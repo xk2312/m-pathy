@@ -148,6 +148,18 @@ uploadBtn.addEventListener('click', () => {
       const audioUrl = result.filesUploaded[0].url;
       console.log('Voice uploaded:', audioUrl);
 
+      fetch('http://5.161.70.239:5000/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url: audioUrl })
+      })
+      .then(res => res.text())
+      .then(res => console.log('Server response:', res))
+      .catch(err => console.error('Server error:', err));
+      
+
       const voicePlayer = new Audio(audioUrl);
       voicePlayer.autoplay = true;
       voicePlayer.controls = true;
