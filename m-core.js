@@ -158,3 +158,34 @@ uploadBtn.addEventListener('click', () => {
     },
   }).open();
 });
+//<!-- CAPSULA: AUDIO-LOGIC -->
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const welcomeAudio = document.getElementById("mWelcome");
+    const portalStarter = () => {
+      if (typeof activatePortal === "function") {
+        activatePortal();
+      } else {
+        console.warn("activatePortal() not found");
+      }
+    };
+
+    if (welcomeAudio) {
+      welcomeAudio.volume = 0.88;
+      welcomeAudio.play()
+        .then(() => console.log("[m–PATHY] Welcome audio playing."))
+        .catch(err => {
+          console.warn("Autoplay blocked:", err);
+          portalStarter(); // Fallback
+        });
+
+      welcomeAudio.addEventListener("ended", () => {
+        console.log("[m–PATHY] Welcome audio ended. Activating portal...");
+        portalStarter();
+      });
+    } else {
+      portalStarter(); // Fallback
+    }
+  });
+
+
