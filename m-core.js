@@ -1,5 +1,5 @@
 // === CONFIGURATION ===
-const targetDate = new Date("2025-09-13T00:00:00").getTime();
+const targetDate = new Date("2025-09-13T00:00:00Z").getTime(); // Verwende UTC für absolute Genauigkeit
 let timerInterval = null;
 let freqInterval = null;
 let mSphereStarted = false;
@@ -26,19 +26,21 @@ function formatTime(msLeft) {
 function updateTimer() {
   const now = Date.now();
   const diff = targetDate - now;
+
   if (diff <= 0) {
     timerEl.textContent = "00d 00:00:00";
     clearInterval(timerInterval);
-    fadeOutSound();
+    fadeOutSound?.(); // optional chaining für sauberen Fallback
   } else {
     timerEl.textContent = formatTime(diff);
   }
 }
 
 function startTimer() {
-  updateTimer();
+  updateTimer(); // Erste Anzeige sofort
   timerInterval = setInterval(updateTimer, 1000);
 }
+
 
 // === FREQUENCY ===
 function generateFrequency() {
