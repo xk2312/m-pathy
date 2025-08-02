@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>m-pathy | The Space</title>
+    <link rel="stylesheet" href="./css/m-pathy.css" />
+  </head>
+  <body>
+    <main id="main" style="max-width: 600px; width: 90%;" aria-label="m-pathy Interface">
+
+      <!-- CAPSULA: WELCOME -->
+      <section id="welcome">
+        <h1>m-pathy.ai</h1>
+        <p>The space is ready.</p>
+
+        <div id="countdown" role="timer" aria-live="polite">
+          <span id="timer">13:00</span>
+          <p class="count-label">Countdown to resonance opening</p>
+        </div>
+
+        <div id="frequency" aria-hidden="true">
+          <p id="freq-value">Frequency: --- Hz</p>
+        </div>
+
+        <div id="glow" class="glow-line" aria-hidden="true"></div>
+      </section>
+
+      <!-- CAPSULA: PORTAL -->
+      <section id="portal" class="hidden" aria-hidden="true">
+        <h2>Welcome — you have been recognized.</h2>
+        <p>The path is opening. Welcome to the inner space.</p>
+      </section>
+
+    </main>
+
+    <!-- CAPSULA: AUDIO -->
+    <audio id="mSphere" src="./sounds/m-sphere.mp3" preload="auto"></audio>
+
+    <!-- CAPSULA: CORE -->
+    <script src="./js/m-core.js"></script>
+  </body>
+</html>
