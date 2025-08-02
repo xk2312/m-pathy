@@ -1,5 +1,5 @@
 // === CONFIGURATION ===
-const targetDate = new Date("2025-09-13T00:00:00Z").getTime(); // UTC-Zeit beachten!
+const targetDate = new Date("2025-09-13T00:00:00").getTime();
 let timerInterval = null;
 let freqInterval = null;
 let mSphereStarted = false;
@@ -13,21 +13,19 @@ const portalEl = document.getElementById("portal");
 const glowEl = document.getElementById("glow");
 const mSphere = document.getElementById("mSphere");
 
-// === UTILITY FUNCTIONS ===
+// === TIMER ===
 function formatTime(msLeft) {
   const totalSeconds = Math.floor(msLeft / 1000);
   const days = Math.floor(totalSeconds / 86400);
   const hours = Math.floor((totalSeconds % 86400) / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
-
   return `${days}d ${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 }
 
 function updateTimer() {
   const now = Date.now();
   const diff = targetDate - now;
-
   if (diff <= 0) {
     timerEl.textContent = "00d 00:00:00";
     clearInterval(timerInterval);
@@ -38,18 +36,16 @@ function updateTimer() {
 }
 
 function startTimer() {
-  updateTimer(); // First immediate call
-  timerInterval = setInterval(() => {
-    updateTimer();
-  }, 1000);
+  updateTimer();
+  timerInterval = setInterval(updateTimer, 1000);
 }
 
+// === FREQUENCY ===
 function generateFrequency() {
-  const specialFrequencies = [396, 417, 432, 528, 639, 741, 852, 963];
-  const freq = specialFrequencies[Math.floor(Math.random() * specialFrequencies.length)];
-  freqEl.textContent = `Frequency: ${freq} Hz`;
+  const freqs = [396, 417, 432, 528, 639, 741, 852, 963];
+  const selected = freqs[Math.floor(Math.random() * freqs.length)];
+  freqEl.textContent = `Frequency: ${selected} Hz`;
   freqContainer.classList.add("show");
-
   freqEl.classList.add("flash");
   setTimeout(() => {
     freqContainer.classList.remove("show");
@@ -61,12 +57,7 @@ function startFrequencies() {
   freqInterval = setInterval(generateFrequency, 2000);
 }
 
-function stopLoops() {
-  clearInterval(timerInterval);
-  clearInterval(freqInterval);
-}
-
-// === SOUND CONTROL ===
+// === SOUND ===
 function startMSphere() {
   if (!mSphere || mSphereStarted) return;
   mSphere.loop = true;
@@ -80,9 +71,7 @@ function startMSphere() {
         clearInterval(fade);
       }
     }, 50);
-  }).catch((err) => {
-    console.warn("Autoplay blocked or error:", err);
-  });
+  }).catch(err => console.warn("Autoplay error:", err));
 }
 
 function fadeOutSound() {
@@ -97,7 +86,8 @@ function fadeOutSound() {
     }
   }, 50);
 }
-// === MAIN ENTRY ===
+
+// === PORTAL ===
 function activatePortal() {
   startMSphere();
   startTimer();
@@ -110,35 +100,22 @@ function activatePortal() {
   }, 10);
 }
 
-// === SINGLE CLICK HANDLER ===
+// === CLICK HANDLER ===
 let clickCooldown = false;
 logoEl.addEventListener("click", () => {
   if (clickCooldown) return;
   clickCooldown = true;
   activatePortal();
-  setTimeout(() => (clickCooldown = false), 1500); // debounce
+  setTimeout(() => clickCooldown = false, 1500);
 });
 
-// === CLEANUP on UNLOAD ===
+// === UNLOAD CLEANUP ===
 window.addEventListener("beforeunload", () => {
-  stopLoops();
+  clearInterval(timerInterval);
+  clearInterval(freqInterval);
 });
 
-// === FILESTACK UPLOAD ===
-const filestackClient = filestack.init('A9825XwAURzeY9sIYkLiMz');
-
-document.getElementById('voiceUpload').addEventListener('click', () => {
-  filestackClient.picker({
-    accept: ['audio/*'],
-    fromSources: ['local_file_system', 'url', 'audio'],
-    onUploadDone: (result) => {
-      console.log('Upload result:', result);
-      const audioURL = result.filesUploaded[0].url;
-      console.log('Audio URL:', audioURL);
-    },
-  }).open();
-});
-
+// === VOICE UPLOAD (Filestack) ===
 const apiKey = 'A9825XwAURzeY9sIYkLiMz';
 const client = filestack.init(apiKey);
 
@@ -150,15 +127,13 @@ document.getElementById('portal').appendChild(uploadBtn);
 uploadBtn.addEventListener('click', () => {
   client.picker({
     accept: ['audio/*'],
-    onUploadDone: (result) => {
+    onUploadDone: result => {
       const audioUrl = result.filesUploaded[0].url;
       console.log('Voice uploaded:', audioUrl);
 
       fetch('http://5.161.70.239:5000/upload', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: audioUrl })
       })
       .then(res => res.text())
@@ -168,14 +143,12 @@ uploadBtn.addEventListener('click', () => {
       const voicePlayer = new Audio(audioUrl);
       voicePlayer.autoplay = true;
       voicePlayer.controls = true;
-
-      const portal = document.getElementById('portal');
-      portal.appendChild(voicePlayer);
-    },
+      document.getElementById('portal').appendChild(voicePlayer);
+    }
   }).open();
 });
 
-// === CAPSULA: AUDIO-LOGIC ===
+// === WELCOME AUDIO ===
 window.addEventListener("DOMContentLoaded", () => {
   const welcomeAudio = document.getElementById("mWelcome");
   const portalStarter = () => {
@@ -192,7 +165,7 @@ window.addEventListener("DOMContentLoaded", () => {
       .then(() => console.log("[m–PATHY] Welcome audio playing."))
       .catch(err => {
         console.warn("Autoplay blocked:", err);
-        portalStarter(); // Fallback
+        portalStarter();
       });
 
     welcomeAudio.addEventListener("ended", () => {
@@ -200,6 +173,6 @@ window.addEventListener("DOMContentLoaded", () => {
       portalStarter();
     });
   } else {
-    portalStarter(); // Fallback
+    portalStarter();
   }
 });
