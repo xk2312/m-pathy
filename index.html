@@ -16,7 +16,7 @@
         <p>The space is ready.</p>
 
         <div id="countdown" role="timer" aria-live="polite">
-          <span id="timer">13:00</span>
+          <span id="timer">Loading…</span>
           <p class="count-label">Countdown to resonance opening</p>
         </div>
 
@@ -48,19 +48,26 @@
     <!-- CAPSULA: CORE -->
     <script src="m-core.js"></script>
 
-    <!-- CAPSULA: AUDIO-LOGIC -->
+    <!-- CAPSULA: TIMER STARTER -->
     <script>
-      window.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener("DOMContentLoaded", () => {
         const welcomeAudio = document.getElementById("mWelcome");
         if (welcomeAudio) {
           welcomeAudio.play().catch(err => {
             console.warn("Autoplay prevented:", err);
           });
         }
+
+        if (typeof startTimer === "function") {
+          startTimer();
+          console.log("✅ startTimer() executed.");
+        } else {
+          console.error("❌ startTimer() not defined. Check m-core.js.");
+        }
       });
     </script>
 
-    <!-- CAPSULA: FILSTACK-LOGIC -->
+    <!-- CAPSULA: FILESTACK-LOGIC -->
     <script>
       const client = filestack.init('A9825XwAURzeY9sIYKL...'); // Replace with real API key
 
