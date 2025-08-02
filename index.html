@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>m-pathy | The Space</title>
     <link rel="stylesheet" href="m-path.css" />
+    <script src="https://static.filestackapi.com/filestack-js/3.x.x/filestack.min.js"></script>
   </head>
   <body>
     <main id="main" style="max-width: 600px; width: 90%;" aria-label="m-pathy Interface">
@@ -24,6 +25,12 @@
         </div>
 
         <div id="glow" class="glow-line" aria-hidden="true"></div>
+
+        <!-- CAPSULA: FILSTACK-UPLOAD -->
+        <div id="voice-upload-section" style="margin-top: 2em;">
+          <button id="voiceUpload">Upload Your Voice</button>
+          <p id="upload-result" style="font-size: 0.8em; color: #aaa;"></p>
+        </div>
       </section>
 
       <!-- CAPSULA: PORTAL -->
@@ -36,8 +43,38 @@
 
     <!-- CAPSULA: AUDIO -->
     <audio id="mSphere" src="m-sphere.mp3" preload="auto"></audio>
+    <audio id="mWelcome" src="M–PATHY–WELCOME.mp3" preload="auto"></audio>
 
     <!-- CAPSULA: CORE -->
     <script src="m-core.js"></script>
+
+    <!-- CAPSULA: AUDIO-LOGIC -->
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        const welcomeAudio = document.getElementById("mWelcome");
+        if (welcomeAudio) {
+          welcomeAudio.play().catch(err => {
+            console.warn("Autoplay prevented:", err);
+          });
+        }
+      });
+    </script>
+
+    <!-- CAPSULA: FILSTACK-LOGIC -->
+    <script>
+      const client = filestack.init('A9825XwAURzeY9sIYKL...'); // Replace with real API key
+
+      document.getElementById('voiceUpload').addEventListener('click', () => {
+        client.picker({
+          accept: ['.mp3', '.wav', '.m4a'],
+          maxFiles: 1,
+          onUploadDone: (res) => {
+            const url = res.filesUploaded[0].url;
+            document.getElementById('upload-result').innerText = 'Uploaded to: ' + url;
+            console.log('Voice uploaded:', url);
+          }
+        }).open();
+      });
+    </script>
   </body>
 </html>

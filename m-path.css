@@ -127,4 +127,17 @@ body {
       padding: 12px;
     }
   }
+  #upload-voice {
+    margin-top: 1em;
+    padding: 0.5em 1em;
+    background: #222;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  audio {
+    margin-top: 1em;
+    width: 100%;
+  }
   

@@ -120,3 +120,41 @@ logoEl.addEventListener("click", () => {
 window.addEventListener("beforeunload", () => {
   stopLoops();
 });
+const filestackClient = filestack.init('A9825XwAURzeY9sIYkLiMz');
+
+document.getElementById('voiceUpload').addEventListener('click', () => {
+  filestackClient.picker({
+    accept: ['audio/*'],
+    fromSources: ['local_file_system', 'url', 'audio'],
+    onUploadDone: (result) => {
+      console.log('Upload result:', result);
+      const audioURL = result.filesUploaded[0].url;
+      console.log('Audio URL:', audioURL);
+    },
+  }).open();
+});
+const apiKey = 'A9825XwAURzeY9sIYkLiMz'; // Dein API-Key
+const client = filestack.init(apiKey);
+
+const uploadBtn = document.createElement('button');
+uploadBtn.textContent = 'Upload Your Voice';
+uploadBtn.id = 'upload-voice';
+document.getElementById('portal').appendChild(uploadBtn);
+
+uploadBtn.addEventListener('click', () => {
+  client.picker({
+    accept: ['audio/*'],
+    onUploadDone: (result) => {
+      const audioUrl = result.filesUploaded[0].url;
+      console.log('Voice uploaded:', audioUrl);
+
+      const voicePlayer = new Audio(audioUrl);
+      voicePlayer.autoplay = true;
+      voicePlayer.controls = true;
+
+      // Optional: einfügen ins DOM
+      const portal = document.getElementById('portal');
+      portal.appendChild(voicePlayer);
+    },
+  }).open();
+});
