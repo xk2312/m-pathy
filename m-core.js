@@ -1,5 +1,5 @@
 // === CONFIGURATION ===
-const targetDate = new Date("2025-09-13T00:00:00").getTime();
+const targetDate = new Date("2025-09-13T00:00:00Z").getTime(); // UTC-Zeit beachten!
 let timerInterval = null;
 let freqInterval = null;
 let mSphereStarted = false;
@@ -24,14 +24,6 @@ function formatTime(msLeft) {
   return `${days}d ${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 }
 
-
-function startTimer() {
-  updateTimer(); // first render
-  timerInterval = setInterval(() => {
-    updateTimer();
-  }, 1000);
-}
-
 function updateTimer() {
   const now = Date.now();
   const diff = targetDate - now;
@@ -45,13 +37,19 @@ function updateTimer() {
   }
 }
 
+function startTimer() {
+  updateTimer(); // First immediate call
+  timerInterval = setInterval(() => {
+    updateTimer();
+  }, 1000);
+}
+
 function generateFrequency() {
   const specialFrequencies = [396, 417, 432, 528, 639, 741, 852, 963];
   const freq = specialFrequencies[Math.floor(Math.random() * specialFrequencies.length)];
   freqEl.textContent = `Frequency: ${freq} Hz`;
   freqContainer.classList.add("show");
 
-  // Visual Flash Feedback
   freqEl.classList.add("flash");
   setTimeout(() => {
     freqContainer.classList.remove("show");
@@ -99,7 +97,6 @@ function fadeOutSound() {
     }
   }, 50);
 }
-
 // === MAIN ENTRY ===
 function activatePortal() {
   startMSphere();
@@ -126,6 +123,8 @@ logoEl.addEventListener("click", () => {
 window.addEventListener("beforeunload", () => {
   stopLoops();
 });
+
+// === FILESTACK UPLOAD ===
 const filestackClient = filestack.init('A9825XwAURzeY9sIYkLiMz');
 
 document.getElementById('voiceUpload').addEventListener('click', () => {
@@ -139,7 +138,8 @@ document.getElementById('voiceUpload').addEventListener('click', () => {
     },
   }).open();
 });
-const apiKey = 'A9825XwAURzeY9sIYkLiMz'; // Dein API-Key
+
+const apiKey = 'A9825XwAURzeY9sIYkLiMz';
 const client = filestack.init(apiKey);
 
 const uploadBtn = document.createElement('button');
@@ -164,46 +164,42 @@ uploadBtn.addEventListener('click', () => {
       .then(res => res.text())
       .then(res => console.log('Server response:', res))
       .catch(err => console.error('Server error:', err));
-      
 
       const voicePlayer = new Audio(audioUrl);
       voicePlayer.autoplay = true;
       voicePlayer.controls = true;
 
-      // Optional: einfügen ins DOM
       const portal = document.getElementById('portal');
       portal.appendChild(voicePlayer);
     },
   }).open();
 });
-//<!-- CAPSULA: AUDIO-LOGIC -->
 
-  window.addEventListener("DOMContentLoaded", () => {
-    const welcomeAudio = document.getElementById("mWelcome");
-    const portalStarter = () => {
-      if (typeof activatePortal === "function") {
-        activatePortal();
-      } else {
-        console.warn("activatePortal() not found");
-      }
-    };
-
-    if (welcomeAudio) {
-      welcomeAudio.volume = 0.88;
-      welcomeAudio.play()
-        .then(() => console.log("[m–PATHY] Welcome audio playing."))
-        .catch(err => {
-          console.warn("Autoplay blocked:", err);
-          portalStarter(); // Fallback
-        });
-
-      welcomeAudio.addEventListener("ended", () => {
-        console.log("[m–PATHY] Welcome audio ended. Activating portal...");
-        portalStarter();
-      });
+// === CAPSULA: AUDIO-LOGIC ===
+window.addEventListener("DOMContentLoaded", () => {
+  const welcomeAudio = document.getElementById("mWelcome");
+  const portalStarter = () => {
+    if (typeof activatePortal === "function") {
+      activatePortal();
     } else {
-      portalStarter(); // Fallback
+      console.warn("activatePortal() not found");
     }
-  });
+  };
 
+  if (welcomeAudio) {
+    welcomeAudio.volume = 0.88;
+    welcomeAudio.play()
+      .then(() => console.log("[m–PATHY] Welcome audio playing."))
+      .catch(err => {
+        console.warn("Autoplay blocked:", err);
+        portalStarter(); // Fallback
+      });
 
+    welcomeAudio.addEventListener("ended", () => {
+      console.log("[m–PATHY] Welcome audio ended. Activating portal...");
+      portalStarter();
+    });
+  } else {
+    portalStarter(); // Fallback
+  }
+});
