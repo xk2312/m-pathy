@@ -1,5 +1,5 @@
 // === CONFIGURATION ===
-const targetDate = new Date("2025-09-13T00:00:00Z").getTime(); // Verwende UTC für absolute Genauigkeit
+const targetDate = new Date("2025-09-13T00:00:00+02:00").getTime(); // +02:00 = MESZ (Mitteleuropäische Sommerzeit)
 let timerInterval = null;
 let freqInterval = null;
 let mSphereStarted = false;
@@ -20,7 +20,7 @@ function formatTime(msLeft) {
   const hours = Math.floor((totalSeconds % 86400) / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
-  return `${days}d ${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  return `${days}d ${hours.toString().padStart(2, "0")}h ${minutes.toString().padStart(2, "0")}m ${seconds.toString().padStart(2, "0")}s`;
 }
 
 function updateTimer() {
@@ -28,18 +28,19 @@ function updateTimer() {
   const diff = targetDate - now;
 
   if (diff <= 0) {
-    timerEl.textContent = "00d 00:00:00";
+    timerEl.textContent = "00d 00h 00m 00s";
     clearInterval(timerInterval);
-    fadeOutSound?.(); // optional chaining für sauberen Fallback
+    fadeOutSound?.(); // fallback safe
   } else {
     timerEl.textContent = formatTime(diff);
   }
 }
 
 function startTimer() {
-  updateTimer(); // Erste Anzeige sofort
+  updateTimer();
   timerInterval = setInterval(updateTimer, 1000);
 }
+
 
 
 // === FREQUENCY ===
