@@ -1,5 +1,5 @@
 // === CONFIGURATION ===
-let time = 13 * 60; // 13 Minuten
+const targetDate = new Date("2025-09-13T00:00:00").getTime();
 let timerInterval = null;
 let freqInterval = null;
 let mSphereStarted = false;
@@ -14,29 +14,35 @@ const glowEl = document.getElementById("glow");
 const mSphere = document.getElementById("mSphere");
 
 // === UTILITY FUNCTIONS ===
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins.toString().padStart(2, "0")}:${secs
-    .toString()
-    .padStart(2, "0")}`;
+function formatTime(msLeft) {
+  const totalSeconds = Math.floor(msLeft / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${days}d ${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 }
 
+
 function startTimer() {
-  updateTimer(); // Initial render
+  updateTimer(); // first render
   timerInterval = setInterval(() => {
-    if (time > 0) {
-      time--;
-      updateTimer();
-    } else {
-      clearInterval(timerInterval);
-      fadeOutSound();
-    }
+    updateTimer();
   }, 1000);
 }
 
 function updateTimer() {
-  timerEl.textContent = formatTime(time);
+  const now = Date.now();
+  const diff = targetDate - now;
+
+  if (diff <= 0) {
+    timerEl.textContent = "00d 00:00:00";
+    clearInterval(timerInterval);
+    fadeOutSound();
+  } else {
+    timerEl.textContent = formatTime(diff);
+  }
 }
 
 function generateFrequency() {
