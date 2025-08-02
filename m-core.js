@@ -24,13 +24,6 @@ function formatTime(msLeft) {
   return `${days}d ${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 }
 
-function startTimer() {
-  updateTimer(); // first render
-  timerInterval = setInterval(() => {
-    updateTimer();
-  }, 1000);
-}
-
 function updateTimer() {
   const now = Date.now();
   const diff = targetDate - now;
@@ -44,13 +37,16 @@ function updateTimer() {
   }
 }
 
+function startTimer() {
+  updateTimer();
+  timerInterval = setInterval(updateTimer, 1000);
+}
+
 function generateFrequency() {
   const specialFrequencies = [396, 417, 432, 528, 639, 741, 852, 963];
   const freq = specialFrequencies[Math.floor(Math.random() * specialFrequencies.length)];
   freqEl.textContent = `Frequency: ${freq} Hz`;
   freqContainer.classList.add("show");
-
-  // Visual Flash Feedback
   freqEl.classList.add("flash");
   setTimeout(() => {
     freqContainer.classList.remove("show");
@@ -66,6 +62,7 @@ function stopLoops() {
   clearInterval(timerInterval);
   clearInterval(freqInterval);
 }
+
 // === SOUND CONTROL ===
 function startMSphere() {
   if (!mSphere || mSphereStarted) return;
@@ -103,7 +100,6 @@ function activatePortal() {
   startMSphere();
   startTimer();
   startFrequencies();
-
   portalEl.classList.remove("m-hidden");
   setTimeout(() => {
     portalEl.classList.add("show");
@@ -117,39 +113,29 @@ logoEl.addEventListener("click", () => {
   if (clickCooldown) return;
   clickCooldown = true;
   activatePortal();
-  setTimeout(() => (clickCooldown = false), 1500); // debounce
+  setTimeout(() => (clickCooldown = false), 1500);
 });
 
-// === CLEANUP on UNLOAD ===
-window.addEventListener("beforeunload", () => {
-  stopLoops();
-});
+// === UNLOAD ===
+window.addEventListener("beforeunload", () => stopLoops());
 
-// === FILESTACK UPLOAD BUTTON INJECTION + LOGIC ===
-const apiKey = 'A9825XwAURzeY9sIYkLiMz';
-const client = filestack.init(apiKey);
-
+// === FILESTACK UPLOAD ===
+window.fsClient = window.fsClient || filestack.init('A9825XwAURzeY9sIYkLiMz');
 const uploadBtn = document.createElement('button');
 uploadBtn.textContent = 'Upload Your Voice';
 uploadBtn.id = 'upload-voice';
-uploadBtn.setAttribute("aria-label", "Upload Your Voice");
 uploadBtn.style.marginTop = "20px";
 uploadBtn.style.fontSize = "1em";
-
-document.getElementById('m-portal').appendChild(uploadBtn);
+portalEl.appendChild(uploadBtn);
 
 uploadBtn.addEventListener('click', () => {
-  client.picker({
+  fsClient.picker({
     accept: ['audio/*'],
     onUploadDone: (result) => {
       const audioUrl = result.filesUploaded[0].url;
-      console.log('Voice uploaded:', audioUrl);
-
       fetch('http://5.161.70.239:5000/upload', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: audioUrl })
       })
       .then(res => res.text())
@@ -160,49 +146,36 @@ uploadBtn.addEventListener('click', () => {
       voicePlayer.autoplay = true;
       voicePlayer.controls = true;
       voicePlayer.style.marginTop = "15px";
-
-      const portal = document.getElementById('m-portal');
-      portal.appendChild(voicePlayer);
-    },
+      portalEl.appendChild(voicePlayer);
+    }
   }).open();
 });
 
-// === CAPSULA: AUDIO-LOGIC (WELCOME AUDIO + FALLBACK) ===
+// === WELCOME AUDIO LOGIC ===
 window.addEventListener("DOMContentLoaded", () => {
   const welcomeAudio = document.getElementById("mWelcome");
   const portalStarter = () => {
-    if (typeof activatePortal === "function") {
-      console.log("[m–PATHY] Portal activation triggered via fallback.");
-      activatePortal();
-    } else {
-      console.warn("activatePortal() not found.");
-    }
+    if (typeof activatePortal === "function") activatePortal();
   };
 
   if (welcomeAudio) {
     welcomeAudio.volume = 0.88;
     welcomeAudio.play()
-      .then(() => {
-        console.log("[m–PATHY] Welcome audio playing.");
-      })
+      .then(() => console.log("[m–PATHY] Welcome audio playing."))
       .catch(err => {
         console.warn("Autoplay blocked:", err);
-        portalStarter(); // Fallback
+        portalStarter();
       });
 
-    welcomeAudio.addEventListener("ended", () => {
-      console.log("[m–PATHY] Welcome audio ended. Activating portal...");
-      portalStarter();
-    });
+    welcomeAudio.addEventListener("ended", portalStarter);
   } else {
-    console.warn("[m–PATHY] Welcome audio missing. Activating fallback...");
-    portalStarter(); // Fallback
+    portalStarter();
   }
 
   // Timer failsafe
   setTimeout(() => {
     if (!timerInterval) {
-      console.warn("⚠️ Timer not running — forcing start.");
+      console.warn("Timer not running — forcing start.");
       startTimer();
     }
   }, 3000);
