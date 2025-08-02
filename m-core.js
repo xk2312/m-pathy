@@ -1,19 +1,16 @@
-// === CONFIGURATION ===
-const targetDate = new Date("2025-09-13T00:00:00+02:00").getTime(); // +02:00 = MESZ (Mitteleuropäische Sommerzeit)
+const targetDate = new Date("2025-09-13T00:00:00+02:00").getTime();
 let timerInterval = null;
 let freqInterval = null;
 let mSphereStarted = false;
 
-// === DOM ELEMENTS ===
-const timerEl = document.getElementById("timer");
-const freqEl = document.getElementById("freq-value");
-const freqContainer = document.getElementById("frequency");
+const timerEl = document.getElementById("m-timer");
+const freqEl = document.getElementById("m-freq-value");
+const freqContainer = document.getElementById("m-frequency");
 const logoEl = document.querySelector("h1");
-const portalEl = document.getElementById("portal");
-const glowEl = document.getElementById("glow");
+const portalEl = document.getElementById("m-portal");
+const glowEl = document.getElementById("m-glow");
 const mSphere = document.getElementById("mSphere");
 
-// === TIMER ===
 function formatTime(msLeft) {
   const totalSeconds = Math.floor(msLeft / 1000);
   const days = Math.floor(totalSeconds / 86400);
@@ -26,11 +23,10 @@ function formatTime(msLeft) {
 function updateTimer() {
   const now = Date.now();
   const diff = targetDate - now;
-
   if (diff <= 0) {
     timerEl.textContent = "00d 00h 00m 00s";
     clearInterval(timerInterval);
-    fadeOutSound?.(); // fallback safe
+    fadeOutSound?.();
   } else {
     timerEl.textContent = formatTime(diff);
   }
@@ -41,9 +37,6 @@ function startTimer() {
   timerInterval = setInterval(updateTimer, 1000);
 }
 
-
-
-// === FREQUENCY ===
 function generateFrequency() {
   const freqs = [396, 417, 432, 528, 639, 741, 852, 963];
   const selected = freqs[Math.floor(Math.random() * freqs.length)];
@@ -60,7 +53,6 @@ function startFrequencies() {
   freqInterval = setInterval(generateFrequency, 2000);
 }
 
-// === SOUND ===
 function startMSphere() {
   if (!mSphere || mSphereStarted) return;
   mSphere.loop = true;
@@ -90,76 +82,23 @@ function fadeOutSound() {
   }, 50);
 }
 
-// === PORTAL ===
 function activatePortal() {
   startMSphere();
   startTimer();
   startFrequencies();
-
-  portalEl.classList.remove("hidden");
+  portalEl.classList.remove("m-hidden");
   setTimeout(() => {
     portalEl.classList.add("show");
     glowEl.classList.add("visible");
   }, 10);
 }
 
-// === CLICK HANDLER ===
-let clickCooldown = false;
-logoEl.addEventListener("click", () => {
-  if (clickCooldown) return;
-  clickCooldown = true;
-  activatePortal();
-  setTimeout(() => clickCooldown = false, 1500);
-});
-
-// === UNLOAD CLEANUP ===
-window.addEventListener("beforeunload", () => {
-  clearInterval(timerInterval);
-  clearInterval(freqInterval);
-});
-
-// === VOICE UPLOAD (Filestack) ===
-const apiKey = 'A9825XwAURzeY9sIYkLiMz';
-const client = filestack.init(apiKey);
-
-const uploadBtn = document.createElement('button');
-uploadBtn.textContent = 'Upload Your Voice';
-uploadBtn.id = 'upload-voice';
-document.getElementById('portal').appendChild(uploadBtn);
-
-uploadBtn.addEventListener('click', () => {
-  client.picker({
-    accept: ['audio/*'],
-    onUploadDone: result => {
-      const audioUrl = result.filesUploaded[0].url;
-      console.log('Voice uploaded:', audioUrl);
-
-      fetch('http://5.161.70.239:5000/upload', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: audioUrl })
-      })
-      .then(res => res.text())
-      .then(res => console.log('Server response:', res))
-      .catch(err => console.error('Server error:', err));
-
-      const voicePlayer = new Audio(audioUrl);
-      voicePlayer.autoplay = true;
-      voicePlayer.controls = true;
-      document.getElementById('portal').appendChild(voicePlayer);
-    }
-  }).open();
-});
-
-// === WELCOME AUDIO ===
 window.addEventListener("DOMContentLoaded", () => {
   const welcomeAudio = document.getElementById("mWelcome");
+
   const portalStarter = () => {
-    if (typeof activatePortal === "function") {
-      activatePortal();
-    } else {
-      console.warn("activatePortal() not found");
-    }
+    console.log("🔁 Triggering fallback portal activation");
+    activatePortal();
   };
 
   if (welcomeAudio) {
@@ -178,4 +117,26 @@ window.addEventListener("DOMContentLoaded", () => {
   } else {
     portalStarter();
   }
+
+  setTimeout(() => {
+    if (!timerInterval) {
+      console.warn("⚠️ Timer not running — forcing start.");
+      startTimer();
+    }
+  }, 3000);
+});
+
+// VOICE UPLOAD
+const apiKey = 'A9825XwAURzeY9sIYkLiMz';
+const client = filestack.init(apiKey);
+document.getElementById('upload-voice').addEventListener('click', () => {
+  client.picker({
+    accept: ['.mp3', '.wav', '.m4a'],
+    maxFiles: 1,
+    onUploadDone: (res) => {
+      const url = res.filesUploaded[0].url;
+      document.getElementById('upload-result').innerText = 'Uploaded to: ' + url;
+      console.log('Voice uploaded:', url);
+    }
+  }).open();
 });

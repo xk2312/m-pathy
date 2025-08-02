@@ -1,87 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>m-pathy | The Space</title>
-    <link rel="stylesheet" href="m-path.css" />
-    <script src="https://static.filestackapi.com/filestack-js/3.x.x/filestack.min.js"></script>
-  </head>
-  <body>
-    <main id="main" style="max-width: 600px; width: 90%;" aria-label="m-pathy Interface">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>m-pathy | The Space</title>
+  <link rel="stylesheet" href="m-pathy.css" />
+  <script src="https://static.filestackapi.com/filestack-js/3.x.x/filestack.min.js"></script>
+</head>
+<body>
+  <main style="max-width: 600px; width: 90%;" aria-label="m-pathy Interface">
+    <!-- WELCOME -->
+    <section id="m-welcome">
+      <h1>m-pathy.ai</h1>
+      <p>The space is ready.</p>
 
-      <!-- CAPSULA: WELCOME -->
-      <section id="welcome">
-        <h1>m-pathy.ai</h1>
-        <p>The space is ready.</p>
+      <div id="m-countdown" role="timer" aria-live="polite">
+        <div id="m-timer">Loading…</div>
+        <p class="m-count-label">Countdown to resonance opening</p>
+      </div>
 
-        <div id="countdown" role="timer" aria-live="polite">
-          <span id="timer">Loading…</span>
-          <p class="count-label">Countdown to resonance opening</p>
-        </div>
+      <div id="m-frequency" aria-live="polite">
+        <p id="m-freq-value">Frequency: --- Hz</p>
+      </div>
 
-        <div id="frequency" aria-hidden="true">
-          <p id="freq-value">Frequency: --- Hz</p>
-        </div>
+      <div id="m-glow" class="m-glow-line" aria-hidden="true"></div>
 
-        <div id="glow" class="glow-line" aria-hidden="true"></div>
+      <!-- VOICE UPLOAD -->
+      <button id="upload-voice">Upload Your Voice</button>
+      <p id="upload-result" style="font-size: 0.8em; color: #aaa;"></p>
+    </section>
 
-        <!-- CAPSULA: FILSTACK-UPLOAD -->
-        <div id="voice-upload-section" style="margin-top: 2em;">
-          <button id="voiceUpload">Upload Your Voice</button>
-          <p id="upload-result" style="font-size: 0.8em; color: #aaa;"></p>
-        </div>
-      </section>
+    <!-- PORTAL -->
+    <section id="m-portal" class="m-hidden" aria-hidden="true">
+      <h2>Welcome — you have been recognized.</h2>
+      <p>The path is opening. Welcome to the inner space.</p>
+    </section>
+  </main>
 
-      <!-- CAPSULA: PORTAL -->
-      <section id="portal" class="hidden" aria-hidden="true">
-        <h2>Welcome — you have been recognized.</h2>
-        <p>The path is opening. Welcome to the inner space.</p>
-      </section>
+  <!-- AUDIO -->
+  <audio id="mSphere" src="m-sphere.mp3" preload="auto"></audio>
+  <audio id="mWelcome" src="M–PATHY–WELCOME.mp3" preload="auto"></audio>
 
-    </main>
-
-    <!-- CAPSULA: AUDIO -->
-    <audio id="mSphere" src="m-sphere.mp3" preload="auto"></audio>
-    <audio id="mWelcome" src="M–PATHY–WELCOME.mp3" preload="auto"></audio>
-
-    <!-- CAPSULA: CORE -->
-    <script src="m-core.js"></script>
-
-    <!-- CAPSULA: TIMER STARTER -->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const welcomeAudio = document.getElementById("mWelcome");
-        if (welcomeAudio) {
-          welcomeAudio.play().catch(err => {
-            console.warn("Autoplay prevented:", err);
-          });
-        }
-
-        if (typeof startTimer === "function") {
-          startTimer();
-          console.log("✅ startTimer() executed.");
-        } else {
-          console.error("❌ startTimer() not defined. Check m-core.js.");
-        }
-      });
-    </script>
-
-    <!-- CAPSULA: FILESTACK-LOGIC -->
-    <script>
-      const client = filestack.init('A9825XwAURzeY9sIYKL...'); // Replace with real API key
-
-      document.getElementById('voiceUpload').addEventListener('click', () => {
-        client.picker({
-          accept: ['.mp3', '.wav', '.m4a'],
-          maxFiles: 1,
-          onUploadDone: (res) => {
-            const url = res.filesUploaded[0].url;
-            document.getElementById('upload-result').innerText = 'Uploaded to: ' + url;
-            console.log('Voice uploaded:', url);
-          }
-        }).open();
-      });
-    </script>
-  </body>
+  <script src="m-core.js"></script>
+</body>
 </html>
