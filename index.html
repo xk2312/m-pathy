@@ -2,54 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>m-pathy | The Space</title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="m-pathy.css" />
-
-  <!-- FileStack -->
-  <script src="https://static.filestackapi.com/filestack-js/3.x.x/filestack.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enter M</title>
+  <link rel="stylesheet" href="m-path.css" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, #0f0f0f, #000000);
+      font-family: 'Segoe UI', sans-serif;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-action: none;
+    }
+  </style>
 </head>
 <body>
-  <main style="max-width: 600px; width: 90%;" aria-label="m-pathy Interface">
-    
-    <!-- WELCOME SECTION -->
-    <section id="m-welcome">
-      <h1>m-pathy.ai</h1>
-      <p>The space is ready.</p>
 
-      <!-- Countdown Timer -->
-      <div id="m-countdown" role="timer" aria-live="polite">
-        <div id="m-timer">Loading…</div>
-        <p class="m-count-label">Countdown to resonance opening</p>
-      </div>
+  <div id="bloom-wrapper">
+    <div id="bloom-core"></div>
+    <canvas id="fractal-canvas"></canvas>
+  </div>
 
-      <!-- Frequency Display -->
-      <div id="m-frequency" aria-live="polite">
-        <p id="m-freq-value">Frequency: --- Hz</p>
-      </div>
-
-      <!-- Glow Animation Line -->
-      <div id="m-glow" class="m-glow-line" aria-hidden="true"></div>
-
-      <!-- Upload Result Info -->
-      <p id="upload-result" style="font-size: 0.8em; color: #aaa;"></p>
-    </section>
-
-    <!-- PORTAL SECTION -->
-    <section id="m-portal" class="m-hidden" aria-hidden="true">
-      <h2>Welcome — you have been recognized.</h2>
-      <p>The path is opening. Welcome to the inner space.</p>
-      <!-- Upload button & player will be injected via JS -->
-    </section>
-  </main>
-
-  <!-- AUDIO FILES -->
-  <audio id="mSphere" src="m-sphere.mp3" preload="auto"></audio>
-  <audio id="mWelcome" src="m-pathy-welcome.mp3" preload="auto"></audio>
-
-  <!-- CORE LOGIC -->
   <script src="m-core.js"></script>
+
 </body>
 </html>

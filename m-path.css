@@ -1,143 +1,81 @@
-/* == m-pathy CORE STYLE == */
+/* === GLOBAL RESET === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-body {
-    margin: 0;
-    font-family: "Helvetica Neue", "Segoe UI", Roboto, sans-serif;
-    background: #0f0f0f;
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow-x: hidden;
-  }
-  
-  main {
-    padding: 20px;
-    max-width: 600px;
-    width: 100%;
-  }
-  
-  /* == Welcome Section == */
-  #m-welcome {
-    text-align: center;
-  }
-  
-  /* Timer Style */
-  #m-timer {
-    font-size: clamp(3rem, 5vw, 5rem);
-    font-weight: bold;
-    letter-spacing: 0.1em;
-    animation: m-pulse 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  }
-  
-  /* Pulse Animation */
-  @keyframes m-pulse {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.7;
-      transform: scale(1.05);
-    }
-  }
-  
-  /* Label */
-  .m-count-label {
-    font-size: 1.2rem;
-    color: #bbb;
-    margin-top: 10px;
-  }
-  
-  /* Frequency Section */
-  #m-frequency {
-    margin-top: 30px;
-    font-size: 1.5rem;
-    color: #70e0ff;
-    opacity: 0;
-    transition: opacity 0.5s ease-in;
-  }
-  #m-frequency.show {
-    opacity: 1;
-  }
-  #m-frequency[aria-live="polite"] {
-    outline: none;
-  }
-  
-  /* Portal Section */
-  #m-portal {
-    margin-top: 40px;
-    padding: 20px;
-    border: 2px solid #70e0ff;
-    border-radius: 12px;
-    background: rgba(112, 224, 255, 0.1);
-    color: #ffffff;
-    opacity: 0;
-    transform: scale(0.95);
-    transition: all 0.8s ease;
-    box-shadow: 0 0 15px rgba(112, 224, 255, 0.4);
-  }
-  #m-portal.show {
-    opacity: 1;
-    transform: scale(1);
-  }
-  
-  /* Hidden Utility */
-  .m-hidden {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  
-  /* Glow Line */
-  .m-glow-line {
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, #70e0ff, #ffffff, #70e0ff);
-    background-size: 200% auto;
-    animation: m-glowFlow 6s linear infinite;
-    margin: 24px 0;
-    border-radius: 2px;
-    opacity: 0;
-    transition: opacity 1s ease;
-  }
-  .m-glow-line.visible {
-    opacity: 1;
-  }
-  
-  @keyframes m-glowFlow {
-    0% {
-      background-position: 200% center;
-    }
-    100% {
-      background-position: -200% center;
-    }
-  }
-  
-  /* == Mobile First Enhancements == */
-  @media (max-width: 600px) {
-    .m-count-label,
-    #m-frequency,
-    #m-portal {
-      font-size: 1rem;
-    }
-  
-    #m-portal {
-      padding: 12px;
-    }
-  }
-  #upload-voice {
-    margin-top: 1em;
-    padding: 0.5em 1em;
-    background: #222;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  audio {
-    margin-top: 1em;
-    width: 100%;
-  }
-  
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #0f0f0f, #000000);
+  font-family: 'Segoe UI', sans-serif;
+  touch-action: none;
+  user-select: none;
+}
+
+/* === WRAPPER === */
+#bloom-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* === CANVAS (Sterne) === */
+canvas#fractal-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  filter: blur(0.6px) contrast(120%);
+  opacity: 0.8;
+  pointer-events: auto;
+}
+
+/* === PULSE KERN === */
+#bloom-core {
+  width: 22vw;
+  max-width: 180px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #fff0f5, #9b59b6);
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.15),
+              0 0 30px rgba(155, 89, 182, 0.3) inset;
+  animation: pulseAnim 4s ease-in-out infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.1em;
+  z-index: 2;
+}
+
+/* === PULSE HOVER STYLE === */
+#bloom-core.hover {
+  background: radial-gradient(circle at center, #70e0ff, #2f3ccf);
+  box-shadow: 0 0 60px rgba(112, 224, 255, 0.4),
+              0 0 30px rgba(0, 102, 255, 0.6) inset;
+  font-weight: 600;
+  font-size: 1.2em;
+  letter-spacing: 0.03em;
+}
+
+/* === ANIMATIONEN === */
+@keyframes pulseAnim {
+  0%   { transform: translate(-50%, -50%) scale(1); }
+  50%  { transform: translate(-50%, -50%) scale(1.1); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* === STAGE 2 PREPARATION (optional) === */
+body.stage-2 {
+  background: #000;
+}
