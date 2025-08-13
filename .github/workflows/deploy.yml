@@ -1,0 +1,63 @@
+name: Deploy M-Pathy
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build Next.js
+        env:
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
+          AZURE_OPENAI_API_VERSION: ${{ secrets.AZURE_OPENAI_API_VERSION }}
+          NODE_ENV: production
+        run: npm run build
+
+      - name: Package artifact
+        run: tar --exclude='.git' --exclude='node_modules' -czf m-pathy.tar.gz .
+
+      - name: Upload to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "m-pathy.tar.gz"
+          target: "/srv/"
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            cd /srv
+            rm -rf m-pathy.new
+            mkdir -p m-pathy.new
+            tar -xzf /srv/m-pathy.tar.gz -C m-pathy.new
+            cd m-pathy.new
+            npm ci --omit=dev
+            rm -rf /srv/m-pathy.prev
+            if [ -d /srv/m-pathy ]; then mv /srv/m-pathy /srv/m-pathy.prev; fi
+            mv /srv/m-pathy.new /srv/m-pathy
+            sudo systemctl restart m-pathy
+            sudo systemctl status m-pathy --no-pager -l || true
