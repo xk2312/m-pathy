@@ -50,3 +50,7 @@ pnpm-debug.log*
 
 # Filestack + API keys
 filestack_key.txt
+
+# CI artifacts (nicht committen)
+/package-src/
+/m-pathy.tar.gz
