@@ -19,17 +19,88 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install prod deps for orchestrator
-        run: npm i
+      - name: Build (Next.js)
+        run: |
+          npm ci
+          npm run build
 
-      - name: Run orchestrator
+      - name: Package artifact (stable snapshot)
+        run: |
+          set -e
+          SNAP="/tmp/mpathy-${RANDOM}${RANDOM}"
+          mkdir -p "$SNAP/package-src"
+          rsync -a --delete \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='.next/cache' \
+            ./ "$SNAP/package-src"/
+          tar -C "$SNAP/package-src" -czf m-pathy.tar.gz .
+
+      - name: Upload artifact to server
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_PORT: ${{ secrets.SSH_PORT }}
           SSH_USER: ${{ secrets.SSH_USER }}
           HETZNER_SSH_KEY: ${{ secrets.HETZNER_SSH_KEY }}
+        run: |
+          set -e
+          umask 077
+          printf "%s\n" "$HETZNER_SSH_KEY" > key.pem
+          scp -i key.pem -P "${SSH_PORT}" -o StrictHostKeyChecking=accept-new \
+            m-pathy.tar.gz "${SSH_USER}@${SSH_HOST}:/tmp/m-pathy.tar.gz"
+
+      - name: Deploy on server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
           AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
           AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
           AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
           AZURE_OPENAI_API_VERSION: ${{ secrets.AZURE_OPENAI_API_VERSION }}
-        run: npm run deploy:orchestrated
+        run: |
+          set -e
+          ssh -i key.pem -p "${SSH_PORT}" -o StrictHostKeyChecking=accept-new \
+            "${SSH_USER}@${SSH_HOST}" 'bash -s' <<'REMOTE'
+            set -e
+            ARCHIVE=/tmp/m-pathy.tar.gz
+            APP_NEW=/srv/m-pathy.new
+            APP_CUR=/srv/m-pathy
+            ENV_FILE=/etc/m-pathy.env
+
+            sudo systemctl stop m-pathy || true
+            sudo rm -rf "$APP_NEW"
+            sudo mkdir -p "$APP_NEW"
+            sudo tar -C "$APP_NEW" -xzf "$ARCHIVE"
+            sudo rm -f "$ARCHIVE"
+
+            # Validate
+            [ -f "$APP_NEW/package.json" ] || (echo "Missing package.json after extract" >&2; exit 1)
+
+            # ENV (nur falls du es brauchst)
+            sudo bash -c "cat > $ENV_FILE" <<EOF
+AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+AZURE_OPENAI_DEPLOYMENT=${AZURE_OPENAI_DEPLOYMENT}
+AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION}
+NODE_ENV=production
+PORT=3000
+EOF
+            sudo chmod 600 "$ENV_FILE"
+
+            # Atomic switch
+            sudo rm -rf "${APP_CUR}.prev" || true
+            [ -d "$APP_CUR" ] && sudo mv "$APP_CUR" "${APP_CUR}.prev" || true
+            sudo mv "$APP_NEW" "$APP_CUR"
+
+            # Install & start
+            cd "$APP_CUR"
+            npm ci --omit=dev
+            sudo systemctl daemon-reload || true
+            sudo systemctl start m-pathy
+            sudo systemctl status m-pathy --no-pager -l | head -n 50 || true
+REMOTE
+
+      - name: Cleanup key
+        if: always()
+        run: rm -f key.pem
