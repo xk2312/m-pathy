@@ -3,7 +3,7 @@ from openai import AzureOpenAI
 
 # API-Daten
 endpoint = "https://mutah-me71x3km-eastus2.openai.azure.com/"
-api_key = os.getenv("AZURE_OPENAI_KEY")  # vorher: export AZURE_OPENAI_KEY="dein_api_key"
+api_key = os.getenv("AZURE_OPENAI_API_KEY")  # vorher: export AZURE_OPENAI_API_KEY="dein_api_key"
 api_version = "2024-08-01-preview"
 
 client = AzureOpenAI(
