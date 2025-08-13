@@ -1,9 +1,9 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
-import { startMeteorSequence } from '@/modules/meteorEngine'
-import { buildCrystalM, computeMAnchor } from '@/modules/crystalEngine'
-import '@/styles/m-path.css'
+import { startMeteorSequence } from '../modules/meteorEngine'
+import { buildCrystalM, computeMAnchor } from '../modules/crystalEngine'
+import '../../styles/m-path.css'
 
 export default function CanvasMeteorAndM() {
   const wrapperRef = useRef<HTMLDivElement>(null)

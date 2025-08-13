@@ -21,7 +21,7 @@
 
 import React, { useEffect, useMemo, useState, FormEvent } from "react";
 import Image from "next/image"; // ⬅️ oben bei den Imports sicherstellen
-import LogoM from "@/components/LogoM";
+import LogoM from "../components/LogoM";
 
 /* =======================================================================
    [ANCHOR:CONFIG]  — Design Tokens, Themes, Personas, System Prompt
