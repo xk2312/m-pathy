@@ -92,6 +92,10 @@ jobs:
             [ -d "$CUR" ] && sudo mv "$CUR" "${CUR}.prev" || true
             sudo mv "$NEW" "$CUR"
 
+            # 👉 Besitz & Rechte reparieren, damit npm als deploy schreiben darf
+            sudo chown -R "$USER":"$USER" "$CUR"
+            sudo find "$CUR" -type d -exec chmod u+rwx {} \;
+
             cd "$CUR"
             npm ci --omit=dev
 
