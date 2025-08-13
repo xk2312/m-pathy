@@ -1,7 +1,7 @@
 'use client';
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// export const revalidate = 0; // ❌ Entfernt, weil nicht in Client-Komponenten erlaubt
 
 import { useEffect } from 'react';
 import CanvasMeteorAndM from './components/CanvasMeteorAndM';
