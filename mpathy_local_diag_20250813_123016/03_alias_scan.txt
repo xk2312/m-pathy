@@ -1,0 +1,8 @@
+===== SEARCH '@/styles' & '@/components' IN app/ =====
+app//components/CanvasMeteorAndM.tsx:6:import '@/styles/m-path.css'
+app//page2/page.tsx:24:import LogoM from "@/components/LogoM";
+===== SEARCH '@/…' GENERIC =====
+app//page2/page.tsx:24:import LogoM from "@/components/LogoM";
+app//components/CanvasMeteorAndM.tsx:4:import { startMeteorSequence } from '@/modules/meteorEngine'
+app//components/CanvasMeteorAndM.tsx:5:import { buildCrystalM, computeMAnchor } from '@/modules/crystalEngine'
+app//components/CanvasMeteorAndM.tsx:6:import '@/styles/m-path.css'

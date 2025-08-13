@@ -1,0 +1,209 @@
+===== systemctl status m-pathy =====
+● m-pathy.service - M-Pathy (Next.js)
+     Loaded: loaded (/etc/systemd/system/m-pathy.service; enabled; preset: enabled)
+     Active: activating (auto-restart) (Result: exit-code) since Wed 2025-08-13 10:30:57 UTC; 1s ago
+    Process: 33449 ExecStart=/usr/bin/npm run start -- -p 3000 (code=exited, status=254)
+   Main PID: 33449 (code=exited, status=254)
+        CPU: 203ms
+
+===== journalctl (letzte 200 Zeilen) =====
+Aug 13 10:29:33 ubuntu-2gb-ash-1 npm[33244]: npm error path /srv/m-pathy/package.json
+Aug 13 10:29:33 ubuntu-2gb-ash-1 npm[33244]: npm error errno -2
+Aug 13 10:29:33 ubuntu-2gb-ash-1 npm[33244]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:29:33 ubuntu-2gb-ash-1 npm[33244]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:29:33 ubuntu-2gb-ash-1 npm[33244]: npm error enoent
+Aug 13 10:29:33 ubuntu-2gb-ash-1 npm[33244]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_29_33_183Z-debug-0.log
+Aug 13 10:29:33 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:29:33 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:29:38 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2504.
+Aug 13 10:29:38 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:29:38 ubuntu-2gb-ash-1 npm[33257]: npm error code ENOENT
+Aug 13 10:29:38 ubuntu-2gb-ash-1 npm[33257]: npm error syscall open
+Aug 13 10:29:38 ubuntu-2gb-ash-1 npm[33257]: npm error path /srv/m-pathy/package.json
+Aug 13 10:29:38 ubuntu-2gb-ash-1 npm[33257]: npm error errno -2
+Aug 13 10:29:38 ubuntu-2gb-ash-1 npm[33257]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:29:38 ubuntu-2gb-ash-1 npm[33257]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:29:38 ubuntu-2gb-ash-1 npm[33257]: npm error enoent
+Aug 13 10:29:38 ubuntu-2gb-ash-1 npm[33257]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_29_38_434Z-debug-0.log
+Aug 13 10:29:38 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:29:38 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:29:43 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2505.
+Aug 13 10:29:43 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:29:43 ubuntu-2gb-ash-1 npm[33269]: npm error code ENOENT
+Aug 13 10:29:43 ubuntu-2gb-ash-1 npm[33269]: npm error syscall open
+Aug 13 10:29:43 ubuntu-2gb-ash-1 npm[33269]: npm error path /srv/m-pathy/package.json
+Aug 13 10:29:43 ubuntu-2gb-ash-1 npm[33269]: npm error errno -2
+Aug 13 10:29:43 ubuntu-2gb-ash-1 npm[33269]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:29:43 ubuntu-2gb-ash-1 npm[33269]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:29:43 ubuntu-2gb-ash-1 npm[33269]: npm error enoent
+Aug 13 10:29:43 ubuntu-2gb-ash-1 npm[33269]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_29_43_687Z-debug-0.log
+Aug 13 10:29:43 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:29:43 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:29:48 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2506.
+Aug 13 10:29:48 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:29:49 ubuntu-2gb-ash-1 npm[33283]: npm error code ENOENT
+Aug 13 10:29:49 ubuntu-2gb-ash-1 npm[33283]: npm error syscall open
+Aug 13 10:29:49 ubuntu-2gb-ash-1 npm[33283]: npm error path /srv/m-pathy/package.json
+Aug 13 10:29:49 ubuntu-2gb-ash-1 npm[33283]: npm error errno -2
+Aug 13 10:29:49 ubuntu-2gb-ash-1 npm[33283]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:29:49 ubuntu-2gb-ash-1 npm[33283]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:29:49 ubuntu-2gb-ash-1 npm[33283]: npm error enoent
+Aug 13 10:29:49 ubuntu-2gb-ash-1 npm[33283]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_29_48_932Z-debug-0.log
+Aug 13 10:29:49 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:29:49 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:29:54 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2507.
+Aug 13 10:29:54 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:29:54 ubuntu-2gb-ash-1 npm[33295]: npm error code ENOENT
+Aug 13 10:29:54 ubuntu-2gb-ash-1 npm[33295]: npm error syscall open
+Aug 13 10:29:54 ubuntu-2gb-ash-1 npm[33295]: npm error path /srv/m-pathy/package.json
+Aug 13 10:29:54 ubuntu-2gb-ash-1 npm[33295]: npm error errno -2
+Aug 13 10:29:54 ubuntu-2gb-ash-1 npm[33295]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:29:54 ubuntu-2gb-ash-1 npm[33295]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:29:54 ubuntu-2gb-ash-1 npm[33295]: npm error enoent
+Aug 13 10:29:54 ubuntu-2gb-ash-1 npm[33295]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_29_54_189Z-debug-0.log
+Aug 13 10:29:54 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:29:54 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:29:59 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2508.
+Aug 13 10:29:59 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:29:59 ubuntu-2gb-ash-1 npm[33309]: npm error code ENOENT
+Aug 13 10:29:59 ubuntu-2gb-ash-1 npm[33309]: npm error syscall open
+Aug 13 10:29:59 ubuntu-2gb-ash-1 npm[33309]: npm error path /srv/m-pathy/package.json
+Aug 13 10:29:59 ubuntu-2gb-ash-1 npm[33309]: npm error errno -2
+Aug 13 10:29:59 ubuntu-2gb-ash-1 npm[33309]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:29:59 ubuntu-2gb-ash-1 npm[33309]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:29:59 ubuntu-2gb-ash-1 npm[33309]: npm error enoent
+Aug 13 10:29:59 ubuntu-2gb-ash-1 npm[33309]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_29_59_426Z-debug-0.log
+Aug 13 10:29:59 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:29:59 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:30:04 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2509.
+Aug 13 10:30:04 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:30:04 ubuntu-2gb-ash-1 npm[33321]: npm error code ENOENT
+Aug 13 10:30:04 ubuntu-2gb-ash-1 npm[33321]: npm error syscall open
+Aug 13 10:30:04 ubuntu-2gb-ash-1 npm[33321]: npm error path /srv/m-pathy/package.json
+Aug 13 10:30:04 ubuntu-2gb-ash-1 npm[33321]: npm error errno -2
+Aug 13 10:30:04 ubuntu-2gb-ash-1 npm[33321]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:30:04 ubuntu-2gb-ash-1 npm[33321]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:30:04 ubuntu-2gb-ash-1 npm[33321]: npm error enoent
+Aug 13 10:30:04 ubuntu-2gb-ash-1 npm[33321]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_30_04_694Z-debug-0.log
+Aug 13 10:30:04 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:30:04 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:30:09 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2510.
+Aug 13 10:30:09 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:30:10 ubuntu-2gb-ash-1 npm[33336]: npm error code ENOENT
+Aug 13 10:30:10 ubuntu-2gb-ash-1 npm[33336]: npm error syscall open
+Aug 13 10:30:10 ubuntu-2gb-ash-1 npm[33336]: npm error path /srv/m-pathy/package.json
+Aug 13 10:30:10 ubuntu-2gb-ash-1 npm[33336]: npm error errno -2
+Aug 13 10:30:10 ubuntu-2gb-ash-1 npm[33336]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:30:10 ubuntu-2gb-ash-1 npm[33336]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:30:10 ubuntu-2gb-ash-1 npm[33336]: npm error enoent
+Aug 13 10:30:10 ubuntu-2gb-ash-1 npm[33336]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_30_09_938Z-debug-0.log
+Aug 13 10:30:10 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:30:10 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:30:15 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2511.
+Aug 13 10:30:15 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:30:15 ubuntu-2gb-ash-1 npm[33350]: npm error code ENOENT
+Aug 13 10:30:15 ubuntu-2gb-ash-1 npm[33350]: npm error syscall open
+Aug 13 10:30:15 ubuntu-2gb-ash-1 npm[33350]: npm error path /srv/m-pathy/package.json
+Aug 13 10:30:15 ubuntu-2gb-ash-1 npm[33350]: npm error errno -2
+Aug 13 10:30:15 ubuntu-2gb-ash-1 npm[33350]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:30:15 ubuntu-2gb-ash-1 npm[33350]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:30:15 ubuntu-2gb-ash-1 npm[33350]: npm error enoent
+Aug 13 10:30:15 ubuntu-2gb-ash-1 npm[33350]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_30_15_182Z-debug-0.log
+Aug 13 10:30:15 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:30:15 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:30:20 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2512.
+Aug 13 10:30:20 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:30:20 ubuntu-2gb-ash-1 npm[33363]: npm error code ENOENT
+Aug 13 10:30:20 ubuntu-2gb-ash-1 npm[33363]: npm error syscall open
+Aug 13 10:30:20 ubuntu-2gb-ash-1 npm[33363]: npm error path /srv/m-pathy/package.json
+Aug 13 10:30:20 ubuntu-2gb-ash-1 npm[33363]: npm error errno -2
+Aug 13 10:30:20 ubuntu-2gb-ash-1 npm[33363]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:30:20 ubuntu-2gb-ash-1 npm[33363]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:30:20 ubuntu-2gb-ash-1 npm[33363]: npm error enoent
+Aug 13 10:30:20 ubuntu-2gb-ash-1 npm[33363]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_30_20_437Z-debug-0.log
+Aug 13 10:30:20 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:30:20 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:30:25 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2513.
+Aug 13 10:30:25 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:30:25 ubuntu-2gb-ash-1 npm[33375]: npm error code ENOENT
+Aug 13 10:30:25 ubuntu-2gb-ash-1 npm[33375]: npm error syscall open
+Aug 13 10:30:25 ubuntu-2gb-ash-1 npm[33375]: npm error path /srv/m-pathy/package.json
+Aug 13 10:30:25 ubuntu-2gb-ash-1 npm[33375]: npm error errno -2
+Aug 13 10:30:25 ubuntu-2gb-ash-1 npm[33375]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:30:25 ubuntu-2gb-ash-1 npm[33375]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:30:25 ubuntu-2gb-ash-1 npm[33375]: npm error enoent
+Aug 13 10:30:25 ubuntu-2gb-ash-1 npm[33375]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_30_25_689Z-debug-0.log
+Aug 13 10:30:25 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:30:25 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:30:30 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2514.
+Aug 13 10:30:30 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:30:31 ubuntu-2gb-ash-1 npm[33387]: npm error code ENOENT
+Aug 13 10:30:31 ubuntu-2gb-ash-1 npm[33387]: npm error syscall open
+Aug 13 10:30:31 ubuntu-2gb-ash-1 npm[33387]: npm error path /srv/m-pathy/package.json
+Aug 13 10:30:31 ubuntu-2gb-ash-1 npm[33387]: npm error errno -2
+Aug 13 10:30:31 ubuntu-2gb-ash-1 npm[33387]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:30:31 ubuntu-2gb-ash-1 npm[33387]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:30:31 ubuntu-2gb-ash-1 npm[33387]: npm error enoent
+Aug 13 10:30:31 ubuntu-2gb-ash-1 npm[33387]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_30_30_936Z-debug-0.log
+Aug 13 10:30:31 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:30:31 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:30:36 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2515.
+Aug 13 10:30:36 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:30:36 ubuntu-2gb-ash-1 npm[33399]: npm error code ENOENT
+Aug 13 10:30:36 ubuntu-2gb-ash-1 npm[33399]: npm error syscall open
+Aug 13 10:30:36 ubuntu-2gb-ash-1 npm[33399]: npm error path /srv/m-pathy/package.json
+Aug 13 10:30:36 ubuntu-2gb-ash-1 npm[33399]: npm error errno -2
+Aug 13 10:30:36 ubuntu-2gb-ash-1 npm[33399]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:30:36 ubuntu-2gb-ash-1 npm[33399]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:30:36 ubuntu-2gb-ash-1 npm[33399]: npm error enoent
+Aug 13 10:30:36 ubuntu-2gb-ash-1 npm[33399]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_30_36_197Z-debug-0.log
+Aug 13 10:30:36 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:30:36 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:30:41 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2516.
+Aug 13 10:30:41 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:30:41 ubuntu-2gb-ash-1 npm[33411]: npm error code ENOENT
+Aug 13 10:30:41 ubuntu-2gb-ash-1 npm[33411]: npm error syscall open
+Aug 13 10:30:41 ubuntu-2gb-ash-1 npm[33411]: npm error path /srv/m-pathy/package.json
+Aug 13 10:30:41 ubuntu-2gb-ash-1 npm[33411]: npm error errno -2
+Aug 13 10:30:41 ubuntu-2gb-ash-1 npm[33411]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:30:41 ubuntu-2gb-ash-1 npm[33411]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:30:41 ubuntu-2gb-ash-1 npm[33411]: npm error enoent
+Aug 13 10:30:41 ubuntu-2gb-ash-1 npm[33411]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_30_41_440Z-debug-0.log
+Aug 13 10:30:41 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:30:41 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:30:46 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2517.
+Aug 13 10:30:46 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:30:46 ubuntu-2gb-ash-1 npm[33423]: npm error code ENOENT
+Aug 13 10:30:46 ubuntu-2gb-ash-1 npm[33423]: npm error syscall open
+Aug 13 10:30:46 ubuntu-2gb-ash-1 npm[33423]: npm error path /srv/m-pathy/package.json
+Aug 13 10:30:46 ubuntu-2gb-ash-1 npm[33423]: npm error errno -2
+Aug 13 10:30:46 ubuntu-2gb-ash-1 npm[33423]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:30:46 ubuntu-2gb-ash-1 npm[33423]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:30:46 ubuntu-2gb-ash-1 npm[33423]: npm error enoent
+Aug 13 10:30:46 ubuntu-2gb-ash-1 npm[33423]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_30_46_688Z-debug-0.log
+Aug 13 10:30:46 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:30:46 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:30:51 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2518.
+Aug 13 10:30:51 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:30:52 ubuntu-2gb-ash-1 npm[33435]: npm error code ENOENT
+Aug 13 10:30:52 ubuntu-2gb-ash-1 npm[33435]: npm error syscall open
+Aug 13 10:30:52 ubuntu-2gb-ash-1 npm[33435]: npm error path /srv/m-pathy/package.json
+Aug 13 10:30:52 ubuntu-2gb-ash-1 npm[33435]: npm error errno -2
+Aug 13 10:30:52 ubuntu-2gb-ash-1 npm[33435]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:30:52 ubuntu-2gb-ash-1 npm[33435]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:30:52 ubuntu-2gb-ash-1 npm[33435]: npm error enoent
+Aug 13 10:30:52 ubuntu-2gb-ash-1 npm[33435]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_30_51_939Z-debug-0.log
+Aug 13 10:30:52 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:30:52 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.
+Aug 13 10:30:57 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Scheduled restart job, restart counter is at 2519.
+Aug 13 10:30:57 ubuntu-2gb-ash-1 systemd[1]: Started m-pathy.service - M-Pathy (Next.js).
+Aug 13 10:30:57 ubuntu-2gb-ash-1 npm[33449]: npm error code ENOENT
+Aug 13 10:30:57 ubuntu-2gb-ash-1 npm[33449]: npm error syscall open
+Aug 13 10:30:57 ubuntu-2gb-ash-1 npm[33449]: npm error path /srv/m-pathy/package.json
+Aug 13 10:30:57 ubuntu-2gb-ash-1 npm[33449]: npm error errno -2
+Aug 13 10:30:57 ubuntu-2gb-ash-1 npm[33449]: npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/srv/m-pathy/package.json'
+Aug 13 10:30:57 ubuntu-2gb-ash-1 npm[33449]: npm error enoent This is related to npm not being able to find a file.
+Aug 13 10:30:57 ubuntu-2gb-ash-1 npm[33449]: npm error enoent
+Aug 13 10:30:57 ubuntu-2gb-ash-1 npm[33449]: npm error A complete log of this run can be found in: /home/deploy/.npm/_logs/2025-08-13T10_30_57_181Z-debug-0.log
+Aug 13 10:30:57 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Main process exited, code=exited, status=254/n/a
+Aug 13 10:30:57 ubuntu-2gb-ash-1 systemd[1]: m-pathy.service: Failed with result 'exit-code'.

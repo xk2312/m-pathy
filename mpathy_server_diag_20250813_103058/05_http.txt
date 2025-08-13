@@ -1,0 +1,17 @@
+===== curl localhost:3000 (HEAD) =====
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+curl: (7) Failed to connect to 127.0.0.1 port 3000 after 0 ms: Couldn't connect to server
+
+===== curl via Nginx :80 (HEAD) =====
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0   166    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 502 Bad Gateway
+Server: nginx/1.24.0 (Ubuntu)
+Date: Wed, 13 Aug 2025 10:30:58 GMT
+Content-Type: text/html
+Content-Length: 166
+Connection: keep-alive
+

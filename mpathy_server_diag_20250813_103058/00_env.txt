@@ -1,0 +1,19 @@
+===== HOST =====
+ Static hostname: ubuntu-2gb-ash-1
+       Icon name: computer-vm
+         Chassis: vm 🖴
+      Machine ID: 1605df154aeb4e0aaf36e49f6148ade9
+         Boot ID: e615cdc7f53f4a1a945034565ca42d6b
+  Virtualization: kvm
+Operating System: Ubuntu 24.04.2 LTS
+          Kernel: Linux 6.8.0-71-generic
+    Architecture: x86-64
+ Hardware Vendor: Hetzner
+  Hardware Model: vServer
+Firmware Version: 20171111
+   Firmware Date: Sat 2017-11-11
+    Firmware Age: 7y 9month 1d
+
+===== VERSIONS =====
+v20.19.4
+10.8.2

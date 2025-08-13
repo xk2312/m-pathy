@@ -1,0 +1,24 @@
+app
+├── api
+│   └── chat
+│       └── route.ts
+├── components
+│   ├── CanvasMeteorAndM.tsx
+│   ├── LogoM.tsx
+│   ├── ZenithButton.module.css
+│   └── ZenithButton.tsx
+├── global.css
+├── layout.tsx
+├── modules
+│   ├── crystalEngine.ts
+│   ├── meteorEngine.ts
+│   ├── mobileTrigger.ts
+│   ├── particleEngine.ts
+│   └── triggerImplosion.ts
+├── next.config.js
+├── page.tsx
+└── page2
+    ├── page.tsx
+    └── page2.module.css
+
+6 directories, 16 files

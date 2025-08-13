@@ -1,0 +1,5 @@
+===== VERSIONS =====
+PWD: /Users/nabilkhayat/Projekte/M-PATHY
+v23.11.0
+10.9.2
+git version 2.39.2 (Apple Git-143)
