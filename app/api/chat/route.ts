@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const endpoint   = process.env.AZURE_OPENAI_ENDPOINT!;
-const apiKey     = process.env.AZURE_OPENAI_KEY!;
+const apiKey     = process.env.AZURE_OPENAI_API_KEY!;
 const deployment = process.env.AZURE_OPENAI_DEPLOYMENT!;
 const apiVersion = process.env.AZURE_OPENAI_API_VERSION!;
 
@@ -11,7 +11,7 @@ interface ChatMessage { role: Role; content: string }
 function assertEnv() {
   const missing = [];
   if (!endpoint) missing.push("AZURE_OPENAI_ENDPOINT");
-  if (!apiKey) missing.push("AZURE_OPENAI_KEY");
+  if (!apiKey) missing.push("AZURE_OPENAI_API_KEY");
   if (!deployment) missing.push("AZURE_OPENAI_DEPLOYMENT");
   if (!apiVersion) missing.push("AZURE_OPENAI_API_VERSION");
   if (missing.length) throw new Error(`Missing environment variables: ${missing.join(", ")}`);
