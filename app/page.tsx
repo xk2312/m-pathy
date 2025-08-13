@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
-import '../styles/m-path.css';
+import '../styles/m-path.css'; // relativer Import, kein Alias
 
 // Button optional client-only laden
 const ZenithButton = dynamic(() => import('./components/ZenithButton'), { ssr: false });

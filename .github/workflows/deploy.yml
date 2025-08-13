@@ -2,14 +2,12 @@ name: Deploy M-Pathy
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ "main" ]
+  workflow_dispatch: {}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: production
 
     steps:
       - name: Checkout
@@ -18,50 +16,20 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: 20
+          cache: npm
 
-      - name: Install deps
-        run: npm ci
+      - name: Install prod deps for orchestrator
+        run: npm i
 
-      - name: Build Next.js
-        run: npm run build
-
-      - name: Package artifact (stable snapshot)
-        run: |
-          set -e
-          mkdir -p package-src
-          rsync -a --delete \
-            --exclude='.git' \
-            --exclude='node_modules' \
-            --exclude='.next/cache' \
-            ./ package-src/
-          tar -C package-src -czf m-pathy.tar.gz .
-
-      - name: Upload artifact to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          port: ${{ secrets.SSH_PORT }}
-          key: ${{ secrets.HETZNER_SSH_KEY }}
-          source: m-pathy.tar.gz
-          target: /tmp
-
-      - name: Deploy on server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          port: ${{ secrets.SSH_PORT }}
-          key: ${{ secrets.HETZNER_SSH_KEY }}
-          script: |
-            set -e
-            sudo systemctl stop m-pathy || true
-            rm -rf /srv/m-pathy/*
-            mkdir -p /srv/m-pathy
-            tar -C /srv/m-pathy -xzf /tmp/m-pathy.tar.gz
-            cd /srv/m-pathy
-            npm ci --omit=dev
-            sudo systemctl start m-pathy
-            sudo systemctl status m-pathy --no-pager -l || true
+      - name: Run orchestrator
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          HETZNER_SSH_KEY: ${{ secrets.HETZNER_SSH_KEY }}
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
+          AZURE_OPENAI_API_VERSION: ${{ secrets.AZURE_OPENAI_API_VERSION }}
+        run: npm run deploy:orchestrated
