@@ -1,12 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* danach dein bisheriger globaler Code */
+
+
 /* app/globals.css */
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-  }
-  
-  html, body {
+}
+
+html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -14,19 +21,19 @@
     background: radial-gradient(circle at center, #0f0f0f, #000000);
     user-select: none;
     touch-action: none;
-  }
-  
-  canvas {
+}
+
+canvas {
     display: block;
-  }
-  
-  #bloom-wrapper {
+}
+
+#bloom-wrapper {
     position: relative;
     width: 100%;
     height: 100%;
-  }
-  
-  #bloom-core {
+}
+
+#bloom-core {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -37,14 +44,68 @@
     background: rgba(112,224,255,0.05);
     transition: all 0.3s ease;
     z-index: 2;
-  }
-  
-  #bloom-core.hover {
+}
+
+#bloom-core.hover {
     box-shadow: 0 0 60px rgba(112,224,255,0.4);
-  }
-  
-  .stage-2 {
+}
+
+.stage-2 {
     background: black;
     transition: background 1s ease;
-  }
-  
+}
+
+/* === Global: Keyframes stabil & ohne Hash === */
+@keyframes zenithSweep {
+  from { transform: translateX(-120%); }
+  to   { transform: translateX(120%); }
+}
+
+@keyframes zenithExit {
+  0%   { opacity:1; transform: translateX(-50%) translateY(0) scale(1); filter: blur(0); }
+  40%  { opacity:.9; transform: translateX(-50%) translateY(-3vh) scale(1.04); }
+  100% { opacity:0; transform: translateX(-50%) translateY(-20vh) scale(.9); filter: blur(6px); }
+}
+
+@keyframes zenithDust {
+  0%   { opacity:.9; transform: translate(0,0) scale(1); filter: blur(0); }
+  100% { opacity:0; transform: translate(var(--dx), var(--dy)) scale(0.3); filter: blur(2px); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .btn, .btn::before, .crystal, .isExiting { transition:none !important; animation:none !important; }
+}
+
+/* Fix: Chat-Textfarbe auf dunklem Hintergrund */
+body {
+  background-color: #000; /* bleibt schwarz */
+  color: #fff; /* Standard-Text weiß */
+}
+
+.message {
+  color: #fff; /* Textfarbe im Chat */
+}
+
+.message.user {
+  color: #0ff; /* Türkis für Benutzer */
+}
+
+.message.assistant {
+  color: #ffd700; /* Gold für AI */
+}
+
+/* Scrollbar etwas dezenter */
+section::-webkit-scrollbar {
+  width: 8px;
+}
+section::-webkit-scrollbar-track {
+  background: transparent;
+}
+section::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+section::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

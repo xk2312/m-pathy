@@ -1,47 +1,183 @@
-/* ===== M-PATH – CORE RESET (One-Page) ===== */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* ===== Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 html, body {
   width: 100%;
   height: 100%;
-  background: #000;                /* reines Schwarz */
-  overflow: hidden;                /* Fullscreen Bühne */
+  background: #000;
+  overflow: hidden;
   font-family: "Segoe UI", system-ui, sans-serif;
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
 }
 
-/* ===== Canvas Bühne ===== */
-.m-canvas, canvas {
-  display: block;
+/* ===== Bühne: 13% Abstand vom Top ===== */
+.stage {
   width: 100vw;
   height: 100vh;
   background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 13vh; /* exakt laut Anforderung */
+  gap: 24px;
 }
 
-/* High-DPI Schärfe-Hinweis: Rendering übernimmt JS via setTransform() */
+/* ===== M-Container: festes Quadrat (Mobile-First) ===== */
+:root {
+  --m-size: 350px; /* Einheitliche Breite/Höhe für alle Geräte */
+}
 
-/* ===== Punkt-/Glanz-Utilities (für künftige DOM-Overlays, falls nötig) ===== */
+/* ===== M-Container: Golden Ratio =====
+   Breite fix 350px (mobile-first), Höhe = Breite * 1.618 */
+   #m-wrapper {
+    width: 350px;
+    height: calc(350px * 1.618);
+    display: grid;
+    place-items: center;
+    margin-inline: auto;
+    overflow: hidden;
+    background: transparent;
+  }
+  
+  /* Canvas füllt den Wrapper */
+  #m-wrapper canvas,
+  .m-canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    background: #000;
+  }
+
+/* Utilities */
 .m-point-glow {
   filter: drop-shadow(0 0 6px rgba(255,215,0,0.9))
           drop-shadow(0 0 14px rgba(255,215,0,0.6));
 }
-
 .m-soft-fade-in {
   animation: m-fade-in 600ms ease both;
 }
-
 @keyframes m-fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from { opacity: 0 }
+  to   { opacity: 1 }
 }
 
-/* ===== Bewegungsreduktion respektieren ===== */
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+/* ---------- SCOPE ---------- */
+.zenith-scope { --zenith-bg: rgba(255,255,255,0.06);
+  --zenith-edge: rgba(175, 246, 255, 0.8);
+  --zenith-glow: rgba(0, 199, 255, 0.55);
+  --zenith-text: #ffffff;
+  --zenith-cyan: #7fe9ff;
+  --zenith-shadow: 0 0 24px rgba(127, 233, 255, 0.25), 0 0 2px rgba(255,255,255,0.5) inset;
+  position: relative; width: 100%;
 }
 
-/* ===== Entfernt: alter Bloom/Fractal-Kram ===== */
-/* #bloom-wrapper, #bloom-core, .m-electric, canvas#fractal-canvas und
-   zugehörige Keyframes wurden absichtlich gestrichen. */
+/* Positionierung relativ zum M */
+.zenith-scope[data-position="under"] .zenith-btn { position: absolute; left: 50%; transform: translateX(-50%); bottom: clamp(6vh, 8dvh, 10vh); }
+.zenith-scope[data-position="over"]  .zenith-btn { position: absolute; left: 50%; transform: translateX(-50%); top:    clamp(6vh, 8dvh, 10vh); }
+
+/* ---------- BUTTON ---------- */
+.zenith-btn{
+  --padX: clamp(18px, 3.6vw, 42px); --padY: clamp(12px, 2.2vw, 20px);
+  appearance: none; border: 0; outline: none; cursor: pointer;
+  padding: var(--padY) var(--padX); border-radius: 999px;
+  background: radial-gradient(120% 160% at 50% 0%, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 44%, rgba(255,255,255,0.02) 100%), var(--zenith-bg);
+  color: var(--zenith-text); font: 600 clamp(15px, 2.6vw, 18px)/1.1 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: .02em; text-transform: none;
+  box-shadow: var(--zenith-shadow);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  position: relative; isolation: isolate; 
+  transition: transform .25s ease, box-shadow .25s ease, background .25s ease, opacity .25s ease;
+}
+
+/* Cyan-Schimmer-Rand (dezent) */
+.zenith-btn::before{
+  content:""; position:absolute; inset:0; border-radius: inherit;
+  padding: 2px; background:
+    linear-gradient(135deg, rgba(255,255,255,.8), rgba(255,255,255,0) 35%),
+    conic-gradient(from 120deg at 50% 50%, rgba(255,255,255,.3), var(--zenith-edge), rgba(255,255,255,.3));
+  -webkit-mask: 
+    linear-gradient(#000 0 0) content-box, 
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: .65; filter: drop-shadow(0 0 10px var(--zenith-glow));
+  transition: opacity .25s ease, filter .25s ease;
+}
+
+/* Innen-Glare */
+.zenith-btn::after{
+  content:""; position:absolute; inset:2px; border-radius: inherit; z-index:0;
+  background: radial-gradient(120% 180% at 50% -20%, rgba(255,255,255,.18), rgba(255,255,255,0) 55%);
+  pointer-events: none;
+}
+
+/* Label */
+.zenith-label{ position: relative; z-index: 2; text-shadow: 0 0 10px rgba(127,233,255,.35); }
+
+/* Kristall-Linien (Hover) */
+.zenith-crystal{ position:absolute; inset:0; border-radius: inherit; z-index:1; pointer-events:none; opacity:0; transition: opacity .25s ease; }
+.zenith-c1{ background: repeating-linear-gradient( 90deg, rgba(127,233,255,.0) 0 8px, rgba(127,233,255,.25) 8px 9px, rgba(127,233,255,0) 9px 18px ); mix-blend-mode: screen; }
+.zenith-c2{ background: repeating-linear-gradient(  0deg, rgba(127,233,255,.0) 0 10px, rgba(127,233,255,.2) 10px 11px, rgba(127,233,255,0) 11px 22px ); mix-blend-mode: screen; }
+.zenith-c3{ background: linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.2), rgba(255,255,255,.0)); opacity:.0; }
+
+/* Hover-Animationen */
+@keyframes zenithSweep { from { transform: translateX(-120%); } to { transform: translateX(120%); } }
+
+.zenith-btn:hover{ transform: translateX(-50%) translateY(-2px) scale(1.02); box-shadow: 0 0 34px rgba(127,233,255,.35), 0 0 2px rgba(255,255,255,.65) inset; }
+.zenith-scope[data-position="over"]  .zenith-btn:hover{ transform: translateX(-50%) translateY(-2px) scale(1.02); }
+.zenith-scope[data-position="under"] .zenith-btn:hover{ transform: translateX(-50%) translateY(-2px) scale(1.02); }
+
+.zenith-btn:hover::before{ opacity: .95; filter: drop-shadow(0 0 16px var(--zenith-glow)); }
+.zenith-btn:hover .zenith-crystal{ opacity: 1; }
+.zenith-btn:hover .zenith-c3{ opacity:.35; }
+.zenith-btn:hover .zenith-c3{ animation: zenithSweep 1.3s ease infinite; }
+
+/* Active/Klick */
+.zenith-btn:active{ transform: translateX(-50%) translateY(1px) scale(.99); }
+
+/* Exit (nach Klick) */
+.zenith-btn.is-exiting{ animation: zenithExit .7s ease forwards; }
+@keyframes zenithExit{
+  0%{ opacity:1; transform: translateX(-50%) translateY(0) scale(1); filter: blur(0); }
+  40%{ opacity:.9; transform: translateX(-50%) translateY(-3vh) scale(1.04); }
+  100%{ opacity:0; transform: translateX(-50%) translateY(-20vh) scale(.9); filter: blur(6px); }
+}
+
+/* Partikel (Staub) */
+.zenith-dust{ position:absolute; width:6px; height:6px; border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, #fff, var(--zenith-cyan) 60%, rgba(127,233,255,0) 70%);
+  pointer-events:none; opacity:0; }
+@keyframes zenithDust{
+  0%{ opacity:.9; transform: translate(0,0) scale(1); filter: blur(0); }
+  100%{ opacity:0; transform: translate(var(--dx), var(--dy)) scale(0.3); filter: blur(2px); }
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .zenith-btn, .zenith-btn::before, .zenith-crystal, .zenith-btn.is-exiting { transition:none !important; animation:none !important; }
+}
+.hidden{
+  opacity:0;
+  pointer-events:none;
+  transition: opacity .35s ease, transform .35s ease;
+  transform: translateY(8px);
+}
+
+.show{
+  opacity:1;
+  pointer-events:auto;
+  transition: opacity .35s ease, transform .35s ease;
+  transform: translateY(0);
+}

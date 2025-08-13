@@ -1,65 +1,91 @@
 // app/modules/crystalEngine.ts
+// Fixe Container-Bühne (kommt vom Wrapper/Canvas). Geometrie rein relativ
+// zu canvas.width/height. Pen-Sweep mit runden Caps/Joins, Valley-Plug, Außenkappen.
+
 type XY = { x: number; y: number }
 
-/** Linker unterer Anker exakt wie im M */
-export function computeMAnchor(w: number, h: number): XY {
-  const leftX = w * 0.28
-  const baseY = h * 0.74
-  return { x: leftX, y: baseY }
+/* ========= Tunables (für Look & Proportionen) ============================ */
+// ca. +18% Gesamtgröße (breiter und etwas höher)
+const INNER_W_FACTOR = 0.80   // vorher 0.68 → M größer (seitliche Luft etwas kleiner)
+
+// Vertikale Marken (höher & tiefer → mehr Höhe der Säulen)
+const TOP_Y_FACTOR  = 0.32    // vorher 0.36  (weiter rauf)
+const BASE_Y_FACTOR = 0.78    // vorher 0.74  (weiter runter)
+
+// V-Kerbe etwas tiefer (näher an der Basis): kleinere Tiefe → größerer valleyY
+const VALLEY_DEPTH_MIN     = 90
+const VALLEY_DEPTH_FACTOR  = 0.12   // vorher 0.14
+
+// Strichbreite (etwas kräftiger)
+const MOBILE_STROKE_PX = 36         // vorher ~28–34
+const DESKTOP_STROKE_PX = 64        // vorher ~56
+
+/* ========= Geometrie (nur Canvas, keine Viewport-Infos) ================== */
+function computeFixedGeometry(canvasW: number, canvasH: number) {
+  const w = canvasW
+  const h = canvasH
+
+  const innerW = w * INNER_W_FACTOR
+  const leftX  = (w - innerW) / 2
+  const rightX = leftX + innerW
+
+  const topY   = h * TOP_Y_FACTOR
+  const baseY  = h * BASE_Y_FACTOR
+
+  const midX   = (leftX + rightX) / 2
+  const depth  = Math.max(VALLEY_DEPTH_MIN, h * VALLEY_DEPTH_FACTOR)
+  const valleyY = baseY - depth
+
+  return { w, h, innerW, leftX, rightX, topY, baseY, midX, valleyY }
 }
 
-/**
- * Pen-Sweep: Ein digitaler Stift fährt den Pfad P0→P1→P2→P3→P4 in ~5 s ab
- * und setzt unterwegs Punkte (mehrere parallele Reihen = Strichbreite)
- * mit Mindestabstand. Runde Caps + runde Joins; Valley-Plug füllt die V-Kerbe.
- * Zusätzlich: runde Außenkappen an den oberen Ecken (P1, P3).
- */
-export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
-  const { width: w, height: h } = ctx.canvas.getBoundingClientRect()
+/** Anchor: linker unterer Punkt des M (rein aus Canvas) */
+export function computeMAnchor(w: number, h: number): XY {
+  const g = computeFixedGeometry(w, h)
+  return { x: g.leftX, y: g.baseY }
+}
 
-  // Proportionen (aufrechte Säulen, edel)
-  const baseY = h * 0.74
-  const topY = h * 0.36
-  const leftX = w * 0.28
-  const rightX = w * 0.28 + Math.max(360, w * 0.32)
-  const midX = (leftX + rightX) / 2
-  const valleyY = baseY - Math.max(90, h * 0.14)
+/* ========= Rendering ===================================================== */
+export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
+  // CSS-Pixel-Geometrie (nicht der DPR-Backbuffer!)
+  const rect = ctx.canvas.getBoundingClientRect()
+  const g = computeFixedGeometry(rect.width, rect.height)
 
   const P = [
-    { x: leftX, y: baseY }, // 0
-    { x: leftX, y: topY }, // 1
-    { x: midX, y: valleyY }, // 2
-    { x: rightX, y: topY }, // 3
-    { x: rightX, y: baseY } // 4
+    { x: g.leftX,  y: g.baseY },   // 0
+    { x: g.leftX,  y: g.topY  },   // 1
+    { x: g.midX,   y: g.valleyY }, // 2
+    { x: g.rightX, y: g.topY  },   // 3
+    { x: g.rightX, y: g.baseY },   // 4
   ] as const
 
-  // Segmente + Geometrie
+  // Segmente + Differentialgeometrie
   const segs = [
     { a: P[0], b: P[1] },
     { a: P[1], b: P[2] },
     { a: P[2], b: P[3] },
-    { a: P[3], b: P[4] }
+    { a: P[3], b: P[4] },
   ].map(s => {
     const dx = s.b.x - s.a.x
     const dy = s.b.y - s.a.y
     const len = Math.hypot(dx, dy)
     const tx = len ? dx / len : 0
     const ty = len ? dy / len : 0
-    const nx = ty
+    const nx =  ty
     const ny = -tx
     return { ...s, dx, dy, len, tx, ty, nx, ny }
   })
 
-  const totalLen = segs.reduce((s, g) => s + g.len, 0)
+  const totalLen = segs.reduce((acc, g) => acc + g.len, 0)
 
-  // Look & Rasterabstände
-  const dotR = isMobile ? 1.3 : 1.6
-  const minGap = isMobile ? 1.8 : 2.2
-  const stepAlong = Math.max(isMobile ? 2.4 : 2.0, dotR * 2 + (minGap - 0.6))
-  const gapAcross = Math.max(isMobile ? 4.8 : 4.2, dotR * 2 + minGap)
-  const widthPx = isMobile ? 28 : 56
-  const rows = Math.max(1, Math.floor(widthPx / gapAcross))
+  // Look & Raster
+  const isMobile   = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
+  const dotR       = isMobile ? 1.3 : 1.6
+  const minGap     = isMobile ? 1.8 : 2.2
+  const stepAlong  = Math.max(isMobile ? 2.4 : 2.0, dotR * 2 + (minGap - 0.6))
+  const gapAcross  = Math.max(isMobile ? 4.8 : 4.2, dotR * 2 + minGap)
+  const widthPx    = (isMobile ? MOBILE_STROKE_PX : DESKTOP_STROKE_PX)
+  const rows       = Math.max(1, Math.floor(widthPx / gapAcross))
   const durationSec = 5
 
   // Zeitsteuerung
@@ -67,7 +93,7 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
   let prevS = 0
   let raf = 0
 
-  // Spatial Hash (Abstands-Garantie)
+  // Spatial Hash (Abstandsgarantie)
   const cell = Math.min(stepAlong, gapAcross) * 0.9
   const placed = new Set<string>()
   const key = (x: number, y: number) => `${Math.round(x / cell)}:${Math.round(y / cell)}`
@@ -87,19 +113,19 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
     return true
   }
 
-  // Erstpunkt (Anchor)
+  // Erster Punkt (Anchor)
   tryDot(anchor.x, anchor.y, dotR + 0.9)
 
-  // Extras (Caps/Joins/Valley-Plug/Outer-Caps)
+  // Extras (Caps/Joins/Valley/Outer-Caps) vorberechnen
   type Extra = { s: number; x: number; y: number; r?: number }
   const extras: Extra[] = []
 
-  // Start-Cap (Halbkreis am P0)
+  // Start-Cap am P0
   if (segs[0]) {
     pushRoundCap(extras, P[0], -segs[0].tx, -segs[0].ty, rows, gapAcross, dotR, stepAlong, 0)
   }
 
-  // Joins + Outer-Caps + Valley-Plug
+  // Ecken P1..P3
   for (let i = 1; i < segs.length; i++) {
     const prev = segs[i - 1]
     const next = segs[i]
@@ -108,16 +134,15 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
     // Innen-Join
     pushRoundJoin(extras, P[i], prev, next, rows, gapAcross, dotR, stepAlong, sAtCorner)
 
-    // Tal (innen) auffüllen
+    // V-Kerbe (nur am Innenknick P2) & außen runde Kappen an P1/P3
     if (i === 2) {
       pushValleyPlug(extras, P[2], segs[1], segs[2], rows, gapAcross, dotR, sAtCorner)
     } else {
-      // Obere Außenkappen an P1 und P3
       pushOuterCornerCap(extras, P[i], prev, next, rows, gapAcross, dotR, sAtCorner)
     }
   }
 
-  // End-Cap (Halbkreis am P4)
+  // End-Cap am P4
   const lenBeforeEnd = segs.reduce((s, g) => s + g.len, 0)
   pushRoundCap(
     extras,
@@ -131,16 +156,16 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
     lenBeforeEnd
   )
 
-  // Sortieren, damit die Einblendung zeitlich in den Sweep passt
+  // Rendering-Reihenfolge entlang des Sweeps
   extras.sort((a, b) => a.s - b.s)
   let extraIdx = 0
 
-  // PEN-SWEEP
+  // Animation
   function tick(now: number) {
     const t = Math.min((now - start) / (durationSec * 1000), 1)
     const sTarget = t * totalLen
 
-    // entlang des Pfads Punkte setzen (mehrere Reihen = Strichbreite)
+    // Linienpunkte
     for (let s = prevS; s <= sTarget; s += stepAlong) {
       const pos = pointAtLength(s)
       if (!pos) continue
@@ -153,7 +178,7 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
     }
     prevS = sTarget
 
-    // Extras, deren s erreicht ist
+    // Extras (Caps/Joins/Plug)
     while (extraIdx < extras.length && extras[extraIdx].s <= sTarget) {
       const e = extras[extraIdx++]
       tryDot(e.x, e.y, e.r ?? dotR)
@@ -167,7 +192,7 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
   }
   raf = requestAnimationFrame(tick)
 
-  // ---------- Helpers -------------------------------------------------------
+  /* ================= Helpers ============================================ */
 
   function pointAtLength(
     s: number
@@ -187,7 +212,7 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
     return { x: last.b.x, y: last.b.y, nx: last.ny, ny: -last.nx }
   }
 
-  // runder End-/Start-Cap (Halbkreis)
+  // runder Start-/End-Cap (Halbkreis)
   function pushRoundCap(
     out: Extra[],
     C: XY,
@@ -202,7 +227,7 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
     const half = (nRows - 1) / 2
     const radius = half * across
     const arcStart = Math.atan2(-ty, -tx) - Math.PI / 2
-    const arcEnd = arcStart + Math.PI
+    const arcEnd   = arcStart + Math.PI
 
     const ringStep = Math.max(rDot * 2 + minGap, across * 0.9)
     const rings = Math.max(1, Math.floor(radius / ringStep))
@@ -222,7 +247,7 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
     }
   }
 
-  // runder Join (Sektor) zwischen zwei Segmenten am Eckpunkt C (inkl. Large-Arc)
+  // runder Innen-Join (Sektor)
   function pushRoundJoin(
     out: Extra[],
     C: XY,
@@ -234,44 +259,37 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
     along: number,
     sAtCorner: number
   ) {
-    const aIn = Math.atan2(prev.ny, prev.nx)
+    const aIn  = Math.atan2(prev.ny, prev.nx)
     const aOut = Math.atan2(next.ny, next.nx)
 
-    // Tangenten (für konkav/konvex)
-    let tIn = Math.atan2(prev.ty, prev.tx)
+    let tIn  = Math.atan2(prev.ty, prev.tx)
     let tOut = Math.atan2(next.ty, next.tx)
     while (tOut - tIn <= -Math.PI) tOut += 2 * Math.PI
-    while (tOut - tIn > Math.PI) tOut -= 2 * Math.PI
+    while (tOut - tIn >   Math.PI) tOut -= 2 * Math.PI
     const turn = tOut - tIn
 
-    // Winkel-Differenz der Normalen auf [-π,π]
     let delta = aOut - aIn
     while (delta <= -Math.PI) delta += 2 * Math.PI
-    while (delta > Math.PI) delta -= 2 * Math.PI
+    while (delta >   Math.PI) delta -= 2 * Math.PI
 
-    // konkav → großen Bogen nehmen
-    const useLargeArc = Math.abs(turn) > Math.PI / 2
+    const useLargeArc = Math.abs(turn) > (Math.PI / 2)
     let startAngle = aIn
-    let endAngle = aIn + delta
+    let endAngle   = aIn + delta
     if (useLargeArc) {
       if (delta > 0) endAngle = aIn - (2 * Math.PI - delta)
-      else endAngle = aIn + (2 * Math.PI + delta)
+      else           endAngle = aIn + (2 * Math.PI + delta)
     }
 
-    const radius = ((nRows - 1) * across) / 2
+    const radius   = ((nRows - 1) * across) / 2
     const ringStep = Math.max(rDot * 2 + minGap, across * 0.9)
-    const rings = Math.max(1, Math.floor(radius / ringStep))
-    const angStep = Math.max((rDot * 2 + minGap) / Math.max(radius, 1), Math.PI / 36)
+    const rings    = Math.max(1, Math.floor(radius / ringStep))
+    const angStep  = Math.max((rDot * 2 + minGap) / Math.max(radius, 1), Math.PI / 36)
 
     const dir = endAngle >= startAngle ? 1 : -1
     let seq = 0
     for (let r = 0; r <= rings; r++) {
       const rad = r * ringStep
-      for (
-        let a = startAngle;
-        dir > 0 ? a <= endAngle : a >= endAngle;
-        a += dir * angStep
-      ) {
+      for (let a = startAngle; dir > 0 ? a <= endAngle : a >= endAngle; a += dir * angStep) {
         out.push({
           s: sAtCorner + 0.001 * (seq++),
           x: C.x + Math.cos(a) * rad,
@@ -282,7 +300,7 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
     out.push({ s: sAtCorner + 0.002 * (seq++), x: C.x, y: C.y, r: rDot })
   }
 
-  // füllt die innere V-Ecke (Tal) weich
+  // weicher Plug in der V-Kerbe
   function pushValleyPlug(
     out: Extra[],
     C: XY,
@@ -293,14 +311,11 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
     rDot: number,
     sAtCorner: number
   ) {
-    // Innen-Bisektor
     let bx = -prev.tx + next.tx
     let by = -prev.ty + next.ty
-    const bl = Math.hypot(bx, by) || 1
-    bx /= bl
-    by /= bl
+    const bl = Math.hypot(bx, by) || 1; bx /= bl; by /= bl
 
-    const innerR = (nRows - 1) * across * 0.48
+    const innerR = ((nRows - 1) * across) * 0.48
     const cx = C.x + bx * (innerR * 0.35)
     const cy = C.y + by * (innerR * 0.35)
 
@@ -325,7 +340,7 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
     out.push({ s: sAtCorner + 0.002 * (seq++), x: cx, y: cy, r: rDot })
   }
 
-  // runde Außenkappe an konvexen oberen Ecken (P1, P3)
+  // runde Außenkappe an P1/P3
   function pushOuterCornerCap(
     out: Extra[],
     C: XY,
@@ -338,17 +353,13 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
   ) {
     const radius = ((nRows - 1) * across) / 2
 
-    // Außen-Bisektor aus den linken Normalen
     let bx = prev.nx + next.nx
     let by = prev.ny + next.ny
-    const bl = Math.hypot(bx, by) || 1
-    bx /= bl
-    by /= bl
+    const bl = Math.hypot(bx, by) || 1; bx /= bl; by /= bl
 
-    // Halbkreis nach außen (orthogonal zum Bisektor)
     const baseAngle = Math.atan2(by, bx)
-    const arcStart = baseAngle - Math.PI / 2
-    const arcEnd = baseAngle + Math.PI / 2
+    const arcStart  = baseAngle - Math.PI / 2
+    const arcEnd    = baseAngle + Math.PI / 2
 
     const ringStep = Math.max(rDot * 2 + minGap, across * 0.9)
     const rings = Math.max(1, Math.floor(radius / ringStep))
@@ -368,3 +379,34 @@ export function buildCrystalM(ctx: CanvasRenderingContext2D, anchor: XY) {
     }
   }
 }
+// === M-FINAL-EVENT via eigener RAF-Progress ===
+let start: number | null = null;
+let notified = false;
+
+const DURATION_MS = 1800;          // Dauer bis M fertig gezeichnet (anpassen)
+const AFTER_FINISH_DELAY_MS = 5000; // EXTRA-Wartezeit NACH Fertig (anpassen)
+
+function tick(ts: number) {
+  if (start === null) start = ts;
+
+  const elapsed = ts - start;
+  const progress = elapsed / DURATION_MS; // kann >1 werden
+
+  // --- hier dein normales Zeichnen mit progress (0..1 clampen wenn nötig) ---
+  // drawM(Math.min(1, progress));
+
+  // Sobald fertig (>=1), GENAU EINMAL melden – nach gewünschter Zusatz-Wartezeit
+  if (!notified && progress >= 1) {
+    notified = true;
+    setTimeout(() => {
+      (window as any).__mFormedFired = true;
+      window.dispatchEvent(new CustomEvent('m:formed'));
+    }, AFTER_FINISH_DELAY_MS);
+    return; // Loop stoppen
+  }
+
+  requestAnimationFrame(tick);
+}
+
+// Loop starten
+requestAnimationFrame(tick);

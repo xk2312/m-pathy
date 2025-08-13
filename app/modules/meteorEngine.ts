@@ -6,49 +6,87 @@ export function startMeteorSequence(
   onImpact: () => void
 ): () => void {
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
+
+  // Wir arbeiten konsequent in CSS-Pixeln
   const rect = ctx.canvas.getBoundingClientRect()
-  const w = rect.width, h = rect.height
+  const W = Math.floor(rect.width)
+  const H = Math.floor(rect.height)
 
-  const x0 = w * 1.08, y0 = -h * 0.08
+  // Startpunkt (oben rechts außerhalb), Ziel = anchor (CSS-Pixel)
+  const x0 = W * 1.08
+  const y0 = -H * 0.08
+
   const frames = isMobile ? 90 : 120
-  let t = 0, rafId = 0, hit = false
-  const dx = target.x - x0, dy = target.y - y0
-  const ease = (p:number)=>1-(1-p)*(1-p)
-  const tail:{x:number;y:number;a:number}[]=[]
+  const easeOutQuad = (p: number) => 1 - (1 - p) * (1 - p)
 
-  function drawTail(){
-    for (let i=tail.length-1;i>=0;i--){
-      const d=tail[i]
-      ctx.beginPath(); ctx.arc(d.x,d.y,isMobile?1.6:2.2,0,Math.PI*2)
-      ctx.fillStyle=`rgba(107,213,255,${d.a})`; ctx.fill()
-      d.a-=0.03; if(d.a<=0) tail.splice(i,1)
+  const dx = target.x - x0
+  const dy = target.y - y0
+
+  let t = 0
+  let rafId = 0
+  let hit = false
+  let stopped = false
+
+  type Tail = { x: number; y: number; a: number }
+  const tail: Tail[] = []
+
+  function drawTail() {
+    for (let i = tail.length - 1; i >= 0; i--) {
+      const d = tail[i]
+      ctx.beginPath()
+      ctx.arc(d.x, d.y, isMobile ? 1.6 : 2.2, 0, Math.PI * 2)
+      ctx.fillStyle = `rgba(107,213,255,${d.a})`
+      ctx.fill()
+      d.a -= 0.03
+      if (d.a <= 0) tail.splice(i, 1)
     }
   }
-  function meteor(x:number,y:number){
-    ctx.beginPath(); ctx.arc(x,y,isMobile?4:6,0,Math.PI*2)
-    ctx.fillStyle='#6BD5FF'
-    ctx.shadowColor='rgba(107,213,255,1)'
-    ctx.shadowBlur=20
+
+  function drawMeteor(x: number, y: number) {
+    ctx.beginPath()
+    ctx.arc(x, y, isMobile ? 4 : 6, 0, Math.PI * 2)
+    ctx.fillStyle = '#6BD5FF'
+    ctx.shadowColor = 'rgba(107,213,255,1)'
+    ctx.shadowBlur = 20
     ctx.fill()
   }
 
-  function loop(){
-    ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
-    const p=Math.min(t/frames,1), e=ease(p)
-    const x=x0+dx*e, y=y0+dy*e
-    tail.push({x,y,a:1}); drawTail(); meteor(x,y)
+  function clearCanvas() {
+    // Wichtig: in CSS-Pixeln löschen (passend zur Transform)
+    ctx.clearRect(0, 0, W, H)
+  }
 
-    if (!hit && p>=1){
+  function loop() {
+    if (stopped) return
+
+    clearCanvas()
+
+    const p = Math.min(t / frames, 1)
+    const e = easeOutQuad(p)
+    const x = x0 + dx * e
+    const y = y0 + dy * e
+
+    tail.push({ x, y, a: 1 })
+    drawTail()
+    drawMeteor(x, y)
+
+    if (!hit && p >= 1) {
       hit = true
       cancelAnimationFrame(rafId)
-      // WISCH Meteor vollständig weg
-      ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height)
-      onImpact()
+      clearCanvas()        // Meteor komplett weg
+      onImpact()           // jetzt das Punkt-M starten
       return
     }
-    t++; rafId = requestAnimationFrame(loop)
+
+    t++
+    rafId = requestAnimationFrame(loop)
   }
 
   rafId = requestAnimationFrame(loop)
-  return () => cancelAnimationFrame(rafId)
+
+  // Stop-Funktion: Animation abbrechen & weiteren Impact verhindern
+  return () => {
+    stopped = true
+    cancelAnimationFrame(rafId)
+  }
 }

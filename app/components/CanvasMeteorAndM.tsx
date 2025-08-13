@@ -1,53 +1,66 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
-import '@/styles/m-path.css'
 import { startMeteorSequence } from '@/modules/meteorEngine'
 import { buildCrystalM, computeMAnchor } from '@/modules/crystalEngine'
+import '@/styles/m-path.css'
 
-function CanvasMeteorAndM() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+export default function CanvasMeteorAndM() {
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const canvasRef  = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const wrapper = wrapperRef.current!
+    const canvas  = canvasRef.current!
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!wrapper || !canvas || !ctx) return
 
-    // DPR-aware Resize
-    const resize = () => {
+    // Canvas an Wrapper koppeln (DPR-scharf)
+    const fit = () => {
       const dpr = window.devicePixelRatio || 1
-      const w = window.innerWidth
-      const h = window.innerHeight
+      const w = Math.floor(wrapper.clientWidth)
+      const h = Math.floor(wrapper.clientHeight)
       canvas.style.width = `${w}px`
       canvas.style.height = `${h}px`
-      canvas.width = Math.floor(w * dpr)
+      canvas.width  = Math.floor(w * dpr)
       canvas.height = Math.floor(h * dpr)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)   // keine Offsets
+      ctx.clearRect(0, 0, w, h)                // sauber wischen
     }
-    resize()
-    window.addEventListener('resize', resize)
 
-    // Anchor exakt aus den M-Parametern ableiten
-    const rect = canvas.getBoundingClientRect()
-    const anchor = computeMAnchor(rect.width, rect.height)
+    // (Optional) Resize debounce
+    let resizeT = 0 as number | ReturnType<typeof setTimeout>
+    const onResize = () => {
+      clearTimeout(resizeT as number)
+      resizeT = setTimeout(() => {
+        fit()
+        const anchor = computeMAnchor(wrapper.clientWidth, wrapper.clientHeight)
+        buildCrystalM(ctx, anchor)            // nach Resize direkt M zeigen
+      }, 120)
+    }
 
-    const stop = startMeteorSequence(
-      ctx,
-      anchor,
-      () => {
-        // 1 Sekunde stehen lassen, dann aufbauen
-        setTimeout(() => buildCrystalM(ctx, anchor), 1000)
-      }
-    )
+    // Initial
+    fit()
+    let anchor = computeMAnchor(wrapper.clientWidth, wrapper.clientHeight)
 
+    // Sequenz: Meteor -> M
+    const stop = startMeteorSequence(ctx, anchor, () => {
+      // Falls während des Flugs resized wurde: Anchor frisch berechnen
+      anchor = computeMAnchor(wrapper.clientWidth, wrapper.clientHeight)
+      ctx.clearRect(0, 0, canvas.width, canvas.height) // Meteor vollständig weg
+      buildCrystalM(ctx, anchor)
+    })
+
+    window.addEventListener('resize', onResize)
     return () => {
-      window.removeEventListener('resize', resize)
+      window.removeEventListener('resize', onResize)
       if (typeof stop === 'function') stop()
     }
   }, [])
 
-  return <canvas ref={canvasRef} className="m-canvas" />
+  return (
+    <div id="m-wrapper" ref={wrapperRef}>
+      <canvas ref={canvasRef} className="m-canvas" />
+    </div>
+  )
 }
-
-export default CanvasMeteorAndM

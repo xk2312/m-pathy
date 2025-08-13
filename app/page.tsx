@@ -1,15 +1,17 @@
+// app/page.tsx
 'use client'
-
-import '@/styles/m-path.css'
+import { useEffect } from 'react';
 import CanvasMeteorAndM from './components/CanvasMeteorAndM'
+import ZenithButton from './components/ZenithButton'
+import '@/styles/m-path.css'
 
 export default function Page() {
+  useEffect(() => { (window as any).__mFormedFired = false }, []);
   return (
-    <div style={{
-      margin: 0, padding: 0, overflow: 'hidden',
-      width: '100vw', height: '100vh', backgroundColor: '#000'
-    }}>
+    <div className="stage">
       <CanvasMeteorAndM />
+      {/* ↓ hier nur den Pfad tauschen */}
+      <ZenithButton position="under" onNavigate="/page2" />
     </div>
   )
 }
