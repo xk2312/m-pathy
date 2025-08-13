@@ -1,11 +1,17 @@
 name: Deploy M-Pathy
+
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    concurrency:
+      group: m-pathy-deploy
+      cancel-in-progress: true
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -13,51 +19,58 @@ jobs:
       - name: Use Node 20
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install deps
         run: npm ci
 
       - name: Build Next.js
         env:
-          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
-          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-          AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
-          AZURE_OPENAI_API_VERSION: ${{ secrets.AZURE_OPENAI_API_VERSION }}
-          NODE_ENV: production
+          NEXT_TELEMETRY_DISABLED: '1'
         run: npm run build
 
-      - name: Package artifact
-        run: tar --exclude='.git' --exclude='node_modules' -czf m-pathy.tar.gz .
+      # === Snapshot-Packaging, verhindert "file changed as we read it" ===
+      - name: Package artifact (stable snapshot)
+        run: |
+          set -euxo pipefail
+          mkdir -p package-src
+          rsync -a --delete \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='.next/cache' \
+            ./ package-src/
+          tar -C package-src -czf m-pathy.tar.gz .
 
       - name: Upload to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.HETZNER_SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          source: "m-pathy.tar.gz"
-          target: "/srv/"
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY : ${{ secrets.HETZNER_SSH_KEY }}
+        run: |
+          set -euxo pipefail
+          printf "%s" "$SSH_KEY" > key.pem
+          chmod 600 key.pem
+          scp -P "${SSH_PORT:-22}" -i key.pem -o StrictHostKeyChecking=no m-pathy.tar.gz "${SSH_USER}@${SSH_HOST}:/tmp/m-pathy.tar.gz"
 
       - name: Deploy on server
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.HETZNER_SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            set -e
-            cd /srv
-            rm -rf m-pathy.new
-            mkdir -p m-pathy.new
-            tar -xzf /srv/m-pathy.tar.gz -C m-pathy.new
-            cd m-pathy.new
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          set -euxo pipefail
+          ssh -p "${SSH_PORT:-22}" -i key.pem -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" 'bash -s' <<'REMOTE'
+            set -euxo pipefail
+            sudo mkdir -p /srv/m-pathy
+            sudo tar -xzf /tmp/m-pathy.tar.gz -C /srv/m-pathy
+            sudo chown -R deploy:deploy /srv/m-pathy
+            cd /srv/m-pathy
             npm ci --omit=dev
-            rm -rf /srv/m-pathy.prev
-            if [ -d /srv/m-pathy ]; then mv /srv/m-pathy /srv/m-pathy.prev; fi
-            mv /srv/m-pathy.new /srv/m-pathy
             sudo systemctl restart m-pathy
-            sudo systemctl status m-pathy --no-pager -l || true
+REMOTE
+
+      - name: Cleanup key
+        if: always()
+        run: rm -f key.pem
