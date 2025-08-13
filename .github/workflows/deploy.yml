@@ -21,13 +21,14 @@ jobs:
 
       - name: Build (Next.js)
         run: |
+          set -e
           npm ci
           npm run build
 
       - name: Package artifact (stable snapshot)
         run: |
           set -e
-          SNAP="/tmp/mpathy-${RANDOM}${RANDOM}"
+          SNAP="$(mktemp -d)"
           mkdir -p "$SNAP/package-src"
           rsync -a --delete \
             --exclude='.git' \
@@ -35,6 +36,7 @@ jobs:
             --exclude='.next/cache' \
             ./ "$SNAP/package-src"/
           tar -C "$SNAP/package-src" -czf m-pathy.tar.gz .
+          rm -rf "$SNAP"
 
       - name: Upload artifact to server
         env:
@@ -46,10 +48,10 @@ jobs:
           set -e
           umask 077
           printf "%s\n" "$HETZNER_SSH_KEY" > key.pem
-          scp -i key.pem -P "${SSH_PORT}" -o StrictHostKeyChecking=accept-new \
-            m-pathy.tar.gz "${SSH_USER}@${SSH_HOST}:/tmp/m-pathy.tar.gz"
+          scp -i key.pem -P "$SSH_PORT" -o StrictHostKeyChecking=accept-new \
+            m-pathy.tar.gz "$SSH_USER@$SSH_HOST:/tmp/m-pathy.tar.gz"
 
-      - name: Deploy on server
+      - name: Deploy on server (atomic switch)
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_PORT: ${{ secrets.SSH_PORT }}
@@ -60,8 +62,8 @@ jobs:
           AZURE_OPENAI_API_VERSION: ${{ secrets.AZURE_OPENAI_API_VERSION }}
         run: |
           set -e
-          ssh -i key.pem -p "${SSH_PORT}" -o StrictHostKeyChecking=accept-new \
-            "${SSH_USER}@${SSH_HOST}" 'bash -s' <<'REMOTE'
+          ssh -i key.pem -p "$SSH_PORT" -o StrictHostKeyChecking=accept-new \
+            "$SSH_USER@$SSH_HOST" 'bash -s' <<'REMOTE'
             set -e
             ARCHIVE=/tmp/m-pathy.tar.gz
             APP_NEW=/srv/m-pathy.new
@@ -74,11 +76,14 @@ jobs:
             sudo tar -C "$APP_NEW" -xzf "$ARCHIVE"
             sudo rm -f "$ARCHIVE"
 
-            # Validate
-            [ -f "$APP_NEW/package.json" ] || (echo "Missing package.json after extract" >&2; exit 1)
+            # Sicherstellen, dass package.json existiert
+            test -f "$APP_NEW/package.json" || { echo "Missing package.json after extract" >&2; exit 1; }
 
-            # ENV (nur falls du es brauchst)
-            sudo bash -c "cat > $ENV_FILE" <<EOF
+            # ENV schreiben (Werte wurden bereits im Runner expandiert)
+REMOTE
+          # die ENV-Inhalte als Klartext erzeugen und via SSH anhängen
+          ssh -i key.pem -p "$SSH_PORT" -o StrictHostKeyChecking=accept-new \
+            "$SSH_USER@$SSH_HOST" "sudo tee /etc/m-pathy.env >/dev/null" <<EOF
 AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
 AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
 AZURE_OPENAI_DEPLOYMENT=${AZURE_OPENAI_DEPLOYMENT}
@@ -86,19 +91,24 @@ AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION}
 NODE_ENV=production
 PORT=3000
 EOF
-            sudo chmod 600 "$ENV_FILE"
+          ssh -i key.pem -p "$SSH_PORT" -o StrictHostKeyChecking=accept-new \
+            "$SSH_USER@$SSH_HOST" 'bash -s' <<'REMOTE'
+            set -e
+            sudo chmod 600 /etc/m-pathy.env
 
-            # Atomic switch
+            # Atomare Umschaltung
+            APP_NEW=/srv/m-pathy.new
+            APP_CUR=/srv/m-pathy
             sudo rm -rf "${APP_CUR}.prev" || true
             [ -d "$APP_CUR" ] && sudo mv "$APP_CUR" "${APP_CUR}.prev" || true
             sudo mv "$APP_NEW" "$APP_CUR"
 
-            # Install & start
+            # Install & Start
             cd "$APP_CUR"
             npm ci --omit=dev
             sudo systemctl daemon-reload || true
             sudo systemctl start m-pathy
-            sudo systemctl status m-pathy --no-pager -l | head -n 50 || true
+            sudo systemctl status m-pathy --no-pager -l | head -n 60 || true
 REMOTE
 
       - name: Cleanup key
