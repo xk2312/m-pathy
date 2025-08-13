@@ -13,19 +13,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
-      - name: Build (Next.js)
+      - name: Install & Build
         run: |
           set -e
           npm ci
           npm run build
 
-      - name: Package artifact (stable snapshot)
+      - name: Package artifact (snapshot safe)
         run: |
           set -e
           SNAP="$(mktemp -d)"
@@ -38,79 +38,63 @@ jobs:
           tar -C "$SNAP/package-src" -czf m-pathy.tar.gz .
           rm -rf "$SNAP"
 
-      - name: Upload artifact to server
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_PORT: ${{ secrets.SSH_PORT }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          HETZNER_SSH_KEY: ${{ secrets.HETZNER_SSH_KEY }}
-        run: |
-          set -e
-          umask 077
-          printf "%s\n" "$HETZNER_SSH_KEY" > key.pem
-          scp -i key.pem -P "$SSH_PORT" -o StrictHostKeyChecking=accept-new \
-            m-pathy.tar.gz "$SSH_USER@$SSH_HOST:/tmp/m-pathy.tar.gz"
+      - name: Upload artifact via scp
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          source: "m-pathy.tar.gz"
+          target: "/tmp"
 
-      - name: Deploy on server (atomic switch)
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_PORT: ${{ secrets.SSH_PORT }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
-          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-          AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
-          AZURE_OPENAI_API_VERSION: ${{ secrets.AZURE_OPENAI_API_VERSION }}
-        run: |
-          set -e
-          ssh -i key.pem -p "$SSH_PORT" -o StrictHostKeyChecking=accept-new \
-            "$SSH_USER@$SSH_HOST" 'bash -s' <<'REMOTE'
+      - name: Write /etc/m-pathy.env on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: |
             set -e
-            ARCHIVE=/tmp/m-pathy.tar.gz
-            APP_NEW=/srv/m-pathy.new
-            APP_CUR=/srv/m-pathy
-            ENV_FILE=/etc/m-pathy.env
-
-            sudo systemctl stop m-pathy || true
-            sudo rm -rf "$APP_NEW"
-            sudo mkdir -p "$APP_NEW"
-            sudo tar -C "$APP_NEW" -xzf "$ARCHIVE"
-            sudo rm -f "$ARCHIVE"
-
-            # Sicherstellen, dass package.json existiert
-            test -f "$APP_NEW/package.json" || { echo "Missing package.json after extract" >&2; exit 1; }
-
-            # ENV schreiben (Werte wurden bereits im Runner expandiert)
-REMOTE
-          # die ENV-Inhalte als Klartext erzeugen und via SSH anhängen
-          ssh -i key.pem -p "$SSH_PORT" -o StrictHostKeyChecking=accept-new \
-            "$SSH_USER@$SSH_HOST" "sudo tee /etc/m-pathy.env >/dev/null" <<EOF
-AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
-AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
-AZURE_OPENAI_DEPLOYMENT=${AZURE_OPENAI_DEPLOYMENT}
-AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION}
-NODE_ENV=production
-PORT=3000
-EOF
-          ssh -i key.pem -p "$SSH_PORT" -o StrictHostKeyChecking=accept-new \
-            "$SSH_USER@$SSH_HOST" 'bash -s' <<'REMOTE'
-            set -e
+            sudo bash -c 'cat > /etc/m-pathy.env' <<'EOF'
+            AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}
+            AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }}
+            AZURE_OPENAI_DEPLOYMENT=${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
+            AZURE_OPENAI_API_VERSION=${{ secrets.AZURE_OPENAI_API_VERSION }}
+            NODE_ENV=production
+            PORT=3000
+            EOF
             sudo chmod 600 /etc/m-pathy.env
 
-            # Atomare Umschaltung
-            APP_NEW=/srv/m-pathy.new
-            APP_CUR=/srv/m-pathy
-            sudo rm -rf "${APP_CUR}.prev" || true
-            [ -d "$APP_CUR" ] && sudo mv "$APP_CUR" "${APP_CUR}.prev" || true
-            sudo mv "$APP_NEW" "$APP_CUR"
+      - name: Remote deploy (atomic switch)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: |
+            set -e
+            ARCHIVE=/tmp/m-pathy.tar.gz
+            NEW=/srv/m-pathy.new
+            CUR=/srv/m-pathy
 
-            # Install & Start
-            cd "$APP_CUR"
+            sudo systemctl stop m-pathy || true
+            sudo rm -rf "$NEW"
+            sudo mkdir -p "$NEW"
+            sudo tar -C "$NEW" -xzf "$ARCHIVE"
+            sudo rm -f "$ARCHIVE"
+
+            test -f "$NEW/package.json" || { echo "Missing package.json after extract" >&2; exit 1; }
+
+            sudo rm -rf "${CUR}.prev" || true
+            [ -d "$CUR" ] && sudo mv "$CUR" "${CUR}.prev" || true
+            sudo mv "$NEW" "$CUR"
+
+            cd "$CUR"
             npm ci --omit=dev
-            sudo systemctl daemon-reload || true
-            sudo systemctl start m-pathy
-            sudo systemctl status m-pathy --no-pager -l | head -n 60 || true
-REMOTE
 
-      - name: Cleanup key
-        if: always()
-        run: rm -f key.pem
+            sudo systemctl daemon-reload || true
+            sudo systemctl restart m-pathy
+            sudo systemctl status m-pathy --no-pager -l | head -n 60 || true
