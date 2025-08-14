@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-/** Optional: auf Edge-Runtime laufen lassen (schneller, weniger cold starts) */
+// Optional: Edge-Runtime
 // export const runtime = "edge";
 
 type Role = "system" | "user" | "assistant";
@@ -10,11 +10,27 @@ interface ChatBody {
   temperature?: number;
 }
 
-/** Env mit Fallback: API_KEY oder KEY */
+/** Envs (mit Fallback für KEY) */
 const endpoint   = process.env.AZURE_OPENAI_ENDPOINT ?? "";
 const apiKey     = process.env.AZURE_OPENAI_API_KEY ?? process.env.AZURE_OPENAI_KEY ?? "";
 const deployment = process.env.AZURE_OPENAI_DEPLOYMENT ?? "";
 const apiVersion = process.env.AZURE_OPENAI_API_VERSION ?? "";
+
+/** Bau die Azure-URL robust, egal in welcher Form ENDPOINT geliefert wird */
+function buildAzureUrl(ep: string, dep: string, ver: string) {
+  const base = (ep || "").trim().replace(/\/+$/, "");
+
+  // already like .../openai/deployments/<dep>
+  if (/\/openai\/deployments\/[^/]+$/i.test(base)) {
+    return `${base}/chat/completions?api-version=${encodeURIComponent(ver)}`;
+  }
+  // already like .../openai
+  if (/\/openai$/i.test(base)) {
+    return `${base}/deployments/${encodeURIComponent(dep)}/chat/completions?api-version=${encodeURIComponent(ver)}`;
+  }
+  // plain resource host
+  return `${base}/openai/deployments/${encodeURIComponent(dep)}/chat/completions?api-version=${encodeURIComponent(ver)}`;
+}
 
 function assertEnv() {
   const missing: string[] = [];
@@ -38,11 +54,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const temperature = typeof body.temperature === "number" ? body.temperature : 0.7;
+    const temperature =
+      typeof body.temperature === "number" ? body.temperature : 0.7;
 
-    const url =
-      `${endpoint.replace(/\/+$/, "")}/openai/deployments/${deployment}` +
-      `/chat/completions?api-version=${encodeURIComponent(apiVersion)}`;
+    const url = buildAzureUrl(endpoint, deployment, apiVersion);
 
     const response = await fetch(url, {
       method: "POST",
@@ -60,7 +75,10 @@ export async function POST(req: NextRequest) {
     if (!response.ok) {
       const errorText = await response.text().catch(() => "");
       console.error("[AzureOpenAI Error]", response.status, errorText);
-      return NextResponse.json({ error: errorText || "Upstream error" }, { status: response.status });
+      return NextResponse.json(
+        { error: errorText || "Upstream error" },
+        { status: response.status }
+      );
     }
 
     const data: any = await response.json();
