@@ -67,7 +67,7 @@ jobs:
           key: ${{ secrets.HETZNER_SSH_KEY }}
           script: |
             set -e
-            sudo bash -c 'cat > /etc/m-pathy.env' <<'EOF'
+            sudo -n tee /etc/m-pathy.env >/dev/null <<'EOF'
             AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}
             AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }}
             AZURE_OPENAI_DEPLOYMENT=${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
@@ -75,7 +75,7 @@ jobs:
             NODE_ENV=production
             PORT=3000
             EOF
-            sudo chmod 600 /etc/m-pathy.env
+            sudo -n chmod 600 /etc/m-pathy.env
 
       - name: Remote deploy (atomic switch)
         uses: appleboy/ssh-action@v1.0.3
@@ -90,25 +90,25 @@ jobs:
             NEW=/srv/m-pathy.new
             CUR=/srv/m-pathy
 
-            sudo systemctl stop m-pathy || true
-            sudo rm -rf "$NEW"
-            sudo mkdir -p "$NEW"
-            sudo tar -C "$NEW" -xzf "$ARCHIVE"
-            sudo rm -f "$ARCHIVE"
+            sudo -n systemctl stop m-pathy || true
+            sudo -n rm -rf "$NEW"
+            sudo -n mkdir -p "$NEW"
+            sudo -n tar -C "$NEW" -xzf "$ARCHIVE"
+            sudo -n rm -f "$ARCHIVE"
 
             test -f "$NEW/package.json" || { echo "Missing package.json after extract" >&2; exit 1; }
 
-            sudo rm -rf "${CUR}.prev" || true
-            [ -d "$CUR" ] && sudo mv "$CUR" "${CUR}.prev" || true
-            sudo mv "$NEW" "$CUR"
+            sudo -n rm -rf "${CUR}.prev" || true
+            [ -d "$CUR" ] && sudo -n mv "$CUR" "${CUR}.prev" || true
+            sudo -n mv "$NEW" "$CUR"
 
-            # 👉 Besitz & Rechte reparieren, damit npm als deploy schreiben darf
-            sudo chown -R "$USER":"$USER" "$CUR"
-            sudo find "$CUR" -type d -exec chmod u+rwx {} \;
+            # Besitz & Rechte reparieren, damit npm als deploy schreiben darf
+            sudo -n chown -R "$USER":"$USER" "$CUR"
+            sudo -n find "$CUR" -type d -exec chmod u+rwx {} \;
 
             cd "$CUR"
             npm ci --omit=dev
 
-            sudo systemctl daemon-reload || true
-            sudo systemctl restart m-pathy
-            sudo systemctl status m-pathy --no-pager -l | head -n 60 || true
+            sudo -n systemctl daemon-reload || true
+            sudo -n systemctl restart m-pathy
+            sudo -n systemctl status m-pathy --no-pager -l | head -n 60 || true
