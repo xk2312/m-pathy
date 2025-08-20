@@ -38,6 +38,16 @@ jobs:
           tar -C "$SNAP/package-src" -czf m-pathy.tar.gz .
           rm -rf "$SNAP"
 
+      # 🟢 Test ob GitHub via SSH den Server erreicht
+      - name: Test SSH connectivity
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: echo "✅ SSH ok"
+
       - name: Upload artifact via scp
         uses: appleboy/scp-action@v0.1.7
         with:
