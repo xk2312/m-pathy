@@ -38,7 +38,6 @@ jobs:
           tar -C "$SNAP/package-src" -czf m-pathy.tar.gz .
           rm -rf "$SNAP"
 
-      # ✅ kurzer Reachability-Check
       - name: Test SSH connectivity
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -67,6 +66,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.HETZNER_SSH_KEY }}
+          envs: SUDO_PASS           # ← WICHTIG: macht $SUDO_PASS auf dem Server verfügbar
           script: |
             set -e
             s() { echo "$SUDO_PASS" | sudo -S -p '' "$@"; }
@@ -91,6 +91,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.HETZNER_SSH_KEY }}
+          envs: SUDO_PASS           # ← WICHTIG: macht $SUDO_PASS auf dem Server verfügbar
           script: |
             set -e
             s() { echo "$SUDO_PASS" | sudo -S -p '' "$@"; }
@@ -111,7 +112,6 @@ jobs:
             [ -d "$CUR" ] && s mv "$CUR" "${CUR}.prev" || true
             s mv "$NEW" "$CUR"
 
-            # Besitz & Rechte, damit npm als deploy schreiben darf
             s chown -R "$USER":"$USER" "$CUR"
             s find "$CUR" -type d -exec chmod u+rwx {} \;
 
