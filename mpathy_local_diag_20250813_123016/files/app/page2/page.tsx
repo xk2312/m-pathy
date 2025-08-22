@@ -432,10 +432,7 @@ useEffect(() => {
     setLoading(true);
 
     try {
-      const history: ChatMessage[] = [
-        { role: "system", content: SYSTEM_PROMPT },
-        ...next,
-      ];
+      const history: ChatMessage[] = [...next];
 
       const res = await fetch("/api/chat", {
         method: "POST",
