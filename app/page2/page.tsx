@@ -338,7 +338,7 @@ function InputDock({
           color: tokens.color.text,
           outline: "none",
         }}
-        placeholder="Sprich mit M … (Enter = senden)"
+        placeholder="Talk to M"
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
@@ -417,7 +417,7 @@ useEffect(() => {
   // Initiale Begrüßung
   useEffect(() => {
     setMessages([
-      { role: "assistant", content: "Welcome. I'm M. Mother of AI." },
+      { role: "assistant", content: "Welcome. I am M. Mother of AI." },
     ]);
   }, []);
 
