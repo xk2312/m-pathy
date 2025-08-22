@@ -19,8 +19,8 @@ function Page() {
     <div className="stage">
       <CanvasMeteorAndM />
       {/* ↓ Pfad bleibt wie gehabt */}
-      <ZenithButton position="under" onNavigate="/page2" />
-    </div>
+      <ZenithButton position="under" onNavigate="/page2" resetFlagOnMount={false} />
+      </div>
   );
 }
 
