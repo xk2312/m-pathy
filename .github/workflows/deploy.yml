@@ -2,7 +2,7 @@ name: Deploy M-Pathy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch: {}
 
 jobs:
@@ -38,6 +38,15 @@ jobs:
           tar -C "$SNAP/package-src" -czf m-pathy.tar.gz .
           rm -rf "$SNAP"
 
+      - name: Test SSH connectivity
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: echo "SSH OK"
+
       - name: Upload artifact via scp
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -48,16 +57,21 @@ jobs:
           source: "m-pathy.tar.gz"
           target: "/tmp"
 
-      - name: Write /etc/m-pathy.env on server
+      - name: Write /etc/m-pathy.env on server (with sudo password)
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          SUDO_PASS: ${{ secrets.DEPLOY_PASSWORD }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.HETZNER_SSH_KEY }}
+          envs: SUDO_PASS           # ← WICHTIG: macht $SUDO_PASS auf dem Server verfügbar
           script: |
             set -e
-            sudo bash -c 'cat > /etc/m-pathy.env' <<'EOF'
+            s() { echo "$SUDO_PASS" | sudo -S -p '' "$@"; }
+
+            s tee /etc/m-pathy.env >/dev/null <<'EOF'
             AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}
             AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }}
             AZURE_OPENAI_DEPLOYMENT=${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
@@ -65,40 +79,45 @@ jobs:
             NODE_ENV=production
             PORT=3000
             EOF
-            sudo chmod 600 /etc/m-pathy.env
 
-      - name: Remote deploy (atomic switch)
+            s chmod 600 /etc/m-pathy.env
+
+      - name: Remote deploy (atomic switch, with sudo password)
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          SUDO_PASS: ${{ secrets.DEPLOY_PASSWORD }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.HETZNER_SSH_KEY }}
+          envs: SUDO_PASS           # ← WICHTIG: macht $SUDO_PASS auf dem Server verfügbar
           script: |
             set -e
+            s() { echo "$SUDO_PASS" | sudo -S -p '' "$@"; }
+
             ARCHIVE=/tmp/m-pathy.tar.gz
             NEW=/srv/m-pathy.new
             CUR=/srv/m-pathy
 
-            sudo systemctl stop m-pathy || true
-            sudo rm -rf "$NEW"
-            sudo mkdir -p "$NEW"
-            sudo tar -C "$NEW" -xzf "$ARCHIVE"
-            sudo rm -f "$ARCHIVE"
+            s systemctl stop m-pathy || true
+            s rm -rf "$NEW"
+            s mkdir -p "$NEW"
+            s tar -C "$NEW" -xzf "$ARCHIVE"
+            s rm -f "$ARCHIVE"
 
             test -f "$NEW/package.json" || { echo "Missing package.json after extract" >&2; exit 1; }
 
-            sudo rm -rf "${CUR}.prev" || true
-            [ -d "$CUR" ] && sudo mv "$CUR" "${CUR}.prev" || true
-            sudo mv "$NEW" "$CUR"
+            s rm -rf "${CUR}.prev" || true
+            [ -d "$CUR" ] && s mv "$CUR" "${CUR}.prev" || true
+            s mv "$NEW" "$CUR"
 
-            # 👉 Besitz & Rechte reparieren, damit npm als deploy schreiben darf
-            sudo chown -R "$USER":"$USER" "$CUR"
-            sudo find "$CUR" -type d -exec chmod u+rwx {} \;
+            s chown -R "$USER":"$USER" "$CUR"
+            s find "$CUR" -type d -exec chmod u+rwx {} \;
 
             cd "$CUR"
             npm ci --omit=dev
 
-            sudo systemctl daemon-reload || true
-            sudo systemctl restart m-pathy
-            sudo systemctl status m-pathy --no-pager -l | head -n 60 || true
+            s systemctl daemon-reload || true
+            s systemctl restart m-pathy
+            s systemctl status m-pathy --no-pager -l | head -n 60 || true
