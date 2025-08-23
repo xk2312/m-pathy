@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import dotenv from "dotenv";
 import fs from "fs";
+
+// === 1. ENV laden ===
+dotenv.config({ path: "/srv/m-pathy/.env.production" }); // <- KORREKT eingebunden
 
 // === 2. Typen & Interfaces ===
 type Role = "system" | "user" | "assistant";
@@ -7,7 +11,7 @@ interface ChatMessage { role: Role; content: string }
 interface ChatBody {
   messages: ChatMessage[];
   temperature?: number;
-  protocol?: string; // erlaubt Protokollwahl
+  protocol?: string;
 }
 
 // === 3. ENV absichern ===
@@ -29,10 +33,12 @@ function assertEnv() {
 function loadSystemPrompt(protocol: string = "GPTX") {
   const path = `/srv/m-pathy/${protocol}.txt`;
   if (!fs.existsSync(path)) return null;
-  return fs.readFileSync(path, "utf8");
+  const content = fs.readFileSync(path, "utf8");
+  console.log("✅ SYSTEM PROMPT LOADED:", content.slice(0, 80));
+  return content;
 }
 
-// === 5. Azure URL Generator ===
+// === 5. Azure URL Builder ===
 function buildAzureUrl(ep: string, dep: string, ver: string) {
   const base = ep.trim().replace(/\/+$/, "");
   if (/\/openai\/deployments\/[^/]+$/i.test(base)) {
@@ -59,6 +65,7 @@ export async function POST(req: NextRequest) {
 
     const protocol = body.protocol ?? "GPTX";
     const systemPrompt = loadSystemPrompt(protocol);
+
     const messages: ChatMessage[] = systemPrompt
       ? [{ role: "system", content: systemPrompt }, ...body.messages]
       : body.messages;
