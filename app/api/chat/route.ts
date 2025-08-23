@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import dotenv from "dotenv";
 import fs from "fs";
+import dotenv from "dotenv";
 
-// === 1. ENV laden ===
-dotenv.config({ path: "/srv/m-pathy/.env.production" }); // <- KORREKT eingebunden
+// 🌱 Sicherstellen, dass ENV geladen ist – auch bei Import-Schwächen
+dotenv.config({ path: "/srv/m-pathy/.env.production" }); // 🔒 Gold-Standard
 
-// === 2. Typen & Interfaces ===
+// === 1. Typen ===
 type Role = "system" | "user" | "assistant";
 interface ChatMessage { role: Role; content: string }
 interface ChatBody {
@@ -14,40 +14,45 @@ interface ChatBody {
   protocol?: string;
 }
 
-// === 3. ENV absichern ===
-const endpoint   = process.env.AZURE_OPENAI_ENDPOINT ?? "";
-const apiKey     = process.env.AZURE_OPENAI_API_KEY ?? process.env.AZURE_OPENAI_KEY ?? "";
-const deployment = process.env.AZURE_OPENAI_DEPLOYMENT ?? "";
-const apiVersion = process.env.AZURE_OPENAI_API_VERSION ?? "";
+// === 2. ENV laden (nach dotenv)
+const ENV = {
+  endpoint: process.env.AZURE_OPENAI_ENDPOINT ?? "",
+  apiKey: process.env.AZURE_OPENAI_API_KEY ?? process.env.AZURE_OPENAI_KEY ?? "",
+  deployment: process.env.AZURE_OPENAI_DEPLOYMENT ?? "",
+  version: process.env.AZURE_OPENAI_API_VERSION ?? "",
+};
 
+// === 3. ENV-Schutz ===
 function assertEnv() {
   const missing: string[] = [];
-  if (!endpoint)   missing.push("AZURE_OPENAI_ENDPOINT");
-  if (!apiKey)     missing.push("AZURE_OPENAI_API_KEY | AZURE_OPENAI_KEY");
-  if (!deployment) missing.push("AZURE_OPENAI_DEPLOYMENT");
-  if (!apiVersion) missing.push("AZURE_OPENAI_API_VERSION");
+  if (!ENV.endpoint)   missing.push("AZURE_OPENAI_ENDPOINT");
+  if (!ENV.apiKey)     missing.push("AZURE_OPENAI_API_KEY | AZURE_OPENAI_KEY");
+  if (!ENV.deployment) missing.push("AZURE_OPENAI_DEPLOYMENT");
+  if (!ENV.version)    missing.push("AZURE_OPENAI_API_VERSION");
   if (missing.length) throw new Error(`Missing env: ${missing.join(", ")}`);
 }
 
-// === 4. System Prompt Loader ===
+// === 4. Systemprompt laden ===
 function loadSystemPrompt(protocol: string = "GPTX") {
   const path = `/srv/m-pathy/${protocol}.txt`;
   if (!fs.existsSync(path)) return null;
   const content = fs.readFileSync(path, "utf8");
-  console.log("✅ SYSTEM PROMPT LOADED:", content.slice(0, 80));
+  if (process.env.NODE_ENV !== "production") {
+    console.log("✅ SYSTEM PROMPT LOADED:", content.slice(0, 80));
+  }
   return content;
 }
 
-// === 5. Azure URL Builder ===
-function buildAzureUrl(ep: string, dep: string, ver: string) {
-  const base = ep.trim().replace(/\/+$/, "");
+// === 5. Azure URL Generator ===
+function buildAzureUrl() {
+  const base = ENV.endpoint.trim().replace(/\/+$/, "");
   if (/\/openai\/deployments\/[^/]+$/i.test(base)) {
-    return `${base}/chat/completions?api-version=${ver}`;
+    return `${base}/chat/completions?api-version=${ENV.version}`;
   }
   if (/\/openai$/i.test(base)) {
-    return `${base}/deployments/${dep}/chat/completions?api-version=${ver}`;
+    return `${base}/deployments/${ENV.deployment}/chat/completions?api-version=${ENV.version}`;
   }
-  return `${base}/openai/deployments/${dep}/chat/completions?api-version=${ver}`;
+  return `${base}/openai/deployments/${ENV.deployment}/chat/completions?api-version=${ENV.version}`;
 }
 
 // === 6. POST Handler ===
@@ -70,13 +75,13 @@ export async function POST(req: NextRequest) {
       ? [{ role: "system", content: systemPrompt }, ...body.messages]
       : body.messages;
 
-    const url = buildAzureUrl(endpoint, deployment, apiVersion);
+    const url = buildAzureUrl();
 
     const res = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "api-key": apiKey,
+        "api-key": ENV.apiKey,
       },
       body: JSON.stringify({
         messages,
