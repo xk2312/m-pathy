@@ -1,9 +1,5 @@
-import dotenv from "dotenv";
-dotenv.config({ path: "/etc/m-pathy.env" }); // <- GANZ OBEN
-
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
-
 
 // === 2. Typen & Interfaces ===
 type Role = "system" | "user" | "assistant";
