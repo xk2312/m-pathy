@@ -22,7 +22,6 @@
 import React, { useEffect, useMemo, useState, FormEvent } from "react";
 import Image from "next/image"; // ⬅️ oben bei den Imports sicherstellen
 import LogoM from "../components/LogoM";
-import fs from "fs"
 
 /* =======================================================================
    [ANCHOR:CONFIG]  — Design Tokens, Themes, Personas, System Prompt
@@ -91,8 +90,6 @@ const THEMES: Record<string, Theme> = {
 const PERSONAS: Record<string, { theme: keyof typeof THEMES }> = {
   default: { theme: "m_default" },
 };
-
-const SYSTEM_PROMPT = fs.readFileSync("/srv/m-pathy/GPTX.txt", "utf8");
 
 /* =======================================================================
    [ANCHOR:HOOKS]  — Breakpoint + Theme Resolution
@@ -432,19 +429,19 @@ useEffect(() => {
     setLoading(true);
 
     try {
-      const history: ChatMessage[] = [
-        { role: "system", content: SYSTEM_PROMPT },
-        ...next,
-      ];
+      const history: ChatMessage[] = [...next]; // ✅ das reicht
+
       console.log("Sending to /api/chat:", history);
 
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: history.map((m) => ({ role: m.role, content: m.content })),
-          temperature: 0.7,
-        }),
+        messages: history.map((m) => ({ role: m.role, content: m.content })),
+        temperature: 0.7,
+        protocol: "GPTX", // 💡 das aktiviert das Laden der GPTX.txt
+      }),
+
       });
 
       if (!res.ok) throw new Error(await res.text());

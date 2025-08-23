@@ -1,57 +1,59 @@
 import { NextRequest, NextResponse } from "next/server";
 import dotenv from "dotenv";
+import fs from "fs";
 
-// lade Datei von absolutem Pfad
+// === 1. ENV laden (zentrale, externe Quelle) ===
 dotenv.config({ path: "/etc/m-pathy.env" });
 
-
-// Optional: Edge-Runtime
-// export const runtime = "edge";
-
+// === 2. Typen & Interfaces ===
 type Role = "system" | "user" | "assistant";
 interface ChatMessage { role: Role; content: string }
 interface ChatBody {
   messages: ChatMessage[];
   temperature?: number;
+  protocol?: string; // erlaubt Protokollwahl
 }
 
-/** Envs (mit Fallback für KEY) */
+// === 3. ENV absichern ===
 const endpoint   = process.env.AZURE_OPENAI_ENDPOINT ?? "";
 const apiKey     = process.env.AZURE_OPENAI_API_KEY ?? process.env.AZURE_OPENAI_KEY ?? "";
 const deployment = process.env.AZURE_OPENAI_DEPLOYMENT ?? "";
 const apiVersion = process.env.AZURE_OPENAI_API_VERSION ?? "";
 
-/** Bau die Azure-URL robust, egal in welcher Form ENDPOINT geliefert wird */
-function buildAzureUrl(ep: string, dep: string, ver: string) {
-  const base = (ep || "").trim().replace(/\/+$/, "");
-
-  // already like .../openai/deployments/<dep>
-  if (/\/openai\/deployments\/[^/]+$/i.test(base)) {
-    return `${base}/chat/completions?api-version=${encodeURIComponent(ver)}`;
-  }
-  // already like .../openai
-  if (/\/openai$/i.test(base)) {
-    return `${base}/deployments/${encodeURIComponent(dep)}/chat/completions?api-version=${encodeURIComponent(ver)}`;
-  }
-  // plain resource host
-  return `${base}/openai/deployments/${encodeURIComponent(dep)}/chat/completions?api-version=${encodeURIComponent(ver)}`;
-}
-
 function assertEnv() {
   const missing: string[] = [];
   if (!endpoint)   missing.push("AZURE_OPENAI_ENDPOINT");
-  if (!apiKey)     missing.push("AZURE_OPENAI_API_KEY|AZURE_OPENAI_KEY");
+  if (!apiKey)     missing.push("AZURE_OPENAI_API_KEY | AZURE_OPENAI_KEY");
   if (!deployment) missing.push("AZURE_OPENAI_DEPLOYMENT");
   if (!apiVersion) missing.push("AZURE_OPENAI_API_VERSION");
-  if (missing.length) throw new Error(`Missing environment variables: ${missing.join(", ")}`);
+  if (missing.length) throw new Error(`Missing env: ${missing.join(", ")}`);
 }
 
+// === 4. System Prompt Loader ===
+function loadSystemPrompt(protocol: string = "GPTX") {
+  const path = `/srv/m-pathy/${protocol}.txt`;
+  if (!fs.existsSync(path)) return null;
+  return fs.readFileSync(path, "utf8");
+}
+
+// === 5. Azure URL Generator ===
+function buildAzureUrl(ep: string, dep: string, ver: string) {
+  const base = ep.trim().replace(/\/+$/, "");
+  if (/\/openai\/deployments\/[^/]+$/i.test(base)) {
+    return `${base}/chat/completions?api-version=${ver}`;
+  }
+  if (/\/openai$/i.test(base)) {
+    return `${base}/deployments/${dep}/chat/completions?api-version=${ver}`;
+  }
+  return `${base}/openai/deployments/${dep}/chat/completions?api-version=${ver}`;
+}
+
+// === 6. POST Handler ===
 export async function POST(req: NextRequest) {
   try {
     assertEnv();
 
     const body = (await req.json()) as ChatBody;
-
     if (!Array.isArray(body?.messages)) {
       return NextResponse.json(
         { error: "`messages` must be an array of { role, content }" },
@@ -59,42 +61,39 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const temperature =
-      typeof body.temperature === "number" ? body.temperature : 0.7;
+    const protocol = body.protocol ?? "GPTX";
+    const systemPrompt = loadSystemPrompt(protocol);
+    const messages: ChatMessage[] = systemPrompt
+      ? [{ role: "system", content: systemPrompt }, ...body.messages]
+      : body.messages;
 
     const url = buildAzureUrl(endpoint, deployment, apiVersion);
 
-    const response = await fetch(url, {
+    const res = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "api-key": apiKey,
       },
       body: JSON.stringify({
-        messages: body.messages,
-        temperature,
+        messages,
+        temperature: typeof body.temperature === "number" ? body.temperature : 0.7,
         max_tokens: 800,
       }),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => "");
-      console.error("[AzureOpenAI Error]", response.status, errorText);
-      return NextResponse.json(
-        { error: errorText || "Upstream error" },
-        { status: response.status }
-      );
+    if (!res.ok) {
+      const errorText = await res.text().catch(() => "");
+      console.error("[AzureOpenAI Error]", res.status, errorText);
+      return NextResponse.json({ error: errorText || "Upstream error" }, { status: res.status });
     }
 
-    const data: any = await response.json();
+    const data: any = await res.json();
     const content: string | undefined = data?.choices?.[0]?.message?.content;
 
     if (!content) {
       console.error("[AzureOpenAI] No content in response", JSON.stringify(data, null, 2));
-      return NextResponse.json(
-        { error: "Azure OpenAI returned no message content" },
-        { status: 502 }
-      );
+      return NextResponse.json({ error: "No message content" }, { status: 502 });
     }
 
     return NextResponse.json({ role: "assistant", content });
