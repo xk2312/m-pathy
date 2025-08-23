@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import dotenv from "dotenv";
 
-// 🌱 Sicherstellen, dass ENV geladen ist – auch bei Import-Schwächen
-dotenv.config({ path: "/srv/m-pathy/.env.production" }); // 🔒 Gold-Standard
+// ✅ ENV direkt laden – keine extra Datei nötig
+dotenv.config({ path: "/srv/m-pathy/.env.production" });
 
 // === 1. Typen ===
 type Role = "system" | "user" | "assistant";
@@ -14,7 +14,7 @@ interface ChatBody {
   protocol?: string;
 }
 
-// === 2. ENV laden (nach dotenv)
+// === 2. ENV lesen ===
 const ENV = {
   endpoint: process.env.AZURE_OPENAI_ENDPOINT ?? "",
   apiKey: process.env.AZURE_OPENAI_API_KEY ?? process.env.AZURE_OPENAI_KEY ?? "",
@@ -22,7 +22,7 @@ const ENV = {
   version: process.env.AZURE_OPENAI_API_VERSION ?? "",
 };
 
-// === 3. ENV-Schutz ===
+// === 3. Validierung ===
 function assertEnv() {
   const missing: string[] = [];
   if (!ENV.endpoint)   missing.push("AZURE_OPENAI_ENDPOINT");
@@ -32,7 +32,7 @@ function assertEnv() {
   if (missing.length) throw new Error(`Missing env: ${missing.join(", ")}`);
 }
 
-// === 4. Systemprompt laden ===
+// === 4. Prompt laden ===
 function loadSystemPrompt(protocol: string = "GPTX") {
   const path = `/srv/m-pathy/${protocol}.txt`;
   if (!fs.existsSync(path)) return null;
@@ -43,7 +43,7 @@ function loadSystemPrompt(protocol: string = "GPTX") {
   return content;
 }
 
-// === 5. Azure URL Generator ===
+// === 5. URL bauen ===
 function buildAzureUrl() {
   const base = ENV.endpoint.trim().replace(/\/+$/, "");
   if (/\/openai\/deployments\/[^/]+$/i.test(base)) {
@@ -55,7 +55,7 @@ function buildAzureUrl() {
   return `${base}/openai/deployments/${ENV.deployment}/chat/completions?api-version=${ENV.version}`;
 }
 
-// === 6. POST Handler ===
+// === 6. Handler ===
 export async function POST(req: NextRequest) {
   try {
     assertEnv();
