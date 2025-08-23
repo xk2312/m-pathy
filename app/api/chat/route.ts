@@ -1,4 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import dotenv from "dotenv";
+
+// lade Datei von absolutem Pfad
+dotenv.config({ path: "/etc/m-pathy.env" });
+
 
 // Optional: Edge-Runtime
 // export const runtime = "edge";
