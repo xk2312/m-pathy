@@ -1,3 +1,14 @@
+if (process.env.NODE_ENV === "production") {
+  console.log("🔧 ENV DEBUG:", {
+    AZURE_OPENAI_ENDPOINT: process.env.AZURE_OPENAI_ENDPOINT,
+    AZURE_OPENAI_API_KEY: process.env.AZURE_OPENAI_API_KEY,
+    AZURE_OPENAI_KEY: process.env.AZURE_OPENAI_KEY,
+    AZURE_OPENAI_DEPLOYMENT: process.env.AZURE_OPENAI_DEPLOYMENT,
+    AZURE_OPENAI_API_VERSION: process.env.AZURE_OPENAI_API_VERSION,
+    NODE_ENV: process.env.NODE_ENV,
+  });
+}
+
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
