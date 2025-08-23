@@ -22,6 +22,7 @@
 import React, { useEffect, useMemo, useState, FormEvent } from "react";
 import Image from "next/image"; // ⬅️ oben bei den Imports sicherstellen
 import LogoM from "../components/LogoM";
+import fs from "fs"
 
 /* =======================================================================
    [ANCHOR:CONFIG]  — Design Tokens, Themes, Personas, System Prompt
@@ -91,8 +92,7 @@ const PERSONAS: Record<string, { theme: keyof typeof THEMES }> = {
   default: { theme: "m_default" },
 };
 
-const SYSTEM_PROMPT =
-  "You are M. Respond calmly, clearly, and helpfully. Be concise and kind.";
+const SYSTEM_PROMPT = fs.readFileSync("/srv/m-pathy/GPTX.txt", "utf8");
 
 /* =======================================================================
    [ANCHOR:HOOKS]  — Breakpoint + Theme Resolution
@@ -437,7 +437,7 @@ useEffect(() => {
         ...next,
       ];
       console.log("Sending to /api/chat:", history);
-      
+
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
