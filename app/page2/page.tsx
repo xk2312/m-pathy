@@ -436,7 +436,8 @@ useEffect(() => {
         { role: "system", content: SYSTEM_PROMPT },
         ...next,
       ];
-
+      console.log("Sending to /api/chat:", history);
+      
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
