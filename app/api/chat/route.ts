@@ -1,31 +1,20 @@
-if (process.env.NODE_ENV === "production") {
-  console.log("🔧 ENV DEBUG:", {
-    AZURE_OPENAI_ENDPOINT: process.env.AZURE_OPENAI_ENDPOINT,
-    AZURE_OPENAI_API_KEY: process.env.AZURE_OPENAI_API_KEY,
-    AZURE_OPENAI_KEY: process.env.AZURE_OPENAI_KEY,
-    AZURE_OPENAI_DEPLOYMENT: process.env.AZURE_OPENAI_DEPLOYMENT,
-    AZURE_OPENAI_API_VERSION: process.env.AZURE_OPENAI_API_VERSION,
-    NODE_ENV: process.env.NODE_ENV,
-  });
-}
-
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 
-// === 0.1: .env.production NUR LADEN, wenn nicht automatisch geladen ===
+// === 0.1: ENV laden falls Production ===
 if (process.env.NODE_ENV === "production") {
   dotenv.config({ path: "/srv/m-pathy/.env.production" });
 }
 
-// === 0.2: ENV Variablen aus process.env ziehen ===
+// === 0.2: ENV Variablen vorbereiten ===
 const endpoint   = process.env.AZURE_OPENAI_ENDPOINT ?? "";
 const apiKey     = process.env.AZURE_OPENAI_API_KEY ?? process.env.AZURE_OPENAI_KEY ?? "";
 const deployment = process.env.AZURE_OPENAI_DEPLOYMENT ?? "";
 const apiVersion = process.env.AZURE_OPENAI_API_VERSION ?? "";
 
-// === 1. Typen ===
+// === 1. Typen definieren ===
 type Role = "system" | "user" | "assistant";
 interface ChatMessage { role: Role; content: string }
 interface ChatBody {
@@ -34,28 +23,35 @@ interface ChatBody {
   protocol?: string;
 }
 
-// === 2. ENV Check ===
+// === 2. ENV-Check Funktion ===
 function assertEnv() {
   const missing: string[] = [];
   if (!endpoint)   missing.push("AZURE_OPENAI_ENDPOINT");
   if (!apiKey)     missing.push("AZURE_OPENAI_API_KEY | AZURE_OPENAI_KEY");
   if (!deployment) missing.push("AZURE_OPENAI_DEPLOYMENT");
   if (!apiVersion) missing.push("AZURE_OPENAI_API_VERSION");
-  if (missing.length) throw new Error(`Missing env: ${missing.join(", ")}`);
+  if (missing.length > 0) throw new Error(`Missing ENV variables: ${missing.join(", ")}`);
 }
 
-// === 3. Optionalen Systemprompt laden ===
-function loadSystemPrompt(protocol: string = "GPTX") {
-  const promptPath = path.resolve("/srv/m-pathy", `${protocol}.txt`);
-  if (!fs.existsSync(promptPath)) return null;
-  const content = fs.readFileSync(promptPath, "utf8");
-  if (process.env.NODE_ENV !== "production") {
-    console.log("✅ SYSTEM PROMPT LOADED:", content.slice(0, 80));
+// === 3. Optionaler Systemprompt ===
+function loadSystemPrompt(protocol = "GPTX") {
+  try {
+    const promptPath = path.resolve("/srv/m-pathy", `${protocol}.txt`);
+    if (fs.existsSync(promptPath)) {
+      const content = fs.readFileSync(promptPath, "utf8");
+      if (process.env.NODE_ENV !== "production") {
+        console.log("✅ SYSTEM PROMPT LOADED:", content.slice(0, 80));
+      }
+      return content;
+    }
+    return null;
+  } catch (err) {
+    console.warn("⚠️ Error loading system prompt:", err);
+    return null;
   }
-  return content;
 }
 
-// === 4. Azure URL builder ===
+// === 4. Azure URL Builder ===
 function buildAzureUrl(): string {
   const base = endpoint.trim().replace(/\/+$/, "");
   if (/\/openai\/deployments\/[^/]+$/i.test(base)) {
@@ -67,26 +63,27 @@ function buildAzureUrl(): string {
   return `${base}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
 }
 
-// === 5. POST Handler ===
+// === 5. POST-Handler ===
 export async function POST(req: NextRequest) {
   try {
     assertEnv();
 
     const body = (await req.json()) as ChatBody;
-    if (!Array.isArray(body?.messages)) {
-      return NextResponse.json({ error: "`messages` must be an array of { role, content }" }, { status: 400 });
+
+    if (!Array.isArray(body.messages)) {
+      return NextResponse.json(
+        { error: "`messages` must be an array of { role, content }" },
+        { status: 400 }
+      );
     }
 
-    const protocol = body.protocol ?? "GPTX";
-    const systemPrompt = loadSystemPrompt(protocol);
+    const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
 
     const messages: ChatMessage[] = systemPrompt
       ? [{ role: "system", content: systemPrompt }, ...body.messages]
       : body.messages;
 
-    const url = buildAzureUrl();
-
-    const res = await fetch(url, {
+    const response = await fetch(buildAzureUrl(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -94,16 +91,19 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify({
         messages,
-        temperature: typeof body.temperature === "number" ? body.temperature : 0.7,
+        temperature: body.temperature ?? 0.7,
         max_tokens: 800,
       }),
     });
 
-    const data: any = await res.json();
+    const data = await response.json();
 
-    if (!res.ok) {
-      console.error("[AzureOpenAI Error]", res.status, data);
-      return NextResponse.json({ error: data?.error?.message ?? "Upstream error" }, { status: res.status });
+    if (!response.ok) {
+      console.error("[AzureOpenAI Error]", response.status, data);
+      return NextResponse.json(
+        { error: data?.error?.message ?? "Upstream error" },
+        { status: response.status }
+      );
     }
 
     const content: string | undefined = data?.choices?.[0]?.message?.content;
@@ -112,8 +112,12 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ role: "assistant", content });
+
   } catch (err: any) {
     console.error("[API Error]", err);
-    return NextResponse.json({ error: err.message ?? "Unknown error" }, { status: 500 });
+    return NextResponse.json(
+      { error: err.message ?? "Unknown error" },
+      { status: 500 }
+    );
   }
 }
