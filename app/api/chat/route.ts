@@ -6,8 +6,6 @@ import dotenv from "dotenv";
 // === 0.1: ENV laden falls Production ===
 if (process.env.NODE_ENV === "production") {
   dotenv.config({ path: "/srv/m-pathy/.env.production" });
-} else {
-  dotenv.config(); // auch im Dev laden
 }
 
 // === 0.2: ENV Variablen vorbereiten ===
@@ -32,10 +30,7 @@ function assertEnv() {
   if (!apiKey)     missing.push("AZURE_OPENAI_API_KEY | AZURE_OPENAI_KEY");
   if (!deployment) missing.push("AZURE_OPENAI_DEPLOYMENT");
   if (!apiVersion) missing.push("AZURE_OPENAI_API_VERSION");
-  if (missing.length > 0) {
-    console.error("❌ ENV missing:", missing.join(", "));
-    throw new Error(`Missing ENV variables: ${missing.join(", ")}`);
-  }
+  if (missing.length > 0) throw new Error(`Missing ENV variables: ${missing.join(", ")}`);
 }
 
 // === 3. Optionaler Systemprompt ===
@@ -48,8 +43,6 @@ function loadSystemPrompt(protocol = "GPTX") {
         console.log("✅ SYSTEM PROMPT LOADED:", content.slice(0, 80));
       }
       return content;
-    } else {
-      console.warn("⚠️ Prompt-Datei nicht gefunden:", promptPath);
     }
     return null;
   } catch (err) {
