@@ -38,7 +38,7 @@ function assertEnv() {
   }
 }
 
-// === 3. Optionaler Systemprompt ===
+// === 3. Optionaler Systemprompt mit Markdown-Format ===
 function loadSystemPrompt(protocol = "GPTX") {
   try {
     const promptPath = path.resolve("/srv/m-pathy", `${protocol}.txt`);
@@ -47,7 +47,7 @@ function loadSystemPrompt(protocol = "GPTX") {
       if (process.env.NODE_ENV !== "production") {
         console.log("✅ SYSTEM PROMPT LOADED:", content.slice(0, 80));
       }
-      return content;
+      return `\`\`\`markdown\n${content.trim()}\n\`\`\``;
     } else {
       console.warn("⚠️ Prompt-Datei nicht gefunden:", promptPath);
     }
