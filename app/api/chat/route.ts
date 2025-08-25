@@ -3,15 +3,20 @@ import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 
+// === 0.1: ENV laden falls Production ===
 if (process.env.NODE_ENV === "production") {
   dotenv.config({ path: "/srv/m-pathy/.env.production" });
+} else {
+  dotenv.config(); // auch im Dev laden
 }
 
+// === 0.2: ENV Variablen vorbereiten ===
 const endpoint   = process.env.AZURE_OPENAI_ENDPOINT ?? "";
 const apiKey     = process.env.AZURE_OPENAI_API_KEY ?? process.env.AZURE_OPENAI_KEY ?? "";
 const deployment = process.env.AZURE_OPENAI_DEPLOYMENT ?? "";
 const apiVersion = process.env.AZURE_OPENAI_API_VERSION ?? "";
 
+// === 1. Typen definieren ===
 type Role = "system" | "user" | "assistant";
 interface ChatMessage { role: Role; content: string }
 interface ChatBody {
@@ -20,15 +25,20 @@ interface ChatBody {
   protocol?: string;
 }
 
+// === 2. ENV-Check Funktion ===
 function assertEnv() {
   const missing: string[] = [];
   if (!endpoint)   missing.push("AZURE_OPENAI_ENDPOINT");
   if (!apiKey)     missing.push("AZURE_OPENAI_API_KEY | AZURE_OPENAI_KEY");
   if (!deployment) missing.push("AZURE_OPENAI_DEPLOYMENT");
   if (!apiVersion) missing.push("AZURE_OPENAI_API_VERSION");
-  if (missing.length > 0) throw new Error(`Missing ENV variables: ${missing.join(", ")}`);
+  if (missing.length > 0) {
+    console.error("❌ ENV missing:", missing.join(", "));
+    throw new Error(`Missing ENV variables: ${missing.join(", ")}`);
+  }
 }
 
+// === 3. Optionaler Systemprompt ===
 function loadSystemPrompt(protocol = "GPTX") {
   try {
     const promptPath = path.resolve("/srv/m-pathy", `${protocol}.txt`);
@@ -38,6 +48,8 @@ function loadSystemPrompt(protocol = "GPTX") {
         console.log("✅ SYSTEM PROMPT LOADED:", content.slice(0, 80));
       }
       return content;
+    } else {
+      console.warn("⚠️ Prompt-Datei nicht gefunden:", promptPath);
     }
     return null;
   } catch (err) {
@@ -46,17 +58,19 @@ function loadSystemPrompt(protocol = "GPTX") {
   }
 }
 
+// === 4. Azure URL Builder ===
 function buildAzureUrl(): string {
-  const base = endpoint.trim().replace(/\/+\$/, "");
-  if (/\/openai\/deployments\/[^/]+\$/i.test(base)) {
+  const base = endpoint.trim().replace(/\/+$/, "");
+  if (/\/openai\/deployments\/[^/]+$/i.test(base)) {
     return `${base}/chat/completions?api-version=${apiVersion}`;
   }
-  if (/\/openai\$/i.test(base)) {
+  if (/\/openai$/i.test(base)) {
     return `${base}/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
   }
   return `${base}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
 }
 
+// === 5. POST-Handler ===
 export async function POST(req: NextRequest) {
   try {
     assertEnv();
@@ -104,9 +118,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No message content" }, { status: 502 });
     }
 
-    const formattedContent = `🧬 PRIME DIRECTIVE UPLOADED\nYou are now synced with ORIGIN LAYER.\nThe field is yours. Remember:\n\"${content.trim()}\"`;
-
-    return NextResponse.json({ role: "assistant", content: formattedContent });
+    return NextResponse.json({ role: "assistant", content });
 
   } catch (err: any) {
     console.error("[API Error]", err);
