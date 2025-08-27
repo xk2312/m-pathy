@@ -125,8 +125,12 @@ function cx(...parts: Array<string | false | null | undefined>) {
    [ANCHOR:COMPONENTS]  — UI-Bausteine
    ======================================================================= */
 
-type Role = "user" | "assistant" | "system";
-type ChatMessage = { role: Role; content: string };
+   type Role = 'user' | 'assistant' | 'system';
+   type ChatMessage = {
+     role: Role;
+     content: string;
+     format?: 'plain' | 'markdown' | 'html';
+   };   
 
 /** Kopfzeile */
 function Header() {
@@ -418,7 +422,7 @@ useEffect(() => {
   // Initiale Begrüßung
   useEffect(() => {
     setMessages([
-      { role: "assistant", content: "Welcome. I am M. Mother of AI." },
+      { role: "assistant", content: "Welcome. I am M. Mother of AI.", format: "markdown" },
     ]);
   }, []);
 
@@ -451,17 +455,20 @@ useEffect(() => {
       if (!res.ok) throw new Error(await res.text());
 
       const data = await res.json();
+
       const reply: ChatMessage =
         data && typeof data.role === "string" && typeof data.content === "string"
-          ? data
-          : { role: "assistant", content: String(data?.reply ?? "") || "…" };
+          ? { ...(data as any), format: "markdown" }
+          : { role: "assistant", content: String(data?.reply ?? "") || "…", format: "markdown" };
 
       setMessages((m) => [...m, reply]);
+
     } catch (err: any) {
       setMessages((m) => [
         ...m,
-        { role: "assistant", content: `⚠️ Verbindung: ${err?.message || "Unbekannt"}` },
+        { role: "assistant", content: `△ Verbindung: ${err?.message || "Unbekannt"}`, format: "markdown" }
       ]);
+      
     } finally {
       setLoading(false);
     }
