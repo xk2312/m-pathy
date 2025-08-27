@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
  * MessageInput – mehrzeilige Eingabeleiste mit Auto-Resize
  * - Enter = senden, Shift+Enter = Zeilenumbruch
  * - IME-Protection (während Komposition nie senden)
- * - Styles ausgelagert in app/styles/input-bar.css (Klassen: m-inputbar, m-inputbar__textarea, m-inputbar__send)
+ * - Styles in route/styles/input-bar.css (m-inputbar, m-inputbar__textarea, m-inputbar__send)
  */
 export type MessageInputProps = {
   onSend: (text: string) => void | Promise<void>;
@@ -27,7 +27,7 @@ export default function MessageInput({
   const [isComposing, setIsComposing] = useState(false);
   const taRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Auto-Resize ohne externen Hook (bewusst selbstenthalten)
+  // Auto-Resize
   const autoResize = useCallback(() => {
     const el = taRef.current;
     if (!el) return;
@@ -45,24 +45,30 @@ export default function MessageInput({
   useEffect(() => { autoResize(); }, [value, autoResize]);
 
   const handleSend = useCallback(async () => {
+    if (disabled) return;
     const text = value.trim();
     if (!text) return;
+
     try {
+      console.log('[MI] onSend ->', text);
       await onSend(text);
-    } finally {
       setValue('');
       // Nach dem Senden Höhe zurücksetzen
       requestAnimationFrame(autoResize);
+      console.log('[MI] onSend:done');
+    } catch (err) {
+      console.error('[MI] onSend:error', err);
+      // Bei Fehler Inhalt NICHT leeren
     }
-  }, [value, onSend, autoResize]);
+  }, [value, disabled, onSend, autoResize]);
 
   const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key !== 'Enter') return;
-    if (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) return; // explizit: nur reines Enter sendet
+    if (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) return; // nur reines Enter sendet
     if (isComposing) return; // während IME nicht senden
     e.preventDefault();
-    if (!disabled) void handleSend();
-  }, [disabled, isComposing, handleSend]);
+    void handleSend();
+  }, [isComposing, handleSend]);
 
   return (
     <div className="m-inputbar" aria-label="Eingabeleiste" role="group">
@@ -84,7 +90,7 @@ export default function MessageInput({
 
       <button
         type="button"
-        onClick={() => !disabled && handleSend()}
+        onClick={() => void handleSend()}
         disabled={disabled || value.trim().length === 0}
         className="m-inputbar__send"
         aria-label="Senden"
