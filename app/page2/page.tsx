@@ -476,21 +476,27 @@ useEffect(() => {
   }
  // Adapter: MessageInput → nutzt DEINE bestehende sendMessage-Pipeline
   const handleSend = React.useCallback(async (text: string) => {
-    // 1) Den globalen Eingabe-State befüllen
-    setInput(text);
+    try {
+      // 1) globalen Input-State befüllen (deine Pipeline liest daraus)
+      setInput(text);
 
-    // 2) Einen Render-Tick warten, damit 'input' sicher aktualisiert ist
-    await new Promise<void>((resolve) => {
-      if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => resolve());
-      else setTimeout(resolve, 0);
-    });
+      // 2) einen Render-Tick warten, damit 'input' sicher aktualisiert ist
+      await new Promise<void>((resolve) => {
+        if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => resolve());
+        else setTimeout(resolve, 0);
+      });
 
-    // 3) Deine bestehende Sende-Logik (FormEvent erwartet)
-    const fakeEvent = { preventDefault: () => {} } as unknown as FormEvent<HTMLFormElement>;
-    await sendMessage(fakeEvent);
+      // 3) deine bestehende sendMessage erwartet ein FormEvent → minimaler Fake reicht
+      const fakeEvent = { preventDefault: () => {} } as unknown as FormEvent<HTMLFormElement>;
+      await sendMessage(fakeEvent);
 
-    // 4) Optional: globalen Sicht-Input leeren (MessageInput leert sich selbst)
-    setInput('');
+      // 4) optional: globalen Sicht-Input leeren (MessageInput leert sein eigenes Feld ohnehin)
+      setInput('');
+    } catch (err) {
+      console.error('[handleSend] sendMessage failed', err);
+      // Bei Fehler Eingabetext im globalen State wiederherstellen:
+      setInput(text);
+    }
   }, [sendMessage, setInput]);
 
 
