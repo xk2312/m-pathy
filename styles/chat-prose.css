@@ -1,0 +1,98 @@
+/* Chat‑Typografie: wirkt NUR innerhalb des Inhalts‑Wrappers .md-prose
+   Ziel: saubere Lesbarkeit auf dunklem Hintergrund, ohne Global‑Leaks. */
+
+   .md-prose {
+    color: inherit;               /* erbt Textfarbe der Bubble */
+    line-height: 1.65;
+    word-break: break-word;
+  }
+  
+  /* Headings – klare Hierarchie, mehr Abstand nach oben als unten */
+  .md-prose h1,
+  .md-prose h2,
+  .md-prose h3,
+  .md-prose h4 {
+    font-weight: 700;
+    line-height: 1.25;
+    margin-top: 1.2em;
+    margin-bottom: 0.5em;
+  }
+  .md-prose h1 { font-size: 1.6rem; }
+  .md-prose h2 { font-size: 1.35rem; }
+  .md-prose h3 { font-size: 1.2rem; }
+  .md-prose h4 { font-size: 1.05rem; }
+  
+  /* Paragraphs */
+  .md-prose p { margin: 0.75em 0; }
+  
+  /* Links – dezent, sicher (neues Tab via Renderer) */
+  .md-prose a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .md-prose a:hover { opacity: 0.9; }
+  
+  /* Lists */
+  .md-prose ul,
+  .md-prose ol { margin: 0.75em 0 0.75em 1.25em; padding: 0; }
+  .md-prose li { margin: 0.25em 0; }
+  
+  /* Blockquote */
+  .md-prose blockquote {
+    margin: 1em 0;
+    padding-left: 0.9em;
+    border-left: 2px solid rgba(255,255,255,0.2);
+    opacity: 0.95;
+  }
+  
+  /* Code – inline */
+  .md-prose code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.95em;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px;
+    padding: 0.15em 0.35em;
+  }
+  
+  /* Code – Blöcke */
+  .md-prose pre {
+    margin: 1em 0;
+    padding: 0.9em 1em;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    overflow-x: auto;
+  }
+  .md-prose pre > code {
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+  
+  /* Tabellen */
+  .md-prose table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+  }
+  .md-prose th,
+  .md-prose td {
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 0.5em 0.6em;
+  }
+  .md-prose th {
+    text-align: left;
+    background: rgba(255,255,255,0.03);
+  }
+  
+  /* Sonstiges */
+  .md-prose hr {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    margin: 1.2em 0;
+  }
+  .md-prose img { max-width: 100%; display: block; margin: 0.5em 0; border-radius: 8px; }
+  .md-prose strong { font-weight: 700; }
+  .md-prose em { font-style: italic; }
+  

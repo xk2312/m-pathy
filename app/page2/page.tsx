@@ -22,6 +22,8 @@
 import React, { useEffect, useMemo, useState, FormEvent } from "react";
 import Image from "next/image"; // ⬅️ oben bei den Imports sicherstellen
 import LogoM from "../components/LogoM";
+import MessageBody from '../components/MessageBody';
+
 
 /* =======================================================================
    [ANCHOR:CONFIG]  — Design Tokens, Themes, Personas, System Prompt
@@ -225,10 +227,12 @@ function Bubble({
         />
       )}
 
-      <div style={bubbleStyle}>{msg.content}</div>
-    </div>
-  );
-}
+      <div style={bubbleStyle}>
+        <MessageBody msg={msg} />
+      </div>
+          </div>
+        );
+      }
 
 
 /** Nachrichtenliste */
