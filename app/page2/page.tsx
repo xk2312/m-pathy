@@ -474,30 +474,41 @@ useEffect(() => {
       setLoading(false);
     }
   }
- // Adapter: MessageInput → nutzt DEINE bestehende sendMessage-Pipeline
-  const handleSend = React.useCallback(async (text: string) => {
-    try {
-      // 1) globalen Input-State befüllen (deine Pipeline liest daraus)
-      setInput(text);
+ // Adapter: MessageInput → nutzt DEINE bestehende sendMessage-Pipeline (FormEvent- oder State-basiert)
+const handleSend = React.useCallback(async (text: string) => {
+  console.log('[PAGE] handleSend:start', { text });
 
-      // 2) einen Render-Tick warten, damit 'input' sicher aktualisiert ist
-      await new Promise<void>((resolve) => {
-        if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => resolve());
-        else setTimeout(resolve, 0);
-      });
+  // (A) globalen State befüllen – falls sendMessage aus 'input' liest
+  setInput(text);
 
-      // 3) deine bestehende sendMessage erwartet ein FormEvent → minimaler Fake reicht
-      const fakeEvent = { preventDefault: () => {} } as unknown as FormEvent<HTMLFormElement>;
-      await sendMessage(fakeEvent);
+  // (B) einen Render-Tick abwarten, damit 'input' sicher aktualisiert ist
+  await new Promise<void>((resolve) => {
+    if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => resolve());
+    else setTimeout(resolve, 0);
+  });
 
-      // 4) optional: globalen Sicht-Input leeren (MessageInput leert sein eigenes Feld ohnehin)
-      setInput('');
-    } catch (err) {
-      console.error('[handleSend] sendMessage failed', err);
-      // Bei Fehler Eingabetext im globalen State wiederherstellen:
-      setInput(text);
-    }
-  }, [sendMessage, setInput]);
+  // (C) ein minimales Formular erzeugen – falls sendMessage FormData(e.currentTarget) liest
+  const form = document.createElement('form');
+  // wir decken die gängigen Feldnamen ab; wenn dein sendMessage keins davon nutzt, ist es egal
+  const f1 = document.createElement('input'); f1.type = 'hidden'; f1.name = 'input';   f1.value = text;
+  const f2 = document.createElement('input'); f2.type = 'hidden'; f2.name = 'message'; f2.value = text;
+  form.appendChild(f1); form.appendChild(f2);
+
+  // (D) Fake-Event mit preventDefault + currentTarget/target befüllen
+  const fakeEvent = {
+    preventDefault: () => {},
+    currentTarget: form,
+    target: form,
+  } as unknown as FormEvent<HTMLFormElement>;
+
+  console.log('[PAGE] call sendMessage');
+  await sendMessage(fakeEvent);          // ⬅️ DEINE bestehende Funktion, unverändert
+
+  // (E) optional: globalen Sicht-Input leeren (MessageInput leert sich selbst bereits)
+  setInput('');
+  console.log('[PAGE] sendMessage:done');
+}, [sendMessage, setInput]);
+
 
 
   // Scroll-Ref für den Chronik-Container
