@@ -1,0 +1,83 @@
+/* app/styles/input-bar.css */
+
+/* Eingabeleiste: sticky unten, Blur, schmale Trennlinie */
+.m-inputbar {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.6);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    z-index: 20;
+  }
+  
+  /* Mehrzeiliges Textfeld mit Auto-Resize (Höhe steuert die Komponente) */
+  .m-inputbar__textarea {
+    flex: 1;
+    resize: none;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+    padding: 10px 12px;
+    line-height: 1.5;
+    font-size: 14px;
+    outline: none;
+    user-select: text; /* überschreibt globales user-select: none nur hier */
+    touch-action: manipulation;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    max-height: 180px; /* Sicherheitsdeckel für sehr lange Eingaben */
+    overflow-y: auto;  /* Scrollt innerhalb des Feldes, nicht die Seite */
+  }
+  
+  .m-inputbar__textarea::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+  }
+  
+  .m-inputbar__textarea:focus-visible {
+    border-color: rgba(0, 255, 255, 0.4);
+    box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.15);
+  }
+  
+  /* Senden-Button: klarer Fokus, dezente Hover-/Active-States */
+  .m-inputbar__send {
+    border-radius: 12px;
+    padding: 10px 14px;
+    border: 1px solid rgba(0, 255, 255, 0.25);
+    background: rgba(0, 255, 255, 0.12);
+    color: #c9ffff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 80ms ease, background 120ms ease, border-color 120ms ease;
+  }
+  
+  .m-inputbar__send:hover {
+    transform: translateY(-1px);
+    background: rgba(0, 255, 255, 0.16);
+  }
+  
+  .m-inputbar__send:active {
+    transform: translateY(0);
+  }
+  
+  .m-inputbar__send:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  /* Bewegungsreduktion beachten */
+  @media (prefers-reduced-motion: reduce) {
+    .m-inputbar, .m-inputbar__send { transition: none !important; }
+  }
+  
+  /* High-Contrast/Forced Colors Support */
+  @media (forced-colors: active) {
+    .m-inputbar { backdrop-filter: none; }
+    .m-inputbar__textarea, .m-inputbar__send { border: 1px solid CanvasText; }
+  }
+  
