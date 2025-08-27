@@ -19,10 +19,11 @@
  *  - Statischer Bühnenlook (Hintergrund/Bubbles) darf zusätzlich in page2.module.css bleiben.
  */
 
-import React, { useEffect, useMemo, useState, FormEvent } from "react";
+import React, { useEffect, useMemo, useState, FormEvent, useRef } from "react";
 import Image from "next/image"; // ⬅️ oben bei den Imports sicherstellen
 import LogoM from "../components/LogoM";
 import MessageBody from '../components/MessageBody';
+import MessageInput from '../components/MessageInput';
 
 
 /* =======================================================================
@@ -473,85 +474,115 @@ useEffect(() => {
       setLoading(false);
     }
   }
+  // nutzt deine bestehende Pipeline – sendMessage bleibt UNVERÄNDERT
+const handleSend = React.useCallback(async (text: string) => {
+  // 1) falls deine Pipeline bisher aus dem State 'input' liest:
+  //    kurz den State setzen, damit nachfolgende Logik denselben Wert hat.
+  setInput(text);
+
+  // 2) DEINE bestehende Sende-Logik aufrufen (FormEvent erwartet)
+  const fakeEvent = { preventDefault: () => {} } as unknown as FormEvent<HTMLFormElement>;
+  await sendMessage(fakeEvent);
+
+    // 3) optional: den Sicht-Input leeren – MessageInput leert sich selbst,
+    //    aber falls du den globalen 'input'-State als UI zeigst, leere ihn hier:
+    setInput('');
+  }, [sendMessage, setInput]);
+  // Scroll-Ref für den Chronik-Container
+  const convoRef = useRef<HTMLDivElement | null>(null);
+
+  // Prüft, ob der User „nahe“ am unteren Rand ist (damit wir ihn beim Lesen nicht nerven)
+  const isNearBottom = () => {
+    const el = convoRef.current;
+    if (!el) return true;
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 160; // ~160px Toleranz
+  };
+  // Scrollt bei neuen Messages nach unten – aber nur, wenn der User nicht weit nach oben gescrolled hat
+    useEffect(() => {
+      const el = convoRef.current;
+      if (!el) return;
+      if (isNearBottom()) {
+        el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+      }
+    }, [messages.length]);
+
+    // Beim ersten Mount einmal an den Boden springen (ohne Animation)
+    useEffect(() => {
+      const el = convoRef.current;
+      if (el) el.scrollTop = el.scrollHeight;
+    }, []);
+
+
+
 
   /* ======================================================================
    [ANCHOR:LAYOUT]  — Bühne, Container, Radial-Hintergrund
    ===================================================================== */
 
-const pageStyle: React.CSSProperties = {
-  minHeight: "100dvh",
-  color: tokens.color.text,
-  background: `
-    radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%),
-    radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%),
-    linear-gradient(180deg, ${tokens.color.bg1}, ${tokens.color.bg0} 60%, #000 100%)
-  `,
-};
-
-return (
-  <main
-    style={{
-      ...pageStyle,
-      display: "flex",
-      flexDirection: "column",
-      height: "100dvh",
-    }}
-  >
-    <div
-  style={{
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    marginLeft: sideMargin,
-    marginRight: sideMargin,
-    minHeight: 0, // wichtig für Flex + Overflow
-  }}
->
-  {/* Header: zentriertes M, animiert während loading */}
-<div
-  ref={headerRef}
-  style={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "24px 0",
-  }}
->
-  <LogoM size={isMobile ? 120 : 160} active={loading} />
-</div>
-
-
-    
-{/* Scrollbarer Chronik-Container über dem Dock */}
-<div
-  style={{
-    flex: 1,                         // nimmt den verfügbaren Platz
-    overflowY: "auto",
-    paddingTop: 12,
-    // Platz für das schwebende Dock + Safe-Area (iOS):
-    paddingBottom: `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`,
-    scrollbarWidth: "thin",
-  }}
->
-  <div>
-    {messages.map((m, i) => (
-      <Bubble key={i} msg={m} tokens={tokens} />
-    ))}
-  </div>
-</div>
-
-
-    </div>
-
-    {/* Dock bleibt fix unten (wird per ID gemessen) */}
-    <InputDock
-      tokens={tokens}
-      isMobile={isMobile}
-      onSubmit={sendMessage}
-      value={input}
-      setValue={setInput}
-      disabled={loading}
-    />
-  </main>
-);
+   const pageStyle: React.CSSProperties = {
+    minHeight: "100dvh",
+    color: tokens.color.text,
+    background: `
+      radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%),
+      radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%),
+      linear-gradient(180deg, ${tokens.color.bg1}, ${tokens.color.bg0} 60%, #000 100%)
+    `,
+  };
+  
+  return (
+    <main
+      style={{
+        ...pageStyle,
+        display: "flex",
+        flexDirection: "column",
+        height: "100dvh",
+      }}
+    >
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          marginLeft: sideMargin,
+          marginRight: sideMargin,
+          minHeight: 0, // wichtig für Flex + Overflow
+        }}
+      >
+        {/* Header: zentriertes M, animiert während loading */}
+        <div
+          ref={headerRef}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "24px 0",
+          }}
+        >
+          <LogoM size={isMobile ? 120 : 160} active={loading} />
+        </div>
+  
+        {/* Scrollbarer Chronik-Container über dem Dock */}
+        <div
+          ref={convoRef} // <-- neu: Auto-Scroll-Ref andocken
+          style={{
+            flex: 1,                         // nimmt den verfügbaren Platz
+            overflowY: "auto",
+            paddingTop: 12,
+            // Platz für die Eingabeleiste + Safe-Area (iOS):
+            paddingBottom: "calc(96px + env(safe-area-inset-bottom, 0px))",
+            scrollbarWidth: "thin",
+          }}
+        >
+          <div>
+            {messages.map((m, i) => (
+              <Bubble key={i} msg={m} tokens={tokens} />
+            ))}
+          </div>
+        </div>
+      </div>
+  
+      {/* Eingabeleiste unten (mehrzeilig) */}
+      <MessageInput onSend={handleSend} disabled={loading} />
+    </main>
+  );
 }
