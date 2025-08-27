@@ -474,20 +474,26 @@ useEffect(() => {
       setLoading(false);
     }
   }
-  // nutzt deine bestehende Pipeline – sendMessage bleibt UNVERÄNDERT
-const handleSend = React.useCallback(async (text: string) => {
-  // 1) falls deine Pipeline bisher aus dem State 'input' liest:
-  //    kurz den State setzen, damit nachfolgende Logik denselben Wert hat.
-  setInput(text);
+ // Adapter: MessageInput → nutzt DEINE bestehende sendMessage-Pipeline
+  const handleSend = React.useCallback(async (text: string) => {
+    // 1) Den globalen Eingabe-State befüllen
+    setInput(text);
 
-  // 2) DEINE bestehende Sende-Logik aufrufen (FormEvent erwartet)
-  const fakeEvent = { preventDefault: () => {} } as unknown as FormEvent<HTMLFormElement>;
-  await sendMessage(fakeEvent);
+    // 2) Einen Render-Tick warten, damit 'input' sicher aktualisiert ist
+    await new Promise<void>((resolve) => {
+      if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => resolve());
+      else setTimeout(resolve, 0);
+    });
 
-    // 3) optional: den Sicht-Input leeren – MessageInput leert sich selbst,
-    //    aber falls du den globalen 'input'-State als UI zeigst, leere ihn hier:
+    // 3) Deine bestehende Sende-Logik (FormEvent erwartet)
+    const fakeEvent = { preventDefault: () => {} } as unknown as FormEvent<HTMLFormElement>;
+    await sendMessage(fakeEvent);
+
+    // 4) Optional: globalen Sicht-Input leeren (MessageInput leert sich selbst)
     setInput('');
   }, [sendMessage, setInput]);
+
+
   // Scroll-Ref für den Chronik-Container
   const convoRef = useRef<HTMLDivElement | null>(null);
 
