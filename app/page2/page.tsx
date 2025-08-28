@@ -427,32 +427,51 @@ useEffect(() => {
     ]);
   }, []);
 
-  async function sendMessage(e: FormEvent) {
+  async function sendMessage(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const text = input.trim();
-    if (!text || loading) return;
-
-    const next: ChatMessage[] = [...messages, { role: "user", content: text }];
-    setMessages(next);
-    setInput("");
-    setLoading(true);
-
+  
+    // 1) Text primär aus dem Event/FormData lesen (von handleSend geliefert),
+    //    Fallback: aktueller State `input`
+    let text = input.trim();
     try {
-      const history: ChatMessage[] = [...next]; // ✅ das reicht
-
-      console.log("Sending to /api/chat:", history);
-
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const form = e.currentTarget as HTMLFormElement | null;
+      if (form) {
+        const fd = new FormData(form);
+        const fromForm =
+          (fd.get('message') || fd.get('input') || '')?.toString().trim();
+        if (fromForm) text = fromForm;
+      }
+    } catch {
+      /* stiller Fallback auf State */
+    }
+  
+    // 2) Guard: nur senden, wenn wirklich Text da ist und nicht bereits geladen wird
+    if (!text || loading) return;
+  
+    // 3) User-Bubble sofort anhängen
+    const userMsg: ChatMessage = { role: 'user', content: text, format: 'markdown' };
+    const next: ChatMessage[] = [...messages, userMsg];
+    setMessages(next);
+    setInput('');
+    setLoading(true);
+  
+    try {
+      // 4) Verlauf für die API (stabil aus `next`)
+      const history: ChatMessage[] = [...next];
+  
+      console.log('Sending to /api/chat:', history);
+  
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-        messages: history.map((m) => ({ role: m.role, content: m.content })),
-        temperature: 0.7,
-        protocol: "GPTX", // 💡 das aktiviert das Laden der GPTX.txt
-      }),
-
+          messages: history.map((m) => ({ role: m.role, content: m.content })),
+          temperature: 0.7,
+          protocol: 'GPTX', // 💡 lädt GPTX.txt serverseitig
+        }),
       });
-
+      // … dein bestehender Code geht hier weiter (res.ok prüfen, reply bauen, setMessages(...), catch/finally) …
+  
       if (!res.ok) throw new Error(await res.text());
 
       const data = await res.json();
