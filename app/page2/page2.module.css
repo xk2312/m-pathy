@@ -1,10 +1,11 @@
+/* ===== Base ========================================================== */
 .bg {
   background: radial-gradient(circle at center, #0d1b1e, #000);
   color: white;
   font-family: system-ui, sans-serif;
 }
 
-/* Chat bubbles */
+/* ===== Chat Bubbles ================================================== */
 .userBubble {
   background: rgba(0, 80, 90, 0.6);
   padding: 12px 18px;
@@ -23,7 +24,8 @@
   margin-left: 0;
 }
 
-/* Floating input container */
+/* ===== (Legacy) Floating Input ====================================== */
+/* (Dein InputDock nutzt Inline-Styles; diese Klasse bleibt für Alt-Nutzung) */
 .inputContainer {
   position: fixed;
   bottom: 300px; /* Desktop default */
@@ -64,59 +66,66 @@
   background: #00ccb4;
 }
 
-/* Mobile adjustments */
+/* ===== Desktop: 2-Spalten-Bereich =================================== */
+.bottomSplit {
+  display: grid !important;
+  grid-template-columns: 320px 1fr !important; /* Säule | Chat */
+  gap: 16px;
+  min-height: 0;
+  align-items: stretch;
+}
+
+.bottomSplit > * { min-width: 0; } /* verhindert Abschneiden */
+
+.rightPane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Optional: zentrale Maxbreite für Content-Blocks */
+.mainMax { max-width: 1320px; margin: 0 auto; }
+
+/* ===== Mobile: Overlay-Säule ======================================== */
+/* In-Flow Sidebar nur Desktop zeigen */
+.sidebarInFlow { display: block; }
+
+@media (max-width: 960px) {
+  .bottomSplit { grid-template-columns: 1fr; }
+  .sidebarInFlow { display: none; } /* im Flow ausblenden – Overlay übernimmt */
+}
+
+/* Overlay-Panel + Scrim (nur Mobile gerendert per React) */
+.sidebarBase {
+  width: 86vw;
+  max-width: 380px;
+  position: fixed;
+  inset: 0 auto 0 0;        /* top:0; left:0; bottom:0 */
+  background: rgba(10, 14, 16, 0.96);
+  border-right: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+  z-index: 30;
+  transform: translateX(-100%);
+  transition: transform .2s ease;
+  overflow: auto;
+}
+
+.sidebarOpen { transform: translateX(0); }
+
+.scrim {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(2px);
+  z-index: 20;
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s ease;
+}
+.scrimVisible { opacity: 1; pointer-events: auto; }
+
+/* ===== Mobile Tuning für legacy inputContainer ====================== */
 @media (max-width: 768px) {
   .inputContainer {
     bottom: 50px;
     width: calc(100% - 20px);
   }
 }
-/* --- GRID SAFETY PATCHES --- */
-
-/* 1) Erzwinge Grid (falls irgendwo anders display überschreibt) */
-.bottomSplit {
-  display: grid !important;          /* <- wichtig */
-  grid-template-columns: 320px 1fr !important;
-  gap: 16px;
-  min-height: 0;
-  align-items: stretch;
-}
-
-/* 2) Verhindere Abschneiden in der rechten Spalte (Safari/Flex-Child) */
-.rightPane,
-.rightPane > * {
-  min-height: 0;
-}
-
-/* 3) Debug-Outline für linke Spalte (nur kurz zum Test, dann wieder löschen) */
-/* .bottomSplit > :first-child { outline: 2px dashed rgba(34,211,238,.6); } */
-
-/* Mobile wie gehabt */
-@media (max-width: 960px) {
-  .bottomSplit { grid-template-columns: 1fr; }
-}
-/* --- GRID SAFETY PATCHES --- */
-
-/* 1) Erzwinge Grid (falls irgendwo anders display überschreibt) */
-.bottomSplit {
-  display: grid !important;          /* <- wichtig */
-  grid-template-columns: 320px 1fr !important;
-  gap: 16px;
-  min-height: 0;
-  align-items: stretch;
-}
-
-/* 2) Verhindere Abschneiden in der rechten Spalte (Safari/Flex-Child) */
-.rightPane,
-.rightPane > * {
-  min-height: 0;
-}
-
-/* 3) Debug-Outline für linke Spalte (nur kurz zum Test, dann wieder löschen) */
-/* .bottomSplit > :first-child { outline: 2px dashed rgba(34,211,238,.6); } */
-
-/* Mobile wie gehabt */
-@media (max-width: 960px) {
-  .bottomSplit { grid-template-columns: 1fr; }
-}
-
