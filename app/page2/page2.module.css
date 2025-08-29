@@ -76,7 +76,9 @@
   grid-template-columns: 320px 1fr;
   gap: 16px;
   min-height: 0;
+  align-items: stretch;
 }
+.bottomSplit > * { min-width: 0; } /* verhindert Abschneiden */
 .rightPane {
   display: flex;
   flex-direction: column;
@@ -85,3 +87,4 @@
 @media (max-width: 960px) {
   .bottomSplit { grid-template-columns: 1fr; }
 }
+
