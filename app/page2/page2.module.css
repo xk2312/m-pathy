@@ -95,4 +95,28 @@
 @media (max-width: 960px) {
   .bottomSplit { grid-template-columns: 1fr; }
 }
+/* --- GRID SAFETY PATCHES --- */
+
+/* 1) Erzwinge Grid (falls irgendwo anders display überschreibt) */
+.bottomSplit {
+  display: grid !important;          /* <- wichtig */
+  grid-template-columns: 320px 1fr !important;
+  gap: 16px;
+  min-height: 0;
+  align-items: stretch;
+}
+
+/* 2) Verhindere Abschneiden in der rechten Spalte (Safari/Flex-Child) */
+.rightPane,
+.rightPane > * {
+  min-height: 0;
+}
+
+/* 3) Debug-Outline für linke Spalte (nur kurz zum Test, dann wieder löschen) */
+/* .bottomSplit > :first-child { outline: 2px dashed rgba(34,211,238,.6); } */
+
+/* Mobile wie gehabt */
+@media (max-width: 960px) {
+  .bottomSplit { grid-template-columns: 1fr; }
+}
 
