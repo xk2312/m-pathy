@@ -25,8 +25,6 @@ import LogoM from "../components/LogoM";
 import MessageBody from '../components/MessageBody';
 import MessageInput from '../components/MessageInput';
 import Saeule from "../components/Saeule";
-import styles from "./page2.module.css";
-
 
 
 /* =======================================================================
@@ -642,7 +640,7 @@ const handleSend = React.useCallback(async (text: string) => {
           <LogoM size={isMobile ? 120 : 160} active={loading} />
         </div>
   
-        {/* UNTERER TEIL: 2-Spalten – links Säule, rechts Chat (inline styles, build-safe) */}
+        {/* UNTERER TEIL: 2-Spalten – links Säule, rechts Chat (inline, build-safe) */}
 <div
   style={{
     display: "grid",
@@ -664,7 +662,7 @@ const handleSend = React.useCallback(async (text: string) => {
         flex: 1,
         overflowY: "auto",
         paddingTop: 12,
-        // Platz für Eingabeleiste + Safe-Area (iOS):
+        // Platz für Eingabeleiste + Safe-Area (iOS)
         paddingBottom: `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`,
         scrollbarWidth: "thin",
       }}
@@ -676,7 +674,7 @@ const handleSend = React.useCallback(async (text: string) => {
       </div>
     </div>
 
-    {/* Eingabeleiste unten, rechts */}
+    {/* Eingabeleiste unten rechts */}
     <div style={{ paddingTop: 8 }}>
       <MessageInput onSend={handleSend} disabled={loading} />
     </div>
