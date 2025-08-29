@@ -71,3 +71,17 @@
     width: calc(100% - 20px);
   }
 }
+.bottomSplit {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 16px;
+  min-height: 0;
+}
+.rightPane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+@media (max-width: 960px) {
+  .bottomSplit { grid-template-columns: 1fr; }
+}
