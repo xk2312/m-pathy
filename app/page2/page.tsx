@@ -24,6 +24,9 @@ import Image from "next/image"; // ⬅️ oben bei den Imports sicherstellen
 import LogoM from "../components/LogoM";
 import MessageBody from '../components/MessageBody';
 import MessageInput from '../components/MessageInput';
+import Saeule from "../components/Saeule";
+import styles from "./page2.module.css";
+
 
 
 /* =======================================================================
@@ -118,9 +121,34 @@ function useTheme(persona: keyof typeof PERSONAS = "default") {
    [ANCHOR:UTILS]  — kleine Helfer
    ======================================================================= */
 
-function cx(...parts: Array<string | false | null | undefined>) {
-  return parts.filter(Boolean).join(" ");
-}
+   function cx(...parts: Array<string | false | null | undefined>) {
+    return parts.filter(Boolean).join(" ");
+  }
+  
+  /** LocalStorage – schlank & failsafe */
+  const LS_KEY = "mpathy:thread:default";
+  const MAX_HISTORY = 200;
+  
+  function truncate<T>(arr: T[]): T[] {
+    return arr.length > MAX_HISTORY ? arr.slice(arr.length - MAX_HISTORY) : arr;
+  }
+  function loadMessages(): any[] {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = window.localStorage.getItem(LS_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray((parsed as any)?.messages) ? (parsed as any).messages : [];
+    } catch { return []; }
+  }
+  function saveMessages(messages: unknown[]): void {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(LS_KEY, JSON.stringify({ messages, updatedAt: Date.now() }));
+    } catch {/* stiller Fail */}
+  }
+  
+  
 
 /* =======================================================================
    [ANCHOR:COMPONENTS]  — UI-Bausteine
@@ -422,77 +450,88 @@ useEffect(() => {
 
   // Initiale Begrüßung
   useEffect(() => {
-    setMessages([
-      { role: "assistant", content: "Welcome. I am M. Mother of AI.", format: "markdown" },
-    ]);
+    const initial = loadMessages();
+    if (initial && initial.length > 0) {
+      setMessages(initial as ChatMessage[]);
+    } else {
+      setMessages([{ role: "assistant", content: "Welcome. I am M. Mother of AI.", format: "markdown" }]);
+    }
   }, []);
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  async function sendMessage(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-  
-    // 1) Text primär aus dem Event/FormData lesen (von handleSend geliefert),
-    //    Fallback: aktueller State `input`
-    let text = input.trim();
-    try {
-      const form = e.currentTarget as HTMLFormElement | null;
-      if (form) {
-        const fd = new FormData(form);
-        const fromForm =
-          (fd.get('message') || fd.get('input') || '')?.toString().trim();
-        if (fromForm) text = fromForm;
-      }
-    } catch {
-      /* stiller Fallback auf State */
+useEffect(() => {
+  if (saveTimer.current) clearTimeout(saveTimer.current);
+  saveTimer.current = setTimeout(() => saveMessages(messages), 150);
+  return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
+}, [messages]);
+
+
+async function sendMessage(e: FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+
+  // 1) Text primär aus dem Event/FormData lesen (von handleSend geliefert),
+  //    Fallback: aktueller State `input`
+  let text = input.trim();
+  try {
+    const form = e.currentTarget as HTMLFormElement | null;
+    if (form) {
+      const fd = new FormData(form);
+      const fromForm =
+        (fd.get("message") || fd.get("input") || "")?.toString().trim();
+      if (fromForm) text = fromForm;
     }
-  
-    // 2) Guard: nur senden, wenn wirklich Text da ist und nicht bereits geladen wird
-    if (!text || loading) return;
-  
-    // 3) User-Bubble sofort anhängen
-    const userMsg: ChatMessage = { role: 'user', content: text, format: 'markdown' };
-    const next: ChatMessage[] = [...messages, userMsg];
-    setMessages(next);
-    setInput('');
-    setLoading(true);
-  
-    try {
-      // 4) Verlauf für die API (stabil aus `next`)
-      const history: ChatMessage[] = [...next];
-  
-      console.log('Sending to /api/chat:', history);
-  
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: history.map((m) => ({ role: m.role, content: m.content })),
-          temperature: 0.7,
-          protocol: 'GPTX', // 💡 lädt GPTX.txt serverseitig
-        }),
-      });
-      // … dein bestehender Code geht hier weiter (res.ok prüfen, reply bauen, setMessages(...), catch/finally) …
-  
-      if (!res.ok) throw new Error(await res.text());
-
-      const data = await res.json();
-
-      const reply: ChatMessage =
-        data && typeof data.role === "string" && typeof data.content === "string"
-          ? { ...(data as any), format: "markdown" }
-          : { role: "assistant", content: String(data?.reply ?? "") || "…", format: "markdown" };
-
-      setMessages((m) => [...m, reply]);
-
-    } catch (err: any) {
-      setMessages((m) => [
-        ...m,
-        { role: "assistant", content: `△ Verbindung: ${err?.message || "Unbekannt"}`, format: "markdown" }
-      ]);
-      
-    } finally {
-      setLoading(false);
-    }
+  } catch {
+    /* stiller Fallback auf State */
   }
+
+  // 2) Guard: nur senden, wenn wirklich Text da ist und nicht bereits geladen wird
+  if (!text || loading) return;
+
+  // 3) User-Bubble sofort anhängen (⚠️ Rolling Window mit truncate)
+  const userMsg: ChatMessage = { role: "user", content: text, format: "markdown" };
+  const next: ChatMessage[] = [...messages, userMsg]; // für history/API stabil
+  setMessages(prev => truncate([...(prev ?? []), userMsg]));
+  setInput("");
+  setLoading(true);
+
+  try {
+    // 4) Verlauf für die API (stabil aus `next`)
+    const history: ChatMessage[] = [...next];
+
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages: history.map((m) => ({ role: m.role, content: m.content })),
+        temperature: 0.7,
+        protocol: "GPTX",
+      }),
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+
+    const data = await res.json();
+
+    const reply: ChatMessage =
+      data && typeof data.role === "string" && typeof data.content === "string"
+        ? { ...(data as any), format: "markdown" }
+        : { role: "assistant", content: String(data?.reply ?? "") || "…", format: "markdown" };
+
+    // (✅) Reply anhängen mit truncate
+    setMessages(prev => truncate([...(prev ?? []), reply]));
+
+  } catch (err: any) {
+    // (✅) Fehlerhinweis anhängen mit truncate
+    setMessages(prev => truncate([
+      ...(prev ?? []),
+      { role: "assistant", content: `△ Verbindung: ${err?.message || "Unbekannt"}`, format: "markdown" }
+    ]));
+
+  } finally {
+    setLoading(false);
+  }
+}
+
  // Adapter: MessageInput → nutzt DEINE bestehende sendMessage-Pipeline (FormEvent- oder State-basiert)
 const handleSend = React.useCallback(async (text: string) => {
   console.log('[PAGE] handleSend:start', { text });
