@@ -642,38 +642,47 @@ const handleSend = React.useCallback(async (text: string) => {
           <LogoM size={isMobile ? 120 : 160} active={loading} />
         </div>
   
-        {/* UNTERER TEIL: 2-Spalten – links Säule, rechts Chat */}
-        <div className={styles.bottomSplit} style={{ flex: 1, minHeight: 0 }}>
-          {/* Säule links */}
-          <Saeule />
-  
-          {/* Rechte Spalte */}
-          <div className={styles.rightPane}>
-            {/* Scrollbarer Chronik-Container */}
-            <div
-              ref={convoRef}
-              style={{
-                flex: 1,
-                overflowY: "auto",
-                paddingTop: 12,
-                // Platz für Eingabeleiste + Safe-Area (iOS):
-                paddingBottom: "calc(96px + env(safe-area-inset-bottom, 0px))",
-                scrollbarWidth: "thin",
-              }}
-            >
-              <div>
-                {messages.map((m, i) => (
-                  <Bubble key={i} msg={m} tokens={tokens} />
-                ))}
-              </div>
-            </div>
-  
-            {/* Eingabeleiste unten rechts */}
-            <div style={{ paddingTop: 8 }}>
-              <MessageInput onSend={handleSend} disabled={loading} />
-            </div>
-          </div>
-        </div>
+        {/* UNTERER TEIL: 2-Spalten – links Säule, rechts Chat (inline styles, build-safe) */}
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "320px 1fr",
+    gap: 16,
+    minHeight: 0,
+    flex: 1,
+  }}
+>
+  {/* Säule links */}
+  <Saeule />
+
+  {/* Rechte Spalte */}
+  <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
+    {/* Scrollbarer Chronik-Container */}
+    <div
+      ref={convoRef}
+      style={{
+        flex: 1,
+        overflowY: "auto",
+        paddingTop: 12,
+        // Platz für Eingabeleiste + Safe-Area (iOS):
+        paddingBottom: `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`,
+        scrollbarWidth: "thin",
+      }}
+    >
+      <div>
+        {messages.map((m, i) => (
+          <Bubble key={i} msg={m} tokens={tokens} />
+        ))}
+      </div>
+    </div>
+
+    {/* Eingabeleiste unten rechts */}
+    <div style={{ paddingTop: 8 }}>
+      <MessageInput onSend={handleSend} disabled={loading} />
+    </div>
+  </div>
+</div>
+
       </div>
     </main>
   );
