@@ -510,21 +510,31 @@ return (
 
 
     
-{/* Scrollbarer Chronik-Container über dem Dock */}
-<div
-  style={{
-    flex: 1,                         // nimmt den verfügbaren Platz
-    overflowY: "auto",
-    paddingTop: 12,
-    // Platz für das schwebende Dock + Safe-Area (iOS):
-    paddingBottom: `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`,
-    scrollbarWidth: "thin",
-  }}
->
-  <div>
-    {messages.map((m, i) => (
-      <Bubble key={i} msg={m} tokens={tokens} />
-    ))}
+{/* UNTERER TEIL: 2-Spalten – links Säule, rechts Chat */}
+<div className={styles.bottomSplit} style={{ flex: 1, minHeight: 0 }}>
+  {/* Säule links */}
+  <Saeule />
+
+  {/* Rechte Spalte */}
+  <div className={styles.rightPane}>
+    {/* Scrollbarer Chronik-Container über dem Dock */}
+    <div
+      ref={convoRef}
+      style={{
+        flex: 1,
+        overflowY: "auto",
+        paddingTop: 12,
+        // Platz für das schwebende Dock + Safe-Area (iOS):
+        paddingBottom: `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`,
+        scrollbarWidth: "thin",
+      }}
+    >
+      <div>
+        {messages.map((m, i) => (
+          <Bubble key={i} msg={m} tokens={tokens} />
+        ))}
+      </div>
+    </div>
   </div>
 </div>
 

@@ -629,7 +629,7 @@ const handleSend = React.useCallback(async (text: string) => {
           minHeight: 0, // wichtig für Flex + Overflow
         }}
       >
-        {/* Header: zentriertes M, animiert während loading */}
+        {/* Header: zentriertes M */}
         <div
           ref={headerRef}
           style={{
@@ -642,28 +642,39 @@ const handleSend = React.useCallback(async (text: string) => {
           <LogoM size={isMobile ? 120 : 160} active={loading} />
         </div>
   
-        {/* Scrollbarer Chronik-Container über dem Dock */}
-        <div
-          ref={convoRef} // <-- neu: Auto-Scroll-Ref andocken
-          style={{
-            flex: 1,                         // nimmt den verfügbaren Platz
-            overflowY: "auto",
-            paddingTop: 12,
-            // Platz für die Eingabeleiste + Safe-Area (iOS):
-            paddingBottom: "calc(96px + env(safe-area-inset-bottom, 0px))",
-            scrollbarWidth: "thin",
-          }}
-        >
-          <div>
-            {messages.map((m, i) => (
-              <Bubble key={i} msg={m} tokens={tokens} />
-            ))}
+        {/* UNTERER TEIL: 2-Spalten – links Säule, rechts Chat */}
+        <div className={styles.bottomSplit} style={{ flex: 1, minHeight: 0 }}>
+          {/* Säule links */}
+          <Saeule />
+  
+          {/* Rechte Spalte */}
+          <div className={styles.rightPane}>
+            {/* Scrollbarer Chronik-Container */}
+            <div
+              ref={convoRef}
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                paddingTop: 12,
+                // Platz für Eingabeleiste + Safe-Area (iOS):
+                paddingBottom: "calc(96px + env(safe-area-inset-bottom, 0px))",
+                scrollbarWidth: "thin",
+              }}
+            >
+              <div>
+                {messages.map((m, i) => (
+                  <Bubble key={i} msg={m} tokens={tokens} />
+                ))}
+              </div>
+            </div>
+  
+            {/* Eingabeleiste unten rechts */}
+            <div style={{ paddingTop: 8 }}>
+              <MessageInput onSend={handleSend} disabled={loading} />
+            </div>
           </div>
         </div>
       </div>
-  
-      {/* Eingabeleiste unten (mehrzeilig) */}
-      <MessageInput onSend={handleSend} disabled={loading} />
     </main>
   );
 }
