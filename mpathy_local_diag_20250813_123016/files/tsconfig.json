@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,               // auf false stellen, wenn keine .js-Dateien nötig sind
+    "allowJs": true,               // set to false if you don't need .js files
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -25,15 +25,10 @@
     "incremental": true,
     "plugins": [{ "name": "next" }]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": [
     "node_modules",
-    // verhindert Prüfungen im lokal/CI erzeugten Snapshot-Baum
+    // ignore the local/CI snapshot tree that contains the stale duplicate page.tsx
     "mpathy_local_diag_*",
     "**/mpathy_local_diag_*",
     "**/mpathy_local_diag_*/**"
