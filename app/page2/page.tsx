@@ -662,7 +662,7 @@ const handleSend = React.useCallback(async (text: string) => {
         flex: 1,
         overflowY: "auto",
         paddingTop: 12,
-        // Platz für Eingabeleiste + Safe-Area (iOS)
+        // Platz für Eingabeleiste + Safe-Area (iOS):
         paddingBottom: `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`,
         scrollbarWidth: "thin",
       }}
