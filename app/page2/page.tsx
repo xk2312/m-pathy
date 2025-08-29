@@ -676,7 +676,7 @@ const handleSend = React.useCallback(async (text: string) => {
       </div>
     </div>
 
-    {/* Eingabeleiste unten rechts */}
+    {/* Eingabeleiste unten, rechts */}
     <div style={{ paddingTop: 8 }}>
       <MessageInput onSend={handleSend} disabled={loading} />
     </div>
