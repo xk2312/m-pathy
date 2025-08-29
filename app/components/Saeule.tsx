@@ -2,7 +2,6 @@
 import styles from "./Saeule.module.css";
 
 export default function Saeule() {
-  // Fallback-Inhalt – wird später gern mit echtem Verlauf gefüttert
   const items = [{ id: "cur", title: "Aktueller Chat", ts: Date.now() }];
 
   return (
