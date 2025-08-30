@@ -54,3 +54,19 @@ filestack_key.txt
 # CI artifacts (nicht committen)
 /package-src/
 /m-pathy.tar.gz
+# env & secrets
+.env
+.env.*
+!.env.example
+/srv/
+/etc/
+/tmp/
+
+# build outputs
+.next/
+dist/
+node_modules/
+*.log
+
+# lokale Prompts/Artefakte
+GPTX*.txt
