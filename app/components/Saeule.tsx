@@ -4,8 +4,6 @@ import styles from "./Saeule.module.css";
 import audit from "../../lib/auditLogger";
 const { logEvent } = audit;
 
-
-
 type ModeId = "onboarding" | "M" | "council" | `C${string}`;
 type KiId =
   | "M (Auto)"
@@ -40,17 +38,6 @@ const KIS: KiId[] = [
   "Amazon Nexus",
   "OpenAI Root",
 ];
-
-function logEvent(name: string, data: Record<string, any>) {
-  try {
-    const ts = new Date().toISOString();
-    const prev = JSON.parse(localStorage.getItem("mpathy:audit") || "[]");
-    prev.push({ name, ts, ...data });
-    localStorage.setItem("mpathy:audit", JSON.stringify(prev));
-    // Debug (leise):
-    // console.debug("[audit]", name, data);
-  } catch {}
-}
 
 export default function Saeule() {
   // --- State ---------------------------------------------------------------
