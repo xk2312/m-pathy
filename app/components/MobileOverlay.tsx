@@ -1,0 +1,146 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import Saeule from "./Saeule";
+
+type Props = {
+  open: boolean;
+  onClose: () => void;
+  /** optional: id eines Elements, das beim Öffnen fokussiert werden soll */
+  initialFocusId?: string;
+};
+
+export default function MobileOverlay({ open, onClose, initialFocusId }: Props) {
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  // Body-Scroll-Lock
+  useEffect(() => {
+    if (!open) return;
+    const { overflow, position } = document.body.style;
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "relative";
+    return () => {
+      document.body.style.overflow = overflow;
+      document.body.style.position = position;
+    };
+  }, [open]);
+
+  // ESC schließt
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      // rudimentäre Focus-Trap (TAB bleibt im Drawer)
+      if (e.key === "Tab" && drawerRef.current) {
+        const f = drawerRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (f.length === 0) return;
+        const first = f[0];
+        const last = f[f.length - 1];
+        const active = document.activeElement as HTMLElement | null;
+        if (e.shiftKey && active === first) {
+          last.focus();
+          e.preventDefault();
+        } else if (!e.shiftKey && active === last) {
+          first.focus();
+          e.preventDefault();
+        }
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  // Initialer Fokus
+  useEffect(() => {
+    if (!open) return;
+    const target =
+      (initialFocusId && document.getElementById(initialFocusId)) ||
+      drawerRef.current?.querySelector<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    target?.focus();
+  }, [open, initialFocusId]);
+
+  if (!open) return null;
+
+  return (
+    <div
+      aria-label="Mobiles Säulen-Overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-describedby="mobile-overlay-desc"
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 60,
+      }}
+    >
+      {/* Scrim */}
+      <div
+        onClick={onClose}
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "rgba(2,6,23,0.6)",
+          backdropFilter: "blur(6px)",
+        }}
+      />
+
+      {/* Drawer */}
+      <div
+        ref={drawerRef}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100dvh",
+          width: "min(92vw, 420px)",
+          background: "rgba(255,255,255,0.06)",
+          borderRight: "1px solid rgba(255,255,255,0.18)",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
+          transform: "translateX(0)",
+          transition: "transform 180ms ease",
+          display: "flex",
+          flexDirection: "column",
+          padding: 12,
+          backdropFilter: "blur(10px)",
+        }}
+      >
+        {/* Kopfzeile */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 8,
+          }}
+        >
+          <div id="mobile-overlay-desc" style={{ fontSize: 12, color: "#9fb3c8" }}>
+            Mobile Navigation der Säule
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Overlay schließen"
+            style={{
+              minHeight: 44,
+              padding: "8px 10px",
+              borderRadius: 10,
+              border: "1px solid #314156",
+              background: "#0b1220",
+              color: "#e6f0f3",
+              fontWeight: 700,
+            }}
+          >
+            Schließen
+          </button>
+        </div>
+
+        {/* Inhalt: identische Säulen-Struktur */}
+        <div style={{ overflow: "auto", paddingBottom: 12 }}>
+          <Saeule />
+        </div>
+      </div>
+    </div>
+  );
+}

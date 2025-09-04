@@ -25,6 +25,9 @@ import LogoM from "../components/LogoM";
 import MessageBody from '../components/MessageBody';
 import MessageInput from '../components/MessageInput';
 import Saeule from "../components/Saeule";
+import SidebarContainer from "../components/SidebarContainer";
+import MobileOverlay from "../components/MobileOverlay";
+import StickyFab from "../components/StickyFab";
 
 
 /* =======================================================================
@@ -598,90 +601,100 @@ const handleSend = React.useCallback(async (text: string) => {
    [ANCHOR:LAYOUT]  — Bühne, Container, Radial-Hintergrund
    ===================================================================== */
 
-   const pageStyle: React.CSSProperties = {
-    minHeight: "100dvh",
-    color: tokens.color.text,
-    background: `
-      radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%),
-      radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%),
-      linear-gradient(180deg, ${tokens.color.bg1}, ${tokens.color.bg0} 60%, #000 100%)
-    `,
-  };
-  
-  return (
-    <main
+const [overlayOpen, setOverlayOpen] = useState(false);
+
+const pageStyle: React.CSSProperties = {
+  minHeight: "100dvh",
+  color: tokens.color.text,
+  background: `
+    radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%),
+    radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%),
+    linear-gradient(180deg, ${tokens.color.bg1}, ${tokens.color.bg0} 60%, #000 100%)
+  `,
+};
+
+return (
+  <main
+    style={{
+      ...pageStyle,
+      display: "flex",
+      flexDirection: "column",
+      height: "100dvh",
+    }}
+  >
+    <div
       style={{
-        ...pageStyle,
+        flex: 1,
         display: "flex",
         flexDirection: "column",
-        height: "100dvh",
+        marginLeft: sideMargin,
+        marginRight: sideMargin,
+        minHeight: 0,          // wichtig für Flex + Overflow
+        maxWidth: 1280,        // optional: bremst extreme Breiten
+        alignSelf: "center",   // optional: zentriert den Content
       }}
     >
+      {/* Header: zentriertes M */}
       <div
+        ref={headerRef}
         style={{
-          flex: 1,
           display: "flex",
-          flexDirection: "column",
-          marginLeft: sideMargin,
-          marginRight: sideMargin,
-          minHeight: 0,          // wichtig für Flex + Overflow
-          maxWidth: 1280,        // optional: bremst extreme Breiten
-          alignSelf: "center",   // optional: zentriert den Content
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "24px 0",
         }}
       >
-        {/* Header: zentriertes M */}
-        <div
-          ref={headerRef}
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: "24px 0",
-          }}
-        >
-          <LogoM size={isMobile ? 120 : 160} active={loading} />
-        </div>
-  
-        {/* UNTERER TEIL: 2-Spalten – links Säule, rechts Chat (inline, build-safe) */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
-            gap: 16,
-            minHeight: 0,
-            flex: 1,
-          }}
-        >
-          {/* Säule links (nur Desktop im Flow) */}
-          {!isMobile && <Saeule />}
-  
-          {/* Rechte Spalte */}
-          <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
-            {/* Scrollbarer Chronik-Container */}
-            <div
-              ref={convoRef}
-              style={{
-                flex: 1,
-                overflowY: "auto",
-                paddingTop: 12,
-                paddingBottom: `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`,
-                scrollbarWidth: "thin",
-              }}
-            >
-              <div>
-                {messages.map((m, i) => (
-                  <Bubble key={i} msg={m} tokens={tokens} />
-                ))}
-              </div>
+        <LogoM size={isMobile ? 120 : 160} active={loading} />
+      </div>
+
+      {/* UNTERER TEIL: 2-Spalten – links Säule/Container, rechts Chat */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+          gap: 16,
+          minHeight: 0,
+          flex: 1,
+        }}
+      >
+        {/* Säule links (Desktop statisch via SidebarContainer; Mobile via Overlay) */}
+        {!isMobile && <SidebarContainer />}
+
+        {/* Rechte Spalte */}
+        <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
+          {/* Scrollbarer Chronik-Container */}
+          <div
+            ref={convoRef}
+            style={{
+              flex: 1,
+              overflowY: "auto",
+              paddingTop: 12,
+              paddingBottom: `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`,
+              scrollbarWidth: "thin",
+            }}
+          >
+            <div>
+              {messages.map((m, i) => (
+                <Bubble key={i} msg={m} tokens={tokens} />
+              ))}
             </div>
-  
-            {/* Eingabeleiste fuer unten rechts */}
-            <div style={{ paddingTop: 8 }}>
-              <MessageInput onSend={handleSend} disabled={loading} />
-            </div>
+          </div>
+
+          {/* Eingabeleiste fuer unten rechts */}
+          <div style={{ paddingTop: 8 }}>
+            <MessageInput onSend={handleSend} disabled={loading} />
           </div>
         </div>
       </div>
-    </main>
-  );
-}  
+    </div>
+
+    {/* Mobile: Sticky-FAB öffnet Overlay */}
+    {isMobile && (
+      <>
+        <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
+        <MobileOverlay open={overlayOpen} onClose={() => setOverlayOpen(false)} />
+      </>
+    )}
+  </main>
+);
+}
