@@ -8,9 +8,16 @@ type Props = {
   onClose: () => void;
   /** optional: id eines Elements, das beim Öffnen fokussiert werden soll */
   initialFocusId?: string;
+  /** optional: Systemmeldung nach außen reichen (passt zu onSystemMessage in deinem Layout) */
+  onSystemMessage?: (content: string) => void;
 };
 
-export default function MobileOverlay({ open, onClose, initialFocusId }: Props) {
+export default function MobileOverlay({
+  open,
+  onClose,
+  initialFocusId,
+  onSystemMessage, // ← hinzugefügt (wird nicht automatisch aufgerufen)
+}: Props) {
   const drawerRef = useRef<HTMLDivElement>(null);
 
   // Body-Scroll-Lock
@@ -25,12 +32,11 @@ export default function MobileOverlay({ open, onClose, initialFocusId }: Props) 
     };
   }, [open]);
 
-  // ESC schließt
+  // ESC schließt + rudimentäre Focus-Trap
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      // rudimentäre Focus-Trap (TAB bleibt im Drawer)
       if (e.key === "Tab" && drawerRef.current) {
         const f = drawerRef.current.querySelectorAll<HTMLElement>(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -57,7 +63,9 @@ export default function MobileOverlay({ open, onClose, initialFocusId }: Props) 
     if (!open) return;
     const target =
       (initialFocusId && document.getElementById(initialFocusId)) ||
-      drawerRef.current?.querySelector<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      drawerRef.current?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
     target?.focus();
   }, [open, initialFocusId]);
 
@@ -69,11 +77,7 @@ export default function MobileOverlay({ open, onClose, initialFocusId }: Props) 
       role="dialog"
       aria-modal="true"
       aria-describedby="mobile-overlay-desc"
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 60,
-      }}
+      style={{ position: "fixed", inset: 0, zIndex: 60 }}
     >
       {/* Scrim */}
       <div

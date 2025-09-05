@@ -19,85 +19,111 @@
  *  - Statischer Bühnenlook (Hintergrund/Bubbles) darf zusätzlich in page2.module.css bleiben.
  */
 
-import React, { useEffect, useMemo, useState, FormEvent, useRef } from "react";
-import Image from "next/image"; // ⬅️ oben bei den Imports sicherstellen
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useMemo,       // ✅ hinzugefügt
+  FormEvent,
+} from "react";
+import Image from "next/image";
+
 import LogoM from "../components/LogoM";
-import MessageBody from '../components/MessageBody';
-import MessageInput from '../components/MessageInput';
+import MessageBody from "../components/MessageBody";
+import MessageInput from "../components/MessageInput";
 import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
 import StickyFab from "../components/StickyFab";
 
+// ⚠️ NICHT importieren: useTheme aus "next-themes" (Konflikt mit lokalem Hook)
+// import { useTheme } from "next-themes"; // ❌ bitte entfernt lassen
+
+// ——— Theme-Token-Typen (global, einmalig) ———
+type ColorTokens = { bg0?: string; bg1?: string; text?: string };
+type ThemeTokens = { color?: ColorTokens; [k: string]: any };
+
 
 /* =======================================================================
-   [ANCHOR:CONFIG]  — Design Tokens, Themes, Personas, System Prompt
+   [ANCHOR:CONFIG] — Design Tokens, Themes, Personas, System Prompt
    ======================================================================= */
 
-type Tokens = {
-  radius: { sm: number; md: number; lg: number };
-  shadow: { soft: string; glowCyan: string };
-  color: {
-    bg0: string;
-    bg1: string;
-    text: string;
-    textMuted: string;
-    cyan: string;
-    cyanGlass: string;
-    cyanBorder: string;
-    slateGlass: string;
-    slateBorder: string;
-    glass: string;
-    glassBorder: string;
+   export type Tokens = {
+    radius: { sm: number; md: number; lg: number };
+    shadow: { soft: string; glowCyan: string };
+    color: {
+      bg0: string;
+      bg1: string;
+      text: string;
+      textMuted: string;
+      cyan: string;
+      cyanGlass: string;
+      cyanBorder: string;
+      slateGlass: string;
+      slateBorder: string;
+      glass: string;
+      glassBorder: string;
+    };
   };
-};
-
-const TOKENS: Tokens = {
-  radius: { sm: 10, md: 12, lg: 16 },
-  shadow: {
-    soft: "0 14px 40px rgba(0,0,0,0.35)",
-    glowCyan: "0 0 28px rgba(34,211,238,0.12)",
-  },
-  color: {
-    bg0: "#000",             // tiefe Bühne
-    bg1: "#0c0f12",          // Zenith-Glow
-    text: "#E6F0F3",
-    textMuted: "rgba(230,240,243,0.65)",
-    cyan: "#22d3ee",
-    cyanGlass: "rgba(34,211,238,0.12)",
-    cyanBorder: "rgba(34,211,238,0.28)",
-    slateGlass: "rgba(148,163,184,0.10)",
-    slateBorder: "rgba(148,163,184,0.30)",
-    glass: "rgba(255,255,255,0.06)",
-    glassBorder: "rgba(255,255,255,0.12)",
-  },
-};
-
-type Theme = {
-  name: string;
-  tokens: Tokens;
-  dock: {
-    desktop: { width: number; bottom: number; side: number };
-    mobile: { widthCalc: string; bottom: number; side: number };
-  };
-};
-
-const THEMES: Record<string, Theme> = {
-  m_default: {
-    name: "m_default",
-    tokens: TOKENS,
-    dock: {
-      desktop: { width: 600, bottom: 300, side: 24 },   // ← Deine Vorgaben
-      mobile: { widthCalc: "calc(100% - 20px)", bottom: 50, side: 10 },
+  
+  export const TOKENS: Tokens = {
+    radius: { sm: 10, md: 12, lg: 16 },
+    shadow: {
+      soft: "0 14px 40px rgba(0,0,0,0.35)",
+      glowCyan: "0 0 28px rgba(34,211,238,0.12)",
     },
-  },
-};
-
-// Personas können hier später andere Themes mappen
-const PERSONAS: Record<string, { theme: keyof typeof THEMES }> = {
-  default: { theme: "m_default" },
-};
-
+    color: {
+      bg0: "#000",             // tiefe Bühne
+      bg1: "#0c0f12",          // Zenith-Glow
+      text: "#E6F0F3",
+      textMuted: "rgba(230,240,243,0.65)",
+      cyan: "#22d3ee",
+      cyanGlass: "rgba(34,211,238,0.12)",
+      cyanBorder: "rgba(34,211,238,0.28)",
+      slateGlass: "rgba(148,163,184,0.10)",
+      slateBorder: "rgba(148,163,184,0.30)",
+      glass: "rgba(255,255,255,0.06)",
+      glassBorder: "rgba(255,255,255,0.12)",
+    },
+  };
+  
+  export type Theme = {
+    name: string;
+    tokens: Tokens;
+    dock: {
+      desktop: { width: number; bottom: number; side: number };
+      mobile: { widthCalc: string; bottom: number; side: number };
+    };
+  };
+  
+  export const THEMES: Record<string, Theme> = {
+    m_default: {
+      name: "m_default",
+      tokens: TOKENS,
+      dock: {
+        desktop: { width: 600, bottom: 300, side: 24 },   // ← Bühne fix
+        mobile: { widthCalc: "calc(100% - 20px)", bottom: 50, side: 10 },
+      },
+    },
+  };
+  
+  // Personas mappen auf Themes
+  export const PERSONAS: Record<string, { theme: keyof typeof THEMES }> = {
+    default: { theme: "m_default" },
+  };
+  
+  // -----------------------------------------------------------------------
+  // Council-Module Mapping: Buttons → SystemCommands
+  // (wird von Saeule.tsx via onSystemMessage getriggert)
+  export const COUNCIL_COMMANDS: Record<string, string> = {
+    LUX: "INIT LUX-Anchor",                          // siehe LUX.pdf:contentReference[oaicite:5]{index=5}
+    JURAXY: "INITIATE JURAXY-1/13",                  // siehe JURAXY.pdf:contentReference[oaicite:6]{index=6}
+    DATAMASTER: "START DataMaster Session",          // siehe DataMaster.pdf:contentReference[oaicite:7]{index=7}
+    CHEMOMASTER: "START ChemoMaster 2.0 Loop",       // siehe ChemoMaster.pdf:contentReference[oaicite:8]{index=8}
+    SHADOWMASTER: "TRIGGER_SHADOW_ANALYSIS",         // siehe ShadowMaster.pdf:contentReference[oaicite:9]{index=9}
+  };
+  
 /* =======================================================================
    [ANCHOR:HOOKS]  — Breakpoint + Theme Resolution
    ======================================================================= */
@@ -117,7 +143,6 @@ function useTheme(persona: keyof typeof PERSONAS = "default") {
   const key = PERSONAS[persona]?.theme ?? "m_default";
   return THEMES[key];
 }
-
 /* =======================================================================
    [ANCHOR:UTILS]  — kleine Helfer
    ======================================================================= */
@@ -130,23 +155,104 @@ function useTheme(persona: keyof typeof PERSONAS = "default") {
   const LS_KEY = "mpathy:thread:default";
   const MAX_HISTORY = 200;
   
-  function truncate<T>(arr: T[]): T[] {
-    return arr.length > MAX_HISTORY ? arr.slice(arr.length - MAX_HISTORY) : arr;
+  /** Typen (falls nicht global vorhanden) */
+  type Role = "user" | "assistant" | "system";
+  type ChatMessage = { role: Role; content: string; format?: "plain" | "markdown" | "html" };
+  
+  /** Einzige (!) truncate-Implementierung für Chat-Verläufe */
+  export function truncateMessages(list: ReadonlyArray<ChatMessage>, max = MAX_HISTORY): ChatMessage[] {
+    return list.length > max ? list.slice(list.length - max) : [...list];
   }
-  function loadMessages(): any[] {
+  
+  /** Laden/Speichern strikt getypt */
+  export function loadMessages(): ChatMessage[] {
     if (typeof window === "undefined") return [];
     try {
       const raw = window.localStorage.getItem(LS_KEY);
       if (!raw) return [];
       const parsed = JSON.parse(raw);
-      return Array.isArray((parsed as any)?.messages) ? (parsed as any).messages : [];
-    } catch { return []; }
+      const msgs = (parsed as any)?.messages;
+      return Array.isArray(msgs) ? msgs as ChatMessage[] : [];
+    } catch {
+      return [];
+    }
   }
-  function saveMessages(messages: unknown[]): void {
+  
+  export function saveMessages(messages: ReadonlyArray<ChatMessage>): void {
     if (typeof window === "undefined") return;
     try {
-      window.localStorage.setItem(LS_KEY, JSON.stringify({ messages, updatedAt: Date.now() }));
-    } catch {/* stiller Fail */}
+      window.localStorage.setItem(
+        LS_KEY,
+        JSON.stringify({ messages, updatedAt: Date.now() })
+      );
+    } catch { /* noop */ }
+  }
+  
+  /** Grobe Token-Schätzung (fallback, wenn kein echter Tokenizer verfügbar ist) */
+  export function estimateTokens(text: string): number {
+    return Math.ceil(text.trim().length / 4);
+  }
+  
+  /** Text an sinnvollen Grenzen in Chunks < limit aufteilen */
+  export function smartSplit(
+    text: string,
+    opts: { maxModelTokens: number; userShare?: number } // z. B. userShare 0.7
+  ): string[] {
+    const { maxModelTokens, userShare = 0.7 } = opts;
+    const maxUserTokens = Math.floor(maxModelTokens * userShare);
+  
+    if (estimateTokens(text) <= maxUserTokens) return [text];
+  
+    const hardParts = text.split(/\n{2,}/);
+    const pieces: string[] = [];
+    const pushChunk = (buf: string) => { const t = buf.trim(); if (t) pieces.push(t); };
+  
+    for (const block of hardParts) {
+      if (estimateTokens(block) <= maxUserTokens) { pushChunk(block); continue; }
+  
+      const lines = block.split(/\n/);
+      let buf = "";
+      const flushSmart = () => {
+        if (!buf) return;
+        if (estimateTokens(buf) > maxUserTokens) {
+          const sentences = buf.split(/(?<=[.!?…])\s+/);
+          let sbuf = "";
+          for (const s of sentences) {
+            const next = sbuf ? `${sbuf} ${s}` : s;
+            if (estimateTokens(next) <= maxUserTokens) sbuf = next;
+            else { pushChunk(sbuf); sbuf = s; }
+          }
+          pushChunk(sbuf);
+        } else {
+          pushChunk(buf);
+        }
+        buf = "";
+      };
+  
+      for (const ln of lines) {
+        const candidate = buf ? `${buf}\n${ln}` : ln;
+        if (estimateTokens(candidate) <= maxUserTokens) {
+          buf = candidate;
+        } else {
+          flushSmart();
+          if (estimateTokens(ln) > maxUserTokens) {
+            const sentences = ln.split(/(?<=[.!?…])\s+/);
+            let sbuf = "";
+            for (const s of sentences) {
+              const next = sbuf ? `${sbuf} ${s}` : s;
+              if (estimateTokens(next) <= maxUserTokens) sbuf = next;
+              else { pushChunk(sbuf); sbuf = s; }
+            }
+            pushChunk(sbuf);
+          } else {
+            buf = ln;
+          }
+        }
+      }
+      flushSmart();
+    }
+  
+    return pieces;
   }
   
   
@@ -154,13 +260,6 @@ function useTheme(persona: keyof typeof PERSONAS = "default") {
 /* =======================================================================
    [ANCHOR:COMPONENTS]  — UI-Bausteine
    ======================================================================= */
-
-   type Role = 'user' | 'assistant' | 'system';
-   type ChatMessage = {
-     role: Role;
-     content: string;
-     format?: 'plain' | 'markdown' | 'html';
-   };   
 
 /** Kopfzeile */
 function Header() {
@@ -402,299 +501,274 @@ function InputDock({
     </form>
   );
 }
-
-
 /* =======================================================================
    [ANCHOR:BEHAVIOR]  — Chatlogik (Azure OpenAI)
    ======================================================================= */
- 
-export default function Page2() {
-  // Persona/Theme
-  const theme = useTheme("default");
-  const tokens = theme.tokens;
 
-  // Breakpoint + Seitenränder nach Vorgabe
-  const { isMobile } = useBreakpoint(768);
-  // Höhen-Messung für scrollbare Conversation
-const headerRef = React.useRef<HTMLDivElement>(null);
-const [vh, setVh] = useState(0);
-const [headerH, setHeaderH] = useState(0);
-const [dockH, setDockH] = useState(0);
-
-useEffect(() => {
-  const measure = () => {
-    setVh(window.innerHeight);
-    setHeaderH(headerRef.current?.offsetHeight || 0);
-    const dockEl = document.getElementById("m-input-dock");
-    setDockH((dockEl as HTMLElement | null)?.offsetHeight || 0);
-  };
-  measure();
-
-  window.addEventListener("resize", measure);
-  const ro = new ResizeObserver(measure);
-  if (headerRef.current) ro.observe(headerRef.current);
-  const dockEl = document.getElementById("m-input-dock");
-  if (dockEl) ro.observe(dockEl);
-
-  return () => {
-    window.removeEventListener("resize", measure);
-    ro.disconnect();
-  };
-}, []);
+   export default function Page2() {
+    // Persona/Theme
+    const theme = useTheme("default");
+    // ✔︎ Fallback auf zentrale TOKENS (aus CONFIG)
+    const activeTokens: Tokens = (theme as any)?.tokens ?? TOKENS;
   
-  const sideMargin = isMobile ? theme.dock.mobile.side : theme.dock.desktop.side;
-
-  // Chat State
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  // Initiale Begrüßung
-  useEffect(() => {
-    const initial = loadMessages();
-    if (initial && initial.length > 0) {
-      setMessages(initial as ChatMessage[]);
-    } else {
-      setMessages([{ role: "assistant", content: "Welcome. I am M. Mother of AI.", format: "markdown" }]);
-    }
-  }, []);
-  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-useEffect(() => {
-  if (saveTimer.current) clearTimeout(saveTimer.current);
-  saveTimer.current = setTimeout(() => saveMessages(messages), 150);
-  return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
-}, [messages]);
-
-
-async function sendMessage(e: FormEvent<HTMLFormElement>) {
-  e.preventDefault();
-
-  // 1) Text primär aus dem Event/FormData lesen (von handleSend geliefert),
-  //    Fallback: aktueller State `input`
-  let text = input.trim();
-  try {
-    const form = e.currentTarget as HTMLFormElement | null;
-    if (form) {
-      const fd = new FormData(form);
-      const fromForm =
-        (fd.get("message") || fd.get("input") || "")?.toString().trim();
-      if (fromForm) text = fromForm;
-    }
-  } catch {
-    /* stiller Fallback auf State */
-  }
-
-  // 2) Guard: nur senden, wenn wirklich Text da ist und nicht bereits geladen wird
-  if (!text || loading) return;
-
-  // 3) User-Bubble sofort anhängen (⚠️ Rolling Window mit truncate)
-  const userMsg: ChatMessage = { role: "user", content: text, format: "markdown" };
-  const next: ChatMessage[] = [...messages, userMsg]; // für history/API stabil
-  setMessages(prev => truncate([...(prev ?? []), userMsg]));
-  setInput("");
-  setLoading(true);
-
-  try {
-    // 4) Verlauf für die API (stabil aus `next`)
-    const history: ChatMessage[] = [...next];
-
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        messages: history.map((m) => ({ role: m.role, content: m.content })),
-        temperature: 0.7,
-        protocol: "GPTX",
-      }),
-    });
-
-    if (!res.ok) throw new Error(await res.text());
-
-    const data = await res.json();
-
-    const reply: ChatMessage =
-      data && typeof data.role === "string" && typeof data.content === "string"
-        ? { ...(data as any), format: "markdown" }
-        : { role: "assistant", content: String(data?.reply ?? "") || "…", format: "markdown" };
-
-    // (✅) Reply anhängen mit truncate
-    setMessages(prev => truncate([...(prev ?? []), reply]));
-
-  } catch (err: any) {
-    // (✅) Fehlerhinweis anhängen mit truncate
-    setMessages(prev => truncate([
-      ...(prev ?? []),
-      { role: "assistant", content: `△ Verbindung: ${err?.message || "Unbekannt"}`, format: "markdown" }
-    ]));
-
-  } finally {
-    setLoading(false);
-  }
-}
-
- // Adapter: MessageInput → nutzt DEINE bestehende sendMessage-Pipeline (FormEvent- oder State-basiert)
-const handleSend = React.useCallback(async (text: string) => {
-  console.log('[PAGE] handleSend:start', { text });
-
-  // (A) globalen State befüllen – falls sendMessage aus 'input' liest
-  setInput(text);
-
-  // (B) einen Render-Tick abwarten, damit 'input' sicher aktualisiert ist
-  await new Promise<void>((resolve) => {
-    if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => resolve());
-    else setTimeout(resolve, 0);
-  });
-
-  // (C) ein minimales Formular erzeugen – falls sendMessage FormData(e.currentTarget) liest
-  const form = document.createElement('form');
-  // wir decken die gängigen Feldnamen ab; wenn dein sendMessage keins davon nutzt, ist es egal
-  const f1 = document.createElement('input'); f1.type = 'hidden'; f1.name = 'input';   f1.value = text;
-  const f2 = document.createElement('input'); f2.type = 'hidden'; f2.name = 'message'; f2.value = text;
-  form.appendChild(f1); form.appendChild(f2);
-
-  // (D) Fake-Event mit preventDefault + currentTarget/target befüllen
-  const fakeEvent = {
-    preventDefault: () => {},
-    currentTarget: form,
-    target: form,
-  } as unknown as FormEvent<HTMLFormElement>;
-
-  console.log('[PAGE] call sendMessage');
-  await sendMessage(fakeEvent);          // ⬅️ DEINE bestehende Funktion, unverändert
-
-  // (E) optional: globalen Sicht-Input leeren (MessageInput leert sich selbst bereits)
-  setInput('');
-  console.log('[PAGE] sendMessage:done');
-}, [sendMessage, setInput]);
-
-
-
-  // Scroll-Ref für den Chronik-Container
-  const convoRef = useRef<HTMLDivElement | null>(null);
-
-  // Prüft, ob der User „nahe“ am unteren Rand ist (damit wir ihn beim Lesen nicht nerven)
-  const isNearBottom = () => {
-    const el = convoRef.current;
-    if (!el) return true;
-    return el.scrollHeight - el.scrollTop - el.clientHeight < 160; // ~160px Toleranz
-  };
-  // Scrollt bei neuen Messages nach unten – aber nur, wenn der User nicht weit nach oben gescrolled hat
+    // Breakpoint + Seitenränder nach Vorgabe
+    const { isMobile } = useBreakpoint(768);
+  
+    // Höhen-Messung für scrollbare Conversation
+    const headerRef = React.useRef<HTMLDivElement>(null);
+    const convoRef  = React.useRef<HTMLDivElement>(null);
+    const [vh, setVh] = useState(0);
+    const [headerH, setHeaderH] = useState(0);
+    const [dockH, setDockH] = useState(0);
+  
     useEffect(() => {
-      const el = convoRef.current;
-      if (!el) return;
-      if (isNearBottom()) {
-        el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
-      }
-    }, [messages.length]);
-
-    // Beim ersten Mount einmal an den Boden springen (ohne Animation)
-    useEffect(() => {
-      const el = convoRef.current;
-      if (el) el.scrollTop = el.scrollHeight;
+      const measure = () => {
+        setVh(window.innerHeight);
+        setHeaderH(headerRef.current?.offsetHeight || 0);
+        const dockEl = document.getElementById("m-input-dock");
+        setDockH((dockEl as HTMLElement | null)?.offsetHeight || 0);
+      };
+      measure();
+  
+      window.addEventListener("resize", measure);
+      const ro = new ResizeObserver(measure);
+      if (headerRef.current) ro.observe(headerRef.current);
+      const dockEl = document.getElementById("m-input-dock");
+      if (dockEl) ro.observe(dockEl);
+  
+      return () => {
+        window.removeEventListener("resize", measure);
+        ro.disconnect();
+      };
     }, []);
-
-
-
-
-  /* ======================================================================
-   [ANCHOR:LAYOUT]  — Bühne, Container, Radial-Hintergrund
-   ===================================================================== */
-
-const [overlayOpen, setOverlayOpen] = useState(false);
-
-const pageStyle: React.CSSProperties = {
-  minHeight: "100dvh",
-  color: tokens.color.text,
-  background: `
-    radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%),
-    radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%),
-    linear-gradient(180deg, ${tokens.color.bg1}, ${tokens.color.bg0} 60%, #000 100%)
-  `,
-};
-
-return (
-  <main
-    style={{
-      ...pageStyle,
-      display: "flex",
-      flexDirection: "column",
-      height: "100dvh",
-    }}
-  >
-    <div
-      style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        marginLeft: sideMargin,
-        marginRight: sideMargin,
-        minHeight: 0,          // wichtig für Flex + Overflow
-        maxWidth: 1280,        // optional: bremst extreme Breiten
-        alignSelf: "center",   // optional: zentriert den Content
-      }}
-    >
-      {/* Header: zentriertes M */}
-      <div
-        ref={headerRef}
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "24px 0",
-        }}
-      >
-        <LogoM size={isMobile ? 120 : 160} active={loading} />
-      </div>
-
-      {/* UNTERER TEIL: 2-Spalten – links Säule/Container, rechts Chat */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
-          gap: 16,
-          minHeight: 0,
-          flex: 1,
-        }}
-      >
-        {/* Säule links (Desktop statisch via SidebarContainer; Mobile via Overlay) */}
-        {!isMobile && <SidebarContainer />}
-
-        {/* Rechte Spalte */}
-        <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
-          {/* Scrollbarer Chronik-Container */}
+  
+    const sideMargin =
+      isMobile
+        ? (theme as any)?.dock?.mobile?.side ?? 12
+        : (theme as any)?.dock?.desktop?.side ?? 24;
+  
+    // ── Chat State
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const [input, setInput] = useState("");
+    const [loading, setLoading] = useState(false);
+  
+    // Persist aus UTILS verwenden
+    const persistMessages = saveMessages;
+  
+    // Initiale Begrüßung (mit Restore aus LocalStorage, falls vorhanden)
+    useEffect(() => {
+      const restored = loadMessages();
+      if (Array.isArray(restored) && restored.length) {
+        setMessages(restored);
+        return;
+      }
+      setMessages([
+        { role: "assistant", content: "Welcome. I'm M. Mother of AI." } as ChatMessage,
+      ]);
+    }, []);
+  
+    // Systemmeldung → hängt Bubble an (wird auch vom Säulen-Event genutzt)
+    const systemSay = useCallback((content: string) => {
+      if (!content) return;
+      setMessages((prev) => {
+        const next = truncateMessages([
+          ...(Array.isArray(prev) ? prev : []),
+          { role: "assistant", content, format: "markdown" } as ChatMessage,
+        ]);
+        persistMessages(next);
+        return next;
+      });
+    }, [persistMessages]);
+  
+    // CustomEvent-Brücke: Saeule.tsx -> Page2 (Buttons feuern SystemMessage)
+    useEffect(() => {
+      const handler = (e: Event) => {
+        const ce = e as CustomEvent<string>;
+        systemSay(ce?.detail ?? "");
+      };
+      window.addEventListener("mpathy:system-message", handler as EventListener);
+      return () => {
+        window.removeEventListener("mpathy:system-message", handler as EventListener);
+      };
+    }, [systemSay]);
+  
+    // Einheitliche Sendelogik für <MessageInput onSend={handleSend}>
+    async function handleSend(text: string): Promise<void> {
+      const t = text.trim();
+      if (!t || loading) return;
+  
+      const next: ChatMessage[] = [...messages, { role: "user", content: t } as ChatMessage];
+      setMessages(next);
+      persistMessages(next);
+      setLoading(true);
+  
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: next.map((m) => ({ role: m.role, content: m.content })),
+            temperature: 0.7,
+          }),
+        });
+  
+        if (!res.ok) throw new Error(await res.text());
+        const data = await res.json();
+  
+        // Antwort hart auf gültige Role normalisieren
+        const normalizedRole: Role =
+          (data && typeof data.role === "string" && (["user","assistant","system"] as const).includes(data.role as Role))
+            ? (data.role as Role)
+            : "assistant";
+  
+        const reply: ChatMessage =
+          data && typeof data.content === "string"
+            ? { role: normalizedRole, content: data.content }
+            : { role: "assistant", content: String(data?.reply ?? "") || "…" };
+  
+        setMessages((m) => {
+          const merged = truncateMessages([...m, reply]);
+          persistMessages(merged);
+          return merged;
+        });
+      } catch (err: any) {
+        setMessages((m) => {
+          const merged = truncateMessages([
+            ...m,
+            { role: "assistant", content: `⚠️ Verbindung: ${err?.message || "Unbekannt"}` },
+          ]);
+          persistMessages(merged);
+          return merged;
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+  
+    // Optionaler Wrapper, falls du irgendwo ein <form onSubmit={sendMessage}> hast
+    async function sendMessage(e: FormEvent) {
+      e.preventDefault();
+      const t = input.trim();
+      if (!t) return;
+      setInput("");
+      await handleSend(t);
+    }
+  
+    /* =======================================================================
+       [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
+       ======================================================================= */
+  
+    // nur lokaler UI-State für das Mobile-Overlay
+    const [overlayOpen, setOverlayOpen] = useState(false);
+  
+    // Farben ausschließlich aus activeTokens
+    const color = activeTokens.color;
+    const bg0 = color.bg0 ?? "#000000";
+    const bg1 = color.bg1 ?? "#0b1220";
+    const textColor = color.text ?? "#ffffff";
+  
+    // Seitenstil (radial + linear)
+    const pageStyle: React.CSSProperties = {
+      minHeight: "100dvh",
+      color: textColor,
+      background: [
+        "radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%)",
+        "radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%)",
+        `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000 100%)`,
+      ].join(", "),
+    };
+  
+    // ── Return: gesamtes Layout
+    return (
+      <main style={{ ...pageStyle, display: "flex", flexDirection: "column", height: "100dvh" }}>
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            marginInline: sideMargin,
+            minHeight: 0,
+            maxWidth: 1280,
+            alignSelf: "center",
+            width: "100%",
+          }}
+        >
+          {/* Header */}
           <div
-            ref={convoRef}
+            ref={headerRef}
             style={{
-              flex: 1,
-              overflowY: "auto",
-              paddingTop: 12,
-              paddingBottom: `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`,
-              scrollbarWidth: "thin",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "24px 0",
             }}
           >
-            <div>
-              {messages.map((m, i) => (
-                <Bubble key={i} msg={m} tokens={tokens} />
-              ))}
+            <LogoM size={isMobile ? 120 : 160} active={loading} />
+          </div>
+  
+          {/* Bühne: 2 Spalten */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+              gap: 16,
+              minHeight: 0,
+              flex: 1,
+            }}
+          >
+            {/* Säule links – Desktop statisch */}
+            {!isMobile && <SidebarContainer onSystemMessage={systemSay} />}
+  
+            {/* Rechte Spalte */}
+            <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
+              {/* Chronik (scrollbar) */}
+              <div
+                ref={convoRef}
+                style={{
+                  flex: 1,
+                  overflowY: "auto",
+                  paddingTop: 12,
+                  paddingBottom: `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`,
+                  scrollbarWidth: "thin",
+                }}
+              >
+                <div>
+                  {messages.map((m, i) => (
+                    <Bubble key={i} msg={m} tokens={activeTokens} />
+                  ))}
+                </div>
+              </div>
+  
+              {/* Eingabe-Dock (Mess-Anker) */}
+              <div
+                id="m-input-dock"
+                role="group"
+                aria-label="Chat Eingabeleiste"
+                style={{
+                  position: "sticky",
+                  bottom: 0,
+                  paddingTop: 8,
+                  background: "transparent",
+                }}
+              >
+                <MessageInput onSend={handleSend} disabled={loading} />
+              </div>
             </div>
           </div>
-
-          {/* Eingabeleiste fuer unten rechts */}
-          <div style={{ paddingTop: 8 }}>
-            <MessageInput onSend={handleSend} disabled={loading} />
-          </div>
         </div>
-      </div>
-    </div>
-
-    {/* Mobile: Sticky-FAB öffnet Overlay */}
-    {isMobile && (
-      <>
-        <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
-        <MobileOverlay open={overlayOpen} onClose={() => setOverlayOpen(false)} />
-      </>
-    )}
-  </main>
-);
-}
+  
+        {/* Mobile: FAB + Overlay */}
+        {isMobile && (
+          <>
+            <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
+            <MobileOverlay
+              open={overlayOpen}
+              onClose={() => setOverlayOpen(false)}
+              onSystemMessage={systemSay}
+            />
+          </>
+        )}
+      </main>
+    );
+  } // ← Ende Page2()
+  
