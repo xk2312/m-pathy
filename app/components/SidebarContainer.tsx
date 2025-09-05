@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import Saeule from "./Saeule";
 
+type Props = {
+  onSystemMessage?: (content: string) => void;
+};
+
 function useIsDesktop(minWidth = 1024) {
   const [isDesktop, setIsDesktop] = useState<boolean>(() => {
     if (typeof window === "undefined") return true; // SSR-Fallback: Desktop
@@ -27,7 +31,7 @@ function useIsDesktop(minWidth = 1024) {
   return isDesktop;
 }
 
-export default function SidebarContainer() {
+export default function SidebarContainer({ onSystemMessage }: Props) {
   const isDesktop = useIsDesktop(1024);
 
   return (
@@ -38,7 +42,7 @@ export default function SidebarContainer() {
     >
       {isDesktop ? (
         // Desktop: Säule statisch anzeigen
-        <Saeule />
+        <Saeule onSystemMessage={onSystemMessage} />
       ) : (
         // Mobile: Overlay/StickyFab folgen in Schritt 4/5
         <div aria-hidden="true" data-test="sidebar-mobile-placeholder" />

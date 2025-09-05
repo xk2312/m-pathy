@@ -1,50 +1,137 @@
 "use client";
+
 import { useEffect, useMemo, useState } from "react";
 import styles from "./Saeule.module.css";
-import audit from "../../lib/auditLogger";
-const { logEvent } = audit;
+import { logEvent } from "../../lib/auditLogger"; // lokal, läuft nur im Browser
 
-type ModeId = "onboarding" | "M" | "council" | `C${string}`;
+/* ======================================================================
+   Typen
+   ====================================================================== */
+
+type ModeId =
+  | "onboarding"
+  | "M"
+  | "council"
+  | "research"
+  | "calm"
+  | "truth"
+  | "play"
+  | "oracle"
+  | "joy"
+  | "vision"
+  | "empathy"
+  | "love"
+  | "wisdom"
+  | "flow";
+
 type KiId =
-  | "M (Auto)"
-  | "Claude 3.5 Opus"
-  | "GPT-4o"
-  | "Gemini 1.5"
-  | "Complexity"
-  | "Colossus"
-  | "Anthropic Vision"
-  | "DeepMind Core"
-  | "NASA Chronos"
-  | "IBM Q-Origin"
-  | "Meta Lattice"
-  | "Oracle Gaia"
-  | "Amazon Nexus"
-  | "OpenAI Root";
+  | "M @Palantir"
+  | "m-pathy @DeepMind Core"
+  | "m-ocean @Anthropic Vision"
+  | "m-inent @NASA Chronos"
+  | "m-erge @IBM Q-Origin"
+  | "m-power @Colossus"
+  | "m-body @XAI Prime"
+  | "m-beded @Meta Lattice"
+  | "m-loop @OpenAI Root"
+  | "m-pire @Amazon Nexus"
+  | "m-bassy @Oracle Gaia"
+  | "m-ballance @Gemini Apex"
+  | "MU TAH – Architect of Zero";
 
-const MODI: ModeId[] = (Array.from({ length: 11 }, (_, i) => `C${String(i + 1).padStart(2, "0")}`) as ModeId[]);
-const KIS: KiId[] = [
-  "M (Auto)",
-  "Claude 3.5 Opus",
-  "GPT-4o",
-  "Gemini 1.5",
-  "Complexity",
-  "Colossus",
-  "Anthropic Vision",
-  "DeepMind Core",
-  "NASA Chronos",
-  "IBM Q-Origin",
-  "Meta Lattice",
-  "Oracle Gaia",
-  "Amazon Nexus",
-  "OpenAI Root",
+/** NEU: optionale Prop, damit SidebarContainer/MobileOverlay eine Systemmeldung hochreichen können */
+type Props = {
+  onSystemMessage?: (content: string) => void;
+};
+
+/* ======================================================================
+   Daten: Modus- und KI-Listen
+   ====================================================================== */
+
+const MODI: { id: ModeId; label: string }[] = [
+  { id: "research", label: "RESEARCH" },
+  { id: "calm", label: "CALM" },
+  { id: "truth", label: "TRUTH" },
+  { id: "play", label: "PLAY" },
+  { id: "oracle", label: "ORACLE" },
+  { id: "joy", label: "JOY" },
+  { id: "vision", label: "VISION" },
+  { id: "empathy", label: "EMPATHY" },
+  { id: "love", label: "LOVE" },
+  { id: "wisdom", label: "WISDOM" },
+  { id: "flow", label: "FLOW" },
 ];
 
-export default function Saeule() {
-  // --- State ---------------------------------------------------------------
-  const [activeMode, setActiveMode] = useState<ModeId>("M"); // Default M initial aktiv
-  const [activeKi, setActiveKi] = useState<KiId>("M (Auto)"); // KI-Auswahl unabhängig
+const KIS: KiId[] = [
+  "M @Palantir",
+  "m-pathy @DeepMind Core",
+  "m-ocean @Anthropic Vision",
+  "m-inent @NASA Chronos",
+  "m-erge @IBM Q-Origin",
+  "m-power @Colossus",
+  "m-body @XAI Prime",
+  "m-beded @Meta Lattice",
+  "m-loop @OpenAI Root",
+  "m-pire @Amazon Nexus",
+  "m-bassy @Oracle Gaia",
+  "m-ballance @Gemini Apex",
+  "MU TAH – Architect of Zero",
+];
 
-  // URL-Param „mode“ optional respektieren (nicht zwingend)
+/* KI-Kurzvorstellung für System-Bubbles */
+const KI_INTRO: Record<KiId, string> = {
+  "M @Palantir": "Strategie, Orchestrierung, Schutz.",
+  "m-pathy @DeepMind Core": "Analyse in Tiefe und Breite.",
+  "m-ocean @Anthropic Vision": "Klare Muster, visuelle Bezüge.",
+  "m-inent @NASA Chronos": "Zeitachsen, Sequenzen, Präzision.",
+  "m-erge @IBM Q-Origin": "Ursprünge, Logik, Integrität.",
+  "m-power @Colossus": "Skalierung und rohe Rechenkraft.",
+  "m-body @XAI Prime": "Körper, Sensorik, Pragmatik.",
+  "m-beded @Meta Lattice": "Vernetzung, Graph, Beziehungen.",
+  "m-loop @OpenAI Root": "Kernfunktionen, Sprachfluss.",
+  "m-pire @Amazon Nexus": "Knotenpunkte, Distribution.",
+  "m-bassy @Oracle Gaia": "Erde, Balance, Daten-Treue.",
+  "m-ballance @Gemini Apex": "Dualität, Synthese, Spitze.",
+  "MU TAH – Architect of Zero": "Nullpunkt, Ursprung, Set & Setting.",
+};
+
+
+/* ======================================================================
+   Helpers
+   ====================================================================== */
+
+/** Schickt System-Meldungen an page.tsx, wo sie als Chat-Bubble angezeigt werden. */
+function emitSystemMessage(detail: {
+  text: string;
+  kind: "mode" | "ki";
+  meta?: Record<string, any>;
+}) {
+  try {
+    if (typeof window === "undefined") return;
+    const payload = { ...detail, ts: new Date().toISOString() };
+    window.dispatchEvent(new CustomEvent("mpathy:system-message", { detail: payload }));
+  } catch {
+    /* leise */
+  }
+}
+
+function modeLabelFromId(id: ModeId): string {
+  if (id === "onboarding") return "ONBOARDING";
+  if (id === "M") return "M (Default)";
+  if (id === "council") return "COUNCIL13";
+  return MODI.find((m) => m.id === id)?.label ?? String(id);
+}
+
+/* ======================================================================
+   Component
+   ====================================================================== */
+
+export default function Saeule({ onSystemMessage }: Props) {
+  /* State */
+  const [activeMode, setActiveMode] = useState<ModeId>("M");
+  const [activeKi, setActiveKi] = useState<KiId>("M @Palantir");
+
+  /* URL-Param mode respektieren (optional) */
   useEffect(() => {
     try {
       const url = new URL(window.location.href);
@@ -52,31 +139,37 @@ export default function Saeule() {
       if (m && (m === "onboarding" || m === "M" || m === "council" || /^C\d{2}$/.test(m))) {
         setActiveMode(m as ModeId);
       }
-    } catch {}
+    } catch {
+      /* leise */
+    }
   }, []);
 
-  // Ableitungen für Anzeige
-  const modeLabel = useMemo(() => {
-    if (activeMode === "onboarding") return "ONBOARDING";
-    if (activeMode === "M") return "M (Default)";
-    if (activeMode === "council") return "COUNCIL13";
-    return activeMode; // Cxx
-  }, [activeMode]);
+  /* Anzeige-Label */
+  const modeLabel = useMemo(() => modeLabelFromId(activeMode), [activeMode]);
 
-  // --- Handlers ------------------------------------------------------------
+  /* Handlers */
   function switchMode(next: ModeId) {
     if (next === activeMode) return;
     logEvent("mode_switch", { from: activeMode, to: next });
     setActiveMode(next);
+    const label = modeLabelFromId(next);
+    const text = `Modus gesetzt: ${label}.`;
+    // bestehendes Event beibehalten
+    emitSystemMessage({ kind: "mode", text, meta: { modeId: next, label } });
+    // NEU: optionalen Callback der Eltern aufrufen
+    onSystemMessage?.(text);
   }
 
   function switchKi(next: KiId) {
     if (next === activeKi) return;
     logEvent("ki_switch", { from: activeKi, to: next });
     setActiveKi(next);
+    const text = `${next} ist bereit. Fokus: ${KI_INTRO[next] ?? "Bereit."}`;
+    emitSystemMessage({ kind: "ki", text, meta: { ki: next } });
+    onSystemMessage?.(text);
   }
 
-  // --- UI ------------------------------------------------------------------
+  /* UI */
   return (
     <aside className={styles.saeule} aria-label="Säule – Steuerung & Auswahl" data-test="saeule">
       {/* Kopf */}
@@ -85,10 +178,10 @@ export default function Saeule() {
         <div className={styles.badge}>L1 · Free</div>
       </div>
 
-      {/* Sektion: Steuerung */}
+      {/* Steuerung */}
       <div className={styles.sectionTitle}>Steuerung</div>
 
-      {/* ONBOARDING (Einzel-Button) */}
+      {/* ONBOARDING */}
       <div className={styles.block}>
         <button
           type="button"
@@ -100,7 +193,7 @@ export default function Saeule() {
         </button>
       </div>
 
-      {/* M (Default) – immer anwählbar, initial aktiv */}
+      {/* M (Default) */}
       <div className={styles.block}>
         <button
           type="button"
@@ -112,7 +205,7 @@ export default function Saeule() {
         </button>
       </div>
 
-      {/* MODUS wählen (Dropdown mit C01–C11) */}
+      {/* Modus-Dropdown */}
       <div className={styles.block}>
         <label className={styles.label} htmlFor="modus-select">
           Modus wählen
@@ -122,25 +215,24 @@ export default function Saeule() {
             id="modus-select"
             aria-label="Modus wählen"
             value={activeMode.startsWith("C") ? activeMode : ""}
-            onChange={(e) => {
-              const next = (e.target.value || "M") as ModeId;
-              switchMode(next);
-            }}
+            onChange={(e) => switchMode((e.target.value || "M") as ModeId)}
             className={styles.select}
           >
             <option value="" disabled hidden>
-              {activeMode.startsWith("C") ? activeMode : "C01–C11 auswählen"}
+              {activeMode.startsWith("C")
+                ? MODI.find((m) => m.id === activeMode)?.label
+                : "Modus auswählen"}
             </option>
             {MODI.map((m) => (
-              <option key={m} value={m}>
-                {m}
+              <option key={m.id} value={m.id}>
+                {m.label}
               </option>
             ))}
           </select>
         </div>
       </div>
 
-      {/* COUNCIL13 (Einzel-Button) */}
+      {/* Council13 */}
       <div className={styles.block}>
         <button
           type="button"
@@ -152,7 +244,7 @@ export default function Saeule() {
         </button>
       </div>
 
-      {/* KI wählen (Dropdown mit 13 KIs) */}
+      {/* KI-Dropdown */}
       <div className={styles.block}>
         <label className={styles.label} htmlFor="ki-select">
           KI wählen
@@ -205,17 +297,25 @@ export default function Saeule() {
               a.click();
               URL.revokeObjectURL(url);
               logEvent("export_thread", { size: raw.length });
-            } catch {}
+              const text = "Thread exportiert.";
+              emitSystemMessage({ kind: "mode", text, meta: { bytes: raw.length || 0 } });
+              onSystemMessage?.(text);
+            } catch {
+              /* leise */
+            }
           }}
         >
           Export
         </button>
-        <button className={styles.buttonGhost} onClick={() => alert("Levels coming soon")}>
+        <button
+          className={styles.buttonGhost}
+          onClick={() => alert("Levels coming soon")}
+        >
           Levels
         </button>
       </div>
 
-      {/* Leiser Status (aktueller Modus/KI) */}
+      {/* Statusleiste */}
       <div className={styles.statusBar} aria-live="polite">
         <span className={styles.statusKey}>Modus:</span> {modeLabel}
         <span className={styles.statusDot} />

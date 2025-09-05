@@ -1,8 +1,11 @@
 import "./global.css";
 import "../styles/chat-prose.css";
+import "../styles/input-bar.css";
+
+import React from "react";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import "../styles/input-bar.css";
+import Providers from "./providers";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
@@ -11,31 +14,29 @@ export const metadata: Metadata = {
   description: "Learn tech basics with M",
 };
 
-// Mobile-Safe-Areas & Keyboard-Verhalten (iOS/Safari)
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  interactiveWidget: "resizes-visual", // vermeidet Layoutsprünge beim Keyboard
+  interactiveWidget: "resizes-visual",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+type RootLayoutProps = Readonly<{ children: React.ReactNode }>;
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head />
       <body
         className={`${inter.className} min-h-dvh bg-gradient-to-b from-blue-50 via-white to-blue-100 text-slate-900 antialiased`}
-        style={{
-          // ruhiger Scroll auf Mobile, verhindert Gummiband-Effekt
-          overscrollBehaviorY: "none",
-          WebkitTapHighlightColor: "transparent",
-        }}
+        style={{ overscrollBehaviorY: "none", WebkitTapHighlightColor: "transparent" }}
       >
-        {children}
+        <Providers>{children}</Providers>
 
-        {/* Portal-Container für Overlays/Toasts (optional nutzbar) */}
+        {/* Portal-Container für Overlays/Toasts */}
         <div id="overlay-root" />
 
-        {/* Safe-area Spacer (nur falls benötigt) */}
+        {/* Safe-area Spacer */}
         <div
           aria-hidden="true"
           style={{

@@ -2,26 +2,28 @@
   "compilerOptions": {
     "target": "ES2020",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,               // -> false, falls keine .js-Dateien im Repo
+    "allowJs": false,                         // war: true
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "ESNext",
-    "moduleResolution": "bundler", // Next.js 14 Empfehlung
+    "moduleResolution": "bundler",            // Next.js 14 Empfehlung
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
+      "@/*": ["*"],
       "@/app/*": ["app/*"],
       "@/components/*": ["app/components/*"],
       "@/modules/*": ["app/modules/*"],
-      "@/lib/*": ["lib/*", "src/lib/*"],   // <-- FIX: zuerst lib/*
+      "@/lib/*": ["lib/*"],                   // zuerst lib/*
       "@/styles/*": ["styles/*"],
       "@/public/*": ["public/*"]
     },
+    "types": ["node", "react", "react-dom"],  // global React/DOM-Typen
     "incremental": true,
     "plugins": [{ "name": "next" }]
   },
