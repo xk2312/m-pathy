@@ -144,119 +144,45 @@ function useTheme(persona: keyof typeof PERSONAS = "default") {
   return THEMES[key];
 }
 /* =======================================================================
-   [ANCHOR:UTILS]  — kleine Helfer
+   [ANCHOR:UTILS] — kleine Helfer (keine Exports in page.tsx!)
    ======================================================================= */
 
-   function cx(...parts: Array<string | false | null | undefined>) {
-    return parts.filter(Boolean).join(" ");
-  }
+   const LS_KEY = "mpathy:thread:default";
+   const MAX_HISTORY = 200;
+   
+   type Role = "user" | "assistant" | "system";
+   type ChatMessage = {
+     role: Role;
+     content: string;
+     format?: "plain" | "markdown" | "html";
+   };
+   
+   function truncateMessages(list: ReadonlyArray<ChatMessage>, max = MAX_HISTORY): ChatMessage[] {
+     return list.length > max ? list.slice(list.length - max) : [...list];
+   }
+   
+   function loadMessages(): ChatMessage[] {
+     if (typeof window === "undefined") return [];
+     try {
+       const raw = window.localStorage.getItem(LS_KEY);
+       if (!raw) return [];
+       const parsed = JSON.parse(raw);
+       return Array.isArray((parsed as any)?.messages) ? (parsed as any).messages as ChatMessage[] : [];
+     } catch {
+       return [];
+     }
+   }
+   
+   function saveMessages(messages: ChatMessage[]): void {
+     if (typeof window === "undefined") return;
+     try {
+       window.localStorage.setItem(
+         LS_KEY,
+         JSON.stringify({ messages, updatedAt: Date.now() })
+       );
+     } catch { /* noop */ }
+   }
   
-  /** LocalStorage – schlank & failsafe */
-  const LS_KEY = "mpathy:thread:default";
-  const MAX_HISTORY = 200;
-  
-  /** Typen (falls nicht global vorhanden) */
-  type Role = "user" | "assistant" | "system";
-  type ChatMessage = { role: Role; content: string; format?: "plain" | "markdown" | "html" };
-  
-  /** Einzige (!) truncate-Implementierung für Chat-Verläufe */
-  function truncateMessages(list: ReadonlyArray<ChatMessage>, max = MAX_HISTORY): ChatMessage[] {
-    return list.length > max ? list.slice(list.length - max) : [...list];
-  }
-  
-  /** Laden/Speichern strikt getypt */
-  export function loadMessages(): ChatMessage[] {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = window.localStorage.getItem(LS_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      const msgs = (parsed as any)?.messages;
-      return Array.isArray(msgs) ? msgs as ChatMessage[] : [];
-    } catch {
-      return [];
-    }
-  }
-  
-  export function saveMessages(messages: ReadonlyArray<ChatMessage>): void {
-    if (typeof window === "undefined") return;
-    try {
-      window.localStorage.setItem(
-        LS_KEY,
-        JSON.stringify({ messages, updatedAt: Date.now() })
-      );
-    } catch { /* noop */ }
-  }
-  
-  /** Grobe Token-Schätzung (fallback, wenn kein echter Tokenizer verfügbar ist) */
-  export function estimateTokens(text: string): number {
-    return Math.ceil(text.trim().length / 4);
-  }
-  
-  /** Text an sinnvollen Grenzen in Chunks < limit aufteilen */
-  export function smartSplit(
-    text: string,
-    opts: { maxModelTokens: number; userShare?: number } // z. B. userShare 0.7
-  ): string[] {
-    const { maxModelTokens, userShare = 0.7 } = opts;
-    const maxUserTokens = Math.floor(maxModelTokens * userShare);
-  
-    if (estimateTokens(text) <= maxUserTokens) return [text];
-  
-    const hardParts = text.split(/\n{2,}/);
-    const pieces: string[] = [];
-    const pushChunk = (buf: string) => { const t = buf.trim(); if (t) pieces.push(t); };
-  
-    for (const block of hardParts) {
-      if (estimateTokens(block) <= maxUserTokens) { pushChunk(block); continue; }
-  
-      const lines = block.split(/\n/);
-      let buf = "";
-      const flushSmart = () => {
-        if (!buf) return;
-        if (estimateTokens(buf) > maxUserTokens) {
-          const sentences = buf.split(/(?<=[.!?…])\s+/);
-          let sbuf = "";
-          for (const s of sentences) {
-            const next = sbuf ? `${sbuf} ${s}` : s;
-            if (estimateTokens(next) <= maxUserTokens) sbuf = next;
-            else { pushChunk(sbuf); sbuf = s; }
-          }
-          pushChunk(sbuf);
-        } else {
-          pushChunk(buf);
-        }
-        buf = "";
-      };
-  
-      for (const ln of lines) {
-        const candidate = buf ? `${buf}\n${ln}` : ln;
-        if (estimateTokens(candidate) <= maxUserTokens) {
-          buf = candidate;
-        } else {
-          flushSmart();
-          if (estimateTokens(ln) > maxUserTokens) {
-            const sentences = ln.split(/(?<=[.!?…])\s+/);
-            let sbuf = "";
-            for (const s of sentences) {
-              const next = sbuf ? `${sbuf} ${s}` : s;
-              if (estimateTokens(next) <= maxUserTokens) sbuf = next;
-              else { pushChunk(sbuf); sbuf = s; }
-            }
-            pushChunk(sbuf);
-          } else {
-            buf = ln;
-          }
-        }
-      }
-      flushSmart();
-    }
-  
-    return pieces;
-  }
-  
-  
-
 /* =======================================================================
    [ANCHOR:COMPONENTS]  — UI-Bausteine
    ======================================================================= */
@@ -502,18 +428,19 @@ function InputDock({
   );
 }
 /* =======================================================================
-   [ANCHOR:BEHAVIOR + LAYOUT] — Chatlogik & Bühne
+   [ANCHOR:BEHAVIOR] — Chatlogik (Azure OpenAI)
    ======================================================================= */
 
    export default function Page2() {
     // Persona/Theme
     const theme = useTheme("default");
+    // ✔︎ Fallback auf zentrale TOKENS (aus CONFIG)
     const activeTokens: Tokens = (theme as any)?.tokens ?? TOKENS;
   
-    // Breakpoint + Seitenränder
+    // Breakpoint + Seitenränder nach Vorgabe
     const { isMobile } = useBreakpoint(768);
   
-    // Refs + Höhen
+    // Höhen-Messung für scrollbare Conversation
     const headerRef = React.useRef<HTMLDivElement>(null);
     const convoRef  = React.useRef<HTMLDivElement>(null);
     const [vh, setVh] = useState(0);
@@ -546,25 +473,27 @@ function InputDock({
         ? (theme as any)?.dock?.mobile?.side ?? 12
         : (theme as any)?.dock?.desktop?.side ?? 24;
   
-    // Chat State
+    // ── Chat State
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
   
-    // Persist
+    // Persist aus UTILS verwenden
     const persistMessages = saveMessages;
   
-    // Init / Begrüßung
+    // Initiale Begrüßung (mit Restore aus LocalStorage, falls vorhanden)
     useEffect(() => {
       const restored = loadMessages();
       if (Array.isArray(restored) && restored.length) {
         setMessages(restored);
         return;
       }
-      setMessages([{ role: "assistant", content: "Welcome. I'm M. Mother of AI." }]);
+      setMessages([
+        { role: "assistant", content: "Welcome. I'm M. Mother of AI." } as ChatMessage,
+      ]);
     }, []);
   
-    // SystemSay
+    // Systemmeldung → hängt Bubble an (wird auch vom Säulen-Event genutzt)
     const systemSay = useCallback((content: string) => {
       if (!content) return;
       setMessages((prev) => {
@@ -577,6 +506,7 @@ function InputDock({
       });
     }, [persistMessages]);
   
+    // CustomEvent-Brücke: Saeule.tsx -> Page2 (Buttons feuern SystemMessage)
     useEffect(() => {
       const handler = (e: Event) => {
         const ce = e as CustomEvent<string>;
@@ -588,12 +518,12 @@ function InputDock({
       };
     }, [systemSay]);
   
-    // Handle Send
+    // Einheitliche Sendelogik
     async function handleSend(text: string): Promise<void> {
       const t = text.trim();
       if (!t || loading) return;
   
-      const next: ChatMessage[] = [...messages, { role: "user", content: t }];
+      const next: ChatMessage[] = [...messages, { role: "user", content: t } as ChatMessage];
       setMessages(next);
       persistMessages(next);
       setLoading(true);
@@ -612,8 +542,7 @@ function InputDock({
         const data = await res.json();
   
         const normalizedRole: Role =
-          (data && typeof data.role === "string" &&
-            (["user", "assistant", "system"] as const).includes(data.role as Role))
+          (data && typeof data.role === "string" && (["user","assistant","system"] as const).includes(data.role as Role))
             ? (data.role as Role)
             : "assistant";
   
@@ -649,14 +578,20 @@ function InputDock({
       await handleSend(t);
     }
   
-    // ================= LAYOUT =================
+    /* =======================================================================
+       [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
+       ======================================================================= */
   
+    // UI-State (nur fürs Mobile-Overlay)
     const [overlayOpen, setOverlayOpen] = useState(false);
+  
+    // Farben ausschließlich aus activeTokens
     const color = activeTokens.color;
     const bg0 = color.bg0 ?? "#000000";
     const bg1 = color.bg1 ?? "#0b1220";
     const textColor = color.text ?? "#ffffff";
   
+    // Seitenstil (radial + linear)
     const pageStyle: React.CSSProperties = {
       minHeight: "100dvh",
       color: textColor,
@@ -694,7 +629,7 @@ function InputDock({
             <LogoM size={isMobile ? 120 : 160} active={loading} />
           </div>
   
-          {/* 2-Spalten-Bühne */}
+          {/* Bühne: 2 Spalten */}
           <div
             style={{
               display: "grid",
@@ -704,9 +639,12 @@ function InputDock({
               flex: 1,
             }}
           >
+            {/* Säule links – Desktop statisch */}
             {!isMobile && <SidebarContainer onSystemMessage={systemSay} />}
   
+            {/* Rechte Spalte */}
             <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
+              {/* Chronik (scrollbar) */}
               <div
                 ref={convoRef}
                 style={{
@@ -724,6 +662,7 @@ function InputDock({
                 </div>
               </div>
   
+              {/* Eingabe-Dock (Mess-Anker) */}
               <div
                 id="m-input-dock"
                 role="group"
@@ -741,6 +680,7 @@ function InputDock({
           </div>
         </div>
   
+        {/* Mobile: FAB + Overlay */}
         {isMobile && (
           <>
             <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
