@@ -160,7 +160,7 @@ function useTheme(persona: keyof typeof PERSONAS = "default") {
   type ChatMessage = { role: Role; content: string; format?: "plain" | "markdown" | "html" };
   
   /** Einzige (!) truncate-Implementierung für Chat-Verläufe */
-  export function truncateMessages(list: ReadonlyArray<ChatMessage>, max = MAX_HISTORY): ChatMessage[] {
+  function truncateMessages(list: ReadonlyArray<ChatMessage>, max = MAX_HISTORY): ChatMessage[] {
     return list.length > max ? list.slice(list.length - max) : [...list];
   }
   
