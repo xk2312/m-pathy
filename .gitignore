@@ -1,3 +1,9 @@
+# Ignoriere alles im Home/Root Verzeichnis
+/*
+# Aber behalte dein Projekt-Ordner
+!/M-PATHY
+
+
 # Node + Next.js
 node_modules/
 .next/
