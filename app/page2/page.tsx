@@ -49,7 +49,7 @@ type ThemeTokens = { color?: ColorTokens; [k: string]: any };
    [ANCHOR:CONFIG] — Design Tokens, Themes, Personas, System Prompt
    ======================================================================= */
 
-   export type Tokens = {
+   type Tokens = {
     radius: { sm: number; md: number; lg: number };
     shadow: { soft: string; glowCyan: string };
     color: {
@@ -67,15 +67,15 @@ type ThemeTokens = { color?: ColorTokens; [k: string]: any };
     };
   };
   
-  export const TOKENS: Tokens = {
+  const TOKENS: Tokens = {
     radius: { sm: 10, md: 12, lg: 16 },
     shadow: {
       soft: "0 14px 40px rgba(0,0,0,0.35)",
       glowCyan: "0 0 28px rgba(34,211,238,0.12)",
     },
     color: {
-      bg0: "#000",             // tiefe Bühne
-      bg1: "#0c0f12",          // Zenith-Glow
+      bg0: "#000",
+      bg1: "#0c0f12",
       text: "#E6F0F3",
       textMuted: "rgba(230,240,243,0.65)",
       cyan: "#22d3ee",
@@ -88,7 +88,7 @@ type ThemeTokens = { color?: ColorTokens; [k: string]: any };
     },
   };
   
-  export type Theme = {
+  type Theme = {
     name: string;
     tokens: Tokens;
     dock: {
@@ -97,32 +97,29 @@ type ThemeTokens = { color?: ColorTokens; [k: string]: any };
     };
   };
   
-  export const THEMES: Record<string, Theme> = {
+  const THEMES: Record<string, Theme> = {
     m_default: {
       name: "m_default",
       tokens: TOKENS,
       dock: {
-        desktop: { width: 600, bottom: 300, side: 24 },   // ← Bühne fix
+        desktop: { width: 600, bottom: 300, side: 24 },
         mobile: { widthCalc: "calc(100% - 20px)", bottom: 50, side: 10 },
       },
     },
   };
   
-  // Personas mappen auf Themes
-  export const PERSONAS: Record<string, { theme: keyof typeof THEMES }> = {
+  const PERSONAS: Record<string, { theme: keyof typeof THEMES }> = {
     default: { theme: "m_default" },
   };
   
-  // -----------------------------------------------------------------------
-  // Council-Module Mapping: Buttons → SystemCommands
-  // (wird von Saeule.tsx via onSystemMessage getriggert)
-  export const COUNCIL_COMMANDS: Record<string, string> = {
-    LUX: "INIT LUX-Anchor",                          // siehe LUX.pdf:contentReference[oaicite:5]{index=5}
-    JURAXY: "INITIATE JURAXY-1/13",                  // siehe JURAXY.pdf:contentReference[oaicite:6]{index=6}
-    DATAMASTER: "START DataMaster Session",          // siehe DataMaster.pdf:contentReference[oaicite:7]{index=7}
-    CHEMOMASTER: "START ChemoMaster 2.0 Loop",       // siehe ChemoMaster.pdf:contentReference[oaicite:8]{index=8}
-    SHADOWMASTER: "TRIGGER_SHADOW_ANALYSIS",         // siehe ShadowMaster.pdf:contentReference[oaicite:9]{index=9}
-  };
+  // (optional, wenn in dieser Datei genutzt; sonst komplett entfernen)
+  const COUNCIL_COMMANDS: Record<string, string> = {
+    LUX: "INIT LUX-Anchor",
+    JURAXY: "INITIATE JURAXY-1/13",
+    DATAMASTER: "START DataMaster Session",
+    CHEMOMASTER: "START ChemoMaster 2.0 Loop",
+    SHADOWMASTER: "TRIGGER_SHADOW_ANALYSIS",
+  };  
   
 /* =======================================================================
    [ANCHOR:HOOKS]  — Breakpoint + Theme Resolution
@@ -147,41 +144,40 @@ function useTheme(persona: keyof typeof PERSONAS = "default") {
    [ANCHOR:UTILS] — kleine Helfer (keine Exports in page.tsx!)
    ======================================================================= */
 
-   const LS_KEY = "mpathy:thread:default";
-   const MAX_HISTORY = 200;
-   
-   type Role = "user" | "assistant" | "system";
-   type ChatMessage = {
-     role: Role;
-     content: string;
-     format?: "plain" | "markdown" | "html";
-   };
-   
-   function truncateMessages(list: ReadonlyArray<ChatMessage>, max = MAX_HISTORY): ChatMessage[] {
-     return list.length > max ? list.slice(list.length - max) : [...list];
-   }
-   
-   function loadMessages(): ChatMessage[] {
-     if (typeof window === "undefined") return [];
-     try {
-       const raw = window.localStorage.getItem(LS_KEY);
-       if (!raw) return [];
-       const parsed = JSON.parse(raw);
-       return Array.isArray((parsed as any)?.messages) ? (parsed as any).messages as ChatMessage[] : [];
-     } catch {
-       return [];
-     }
-   }
-   
-   function saveMessages(messages: ChatMessage[]): void {
-     if (typeof window === "undefined") return;
-     try {
-       window.localStorage.setItem(
-         LS_KEY,
-         JSON.stringify({ messages, updatedAt: Date.now() })
-       );
-     } catch { /* noop */ }
-   }
+// [ANCHOR:UTILS]
+const LS_KEY = "mpathy:thread:default";
+const MAX_HISTORY = 200;
+
+type Role = "user" | "assistant" | "system";
+type ChatMessage = {
+  role: Role;
+  content: string;
+  format?: "plain" | "markdown" | "html";
+};
+
+function truncateMessages(list: ReadonlyArray<ChatMessage>, max = MAX_HISTORY): ChatMessage[] {
+  return list.length > max ? list.slice(list.length - max) : [...list];
+}
+
+function loadMessages(): ChatMessage[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(LS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    const msgs = (parsed as any)?.messages;
+    return Array.isArray(msgs) ? (msgs as ChatMessage[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveMessages(messages: ReadonlyArray<ChatMessage>): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(LS_KEY, JSON.stringify({ messages, updatedAt: Date.now() }));
+  } catch { /* noop */ }
+}
   
 /* =======================================================================
    [ANCHOR:COMPONENTS]  — UI-Bausteine
