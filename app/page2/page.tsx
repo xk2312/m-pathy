@@ -502,19 +502,18 @@ function InputDock({
   );
 }
 /* =======================================================================
-   [ANCHOR:BEHAVIOR]  — Chatlogik (Azure OpenAI)
+   [ANCHOR:BEHAVIOR + LAYOUT] — Chatlogik & Bühne
    ======================================================================= */
 
    export default function Page2() {
     // Persona/Theme
     const theme = useTheme("default");
-    // ✔︎ Fallback auf zentrale TOKENS (aus CONFIG)
     const activeTokens: Tokens = (theme as any)?.tokens ?? TOKENS;
   
-    // Breakpoint + Seitenränder nach Vorgabe
+    // Breakpoint + Seitenränder
     const { isMobile } = useBreakpoint(768);
   
-    // Höhen-Messung für scrollbare Conversation
+    // Refs + Höhen
     const headerRef = React.useRef<HTMLDivElement>(null);
     const convoRef  = React.useRef<HTMLDivElement>(null);
     const [vh, setVh] = useState(0);
@@ -547,27 +546,25 @@ function InputDock({
         ? (theme as any)?.dock?.mobile?.side ?? 12
         : (theme as any)?.dock?.desktop?.side ?? 24;
   
-    // ── Chat State
+    // Chat State
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
   
-    // Persist aus UTILS verwenden
+    // Persist
     const persistMessages = saveMessages;
   
-    // Initiale Begrüßung (mit Restore aus LocalStorage, falls vorhanden)
+    // Init / Begrüßung
     useEffect(() => {
       const restored = loadMessages();
       if (Array.isArray(restored) && restored.length) {
         setMessages(restored);
         return;
       }
-      setMessages([
-        { role: "assistant", content: "Welcome. I'm M. Mother of AI." } as ChatMessage,
-      ]);
+      setMessages([{ role: "assistant", content: "Welcome. I'm M. Mother of AI." }]);
     }, []);
   
-    // Systemmeldung → hängt Bubble an (wird auch vom Säulen-Event genutzt)
+    // SystemSay
     const systemSay = useCallback((content: string) => {
       if (!content) return;
       setMessages((prev) => {
@@ -580,7 +577,6 @@ function InputDock({
       });
     }, [persistMessages]);
   
-    // CustomEvent-Brücke: Saeule.tsx -> Page2 (Buttons feuern SystemMessage)
     useEffect(() => {
       const handler = (e: Event) => {
         const ce = e as CustomEvent<string>;
@@ -592,12 +588,12 @@ function InputDock({
       };
     }, [systemSay]);
   
-    // Einheitliche Sendelogik für <MessageInput onSend={handleSend}>
+    // Handle Send
     async function handleSend(text: string): Promise<void> {
       const t = text.trim();
       if (!t || loading) return;
   
-      const next: ChatMessage[] = [...messages, { role: "user", content: t } as ChatMessage];
+      const next: ChatMessage[] = [...messages, { role: "user", content: t }];
       setMessages(next);
       persistMessages(next);
       setLoading(true);
@@ -615,9 +611,9 @@ function InputDock({
         if (!res.ok) throw new Error(await res.text());
         const data = await res.json();
   
-        // Antwort hart auf gültige Role normalisieren
         const normalizedRole: Role =
-          (data && typeof data.role === "string" && (["user","assistant","system"] as const).includes(data.role as Role))
+          (data && typeof data.role === "string" &&
+            (["user", "assistant", "system"] as const).includes(data.role as Role))
             ? (data.role as Role)
             : "assistant";
   
@@ -645,7 +641,6 @@ function InputDock({
       }
     }
   
-    // Optionaler Wrapper, falls du irgendwo ein <form onSubmit={sendMessage}> hast
     async function sendMessage(e: FormEvent) {
       e.preventDefault();
       const t = input.trim();
@@ -654,20 +649,14 @@ function InputDock({
       await handleSend(t);
     }
   
-    /* =======================================================================
-       [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
-       ======================================================================= */
+    // ================= LAYOUT =================
   
-    // nur lokaler UI-State für das Mobile-Overlay
     const [overlayOpen, setOverlayOpen] = useState(false);
-  
-    // Farben ausschließlich aus activeTokens
     const color = activeTokens.color;
     const bg0 = color.bg0 ?? "#000000";
     const bg1 = color.bg1 ?? "#0b1220";
     const textColor = color.text ?? "#ffffff";
   
-    // Seitenstil (radial + linear)
     const pageStyle: React.CSSProperties = {
       minHeight: "100dvh",
       color: textColor,
@@ -678,7 +667,6 @@ function InputDock({
       ].join(", "),
     };
   
-    // ── Return: gesamtes Layout
     return (
       <main style={{ ...pageStyle, display: "flex", flexDirection: "column", height: "100dvh" }}>
         <div
@@ -706,7 +694,7 @@ function InputDock({
             <LogoM size={isMobile ? 120 : 160} active={loading} />
           </div>
   
-          {/* Bühne: 2 Spalten */}
+          {/* 2-Spalten-Bühne */}
           <div
             style={{
               display: "grid",
@@ -716,12 +704,9 @@ function InputDock({
               flex: 1,
             }}
           >
-            {/* Säule links – Desktop statisch */}
             {!isMobile && <SidebarContainer onSystemMessage={systemSay} />}
   
-            {/* Rechte Spalte */}
             <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
-              {/* Chronik (scrollbar) */}
               <div
                 ref={convoRef}
                 style={{
@@ -739,7 +724,6 @@ function InputDock({
                 </div>
               </div>
   
-              {/* Eingabe-Dock (Mess-Anker) */}
               <div
                 id="m-input-dock"
                 role="group"
@@ -757,7 +741,6 @@ function InputDock({
           </div>
         </div>
   
-        {/* Mobile: FAB + Overlay */}
         {isMobile && (
           <>
             <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
@@ -770,5 +753,5 @@ function InputDock({
         )}
       </main>
     );
-  } // ← Ende Page2()
+  }
   
