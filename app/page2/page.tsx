@@ -562,17 +562,7 @@ function InputDock({
         window.removeEventListener("mpathy:system-message", handler as EventListener);
       };
     }, [systemSay]);
-
-    // Autoscroll: nach jeder neuen Nachricht ans Ende
-useEffect(() => {
-  const el = convoRef.current;
-  if (!el) return;
-  // einen Frame warten, bis die neue Bubble gerendert ist
-  requestAnimationFrame(() => {
-    el.scrollTop = el.scrollHeight;
-  });
-}, [messages]);
-
+    
   // Wandelt beliebige Content-Formen in einen gültigen Textstring um
 function toSafeContent(value: unknown): string {
   if (typeof value === "string") return value;
