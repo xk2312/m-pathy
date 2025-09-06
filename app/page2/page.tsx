@@ -338,19 +338,22 @@ function Conversation({
   messages,
   tokens,
   padBottom = "12px",
+  scrollRef,
 }: {
   messages: ChatMessage[];
   tokens: Tokens;
-  padBottom?: string; // <— neu
+  padBottom?: string;
+  scrollRef?: React.Ref<HTMLDivElement>; // neu
 }) {
   return (
     <section
+      ref={scrollRef as any} // <— HIER die Ref an die echte Scroll-Section
       style={{
-        flex: 1,            // <— statt fester Höhe
-        minHeight: 0,       // <— wichtig für Flex-Scroller!
+        flex: 1,
+        minHeight: 0,
         overflowY: "auto",
         paddingTop: 12,
-        paddingBottom: padBottom,  // <— durch Dock-Höhe gepuffert
+        paddingBottom: padBottom,
         scrollbarWidth: "thin",
       }}
     >
@@ -360,6 +363,7 @@ function Conversation({
     </section>
   );
 }
+
 
 
 /** Eingabedock — unterstützt "flow" (im Layoutfluss) und "fixed" (schwebend) */
@@ -482,7 +486,7 @@ function InputDock({
   
     // Höhen-Messung für scrollbare Conversation
     const headerRef = React.useRef<HTMLDivElement>(null);
-    const convoRef  = React.useRef<HTMLDivElement>(null);
+    const convoRef  = React.useRef<HTMLDivElement>(null); // wird an <Conversation scrollRef> gereicht
     const [vh, setVh] = useState(0);
     const [headerH, setHeaderH] = useState(0);
     const [dockH, setDockH] = useState(0);
@@ -529,11 +533,11 @@ function InputDock({
         return;
       }
       setMessages([
-        { role: "assistant", content: "Welcome. I'm M. Mother of AI." } as ChatMessage,
+        { role: "assistant", content: "Welcome. I'm M. Mother of AI.", format: "markdown" } as ChatMessage,
       ]);
     }, []);
   
-    // Systemmeldung → hängt Bubble an (wird auch vom Säulen-Event genutzt)
+    // Systemmeldung → hängt Bubble an (wird via Sidebar-Prop genutzt)
     const systemSay = useCallback((content: string) => {
       if (!content) return;
       setMessages((prev) => {
@@ -546,64 +550,64 @@ function InputDock({
       });
     }, [persistMessages]);
   
-    // CustomEvent-Brücke: Saeule.tsx -> Page2 (Buttons feuern SystemMessage)
+    // (Deaktiviert) CustomEvent-Brücke – vermeiden von Doppel-Bubbles
+    // useEffect(() => {
+    //   const handler = (e: Event) => {
+    //     const ce = e as CustomEvent<any>;
+    //     const msg =
+    //       typeof ce.detail === "string"
+    //         ? ce.detail
+    //         : (ce.detail && typeof ce.detail.text === "string" ? ce.detail.text : "");
+    //     if (msg) systemSay(msg);
+    //   };
+    //   window.addEventListener("mpathy:system-message", handler as EventListener);
+    //   return () => {
+    //     window.removeEventListener("mpathy:system-message", handler as EventListener);
+    //   };
+    // }, [systemSay]);
+  
+    // Autoscroll: nach jeder neuen Nachricht ans Ende
     useEffect(() => {
-      const handler = (e: Event) => {
-        const ce = e as CustomEvent<any>;
-        const msg =
-          typeof ce.detail === "string"
-            ? ce.detail
-            : (ce.detail && typeof ce.detail.text === "string" ? ce.detail.text : "");
-        if (msg) systemSay(msg); // ⚠️ nur anhängen, wenn wirklich Text vorhanden
-      };
-      
-      window.addEventListener("mpathy:system-message", handler as EventListener);
-      return () => {
-        window.removeEventListener("mpathy:system-message", handler as EventListener);
-      };
-    }, [systemSay]);
-    
-  // Wandelt beliebige Content-Formen in einen gültigen Textstring um
-function toSafeContent(value: unknown): string {
-  if (typeof value === "string") return value;
-  if (Array.isArray(value)) {
-    // z.B. ["a", {text:"b"}] -> "a\n{"text":"b"}"
-    return value
-      .map(v => (typeof v === "string" ? v : JSON.stringify(v)))
-      .join("\n");
-  }
-  if (value && typeof value === "object") {
-    // häufige Fälle wie {text:"..."} oder fremde Strukturen
-    // sauber in Text serialisieren
-    try {
-      // bevorzugt "text" auslesen, wenn vorhanden
-      // @ts-ignore
-      if (typeof (value as any).text === "string") return (value as any).text;
-      return JSON.stringify(value);
-    } catch {
-      return String(value);
+      const el = convoRef.current;
+      if (!el) return;
+      requestAnimationFrame(() => {
+        el.scrollTop = el.scrollHeight;
+      });
+    }, [messages, dockH]);
+  
+    // Wandelt beliebige Content-Formen in einen gültigen Textstring um
+    function toSafeContent(value: unknown): string {
+      if (typeof value === "string") return value;
+      if (Array.isArray(value)) {
+        return value.map(v => (typeof v === "string" ? v : JSON.stringify(v))).join("\n");
+      }
+      if (value && typeof value === "object") {
+        try {
+          // @ts-ignore – häufiges Muster: { text: "..." }
+          if (typeof (value as any).text === "string") return (value as any).text;
+          return JSON.stringify(value);
+        } catch {
+          return String(value);
+        }
+      }
+      return String(value ?? "");
     }
-  }
-  return String(value ?? "");
-}
-
-    // Einheitliche Sendelogik
+  
+    // Einheitliche Sendelogik (mit sanftem 1x-Retry; kein Doppel-Append)
     async function handleSend(userText: string, retried = false): Promise<void> {
       const t = userText.trim();
       if (!t || loading) return;
-      
   
       // Beim Retry KEINE zweite User-Bubble anhängen
-const next: ChatMessage[] = retried
-? messages
-: [...messages, { role: "user", content: t } as ChatMessage];
-
-if (!retried) {
-setMessages(next);
-persistMessages(next);
-}
-setLoading(true);
-
+      const next: ChatMessage[] = retried
+        ? messages
+        : [...messages, { role: "user", content: t } as ChatMessage];
+  
+      if (!retried) {
+        setMessages(next);
+        persistMessages(next);
+      }
+      setLoading(true);
   
       try {
         const res = await fetch("/api/chat", {
@@ -616,9 +620,8 @@ setLoading(true);
             })),
             temperature: 0.7,
           }),
-          
         });
-        
+  
         // Einmaliger, sanfter Retry bei Transport-/Antwortfehlern
         if (!res.ok) {
           if (!retried) {
@@ -628,7 +631,7 @@ setLoading(true);
           }
           throw new Error(await res.text());
         }
-        
+  
         let data: any = null;
         try {
           data = await res.json();
@@ -640,31 +643,26 @@ setLoading(true);
           }
           throw new Error("Antwort unlesbar");
         }
-        
   
         const normalizedRole: Role =
-  (data && typeof data.role === "string" && (["user","assistant","system"] as const).includes(data.role as Role))
-    ? (data.role as Role)
-    : "assistant";
-
-// ✅ Nur antworten, wenn nach Normalisierung echter Text vorhanden ist
-const raw = (data as any)?.content ?? (data as any)?.reply ?? "";
-const replyText = toSafeContent(raw);
-
-const hasContent = typeof replyText === "string" && replyText.trim().length > 0;
-
-const reply: ChatMessage | null = hasContent
-  ? { role: normalizedRole, content: replyText }
-  : null;
-
-
-setMessages((m) => {
-  // ❌ Keine leere/Placeholder-Bubble anhängen
-  const merged = reply ? truncateMessages([...m, reply]) : m;
-  persistMessages(merged);
-  return merged;
-});
-
+          (data && typeof data.role === "string" && (["user","assistant","system"] as const).includes(data.role as Role))
+            ? (data.role as Role)
+            : "assistant";
+  
+        // Nur antworten, wenn nach Normalisierung echter Text vorhanden ist
+        const raw = (data as any)?.content ?? (data as any)?.reply ?? "";
+        const replyText = toSafeContent(raw);
+        const hasContent = typeof replyText === "string" && replyText.trim().length > 0;
+  
+        const reply: ChatMessage | null = hasContent
+          ? { role: normalizedRole, content: replyText, format: "markdown" as const }
+          : null;
+  
+        setMessages((m) => {
+          const merged = reply ? truncateMessages([...m, reply]) : m; // keine leere Bubble
+          persistMessages(merged);
+          return merged;
+        });
       } catch (err: any) {
         setMessages((m) => {
           const merged = truncateMessages([
@@ -712,7 +710,7 @@ setMessages((m) => {
     };
   
     return (
-        <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
+      <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
         <div
           style={{
             flex: 1,
@@ -756,23 +754,17 @@ setMessages((m) => {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                flex: 1,          // <— wichtig, damit sie Platz bekommt
-                minHeight: 0,     // <— wichtig für Flex-Scroller!
+                flex: 1,
+                minHeight: 0,
               }}
             >
               {/* Chronik (scrollbar) */}
-              <div
-                ref={convoRef}
-                style={{
-                  flex: 1,         // <— gibt der Conversation den verfügbaren Raum
-                  minHeight: 0,    // <— verhindert Abschneiden
-                  display: "flex", // <— erlaubt der inneren Section zu flexen
-                }}
-              >
+              <div style={{ flex: 1, minHeight: 0, display: "flex" }}>
                 <Conversation
                   messages={messages}
                   tokens={activeTokens}
                   padBottom={`calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`}
+                  scrollRef={convoRef}
                 />
               </div>
   
