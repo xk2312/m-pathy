@@ -513,45 +513,108 @@ function InputDock({
         window.removeEventListener("mpathy:system-message", handler as EventListener);
       };
     }, [systemSay]);
-  
+  // Wandelt beliebige Content-Formen in einen gültigen Textstring um
+function toSafeContent(value: unknown): string {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) {
+    // z.B. ["a", {text:"b"}] -> "a\n{"text":"b"}"
+    return value
+      .map(v => (typeof v === "string" ? v : JSON.stringify(v)))
+      .join("\n");
+  }
+  if (value && typeof value === "object") {
+    // häufige Fälle wie {text:"..."} oder fremde Strukturen
+    // sauber in Text serialisieren
+    try {
+      // bevorzugt "text" auslesen, wenn vorhanden
+      // @ts-ignore
+      if (typeof (value as any).text === "string") return (value as any).text;
+      return JSON.stringify(value);
+    } catch {
+      return String(value);
+    }
+  }
+  return String(value ?? "");
+}
+
     // Einheitliche Sendelogik
-    async function handleSend(text: string): Promise<void> {
-      const t = text.trim();
+    async function handleSend(userText: string, retried = false): Promise<void> {
+      const t = userText.trim();
       if (!t || loading) return;
+      
   
-      const next: ChatMessage[] = [...messages, { role: "user", content: t } as ChatMessage];
-      setMessages(next);
-      persistMessages(next);
-      setLoading(true);
+      // Beim Retry KEINE zweite User-Bubble anhängen
+const next: ChatMessage[] = retried
+? messages
+: [...messages, { role: "user", content: t } as ChatMessage];
+
+if (!retried) {
+setMessages(next);
+persistMessages(next);
+}
+setLoading(true);
+
   
       try {
         const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            messages: next.map((m) => ({ role: m.role, content: m.content })),
+            messages: next.map((m) => ({
+              role: m.role,
+              content: toSafeContent((m as any).content),
+            })),
             temperature: 0.7,
           }),
+          
         });
-  
-        if (!res.ok) throw new Error(await res.text());
-        const data = await res.json();
+        
+        // Einmaliger, sanfter Retry bei Transport-/Antwortfehlern
+        if (!res.ok) {
+          if (!retried) {
+            console.warn("[chat] retry after non-OK response …");
+            await new Promise(r => setTimeout(r, 300));
+            return handleSend(userText, true);
+          }
+          throw new Error(await res.text());
+        }
+        
+        let data: any = null;
+        try {
+          data = await res.json();
+        } catch {
+          if (!retried) {
+            console.warn("[chat] retry after JSON parse …");
+            await new Promise(r => setTimeout(r, 200));
+            return handleSend(userText, true);
+          }
+          throw new Error("Antwort unlesbar");
+        }
+        
   
         const normalizedRole: Role =
-          (data && typeof data.role === "string" && (["user","assistant","system"] as const).includes(data.role as Role))
-            ? (data.role as Role)
-            : "assistant";
-  
-        const reply: ChatMessage =
-          data && typeof data.content === "string"
-            ? { role: normalizedRole, content: data.content }
-            : { role: "assistant", content: String(data?.reply ?? "") || "…" };
-  
-        setMessages((m) => {
-          const merged = truncateMessages([...m, reply]);
-          persistMessages(merged);
-          return merged;
-        });
+  (data && typeof data.role === "string" && (["user","assistant","system"] as const).includes(data.role as Role))
+    ? (data.role as Role)
+    : "assistant";
+
+// ✅ Nur antworten, wenn nach Normalisierung echter Text vorhanden ist
+const raw = (data as any)?.content ?? (data as any)?.reply ?? "";
+const replyText = toSafeContent(raw);
+
+const hasContent = typeof replyText === "string" && replyText.trim().length > 0;
+
+const reply: ChatMessage | null = hasContent
+  ? { role: normalizedRole, content: replyText }
+  : null;
+
+
+setMessages((m) => {
+  // ❌ Keine leere/Placeholder-Bubble anhängen
+  const merged = reply ? truncateMessages([...m, reply]) : m;
+  persistMessages(merged);
+  return merged;
+});
+
       } catch (err: any) {
         setMessages((m) => {
           const merged = truncateMessages([
