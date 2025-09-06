@@ -30,7 +30,6 @@ import React, {
 import Image from "next/image";
 
 import LogoM from "../components/LogoM";
-import MessageBody from "../components/MessageBody";
 import MessageInput from "../components/MessageInput";
 import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
@@ -228,6 +227,49 @@ function Header() {
 
 
 /** Sprechblase mit M-Avatar für Assistant */
+// --- Markdown Mini-Renderer (XSS-safe: erst escapen, dann Muster ersetzen)
+function mdToHtml(src: string): string {
+  const esc = String(src)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  // Überschriften
+  const withHeadings = esc
+    .replace(/^### (.*)$/gm, "<h3>$1</h3>")
+    .replace(/^## (.*)$/gm, "<h2>$1</h2>")
+    .replace(/^# (.*)$/gm, "<h1>$1</h1>");
+
+  // Fett/Kursiv/Code inline
+  const withInline = withHeadings
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(/`([^`]+?)`/g, "<code>$1</code>");
+
+  // Einfache Listen
+  const withLists = withInline
+    .replace(/^(?:- |\* )(.*)$/gm, "<li>$1</li>")
+    .replace(/(<li>.*<\/li>)(?:(?:\r?\n)?(?!<li>))/gs, "<ul>$1</ul>\n");
+
+  // Absätze (doppelte Zeilenumbrüche)
+  return withLists
+    .replace(/\n{2,}/g, "</p><p>")
+    .replace(/^/, "<p>").replace(/$/, "</p>");
+}
+
+// --- Body einer Nachricht: entscheidet Markdown vs. Plaintext
+function MessageBody({ msg }: { msg: ChatMessage }) {
+  const isMd = (msg as any).format === "markdown";
+  if (isMd) {
+    return (
+      <div
+        // Nur generiertes, zuvor escaptes HTML einfügen
+        dangerouslySetInnerHTML={{ __html: mdToHtml(String(msg.content ?? "")) }}
+        style={{ lineHeight: 1.55 }}
+      />
+    );
+  }
+  return <div style={{ lineHeight: 1.55 }}>{String(msg.content ?? "")}</div>;
+}
+
 function Bubble({
   msg,
   tokens,
@@ -295,19 +337,20 @@ function Bubble({
 function Conversation({
   messages,
   tokens,
-  height,
+  padBottom = "12px",
 }: {
   messages: ChatMessage[];
   tokens: Tokens;
-  height: number; // <— dynamische Höhe
+  padBottom?: string; // <— neu
 }) {
   return (
     <section
       style={{
-        height,
+        flex: 1,            // <— statt fester Höhe
+        minHeight: 0,       // <— wichtig für Flex-Scroller!
         overflowY: "auto",
         paddingTop: 12,
-        paddingBottom: 12,
+        paddingBottom: padBottom,  // <— durch Dock-Höhe gepuffert
         scrollbarWidth: "thin",
       }}
     >
@@ -317,6 +360,7 @@ function Conversation({
     </section>
   );
 }
+
 
 /** Eingabedock — unterstützt "flow" (im Layoutfluss) und "fixed" (schwebend) */
 function InputDock({
@@ -505,14 +549,30 @@ function InputDock({
     // CustomEvent-Brücke: Saeule.tsx -> Page2 (Buttons feuern SystemMessage)
     useEffect(() => {
       const handler = (e: Event) => {
-        const ce = e as CustomEvent<string>;
-        systemSay(ce?.detail ?? "");
+        const ce = e as CustomEvent<any>;
+        const msg =
+          typeof ce.detail === "string"
+            ? ce.detail
+            : (ce.detail && typeof ce.detail.text === "string" ? ce.detail.text : "");
+        if (msg) systemSay(msg); // ⚠️ nur anhängen, wenn wirklich Text vorhanden
       };
+      
       window.addEventListener("mpathy:system-message", handler as EventListener);
       return () => {
         window.removeEventListener("mpathy:system-message", handler as EventListener);
       };
     }, [systemSay]);
+
+    // Autoscroll: nach jeder neuen Nachricht ans Ende
+useEffect(() => {
+  const el = convoRef.current;
+  if (!el) return;
+  // einen Frame warten, bis die neue Bubble gerendert ist
+  requestAnimationFrame(() => {
+    el.scrollTop = el.scrollHeight;
+  });
+}, [messages]);
+
   // Wandelt beliebige Content-Formen in einen gültigen Textstring um
 function toSafeContent(value: unknown): string {
   if (typeof value === "string") return value;
@@ -662,7 +722,7 @@ setMessages((m) => {
     };
   
     return (
-      <main style={{ ...pageStyle, display: "flex", flexDirection: "column", height: "100dvh" }}>
+        <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
         <div
           style={{
             flex: 1,
@@ -702,23 +762,28 @@ setMessages((m) => {
             {!isMobile && <SidebarContainer onSystemMessage={systemSay} />}
   
             {/* Rechte Spalte */}
-            <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,          // <— wichtig, damit sie Platz bekommt
+                minHeight: 0,     // <— wichtig für Flex-Scroller!
+              }}
+            >
               {/* Chronik (scrollbar) */}
               <div
                 ref={convoRef}
                 style={{
-                  flex: 1,
-                  overflowY: "auto",
-                  paddingTop: 12,
-                  paddingBottom: `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`,
-                  scrollbarWidth: "thin",
+                  flex: 1,         // <— gibt der Conversation den verfügbaren Raum
+                  minHeight: 0,    // <— verhindert Abschneiden
+                  display: "flex", // <— erlaubt der inneren Section zu flexen
                 }}
               >
-                <div>
-                  {messages.map((m, i) => (
-                    <Bubble key={i} msg={m} tokens={activeTokens} />
-                  ))}
-                </div>
+                <Conversation
+                  messages={messages}
+                  tokens={activeTokens}
+                  padBottom={`calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`}
+                />
               </div>
   
               {/* Eingabe-Dock (Mess-Anker) */}

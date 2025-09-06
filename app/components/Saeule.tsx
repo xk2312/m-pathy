@@ -94,6 +94,22 @@ const KI_INTRO: Record<KiId, string> = {
   "m-ballance @Gemini Apex": "Dualität, Synthese, Spitze.",
   "MU TAH – Architect of Zero": "Nullpunkt, Ursprung, Set & Setting.",
 };
+const KI_ICON: Record<KiId, string> = {
+  "M @Palantir": "🔭",
+  "m-pathy @DeepMind Core": "🧠",
+  "m-ocean @Anthropic Vision": "🌊",
+  "m-inent @NASA Chronos": "⏱️",
+  "m-erge @IBM Q-Origin": "⚛️",
+  "m-power @Colossus": "🗿",
+  "m-body @XAI Prime": "🤖",
+  "m-beded @Meta Lattice": "🕸️",
+  "m-loop @OpenAI Root": "🌱",
+  "m-pire @Amazon Nexus": "🛠️",
+  "m-bassy @Oracle Gaia": "🌍",
+  "m-ballance @Gemini Apex": "♊️",
+  "MU TAH – Architect of Zero": "🌀",
+};
+
 
 
 /* ======================================================================
@@ -191,7 +207,7 @@ useEffect(() => {
     if (next === activeKi) return;
     logEvent("ki_switch", { from: activeKi, to: next });
     setActiveKi(next);
-    const text = `${next} ist bereit. Fokus: ${KI_INTRO[next] ?? "Bereit."}`;
+    const text = `${KI_ICON[next] ?? "✨"}  ${next} ist bereit. Fokus: ${KI_INTRO[next] ?? "Bereit."}`;
     emitSystemMessage({ kind: "ki", text, meta: { ki: next } });
     onSystemMessage?.(text);
   }
