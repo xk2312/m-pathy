@@ -81,3 +81,54 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
   --z-overlay: 60;
   --z-fab: 70;
 }
+
+/* ======================================================================
+   Markdown typographic defaults (greifen auf <div class="markdown">…)
+   ====================================================================== */
+
+.markdown {
+  line-height: 1.6;
+  word-break: break-word;
+  color: inherit;           /* erbt Bubble-Farbe */
+}
+
+/* Headings */
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+  margin: 1.2em 0 0.6em;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.markdown h1 { font-size: clamp(1.40rem, 1.10rem + 1vw, 1.90rem); }
+.markdown h2 { font-size: clamp(1.25rem, 1.00rem + 0.7vw, 1.60rem); }
+.markdown h3 { font-size: clamp(1.10rem, 0.95rem + 0.5vw, 1.30rem); }
+
+/* Paragraphs */
+.markdown p { margin: 0.75em 0; }
+
+/* Lists */
+.markdown ul,
+.markdown ol {
+  display: block;           /* Schutz gegen Resets */
+  list-style-position: outside;
+  margin: 0.75em 0 0.75em 1.25em;
+  padding: 0;
+}
+.markdown li { display: list-item; margin: 0.25em 0; }
+.markdown ul  { list-style-type: disc; }
+.markdown ul ul { margin-left: 1.1em; list-style-type: circle; }
+.markdown ol  { list-style-type: decimal; }
+
+/* Inline code */
+.markdown code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 0.1em 0.35em;
+  border-radius: 0.35em;
+}
+
+/* Links (optional) */
+.markdown a { text-decoration: underline; color: inherit; }

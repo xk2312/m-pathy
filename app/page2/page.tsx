@@ -205,19 +205,14 @@ function Header() {
         }}
       >
         <Image
-      src="/pictures/m.svg"
-      alt="M"
-      width={22}
-      height={22}
-      style={{ marginTop: 6, flex: "0 0 22px" }}
-    />
-
+          src="/pictures/m.svg"
+          alt="M"
+          width={22}
+          height={22}
+          style={{ marginTop: 6, flex: "0 0 22px" }}
+        />
         {/* Screenreader-Title, visuell versteckt */}
-        <span style={{
-          position: "absolute",
-          left: -9999,
-          width: 1, height: 1, overflow: "hidden"
-        }}>
+        <span style={{ position: "absolute", left: -9999, width: 1, height: 1, overflow: "hidden" }}>
           M
         </span>
       </div>
@@ -225,43 +220,62 @@ function Header() {
   );
 }
 
-
-/** Sprechblase mit M-Avatar für Assistant */
-// --- Markdown Mini-Renderer (XSS-safe: erst escapen, dann Muster ersetzen)
+/* --- Markdown Mini-Renderer (XSS-safe: erst escapen, dann Muster ersetzen) --- */
 function mdToHtml(src: string): string {
+  // 1) Escapen
   const esc = String(src)
-    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 
-  // Überschriften
-  const withHeadings = esc
+  // 2) Headings
+  let out = esc
     .replace(/^### (.*)$/gm, "<h3>$1</h3>")
     .replace(/^## (.*)$/gm, "<h2>$1</h2>")
     .replace(/^# (.*)$/gm, "<h1>$1</h1>");
 
-  // Fett/Kursiv/Code inline
-  const withInline = withHeadings
+  // 3) Inline-Styles
+  out = out
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
     .replace(/`([^`]+?)`/g, "<code>$1</code>");
 
-  // Einfache Listen
-  const withLists = withInline
-    .replace(/^(?:- |\* )(.*)$/gm, "<li>$1</li>")
-    .replace(/(<li>.*<\/li>)(?:(?:\r?\n)?(?!<li>))/gs, "<ul>$1</ul>\n");
+  // 4) Listen: zusammenhängende - / * Zeilen zu EINEM <ul> gruppieren
+  out = out.replace(
+    /(^|\n)((?:[-*]\s+.*(?:\n|$))+)/g,
+    (_m: string, prefix: string, block: string) => {
+      const items = block
+        .trimEnd()
+        .split("\n")
+        .filter(Boolean)
+        .map((line: string) => line.replace(/^[-*]\s+/, "")) // Marker entfernen
+        .map((text: string) => `<li>${text}</li>`)
+        .join("");
+      return `${prefix}<ul>${items}</ul>\n`;
+    }
+  );
 
-  // Absätze (doppelte Zeilenumbrüche)
-  return withLists
-    .replace(/\n{2,}/g, "</p><p>")
-    .replace(/^/, "<p>").replace(/$/, "</p>");
+  // 5) Absätze: Nur „nackte“ Textblöcke in <p> einpacken, nicht Blockelemente
+  const blocks = out.split(/\n{2,}/);
+  const rendered = blocks
+    .map((b) => {
+      const t = b.trim();
+      if (!t) return "";
+      if (/^<(h1|h2|h3|ul|ol|pre|blockquote|table|hr)\b/i.test(t)) return t;
+      return `<p>${t}</p>`;
+    })
+    .join("\n");
+
+  return rendered;
 }
 
-// --- Body einer Nachricht: entscheidet Markdown vs. Plaintext
+/** Body einer Nachricht: entscheidet Markdown vs. Plaintext */
 function MessageBody({ msg }: { msg: ChatMessage }) {
   const isMd = (msg as any).format === "markdown";
   if (isMd) {
     return (
       <div
-        // Nur generiertes, zuvor escaptes HTML einfügen
+        className="markdown" // Haken für deine bestehenden CSS-Regeln (.markdown h1, .markdown ul, ...)
         dangerouslySetInnerHTML={{ __html: mdToHtml(String(msg.content ?? "")) }}
         style={{ lineHeight: 1.55 }}
       />
@@ -270,6 +284,7 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
   return <div style={{ lineHeight: 1.55 }}>{String(msg.content ?? "")}</div>;
 }
 
+/** Sprechblase mit M-Avatar für Assistant */
 function Bubble({
   msg,
   tokens,
@@ -327,13 +342,11 @@ function Bubble({
       <div style={bubbleStyle}>
         <MessageBody msg={msg} />
       </div>
-          </div>
-        );
-      }
+    </div>
+  );
+}
 
-
-/** Nachrichtenliste */
-
+/** Nachrichtenliste (echter Scroll-Container ist die <section>) */
 function Conversation({
   messages,
   tokens,
@@ -343,17 +356,18 @@ function Conversation({
   messages: ChatMessage[];
   tokens: Tokens;
   padBottom?: string;
-  scrollRef?: React.Ref<HTMLDivElement>; // neu
+  scrollRef?: React.Ref<HTMLDivElement>;
 }) {
   return (
     <section
-      ref={scrollRef as any} // <— HIER die Ref an die echte Scroll-Section
+      ref={scrollRef as any} // Ref direkt an die scrollende Section
       style={{
         flex: 1,
         minHeight: 0,
         overflowY: "auto",
+        boxSizing: "border-box",
         paddingTop: 12,
-        paddingBottom: padBottom,
+        paddingBottom: padBottom, // Dock-Höhe + Safe-Area + Luft wird von außen übergeben
         scrollbarWidth: "thin",
       }}
     >
@@ -363,8 +377,6 @@ function Conversation({
     </section>
   );
 }
-
-
 
 /** Eingabedock — unterstützt "flow" (im Layoutfluss) und "fixed" (schwebend) */
 function InputDock({
@@ -471,6 +483,7 @@ function InputDock({
     </form>
   );
 }
+
 /* =======================================================================
    [ANCHOR:BEHAVIOR] — Chatlogik (Azure OpenAI)
    ======================================================================= */
@@ -518,9 +531,12 @@ function InputDock({
         : (theme as any)?.dock?.desktop?.side ?? 24;
   
     // ── Chat State
+    // ── Chat State
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
+    const [stickToBottom, setStickToBottom] = useState(true); // ← NEU
+
   
     // Persist aus UTILS verwenden
     const persistMessages = saveMessages;
@@ -570,10 +586,26 @@ function InputDock({
     useEffect(() => {
       const el = convoRef.current;
       if (!el) return;
+      if (!stickToBottom) return; // ← nur autoscrollen, wenn nahe am Ende
       requestAnimationFrame(() => {
         el.scrollTop = el.scrollHeight;
       });
-    }, [messages, dockH]);
+    }, [messages, dockH, stickToBottom]);
+    
+
+// Scroll-Listener: misst, ob der User nahe „unten“ ist (Threshold ~80px)
+useEffect(() => {
+  const el = convoRef.current;
+  if (!el) return;
+  const onScroll = () => {
+    const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
+    setStickToBottom(distance < 80);
+  };
+  el.addEventListener("scroll", onScroll, { passive: true });
+  onScroll(); // initial messen
+  return () => el.removeEventListener("scroll", onScroll);
+}, []);
+
   
     // Wandelt beliebige Content-Formen in einen gültigen Textstring um
     function toSafeContent(value: unknown): string {
@@ -682,8 +714,10 @@ function InputDock({
       const t = input.trim();
       if (!t) return;
       setInput("");
+      setStickToBottom(true);           // ← beim Senden wieder an’s Ende „kleben“
       await handleSend(t);
     }
+    
   
     /* =======================================================================
        [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
@@ -711,6 +745,7 @@ function InputDock({
   
     return (
       <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
+
         <div
           style={{
             flex: 1,
@@ -759,29 +794,31 @@ function InputDock({
               }}
             >
               {/* Chronik (scrollbar) */}
-              <div style={{ flex: 1, minHeight: 0, display: "flex" }}>
-                <Conversation
-                  messages={messages}
-                  tokens={activeTokens}
-                  padBottom={`calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`}
-                  scrollRef={convoRef}
-                />
-              </div>
+<div
+  style={{
+    flex: 1,
+    minHeight: 0,
+    display: "flex",
+  }}
+>
+<Conversation
+  messages={messages}
+  tokens={activeTokens}
+  padBottom={`calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`}  // ← Dock + Safe-Area + Luft
+  scrollRef={convoRef}
+/>
+</div>
+
   
-              {/* Eingabe-Dock (Mess-Anker) */}
-              <div
-                id="m-input-dock"
-                role="group"
-                aria-label="Chat Eingabeleiste"
-                style={{
-                  position: "sticky",
-                  bottom: 0,
-                  paddingTop: 8,
-                  background: "transparent",
-                }}
-              >
-                <MessageInput onSend={handleSend} disabled={loading} />
-              </div>
+                  {/* Eingabe-Dock (Mess-Anker) */}
+    <div
+      id="m-input-dock"                    // ← MUSS exakt so heißen (für die Höhenmessung)
+      role="group"
+      aria-label="Chat Eingabeleiste"
+      style={{ position: "sticky", bottom: 0, paddingTop: 8, background: "transparent" }}
+    >
+      <MessageInput onSend={handleSend} disabled={loading} />
+    </div>
             </div>
           </div>
         </div>
