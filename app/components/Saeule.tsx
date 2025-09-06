@@ -130,6 +130,33 @@ export default function Saeule({ onSystemMessage }: Props) {
   /* State */
   const [activeMode, setActiveMode] = useState<ModeId>("M");
   const [activeKi, setActiveKi] = useState<KiId>("M @Palantir");
+// Hydration-Flag (verhindert kurzzeitigen Placeholder-Flicker)
+const [hydrated, setHydrated] = useState(false);
+useEffect(() => { setHydrated(true); }, []);
+
+// Änderungen persistieren (nur echte Werte schreiben)
+useEffect(() => {
+  try {
+    if (activeMode) localStorage.setItem("mode", activeMode);
+  } catch { /* leise */ }
+}, [activeMode]);
+
+useEffect(() => {
+  try {
+    if (activeKi) localStorage.setItem("agent", activeKi);
+  } catch { /* leise */ }
+}, [activeKi]);
+
+
+// Initial aus localStorage lesen (nur Client)
+useEffect(() => {
+  try {
+    const m = localStorage.getItem("mode") as ModeId | null;
+    const k = localStorage.getItem("agent") as KiId | null;
+    if (m) setActiveMode(m);
+    if (k) setActiveKi(k);
+  } catch { /* leise */ }
+}, []);
 
   /* URL-Param mode respektieren (optional) */
   useEffect(() => {
@@ -214,8 +241,8 @@ export default function Saeule({ onSystemMessage }: Props) {
           <select
             id="modus-select"
             aria-label="Modus wählen"
-            value={activeMode.startsWith("C") ? activeMode : ""}
-            onChange={(e) => switchMode((e.target.value || "M") as ModeId)}
+            value={hydrated ? (MODI.some(m => m.id === activeMode) ? activeMode : "") : ""}
+            onChange={(e) => switchMode(e.target.value as ModeId)}
             className={styles.select}
           >
             <option value="" disabled hidden>
