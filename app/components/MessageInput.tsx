@@ -7,7 +7,9 @@ import { t } from "@/lib/i18n";
  * MessageInput – multi-line input with auto-resize
  * - Enter = send, Shift+Enter = newline
  * - IME protection (don't send while composing)
- * - Styles in route/styles/input-bar.css (m-inputbar, m-inputbar__textarea, m-inputbar__send)
+ * - Supports "/council Name: prompt" shortcut:
+ *     → POST /api/council/invoke
+ *     → calls onSend(notice) and onSend(answer)
  */
 export type MessageInputProps = {
   onSend: (text: string) => void | Promise<void>;
@@ -28,6 +30,15 @@ export default function MessageInput({
   const [isComposing, setIsComposing] = useState(false);
   const taRef = useRef<HTMLTextAreaElement | null>(null);
 
+  // ---- helpers -------------------------------------------------------------
+
+  /** parse "/council Name: prompt" → { name, prompt } | null */
+  const parseCouncilCommand = (text: string): null | { name: string; prompt: string } => {
+    const m = text.match(/^\/council\s+([^:]+)\s*:\s*(.+)$/i);
+    if (!m) return null;
+    return { name: m[1].trim(), prompt: m[2].trim() };
+  };
+
   // Auto-resize
   const autoResize = useCallback(() => {
     const el = taRef.current;
@@ -45,6 +56,8 @@ export default function MessageInput({
 
   useEffect(() => { autoResize(); }, [value, autoResize]);
 
+  // ---- send logic ----------------------------------------------------------
+
   const handleSend = useCallback(async () => {
     if (disabled) return;
     const text = value.trim();
@@ -52,9 +65,36 @@ export default function MessageInput({
 
     try {
       console.log('[MI] onSend ->', text);
-      await onSend(text);
+
+      // 1) Council shortcut?
+      const council = parseCouncilCommand(text);
+      if (council) {
+        // optional: sofort User-Command an Parent weiterreichen (als Echo)
+        await onSend(text);
+
+        const res = await fetch('/api/council/invoke', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: council.name, prompt: council.prompt }),
+        });
+
+        if (!res.ok) {
+          const msg = `Council invoke failed (${res.status})`;
+          console.error('[MI] council:error', msg);
+          await onSend(`⚠️ ${msg}`);
+        } else {
+          const data = await res.json(); // { notice, answer, shadow?, meta }
+          // 1a) Systemmeldung
+          if (data?.notice) await onSend(String(data.notice));
+          // 1b) Erste Antwort der gewählten KI
+          if (data?.answer) await onSend(String(data.answer));
+        }
+      } else {
+        // 2) Normaler Text
+        await onSend(text);
+      }
+
       setValue('');
-      // Reset height after sending
       requestAnimationFrame(autoResize);
       console.log('[MI] onSend:done');
     } catch (err) {
@@ -70,6 +110,8 @@ export default function MessageInput({
     e.preventDefault();
     void handleSend();
   }, [isComposing, handleSend]);
+
+  // ---- render --------------------------------------------------------------
 
   return (
     <div className="m-inputbar" aria-label="Message input" role="group">
