@@ -36,6 +36,7 @@ import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
 import StickyFab from "../components/StickyFab";
 import { t } from "@/lib/i18n";
+import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
 
 // ⚠️ NICHT importieren: useTheme aus "next-themes" (Konflikt mit lokalem Hook)
 // import { useTheme } from "next-themes"; // ❌ bitte entfernt lassen
@@ -719,121 +720,57 @@ useEffect(() => {
     
   
     /* =======================================================================
-       [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
-       ======================================================================= */
-  
-    // UI-State (nur fürs Mobile-Overlay)
-    const [overlayOpen, setOverlayOpen] = useState(false);
-  
-    // Farben ausschließlich aus activeTokens
-    const color = activeTokens.color;
-    const bg0 = color.bg0 ?? "#000000";
-    const bg1 = color.bg1 ?? "#0b1220";
-    const textColor = color.text ?? "#ffffff";
-  
-    // Seitenstil (radial + linear)
-    const pageStyle: React.CSSProperties = {
-      minHeight: "100dvh",
-      color: textColor,
-      background: [
-        "radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%)",
-        "radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%)",
-        `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000 100%)`,
-      ].join(", "),
-    };
-  
-    return (
-      <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
+     [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
+     ======================================================================= */
 
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            marginInline: sideMargin,
-            minHeight: 0,
-            maxWidth: 1280,
-            alignSelf: "center",
-            width: "100%",
-          }}
-        >
-          {/* Header */}
-          <div
-            ref={headerRef}
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "24px 0",
-            }}
-          >
-            <LogoM size={isMobile ? 120 : 160} active={loading} />
-          </div>
-  
-          {/* Bühne: 2 Spalten */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
-              gap: 16,
-              minHeight: 0,
-              flex: 1,
-            }}
-          >
-            {/* Säule links – Desktop statisch */}
-            {!isMobile && <SidebarContainer onSystemMessage={systemSay} />}
-  
-            {/* Rechte Spalte */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                flex: 1,
-                minHeight: 0,
-              }}
-            >
-              {/* Chronik (scrollbar) */}
-<div
-  style={{
-    flex: 1,
-    minHeight: 0,
-    display: "flex",
-  }}
->
-<Conversation
-  messages={messages}
-  tokens={activeTokens}
-  padBottom={`calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`}  // ← Dock + Safe-Area + Luft
-  scrollRef={convoRef}
-/>
-</div>
+  const [overlayOpen, setOverlayOpen] = useState(false);
+  const color = activeTokens.color;
+  const bg0 = color.bg0 ?? "#000000";
+  const bg1 = color.bg1 ?? "#0b1220";
+  const textColor = color.text ?? "#ffffff";
 
-  
-                  {/* Eingabe-Dock (Mess-Anker) */}
-    <div
-      id="m-input-dock"                    // ← MUSS exakt so heißen (für die Höhenmessung)
-      role="group"
-      aria-label="Chat Eingabeleiste"
-      style={{ position: "sticky", bottom: 0, paddingTop: 8, background: "transparent" }}
-    >
-      <MessageInput onSend={handleSend} disabled={loading} />
-    </div>
-            </div>
-          </div>
-        </div>
-  
-        {/* Mobile: FAB + Overlay */}
-        {isMobile && (
-          <>
-            <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
-            <MobileOverlay
-              open={overlayOpen}
-              onClose={() => setOverlayOpen(false)}
-              onSystemMessage={systemSay}
-            />
-          </>
-        )}
-      </main>
-    );
-  }
-  //I ♥️ M
+  const pageStyle: React.CSSProperties = {
+    minHeight: "100dvh",
+    color: textColor,
+    background: [
+      "radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%)",
+      "radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%)",
+      `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000 100%)`,
+    ].join(", "),
+  };
+
+  return (
+    <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
+      {/* … dein bestehendes Layout … */}
+
+      <div style={{ flex: 1, minHeight: 0, display: "flex" }}>
+        <Conversation
+          messages={messages}
+          tokens={activeTokens}
+          padBottom={`calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`}
+          scrollRef={convoRef}
+        />
+      </div>
+
+      {/* OnboardingWatcher → minimal invasiv eingefügt */}
+      <OnboardingWatcher active onSystemMessage={systemSay} />
+      {/* Eingabe-Dock */}
+      <div id="m-input-dock" role="group" aria-label="Chat Eingabeleiste"
+           style={{ position: "sticky", bottom: 0, paddingTop: 8, background: "transparent" }}>
+        <MessageInput onSend={handleSend} disabled={loading} />
+      </div>
+
+      {/* Mobile Overlay bleibt unverändert */}
+      {isMobile && (
+        <>
+          <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
+          <MobileOverlay
+            open={overlayOpen}
+            onClose={() => setOverlayOpen(false)}
+            onSystemMessage={systemSay}
+          />
+        </>
+      )}
+    </main>
+  );
+}
