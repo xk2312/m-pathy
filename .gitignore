@@ -1,33 +1,9 @@
-
-
-# Node + Next.js
+# Node & Next.js
 node_modules/
 .next/
 out/
 dist/
 build/
-
-# Next.js specific cache
-.next/cache/
-.next/server/
-.next/static/
-.next/trace
-*.pack.gz
-*.pack.gz.old
-
-# Environment files
-.env.*.local
-.env
-.env.*
-!.env.example
-.env.local
-.env.development.local
-.env.production.local
-.env.test.local
-
-# Next build outputs
-.next/
-
 
 # Logs
 *.log
@@ -36,40 +12,11 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# macOS System Files
+# System
 .DS_Store
-._*
-.Spotlight-V100
-.Trashes
+Thumbs.db
 
-# IDE settings
-.vscode/
-.idea/
+# Local temp
+mpathy_local_diag_*
 
-# Hot reload & temp files
-*.hot-update.js
-*.hot-update.json
-
-# Filestack + API keys
-filestack_key.txt
-
-# CI artifacts (nicht committen)
-/package-src/
-/m-pathy.tar.gz
-# env & secrets
-.env
-.env.*
-!.env.example
-/srv/
-/etc/
-/tmp/
-
-# build outputs
-.next/
-dist/
-node_modules/
-*.log
-
-# lokale Prompts/Artefakte
-GPTX*.txt
-!/lib/**
+.env.local
