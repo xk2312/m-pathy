@@ -1,5 +1,3 @@
-
-
 # Node + Next.js
 node_modules/
 .next/
@@ -68,8 +66,13 @@ filestack_key.txt
 .next/
 dist/
 node_modules/
+# Ignoriere alles im Home/Root Verzeichnis
+/*
+# Aber behalte dein Projekt-Ordner
+!/M-PATHY
+
 *.log
 
 # lokale Prompts/Artefakte
 GPTX*.txt
-!/lib/**
+
