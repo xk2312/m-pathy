@@ -34,3 +34,9 @@ mpathy_local_diag_*
 .env.local.*
 *.env
 *.env.*
+
+# secrets
+.env
+.env.*
+*.env
+*.env.*
