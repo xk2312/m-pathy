@@ -35,6 +35,7 @@ import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
 import StickyFab from "../components/StickyFab";
+import { t } from "@/lib/i18n"; // oben ergänzen
 
 // ⚠️ NICHT importieren: useTheme aus "next-themes" (Konflikt mit lokalem Hook)
 // import { useTheme } from "next-themes"; // ❌ bitte entfernt lassen
@@ -319,31 +320,34 @@ function Bubble({
         borderColor: tokens.color.slateBorder,
       };
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: isUser ? "flex-end" : "flex-start",
-        alignItems: "flex-start",
-        gap: 10,
-        margin: "6px 0",
-      }}
-    >
-      {!isUser && (
-        <Image
-          src="/pictures/m.svg"
-          alt="M"
-          width={22}
-          height={22}
-          style={{ marginTop: 6, flex: "0 0 22px" }}
-        />
-      )}
-
-      <div style={bubbleStyle}>
-        <MessageBody msg={msg} />
-      </div>
-    </div>
-  );
+      return (
+        <div
+          role="listitem"
+          aria-label={isUser ? t("youSaid") : t("assistantSays")}
+          style={{
+            display: "flex",
+            justifyContent: isUser ? "flex-end" : "flex-start",
+            alignItems: "flex-start",
+            gap: 10,
+            margin: "6px 0",
+          }}
+        >
+          {!isUser && (
+            <Image
+              src="/pictures/m.svg"
+              alt="M"
+              width={22}
+              height={22}
+              style={{ marginTop: 6, flex: "0 0 22px" }}
+            />
+          )}
+      
+          <div style={bubbleStyle}>
+            <MessageBody msg={msg} />
+          </div>
+        </div>
+      );
+      
 }
 
 /** Nachrichtenliste (echter Scroll-Container ist die <section>) */
@@ -360,21 +364,16 @@ function Conversation({
 }) {
   return (
     <section
-      ref={scrollRef as any} // Ref direkt an die scrollende Section
-      style={{
-        flex: 1,
-        minHeight: 0,
-        overflowY: "auto",
-        boxSizing: "border-box",
-        paddingTop: 12,
-        paddingBottom: padBottom, // Dock-Höhe + Safe-Area + Luft wird von außen übergeben
-        scrollbarWidth: "thin",
-      }}
-    >
-      {messages.map((m, i) => (
-        <Bubble key={i} msg={m} tokens={tokens} />
-      ))}
-    </section>
+  role="log"
+  aria-live="polite"
+  aria-relevant="additions"
+  aria-label={t("conversationAria")}
+  style={{ /* … unverändert … */ }}
+>
+  {messages.map((m, i) => (
+    <Bubble key={i} msg={m} tokens={tokens} />
+  ))}
+</section>
   );
 }
 

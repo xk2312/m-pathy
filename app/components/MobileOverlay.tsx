@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import Saeule from "./Saeule";
+import { t } from "@/lib/i18n"; // ← neu
 
 type Props = {
   open: boolean;
@@ -16,9 +17,48 @@ export default function MobileOverlay({
   open,
   onClose,
   initialFocusId,
-  onSystemMessage, // ← hinzugefügt (wird nicht automatisch aufgerufen)
+  onSystemMessage, // ← wird genutzt
 }: Props) {
   const drawerRef = useRef<HTMLDivElement>(null);
+
+  // Systemmeldung aus Säule → Bubble senden + Overlay schließen (Desktop-Verhalten spiegeln)
+  const closingRef = useRef(false);
+
+const forwardSystemMessage = useCallback(
+  (content: string) => {
+    if (content && content.trim()) {
+      onSystemMessage?.(content);
+    }
+    closingRef.current = true; // ← weitere Events ignorieren
+    onClose();
+  },
+  [onSystemMessage, onClose]
+);
+
+// Reset beim Öffnen
+useEffect(() => {
+  if (open) closingRef.current = false;
+}, [open]);
+
+useEffect(() => {
+  if (!open) return;
+  const handler = (e: Event) => {
+    if (closingRef.current) return; // ← verhindert Doppeltrigger
+    const ce = e as CustomEvent<any>;
+    const msg =
+      typeof ce.detail === "string"
+        ? ce.detail
+        : (ce.detail && typeof ce.detail.text === "string" ? ce.detail.text : "");
+    if (msg && msg.trim()) {
+      closingRef.current = true;
+      onSystemMessage?.(msg);
+      onClose();
+    }
+  };
+  window.addEventListener("mpathy:system-message", handler as EventListener);
+  return () => window.removeEventListener("mpathy:system-message", handler as EventListener);
+}, [open, onSystemMessage, onClose]);
+
 
   // Body-Scroll-Lock
   useEffect(() => {
@@ -73,12 +113,12 @@ export default function MobileOverlay({
 
   return (
     <div
-      aria-label="Mobiles Säulen-Overlay"
-      role="dialog"
-      aria-modal="true"
-      aria-describedby="mobile-overlay-desc"
-      style={{ position: "fixed", inset: 0, zIndex: 60 }}
-    >
+  aria-label={t("mobileOverlayLabel")}
+  role="dialog"
+  aria-modal="true"
+  aria-describedby="mobile-overlay-desc"
+  style={{ position: "fixed", inset: 0, zIndex: 60 }}
+>
       {/* Scrim */}
       <div
         onClick={onClose}
@@ -121,7 +161,7 @@ export default function MobileOverlay({
           }}
         >
           <div id="mobile-overlay-desc" style={{ fontSize: 12, color: "#9fb3c8" }}>
-            Mobile Navigation der Säule
+            {t("mobileNav")}
           </div>
           <button
             onClick={onClose}
@@ -135,14 +175,15 @@ export default function MobileOverlay({
               color: "#e6f0f3",
               fontWeight: 700,
             }}
-          >
-            Schließen
+            >
+            {t("close")}
           </button>
         </div>
 
         {/* Inhalt: identische Säulen-Struktur */}
         <div style={{ overflow: "auto", paddingBottom: 12 }}>
-          <Saeule />
+          {/* WICHTIG: Prop durchreichen → Bubble + Close bei Auswahl */}
+          <Saeule onSystemMessage={forwardSystemMessage} />
         </div>
       </div>
     </div>

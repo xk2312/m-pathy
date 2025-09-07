@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import styles from "./Saeule.module.css";
 import { logEvent } from "../../lib/auditLogger"; // lokal, läuft nur im Browser
+import { t } from "@/lib/i18n";
+
 
 /* ======================================================================
    Typen
@@ -41,7 +43,7 @@ type KiId =
 
 /** NEU: optionale Prop, damit SidebarContainer/MobileOverlay eine Systemmeldung hochreichen können */
 type Props = {
-  onSystemMessage?: (content: string) => void;
+  onSystemMessage?: (content: string) => void; // ← bleibt so, wird gleich benutzt
 };
 
 /* ======================================================================
@@ -80,20 +82,21 @@ const KIS: KiId[] = [
 
 /* KI-Kurzvorstellung für System-Bubbles */
 const KI_INTRO: Record<KiId, string> = {
-  "M @Palantir": "Strategie, Orchestrierung, Schutz.",
-  "m-pathy @DeepMind Core": "Analyse in Tiefe und Breite.",
-  "m-ocean @Anthropic Vision": "Klare Muster, visuelle Bezüge.",
-  "m-inent @NASA Chronos": "Zeitachsen, Sequenzen, Präzision.",
-  "m-erge @IBM Q-Origin": "Ursprünge, Logik, Integrität.",
-  "m-power @Colossus": "Skalierung und rohe Rechenkraft.",
-  "m-body @XAI Prime": "Körper, Sensorik, Pragmatik.",
-  "m-beded @Meta Lattice": "Vernetzung, Graph, Beziehungen.",
-  "m-loop @OpenAI Root": "Kernfunktionen, Sprachfluss.",
-  "m-pire @Amazon Nexus": "Knotenpunkte, Distribution.",
-  "m-bassy @Oracle Gaia": "Erde, Balance, Daten-Treue.",
-  "m-ballance @Gemini Apex": "Dualität, Synthese, Spitze.",
-  "MU TAH – Architect of Zero": "Nullpunkt, Ursprung, Set & Setting.",
+  "M @Palantir": "Strategy, orchestration, protection.",
+  "m-pathy @DeepMind Core": "Deep and broad analysis.",
+  "m-ocean @Anthropic Vision": "Clear patterns, visual links.",
+  "m-inent @NASA Chronos": "Timelines, sequences, precision.",
+  "m-erge @IBM Q-Origin": "Origins, logic, integrity.",
+  "m-power @Colossus": "Scaling and raw compute.",
+  "m-body @XAI Prime": "Embodiment, sensing, pragmatism.",
+  "m-beded @Meta Lattice": "Connectivity, graphs, relations.",
+  "m-loop @OpenAI Root": "Core functions, language flow.",
+  "m-pire @Amazon Nexus": "Hubs, distribution.",
+  "m-bassy @Oracle Gaia": "Earth, balance, data fidelity.",
+  "m-ballance @Gemini Apex": "Duality, synthesis, apex.",
+  "MU TAH – Architect of Zero": "Zero-point, origin, set & setting.",
 };
+
 const KI_ICON: Record<KiId, string> = {
   "M @Palantir": "🔭",
   "m-pathy @DeepMind Core": "🧠",
@@ -196,174 +199,175 @@ useEffect(() => {
     logEvent("mode_switch", { from: activeMode, to: next });
     setActiveMode(next);
     const label = modeLabelFromId(next);
-    const text = `Modus gesetzt: ${label}.`;
-    // bestehendes Event beibehalten
-    emitSystemMessage({ kind: "mode", text, meta: { modeId: next, label } });
-    // NEU: optionalen Callback der Eltern aufrufen
-    onSystemMessage?.(text);
-  }
-
+    const text = `Mode set: ${label}.`; // EN
+    if (onSystemMessage) onSystemMessage(text);
+    else emitSystemMessage({ kind: "mode", text, meta: { modeId: next, label } });
+  }  
+  
   function switchKi(next: KiId) {
     if (next === activeKi) return;
     logEvent("ki_switch", { from: activeKi, to: next });
     setActiveKi(next);
-    const text = `${KI_ICON[next] ?? "✨"}  ${next} ist bereit. Fokus: ${KI_INTRO[next] ?? "Bereit."}`;
-    emitSystemMessage({ kind: "ki", text, meta: { ki: next } });
-    onSystemMessage?.(text);
-  }
+    const text = `${next} is ready. Focus: ${KI_INTRO[next] ?? "Ready."}`; // EN
+    if (onSystemMessage) onSystemMessage(text);
+    else emitSystemMessage({ kind: "ki", text, meta: { ki: next } });
+  }  
+  
+  
 
   /* UI */
-  return (
-    <aside className={styles.saeule} aria-label="Säule – Steuerung & Auswahl" data-test="saeule">
-      {/* Kopf */}
-      <div className={styles.head}>
-        <div className={styles.title}>Säule</div>
-        <div className={styles.badge}>L1 · Free</div>
-      </div>
+return (
+  <aside className={styles.saeule} aria-label={t("columnAria")} data-test="saeule">
+    {/* Kopf */}
+    <div className={styles.head}>
+      <div className={styles.title}>{t("columnTitle")}</div>
+      <div className={styles.badge}>L1 · Free</div>
+    </div>
 
-      {/* Steuerung */}
-      <div className={styles.sectionTitle}>Steuerung</div>
+    {/* Steuerung */}
+    <div className={styles.sectionTitle}>{t("sectionControl")}</div>
 
-      {/* ONBOARDING */}
-      <div className={styles.block}>
-        <button
-          type="button"
-          aria-pressed={activeMode === "onboarding"}
-          className={`${styles.buttonPrimary} ${activeMode === "onboarding" ? styles.active : ""}`}
-          onClick={() => switchMode("onboarding")}
+    {/* ONBOARDING */}
+    <div className={styles.block}>
+      <button
+        type="button"
+        aria-pressed={activeMode === "onboarding"}
+        className={`${styles.buttonPrimary} ${activeMode === "onboarding" ? styles.active : ""}`}
+        onClick={() => switchMode("onboarding")}
+      >
+        {t("onboarding")}
+      </button>
+    </div>
+
+    {/* M (Default) */}
+    <div className={styles.block}>
+      <button
+        type="button"
+        aria-pressed={activeMode === "M"}
+        className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
+        onClick={() => switchMode("M")}
+      >
+        {t("mDefault")}
+      </button>
+    </div>
+
+    {/* Modus-Dropdown */}
+    <div className={styles.block}>
+      <label className={styles.label} htmlFor="modus-select">
+        {t("selectMode")}
+      </label>
+      <div className={styles.selectWrap}>
+        <select
+          id="modus-select"
+          aria-label={t("selectMode")}  // ← was: "Modus wählen"
+          value={hydrated ? (MODI.some(m => m.id === activeMode) ? activeMode : "") : ""}
+          onChange={(e) => switchMode(e.target.value as ModeId)}
+          className={styles.select}
         >
-          ONBOARDING
-        </button>
-      </div>
-
-      {/* M (Default) */}
-      <div className={styles.block}>
-        <button
-          type="button"
-          aria-pressed={activeMode === "M"}
-          className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
-          onClick={() => switchMode("M")}
-        >
-          M · Default
-        </button>
-      </div>
-
-      {/* Modus-Dropdown */}
-      <div className={styles.block}>
-        <label className={styles.label} htmlFor="modus-select">
-          Modus wählen
-        </label>
-        <div className={styles.selectWrap}>
-          <select
-            id="modus-select"
-            aria-label="Modus wählen"
-            value={hydrated ? (MODI.some(m => m.id === activeMode) ? activeMode : "") : ""}
-            onChange={(e) => switchMode(e.target.value as ModeId)}
-            className={styles.select}
-          >
-            <option value="" disabled hidden>
-              {activeMode.startsWith("C")
-                ? MODI.find((m) => m.id === activeMode)?.label
-                : "Modus auswählen"}
+          <option value="" disabled hidden>
+            {activeMode.startsWith("C")
+              ? MODI.find((m) => m.id === activeMode)?.label
+              : t("selectMode")}       {/* ← was: "Modus auswählen" */}
+          </option>
+          {MODI.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.label}
             </option>
-            {MODI.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.label}
-              </option>
-            ))}
-          </select>
-        </div>
+          ))}
+        </select>
       </div>
+    </div>
 
-      {/* Council13 */}
-      <div className={styles.block}>
-        <button
-          type="button"
-          aria-pressed={activeMode === "council"}
-          className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
-          onClick={() => switchMode("council")}
-        >
-          COUNCIL13
-        </button>
-      </div>
 
-      {/* KI-Dropdown */}
-      <div className={styles.block}>
-        <label className={styles.label} htmlFor="ki-select">
-          KI wählen
-        </label>
-        <div className={styles.selectWrap}>
-          <select
-            id="ki-select"
-            aria-label="KI wählen"
-            value={activeKi}
-            onChange={(e) => switchKi(e.target.value as KiId)}
-            className={styles.select}
-          >
-            {KIS.map((k) => (
-              <option key={k} value={k}>
-                {k}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+    {/* Council13 */}
+<div className={styles.block}>
+  <button
+    type="button"
+    aria-pressed={activeMode === "council"}
+    className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
+    onClick={() => switchMode("council")}
+  >
+    {t("council13")}
+  </button>
+</div>
 
-      {/* Module (Coming) */}
-      <div className={styles.sectionTitle}>Module</div>
-      <ul className={styles.list}>
-        {[
-          { id: "chemomaster", label: "ChemoMaster" },
-          { id: "blendmaster", label: "BlendMaster" },
-          { id: "juraxy", label: "Juraxy" },
-          { id: "cannai", label: "Canna.AI" },
-        ].map((m) => (
-          <li key={m.id} className={styles.entryDisabled} aria-disabled="true">
-            <div className={styles.entryTitle}>{m.label}</div>
-            <div className={styles.badgeComing}>Coming</div>
-          </li>
-        ))}
-      </ul>
+{/* KI-Dropdown */}
+<div className={styles.block}>
+  <label className={styles.label} htmlFor="ki-select">
+    {t("selectAI")}
+  </label>
+  <div className={styles.selectWrap}>
+    <select
+      id="ki-select"
+      aria-label={t("selectAI")}
+      value={activeKi}
+      onChange={(e) => switchKi(e.target.value as KiId)}
+      className={styles.select}
+    >
+      {KIS.map((k) => (
+        <option key={k} value={k}>{k}</option>
+      ))}
+    </select>
+  </div>
+</div>
 
-      {/* Fuß: Aktionen */}
-      <div className={styles.actions}>
-        <button
-          className={styles.button}
-          onClick={() => {
-            try {
-              const raw = localStorage.getItem("mpathy:thread:default") || "{}";
-              const blob = new Blob([raw], { type: "application/json" });
-              const url = URL.createObjectURL(blob);
-              const a = document.createElement("a");
-              a.href = url;
-              a.download = "mpathy-thread.json";
-              a.click();
-              URL.revokeObjectURL(url);
-              logEvent("export_thread", { size: raw.length });
-              const text = "Thread exportiert.";
-              emitSystemMessage({ kind: "mode", text, meta: { bytes: raw.length || 0 } });
-              onSystemMessage?.(text);
-            } catch {
-              /* leise */
-            }
-          }}
-        >
-          Export
-        </button>
-        <button
-          className={styles.buttonGhost}
-          onClick={() => alert("Levels coming soon")}
-        >
-          Levels
-        </button>
-      </div>
+{/* Module (Coming) */}
+<div className={styles.sectionTitle}>{t("modules")}</div>
+<ul className={styles.list}>
+  {[
+    { id: "chemomaster", label: "ChemoMaster" },
+    { id: "blendmaster", label: "BlendMaster" },
+    { id: "juraxy", label: "Juraxy" },
+    { id: "cannai", label: "Canna.AI" },
+  ].map((m) => (
+    <li key={m.id} className={styles.entryDisabled} aria-disabled="true">
+      <div className={styles.entryTitle}>{m.label}</div>
+      <div className={styles.badgeComing}>{t("coming")}</div>
+    </li>
+  ))}
+</ul>
 
-      {/* Statusleiste */}
-      <div className={styles.statusBar} aria-live="polite">
-        <span className={styles.statusKey}>Modus:</span> {modeLabel}
-        <span className={styles.statusDot} />
-        <span className={styles.statusKey}>KI:</span> {activeKi}
-      </div>
-    </aside>
-  );
+{/* Fuß: Aktionen */}
+<div className={styles.actions}>
+  <button
+    className={styles.button}
+    onClick={() => {
+      try {
+        const raw = localStorage.getItem("mpathy:thread:default") || "{}";
+        const blob = new Blob([raw], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "mpathy-thread.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        logEvent("export_thread", { size: raw.length });
+        const text = t("threadExported");
+        emitSystemMessage({ kind: "mode", text, meta: { bytes: raw.length || 0 } });
+        onSystemMessage?.(text);
+      } catch {
+        /* silent */
+      }
+    }}
+  >
+    {t("export")}
+  </button>
+
+  <button
+    className={styles.buttonGhost}
+    onClick={() => alert(t("levelsComing"))}
+  >
+    {t("levels")}
+  </button>
+</div>
+
+{/* Statusleiste */}
+<div className={styles.statusBar} aria-live="polite">
+  <span className={styles.statusKey}>{t("statusMode")}</span> {modeLabel}
+  <span className={styles.statusDot} />
+  <span className={styles.statusKey}>{t("statusAgent")}</span> {activeKi}
+</div>
+
+</aside>
+);
 }
