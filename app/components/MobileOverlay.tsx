@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from "react";
 import Saeule from "./Saeule";
-import { t } from "@/lib/i18n"; // ← neu
+import { t } from "../../lib/i18n";
 
 type Props = {
   open: boolean;

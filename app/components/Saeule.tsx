@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import styles from "./Saeule.module.css";
 import { logEvent } from "../../lib/auditLogger"; // lokal, läuft nur im Browser
-import { t } from "@/lib/i18n";
+import { t } from "../../lib/i18n";
 
 
 /* ======================================================================

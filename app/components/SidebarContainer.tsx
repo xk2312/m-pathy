@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Saeule from "./Saeule";
 
+
 type Props = {
   onSystemMessage?: (content: string) => void;
 };

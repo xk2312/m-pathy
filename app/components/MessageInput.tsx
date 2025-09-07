@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { t } from "@/lib/i18n";
+import { t } from "../../lib/i18n";
 
 /**
  * MessageInput – multi-line input with auto-resize
