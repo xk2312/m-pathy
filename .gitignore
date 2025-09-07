@@ -76,3 +76,4 @@ node_modules/
 
 # lokale Prompts/Artefakte
 GPTX*.txt
+!/lib/**
