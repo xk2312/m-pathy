@@ -11,7 +11,7 @@ export interface LocalProfile {
   focus?: string;             // z.B. "Klarheit", "Ruhe", "Kreativität"
   // Meta (aus vorhandenen LS-Keys)
   mode?: string;              // LS: "mode"
-  agent?: string;             // LS: "agent"
+  agent?: string;             // LS: "agent" 
 }
 
 const KEYS = {
