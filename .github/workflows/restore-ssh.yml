@@ -97,3 +97,14 @@ jobs:
             whoami
             echo "HOME=$HOME"
             ls -ld $HOME
+      - name: Debug whoami & home
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: |
+            whoami
+            echo "HOME=$HOME"
+            ls -ld $HOME
