@@ -1,0 +1,54 @@
+name: Restore SSH Access
+on:
+  workflow_dispatch:
+    inputs:
+      pubkey:
+        description: "Paste your PUBLIC ssh-ed25519 key"
+        required: true
+
+jobs:
+  inject-key:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add pubkey to remote (user home)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -e
+            mkdir -p ~/.ssh
+            touch ~/.ssh/authorized_keys
+            grep -q "${{ github.event.inputs.pubkey }}" 
+~/.ssh/authorized_keys || echo "${{ github.event.inputs.pubkey }}" 
+>> ~/.ssh/authorized_keys
+            chmod 700 ~/.ssh
+            chmod 600 ~/.ssh/authorized_keys
+            echo "✅ Added key to $HOME/.ssh/authorized_keys"
+
+      - name: Try to add key to root as well (best effort)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: |
+            set -e
+            if command -v sudo >/dev/null 2>&1; then
+              sudo mkdir -p /root/.ssh
+              sudo touch /root/.ssh/authorized_keys
+              sudo grep -q "${{ github.event.inputs.pubkey }}" 
+/root/.ssh/authorized_keys || echo "${{ github.event.inputs.pubkey 
+}}" | sudo tee -a /root/.ssh/authorized_keys >/dev/null
+              sudo chmod 700 /root/.ssh
+              sudo chmod 600 /root/.ssh/authorized_keys
+              echo "✅ Also added key to /root/.ssh/authorized_keys"
+            else
+              echo "ℹ️ sudo not available for $USER; root update 
+skipped."
+            fi
+
