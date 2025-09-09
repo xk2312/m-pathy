@@ -121,48 +121,15 @@ jobs:
             s systemctl daemon-reload || true
             s systemctl restart m-pathy
             s systemctl status m-pathy --no-pager -l | head -n 60 || true
-      - name: Remote deploy (atomic switch, with sudo password)
-        uses: appleboy/ssh-action@v1.0.3
-        env:
-          SUDO_PASS: ${{ secrets.DEPLOY_PASSWORD }}
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          port: ${{ secrets.SSH_PORT }}
-          key: ${{ secrets.HETZNER_SSH_KEY }}
-          envs: SUDO_PASS
-          script: |
-            set -e
-            s() { echo "$SUDO_PASS" | sudo -S -p '' "$@"; }
-
-            ARCHIVE=/tmp/m-pathy.tar.gz
-            NEW=/srv/m-pathy.new
-            CUR=/srv/m-pathy
-            PROMPT_DST=/etc/m-pathy/system-prompt.txt
-
-            s systemctl stop m-pathy || true
-            s rm -rf "$NEW"
-            s mkdir -p "$NEW"
-            s tar -C "$NEW" -xzf "$ARCHIVE"
-            s rm -f "$ARCHIVE"
-
-            test -f "$NEW/package.json" || { echo "Missing package.json after extract" >&2; exit 1; }
-
-            s rm -rf "${CUR}.prev" || true
-            [ -d "$CUR" ] && s mv "$CUR" "${CUR}.prev" || true
-            s mv "$NEW" "$CUR"
-
-            s chown -R "$USER":"$USER" "$CUR"
-            s find "$CUR" -type d -exec chmod u+rwx {} \;
-
-            cd "$CUR"
-            npm ci --omit=dev
-
-            # >>> Prompt aus dem Code-Bundle heraus nach /etc legen (falls vorhanden)
-            if [ -f "$CUR/GPTX.txt" ]; then
-              s install -D -m 0644 "$CUR/GPTX.txt" "$PROMPT_DST"
-            fi
-
-            s systemctl daemon-reload || true
-            s systemctl restart m-pathy
-            s systemctl status m-pathy --no-pager -l | head -n 60 || true
+# >>> Prompt aus dem Code-Bundle heraus nach /etc legen (idempotent + atomar)
+PROMPT_SRC="$CUR/GPTX.txt"
+PROMPT_DST="/etc/m-pathy/system-prompt.txt"
+if [ -f "$PROMPT_SRC" ]; then
+  TMP="$(mktemp)"
+  cp "$PROMPT_SRC" "$TMP"
+  s install -D -m 0644 "$TMP" "$PROMPT_DST"
+  rm -f "$TMP"
+  echo "Prompt installed → $PROMPT_DST (sha256)"; sha256sum "$PROMPT_SRC" || shasum -a 256 "$PROMPT_SRC" || true
+else
+  echo "WARN: $PROMPT_SRC nicht gefunden – Deploy läuft weiter."
+fi
