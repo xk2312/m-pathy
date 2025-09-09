@@ -11,7 +11,7 @@ jobs:
   inject:
     runs-on: ubuntu-latest
     steps:
-      - name: Add pubkey to deploy user's authorized_keys
+      - name: Add pubkey to deploy user's authorized_keys (idempotent)
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -24,11 +24,17 @@ jobs:
             PUB="${{ github.event.inputs.pubkey }}"
             mkdir -p "$HOME/.ssh"
             touch "$HOME/.ssh/authorized_keys"
+            # eintragen, falls noch nicht vorhanden
             grep -qxF "$PUB" "$HOME/.ssh/authorized_keys" || echo "$PUB" >> "$HOME/.ssh/authorized_keys"
+            # Rechte/Owner korrigieren
             chmod 700 "$HOME/.ssh"
             chmod 600 "$HOME/.ssh/authorized_keys"
-            echo "✅ Added key to $HOME/.ssh/authorized_keys"
-            whoami && id && echo "HOME=$HOME"
+            chown -R "$(whoami)":"$(whoami)" "$HOME/.ssh"
+            # Debug-Ausgabe
+            echo "whoami=$(whoami)"
+            echo "HOME=$HOME"
+            echo "--- authorized_keys (first 3 lines) ---"
+            head -n 3 "$HOME/.ssh/authorized_keys" || true
 
       - name: Try to add the same key for root (best effort)
         uses: appleboy/ssh-action@v1.0.3
