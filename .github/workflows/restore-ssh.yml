@@ -1,16 +1,17 @@
 name: Restore SSH Access
+
 on:
   workflow_dispatch:
     inputs:
       pubkey:
-        description: "Paste your PUBLIC ssh-ed25519 key"
+        description: "Paste your PUBLIC ssh-ed25519 key (one line)"
         required: true
 
 jobs:
-  inject-key:
+  inject:
     runs-on: ubuntu-latest
     steps:
-      - name: Add pubkey to remote (user home)
+      - name: Add pubkey to deploy user's authorized_keys
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -19,17 +20,17 @@ jobs:
           key: ${{ secrets.HETZNER_SSH_KEY }}
           script_stop: true
           script: |
-            set -e
-            mkdir -p ~/.ssh
-            touch ~/.ssh/authorized_keys
-            grep -q "${{ github.event.inputs.pubkey }}" 
-~/.ssh/authorized_keys || echo "${{ github.event.inputs.pubkey }}" 
->> ~/.ssh/authorized_keys
-            chmod 700 ~/.ssh
-            chmod 600 ~/.ssh/authorized_keys
+            set -Eeuo pipefail
+            PUB="${{ github.event.inputs.pubkey }}"
+            mkdir -p "$HOME/.ssh"
+            touch "$HOME/.ssh/authorized_keys"
+            grep -qxF "$PUB" "$HOME/.ssh/authorized_keys" || echo "$PUB" >> "$HOME/.ssh/authorized_keys"
+            chmod 700 "$HOME/.ssh"
+            chmod 600 "$HOME/.ssh/authorized_keys"
             echo "✅ Added key to $HOME/.ssh/authorized_keys"
+            whoami && id && echo "HOME=$HOME"
 
-      - name: Try to add key to root as well (best effort)
+      - name: Try to add the same key for root (best effort)
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -37,18 +38,17 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.HETZNER_SSH_KEY }}
           script: |
-            set -e
+            set -Eeuo pipefail
+            PUB="${{ github.event.inputs.pubkey }}"
             if command -v sudo >/dev/null 2>&1; then
-              sudo mkdir -p /root/.ssh
-              sudo touch /root/.ssh/authorized_keys
-              sudo grep -q "${{ github.event.inputs.pubkey }}" 
-/root/.ssh/authorized_keys || echo "${{ github.event.inputs.pubkey 
-}}" | sudo tee -a /root/.ssh/authorized_keys >/dev/null
-              sudo chmod 700 /root/.ssh
-              sudo chmod 600 /root/.ssh/authorized_keys
+              echo "${{ secrets.DEPLOY_PASSWORD }}" | sudo -S bash -c "
+                mkdir -p /root/.ssh
+                touch /root/.ssh/authorized_keys
+                grep -qxF \"$PUB\" /root/.ssh/authorized_keys || echo \"$PUB\" >> /root/.ssh/authorized_keys
+                chmod 700 /root/.ssh
+                chmod 600 /root/.ssh/authorized_keys
+              "
               echo "✅ Also added key to /root/.ssh/authorized_keys"
             else
-              echo "ℹ️ sudo not available for $USER; root update 
-skipped."
+              echo "ℹ️ sudo not available; skipped root."
             fi
-
