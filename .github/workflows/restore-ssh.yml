@@ -58,3 +58,31 @@ jobs:
             else
               echo "ℹ️ sudo not available; skipped root."
             fi
+  - name: Ensure 'deploy' user exists and has your key
+    uses: appleboy/ssh-action@v1.0.3
+    with:
+      host: ${{ secrets.SSH_HOST }}
+      username: ${{ secrets.SSH_USER }}
+      port: ${{ secrets.SSH_PORT }}
+      key: ${{ secrets.HETZNER_SSH_KEY }}
+      script_stop: true
+      script: |
+        set -Eeuo pipefail
+        PUB="${{ github.event.inputs.pubkey }}"
+
+        echo "${{ secrets.DEPLOY_PASSWORD }}" | sudo -S bash -c '
+          # 1) User deploy anlegen (falls nicht vorhanden) und in sudo aufnehmen
+          id -u deploy >/dev/null 2>&1 || useradd -m -s /bin/bash deploy
+          usermod -aG sudo deploy || true
+
+          # 2) SSH-Verzeichnis + authorized_keys vorbereiten
+          install -d -m 700 -o deploy -g deploy /home/deploy/.ssh
+          touch /home/deploy/.ssh/authorized_keys
+          chown deploy:deploy /home/deploy/.ssh/authorized_keys
+          chmod 600 /home/deploy/.ssh/authorized_keys
+
+          # 3) Key idempotent eintragen
+          grep -qxF "$PUB" /home/deploy/.ssh/authorized_keys || echo "$PUB" >> /home/deploy/.ssh/authorized_keys
+        '
+
+        echo "✅ deploy user ready with your key"
