@@ -228,32 +228,35 @@ export default function MessageInput({
     style={{ display: 'flex', gap: 8 }}
   >
     <button
-      type="button"
-      title={t('comingUpload') ?? 'Coming soon: Upload'}
-      aria-label={t('comingUpload') ?? 'Coming soon: Upload'}
-      style={toolBtnStyle}
-      onClick={(e) => e.preventDefault()}
-    >
-      📎
-    </button>
-    <button
-      type="button"
-      title={t('comingFunctions') ?? 'Coming soon: Functions'}
-      aria-label={t('comingFunctions') ?? 'Coming soon: Functions'}
-      style={toolBtnStyle}
-      onClick={(e) => e.preventDefault()}
-    >
-      ⚙️
-    </button>
-    <button
-      type="button"
-      title={t('comingVoice') ?? 'Coming soon: Voice'}
-      aria-label={t('comingVoice') ?? 'Coming soon: Voice'}
-      style={toolBtnStyle}
-      onClick={(e) => e.preventDefault()}
-    >
-      🎙️
-    </button>
+  type="button"
+  title={t('comingUpload') ?? 'Coming soon: Upload'}
+  aria-label={t('comingUpload') ?? 'Coming soon: Upload'}
+  style={toolBtnStyle}
+  onClick={(e) => e.preventDefault()}
+>
+  📎
+</button>
+
+<button
+  type="button"
+  title={t('comingFunctions') ?? 'Coming soon: Functions'}
+  aria-label={t('comingFunctions') ?? 'Coming soon: Functions'}
+  style={toolBtnStyle}
+  onClick={(e) => e.preventDefault()}
+>
+  ⚙️
+</button>
+
+<button
+  type="button"
+  title={t('comingVoice') ?? 'Coming soon: Voice'}
+  aria-label={t('comingVoice') ?? 'Coming soon: Voice'}
+  style={toolBtnStyle}
+  onClick={(e) => e.preventDefault()}
+>
+  🎙️
+</button>
+
   </div>
 
   {/* Senden (breit) */}
