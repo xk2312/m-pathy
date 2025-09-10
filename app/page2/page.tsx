@@ -648,6 +648,11 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
   // Optional: Abstand unten (falls du ihn in Conversation nutzt)
   const padBottom = `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`;
 
+  // Höhe der M-Section (Logo-Höhe + vertikales Padding)
+  const headerLogoSize = isMobile ? 120 : 160;
+  const headerPadY = 64; // 32px oben + 32px unten
+  const headerH = headerLogoSize + headerPadY;
+
   return (
     <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
       <div
@@ -662,36 +667,43 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
           width: "100%",
         }}
       >
-        {/* Header-Bereich in page2.tsx */}
-<div
-  ref={headerRef}
-  style={{
-    position: "sticky",
-    top: 0,
-    zIndex: 20,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "32px 0",
-    background: "rgba(0, 0, 0, 0.85)", // ⬅️ kräftiger Hintergrund
-    backdropFilter: "blur(6px)",       // ⬅️ sorgt für Bühne-Effekt
-  }}
->
-  <LogoM size={isMobile ? 120 : 160} active={loading} />
-</div>
-
-
-
-        {/* Bühne: Desktop 2 Spalten (Säule links), Mobile 1 Spalte */}
+        {/* Header-Bereich: eigenständige Section (fixed) */}
         <div
+          ref={headerRef}
           style={{
-            display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
-            gap: 16,
-            minHeight: 0,
-            flex: 1,
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 20,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: `${headerH}px`,
+            background: "rgba(0, 0, 0, 0.88)",
+            backdropFilter: "blur(6px)",
+            boxShadow: "0 8px 24px rgba(0,0,0,.45), inset 0 -1px 0 rgba(255,255,255,.06)",
           }}
         >
+          <LogoM size={headerLogoSize} active={loading} />
+        </div>
+
+        {/* Spacer: reserviert Platz unter der fixed Section */}
+        <div style={{ height: `${headerH}px` }} />
+
+        {/* Bühne: Desktop 2 Spalten (Säule links), Mobile 1 Spalte */}
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+    alignItems: "start",          // verhindert Dehnen
+    gap: 16,
+    flex: 1,
+    minHeight: 0,                 // wichtig: erlaubt Kind-Overflow im Chat
+    overflow: "visible",          // Grid selbst scrollt NICHT
+  }}
+>
+
           {/* Säule links – Desktop statisch */}
           {!isMobile && <SidebarContainer onSystemMessage={systemSay} />}
 
