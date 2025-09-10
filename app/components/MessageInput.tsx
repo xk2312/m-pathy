@@ -31,8 +31,6 @@ export default function MessageInput({
   const [isComposing, setIsComposing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const taRef = useRef<HTMLTextAreaElement | null>(null);
-  const fileRef = useRef<HTMLInputElement | null>(null);
-
   // ---- helpers -------------------------------------------------------------
 
   /** parse "/council Name: prompt" → { name, prompt } | null */
@@ -111,18 +109,6 @@ export default function MessageInput({
 
   // ---- upload placeholders -------------------------------------------------
 
-  const openFilePicker = useCallback(() => {
-    fileRef.current?.click();
-  }, []);
-
-  const onFilesSelected = useCallback((files: FileList | null) => {
-    if (!files || files.length === 0) return;
-    // Platzhalter: nur anzeigen, noch kein Upload-API-Call
-    const names = Array.from(files).map(f => `• ${f.name} (${Math.round(f.size / 1024)} KB)`).join('\n');
-    setValue(v => (v ? `${v}\n` : '') + `📎 Files ready:\n${names}\n`);
-    requestAnimationFrame(autoResize);
-  }, [autoResize]);
-
   // Drag & Drop (Platzhalter)
   const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -136,12 +122,11 @@ export default function MessageInput({
   }, []);
 
   const onDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-    if (disabled) return;
-    const files = e.dataTransfer?.files ?? null;
-    onFilesSelected(files);
-  }, [disabled, onFilesSelected]);
+  e.preventDefault();
+  setIsDragging(false);
+  // bewusst keine Aktion: nur Tooltip-Icons, Funktionen folgen später
+}, []);
+
 
   // ---- render --------------------------------------------------------------
 
@@ -172,52 +157,7 @@ export default function MessageInput({
         transition: 'background .15s ease, transform .12s ease',
       }}
     >
-      {/* Toolbar (links) */}
-      <div
-        className="m-inputbar__tools"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          flex: '0 0 auto',
-        }}
-        aria-label={t('tools')}
-        role="toolbar"
-      >
-        {/* Upload */}
-        <button
-          type="button"
-          onClick={openFilePicker}
-          disabled={disabled}
-          title={t('upload') ?? 'Upload'}
-          aria-label={t('upload') ?? 'Upload'}
-          style={toolBtnStyle}
-        >
-          📎
-        </button>
-        <input
-          ref={fileRef}
-          type="file"
-          multiple
-          hidden
-          onChange={(e) => onFilesSelected(e.target.files)}
-        />
-
-        {/* Funktionen / Commands (Platzhalter für künftige Tools) */}
-        <button
-          type="button"
-          onClick={() => {
-            setValue(v => (v ? `${v}\n` : '') + '⚙️ Functions: (coming soon)\n');
-            requestAnimationFrame(autoResize);
-          }}
-          disabled={disabled}
-          title="Functions"
-          aria-label="Functions"
-          style={toolBtnStyle}
-        >
-          ⚙️
-        </button>
-      </div>
+  
 
       {/* Textbereich (mittig, groß & mehrzeilig) */}
       <div style={{ flex: '1 1 480px', minWidth: 240 }}>
@@ -270,36 +210,82 @@ export default function MessageInput({
         </div>
       </div>
 
-      {/* Send-Button (rechts, groß & kontrastreich) */}
-      <button
-        type="button"
-        onClick={() => void handleSend()}
-        disabled={disabled || value.trim().length === 0}
-        className="m-inputbar__send"
-        aria-label={t('send')}
-        title={`${t('send')} (Enter)`}
-        style={{
-          flex: '0 0 auto',
-          height: 52,
-          padding: '0 22px',
-          border: 0,
-          borderRadius: radius,
-          background: 'linear-gradient(180deg, #22d3ee, #11b2cc)',
-          color: '#071015',
-          fontWeight: 800,
-          fontSize: 16,
-          letterSpacing: 0.3,
-          cursor: disabled || value.trim().length === 0 ? 'not-allowed' : 'pointer',
-          opacity: disabled || value.trim().length === 0 ? 0.6 : 1,
-          boxShadow: '0 0 22px rgba(34,211,238,0.35)',
-          alignSelf: 'flex-end',
-          transition: 'transform .12s ease, box-shadow .12s ease',
-        }}
-        onMouseDown={(e) => (e.currentTarget.style.transform = 'translateY(1px)')}
-        onMouseUp={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
-      >
-        {t('send')}
-      </button>
+      {/* Actions rechts: Icons oben, Senden darunter */}
+<div
+  className="m-inputbar__actionsRight"
+  style={{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    gap: 8,
+    flex: '0 0 220px',       // Platz für Icons + breiten Send-Button
+  }}
+>
+  {/* Icon-Zeile */}
+  <div
+    role="toolbar"
+    aria-label={t('tools')}
+    style={{ display: 'flex', gap: 8 }}
+  >
+    <button
+      type="button"
+      title={t('comingUpload') ?? 'Coming soon: Upload'}
+      aria-label={t('comingUpload') ?? 'Coming soon: Upload'}
+      style={toolBtnStyle}
+      onClick={(e) => e.preventDefault()}
+    >
+      📎
+    </button>
+    <button
+      type="button"
+      title={t('comingFunctions') ?? 'Coming soon: Functions'}
+      aria-label={t('comingFunctions') ?? 'Coming soon: Functions'}
+      style={toolBtnStyle}
+      onClick={(e) => e.preventDefault()}
+    >
+      ⚙️
+    </button>
+    <button
+      type="button"
+      title={t('comingVoice') ?? 'Coming soon: Voice'}
+      aria-label={t('comingVoice') ?? 'Coming soon: Voice'}
+      style={toolBtnStyle}
+      onClick={(e) => e.preventDefault()}
+    >
+      🎙️
+    </button>
+  </div>
+
+  {/* Senden (breit) */}
+  <button
+    type="button"
+    onClick={() => void handleSend()}
+    disabled={disabled || value.trim().length === 0}
+    aria-label={t('send')}
+    title={`${t('send')} (Enter)`}
+    style={{
+      width: '100%',          // breit unter den Icons
+      height: 52,
+      padding: '0 24px',
+      border: 0,
+      borderRadius: radius,
+      background: 'linear-gradient(180deg, #22d3ee, #11b2cc)',
+      color: '#071015',
+      fontWeight: 800,
+      fontSize: 16,
+      letterSpacing: 0.3,
+      cursor: disabled || value.trim().length === 0 ? 'not-allowed' : 'pointer',
+      opacity: disabled || value.trim().length === 0 ? 0.6 : 1,
+      boxShadow: '0 0 22px rgba(34,211,238,0.35)',
+      transition: 'transform .12s ease, box-shadow .12s ease',
+    }}
+    onMouseDown={(e) => (e.currentTarget.style.transform = 'translateY(1px)')}
+    onMouseUp={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
+  >
+    {t('send')}
+  </button>
+</div>
+
     </div>
   );
 }
