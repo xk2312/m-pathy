@@ -31,6 +31,23 @@ export default function MessageInput({
   const [isComposing, setIsComposing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const taRef = useRef<HTMLTextAreaElement | null>(null);
+  /* 5.3 — Plus-Menü State (nur Mobile sichtbar) */
+const [toolsOpen, setToolsOpen] = useState(false);
+const toolsRef = useRef<HTMLDivElement | null>(null);
+
+/* 5.3 — Click-Outside schließt das Menü */
+useEffect(() => {
+  function onDocClick(e: MouseEvent) {
+    if (!toolsOpen) return;
+    const target = e.target as HTMLElement | null;
+    if (target && toolsRef.current && !toolsRef.current.contains(target)) {
+      setToolsOpen(false);
+    }
+  }
+  document.addEventListener("mousedown", onDocClick);
+  return () => document.removeEventListener("mousedown", onDocClick);
+}, [toolsOpen]);
+
   // ---- helpers -------------------------------------------------------------
 
   /** parse "/council Name: prompt" → { name, prompt } | null */
@@ -143,6 +160,7 @@ export default function MessageInput({
       onDragLeave={onDragLeave}
       onDrop={onDrop}
       style={{
+        position: 'relative',
         width: '100%',
         gap: 12,
         display: 'flex',
@@ -161,6 +179,55 @@ export default function MessageInput({
 
       {/* Textbereich (mittig, groß & mehrzeilig) */}
       <div style={{ flex: '1 1 480px', minWidth: 240 }}>
+          {/* Plus-Menü (nur mobil sichtbar; Desktop wird via CSS ausgeblendet) */}
+  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+    <button
+      type="button"
+      aria-label="Werkzeuge"
+      aria-expanded={toolsOpen}
+      aria-controls="mi-tools-popover"
+      onClick={() => setToolsOpen(v => !v)}
+      className="mi-plus-btn"
+      style={{
+        minWidth: 40, minHeight: 40,
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        borderRadius: 12, border: '1px solid rgba(255,255,255,0.12)',
+        background: 'rgba(255,255,255,0.06)', color: 'rgba(230,240,243,0.95)',
+        fontWeight: 800, fontSize: 18, lineHeight: 1
+      }}
+    >
+      +
+    </button>
+    {toolsOpen && (
+  <div
+    id="mi-tools-popover"
+    ref={toolsRef}
+    role="menu"
+    aria-label="Werkzeuge"
+    style={{
+      position: 'absolute',
+      left: 12,
+      bottom: 'calc(100% + 8px)',   // über der Inputbar
+      width: 'min(92vw, 360px)',
+      background: 'rgba(12,20,36,0.96)',
+      border: '1px solid rgba(255,255,255,0.14)',
+      borderRadius: 12,
+      padding: 8,
+      boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
+      backdropFilter: 'blur(10px)',
+      zIndex: 5,
+    }}
+  >
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+      <button role="menuitem" type="button" className="mi-tool">📎 {t('comingUpload') ?? 'Upload'}</button>
+      <button role="menuitem" type="button" className="mi-tool">🎙️ {t('comingVoice') ?? 'Voice'}</button>
+      <button role="menuitem" type="button" className="mi-tool">⚙️ {t('comingFunctions') ?? 'Optionen'}</button>
+    </div>
+  </div>
+)}
+
+  </div>
+
         <textarea
           ref={taRef}
           value={value}

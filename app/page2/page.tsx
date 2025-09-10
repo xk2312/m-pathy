@@ -37,6 +37,7 @@ import MobileOverlay from "../components/MobileOverlay";
 import StickyFab from "../components/StickyFab";
 import { t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
+import { useMobileViewport } from "@/lib/useMobileViewport";
 
 // ⚠️ NICHT importieren: useTheme aus "next-themes" (Konflikt mit lokalem Hook)
 // import { useTheme } from "next-themes"; // ❌ bitte entfernt lassen
@@ -628,10 +629,73 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
     ].join(", "),
   };
 
-  // Optional: Abstand unten (falls du ihn in Conversation nutzt)
-const padBottom = `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`;
+  // Optional: Abstand unten (mobil über visualViewport gepflegt)
+const padBottom = `calc(${dockH}px + var(--safe-bottom) + 24px)`;
 
-// ❌ Entfernen: headerLogoSize / headerPadY / headerH
+/* 3.2 — Mobile Header State + Viewport Hook (BEGIN) */
+const [mState, setMState] = useState<"idle" | "shrink" | "typing">("idle");
+
+// Keyboard-/Viewport-Handling (setzt --vh / --safe-bottom / --dock-cap dynamisch)
+useMobileViewport(typeof document !== "undefined" ? document.body : null);
+/* 3.2 — Mobile Header State + Viewport Hook (END) */
+/* 3.3 — Scroll → Header shrink (BEGIN) */
+useEffect(() => {
+  // nur auf Mobile und wenn das Scroll-Element existiert
+  if (!isMobile || !convoRef?.current) return;
+
+  const el = convoRef.current as HTMLElement;
+
+  const onScroll = () => {
+    if (mState === "typing") return; // Tippen dominiert, nicht schrumpfen
+    const y = el.scrollTop || 0;
+    setMState(y > 24 ? "shrink" : "idle");
+  };
+
+  el.addEventListener("scroll", onScroll, { passive: true });
+  return () => el.removeEventListener("scroll", onScroll);
+}, [isMobile, mState, convoRef]);
+/* 3.3 — Scroll → Header shrink (END) */
+/* 3.4 — Focus im Prompt/Dock → Header typing (BEGIN) */
+useEffect(() => {
+  if (!isMobile) return;
+
+  const onFocusIn = (e: FocusEvent) => {
+    const t = e.target as HTMLElement | null;
+    // Wenn der Fokus in den Dock/Prompt-Bereich wandert → typing
+    if (t && t.closest("#m-input-dock")) setMState("typing");
+  };
+
+  const onFocusOut = (e: FocusEvent) => {
+    const t = e.target as HTMLElement | null;
+    if (t && t.closest("#m-input-dock")) {
+      // Beim Verlassen: wenn gescrollt → shrink, sonst → idle
+      setMState((prev) => (prev === "typing" ? (convoRef?.current && (convoRef.current as HTMLElement).scrollTop > 24 ? "shrink" : "idle") : prev));
+    }
+  };
+
+  document.addEventListener("focusin", onFocusIn);
+  document.addEventListener("focusout", onFocusOut);
+  return () => {
+    document.removeEventListener("focusin", onFocusIn);
+    document.removeEventListener("focusout", onFocusOut);
+  };
+}, [isMobile, convoRef]);
+/* 3.4 — Focus im Prompt/Dock → Header typing (END) */
+/* 3.5 — CSS-Variable --header-h je State setzen (BEGIN) */
+useEffect(() => {
+  if (!isMobile) return;
+
+  const root = document.documentElement;
+  const value =
+    mState === "typing"
+      ? "var(--header-h-typing)"   // 0px
+      : mState === "shrink"
+      ? "var(--header-h-shrink)"   // 72px
+      : "var(--header-h-idle)";    // 96px
+
+  root.style.setProperty("--header-h", value);
+}, [isMobile, mState]);
+/* 3.5 — CSS-Variable --header-h je State setzen (END) */
 
 return (
   <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
@@ -645,7 +709,7 @@ return (
         left: 0,
         right: 0,
         zIndex: 100,
-        height: isMobile ? "184px" : "224px", // 120/160 Logo + 64px vert. Padding
+        height: isMobile ? "var(--header-h)" : "224px",
         background: bg0,
         borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
       }}
@@ -676,7 +740,7 @@ return (
         maxWidth: 1280,
         alignSelf: "center",
         width: "100%",
-        paddingTop: isMobile ? "184px" : "224px", // reserviert Platz unter Header
+        paddingTop: isMobile ? "var(--header-h)" : "224px", // folgt der Header-State-Maschine
       }}
     >
       {/* Bühne: Desktop 2 Spalten (Säule links), Mobile 1 Spalte */}
@@ -722,32 +786,42 @@ return (
           </div>
 
           {/* Prompt Dock (sticky bottom) */}
-          <div
-            id="m-input-dock"
-            ref={dockRef as any}
-            role="group"
-            aria-label="Chat Eingabeleiste"
-            style={{
-              position: "sticky",
-              bottom: 0,
-              zIndex: 50,
-              background: bg0,
-              padding: "12px 12px calc(12px + env(safe-area-inset-bottom, 0px))",
-              marginTop: 8,
-              borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
-              backdropFilter: "blur(8px)",
-              boxShadow: "0 -6px 24px rgba(0,0,0,.35)",
-              overscrollBehavior: "contain",
-            }}
-          >
-            <MessageInput
-              onSend={onSendFromPrompt}
-              disabled={loading}
-              placeholder={t('writeMessage')}
-              minRows={3}
-              maxRows={10}
-            />
-          </div>
+<div
+  id="m-input-dock"
+  ref={dockRef as any}
+  role="group"
+  aria-label="Chat Eingabeleiste"
+  style={{
+    position: "sticky",
+    bottom: 0,
+    zIndex: 50,
+    background: bg0,
+
+    // ⬇ kompakter & Safe-Area über unsere Var
+    padding: "10px 10px calc(10px + var(--safe-bottom))",
+    marginTop: 6,
+
+    borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
+    backdropFilter: "blur(8px)",
+    boxShadow: "0 -6px 24px rgba(0,0,0,.35)",
+    overscrollBehavior: "contain",
+
+    // ⬇ Auto-Grow Kappe: Dock darf mobil max. bis zur Cap wachsen
+    maxHeight: "var(--dock-cap)",  // 30vh Portrait / 22vh Landscape (aus Hook)
+    overflow: "visible",
+  }}
+>
+  <MessageInput
+    onSend={onSendFromPrompt}
+    disabled={loading}
+    placeholder={t('writeMessage')}
+
+    // ⬇ mobil kompakt starten, weich wachsen
+    minRows={isMobile ? 1 : 3}
+    maxRows={isMobile ? 6 : 10}
+  />
+</div>
+
         </div>
       </div>
     </div>

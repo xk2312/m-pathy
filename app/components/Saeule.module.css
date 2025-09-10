@@ -270,3 +270,18 @@
 
 /* Optional: Debug-Rahmen */
 /* .saeule { outline: 2px solid rgba(34,211,238,.5); } */
+/* ─────────────────────────────────────────
+   Mobile Overlay: Säule ist NICHT sticky
+   ──────────────────────────────────────── */
+@media (max-width: 768px), (pointer: coarse) {
+  [data-overlay="true"] .saeule {
+    position: static;     /* statt sticky */
+    top: auto;
+    margin-top: 0;
+
+    /* Säule selbst scrollt nicht; Panel (data-overlay) scrollt */
+    max-height: none;
+    height: auto;
+    overflow: visible;
+  }
+}
