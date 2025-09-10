@@ -500,7 +500,7 @@ export default function Page2() {
   // Refs & Höhenmessung
   const headerRef = useRef<HTMLDivElement>(null);
   const convoRef = useRef<HTMLDivElement>(null);
-  const dockRef = useRef<HTMLFormElement>(null);
+  const dockRef = useRef<HTMLDivElement>(null);
   const [dockH, setDockH] = useState(0);
 
   useEffect(() => {
@@ -591,37 +591,35 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
 }
 
 
-  // Submit → Senden
-  const onSubmit = useCallback(async (e: FormEvent) => {
-    e.preventDefault();
-    const text = input.trim();
-    if (!text) return;
+  const onSendFromPrompt = useCallback(async (text: string) => {
+  const trimmed = (text ?? "").trim();
+  if (!trimmed) return;
 
-    const userMsg: ChatMessage = { role: "user", content: text, format: "markdown" };
-    const optimistic = truncateMessages([...(messages ?? []), userMsg]);
-    setMessages(optimistic);
-    persistMessages(optimistic);
-    setInput("");
-    setLoading(true);
-    setMode("THINKING");
+  const userMsg: ChatMessage = { role: "user", content: trimmed, format: "markdown" };
+  const optimistic = truncateMessages([...(messages ?? []), userMsg]);
+  setMessages(optimistic);
+  persistMessages(optimistic);
+  setLoading(true);
+  setMode("THINKING");
 
-    try {
-      const assistant = await sendMessageLocal(optimistic);
-      const next = truncateMessages([...(optimistic ?? []), assistant]);
-      setMessages(next);
-      persistMessages(next);
-    } catch {
-      const next = truncateMessages([
-        ...(optimistic ?? []),
-        { role: "assistant", content: "⚠️ Send failed. Please retry.", format: "markdown" },
-      ]);
-      setMessages(next);
-      persistMessages(next);
-    } finally {
-      setLoading(false);
-      setMode("DEFAULT");
-    }
-  }, [input, messages, persistMessages]);
+  try {
+    const assistant = await sendMessageLocal(optimistic);
+    const next = truncateMessages([...(optimistic ?? []), assistant]);
+    setMessages(next);
+    persistMessages(next);
+  } catch {
+    const next = truncateMessages([
+      ...(optimistic ?? []),
+      { role: "assistant", content: "⚠️ Send failed. Please retry.", format: "markdown" },
+    ]);
+    setMessages(next);
+    persistMessages(next);
+  } finally {
+    setLoading(false);
+    setMode("DEFAULT");
+  }
+}, [messages, persistMessages]);
+
 
   /* =====================================================================
      [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
@@ -707,10 +705,11 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
                 minHeight: 0,
                 overflow: "auto",
                 paddingTop: 8,
-                paddingBottom: 8,
+                paddingBottom: padBottom, // ⬅️ reserviert Platz für das Sticky-Dock
               }}
               aria-label={t("conversationAria")}
-            >
+>
+
               <Conversation
                 messages={messages}
                 tokens={activeTokens}
@@ -719,17 +718,32 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
               />
             </div>
 
-            {/* Eingabe-Dock (im Fluss, mit Mess-Ref) */}
-            <InputDock
-              tokens={activeTokens}
-              isMobile={isMobile}
-              onSubmit={onSubmit}
-              value={input}
-              setValue={setInput}
-              disabled={loading}
-              dockRef={dockRef as any}
-              mode="flow"
-            />
+            {/* Prompt Dock (sticky bottom) */}
+<div
+  id="m-input-dock"
+  ref={dockRef as any}
+  role="group"
+  aria-label="Chat Eingabeleiste"
+  style={{
+    position: "sticky",
+    bottom: 0,
+    zIndex: 30,
+    background: bg0, // kräftig, nicht transparent
+    padding: 12,
+    marginTop: 8,
+    borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
+    backdropFilter: "blur(8px)",
+  }}
+>
+  <MessageInput
+    onSend={onSendFromPrompt}   // siehe unten: Sende-Handler
+    disabled={loading}
+    placeholder={t('writeMessage')}
+    minRows={3}
+    maxRows={10}
+  />
+</div>
+
           </div>
         </div>
       </div>
