@@ -573,17 +573,23 @@ export default function Page2() {
     return () => el.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Simpler Sender (platzhalter, API-agnostisch – kein Rot)
-  async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
-    // Hier kann später dein echtes Azure/OpenAI-Backend andocken.
-    // Für jetzt: minimal neutrales Echo, damit nichts rot ist.
-    const last = context[context.length - 1]?.content ?? "";
-    return {
-      role: "assistant",
-      content: last ? `**Echo:** ${last}` : "…",
-      format: "markdown",
-    };
-  }
+  /// app/page2/page.tsx — REPLACE ONLY THIS FUNCTION
+async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ messages: context }),
+  });
+  if (!res.ok) throw new Error("Chat API failed");
+  const data = await res.json();
+  const assistant = (data.assistant ?? data); // route returns either wrapped or raw
+  return {
+    role: assistant.role ?? "assistant",
+    content: assistant.content ?? "",
+    format: assistant.format ?? "markdown",
+  } as ChatMessage;
+}
+
 
   // Submit → Senden
   const onSubmit = useCallback(async (e: FormEvent) => {
@@ -658,10 +664,23 @@ export default function Page2() {
           width: "100%",
         }}
       >
-        {/* Header (deine lokale Komponente, sticky) */}
-        <div ref={headerRef}>
-          <Header />
-        </div>
+        {/* Header-Bereich in page2.tsx */}
+<div
+  ref={headerRef}
+  style={{
+    position: "sticky",      // bleibt oben
+    top: 0,
+    zIndex: 20,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "32px 0",       // etwas mehr Luft
+    background: "transparent",
+  }}
+>
+  <LogoM size={isMobile ? 120 : 160} active={loading} />
+</div>
+
 
         {/* Bühne: Desktop 2 Spalten (Säule links), Mobile 1 Spalte */}
         <div
