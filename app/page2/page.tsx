@@ -629,141 +629,133 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
   };
 
   // Optional: Abstand unten (falls du ihn in Conversation nutzt)
-  const padBottom = `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`;
+const padBottom = `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`;
 
-  // Höhe der M-Section (Logo-Höhe + vertikales Padding)
-  const headerLogoSize = isMobile ? 120 : 160;
-  const headerPadY = 64; // 32px oben + 32px unten
-  const headerH = headerLogoSize + headerPadY;
+// ❌ Entfernen: headerLogoSize / headerPadY / headerH
 
-  return (
-    <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
+return (
+  <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
+    {/* === HEADER: eigene BLOCK-Section, getrennt von der Bühne === */}
+    <header
+      ref={headerRef}
+      role="banner"
+      style={{
+        position: "relative",
+        background: bg0,
+        borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
+      }}
+    >
       <div
         style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
           marginInline: sideMargin,
-          minHeight: 0,
           maxWidth: 1280,
-          alignSelf: "center",
           width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "32px 0",
         }}
       >
-        {/* Header-Bereich: eigenständige Section (fixed) */}
-        <div
-          ref={headerRef}
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 20,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: `${headerH}px`,
-            background: "rgba(0, 0, 0, 0.88)",
-            backdropFilter: "blur(6px)",
-            boxShadow: "0 8px 24px rgba(0,0,0,.45), inset 0 -1px 0 rgba(255,255,255,.06)",
-          }}
-        >
-          <LogoM size={headerLogoSize} active={loading} />
-        </div>
+        <LogoM size={isMobile ? 120 : 160} active={loading} />
+      </div>
+    </header>
 
-        {/* Spacer: reserviert Platz unter der fixed Section */}
-        <div style={{ height: `${headerH}px` }} />
+    {/* === BÜHNE: ab hier startet direkt das Grid (KEIN Header mehr hier drin) === */}
+    <div
+      style={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        marginInline: sideMargin,
+        minHeight: 0,
+        maxWidth: 1280,
+        alignSelf: "center",
+        width: "100%",
+      }}
+    >
+      {/* Bühne: Desktop 2 Spalten (Säule links), Mobile 1 Spalte */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+          alignItems: "start",
+          gap: 16,
+          flex: 1,
+          minHeight: 0,
+          overflow: "visible",
+        }}
+      >
+        {/* Säule links */}
+        {!isMobile && <SidebarContainer onSystemMessage={systemSay} />}
 
-        {/* Bühne: Desktop 2 Spalten (Säule links), Mobile 1 Spalte */}
-<div
-  style={{
-    display: "grid",
-    gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
-    alignItems: "start",          // verhindert Dehnen
-    gap: 16,
-    flex: 1,
-    minHeight: 0,                 // wichtig: erlaubt Kind-Overflow im Chat
-    overflow: "visible",          // Grid selbst scrollt NICHT
-  }}
->
+        {/* Rechte Spalte: Conversation + Dock */}
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
+          {/* Scrollbarer Chronik-Container (einziger Scroll) */}
+          <div
+            ref={convoRef as any}
+            style={{
+              flex: 1,
+              minHeight: 0,
+              overflow: "auto",
+              overscrollBehavior: "contain",
+              WebkitOverflowScrolling: "touch",
+              paddingTop: 8,
+              paddingBottom: padBottom,
+              scrollbarGutter: "stable",
+            }}
+            aria-label={t("conversationAria")}
+          >
+            <Conversation
+              messages={messages}
+              tokens={activeTokens}
+              padBottom={padBottom}
+              scrollRef={convoRef as any}
+            />
+          </div>
 
-          {/* Säule links – Desktop statisch */}
-          {!isMobile && <SidebarContainer onSystemMessage={systemSay} />}
-
-          {/* Rechte Spalte: Conversation + Dock */}
-          <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
-            {/* Scrollbarer Chronik-Container */}
-            <div
-  ref={convoRef as any}
-  style={{
-    flex: 1,
-    minHeight: 0,
-    overflow: "auto",                 // ← einziger Scroll-Container
-    overscrollBehavior: "contain",    // ← verhindert Outer-Scroll/Bounce
-    WebkitOverflowScrolling: "touch", // ← iOS flüssiges Scrollen
-    paddingTop: 8,
-    paddingBottom: padBottom,
-    scrollbarGutter: "stable",        // ← verhindert Layout-Jumps bei Scrollbar
-  }}
-  aria-label={t("conversationAria")}
->
-
-
-              <Conversation
-                messages={messages}
-                tokens={activeTokens}
-                padBottom={padBottom}
-                scrollRef={convoRef as any}
-              />
-            </div>
-
-            {/* Prompt Dock (sticky bottom) */}
-<div
-  id="m-input-dock"
-  ref={dockRef as any}
-  role="group"
-  aria-label="Chat Eingabeleiste"
-  style={{
-    position: "sticky",
-    bottom: 0,
-    zIndex: 50, // über Conversation
-    background: bg0,
-    padding: "12px 12px calc(12px + env(safe-area-inset-bottom, 0px))", // Safe-Area
-    marginTop: 8,
-    borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
-    backdropFilter: "blur(8px)",
-    boxShadow: "0 -6px 24px rgba(0,0,0,.35)",      // sanfte Abhebung
-    overscrollBehavior: "contain",                 // kein Parent-Scroll
-  }}
->
-  <MessageInput
-    onSend={onSendFromPrompt}
-    disabled={loading}
-    placeholder={t('writeMessage')}
-    minRows={3}
-    maxRows={10}
-  />
-</div>
-
-
+          {/* Prompt Dock (sticky bottom) */}
+          <div
+            id="m-input-dock"
+            ref={dockRef as any}
+            role="group"
+            aria-label="Chat Eingabeleiste"
+            style={{
+              position: "sticky",
+              bottom: 0,
+              zIndex: 50,
+              background: bg0,
+              padding: "12px 12px calc(12px + env(safe-area-inset-bottom, 0px))",
+              marginTop: 8,
+              borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
+              backdropFilter: "blur(8px)",
+              boxShadow: "0 -6px 24px rgba(0,0,0,.35)",
+              overscrollBehavior: "contain",
+            }}
+          >
+            <MessageInput
+              onSend={onSendFromPrompt}
+              disabled={loading}
+              placeholder={t("writeMessage")}
+              minRows={3}
+              maxRows={10}
+            />
           </div>
         </div>
       </div>
+    </div>
 
-      {/* Mobile: FAB + Overlay (Säule als Drawer) */}
-      {isMobile && (
-        <>
-          <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
-          <MobileOverlay
-            open={overlayOpen}
-            onClose={() => setOverlayOpen(false)}
-            onSystemMessage={systemSay}
-          />
-        </>
-      )}
-
-      {/* Optional aktivierbar */}
-      <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
-    </main>
-  );
+    {/* Mobile Overlay / Onboarding unverändert darunter */}
+    {isMobile && (
+      <>
+        <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
+        <MobileOverlay
+          open={overlayOpen}
+          onClose={() => setOverlayOpen(false)}
+          onSystemMessage={systemSay}
+        />
+      </>
+    )}
+    <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
+  </main>
+);
 }
