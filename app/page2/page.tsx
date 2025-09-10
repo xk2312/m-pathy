@@ -436,13 +436,12 @@ function InputDock({
   }, [isMobile, tokens, mode]);
 
   return (
-  <form
-    id="m-input"                 // ← eindeutige ID (keine Kollision)
-    // ref={dockRef as any}      // ← ENTFERNT: Dock-Ref gehört zum Wrapper in page.tsx
-    onSubmit={onSubmit}
+  <div
+    id="m-input"               // ← eindeutige ID
+    role="group"               // ← A11y statt Form
     style={dockStyle}
     aria-label="Message input"
-    data-testid="m-input-form"   // ← optional für Tests
+    data-testid="m-input-form"
   >
     <input
       aria-label="Type your message"
@@ -459,12 +458,31 @@ function InputDock({
       placeholder="Talk to M"
       value={value}
       onChange={(e) => setValue(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          if (!disabled && value.trim()) {
+            // Form-Submit synthetisch auslösen (ohne echtes <form>)
+            onSubmit?.({ preventDefault() {} } as any);
+          }
+        }
+      }}
     />
-    <button type="submit" disabled={disabled || !value.trim()} /* … */>
+
+    <button
+      type="button"                                  // ← kein echter Submit
+      disabled={disabled || !value.trim()}
+      onClick={() => {
+        if (!disabled && value.trim()) {
+          onSubmit?.({ preventDefault() {} } as any); // ← triggert deine bestehende Logik
+        }
+      }}
+    >
       Senden
     </button>
-  </form>
+  </div>
 );
+
 
 }
 
@@ -560,15 +578,14 @@ export default function Page2() {
   /// app/page2/page.tsx — REPLACE ONLY THIS FUNCTION
 async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
   const res = await fetch("/api/chat", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  credentials: "same-origin",     // ⬅︎ Cookies/Sessions mitgeben (Auth-Setups vermeiden 401)
-  body: JSON.stringify({ messages: context }),
-});
-
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",                // ⬅︎ NEU: Session-Cookies mitgeben
+    body: JSON.stringify({ messages: context }),
+  });
   if (!res.ok) throw new Error("Chat API failed");
   const data = await res.json();
-  const assistant = (data.assistant ?? data); // route returns either wrapped or raw
+  const assistant = (data.assistant ?? data);
   return {
     role: assistant.role ?? "assistant",
     content: assistant.content ?? "",
