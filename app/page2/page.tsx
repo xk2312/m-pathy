@@ -560,10 +560,12 @@ export default function Page2() {
   /// app/page2/page.tsx — REPLACE ONLY THIS FUNCTION
 async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
   const res = await fetch("/api/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ messages: context }),
-  });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  credentials: "same-origin",     // ⬅︎ Cookies/Sessions mitgeben (Auth-Setups vermeiden 401)
+  body: JSON.stringify({ messages: context }),
+});
+
   if (!res.ok) throw new Error("Chat API failed");
   const data = await res.json();
   const assistant = (data.assistant ?? data); // route returns either wrapped or raw
