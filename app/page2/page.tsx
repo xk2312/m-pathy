@@ -635,12 +635,17 @@ const padBottom = `calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`;
 
 return (
   <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
-    {/* === HEADER: eigene BLOCK-Section, getrennt von der Bühne === */}
+    {/* === HEADER: eigene BLOCK-Section, fixiert oben === */}
     <header
       ref={headerRef}
       role="banner"
       style={{
-        position: "relative",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        height: isMobile ? "184px" : "224px", // 120/160 Logo + 64px vert. Padding
         background: bg0,
         borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
       }}
@@ -650,17 +655,17 @@ return (
           marginInline: sideMargin,
           maxWidth: 1280,
           width: "100%",
+          height: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          padding: "32px 0",
         }}
       >
         <LogoM size={isMobile ? 120 : 160} active={loading} />
       </div>
     </header>
 
-    {/* === BÜHNE: ab hier startet direkt das Grid (KEIN Header mehr hier drin) === */}
+    {/* === BÜHNE: startet unter dem fixierten Header === */}
     <div
       style={{
         flex: 1,
@@ -671,6 +676,7 @@ return (
         maxWidth: 1280,
         alignSelf: "center",
         width: "100%",
+        paddingTop: isMobile ? "184px" : "224px", // reserviert Platz unter Header
       }}
     >
       {/* Bühne: Desktop 2 Spalten (Säule links), Mobile 1 Spalte */}
@@ -735,7 +741,7 @@ return (
             <MessageInput
               onSend={onSendFromPrompt}
               disabled={loading}
-              placeholder={t("writeMessage")}
+              placeholder={t('writeMessage')}
               minRows={3}
               maxRows={10}
             />
