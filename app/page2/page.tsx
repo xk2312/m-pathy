@@ -435,53 +435,36 @@ function InputDock({
   }, [isMobile, tokens, mode]);
 
   return (
-    <form
-      id="m-input-dock"
-      ref={dockRef as any}
-      onSubmit={onSubmit}
-      style={dockStyle}
-      aria-label="Message input"
-    >
-      <input
-        aria-label="Type your message"
-        style={{
-          flex: 1,
-          height: 44,
-          padding: "0 14px",
-          borderRadius: TOKENS.radius.md,
-          border: `1px solid ${tokens.color.glassBorder}`,
-          background: "rgba(255,255,255,0.04)",
-          color: tokens.color.text,
-          outline: "none",
-        }}
-        placeholder="Talk to M"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
-      <button
-        type="submit"
-        disabled={disabled || !value.trim()}
-        style={{
-          height: 44,
-          padding: "0 18px",
-          border: 0,
-          borderRadius: TOKENS.radius.md,
-          background: tokens.color.cyan,
-          color: "#071015",
-          fontWeight: 700,
-          cursor: disabled || !value.trim() ? "not-allowed" : "pointer",
-          opacity: disabled || !value.trim() ? 0.6 : 1,
-          boxShadow: "0 0 18px rgba(34,211,238,0.25)",
-          transition: "transform .12s ease",
-        }}
-        onMouseDown={(e) => (e.currentTarget.style.transform = "translateY(1px)")}
-        onMouseUp={(e) => (e.currentTarget.style.transform = "translateY(0)")}
-        aria-label="Senden"
-      >
-        Senden
-      </button>
-    </form>
-  );
+  <form
+    id="m-input"                 // ← eindeutige ID (keine Kollision)
+    // ref={dockRef as any}      // ← ENTFERNT: Dock-Ref gehört zum Wrapper in page.tsx
+    onSubmit={onSubmit}
+    style={dockStyle}
+    aria-label="Message input"
+    data-testid="m-input-form"   // ← optional für Tests
+  >
+    <input
+      aria-label="Type your message"
+      style={{
+        flex: 1,
+        height: 44,
+        padding: "0 14px",
+        borderRadius: TOKENS.radius.md,
+        border: `1px solid ${tokens.color.glassBorder}`,
+        background: "rgba(255,255,255,0.04)",
+        color: tokens.color.text,
+        outline: "none",
+      }}
+      placeholder="Talk to M"
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
+    <button type="submit" disabled={disabled || !value.trim()} /* … */>
+      Senden
+    </button>
+  </form>
+);
+
 }
 
 /* =======================================================================
@@ -711,16 +694,20 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
           <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
             {/* Scrollbarer Chronik-Container */}
             <div
-              ref={convoRef as any}
-              style={{
-                flex: 1,
-                minHeight: 0,
-                overflow: "auto",
-                paddingTop: 8,
-                paddingBottom: padBottom, // ⬅️ reserviert Platz für das Sticky-Dock
-              }}
-              aria-label={t("conversationAria")}
+  ref={convoRef as any}
+  style={{
+    flex: 1,
+    minHeight: 0,
+    overflow: "auto",                 // ← einziger Scroll-Container
+    overscrollBehavior: "contain",    // ← verhindert Outer-Scroll/Bounce
+    WebkitOverflowScrolling: "touch", // ← iOS flüssiges Scrollen
+    paddingTop: 8,
+    paddingBottom: padBottom,
+    scrollbarGutter: "stable",        // ← verhindert Layout-Jumps bei Scrollbar
+  }}
+  aria-label={t("conversationAria")}
 >
+
 
               <Conversation
                 messages={messages}
@@ -739,22 +726,25 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
   style={{
     position: "sticky",
     bottom: 0,
-    zIndex: 30,
-    background: bg0, // kräftig, nicht transparent
-    padding: 12,
+    zIndex: 50, // über Conversation
+    background: bg0,
+    padding: "12px 12px calc(12px + env(safe-area-inset-bottom, 0px))", // Safe-Area
     marginTop: 8,
     borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
     backdropFilter: "blur(8px)",
+    boxShadow: "0 -6px 24px rgba(0,0,0,.35)",      // sanfte Abhebung
+    overscrollBehavior: "contain",                 // kein Parent-Scroll
   }}
 >
   <MessageInput
-    onSend={onSendFromPrompt}   // siehe unten: Sende-Handler
+    onSend={onSendFromPrompt}
     disabled={loading}
     placeholder={t('writeMessage')}
     minRows={3}
     maxRows={10}
   />
 </div>
+
 
           </div>
         </div>

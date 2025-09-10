@@ -15,7 +15,7 @@
   flex-direction: column;
   gap: 12px;
 
-  /* Scroll wird jetzt ausschließlich von der Chat-Section übernommen */
+  /* Scroll übernimmt ausschließlich die Chat-Section */
   /* max-height: calc(100dvh - 32px); */
   overflow: visible;
 
