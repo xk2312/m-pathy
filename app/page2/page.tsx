@@ -668,18 +668,20 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
 <div
   ref={headerRef}
   style={{
-    position: "sticky",      // bleibt oben
+    position: "sticky",
     top: 0,
     zIndex: 20,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: "32px 0",       // etwas mehr Luft
-    background: "transparent",
+    padding: "32px 0",
+    background: "rgba(0, 0, 0, 0.85)", // ⬅️ kräftiger Hintergrund
+    backdropFilter: "blur(6px)",       // ⬅️ sorgt für Bühne-Effekt
   }}
 >
   <LogoM size={isMobile ? 120 : 160} active={loading} />
 </div>
+
 
 
         {/* Bühne: Desktop 2 Spalten (Säule links), Mobile 1 Spalte */}

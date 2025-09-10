@@ -4,31 +4,34 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from "@/lib/i18n";
 
 /**
- * MessageInput – multi-line input with auto-resize
- * - Enter = send, Shift+Enter = newline
- * - IME protection (don't send while composing)
- * - Supports "/council Name: prompt" shortcut:
- *     → POST /api/council/invoke
- *     → calls onSend(notice) and onSend(answer)
+ * MessageInput – accessible, powerful multi-line input (Council13 / DevLoop 130)
+ * - Große, gut lesbare Typo (für ältere Augen)
+ * - Auto-Resize (minRows..maxRows), Enter=Send, Shift+Enter=Zeilenumbruch
+ * - IME-Schutz (nicht senden während Komposition)
+ * - Drag&Drop-Dateiupload (Platzhalter; noch kein Upload-API-Call)
+ * - Toolbar mit Buttons: Upload, Funktionen (Platzhalter), Senden
+ * - Shortcut: "/council Name: prompt" → POST /api/council/invoke
  */
 export type MessageInputProps = {
   onSend: (text: string) => void | Promise<void>;
   disabled?: boolean;
   placeholder?: string;
-  minRows?: number; // visual min height in lines (default 1)
-  maxRows?: number; // visual max height in lines (default 6)
+  minRows?: number; // visuelle Mindesthöhe (Zeilen)
+  maxRows?: number; // visuelle Maxhöhe (Zeilen)
 };
 
 export default function MessageInput({
   onSend,
   disabled = false,
   placeholder = t('writeMessage'),
-  minRows = 1,
-  maxRows = 6,
+  minRows = 3,
+  maxRows = 10,
 }: MessageInputProps) {
   const [value, setValue] = useState('');
   const [isComposing, setIsComposing] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const taRef = useRef<HTMLTextAreaElement | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
   // ---- helpers -------------------------------------------------------------
 
@@ -44,8 +47,8 @@ export default function MessageInput({
     const el = taRef.current;
     if (!el) return;
     const lineHeight = getComputedStyle(el).lineHeight;
-    const lh = lineHeight ? parseFloat(lineHeight) : 20;
-    const minH = Math.max(lh * minRows, lh);
+    const lh = lineHeight ? parseFloat(lineHeight) : 22;
+    const minH = Math.max(lh * minRows, lh * 2.8);   // großzügiger Mindestblock
     const maxH = Math.max(lh * maxRows, minH);
 
     el.style.height = 'auto';
@@ -64,12 +67,10 @@ export default function MessageInput({
     if (!text) return;
 
     try {
-      console.log('[MI] onSend ->', text);
-
       // 1) Council shortcut?
       const council = parseCouncilCommand(text);
       if (council) {
-        // optional: sofort User-Command an Parent weiterreichen (als Echo)
+        // Echo des Kommandos an Parent
         await onSend(text);
 
         const res = await fetch('/api/council/invoke', {
@@ -84,9 +85,7 @@ export default function MessageInput({
           await onSend(`⚠️ ${msg}`);
         } else {
           const data = await res.json(); // { notice, answer, shadow?, meta }
-          // 1a) Systemmeldung
           if (data?.notice) await onSend(String(data.notice));
-          // 1b) Erste Antwort der gewählten KI
           if (data?.answer) await onSend(String(data.answer));
         }
       } else {
@@ -96,41 +95,182 @@ export default function MessageInput({
 
       setValue('');
       requestAnimationFrame(autoResize);
-      console.log('[MI] onSend:done');
     } catch (err) {
       console.error('[MI] onSend:error', err);
-      // keep value on error
+      // value bleibt erhalten
     }
   }, [value, disabled, onSend, autoResize]);
 
   const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key !== 'Enter') return;
-    if (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) return; // only plain Enter sends
-    if (isComposing) return; // don't send during IME composition
+    if (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) return; // nur reines Enter sendet
+    if (isComposing) return; // IME
     e.preventDefault();
     void handleSend();
   }, [isComposing, handleSend]);
 
+  // ---- upload placeholders -------------------------------------------------
+
+  const openFilePicker = useCallback(() => {
+    fileRef.current?.click();
+  }, []);
+
+  const onFilesSelected = useCallback((files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    // Platzhalter: nur anzeigen, noch kein Upload-API-Call
+    const names = Array.from(files).map(f => `• ${f.name} (${Math.round(f.size / 1024)} KB)`).join('\n');
+    setValue(v => (v ? `${v}\n` : '') + `📎 Files ready:\n${names}\n`);
+    requestAnimationFrame(autoResize);
+  }, [autoResize]);
+
+  // Drag & Drop (Platzhalter)
+  const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (disabled) return;
+    setIsDragging(true);
+  }, [disabled]);
+
+  const onDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+  }, []);
+
+  const onDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (disabled) return;
+    const files = e.dataTransfer?.files ?? null;
+    onFilesSelected(files);
+  }, [disabled, onFilesSelected]);
+
   // ---- render --------------------------------------------------------------
 
-  return (
-    <div className="m-inputbar" aria-label="Message input" role="group">
-      <textarea
-        ref={taRef}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={onKeyDown}
-        onCompositionStart={() => setIsComposing(true)}
-        onCompositionEnd={() => setIsComposing(false)}
-        placeholder={placeholder}
-        disabled={disabled}
-        rows={minRows}
-        className="m-inputbar__textarea"
-        aria-label={t('writeMessage')}
-        aria-multiline
-        enterKeyHint="send"
-      />
+  const bigFont = 18;        // Grundschrift
+  const bigLine = 1.45;      // Lesbarkeit
+  const radius = 16;
 
+  return (
+    <div
+      className="m-inputbar"
+      aria-label="Message input"
+      role="group"
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+      style={{
+        width: '100%',
+        gap: 12,
+        display: 'flex',
+        alignItems: 'stretch',
+        flexWrap: 'wrap',
+        padding: 12,
+        borderRadius: radius,
+        border: '1px solid rgba(255,255,255,0.12)',
+        background: isDragging ? 'rgba(34,211,238,0.10)' : 'rgba(255,255,255,0.06)',
+        boxShadow: '0 14px 40px rgba(0,0,0,0.35), 0 0 28px rgba(34,211,238,0.12)',
+        backdropFilter: 'blur(12px)',
+        transition: 'background .15s ease, transform .12s ease',
+      }}
+    >
+      {/* Toolbar (links) */}
+      <div
+        className="m-inputbar__tools"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          flex: '0 0 auto',
+        }}
+        aria-label={t('tools')}
+        role="toolbar"
+      >
+        {/* Upload */}
+        <button
+          type="button"
+          onClick={openFilePicker}
+          disabled={disabled}
+          title={t('upload') ?? 'Upload'}
+          aria-label={t('upload') ?? 'Upload'}
+          style={toolBtnStyle}
+        >
+          📎
+        </button>
+        <input
+          ref={fileRef}
+          type="file"
+          multiple
+          hidden
+          onChange={(e) => onFilesSelected(e.target.files)}
+        />
+
+        {/* Funktionen / Commands (Platzhalter für künftige Tools) */}
+        <button
+          type="button"
+          onClick={() => {
+            setValue(v => (v ? `${v}\n` : '') + '⚙️ Functions: (coming soon)\n');
+            requestAnimationFrame(autoResize);
+          }}
+          disabled={disabled}
+          title="Functions"
+          aria-label="Functions"
+          style={toolBtnStyle}
+        >
+          ⚙️
+        </button>
+      </div>
+
+      {/* Textbereich (mittig, groß & mehrzeilig) */}
+      <div style={{ flex: '1 1 480px', minWidth: 240 }}>
+        <textarea
+          ref={taRef}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={onKeyDown}
+          onCompositionStart={() => setIsComposing(true)}
+          onCompositionEnd={() => setIsComposing(false)}
+          placeholder={placeholder}
+          disabled={disabled}
+          rows={minRows}
+          className="m-inputbar__textarea"
+          aria-label={t('writeMessage')}
+          aria-multiline
+          enterKeyHint="send"
+          style={{
+            width: '100%',
+            display: 'block',
+            fontSize: bigFont,
+            lineHeight: bigLine,
+            color: 'rgba(230,240,243,1)',
+            background: 'rgba(255,255,255,0.04)',
+            borderRadius: radius,
+            border: '1px solid rgba(255,255,255,0.12)',
+            outline: 'none',
+            padding: '14px 16px',
+            resize: 'none',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
+          }}
+        />
+        {/* Hint-Zeile (zugänglich, dezent) */}
+        <div
+          aria-hidden
+          style={{
+            marginTop: 6,
+            fontSize: 12,
+            opacity: 0.7,
+            color: 'rgba(230,240,243,0.70)',
+            display: 'flex',
+            gap: 12,
+            flexWrap: 'wrap',
+          }}
+        >
+          <span>↩︎ Enter = {t('send') ?? 'Send'}</span>
+          <span>⇧ Enter = {t('newline') ?? 'New line'}</span>
+          <span>/council Name: prompt</span>
+          <span>Drop files here</span>
+        </div>
+      </div>
+
+      {/* Send-Button (rechts, groß & kontrastreich) */}
       <button
         type="button"
         onClick={() => void handleSend()}
@@ -138,9 +278,43 @@ export default function MessageInput({
         className="m-inputbar__send"
         aria-label={t('send')}
         title={`${t('send')} (Enter)`}
+        style={{
+          flex: '0 0 auto',
+          height: 52,
+          padding: '0 22px',
+          border: 0,
+          borderRadius: radius,
+          background: 'linear-gradient(180deg, #22d3ee, #11b2cc)',
+          color: '#071015',
+          fontWeight: 800,
+          fontSize: 16,
+          letterSpacing: 0.3,
+          cursor: disabled || value.trim().length === 0 ? 'not-allowed' : 'pointer',
+          opacity: disabled || value.trim().length === 0 ? 0.6 : 1,
+          boxShadow: '0 0 22px rgba(34,211,238,0.35)',
+          alignSelf: 'flex-end',
+          transition: 'transform .12s ease, box-shadow .12s ease',
+        }}
+        onMouseDown={(e) => (e.currentTarget.style.transform = 'translateY(1px)')}
+        onMouseUp={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
       >
         {t('send')}
       </button>
     </div>
   );
 }
+
+/* —— kleine, wiederverwendbare Styles —— */
+const toolBtnStyle: React.CSSProperties = {
+  height: 44,
+  minWidth: 44,
+  padding: '0 10px',
+  borderRadius: 12,
+  border: '1px solid rgba(255,255,255,0.12)',
+  background: 'rgba(255,255,255,0.04)',
+  color: 'rgba(230,240,243,0.95)',
+  fontSize: 18,
+  lineHeight: 1,
+  cursor: 'pointer',
+  boxShadow: '0 0 10px rgba(34,211,238,0.12)',
+};
