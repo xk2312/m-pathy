@@ -220,9 +220,14 @@ return (
   <aside className={styles.saeule} aria-label={t("columnAria")} data-test="saeule">
     {/* Kopf */}
     <div className={styles.head}>
-      <div className={styles.title}>{t("columnTitle")}</div>
-      <div className={styles.badge}>L1 · Free</div>
-    </div>
+  <div className={styles.title}>{t("columnTitle")}</div>
+  <div className={styles.badgesRow}>
+    <span className={`${styles.badge} ${styles.badgeGradient}`}>
+      <span className={styles.badgeDot} /> L1 · Free
+    </span>
+  </div>
+</div>
+
 
     {/* Steuerung */}
     <div className={styles.sectionTitle}>{t("sectionControl")}</div>
@@ -313,19 +318,25 @@ return (
 
 {/* Module (Coming) */}
 <div className={styles.sectionTitle}>{t("modules")}</div>
-<ul className={styles.list}>
+<div className={styles.moduleList}>
   {[
     { id: "chemomaster", label: "ChemoMaster" },
-    { id: "blendmaster", label: "BlendMaster" },
-    { id: "juraxy", label: "Juraxy" },
-    { id: "cannai", label: "Canna.AI" },
+    { id: "blendmaster",  label: "BlendMaster" },
+    { id: "juraxy",       label: "Juraxy" },
+    { id: "cannai",       label: "Canna.AI" },
   ].map((m) => (
-    <li key={m.id} className={styles.entryDisabled} aria-disabled="true">
-      <div className={styles.entryTitle}>{m.label}</div>
-      <div className={styles.badgeComing}>{t("coming")}</div>
-    </li>
+    <div key={m.id} className={styles.moduleItem} aria-disabled="true">
+      <div className={styles.moduleLeft}>
+        <span className={styles.moduleDot} />
+        <span className={styles.moduleName}>{m.label}</span>
+      </div>
+      <span className={`${styles.moduleTag} ${styles.moduleTagSoon}`}>
+        {t("coming")} soon
+      </span>
+    </div>
   ))}
-</ul>
+</div>
+
 
 {/* Fuß: Aktionen */}
 <div className={styles.actions}>
