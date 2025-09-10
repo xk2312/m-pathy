@@ -1,11 +1,17 @@
-/* ─────────────────────────────────────────
-   Säule – Container & Grundlayout (sticky)
-   ──────────────────────────────────────── */
+/* ─────────────────────────────
+   Säule – sticky + Header-Abstand
+   ───────────────────────────── */
 .saeule {
   position: sticky;
-  top: 24px;
-  align-self: start;
+  top: var(--header-offset, 16px);   /* sitzt unter dem Header */
+  margin-top: var(--header-offset, 16px);
 
+  align-self: start;
+  height: max-content;               /* Größe nach Inhalt */
+  max-height: none;                  /* KEINE eigene Scrollhöhe mehr */
+  overflow: visible;                 /* KEINE eigene Scrollbar */
+
+  /* Look wie gehabt */
   color: #e6f0f3;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.18);
@@ -14,11 +20,6 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-
-  /* Scroll übernimmt ausschließlich die Chat-Section */
-  /* max-height: calc(100dvh - 32px); */
-  overflow: visible;
-
   backdrop-filter: blur(10px);
 }
 

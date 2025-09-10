@@ -650,19 +650,19 @@ return (
         borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
       }}
     >
-      <div
-        style={{
-          marginInline: sideMargin,
-          maxWidth: 1280,
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <LogoM size={isMobile ? 120 : 160} active={loading} />
-      </div>
+       <div
+    style={{
+      width: "100vw",          // volle Viewport-Breite
+      maxWidth: "none",
+      margin: 0,
+      height: "100%",
+      display: "flex",
+      justifyContent: "center",// exakt zentriert (horizontal)
+      alignItems: "center",    // exakt zentriert (vertikal in der Header-Höhe)
+    }}
+  >
+    <LogoM size={isMobile ? 120 : 160} active={loading} />
+  </div>
     </header>
 
     {/* === BÜHNE: startet unter dem fixierten Header === */}
@@ -689,6 +689,8 @@ return (
           flex: 1,
           minHeight: 0,
           overflow: "visible",
+          /* ➜ Abstand unter dem Header für .saeule */
+          ["--header-offset" as any]: "16px", // bei Bedarf 24px/32px
         }}
       >
         {/* Säule links */}
