@@ -107,6 +107,7 @@ export async function POST(req: NextRequest) {
       headers: { "Content-Type": "application/json", "api-key": apiKey },
       body: JSON.stringify(payload),
     };
+    console.log("Endpoint in runtime:", process.env.AZURE_OPENAI_ENDPOINT);
 
     // Concurrency-Gate + Retry-After Backoff
     const response = await withGate(() => retryingFetch(buildAzureUrl(), init, 5));
