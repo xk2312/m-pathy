@@ -108,6 +108,8 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify(payload),
     };
     console.log("Endpoint in runtime:", process.env.AZURE_OPENAI_ENDPOINT);
+    console.log("🔍 Azure URL in use:", buildAzureUrl());
+    console.log("🔑 API Key (masked):", apiKey ? apiKey.slice(0, 5) + "..." : "MISSING");
 
     // Concurrency-Gate + Retry-After Backoff
     const response = await withGate(() => retryingFetch(buildAzureUrl(), init, 5));
