@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
     const payload = {
       messages,
       temperature: body.temperature ?? 0.7,
-      max_tokens: MODEL_MAX_TOKENS, // kleiner halten → weniger 429
+      max_tokens: MODEL_MAX_TOKENS, // kleiner halten → weniger 429 
     };
 
     const init: RequestInit = {
