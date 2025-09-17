@@ -1,0 +1,26 @@
+name: Deploy Prod
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+concurrency:
+  group: prod-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+      - name: Node setup (placeholder)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: Build (placeholder)
+        run: |
+          echo "Build goes here"
+      - name: Deploy (placeholder)
+        run: |
+          echo "SSH/rsync deploy to PROD goes here"

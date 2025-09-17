@@ -1,0 +1,23 @@
+name: Rollback
+on:
+  workflow_dispatch:
+    inputs:
+      target_ref:
+        description: 'Tag or commit to roll back to (e.g., v1.2.3 or commit SHA)'
+        required: true
+
+concurrency:
+  group: prod-deploy
+  cancel-in-progress: false
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.target_ref }}
+      - name: Deploy selected ref (placeholder)
+        run: |
+          echo "Redeploy selected ref to PROD goes here"
