@@ -16,17 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # (Optional) Wenn du im CI bauen willst:
-      # - uses: actions/setup-node@v4
-      #   with:
-      #     node-version: 'lts/*'
-      # - name: Build
-      #   run: |
-      #     npm ci
-      #     npm run build
-
       - name: Prepare SSH
         run: |
+          set -euo pipefail
           install -m 700 -d ~/.ssh
           printf "%s\n" "${{ secrets.STAGING_SSH_KEY }}" > 
 ~/.ssh/id_ed25519
@@ -35,14 +27,24 @@ jobs:
 ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
+      # --- DEBUG: zeigt uns, ob Secrets ankommen ---
+      - name: Debug vars
+        env:
+          HOST: ${{ secrets.STAGING_HOST }}
+          USER: ${{ secrets.STAGING_USER }}
+        run: |
+          set -euo pipefail
+          echo "HOST=${HOST:-<empty>}"
+          echo "USER=${USER:-<empty>}"
+          [ -n "${HOST:-}" ] || { echo "❌ STAGING_HOST fehlt"; exit 2; }
+          [ -n "${USER:-}" ] || { echo "❌ STAGING_USER fehlt"; exit 2; }
+
       - name: Rsync to server
         env:
-          HOST: ${{ secrets.STAGING_HOST }}      # z.B. 78.47.96.191
-          USER: ${{ secrets.STAGING_USER }}      # deploy
+          HOST: ${{ secrets.STAGING_HOST }}
+          USER: ${{ secrets.STAGING_USER }}
         run: |
-          if [ -z "$HOST" ] || [ -z "$USER" ]; then
-            echo "HOST/USER secret missing"; exit 2
-          fi
+          set -euo pipefail
           RSYNC_RSH="ssh -i ~/.ssh/id_ed25519 -o 
 StrictHostKeyChecking=yes"
           rsync -az --delete \
@@ -56,6 +58,7 @@ StrictHostKeyChecking=yes"
           HOST: ${{ secrets.STAGING_HOST }}
           USER: ${{ secrets.STAGING_USER }}
         run: |
+          set -euo pipefail
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes 
 "$USER@$HOST" \
             'sudo systemctl daemon-reload && sudo systemctl restart 
