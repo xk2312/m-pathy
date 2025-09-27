@@ -44,6 +44,8 @@ jobs:
             cp /srv/app/shared/.env .env.production || true
             npm ci --no-audit --no-fund
             npm run build
-            sudo systemctl restart mpathy
+            sudo -n systemctl restart mpathy
+            sudo -n systemctl status mpathy --no-pager || true
             curl -sS -I https://staging.m-pathy.ai/health || true
           '
+
