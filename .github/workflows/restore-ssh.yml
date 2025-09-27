@@ -1,0 +1,91 @@
+name: Restore SSH Access
+
+on:
+  workflow_dispatch:
+    inputs:
+      pubkey:
+        description: "Paste your PUBLIC ssh-ed25519 key (one line)"
+        required: true
+
+jobs:
+  inject:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add pubkey to deploy user's authorized_keys (idempotent)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -Eeuo pipefail
+            PUB="${{ github.event.inputs.pubkey }}"
+            mkdir -p "$HOME/.ssh"
+            touch "$HOME/.ssh/authorized_keys"
+            grep -qxF "$PUB" "$HOME/.ssh/authorized_keys" || echo "$PUB" >> "$HOME/.ssh/authorized_keys"
+            chmod 700 "$HOME/.ssh"
+            chmod 600 "$HOME/.ssh/authorized_keys"
+            chown -R "$(whoami)":"$(whoami)" "$HOME/.ssh"
+            echo "whoami=$(whoami)"
+            echo "HOME=$HOME"
+            head -n 3 "$HOME/.ssh/authorized_keys" || true
+
+      - name: Try to add the same key for root (best effort)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: |
+            set -Eeuo pipefail
+            PUB="${{ github.event.inputs.pubkey }}"
+            if command -v sudo >/dev/null 2>&1; then
+              echo "${{ secrets.DEPLOY_PASSWORD }}" | sudo -S bash -c "
+                mkdir -p /root/.ssh
+                touch /root/.ssh/authorized_keys
+                grep -qxF \"$PUB\" /root/.ssh/authorized_keys || echo \"$PUB\" >> /root/.ssh/authorized_keys
+                chmod 700 /root/.ssh
+                chmod 600 /root/.ssh/authorized_keys
+              "
+              echo "✅ Also added key to /root/.ssh/authorized_keys"
+            else
+              echo "ℹ️ sudo not available; skipped root."
+            fi
+
+      - name: Ensure 'deploy' user exists and has your key
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -Eeuo pipefail
+            PUB="${{ github.event.inputs.pubkey }}"
+
+            echo "${{ secrets.DEPLOY_PASSWORD }}" | sudo -S bash -c '
+              id -u deploy >/dev/null 2>&1 || useradd -m -s /bin/bash deploy
+              usermod -aG sudo deploy || true
+              install -d -m 700 -o deploy -g deploy /home/deploy/.ssh
+              touch /home/deploy/.ssh/authorized_keys
+              chown deploy:deploy /home/deploy/.ssh/authorized_keys
+              chmod 600 /home/deploy/.ssh/authorized_keys
+              grep -qxF "$PUB" /home/deploy/.ssh/authorized_keys || echo "$PUB" >> /home/deploy/.ssh/authorized_keys
+            '
+            echo "✅ deploy user ready with your key"
+
+      - name: Debug whoami & home
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: |
+            whoami
+            echo "HOME=$HOME"
+            ls -ld $HOME

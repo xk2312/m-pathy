@@ -132,3 +132,60 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
 /* Links (optional) */
 .markdown a { text-decoration: underline; color: inherit; }
+/* === MOBILE SCOPE ===================================================== */
+@media (max-width: 768px), (pointer: coarse) {
+  :root {
+    /* Viewport + Safe Area (werden später via JS aktualisiert) */
+    --vh: 1vh;                         /* Fallback, wird via visualViewport gesetzt */
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+    /* Header-Höhen */
+    --header-h-idle: 96px;
+    --header-h-shrink: 72px;
+    --header-h-typing: 0px;
+    --header-h: var(--header-h-idle);  /* aktueller Wert (wird getoggelt) */
+
+    /* Dock / Prompt Caps */
+    --dock-cap-portrait: 30vh;
+    --dock-cap-landscape: 22vh;
+    --dock-cap: var(--dock-cap-portrait);
+
+    /* Spacings */
+    --header-offset: 16px;             /* Säule-Offset unter Header */
+  }
+
+  /* Motion budget mobil (respect RRM) */
+  @media (prefers-reduced-motion: no-preference) {
+    .mob-transition {
+      transition: height .16s ease, padding .16s ease, transform .16s ease, opacity .16s ease;
+    }
+  }
+}
+/* === Mobile MessageInput Toolbar Toggle ================================ */
+@media (max-width: 768px), (pointer: coarse) {
+  /* Plus-Button mobil zeigen */
+  .mi-plus-btn { display: inline-flex; }
+
+  /* Rechte Icon-Leiste mobil ausblenden (nur die Toolbar, nicht den Senden-Button) */
+  .m-inputbar__actionsRight [role="toolbar"] {
+    display: none !important;
+  }
+
+  /* Tool-Kacheln im Popover: große Touch-Ziele */
+  .mi-tool {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    border-radius: 10px;
+    border: 1px solid #314156;
+    background: #0b1220;
+    color: #e6f0f3;
+    font-weight: 700;
+  }
+}
+
+/* Desktop: Plus-Button ausblenden */
+@media (min-width: 769px) and (pointer: fine) {
+  .mi-plus-btn { display: none !important; }
+}

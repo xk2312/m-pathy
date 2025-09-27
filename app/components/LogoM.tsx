@@ -3,7 +3,7 @@ import React from "react";
 
 type Props = {
   size?: number;      // px, default 160
-  active?: boolean;   // true => Puls-Animation
+  active?: boolean;   // true => Puls-Animation 
 };
 
 export default function LogoM({ size = 160, active = false }: Props) {
