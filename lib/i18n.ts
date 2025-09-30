@@ -13,7 +13,7 @@ const en = {
   mobileNav: "Mobile navigation",
   close: "Close",
 
-  // Sidebar / Column
+  // Sidebar / Column 
   columnTitle: "Column",
   sectionControl: "Controls",
   onboarding: "ONBOARDING",

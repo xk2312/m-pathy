@@ -117,7 +117,7 @@ useEffect(() => {
   role="dialog"
   aria-modal="true"
   aria-describedby="mobile-overlay-desc"
-  style={{ position: "fixed", inset: 0, zIndex: 60 }}
+  style={{ position: "fixed", inset: 0, zIndex: 120 }}
 >
       {/* Scrim */}
       <div
@@ -181,11 +181,22 @@ useEffect(() => {
         </div>
 
         {/* Inhalt: identische Säulen-Struktur */}
-        <div style={{ overflow: "auto", paddingBottom: 12 }}>
-          {/* WICHTIG: Prop durchreichen → Bubble + Close bei Auswahl */}
-          <Saeule onSystemMessage={forwardSystemMessage} />
-        </div>
+<div
+  data-overlay="true"
+  style={{
+    overflow: "auto",
+    paddingBottom: "calc(12px + var(--safe-bottom))",
+    overscrollBehavior: "contain",
+    WebkitOverflowScrolling: "touch",
+  }}
+>
+  {/* WICHTIG: Prop durchreichen → Bubble + Close bei Auswahl */}
+  <Saeule onSystemMessage={forwardSystemMessage} />
+</div>
+
       </div>
     </div>
+    
   );
+  
 }

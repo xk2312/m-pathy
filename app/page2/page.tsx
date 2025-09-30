@@ -1,6 +1,6 @@
 "use client";
 
-/**
+/***
  * =========================================================
  *  M — PAGE2 MASTER (Single-File Design/Behavior Control)
  * =========================================================
@@ -37,6 +37,7 @@ import MobileOverlay from "../components/MobileOverlay";
 import StickyFab from "../components/StickyFab";
 import { t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
+import { useMobileViewport } from "@/lib/useMobileViewport";
 
 // ⚠️ NICHT importieren: useTheme aus "next-themes" (Konflikt mit lokalem Hook)
 // import { useTheme } from "next-themes"; // ❌ bitte entfernt lassen
@@ -435,300 +436,208 @@ function InputDock({
   }, [isMobile, tokens, mode]);
 
   return (
-    <form
-      id="m-input-dock"
-      ref={dockRef as any}
-      onSubmit={onSubmit}
-      style={dockStyle}
-      aria-label="Message input"
+  <div
+    id="m-input"               // ← eindeutige ID
+    role="group"               // ← A11y statt Form
+    style={dockStyle}
+    aria-label="Message input"
+    data-testid="m-input-form"
+  >
+    <input
+      aria-label="Type your message"
+      style={{
+        flex: 1,
+        height: 44,
+        padding: "0 14px",
+        borderRadius: TOKENS.radius.md,
+        border: `1px solid ${tokens.color.glassBorder}`,
+        background: "rgba(255,255,255,0.04)",
+        color: tokens.color.text,
+        outline: "none",
+      }}
+      placeholder="Talk to M"
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          if (!disabled && value.trim()) {
+            // Form-Submit synthetisch auslösen (ohne echtes <form>)
+            onSubmit?.({ preventDefault() {} } as any);
+          }
+        }
+      }}
+    />
+
+    <button
+      type="button"                                  // ← kein echter Submit
+      disabled={disabled || !value.trim()}
+      onClick={() => {
+        if (!disabled && value.trim()) {
+          onSubmit?.({ preventDefault() {} } as any); // ← triggert deine bestehende Logik
+        }
+      }}
     >
-      <input
-        aria-label="Type your message"
-        style={{
-          flex: 1,
-          height: 44,
-          padding: "0 14px",
-          borderRadius: TOKENS.radius.md,
-          border: `1px solid ${tokens.color.glassBorder}`,
-          background: "rgba(255,255,255,0.04)",
-          color: tokens.color.text,
-          outline: "none",
-        }}
-        placeholder="Talk to M"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
-      <button
-        type="submit"
-        disabled={disabled || !value.trim()}
-        style={{
-          height: 44,
-          padding: "0 18px",
-          border: 0,
-          borderRadius: TOKENS.radius.md,
-          background: tokens.color.cyan,
-          color: "#071015",
-          fontWeight: 700,
-          cursor: disabled || !value.trim() ? "not-allowed" : "pointer",
-          opacity: disabled || !value.trim() ? 0.6 : 1,
-          boxShadow: "0 0 18px rgba(34,211,238,0.25)",
-          transition: "transform .12s ease",
-        }}
-        onMouseDown={(e) => (e.currentTarget.style.transform = "translateY(1px)")}
-        onMouseUp={(e) => (e.currentTarget.style.transform = "translateY(0)")}
-        aria-label="Senden"
-      >
-        Senden
-      </button>
-    </form>
-  );
+      Senden
+    </button>
+  </div>
+);
+
+
 }
 
 /* =======================================================================
    [ANCHOR:BEHAVIOR] — Chatlogik (Azure OpenAI)
    ======================================================================= */
 
-   export default function Page2() {
-    // Persona/Theme
-    const theme = useTheme("default");
-    // ✔︎ Fallback auf zentrale TOKENS (aus CONFIG)
-    const activeTokens: Tokens = (theme as any)?.tokens ?? TOKENS;
-  
-    // Breakpoint + Seitenränder nach Vorgabe
-    const { isMobile } = useBreakpoint(768);
-  
-    // Höhen-Messung für scrollbare Conversation
-    const headerRef = React.useRef<HTMLDivElement>(null);
-    const convoRef  = React.useRef<HTMLDivElement>(null); // wird an <Conversation scrollRef> gereicht
-    const [vh, setVh] = useState(0);
-    const [headerH, setHeaderH] = useState(0);
-    const [dockH, setDockH] = useState(0);
-  
-    useEffect(() => {
-      const measure = () => {
-        setVh(window.innerHeight);
-        setHeaderH(headerRef.current?.offsetHeight || 0);
-        const dockEl = document.getElementById("m-input-dock");
-        setDockH((dockEl as HTMLElement | null)?.offsetHeight || 0);
-      };
-      measure();
-  
-      window.addEventListener("resize", measure);
-      const ro = new ResizeObserver(measure);
-      if (headerRef.current) ro.observe(headerRef.current);
-      const dockEl = document.getElementById("m-input-dock");
-      if (dockEl) ro.observe(dockEl);
-  
-      return () => {
-        window.removeEventListener("resize", measure);
-        ro.disconnect();
-      };
-    }, []);
-  
-    const sideMargin =
-      isMobile
-        ? (theme as any)?.dock?.mobile?.side ?? 12
-        : (theme as any)?.dock?.desktop?.side ?? 24;
-  
-    // ── Chat State
-    // ── Chat State
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
-    const [input, setInput] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [stickToBottom, setStickToBottom] = useState(true); // ← NEU
+export default function Page2() {
+  // Persona/Theme
+  const theme = useTheme("default");
+  const activeTokens: Tokens = theme.tokens;
 
-  
-    // Persist aus UTILS verwenden
-    const persistMessages = saveMessages;
-  
-    // Initiale Begrüßung (mit Restore aus LocalStorage, falls vorhanden)
-    useEffect(() => {
-      const restored = loadMessages();
-      if (Array.isArray(restored) && restored.length) {
-        setMessages(restored);
-        return;
-      }
-      setMessages([
-        { role: "assistant", content: "Welcome. I'm M. Mother of AI.", format: "markdown" } as ChatMessage,
+  // Breakpoint + Seitenränder
+  const { isMobile } = useBreakpoint(768);
+  const sideMargin = isMobile ? theme.dock.mobile.side : theme.dock.desktop.side;
+
+  // Refs & Höhenmessung
+  const headerRef = useRef<HTMLDivElement>(null);
+  const convoRef = useRef<HTMLDivElement>(null);
+  const dockRef = useRef<HTMLDivElement>(null);
+  const [dockH, setDockH] = useState(0);
+
+  useEffect(() => {
+    const measure = () => {
+      if (dockRef.current) setDockH(dockRef.current.offsetHeight || 0);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (dockRef.current) ro.observe(dockRef.current);
+    if (headerRef.current) ro.observe(headerRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  // Chat State
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [stickToBottom, setStickToBottom] = useState(true);
+  const [mode, setMode] = useState<string>("DEFAULT");
+
+  // Persist
+  const persistMessages = saveMessages;
+
+  // Initiale Begrüßung / Restore
+  useEffect(() => {
+    const restored = loadMessages();
+    if (Array.isArray(restored) && restored.length) {
+      setMessages(restored);
+      return;
+    }
+    setMessages([
+      { role: "assistant", content: "Welcome. I'm M. Mother of AI.", format: "markdown" },
+    ]);
+  }, []);
+
+  // Systemmeldung (für Säule/Overlay/Onboarding)
+  const systemSay = useCallback((content: string) => {
+    if (!content) return;
+    setMessages((prev) => {
+      const next = truncateMessages([
+        ...(Array.isArray(prev) ? prev : []),
+        { role: "assistant", content, format: "markdown" },
       ]);
-    }, []);
-  
-    // Systemmeldung → hängt Bubble an (wird via Sidebar-Prop genutzt)
-    const systemSay = useCallback((content: string) => {
-      if (!content) return;
-      setMessages((prev) => {
-        const next = truncateMessages([
-          ...(Array.isArray(prev) ? prev : []),
-          { role: "assistant", content, format: "markdown" } as ChatMessage,
-        ]);
-        persistMessages(next);
-        return next;
-      });
-    }, [persistMessages]);
-  
-    // (Deaktiviert) CustomEvent-Brücke – vermeiden von Doppel-Bubbles
-    // useEffect(() => {
-    //   const handler = (e: Event) => {
-    //     const ce = e as CustomEvent<any>;
-    //     const msg =
-    //       typeof ce.detail === "string"
-    //         ? ce.detail
-    //         : (ce.detail && typeof ce.detail.text === "string" ? ce.detail.text : "");
-    //     if (msg) systemSay(msg);
-    //   };
-    //   window.addEventListener("mpathy:system-message", handler as EventListener);
-    //   return () => {
-    //     window.removeEventListener("mpathy:system-message", handler as EventListener);
-    //   };
-    // }, [systemSay]);
-  
-    // Autoscroll: nach jeder neuen Nachricht ans Ende
-    useEffect(() => {
-      const el = convoRef.current;
-      if (!el) return;
-      if (!stickToBottom) return; // ← nur autoscrollen, wenn nahe am Ende
-      requestAnimationFrame(() => {
-        el.scrollTop = el.scrollHeight;
-      });
-    }, [messages, dockH, stickToBottom]);
-    
+      persistMessages(next);
+      return next;
+    });
+  }, [persistMessages]);
 
-// Scroll-Listener: misst, ob der User nahe „unten“ ist (Threshold ~80px)
-useEffect(() => {
-  const el = convoRef.current;
-  if (!el) return;
-  const onScroll = () => {
-    const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
-    setStickToBottom(distance < 80);
-  };
-  el.addEventListener("scroll", onScroll, { passive: true });
-  onScroll(); // initial messen
-  return () => el.removeEventListener("scroll", onScroll);
-}, []);
+  // Autosrollen ans Ende, wenn am Bottom
+  useEffect(() => {
+    const el = convoRef.current as HTMLDivElement | null;
+    if (!el || !stickToBottom) return;
+    requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; });
+  }, [messages, dockH, stickToBottom]);
 
-  
-    // Wandelt beliebige Content-Formen in einen gültigen Textstring um
-    function toSafeContent(value: unknown): string {
-      if (typeof value === "string") return value;
-      if (Array.isArray(value)) {
-        return value.map(v => (typeof v === "string" ? v : JSON.stringify(v))).join("\n");
-      }
-      if (value && typeof value === "object") {
-        try {
-          // @ts-ignore – häufiges Muster: { text: "..." }
-          if (typeof (value as any).text === "string") return (value as any).text;
-          return JSON.stringify(value);
-        } catch {
-          return String(value);
-        }
-      }
-      return String(value ?? "");
-    }
-  
-    // Einheitliche Sendelogik (mit sanftem 1x-Retry; kein Doppel-Append)
-    async function handleSend(userText: string, retried = false): Promise<void> {
-      const t = userText.trim();
-      if (!t || loading) return;
-  
-      // Beim Retry KEINE zweite User-Bubble anhängen
-      const next: ChatMessage[] = retried
-        ? messages
-        : [...messages, { role: "user", content: t } as ChatMessage];
-  
-      if (!retried) {
-        setMessages(next);
-        persistMessages(next);
-      }
-      setLoading(true);
-  
-      try {
-        const res = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            messages: next.map((m) => ({
-              role: m.role,
-              content: toSafeContent((m as any).content),
-            })),
-            temperature: 0.7,
-          }),
-        });
-  
-        // Einmaliger, sanfter Retry bei Transport-/Antwortfehlern
-        if (!res.ok) {
-          if (!retried) {
-            console.warn("[chat] retry after non-OK response …");
-            await new Promise(r => setTimeout(r, 300));
-            return handleSend(userText, true);
-          }
-          throw new Error(await res.text());
-        }
-  
-        let data: any = null;
-        try {
-          data = await res.json();
-        } catch {
-          if (!retried) {
-            console.warn("[chat] retry after JSON parse …");
-            await new Promise(r => setTimeout(r, 200));
-            return handleSend(userText, true);
-          }
-          throw new Error("Antwort unlesbar");
-        }
-  
-        const normalizedRole: Role =
-          (data && typeof data.role === "string" && (["user","assistant","system"] as const).includes(data.role as Role))
-            ? (data.role as Role)
-            : "assistant";
-  
-        // Nur antworten, wenn nach Normalisierung echter Text vorhanden ist
-        const raw = (data as any)?.content ?? (data as any)?.reply ?? "";
-        const replyText = toSafeContent(raw);
-        const hasContent = typeof replyText === "string" && replyText.trim().length > 0;
-  
-        const reply: ChatMessage | null = hasContent
-          ? { role: normalizedRole, content: replyText, format: "markdown" as const }
-          : null;
-  
-        setMessages((m) => {
-          const merged = reply ? truncateMessages([...m, reply]) : m; // keine leere Bubble
-          persistMessages(merged);
-          return merged;
-        });
-      } catch (err: any) {
-        setMessages((m) => {
-          const merged = truncateMessages([
-            ...m,
-            { role: "assistant", content: `⚠️ Verbindung: ${err?.message || "Unbekannt"}` },
-          ]);
-          persistMessages(merged);
-          return merged;
-        });
-      } finally {
-        setLoading(false);
-      }
-    }
-  
-    async function sendMessage(e: FormEvent) {
-      e.preventDefault();
-      const t = input.trim();
-      if (!t) return;
-      setInput("");
-      setStickToBottom(true);           // ← beim Senden wieder an’s Ende „kleben“
-      await handleSend(t);
-    }
-    
-  
-    /* =======================================================================
+  // Scroll-Listener zur Bottom-Erkennung
+  useEffect(() => {
+    const el = convoRef.current as HTMLDivElement | null;
+    if (!el) return;
+    const onScroll = () => {
+      const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
+      setStickToBottom(distance < 80);
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /// app/page2/page.tsx — REPLACE ONLY THIS FUNCTION
+async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",                // ⬅︎ NEU: Session-Cookies mitgeben
+    body: JSON.stringify({ messages: context }),
+  });
+  if (!res.ok) throw new Error("Chat API failed");
+  const data = await res.json();
+  const assistant = (data.assistant ?? data);
+  return {
+    role: assistant.role ?? "assistant",
+    content: assistant.content ?? "",
+    format: assistant.format ?? "markdown",
+  } as ChatMessage;
+}
+
+
+  const onSendFromPrompt = useCallback(async (text: string) => {
+  const trimmed = (text ?? "").trim();
+  if (!trimmed) return;
+
+  const userMsg: ChatMessage = { role: "user", content: trimmed, format: "markdown" };
+  const optimistic = truncateMessages([...(messages ?? []), userMsg]);
+  setMessages(optimistic);
+  persistMessages(optimistic);
+  setLoading(true);
+  setMode("THINKING");
+
+  try {
+    const assistant = await sendMessageLocal(optimistic);
+    const next = truncateMessages([...(optimistic ?? []), assistant]);
+    setMessages(next);
+    persistMessages(next);
+  } catch {
+    const next = truncateMessages([
+      ...(optimistic ?? []),
+      { role: "assistant", content: "⚠️ Send failed. Please retry.", format: "markdown" },
+    ]);
+    setMessages(next);
+    persistMessages(next);
+  } finally {
+    setLoading(false);
+    setMode("DEFAULT");
+  }
+}, [messages, persistMessages]);
+
+
+  /* =====================================================================
      [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
-     ======================================================================= */
+     ===================================================================== */
 
+  // Mobile Overlay
   const [overlayOpen, setOverlayOpen] = useState(false);
+
+  // Farben ausschließlich aus Tokens
   const color = activeTokens.color;
   const bg0 = color.bg0 ?? "#000000";
-  const bg1 = color.bg1 ?? "#0b1220";
-  const textColor = color.text ?? "#ffffff";
+  const bg1 = color.bg1 ?? "#0c0f12";
+  const textColor = color.text ?? "#E6F0F3";
 
+  // Seitenstil (radial + linear)
   const pageStyle: React.CSSProperties = {
     minHeight: "100dvh",
     color: textColor,
@@ -739,38 +648,215 @@ useEffect(() => {
     ].join(", "),
   };
 
-  return (
-    <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
-      {/* … dein bestehendes Layout … */}
+  // Optional: Abstand unten (mobil über visualViewport gepflegt)
+const padBottom = `calc(${dockH}px + var(--safe-bottom) + 24px)`;
 
-      <div style={{ flex: 1, minHeight: 0, display: "flex" }}>
-        <Conversation
-          messages={messages}
-          tokens={activeTokens}
-          padBottom={`calc(${dockH}px + env(safe-area-inset-bottom, 0px) + 24px)`}
-          scrollRef={convoRef}
+/* 3.2 — Mobile Header State + Viewport Hook (BEGIN) */
+const [mState, setMState] = useState<"idle" | "shrink" | "typing">("idle");
+
+// Keyboard-/Viewport-Handling (setzt --vh / --safe-bottom / --dock-cap dynamisch)
+useMobileViewport(typeof document !== "undefined" ? document.body : null);
+/* 3.2 — Mobile Header State + Viewport Hook (END) */
+/* 3.3 — Scroll → Header shrink (BEGIN) */
+useEffect(() => {
+  // nur auf Mobile und wenn das Scroll-Element existiert
+  if (!isMobile || !convoRef?.current) return;
+
+  const el = convoRef.current as HTMLElement;
+
+  const onScroll = () => {
+    if (mState === "typing") return; // Tippen dominiert, nicht schrumpfen
+    const y = el.scrollTop || 0;
+    setMState(y > 24 ? "shrink" : "idle");
+  };
+
+  el.addEventListener("scroll", onScroll, { passive: true });
+  return () => el.removeEventListener("scroll", onScroll);
+}, [isMobile, mState, convoRef]);
+/* 3.3 — Scroll → Header shrink (END) */
+/* 3.4 — Focus im Prompt/Dock → Header typing (BEGIN) */
+useEffect(() => {
+  if (!isMobile) return;
+
+  const onFocusIn = (e: FocusEvent) => {
+    const t = e.target as HTMLElement | null;
+    // Wenn der Fokus in den Dock/Prompt-Bereich wandert → typing
+    if (t && t.closest("#m-input-dock")) setMState("typing");
+  };
+
+  const onFocusOut = (e: FocusEvent) => {
+    const t = e.target as HTMLElement | null;
+    if (t && t.closest("#m-input-dock")) {
+      // Beim Verlassen: wenn gescrollt → shrink, sonst → idle
+      setMState((prev) => (prev === "typing" ? (convoRef?.current && (convoRef.current as HTMLElement).scrollTop > 24 ? "shrink" : "idle") : prev));
+    }
+  };
+
+  document.addEventListener("focusin", onFocusIn);
+  document.addEventListener("focusout", onFocusOut);
+  return () => {
+    document.removeEventListener("focusin", onFocusIn);
+    document.removeEventListener("focusout", onFocusOut);
+  };
+}, [isMobile, convoRef]);
+/* 3.4 — Focus im Prompt/Dock → Header typing (END) */
+/* 3.5 — CSS-Variable --header-h je State setzen (BEGIN) */
+useEffect(() => {
+  if (!isMobile) return;
+
+  const root = document.documentElement;
+  const value =
+    mState === "typing"
+      ? "var(--header-h-typing)"   // 0px
+      : mState === "shrink"
+      ? "var(--header-h-shrink)"   // 72px
+      : "var(--header-h-idle)";    // 96px
+
+  root.style.setProperty("--header-h", value);
+}, [isMobile, mState]);
+/* 3.5 — CSS-Variable --header-h je State setzen (END) */
+
+return (
+  <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
+    {/* === HEADER: eigene BLOCK-Section, fixiert oben === */}
+    <header
+      ref={headerRef}
+      role="banner"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        height: isMobile ? "var(--header-h)" : "224px",
+        background: bg0,
+        borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
+      }}
+    >
+       <div
+    style={{
+      width: "100vw",          // volle Viewport-Breite
+      maxWidth: "none",
+      margin: 0,
+      height: "100%",
+      display: "flex",
+      justifyContent: "center",// exakt zentriert (horizontal)
+      alignItems: "center",    // exakt zentriert (vertikal in der Header-Höhe)
+    }}
+  >
+    <LogoM size={isMobile ? 120 : 160} active={loading} />
+  </div>
+    </header>
+
+    {/* === BÜHNE: startet unter dem fixierten Header === */}
+    <div
+      style={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        marginInline: sideMargin,
+        minHeight: 0,
+        maxWidth: 1280,
+        alignSelf: "center",
+        width: "100%",
+        paddingTop: isMobile ? "var(--header-h)" : "224px", // folgt der Header-State-Maschine
+      }}
+    >
+      {/* Bühne: Desktop 2 Spalten (Säule links), Mobile 1 Spalte */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+          alignItems: "start",
+          gap: 16,
+          flex: 1,
+          minHeight: 0,
+          overflow: "visible",
+          /* ➜ Abstand unter dem Header für .saeule */
+          ["--header-offset" as any]: "16px", // bei Bedarf 24px/32px
+        }}
+      >
+        {/* Säule links */}
+        {!isMobile && <SidebarContainer onSystemMessage={systemSay} />}
+
+        {/* Rechte Spalte: Conversation + Dock */}
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
+          {/* Scrollbarer Chronik-Container (einziger Scroll) */}
+          <div
+            ref={convoRef as any}
+            style={{
+              flex: 1,
+              minHeight: 0,
+              overflow: "auto",
+              overscrollBehavior: "contain",
+              WebkitOverflowScrolling: "touch",
+              paddingTop: 8,
+              paddingBottom: padBottom,
+              scrollbarGutter: "stable",
+            }}
+            aria-label={t("conversationAria")}
+          >
+            <Conversation
+              messages={messages}
+              tokens={activeTokens}
+              padBottom={padBottom}
+              scrollRef={convoRef as any}
+            />
+          </div>
+
+          {/* Prompt Dock (sticky bottom) */}
+<div
+  id="m-input-dock"
+  ref={dockRef as any}
+  role="group"
+  aria-label="Chat Eingabeleiste"
+  style={{
+    position: "sticky",
+    bottom: 0,
+    zIndex: 50,
+    background: bg0,
+
+    // ⬇ kompakter & Safe-Area über unsere Var
+    padding: "10px 10px calc(10px + var(--safe-bottom))",
+    marginTop: 6,
+
+    borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
+    backdropFilter: "blur(8px)",
+    boxShadow: "0 -6px 24px rgba(0,0,0,.35)",
+    overscrollBehavior: "contain",
+
+    // ⬇ Auto-Grow Kappe: Dock darf mobil max. bis zur Cap wachsen
+    maxHeight: "var(--dock-cap)",  // 30vh Portrait / 22vh Landscape (aus Hook)
+    overflow: "visible",
+  }}
+>
+  <MessageInput
+    onSend={onSendFromPrompt}
+    disabled={loading}
+    placeholder={t('writeMessage')}
+
+    // ⬇ mobil kompakt starten, weich wachsen
+    minRows={isMobile ? 1 : 3}
+    maxRows={isMobile ? 6 : 10}
+  />
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    {/* Mobile Overlay / Onboarding unverändert darunter */}
+    {isMobile && (
+      <>
+        <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
+        <MobileOverlay
+          open={overlayOpen}
+          onClose={() => setOverlayOpen(false)}
+          onSystemMessage={systemSay}
         />
-      </div>
-
-      {/* OnboardingWatcher → minimal invasiv eingefügt */}
-      <OnboardingWatcher active onSystemMessage={systemSay} />
-      {/* Eingabe-Dock */}
-      <div id="m-input-dock" role="group" aria-label="Chat Eingabeleiste"
-           style={{ position: "sticky", bottom: 0, paddingTop: 8, background: "transparent" }}>
-        <MessageInput onSend={handleSend} disabled={loading} />
-      </div>
-
-      {/* Mobile Overlay bleibt unverändert */}
-      {isMobile && (
-        <>
-          <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
-          <MobileOverlay
-            open={overlayOpen}
-            onClose={() => setOverlayOpen(false)}
-            onSystemMessage={systemSay}
-          />
-        </>
-      )}
-    </main>
-  );
+      </>
+    )}
+    <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
+  </main>
+);
 }

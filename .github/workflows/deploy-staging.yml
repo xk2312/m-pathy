@@ -1,67 +1,51 @@
-name: Deploy Staging
+name: deploy-staging
 
 on:
   push:
-    branches: [ staging ]
+    branches: [ "staging" ]
+  workflow_dispatch:
 
 concurrency:
-  group: staging-deploy
+  group: deploy-staging
   cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: staging
-
+    env:
+      SSH_USER: deploy
+      SSH_HOST: 78.47.96.191
+      SSH_DEST: /srv/app/current
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Prepare SSH
         run: |
           set -euo pipefail
           install -m 700 -d ~/.ssh
-          printf "%s\n" "${{ secrets.STAGING_SSH_KEY }}" > 
-~/.ssh/id_ed25519
+          printf "%s\n" "${{ secrets.STAGING_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          printf "%s\n" "${{ secrets.STAGING_KNOWN_HOSTS }}" > 
-~/.ssh/known_hosts
+          printf "%s\n" "${{ secrets.STAGING_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
-      # --- DEBUG: zeigt uns, ob Secrets ankommen ---
-      - name: Debug vars
-        env:
-          HOST: ${{ secrets.STAGING_HOST }}
-          USER: ${{ secrets.STAGING_USER }}
+      - name: Sync files to server (rsync)
         run: |
-          set -euo pipefail
-          echo "HOST=${HOST:-<empty>}"
-          echo "USER=${USER:-<empty>}"
-          [ -n "${HOST:-}" ] || { echo "❌ STAGING_HOST fehlt"; exit 2; }
-          [ -n "${USER:-}" ] || { echo "❌ STAGING_USER fehlt"; exit 2; }
-
-      - name: Rsync to server
-        env:
-          HOST: ${{ secrets.STAGING_HOST }}
-          USER: ${{ secrets.STAGING_USER }}
-        run: |
-          set -euo pipefail
-          RSYNC_RSH="ssh -i ~/.ssh/id_ed25519 -o 
-StrictHostKeyChecking=yes"
           rsync -az --delete \
-            --exclude ".git" \
-            --exclude "node_modules" \
-            --exclude ".env" --exclude ".env.*" \
-            -e "$RSYNC_RSH" ./ "$USER@$HOST:/srv/app/current/"
+            -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes" \
+            --exclude ".git" --exclude "node_modules" \
+            ./ ${SSH_USER}@${SSH_HOST}:${SSH_DEST}/
 
-      - name: Restart service
-        env:
-          HOST: ${{ secrets.STAGING_HOST }}
-          USER: ${{ secrets.STAGING_USER }}
+      - name: Remote build & restart
         run: |
-          set -euo pipefail
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes 
-"$USER@$HOST" \
-            'sudo systemctl daemon-reload && sudo systemctl restart 
-mpathy.service && sudo systemctl status mpathy.service --no-pager 
---lines=20'
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes ${SSH_USER}@${SSH_HOST} '
+            set -e
+            cd '"${SSH_DEST}"'
+            cp /srv/app/shared/.env .env.production || true
+            npm ci --no-audit --no-fund
+            npm run build
+            sudo -n systemctl restart mpathy
+            sudo -n systemctl status mpathy --no-pager || true
+            curl -sS -I https://staging.m-pathy.ai/health || true
+          '
 

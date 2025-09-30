@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
     const payload = {
       messages,
       temperature: body.temperature ?? 0.7,
-      max_tokens: MODEL_MAX_TOKENS, // kleiner halten → weniger 429
+      max_tokens: MODEL_MAX_TOKENS, // kleiner halten → weniger 429 
     };
 
     const init: RequestInit = {
@@ -107,6 +107,9 @@ export async function POST(req: NextRequest) {
       headers: { "Content-Type": "application/json", "api-key": apiKey },
       body: JSON.stringify(payload),
     };
+    console.log("Endpoint in runtime:", process.env.AZURE_OPENAI_ENDPOINT);
+    console.log("🔍 Azure URL in use:", buildAzureUrl());
+    console.log("🔑 API Key (masked):", apiKey ? apiKey.slice(0, 5) + "..." : "MISSING");
 
     // Concurrency-Gate + Retry-After Backoff
     const response = await withGate(() => retryingFetch(buildAzureUrl(), init, 5));

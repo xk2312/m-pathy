@@ -40,3 +40,4 @@ mpathy_local_diag_*
 .env.*
 *.env
 *.env.*
+!prompts/GPTX.txt
