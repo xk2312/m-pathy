@@ -537,9 +537,8 @@ export default function Page2() {
       setMessages(restored);
       return;
     }
-    setMessages([
-      { role: "assistant", content: "Welcome. I'm M. Mother of AI.", format: "markdown" },
-    ]);
+    setMessages([]);
+
   }, []);
 
   // Systemmeldung (für Säule/Overlay/Onboarding)
