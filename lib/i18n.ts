@@ -9,6 +9,13 @@ const en = {
   writeMessage: "Write a message…",
   send: "Send",
 
+  // Input helpers
+  tools: "Tools",
+  newline: "New line",
+  comingUpload: "Upload",
+  comingVoice: "Voice",
+  comingFunctions: "Options",
+
   // Overlay header / buttons (mobile)
   mobileNav: "Mobile navigation",
   close: "Close",
@@ -23,6 +30,14 @@ const en = {
   selectAI: "Choose AI",
   modules: "Modules",
   coming: "Coming",
+
+  // Sidebar additions (experts & CTA)
+  selectExpert: "Choose expert",
+  statusExpert: "Expert:",
+  clearChat: "Clear chat",
+  startBuilding: "Start building",
+  startBuildingMsg:
+    "What can you build here, and how can I help? I'll answer briefly and with empathy.",
 
   // Actions / footer
   export: "Export",
@@ -51,6 +66,13 @@ const de: Dict = {
   writeMessage: "Nachricht schreiben…",
   send: "Senden",
 
+  // Eingabe-Hilfen
+  tools: "Werkzeuge",
+  newline: "Neue Zeile",
+  comingUpload: "Upload",
+  comingVoice: "Sprache",
+  comingFunctions: "Optionen",
+
   // Overlay header / buttons (mobile)
   mobileNav: "Mobile Navigation",
   close: "Schließen",
@@ -65,6 +87,14 @@ const de: Dict = {
   selectAI: "KI wählen",
   modules: "Module",
   coming: "Coming",
+
+  // Ergänzungen (Experten & CTA)
+  selectExpert: "Experte wählen",
+  statusExpert: "Experte:",
+  clearChat: "Chat leeren",
+  startBuilding: "Jetzt bauen",
+  startBuildingMsg:
+    "Was kannst du hier entwickeln und wie kann ich dir helfen? Ich antworte minimalistisch und empathisch.",
 
   // Actions / footer
   export: "Export",
