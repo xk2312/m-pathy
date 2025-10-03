@@ -2,8 +2,8 @@ name: deploy-staging
 
 on:
   push:
-    branches: [ "staging" ]
-  workflow_dispatch:
+    branches: ["staging"]
+  workflow_dispatch: {}
 
 concurrency:
   group: deploy-staging
@@ -13,39 +13,28 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      SSH_USER: deploy
-      SSH_HOST: 78.47.96.191
-      SSH_DEST: /srv/app/current
+      SSH_USER: ${{ secrets.STAGING_USER }}
+      SSH_HOST: ${{ secrets.STAGING_HOST }}
     steps:
-      - name: Checkout
+      - name: Checkout (metadata only)
         uses: actions/checkout@v4
 
       - name: Prepare SSH
+        shell: bash
         run: |
           set -euo pipefail
           install -m 700 -d ~/.ssh
-          printf "%s\n" "${{ secrets.STAGING_SSH_KEY }}" > ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.STAGING_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          printf "%s\n" "${{ secrets.STAGING_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          if [ -n "${{ secrets.STAGING_KNOWN_HOSTS }}" ]; then
+            printf '%s\n' "${{ secrets.STAGING_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          else
+            ssh-keyscan -p 22 "$SSH_HOST" >> ~/.ssh/known_hosts
+          fi
           chmod 644 ~/.ssh/known_hosts
 
-      - name: Sync files to server (rsync)
+      - name: Deploy via SSH (call server wrapper)
+        shell: bash
         run: |
-          rsync -az --delete \
-            -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes" \
-            --exclude ".git" --exclude "node_modules" \
-            ./ ${SSH_USER}@${SSH_HOST}:${SSH_DEST}/
-
-      - name: Remote build & restart
-        run: |
-          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes ${SSH_USER}@${SSH_HOST} '
-            set -e
-            cd '"${SSH_DEST}"'
-            cp /srv/app/shared/.env .env.production || true
-            npm ci --no-audit --no-fund
-            npm run build
-            sudo -n systemctl restart mpathy
-            sudo -n systemctl status mpathy --no-pager || true
-            curl -sS -I https://staging.m-pathy.ai/health || true
-          '
-
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes \
+            "${SSH_USER}@${SSH_HOST}" '/srv/app/bin/deploy_staging.sh'
