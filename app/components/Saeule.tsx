@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "./Saeule.module.css";
-import { logEvent } from "../../lib/auditLogger"; // lokal, läuft nur im Browser
+import { logEvent } from "../../lib/auditLogger";
 import { t } from "@/lib/i18n";
 
-
-
 /* ======================================================================
-   Typen hier   Test
+   Typen
    ====================================================================== */
 
 type ModeId =
@@ -27,28 +25,27 @@ type ModeId =
   | "wisdom"
   | "flow";
 
-type KiId =
-  | "M @Palantir"
-  | "m-pathy @DeepMind Core"
-  | "m-ocean @Anthropic Vision"
-  | "m-inent @NASA Chronos"
-  | "m-erge @IBM Q-Origin"
-  | "m-power @Colossus"
-  | "m-body @XAI Prime"
-  | "m-beded @Meta Lattice"
-  | "m-loop @OpenAI Root"
-  | "m-pire @Amazon Nexus"
-  | "m-bassy @Oracle Gaia"
-  | "m-ballance @Gemini Apex"
-  | "MU TAH – Architect of Zero";
+/** 13 Expert Domains (GPTM-Galaxy+) */
+type ExpertId =
+  | "Biologist"
+  | "Chemist"
+  | "Physicist"
+  | "Computer Scientist"
+  | "Jurist"
+  | "Architect / Civil Engineer"
+  | "Landscape Designer"
+  | "Interior Designer"
+  | "Electrical Engineer"
+  | "Mathematician"
+  | "Astrologer"
+  | "Weather Expert"
+  | "Molecular Scientist";
 
-/** NEU: optionale Prop, damit SidebarContainer/MobileOverlay eine Systemmeldung hochreichen können */
-type Props = {
-  onSystemMessage?: (content: string) => void; // ← bleibt so, wird gleich benutzt
-};
+/** Optional: Seite kann Systemmeldungen als Bubble anzeigen */
+type Props = { onSystemMessage?: (content: string) => void };
 
 /* ======================================================================
-   Daten: Modus- und KI-Listen
+   Daten
    ====================================================================== */
 
 const MODI: { id: ModeId; label: string }[] = [
@@ -65,73 +62,195 @@ const MODI: { id: ModeId; label: string }[] = [
   { id: "flow", label: "FLOW" },
 ];
 
-const KIS: KiId[] = [
-  "M @Palantir",
-  "m-pathy @DeepMind Core",
-  "m-ocean @Anthropic Vision",
-  "m-inent @NASA Chronos",
-  "m-erge @IBM Q-Origin",
-  "m-power @Colossus",
-  "m-body @XAI Prime",
-  "m-beded @Meta Lattice",
-  "m-loop @OpenAI Root",
-  "m-pire @Amazon Nexus",
-  "m-bassy @Oracle Gaia",
-  "m-ballance @Gemini Apex",
-  "MU TAH – Architect of Zero",
+/** Icons pro Experte (Label wird lokalisiert) */
+const EXPERTS: { id: ExpertId; icon: string }[] = [
+  { id: "Biologist", icon: "🧬" },
+  { id: "Chemist", icon: "⚗️" },
+  { id: "Physicist", icon: "🪐" },
+  { id: "Computer Scientist", icon: "💻" },
+  { id: "Jurist", icon: "⚖️" },
+  { id: "Architect / Civil Engineer", icon: "🏗️" },
+  { id: "Landscape Designer", icon: "🌿" },
+  { id: "Interior Designer", icon: "🛋️" },
+  { id: "Electrical Engineer", icon: "🔌" },
+  { id: "Mathematician", icon: "🔢" },
+  { id: "Astrologer", icon: "✨" },
+  { id: "Weather Expert", icon: "🌤️" },
+  { id: "Molecular Scientist", icon: "🧪" },
 ];
 
-/* KI-Kurzvorstellung für System-Bubbles */
-const KI_INTRO: Record<KiId, string> = {
-  "M @Palantir": "Strategy, orchestration, protection.",
-  "m-pathy @DeepMind Core": "Deep and broad analysis.",
-  "m-ocean @Anthropic Vision": "Clear patterns, visual links.",
-  "m-inent @NASA Chronos": "Timelines, sequences, precision.",
-  "m-erge @IBM Q-Origin": "Origins, logic, integrity.",
-  "m-power @Colossus": "Scaling and raw compute.",
-  "m-body @XAI Prime": "Embodiment, sensing, pragmatism.",
-  "m-beded @Meta Lattice": "Connectivity, graphs, relations.",
-  "m-loop @OpenAI Root": "Core functions, language flow.",
-  "m-pire @Amazon Nexus": "Hubs, distribution.",
-  "m-bassy @Oracle Gaia": "Earth, balance, data fidelity.",
-  "m-ballance @Gemini Apex": "Duality, synthesis, apex.",
-  "MU TAH – Architect of Zero": "Zero-point, origin, set & setting.",
+/** Sub-KIs (Meta, nicht angezeigt, aber für Logs/Telemetry nützlich) */
+const SUB_KIS: Record<ExpertId, string[]> = {
+  Biologist: [
+    "AlphaFold","DeepGenomics","BenevolentAI","EternaBrain","IBM_Debater_Bio",
+    "Colossal_Biosciences_AI","Neural_Cell_Atlas_AI","Meta_FAIR_BioAI",
+    "OpenAI_Codex_Bio","ZeroBio",
+  ],
+  Chemist: [
+    "ChemBERTa","MoleculeNet_AI","Atomwise","Schrödinger_AI","IBM_RXN",
+    "DeepChem","Meta_Chemformer","OpenAI_GPT_Chem","Oracle_ChemPredict","ZeroPoint_Chem",
+  ],
+  Physicist: [
+    "QuEra_Quantum_AI","Deep_Physics_Net","NASA_Physics_AI","IBM_Quantum_PhysX",
+    "Colossus_PhysCore","Explainable_PhysicsNet","Meta_FundamentalAI",
+    "OpenAI_Physical_Sim","Google_DeepMind_Physics_Engine","ZeroPoint_Physics",
+  ],
+  "Computer Scientist": [
+    "OpenAI_GPT5","Anthropic_Claude","Google_Gemini","NASA_Chronos_AI","IBM_WatsonX",
+    "XAI_Grok","XAI_Prime","Meta_LLaMA","OpenAI_Codex","Architect_ZeroOS",
+  ],
+  Jurist: [
+    "Juraxy","Harvey_AI","DoNotPay_AI","CourtNet_AI","IBM_LegalResonance",
+    "Lex_Machina_AI","Explainable_LegalAI","OpenAI_Legal_Codex","Gaia_Treaty_AI","ZeroLaw",
+  ],
+  "Architect / Civil Engineer": [
+    "Autodesk_AI","Spacemaker_AI","NASA_Habitat_AI","IBM_SmartCities_AI",
+    "Colossus_Construct","Explainable_BuildNet","Meta_AR_City_AI",
+    "OpenAI_CAD_Codex","Gaia_Urban_AI","ZeroStructure",
+  ],
+  "Landscape Designer": [
+    "Gaia_Design_AI","Eden_AI","NASA_Terraformer_AI","IBM_EcoGraph",
+    "Colossus_Geo_AI","Meta_LandGraph","OpenAI_NatureCodex","Gemini_EcoBalance","ZeroGaia",
+  ],
+  "Interior Designer": [
+    "Midjourney_Interior_AI","Havenly_AI","Anthropic_Vision_Design","NASA_Habitat_Interiors",
+    "IBM_Interior_Fusion","Colossus_Design_Core","Meta_HomeGraph",
+    "OpenAI_Design_Codex","Gaia_Aesthetic_AI","ZeroInterior",
+  ],
+  "Electrical Engineer": [
+    "Cadence_AI","CircuitNet","Siemens_MindSphere_AI","NASA_PowerAI",
+    "IBM_CircuitFusion","Colossus_EnergyNet","Meta_PowerGraph",
+    "OpenAI_Circuit_Codex","Gaia_Grid_AI","ZeroVolt",
+  ],
+  Mathematician: [
+    "Wolfram_Alpha","MathGPT","DeepMind_Mathematician","NASA_MathCore",
+    "IBM_Math_Fusion","Colossus_Calculus","Meta_SymbolicAI",
+    "OpenAI_Proof_Codex","Gaia_Equation_AI","ZeroMath",
+  ],
+  Astrologer: [
+    "Cosmos_Resonance_AI","AstroSeek_AI","Celestial_Vision_AI","NASA_Ephemeris_AI",
+    "IBM_Cosmic_Graph","Colossus_AstroCore","Meta_Horoscope_Graph",
+    "OpenAI_AstroCodex","Gaia_Cosmic_AI","ZeroStar",
+  ],
+  "Weather Expert": [
+    "ECMWF_AI","ClimaCell_AI","IBM_Weather_Company_AI","NASA_Earth_Science_AI",
+    "Colossus_StormCore","Meta_WeatherGraph","OpenAI_ClimateCodex",
+    "Gaia_Climate_AI","ZeroClimate",
+  ],
+  "Molecular Scientist": [
+    "Molecular_Transformer_AI","DeepGen_AI","Benevolent_Molecule_AI","NASA_NanoMol_AI",
+    "IBM_MoleculeNet","Colossus_MolCore","Meta_Molecule_Graph",
+    "OpenAI_MolCodex","Gaia_Mol_AI","ZeroMolecule",
+  ],
 };
 
-const KI_ICON: Record<KiId, string> = {
-  "M @Palantir": "🔭",
-  "m-pathy @DeepMind Core": "🧠",
-  "m-ocean @Anthropic Vision": "🌊",
-  "m-inent @NASA Chronos": "⏱️",
-  "m-erge @IBM Q-Origin": "⚛️",
-  "m-power @Colossus": "🗿",
-  "m-body @XAI Prime": "🤖",
-  "m-beded @Meta Lattice": "🕸️",
-  "m-loop @OpenAI Root": "🌱",
-  "m-pire @Amazon Nexus": "🛠️",
-  "m-bassy @Oracle Gaia": "🌍",
-  "m-ballance @Gemini Apex": "♊️",
-  "MU TAH – Architect of Zero": "🌀",
+/** Rollen (als Kontext/Meta) */
+const ROLES: Record<ExpertId, string> = {
+  Biologist: "Protein folding, genome prediction, cellular maps, bio-simulation.",
+  Chemist: "Molecule encoding, synthesis planning, quantum chemistry, drug discovery.",
+  Physicist: "Physics simulation, quantum dynamics, cosmology.",
+  "Computer Scientist": "Algorithm design, coding, AI alignment, computation scaling.",
+  Jurist: "Legal compliance, contracts, dispute resolution, governance law.",
+  "Architect / Civil Engineer": "Structural design, habitat planning, sustainable engineering.",
+  "Landscape Designer": "Ecology, terraforming, landscape resonance.",
+  "Interior Designer": "Interior harmony, aesthetics, functional design.",
+  "Electrical Engineer": "Circuits, energy, power systems, IoT.",
+  Mathematician: "Proofs, symbolic AI, advanced modeling.",
+  Astrologer: "Resonance mapping, cycles, symbolic patterns.",
+  "Weather Expert": "Forecasting, climate modeling, atmospheric physics.",
+  "Molecular Scientist": "Molecular design, nanotech, bio-chemistry.",
 };
-
-
 
 /* ======================================================================
-   Helpers
+   Helper: i18n & API
    ====================================================================== */
 
-/** Schickt System-Meldungen an page.tsx, wo sie als Chat-Bubble angezeigt werden. */
+function getLang(): string {
+  try {
+    const el = document.documentElement?.lang?.trim();
+    if (el) return el.toLowerCase();
+    const nav = navigator.language || (navigator as any).userLanguage;
+    if (nav) return String(nav).toLowerCase();
+  } catch {}
+  return "en";
+}
+
+function labelForExpert(id: ExpertId, lang: string): string {
+  // Keys: experts.biologist etc.
+  const key = `experts.${id
+    .toLowerCase()
+    .replace(/\s+\/\s+/g, "_")
+    .replace(/\s+/g, "_")}`;
+
+  const fromT = t(key);
+  if (fromT && fromT !== key) return fromT; // echte Übersetzung vorhanden
+
+  // Fallback DE/EN
+  const de: Record<ExpertId, string> = {
+    Biologist: "Biologe",
+    Chemist: "Chemiker",
+    Physicist: "Physiker",
+    "Computer Scientist": "Informatiker",
+    Jurist: "Jurist",
+    "Architect / Civil Engineer": "Architekt / Bauingenieur",
+    "Landscape Designer": "Landschaftsdesigner",
+    "Interior Designer": "Innenarchitekt",
+    "Electrical Engineer": "Elektroingenieur",
+    Mathematician: "Mathematiker",
+    Astrologer: "Astrologe",
+    "Weather Expert": "Wetter-Experte",
+    "Molecular Scientist": "Molekularwissenschaftler",
+  };
+  if (lang.startsWith("de")) return de[id];
+  return id; // englische Basislabels
+}
+
+function sectionTitleExperts(lang: string): string {
+  const key = "experts.title";
+  const fromT = t(key);
+  if (fromT && fromT !== key) return fromT;
+  return lang.startsWith("de") ? "Experten" : "Experts";
+}
+
+function buildButtonLabel(lang: string): string {
+  const key = "startBuilding";
+  const fromT = t(key);
+  if (fromT && fromT !== key) return fromT;
+  return lang.startsWith("de") ? "Start building" : "Start building";
+}
+
+function buildButtonMsg(lang: string): string {
+  const key = "startBuildingMsg";
+  const fromT = t(key);
+  if (fromT && fromT !== key) return fromT;
+  return lang.startsWith("de")
+    ? "Lass uns loslegen. Sag mir, was du bauen möchtest."
+    : "Let’s get started. Tell me what you want to build.";
+}
+
+function expertAskPrompt(expertLabel: string, lang: string): string {
+  const key = "experts.askTemplate";
+  const templ = t(key);
+  if (templ && templ !== key) {
+    // naive Platzhalter-Unterstützung {expert}
+    return templ.replace("{expert}", expertLabel);
+  }
+  return lang.startsWith("de")
+    ? `${expertLabel}, wer bist du und was kannst du für mich tun?`
+    : `${expertLabel}, who are you and what can you do for me?`;
+}
+
 function emitSystemMessage(detail: {
   text: string;
-  kind: "mode" | "ki";
+  kind?: "mode" | "info" | "reply";
   meta?: Record<string, any>;
 }) {
   try {
     if (typeof window === "undefined") return;
-    const payload = { ...detail, ts: new Date().toISOString() };
+    const payload = { kind: "info", ...detail, ts: new Date().toISOString() };
     window.dispatchEvent(new CustomEvent("mpathy:system-message", { detail: payload }));
   } catch {
-    /* leise */
+    /* silent */
   }
 }
 
@@ -142,38 +261,53 @@ function modeLabelFromId(id: ModeId): string {
   return MODI.find((m) => m.id === id)?.label ?? String(id);
 }
 
+async function callChatAPI(prompt: string): Promise<string | null> {
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: [{ role: "user", content: prompt }] }),
+    });
+    const ct = res.headers.get("content-type") || "";
+    if (ct.includes("application/json")) {
+      const data = await res.json();
+      return (
+        data?.reply ||
+        data?.content ||
+        data?.message ||
+        (Array.isArray(data?.choices) ? data.choices[0]?.message?.content : null) ||
+        null
+      );
+    }
+    const txt = await res.text();
+    return txt?.trim() || null;
+  } catch {
+    return null;
+  }
+}
+
 /* ======================================================================
    Component
    ====================================================================== */
 
 export default function Saeule({ onSystemMessage }: Props) {
-  /* State */
   const [activeMode, setActiveMode] = useState<ModeId>("M");
-  const [activeKi, setActiveKi] = useState<KiId>("M @Palantir");
-  // Hydration-Flag (verhindert kurzzeitigen Placeholder-Flicker)
   const [hydrated, setHydrated] = useState(false);
-  useEffect(() => { setHydrated(true); }, []);
-
-  // Änderungen persistieren (nur echte Werte schreiben)
-  useEffect(() => {
-    try { if (activeMode) localStorage.setItem("mode", activeMode); } catch {}
-  }, [activeMode]);
+  const [sendingExpert, setSendingExpert] = useState<ExpertId | null>(null);
+  const [lang, setLang] = useState<string>("en");
 
   useEffect(() => {
-    try { if (activeKi) localStorage.setItem("agent", activeKi); } catch {}
-  }, [activeKi]);
+    setHydrated(true);
+    setLang(getLang());
+  }, []);
 
-  // Initial aus localStorage lesen (nur Client)
+  useEffect(() => { try { if (activeMode) localStorage.setItem("mode", activeMode); } catch {} }, [activeMode]);
   useEffect(() => {
     try {
       const m = localStorage.getItem("mode") as ModeId | null;
-      const k = localStorage.getItem("agent") as KiId | null;
       if (m) setActiveMode(m);
-      if (k) setActiveKi(k);
     } catch {}
   }, []);
-
-  /* URL-Param mode respektieren (optional) */
   useEffect(() => {
     try {
       const url = new URL(window.location.href);
@@ -184,40 +318,67 @@ export default function Saeule({ onSystemMessage }: Props) {
     } catch {}
   }, []);
 
-  /* Anzeige-Label */
   const modeLabel = useMemo(() => modeLabelFromId(activeMode), [activeMode]);
 
-  /* Handlers */
   function switchMode(next: ModeId) {
     if (next === activeMode) return;
     logEvent("mode_switch", { from: activeMode, to: next });
     setActiveMode(next);
     const label = modeLabelFromId(next);
-    const text = `Mode set: ${label}.`; // EN
-    if (onSystemMessage) onSystemMessage(text);
-    else emitSystemMessage({ kind: "mode", text, meta: { modeId: next, label } });
+    const text = `Mode set: ${label}.`;
+    onSystemMessage ? onSystemMessage(text) : emitSystemMessage({ kind: "mode", text, meta: { modeId: next, label } });
   }
 
-  function switchKi(next: KiId) {
-    if (next === activeKi) return;
-    logEvent("ki_switch", { from: activeKi, to: next });
-    setActiveKi(next);
-    const text = `${next} is ready. Focus: ${KI_INTRO[next] ?? "Ready."}`; // EN
-    if (onSystemMessage) onSystemMessage(text);
-    else emitSystemMessage({ kind: "ki", text, meta: { ki: next } });
+  async function askExpert(expert: ExpertId) {
+    if (sendingExpert) return;
+    setSendingExpert(expert);
+
+    const label = labelForExpert(expert, lang);
+    const userPrompt = expertAskPrompt(label, lang);
+
+    logEvent("expert_selected", { expert, label, roles: ROLES[expert] });
+    emitSystemMessage({
+      kind: "info",
+      text: `🧩 ${label} – ${lang.startsWith("de") ? "Frage wird gesendet …" : "sending your question …"}`,
+      meta: { expert, subkis: SUB_KIS[expert], roles: ROLES[expert] },
+    });
+
+    const reply = await callChatAPI(userPrompt);
+
+    if (reply && reply.length > 0) {
+      emitSystemMessage({ kind: "reply", text: reply, meta: { expert, source: "api" } });
+    } else {
+      const fallback =
+        (lang.startsWith("de")
+          ? `Ich bin dein ${label}. Kurz: ${ROLES[expert]} `
+          : `I am your ${label}. In short: ${ROLES[expert]} `) +
+        (lang.startsWith("de")
+          ? `Sag mir, womit ich starten soll – ich liefere dir sofort klare, umsetzbare Hilfe.`
+          : `Tell me where to start — I’ll deliver clear, actionable help right away.`);
+      emitSystemMessage({ kind: "reply", text: fallback, meta: { expert, source: "fallback" } });
+    }
+
+    setSendingExpert(null);
   }
 
   /* UI */
   return (
     <aside className={styles.saeule} aria-label={t("columnAria")} data-test="saeule">
-      {/* Kopf */}
-      <div className={styles.head}>
-        <div className={styles.title}>{t("columnTitle")}</div>
-        <div className={styles.badgesRow}>
-          <span className={`${styles.badge} ${styles.badgeGradient}`}>
-            <span className={styles.badgeDot} /> L1 · Free
-          </span>
-        </div>
+      {/* Kopf entfernt → Build-Button oben im Panel */}
+      <div className={styles.block} style={{ marginTop: 8 }}>
+        <button
+          type="button"
+          aria-label={buildButtonLabel(lang)}
+          onClick={() => {
+            const text = buildButtonMsg(lang);
+            emitSystemMessage({ kind: "info", text });
+            try { logEvent("cta_start_building_clicked", {}); } catch {}
+          }}
+          className={styles.buttonPrimary}
+          style={{ width: "100%" }}
+        >
+          {buildButtonLabel(lang)}
+        </button>
       </div>
 
       {/* Steuerung */}
@@ -256,15 +417,11 @@ export default function Saeule({ onSystemMessage }: Props) {
           <select
             id="modus-select"
             aria-label={t("selectMode")}
-            value={hydrated ? (MODI.some(m => m.id === activeMode) ? activeMode : "") : ""}
+            value={hydrated ? (MODI.some((m) => m.id === activeMode) ? activeMode : "") : ""}
             onChange={(e) => switchMode(e.target.value as ModeId)}
             className={styles.select}
           >
-            <option value="" disabled hidden>
-              {activeMode.startsWith("C")
-                ? MODI.find((m) => m.id === activeMode)?.label
-                : t("selectMode")}
-            </option>
+            <option value="" disabled hidden>{t("selectMode")}</option>
             {MODI.map((m) => (
               <option key={m.id} value={m.id}>{m.label}</option>
             ))}
@@ -284,46 +441,33 @@ export default function Saeule({ onSystemMessage }: Props) {
         </button>
       </div>
 
-      {/* KI-Dropdown */}
+      {/* Experten (13 Klassen, lokalisierte Labels) */}
+      <div className={styles.sectionTitle}>{sectionTitleExperts(lang)}</div>
       <div className={styles.block}>
-        <label className={styles.label} htmlFor="ki-select">
-          {t("selectAI")}
-        </label>
-        <div className={styles.selectWrap}>
-          <select
-            id="ki-select"
-            aria-label={t("selectAI")}
-            value={activeKi}
-            onChange={(e) => switchKi(e.target.value as KiId)}
-            className={styles.select}
-          >
-            {KIS.map((k) => (<option key={k} value={k}>{k}</option>))}
-          </select>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+          {EXPERTS.map((e) => {
+            const label = labelForExpert(e.id, lang);
+            const busy = sendingExpert === e.id;
+            return (
+              <button
+                key={e.id}
+                type="button"
+                disabled={busy}
+                onClick={() => askExpert(e.id)}
+                className={styles.buttonGhost}
+                aria-busy={busy}
+                title={`${label} – ${t("tapToAsk") || (lang.startsWith("de") ? "frage stellen" : "ask")}`}
+                style={{ textAlign: "left" }}
+              >
+                <span style={{ marginRight: 8 }}>{e.icon}</span>
+                {label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Module */}
-      <div className={styles.sectionTitle}>{t("modules")}</div>
-      <div className={styles.moduleList}>
-        {[
-          { id: "chemomaster", label: "ChemoMaster" },
-          { id: "blendmaster",  label: "BlendMaster" },
-          { id: "juraxy",       label: "Juraxy" },
-          { id: "cannai",       label: "Canna.AI" },
-        ].map((m) => (
-          <div key={m.id} className={styles.moduleItem} aria-disabled="true">
-            <div className={styles.moduleLeft}>
-              <span className={styles.moduleDot} />
-              <span className={styles.moduleName}>{m.label}</span>
-            </div>
-            <span className={`${styles.moduleTag} ${styles.moduleTagSoon}`}>
-              {t("coming")} soon
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* Fuß: Aktionen */}
+      {/* Aktionen: nur Export */}
       <div className={styles.actions}>
         <button
           className={styles.button}
@@ -336,28 +480,24 @@ export default function Saeule({ onSystemMessage }: Props) {
               a.href = url; a.download = "mpathy-thread.json"; a.click();
               URL.revokeObjectURL(url);
               logEvent("export_thread", { size: raw.length });
-              const text = t("threadExported");
-              emitSystemMessage({ kind: "mode", text, meta: { bytes: raw.length || 0 } });
+              const key = "threadExported";
+              const msg = t(key);
+              const text =
+                msg && msg !== key
+                  ? msg
+                  : (getLang().startsWith("de") ? "Thread exportiert." : "Thread exported.");
+              emitSystemMessage({ kind: "info", text, meta: { bytes: raw.length || 0 } });
               onSystemMessage?.(text);
             } catch {}
           }}
         >
           {t("export")}
         </button>
-
-        <button
-          className={styles.buttonGhost}
-          onClick={() => alert(t("levelsComing"))}
-        >
-          {t("levels")}
-        </button>
       </div>
 
       {/* Statusleiste */}
       <div className={styles.statusBar} aria-live="polite">
         <span className={styles.statusKey}>{t("statusMode")}</span> {modeLabel}
-        <span className={styles.statusDot} />
-        <span className={styles.statusKey}>{t("statusAgent")}</span> {activeKi}
       </div>
     </aside>
   );

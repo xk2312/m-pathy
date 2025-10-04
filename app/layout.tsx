@@ -6,7 +6,6 @@ import React from "react";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import Providers from "./providers";
-import TopCTA from "./components/TopCTA";
 import LangAttrUpdater from "./components/LangAttrUpdater";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
@@ -34,7 +33,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
         style={{ overscrollBehaviorY: "none", WebkitTapHighlightColor: "transparent" }}
       >
         <LangAttrUpdater />
-        <TopCTA />
         <Providers>{children}</Providers>
 
         {/* Portal-Container für Overlays/Toasts */}
@@ -54,4 +52,4 @@ export default function RootLayout({ children }: RootLayoutProps) {
       </body>
     </html>
   );
-} 
+}
