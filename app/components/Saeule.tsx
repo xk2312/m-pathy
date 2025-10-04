@@ -211,6 +211,12 @@ function sectionTitleExperts(lang: string): string {
   if (fromT && fromT !== key) return fromT;
   return lang.startsWith("de") ? "Experten" : "Experts";
 }
+function chooseExpertLabel(lang: string): string {
+  const key = "experts.choose";
+  const fromT = t(key);
+  if (fromT && fromT !== key) return fromT;
+  return lang.startsWith("de") ? "Wähle Experten" : "Choose expert";
+}
 
 function buildButtonLabel(lang: string): string {
   const key = "startBuilding";
@@ -294,7 +300,9 @@ export default function Saeule({ onSystemMessage }: Props) {
   const [activeMode, setActiveMode] = useState<ModeId>("M");
   const [hydrated, setHydrated] = useState(false);
   const [sendingExpert, setSendingExpert] = useState<ExpertId | null>(null);
+  const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null); // ← neu
   const [lang, setLang] = useState<string>("en");
+
 
   useEffect(() => {
     setHydrated(true);
@@ -430,42 +438,46 @@ export default function Saeule({ onSystemMessage }: Props) {
       </div>
 
       {/* Council13 */}
-      <div className={styles.block}>
-        <button
-          type="button"
-          aria-pressed={activeMode === "council"}
-          className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
-          onClick={() => switchMode("council")}
-        >
-          {t("council13")}
-        </button>
-      </div>
+<div className={styles.block}>
+  <button
+    type="button"
+    aria-pressed={activeMode === "council"}
+    className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
+    onClick={() => switchMode("council")}
+    style={{ width: "100%", cursor: "pointer" }}
+  >
+    {t("council13")}
+  </button>
+</div>
 
-      {/* Experten (13 Klassen, lokalisierte Labels) */}
-      <div className={styles.sectionTitle}>{sectionTitleExperts(lang)}</div>
-      <div className={styles.block}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-          {EXPERTS.map((e) => {
-            const label = labelForExpert(e.id, lang);
-            const busy = sendingExpert === e.id;
-            return (
-              <button
-                key={e.id}
-                type="button"
-                disabled={busy}
-                onClick={() => askExpert(e.id)}
-                className={styles.buttonGhost}
-                aria-busy={busy}
-                title={`${label} – ${t("tapToAsk") || (lang.startsWith("de") ? "frage stellen" : "ask")}`}
-                style={{ textAlign: "left" }}
-              >
-                <span style={{ marginRight: 8 }}>{e.icon}</span>
-                {label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+
+        {/* Experten (Dropdown) */}
+<div className={styles.sectionTitle}>{sectionTitleExperts(lang)}</div>
+<div className={styles.block}>
+  <label className={styles.label} htmlFor="expert-select">
+    {chooseExpertLabel(lang)}
+  </label>
+  <div className={styles.selectWrap}>
+    <select
+      id="expert-select"
+      className={styles.select}
+      aria-label={chooseExpertLabel(lang)}
+      defaultValue=""
+      onChange={(e) => {
+        const val = e.target.value as unknown as ExpertId;
+        if (val) { void askExpert(val); }
+      }}
+    >
+      <option value="" disabled hidden>{chooseExpertLabel(lang)}</option>
+      {EXPERTS.map((e) => (
+        <option key={e.id} value={e.id}>
+          {e.icon} {labelForExpert(e.id, lang)}
+        </option>
+      ))}
+    </select>
+  </div>
+</div>
+
 
       {/* Aktionen: nur Export */}
       <div className={styles.actions}>

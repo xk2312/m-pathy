@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Chat-typografische Erweiterung (für .md-prose) */
+@import "./chat-prose.css";
+
 /* ── Base Reset ───────────────────────────────────────────── */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -59,6 +62,9 @@ canvas { display: block; }
 @media (prefers-reduced-motion: reduce){
   .btn, .btn::before, .crystal, .isExiting { transition:none !important; animation:none !important; }
 }
+@media (prefers-reduced-motion: reduce){
+  * { animation: none !important; transition: none !important; transform: none !important; }
+}
 
 /* ── Chat-Farben (wie bei dir) ───────────────────────────── */
 .message { color: #fff; }
@@ -80,6 +86,27 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
   --z-base: 1;
   --z-overlay: 60;
   --z-fab: 70;
+    /* === Galaxy Design Tokens === */
+  --color-bg: #0a0f14;
+  --color-fg: #e6f7ff;
+
+  /* Radii */
+  --rz-sm: 10px;
+  --rz-lg: 20px;
+  --rz-2xl: 24px;
+
+  /* Shadows & Glow */
+  --sh-sm: 0 2px 8px rgba(0,255,255,0.10);
+  --sh-md: 0 6px 24px rgba(0,255,255,0.12);
+  --sh-lg: 0 12px 40px rgba(0,255,255,0.15);
+  --glow: 0 0 0 1px rgba(0,255,255,0.25), 0 0 18px rgba(0,255,255,0.18);
+
+  /* Timings & Easing */
+  --t-fast: 90ms;
+  --t-mid: 120ms;
+  --t-slow: 200ms;
+  --ease: cubic-bezier(.2,.6,.2,1);
+
 }
 
 /* ======================================================================
@@ -132,6 +159,7 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
 /* Links (optional) */
 .markdown a { text-decoration: underline; color: inherit; }
+
 /* === MOBILE SCOPE ===================================================== */
 @media (max-width: 768px), (pointer: coarse) {
   :root {
@@ -188,4 +216,15 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 /* Desktop: Plus-Button ausblenden */
 @media (min-width: 769px) and (pointer: fine) {
   .mi-plus-btn { display: none !important; }
+}
+/* === A11y Focus Enhancements =========================================== */
+:focus-visible {
+  outline: 2px solid rgba(34,211,238,0.55);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
 }

@@ -324,11 +324,12 @@ function Bubble({
 
       return (
         <div
-          role="listitem"
-          aria-label={isUser ? t("youSaid") : t("assistantSays")}
-          style={{
-            display: "flex",
-            justifyContent: isUser ? "flex-end" : "flex-start",
+          role="group"                    // group statt listitem → Screenreader-Gruppe
+  aria-roledescription={isUser ? "user message" : "assistant message"}
+  aria-label={isUser ? t("youSaid") : t("assistantSays")}
+  style={{
+    display: "flex",
+    justifyContent: isUser ? "flex-end" : "flex-start",
             alignItems: "flex-start",
             gap: 10,
             margin: "6px 0",
@@ -815,6 +816,7 @@ return (
     zIndex: 50,
     background: bg0,
 
+    
     // ⬇ kompakter & Safe-Area über unsere Var
     padding: "10px 10px calc(10px + var(--safe-bottom))",
     marginTop: 6,
@@ -839,10 +841,94 @@ return (
     maxRows={isMobile ? 6 : 10}
   />
 </div>
+  <MessageInput
+    onSend={onSendFromPrompt}
+    disabled={loading}
+    placeholder={t('writeMessage')}
+    minRows={isMobile ? 1 : 3}
+    maxRows={isMobile ? 6 : 10}
+  />
+
+  {/* Status-Footer (rein visuell, keine Logik) */}
+  <div
+    aria-label="Statusleiste"
+    style={{
+      marginTop: 8,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: 12,
+      padding: "8px 10px",
+      borderRadius: 12,
+      background: "rgba(8,14,18,0.60)",
+      border: `1px solid ${
+        activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"
+      }`,
+      color: activeTokens.color.text,
+      fontSize: 12,
+    }}
+  >
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+      <span
+        style={{
+          width: 6,
+          height: 6,
+          borderRadius: 999,
+          background: "#0ff",
+          boxShadow: "0 0 8px rgba(0,255,255,.8)",
+        }}
+      />
+      Modus:&nbsp;<strong>COUNCIL13</strong>
+      <em style={{ opacity: 0.8, fontStyle: "normal" }}> (Default)</em>
+    </span>
+
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+      <span
+        style={{
+          width: 6,
+          height: 6,
+          borderRadius: 999,
+          background: "#0ff",
+          boxShadow: "0 0 8px rgba(0,255,255,.8)",
+        }}
+      />
+      Aktueller Experte:&nbsp;<strong>—</strong>
+    </span>
+  </div>
+</div>
+
+  {/* Status-Footer (rein visuell, keine Logik) */}
+  <div
+    aria-label="Status"
+    style={{
+      marginTop: 8,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: 12,
+      padding: "8px 10px",
+      borderRadius: 12,
+      background: "rgba(8,14,18,0.60)",
+      border: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
+      color: activeTokens.color.text,
+      fontSize: 12,
+    }}
+  >
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+      <span style={{ width: 6, height: 6, borderRadius: 999, background: "#0ff", boxShadow: "0 0 8px rgba(0,255,255,.8)" }} />
+      Modus: <strong>COUNCIL13</strong> <em style={{ opacity:.85, fontStyle:"normal" }}>(Default)</em>
+    </span>
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+      <span style={{ width: 6, height: 6, borderRadius: 999, background: "#0ff", boxShadow: "0 0 8px rgba(0,255,255,.8)" }} />
+      Aktueller Experte: <strong>—</strong>
+    </span>
+  </div>
+</div>
+
 
         </div>
-      </div>
-    </div>
+      
+    
 
     {/* Mobile Overlay / Onboarding unverändert darunter */}
     {isMobile && (

@@ -3,25 +3,122 @@
    ───────────────────────────── */
 .saeule {
   position: sticky;
-  top: var(--header-offset, 16px);   /* sitzt unter dem Header */
+  top: var(--header-offset, 16px);
   margin-top: var(--header-offset, 16px);
 
   align-self: start;
-  height: max-content;               /* Größe nach Inhalt */
-  max-height: none;                  /* KEINE eigene Scrollhöhe mehr */
-  overflow: visible;                 /* KEINE eigene Scrollbar */
+  height: max-content;
+  max-height: none;
+  overflow: visible;
 
-  /* Look wie gehabt */
-  color: #e6f0f3;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 14px;
+  /* Galaxy Premium Glass (Tokens) */
+  color: var(--color-fg);
+  background: linear-gradient(180deg, rgba(12,24,32,0.72), rgba(10,18,26,0.68));
+  border: 1px solid rgba(0,255,255,0.10);
+  border-radius: var(--rz-lg);
   padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--sh-sm);
+  z-index: var(--z-base);
 }
+
+/* === Elevation tiers (Tokens) === */
+.elev-0 { box-shadow: none; }
+.elev-1 { box-shadow: var(--sh-sm); }
+.elev-2 { box-shadow: var(--sh-md); }
+
+/* === Expert Grid (responsive) === */
+.expertGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 720px) {
+  .expertGrid { grid-template-columns: 1fr 1fr; gap: 14px; }
+}
+@media (min-width: 1120px) {
+  .expertGrid { grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+}
+
+/* === Expert Button (pointer, hover/active, focus) === */
+.expertBtn {
+  display: flex; align-items: center; gap: 10px;
+  min-height: 44px;
+  border-radius: var(--rz-lg);
+  background: rgba(12,24,32,0.72);
+  border: 1px solid rgba(0,255,255,0.08);
+  box-shadow: var(--sh-sm);
+  transition: transform var(--t-mid) var(--ease),
+              box-shadow var(--t-mid) var(--ease),
+              background var(--t-mid) var(--ease);
+  cursor: pointer; pointer-events: auto;
+}
+.expertBtn:hover {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: var(--sh-md);
+  background: rgba(14,32,42,0.80);
+}
+.expertBtn:active {
+  transform: translateY(0) scale(0.985);
+  box-shadow: var(--sh-sm);
+}
+.expertBtn:focus-visible {
+  outline: none;
+  box-shadow: var(--glow), var(--sh-md);
+}
+.expertBtn .icon {
+  width: 20px; height: 20px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 20px;
+}
+
+/* === Mode Buttons (visuell; inkl. Default-Ring für COUNCIL13) === */
+.modeBtn {
+  border-radius: var(--rz-2xl);
+  background: rgba(10,18,26,0.6);
+  border: 1px solid rgba(0,255,255,0.08);
+  transition: background var(--t-mid) var(--ease), box-shadow var(--t-mid) var(--ease);
+  cursor: pointer; pointer-events: auto;
+}
+.modeBtn--active {
+  background: linear-gradient(180deg, rgba(14,47,58,0.95), rgba(10,30,38,0.90));
+  box-shadow: var(--glow);
+  border: 1px solid rgba(0,255,255,0.22);
+}
+.modeBtn--default { /* Council13 Default Visual */
+  box-shadow: 0 0 0 2px rgba(0,255,255,0.35), 0 0 30px rgba(0,255,255,0.18);
+}
+/* Optionaler “DEFAULT”-Chip (Positionierung am Buttonrand, rein visuell) */
+.modeDefaultChip {
+  position: absolute; top: -6px; right: -6px;
+  padding: 2px 6px; border-radius: var(--rz-round);
+  background: rgba(0,255,255,0.14);
+  border: 1px solid rgba(0,255,255,0.28);
+  color: var(--color-fg);
+  font-size: 10px; font-weight: 700; letter-spacing: .02em;
+  box-shadow: var(--sh-sm);
+  pointer-events: none;
+}
+
+/* === “SelectShell” (nur Visuals für Dropdown) === */
+.selectShell {
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 10px 12px;
+  border-radius: var(--rz-lg);
+  background: rgba(12,24,32,0.72);
+  border: 1px solid rgba(0,255,255,0.10);
+  box-shadow: var(--sh-sm);
+  transition: background var(--t-mid) var(--ease), box-shadow var(--t-mid) var(--ease), transform var(--t-mid) var(--ease);
+  cursor: pointer;
+}
+.selectShell:hover { background: rgba(14,32,42,0.80); box-shadow: var(--sh-md); transform: translateY(-1px); }
+.selectShell:focus-visible { outline: none; box-shadow: var(--glow), var(--sh-md); }
+.selectShell .label { opacity: .9; }
+.selectShell .chev { width: 16px; height: 16px; opacity: .65; }
 
 
 /* ─────────────────────────────────────────
@@ -106,6 +203,10 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 8px;
+}
+/* Expert-Grid Fallback auf Mobile — bleibt 1 Spalte, siehe oben Breakpoints */
+@media (max-width: 719px) {
+  .expertGrid { grid-template-columns: 1fr; gap: 12px; }
 }
 
 .moduleItem {
@@ -209,15 +310,20 @@
 }
 
 /* Fokus sichtbar (A11y) */
+/* Unified Focus-Ring (OLED-optimiert, Tokens) */
 .button:focus-visible,
 .buttonGhost:focus-visible,
 .buttonPrimary:focus-visible,
 .buttonGhostPrimary:focus-visible,
 .buttonSolid:focus-visible,
-.select:focus-visible {
+.select:focus-visible,
+.selectShell:focus-visible,
+.modeBtn:focus-visible,
+.expertBtn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px #93c5fd, 0 0 0 5px rgba(147,197,253,.25);
+  box-shadow: var(--glow), var(--sh-md);
 }
+
 
 /* ─────────────────────────────────────────
    Dropdowns / Select

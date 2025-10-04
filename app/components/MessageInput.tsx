@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { t } from "@/lib/i18n";
 
 /**
@@ -31,22 +31,27 @@ export default function MessageInput({
   const [isComposing, setIsComposing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const taRef = useRef<HTMLTextAreaElement | null>(null);
-  /* 5.3 — Plus-Menü State (nur Mobile sichtbar) */
-const [toolsOpen, setToolsOpen] = useState(false);
-const toolsRef = useRef<HTMLDivElement | null>(null);
+  const overlayRef = useRef<HTMLDivElement | null>(null); // ← Fokus-/Drag-Glow-Layer
 
-/* 5.3 — Click-Outside schließt das Menü */
-useEffect(() => {
-  function onDocClick(e: MouseEvent) {
-    if (!toolsOpen) return;
-    const target = e.target as HTMLElement | null;
-    if (target && toolsRef.current && !toolsRef.current.contains(target)) {
-      setToolsOpen(false);
+  // A11y: ID für die Shortcuts-/Hinweiszeile (wird per aria-describedby verdrahtet)
+  const hintId = useMemo(() => `mi-hints-${Math.random().toString(36).slice(2, 8)}`, []);
+
+  /* 5.3 — Plus-Menü State (nur Mobile sichtbar) */
+  const [toolsOpen, setToolsOpen] = useState(false);
+  const toolsRef = useRef<HTMLDivElement | null>(null);
+
+  /* 5.3 — Click-Outside schließt das Menü */
+  useEffect(() => {
+    function onDocClick(e: MouseEvent) {
+      if (!toolsOpen) return;
+      const target = e.target as HTMLElement | null;
+      if (target && toolsRef.current && !toolsRef.current.contains(target)) {
+        setToolsOpen(false);
+      }
     }
-  }
-  document.addEventListener("mousedown", onDocClick);
-  return () => document.removeEventListener("mousedown", onDocClick);
-}, [toolsOpen]);
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, [toolsOpen]);
 
   // ---- helpers -------------------------------------------------------------
 
@@ -139,11 +144,16 @@ useEffect(() => {
   }, []);
 
   const onDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-  e.preventDefault();
-  setIsDragging(false);
-  // bewusst keine Aktion: nur Tooltip-Icons, Funktionen folgen später
-}, []);
+    e.preventDefault();
+    setIsDragging(false);
+    // bewusst keine Aktion: nur Tooltip-Icons, Funktionen folgen später
+  }, []);
 
+  // Visueller Drag-Glow am Container-Overlay
+  useEffect(() => {
+    if (!overlayRef.current) return;
+    overlayRef.current.style.boxShadow = isDragging ? 'var(--glow)' : 'none';
+  }, [isDragging]);
 
   // ---- render --------------------------------------------------------------
 
@@ -167,66 +177,83 @@ useEffect(() => {
         alignItems: 'stretch',
         flexWrap: 'wrap',
         padding: 12,
-        borderRadius: radius,
-        border: '1px solid rgba(255,255,255,0.12)',
-        background: isDragging ? 'rgba(34,211,238,0.10)' : 'rgba(255,255,255,0.06)',
-        boxShadow: '0 14px 40px rgba(0,0,0,0.35), 0 0 28px rgba(34,211,238,0.12)',
+        borderRadius: 16, /* harmoniert mit --rz-lg */
+        border: '1px solid rgba(0,255,255,0.10)',
+        background: isDragging
+          ? 'rgba(0,255,255,0.10)'
+          : 'linear-gradient(180deg, rgba(12,24,32,0.72), rgba(10,18,26,0.68))',
+        boxShadow: 'var(--sh-sm)',
         backdropFilter: 'blur(12px)',
-        transition: 'background .15s ease, transform .12s ease',
+        WebkitBackdropFilter: 'blur(12px)',
+        transition: 'background var(--t-mid) var(--ease), box-shadow var(--t-mid) var(--ease), transform var(--t-fast) var(--ease)',
+        willChange: 'transform, box-shadow, background',
+        cursor: 'text',
       }}
     >
-  
+      {/* Fokus-/Drag-Overlay (rein visuell, kein Hit-Test) */}
+      <div
+        ref={overlayRef}
+        aria-hidden
+        style={{
+          position: 'absolute',
+          inset: -1,              // 1px überlappend für sauberen Rand
+          borderRadius: 16,
+          pointerEvents: 'none',
+          boxShadow: 'none',
+          transition: 'box-shadow var(--t-mid) var(--ease)'
+        }}
+      />
 
       {/* Textbereich (mittig, groß & mehrzeilig) */}
       <div style={{ flex: '1 1 480px', minWidth: 240 }}>
-          {/* Plus-Menü (nur mobil sichtbar; Desktop wird via CSS ausgeblendet) */}
-  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-    <button
-      type="button"
-      aria-label="Werkzeuge"
-      aria-expanded={toolsOpen}
-      aria-controls="mi-tools-popover"
-      onClick={() => setToolsOpen(v => !v)}
-      className="mi-plus-btn"
-      style={{
-        minWidth: 40, minHeight: 40,
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        borderRadius: 12, border: '1px solid rgba(255,255,255,0.12)',
-        background: 'rgba(255,255,255,0.06)', color: 'rgba(230,240,243,0.95)',
-        fontWeight: 800, fontSize: 18, lineHeight: 1
-      }}
-    >
-      +
-    </button>
-    {toolsOpen && (
-  <div
-    id="mi-tools-popover"
-    ref={toolsRef}
-    role="menu"
-    aria-label="Werkzeuge"
-    style={{
-      position: 'absolute',
-      left: 12,
-      bottom: 'calc(100% + 8px)',   // über der Inputbar
-      width: 'min(92vw, 360px)',
-      background: 'rgba(12,20,36,0.96)',
-      border: '1px solid rgba(255,255,255,0.14)',
-      borderRadius: 12,
-      padding: 8,
-      boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
-      backdropFilter: 'blur(10px)',
-      zIndex: 5,
-    }}
-  >
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
-      <button role="menuitem" type="button" className="mi-tool">📎 {t('comingUpload') ?? 'Upload'}</button>
-      <button role="menuitem" type="button" className="mi-tool">🎙️ {t('comingVoice') ?? 'Voice'}</button>
-      <button role="menuitem" type="button" className="mi-tool">⚙️ {t('comingFunctions') ?? 'Optionen'}</button>
-    </div>
-  </div>
-)}
-
-  </div>
+        {/* Plus-Menü (nur mobil sichtbar; Desktop wird via CSS ausgeblendet) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <button
+            type="button"
+            aria-label="Werkzeuge"
+            aria-expanded={toolsOpen}
+            aria-controls="mi-tools-popover"
+            onClick={() => setToolsOpen(v => !v)}
+            className="mi-plus-btn"
+            style={{
+              minWidth: 40, minHeight: 40,
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              borderRadius: 12, border: '1px solid rgba(255,255,255,0.12)',
+              background: 'rgba(255,255,255,0.06)', color: 'rgba(230,240,243,0.95)',
+              fontWeight: 800, fontSize: 18, lineHeight: 1
+            }}
+          >
+            +
+          </button>
+          {toolsOpen && (
+            <div
+              id="mi-tools-popover"
+              ref={toolsRef}
+              role="menu"
+              aria-label="Werkzeuge"
+              style={{
+                position: 'absolute',
+                left: 12,
+                bottom: 'calc(100% + 8px)',   // über der Inputbar
+                width: 'min(92vw, 360px)',
+                background: 'rgba(12,20,36,0.96)',
+                border: '1px solid rgba(255,255,255,0.14)',
+                borderRadius: 12,
+                padding: 8,
+                boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
+                backdropFilter: 'blur(10px)',
+                zIndex: 5,
+              }}
+            >
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+                {/* Platzhalter: nicht fokusierbar */}
+                <button role="menuitem" type="button" className="mi-tool" tabIndex={-1} aria-hidden="true">📎 {t('comingUpload') ?? 'Upload'}</button>
+                <button role="menuitem" type="button" className="mi-tool" tabIndex={-1} aria-hidden="true">🎙️ {t('comingVoice') ?? 'Voice'}</button>
+                <button role="menuitem" type="button" className="mi-tool" tabIndex={-1} aria-hidden="true">⚙️ {t('comingFunctions') ?? 'Optionen'}</button>
+              </div>
+            </div>
+          )}
+        </div>
 
         <textarea
           ref={taRef}
@@ -241,7 +268,18 @@ useEffect(() => {
           className="m-inputbar__textarea"
           aria-label={t('writeMessage')}
           aria-multiline
+          aria-describedby={hintId}
           enterKeyHint="send"
+          onFocus={(e) => {
+            e.currentTarget.style.boxShadow = 'var(--glow)';
+            e.currentTarget.style.background = 'linear-gradient(180deg, rgba(10,18,26,0.55), rgba(8,14,20,0.55))';
+            if (overlayRef.current) overlayRef.current.style.boxShadow = 'var(--glow)';
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.05)';
+            e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+            if (overlayRef.current) overlayRef.current.style.boxShadow = 'none';
+          }}
           style={{
             width: '100%',
             display: 'block',
@@ -249,17 +287,20 @@ useEffect(() => {
             lineHeight: bigLine,
             color: 'rgba(230,240,243,1)',
             background: 'rgba(255,255,255,0.04)',
-            borderRadius: radius,
-            border: '1px solid rgba(255,255,255,0.12)',
+            borderRadius: 16,
+            border: '1px solid rgba(0,255,255,0.12)',
             outline: 'none',
             padding: '14px 16px',
             resize: 'none',
             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
+            transition: 'box-shadow var(--t-mid) var(--ease), background var(--t-mid) var(--ease)',
           }}
         />
+
         {/* Hint-Zeile (zugänglich, dezent) */}
         <div
-          aria-hidden
+          id={hintId}
+          role="note"
           style={{
             marginTop: 6,
             fontSize: 12,
@@ -278,84 +319,59 @@ useEffect(() => {
       </div>
 
       {/* Actions rechts: Icons oben, Senden darunter */}
-<div
-  className="m-inputbar__actionsRight"
-  style={{
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    gap: 8,
-    flex: '0 0 220px',       // Platz für Icons + breiten Send-Button
-  }}
->
-  {/* Icon-Zeile */}
-  <div
-    role="toolbar"
-    aria-label={t('tools')}
-    style={{ display: 'flex', gap: 8 }}
-  >
-    <button
-  type="button"
-  title={t('comingUpload') ?? 'Coming soon: Upload'}
-  aria-label={t('comingUpload') ?? 'Coming soon: Upload'}
-  style={toolBtnStyle}
-  onClick={(e) => e.preventDefault()}
->
-  📎
-</button>
+      <div
+        className="m-inputbar__actionsRight"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+          gap: 8,
+          flex: '0 0 220px',       // Platz für Icons + breiten Send-Button
+        }}
+      >
+        {/* Icon-Zeile (Platzhalter → nicht fokusierbar) */}
+        <div
+          role="toolbar"
+          aria-label={t('tools')}
+          style={{ display: 'flex', gap: 8 }}
+        >
+          <button type="button" title={t('comingUpload') ?? 'Coming soon: Upload'} aria-label={t('comingUpload') ?? 'Coming soon: Upload'} style={toolBtnStyle} onClick={(e) => e.preventDefault()} tabIndex={-1} aria-disabled="true">📎</button>
+          <button type="button" title={t('comingFunctions') ?? 'Coming soon: Functions'} aria-label={t('comingFunctions') ?? 'Coming soon: Functions'} style={toolBtnStyle} onClick={(e) => e.preventDefault()} tabIndex={-1} aria-disabled="true">⚙️</button>
+          <button type="button" title={t('comingVoice') ?? 'Coming soon: Voice'} aria-label={t('comingVoice') ?? 'Coming soon: Voice'} style={toolBtnStyle} onClick={(e) => e.preventDefault()} tabIndex={-1} aria-disabled="true">🎙️</button>
+        </div>
 
-<button
-  type="button"
-  title={t('comingFunctions') ?? 'Coming soon: Functions'}
-  aria-label={t('comingFunctions') ?? 'Coming soon: Functions'}
-  style={toolBtnStyle}
-  onClick={(e) => e.preventDefault()}
->
-  ⚙️
-</button>
-
-<button
-  type="button"
-  title={t('comingVoice') ?? 'Coming soon: Voice'}
-  aria-label={t('comingVoice') ?? 'Coming soon: Voice'}
-  style={toolBtnStyle}
-  onClick={(e) => e.preventDefault()}
->
-  🎙️
-</button>
-
-  </div>
-
-  {/* Senden (breit) */}
-  <button
-    type="button"
-    onClick={() => void handleSend()}
-    disabled={disabled || value.trim().length === 0}
-    aria-label={t('send')}
-    title={`${t('send')} (Enter)`}
-    style={{
-      width: '100%',          // breit unter den Icons
-      height: 52,
-      padding: '0 24px',
-      border: 0,
-      borderRadius: radius,
-      background: 'linear-gradient(180deg, #22d3ee, #11b2cc)',
-      color: '#071015',
-      fontWeight: 800,
-      fontSize: 16,
-      letterSpacing: 0.3,
-      cursor: disabled || value.trim().length === 0 ? 'not-allowed' : 'pointer',
-      opacity: disabled || value.trim().length === 0 ? 0.6 : 1,
-      boxShadow: '0 0 22px rgba(34,211,238,0.35)',
-      transition: 'transform .12s ease, box-shadow .12s ease',
-    }}
-    onMouseDown={(e) => (e.currentTarget.style.transform = 'translateY(1px)')}
-    onMouseUp={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
-  >
-    {t('send')}
-  </button>
-</div>
-
+        {/* Senden (breit) */}
+        <button
+          type="button"
+          onClick={() => void handleSend()}
+          disabled={disabled || value.trim().length === 0}
+          aria-label={t('send')}
+          title={`${t('send')} (Enter)`}
+          style={{
+            width: '100%',
+            height: 52,
+            padding: '0 24px',
+            border: 0,
+            borderRadius: 16,
+            background: 'linear-gradient(180deg, rgba(34,211,238,1), rgba(17,178,204,1))',
+            color: '#071015',
+            fontWeight: 800,
+            fontSize: 16,
+            letterSpacing: 0.3,
+            cursor: disabled || value.trim().length === 0 ? 'not-allowed' : 'pointer',
+            opacity: disabled || value.trim().length === 0 ? 0.6 : 1,
+            boxShadow: 'var(--sh-md)',
+            transition: 'transform var(--t-fast) var(--ease), box-shadow var(--t-mid) var(--ease), filter var(--t-mid) var(--ease)',
+            willChange: 'transform, box-shadow, filter',
+          }}
+          onMouseDown={(e) => { e.currentTarget.style.transform = 'translateY(1px) scale(0.995)'; }}
+          onMouseUp={(e) => { e.currentTarget.style.transform = 'translateY(0)'; }}
+          onMouseEnter={(e) => { e.currentTarget.style.boxShadow = 'var(--sh-lg)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'var(--sh-md)'; }}
+        >
+          {t('send')}
+        </button>
+      </div>
     </div>
   );
 }
@@ -366,11 +382,12 @@ const toolBtnStyle: React.CSSProperties = {
   minWidth: 44,
   padding: '0 10px',
   borderRadius: 12,
-  border: '1px solid rgba(255,255,255,0.12)',
-  background: 'rgba(255,255,255,0.04)',
+  border: '1px solid rgba(0,255,255,0.10)',
+  background: 'rgba(12,24,32,0.72)',
   color: 'rgba(230,240,243,0.95)',
   fontSize: 18,
   lineHeight: 1,
   cursor: 'pointer',
-  boxShadow: '0 0 10px rgba(34,211,238,0.12)',
-};
+  boxShadow: 'var(--sh-sm)',
+  transition: 'transform var(--t-fast) var(--ease), box-shadow var(--t-mid) var(--ease), background var(--t-mid) var(--ease)',
+} as const;
