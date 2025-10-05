@@ -42,13 +42,6 @@ import { useMobileViewport } from "@/lib/useMobileViewport";
 // ⚠️ NICHT importieren: useTheme aus "next-themes" (Konflikt mit lokalem Hook)
 // import { useTheme } from "next-themes"; // ❌ bitte entfernt lassen
 
-// Footer–Status (nur Anzeige in der Statusleiste, keine Bubble)
-const [footerStatus, setFooterStatus] = useState<{ modeLabel: string; expertLabel: string }>({
-  modeLabel: "—",
-  expertLabel: "—",
-});
-
-
 // ——— Theme-Token-Typen (global, einmalig) ———
 type ColorTokens = { bg0?: string; bg1?: string; text?: string };
 type ThemeTokens = { color?: ColorTokens; [k: string]: any };
