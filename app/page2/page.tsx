@@ -42,6 +42,13 @@ import { useMobileViewport } from "@/lib/useMobileViewport";
 // ⚠️ NICHT importieren: useTheme aus "next-themes" (Konflikt mit lokalem Hook)
 // import { useTheme } from "next-themes"; // ❌ bitte entfernt lassen
 
+// Footer–Status (nur Anzeige in der Statusleiste, keine Bubble)
+const [footerStatus, setFooterStatus] = useState<{ modeLabel: string; expertLabel: string }>({
+  modeLabel: "—",
+  expertLabel: "—",
+});
+
+
 // ——— Theme-Token-Typen (global, einmalig) ———
 type ColorTokens = { bg0?: string; bg1?: string; text?: string };
 type ThemeTokens = { color?: ColorTokens; [k: string]: any };
@@ -527,7 +534,10 @@ export default function Page2() {
   const [loading, setLoading] = useState(false);
   const [stickToBottom, setStickToBottom] = useState(true);
   const [mode, setMode] = useState<string>("DEFAULT");
-
+// ▼▼ NEU: Footer-Status (nur Anzeige)
+type FooterStatus = { modeLabel: string; expertLabel: string };
+const [status, setStatus] = useState<FooterStatus>({ modeLabel: "—", expertLabel: "—" });
+// … 5 Zeilen nachher …
   // Persist
   const persistMessages = saveMessages;
 
@@ -542,7 +552,9 @@ export default function Page2() {
 
   }, []);
 
-  // Systemmeldung (für Säule/Overlay/Onboarding)
+    // ===============================================================
+  // Systemmeldung (für Säule / Overlay / Onboarding)
+  // ===============================================================
   const systemSay = useCallback((content: string) => {
     if (!content) return;
     setMessages((prev) => {
@@ -555,14 +567,67 @@ export default function Page2() {
     });
   }, [persistMessages]);
 
+  // ===============================================================
+// BRIDGE — Saeule → Chat (Event → echte Nachricht)
+// ===============================================================
+useEffect(() => {
+  const onSystem = (e: Event) => {
+    const detail = (e as CustomEvent).detail ?? {};
+    const text: string = detail.text ?? "";
+    const kind: string = detail.kind ?? "info";
+    const meta = detail.meta ?? {};
+
+    // 1) Reine Status-Events → nur Footer updaten (KEINE Bubble)
+    if (kind === "status") {
+      const nextMode   = typeof meta.modeLabel === "string"   && meta.modeLabel.length   ? meta.modeLabel   : undefined;
+      const nextExpert = typeof meta.expertLabel === "string" && meta.expertLabel.length ? meta.expertLabel : undefined;
+
+      if (nextMode || nextExpert) {
+        setFooterStatus((s) => ({
+          modeLabel:   nextMode   ?? s.modeLabel,
+          expertLabel: nextExpert ?? s.expertLabel,
+        }));
+      }
+      return;
+    }
+
+    // 2) Mode-Events → optional Label in Footer spiegeln
+    if (kind === "mode") {
+      const nextMode = (meta.label ?? meta.modeLabel ?? detail.modeLabel);
+      if (typeof nextMode === "string" && nextMode.length) {
+        setFooterStatus((s) => ({ ...s, modeLabel: nextMode }));
+      }
+    }
+
+    // 3) Nur wenn Text vorhanden ist → sichtbare Bubble anhängen
+    if (!text) return;
+
+    setMessages((prev) => {
+      const role: Role = kind === "mode" ? "system" : "assistant";
+      const msg: ChatMessage = { role, content: text, format: "markdown" };
+      const next = truncateMessages([...(Array.isArray(prev) ? prev : []), msg]);
+      persistMessages(next);
+      return next;
+    });
+  };
+
+  window.addEventListener("mpathy:system-message" as any, onSystem as any);
+  return () => window.removeEventListener("mpathy:system-message" as any, onSystem as any);
+}, [persistMessages]);
+
+
+  // ===============================================================
   // Autosrollen ans Ende, wenn am Bottom
+  // ===============================================================
   useEffect(() => {
     const el = convoRef.current as HTMLDivElement | null;
     if (!el || !stickToBottom) return;
     requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; });
   }, [messages, dockH, stickToBottom]);
 
+  // ===============================================================
   // Scroll-Listener zur Bottom-Erkennung
+  // ===============================================================
   useEffect(() => {
     const el = convoRef.current as HTMLDivElement | null;
     if (!el) return;
@@ -575,53 +640,58 @@ export default function Page2() {
     return () => el.removeEventListener("scroll", onScroll);
   }, []);
 
-  /// app/page2/page.tsx — REPLACE ONLY THIS FUNCTION
-async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
-  const res = await fetch("/api/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "same-origin",                // ⬅︎ NEU: Session-Cookies mitgeben
-    body: JSON.stringify({ messages: context }),
-  });
-  if (!res.ok) throw new Error("Chat API failed");
-  const data = await res.json();
-  const assistant = (data.assistant ?? data);
-  return {
-    role: assistant.role ?? "assistant",
-    content: assistant.content ?? "",
-    format: assistant.format ?? "markdown",
-  } as ChatMessage;
-}
-
-
-  const onSendFromPrompt = useCallback(async (text: string) => {
-  const trimmed = (text ?? "").trim();
-  if (!trimmed) return;
-
-  const userMsg: ChatMessage = { role: "user", content: trimmed, format: "markdown" };
-  const optimistic = truncateMessages([...(messages ?? []), userMsg]);
-  setMessages(optimistic);
-  persistMessages(optimistic);
-  setLoading(true);
-  setMode("THINKING");
-
-  try {
-    const assistant = await sendMessageLocal(optimistic);
-    const next = truncateMessages([...(optimistic ?? []), assistant]);
-    setMessages(next);
-    persistMessages(next);
-  } catch {
-    const next = truncateMessages([
-      ...(optimistic ?? []),
-      { role: "assistant", content: "⚠️ Send failed. Please retry.", format: "markdown" },
-    ]);
-    setMessages(next);
-    persistMessages(next);
-  } finally {
-    setLoading(false);
-    setMode("DEFAULT");
+  // ===============================================================
+  // Lokale Chat-Sendefunktion (ruft echte API)
+  // ===============================================================
+  async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin", // Session mitgeben
+      body: JSON.stringify({ messages: context }),
+    });
+    if (!res.ok) throw new Error("Chat API failed");
+    const data = await res.json();
+    const assistant = data.assistant ?? data;
+    return {
+      role: assistant.role ?? "assistant",
+      content: assistant.content ?? "",
+      format: assistant.format ?? "markdown",
+    } as ChatMessage;
   }
-}, [messages, persistMessages]);
+
+  // ===============================================================
+  // Prompt-Handler – sendet Text aus Eingabefeld
+  // ===============================================================
+  const onSendFromPrompt = useCallback(async (text: string) => {
+    const trimmed = (text ?? "").trim();
+    if (!trimmed) return;
+
+    const userMsg: ChatMessage = { role: "user", content: trimmed, format: "markdown" };
+    const optimistic = truncateMessages([...(messages ?? []), userMsg]);
+    setMessages(optimistic);
+    persistMessages(optimistic);
+    setLoading(true);
+    setMode("THINKING");
+
+    try {
+      const assistant = await sendMessageLocal(optimistic);
+      const next = truncateMessages([...(optimistic ?? []), assistant]);
+      setMessages(next);
+      persistMessages(next);
+    } catch {
+      const next = truncateMessages([
+        ...(optimistic ?? []),
+        { role: "assistant", content: "⚠️ Send failed. Please retry.", format: "markdown" },
+      ]);
+      setMessages(next);
+      persistMessages(next);
+    } finally {
+      setLoading(false);
+      setMode("DEFAULT");
+    }
+  }, [messages, persistMessages]);
+
 
 
   /* =====================================================================
@@ -832,6 +902,27 @@ return (
   }}
 >
 </div>
+  {/* Prompt Dock (sticky bottom) */}
+<div
+  id="m-input-dock"
+  ref={dockRef as any}
+  role="group"
+  aria-label="Chat Eingabeleiste"
+  style={{
+    position: "sticky",
+    bottom: 0,
+    zIndex: 50,
+    background: bg0,
+    padding: "10px 10px calc(10px + var(--safe-bottom))",
+    marginTop: 6,
+    borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
+    backdropFilter: "blur(8px)",
+    boxShadow: "0 -6px 24px rgba(0,0,0,.35)",
+    overscrollBehavior: "contain",
+    maxHeight: "var(--dock-cap)",
+    overflow: "visible",
+  }}
+>
   <MessageInput
     onSend={onSendFromPrompt}
     disabled={loading}
@@ -839,53 +930,58 @@ return (
     minRows={isMobile ? 1 : 3}
     maxRows={isMobile ? 6 : 10}
   />
+</div>
+
 
   {/* Status-Footer (rein visuell, keine Logik) */}
-  <div
-    aria-label="Statusleiste"
-    style={{
-      marginTop: 8,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      gap: 12,
-      padding: "8px 10px",
-      borderRadius: 12,
-      background: "rgba(8,14,18,0.60)",
-      border: `1px solid ${
-        activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"
-      }`,
-      color: activeTokens.color.text,
-      fontSize: 12,
-    }}
-  >
-    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-      <span
-        style={{
-          width: 6,
-          height: 6,
-          borderRadius: 999,
-          background: "#0ff",
-          boxShadow: "0 0 8px rgba(0,255,255,.8)",
-        }}
-      />
-      Modus:&nbsp;<strong>COUNCIL13</strong>
-      <em style={{ opacity: 0.8, fontStyle: "normal" }}> (Default)</em>
-    </span>
+<div
+  aria-label="Statusleiste"
+  style={{
+    marginTop: 8,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+    padding: "8px 10px",
+    borderRadius: 12,
+    background: "rgba(8,14,18,0.60)",
+    border: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
+    color: activeTokens.color.text,
+    fontSize: 12,
+  }}
+>
+  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+    <span
+      style={{
+        width: 6,
+        height: 6,
+        borderRadius: 999,
+        background: "#0ff",
+        boxShadow: "0 0 8px rgba(0,255,255,.8)",
+      }}
+    />
+    {t("statusMode") ?? "Mode"}:&nbsp;
+<strong>{footerStatus.modeLabel || "—"}</strong>
 
-    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-      <span
-        style={{
-          width: 6,
-          height: 6,
-          borderRadius: 999,
-          background: "#0ff",
-          boxShadow: "0 0 8px rgba(0,255,255,.8)",
-        }}
-      />
-      Aktueller Experte:&nbsp;<strong>—</strong>
-    </span>
-  </div>
+  </span>
+
+  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+    <span
+      style={{
+        width: 6,
+        height: 6,
+        borderRadius: 999,
+        background: "#0ff",
+        boxShadow: "0 0 8px rgba(0,255,255,.8)",
+      }}
+    />
+    {t("currentExpert") ?? "Expert"}:&nbsp;
+<strong>{footerStatus.expertLabel || "—"}</strong>
+
+  </span>
+</div>
+
+
 </div>
 </div>
 

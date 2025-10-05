@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import styles from "./Saeule.module.css";
 import { logEvent } from "../../lib/auditLogger";
 import { t } from "@/lib/i18n";
@@ -327,18 +327,36 @@ export default function Saeule({ onSystemMessage }: Props) {
   }, []);
 
   const modeLabel = useMemo(() => modeLabelFromId(activeMode), [activeMode]);
+  // ▼▼ NEU: Footer-Status ohne Bubble senden ▼▼
+const emitStatus = useCallback((partial: { modeLabel?: string; expertLabel?: string }) => {
+  try {
+    window.dispatchEvent(new CustomEvent("mpathy:system-message", {
+      detail: { kind: "status", text: "", meta: partial },
+    }));
+  } catch {}
+}, []);
+// ▲▲ ENDE NEU ▲▲
 
-  async function switchMode(next: ModeId) {
+
+  // ▼▼▼ EINFÜGEN (Helper: immer auch eine Chat-Bubble setzen) ▼▼▼
+  const say = useCallback((text: string) => {
+    if (!text) return;
+    if (onSystemMessage) onSystemMessage(text);
+    else emitSystemMessage({ kind: "reply", text });
+  }, [onSystemMessage]);
+  // ▲▲▲ ENDE EINFÜGUNG ▲▲▲
+
+    async function switchMode(next: ModeId) {
   if (next === activeMode) return;
 
   logEvent("mode_switch", { from: activeMode, to: next });
   setActiveMode(next);
 
   const label = modeLabelFromId(next);
-  const text  = `Mode set: ${label}.`;
-  emitSystemMessage({ kind: "mode", text, meta: { modeId: next, label } });
+  emitSystemMessage({ kind: "mode", text: `Mode set: ${label}.`, meta: { modeId: next, label } });
+  emitStatus({ modeLabel: label });                // ← Footer updaten
 
-  // ------ Auto-Prompt, super simpel ------
+  // Auto-Prompt nur für die API (kein Fallback-Text)
   let q = "";
   if (next === "onboarding") {
     q = lang.startsWith("de")
@@ -359,57 +377,59 @@ export default function Saeule({ onSystemMessage }: Props) {
   }
 
   const reply = await callChatAPI(q);
-  emitSystemMessage({
-    kind: "reply",
-    text: reply && reply.length ? reply
-         : (lang.startsWith("de")
-              ? "Bereit. Sag mir einfach, womit wir starten."
-              : "Ready. Tell me where to start."),
-    meta: { modeId: next, autoPrompt: true }
-  });
+  if (reply && reply.trim().length > 0) {
+    say(reply);                                     // ← genau eine Bubble, nur wenn API liefert
+  }
 }
 
 
-  async function askExpert(expert: ExpertId) {
+async function askExpert(expert: ExpertId) {
   if (sendingExpert) return;
   setSendingExpert(expert);
+  setCurrentExpert(expert);
 
   const label = labelForExpert(expert, lang);
-  const userPrompt = expertAskPrompt(label, lang);
 
+  // Telemetrie
   logEvent("expert_selected", { expert, label, roles: ROLES[expert] });
-  emitSystemMessage({
-    kind: "info",
-    text: `🧩 ${label} – ${lang.startsWith("de") ? "Frage wird gesendet …" : "sending your question …"}`,
-    meta: { expert, subkis: SUB_KIS[expert], roles: ROLES[expert] },
-  });
 
+  // Footer sofort aktualisieren (ohne Bubble)
+  emitStatus({ expertLabel: label });
+
+  // Prompt an API – keine festen Fallbacks
+  const userPrompt = expertAskPrompt(label, lang);
   const reply = await callChatAPI(userPrompt);
-
-  if (reply && reply.length > 0) {
-    emitSystemMessage({ kind: "reply", text: reply, meta: { expert, source: "api" } });
-  } else {
-    const fallback = lang.startsWith("de")
-      ? `Ich bin dein ${label}. Kurz: ${ROLES[expert]}. Sag mir, womit ich starten soll – ich liefere dir sofort klare, umsetzbare Hilfe.`
-      : `I am your ${label}. In short: ${ROLES[expert]}. Tell me where to start — I’ll deliver clear, actionable help right away.`;
-    emitSystemMessage({ kind: "reply", text: fallback, meta: { expert, source: "fallback" } });
+  if (reply && reply.trim().length > 0) {
+    say(reply);                                     // ← genau eine Bubble
   }
 
   setSendingExpert(null);
 }
 
+
   /* UI */
   return (
     <aside className={styles.saeule} aria-label={t("columnAria")} data-test="saeule">
       {/* Kopf entfernt → Build-Button oben im Panel */}
-      <div className={styles.block} style={{ marginTop: 8 }}>
+            <div className={styles.block} style={{ marginTop: 8 }}>
         <button
           type="button"
           aria-label={buildButtonLabel(lang)}
-          onClick={() => {
-            const text = buildButtonMsg(lang);
-            emitSystemMessage({ kind: "info", text });
+          onClick={async () => {
+            const prompt = buildButtonMsg(lang);
             try { logEvent("cta_start_building_clicked", {}); } catch {}
+            // kurze Echo-Info (dezent)
+            emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
+
+            // Chat-Aufruf + Reply ausgeben (einmalig)
+            const reply = await callChatAPI(prompt);
+const finalText = reply && reply.length
+  ? reply
+  : (lang.startsWith("de")
+      ? "Alles klar – sag mir einfach, was du bauen möchtest (App, Flow, Feature …)."
+      : "All set — tell me what you want to build (app, flow, feature …).");
+say(finalText);
+
           }}
           className={styles.buttonPrimary}
           style={{ width: "100%", cursor: "pointer" }}
@@ -417,6 +437,7 @@ export default function Saeule({ onSystemMessage }: Props) {
           {buildButtonLabel(lang)}
         </button>
       </div>
+
 
       {/* Steuerung */}
       <div className={styles.sectionTitle}>{t("sectionControl")}</div>

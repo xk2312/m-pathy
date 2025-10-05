@@ -310,6 +310,19 @@
   cursor: pointer;
 }
 
+/* 1.1) Deaktivierte Buttons eindeutig markieren */
+.button:disabled,
+.buttonGhost:disabled,
+.buttonPrimary:disabled,
+.buttonGhostPrimary:disabled,
+.buttonSolid:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  filter: none;            /* keine Hoverschimmer */
+  transform: none;         /* kein Press-Effect */
+}
+
+
 /* 2) Hover + Focus-Visible konsistent boosten (liegt NACH den Einzelregeln, gewinnt im Cascade) */
 .buttonPrimary:hover,
 .buttonPrimary:focus-visible,
@@ -323,6 +336,12 @@
 /* 3) Primärbutton im aktiven Zustand etwas heller (du hast 1.05 – lassen wir so) */
 .buttonPrimary.active {
   filter: brightness(1.05); /* bleibt wie von dir gesetzt */
+}
+/* Sofortiges Press-Feedback beim Klick */
+.buttonPrimary:active,
+.buttonGhostPrimary:active,
+.buttonSolid:active {
+  transform: translateY(0.5px);
 }
 
 /* aktiver Zustand */
