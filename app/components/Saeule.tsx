@@ -267,30 +267,42 @@ function modeLabelFromId(id: ModeId): string {
   return MODI.find((m) => m.id === id)?.label ?? String(id);
 }
 
+// Saeule.tsx — REPLACE the whole function
 async function callChatAPI(prompt: string): Promise<string | null> {
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: [{ role: "user", content: prompt }] }),
+      credentials: "same-origin", // ← important: keep session cookies
+      body: JSON.stringify({
+        messages: [{ role: "user", content: prompt, format: "markdown" }],
+      }),
     });
+
+    if (!res.ok) return null;
+
     const ct = res.headers.get("content-type") || "";
     if (ct.includes("application/json")) {
       const data = await res.json();
-      return (
-        data?.reply ||
-        data?.content ||
-        data?.message ||
-        (Array.isArray(data?.choices) ? data.choices[0]?.message?.content : null) ||
-        null
-      );
+      // accept all common shapes
+      const assistant = (data?.assistant ?? data) as any;
+      const text =
+        assistant?.content ??
+        data?.reply ??
+        data?.content ??
+        data?.message ??
+        (Array.isArray(data?.choices) ? data.choices[0]?.message?.content : null);
+
+      return typeof text === "string" ? text.trim() : null;
     }
+
     const txt = await res.text();
     return txt?.trim() || null;
   } catch {
     return null;
   }
 }
+
 
 /* ======================================================================
    Component
