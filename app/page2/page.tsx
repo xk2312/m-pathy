@@ -567,6 +567,12 @@ const [status, setStatus] = useState<FooterStatus>({ modeLabel: "—", expertLab
     });
   }, [persistMessages]);
 
+  // Footer-Status (nur Anzeige in der Statusleiste, keine Bubble)
+const [footerStatus, setFooterStatus] = useState<{ modeLabel: string; expertLabel: string }>({
+  modeLabel: "—",
+  expertLabel: "—",
+});
+
   // ===============================================================
 // BRIDGE — Saeule → Chat (Event → echte Nachricht)
 // ===============================================================
@@ -577,25 +583,22 @@ useEffect(() => {
     const kind: string = detail.kind ?? "info";
     const meta = detail.meta ?? {};
 
-    // 1) Reine Status-Events → nur Footer updaten (KEINE Bubble)
+    // 1) Reine Status-Events: nur Footer-State aktualisieren, KEINE Bubble
     if (kind === "status") {
-      const nextMode   = typeof meta.modeLabel === "string"   && meta.modeLabel.length   ? meta.modeLabel   : undefined;
-      const nextExpert = typeof meta.expertLabel === "string" && meta.expertLabel.length ? meta.expertLabel : undefined;
-
-      if (nextMode || nextExpert) {
-        setFooterStatus((s) => ({
-          modeLabel:   nextMode   ?? s.modeLabel,
-          expertLabel: nextExpert ?? s.expertLabel,
-        }));
-      }
+      const modeLabel = meta.modeLabel ?? detail.modeLabel;
+      const expertLabel = meta.expertLabel ?? detail.expertLabel;
+      setFooterStatus((s) => ({
+        modeLabel: typeof modeLabel === "string" && modeLabel.length ? modeLabel : s.modeLabel,
+        expertLabel: typeof expertLabel === "string" && expertLabel.length ? expertLabel : s.expertLabel,
+      }));
       return;
     }
 
-    // 2) Mode-Events → optional Label in Footer spiegeln
+    // 2) Modus-Events: Label in den Footer spiegeln (falls geliefert)
     if (kind === "mode") {
-      const nextMode = (meta.label ?? meta.modeLabel ?? detail.modeLabel);
-      if (typeof nextMode === "string" && nextMode.length) {
-        setFooterStatus((s) => ({ ...s, modeLabel: nextMode }));
+      const modeLabel = meta.label ?? meta.modeLabel ?? detail.modeLabel;
+      if (typeof modeLabel === "string" && modeLabel.length) {
+        setFooterStatus((s) => ({ ...s, modeLabel }));
       }
     }
 
@@ -951,35 +954,18 @@ return (
   }}
 >
   <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-    <span
-      style={{
-        width: 6,
-        height: 6,
-        borderRadius: 999,
-        background: "#0ff",
-        boxShadow: "0 0 8px rgba(0,255,255,.8)",
-      }}
-    />
+    <span style={{ width: 6, height: 6, borderRadius: 999, background: "#0ff", boxShadow: "0 0 8px rgba(0,255,255,.8)" }} />
     {t("statusMode") ?? "Mode"}:&nbsp;
-<strong>{footerStatus.modeLabel || "—"}</strong>
-
+    <strong>{footerStatus.modeLabel || "—"}</strong>
   </span>
 
   <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-    <span
-      style={{
-        width: 6,
-        height: 6,
-        borderRadius: 999,
-        background: "#0ff",
-        boxShadow: "0 0 8px rgba(0,255,255,.8)",
-      }}
-    />
+    <span style={{ width: 6, height: 6, borderRadius: 999, background: "#0ff", boxShadow: "0 0 8px rgba(0,255,255,.8)" }} />
     {t("currentExpert") ?? "Expert"}:&nbsp;
-<strong>{footerStatus.expertLabel || "—"}</strong>
-
+    <strong>{footerStatus.expertLabel || "—"}</strong>
   </span>
 </div>
+
 
 
 </div>
