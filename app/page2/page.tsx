@@ -831,15 +831,6 @@ return (
     overflow: "visible",
   }}
 >
-  <MessageInput
-    onSend={onSendFromPrompt}
-    disabled={loading}
-    placeholder={t('writeMessage')}
-
-    // ⬇ mobil kompakt starten, weich wachsen
-    minRows={isMobile ? 1 : 3}
-    maxRows={isMobile ? 6 : 10}
-  />
 </div>
   <MessageInput
     onSend={onSendFromPrompt}
@@ -896,33 +887,6 @@ return (
     </span>
   </div>
 </div>
-
-  {/* Status-Footer (rein visuell, keine Logik) */}
-  <div
-    aria-label="Status"
-    style={{
-      marginTop: 8,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      gap: 12,
-      padding: "8px 10px",
-      borderRadius: 12,
-      background: "rgba(8,14,18,0.60)",
-      border: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
-      color: activeTokens.color.text,
-      fontSize: 12,
-    }}
-  >
-    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-      <span style={{ width: 6, height: 6, borderRadius: 999, background: "#0ff", boxShadow: "0 0 8px rgba(0,255,255,.8)" }} />
-      Modus: <strong>COUNCIL13</strong> <em style={{ opacity:.85, fontStyle:"normal" }}>(Default)</em>
-    </span>
-    <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-      <span style={{ width: 6, height: 6, borderRadius: 999, background: "#0ff", boxShadow: "0 0 8px rgba(0,255,255,.8)" }} />
-      Aktueller Experte: <strong>—</strong>
-    </span>
-  </div>
 </div>
 
 
