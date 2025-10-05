@@ -291,8 +291,6 @@
   background: linear-gradient(135deg,#60a5fa,#a78bfa);
   color: #0b1220; border: 1px solid rgba(148,163,184,.35);
 }
-.buttonPrimary:hover { filter: brightness(1.04); }
-
 .buttonSolid {
   background: #0f172a; color: #e5e7eb; border: 1px solid #243041;
 }
@@ -302,11 +300,37 @@
   background: #0b1220; color: #e6f0f3; border: 1px solid #314156;
 }
 .buttonGhostPrimary:hover { background: #0c1526; border-color: #3a4a62; }
+/* === Einheitliches Pointer + kräftiger Hover/Focus für alle Aktions-Buttons === */
+/* 1) Mauszeiger immer als „Hand“ */
+.button,
+.buttonGhost,
+.buttonPrimary,
+.buttonGhostPrimary,
+.buttonSolid {
+  cursor: pointer;
+}
+
+/* 2) Hover + Focus-Visible konsistent boosten (liegt NACH den Einzelregeln, gewinnt im Cascade) */
+.buttonPrimary:hover,
+.buttonPrimary:focus-visible,
+.buttonGhostPrimary:hover,
+.buttonGhostPrimary:focus-visible,
+.buttonSolid:hover,
+.buttonSolid:focus-visible {
+  filter: brightness(1.03);
+}
+
+/* 3) Primärbutton im aktiven Zustand etwas heller (du hast 1.05 – lassen wir so) */
+.buttonPrimary.active {
+  filter: brightness(1.05); /* bleibt wie von dir gesetzt */
+}
 
 /* aktiver Zustand */
 .active {
-  box-shadow: 0 0 0 1px #64748b, 0 0 0 4px rgba(100,116,139,.25);
-  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  box-shadow: 0 0 0 1px rgba(147,197,253,.55), 0 0 0 6px rgba(147,197,253,.22);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  color: #f8fafc !important; /* sehr hell */
+  border-color: rgba(147,197,253,.55) !important;
 }
 
 /* Fokus sichtbar (A11y) */
@@ -390,4 +414,8 @@
     height: auto;
     overflow: visible;
   }
+}
+/* Sicherstellen, dass Primär-Button aktiv stark wirkt */
+.buttonPrimary.active {
+  filter: brightness(1.05);
 }

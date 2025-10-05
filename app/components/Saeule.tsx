@@ -328,46 +328,75 @@ export default function Saeule({ onSystemMessage }: Props) {
 
   const modeLabel = useMemo(() => modeLabelFromId(activeMode), [activeMode]);
 
-  function switchMode(next: ModeId) {
-    if (next === activeMode) return;
-    logEvent("mode_switch", { from: activeMode, to: next });
-    setActiveMode(next);
-    const label = modeLabelFromId(next);
-    const text = `Mode set: ${label}.`;
-    onSystemMessage ? onSystemMessage(text) : emitSystemMessage({ kind: "mode", text, meta: { modeId: next, label } });
+  async function switchMode(next: ModeId) {
+  if (next === activeMode) return;
+
+  logEvent("mode_switch", { from: activeMode, to: next });
+  setActiveMode(next);
+
+  const label = modeLabelFromId(next);
+  const text  = `Mode set: ${label}.`;
+  emitSystemMessage({ kind: "mode", text, meta: { modeId: next, label } });
+
+  // ------ Auto-Prompt, super simpel ------
+  let q = "";
+  if (next === "onboarding") {
+    q = lang.startsWith("de")
+      ? "Hey! 👋 Wer bist du und wie begleitest du mich hier Schritt für Schritt?"
+      : "Hey! 👋 Who are you and how will you guide me here step by step?";
+  } else if (next === "M") {
+    q = lang.startsWith("de")
+      ? "Setze alles auf Standard zurück und sag mir kurz den Status."
+      : "Reset everything to default and give me a brief status.";
+  } else if (next === "council") {
+    q = lang.startsWith("de")
+      ? "Alle KIs bitte kurz vorstellen und sagen, wobei ihr sofort helfen könnt."
+      : "Each AI please introduce yourself and say how you can help right now.";
+  } else {
+    q = lang.startsWith("de")
+      ? `Modus ${label}: Was bist du und wobei unterstützt du mich am besten?`
+      : `Mode ${label}: What are you and where will you help me best?`;
   }
+
+  const reply = await callChatAPI(q);
+  emitSystemMessage({
+    kind: "reply",
+    text: reply && reply.length ? reply
+         : (lang.startsWith("de")
+              ? "Bereit. Sag mir einfach, womit wir starten."
+              : "Ready. Tell me where to start."),
+    meta: { modeId: next, autoPrompt: true }
+  });
+}
+
 
   async function askExpert(expert: ExpertId) {
-    if (sendingExpert) return;
-    setSendingExpert(expert);
+  if (sendingExpert) return;
+  setSendingExpert(expert);
 
-    const label = labelForExpert(expert, lang);
-    const userPrompt = expertAskPrompt(label, lang);
+  const label = labelForExpert(expert, lang);
+  const userPrompt = expertAskPrompt(label, lang);
 
-    logEvent("expert_selected", { expert, label, roles: ROLES[expert] });
-    emitSystemMessage({
-      kind: "info",
-      text: `🧩 ${label} – ${lang.startsWith("de") ? "Frage wird gesendet …" : "sending your question …"}`,
-      meta: { expert, subkis: SUB_KIS[expert], roles: ROLES[expert] },
-    });
+  logEvent("expert_selected", { expert, label, roles: ROLES[expert] });
+  emitSystemMessage({
+    kind: "info",
+    text: `🧩 ${label} – ${lang.startsWith("de") ? "Frage wird gesendet …" : "sending your question …"}`,
+    meta: { expert, subkis: SUB_KIS[expert], roles: ROLES[expert] },
+  });
 
-    const reply = await callChatAPI(userPrompt);
+  const reply = await callChatAPI(userPrompt);
 
-    if (reply && reply.length > 0) {
-      emitSystemMessage({ kind: "reply", text: reply, meta: { expert, source: "api" } });
-    } else {
-      const fallback =
-        (lang.startsWith("de")
-          ? `Ich bin dein ${label}. Kurz: ${ROLES[expert]} `
-          : `I am your ${label}. In short: ${ROLES[expert]} `) +
-        (lang.startsWith("de")
-          ? `Sag mir, womit ich starten soll – ich liefere dir sofort klare, umsetzbare Hilfe.`
-          : `Tell me where to start — I’ll deliver clear, actionable help right away.`);
-      emitSystemMessage({ kind: "reply", text: fallback, meta: { expert, source: "fallback" } });
-    }
-
-    setSendingExpert(null);
+  if (reply && reply.length > 0) {
+    emitSystemMessage({ kind: "reply", text: reply, meta: { expert, source: "api" } });
+  } else {
+    const fallback = lang.startsWith("de")
+      ? `Ich bin dein ${label}. Kurz: ${ROLES[expert]}. Sag mir, womit ich starten soll – ich liefere dir sofort klare, umsetzbare Hilfe.`
+      : `I am your ${label}. In short: ${ROLES[expert]}. Tell me where to start — I’ll deliver clear, actionable help right away.`;
+    emitSystemMessage({ kind: "reply", text: fallback, meta: { expert, source: "fallback" } });
   }
+
+  setSendingExpert(null);
+}
 
   /* UI */
   return (
@@ -383,7 +412,7 @@ export default function Saeule({ onSystemMessage }: Props) {
             try { logEvent("cta_start_building_clicked", {}); } catch {}
           }}
           className={styles.buttonPrimary}
-          style={{ width: "100%" }}
+          style={{ width: "100%", cursor: "pointer" }}
         >
           {buildButtonLabel(lang)}
         </button>
