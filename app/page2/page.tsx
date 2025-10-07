@@ -607,7 +607,34 @@ useEffect(() => {
 // ▼▼ NEU: Footer-Status (nur Anzeige)
 type FooterStatus = { modeLabel: string; expertLabel: string };
 const [status, setStatus] = useState<FooterStatus>({ modeLabel: "—", expertLabel: "—" });
-// … 5 Zeilen nachher …
+  // Golden Prompt — micro-motion registers
+  const breathRef = useRef<number>(0);            // breath phase accumulator
+  const lastMotionRef = useRef<number[]>([]);     // flow memory (last intensities)
+  const rafRef = useRef<number | null>(null);     // living continuum loop
+
+  // Living Continuum Engine (perceptual continuity)
+  useEffect(() => {
+    let mounted = true;
+    const tick = (t: number) => {
+      if (!mounted) return;
+      // Breath coupling (5s cycle; amplitude modulated by typing)
+      const typingBias = document.getElementById("gold-input")?.classList.contains("is-typing") ? 1 : 0.35;
+      breathRef.current = (t / 1000) % 5; // seconds
+      const phase = (breathRef.current / 5) * Math.PI * 2;
+      const amp = 0.003 * typingBias; // subtle scale shift
+      const dock = document.getElementById("m-input-dock");
+      if (dock) {
+        dock.style.transform = `translateZ(0) scale(${1 + Math.sin(phase) * amp})`;
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      mounted = false;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
   // Persist
   const persistMessages = saveMessages;
 
@@ -950,6 +977,91 @@ return (
           </div>
 
   {/* Prompt Dock (sticky bottom) */}
+  <div
+    id="m-input-dock"
+    ref={dockRef as any}
+    role="group"
+    aria-label="Chat Eingabeleiste"
+    className="gold-dock mob-transition"
+    onAnimationEnd={(e) => {
+      if ((e.target as HTMLElement).classList.contains("send-ripple")) {
+        (e.target as HTMLElement).classList.remove("send-ripple");
+      }
+    }}
+    style={{
+      position: "sticky",
+      bottom: 0,
+      zIndex: 50,
+      background: bg0,
+      padding: "10px 10px calc(10px + var(--safe-bottom))",
+      marginTop: 6,
+      borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
+      backdropFilter: "blur(8px)",
+      boxShadow: "0 -6px 24px rgba(0,0,0,.35)",
+      overscrollBehavior: "contain",
+      maxHeight: "var(--dock-cap)",
+      overflow: "visible",
+    }}
+  >
+    <div className="gold-prompt-wrap">
+      <textarea
+        id="gold-input"
+        aria-label={t("writeMessage")}
+        placeholder={t("writeMessage")}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onInput={(e) => {
+          const ta = e.currentTarget;
+          // one-line → multi-line auto-grow (with soft cap)
+          ta.style.height = "auto";
+          const cap = Math.min(ta.scrollHeight, Math.round(window.innerHeight * 0.30));
+          ta.style.height = `${cap}px`;
+          // breathing state
+          ta.classList.add("is-typing");
+        }}
+        onBlur={(e) => e.currentTarget.classList.remove("is-typing")}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            if (input.trim()) {
+              // ripple trigger
+              const dockEl = document.getElementById("m-input-dock");
+              dockEl?.classList.add("send-ripple");
+              void dockEl?.getBoundingClientRect(); // reflow to restart animation
+              onSendFromPrompt(input);
+              setInput("");
+              const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+              if (ta) { ta.style.height = "auto"; }
+            }
+          }
+        }}
+        rows={1}
+        className="gold-textarea"
+        spellCheck
+        autoCorrect="on"
+        autoCapitalize="sentences"
+      />
+      <button
+        type="button"
+        className="gold-send"
+        aria-label={t("send")}
+        disabled={loading || !input.trim()}
+        onClick={() => {
+          if (!loading && input.trim()) {
+            const dockEl = document.getElementById("m-input-dock");
+            dockEl?.classList.add("send-ripple");
+            void dockEl?.getBoundingClientRect();
+            onSendFromPrompt(input);
+            setInput("");
+            const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+            if (ta) { ta.style.height = "auto"; ta.classList.remove("is-typing"); }
+          }
+        }}
+      >
+        {t("send")}
+      </button>
+    </div>
+  </div>
 
 {/* Prompt Dock (sticky bottom) */}
 <div
@@ -1033,6 +1145,77 @@ return (
       </>
     )}
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
+        {/* Golden Prompt — minimal global styles & motion */}
+    <style jsx global>{`
+      /* Remove any plus button globally (no guessing component props) */
+      .mi-plus-btn { display: none !important; }
+
+      /* Prompt dock layout (compact, single-line start → multi-line growth) */
+      .gold-prompt-wrap {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: end;
+        width: min(920px, 100%);
+        margin: 0 auto;
+      }
+      .gold-textarea {
+        width: 100%;
+        min-height: 44px;
+        max-height: var(--dock-cap);
+        resize: none;
+        border-radius: 12px;
+        padding: 10px 12px;
+        line-height: 1.5;
+        border: 1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"};
+        background: rgba(255,255,255,0.04);
+        color: ${activeTokens.color.text};
+        outline: none;
+        transition: box-shadow var(--t-mid, 120ms) var(--ease, cubic-bezier(.2,.6,.2,1)),
+                    border-color var(--t-mid, 120ms) var(--ease, cubic-bezier(.2,.6,.2,1));
+      }
+      .gold-textarea:is(:hover, :focus, .is-typing) {
+        box-shadow: 0 0 0 1px ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"},
+                    0 0 18px rgba(34,211,238,0.18);
+        border-color: ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
+      }
+
+      .gold-send {
+        min-height: 44px;
+        padding: 0 14px;
+        border-radius: 12px;
+        font-weight: 700;
+        border: 1px solid ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
+        background: ${activeTokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"};
+        color: ${activeTokens.color.text};
+        cursor: pointer;
+        transition: transform 120ms var(--ease, cubic-bezier(.2,.6,.2,1)),
+                    box-shadow 120ms var(--ease, cubic-bezier(.2,.6,.2,1));
+      }
+      .gold-send:hover:not(:disabled) { transform: translateY(-1px); }
+      .gold-send:active:not(:disabled) { transform: translateY(0); }
+      .gold-send:disabled { opacity: .45; cursor: default; }
+
+      /* Subtle inertia settle on dock after send (3px overshoot) */
+      .gold-dock.send-ripple {
+        animation: gp-inertia 320ms var(--ease, cubic-bezier(.2,.6,.2,1)) 1,
+                   gp-ripple 680ms ease-out 1;
+      }
+
+      @keyframes gp-inertia {
+        0% { transform: translateZ(0) translateY(0); }
+        55% { transform: translateZ(0) translateY(-3px); }
+        100% { transform: translateZ(0) translateY(0); }
+      }
+
+      /* Light refraction ripple through the glass */
+      @keyframes gp-ripple {
+        0% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0.0); }
+        15% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 1000px rgba(34,211,238,0.08); }
+        100% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0.0); }
+      }
+    `}</style>
+
   </main>
 );
 }
