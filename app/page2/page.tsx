@@ -21,11 +21,11 @@
 
 import React, {
   useEffect,
-  useLayoutEffect,
+  useLayoutEffect, // darf drin bleiben, wird hier aber nicht zwingend gebraucht
   useState,
   useRef,
   useCallback,
-  useMemo,       // ✅
+  useMemo,
   FormEvent,
 } from "react";
 import Image from "next/image";
@@ -497,47 +497,57 @@ export default function Page2() {
   const theme = useTheme("default");
   const activeTokens: Tokens = theme.tokens;
 
-// === SCROLL READY: warte auf stabilen Layout-Frame, DANN nudge ===
-useLayoutEffect(() => {
+// === Scroll-Enable NACH DOM-Load & Fonts, dann 2× rAF für stabiles Layout ===
+useEffect(() => {
+  let fired = false;
   let raf1 = 0, raf2 = 0;
-  let cancelled = false;
 
-  const ready = () => {
-    const el = convoRef.current as HTMLDivElement | null;
-    if (!el) return false;
-    // Scroll erst aktivieren, wenn der Container real Maße hat
-    const hasDims = el.clientHeight > 0 && el.offsetParent !== null;
-    // Optional: Header/Dock schon vermessen?
-    const headerOk = !headerRef.current || headerRef.current.clientHeight >= 0;
-    return hasDims && headerOk;
+  const nudge = () => {
+    if (fired) return;
+    fired = true;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        const el = convoRef.current as HTMLDivElement | null;
+        if (!el) return;
+        const prev = el.style.overflow;
+        el.style.overflow = "hidden";
+        el.scrollTop = (el.scrollTop || 0) + 1; // minimaler Impuls
+        void el.offsetHeight;                    // Reflow erzwingen
+        el.style.overflow = prev || "auto";
+      });
+    });
   };
 
-  const applyNudge = () => {
-    const el = convoRef.current as HTMLDivElement | null;
-    if (!el) return;
-    const prev = el.style.overflow;
-    el.style.overflow = "hidden";
-    el.scrollTop = (el.scrollTop || 0) + 1; // minimaler Impuls
-    void el.offsetHeight;                    // Reflow erzwingen
-    el.style.overflow = prev || "auto";
-  };
-
-  const loopUntilReady = () => {
-    if (cancelled) return;
-    if (!ready()) {
-      raf2 = requestAnimationFrame(loopUntilReady);
-      return;
+  // Wenn Fonts fertig sind, erst dann Layout als stabil ansehen
+  const afterFonts = () => {
+    if ("fonts" in document && (document as any).fonts?.ready) {
+      (document as any).fonts.ready.then(nudge).catch(nudge);
+    } else {
+      nudge();
     }
-    applyNudge();
   };
 
-  // 2× rAF → nach Paint & Layout, dann readiness-Loop
-  raf1 = requestAnimationFrame(() => {
-    raf2 = requestAnimationFrame(loopUntilReady);
-  });
+  // Warten bis DOM + Ressourcen geladen (Load-Event). Falls schon geladen → direkt weiter.
+  if (document.readyState === "complete") {
+    afterFonts();
+  } else {
+    const onLoad = () => { afterFonts(); };
+    window.addEventListener("load", onLoad, { once: true });
+    // Falls der Browser „complete“ erreicht, ohne echtes load zu feuern:
+    const onRS = () => {
+      if (document.readyState === "complete") {
+        window.removeEventListener("load", onLoad);
+        afterFonts();
+      }
+    };
+    document.addEventListener("readystatechange", onRS, { once: true });
+    return () => {
+      window.removeEventListener("load", onLoad);
+      document.removeEventListener("readystatechange", onRS as any);
+    };
+  }
 
   return () => {
-    cancelled = true;
     if (raf1) cancelAnimationFrame(raf1);
     if (raf2) cancelAnimationFrame(raf2);
   };
