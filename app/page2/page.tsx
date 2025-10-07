@@ -496,6 +496,49 @@ export default function Page2() {
   const theme = useTheme("default");
   const activeTokens: Tokens = theme.tokens;
 
+   // === SAFETY RESET: robust gegen Locks aus voriger Route ===
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+
+    // 1) Häufige „No-Scroll“-Klassen entfernen
+    html.classList.remove("no-scroll", "lock", "modal-open");
+    body.classList.remove("no-scroll", "lock", "modal-open");
+
+    // 2) Inline-Styles neutralisieren, die Scroll blockieren könnten
+    for (const el of [html, body]) {
+      el.style.overflow = "";
+      el.style.position = "";
+      el.style.height = "";
+      el.style.width = "";
+      el.style.top = "";
+      el.style.left = "";
+      el.style.right = "";
+      el.style.touchAction = "";
+      el.style.overscrollBehavior = "";
+    }
+
+    // 3) Scrolling-Element explizit freigeben
+    const scroller = document.scrollingElement as HTMLElement | null;
+    if (scroller) scroller.style.overflow = "";
+
+    // 4) Defensiv: passive Scroll-Gesten sicherstellen
+    window.addEventListener("touchmove", () => {}, { passive: true });
+    window.addEventListener("wheel", () => {}, { passive: true });
+
+    // 5) Nächster Frame: Scroll-Nudge im Chat-Container
+    requestAnimationFrame(() => {
+      const el = convoRef.current as HTMLDivElement | null;
+      if (!el) return;
+      const prev = el.style.overflow;
+      el.style.overflow = "hidden";
+      el.scrollTop = (el.scrollTop || 0) + 1; // minimaler Nudge
+      void el.offsetHeight;                    // Reflow erzwingen
+      el.style.overflow = prev || "auto";
+    });
+  }, []);
+
+
   // Breakpoint + Seitenränder
   const { isMobile } = useBreakpoint(768);
   const sideMargin = isMobile ? theme.dock.mobile.side : theme.dock.desktop.side;
@@ -521,18 +564,23 @@ export default function Page2() {
     };
   }, []);
 
-    // Initial-Scroll-"Unlock": behebt Freeze nach erstem Paint
-  useEffect(() => {
-    const el = convoRef.current as HTMLDivElement | null;
-    if (!el) return;
+
+
+  // Initial Scroll "Unlock" — stabiler (double rAF) + Reflow-Nudge
+useEffect(() => {
+  const el = convoRef.current as HTMLDivElement | null;
+  if (!el) return;
+  requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      // Overflow kurz sperren, minimal scrollen → Browser „entblockt“ den Scroll-State
       const prev = el.style.overflow;
       el.style.overflow = "hidden";
-      el.scrollTop = el.scrollTop + 1;
+      el.scrollTop = (el.scrollTop || 0) + 1; // minimaler Nudge
+      void el.offsetHeight;                   // Reflow erzwingen
       el.style.overflow = prev || "auto";
     });
-  }, []);
+  });
+}, []);
+
 
   // Chat State
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -867,8 +915,10 @@ return (
               flex: 1,
               minHeight: 0,
               overflow: "auto",
-              overscrollBehavior: "contain",
+              pointerEvents: "auto",
+              touchAction: "auto",
               WebkitOverflowScrolling: "touch",
+              overscrollBehavior: "contain",
               paddingTop: 8,
               paddingBottom: padBottom,
               scrollbarGutter: "stable",
@@ -884,34 +934,6 @@ return (
           </div>
 
   {/* Prompt Dock (sticky bottom) */}
-<div
-  id="m-input-dock"
-  ref={dockRef as any}
-  role="group"
-  aria-label="Chat Eingabeleiste"
-  style={{
-    position: "sticky",
-    bottom: 0,
-    zIndex: 50,
-    background: bg0,
-    padding: "10px 10px calc(10px + var(--safe-bottom))",
-    marginTop: 6,
-    borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
-    backdropFilter: "blur(8px)",
-    boxShadow: "0 -6px 24px rgba(0,0,0,.35)",
-    overscrollBehavior: "contain",
-    maxHeight: "var(--dock-cap)",
-    overflow: "visible",
-  }}
->
-  <MessageInput
-    onSend={onSendFromPrompt}
-    disabled={loading}
-    placeholder={t('writeMessage')}
-    minRows={isMobile ? 1 : 3}
-    maxRows={isMobile ? 6 : 10}
-  />
-</div>
 
 
   {/* Status-Footer (rein visuell, keine Logik) */}

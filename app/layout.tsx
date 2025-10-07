@@ -30,7 +30,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head />
       <body
         className={`${inter.className} min-h-dvh bg-gradient-to-b from-blue-50 via-white to-blue-100 text-slate-900 antialiased`}
-        style={{ overscrollBehaviorY: "none", WebkitTapHighlightColor: "transparent" }}
+        style={{ overscrollBehaviorY: "auto", WebkitTapHighlightColor: "transparent" }}
       >
         <LangAttrUpdater />
         <Providers>{children}</Providers>
