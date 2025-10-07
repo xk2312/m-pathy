@@ -869,10 +869,10 @@ useEffect(() => {
   const root = document.documentElement;
   const value =
     mState === "typing"
-      ? "var(--header-h-typing)"   // 0px
+      ? "var(--header-h-typing)"
       : mState === "shrink"
-      ? "var(--header-h-shrink)"   // 72px
-      : "var(--header-h-idle)";    // 96px
+      ? "var(--header-h-shrink)"
+      : "var(--header-h-idle)";
   root.style.setProperty("--header-h", value);
 }, [isMobile, mState]);
 
@@ -920,9 +920,9 @@ return (
         flex: 1,
         display: "flex",
         flexDirection: "column",
-        marginInline: sideMargin,
+        marginInline: isMobile ? 0 : sideMargin, // ⬅️ Mobile: keine Ränder
         minHeight: 0,
-        maxWidth: 1280,
+        maxWidth: isMobile ? "none" : 1280,      // ⬅️ Mobile: volle Breite
         alignSelf: "center",
         width: "100%",
         paddingTop: isMobile ? "var(--header-h)" : "224px",
@@ -958,6 +958,8 @@ return (
               WebkitOverflowScrolling: "touch",
               overscrollBehavior: "contain",
               paddingTop: 8,
+              paddingLeft: isMobile ? 0 : undefined,   // ⬅️ Mobile bündig
+              paddingRight: isMobile ? 0 : undefined,  // ⬅️ Mobile bündig
               paddingBottom: padBottom,
               scrollbarGutter: "stable",
             }}
@@ -971,7 +973,7 @@ return (
             />
           </div>
 
-          {/* === BOTTOM STACK: Tools + Status (rechts) + Prompt ============= */}
+          {/* === BOTTOM STACK: Prompt, dann Icons+Status ================= */}
           <div
             id="m-input-dock"
             ref={dockRef as any}
@@ -979,28 +981,6 @@ return (
             role="group"
             aria-label="Chat Eingabe & Status"
           >
-            {/* Tools + Status in einer Reihe (Status rechts, vertikal gestapelt) */}
-            <div className="gold-tools-row" aria-label={t('promptTools') ?? 'Prompt tools'}>
-              <div className="gold-tools">
-                <button type="button" aria-label={t('comingUpload')}    className="gt-btn">📎</button>
-                <button type="button" aria-label={t('comingVoice')}     className="gt-btn">🎙️</button>
-                <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
-              </div>
-
-              <div className="gold-stats">
-                <div className="stat">
-                  <span className="dot" />
-                  <span className="label">Mode:</span>
-                  <strong>{footerStatus.modeLabel || "—"}</strong>
-                </div>
-                <div className="stat">
-                  <span className="dot" />
-                  <span className="label">Expert:</span>
-                  <strong>{footerStatus.expertLabel || "—"}</strong>
-                </div>
-              </div>
-            </div>
-
             {/* Prompt */}
             <div className="gold-prompt-wrap">
               <textarea
@@ -1057,6 +1037,28 @@ return (
                 {t("send")}
               </button>
             </div>
+
+            {/* Icons + Status (unter Prompt, 3px Abstand; Status startet direkt nach dem ⚙️) */}
+            <div className="gold-bar">
+              <div className="gold-tools" aria-label={t('promptTools') ?? 'Prompt tools'}>
+                <button type="button" aria-label={t('comingUpload')}    className="gt-btn">📎</button>
+                <button type="button" aria-label={t('comingVoice')}     className="gt-btn">🎙️</button>
+                <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
+              </div>
+
+              <div className="gold-stats">
+                <div className="stat">
+                  <span className="dot" />
+                  <span className="label">Mode</span>
+                  <strong>{footerStatus.modeLabel || "—"}</strong>
+                </div>
+                <div className="stat">
+                  <span className="dot" />
+                  <span className="label">Expert</span>
+                  <strong>{footerStatus.expertLabel || "—"}</strong>
+                </div>
+              </div>
+            </div>
           </div>
           {/* === /BOTTOM STACK ========================================= */}
         </div>
@@ -1076,13 +1078,9 @@ return (
     )}
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
 
-    {/* === Golden Prompt — sealed styles ============================== */}
+    {/* === Golden Prompt — Styles ==================================== */}
     <style jsx global>{`
-      /* Kanten weg, dunkle Scrollbar, FAB über Dock */
       html, body { background:#000; margin:0; padding:0; overflow-x:hidden; }
-      ::-webkit-scrollbar { width: 8px; height: 8px; }
-      ::-webkit-scrollbar-track { background: rgba(0,0,0,.6); }
-      ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.10); border-radius: 4px; }
       :root { --dock-h: 60px; --fab-z: 90; }
       .mi-plus-btn { display: none !important; }
       [data-sticky-fab] { z-index: var(--fab-z) !important; }
@@ -1101,33 +1099,6 @@ return (
         width: auto; margin: 0; border-radius: 0;
       }
 
-      /* Tools + Status (rechts, vertikal) */
-      .gold-tools-row{
-        display:flex; align-items:center; justify-content:space-between;
-        width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
-        margin:0 auto 8px auto; gap:12px;
-      }
-      .gold-tools{ display:flex; gap:8px; }
-      .gt-btn{
-        display:inline-flex; align-items:center; justify-content:center;
-        height:36px; min-width:36px; padding:0 12px;
-        border-radius:10px; border:1px solid rgba(49,65,86,.7);
-        background:#0b1220; color:#e6f0f3; font-weight:700;
-        transition:transform 120ms cubic-bezier(.2,.6,.2,1);
-      }
-      .gt-btn:active{ transform:scale(.98); }
-
-      .gold-stats{
-        display:flex; flex-direction:column; gap:6px; align-items:flex-end;
-        color:${activeTokens.color.text}; font-size:12px;
-      }
-      .gold-stats .stat{ display:inline-flex; align-items:center; gap:8px; }
-      .gold-stats .dot{
-        width:6px; height:6px; border-radius:999px; flex:0 0 6px;
-        background:#22d3ee; box-shadow:0 0 8px rgba(34,211,238,.8);
-      }
-      .gold-stats .label{ opacity:.9; }
-
       /* Prompt Grid */
       .gold-prompt-wrap{
         display:grid; grid-template-columns: 1fr max-content;
@@ -1140,10 +1111,9 @@ return (
         resize:none; border-radius:12px; padding:10px 12px; line-height:1.5;
         border:1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"};
         background:rgba(255,255,255,0.04); color:${activeTokens.color.text};
-        outline:none;
+        outline:none; background-clip: padding-box;
         transition: box-shadow 120ms cubic-bezier(.2,.6,.2,1), border-color 120ms cubic-bezier(.2,.6,.2,1);
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"!important;
-        letter-spacing:0!important; padding-right:12px!important; background-clip: padding-box;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
       }
       .gold-textarea:is(:hover,:focus,.is-typing){
         box-shadow: 0 0 0 1px ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"},
@@ -1155,15 +1125,43 @@ return (
         padding:0 16px; border-radius:12px; font-weight:700;
         border:1px solid ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
         background:${activeTokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"};
-        color:${activeTokens.color.text}; cursor:pointer;
+        color:${activeTokens.color.text}; cursor:pointer; background-clip: padding-box;
         transition: transform 120ms cubic-bezier(.2,.6,.2,1), box-shadow 120ms cubic-bezier(.2,.6,.2,1);
-        display:inline-flex; align-items:center; justify-content:center; background-clip: padding-box;
+        display:inline-flex; align-items:center; justify-content:center;
       }
       .gold-send:hover:not(:disabled){ transform: translateY(-1px); }
       .gold-send:active:not(:disabled){ transform: translateY(0); }
       .gold-send:disabled{ opacity:.45; cursor:default; }
 
-      /* Mobile: Dock edge-to-edge + Safe-Area; FAB über Dock */
+      /* Icons + Status unter Prompt — 3px Abstand */
+      .gold-bar{
+        width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+        margin:3px auto 0 auto; /* ⬅️ exakt 3px */
+        display:flex; align-items:center; justify-content:flex-start; gap:12px;
+      }
+      .gold-tools{ display:flex; gap:8px; }
+      .gt-btn{
+        display:inline-flex; align-items:center; justify-content:center;
+        height:36px; min-width:36px; padding:0 12px;
+        border-radius:10px; border:1px solid rgba(49,65,86,.7);
+        background:#0b1220; color:#e6f0f3; font-weight:700;
+        transition:transform 120ms cubic-bezier(.2,.6,.2,1);
+      }
+      .gt-btn:active{ transform:scale(.98); }
+
+      /* Status beginnt direkt nach dem letzten Icon (links bündig), vertikal gestapelt */
+      .gold-stats{
+        display:flex; flex-direction:column; gap:6px; margin-left:12px; /* ⬅️ Abstand zum ⚙️ */
+        align-items:flex-start; color:${activeTokens.color.text}; font-size:12px;
+      }
+      .gold-stats .stat{ display:inline-flex; align-items:center; gap:8px; }
+      .gold-stats .dot{
+        width:6px; height:6px; border-radius:999px; flex:0 0 6px;
+        background:#22d3ee; box-shadow:0 0 8px rgba(34,211,238,.8);
+      }
+      .gold-stats .label{ opacity:.9; }
+
+      /* Mobile: Dock edge-to-edge + Safe-Area, keine weißen Ränder */
       @media (max-width: 768px){
         #m-input-dock.m-bottom-stack{
           position: fixed !important;
@@ -1176,26 +1174,22 @@ return (
           box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
           z-index: 70 !important;
         }
-        .gold-tools-row,
-        .gold-prompt-wrap{
+        .gold-prompt-wrap,
+        .gold-bar{
           width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
-          margin: 0 auto;
+          margin-left: auto; margin-right: auto;
         }
       }
 
-      /* Ripple / Micro motion */
+      /* Ripple / Inertia */
       .gold-dock.send-ripple{
         animation: gp-inertia 320ms cubic-bezier(.2,.6,.2,1) 1, gp-ripple 680ms ease-out 1;
       }
-      @keyframes gp-inertia{
-        0%{ transform: translateY(0); }
-        55%{ transform: translateY(-3px); }
-        100%{ transform: translateY(0); }
-      }
+      @keyframes gp-inertia{ 0%{transform:translateY(0)} 55%{transform:translateY(-3px)} 100%{transform:translateY(0)} }
       @keyframes gp-ripple{
-        0%   { box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
-        15%  { box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 1000px rgba(34,211,238,0.08); }
-        100% { box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
+        0%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
+        15%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 1000px rgba(34,211,238,0.08); }
+        100%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
       }
 
       /* Entkopplung von Legacy input-bar.css */
@@ -1205,7 +1199,7 @@ return (
         position: static !important; float: none !important; inset: auto !important; box-sizing: border-box !important;
       }
 
-      /* FAB Offset über Dock */
+      /* FAB über Dock */
       .sticky-fab, [data-sticky-fab], button[aria-label="Menü öffnen"]{
         bottom: calc(var(--dock-h, 60px) + 12px) !important;
         z-index: var(--fab-z) !important;
