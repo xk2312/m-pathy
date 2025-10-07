@@ -795,30 +795,30 @@ useEffect(() => {
 
 
   /* =====================================================================
-     [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
-     ===================================================================== */
+   [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
+   ===================================================================== */
 
-  // Mobile Overlay
-  const [overlayOpen, setOverlayOpen] = useState(false);
+// Mobile Overlay
+const [overlayOpen, setOverlayOpen] = useState(false);
 
-  // Farben ausschließlich aus Tokens
-  const color = activeTokens.color;
-  const bg0 = color.bg0 ?? "#000000";
-  const bg1 = color.bg1 ?? "#0c0f12";
-  const textColor = color.text ?? "#E6F0F3";
+// Farben ausschließlich aus Tokens
+const color = activeTokens.color;
+const bg0 = color.bg0 ?? "#000000";
+const bg1 = color.bg1 ?? "#0c0f12";
+const textColor = color.text ?? "#E6F0F3";
 
-  // Seitenstil (radial + linear)
-  const pageStyle: React.CSSProperties = {
-    minHeight: "100dvh",
-    color: textColor,
-    background: [
-      "radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%)",
-      "radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%)",
-      `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000 100%)`,
-    ].join(", "),
-  };
+// Seitenstil (radial + linear)
+const pageStyle: React.CSSProperties = {
+  minHeight: "100dvh",
+  color: textColor,
+  background: [
+    "radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%)",
+    "radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%)",
+    `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000 100%)`,
+  ].join(", "),
+};
 
-  // Optional: Abstand unten (mobil über visualViewport gepflegt)
+// Optional: Abstand unten (mobil über visualViewport gepflegt)
 const padBottom = `calc(${dockH}px + var(--safe-bottom) + 24px)`;
 
 /* 3.2 — Mobile Header State + Viewport Hook (BEGIN) */
@@ -827,41 +827,38 @@ const [mState, setMState] = useState<"idle" | "shrink" | "typing">("idle");
 // Keyboard-/Viewport-Handling (setzt --vh / --safe-bottom / --dock-cap dynamisch)
 useMobileViewport(typeof document !== "undefined" ? document.body : null);
 /* 3.2 — Mobile Header State + Viewport Hook (END) */
+
 /* 3.3 — Scroll → Header shrink (BEGIN) */
 useEffect(() => {
-  // nur auf Mobile und wenn das Scroll-Element existiert
   if (!isMobile || !convoRef?.current) return;
-
   const el = convoRef.current as HTMLElement;
-
   const onScroll = () => {
-    if (mState === "typing") return; // Tippen dominiert, nicht schrumpfen
+    if (mState === "typing") return;
     const y = el.scrollTop || 0;
     setMState(y > 24 ? "shrink" : "idle");
   };
-
   el.addEventListener("scroll", onScroll, { passive: true });
   return () => el.removeEventListener("scroll", onScroll);
 }, [isMobile, mState, convoRef]);
 /* 3.3 — Scroll → Header shrink (END) */
+
 /* 3.4 — Focus im Prompt/Dock → Header typing (BEGIN) */
 useEffect(() => {
   if (!isMobile) return;
-
   const onFocusIn = (e: FocusEvent) => {
     const t = e.target as HTMLElement | null;
-    // Wenn der Fokus in den Dock/Prompt-Bereich wandert → typing
     if (t && t.closest("#m-input-dock")) setMState("typing");
   };
-
   const onFocusOut = (e: FocusEvent) => {
     const t = e.target as HTMLElement | null;
     if (t && t.closest("#m-input-dock")) {
-      // Beim Verlassen: wenn gescrollt → shrink, sonst → idle
-      setMState((prev) => (prev === "typing" ? (convoRef?.current && (convoRef.current as HTMLElement).scrollTop > 24 ? "shrink" : "idle") : prev));
+      setMState((prev) =>
+        prev === "typing"
+          ? (convoRef?.current && (convoRef.current as HTMLElement).scrollTop > 24 ? "shrink" : "idle")
+          : prev
+      );
     }
   };
-
   document.addEventListener("focusin", onFocusIn);
   document.addEventListener("focusout", onFocusOut);
   return () => {
@@ -870,10 +867,10 @@ useEffect(() => {
   };
 }, [isMobile, convoRef]);
 /* 3.4 — Focus im Prompt/Dock → Header typing (END) */
+
 /* 3.5 — CSS-Variable --header-h je State setzen (BEGIN) */
 useEffect(() => {
   if (!isMobile) return;
-
   const root = document.documentElement;
   const value =
     mState === "typing"
@@ -881,7 +878,6 @@ useEffect(() => {
       : mState === "shrink"
       ? "var(--header-h-shrink)"   // 72px
       : "var(--header-h-idle)";    // 96px
-
   root.style.setProperty("--header-h", value);
 }, [isMobile, mState]);
 /* 3.5 — CSS-Variable --header-h je State setzen (END) */
@@ -903,19 +899,19 @@ return (
         borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
       }}
     >
-       <div
-    style={{
-      width: "100vw",          // volle Viewport-Breite
-      maxWidth: "none",
-      margin: 0,
-      height: "100%",
-      display: "flex",
-      justifyContent: "center",// exakt zentriert (horizontal)
-      alignItems: "center",    // exakt zentriert (vertikal in der Header-Höhe)
-    }}
-  >
-    <LogoM size={isMobile ? 120 : 160} active={loading} />
-  </div>
+      <div
+        style={{
+          width: "100vw",
+          maxWidth: "none",
+          margin: 0,
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <LogoM size={isMobile ? 120 : 160} active={loading} />
+      </div>
     </header>
 
     {/* === BÜHNE: startet unter dem fixierten Header === */}
@@ -929,7 +925,7 @@ return (
         maxWidth: 1280,
         alignSelf: "center",
         width: "100%",
-        paddingTop: isMobile ? "var(--header-h)" : "224px", // folgt der Header-State-Maschine
+        paddingTop: isMobile ? "var(--header-h)" : "224px",
       }}
     >
       {/* Bühne: Desktop 2 Spalten (Säule links), Mobile 1 Spalte */}
@@ -942,8 +938,7 @@ return (
           flex: 1,
           minHeight: 0,
           overflow: "visible",
-          /* ➜ Abstand unter dem Header für .saeule */
-          ["--header-offset" as any]: "16px", // bei Bedarf 24px/32px
+          ["--header-offset" as any]: "16px",
         }}
       >
         {/* Säule links */}
@@ -976,134 +971,121 @@ return (
             />
           </div>
 
-  {/* Prompt Dock (sticky bottom) */}
-  <div
-    id="m-input-dock"
-    ref={dockRef as any}
-    role="group"
-    aria-label="Chat Eingabeleiste"
-    className="gold-dock mob-transition"
-    onAnimationEnd={(e) => {
-      if ((e.target as HTMLElement).classList.contains("send-ripple")) {
-        (e.target as HTMLElement).classList.remove("send-ripple");
-      }
-    }}
-    style={{
-      position: "sticky",
-      bottom: 0,
-      zIndex: 50,
-      background: bg0,
-      padding: "10px 10px calc(10px + var(--safe-bottom))",
-      marginTop: 6,
-      borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
-      backdropFilter: "blur(8px)",
-      boxShadow: "0 -6px 24px rgba(0,0,0,.35)",
-      overscrollBehavior: "contain",
-      maxHeight: "var(--dock-cap)",
-      overflow: "visible",
-    }}
-  >
-    <div className="gold-prompt-wrap">
-      <textarea
-        id="gold-input"
-        aria-label={t("writeMessage")}
-        placeholder={t("writeMessage")}
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onInput={(e) => {
-          const ta = e.currentTarget;
-          // one-line → multi-line auto-grow (with soft cap)
-          ta.style.height = "auto";
-          const cap = Math.min(ta.scrollHeight, Math.round(window.innerHeight * 0.30));
-          ta.style.height = `${cap}px`;
-          // breathing state
-          ta.classList.add("is-typing");
-        }}
-        onBlur={(e) => e.currentTarget.classList.remove("is-typing")}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            if (input.trim()) {
-              // ripple trigger
-              const dockEl = document.getElementById("m-input-dock");
-              dockEl?.classList.add("send-ripple");
-              void dockEl?.getBoundingClientRect(); // reflow to restart animation
-              onSendFromPrompt(input);
-              setInput("");
-              const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-              if (ta) { ta.style.height = "auto"; }
-            }
-          }
-        }}
-        rows={1}
-        className="gold-textarea"
-        spellCheck
-        autoCorrect="on"
-        autoCapitalize="sentences"
-      />
-      <button
-        type="button"
-        className="gold-send"
-        aria-label={t("send")}
-        disabled={loading || !input.trim()}
-        onClick={() => {
-          if (!loading && input.trim()) {
-            const dockEl = document.getElementById("m-input-dock");
-            dockEl?.classList.add("send-ripple");
-            void dockEl?.getBoundingClientRect();
-            onSendFromPrompt(input);
-            setInput("");
-            const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-            if (ta) { ta.style.height = "auto"; ta.classList.remove("is-typing"); }
-          }
-        }}
-      >
-        {t("send")}
-      </button>
-    </div>
-  </div>
+          {/* Prompt Dock (sticky bottom, compact) */}
+          <div
+            id="m-input-dock"
+            ref={dockRef as any}
+            role="group"
+            aria-label="Chat Eingabeleiste"
+            className="gold-dock mob-transition"
+            onAnimationEnd={(e) => {
+              const el = e.target as HTMLElement;
+              if (el.classList.contains("send-ripple")) el.classList.remove("send-ripple");
+            }}
+            style={{
+              position: "sticky",
+              bottom: 0,
+              zIndex: 50,
+              background: bg0,
+              padding: "10px 10px calc(10px + var(--safe-bottom))",
+              marginTop: 6,
+              borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
+              backdropFilter: "blur(8px)",
+              boxShadow: "0 -6px 24px rgba(0,0,0,.35)",
+              overscrollBehavior: "contain",
+            }}
+          >
+            <div className="gold-prompt-wrap">
+              <textarea
+                id="gold-input"
+                aria-label={t("writeMessage")}
+                placeholder={t("writeMessage")}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onInput={(e) => {
+                  const ta = e.currentTarget;
+                  ta.style.height = "auto";
+                  const cap = Math.min(ta.scrollHeight, Math.round(window.innerHeight * 0.30));
+                  ta.style.height = `${cap}px`;
+                  ta.classList.add("is-typing");
+                }}
+                onBlur={(e) => e.currentTarget.classList.remove("is-typing")}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    if (input.trim()) {
+                      const dockEl = document.getElementById("m-input-dock");
+                      dockEl?.classList.add("send-ripple");
+                      void dockEl?.getBoundingClientRect();
+                      onSendFromPrompt(input);
+                      setInput("");
+                      const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+                      if (ta) ta.style.height = "auto";
+                    }
+                  }
+                }}
+                rows={1}
+                className="gold-textarea"
+                spellCheck
+                autoCorrect="on"
+                autoCapitalize="sentences"
+              />
+              <button
+                type="button"
+                className="gold-send"
+                aria-label={t("send")}
+                disabled={loading || !input.trim()}
+                onClick={() => {
+                  if (!loading && input.trim()) {
+                    const dockEl = document.getElementById("m-input-dock");
+                    dockEl?.classList.add("send-ripple");
+                    void dockEl?.getBoundingClientRect();
+                    onSendFromPrompt(input);
+                    setInput("");
+                    const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+                    if (ta) { ta.style.height = "auto"; ta.classList.remove("is-typing"); }
+                  }
+                }}
+              >
+                {t("send")}
+              </button>
+            </div>
+          </div>
 
-  {/* Status-Footer (rein visuell, keine Logik) */}
-<div
-  aria-label="Statusleiste"
-  style={{
-    marginTop: 8,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 12,
-    padding: "8px 10px",
-    borderRadius: 12,
-    background: "rgba(8,14,18,0.60)",
-    border: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
-    color: activeTokens.color.text,
-    fontSize: 12,
-  }}
->
-  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-    <span style={{ width: 6, height: 6, borderRadius: 999, background: "#0ff", boxShadow: "0 0 8px rgba(0,255,255,.8)" }} />
-    {t("statusMode") ?? "Mode"}:&nbsp;
-    <strong>{footerStatus.modeLabel || "—"}</strong>
-  </span>
+          {/* Status-Footer (rein visuell, keine Logik) */}
+          <div
+            aria-label="Statusleiste"
+            style={{
+              marginTop: 8,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 12,
+              padding: "8px 10px",
+              borderRadius: 12,
+              background: "rgba(8,14,18,0.60)",
+              border: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
+              color: activeTokens.color.text,
+              fontSize: 12,
+            }}
+          >
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              <span style={{ width: 6, height: 6, borderRadius: 999, background: "#0ff", boxShadow: "0 0 8px rgba(0,255,255,.8)" }} />
+              {t("statusMode") ?? "Mode"}:&nbsp;
+              <strong>{footerStatus.modeLabel || "—"}</strong>
+            </span>
 
-  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-    <span style={{ width: 6, height: 6, borderRadius: 999, background: "#0ff", boxShadow: "0 0 8px rgba(0,255,255,.8)" }} />
-    {t("currentExpert") ?? "Expert"}:&nbsp;
-    <strong>{footerStatus.expertLabel || "—"}</strong>
-  </span>
-</div>
-
-
-
-</div>
-</div>
-
-
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+              <span style={{ width: 6, height: 6, borderRadius: 999, background: "#0ff", boxShadow: "0 0 8px rgba(0,255,255,.8)" }} />
+              {t("currentExpert") ?? "Expert"}:&nbsp;
+              <strong>{footerStatus.expertLabel || "—"}</strong>
+            </span>
+          </div>
         </div>
-      
-    
+      </div>
+    </div>
 
-    {/* Mobile Overlay / Onboarding unverändert darunter */}
+    {/* Mobile Overlay / Onboarding */}
     {isMobile && (
       <>
         <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
@@ -1115,12 +1097,11 @@ return (
       </>
     )}
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
-        {/* Golden Prompt — minimal global styles & motion */}
+
+    {/* Golden Prompt — minimal global styles & motion */}
     <style jsx global>{`
-      /* Remove any plus button globally (no guessing component props) */
       .mi-plus-btn { display: none !important; }
 
-      /* Prompt dock layout (compact, single-line start → multi-line growth) */
       .gold-prompt-wrap {
         display: grid;
         grid-template-columns: 1fr auto;
@@ -1166,26 +1147,21 @@ return (
       .gold-send:active:not(:disabled) { transform: translateY(0); }
       .gold-send:disabled { opacity: .45; cursor: default; }
 
-      /* Subtle inertia settle on dock after send (3px overshoot) */
       .gold-dock.send-ripple {
         animation: gp-inertia 320ms var(--ease, cubic-bezier(.2,.6,.2,1)) 1,
                    gp-ripple 680ms ease-out 1;
       }
-
       @keyframes gp-inertia {
         0% { transform: translateZ(0) translateY(0); }
         55% { transform: translateZ(0) translateY(-3px); }
         100% { transform: translateZ(0) translateY(0); }
       }
-
-      /* Light refraction ripple through the glass */
       @keyframes gp-ripple {
         0% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0.0); }
         15% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 1000px rgba(34,211,238,0.08); }
         100% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0.0); }
       }
     `}</style>
-
   </main>
 );
 }
