@@ -969,6 +969,9 @@ return (
               padBottom={padBottom}
               scrollRef={convoRef as any}
             />
+            {/* Platz für fixiertes Dock auf Mobile */}
+          <div style={{height: isMobile ? 'calc(84px + var(--safe-bottom))' : 0}} />
+
           </div>
 
           {/* Prompt Dock (sticky bottom, compact) */}
@@ -1101,6 +1104,11 @@ return (
     {/* Golden Prompt — minimal global styles & motion */}
     <style jsx global>{`
       .mi-plus-btn { display: none !important; }
+<div className="gold-tools" aria-label="Prompt tools">
+  <button type="button" aria-label={t('comingUpload')} className="gt-btn">📎</button>
+  <button type="button" aria-label={t('comingVoice')} className="gt-btn">🎙️</button>
+  <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
+</div>
 
       .gold-prompt-wrap {
         display: grid;
@@ -1199,6 +1207,63 @@ return (
 #m-input-dock textarea.gold-textarea {
   border: initial;
   background-clip: padding-box;
+}
+@media (max-width: 768px) {
+  /* Dock wirklich ans Viewport-Ende pinnen */
+  #m-input-dock {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    margin: 0 !important;
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    background: rgba(8,14,18,0.86) !important;
+    backdrop-filter: blur(10px) !important;
+    border-top: 1px solid rgba(255,255,255,0.12) !important;
+    z-index: 60 !important; /* über Content, unter FAB */
+  }
+
+  /* Prompt-Row vollbreit, kein zentrieren */
+  #m-input-dock .gold-prompt-wrap {
+    width: 100% !important;
+    margin: 0 !important;
+    grid-template-columns: 1fr max-content !important;
+    gap: 10px !important;
+  }
+
+  /* Textarea flächig, saubere Ränder */
+  #m-input-dock .gold-textarea {
+    min-height: 44px !important;
+    max-height: var(--dock-cap, 30vh) !important;
+    padding: 10px 12px !important;
+  }
+
+  /* Button kompakt, niemals überlappen */
+  #m-input-dock .gold-send {
+    height: 44px !important;
+    min-width: 92px !important;
+    white-space: nowrap !important;
+  }
+}
+/* Desktop ausblenden, Mobile zeigen */
+.gold-tools { display: none; }
+@media (max-width: 768px) {
+  .gold-tools {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: start;
+    gap: 8px;
+    margin: 0 0 8px 0; /* 8px über dem Feld */
+  }
+  .gt-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 34px; min-width: 34px; padding: 0 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(49,65,86,.7);
+    background: #0b1220; color: #e6f0f3; font-weight: 700;
+    transition: transform 120ms var(--ease, cubic-bezier(.2,.6,.2,1));
+  }
+  .gt-btn:active { transform: scale(.98); }
 }
 
     `}</style>
