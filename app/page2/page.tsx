@@ -916,7 +916,7 @@ return (
               minHeight: 0,
               overflow: "auto",
               pointerEvents: "auto",
-              touchAction: "auto",
+              touchAction: "pan-y",
               WebkitOverflowScrolling: "touch",
               overscrollBehavior: "contain",
               paddingTop: 8,

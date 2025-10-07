@@ -29,9 +29,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head />
       <body
-        className={`${inter.className} min-h-dvh bg-gradient-to-b from-blue-50 via-white to-blue-100 text-slate-900 antialiased`}
-        style={{ overscrollBehaviorY: "auto", WebkitTapHighlightColor: "transparent" }}
-      >
+      className={`${inter.className} min-h-dvh bg-gradient-to-b from-blue-50 via-white to-blue-100 text-slate-900 antialiased`}
+      style={{ overscrollBehaviorY: "auto", WebkitTapHighlightColor: "transparent" }}
+    >
+
         <LangAttrUpdater />
         <Providers>{children}</Providers>
 

@@ -17,14 +17,14 @@ html, body {
     radial-gradient(circle at center, #0f0f0f, #000000);
   user-select: text;                 /* war: none */
   -webkit-user-select: text;
-  touch-action: manipulation;        /* war: none */
+  touch-action: pan-y pinch-zoom;
 }
 
 /* Kein globales overflow:hidden – sonst scrollt nichts */
 html { overflow-x: hidden; }
 body {
   background-color: #000;
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: auto;
   -webkit-tap-highlight-color: transparent;
 }
 
