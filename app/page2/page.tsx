@@ -1161,6 +1161,46 @@ return (
         15% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 1000px rgba(34,211,238,0.08); }
         100% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0.0); }
       }
+        /* === Golden Prompt: harte Entkoppelung von Legacy input-bar.css ====== */
+/* Button darf NIEMALS absolut werden */
+#m-input-dock .gold-prompt-wrap { 
+  display: grid;
+  grid-template-columns: 1fr max-content; /* Button misst sich selbst */
+  align-items: center;
+  gap: 10px;
+}
+#m-input-dock .gold-textarea,
+#m-input-dock .gold-send {
+  position: static !important;
+  float: none !important;
+  inset: auto !important;
+  box-sizing: border-box !important;
+}
+
+/* Schrift & Spacing korrigieren (falls Legacy monospace erzwingt) */
+#m-input-dock .gold-textarea {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji" !important;
+  letter-spacing: 0 !important;
+  padding-right: 12px !important; /* Button-Gap sauber */
+}
+
+/* Button-Größe + Inline-Layout erzwingen */
+#m-input-dock .gold-send {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 44px !important;
+  min-width: 92px;
+  white-space: nowrap;
+}
+
+/* Schutz vor globalen Button/textarea-Resets aus Legacy-CSS */
+#m-input-dock button.gold-send,
+#m-input-dock textarea.gold-textarea {
+  border: initial;
+  background-clip: padding-box;
+}
+
     `}</style>
   </main>
 );

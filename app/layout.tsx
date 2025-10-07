@@ -1,6 +1,6 @@
 import "./global.css";
 import "../styles/chat-prose.css";
-import "../styles/input-bar.css";
+// import "../styles/input-bar.css";
 
 import React from "react";
 import type { Metadata, Viewport } from "next";
