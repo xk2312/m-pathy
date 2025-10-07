@@ -821,14 +821,11 @@ const pageStyle: React.CSSProperties = {
 // Optional: Abstand unten (mobil über visualViewport gepflegt)
 const padBottom = `calc(${dockH}px + var(--safe-bottom) + 24px)`;
 
-/* 3.2 — Mobile Header State + Viewport Hook (BEGIN) */
+/* Mobile Header State + Viewport Hook */
 const [mState, setMState] = useState<"idle" | "shrink" | "typing">("idle");
-
-// Keyboard-/Viewport-Handling (setzt --vh / --safe-bottom / --dock-cap dynamisch)
 useMobileViewport(typeof document !== "undefined" ? document.body : null);
-/* 3.2 — Mobile Header State + Viewport Hook (END) */
 
-/* 3.3 — Scroll → Header shrink (BEGIN) */
+/* Scroll → Header shrink */
 useEffect(() => {
   if (!isMobile || !convoRef?.current) return;
   const el = convoRef.current as HTMLElement;
@@ -840,9 +837,8 @@ useEffect(() => {
   el.addEventListener("scroll", onScroll, { passive: true });
   return () => el.removeEventListener("scroll", onScroll);
 }, [isMobile, mState, convoRef]);
-/* 3.3 — Scroll → Header shrink (END) */
 
-/* 3.4 — Focus im Prompt/Dock → Header typing (BEGIN) */
+/* Focus im Prompt/Dock → Header typing */
 useEffect(() => {
   if (!isMobile) return;
   const onFocusIn = (e: FocusEvent) => {
@@ -866,9 +862,8 @@ useEffect(() => {
     document.removeEventListener("focusout", onFocusOut);
   };
 }, [isMobile, convoRef]);
-/* 3.4 — Focus im Prompt/Dock → Header typing (END) */
 
-/* 3.5 — CSS-Variable --header-h je State setzen (BEGIN) */
+/* CSS-Variable --header-h je State setzen */
 useEffect(() => {
   if (!isMobile) return;
   const root = document.documentElement;
@@ -880,11 +875,16 @@ useEffect(() => {
       : "var(--header-h-idle)";    // 96px
   root.style.setProperty("--header-h", value);
 }, [isMobile, mState]);
-/* 3.5 — CSS-Variable --header-h je State setzen (END) */
+
+/* Dock-Höhe → --dock-h (für FAB-Offset) */
+useEffect(() => {
+  const h = dockRef.current?.offsetHeight || 0;
+  document.documentElement.style.setProperty("--dock-h", `${h}px`);
+}, [dockH]);
 
 return (
   <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
-    {/* === HEADER: eigene BLOCK-Section, fixiert oben === */}
+    {/* === HEADER ===================================================== */}
     <header
       ref={headerRef}
       role="banner"
@@ -914,7 +914,7 @@ return (
       </div>
     </header>
 
-    {/* === BÜHNE: startet unter dem fixierten Header === */}
+    {/* === BÜHNE ====================================================== */}
     <div
       style={{
         flex: 1,
@@ -928,7 +928,7 @@ return (
         paddingTop: isMobile ? "var(--header-h)" : "224px",
       }}
     >
-      {/* Bühne: Desktop 2 Spalten (Säule links), Mobile 1 Spalte */}
+      {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
       <div
         style={{
           display: "grid",
@@ -944,9 +944,9 @@ return (
         {/* Säule links */}
         {!isMobile && <SidebarContainer onSystemMessage={systemSay} />}
 
-        {/* Rechte Spalte: Conversation + Dock */}
+        {/* Rechte Spalte: Conversation + Bottom-Stack */}
         <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
-          {/* Scrollbarer Chronik-Container (einziger Scroll) */}
+          {/* Scrollbarer Chronik-Container */}
           <div
             ref={convoRef as any}
             style={{
@@ -969,38 +969,28 @@ return (
               padBottom={padBottom}
               scrollRef={convoRef as any}
             />
-            {/* Platz für fixiertes Dock auf Mobile */}
-          <div style={{height: isMobile ? 'calc(84px + var(--safe-bottom))' : 0}} />
-
           </div>
 
-          {/* Prompt Dock (sticky bottom, compact) */}
+          {/* === BOTTOM STACK: Prompt + Icons + Status ================== */}
           <div
             id="m-input-dock"
             ref={dockRef as any}
+            className="m-bottom-stack gold-dock"
             role="group"
-            aria-label="Chat Eingabeleiste"
-            className="gold-dock mob-transition"
-            onAnimationEnd={(e) => {
-              const el = e.target as HTMLElement;
-              if (el.classList.contains("send-ripple")) el.classList.remove("send-ripple");
-            }}
-            style={{
-              position: "sticky",
-              bottom: 0,
-              zIndex: 50,
-              background: bg0,
-              padding: "10px 10px calc(10px + var(--safe-bottom))",
-              marginTop: 6,
-              borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
-              backdropFilter: "blur(8px)",
-              boxShadow: "0 -6px 24px rgba(0,0,0,.35)",
-              overscrollBehavior: "contain",
-            }}
+            aria-label="Chat Eingabe & Status"
           >
+            {/* Tools (nur mobil sichtbar) */}
+            <div className="gold-tools" aria-label={t('promptTools') ?? 'Prompt tools'}>
+              <button type="button" aria-label={t('comingUpload')}   className="gt-btn">📎</button>
+              <button type="button" aria-label={t('comingVoice')}    className="gt-btn">🎙️</button>
+              <button type="button" aria-label={t('comingFunctions')}className="gt-btn">⚙️</button>
+            </div>
+
+            {/* Prompt */}
             <div className="gold-prompt-wrap">
               <textarea
                 id="gold-input"
+                className="gold-textarea"
                 aria-label={t("writeMessage")}
                 placeholder={t("writeMessage")}
                 value={input}
@@ -1023,12 +1013,11 @@ return (
                       onSendFromPrompt(input);
                       setInput("");
                       const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-                      if (ta) ta.style.height = "auto";
+                      if (ta) { ta.style.height = "auto"; ta.classList.remove("is-typing"); }
                     }
                   }
                 }}
                 rows={1}
-                className="gold-textarea"
                 spellCheck
                 autoCorrect="on"
                 autoCapitalize="sentences"
@@ -1053,37 +1042,18 @@ return (
                 {t("send")}
               </button>
             </div>
-          </div>
 
-          {/* Status-Footer (rein visuell, keine Logik) */}
-          <div
-            aria-label="Statusleiste"
-            style={{
-              marginTop: 8,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 12,
-              padding: "8px 10px",
-              borderRadius: 12,
-              background: "rgba(8,14,18,0.60)",
-              border: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
-              color: activeTokens.color.text,
-              fontSize: 12,
-            }}
-          >
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-              <span style={{ width: 6, height: 6, borderRadius: 999, background: "#0ff", boxShadow: "0 0 8px rgba(0,255,255,.8)" }} />
-              {t("statusMode") ?? "Mode"}:&nbsp;
-              <strong>{footerStatus.modeLabel || "—"}</strong>
-            </span>
-
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-              <span style={{ width: 6, height: 6, borderRadius: 999, background: "#0ff", boxShadow: "0 0 8px rgba(0,255,255,.8)" }} />
-              {t("currentExpert") ?? "Expert"}:&nbsp;
-              <strong>{footerStatus.expertLabel || "—"}</strong>
-            </span>
+            {/* Status direkt unter dem Prompt */}
+            <div className="m-statusbar" aria-label="Statusleiste">
+              <span className="status-chip">
+                <i /> {t("statusMode") ?? "Mode"}:&nbsp;<strong>{footerStatus.modeLabel || "—"}</strong>
+              </span>
+              <span className="status-chip">
+                <i /> {t("currentExpert") ?? "currentExpert"}:&nbsp;<strong>{footerStatus.expertLabel || "—"}</strong>
+              </span>
+            </div>
           </div>
+          {/* === /BOTTOM STACK ========================================= */}
         </div>
       </div>
     </div>
@@ -1101,166 +1071,153 @@ return (
     )}
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
 
-   {/* 🔱 Golden Prompt — final sealed version */}
-      <style jsx global>{`
-        /* === Global Resets & Guardrails ===================================== */
-        .mi-plus-btn { display: none !important; }
+    {/* === Golden Prompt — final sealed styles ======================== */}
+    <style jsx global>{`
+      .mi-plus-btn { display: none !important; }
+      :root { --dock-h: 60px; }
 
-        :root { --dock-h: 60px; } /* Fallback */
-        @media (max-width: 768px) {
-          html, body { overflow-x: hidden; }
-        }
+      /* Bottom-Stack Container */
+      #m-input-dock.m-bottom-stack {
+        position: sticky;
+        bottom: 0;
+        z-index: 55;
+        background: rgba(8,14,18,0.90);
+        backdrop-filter: blur(8px);
+        border-top: 1px solid rgba(255,255,255,0.10);
+        box-shadow: 0 -6px 24px rgba(0,0,0,.35);
+        padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
+        overscroll-behavior: contain;
+        overflow: visible;
+      }
 
-        /* === Golden Dock Layout ============================================ */
-        #m-input-dock {
-          position: sticky;
-          bottom: 0;
-          z-index: 55;
-          background: rgba(8,14,18,0.9);
-          backdrop-filter: blur(8px);
-          border-top: 1px solid rgba(255,255,255,0.1);
-          box-shadow: 0 -6px 24px rgba(0,0,0,.35);
-          padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
-          overscroll-behavior: contain;
-          overflow: visible;
+      /* Mobile fix + Safe Areas */
+      @media (max-width: 768px) {
+        html, body { overflow-x: hidden; }
+        #m-input-dock.m-bottom-stack {
+          position: fixed !important;
+          left: max(8px, env(safe-area-inset-left));
+          right: max(8px, env(safe-area-inset-right));
+          bottom: max(8px, env(safe-area-inset-bottom));
+          margin: 0 !important;
+          padding: 8px 8px calc(8px + env(safe-area-inset-bottom,0px)) !important;
+          background: rgba(8,14,18,0.86) !important;
+          border-top: 1px solid rgba(255,255,255,0.12) !important;
+          z-index: 60 !important;
         }
+      }
 
-        /* === Mobile override: fixed + safe area ============================ */
-        @media (max-width: 768px) {
-          #m-input-dock {
-            position: fixed !important;
-            left: max(8px, env(safe-area-inset-left));
-            right: max(8px, env(safe-area-inset-right));
-            bottom: max(8px, env(safe-area-inset-bottom));
-            width: auto;
-            margin: 0 !important;
-            padding: 8px 8px calc(8px + env(safe-area-inset-bottom,0px)) !important;
-            background: rgba(8,14,18,0.86) !important;
-            border-top: 1px solid rgba(255,255,255,0.12) !important;
-            z-index: 60 !important;
-          }
-        }
+      /* Tools (nur mobil) */
+      .gold-tools {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-start;
+        width: min(920px, 100%);
+        margin: 0 auto 8px auto;
+      }
+      .gt-btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        height: 34px; min-width: 34px; padding: 0 10px;
+        border-radius: 10px;
+        border: 1px solid rgba(49,65,86,.7);
+        background: #0b1220; color: #e6f0f3; font-weight: 700;
+        transition: transform 120ms cubic-bezier(.2,.6,.2,1);
+      }
+      .gt-btn:active { transform: scale(.97); }
+      @media (min-width: 769px) { .gold-tools { display: none; } }
 
-        /* === Icon-Toolbar (Upload / Mic / Settings) ======================== */
-        .gold-tools {
-          display: flex;
-          gap: 8px;
-          justify-content: flex-start;
-          width: min(920px, 100%);
-          margin: 0 auto 8px auto;
-        }
-        .gt-btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          height: 34px;
-          min-width: 34px;
-          padding: 0 10px;
-          border-radius: 10px;
-          border: 1px solid rgba(49,65,86,0.7);
-          background: #0b1220;
-          color: #e6f0f3;
-          font-weight: 700;
-          transition: transform 120ms var(--ease, cubic-bezier(.2,.6,.2,1));
-        }
-        .gt-btn:active { transform: scale(.97); }
-        @media (min-width: 769px) {
-          .gold-tools { display: none; }
-        }
+      /* Prompt Grid */
+      .gold-prompt-wrap {
+        display: grid;
+        grid-template-columns: 1fr max-content;
+        gap: 10px;
+        align-items: stretch;
+        width: min(920px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+        margin: 0 auto;
+      }
+      .gold-textarea {
+        width: 100%;
+        min-height: 44px;
+        max-height: var(--dock-cap, 30vh);
+        resize: none;
+        border-radius: 12px;
+        padding: 10px 12px;
+        line-height: 1.5;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.04);
+        color: ${activeTokens.color.text};
+        outline: none;
+        transition: box-shadow 120ms cubic-bezier(.2,.6,.2,1), border-color 120ms cubic-bezier(.2,.6,.2,1);
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+      }
+      .gold-textarea:is(:hover,:focus,.is-typing) {
+        box-shadow: 0 0 0 1px rgba(34,211,238,0.28), 0 0 18px rgba(34,211,238,0.18);
+        border-color: rgba(34,211,238,0.28);
+      }
+      .gold-send {
+        min-height: 44px;
+        align-self: stretch;
+        padding: 0 14px;
+        border-radius: 12px;
+        font-weight: 700;
+        border: 1px solid rgba(34,211,238,0.28);
+        background: rgba(34,211,238,0.12);
+        color: ${activeTokens.color.text};
+        cursor: pointer;
+        transition: transform 120ms cubic-bezier(.2,.6,.2,1), box-shadow 120ms cubic-bezier(.2,.6,.2,1);
+        display: inline-flex; align-items: center; justify-content: center;
+        white-space: nowrap;
+      }
+      .gold-send:hover:not(:disabled) { transform: translateY(-1px); }
+      .gold-send:active:not(:disabled) { transform: translateY(0); }
+      .gold-send:disabled { opacity: .45; cursor: default; }
 
-        /* === Prompt Input Grid ============================================ */
-        .gold-prompt-wrap {
-          display: grid;
-          grid-template-columns: 1fr max-content;
-          gap: 10px;
-          align-items: stretch;
-          width: min(920px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
-          margin: 0 auto;
-        }
+      /* Statusbar unter dem Prompt */
+      .m-statusbar {
+        width: min(920px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+        margin: 8px auto 0 auto;
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        padding: 8px 10px;
+        border-radius: 12px;
+        background: rgba(8,14,18,0.60);
+        border: 1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"};
+        color: ${activeTokens.color.text};
+        font-size: 12px;
+      }
+      .m-statusbar .status-chip { display: inline-flex; align-items: center; gap: 8px; }
+      .m-statusbar .status-chip i {
+        width: 6px; height: 6px; border-radius: 999px;
+        background: #0ff; box-shadow: 0 0 8px rgba(0,255,255,.8);
+        display: inline-block;
+      }
 
-        .gold-textarea {
-          width: 100%;
-          min-height: 44px;
-          max-height: var(--dock-cap, 30vh);
-          resize: none;
-          border-radius: 12px;
-          padding: 10px 12px;
-          line-height: 1.5;
-          border: 1px solid rgba(255,255,255,0.12);
-          background: rgba(255,255,255,0.04);
-          color: ${activeTokens.color.text};
-          outline: none;
-          transition: box-shadow 120ms var(--ease, cubic-bezier(.2,.6,.2,1)),
-                      border-color 120ms var(--ease, cubic-bezier(.2,.6,.2,1));
-        }
-        .gold-textarea:is(:hover,:focus,.is-typing) {
-          box-shadow: 0 0 0 1px rgba(34,211,238,0.28),
-                      0 0 18px rgba(34,211,238,0.18);
-          border-color: rgba(34,211,238,0.28);
-        }
+      /* Ripple + Inertia */
+      .gold-dock.send-ripple {
+        animation: gp-inertia 320ms cubic-bezier(.2,.6,.2,1) 1, gp-ripple 680ms ease-out 1;
+      }
+      @keyframes gp-inertia { 0%{transform:translateY(0)} 55%{transform:translateY(-3px)} 100%{transform:translateY(0)} }
+      @keyframes gp-ripple {
+        0% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0); }
+        15%{ box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 1000px rgba(34,211,238,0.08); }
+        100%{ box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0); }
+      }
 
-        .gold-send {
-          min-height: 44px;
-          align-self: stretch;
-          padding: 0 14px;
-          border-radius: 12px;
-          font-weight: 700;
-          border: 1px solid rgba(34,211,238,0.28);
-          background: rgba(34,211,238,0.12);
-          color: ${activeTokens.color.text};
-          cursor: pointer;
-          transition: transform 120ms var(--ease, cubic-bezier(.2,.6,.2,1)),
-                      box-shadow 120ms var(--ease, cubic-bezier(.2,.6,.2,1));
-        }
-        .gold-send:hover:not(:disabled) { transform: translateY(-1px); }
-        .gold-send:active:not(:disabled) { transform: translateY(0); }
-        .gold-send:disabled { opacity: .45; cursor: default; }
+      /* Entkopplung von Legacy input-bar.css */
+      #m-input-dock .gold-prompt-wrap,
+      #m-input-dock .gold-textarea,
+      #m-input-dock .gold-send {
+        position: static !important;
+        float: none !important;
+        inset: auto !important;
+        box-sizing: border-box !important;
+      }
+      #m-input-dock .gold-send { height: 44px !important; min-width: 92px; }
 
-        /* === Ripple & Motion ============================================== */
-        .gold-dock.send-ripple {
-          animation: gp-inertia 320ms cubic-bezier(.2,.6,.2,1) 1,
-                    gp-ripple 680ms ease-out 1;
-        }
-        @keyframes gp-inertia {
-          0% { transform: translateY(0); }
-          55% { transform: translateY(-3px); }
-          100% { transform: translateY(0); }
-        }
-        @keyframes gp-ripple {
-          0% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0); }
-          15% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 1000px rgba(34,211,238,0.08); }
-          100% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0); }
-        }
-
-        /* === Entkopplung von Legacy input-bar.css ========================= */
-        #m-input-dock .gold-prompt-wrap,
-        #m-input-dock .gold-textarea,
-        #m-input-dock .gold-send {
-          position: static !important;
-          float: none !important;
-          inset: auto !important;
-          box-sizing: border-box !important;
-        }
-        #m-input-dock .gold-textarea {
-          font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-          letter-spacing: 0 !important;
-          padding-right: 12px !important;
-        }
-        #m-input-dock .gold-send {
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          height: 44px !important;
-          min-width: 92px;
-          white-space: nowrap;
-        }
-        #m-input-dock button.gold-send,
-        #m-input-dock textarea.gold-textarea {
-          border: initial;
-          background-clip: padding-box;
-        }
-      `}</style>
-
+      /* FAB steht über dem Dock (dynamisch via --dock-h) */
+      .sticky-fab, [data-sticky-fab], button[aria-label="Menü öffnen"] {
+        bottom: calc(var(--dock-h, 60px) + 12px) !important;
+        z-index: 70 !important;
+      }
+    `}</style>
   </main>
 );
 }
