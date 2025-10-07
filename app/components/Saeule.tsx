@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import styles from "./Saeule.module.css";
 import { logEvent } from "../../lib/auditLogger";
-import { t } from "@/lib/i18n";
+import { t, getLocale } from "@/lib/i18n";
 
 /* ======================================================================
    Typen
@@ -175,75 +175,36 @@ function getLang(): string {
   return "en";
 }
 
-function labelForExpert(id: ExpertId, lang: string): string {
-  // Keys: experts.biologist etc.
-  const key = `experts.${id
-    .toLowerCase()
-    .replace(/\s+\/\s+/g, "_")
-    .replace(/\s+/g, "_")}`;
-
+function labelForExpert(id: ExpertId, _lang: string): string {
+  const key = `experts.${id.toLowerCase().replace(/\s+\/\s+/g, "_").replace(/\s+/g, "_")}`;
   const fromT = t(key);
-  if (fromT && fromT !== key) return fromT; // echte Übersetzung vorhanden
-
-  // Fallback DE/EN
-  const de: Record<ExpertId, string> = {
-    Biologist: "Biologe",
-    Chemist: "Chemiker",
-    Physicist: "Physiker",
-    "Computer Scientist": "Informatiker",
-    Jurist: "Jurist",
-    "Architect / Civil Engineer": "Architekt / Bauingenieur",
-    "Landscape Designer": "Landschaftsdesigner",
-    "Interior Designer": "Innenarchitekt",
-    "Electrical Engineer": "Elektroingenieur",
-    Mathematician: "Mathematiker",
-    Astrologer: "Astrologe",
-    "Weather Expert": "Wetter-Experte",
-    "Molecular Scientist": "Molekularwissenschaftler",
-  };
-  if (lang.startsWith("de")) return de[id];
-  return id; // englische Basislabels
+  return fromT && fromT !== key ? fromT : id; // i18n → sonst neutrale ID
 }
 
-function sectionTitleExperts(lang: string): string {
-  const key = "experts.title";
-  const fromT = t(key);
-  if (fromT && fromT !== key) return fromT;
-  return lang.startsWith("de") ? "Experten" : "Experts";
-}
-function chooseExpertLabel(lang: string): string {
-  const key = "experts.choose";
-  const fromT = t(key);
-  if (fromT && fromT !== key) return fromT;
-  return lang.startsWith("de") ? "Wähle Experten" : "Choose expert";
+function sectionTitleExperts(_lang: string): string {
+  // nutze vorhandenen Key, damit es sicher lokalisiert (de/en)
+  return t("selectExpert");
 }
 
-function buildButtonLabel(lang: string): string {
-  const key = "startBuilding";
-  const fromT = t(key);
-  if (fromT && fromT !== key) return fromT;
-  return lang.startsWith("de") ? "Start building" : "Start building";
+function chooseExpertLabel(_lang: string): string {
+  // gleicher Key für Label/Aria
+  return t("selectExpert");
 }
 
-function buildButtonMsg(lang: string): string {
-  const key = "startBuildingMsg";
-  const fromT = t(key);
-  if (fromT && fromT !== key) return fromT;
-  return lang.startsWith("de")
-    ? "Lass uns loslegen. Sag mir, was du bauen möchtest."
-    : "Let’s get started. Tell me what you want to build.";
+function buildButtonLabel(_lang: string): string {
+  return tr("startBuilding", "Start building");
 }
 
-function expertAskPrompt(expertLabel: string, lang: string): string {
-  const key = "experts.askTemplate";
-  const templ = t(key);
-  if (templ && templ !== key) {
-    // naive Platzhalter-Unterstützung {expert}
+function buildButtonMsg(_lang: string): string {
+  return tr("startBuildingMsg", "Let’s get started. Tell me what you want to build.");
+}
+
+function expertAskPrompt(expertLabel: string, _lang: string): string {
+  const templ = t("prompts.expertAskTemplate");
+  if (templ && templ !== "prompts.expertAskTemplate") {
     return templ.replace("{expert}", expertLabel);
   }
-  return lang.startsWith("de")
-    ? `${expertLabel}, wer bist du und was kannst du für mich tun?`
-    : `${expertLabel}, who are you and what can you do for me?`;
+  return tr("prompts.expertAskTemplate", "{expert}, who are you and what can you do for me?", { expert: expertLabel });
 }
 
 function emitSystemMessage(detail: {
@@ -265,6 +226,21 @@ function modeLabelFromId(id: ModeId): string {
   if (id === "M") return "M (Default)";
   if (id === "council") return "COUNCIL13";
   return MODI.find((m) => m.id === id)?.label ?? String(id);
+}
+// Universeller Übersetzer: nimmt t(key) und fällt elegant zurück
+function tr(key: string, fallback: string, vars?: Record<string, string>): string {
+  try {
+    const raw = t(key);
+    let out = raw && raw !== key ? raw : fallback;
+    if (vars) {
+      for (const [k, v] of Object.entries(vars)) {
+        out = out.replace(new RegExp(`\\{${k}\\}`, "g"), String(v));
+      }
+    }
+    return out;
+  } catch {
+    return fallback;
+  }
 }
 
 // Saeule.tsx — REPLACE the whole function
@@ -316,10 +292,23 @@ export default function Saeule({ onSystemMessage }: Props) {
   const [lang, setLang] = useState<string>("en");
 
 
-  useEffect(() => {
-    setHydrated(true);
-    setLang(getLang());
-  }, []);
+useEffect(() => {
+  // initial aus zentralem i18n
+  setLang(getLocale());
+  const onChange = (e: Event) => {
+    const next = (e as CustomEvent).detail?.locale as string | undefined;
+    if (next) setLang(next);
+  };
+  window.addEventListener("mpathy:i18n:change", onChange as EventListener);
+  return () => window.removeEventListener("mpathy:i18n:change", onChange as EventListener);
+}, []);
+
+
+
+ useEffect(() => {
+  setHydrated(true);
+  setLang(getLocale());
+}, []);
 
   useEffect(() => { try { if (activeMode) localStorage.setItem("mode", activeMode); } catch {} }, [activeMode]);
   useEffect(() => {
@@ -365,35 +354,32 @@ const emitStatus = useCallback((partial: { modeLabel?: string; expertLabel?: str
   setActiveMode(next);
 
   const label = modeLabelFromId(next);
-  emitSystemMessage({ kind: "mode", text: `Mode set: ${label}.`, meta: { modeId: next, label } });
-  emitStatus({ modeLabel: label });                // ← Footer updaten
+emitSystemMessage({
+  kind: "mode",
+  // Schlüssel frei wählbar; Beispiel: status.modeSet = "Mode set: {label}."
+  text: tr("status.modeSet", "Mode set: {label}.", { label }),
+  meta: { modeId: next, label, lang }
+});
+emitStatus({ modeLabel: label });
 
-  // Auto-Prompt nur für die API (kein Fallback-Text)
-  let q = "";
-  if (next === "onboarding") {
-    q = lang.startsWith("de")
-      ? "Hey! 👋 Wer bist du und wie begleitest du mich hier Schritt für Schritt?"
-      : "Hey! 👋 Who are you and how will you guide me here step by step?";
-  } else if (next === "M") {
-    q = lang.startsWith("de")
-      ? "Setze alles auf Standard zurück und sag mir kurz den Status."
-      : "Reset everything to default and give me a brief status.";
-  } else if (next === "council") {
-    q = lang.startsWith("de")
-      ? "Alle KIs bitte kurz vorstellen und sagen, wobei ihr sofort helfen könnt."
-      : "Each AI please introduce yourself and say how you can help right now.";
-  } else {
-    q = lang.startsWith("de")
-      ? `Modus ${label}: Was bist du und wobei unterstützt du mich am besten?`
-      : `Mode ${label}: What are you and where will you help me best?`;
-  }
+      // ← Footer updaten
+
+    // Auto-Prompt nur für die API (Keys aus i18n.ts → "prompts.*")
+  const q =
+    next === "onboarding"
+      ? tr("prompts.onboarding", "Hey! 👋 Who are you and how will you guide me here step by step?")
+      : next === "M"
+      ? tr("prompts.modeDefault", "Reset everything to default and give me a brief status.")
+      : next === "council"
+      ? tr("prompts.councilIntro", "Each AI please introduce yourself and say how you can help right now.")
+      : tr("prompts.modeGeneric", "Mode {label}: What are you and where will you help me best?", { label });
+
 
   const reply = await callChatAPI(q);
   if (reply && reply.trim().length > 0) {
-    say(reply);                                     // ← genau eine Bubble, nur wenn API liefert
+    say(reply);
   }
 }
-
 
 async function askExpert(expert: ExpertId) {
   if (sendingExpert) return;
@@ -437,9 +423,8 @@ async function askExpert(expert: ExpertId) {
             const reply = await callChatAPI(prompt);
 const finalText = reply && reply.length
   ? reply
-  : (lang.startsWith("de")
-      ? "Alles klar – sag mir einfach, was du bauen möchtest (App, Flow, Feature …)."
-      : "All set — tell me what you want to build (app, flow, feature …).");
+  : tr("cta.fallback", "All set — tell me what you want to build (app, flow, feature …).");
+
 say(finalText);
 
           }}
@@ -554,14 +539,10 @@ say(finalText);
               a.href = url; a.download = "mpathy-thread.json"; a.click();
               URL.revokeObjectURL(url);
               logEvent("export_thread", { size: raw.length });
-              const key = "threadExported";
-              const msg = t(key);
-              const text =
-                msg && msg !== key
-                  ? msg
-                  : (getLang().startsWith("de") ? "Thread exportiert." : "Thread exported.");
+              const text = tr("threadExported", "Thread exported.");
               emitSystemMessage({ kind: "info", text, meta: { bytes: raw.length || 0 } });
               onSystemMessage?.(text);
+
             } catch {}
           }}
         >
@@ -575,4 +556,4 @@ say(finalText);
       </div>
     </aside>
   );
-}
+    }

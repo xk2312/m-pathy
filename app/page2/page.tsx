@@ -521,6 +521,8 @@ export default function Page2() {
     };
   }, []);
 
+  
+
   // Chat State
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");

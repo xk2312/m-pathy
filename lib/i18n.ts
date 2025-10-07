@@ -52,6 +52,24 @@ const en = {
   // Backward-compat alias (if some code still uses statusAI)
   statusAI: "Agent:",
 
+  // Status texts
+  "status.modeSet": "Mode set: {label}.",
+
+  // Prompt texts
+  "prompts.onboarding": "Hey! 👋 Who are you and how will you guide me here step by step?",
+  "prompts.modeDefault": "Reset everything to default and give me a brief status.",
+  "prompts.councilIntro": "Each AI please introduce yourself and say how you can help right now.",
+  "prompts.modeGeneric": "Mode {label}: What are you and where will you help me best?",
+  "prompts.expertAskTemplate": "{expert}, who are you and what can you do for me?",
+  // Experts (used by Saeule.tsx)
+  "experts.title": "Experts",
+  "experts.choose": "Choose expert",
+  "experts.askTemplate": "{expert}, who are you and what can you do for me?",
+  "experts.askTemplateDefault": "{expert}, who are you and what can you do for me?",
+
+  // CTA fallback
+  "cta.fallback": "All set — tell me what you want to build (app, flow, feature …).",
+
   // ARIA / A11y
   conversationAria: "Chat log",
   assistantSays: "Assistant message",
@@ -88,6 +106,8 @@ const de: Dict = {
   modules: "Module",
   coming: "Coming",
 
+  
+
   // Ergänzungen (Experten & CTA)
   selectExpert: "Experte wählen",
   statusExpert: "Experte:",
@@ -108,6 +128,23 @@ const de: Dict = {
 
   // Backward-compat alias
   statusAI: "KI:",
+  // Status-Texte
+  "status.modeSet": "Modus gesetzt: {label}.",
+
+  // Prompt-Texte
+  "prompts.onboarding": "Hey! 👋 Wer bist du und wie begleitest du mich hier Schritt für Schritt?",
+  "prompts.modeDefault": "Setze alles auf Standard zurück und sag mir kurz den Status.",
+  "prompts.councilIntro": "Alle KIs bitte kurz vorstellen und sagen, wobei ihr sofort helfen könnt.",
+  "prompts.modeGeneric": "Modus {label}: Was bist du und wobei unterstützt du mich am besten?",
+  "prompts.expertAskTemplate": "{expert}, wer bist du und was kannst du für mich tun?",
+  // Experten (wird von Saeule.tsx genutzt)
+  "experts.title": "Experten",
+  "experts.choose": "Experten wählen",
+  "experts.askTemplate": "{expert}, wer bist du und was kannst du für mich tun?",
+  "experts.askTemplateDefault": "{expert}, wer bist du und was kannst du für mich tun?",
+
+  // CTA Fallback
+  "cta.fallback": "Alles klar – sag mir einfach, was du bauen möchtest (App, Flow, Feature …).",
 
   // ARIA / A11y
   conversationAria: "Chat-Verlauf",
@@ -122,19 +159,52 @@ export type Locale = keyof typeof DICTS;
 
 const STORAGE_KEY = "mpathy:locale";
 
+/** Mappt "de-AT" → "de", "pt-BR" → "pt" etc. */
+function toBase(tag: string): string {
+  return String(tag || "").toLowerCase().split("-")[0];
+}
+
+/** Aushandlung aus navigator.languages, navigator.language, <html lang> */
+function negotiateLocaleFromBrowser(): string {
+  try {
+    // 1) navigator.languages (höchste Präferenz)
+    if (typeof navigator !== "undefined" && Array.isArray((navigator as any).languages)) {
+      for (const l of (navigator as any).languages) {
+        const base = toBase(l);
+        if (base in DICTS) return base;
+      }
+    }
+
+    // 2) navigator.language
+    if (typeof navigator !== "undefined" && navigator.language) {
+      const base = toBase(navigator.language);
+      if (base in DICTS) return base;
+    }
+
+    // 3) <html lang>
+    if (typeof document !== "undefined" && document.documentElement?.lang) {
+      const base = toBase(document.documentElement.lang);
+      if (base in DICTS) return base;
+    }
+  } catch {
+    /* noop */
+  }
+  return "en"; // Fallback
+}
+
 /** SSR-safe locale initialization */
 function detectInitialLocale(): Locale {
-  // 1) localStorage (client only)
+  // 1) explizit gesetzte Locale (nur wenn zuvor über setLocale gesetzt)
   if (typeof window !== "undefined") {
-    const saved = window.localStorage.getItem(STORAGE_KEY) as Locale | null;
-    if (saved && saved in DICTS) return saved;
+    const explicit = window.localStorage.getItem(STORAGE_KEY) as Locale | null;
+    if (explicit && explicit in DICTS) return explicit;
   }
-  // 2) navigator language (client only)
-  if (typeof navigator !== "undefined") {
-    const lang = (navigator.language || "").toLowerCase();
-    if (lang.startsWith("de")) return "de";
-  }
-  // 3) default
+
+  // 2) Browser-/Dokumentsprache aushandeln
+  const negotiated = negotiateLocaleFromBrowser();
+  if (negotiated in DICTS) return negotiated as Locale;
+
+  // 3) Fallback
   return "en";
 }
 
@@ -145,14 +215,14 @@ export function getLocale(): Locale {
   return currentLocale;
 }
 
-/** Set current locale (persists on client) */
+/** Set current locale (persists on client) — explizites Override */
 export function setLocale(locale: Locale) {
   if (!(locale in DICTS)) return;
   currentLocale = locale;
   if (typeof window !== "undefined") {
-    window.localStorage.setItem(STORAGE_KEY, locale);
-    // Optional: notify listeners (components can re-render on locale change)
+    window.localStorage.setItem(STORAGE_KEY, locale); // explizites Override
     window.dispatchEvent(new CustomEvent("mpathy:i18n:change", { detail: { locale } }));
+    window.dispatchEvent(new CustomEvent("mpathy:i18n:explicit")); // signalisiere Override
   }
 }
 
@@ -167,5 +237,66 @@ export function t(key: string): string {
   return key;
 }
 
-/** Optional helper: list of available locales */
-export const availableLocales: Locale[] = ["en", "de"];
+/** Übersetzen mit Fallback-Text und einfachen Platzhaltern {name} */
+export function tr(key: string, fallback: string, vars?: Record<string, string>): string {
+  let out = t(key);
+  if (out === key) out = fallback; // Fallback verwenden, wenn Key fehlt
+  if (vars) {
+    for (const [k, v] of Object.entries(vars)) {
+      out = out.replace(new RegExp(`\\{${k}\\}`, "g"), String(v));
+    }
+  }
+  return out;
+}
+
+/** Optional helper: list of available locales (automatisch aus DICTS) */
+export const availableLocales: Locale[] = Object.keys(DICTS) as Locale[];
+
+/** Reagiert auf Sprachwechsel im Browser/Dokument (ohne explizites Override) */
+function attachLocaleWatchers() {
+  if (typeof window === "undefined") return;
+
+  // Wenn USER später setLocale() aufruft, setzen wir ein explizites Override.
+  // Solange nicht explizit gesetzt, folgen wir Browser/DOM.
+  let explicit = !!window.localStorage.getItem(STORAGE_KEY);
+
+  // Beobachte Änderungen an <html lang="">
+  try {
+    const mo = new MutationObserver(() => {
+      if (explicit) return;
+      const next = negotiateLocaleFromBrowser() as Locale;
+      if (next !== currentLocale) {
+        currentLocale = next;
+        window.dispatchEvent(new CustomEvent("mpathy:i18n:change", { detail: { locale: next } }));
+      }
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+  } catch { /* noop */ }
+
+  // Reagiere auf Browser-Event languagechange (z. B. iOS/Android)
+  window.addEventListener("languagechange", () => {
+    if (explicit) return;
+    const next = negotiateLocaleFromBrowser() as Locale;
+    if (next !== currentLocale) {
+      currentLocale = next;
+      window.dispatchEvent(new CustomEvent("mpathy:i18n:change", { detail: { locale: next } }));
+    }
+  });
+
+  // Wenn jemand später setLocale() nutzt, merken wir uns das als explizit.
+  window.addEventListener("mpathy:i18n:explicit", () => {
+    explicit = true;
+  });
+}
+
+// --- Auto-Init (Client): folge Browser/DOM-Sprache, bis Nutzer explizit setLocale() ruft ---
+if (typeof window !== "undefined") {
+  // Falls <html lang> leer ist, mit Browser-Grundsprache befüllen (kosmetisch)
+  try {
+    if (!document.documentElement.lang) {
+      document.documentElement.lang = toBase(negotiateLocaleFromBrowser());
+    }
+  } catch { /* noop */ }
+
+  attachLocaleWatchers();
+}
