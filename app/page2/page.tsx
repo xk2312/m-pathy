@@ -971,7 +971,7 @@ return (
             />
           </div>
 
-          {/* === BOTTOM STACK: Prompt + Icons + Status ================== */}
+          {/* === BOTTOM STACK: Tools + Status (rechts) + Prompt ============= */}
           <div
             id="m-input-dock"
             ref={dockRef as any}
@@ -979,11 +979,26 @@ return (
             role="group"
             aria-label="Chat Eingabe & Status"
           >
-            {/* Tools (nur mobil sichtbar) */}
-            <div className="gold-tools" aria-label={t('promptTools') ?? 'Prompt tools'}>
-              <button type="button" aria-label={t('comingUpload')}   className="gt-btn">📎</button>
-              <button type="button" aria-label={t('comingVoice')}    className="gt-btn">🎙️</button>
-              <button type="button" aria-label={t('comingFunctions')}className="gt-btn">⚙️</button>
+            {/* Tools + Status in einer Reihe (Status rechts, vertikal gestapelt) */}
+            <div className="gold-tools-row" aria-label={t('promptTools') ?? 'Prompt tools'}>
+              <div className="gold-tools">
+                <button type="button" aria-label={t('comingUpload')}    className="gt-btn">📎</button>
+                <button type="button" aria-label={t('comingVoice')}     className="gt-btn">🎙️</button>
+                <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
+              </div>
+
+              <div className="gold-stats">
+                <div className="stat">
+                  <span className="dot" />
+                  <span className="label">Mode:</span>
+                  <strong>{footerStatus.modeLabel || "—"}</strong>
+                </div>
+                <div className="stat">
+                  <span className="dot" />
+                  <span className="label">Expert:</span>
+                  <strong>{footerStatus.expertLabel || "—"}</strong>
+                </div>
+              </div>
             </div>
 
             {/* Prompt */}
@@ -1042,16 +1057,6 @@ return (
                 {t("send")}
               </button>
             </div>
-
-            {/* Status direkt unter dem Prompt */}
-            <div className="m-statusbar" aria-label="Statusleiste">
-              <span className="status-chip">
-                <i /> {t("statusMode") ?? "Mode"}:&nbsp;<strong>{footerStatus.modeLabel || "—"}</strong>
-              </span>
-              <span className="status-chip">
-                <i /> {t("currentExpert") ?? "currentExpert"}:&nbsp;<strong>{footerStatus.expertLabel || "—"}</strong>
-              </span>
-            </div>
           </div>
           {/* === /BOTTOM STACK ========================================= */}
         </div>
@@ -1071,151 +1076,139 @@ return (
     )}
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
 
-    {/* === Golden Prompt — final sealed styles ======================== */}
+    {/* === Golden Prompt — sealed styles ============================== */}
     <style jsx global>{`
+      /* Kanten weg, dunkle Scrollbar, FAB über Dock */
+      html, body { background:#000; margin:0; padding:0; overflow-x:hidden; }
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: rgba(0,0,0,.6); }
+      ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.10); border-radius: 4px; }
+      :root { --dock-h: 60px; --fab-z: 90; }
       .mi-plus-btn { display: none !important; }
-      :root { --dock-h: 60px; }
+      [data-sticky-fab] { z-index: var(--fab-z) !important; }
 
-      /* Bottom-Stack Container */
-      #m-input-dock.m-bottom-stack {
+      /* Dock Container */
+      #m-input-dock.m-bottom-stack{
         position: sticky;
         bottom: 0;
-        z-index: 55;
+        z-index: 60;
         background: rgba(8,14,18,0.90);
         backdrop-filter: blur(8px);
         border-top: 1px solid rgba(255,255,255,0.10);
-        box-shadow: 0 -6px 24px rgba(0,0,0,.35);
+        box-shadow: 0 -4px 18px rgba(0,0,0,.40);
         padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
         overscroll-behavior: contain;
-        overflow: visible;
+        width: auto; margin: 0; border-radius: 0;
       }
 
-      /* Mobile fix + Safe Areas */
-      @media (max-width: 768px) {
-        html, body { overflow-x: hidden; }
-        #m-input-dock.m-bottom-stack {
+      /* Tools + Status (rechts, vertikal) */
+      .gold-tools-row{
+        display:flex; align-items:center; justify-content:space-between;
+        width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+        margin:0 auto 8px auto; gap:12px;
+      }
+      .gold-tools{ display:flex; gap:8px; }
+      .gt-btn{
+        display:inline-flex; align-items:center; justify-content:center;
+        height:36px; min-width:36px; padding:0 12px;
+        border-radius:10px; border:1px solid rgba(49,65,86,.7);
+        background:#0b1220; color:#e6f0f3; font-weight:700;
+        transition:transform 120ms cubic-bezier(.2,.6,.2,1);
+      }
+      .gt-btn:active{ transform:scale(.98); }
+
+      .gold-stats{
+        display:flex; flex-direction:column; gap:6px; align-items:flex-end;
+        color:${activeTokens.color.text}; font-size:12px;
+      }
+      .gold-stats .stat{ display:inline-flex; align-items:center; gap:8px; }
+      .gold-stats .dot{
+        width:6px; height:6px; border-radius:999px; flex:0 0 6px;
+        background:#22d3ee; box-shadow:0 0 8px rgba(34,211,238,.8);
+      }
+      .gold-stats .label{ opacity:.9; }
+
+      /* Prompt Grid */
+      .gold-prompt-wrap{
+        display:grid; grid-template-columns: 1fr max-content;
+        gap:10px; align-items:stretch;
+        width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+        margin:0 auto;
+      }
+      .gold-textarea{
+        width:100%; min-height:44px; max-height:var(--dock-cap,30vh);
+        resize:none; border-radius:12px; padding:10px 12px; line-height:1.5;
+        border:1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"};
+        background:rgba(255,255,255,0.04); color:${activeTokens.color.text};
+        outline:none;
+        transition: box-shadow 120ms cubic-bezier(.2,.6,.2,1), border-color 120ms cubic-bezier(.2,.6,.2,1);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"!important;
+        letter-spacing:0!important; padding-right:12px!important; background-clip: padding-box;
+      }
+      .gold-textarea:is(:hover,:focus,.is-typing){
+        box-shadow: 0 0 0 1px ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"},
+                    0 0 18px rgba(34,211,238,0.18);
+        border-color: ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
+      }
+      .gold-send{
+        height:44px; min-width:96px; white-space:nowrap;
+        padding:0 16px; border-radius:12px; font-weight:700;
+        border:1px solid ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
+        background:${activeTokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"};
+        color:${activeTokens.color.text}; cursor:pointer;
+        transition: transform 120ms cubic-bezier(.2,.6,.2,1), box-shadow 120ms cubic-bezier(.2,.6,.2,1);
+        display:inline-flex; align-items:center; justify-content:center; background-clip: padding-box;
+      }
+      .gold-send:hover:not(:disabled){ transform: translateY(-1px); }
+      .gold-send:active:not(:disabled){ transform: translateY(0); }
+      .gold-send:disabled{ opacity:.45; cursor:default; }
+
+      /* Mobile: Dock edge-to-edge + Safe-Area; FAB über Dock */
+      @media (max-width: 768px){
+        #m-input-dock.m-bottom-stack{
           position: fixed !important;
-          left: max(8px, env(safe-area-inset-left));
-          right: max(8px, env(safe-area-inset-right));
-          bottom: max(8px, env(safe-area-inset-bottom));
-          margin: 0 !important;
-          padding: 8px 8px calc(8px + env(safe-area-inset-bottom,0px)) !important;
-          background: rgba(8,14,18,0.86) !important;
-          border-top: 1px solid rgba(255,255,255,0.12) !important;
-          z-index: 60 !important;
+          left: max(0px, env(safe-area-inset-left));
+          right: max(0px, env(safe-area-inset-right));
+          bottom: max(0px, env(safe-area-inset-bottom));
+          padding: 8px max(8px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-right));
+          background: rgba(8,14,18,0.90) !important;
+          border-top: 1px solid rgba(255,255,255,0.10) !important;
+          box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
+          z-index: 70 !important;
+        }
+        .gold-tools-row,
+        .gold-prompt-wrap{
+          width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
+          margin: 0 auto;
         }
       }
 
-      /* Tools (nur mobil) */
-      .gold-tools {
-        display: flex;
-        gap: 8px;
-        justify-content: flex-start;
-        width: min(920px, 100%);
-        margin: 0 auto 8px auto;
-      }
-      .gt-btn {
-        display: inline-flex; align-items: center; justify-content: center;
-        height: 34px; min-width: 34px; padding: 0 10px;
-        border-radius: 10px;
-        border: 1px solid rgba(49,65,86,.7);
-        background: #0b1220; color: #e6f0f3; font-weight: 700;
-        transition: transform 120ms cubic-bezier(.2,.6,.2,1);
-      }
-      .gt-btn:active { transform: scale(.97); }
-      @media (min-width: 769px) { .gold-tools { display: none; } }
-
-      /* Prompt Grid */
-      .gold-prompt-wrap {
-        display: grid;
-        grid-template-columns: 1fr max-content;
-        gap: 10px;
-        align-items: stretch;
-        width: min(920px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
-        margin: 0 auto;
-      }
-      .gold-textarea {
-        width: 100%;
-        min-height: 44px;
-        max-height: var(--dock-cap, 30vh);
-        resize: none;
-        border-radius: 12px;
-        padding: 10px 12px;
-        line-height: 1.5;
-        border: 1px solid rgba(255,255,255,0.12);
-        background: rgba(255,255,255,0.04);
-        color: ${activeTokens.color.text};
-        outline: none;
-        transition: box-shadow 120ms cubic-bezier(.2,.6,.2,1), border-color 120ms cubic-bezier(.2,.6,.2,1);
-        font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-      }
-      .gold-textarea:is(:hover,:focus,.is-typing) {
-        box-shadow: 0 0 0 1px rgba(34,211,238,0.28), 0 0 18px rgba(34,211,238,0.18);
-        border-color: rgba(34,211,238,0.28);
-      }
-      .gold-send {
-        min-height: 44px;
-        align-self: stretch;
-        padding: 0 14px;
-        border-radius: 12px;
-        font-weight: 700;
-        border: 1px solid rgba(34,211,238,0.28);
-        background: rgba(34,211,238,0.12);
-        color: ${activeTokens.color.text};
-        cursor: pointer;
-        transition: transform 120ms cubic-bezier(.2,.6,.2,1), box-shadow 120ms cubic-bezier(.2,.6,.2,1);
-        display: inline-flex; align-items: center; justify-content: center;
-        white-space: nowrap;
-      }
-      .gold-send:hover:not(:disabled) { transform: translateY(-1px); }
-      .gold-send:active:not(:disabled) { transform: translateY(0); }
-      .gold-send:disabled { opacity: .45; cursor: default; }
-
-      /* Statusbar unter dem Prompt */
-      .m-statusbar {
-        width: min(920px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
-        margin: 8px auto 0 auto;
-        display: flex; align-items: center; justify-content: space-between; gap: 12px;
-        padding: 8px 10px;
-        border-radius: 12px;
-        background: rgba(8,14,18,0.60);
-        border: 1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"};
-        color: ${activeTokens.color.text};
-        font-size: 12px;
-      }
-      .m-statusbar .status-chip { display: inline-flex; align-items: center; gap: 8px; }
-      .m-statusbar .status-chip i {
-        width: 6px; height: 6px; border-radius: 999px;
-        background: #0ff; box-shadow: 0 0 8px rgba(0,255,255,.8);
-        display: inline-block;
-      }
-
-      /* Ripple + Inertia */
-      .gold-dock.send-ripple {
+      /* Ripple / Micro motion */
+      .gold-dock.send-ripple{
         animation: gp-inertia 320ms cubic-bezier(.2,.6,.2,1) 1, gp-ripple 680ms ease-out 1;
       }
-      @keyframes gp-inertia { 0%{transform:translateY(0)} 55%{transform:translateY(-3px)} 100%{transform:translateY(0)} }
-      @keyframes gp-ripple {
-        0% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0); }
-        15%{ box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 1000px rgba(34,211,238,0.08); }
-        100%{ box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0); }
+      @keyframes gp-inertia{
+        0%{ transform: translateY(0); }
+        55%{ transform: translateY(-3px); }
+        100%{ transform: translateY(0); }
+      }
+      @keyframes gp-ripple{
+        0%   { box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
+        15%  { box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 1000px rgba(34,211,238,0.08); }
+        100% { box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
       }
 
       /* Entkopplung von Legacy input-bar.css */
       #m-input-dock .gold-prompt-wrap,
       #m-input-dock .gold-textarea,
-      #m-input-dock .gold-send {
-        position: static !important;
-        float: none !important;
-        inset: auto !important;
-        box-sizing: border-box !important;
+      #m-input-dock .gold-send{
+        position: static !important; float: none !important; inset: auto !important; box-sizing: border-box !important;
       }
-      #m-input-dock .gold-send { height: 44px !important; min-width: 92px; }
 
-      /* FAB steht über dem Dock (dynamisch via --dock-h) */
-      .sticky-fab, [data-sticky-fab], button[aria-label="Menü öffnen"] {
+      /* FAB Offset über Dock */
+      .sticky-fab, [data-sticky-fab], button[aria-label="Menü öffnen"]{
         bottom: calc(var(--dock-h, 60px) + 12px) !important;
-        z-index: 70 !important;
+        z-index: var(--fab-z) !important;
       }
     `}</style>
   </main>
