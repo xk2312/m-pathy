@@ -1101,172 +1101,166 @@ return (
     )}
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
 
-    {/* Golden Prompt — minimal global styles & motion */}
-    <style jsx global>{`
-      .mi-plus-btn { display: none !important; }
-<div className="gold-tools" aria-label="Prompt tools">
-  <button type="button" aria-label={t('comingUpload')} className="gt-btn">📎</button>
-  <button type="button" aria-label={t('comingVoice')} className="gt-btn">🎙️</button>
-  <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
-</div>
+   {/* 🔱 Golden Prompt — final sealed version */}
+      <style jsx global>{`
+        /* === Global Resets & Guardrails ===================================== */
+        .mi-plus-btn { display: none !important; }
 
-      .gold-prompt-wrap {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 10px;
-        align-items: end;
-        width: min(920px, 100%);
-        margin: 0 auto;
-      }
-      .gold-textarea {
-        width: 100%;
-        min-height: 44px;
-        max-height: var(--dock-cap);
-        resize: none;
-        border-radius: 12px;
-        padding: 10px 12px;
-        line-height: 1.5;
-        border: 1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"};
-        background: rgba(255,255,255,0.04);
-        color: ${activeTokens.color.text};
-        outline: none;
-        transition: box-shadow var(--t-mid, 120ms) var(--ease, cubic-bezier(.2,.6,.2,1)),
-                    border-color var(--t-mid, 120ms) var(--ease, cubic-bezier(.2,.6,.2,1));
-      }
-      .gold-textarea:is(:hover, :focus, .is-typing) {
-        box-shadow: 0 0 0 1px ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"},
-                    0 0 18px rgba(34,211,238,0.18);
-        border-color: ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
-      }
+        :root { --dock-h: 60px; } /* Fallback */
+        @media (max-width: 768px) {
+          html, body { overflow-x: hidden; }
+        }
 
-      .gold-send {
-        min-height: 44px;
-        padding: 0 14px;
-        border-radius: 12px;
-        font-weight: 700;
-        border: 1px solid ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
-        background: ${activeTokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"};
-        color: ${activeTokens.color.text};
-        cursor: pointer;
-        transition: transform 120ms var(--ease, cubic-bezier(.2,.6,.2,1)),
-                    box-shadow 120ms var(--ease, cubic-bezier(.2,.6,.2,1));
-      }
-      .gold-send:hover:not(:disabled) { transform: translateY(-1px); }
-      .gold-send:active:not(:disabled) { transform: translateY(0); }
-      .gold-send:disabled { opacity: .45; cursor: default; }
+        /* === Golden Dock Layout ============================================ */
+        #m-input-dock {
+          position: sticky;
+          bottom: 0;
+          z-index: 55;
+          background: rgba(8,14,18,0.9);
+          backdrop-filter: blur(8px);
+          border-top: 1px solid rgba(255,255,255,0.1);
+          box-shadow: 0 -6px 24px rgba(0,0,0,.35);
+          padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
+          overscroll-behavior: contain;
+          overflow: visible;
+        }
 
-      .gold-dock.send-ripple {
-        animation: gp-inertia 320ms var(--ease, cubic-bezier(.2,.6,.2,1)) 1,
-                   gp-ripple 680ms ease-out 1;
-      }
-      @keyframes gp-inertia {
-        0% { transform: translateZ(0) translateY(0); }
-        55% { transform: translateZ(0) translateY(-3px); }
-        100% { transform: translateZ(0) translateY(0); }
-      }
-      @keyframes gp-ripple {
-        0% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0.0); }
-        15% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 1000px rgba(34,211,238,0.08); }
-        100% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0.0); }
-      }
-        /* === Golden Prompt: harte Entkoppelung von Legacy input-bar.css ====== */
-/* Button darf NIEMALS absolut werden */
-#m-input-dock .gold-prompt-wrap { 
-  display: grid;
-  grid-template-columns: 1fr max-content; /* Button misst sich selbst */
-  align-items: center;
-  gap: 10px;
-}
-#m-input-dock .gold-textarea,
-#m-input-dock .gold-send {
-  position: static !important;
-  float: none !important;
-  inset: auto !important;
-  box-sizing: border-box !important;
-}
+        /* === Mobile override: fixed + safe area ============================ */
+        @media (max-width: 768px) {
+          #m-input-dock {
+            position: fixed !important;
+            left: max(8px, env(safe-area-inset-left));
+            right: max(8px, env(safe-area-inset-right));
+            bottom: max(8px, env(safe-area-inset-bottom));
+            width: auto;
+            margin: 0 !important;
+            padding: 8px 8px calc(8px + env(safe-area-inset-bottom,0px)) !important;
+            background: rgba(8,14,18,0.86) !important;
+            border-top: 1px solid rgba(255,255,255,0.12) !important;
+            z-index: 60 !important;
+          }
+        }
 
-/* Schrift & Spacing korrigieren (falls Legacy monospace erzwingt) */
-#m-input-dock .gold-textarea {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji" !important;
-  letter-spacing: 0 !important;
-  padding-right: 12px !important; /* Button-Gap sauber */
-}
+        /* === Icon-Toolbar (Upload / Mic / Settings) ======================== */
+        .gold-tools {
+          display: flex;
+          gap: 8px;
+          justify-content: flex-start;
+          width: min(920px, 100%);
+          margin: 0 auto 8px auto;
+        }
+        .gt-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 34px;
+          min-width: 34px;
+          padding: 0 10px;
+          border-radius: 10px;
+          border: 1px solid rgba(49,65,86,0.7);
+          background: #0b1220;
+          color: #e6f0f3;
+          font-weight: 700;
+          transition: transform 120ms var(--ease, cubic-bezier(.2,.6,.2,1));
+        }
+        .gt-btn:active { transform: scale(.97); }
+        @media (min-width: 769px) {
+          .gold-tools { display: none; }
+        }
 
-/* Button-Größe + Inline-Layout erzwingen */
-#m-input-dock .gold-send {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  height: 44px !important;
-  min-width: 92px;
-  white-space: nowrap;
-}
+        /* === Prompt Input Grid ============================================ */
+        .gold-prompt-wrap {
+          display: grid;
+          grid-template-columns: 1fr max-content;
+          gap: 10px;
+          align-items: stretch;
+          width: min(920px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+          margin: 0 auto;
+        }
 
-/* Schutz vor globalen Button/textarea-Resets aus Legacy-CSS */
-#m-input-dock button.gold-send,
-#m-input-dock textarea.gold-textarea {
-  border: initial;
-  background-clip: padding-box;
-}
-@media (max-width: 768px) {
-  /* Dock wirklich ans Viewport-Ende pinnen */
-  #m-input-dock {
-    position: fixed !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    margin: 0 !important;
-    padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
-    background: rgba(8,14,18,0.86) !important;
-    backdrop-filter: blur(10px) !important;
-    border-top: 1px solid rgba(255,255,255,0.12) !important;
-    z-index: 60 !important; /* über Content, unter FAB */
-  }
+        .gold-textarea {
+          width: 100%;
+          min-height: 44px;
+          max-height: var(--dock-cap, 30vh);
+          resize: none;
+          border-radius: 12px;
+          padding: 10px 12px;
+          line-height: 1.5;
+          border: 1px solid rgba(255,255,255,0.12);
+          background: rgba(255,255,255,0.04);
+          color: ${activeTokens.color.text};
+          outline: none;
+          transition: box-shadow 120ms var(--ease, cubic-bezier(.2,.6,.2,1)),
+                      border-color 120ms var(--ease, cubic-bezier(.2,.6,.2,1));
+        }
+        .gold-textarea:is(:hover,:focus,.is-typing) {
+          box-shadow: 0 0 0 1px rgba(34,211,238,0.28),
+                      0 0 18px rgba(34,211,238,0.18);
+          border-color: rgba(34,211,238,0.28);
+        }
 
-  /* Prompt-Row vollbreit, kein zentrieren */
-  #m-input-dock .gold-prompt-wrap {
-    width: 100% !important;
-    margin: 0 !important;
-    grid-template-columns: 1fr max-content !important;
-    gap: 10px !important;
-  }
+        .gold-send {
+          min-height: 44px;
+          align-self: stretch;
+          padding: 0 14px;
+          border-radius: 12px;
+          font-weight: 700;
+          border: 1px solid rgba(34,211,238,0.28);
+          background: rgba(34,211,238,0.12);
+          color: ${activeTokens.color.text};
+          cursor: pointer;
+          transition: transform 120ms var(--ease, cubic-bezier(.2,.6,.2,1)),
+                      box-shadow 120ms var(--ease, cubic-bezier(.2,.6,.2,1));
+        }
+        .gold-send:hover:not(:disabled) { transform: translateY(-1px); }
+        .gold-send:active:not(:disabled) { transform: translateY(0); }
+        .gold-send:disabled { opacity: .45; cursor: default; }
 
-  /* Textarea flächig, saubere Ränder */
-  #m-input-dock .gold-textarea {
-    min-height: 44px !important;
-    max-height: var(--dock-cap, 30vh) !important;
-    padding: 10px 12px !important;
-  }
+        /* === Ripple & Motion ============================================== */
+        .gold-dock.send-ripple {
+          animation: gp-inertia 320ms cubic-bezier(.2,.6,.2,1) 1,
+                    gp-ripple 680ms ease-out 1;
+        }
+        @keyframes gp-inertia {
+          0% { transform: translateY(0); }
+          55% { transform: translateY(-3px); }
+          100% { transform: translateY(0); }
+        }
+        @keyframes gp-ripple {
+          0% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0); }
+          15% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 1000px rgba(34,211,238,0.08); }
+          100% { box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0); }
+        }
 
-  /* Button kompakt, niemals überlappen */
-  #m-input-dock .gold-send {
-    height: 44px !important;
-    min-width: 92px !important;
-    white-space: nowrap !important;
-  }
-}
-/* Desktop ausblenden, Mobile zeigen */
-.gold-tools { display: none; }
-@media (max-width: 768px) {
-  .gold-tools {
-    display: grid;
-    grid-auto-flow: column;
-    justify-content: start;
-    gap: 8px;
-    margin: 0 0 8px 0; /* 8px über dem Feld */
-  }
-  .gt-btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    height: 34px; min-width: 34px; padding: 0 10px;
-    border-radius: 10px;
-    border: 1px solid rgba(49,65,86,.7);
-    background: #0b1220; color: #e6f0f3; font-weight: 700;
-    transition: transform 120ms var(--ease, cubic-bezier(.2,.6,.2,1));
-  }
-  .gt-btn:active { transform: scale(.98); }
-}
+        /* === Entkopplung von Legacy input-bar.css ========================= */
+        #m-input-dock .gold-prompt-wrap,
+        #m-input-dock .gold-textarea,
+        #m-input-dock .gold-send {
+          position: static !important;
+          float: none !important;
+          inset: auto !important;
+          box-sizing: border-box !important;
+        }
+        #m-input-dock .gold-textarea {
+          font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+          letter-spacing: 0 !important;
+          padding-right: 12px !important;
+        }
+        #m-input-dock .gold-send {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          height: 44px !important;
+          min-width: 92px;
+          white-space: nowrap;
+        }
+        #m-input-dock button.gold-send,
+        #m-input-dock textarea.gold-textarea {
+          border: initial;
+          background-clip: padding-box;
+        }
+      `}</style>
 
-    `}</style>
   </main>
 );
 }

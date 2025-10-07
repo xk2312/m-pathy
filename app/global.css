@@ -228,3 +228,55 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
     animation: none !important;
   }
 }
+:root { --dock-h: 60px; } /* Fallback */
+@media (max-width: 768px){
+  html, body { overflow-x: hidden; }
+}
+
+/* gezielt den Chat-Scroller dunkler stylen */
+div[data-convo="1"]::-webkit-scrollbar-track { background: transparent; }
+@supports (scrollbar-color: auto) {
+  div[data-convo="1"] { scrollbar-color: rgba(255,255,255,0.25) transparent; }
+}
+
+/* Golden Prompt Layout */
+.gold-tools{
+  display:flex; gap:8px; justify-content:flex-start;
+  width:min(920px, 100%); margin:0 auto 6px auto;
+}
+.gt{
+  height:32px; min-width:32px; border-radius:10px;
+  border:1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: inherit;
+}
+.gold-prompt-wrap{
+  display:grid; grid-template-columns: 1fr auto; gap:10px; align-items:stretch;
+  width:min(920px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+  margin:0 auto;
+}
+.gold-textarea{
+  width:100%; min-height:44px; max-height:var(--dock-cap); resize:none;
+  border-radius:12px; padding:10px 12px; line-height:1.5;
+  border:1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04); color: inherit; outline:none;
+}
+.gold-send{
+  min-height:44px; align-self:stretch; border-radius:12px;
+  padding:0 14px; font-weight:700; cursor:pointer;
+  border:1px solid rgba(34,211,238,0.28); background: rgba(34,211,238,0.12); color: inherit;
+}
+
+/* Inertias & Ripple (wie besprochen) */
+.gold-dock.send-ripple{
+  animation: gp-inertia 320ms cubic-bezier(.2,.6,.2,1) 1,
+             gp-ripple 680ms ease-out 1;
+}
+@keyframes gp-inertia{
+  0%{ transform: translateY(0); } 55%{ transform: translateY(-3px); } 100%{ transform: translateY(0); }
+}
+@keyframes gp-ripple{
+  0%{ box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0); }
+  15%{ box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 1000px rgba(34,211,238,0.08); }
+  100%{ box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0); }
+}
