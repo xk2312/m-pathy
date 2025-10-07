@@ -21,10 +21,11 @@
 
 import React, {
   useEffect,
+  useLayoutEffect,
   useState,
   useRef,
   useCallback,
-  useMemo,       // ✅ hinzugefügt
+  useMemo,       // ✅
   FormEvent,
 } from "react";
 import Image from "next/image";
@@ -496,47 +497,52 @@ export default function Page2() {
   const theme = useTheme("default");
   const activeTokens: Tokens = theme.tokens;
 
-   // === SAFETY RESET: robust gegen Locks aus voriger Route ===
-  useEffect(() => {
-    const html = document.documentElement;
-    const body = document.body;
+// === SCROLL READY: warte auf stabilen Layout-Frame, DANN nudge ===
+useLayoutEffect(() => {
+  let raf1 = 0, raf2 = 0;
+  let cancelled = false;
 
-    // 1) Häufige „No-Scroll“-Klassen entfernen
-    html.classList.remove("no-scroll", "lock", "modal-open");
-    body.classList.remove("no-scroll", "lock", "modal-open");
+  const ready = () => {
+    const el = convoRef.current as HTMLDivElement | null;
+    if (!el) return false;
+    // Scroll erst aktivieren, wenn der Container real Maße hat
+    const hasDims = el.clientHeight > 0 && el.offsetParent !== null;
+    // Optional: Header/Dock schon vermessen?
+    const headerOk = !headerRef.current || headerRef.current.clientHeight >= 0;
+    return hasDims && headerOk;
+  };
 
-    // 2) Inline-Styles neutralisieren, die Scroll blockieren könnten
-    for (const el of [html, body]) {
-      el.style.overflow = "";
-      el.style.position = "";
-      el.style.height = "";
-      el.style.width = "";
-      el.style.top = "";
-      el.style.left = "";
-      el.style.right = "";
-      el.style.touchAction = "";
-      el.style.overscrollBehavior = "";
+  const applyNudge = () => {
+    const el = convoRef.current as HTMLDivElement | null;
+    if (!el) return;
+    const prev = el.style.overflow;
+    el.style.overflow = "hidden";
+    el.scrollTop = (el.scrollTop || 0) + 1; // minimaler Impuls
+    void el.offsetHeight;                    // Reflow erzwingen
+    el.style.overflow = prev || "auto";
+  };
+
+  const loopUntilReady = () => {
+    if (cancelled) return;
+    if (!ready()) {
+      raf2 = requestAnimationFrame(loopUntilReady);
+      return;
     }
+    applyNudge();
+  };
 
-    // 3) Scrolling-Element explizit freigeben
-    const scroller = document.scrollingElement as HTMLElement | null;
-    if (scroller) scroller.style.overflow = "";
+  // 2× rAF → nach Paint & Layout, dann readiness-Loop
+  raf1 = requestAnimationFrame(() => {
+    raf2 = requestAnimationFrame(loopUntilReady);
+  });
 
-    // 4) Defensiv: passive Scroll-Gesten sicherstellen
-    window.addEventListener("touchmove", () => {}, { passive: true });
-    window.addEventListener("wheel", () => {}, { passive: true });
+  return () => {
+    cancelled = true;
+    if (raf1) cancelAnimationFrame(raf1);
+    if (raf2) cancelAnimationFrame(raf2);
+  };
+}, []);
 
-    // 5) Nächster Frame: Scroll-Nudge im Chat-Container
-    requestAnimationFrame(() => {
-      const el = convoRef.current as HTMLDivElement | null;
-      if (!el) return;
-      const prev = el.style.overflow;
-      el.style.overflow = "hidden";
-      el.scrollTop = (el.scrollTop || 0) + 1; // minimaler Nudge
-      void el.offsetHeight;                    // Reflow erzwingen
-      el.style.overflow = prev || "auto";
-    });
-  }, []);
 
 
   // Breakpoint + Seitenränder
