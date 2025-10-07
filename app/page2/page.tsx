@@ -521,7 +521,18 @@ export default function Page2() {
     };
   }, []);
 
-  
+    // Initial-Scroll-"Unlock": behebt Freeze nach erstem Paint
+  useEffect(() => {
+    const el = convoRef.current as HTMLDivElement | null;
+    if (!el) return;
+    requestAnimationFrame(() => {
+      // Overflow kurz sperren, minimal scrollen → Browser „entblockt“ den Scroll-State
+      const prev = el.style.overflow;
+      el.style.overflow = "hidden";
+      el.scrollTop = el.scrollTop + 1;
+      el.style.overflow = prev || "auto";
+    });
+  }, []);
 
   // Chat State
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -872,34 +883,6 @@ return (
             />
           </div>
 
-          {/* Prompt Dock (sticky bottom) */}
-<div
-  id="m-input-dock"
-  ref={dockRef as any}
-  role="group"
-  aria-label="Chat Eingabeleiste"
-  style={{
-    position: "sticky",
-    bottom: 0,
-    zIndex: 50,
-    background: bg0,
-
-    
-    // ⬇ kompakter & Safe-Area über unsere Var
-    padding: "10px 10px calc(10px + var(--safe-bottom))",
-    marginTop: 6,
-
-    borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
-    backdropFilter: "blur(8px)",
-    boxShadow: "0 -6px 24px rgba(0,0,0,.35)",
-    overscrollBehavior: "contain",
-
-    // ⬇ Auto-Grow Kappe: Dock darf mobil max. bis zur Cap wachsen
-    maxHeight: "var(--dock-cap)",  // 30vh Portrait / 22vh Landscape (aus Hook)
-    overflow: "visible",
-  }}
->
-</div>
   {/* Prompt Dock (sticky bottom) */}
 <div
   id="m-input-dock"
