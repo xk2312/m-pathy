@@ -556,35 +556,33 @@ useEffect(() => {
 
 
   // Breakpoint + Seitenränder
-  const { isMobile } = useBreakpoint(768);
-  const sideMargin = isMobile ? theme.dock.mobile.side : theme.dock.desktop.side;
+const { isMobile } = useBreakpoint(768);
+const sideMargin = isMobile ? theme.dock.mobile.side : theme.dock.desktop.side;
 
-  // Refs & Höhenmessung
-  const headerRef = useRef<HTMLDivElement>(null);
-  const convoRef = useRef<HTMLDivElement>(null);
-  const dockRef = useRef<HTMLDivElement>(null);
-  const [dockH, setDockH] = useState(0);
-  // ▼▼▼ EINZEILER HINZUFÜGEN ▼▼▼
-  const endRef  = useRef<HTMLDivElement>(null);
+// Refs & Höhenmessung
+const headerRef = useRef<HTMLDivElement>(null);
+const convoRef = useRef<HTMLDivElement>(null);
+const dockRef = useRef<HTMLDivElement>(null);
+const [dockH, setDockH] = useState(0);
+// ▼▼▼ EINZEILER HINZUFÜGEN ▼▼▼
+const endRef  = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const measure = () => {
-      if (dockRef.current) setDockH(dockRef.current.offsetHeight || 0);
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (dockRef.current) ro.observe(dockRef.current);
-    if (headerRef.current) ro.observe(headerRef.current);
-    window.addEventListener("resize", measure);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, []);
+useEffect(() => {
+  const measure = () => {
+    if (dockRef.current) setDockH(dockRef.current.offsetHeight || 0);
+  };
+  measure();
+  const ro = new ResizeObserver(measure);
+  if (dockRef.current) ro.observe(dockRef.current);
+  if (headerRef.current) ro.observe(headerRef.current);
+  window.addEventListener("resize", measure);
+  return () => {
+    ro.disconnect();
+    window.removeEventListener("resize", measure);
+  };
+}, []);
 
-
-
-  // Initial Scroll "Unlock" — stabiler (double rAF) + Reflow-Nudge
+// Initial Scroll "Unlock" — stabiler (double rAF) + Reflow-Nudge
 useEffect(() => {
   const el = convoRef.current as HTMLDivElement | null;
   if (!el) return;
@@ -599,57 +597,84 @@ useEffect(() => {
   });
 }, []);
 
-
-  // Chat State
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [stickToBottom, setStickToBottom] = useState(true);
-  const [mode, setMode] = useState<string>("DEFAULT");
+// Chat State
+const [messages, setMessages] = useState<ChatMessage[]>([]);
+const [input, setInput] = useState("");
+const [loading, setLoading] = useState(false);
+const [stickToBottom, setStickToBottom] = useState(true);
+const [mode, setMode] = useState<string>("DEFAULT");
 // ▼▼ NEU: Footer-Status (nur Anzeige)
 type FooterStatus = { modeLabel: string; expertLabel: string };
 const [status, setStatus] = useState<FooterStatus>({ modeLabel: "—", expertLabel: "—" });
-  // Golden Prompt — micro-motion registers
-  const breathRef = useRef<number>(0);            // breath phase accumulator
-  const lastMotionRef = useRef<number[]>([]);     // flow memory (last intensities)
-  const rafRef = useRef<number | null>(null);     // living continuum loop
+// Golden Prompt — micro-motion registers
+const breathRef = useRef<number>(0);            // breath phase accumulator
+const lastMotionRef = useRef<number[]>([]);     // flow memory (last intensities)
+const rafRef = useRef<number | null>(null);     // living continuum loop
 
-  // Living Continuum Engine (perceptual continuity)
-  useEffect(() => {
-    let mounted = true;
-    const tick = (t: number) => {
-      if (!mounted) return;
-      // Breath coupling (5s cycle; amplitude modulated by typing)
-      const typingBias = document.getElementById("gold-input")?.classList.contains("is-typing") ? 1 : 0.35;
-      breathRef.current = (t / 1000) % 5; // seconds
-      const phase = (breathRef.current / 5) * Math.PI * 2;
-      const amp = 0.003 * typingBias; // subtle scale shift
-      const dock = document.getElementById("m-input-dock");
-      if (dock) {
-        dock.style.transform = `translateZ(0) scale(${1 + Math.sin(phase) * amp})`;
-      }
-      rafRef.current = requestAnimationFrame(tick);
-    };
-    rafRef.current = requestAnimationFrame(tick);
-    return () => {
-      mounted = false;
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
+// Living Continuum Engine (perceptual continuity)
+useEffect(() => {
+  let mounted = true;
+  const tick = (t: number) => {
+    if (!mounted) return;
 
-  // Persist
-  const persistMessages = saveMessages;
+    // Breath coupling (5s cycle; amplitude modulated by typing)
+    const typingBias =
+      document.getElementById("gold-input")?.classList.contains("is-typing") ? 1 : 0.35;
 
-  // Initiale Begrüßung / Restore
-  useEffect(() => {
-    const restored = loadMessages();
-    if (Array.isArray(restored) && restored.length) {
-      setMessages(restored);
-      return;
+    breathRef.current = (t / 1000) % 5; // seconds
+    const phase = (breathRef.current / 5) * Math.PI * 2;
+    const amp = 0.003 * typingBias; // subtle scale shift
+
+    const dock = document.getElementById("m-input-dock");
+
+    // ❗ Sticky-Container selbst niemals transformieren
+    if (dock) {
+      (dock as HTMLElement).style.transform = ""; // evtl. alten Wert wegräumen
+
+      const scale = 1 + Math.sin(phase) * amp;
+
+      // ✅ Nur die inneren, nicht-sticky Kinder leicht „atmen“ lassen
+      const promptWrap = dock.querySelector(".gold-prompt-wrap") as HTMLElement | null;
+      const bar        = dock.querySelector(".gold-bar") as HTMLElement | null;
+
+      if (promptWrap) promptWrap.style.transform = `translateZ(0) scale(${scale})`;
+      if (bar)        bar.style.transform        = `translateZ(0) scale(${scale})`;
     }
-    setMessages([]);
 
-  }, []);
+    rafRef.current = requestAnimationFrame(tick);
+  };
+
+  rafRef.current = requestAnimationFrame(tick);
+
+  return () => {
+    mounted = false;
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+
+    // Cleanup: evtl. gesetzte Transforms wieder entfernen
+    const dock = document.getElementById("m-input-dock");
+    if (dock) {
+      (dock as HTMLElement).style.transform = "";
+      const promptWrap = dock.querySelector(".gold-prompt-wrap") as HTMLElement | null;
+      const bar        = dock.querySelector(".gold-bar") as HTMLElement | null;
+      if (promptWrap) promptWrap.style.transform = "";
+      if (bar)        bar.style.transform = "";
+    }
+  };
+}, []);
+
+// Persist
+const persistMessages = saveMessages;
+
+// Initiale Begrüßung / Restore
+useEffect(() => {
+  const restored = loadMessages();
+  if (Array.isArray(restored) && restored.length) {
+    setMessages(restored);
+    return;
+  }
+  setMessages([]);
+}, []);
+
 
     // ===============================================================
   // Systemmeldung (für Säule / Overlay / Onboarding)
