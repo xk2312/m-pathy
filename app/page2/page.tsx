@@ -968,13 +968,15 @@ return (
     flexDirection: "column",
     flex: 1,
     minHeight: 0,
-    overflow: "auto",                // ← Scroll liegt jetzt HIER
+    overflow: "auto",
     pointerEvents: "auto",
     touchAction: "pan-y",
     WebkitOverflowScrolling: "touch",
     overscrollBehavior: "contain",
+    maxHeight: "calc(100dvh - 224px)",   // ⬅️ Höhe unter dem fixen Header
   }}
 >
+
   {/* Chronik wächst im Scroller */}
   <div
     style={{
