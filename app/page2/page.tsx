@@ -564,6 +564,8 @@ useEffect(() => {
   const convoRef = useRef<HTMLDivElement>(null);
   const dockRef = useRef<HTMLDivElement>(null);
   const [dockH, setDockH] = useState(0);
+  // ▼▼▼ EINZEILER HINZUFÜGEN ▼▼▼
+  const endRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const measure = () => {
@@ -942,46 +944,68 @@ return (
         }}
       >
         {/* Säule links */}
-        {!isMobile && <SidebarContainer onSystemMessage={systemSay} />}
+{!isMobile && (
+  <div
+    style={{
+      position: "sticky",
+      top: "240px", // Headerhöhe (224px) + kleiner Abstand
+      alignSelf: "start",
+      height: "fit-content",
+      maxHeight: "calc(100vh - 240px)",
+      overflow: "auto",
+    }}
+  >
+    <SidebarContainer onSystemMessage={systemSay} />
+  </div>
+)}
 
-        {/* Rechte Spalte: Conversation + Bottom-Stack */}
-        <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
-          {/* Scrollbarer Chronik-Container */}
-          <div
-            ref={convoRef as any}
-            style={{
-              flex: 1,
-              minHeight: 0,
-              overflow: "auto",
-              pointerEvents: "auto",
-              touchAction: "pan-y",
-              WebkitOverflowScrolling: "touch",
-              overscrollBehavior: "contain",
-              paddingTop: 8,
-              paddingLeft: isMobile ? 0 : undefined,   // ⬅️ Mobile bündig
-              paddingRight: isMobile ? 0 : undefined,  // ⬅️ Mobile bündig
-              paddingBottom: padBottom,
-              scrollbarGutter: "stable",
-            }}
-            aria-label={t("conversationAria")}
-          >
-            <Conversation
-              messages={messages}
-              tokens={activeTokens}
-              padBottom={padBottom}
-              scrollRef={convoRef as any}
-            />
-          </div>
 
-          {/* === BOTTOM STACK: Prompt, dann Icons+Status ================= */}
-          <div
-            id="m-input-dock"
-            ref={dockRef as any}
-            className="m-bottom-stack gold-dock"
-            role="group"
-            aria-label="Chat Eingabe & Status"
-          >
-            {/* Prompt */}
+       {/* Rechte Spalte: Conversation + Bottom-Stack — WIRD ZUM SCROLLER */}
+<div
+  ref={convoRef as any}
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    minHeight: 0,
+    overflow: "auto",                // ← Scroll liegt jetzt HIER
+    pointerEvents: "auto",
+    touchAction: "pan-y",
+    WebkitOverflowScrolling: "touch",
+    overscrollBehavior: "contain",
+  }}
+>
+  {/* Chronik wächst im Scroller */}
+  <div
+    style={{
+      flex: 1,
+      minHeight: 0,
+      paddingTop: 8,
+      paddingLeft: isMobile ? 0 : undefined,
+      paddingRight: isMobile ? 0 : undefined,
+      paddingBottom: padBottom,      // Platz für Dock
+      scrollbarGutter: "stable",
+    }}
+    aria-label={t("conversationAria")}
+  >
+    <Conversation
+      messages={messages}
+      tokens={activeTokens}
+      padBottom={padBottom}
+      scrollRef={convoRef as any}
+    />
+  </div>
+
+  {/* === BOTTOM STACK: Prompt, dann Icons+Status ================= */}
+  <div
+    id="m-input-dock"
+    ref={dockRef as any}
+    className="m-bottom-stack gold-dock"
+    role="group"
+    aria-label="Chat Eingabe & Status"
+  >
+    {/* Prompt … */}
+
             <div className="gold-prompt-wrap">
               <textarea
                 id="gold-input"
