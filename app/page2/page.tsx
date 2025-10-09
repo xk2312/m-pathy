@@ -617,23 +617,21 @@ useEffect(() => {
   const tick = (t: number) => {
     if (!mounted) return;
 
-    // Breath coupling (5s cycle; amplitude modulated by typing)
+    // 5s cycle; amplitude modulated by typing
     const typingBias =
       document.getElementById("gold-input")?.classList.contains("is-typing") ? 1 : 0.35;
 
-    breathRef.current = (t / 1000) % 5; // seconds
-    const phase = (breathRef.current / 5) * Math.PI * 2;
-    const amp = 0.003 * typingBias; // subtle scale shift
+    const phase = ((t / 1000) % 5) * Math.PI * 2;
+    const amp = 0.003 * typingBias;
+    const scale = 1 + Math.sin(phase) * amp;
 
     const dock = document.getElementById("m-input-dock");
 
-    // ❗ Sticky-Container selbst niemals transformieren
+    // ❗ Niemals den Sticky-Container transformieren
     if (dock) {
-      (dock as HTMLElement).style.transform = ""; // evtl. alten Wert wegräumen
+      (dock as HTMLElement).style.transform = ""; // evtl. alte Werte neutralisieren
 
-      const scale = 1 + Math.sin(phase) * amp;
-
-      // ✅ Nur die inneren, nicht-sticky Kinder leicht „atmen“ lassen
+      // ✅ Nur innere Kinder leicht „atmen“ lassen
       const promptWrap = dock.querySelector(".gold-prompt-wrap") as HTMLElement | null;
       const bar        = dock.querySelector(".gold-bar") as HTMLElement | null;
 
@@ -661,6 +659,7 @@ useEffect(() => {
     }
   };
 }, []);
+
 
 // Persist
 const persistMessages = saveMessages;
@@ -1160,6 +1159,17 @@ return (
       :root { --dock-h: 60px; --fab-z: 90; }
       .mi-plus-btn { display: none !important; }
       [data-sticky-fab] { z-index: var(--fab-z) !important; }
+      /* --- Sticky-Dock darf niemals transformiert werden (Sticky + Transform = Bug) --- */
+      #m-input-dock { 
+        transform: none !important; 
+      }
+
+      /* Die animierten Kinder dürfen transformieren → eigene Stacking/Perf */
+      .gold-prompt-wrap,
+      .gold-bar { 
+        will-change: transform; 
+      }
+
 
       /* Dock Container */
       #m-input-dock.m-bottom-stack{
