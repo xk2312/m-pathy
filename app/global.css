@@ -107,7 +107,17 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
   --t-slow: 200ms;
   --ease: cubic-bezier(.2,.6,.2,1);
 
+  /* --- Safe-area Desktop Default --- */
+  --safe-bottom: 0px; /* Wichtig: Desktop-Fallback = 0px */
 }
+
+/* Wenn der Browser safe-area kennt, mappe sie auf die Variable. */
+@supports (padding: max(0px)) {
+  :root {
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
 
 /* ======================================================================
    Markdown typographic defaults (greifen auf <div class="markdown">…)
