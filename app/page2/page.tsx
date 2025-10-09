@@ -1022,9 +1022,10 @@ return (
     touchAction: "pan-y",
     WebkitOverflowScrolling: "touch",
     overscrollBehavior: "contain",
-    maxHeight: "calc(100dvh - 224px)",   // ⬅️ Höhe unter dem fixen Header
+    height: "calc(100dvh - 224px)",      // ⬅️ Fix: füllt Resthöhe unter dem fixen Header
   }}
 >
+
 
   {/* Chronik wächst im Scroller */}
   <div
