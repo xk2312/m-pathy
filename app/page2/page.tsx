@@ -966,322 +966,319 @@ useEffect(() => {
       </header>
 
       {/* === BÜHNE ====================================================== */}
+<div
+  style={{
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    marginInline: isMobile ? 0 : sideMargin, // ⬅️ Mobile: keine Ränder
+    minHeight: 0,
+    maxWidth: isMobile ? "none" : 1280,      // ⬅️ Mobile: volle Breite
+    alignSelf: "center",
+    width: "100%",
+    paddingTop: isMobile ? "var(--header-h)" : "224px",
+  }}
+>
+  {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+      alignItems: "start",
+      gap: 16,
+      flex: 1,
+      minHeight: 0,
+      overflow: "visible",
+      ["--header-offset" as any]: "16px",
+    }}
+  >
+    {/* Säule links */}
+    {!isMobile && (
+      <div
+        style={{
+          position: "sticky",
+          top: "240px", // Headerhöhe (224px) + kleiner Abstand
+          alignSelf: "start",
+          height: "fit-content",
+          maxHeight: "calc(100vh - 240px)",
+          overflow: "auto",
+        }}
+      >
+        <SidebarContainer onSystemMessage={systemSay} />
+      </div>
+    )}
+
+    {/* Rechte Spalte: Conversation + Bottom-Stack — SCROLLER */}
+    <div
+      ref={convoRef as any}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        minHeight: 0,
+        overflow: "auto",
+        pointerEvents: "auto",
+        touchAction: "pan-y",
+        WebkitOverflowScrolling: "touch",
+        overscrollBehavior: "contain",
+        height: "calc(100dvh - 224px)", // ⬅️ füllt Resthöhe unter dem fixen Header
+        paddingBottom: padBottom,       // ⬅️ WICHTIG: Fußraum am SCROLLPORT (verschoben)
+      }}
+    >
+      {/* Chronik wächst im Scroller */}
       <div
         style={{
           flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          marginInline: isMobile ? 0 : sideMargin, // ⬅️ Mobile: keine Ränder
           minHeight: 0,
-          maxWidth: isMobile ? "none" : 1280,      // ⬅️ Mobile: volle Breite
-          alignSelf: "center",
-          width: "100%",
-          paddingTop: isMobile ? "var(--header-h)" : "224px",
+          paddingTop: 8,
+          paddingLeft: isMobile ? 0 : undefined,
+          paddingRight: isMobile ? 0 : undefined,
+          // paddingBottom ENTFERNT – liegt jetzt am Scrollport
+          scrollbarGutter: "stable",
         }}
+        aria-label={t("conversationAria")}
       >
-        {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
-            alignItems: "start",
-            gap: 16,
-            flex: 1,
-            minHeight: 0,
-            overflow: "visible",
-            ["--header-offset" as any]: "16px",
-          }}
-        >
-          {/* Säule links */}
-          {!isMobile && (
-            <div
-              style={{
-                position: "sticky",
-                top: "240px", // Headerhöhe (224px) + kleiner Abstand
-                alignSelf: "start",
-                height: "fit-content",
-                maxHeight: "calc(100vh - 240px)",
-                overflow: "auto",
-              }}
-            >
-              <SidebarContainer onSystemMessage={systemSay} />
-            </div>
-          )}
+        <Conversation
+          messages={messages}
+          tokens={activeTokens}
+          padBottom={padBottom}
+          scrollRef={convoRef as any}
+        />
+      </div>
 
-          {/* Rechte Spalte: Conversation + Bottom-Stack — SCROLLER */}
-          <div
-            ref={convoRef as any}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              flex: 1,
-              minHeight: 0,
-              overflow: "auto",
-              pointerEvents: "auto",
-              touchAction: "pan-y",
-              WebkitOverflowScrolling: "touch",
-              overscrollBehavior: "contain",
-              height: "calc(100dvh - 224px)", // ⬅️ füllt Resthöhe unter dem fixen Header
+      {/* === BOTTOM STACK: Prompt, dann Icons+Status ================= */}
+      <div
+        id="m-input-dock"
+        ref={dockRef as any}
+        className="m-bottom-stack gold-dock"
+        role="group"
+        aria-label="Chat Eingabe & Status"
+      >
+        {/* Prompt … */}
+        <div className="gold-prompt-wrap">
+          <textarea
+            id="gold-input"
+            className="gold-textarea"
+            aria-label={t("writeMessage")}
+            placeholder={t("writeMessage")}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onInput={(e) => {
+              const ta = e.currentTarget;
+              ta.style.height = "auto";
+              const cap = Math.min(ta.scrollHeight, Math.round(window.innerHeight * 0.30));
+              ta.style.height = `${cap}px`; // ✅ fix: Template-String
+              ta.classList.add("is-typing");
+            }}
+            onBlur={(e) => e.currentTarget.classList.remove("is-typing")}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                if (input.trim()) {
+                  const dockEl = document.getElementById("m-input-dock");
+                  dockEl?.classList.add("send-ripple");
+                  void dockEl?.getBoundingClientRect();
+                  onSendFromPrompt(input);
+                  setInput("");
+                  const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+                  if (ta) { ta.style.height = "auto"; ta.classList.remove("is-typing"); }
+                }
+              }
+            }}
+            rows={1}
+            spellCheck
+            autoCorrect="on"
+            autoCapitalize="sentences"
+          />
+          <button
+            type="button"
+            className="gold-send"
+            aria-label={t("send")}
+            disabled={loading || !input.trim()}
+            onClick={() => {
+              if (!loading && input.trim()) {
+                const dockEl = document.getElementById("m-input-dock");
+                dockEl?.classList.add("send-ripple");
+                void dockEl?.getBoundingClientRect();
+                onSendFromPrompt(input);
+                setInput("");
+                const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+                if (ta) { ta.style.height = "auto"; ta.classList.remove("is-typing"); }
+              }
             }}
           >
-            {/* Chronik wächst im Scroller */}
-            <div
-              style={{
-                flex: 1,
-                minHeight: 0,
-                paddingTop: 8,
-                paddingLeft: isMobile ? 0 : undefined,
-                paddingRight: isMobile ? 0 : undefined,
-                paddingBottom: padBottom, // ⬅️ Platz für Dock
-                scrollbarGutter: "stable",
-              }}
-              aria-label={t("conversationAria")}
-            >
-              <Conversation
-                messages={messages}
-                tokens={activeTokens}
-                padBottom={padBottom}
-                scrollRef={convoRef as any}
-              />
+            {t("send")}
+          </button>
+        </div>
+
+        {/* Icons + Status */}
+        <div className="gold-bar">
+          <div className="gold-tools" aria-label={t('promptTools') ?? 'Prompt tools'}>
+            <button type="button" aria-label={t('comingUpload')}    className="gt-btn">📎</button>
+            <button type="button" aria-label={t('comingVoice')}     className="gt-btn">🎙️</button>
+            <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
+          </div>
+
+          <div className="gold-stats">
+            <div className="stat">
+              <span className="dot" />
+              <span className="label">Mode</span>
+              <strong>{footerStatus.modeLabel || "—"}</strong>
             </div>
-
-            {/* === BOTTOM STACK: Prompt, dann Icons+Status ================= */}
-            <div
-              id="m-input-dock"
-              ref={dockRef as any}
-              className="m-bottom-stack gold-dock"
-              role="group"
-              aria-label="Chat Eingabe & Status"
-            >
-              {/* Prompt … */}
-              <div className="gold-prompt-wrap">
-                <textarea
-                  id="gold-input"
-                  className="gold-textarea"
-                  aria-label={t("writeMessage")}
-                  placeholder={t("writeMessage")}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onInput={(e) => {
-                    const ta = e.currentTarget;
-                    ta.style.height = "auto";
-                    const cap = Math.min(ta.scrollHeight, Math.round(window.innerHeight * 0.30));
-                    ta.style.height = `${cap}px`;
-                    ta.classList.add("is-typing");
-                  }}
-                  onBlur={(e) => e.currentTarget.classList.remove("is-typing")}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      if (input.trim()) {
-                        const dockEl = document.getElementById("m-input-dock");
-                        dockEl?.classList.add("send-ripple");
-                        void dockEl?.getBoundingClientRect();
-                        onSendFromPrompt(input);
-                        setInput("");
-                        const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-                        if (ta) { ta.style.height = "auto"; ta.classList.remove("is-typing"); }
-                      }
-                    }
-                  }}
-                  rows={1}
-                  spellCheck
-                  autoCorrect="on"
-                  autoCapitalize="sentences"
-                />
-                <button
-                  type="button"
-                  className="gold-send"
-                  aria-label={t("send")}
-                  disabled={loading || !input.trim()}
-                  onClick={() => {
-                    if (!loading && input.trim()) {
-                      const dockEl = document.getElementById("m-input-dock");
-                      dockEl?.classList.add("send-ripple");
-                      void dockEl?.getBoundingClientRect();
-                      onSendFromPrompt(input);
-                      setInput("");
-                      const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-                      if (ta) { ta.style.height = "auto"; ta.classList.remove("is-typing"); }
-                    }
-                  }}
-                >
-                  {t("send")}
-                </button>
-              </div>
-
-              {/* Icons + Status */}
-              <div className="gold-bar">
-                <div className="gold-tools" aria-label={t('promptTools') ?? 'Prompt tools'}>
-                  <button type="button" aria-label={t('comingUpload')}    className="gt-btn">📎</button>
-                  <button type="button" aria-label={t('comingVoice')}     className="gt-btn">🎙️</button>
-                  <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
-                </div>
-
-                <div className="gold-stats">
-                  <div className="stat">
-                    <span className="dot" />
-                    <span className="label">Mode</span>
-                    <strong>{footerStatus.modeLabel || "—"}</strong>
-                  </div>
-                  <div className="stat">
-                    <span className="dot" />
-                    <span className="label">Expert</span>
-                    <strong>{footerStatus.expertLabel || "—"}</strong>
-                  </div>
-                </div>
-              </div>
+            <div className="stat">
+              <span className="dot" />
+              <span className="label">Expert</span>
+              <strong>{footerStatus.expertLabel || "—"}</strong>
             </div>
-            {/* === /BOTTOM STACK ========================================= */}
           </div>
         </div>
       </div>
+      {/* === /BOTTOM STACK ========================================= */}
+    </div>
+  </div>
+</div>
 
-      {/* Mobile Overlay / Onboarding */}
-      {isMobile && (
-        <>
-          <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
-          <MobileOverlay
-            open={overlayOpen}
-            onClose={() => setOverlayOpen(false)}
-            onSystemMessage={systemSay}
-          />
-        </>
-      )}
-      <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
+{/* Mobile Overlay / Onboarding */}
+{isMobile && (
+  <>
+    <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
+    <MobileOverlay
+      open={overlayOpen}
+      onClose={() => setOverlayOpen(false)}
+      onSystemMessage={systemSay}
+    />
+  </>
+)}
+<OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
 
-      {/* === Golden Prompt — Styles ==================================== */}
-      <style jsx global>{`
-        html, body { background:#000; margin:0; padding:0; overflow-x:hidden; }
-        :root { --dock-h: 60px; --fab-z: 90; }
-        .mi-plus-btn { display: none !important; }
-        [data-sticky-fab] { z-index: var(--fab-z) !important; }
+{/* === Golden Prompt — Styles ==================================== */}
+<style jsx global>{`
+  html, body { background:#000; margin:0; padding:0; overflow-x:hidden; }
+  :root { --dock-h: 60px; --fab-z: 90; }
+  .mi-plus-btn { display: none !important; }
+  [data-sticky-fab] { z-index: var(--fab-z) !important; }
 
-        /* Dock niemals transformieren (Sticky + Transform = Bug) */
-        #m-input-dock { transform: none !important; }
+  /* Dock niemals transformieren (Sticky + Transform = Bug) */
+  #m-input-dock { transform: none !important; }
 
-        /* Spacer über dem Dock — verhindert Überdecken der letzten Bubble */
-        #m-input-dock::before{
-          content:"";
-          display:block;
-          height: var(--dock-h, 60px);
-          margin-top: calc(-1 * var(--dock-h, 60px));
-        }
+  /* ❌ SPACER ENTFERNT – Fußraum kommt vom Scrollport */
+  /* #m-input-dock::before{ … }  --> gelöscht */
 
-        /* Dock Container */
-        #m-input-dock.m-bottom-stack{
-          position: sticky;
-          bottom: 0;
-          z-index: 60;
-          background: rgba(8,14,18,0.90);
-          backdrop-filter: blur(8px);
-          border-top: 1px solid rgba(255,255,255,0.10);
-          box-shadow: 0 -4px 18px rgba(0,0,0,.40);
-          padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
-          overscroll-behavior: contain;
-          width: auto;
-          margin: 0;
-          border-radius: 0;
-        }
+  /* Dock Container */
+  #m-input-dock.m-bottom-stack{
+    position: sticky;
+    bottom: var(--safe-bottom, 0px); /* ✅ Safe-area-aware */
+    z-index: 60;
+    background: rgba(8,14,18,0.90);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 0 -4px 18px rgba(0,0,0,.40);
+    padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
+    overscroll-behavior: contain;
+    width: auto;
+    margin: 0;
+    border-radius: 0;
+  }
 
-        /* Kinder dürfen animieren */
-        .gold-prompt-wrap,
-        .gold-bar { will-change: transform; }
+  /* Kinder dürfen animieren */
+  .gold-prompt-wrap,
+  .gold-bar { will-change: transform; }
 
-        /* Prompt Grid */
-        .gold-prompt-wrap{
-          display:grid; grid-template-columns: 1fr max-content;
-          gap:10px; align-items:stretch;
-          width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
-          margin:0 auto;
-        }
-        .gold-textarea{
-          width:100%; min-height:44px; max-height:var(--dock-cap,30vh);
-          resize:none; border-radius:12px; padding:10px 12px; line-height:1.5;
-          border:1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"};
-          background:rgba(255,255,255,0.04); color:${activeTokens.color.text};
-          outline:none; background-clip: padding-box;
-          transition: box-shadow 120ms cubic-bezier(.2,.6,.2,1), border-color 120ms cubic-bezier(.2,.6,.2,1);
-          font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
-        }
-        .gold-textarea:is(:hover,:focus,.is-typing){
-          box-shadow: 0 0 0 1px ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"},
-                      0 0 18px rgba(34,211,238,0.18);
-          border-color: ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
-        }
-        .gold-send{
-          height:44px; min-width:96px; white-space:nowrap;
-          padding:0 16px; border-radius:12px; font-weight:700;
-          border:1px solid ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
-          background:${activeTokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"};
-          color:${activeTokens.color.text}; cursor:pointer; background-clip: padding-box;
-          transition: transform 120ms cubic-bezier(.2,.6,.2,1), box-shadow 120ms cubic-bezier(.2,.6,.2,1);
-          display:inline-flex; align-items:center; justify-content:center;
-        }
-        .gold-send:hover:not(:disabled){ transform: translateY(-1px); }
-        .gold-send:active:not(:disabled){ transform: translateY(0); }
-        .gold-send:disabled{ opacity:.45; cursor:default; }
+  /* Prompt Grid */
+  .gold-prompt-wrap{
+    display:grid; grid-template-columns: 1fr max-content;
+    gap:10px; align-items:stretch;
+    width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+    margin:0 auto;
+  }
+  .gold-textarea{
+    width:100%; min-height:44px; max-height:var(--dock-cap,30vh);
+    resize:none; border-radius:12px; padding:10px 12px; line-height:1.5;
+    border:1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"};
+    background:rgba(255,255,255,0.04); color:${activeTokens.color.text};
+    outline:none; background-clip: padding-box;
+    transition: box-shadow 120ms cubic-bezier(.2,.6,.2,1), border-color 120ms cubic-bezier(.2,.6,.2,1);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
+  }
+  .gold-textarea:is(:hover,:focus,.is-typing){
+    box-shadow: 0 0 0 1px ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"},
+                0 0 18px rgba(34,211,238,0.18);
+    border-color: ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
+  }
+  .gold-send{
+    height:44px; min-width:96px; white-space:nowrap;
+    padding:0 16px; border-radius:12px; font-weight:700;
+    border:1px solid ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
+    background:${activeTokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"};
+    color:${activeTokens.color.text}; cursor:pointer; background-clip: padding-box;
+    transition: transform 120ms cubic-bezier(.2,.6,.2,1), box-shadow 120ms cubic-bezier(.2,.6,.2,1);
+    display:inline-flex; align-items:center; justify-content:center;
+  }
+  .gold-send:hover:not(:disabled){ transform: translateY(-1px); }
+  .gold-send:active:not(:disabled){ transform: translateY(0); }
+  .gold-send:disabled{ opacity:.45; cursor:default; }
 
-        /* Icons + Status unter Prompt — 3px Abstand */
-        .gold-bar{
-          width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
-          margin:3px auto 0 auto;
-          display:flex; align-items:center; justify-content:flex-start; gap:12px;
-        }
-        .gold-tools{ display:flex; gap:8px; }
-        .gt-btn{
-          display:inline-flex; align-items:center; justify-content:center;
-          height:36px; min-width:36px; padding:0 12px;
-          border-radius:10px; border:1px solid rgba(49,65,86,.7);
-          background:#0b1220; color:#e6f0f3; font-weight:700;
-          transition:transform 120ms cubic-bezier(.2,.6,.2,1);
-        }
-        .gt-btn:active{ transform:scale(.98); }
+  /* Icons + Status unter Prompt — 3px Abstand */
+  .gold-bar{
+    width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+    margin:3px auto 0 auto;
+    display:flex; align-items:center; justify-content:flex-start; gap:12px;
+  }
+  .gold-tools{ display:flex; gap:8px; }
+  .gt-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    height:36px; min-width:36px; padding:0 12px;
+    border-radius:10px; border:1px solid rgba(49,65,86,.7);
+    background:#0b1220; color:#e6f0f3; font-weight:700;
+    transition:transform 120ms cubic-bezier(.2,.6,.2,1);
+  }
+  .gt-btn:active{ transform:scale(.98); }
 
-        /* Mobile: Dock edge-to-edge + Safe-Area */
-        @media (max-width: 768px){
-          #m-input-dock.m-bottom-stack{
-            position: fixed !important;
-            left: max(0px, env(safe-area-inset-left));
-            right: max(0px, env(safe-area-inset-right));
-            bottom: max(0px, env(safe-area-inset-bottom));
-            padding: 8px max(8px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-right));
-            background: rgba(8,14,18,0.90) !important;
-            border-top: 1px solid rgba(255,255,255,0.10) !important;
-            box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
-            z-index: 70 !important;
-          }
-          .gold-prompt-wrap,
-          .gold-bar{
-            width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
-            margin-left: auto; margin-right: auto;
-          }
-        }
+  /* Mobile: Dock edge-to-edge + Safe-Area */
+  @media (max-width: 768px){
+    #m-input-dock.m-bottom-stack{
+      position: fixed !important;
+      left: max(0px, env(safe-area-inset-left));
+      right: max(0px, env(safe-area-inset-right));
+      bottom: max(0px, env(safe-area-inset-bottom));
+      padding: 8px max(8px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-right));
+      background: rgba(8,14,18,0.90) !important;
+      border-top: 1px solid rgba(255,255,255,0.10) !important;
+      box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
+      z-index: 70 !important;
+    }
+    .gold-prompt-wrap,
+    .gold-bar{
+      width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
+      margin-left: auto; margin-right: auto;
+    }
+  }
 
-        /* Ripple / Inertia */
-        .gold-dock.send-ripple{
-          animation: gp-inertia 320ms cubic-bezier(.2,.6,.2,1) 1, gp-ripple 680ms ease-out 1;
-        }
-        @keyframes gp-inertia{ 0%{transform:translateY(0)} 55%{transform:translateY(-3px)} 100%{transform:translateY(0)} }
-        @keyframes gp-ripple{
-          0%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
-          15%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 1000px rgba(34,211,238,0.08); }
-          100%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
-        }
+  /* Ripple / Inertia */
+  .gold-dock.send-ripple{
+    animation: gp-inertia 320ms cubic-bezier(.2,.6,.2,1) 1, gp-ripple 680ms ease-out 1;
+  }
+  @keyframes gp-inertia{ 0%{transform:translateY(0)} 55%{transform:translateY(-3px)} 100%{transform:translateY(0)} }
+  @keyframes gp-ripple{
+    0%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
+    15%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 1000px rgba(34,211,238,0.08); }
+    100%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
+  }
 
-        /* Entkopplung von Legacy input-bar.css */
-        #m-input-dock .gold-prompt-wrap,
-        #m-input-dock .gold-textarea,
-        #m-input-dock .gold-send{
-          position: static !important; float: none !important; inset: auto !important; box-sizing: border-box !important;
-        }
+  /* Entkopplung von Legacy input-bar.css */
+  #m-input-dock .gold-prompt-wrap,
+  #m-input-dock .gold-textarea,
+  #m-input-dock .gold-send{
+    position: static !important; float: none !important; inset: auto !important; box-sizing: border-box !important;
+  }
 
-        /* FAB über Dock */
-        .sticky-fab, [data-sticky-fab], button[aria-label="Menü öffnen"]{
-          bottom: calc(var(--dock-h, 60px) + 12px) !important;
-          z-index: var(--fab-z) !important;
-        }
-      `}</style>
-    </main>
-  );
+  /* FAB über Dock */
+  .sticky-fab, [data-sticky-fab], button[aria-label="Menü öffnen"]{
+    bottom: calc(var(--dock-h, 60px) + 12px) !important;
+    z-index: var(--fab-z) !important;
+  }
+`}</style>
+</main>
+);
 }
+
