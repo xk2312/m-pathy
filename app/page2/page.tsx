@@ -682,7 +682,10 @@ useEffect(() => {
     const kind: string = detail.kind ?? "info";
     const meta = detail.meta ?? {};
 
-    // 1) Reine Status-Events: nur Footer-State aktualisieren, KEINE Bubble
+    // Merken, ob der User VOR dem Event am Ende war
+    const wasAtEnd = stickToBottom;
+
+    // 1) Reine Status-Events: nur Footer-State ...
     if (kind === "status") {
       const modeLabel = meta.modeLabel ?? detail.modeLabel;
       const expertLabel = meta.expertLabel ?? detail.expertLabel;
@@ -690,10 +693,20 @@ useEffect(() => {
         modeLabel: typeof modeLabel === "string" && modeLabel.length ? modeLabel : s.modeLabel,
         expertLabel: typeof expertLabel === "string" && expertLabel.length ? expertLabel : s.expertLabel,
       }));
+      // Falls vorher unten: nach Layout-Update wieder an den Boden
+      if (wasAtEnd) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const el = convoRef.current as HTMLDivElement | null;
+            if (el) el.scrollTop = el.scrollHeight;
+            setStickToBottom(true);
+          });
+        });
+      }
       return;
     }
 
-    // 2) Modus-Events: Label in den Footer spiegeln (falls geliefert)
+    // 2) Modus-Events: Label in den Footer spiegeln ...
     if (kind === "mode") {
       const modeLabel = meta.label ?? meta.modeLabel ?? detail.modeLabel;
       if (typeof modeLabel === "string" && modeLabel.length) {
@@ -711,11 +724,23 @@ useEffect(() => {
       persistMessages(next);
       return next;
     });
+
+    // Nach dem Anfügen neuer Nachricht: nur wenn vorher unten → wieder an den Boden
+    if (wasAtEnd) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const el = convoRef.current as HTMLDivElement | null;
+          if (el) el.scrollTop = el.scrollHeight;
+          setStickToBottom(true);
+        });
+      });
+    }
   };
 
   window.addEventListener("mpathy:system-message" as any, onSystem as any);
   return () => window.removeEventListener("mpathy:system-message" as any, onSystem as any);
-}, [persistMessages]);
+}, [persistMessages, stickToBottom]); // ⬅️ stickToBottom ergänzen
+
 
 
   // ===============================================================
