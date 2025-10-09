@@ -1173,18 +1173,22 @@ return (
 
 
       /* Dock Container */
-      #m-input-dock.m-bottom-stack{
-        position: sticky;
-        bottom: 0;
-        z-index: 60;
-        background: rgba(8,14,18,0.90);
-        backdrop-filter: blur(8px);
-        border-top: 1px solid rgba(255,255,255,0.10);
-        box-shadow: 0 -4px 18px rgba(0,0,0,.40);
-        padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
-        overscroll-behavior: contain;
-        width: auto; margin: 0; border-radius: 0;
-      }
+#m-input-dock.m-bottom-stack{
+  position: sticky;
+  bottom: 0;
+  z-index: 60;
+  background: rgba(8,14,18,0.90);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 -4px 18px rgba(0,0,0,.40);
+  padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
+  overscroll-behavior: contain;
+  width: auto;
+  margin: 0;
+  margin-top: auto; /* ⬅️ Fix: hält Dock immer am unteren Rand im Flex-Flow */
+  border-radius: 0;
+}
+
 
       /* Prompt Grid */
       .gold-prompt-wrap{
