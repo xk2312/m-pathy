@@ -989,7 +989,8 @@ const withGate = (fn: () => void) => {
   clickGateRef.current = now;
   fn();
 };
-
+/* ⬇︎ NEU: Laufzeit-Gate gegen Mehrfachsendungen */
+const sendingRef = useRef(false);
 return (
   <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
     {/* === HEADER ===================================================== */}
@@ -1167,44 +1168,25 @@ return (
 }}
 
                 onKeyDown={(e) => {
-  if (!input.trim()) return;
-withGate(() => {
-  const dockEl = document.getElementById("m-input-dock");
-  dockEl?.classList.add("send-ripple");
-  void dockEl?.getBoundingClientRect();
+  const ev: any = e;
+  const isComposing = !!ev.isComposing || !!ev.nativeEvent?.isComposing;
+  if (
+    e.key !== "Enter" ||
+    e.shiftKey ||
+    e.repeat ||
+    isComposing ||
+    loading ||
+    !input.trim()
+  ) return;
 
+  e.preventDefault();
 
-      onSendFromPrompt(input);
-      setInput("");
+  if (sendingRef.current) return;
+  sendingRef.current = true;
 
-      const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-      if (ta) {
-        ta.style.height = "44px";
-        ta.classList.remove("is-typing");
-      }
-      const h = dockRef.current?.offsetHeight || 0;
-      document.documentElement.style.setProperty("--dock-h", `${h}px`);
-      setPadBottom(h);
-    });
-  }
-}
-
-                rows={1}
-                spellCheck
-                autoCorrect="on"
-                autoCapitalize="sentences"
-              />
-              <button
-                type="button"
-                className="gold-send"
-                aria-label={t("send")}
-                disabled={loading || !input.trim()}
-                onClick={() => {
-  if (loading || !input.trim()) return;
   withGate(() => {
     const dockEl = document.getElementById("m-input-dock");
     dockEl?.classList.add("send-ripple");
-
     void dockEl?.getBoundingClientRect();
 
     onSendFromPrompt(input);
@@ -1219,7 +1201,46 @@ withGate(() => {
     document.documentElement.style.setProperty("--dock-h", `${h}px`);
     setPadBottom(h);
   });
+
+  setTimeout(() => { sendingRef.current = false; }, 400);
 }}
+
+
+                rows={1}
+                spellCheck
+                autoCorrect="on"
+                autoCapitalize="sentences"
+              />
+              <button
+                type="button"
+                className="gold-send"
+                aria-label={t("send")}
+                disabled={loading || !input.trim()}
+                onClick={() => {
+  if (loading || !input.trim() || sendingRef.current) return;
+  sendingRef.current = true;
+
+  withGate(() => {
+    const dockEl = document.getElementById("m-input-dock");
+    dockEl?.classList.add("send-ripple");
+    void dockEl?.getBoundingClientRect();
+
+    onSendFromPrompt(input);
+    setInput("");
+
+    const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+    if (ta) {
+      ta.style.height = "44px";
+      ta.classList.remove("is-typing");
+    }
+    const h = dockRef.current?.offsetHeight || 0;
+    document.documentElement.style.setProperty("--dock-h", `${h}px`);
+    setPadBottom(h);
+  });
+
+  setTimeout(() => { sendingRef.current = false; }, 400);
+}}
+
 
               >
                 {t("send")}
