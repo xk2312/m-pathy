@@ -1055,45 +1055,28 @@ return (
             <SidebarContainer onSystemMessage={systemSay} />
           </div>
         )}
-        {/* Rechte Spalte: Conversation + Bottom-Stack — SCROLLER */}
         <div
           ref={convoRef as any}
           style={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            minHeight: 0,
-            overflow: "auto",
-            pointerEvents: "auto",
-            touchAction: "pan-y",
-            WebkitOverflowScrolling: "touch",
-            overscrollBehavior: "contain",
-            height: "calc(100dvh - 224px)",
+  display: "flex",
+  flexDirection: "column",
+  flex: 1,
+  minHeight: 0,
+  overflow: "auto",
+  pointerEvents: "auto",
+  touchAction: "pan-y",
+  WebkitOverflowScrolling: "touch",
+  overscrollBehavior: "contain",
 
-            // ⚑ CHANGED: Single-Source Fußraum → padBottomPx (siehe unten)
-            paddingBottom: (() => {
-              if (typeof window === "undefined") return 0;
-              const h = dockRef.current?.offsetHeight || 0;
-              const safeStr = getComputedStyle(document.documentElement)
-                .getPropertyValue("--safe-bottom")
-                .trim() || "0";
-              const safe = Number.parseFloat(safeStr) || 0;
-              return `${Math.max(0, h + safe + 24)}px`;
-            })(),
-            scrollPaddingBottom: (() => {
-              if (typeof window === "undefined") return 0;
-              const h = dockRef.current?.offsetHeight || 0;
-              const safeStr = getComputedStyle(document.documentElement)
-                .getPropertyValue("--safe-bottom")
-                .trim() || "0";
-              const safe = Number.parseFloat(safeStr) || 0;
-              return `${Math.max(0, h + safe + 24)}px`;
-            })(),
+  // Single-Source Fußraum aus bestehendem State
+  paddingBottom: `${padBottom}px`,
+  scrollPaddingBottom: `${padBottom}px`,
 
-            paddingInline: isMobile
-              ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
-              : "12px",
-          }}
+  paddingInline: isMobile
+    ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
+    : "12px",
+}}
+
         >
           {/* Chronik wächst im Scroller */}
           <div
@@ -1109,21 +1092,12 @@ return (
             aria-label={t("conversationAria")}
           >
             <Conversation
-              messages={messages}
-              tokens={activeTokens}
+  messages={messages}
+  tokens={activeTokens}
+  padBottom={`${padBottom}px`}
+  scrollRef={convoRef as any}
+/>
 
-              // ⚑ CHANGED: Conversation bekommt denselben String ("…px")
-              padBottom={(() => {
-                if (typeof window === "undefined") return "0px";
-                const h = dockRef.current?.offsetHeight || 0;
-                const safeStr = getComputedStyle(document.documentElement)
-                  .getPropertyValue("--safe-bottom")
-                  .trim() || "0";
-                const safe = Number.parseFloat(safeStr) || 0;
-                return `${Math.max(0, h + safe + 24)}px`;
-              })()}
-              scrollRef={convoRef as any}
-            />
           </div>
           {/* === BOTTOM STACK: Prompt, dann Icons+Status ================= */}
           <div
@@ -1143,40 +1117,46 @@ return (
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onFocus={() => {
-                  // sofortige Messung bei Fokus
-                  if (typeof requestAnimationFrame !== "undefined") {
-                    requestAnimationFrame(() =>
-                      requestAnimationFrame(() => {
-                        const h = dockRef.current?.offsetHeight || 0;
-                        document.documentElement.style.setProperty("--dock-h", `${h}px`);
-                      })
-                    );
-                  }
-                }}
+  // sofortige Messung bei Fokus
+  if (typeof requestAnimationFrame !== "undefined") {
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const h = dockRef.current?.offsetHeight || 0;
+        document.documentElement.style.setProperty("--dock-h", `${h}px`);
+        setPadBottom(h);
+      })
+    );
+  }
+}}
+
                 onInput={(e) => {
-                  const ta = e.currentTarget;
-                  // Autogrow (max 30% Viewport)
-                  ta.style.height = "auto";
-                  const cap = Math.min(ta.scrollHeight, Math.round((window?.innerHeight || 0) * 0.30));
-                  ta.style.height = `${Math.max(44, cap)}px`;
-                  ta.classList.add("is-typing");
-                  // double-rAF: Dock-Höhe stabil messen
-                  if (typeof requestAnimationFrame !== "undefined") {
-                    requestAnimationFrame(() =>
-                      requestAnimationFrame(() => {
-                        const h = dockRef.current?.offsetHeight || 0;
-                        document.documentElement.style.setProperty("--dock-h", `${h}px`);
-                      })
-                    );
-                  }
-                }}
+  const ta = e.currentTarget;
+  // Autogrow (max 30% Viewport)
+  ta.style.height = "auto";
+  const cap = Math.min(ta.scrollHeight, Math.round((window?.innerHeight || 0) * 0.30));
+  ta.style.height = `${Math.max(44, cap)}px`;
+  ta.classList.add("is-typing");
+  // double-rAF: Dock-Höhe stabil messen
+  if (typeof requestAnimationFrame !== "undefined") {
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const h = dockRef.current?.offsetHeight || 0;
+        document.documentElement.style.setProperty("--dock-h", `${h}px`);
+        setPadBottom(h);
+      })
+    );
+  }
+}}
+
                 onBlur={(e) => {
-                  const ta = e.currentTarget;
-                  ta.classList.remove("is-typing");
-                  ta.style.height = "44px"; // Reset auf Minimalhöhe
-                  const h = dockRef.current?.offsetHeight || 0;
-                  document.documentElement.style.setProperty("--dock-h", `${h}px`);
-                }}
+  const ta = e.currentTarget;
+  ta.classList.remove("is-typing");
+  ta.style.height = "44px"; // Reset auf Minimalhöhe
+  const h = dockRef.current?.offsetHeight || 0;
+  document.documentElement.style.setProperty("--dock-h", `${h}px`);
+  setPadBottom(h);
+}}
+
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
@@ -1189,13 +1169,14 @@ return (
                       setInput("");
 
                       const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-                      if (ta) {
-                        ta.style.height = "44px";
-                        ta.classList.remove("is-typing");
-                      }
-                      const h = dockRef.current?.offsetHeight || 0;
-                      document.documentElement.style.setProperty("--dock-h", `${h}px`);
-                    }
+if (ta) {
+  ta.style.height = "44px";
+  ta.classList.remove("is-typing");
+}
+const h = dockRef.current?.offsetHeight || 0;
+document.documentElement.style.setProperty("--dock-h", `${h}px`);
+setPadBottom(h);
+ }
                   }
                 }}
                 rows={1}
@@ -1218,13 +1199,14 @@ return (
                     setInput("");
 
                     const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-                    if (ta) {
-                      ta.style.height = "44px";
-                      ta.classList.remove("is-typing");
-                    }
-                    const h = dockRef.current?.offsetHeight || 0;
-                    document.documentElement.style.setProperty("--dock-h", `${h}px`);
-                  }
+if (ta) {
+  ta.style.height = "44px";
+  ta.classList.remove("is-typing");
+}
+const h = dockRef.current?.offsetHeight || 0;
+document.documentElement.style.setProperty("--dock-h", `${h}px`);
+setPadBottom(h);
+}
                 }}
               >
                 {t("send")}
@@ -1238,24 +1220,24 @@ return (
             >
               <div className="gold-tools" aria-label={t('promptTools') ?? 'Prompt tools'}>
                 <button type="button" aria-label={t('comingUpload')}    className="gt-btn">📎</button>
-                <button type="button" aria-label={t('comingVoice')}     className="gt-btn">🎙️</button>
-                <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
-              </div>
-
-              <div className="gold-stats">
-                <div className="stat">
-                  <span className="dot" />
-                  <span className="label">Mode</span>
-                  <strong>{footerStatus.modeLabel || "—"}</strong>
+                  <button type="button" aria-label={t('comingVoice')}     className="gt-btn">🎙️</button>
+                  <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
                 </div>
-                <div className="stat">
-                  <span className="dot" />
-                  <span className="label">Expert</span>
-                  <strong>{footerStatus.expertLabel || "—"}</strong>
+
+                <div className="gold-stats">
+                  <div className="stat">
+                    <span className="dot" />
+                    <span className="label">Mode</span>
+                    <strong>{footerStatus.modeLabel || "—"}</strong>
+                  </div>
+                  <div className="stat">
+                    <span className="dot" />
+                    <span className="label">Expert</span>
+                    <strong>{footerStatus.expertLabel || "—"}</strong>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           {/* === /BOTTOM STACK ========================================= */}
         </div> {/* /Scroller */}
       </div>   {/* /Grid */}
@@ -1377,11 +1359,12 @@ return (
       .gold-stats .label { opacity: .75; letter-spacing: .02em; }
       .gold-stats strong { font-weight: 600; }
 
-      /* Fallback für sichtbares Chat-Ende */
-      .chat-end-spacer{
-        height: calc(var(--dock-h, 60px) + var(--safe-bottom, 0px) + 24px);
-        pointer-events: none;
-      }
+      /* Fallback für sichtbares Chat-Ende – neutralisiert, da Fußraum via paddingBottom kommt */
+.chat-end-spacer{
+  height: 0;
+  pointer-events: none;
+}
+
 
       /* Mobile: Dock edge-to-edge + Safe-Area + Status rechts (übereinander) */
       @media (max-width: 768px){
