@@ -573,20 +573,42 @@ const [dockH, setDockH] = useState(0);
 // ▼▼▼ EINZEILER HINZUFÜGEN (bleibt) ▼▼▼
 const endRef  = useRef<HTMLDivElement>(null);
 
+// zentrale Messung + einheitlicher Fußraum
+const [padBottom, setPadBottom] = useState(0);
+
+const measureDock = useCallback(() => {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const h = dockRef.current?.offsetHeight ?? 0;
+      setDockH(h);
+      setPadBottom(h);                           // einzige Fußraum-Quelle
+      document.documentElement.style.setProperty("--dock-h", `${h}px`);
+    });
+  });
+}, []);
+
 useEffect(() => {
-  const measure = () => {
-    if (dockRef.current) setDockH(dockRef.current.offsetHeight || 0);
-  };
-  measure();
-  const ro = new ResizeObserver(measure);
-  if (dockRef.current)  ro.observe(dockRef.current);
+  measureDock();
+  const ro = new ResizeObserver(measureDock);
+  if (dockRef.current) ro.observe(dockRef.current);
   if (headerRef.current) ro.observe(headerRef.current);
-  window.addEventListener("resize", measure);
+  const onWinResize = () => measureDock();
+  window.addEventListener("resize", onWinResize);
+
+  // iOS Safari (Keyboard/URL-Bar): visualViewport-Sync
+  const vv = (window as any).visualViewport as VisualViewport | undefined;
+  const onVV = () => measureDock();
+  vv?.addEventListener("resize", onVV);
+  vv?.addEventListener("scroll", onVV);
+
   return () => {
     ro.disconnect();
-    window.removeEventListener("resize", measure);
+    window.removeEventListener("resize", onWinResize);
+    vv?.removeEventListener("resize", onVV);
+    vv?.removeEventListener("scroll", onVV);
   };
-}, []);
+}, [measureDock]);
+
 
 // ▼▼▼ NEU: Dock-Höhe als CSS-Variable für Styles/Footroom setzen ▼▼▼
 useEffect(() => {
@@ -899,10 +921,6 @@ const pageStyle: React.CSSProperties = {
     `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000 100%)`,
   ].join(", "),
 };
-  const padBottom = `calc(${dockH}px + var(--safe-bottom) + 24px)`;
-
-
-
   /* Mobile Header State + Viewport Hook */
   const [mState, setMState] = useState<"idle" | "shrink" | "typing">("idle");
   useMobileViewport(typeof document !== "undefined" ? document.body : null);
@@ -1079,75 +1097,116 @@ const pageStyle: React.CSSProperties = {
         <Conversation
           messages={messages}
           tokens={activeTokens}
-          padBottom={padBottom}
+          padBottom={`${padBottom}px`}        // ← Number -> CSS-Length
           scrollRef={convoRef as any}
-        />
+/>
+
       </div>
 
       {/* === BOTTOM STACK: Prompt, dann Icons+Status ================= */}
-      <div
-        id="m-input-dock"
-        ref={dockRef as any}
-        className="m-bottom-stack gold-dock"
-        role="group"
-        aria-label="Chat Eingabe & Status"
-      >
-        {/* Prompt … */}
-        <div className="gold-prompt-wrap">
-          <textarea
-            id="gold-input"
-            className="gold-textarea"
-            aria-label={t("writeMessage")}
-            placeholder={t("writeMessage")}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onInput={(e) => {
-              const ta = e.currentTarget;
-              ta.style.height = "auto";
-              const cap = Math.min(ta.scrollHeight, Math.round(window.innerHeight * 0.30));
-              ta.style.height = `${cap}px`; // ✅ fix: Template-String
-              ta.classList.add("is-typing");
-            }}
-            onBlur={(e) => e.currentTarget.classList.remove("is-typing")}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                if (input.trim()) {
-                  const dockEl = document.getElementById("m-input-dock");
-                  dockEl?.classList.add("send-ripple");
-                  void dockEl?.getBoundingClientRect();
-                  onSendFromPrompt(input);
-                  setInput("");
-                  const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-                  if (ta) { ta.style.height = "auto"; ta.classList.remove("is-typing"); }
-                }
-              }
-            }}
-            rows={1}
-            spellCheck
-            autoCorrect="on"
-            autoCapitalize="sentences"
-          />
-          <button
-            type="button"
-            className="gold-send"
-            aria-label={t("send")}
-            disabled={loading || !input.trim()}
-            onClick={() => {
-              if (!loading && input.trim()) {
-                const dockEl = document.getElementById("m-input-dock");
-                dockEl?.classList.add("send-ripple");
-                void dockEl?.getBoundingClientRect();
-                onSendFromPrompt(input);
-                setInput("");
-                const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-                if (ta) { ta.style.height = "auto"; ta.classList.remove("is-typing"); }
-              }
-            }}
-          >
-            {t("send")}
-          </button>
-        </div>
+<div
+  id="m-input-dock"
+  ref={dockRef as any}
+  className="m-bottom-stack gold-dock"
+  role="group"
+  aria-label="Chat Eingabe & Status"
+>
+  {/* Prompt … */}
+  <div className="gold-prompt-wrap">
+    <textarea
+      id="gold-input"
+      className="gold-textarea"
+      aria-label={t("writeMessage")}
+      placeholder={t("writeMessage")}
+      value={input}
+      onChange={(e) => setInput(e.target.value)}
+      onFocus={() => {
+        // sofortige Messung bei Fokus (falls vorhanden)
+        // @ts-ignore
+        typeof measureDock === "function" && measureDock();
+      }}
+      onInput={(e) => {
+        const ta = e.currentTarget;
+        // Autogrow (max 30% Viewport)
+        ta.style.height = "auto";
+        const cap = Math.min(
+          ta.scrollHeight,
+          Math.round(window.innerHeight * 0.30)
+        );
+        ta.style.height = `${cap}px`;
+        ta.classList.add("is-typing");
+
+        // nach Layout-Änderung Höhe des Docks stabil messen (double rAF)
+        // @ts-ignore
+        if (typeof measureDock === "function") {
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() => measureDock())
+          );
+        }
+      }}
+      onBlur={(e) => {
+        const ta = e.currentTarget;
+        ta.classList.remove("is-typing");
+        // zurück auf Minimalhöhe → Prompt schrumpft zuverlässig
+        ta.style.height = "44px";
+        // @ts-ignore
+        typeof measureDock === "function" && measureDock();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          if (input.trim()) {
+            const dockEl = document.getElementById("m-input-dock");
+            dockEl?.classList.add("send-ripple");
+            void dockEl?.getBoundingClientRect();
+
+            onSendFromPrompt(input);
+            setInput("");
+
+            const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+            if (ta) {
+              ta.style.height = "44px";
+              ta.classList.remove("is-typing");
+            }
+            // @ts-ignore
+            typeof measureDock === "function" && measureDock();
+          }
+        }
+      }}
+      rows={1}
+      spellCheck
+      autoCorrect="on"
+      autoCapitalize="sentences"
+    />
+    <button
+      type="button"
+      className="gold-send"
+      aria-label={t("send")}
+      disabled={loading || !input.trim()}
+      onClick={() => {
+        if (!loading && input.trim()) {
+          const dockEl = document.getElementById("m-input-dock");
+          dockEl?.classList.add("send-ripple");
+          void dockEl?.getBoundingClientRect();
+
+          onSendFromPrompt(input);
+          setInput("");
+
+          const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+          if (ta) {
+            ta.style.height = "44px";
+            ta.classList.remove("is-typing");
+          }
+          // @ts-ignore
+          typeof measureDock === "function" && measureDock();
+        }
+      }}
+    >
+      {t("send")}
+    </button>
+  </div>
+</div>
+
 
         {/* Icons + Status */}
 <div
@@ -1178,7 +1237,6 @@ const pageStyle: React.CSSProperties = {
       {/* === /BOTTOM STACK ========================================= */}
     </div>
   </div>
-</div>
 
 {/* Mobile Overlay / Onboarding */}
 {isMobile && (
