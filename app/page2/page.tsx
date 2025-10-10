@@ -981,6 +981,15 @@ useEffect(() => {
   const h = dockRef.current?.offsetHeight || 0;
   document.documentElement.style.setProperty("--dock-h", `${h}px`);
 }, [dockH]);
+/* Dedupe-Gate gegen doppelte Auslösung (Touch→Click, Key→Click etc.) */
+const clickGateRef = useRef<number>(0);
+const withGate = (fn: () => void) => {
+  const now = Date.now();
+  if (now - clickGateRef.current < 350) return; // innerhalb 350ms: ignorieren
+  clickGateRef.current = now;
+  fn();
+};
+
 return (
   <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
     {/* === HEADER ===================================================== */}
@@ -1158,27 +1167,28 @@ return (
 }}
 
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    if (input.trim()) {
-                      const dockEl = document.getElementById("m-input-dock");
-                      dockEl?.classList.add("send-ripple");
-                      void dockEl?.getBoundingClientRect();
+  if (!input.trim()) return;
+withGate(() => {
+  const dockEl = document.getElementById("m-input-dock");
+  dockEl?.classList.add("send-ripple");
+  void dockEl?.getBoundingClientRect();
 
-                      onSendFromPrompt(input);
-                      setInput("");
 
-                      const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-if (ta) {
-  ta.style.height = "44px";
-  ta.classList.remove("is-typing");
+      onSendFromPrompt(input);
+      setInput("");
+
+      const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+      if (ta) {
+        ta.style.height = "44px";
+        ta.classList.remove("is-typing");
+      }
+      const h = dockRef.current?.offsetHeight || 0;
+      document.documentElement.style.setProperty("--dock-h", `${h}px`);
+      setPadBottom(h);
+    });
+  }
 }
-const h = dockRef.current?.offsetHeight || 0;
-document.documentElement.style.setProperty("--dock-h", `${h}px`);
-setPadBottom(h);
- }
-                  }
-                }}
+
                 rows={1}
                 spellCheck
                 autoCorrect="on"
@@ -1190,24 +1200,27 @@ setPadBottom(h);
                 aria-label={t("send")}
                 disabled={loading || !input.trim()}
                 onClick={() => {
-                  if (!loading && input.trim()) {
-                    const dockEl = document.getElementById("m-input-dock");
-                    dockEl?.classList.add("send-ripple");
-                    void dockEl?.getBoundingClientRect();
+  if (loading || !input.trim()) return;
+  withGate(() => {
+    const dockEl = document.getElementById("m-input-dock");
+    dockEl?.classList.add("send-ripple");
 
-                    onSendFromPrompt(input);
-                    setInput("");
+    void dockEl?.getBoundingClientRect();
 
-                    const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-if (ta) {
-  ta.style.height = "44px";
-  ta.classList.remove("is-typing");
-}
-const h = dockRef.current?.offsetHeight || 0;
-document.documentElement.style.setProperty("--dock-h", `${h}px`);
-setPadBottom(h);
-}
-                }}
+    onSendFromPrompt(input);
+    setInput("");
+
+    const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+    if (ta) {
+      ta.style.height = "44px";
+      ta.classList.remove("is-typing");
+    }
+    const h = dockRef.current?.offsetHeight || 0;
+    document.documentElement.style.setProperty("--dock-h", `${h}px`);
+    setPadBottom(h);
+  });
+}}
+
               >
                 {t("send")}
               </button>
