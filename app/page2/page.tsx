@@ -1164,11 +1164,19 @@ useEffect(() => {
   /* ❌ SPACER ENTFERNT – Fußraum kommt vom Scrollport */
   /* #m-input-dock::before{ … }  --> gelöscht */
 
-  /* Dock Container */
+  /* Dock Container — robust: immer fixed (Desktop & Mobile) */
+  #m-input-dock {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: var(--safe-bottom, 0px);
+    z-index: 90;
+  }
+
+  /* Klassenspezifische Ausgestaltung des Docks */
   #m-input-dock.m-bottom-stack{
-    position: sticky;
-    bottom: var(--safe-bottom, 0px); /* ✅ Safe-area-aware */
-    z-index: 60;
+    /* position: sticky;  <-- entfernt */
+    /* bottom bleibt über #m-input-dock gesetzt */
     background: rgba(8,14,18,0.90);
     backdrop-filter: blur(8px);
     border-top: 1px solid rgba(255,255,255,0.10);
@@ -1234,10 +1242,42 @@ useEffect(() => {
   }
   .gt-btn:active{ transform:scale(.98); }
 
+  /* Statuschips: Mode / Expert (neu) */
+  .gold-stats {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-left: 12px;
+  }
+  .gold-stats .stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .06);
+    border: 1px solid rgba(255, 255, 255, .10);
+    backdrop-filter: blur(6px);
+  }
+  .gold-stats .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #42f6ff;
+    box-shadow: 0 0 8px currentColor;
+  }
+  .gold-stats .label {
+    opacity: .75;
+    letter-spacing: .02em;
+  }
+  .gold-stats strong {
+    font-weight: 600;
+  }
+
   /* Mobile: Dock edge-to-edge + Safe-Area */
   @media (max-width: 768px){
     #m-input-dock.m-bottom-stack{
-      position: fixed !important;
+      /* position bleibt fixed durch #m-input-dock */
       left: max(0px, env(safe-area-inset-left));
       right: max(0px, env(safe-area-inset-right));
       bottom: max(0px, env(safe-area-inset-bottom));
@@ -1245,7 +1285,7 @@ useEffect(() => {
       background: rgba(8,14,18,0.90) !important;
       border-top: 1px solid rgba(255,255,255,0.10) !important;
       box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
-      z-index: 70 !important;
+      z-index: 90 !important;
     }
     .gold-prompt-wrap,
     .gold-bar{
@@ -1281,4 +1321,3 @@ useEffect(() => {
 </main>
 );
 }
-
