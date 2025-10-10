@@ -1042,7 +1042,7 @@ const pageStyle: React.CSSProperties = {
        {/* Rechte Spalte: Conversation + Bottom-Stack — SCROLLER */}
     <div
       ref={convoRef as any}
-      style={{
+            style={{
         display: "flex",
         flexDirection: "column",
         flex: 1,
@@ -1054,8 +1054,12 @@ const pageStyle: React.CSSProperties = {
         overscrollBehavior: "contain",
         height: "calc(100dvh - 224px)",
         paddingBottom: padBottom,          // Platz für Dock
-        scrollPaddingBottom: padBottom,    // ← NEU: sanfter Scroll-Stop oberhalb des Docks
+        scrollPaddingBottom: padBottom,    // sanfter Scroll-Stop
+        paddingInline: isMobile
+          ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
+          : "12px",                        // ⬅︎ weicher Rand (Desktop & Mobile)
       }}
+
     >
 
 
@@ -1332,25 +1336,35 @@ const pageStyle: React.CSSProperties = {
     }
 
     /* Zweizeilig & wrap-sicher: Statusleiste unter dem Prompt */
+        /* Tools links, Status rechts (vertikal) */
     .gold-bar{
       display:flex;
-      flex-wrap: wrap;
-      row-gap: 8px;
+      align-items:center;
+      justify-content:space-between;
+      column-gap: 10px;
+      flex-wrap: nowrap;                 /* kein Umbruch mehr */
     }
-    .gold-tools{ order: 1; }
+    .gold-tools{ flex:0 0 auto; }
+
     .gold-stats{
-      order: 2;
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+      flex:1 1 auto;
+      display:flex;
+      flex-direction:column;             /* übereinander */
+      align-items:flex-end;              /* rechtsbündig */
+      gap:6px;
+      min-width: 0;                      /* erlaubt Ellipsis */
     }
     .gold-stats .stat{
-      flex: 1 1 46%;
-      min-width: 140px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      padding:3px 8px;
       max-width: 100%;
-      padding: 4px 8px;
     }
+    .gold-stats .label{ font-size:12px; opacity:.8; }
+    .gold-stats strong{ font-size:12px; font-weight:600; }
+    .gold-stats .dot{ width:6px; height:6px; }
+
     .gold-stats .label,
     .gold-stats strong{
       font-size: 12.5px;
