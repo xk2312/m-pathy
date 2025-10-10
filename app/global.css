@@ -296,17 +296,11 @@ div[data-convo="1"] {
 }
 */
 
-/* Dock wirklich sticky am Scrollport-Rand halten */
+/* Dock zuverlässig an den Viewport pinnen (Desktop & Mobile) – Single source */
 #m-input-dock {
-  position: sticky;
+  position: fixed;
+  left: 0;
+  right: 0;
   bottom: var(--safe-bottom, 0px);
-  z-index: var(--z-overlay, 60);
-}
-/* Dock zuverlässig an den Viewport pinnen (Desktop & Mobile) */
-#m-input-dock {
-position: fixed;
-left: 0;
-right: 0;
-bottom: var(--safe-bottom, 0px);
-z-index: var(--z-overlay, 90);
+  z-index: var(--z-overlay, 90);
 }

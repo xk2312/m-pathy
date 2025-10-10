@@ -902,14 +902,14 @@ useEffect(() => {
    [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
    ===================================================================== */
 
-  // Mobile Overlay
-  const [overlayOpen, setOverlayOpen] = useState(false);
+// Mobile Overlay
+const [overlayOpen, setOverlayOpen] = useState(false);
 
-  // Farben ausschließlich aus Tokens
-  const color = activeTokens.color;
-  const bg0 = color.bg0 ?? "#000000";
-  const bg1 = color.bg1 ?? "#0c0f12";
-  const textColor = color.text ?? "#E6F0F3";
+// Farben ausschließlich aus Tokens
+const color = activeTokens.color;
+const bg0 = color.bg0 ?? "#000000";
+const bg1 = color.bg1 ?? "#0c0f12";
+const textColor = color.text ?? "#E6F0F3";
 
 // Seitenstil (radial + linear)
 const pageStyle: React.CSSProperties = {
@@ -921,539 +921,559 @@ const pageStyle: React.CSSProperties = {
     `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000 100%)`,
   ].join(", "),
 };
-  /* Mobile Header State + Viewport Hook */
-  const [mState, setMState] = useState<"idle" | "shrink" | "typing">("idle");
-  useMobileViewport(typeof document !== "undefined" ? document.body : null);
 
-  /* Scroll → Header shrink */
-  useEffect(() => {
-    if (!isMobile || !convoRef?.current) return;
-    const el = convoRef.current as HTMLElement;
-    const onScroll = () => {
-      if (mState === "typing") return;
-      const y = el.scrollTop || 0;
-      setMState(y > 24 ? "shrink" : "idle");
-    };
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
-  }, [isMobile, mState, convoRef]);
+// Mobile Header State + Viewport Hook
+const [mState, setMState] = useState<"idle" | "shrink" | "typing">("idle");
+useMobileViewport(typeof document !== "undefined" ? document.body : null);
+/* Scroll → Header shrink */
+useEffect(() => {
+  if (!isMobile || !convoRef?.current) return;
+  const el = convoRef.current as HTMLElement;
+  const onScroll = () => {
+    if (mState === "typing") return;
+    const y = el.scrollTop || 0;
+    setMState(y > 24 ? "shrink" : "idle");
+  };
+  el.addEventListener("scroll", onScroll, { passive: true });
+  return () => el.removeEventListener("scroll", onScroll);
+}, [isMobile, mState, convoRef]);
 
-  /* Focus im Prompt/Dock → Header typing */
-  useEffect(() => {
-    if (!isMobile) return;
-    const onFocusIn = (e: FocusEvent) => {
-      const t = e.target as HTMLElement | null;
-      if (t && t.closest("#m-input-dock")) setMState("typing");
-    };
-    const onFocusOut = (e: FocusEvent) => {
-      const t = e.target as HTMLElement | null;
-      if (t && t.closest("#m-input-dock")) {
-        setMState((prev) =>
-          prev === "typing"
-            ? (convoRef?.current && (convoRef.current as HTMLElement).scrollTop > 24 ? "shrink" : "idle")
-            : prev
-        );
-      }
-    };
-    document.addEventListener("focusin", onFocusIn);
-    document.addEventListener("focusout", onFocusOut);
-    return () => {
-      document.removeEventListener("focusin", onFocusIn);
-      document.removeEventListener("focusout", onFocusOut);
-    };
-  }, [isMobile, convoRef]);
+/* Focus im Prompt/Dock → Header typing */
+useEffect(() => {
+  if (!isMobile) return;
+  const onFocusIn = (e: FocusEvent) => {
+    const t = e.target as HTMLElement | null;
+    if (t && t.closest("#m-input-dock")) setMState("typing");
+  };
+  const onFocusOut = (e: FocusEvent) => {
+    const t = e.target as HTMLElement | null;
+    if (t && t.closest("#m-input-dock")) {
+      setMState((prev) =>
+        prev === "typing"
+          ? (convoRef?.current && (convoRef.current as HTMLElement).scrollTop > 24 ? "shrink" : "idle")
+          : prev
+      );
+    }
+  };
+  document.addEventListener("focusin", onFocusIn);
+  document.addEventListener("focusout", onFocusOut);
+  return () => {
+    document.removeEventListener("focusin", onFocusIn);
+    document.removeEventListener("focusout", onFocusOut);
+  };
+}, [isMobile, convoRef]);
 
-  /* CSS-Variable --header-h je State setzen */
-  useEffect(() => {
-    if (!isMobile) return;
-    const root = document.documentElement;
-    const value =
-      mState === "typing"
-        ? "var(--header-h-typing)"
-        : mState === "shrink"
-        ? "var(--header-h-shrink)"
-        : "var(--header-h-idle)";
-    root.style.setProperty("--header-h", value);
-  }, [isMobile, mState]);
+/* CSS-Variable --header-h je State setzen */
+useEffect(() => {
+  if (!isMobile) return;
+  const root = document.documentElement;
+  const value =
+    mState === "typing"
+      ? "var(--header-h-typing)"
+      : mState === "shrink"
+      ? "var(--header-h-shrink)"
+      : "var(--header-h-idle)";
+  root.style.setProperty("--header-h", value);
+}, [isMobile, mState]);
 
-  /* Dock-Höhe → --dock-h (für FAB-Offset & Spacer vorm Dock) */
-  useEffect(() => {
-    const h = dockRef.current?.offsetHeight || 0;
-    document.documentElement.style.setProperty("--dock-h", `${h}px`);
-  }, [dockH]);
-
-  return (
-    <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
-      {/* === HEADER ===================================================== */}
-      <header
-        ref={headerRef}
-        role="banner"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          height: isMobile ? "var(--header-h)" : "224px",
-          background: bg0,
-          borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
-        }}
-      >
-        <div
-          style={{
-            width: "100vw",
-            maxWidth: "none",
-            margin: 0,
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <LogoM size={isMobile ? 120 : 160} active={loading} />
-        </div>
-      </header>
-
-      {/* === BÜHNE ====================================================== */}
-<div
-  style={{
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    marginInline: isMobile ? 0 : sideMargin, // ⬅️ Mobile: keine Ränder
-    minHeight: 0,
-    maxWidth: isMobile ? "none" : 1280,      // ⬅️ Mobile: volle Breite
-    alignSelf: "center",
-    width: "100%",
-    paddingTop: isMobile ? "var(--header-h)" : "224px",
-  }}
->
-  {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
-      alignItems: "start",
-      gap: 16,
-      flex: 1,
-      minHeight: 0,
-      overflow: "visible",
-      ["--header-offset" as any]: "16px",
-    }}
-  >
-    {/* Säule links */}
-    {!isMobile && (
+/* Dock-Höhe → --dock-h (für FAB-Offset & Spacer vorm Dock) */
+useEffect(() => {
+  const h = dockRef.current?.offsetHeight || 0;
+  document.documentElement.style.setProperty("--dock-h", `${h}px`);
+}, [dockH]);
+return (
+  <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
+    {/* === HEADER ===================================================== */}
+    <header
+      ref={headerRef}
+      role="banner"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        height: isMobile ? "var(--header-h)" : "224px",
+        background: bg0,
+        borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
+      }}
+    >
       <div
         style={{
-          position: "sticky",
-          top: "240px", // Headerhöhe (224px) + kleiner Abstand
-          alignSelf: "start",
-          height: "fit-content",
-          maxHeight: "calc(100vh - 240px)",
-          overflow: "auto",
+          width: "100vw",
+          maxWidth: "none",
+          margin: 0,
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <SidebarContainer onSystemMessage={systemSay} />
+        <LogoM size={isMobile ? 120 : 160} active={loading} />
       </div>
-    )}
+    </header>
 
-       {/* Rechte Spalte: Conversation + Bottom-Stack — SCROLLER */}
+    {/* === BÜHNE ====================================================== */}
     <div
-      ref={convoRef as any}
-            style={{
+      style={{
+        flex: 1,
         display: "flex",
         flexDirection: "column",
-        flex: 1,
+        marginInline: isMobile ? 0 : sideMargin, // ⬅️ Mobile: keine Ränder
         minHeight: 0,
-        overflow: "auto",
-        pointerEvents: "auto",
-        touchAction: "pan-y",
-        WebkitOverflowScrolling: "touch",
-        overscrollBehavior: "contain",
-        height: "calc(100dvh - 224px)",
-        paddingBottom: padBottom,          // Platz für Dock
-        scrollPaddingBottom: padBottom,    // sanfter Scroll-Stop
-        paddingInline: isMobile
-          ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
-          : "12px",                        // ⬅︎ weicher Rand (Desktop & Mobile)
+        maxWidth: isMobile ? "none" : 1280,      // ⬅️ Mobile: volle Breite
+        alignSelf: "center",
+        width: "100%",
+        paddingTop: isMobile ? "var(--header-h)" : "224px",
       }}
-
     >
-
-
-      {/* Chronik wächst im Scroller */}
+      {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
       <div
         style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+          alignItems: "start",
+          gap: 16,
           flex: 1,
           minHeight: 0,
-          paddingTop: 8,
-          paddingLeft: isMobile ? 0 : undefined,
-          paddingRight: isMobile ? 0 : undefined,
-          // paddingBottom ENTFERNT – liegt jetzt am Scrollport
-          scrollbarGutter: "stable",
+          overflow: "visible",
+          ["--header-offset" as any]: "16px",
         }}
-        aria-label={t("conversationAria")}
       >
-        <Conversation
-          messages={messages}
-          tokens={activeTokens}
-          padBottom={`${padBottom}px`}        // ← Number -> CSS-Length
-          scrollRef={convoRef as any}
-/>
+        {/* Säule links */}
+        {!isMobile && (
+          <div
+            style={{
+              position: "sticky",
+              top: "240px", // Headerhöhe (224px) + kleiner Abstand
+              alignSelf: "start",
+              height: "fit-content",
+              maxHeight: "calc(100vh - 240px)",
+              overflow: "auto",
+            }}
+          >
+            <SidebarContainer onSystemMessage={systemSay} />
+          </div>
+        )}
+        {/* Rechte Spalte: Conversation + Bottom-Stack — SCROLLER */}
+        <div
+          ref={convoRef as any}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+            minHeight: 0,
+            overflow: "auto",
+            pointerEvents: "auto",
+            touchAction: "pan-y",
+            WebkitOverflowScrolling: "touch",
+            overscrollBehavior: "contain",
+            height: "calc(100dvh - 224px)",
 
-      </div>
+            // ⚑ CHANGED: Single-Source Fußraum → padBottomPx (siehe unten)
+            paddingBottom: (() => {
+              if (typeof window === "undefined") return 0;
+              const h = dockRef.current?.offsetHeight || 0;
+              const safeStr = getComputedStyle(document.documentElement)
+                .getPropertyValue("--safe-bottom")
+                .trim() || "0";
+              const safe = Number.parseFloat(safeStr) || 0;
+              return `${Math.max(0, h + safe + 24)}px`;
+            })(),
+            scrollPaddingBottom: (() => {
+              if (typeof window === "undefined") return 0;
+              const h = dockRef.current?.offsetHeight || 0;
+              const safeStr = getComputedStyle(document.documentElement)
+                .getPropertyValue("--safe-bottom")
+                .trim() || "0";
+              const safe = Number.parseFloat(safeStr) || 0;
+              return `${Math.max(0, h + safe + 24)}px`;
+            })(),
 
-      {/* === BOTTOM STACK: Prompt, dann Icons+Status ================= */}
-<div
-  id="m-input-dock"
-  ref={dockRef as any}
-  className="m-bottom-stack gold-dock"
-  role="group"
-  aria-label="Chat Eingabe & Status"
->
-  {/* Prompt … */}
-  <div className="gold-prompt-wrap">
-    <textarea
-      id="gold-input"
-      className="gold-textarea"
-      aria-label={t("writeMessage")}
-      placeholder={t("writeMessage")}
-      value={input}
-      onChange={(e) => setInput(e.target.value)}
-      onFocus={() => {
-        // sofortige Messung bei Fokus (falls vorhanden)
-        // @ts-ignore
-        typeof measureDock === "function" && measureDock();
-      }}
-      onInput={(e) => {
-        const ta = e.currentTarget;
-        // Autogrow (max 30% Viewport)
-        ta.style.height = "auto";
-        const cap = Math.min(
-          ta.scrollHeight,
-          Math.round(window.innerHeight * 0.30)
-        );
-        ta.style.height = `${cap}px`;
-        ta.classList.add("is-typing");
+            paddingInline: isMobile
+              ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
+              : "12px",
+          }}
+        >
+          {/* Chronik wächst im Scroller */}
+          <div
+            style={{
+              flex: 1,
+              minHeight: 0,
+              paddingTop: 8,
+              paddingLeft: isMobile ? 0 : undefined,
+              paddingRight: isMobile ? 0 : undefined,
+              // paddingBottom ENTFERNT – liegt jetzt am Scrollport
+              scrollbarGutter: "stable",
+            }}
+            aria-label={t("conversationAria")}
+          >
+            <Conversation
+              messages={messages}
+              tokens={activeTokens}
 
-        // nach Layout-Änderung Höhe des Docks stabil messen (double rAF)
-        // @ts-ignore
-        if (typeof measureDock === "function") {
-          requestAnimationFrame(() =>
-            requestAnimationFrame(() => measureDock())
-          );
-        }
-      }}
-      onBlur={(e) => {
-        const ta = e.currentTarget;
-        ta.classList.remove("is-typing");
-        // zurück auf Minimalhöhe → Prompt schrumpft zuverlässig
-        ta.style.height = "44px";
-        // @ts-ignore
-        typeof measureDock === "function" && measureDock();
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          if (input.trim()) {
-            const dockEl = document.getElementById("m-input-dock");
-            dockEl?.classList.add("send-ripple");
-            void dockEl?.getBoundingClientRect();
+              // ⚑ CHANGED: Conversation bekommt denselben String ("…px")
+              padBottom={(() => {
+                if (typeof window === "undefined") return "0px";
+                const h = dockRef.current?.offsetHeight || 0;
+                const safeStr = getComputedStyle(document.documentElement)
+                  .getPropertyValue("--safe-bottom")
+                  .trim() || "0";
+                const safe = Number.parseFloat(safeStr) || 0;
+                return `${Math.max(0, h + safe + 24)}px`;
+              })()}
+              scrollRef={convoRef as any}
+            />
+          </div>
+          {/* === BOTTOM STACK: Prompt, dann Icons+Status ================= */}
+          <div
+            id="m-input-dock"
+            ref={dockRef as any}
+            className="m-bottom-stack gold-dock"
+            role="group"
+            aria-label="Chat Eingabe & Status"
+          >
+            {/* Prompt … */}
+            <div className="gold-prompt-wrap">
+              <textarea
+                id="gold-input"
+                className="gold-textarea"
+                aria-label={t("writeMessage")}
+                placeholder={t("writeMessage")}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onFocus={() => {
+                  // sofortige Messung bei Fokus
+                  if (typeof requestAnimationFrame !== "undefined") {
+                    requestAnimationFrame(() =>
+                      requestAnimationFrame(() => {
+                        const h = dockRef.current?.offsetHeight || 0;
+                        document.documentElement.style.setProperty("--dock-h", `${h}px`);
+                      })
+                    );
+                  }
+                }}
+                onInput={(e) => {
+                  const ta = e.currentTarget;
+                  // Autogrow (max 30% Viewport)
+                  ta.style.height = "auto";
+                  const cap = Math.min(ta.scrollHeight, Math.round((window?.innerHeight || 0) * 0.30));
+                  ta.style.height = `${Math.max(44, cap)}px`;
+                  ta.classList.add("is-typing");
+                  // double-rAF: Dock-Höhe stabil messen
+                  if (typeof requestAnimationFrame !== "undefined") {
+                    requestAnimationFrame(() =>
+                      requestAnimationFrame(() => {
+                        const h = dockRef.current?.offsetHeight || 0;
+                        document.documentElement.style.setProperty("--dock-h", `${h}px`);
+                      })
+                    );
+                  }
+                }}
+                onBlur={(e) => {
+                  const ta = e.currentTarget;
+                  ta.classList.remove("is-typing");
+                  ta.style.height = "44px"; // Reset auf Minimalhöhe
+                  const h = dockRef.current?.offsetHeight || 0;
+                  document.documentElement.style.setProperty("--dock-h", `${h}px`);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    if (input.trim()) {
+                      const dockEl = document.getElementById("m-input-dock");
+                      dockEl?.classList.add("send-ripple");
+                      void dockEl?.getBoundingClientRect();
 
-            onSendFromPrompt(input);
-            setInput("");
+                      onSendFromPrompt(input);
+                      setInput("");
 
-            const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-            if (ta) {
-              ta.style.height = "44px";
-              ta.classList.remove("is-typing");
-            }
-            // @ts-ignore
-            typeof measureDock === "function" && measureDock();
-          }
-        }
-      }}
-      rows={1}
-      spellCheck
-      autoCorrect="on"
-      autoCapitalize="sentences"
-    />
-    <button
-      type="button"
-      className="gold-send"
-      aria-label={t("send")}
-      disabled={loading || !input.trim()}
-      onClick={() => {
-        if (!loading && input.trim()) {
-          const dockEl = document.getElementById("m-input-dock");
-          dockEl?.classList.add("send-ripple");
-          void dockEl?.getBoundingClientRect();
+                      const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+                      if (ta) {
+                        ta.style.height = "44px";
+                        ta.classList.remove("is-typing");
+                      }
+                      const h = dockRef.current?.offsetHeight || 0;
+                      document.documentElement.style.setProperty("--dock-h", `${h}px`);
+                    }
+                  }
+                }}
+                rows={1}
+                spellCheck
+                autoCorrect="on"
+                autoCapitalize="sentences"
+              />
+              <button
+                type="button"
+                className="gold-send"
+                aria-label={t("send")}
+                disabled={loading || !input.trim()}
+                onClick={() => {
+                  if (!loading && input.trim()) {
+                    const dockEl = document.getElementById("m-input-dock");
+                    dockEl?.classList.add("send-ripple");
+                    void dockEl?.getBoundingClientRect();
 
-          onSendFromPrompt(input);
-          setInput("");
+                    onSendFromPrompt(input);
+                    setInput("");
 
-          const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-          if (ta) {
-            ta.style.height = "44px";
-            ta.classList.remove("is-typing");
-          }
-          // @ts-ignore
-          typeof measureDock === "function" && measureDock();
-        }
-      }}
-    >
-      {t("send")}
-    </button>
-  </div>
-</div>
-
-
-        {/* Icons + Status */}
-<div
-  className="gold-bar"
-  data-compact={compactStatus ? 1 : 0}  /* ← NEU: Kompakt-Flag für Mobile */
->
-  <div className="gold-tools" aria-label={t('promptTools') ?? 'Prompt tools'}>
-    <button type="button" aria-label={t('comingUpload')}    className="gt-btn">📎</button>
-    <button type="button" aria-label={t('comingVoice')}     className="gt-btn">🎙️</button>
-    <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
-  </div>
-
-
-          <div className="gold-stats">
-            <div className="stat">
-              <span className="dot" />
-              <span className="label">Mode</span>
-              <strong>{footerStatus.modeLabel || "—"}</strong>
+                    const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+                    if (ta) {
+                      ta.style.height = "44px";
+                      ta.classList.remove("is-typing");
+                    }
+                    const h = dockRef.current?.offsetHeight || 0;
+                    document.documentElement.style.setProperty("--dock-h", `${h}px`);
+                  }
+                }}
+              >
+                {t("send")}
+              </button>
             </div>
-            <div className="stat">
-              <span className="dot" />
-              <span className="label">Expert</span>
-              <strong>{footerStatus.expertLabel || "—"}</strong>
+
+            {/* ⚑ CHANGED: Icons + Status (gold-bar) gehören IN den Dock-Container */}
+            <div
+              className="gold-bar"
+              data-compact={compactStatus ? 1 : 0}
+            >
+              <div className="gold-tools" aria-label={t('promptTools') ?? 'Prompt tools'}>
+                <button type="button" aria-label={t('comingUpload')}    className="gt-btn">📎</button>
+                <button type="button" aria-label={t('comingVoice')}     className="gt-btn">🎙️</button>
+                <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
+              </div>
+
+              <div className="gold-stats">
+                <div className="stat">
+                  <span className="dot" />
+                  <span className="label">Mode</span>
+                  <strong>{footerStatus.modeLabel || "—"}</strong>
+                </div>
+                <div className="stat">
+                  <span className="dot" />
+                  <span className="label">Expert</span>
+                  <strong>{footerStatus.expertLabel || "—"}</strong>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      {/* === /BOTTOM STACK ========================================= */}
-    </div>
-  </div>
+          {/* === /BOTTOM STACK ========================================= */}
+        </div> {/* /Scroller */}
+      </div>   {/* /Grid */}
+    </div>     {/* /Bühne */}
 
-{/* Mobile Overlay / Onboarding */}
-{isMobile && (
-  <>
-    <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
-    <MobileOverlay
-      open={overlayOpen}
-      onClose={() => setOverlayOpen(false)}
-      onSystemMessage={systemSay}
-    />
-  </>
-)}
-<OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
+    {/* Mobile Overlay / Onboarding */}
+    {isMobile && (
+      <>
+        <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
+        <MobileOverlay
+          open={overlayOpen}
+          onClose={() => setOverlayOpen(false)}
+          onSystemMessage={systemSay}
+        />
+      </>
+    )}
+    <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
+    {/* === Golden Prompt — Styles ==================================== */}
+    <style jsx global>{`
+      html, body { background:#000; margin:0; padding:0; overflow-x:hidden; }
+      :root { --dock-h: 60px; --fab-z: 90; }
+      .mi-plus-btn { display: none !important; }
+      [data-sticky-fab] { z-index: var(--fab-z) !important; }
 
-{/* === Golden Prompt — Styles ==================================== */}
-<style jsx global>{`
-  html, body { background:#000; margin:0; padding:0; overflow-x:hidden; }
-  :root { --dock-h: 60px; --fab-z: 90; }
-  .mi-plus-btn { display: none !important; }
-  [data-sticky-fab] { z-index: var(--fab-z) !important; }
+      /* Dock niemals transformieren (Sticky + Transform = Bug) */
+      #m-input-dock { transform: none !important; }
 
-  /* Dock niemals transformieren (Sticky + Transform = Bug) */
-  #m-input-dock { transform: none !important; }
-
-  /* Dock Container — robust: immer fixed (Desktop & Mobile) */
-  #m-input-dock {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: var(--safe-bottom, 0px);
-    z-index: 90;
-  }
-  #m-input-dock.m-bottom-stack{
-    background: rgba(8,14,18,0.90);
-    backdrop-filter: blur(8px);
-    border-top: 1px solid rgba(255,255,255,0.10);
-    box-shadow: 0 -4px 18px rgba(0,0,0,.40);
-    padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
-    overscroll-behavior: contain;
-    width: auto;
-    margin: 0;
-    border-radius: 0;
-  }
-
-  /* Kinder dürfen animieren */
-  .gold-prompt-wrap,
-  .gold-bar { will-change: transform; }
-
-  /* Prompt Grid */
-  .gold-prompt-wrap{
-    display:grid; grid-template-columns: 1fr max-content;
-    gap:10px; align-items:stretch;
-    width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
-    margin:0 auto;
-  }
-  .gold-textarea{
-    width:100%; min-height:44px; max-height:var(--dock-cap,30vh);
-    resize:none; border-radius:12px; padding:10px 12px; line-height:1.5;
-    border:1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"};
-    background:rgba(255,255,255,0.04); color:${activeTokens.color.text};
-    outline:none; background-clip: padding-box;
-    transition: box-shadow 120ms cubic-bezier(.2,.6,.2,1), border-color 120ms cubic-bezier(.2,.6,.2,1);
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
-  }
-  .gold-textarea:is(:hover,:focus,.is-typing){
-    box-shadow: 0 0 0 1px ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"},
-                0 0 18px rgba(34,211,238,0.18);
-    border-color: ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
-  }
-  .gold-send{
-    height:44px; min-width:96px; white-space:nowrap;
-    padding:0 16px; border-radius:12px; font-weight:700;
-    border:1px solid ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
-    background:${activeTokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"};
-    color:${activeTokens.color.text}; cursor:pointer; background-clip: padding-box;
-    transition: transform 120ms cubic-bezier(.2,.6,.2,1), box-shadow 120ms cubic-bezier(.2,.6,.2,1);
-    display:inline-flex; align-items:center; justify-content:center;
-  }
-  .gold-send:hover:not(:disabled){ transform: translateY(-1px); }
-  .gold-send:active:not(:disabled){ transform: translateY(0); }
-  .gold-send:disabled{ opacity:.45; cursor:default; }
-
-  /* Icons + Status unter Prompt */
-  .gold-bar{
-    width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
-    margin:3px auto 0 auto;
-    display:flex; align-items:center; justify-content:flex-start; gap:12px;
-  }
-  .gold-tools{ display:flex; gap:8px; }
-  .gt-btn{
-    display:inline-flex; align-items:center; justify-content:center;
-    height:36px; min-width:36px; padding:0 12px;
-    border-radius:10px; border:1px solid rgba(49,65,86,.7);
-    background:#0b1220; color:#e6f0f3; font-weight:700;
-    transition:transform 120ms cubic-bezier(.2,.6,.2,1);
-  }
-  .gt-btn:active{ transform:scale(.98); }
-
-  /* Statuschips: Mode / Expert */
-  .gold-stats {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    margin-left: 12px;
-    min-width:0;
-  }
-  .gold-stats .stat {
-    display: flex; align-items: center; gap: 8px;
-    padding: 4px 10px; border-radius: 999px;
-    background: rgba(255, 255, 255, .06);
-    border: 1px solid rgba(255, 255, 255, .10);
-    backdrop-filter: blur(6px);
-    max-width:100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-  }
-  .gold-stats .dot { width: 8px; height: 8px; border-radius: 50%; background: #42f6ff; box-shadow: 0 0 8px currentColor; flex: 0 0 8px; }
-  .gold-stats .label { opacity: .75; letter-spacing: .02em; }
-  .gold-stats strong { font-weight: 600; }
-
-  /* Fallback für sichtbares Chat-Ende */
-  .chat-end-spacer{
-    height: calc(var(--dock-h, 60px) + var(--safe-bottom, 0px) + 24px);
-    pointer-events: none;
-  }
-
-  /* Mobile: Dock edge-to-edge + Safe-Area + Status rechts (übereinander) */
-  @media (max-width: 768px){
-    #m-input-dock.m-bottom-stack{
-      left: max(0px, env(safe-area-inset-left));
-      right: max(0px, env(safe-area-inset-right));
-      bottom: max(0px, env(safe-area-inset-bottom));
-      padding: 8px max(8px, env(safe-area-inset-left))
-               calc(8px + env(safe-area-inset-bottom))
-               max(8px, env(safe-area-inset-right));
-      background: rgba(8,14,18,0.90) !important;
-      border-top: 1px solid rgba(255,255,255,0.10) !important;
-      box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
-      z-index: 90 !important;
-    }
-    .gold-prompt-wrap,
-    .gold-bar{
-      width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
-      margin-left: auto; margin-right: auto;
-    }
-
-    /* Tools links, Mode/Expert rechts übereinander */
-    .gold-bar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      column-gap:10px;
-      flex-wrap:nowrap;
-    }
-    .gold-tools{ flex:0 0 auto; }
-
-    .gold-stats{
-      flex:1 1 auto;
-      display:flex;
-      flex-direction:column;     /* übereinander */
-      align-items:flex-end;      /* rechtsbündig */
-      gap:6px;
-      min-width:160px;
-      max-width:60vw;
-      min-height:0;
-    }
-    .gold-stats .stat{
-      padding:3px 8px; gap:6px;
-      max-width:100%;
-    }
-    .gold-stats .dot{ width:6px; height:6px; flex:0 0 6px; }
-    .gold-stats .label{ font-size:12px; opacity:.8; letter-spacing:.01em; }
-    .gold-stats strong{ font-size:12px; font-weight:600; letter-spacing:.01em; }
-
-    /* Kompaktmodus bei offenem Keyboard / sehr wenig Höhe */
-    .gold-bar[data-compact="1"]{ row-gap:6px; }
-    @media (max-height: 560px){
-      .gold-bar[data-compact="1"] .gold-stats{ display:none; }
-      #m-input-dock.m-bottom-stack{
-        padding: 6px max(8px, env(safe-area-inset-left))
-                 calc(6px + env(safe-area-inset-bottom))
-                 max(8px, env(safe-area-inset-right));
+      /* Dock Container — robust: immer fixed (Desktop & Mobile) */
+      #m-input-dock {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: var(--safe-bottom, 0px);
+        z-index: 90;
       }
-      .gold-prompt-wrap{ grid-template-columns: 1fr max-content; gap:6px; }
-    }
-  }
+      #m-input-dock.m-bottom-stack{
+        background: rgba(8,14,18,0.90);
+        backdrop-filter: blur(8px);
+        border-top: 1px solid rgba(255,255,255,0.10);
+        box-shadow: 0 -4px 18px rgba(0,0,0,.40);
+        padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
+        overscroll-behavior: contain;
+        width: auto;
+        margin: 0;
+        border-radius: 0;
+      }
 
-  /* Ripple / Inertia */
-  .gold-dock.send-ripple{
-    animation: gp-inertia 320ms cubic-bezier(.2,.6,.2,1) 1, gp-ripple 680ms ease-out 1;
-  }
-  @keyframes gp-inertia{ 0%{transform:translateY(0)} 55%{transform:translateY(-3px)} 100%{transform:translateY(0)} }
-  @keyframes gp-ripple{
-    0%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
-    15%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 1000px rgba(34,211,238,0.08); }
-    100%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
-  }
+      /* Kinder dürfen animieren */
+      .gold-prompt-wrap,
+      .gold-bar { will-change: transform; }
 
-  /* Entkopplung von Legacy input-bar.css */
-  #m-input-dock .gold-prompt-wrap,
-  #m-input-dock .gold-textarea,
-  #m-input-dock .gold-send{
-    position: static !important; float: none !important; inset: auto !important; box-sizing: border-box !important;
-  }
+      /* Prompt Grid */
+      .gold-prompt-wrap{
+        display:grid; grid-template-columns: 1fr max-content;
+        gap:10px; align-items:stretch;
+        width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+        margin:0 auto;
+      }
+      .gold-textarea{
+        width:100%; min-height:44px; max-height:var(--dock-cap,30vh);
+        resize:none; border-radius:12px; padding:10px 12px; line-height:1.5;
+        border:1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"};
+        background:rgba(255,255,255,0.04); color:${activeTokens.color.text};
+        outline:none; background-clip: padding-box;
+        transition: box-shadow 120ms cubic-bezier(.2,.6,.2,1), border-color 120ms cubic-bezier(.2,.6,.2,1);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
+      }
+      .gold-textarea:is(:hover,:focus,.is-typing){
+        box-shadow: 0 0 0 1px ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"},
+                    0 0 18px rgba(34,211,238,0.18);
+        border-color: ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
+      }
+      .gold-send{
+        height:44px; min-width:96px; white-space:nowrap;
+        padding:0 16px; border-radius:12px; font-weight:700;
+        border:1px solid ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
+        background:${activeTokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"};
+        color:${activeTokens.color.text}; cursor:pointer; background-clip: padding-box;
+        transition: transform 120ms cubic-bezier(.2,.6,.2,1), box-shadow 120ms cubic-bezier(.2,.6,.2,1);
+        display:inline-flex; align-items:center; justify-content:center;
+      }
+      .gold-send:hover:not(:disabled){ transform: translateY(-1px); }
+      .gold-send:active:not(:disabled){ transform: translateY(0); }
+      .gold-send:disabled{ opacity:.45; cursor:default; }
 
-  /* FAB über Dock */
-  .sticky-fab, [data-sticky-fab], button[aria-label="Menü öffnen"]{
-    bottom: calc(var(--dock-h, 60px) + 12px) !important;
-    z-index: var(--fab-z) !important;
-  }
+      /* Icons + Status unter Prompt */
+      .gold-bar{
+        width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+        margin:3px auto 0 auto;
+        display:flex; align-items:center; justify-content:flex-start; gap:12px;
+      }
+      .gold-tools{ display:flex; gap:8px; }
+      .gt-btn{
+        display:inline-flex; align-items:center; justify-content:center;
+        height:36px; min-width:36px; padding:0 12px;
+        border-radius:10px; border:1px solid rgba(49,65,86,.7);
+        background:#0b1220; color:#e6f0f3; font-weight:700;
+        transition:transform 120ms cubic-bezier(.2,.6,.2,1);
+      }
+      .gt-btn:active{ transform:scale(.98); }
 
-  /* Desktop: Margin-Collapse-Guard am Listenende */
-  @media (min-width: 769px){
-    section[role="log"]{ border-bottom: 0.1px solid transparent; }
-    section[role="log"] > *:last-child{ margin-bottom: 0 !important; }
-  }
-`}</style>
+      /* Statuschips: Mode / Expert */
+      .gold-stats {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        margin-left: 12px;
+        min-width:0;
+      }
+      .gold-stats .stat {
+        display: flex; align-items: center; gap: 8px;
+        padding: 4px 10px; border-radius: 999px;
+        background: rgba(255, 255, 255, .06);
+        border: 1px solid rgba(255, 255, 255, .10);
+        backdrop-filter: blur(6px);
+        max-width:100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+      }
+      .gold-stats .dot { width: 8px; height: 8px; border-radius: 50%; background: #42f6ff; box-shadow: 0 0 8px currentColor; flex: 0 0 8px; }
+      .gold-stats .label { opacity: .75; letter-spacing: .02em; }
+      .gold-stats strong { font-weight: 600; }
 
+      /* Fallback für sichtbares Chat-Ende */
+      .chat-end-spacer{
+        height: calc(var(--dock-h, 60px) + var(--safe-bottom, 0px) + 24px);
+        pointer-events: none;
+      }
 
-</main>
+      /* Mobile: Dock edge-to-edge + Safe-Area + Status rechts (übereinander) */
+      @media (max-width: 768px){
+        #m-input-dock.m-bottom-stack{
+          left: max(0px, env(safe-area-inset-left));
+          right: max(0px, env(safe-area-inset-right));
+          bottom: max(0px, env(safe-area-inset-bottom));
+          padding: 8px max(8px, env(safe-area-inset-left))
+                   calc(8px + env(safe-area-inset-bottom))
+                   max(8px, env(safe-area-inset-right));
+          background: rgba(8,14,18,0.90) !important;
+          border-top: 1px solid rgba(255,255,255,0.10) !important;
+          box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
+          z-index: 90 !important;
+        }
+        .gold-prompt-wrap,
+        .gold-bar{
+          width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
+          margin-left: auto; margin-right: auto;
+        }
+
+        /* Tools links, Mode/Expert rechts übereinander */
+        .gold-bar{
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          column-gap:10px;
+          flex-wrap:nowrap;
+        }
+        .gold-tools{ flex:0 0 auto; }
+
+        .gold-stats{
+          flex:1 1 auto;
+          display:flex;
+          flex-direction:column;     /* übereinander */
+          align-items:flex-end;      /* rechtsbündig */
+          gap:6px;
+          min-width:160px;
+          max-width:60vw;
+          min-height:0;
+        }
+        .gold-stats .stat{
+          padding:3px 8px; gap:6px;
+          max-width:100%;
+        }
+        .gold-stats .dot{ width:6px; height:6px; flex:0 0 6px; }
+        .gold-stats .label{ font-size:12px; opacity:.8; letter-spacing:.01em; }
+        .gold-stats strong{ font-size:12px; font-weight:600; letter-spacing:.01em; }
+
+        /* Kompaktmodus bei offenem Keyboard / sehr wenig Höhe */
+        .gold-bar[data-compact="1"]{ row-gap:6px; }
+        @media (max-height: 560px){
+          .gold-bar[data-compact="1"] .gold-stats{ display:none; }
+          #m-input-dock.m-bottom-stack{
+            padding: 6px max(8px, env(safe-area-inset-left))
+                     calc(6px + env(safe-area-inset-bottom))
+                     max(8px, env(safe-area-inset-right));
+          }
+          .gold-prompt-wrap{ grid-template-columns: 1fr max-content; gap:6px; }
+        }
+      }
+
+      /* Ripple / Inertia */
+      .gold-dock.send-ripple{
+        animation: gp-inertia 320ms cubic-bezier(.2,.6,.2,1) 1, gp-ripple 680ms ease-out 1;
+      }
+      @keyframes gp-inertia{ 0%{transform:translateY(0)} 55%{transform:translateY(-3px)} 100%{transform:translateY(0)} }
+      @keyframes gp-ripple{
+        0%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
+        15%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 1000px rgba(34,211,238,0.08); }
+        100%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
+      }
+
+      /* Entkopplung von Legacy input-bar.css */
+      #m-input-dock .gold-prompt-wrap,
+      #m-input-dock .gold-textarea,
+      #m-input-dock .gold-send{
+        position: static !important; float: none !important; inset: auto !important; box-sizing: border-box !important;
+      }
+
+      /* FAB über Dock */
+      .sticky-fab, [data-sticky-fab], button[aria-label="Menü öffnen"]{
+        bottom: calc(var(--dock-h, 60px) + 12px) !important;
+        z-index: var(--fab-z) !important;
+      }
+
+      /* Desktop: Margin-Collapse-Guard am Listenende */
+      @media (min-width: 769px){
+        section[role="log"]{ border-bottom: 0.1px solid transparent; }
+        section[role="log"] > *:last-child{ margin-bottom: 0 !important; }
+      }
+    `}</style>
+  </main>
 );
 }
