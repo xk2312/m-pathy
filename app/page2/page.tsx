@@ -562,9 +562,9 @@ const sideMargin = isMobile ? theme.dock.mobile.side : theme.dock.desktop.side;
 // Refs & Höhenmessung
 const headerRef = useRef<HTMLDivElement>(null);
 const convoRef = useRef<HTMLDivElement>(null);
-const dockRef = useRef<HTMLDivElement>(null);
+const dockRef   = useRef<HTMLDivElement>(null);
 const [dockH, setDockH] = useState(0);
-// ▼▼▼ EINZEILER HINZUFÜGEN ▼▼▼
+// ▼▼▼ EINZEILER HINZUFÜGEN (bleibt) ▼▼▼
 const endRef  = useRef<HTMLDivElement>(null);
 
 useEffect(() => {
@@ -573,7 +573,7 @@ useEffect(() => {
   };
   measure();
   const ro = new ResizeObserver(measure);
-  if (dockRef.current) ro.observe(dockRef.current);
+  if (dockRef.current)  ro.observe(dockRef.current);
   if (headerRef.current) ro.observe(headerRef.current);
   window.addEventListener("resize", measure);
   return () => {
@@ -581,6 +581,11 @@ useEffect(() => {
     window.removeEventListener("resize", measure);
   };
 }, []);
+
+// ▼▼▼ NEU: Dock-Höhe als CSS-Variable für Styles/Footroom setzen ▼▼▼
+useEffect(() => {
+  document.documentElement.style.setProperty("--dock-h", `${dockH}px`);
+}, [dockH]);
 
 // Initial Scroll "Unlock" — stabiler (double rAF) + Reflow-Nudge
 useEffect(() => {
@@ -596,6 +601,7 @@ useEffect(() => {
     });
   });
 }, []);
+
 
 // Chat State
 const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -858,19 +864,19 @@ useEffect(() => {
   const bg1 = color.bg1 ?? "#0c0f12";
   const textColor = color.text ?? "#E6F0F3";
 
-  // Seitenstil (radial + linear)
-  const pageStyle: React.CSSProperties = {
-    minHeight: "100dvh",
-    color: textColor,
-    background: [
-      "radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%)",
-      "radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%)",
-      `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000 100%)`,
-    ].join(", "),
-  };
-
-  // Optional: Abstand unten (mobil über visualViewport gepflegt)
+// Seitenstil (radial + linear)
+const pageStyle: React.CSSProperties = {
+  minHeight: "100dvh",
+  color: textColor,
+  background: [
+    "radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%)",
+    "radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%)",
+    `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000 100%)`,
+  ].join(", "),
+};
   const padBottom = `calc(${dockH}px + var(--safe-bottom) + 24px)`;
+
+
 
   /* Mobile Header State + Viewport Hook */
   const [mState, setMState] = useState<"idle" | "shrink" | "typing">("idle");
@@ -1010,21 +1016,22 @@ useEffect(() => {
 
     {/* Rechte Spalte: Conversation + Bottom-Stack — SCROLLER */}
     <div
-      ref={convoRef as any}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        flex: 1,
-        minHeight: 0,
-        overflow: "auto",
-        pointerEvents: "auto",
-        touchAction: "pan-y",
-        WebkitOverflowScrolling: "touch",
-        overscrollBehavior: "contain",
-        height: "calc(100dvh - 224px)", // ⬅️ füllt Resthöhe unter dem fixen Header
-        paddingBottom: padBottom,       // ⬅️ WICHTIG: Fußraum am SCROLLPORT (verschoben)
-      }}
-    >
+  ref={convoRef as any}
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    minHeight: 0,
+    overflow: "auto",
+    pointerEvents: "auto",
+    touchAction: "pan-y",
+    WebkitOverflowScrolling: "touch",
+    overscrollBehavior: "contain",
+    height: "calc(100dvh - 224px)",
+    paddingBottom: padBottom, // ← sorgt dafür, dass Chat nie vom Dock verdeckt wird
+  }}
+>
+
       {/* Chronik wächst im Scroller */}
       <div
         style={{
