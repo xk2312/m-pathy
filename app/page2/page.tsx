@@ -382,6 +382,7 @@ function Conversation({
   {messages.map((m, i) => (
     <Bubble key={i} msg={m} tokens={tokens} />
   ))}
+    <div className="chat-end-spacer" style={{ height: padBottom }} aria-hidden />
 </section>
   );
 }
@@ -591,7 +592,26 @@ useEffect(() => {
 useEffect(() => {
   document.documentElement.style.setProperty("--dock-h", `${dockH}px`);
 }, [dockH]);
+//// === EINFÜGEN START: Mobile-Keyboard -> Kompaktmodus ===================
+const [compactStatus, setCompactStatus] = useState(false);
 
+useEffect(() => {
+  if (!('visualViewport' in window)) return;
+  const vv = window.visualViewport!;
+  const onChange = () => {
+    const keyboardOpen = (window.innerHeight - vv.height) > 120; // heuristik
+    setCompactStatus(keyboardOpen);
+  };
+  vv.addEventListener('resize', onChange);
+  vv.addEventListener('scroll', onChange);
+  onChange();
+  return () => {
+    vv.removeEventListener('resize', onChange);
+    vv.removeEventListener('scroll', onChange);
+  };
+}, []);
+//// === EINFÜGEN ENDE ======================================================
+ 
 // Initial Scroll "Unlock" — stabiler (double rAF) + Reflow-Nudge
 useEffect(() => {
   const el = convoRef.current as HTMLDivElement | null;
@@ -1019,23 +1039,25 @@ const pageStyle: React.CSSProperties = {
       </div>
     )}
 
-    {/* Rechte Spalte: Conversation + Bottom-Stack — SCROLLER */}
+       {/* Rechte Spalte: Conversation + Bottom-Stack — SCROLLER */}
     <div
-  ref={convoRef as any}
-  style={{
-    display: "flex",
-    flexDirection: "column",
-    flex: 1,
-    minHeight: 0,
-    overflow: "auto",
-    pointerEvents: "auto",
-    touchAction: "pan-y",
-    WebkitOverflowScrolling: "touch",
-    overscrollBehavior: "contain",
-    height: "calc(100dvh - 224px)",
-    paddingBottom: padBottom, // ← sorgt dafür, dass Chat nie vom Dock verdeckt wird
-  }}
->
+      ref={convoRef as any}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        minHeight: 0,
+        overflow: "auto",
+        pointerEvents: "auto",
+        touchAction: "pan-y",
+        WebkitOverflowScrolling: "touch",
+        overscrollBehavior: "contain",
+        height: "calc(100dvh - 224px)",
+        paddingBottom: padBottom,          // Platz für Dock
+        scrollPaddingBottom: padBottom,    // ← NEU: sanfter Scroll-Stop oberhalb des Docks
+      }}
+    >
+
 
       {/* Chronik wächst im Scroller */}
       <div
@@ -1124,12 +1146,16 @@ const pageStyle: React.CSSProperties = {
         </div>
 
         {/* Icons + Status */}
-        <div className="gold-bar">
-          <div className="gold-tools" aria-label={t('promptTools') ?? 'Prompt tools'}>
-            <button type="button" aria-label={t('comingUpload')}    className="gt-btn">📎</button>
-            <button type="button" aria-label={t('comingVoice')}     className="gt-btn">🎙️</button>
-            <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
-          </div>
+<div
+  className="gold-bar"
+  data-compact={compactStatus ? 1 : 0}  /* ← NEU: Kompakt-Flag für Mobile */
+>
+  <div className="gold-tools" aria-label={t('promptTools') ?? 'Prompt tools'}>
+    <button type="button" aria-label={t('comingUpload')}    className="gt-btn">📎</button>
+    <button type="button" aria-label={t('comingVoice')}     className="gt-btn">🎙️</button>
+    <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
+  </div>
+
 
           <div className="gold-stats">
             <div className="stat">
@@ -1267,6 +1293,7 @@ const pageStyle: React.CSSProperties = {
     background: rgba(255, 255, 255, .06);
     border: 1px solid rgba(255, 255, 255, .10);
     backdrop-filter: blur(6px);
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
   }
   .gold-stats .dot {
     width: 8px;
@@ -1274,11 +1301,18 @@ const pageStyle: React.CSSProperties = {
     border-radius: 50%;
     background: #42f6ff;
     box-shadow: 0 0 8px currentColor;
+    flex: 0 0 8px;
   }
   .gold-stats .label { opacity: .75; letter-spacing: .02em; }
   .gold-stats strong { font-weight: 600; }
 
-  /* Mobile: Dock edge-to-edge + Safe-Area */
+  /* Fallback für sichtbares Chat-Ende (optional nutzbar) */
+  .chat-end-spacer{
+    height: calc(var(--dock-h, 60px) + var(--safe-bottom, 0px) + 24px);
+    pointer-events: none;
+  }
+
+  /* Mobile: Dock edge-to-edge + Safe-Area + zweizeilig/wrap-sicher */
   @media (max-width: 768px){
     #m-input-dock.m-bottom-stack{
       /* position bleibt fixed durch #m-input-dock */
@@ -1296,6 +1330,72 @@ const pageStyle: React.CSSProperties = {
       width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
       margin-left: auto; margin-right: auto;
     }
+
+    /* Zweizeilig & wrap-sicher: Statusleiste unter dem Prompt */
+    .gold-bar{
+      display:flex;
+      flex-wrap: wrap;
+      row-gap: 8px;
+    }
+    .gold-tools{ order: 1; }
+    .gold-stats{
+      order: 2;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .gold-stats .stat{
+      flex: 1 1 46%;
+      min-width: 140px;
+      max-width: 100%;
+      padding: 4px 8px;
+    }
+    .gold-stats .label,
+    .gold-stats strong{
+      font-size: 12.5px;
+      line-height: 1.2;
+    }
+      /* === EINFÜGUNG START: Mobile-Guard bei sehr wenig Höhe ============== */
+    @media (max-height: 560px){
+      /* Status komplett einklappen: nichts schiebt den Prompt weg */
+      .gold-bar[data-compact="1"] .gold-stats{ display: none; }
+
+      /* Dock etwas kompakter, damit Eingabe immer sichtbar bleibt */
+      #m-input-dock.m-bottom-stack{
+        padding: 6px max(8px, env(safe-area-inset-left))
+                 calc(6px + env(safe-area-inset-bottom))
+                 max(8px, env(safe-area-inset-right));
+      }
+
+      /* Prompt-Zeile: maximale Breite für das Textfeld, Button dicht dran */
+      .gold-prompt-wrap{
+        grid-template-columns: 1fr max-content;
+        gap: 6px;
+      }
+    }
+    /* === EINFÜGUNG ENDE ================================================== */
+    /* === EINFÜGEN START: Kompaktmodus bei offenem Keyboard ============== */
+    .gold-bar[data-compact="1"]{
+      row-gap: 6px;
+    }
+    .gold-bar[data-compact="1"] .gold-stats{
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .gold-bar[data-compact="1"] .gold-stats .stat{
+      flex: 1 1 46%;
+      min-width: 120px;
+      max-width: 100%;
+      padding: 3px 8px;
+    }
+    /* Option: Wenn extrem wenig Höhe, Status ganz einklappen */
+    @media (max-height: 560px){
+      .gold-bar[data-compact="1"] .gold-stats{ display: none; }
+    }
+    /* === EINFÜGEN ENDE =================================================== */  
   }
 
   /* Ripple / Inertia */
@@ -1321,6 +1421,19 @@ const pageStyle: React.CSSProperties = {
     bottom: calc(var(--dock-h, 60px) + 12px) !important;
     z-index: var(--fab-z) !important;
   }
+    /* === EINFÜGEN START: Desktop Margin-Collapse Guard am Listenende === */
+  @media (min-width: 769px){
+    /* Verhindert, dass die letzte Bubble ins Containerende kollabiert */
+    section[role="log"]{
+      /* hauchdünne, unsichtbare Kante stoppt Collapse */
+      border-bottom: 0.1px solid transparent;
+    }
+    section[role="log"] > *:last-child{
+      margin-bottom: 0 !important;
+    }
+  }
+  /* === EINFÜGEN ENDE ==================================================== */
+</style>
 `}</style>
 
 </main>
