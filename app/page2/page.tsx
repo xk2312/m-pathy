@@ -354,7 +354,10 @@ function Bubble({
       
 }
 
-/** Nachrichtenliste (echter Scroll-Container ist die <section>) */
+/** Conversation-Ansicht.
+ *  Hinweis: Der EINZIGE Scrollport ist der Eltern-Container (rechte Spalte).
+ *  Diese <section> bekommt NUR Layout/Abstand – KEIN eigenes overflow.
+ */
 function Conversation({
   messages,
   tokens,
@@ -372,7 +375,9 @@ function Conversation({
   aria-live="polite"
   aria-relevant="additions"
   aria-label={t("conversationAria")}
-  style={{ /* … unverändert … */ }}
+  /* === EINFÜGEN START: sichtbarer Fußraum + Anti-Collapse === */
+  style={{ paddingBottom: padBottom, marginBottom: 0 }}
+  /* === EINFÜGEN ENDE ======================================= */
 >
   {messages.map((m, i) => (
     <Bubble key={i} msg={m} tokens={tokens} />
