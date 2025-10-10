@@ -1162,7 +1162,6 @@ useEffect(() => {
   #m-input-dock { transform: none !important; }
 
   /* ❌ SPACER ENTFERNT – Fußraum kommt vom Scrollport */
-  /* #m-input-dock::before{ … }  --> gelöscht */
 
   /* Dock Container — robust: immer fixed (Desktop & Mobile) */
   #m-input-dock {
@@ -1175,8 +1174,6 @@ useEffect(() => {
 
   /* Klassenspezifische Ausgestaltung des Docks */
   #m-input-dock.m-bottom-stack{
-    /* position: sticky;  <-- entfernt */
-    /* bottom bleibt über #m-input-dock gesetzt */
     background: rgba(8,14,18,0.90);
     backdrop-filter: blur(8px);
     border-top: 1px solid rgba(255,255,255,0.10);
@@ -1242,7 +1239,7 @@ useEffect(() => {
   }
   .gt-btn:active{ transform:scale(.98); }
 
-  /* Statuschips: Mode / Expert (neu) */
+  /* Statuschips: Mode / Expert */
   .gold-stats {
     display: flex;
     gap: 14px;
@@ -1266,13 +1263,8 @@ useEffect(() => {
     background: #42f6ff;
     box-shadow: 0 0 8px currentColor;
   }
-  .gold-stats .label {
-    opacity: .75;
-    letter-spacing: .02em;
-  }
-  .gold-stats strong {
-    font-weight: 600;
-  }
+  .gold-stats .label { opacity: .75; letter-spacing: .02em; }
+  .gold-stats strong { font-weight: 600; }
 
   /* Mobile: Dock edge-to-edge + Safe-Area */
   @media (max-width: 768px){
@@ -1318,6 +1310,7 @@ useEffect(() => {
     z-index: var(--fab-z) !important;
   }
 `}</style>
+
 </main>
 );
 }
