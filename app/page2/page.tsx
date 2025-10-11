@@ -1047,7 +1047,7 @@ return (
           flex: 1,
           minHeight: 0,
           overflow: "visible",
-          ["--header-offset" as any]: "16px",
+          ["--header-offset" as any]: isMobile ? "16px" : "240px",
         }}
       >
         {/* Säule links */}
