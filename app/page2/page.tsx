@@ -1064,15 +1064,22 @@ return (
 
 
             {/* Säule links */}
-    {!isMobile && (
-      <div
-        style={{
-          alignSelf: "start"
-        }}
-      >
-        <SidebarContainer onSystemMessage={systemSay} />
-      </div>
-    )}
+{!isMobile && (
+  <div
+    style={{
+      position: "fixed",       // ← fixiert an Viewport
+      top: "224px",            // ← exakt unter Headerhöhe
+      left: sideMargin,        // ← nutzt deinen bestehenden Rand
+      width: "320px",          // ← identisch zur Gridbreite
+      height: "calc(100dvh - 224px)", // ← volle Höhe unter Header
+      overflow: "auto",        // ← eigener Scroller innerhalb der Säule (wenn nötig)
+      zIndex: 80,
+    }}
+  >
+    <SidebarContainer onSystemMessage={systemSay} />
+  </div>
+)}
+
 
         <div
           ref={convoRef as any}
