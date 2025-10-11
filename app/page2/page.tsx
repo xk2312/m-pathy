@@ -993,14 +993,13 @@ const withGate = (fn: () => void) => {
 const sendingRef = useRef(false);
 return (
   <main
-    style={{
-      ...pageStyle,
-      display: "flex",
-      flexDirection: "column",
-      height: "100dvh",
-      overflowY: isMobile ? "visible" : "hidden",
-    }}
-  >
+  style={{
+    ...pageStyle,
+    display: "flex",
+    flexDirection: "column",
+  }}
+>
+
 
     {/* === HEADER ===================================================== */}
     <header
@@ -1058,7 +1057,7 @@ return (
     minHeight: 0,
     overflow: "visible",
     height: isMobile ? undefined : "calc(100dvh - 224px)",   // ← Bühne = Viewport minus Header
-    ["--header-offset" as any]: isMobile ? "var(--header-h)" : "calc(224px + 16px)",
+["--header-offset" as any]: isMobile ? "var(--header-h)" : "0px",
   }}
 >
 
