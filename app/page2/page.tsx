@@ -992,15 +992,7 @@ const withGate = (fn: () => void) => {
 /* ⬇︎ NEU: Laufzeit-Gate gegen Mehrfachsendungen */
 const sendingRef = useRef(false);
 return (
-  <main
-  style={{
-    ...pageStyle,
-    display: "flex",
-    flexDirection: "column",
-  }}
->
-
-
+  <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
     {/* === HEADER ===================================================== */}
     <header
       ref={headerRef}
@@ -1031,41 +1023,48 @@ return (
       </div>
     </header>
 
-    {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
-<div
-  style={{
-    display: "grid",
-gridTemplateColumns: isMobile ? "1fr" : "0px 1fr",
-    gap: 16,
-    flex: 1,
-    minHeight: 0,
-    overflow: "visible",
-    ["--header-offset" as any]: isMobile ? "var(--header-h)" : "0px",
-  }}
->
-
-
-
-{/* Säule links */}
-{!isMobile && (
-  <div
-    style={{
-      position: "fixed",
-      top: "224px",
-      left: sideMargin,
-      width: "320px",
-      height: "calc(100dvh - 224px)",
-      overflow: "auto",
-      zIndex: 80,
-    }}
-  >
-    <SidebarContainer onSystemMessage={systemSay} />
-  </div>
-)}
-
-
-
-
+    {/* === BÜHNE ====================================================== */}
+    <div
+      style={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        marginInline: isMobile ? 0 : sideMargin, // ⬅️ Mobile: keine Ränder
+        minHeight: 0,
+        maxWidth: isMobile ? "none" : 1280,      // ⬅️ Mobile: volle Breite
+        alignSelf: "center",
+        width: "100%",
+        paddingTop: isMobile ? "var(--header-h)" : "224px",
+      }}
+    >
+      {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+          alignItems: "start",
+          gap: 16,
+          flex: 1,
+          minHeight: 0,
+          overflow: "visible",
+          ["--header-offset" as any]: "16px",
+        }}
+      >
+        {/* Säule links */}
+        {!isMobile && (
+          <div
+            style={{
+              position: "sticky",
+              top: "240px", // Headerhöhe (224px) + kleiner Abstand
+              alignSelf: "start",
+              height: "fit-content",
+              maxHeight: "calc(100vh - 240px)",
+              overflow: "auto",
+            }}
+          >
+            <SidebarContainer onSystemMessage={systemSay} />
+          </div>
+        )}
         <div
           ref={convoRef as any}
           style={{
