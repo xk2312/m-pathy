@@ -1038,14 +1038,16 @@ return (
     flex: 1,
     display: "flex",
     flexDirection: "column",
-    marginInline: isMobile ? 0 : sideMargin, // ⬅️ Mobile: keine Ränder
+    marginInline: isMobile ? 0 : sideMargin,
     minHeight: 0,
-    maxWidth: isMobile ? "none" : 1280,      // ⬅️ Mobile: volle Breite
+    maxWidth: isMobile ? "none" : 1280,
     alignSelf: "center",
     width: "100%",
     paddingTop: isMobile ? "var(--header-h)" : "224px",
+    paddingLeft: isMobile ? 0 : "320px", // ← Platz für fixierte Säule
   }}
 >
+
   {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
 <div
   style={{
@@ -1062,23 +1064,23 @@ return (
 >
 
 
-
-            {/* Säule links */}
+{/* Säule links */}
 {!isMobile && (
   <div
     style={{
-      position: "fixed",       // ← fixiert an Viewport
-      top: "224px",            // ← exakt unter Headerhöhe
-      left: sideMargin,        // ← nutzt deinen bestehenden Rand
-      width: "320px",          // ← identisch zur Gridbreite
-      height: "calc(100dvh - 224px)", // ← volle Höhe unter Header
-      overflow: "auto",        // ← eigener Scroller innerhalb der Säule (wenn nötig)
-      zIndex: 80,
+      position: "fixed",
+      top: "224px",                               // direkt unter dem Desktop-Header
+      left: sideMargin,                           // bündig zur linken Bühnenkante
+      width: "320px",                             // wie im Grid
+      height: "calc(100dvh - 224px)",             // volle Höhe unter dem Header
+      overflow: "auto",                           // eigener Scroll, falls Inhalte lang
+      zIndex: 80                                  // unter Header (Header hat zIndex 100)
     }}
   >
     <SidebarContainer onSystemMessage={systemSay} />
   </div>
 )}
+
 
 
         <div
