@@ -1038,56 +1038,58 @@ return (
       }}
     >
       {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
-          alignItems: "start",
-          gap: 16,
-          flex: 1,
-          minHeight: 0,
-          overflow: "visible",
-          ["--header-offset" as any]: "16px",
-        }}
-      >
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+    alignItems: "start",
+    gap: 16,
+    flex: 1,
+    minHeight: 0,
+    overflow: "visible",
+    height: isMobile ? undefined : "calc(100dvh - 224px)", // ← Bühne = Viewport minus Header
+    ["--header-offset" as any]: isMobile ? "var(--header-h)" : "0px",
+  }}
+>
+
         {/* Säule links */}
-        {!isMobile && (
-          <div
-            style={{
-              position: "sticky",
-              top: "240px", // Headerhöhe (224px) + kleiner Abstand
-              alignSelf: "start",
-              height: "fit-content",
-              maxHeight: "calc(100vh - 240px)",
-              overflow: "auto",
-            }}
-          >
-            <SidebarContainer onSystemMessage={systemSay} />
-          </div>
-        )}
+{!isMobile && (
+  <div
+    style={{
+      position: "fixed",
+      top: "224px",
+      left: sideMargin,
+      width: "320px",
+      height: "calc(100dvh - 224px)",
+      overflow: "auto",
+      zIndex: 80,
+    }}
+  >
+    <SidebarContainer onSystemMessage={systemSay} />
+  </div>
+)}
+
         <div
-          ref={convoRef as any}
-          style={{
-  display: "flex",
-  flexDirection: "column",
-  flex: 1,
-  minHeight: 0,
-  overflow: "auto",
-  pointerEvents: "auto",
-  touchAction: "pan-y",
-  WebkitOverflowScrolling: "touch",
-  overscrollBehavior: "contain",
+  ref={convoRef as any}
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    minHeight: 0,
+    height: "100%",                 // ← erbt Bühnenhöhe → interner Scroller
+    overflow: "auto",
+    pointerEvents: "auto",
+    touchAction: "pan-y",
+    WebkitOverflowScrolling: "touch",
+    overscrollBehavior: "contain",
+    paddingBottom: `${padBottom}px`,
+    scrollPaddingBottom: `${padBottom}px`,
+    paddingInline: isMobile
+      ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
+      : "12px",
+  }}
+>
 
-  // Single-Source Fußraum aus bestehendem State
-  paddingBottom: `${padBottom}px`,
-  scrollPaddingBottom: `${padBottom}px`,
-
-  paddingInline: isMobile
-    ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
-    : "12px",
-}}
-
-        >
           {/* Chronik wächst im Scroller */}
           <div
             style={{
