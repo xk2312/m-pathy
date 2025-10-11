@@ -1035,8 +1035,7 @@ return (
 <div
   style={{
     display: "grid",
-    gridTemplateColumns: isMobile ? "1fr" : "320px 1fr", // ← diese Zeile ersetzt du
-    alignItems: "start",
+gridTemplateColumns: isMobile ? "1fr" : "0px 1fr",
     gap: 16,
     flex: 1,
     minHeight: 0,
