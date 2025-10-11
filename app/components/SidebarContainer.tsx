@@ -55,7 +55,7 @@ export default function SidebarContainer({ onSystemMessage }: Props) {
       }}
     >
             {isDesktop ? (
-        /* Desktop: Säule wird vom Parent gestickt */
+        /* Desktop: Sticky kommt vom Parent in page.tsx */
         <div
           style={{
             position: "static",
