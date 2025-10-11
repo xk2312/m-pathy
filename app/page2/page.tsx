@@ -992,7 +992,16 @@ const withGate = (fn: () => void) => {
 /* ⬇︎ NEU: Laufzeit-Gate gegen Mehrfachsendungen */
 const sendingRef = useRef(false);
 return (
-  <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
+  <main
+    style={{
+      ...pageStyle,
+      display: "flex",
+      flexDirection: "column",
+      height: "100dvh",
+      overflowY: isMobile ? "visible" : "hidden",
+    }}
+  >
+
     {/* === HEADER ===================================================== */}
     <header
       ref={headerRef}
@@ -1039,20 +1048,20 @@ return (
   }}
 >
   {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
-      alignItems: "start",
-      gap: 16,
-      flex: 1,
-      minHeight: 0,
-      overflow: "visible",
-      // → liefert SidebarContainer den korrekten Sticky-Offset:
-      //    Mobile = dynamische Headerhöhe, Desktop = 224px + kleiner Puffer
-      ["--header-offset" as any]: isMobile ? "var(--header-h)" : "calc(224px + 16px)",
-    }}
-  >
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+    alignItems: "start",
+    gap: 16,
+    flex: 1,
+    minHeight: 0,
+    overflow: "visible",
+    height: isMobile ? undefined : "calc(100dvh - 224px)",   // ← Bühne = Viewport minus Header
+    ["--header-offset" as any]: isMobile ? "var(--header-h)" : "calc(224px + 16px)",
+  }}
+>
+
 
 
             {/* Säule links */}
