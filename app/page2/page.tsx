@@ -1031,37 +1031,20 @@ return (
       </div>
     </header>
 
-    {/* === BÜHNE ====================================================== */}
-    {/* === BÜHNE ====================================================== */}
-<div
-  style={{
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    marginInline: isMobile ? 0 : sideMargin,
-    minHeight: 0,
-    maxWidth: isMobile ? "none" : 1280,
-    alignSelf: "center",
-    width: "100%",
-    paddingTop: isMobile ? "var(--header-h)" : "224px",
-    paddingLeft: isMobile ? 0 : "320px", // ← Platz für fixierte Säule
-  }}
->
-
-  {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
+    {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
 <div
   style={{
     display: "grid",
-    gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+    gridTemplateColumns: isMobile ? "1fr" : "320px 1fr", // ← diese Zeile ersetzt du
     alignItems: "start",
     gap: 16,
     flex: 1,
     minHeight: 0,
     overflow: "visible",
-    height: isMobile ? undefined : "calc(100dvh - 224px)",   // ← Bühne = Viewport minus Header
-["--header-offset" as any]: isMobile ? "var(--header-h)" : "0px",
+    ["--header-offset" as any]: isMobile ? "var(--header-h)" : "0px",
   }}
 >
+
 
 
 {/* Säule links */}
@@ -1069,17 +1052,18 @@ return (
   <div
     style={{
       position: "fixed",
-      top: "224px",                               // direkt unter dem Desktop-Header
-      left: sideMargin,                           // bündig zur linken Bühnenkante
-      width: "320px",                             // wie im Grid
-      height: "calc(100dvh - 224px)",             // volle Höhe unter dem Header
-      overflow: "auto",                           // eigener Scroll, falls Inhalte lang
-      zIndex: 80                                  // unter Header (Header hat zIndex 100)
+      top: "224px",
+      left: sideMargin,
+      width: "320px",
+      height: "calc(100dvh - 224px)",
+      overflow: "auto",
+      zIndex: 80,
     }}
   >
     <SidebarContainer onSystemMessage={systemSay} />
   </div>
 )}
+
 
 
 
