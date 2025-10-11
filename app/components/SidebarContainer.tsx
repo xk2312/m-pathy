@@ -56,16 +56,17 @@ export default function SidebarContainer({ onSystemMessage }: Props) {
     >
       {isDesktop ? (
         /* Desktop: Säule statisch, scroll-safe */
-        <div
+                <div
           style={{
             position: "sticky",
-            top: "var(--header-offset, 16px)",
+            top: "calc(224px + 16px)", // Desktop-Header (224px) + kleiner Abstand
             alignSelf: "start",
             zIndex: "var(--z-base, 1)",
           }}
         >
           <Saeule onSystemMessage={onSystemMessage} />
         </div>
+
       ) : (
         /* Mobile: Platzhalter */
         <div

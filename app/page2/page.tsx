@@ -1050,21 +1050,17 @@ return (
           ["--header-offset" as any]: "16px",
         }}
       >
-        {/* Säule links */}
-        {!isMobile && (
-          <div
-            style={{
-              position: "sticky",
-              top: "240px", // Headerhöhe (224px) + kleiner Abstand
-              alignSelf: "start",
-              height: "fit-content",
-              maxHeight: "calc(100vh - 240px)",
-              overflow: "auto",
-            }}
-          >
-            <SidebarContainer onSystemMessage={systemSay} />
-          </div>
-        )}
+            {/* Säule links */}
+    {!isMobile && (
+      <div
+        style={{
+          alignSelf: "start"
+        }}
+      >
+        <SidebarContainer onSystemMessage={systemSay} />
+      </div>
+    )}
+
         <div
           ref={convoRef as any}
           style={{
