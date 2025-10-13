@@ -1038,7 +1038,7 @@ return (
       }}
     >
       {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
-            <div
+      <div
         style={{
           display: "grid",
           gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
@@ -1050,23 +1050,21 @@ return (
           ["--header-offset" as any]: "16px",
         }}
       >
-
         {/* Säule links */}
-                {!isMobile && (
+        {!isMobile && (
           <div
             style={{
               position: "sticky",
-              top: "240px",
+              top: "240px", // Headerhöhe (224px) + kleiner Abstand
               alignSelf: "start",
-              // ❗kein overflow/maxHeight hier – sonst bricht sticky
+              height: "fit-content",
+              maxHeight: "calc(100vh - 240px)",
+              overflow: "auto",
             }}
           >
-            <div style={{ maxHeight: "calc(100vh - 240px)", overflow: "auto" }}>
-              <SidebarContainer onSystemMessage={systemSay} />
-            </div>
+            <SidebarContainer onSystemMessage={systemSay} />
           </div>
         )}
-
         <div
           ref={convoRef as any}
           style={{

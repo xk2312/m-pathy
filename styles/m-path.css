@@ -10,16 +10,16 @@ html, body {
   min-height: 100%;
   background: #000;
 
-  /* Scroll wieder erlauben, Horizontal-Scroll vermeiden */
+  /* Nur horizontales Clipping beibehalten – kein globales Y-Scrolling hier */
   overflow-x: hidden;
-  overflow-y: auto;
+  /* overflow-y: auto;  ← ENTFERNT */
 
   font-family: "Segoe UI", system-ui, sans-serif;
 
-  /* Interaktion wieder zulassen (wichtig für Mobile) */
+  /* Interaktion (Mobile) – konsistent mit global.css */
   user-select: text;
   -webkit-user-select: text;
-  touch-action: auto;
+  touch-action: pan-y pinch-zoom;
 }
 
 
