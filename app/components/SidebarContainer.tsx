@@ -45,13 +45,13 @@ export default function SidebarContainer({ onSystemMessage }: Props) {
   const isDesktop = useIsDesktop(1024);
 
   return (
-    <aside
+        <aside
       aria-label="Sidebar Container"
       data-test="sidebar-container"
+      /* KEIN display: contents – Containing-Block bleibt stabil */
       style={{
-        display: "contents",
-        cursor: "pointer",              // 🔹 Pointer über vererbbare Ebene
-        pointerEvents: "auto",          // 🔹 erlaubt Interaktion überall
+        cursor: "pointer",
+        pointerEvents: "auto",
       }}
     >
             {isDesktop ? (

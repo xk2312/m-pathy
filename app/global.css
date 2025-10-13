@@ -11,22 +11,26 @@
 /* Wichtig: Scroll wieder erlauben + Selektieren aktivieren */
 html, body {
   width: 100%;
-  min-height: 100dvh; /* dvh für Mobile-Keyboards */
+  /* ⬇︎ Hart auf Viewport-Höhe + KEIN globales Scrollen */
+  height: 100dvh;            /* statt nur min-height */
   color: #fff;
   background:
     radial-gradient(circle at center, #0f0f0f, #000000);
-  user-select: text;                 /* war: none */
+  user-select: text;
   -webkit-user-select: text;
   touch-action: pan-y pinch-zoom;
 }
 
-/* Kein globales overflow:hidden – sonst scrollt nichts */
-html { overflow-x: hidden; }
+html {
+  overflow-x: hidden;
+  overflow-y: hidden;        /* ⬅︎ Body/Seite scrollt NICHT */
+}
 body {
   background-color: #000;
-  overscroll-behavior-y: auto;
+  overscroll-behavior-y: contain; /* optional restriktiver */
   -webkit-tap-highlight-color: transparent;
 }
+
 
 /* Canvas bleibt block-level */
 canvas { display: block; }
