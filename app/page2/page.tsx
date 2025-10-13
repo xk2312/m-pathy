@@ -1291,10 +1291,16 @@ return (
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
     {/* === Golden Prompt — Styles ==================================== */}
     <style jsx global>{`
-      html, body { background:#000; margin:0; padding:0; overflow-x:hidden; }
-      :root { --dock-h: 60px; --fab-z: 90; }
-      .mi-plus-btn { display: none !important; }
-      [data-sticky-fab] { z-index: var(--fab-z) !important; }
+  html, body {
+    background:#000;
+    margin:0;
+    padding:0;
+    height:100dvh;          /* ← fixiert die Root-Höhe auf Viewport */
+    overflow-x:hidden;
+    overflow-y:hidden;      /* ← verhindert Body-Scroll (rechte Spalte scrollt) */
+  }
+  :root { --dock-h: 60px; --fab-z: 90; }
+  .mi-plus-btn { display: none !important; }
 
       /* Dock niemals transformieren (Sticky + Transform = Bug) */
       #m-input-dock { transform: none !important; }
