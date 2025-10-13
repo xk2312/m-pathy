@@ -1038,19 +1038,20 @@ return (
       }}
     >
       {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
-     <div
-  style={{
-    display: "grid",
-    gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
-    alignItems: "start",
-    gap: 16,
-    /* ⬇︎ Kette schließen & Scroll isolieren */
-    height: "100%",
-    minHeight: 0,
-    overflow: "hidden",
-    ["--header-offset" as any]: "16px",
-  }}
->
+           <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+          alignItems: "start",
+          gap: 16,
+          /* ⬇︎ Lass den Grid-Container frei atmen, sticky braucht das */
+          /* height: "100%",  ← ENTFERNT */
+          minHeight: 0,
+          overflow: "visible", // ⬅︎ statt "hidden": klebt stabil, nichts clippt
+          ["--header-offset" as any]: "16px",
+        }}
+      >
+
 
         {/* Säule links */}
         {!isMobile && (
@@ -1067,29 +1068,39 @@ return (
             <SidebarContainer onSystemMessage={systemSay} />
           </div>
         )}
-        <div
+                <div
           ref={convoRef as any}
           style={{
-  display: "flex",
-  flexDirection: "column",
-  flex: 1,
-  minHeight: 0,
-  overflow: "auto",
-  pointerEvents: "auto",
-  touchAction: "pan-y",
-  WebkitOverflowScrolling: "touch",
-  overscrollBehavior: "contain",
+            display: "flex",
+            flexDirection: "column",
 
-  // Single-Source Fußraum aus bestehendem State
-  paddingBottom: `${padBottom}px`,
-  scrollPaddingBottom: `${padBottom}px`,
+            /* ⬇︎ harte, verlässliche Block-Höhe relativ zum Viewport:
+               - var(--header-h) ist dein Top-Offset (mobil dynamisch)
+               - 224px ist dein Desktop-Top-Padding (siehe Bühne)
+               - var(--dock-h) ist der Bottom-Dock
+            */
+            flex: "0 1 auto",
+            height: isMobile
+              ? "calc(100dvh - var(--header-h, 0px) - var(--dock-h, 60px))"
+              : "calc(100dvh - 224px - var(--dock-h, 60px))",
 
-  paddingInline: isMobile
-    ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
-    : "12px",
-}}
+            minHeight: 0,
+            overflow: "auto",
+            pointerEvents: "auto",
+            touchAction: "pan-y",
+            WebkitOverflowScrolling: "touch",
+            overscrollBehavior: "contain",
 
+            // Single-Source Fußraum aus bestehendem State
+            paddingBottom: `${padBottom}px`,
+            scrollPaddingBottom: `${padBottom}px`,
+
+            paddingInline: isMobile
+              ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
+              : "12px",
+          }}
         >
+
           {/* Chronik wächst im Scroller */}
           <div
             style={{
