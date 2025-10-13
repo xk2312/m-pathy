@@ -1038,18 +1038,20 @@ return (
       }}
     >
       {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
-          alignItems: "start",
-          gap: 16,
-          flex: 1,
-          minHeight: 0,
-          overflow: "visible",
-          ["--header-offset" as any]: "16px",
-        }}
-      >
+     <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+    alignItems: "start",
+    gap: 16,
+    /* ⬇︎ Kette schließen & Scroll isolieren */
+    height: "100%",
+    minHeight: 0,
+    overflow: "hidden",
+    ["--header-offset" as any]: "16px",
+  }}
+>
+
         {/* Säule links */}
         {!isMobile && (
           <div
@@ -1292,13 +1294,18 @@ return (
     {/* === Golden Prompt — Styles ==================================== */}
     <style jsx global>{`
   html, body {
-    background:#000;
-    margin:0;
-    padding:0;
-    height:100dvh;          /* ← fixiert die Root-Höhe auf Viewport */
-    overflow-x:hidden;
-    overflow-y:hidden;      /* ← verhindert Body-Scroll (rechte Spalte scrollt) */
-  }
+  background:#000;
+  margin:0;
+  padding:0;
+  height:100dvh;       /* Root fixiert */
+  overflow-x:hidden;
+  overflow-y:hidden;   /* Body scrollt NICHT */
+}
+main {
+  height:100dvh;       /* ⬅️ WICHTIG: der direkte Wrapper bekommt feste Höhe */
+  display:grid;
+}
+
   :root { --dock-h: 60px; --fab-z: 90; }
   .mi-plus-btn { display: none !important; }
 
