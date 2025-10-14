@@ -749,7 +749,7 @@ const [footerStatus, setFooterStatus] = useState<{ modeLabel: string; expertLabe
   expertLabel: "—",
 });
 
- // ===============================================================
+  // ===============================================================
 // BRIDGE — Saeule → Chat (Event → echte Nachricht)
 // ===============================================================
 useEffect(() => {
@@ -759,8 +759,10 @@ useEffect(() => {
     const kind: string = detail.kind ?? "info";
     const meta = detail.meta ?? {};
 
+    // Merken, ob der User VOR dem Event am Ende war
     const wasAtEnd = stickToBottom;
 
+    // 1) Reine Status-Events: nur Footer-State ...
     if (kind === "status") {
       const modeLabel = meta.modeLabel ?? detail.modeLabel;
       const expertLabel = meta.expertLabel ?? detail.expertLabel;
@@ -768,6 +770,7 @@ useEffect(() => {
         modeLabel: typeof modeLabel === "string" && modeLabel.length ? modeLabel : s.modeLabel,
         expertLabel: typeof expertLabel === "string" && expertLabel.length ? expertLabel : s.expertLabel,
       }));
+      // Falls vorher unten: nach Layout-Update wieder an den Boden
       if (wasAtEnd) {
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
@@ -780,6 +783,7 @@ useEffect(() => {
       return;
     }
 
+    // 2) Modus-Events: Label in den Footer spiegeln ...
     if (kind === "mode") {
       const modeLabel = meta.label ?? meta.modeLabel ?? detail.modeLabel;
       if (typeof modeLabel === "string" && modeLabel.length) {
@@ -787,6 +791,7 @@ useEffect(() => {
       }
     }
 
+    // 3) Nur wenn Text vorhanden ist → sichtbare Bubble anhängen
     if (!text) return;
 
     setMessages((prev) => {
@@ -797,6 +802,7 @@ useEffect(() => {
       return next;
     });
 
+    // Nach dem Anfügen neuer Nachricht: nur wenn vorher unten → wieder an den Boden
     if (wasAtEnd) {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -808,24 +814,9 @@ useEffect(() => {
     }
   };
 
-  // ▼▼ Mount-Guard: Listener nur einmal global anhängen
-  const w = window as any;
-  if (!w.__mpathy_onSystem_attached) {
-    w.__mpathy_onSystem_handler = onSystem;
-    window.addEventListener("mpathy:system-message" as any, onSystem as any);
-    w.__mpathy_onSystem_attached = true;
-  }
-
-  // Cleanup nur, wenn *dieser* Mount den Listener gesetzt hat
-  return () => {
-    const w = window as any;
-    if (w.__mpathy_onSystem_attached && w.__mpathy_onSystem_handler === onSystem) {
-      window.removeEventListener("mpathy:system-message" as any, onSystem as any);
-      w.__mpathy_onSystem_attached = false;
-      w.__mpathy_onSystem_handler = null;
-    }
-  };
-}, [persistMessages, stickToBottom]);
+  window.addEventListener("mpathy:system-message" as any, onSystem as any);
+  return () => window.removeEventListener("mpathy:system-message" as any, onSystem as any);
+}, [persistMessages, stickToBottom]); // ⬅️ stickToBottom ergänzen
 
 
 
