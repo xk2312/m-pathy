@@ -1051,13 +1051,13 @@ return (
     flex: 1,
     display: "flex",
     flexDirection: "column",
-    marginInline: isMobile ? 0 : sideMargin, // ⬅️ Mobile: keine Ränder
+    marginInline: isMobile ? 0 : sideMargin,
     minHeight: 0,
-    maxWidth: isMobile ? "none" : 1280,      // ⬅️ Mobile: volle Breite
+    maxWidth: isMobile ? "none" : 1280,
     alignSelf: "center",
     width: "100%",
-    // ⬇️ Header-Abstand auf 60 % der bisherigen Höhe
-    paddingTop: isMobile ? "calc(var(--header-h) * 0.6)" : "224px",
+    // ⬇️ Mobile & Desktop beide auf 60 % des ursprünglichen Header-Werts
+    paddingTop: isMobile ? "calc(var(--header-h) * 0.6)" : "calc(224px * 0.6)",
   }}
 >
 
