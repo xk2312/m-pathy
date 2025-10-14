@@ -728,20 +728,24 @@ useEffect(() => {
 }, []);
 
 
-    // ===============================================================
-  // Systemmeldung (für Säule / Overlay / Onboarding)
-  // ===============================================================
-  const systemSay = useCallback((content: string) => {
-    if (!content) return;
-    setMessages((prev) => {
-      const next = truncateMessages([
-        ...(Array.isArray(prev) ? prev : []),
-        { role: "assistant", content, format: "markdown" },
-      ]);
-      persistMessages(next);
-      return next;
-    });
-  }, [persistMessages]);
+ // ===============================================================
+// Systemmeldung (für Säule / Overlay / Onboarding)
+// ===============================================================
+const systemSay = useCallback((content: string) => {
+  if (!content) return;
+  setMessages((prev) => {
+    const next = truncateMessages([
+      ...(Array.isArray(prev) ? prev : []),
+      { role: "assistant", content, format: "markdown" },
+    ]);
+    persistMessages(next);
+    return next;
+  });
+  // ⬇️ NEU: Antwort ist da → Puls beenden
+  setLoading(false);
+  setMode("DEFAULT");
+}, [persistMessages]);
+
 
   // Footer-Status (nur Anzeige in der Statusleiste, keine Bubble)
 const [footerStatus, setFooterStatus] = useState<{ modeLabel: string; expertLabel: string }>({
@@ -754,20 +758,70 @@ const [footerStatus, setFooterStatus] = useState<{ modeLabel: string; expertLabe
 // ===============================================================
 useEffect(() => {
   const onSystem = (e: Event) => {
-  const detail = (e as CustomEvent).detail ?? {};
-  const text: string = detail.text ?? "";
-  const kind: string = detail.kind ?? "info";
-  const meta = detail.meta ?? {};
+    const detail = (e as CustomEvent).detail ?? {};
+    const text: string = detail.text ?? "";
+    const kind: string = detail.kind ?? "info";
+    const meta = detail.meta ?? {};
 
-  const wasAtEnd = stickToBottom;
+    const wasAtEnd = stickToBottom;
 
-  if (kind === "status") {
-    const modeLabel = meta.modeLabel ?? detail.modeLabel;
-    const expertLabel = meta.expertLabel ?? detail.expertLabel;
-    setFooterStatus((s) => ({
-      modeLabel: typeof modeLabel === "string" && modeLabel.length ? modeLabel : s.modeLabel,
-      expertLabel: typeof expertLabel === "string" && expertLabel.length ? expertLabel : s.expertLabel,
-    }));
+    // 1) Footer-Status aktualisieren
+    if (kind === "status") {
+      const modeLabel = meta.modeLabel ?? detail.modeLabel;
+      const expertLabel = meta.expertLabel ?? detail.expertLabel;
+      setFooterStatus((s) => ({
+        modeLabel: typeof modeLabel === "string" && modeLabel.length ? modeLabel : s.modeLabel,
+        expertLabel: typeof expertLabel === "string" && expertLabel.length ? expertLabel : s.expertLabel,
+      }));
+
+      // Auswahl getroffen → "Denken" startet (Puls an)
+      if ((modeLabel && String(modeLabel).length) || (expertLabel && String(expertLabel).length)) {
+        try { setLoading(true); } catch {}
+      }
+
+      if (wasAtEnd) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const el = convoRef.current as HTMLDivElement | null;
+            if (el) el.scrollTop = el.scrollHeight;
+            setStickToBottom(true);
+          });
+        });
+      }
+      return;
+    }
+
+    // 2) Initialer System-/Mode-Bubble: Puls EIN
+    if (kind === "mode") {
+      const modeLabel = meta.label ?? meta.modeLabel ?? detail.modeLabel;
+      if (typeof modeLabel === "string" && modeLabel.length) {
+        setFooterStatus((s) => ({ ...s, modeLabel }));
+      }
+      try { setLoading(true); } catch {}
+    }
+
+    // 3) Falls eine Antwort signalisiert wird (reply/info), Puls AUS — auch wenn kein Text kommt
+    if (kind === "reply" || kind === "info") {
+      try { setLoading(false); } catch {}
+    }
+
+    // 4) Ohne Text keine Bubble anhängen (aber der obige loading-Fix greift bereits)
+    if (!text) return;
+
+    // 5) Sichtbare Bubble anhängen
+    setMessages((prev) => {
+      const role: Role = kind === "mode" ? "system" : "assistant";
+      const msg: ChatMessage = { role, content: text, format: "markdown" };
+      const next = truncateMessages([...(Array.isArray(prev) ? prev : []), msg]);
+      persistMessages(next);
+      return next;
+    });
+
+    // 6) Bei jeder sichtbaren Nicht-"mode"-Antwort sicherheitshalber Puls AUS
+    if (kind !== "mode") {
+      try { setLoading(false); } catch {}
+    }
+
     if (wasAtEnd) {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -777,49 +831,11 @@ useEffect(() => {
         });
       });
     }
-    return;
-  }
-
-  if (kind === "mode") {
-    const modeLabel = meta.label ?? meta.modeLabel ?? detail.modeLabel;
-    if (typeof modeLabel === "string" && modeLabel.length) {
-      setFooterStatus((s) => ({ ...s, modeLabel }));
-    }
-    // ▼ Beim Setzen von Modus/Experte beginnt das Denken → Logo soll pulsieren
-    try { setLoading(true); } catch {}
-  }
-
-  if (!text) return;
-
-  setMessages((prev) => {
-    const role: Role = kind === "mode" ? "system" : "assistant";
-    const msg: ChatMessage = { role, content: text, format: "markdown" };
-    const next = truncateMessages([...(Array.isArray(prev) ? prev : []), msg]);
-    persistMessages(next);
-    return next;
-  });
-
-  // ▼ Wenn die Antwort-Bubble ankommt, ist das Denken vorbei → Pulsieren aus
-  if (kind === "reply" || kind === "info") {
-    try { setLoading(false); } catch {}
-  }
-
-  if (wasAtEnd) {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const el = convoRef.current as HTMLDivElement | null;
-        if (el) el.scrollTop = el.scrollHeight;
-        setStickToBottom(true);
-      });
-    });
-  }
-};
-
+  };
 
   window.addEventListener("mpathy:system-message" as any, onSystem as any);
   return () => window.removeEventListener("mpathy:system-message" as any, onSystem as any);
-}, [persistMessages, stickToBottom]); // ⬅️ stickToBottom ergänzen
-
+}, [persistMessages, stickToBottom]);
 
 
   // ===============================================================

@@ -339,21 +339,13 @@ const emitStatus = useCallback((partial: { modeLabel?: string; expertLabel?: str
 // ▲▲ ENDE NEU ▲▲
 
 
- // ▼▼▼ Helper: Bubble setzen + Thinking-Ende signalisieren ▼▼▼
-const say = useCallback((text: string) => {
-  if (!text) return;
-  if (onSystemMessage) {
-    // UI-Bubble direkt über Prop
-    onSystemMessage(text);
-    // Ende-Signal für page.tsx → setLoading(false) (text leer → keine Extra-Bubble)
-    emitSystemMessage({ kind: "reply", text: "", meta: { source: "prop-end" } });
-  } else {
-    // Standardweg: Reply als Event → page.tsx setzt ebenfalls loading=false
-    emitSystemMessage({ kind: "reply", text });
-  }
-}, [onSystemMessage]);
-// ▲▲▲ Ende ▼▼▼
-
+  // ▼▼▼ EINFÜGEN (Helper: immer auch eine Chat-Bubble setzen) ▼▼▼
+  const say = useCallback((text: string) => {
+    if (!text) return;
+    if (onSystemMessage) onSystemMessage(text);
+    else emitSystemMessage({ kind: "reply", text });
+  }, [onSystemMessage]);
+  // ▲▲▲ ENDE EINFÜGUNG ▲▲▲
 
     async function switchMode(next: ModeId) {
   if (next === activeMode) return;
