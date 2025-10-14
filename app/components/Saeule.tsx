@@ -362,17 +362,31 @@ emitSystemMessage({
 });
 emitStatus({ modeLabel: label });
 
-      // ← Footer updaten
+// ▼▼ Sofortiges Schließen des Mobile-Overlays, ohne Bubble ▼▼
+try {
+  const inOverlay = !!document.querySelector('[data-overlay="true"]');
+  if (inOverlay) { onSystemMessage?.(""); } // leeres Signal → MobileOverlay schließt
+} catch {}
+// ▲▲ Ende Overlay-Close ▲▲
 
-    // Auto-Prompt nur für die API (Keys aus i18n.ts → "prompts.*")
-  const q =
-    next === "onboarding"
-      ? tr("prompts.onboarding", "Hey! 👋 Who are you and how will you guide me here step by step?")
-      : next === "M"
-      ? tr("prompts.modeDefault", "Reset everything to default and give me a brief status.")
-      : next === "council"
-      ? tr("prompts.councilIntro", "Each AI please introduce yourself and say how you can help right now.")
-      : tr("prompts.modeGeneric", "Mode {label}: What are you and where will you help me best?", { label });
+emitStatus({ modeLabel: label });
+
+// ▼▼ Sofortiges Schließen des Mobile-Overlays, ohne Bubble ▼▼
+try {
+  const inOverlay = !!document.querySelector('[data-overlay="true"]');
+  if (inOverlay) { onSystemMessage?.(""); } // leeres Signal → MobileOverlay schließt
+} catch {}
+// ▲▲ Ende Overlay-Close ▲▲
+
+// Auto-Prompt nur für die API (Keys aus i18n.ts → "prompts.*")
+const q =
+  next === "onboarding"
+    ? tr("prompts.onboarding", "Hey! 👋 Who are you and how will you guide me here step by step?")
+    : next === "M"
+    ? tr("prompts.modeDefault", "Reset everything to default and give me a brief status.")
+    : next === "council"
+    ? tr("prompts.councilIntro", "Each AI please introduce yourself and say how you can help right now.")
+    : tr("prompts.modeGeneric", "Mode {label}: What are you and where will you help me best?", { label });
 
 
   const reply = await callChatAPI(q);
@@ -392,11 +406,20 @@ async function askExpert(expert: ExpertId) {
   logEvent("expert_selected", { expert, label, roles: ROLES[expert] });
 
   // Footer sofort aktualisieren (ohne Bubble)
-  emitStatus({ expertLabel: label });
+emitStatus({ expertLabel: label });
 
-  // Prompt an API – keine festen Fallbacks
-  const userPrompt = expertAskPrompt(label, lang);
-  const reply = await callChatAPI(userPrompt);
+// ▼▼ Sofortiges Schließen des Mobile-Overlays, ohne Bubble ▼▼
+try {
+  const inOverlay = !!document.querySelector('[data-overlay="true"]');
+  if (inOverlay) { onSystemMessage?.(""); } // leeres Signal → MobileOverlay schließt sofort
+} catch {}
+// ▲▲ Ende Overlay-Close ▲▲
+
+// Prompt an API – keine festen Fallbacks
+const userPrompt = expertAskPrompt(label, lang);
+const reply = await callChatAPI(userPrompt);
+
+
   if (reply && reply.trim().length > 0) {
     say(reply);                                     // ← genau eine Bubble
   }
