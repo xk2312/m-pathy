@@ -301,7 +301,6 @@ div[data-convo="1"] {
   padding-bottom: calc(var(--dock-h, 60px) + var(--safe-bottom, 0px) + 24px);
 }
 */
-
 /* Dock zuverlässig an den Viewport pinnen (Desktop & Mobile) – Single source */
 #m-input-dock {
   position: fixed;
@@ -309,14 +308,6 @@ div[data-convo="1"] {
   right: 0;
   bottom: var(--safe-bottom, 0px);
   z-index: var(--z-overlay, 90);
-}
-.md .md-code {
-  /* ...deine bestehenden Regeln... */
-  color: inherit;             /* neue Zeile */
-  background-clip: padding-box;
-}
-.md .md-code > code {
-  color: inherit;             /* neue Zeile */
 }
 
 /* ---------- Markdown scope ---------- */
@@ -366,15 +357,18 @@ div[data-convo="1"] {
 /* runde Ecken an der Außenkante */
 .md table tr:first-child th:first-child { border-top-left-radius: 10px; }
 .md table tr:first-child th:last-child  { border-top-right-radius: 10px; }
-.md table tr:last-child td:first-child  { border-bottom-left-radius: 10px; }
-.md table tr:last-child td:last-child   { border-bottom-right-radius: 10px; }
+.md table tr:last-child  td:first-child { border-bottom-left-radius: 10px; }
+.md table tr:last-child  td:last-child  { border-bottom-right-radius: 10px; }
 
 /* ---------- Code: fenced blocks ---------- */
 .md .md-code {
   margin: 12px 0;
   padding: 14px 16px;
   border-radius: 12px;
+  /* Farbe vom Bubble-Kontext übernehmen */
+  color: inherit;
   background: rgba(15,23,42,0.66); /* glassy slate */
+  background-clip: padding-box;
   border: 1px solid rgba(255,255,255,0.10);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -387,6 +381,7 @@ div[data-convo="1"] {
   line-height: 1.6;
   tab-size: 2;
   white-space: pre;
+  color: inherit; /* Syntax-Theme färbt Tokens; Grundfarbe bleibt vom Bubble-Kontext */
 }
 
 /* ---------- Code: inline ---------- */
@@ -411,4 +406,3 @@ div[data-convo="1"] {
 /* ---------- Lists spacing ---------- */
 .md ul, .md ol { padding-left: 1.25em; margin: 8px 0 12px; }
 .md li + li    { margin-top: 4px; }
-
