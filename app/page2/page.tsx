@@ -1011,50 +1011,56 @@ const withGate = (fn: () => void) => {
 const sendingRef = useRef(false);
 return (
   <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
+    
+    
     {/* === HEADER ===================================================== */}
-    <header
-      ref={headerRef}
-      role="banner"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        height: isMobile ? "var(--header-h)" : "224px",
-        background: bg0,
-        borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
-      }}
-    >
-      <div
-        style={{
-          width: "100vw",
-          maxWidth: "none",
-          margin: 0,
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <LogoM size={isMobile ? 120 : 160} active={loading} />
-      </div>
-    </header>
+<header
+  ref={headerRef}
+  role="banner"
+  style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 100,
+    // ▼ Höhe auf 60 % der bisherigen Werte
+    height: isMobile ? "calc(var(--header-h) * 0.6)" : "calc(224px * 0.6)",
+    background: bg0,
+    borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
+  }}
+>
+  <div
+    style={{
+      width: "100vw",
+      maxWidth: "none",
+      margin: 0,
+      height: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+    {/* ▼ Logo auf 60 %: 120→72 (mobile), 160→96 (desktop) */}
+    <LogoM size={isMobile ? 72 : 96} active={loading} />
+  </div>
+</header>
 
     {/* === BÜHNE ====================================================== */}
-    <div
-      style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        marginInline: isMobile ? 0 : sideMargin, // ⬅️ Mobile: keine Ränder
-        minHeight: 0,
-        maxWidth: isMobile ? "none" : 1280,      // ⬅️ Mobile: volle Breite
-        alignSelf: "center",
-        width: "100%",
-        paddingTop: isMobile ? "var(--header-h)" : "224px",
-      }}
-    >
+<div
+  style={{
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    marginInline: isMobile ? 0 : sideMargin, // ⬅️ Mobile: keine Ränder
+    minHeight: 0,
+    maxWidth: isMobile ? "none" : 1280,      // ⬅️ Mobile: volle Breite
+    alignSelf: "center",
+    width: "100%",
+    // ⬇️ Header-Abstand auf 60 % der bisherigen Höhe
+    paddingTop: isMobile ? "calc(var(--header-h) * 0.6)" : "224px",
+  }}
+>
+
       {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
            <div
         style={{
@@ -1070,22 +1076,24 @@ return (
         }}
       >
 
+{/* Säule links */}
+{!isMobile && (
+  <div
+    style={{
+      position: "sticky",
+      // ▼ Header (Desktop 224px) wurde auf 60 % reduziert → + 16px Puffer
+      top: "calc(224px * 0.6 + 16px)",
+      alignSelf: "start",
+      height: "fit-content",
+      // ▼ verfügbare Höhe: Viewport minus (reduzierter Header + Puffer)
+      maxHeight: "calc(100dvh - (224px * 0.6 + 16px))",
+      overflow: "auto",
+    }}
+  >
+    <SidebarContainer onSystemMessage={systemSay} />
+  </div>
+)}
 
-        {/* Säule links */}
-        {!isMobile && (
-          <div
-            style={{
-              position: "sticky",
-              top: "240px", // Headerhöhe (224px) + kleiner Abstand
-              alignSelf: "start",
-              height: "fit-content",
-              maxHeight: "calc(100vh - 240px)",
-              overflow: "auto",
-            }}
-          >
-            <SidebarContainer onSystemMessage={systemSay} />
-          </div>
-        )}
                 <div
           ref={convoRef as any}
           style={{
@@ -1100,7 +1108,7 @@ return (
             flex: "0 1 auto",
             height: isMobile
   ? undefined                 // ⬅︎ KEINE feste Viewport-Höhe auf Mobile
-  : "calc(100dvh - 224px - var(--dock-h, 60px))",
+              : "calc(100dvh - (224px * 0.6) - var(--dock-h, 60px))",
 
 
             minHeight: 0,
