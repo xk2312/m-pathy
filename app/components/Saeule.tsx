@@ -406,28 +406,24 @@ async function askExpert(expert: ExpertId) {
   logEvent("expert_selected", { expert, label, roles: ROLES[expert] });
 
   // Footer sofort aktualisieren (ohne Bubble)
-emitStatus({ expertLabel: label });
+  emitStatus({ expertLabel: label });
 
-// ▼▼ Sofortiges Schließen des Mobile-Overlays, ohne Bubble ▼▼
-try {
-  const inOverlay = !!document.querySelector('[data-overlay="true"]');
-  if (inOverlay) { onSystemMessage?.(""); } // leeres Signal → MobileOverlay schließt sofort
-} catch {}
-// ▲▲ Ende Overlay-Close ▲▲
+  // ▶ Initial-System-Bubble (konsistent zu Modus)
+  emitSystemMessage({
+    kind: "mode",
+    text: tr("status.expertSet", "Expert set: {label}.", { label }),
+    meta: { expertId: expert, label, lang }
+  });
 
-// Prompt an API – keine festen Fallbacks
-const userPrompt = expertAskPrompt(label, lang);
-const reply = await callChatAPI(userPrompt);
-
-
+  // Prompt an API – keine festen Fallbacks
+  const userPrompt = expertAskPrompt(label, lang);
+  const reply = await callChatAPI(userPrompt);
   if (reply && reply.trim().length > 0) {
-    say(reply);                                     // ← genau eine Bubble
+    say(reply);
   }
 
   setSendingExpert(null);
 }
-
-
   /* UI */
   return (
     <aside className={styles.saeule} aria-label={t("columnAria")} data-test="saeule">
