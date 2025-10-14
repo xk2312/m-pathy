@@ -728,11 +728,12 @@ useEffect(() => {
 }, []);
 
 
- // ===============================================================
+// ===============================================================
 // Systemmeldung (für Säule / Overlay / Onboarding)
 // ===============================================================
 const systemSay = useCallback((content: string) => {
   if (!content) return;
+
   setMessages((prev) => {
     const next = truncateMessages([
       ...(Array.isArray(prev) ? prev : []),
@@ -741,10 +742,21 @@ const systemSay = useCallback((content: string) => {
     persistMessages(next);
     return next;
   });
-  // ⬇️ NEU: Antwort ist da → Puls beenden
+
+  // ▼ immer ans Ende scrollen – identisch zum Event-Weg
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const el = convoRef.current as HTMLDivElement | null;
+      if (el) el.scrollTop = el.scrollHeight;
+      setStickToBottom(true);
+    });
+  });
+
+  // ▼ Antwort ist da → Puls beenden (deine bestehende Logik)
   setLoading(false);
   setMode("DEFAULT");
 }, [persistMessages]);
+
 
 
   // Footer-Status (nur Anzeige in der Statusleiste, keine Bubble)
@@ -822,15 +834,14 @@ useEffect(() => {
       try { setLoading(false); } catch {}
     }
 
-    if (wasAtEnd) {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const el = convoRef.current as HTMLDivElement | null;
-          if (el) el.scrollTop = el.scrollHeight;
-          setStickToBottom(true);
-        });
-      });
-    }
+    requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    const el = convoRef.current as HTMLDivElement | null;
+    if (el) el.scrollTop = el.scrollHeight;
+    setStickToBottom(true);
+  });
+});
+
   };
 
   window.addEventListener("mpathy:system-message" as any, onSystem as any);
@@ -1130,17 +1141,18 @@ return (
 
           {/* Chronik wächst im Scroller */}
           <div
-            style={{
-              flex: 1,
-              minHeight: 0,
-              paddingTop: 8,
-              paddingLeft: isMobile ? 0 : undefined,
-              paddingRight: isMobile ? 0 : undefined,
-              // paddingBottom ENTFERNT – liegt jetzt am Scrollport
-              scrollbarGutter: "stable",
-            }}
-            aria-label={t("conversationAria")}
-          >
+  style={{
+    flex: 1,
+    minHeight: 0,
+    // ▼ berücksichtigt mobilen Header (60 %) + bisherigen 8px
+    paddingTop: isMobile ? "calc(var(--header-h) * 0.6 + 8px)" : 8,
+    paddingLeft: isMobile ? 0 : undefined,
+    paddingRight: isMobile ? 0 : undefined,
+    scrollbarGutter: "stable",
+  }}
+  aria-label={t("conversationAria")}
+>
+
             <Conversation
   messages={messages}
   tokens={activeTokens}
