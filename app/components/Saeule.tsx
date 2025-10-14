@@ -434,16 +434,25 @@ const reply = await callChatAPI(userPrompt);
       {/* Kopf entfernt → Build-Button oben im Panel */}
             <div className={styles.block} style={{ marginTop: 8 }}>
         <button
-          type="button"
-          aria-label={buildButtonLabel(lang)}
-          onClick={async () => {
-            const prompt = buildButtonMsg(lang);
-            try { logEvent("cta_start_building_clicked", {}); } catch {}
-            // kurze Echo-Info (dezent)
-            emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
+  type="button"
+  aria-label={buildButtonLabel(lang)}
+  onClick={async () => {
+    const prompt = buildButtonMsg(lang);
+    try { logEvent("cta_start_building_clicked", {}); } catch {}
 
-            // Chat-Aufruf + Reply ausgeben (einmalig)
-            const reply = await callChatAPI(prompt);
+    // ▼ Overlay sofort schließen (ohne Bubble)
+    try {
+      const inOverlay = !!document.querySelector('[data-overlay="true"]');
+      if (inOverlay) { onSystemMessage?.(""); }
+    } catch {}
+    // ▲ Ende Overlay-Close
+
+    // kurze Echo-Info (dezent)
+    emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
+
+    // Chat-Aufruf + Reply ausgeben (einmalig)
+    const reply = await callChatAPI(prompt);
+
 const finalText = reply && reply.length
   ? reply
   : tr("cta.fallback", "All set — tell me what you want to build (app, flow, feature …).");
@@ -475,16 +484,25 @@ say(finalText);
       </div>
 
       {/* M (Default) */}
-      <div className={styles.block}>
-        <button
-          type="button"
-          aria-pressed={activeMode === "M"}
-          className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
-          onClick={() => switchMode("M")}
-        >
-          {t("mDefault")}
-        </button>
-      </div>
+<div className={styles.block}>
+  <button
+    type="button"
+    aria-pressed={activeMode === "M"}
+    className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
+    onClick={() => {
+      // ▼ Overlay sofort schließen (ohne Bubble)
+      try {
+        const inOverlay = !!document.querySelector('[data-overlay="true"]');
+        if (inOverlay) { onSystemMessage?.(""); }
+      } catch {}
+      // ▲ Ende Overlay-Close
+      void switchMode("M");
+    }}
+  >
+    {t("mDefault")}
+  </button>
+</div>
+
 
       {/* Modus-Dropdown */}
       <div className={styles.block}>
