@@ -4,6 +4,8 @@
 
 /* Chat-typografische Erweiterung (für .md-prose) */
 @import "./chat-prose.css";
+/* syntax theme for rehype-highlight */
+@import "highlight.js/styles/github-dark.css";
 
 /* ── Base Reset ───────────────────────────────────────────── */
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -308,3 +310,105 @@ div[data-convo="1"] {
   bottom: var(--safe-bottom, 0px);
   z-index: var(--z-overlay, 90);
 }
+.md .md-code {
+  /* ...deine bestehenden Regeln... */
+  color: inherit;             /* neue Zeile */
+  background-clip: padding-box;
+}
+.md .md-code > code {
+  color: inherit;             /* neue Zeile */
+}
+
+/* ---------- Markdown scope ---------- */
+.md {
+  /* sorgt für angenehme Breite im Bubble-Layout, ohne Seitenlayout zu verändern */
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.55;
+}
+
+/* ---------- Tables ---------- */
+.md .md-table-wrap {
+  overflow-x: auto;
+  margin: 10px 0 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.03);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+.md table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.md th,
+.md td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  vertical-align: top;
+}
+
+.md thead th {
+  font-weight: 700;
+  background: rgba(255,255,255,0.04);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.md tbody tr:nth-child(even) td {
+  background: rgba(255,255,255,0.02);
+}
+
+/* runde Ecken an der Außenkante */
+.md table tr:first-child th:first-child { border-top-left-radius: 10px; }
+.md table tr:first-child th:last-child  { border-top-right-radius: 10px; }
+.md table tr:last-child td:first-child  { border-bottom-left-radius: 10px; }
+.md table tr:last-child td:last-child   { border-bottom-right-radius: 10px; }
+
+/* ---------- Code: fenced blocks ---------- */
+.md .md-code {
+  margin: 12px 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(15,23,42,0.66); /* glassy slate */
+  border: 1px solid rgba(255,255,255,0.10);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+.md .md-code > code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  tab-size: 2;
+  white-space: pre;
+}
+
+/* ---------- Code: inline ---------- */
+.md .md-inline {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.92em;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 0.1em 0.45em;
+  white-space: break-spaces; /* wrappt in Bubbles elegant */
+}
+
+/* ---------- Links im Markdown ---------- */
+.md a {
+  color: #76eaff;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(118,234,255,0.35);
+}
+.md a:hover { filter: brightness(1.1); }
+
+/* ---------- Lists spacing ---------- */
+.md ul, .md ol { padding-left: 1.25em; margin: 8px 0 12px; }
+.md li + li    { margin-top: 4px; }
+

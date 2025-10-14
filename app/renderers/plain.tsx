@@ -1,19 +1,16 @@
-import React from 'react';
+// components/renderers/plain.tsx
+"use client";
+import React from "react";
 
-// Kleiner, sicherer Plain-Text-Renderer.
-// Zeigt Inhalte 1:1 an, erhält Zeilenumbrüche und bricht lange Wörter um.
-// Keine Hooks, keine Side-Effects – Server/Client-kompatibel.
-
-export type RenderInput = {
-  role: 'user' | 'assistant' | 'system';
+export default function renderPlain(input: {
+  role: "user" | "assistant" | "system";
   content: string;
+  format?: "plain";
   meta?: Record<string, unknown>;
-};
-
-export function renderPlain({ content }: RenderInput): React.ReactNode {
+}): React.ReactNode {
   return (
-    <span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{content}</span>
+    <span style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+      {input.content}
+    </span>
   );
 }
-
-export default renderPlain;

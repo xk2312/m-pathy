@@ -1,30 +1,55 @@
-import React from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+// components/renderers/markdown.tsx
+"use client";
 
-// Markdown-Renderer: wandelt GitHub‑flavored Markdown in semantische HTML‑Tags um.
-// Sicherheitsprinzip: KEIN raw HTML (kein rehypeRaw) → dadurch XSS‑sicherer Standard.
-// Styling passiert außerhalb über den Scope‑Wrapper (.md-prose), nicht hier.
+import React from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import type { Components } from "react-markdown";
 
-export type RenderInput = {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-  meta?: Record<string, unknown>;
+/* Pragmatic components: vermeiden Versions-Typkonflikte */
+const mdComponents: Partial<Components> = {
+  table: ({ node: _n, ...props }: any) => (
+    <div className="md-table-wrap">
+      <table {...props} />
+    </div>
+  ),
+  th: (p: any) => <th scope="col" {...p} />,
+  code: ({ inline, className, children, ...props }: any) => {
+    const m = /language-(\w+)/.exec(className || "");
+    if (inline) {
+      return (
+        <code className="md-inline" {...props}>
+          {children}
+        </code>
+      );
+    }
+    return (
+      <pre className="md-code">
+        <code className={m ? `language-${m[1]}` : undefined} {...props}>
+          {children}
+        </code>
+      </pre>
+    );
+  },
 };
 
-export function renderMarkdown({ content }: RenderInput): React.ReactNode {
+/* ✅ Default-Export vorhanden */
+export default function renderMarkdown(input: {
+  role: "user" | "assistant" | "system";
+  content: string;
+  format?: "markdown";              // optional; Registry steuert Format
+  meta?: Record<string, unknown>;
+}): React.ReactNode {
   return (
-    <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
-      components={{
-        a: (props) => <a {...props} target="_blank" rel="noopener noreferrer" />
-      }}      
-      // Hinweis: Keine HTML‑Durchleitung. Wenn HTML irgendwann nötig ist,
-      // ausschließlich mit Sanitizing (separates Utility) nachrüsten.
-    >
-      {content}
-    </ReactMarkdown>
+    <div className="md md-prose">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeHighlight]}
+        components={mdComponents as Components}
+      >
+        {input.content}
+      </ReactMarkdown>
+    </div>
   );
 }
-
-export default renderMarkdown;
