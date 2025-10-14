@@ -1081,8 +1081,9 @@ return (
             */
             flex: "0 1 auto",
             height: isMobile
-              ? "calc(100dvh - var(--header-h, 0px) - var(--dock-h, 60px))"
-              : "calc(100dvh - 224px - var(--dock-h, 60px))",
+  ? "calc(100svh - var(--header-h, 0px) - var(--dock-h, 60px))"  // ⬅︎ svh auf Mobile
+  : "calc(100dvh - 224px - var(--dock-h, 60px))",
+
 
             minHeight: 0,
             overflow: "auto",
@@ -1305,17 +1306,31 @@ return (
     {/* === Golden Prompt — Styles ==================================== */}
     <style jsx global>{`
   html, body {
-  background:#000;
-  margin:0;
-  padding:0;
-  height:100dvh;       /* Root fixiert */
-  overflow-x:hidden;
-  overflow-y:hidden;   /* Body scrollt NICHT */
-}
-main {
-  height:100dvh;       /* ⬅️ WICHTIG: der direkte Wrapper bekommt feste Höhe */
-  display:grid;
-}
+    background:#000;
+    margin:0;
+    padding:0;
+    height:100dvh;
+    overflow-x:hidden;
+    overflow-y:hidden;
+  }
+  main {
+    height:100dvh;
+    display:grid;
+  }
+
+  /* ⬇︎ NEU: Mobile entsperren + echtes Viewportmaß nutzen */
+  @media (max-width: 768px){
+    html, body {
+      height: auto;          /* Root darf mit Keyboard schrumpfen/wachsen */
+      min-height: 100svh;    /* „small viewport height“ (iOS-Keyboard-freundlich) */
+      overflow-y: auto;      /* kein globales Freeze auf Mobile */
+    }
+    main {
+      height: auto;
+      min-height: 100svh;    /* gleiche Logik für den Main-Wrapper */
+      overflow: hidden;      /* Scroll bleibt delegiert an den rechten Scroller */
+    }
+  }
 
   :root { --dock-h: 60px; --fab-z: 90; }
   .mi-plus-btn { display: none !important; }
