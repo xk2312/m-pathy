@@ -1081,7 +1081,7 @@ return (
             */
             flex: "0 1 auto",
             height: isMobile
-  ? "calc(100svh - var(--header-h, 0px) - var(--dock-h, 60px))"  // ⬅︎ svh auf Mobile
+  ? undefined                 // ⬅︎ KEINE feste Viewport-Höhe auf Mobile
   : "calc(100dvh - 224px - var(--dock-h, 60px))",
 
 
@@ -1306,31 +1306,17 @@ return (
     {/* === Golden Prompt — Styles ==================================== */}
     <style jsx global>{`
   html, body {
-    background:#000;
-    margin:0;
-    padding:0;
-    height:100dvh;
-    overflow-x:hidden;
-    overflow-y:hidden;
-  }
-  main {
-    height:100dvh;
-    display:grid;
-  }
-
-  /* ⬇︎ NEU: Mobile entsperren + echtes Viewportmaß nutzen */
-  @media (max-width: 768px){
-    html, body {
-      height: auto;          /* Root darf mit Keyboard schrumpfen/wachsen */
-      min-height: 100svh;    /* „small viewport height“ (iOS-Keyboard-freundlich) */
-      overflow-y: auto;      /* kein globales Freeze auf Mobile */
-    }
-    main {
-      height: auto;
-      min-height: 100svh;    /* gleiche Logik für den Main-Wrapper */
-      overflow: hidden;      /* Scroll bleibt delegiert an den rechten Scroller */
-    }
-  }
+  background:#000;
+  margin:0;
+  padding:0;
+  height:100dvh;       /* Root fixiert */
+  overflow-x:hidden;
+  overflow-y:hidden;   /* Body scrollt NICHT */
+}
+main {
+  height:100dvh;       /* ⬅️ WICHTIG: der direkte Wrapper bekommt feste Höhe */
+  display:grid;
+}
 
   :root { --dock-h: 60px; --fab-z: 90; }
   .mi-plus-btn { display: none !important; }
@@ -1529,6 +1515,22 @@ return (
         section[role="log"]{ border-bottom: 0.1px solid transparent; }
         section[role="log"] > *:last-child{ margin-bottom: 0 !important; }
       }
+        /* ▼ Mobile-Override: Root & Main nicht starr machen */
+@media (max-width: 768px){
+  html, body{
+    height: auto;         /* Root darf mitschrumpfen */
+    min-height: 100svh;   /* sichtbarer Viewport (iOS-freundlich) */
+    overflow-y: auto;     /* kein globales Freeze */
+  }
+  main{
+    height: auto;         /* Main nicht mehr 100dvh erzwingen */
+    min-height: 100svh;   /* genug Höhe, aber elastisch */
+    overflow: hidden;     /* Scroll bleibt delegiert an rechts */
+  }
+  /* iOS Auto-Zoom vermeiden */
+  #gold-input, .gold-textarea{ font-size:16px; }
+}
+
     `}</style>
   </main>
 );
