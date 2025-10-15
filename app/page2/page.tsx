@@ -743,7 +743,8 @@ const systemSay = useCallback((content: string) => {
     return next;
   });
 
-  // ▼ immer ans Ende scrollen – identisch zum Event-Weg
+  // ▼ immer ans Ende scrollen – Desktop sofort, Mobile mit kurzem Settle
+const scrollToBottom = () => {
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       const el = convoRef.current as HTMLDivElement | null;
@@ -751,6 +752,15 @@ const systemSay = useCallback((content: string) => {
       setStickToBottom(true);
     });
   });
+};
+
+if (isMobile) {
+  // Mobile: nach der Bubble/DOM-Änderung kurz warten (Keyboard/Viewport settle)
+  setTimeout(scrollToBottom, 90); // 60–120ms ist sweet spot
+} else {
+  scrollToBottom();
+}
+
 
   // ▼ Antwort ist da → Puls beenden (deine bestehende Logik)
   setLoading(false);
