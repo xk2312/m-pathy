@@ -577,8 +577,8 @@ say(finalText);
               URL.revokeObjectURL(url);
               logEvent("export_thread", { size: raw.length });
               const text = tr("threadExported", "Thread exported.");
-              emitSystemMessage({ kind: "info", text, meta: { bytes: raw.length || 0 } });
-              onSystemMessage?.(text);
+say(text); // nutzt onSystemMessage ODER emitSystemMessage(reply) – aber nie beides
+
 
             } catch {}
           }}
