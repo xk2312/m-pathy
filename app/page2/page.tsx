@@ -804,13 +804,25 @@ useEffect(() => {
     }
 
     // 2) Initialer System-/Mode-Bubble: Puls EIN
-    if (kind === "mode") {
-      const modeLabel = meta.label ?? meta.modeLabel ?? detail.modeLabel;
-      if (typeof modeLabel === "string" && modeLabel.length) {
-        setFooterStatus((s) => ({ ...s, modeLabel }));
-      }
-      try { setLoading(true); } catch {}
+   if (kind === "mode") {
+  // Nur updaten, wenn eindeutig ein Moduswechsel signalisiert wird
+  const hasModeId =
+    typeof (meta?.modeId ?? (detail as any)?.modeId) === "string";
+
+  if (hasModeId) {
+    const modeLabel =
+      (meta?.label ?? meta?.modeLabel ?? (detail as any)?.modeLabel) as
+        | string
+        | undefined;
+    if (modeLabel && modeLabel.length) {
+      setFooterStatus((s) => ({ ...s, modeLabel }));
     }
+  }
+
+  // Denken beginnt beim Moduswechsel
+  try { setLoading(true); } catch {}
+}
+
 
     // 3) Falls eine Antwort signalisiert wird (reply/info), Puls AUS — auch wenn kein Text kommt
     if (kind === "reply" || kind === "info") {
