@@ -2,7 +2,7 @@
 
 /***
  * =========================================================
- *  M — PAGE2 MASTER (Single-File Design/Behavior Control)
+ *  M — PAGE2 MASTER (Single-File Design/Behavior - Control)
  * =========================================================
  *
  *  INDEX (Sprunganker):
