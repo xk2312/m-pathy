@@ -747,19 +747,25 @@ const systemSay = useCallback((content: string) => {
 const scrollToBottom = () => {
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      const el = convoRef.current as HTMLDivElement | null;
-      if (el) el.scrollTop = el.scrollHeight;
+      if (isMobile && endRef.current) {
+        // iOS/Mobile: stabil gegen Keyboard/visualViewport-Jank
+        endRef.current.scrollIntoView({ block: "end" });
+      } else {
+        const el = convoRef.current as HTMLDivElement | null;
+        if (el) el.scrollTop = el.scrollHeight;
+      }
       setStickToBottom(true);
     });
   });
 };
 
+// Mobile kurz „settlen“ lassen, Desktop sofort
 if (isMobile) {
-  // Mobile: nach der Bubble/DOM-Änderung kurz warten (Keyboard/Viewport settle)
-  setTimeout(scrollToBottom, 90); // 60–120ms ist sweet spot
+  setTimeout(scrollToBottom, 90); // 60–120ms sweet spot
 } else {
   scrollToBottom();
 }
+
 
 
   // ▼ Antwort ist da → Puls beenden (deine bestehende Logik)
@@ -1175,12 +1181,15 @@ return (
   aria-label={t("conversationAria")}
 >
 
-            <Conversation
+ <Conversation
   messages={messages}
   tokens={activeTokens}
   padBottom={`${padBottom}px`}
   scrollRef={convoRef as any}
 />
+{/* ⬇︎ unsichtbarer Anker: stabil ans Ende scrollen – v.a. Mobile/iOS */}
+<div ref={endRef} style={{ height: 1 }} aria-hidden="true" />
+
 
           </div>
           {/* === BOTTOM STACK: Prompt, dann Icons+Status ================= */}
