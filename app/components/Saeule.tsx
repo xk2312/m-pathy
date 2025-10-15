@@ -408,22 +408,19 @@ async function askExpert(expert: ExpertId) {
   // Footer sofort aktualisieren (ohne Bubble)
   emitStatus({ expertLabel: label });
 
-  // ▶ Initial-System-Bubble (konsistent zu Modus)
-  emitSystemMessage({
-    kind: "mode",
-    text: tr("status.expertSet", "Expert set: {label}.", { label }),
-    meta: { expertId: expert, label, lang }
-  });
+  // ⬅️ NEU: sofortiges Ack -> schließt MobileOverlay direkt
+  say(tr("status.expertSet", "Expert set: {label}.", { label }));
 
   // Prompt an API – keine festen Fallbacks
   const userPrompt = expertAskPrompt(label, lang);
   const reply = await callChatAPI(userPrompt);
   if (reply && reply.trim().length > 0) {
-    say(reply);
+    say(reply); // genau eine Antwort-Bubble
   }
 
   setSendingExpert(null);
 }
+
   /* UI */
   return (
     <aside className={styles.saeule} aria-label={t("columnAria")} data-test="saeule">
