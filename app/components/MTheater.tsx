@@ -9,18 +9,18 @@ export default function MTheater({ children }: Props) {
   // mobile-first, dann per media query leicht größer
   return (
     <div
-      aria-label="M Theater"
-      style={{
-        width: M_THEATER.mobile.width,
-        height: M_THEATER.mobile.height,
-        margin: "0 auto",
-        display: "grid",
-        placeItems: "center",
-        overflow: "hidden",
-        padding: "30px 0",        // ← NEU: oben & unten 30 px
+  aria-label="M Theater"
+  style={{
+    width: M_THEATER.mobile.width,
+    height: M_THEATER.mobile.height,
+    margin: "0 auto",
+    display: "grid",
+    placeItems: "center",
+    overflow: "hidden",
+    padding: "30px 0",         // ↑↑ M: 30px top/bottom
+  }}
+>
 
-      }}
-    >
       <style jsx>{`
         @media (min-width: 768px) {
           div[aria-label="M Theater"] {

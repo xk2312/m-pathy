@@ -106,17 +106,24 @@ export default function LogoM({
               to   { transform: scale(${cfg.idlePulseAmp}); }
             }
 
-            /* Uhrzeiger-Spirale – dezent, smooth */
+                        /* Uhrzeiger-Spirale – dezent, smooth */
             @keyframes mSpiralRotate {
               from { transform: rotate(0deg); }
               to   { transform: rotate(360deg); }
             }
 
-            /* sanftes Halten beim Denken – minimale Bewegung */
-            @keyframes mThinkingHold {
-              0%   { transform: scale(1.00) rotate(0deg);   }
-              50%  { transform: scale(1.015) rotate(2deg);  }
-              100% { transform: scale(1.00) rotate(0deg);   }
+            /* M: Eindrehen & Verblassen → Denken beginnt */
+            @keyframes mSpinOut {
+              0%   { opacity: 1;   transform: scale(1.00) rotate(0deg);    }
+              60%  { opacity: .25; transform: scale(0.96) rotate(120deg);  }
+              100% { opacity: 0;   transform: scale(0.92) rotate(180deg);  }
+            }
+
+            /* Accessibility: reduziere Bewegungen */
+            @media (prefers-reduced-motion: reduce) {
+              @keyframes mSpinOut { from { opacity:1; } to { opacity:0; } }
+              @keyframes mSpinIn  { from { opacity:0; } to { opacity:1; } }
+              @keyframes mSpiralRotate { from { transform: none; } to { transform: none; } }
             }
 
             /* Ready-Moment: kurzes, weiches Aufleuchten */
@@ -126,49 +133,140 @@ export default function LogoM({
               100% { opacity: 0; transform: scale(1.00); }
             }
 
-            /* „Ready“-Text sanft ein-/ausblenden */
-            @keyframes mReadyText {
-              0%   { opacity: 0; transform: translateY(4px); }
-              35%  { opacity: .9; transform: translateY(0); }
-              100% { opacity: 0; transform: translateY(-2px); }
+                        /* M: Herausdrehen & Sättigen → Antwort da (Ready) */
+            @keyframes mSpinIn {
+              0%   { opacity: 0;   transform: scale(0.92) rotate(180deg); }
+              40%  { opacity: .6;  transform: scale(0.98) rotate(60deg);  }
+              100% { opacity: 1;   transform: scale(1.00) rotate(0deg);   }
             }
+
+            /* 2s Faraday/E-Halo – dezente elektrische Corona */
+            @keyframes mFaraday {
+              0%   { opacity: .0;  filter: drop-shadow(0 0 0px rgba(96,230,255,.00)); }
+              10%  { opacity: .22; filter: drop-shadow(0 0 8px rgba(96,230,255,.30)); }
+              45%  { opacity: .25; filter: drop-shadow(0 0 12px rgba(96,230,255,.35)); }
+              80%  { opacity: .18; filter: drop-shadow(0 0 8px rgba(96,230,255,.25)); }
+              100% { opacity: .0;  filter: drop-shadow(0 0 0px rgba(96,230,255,.00)); }
+            }
+
+            /* Kohärenz-Faden – einmaliger Sweep pro 4.5s */
+            @keyframes mCoherence {
+              from { stroke-dashoffset: 0; }
+              to   { stroke-dashoffset: -240; }
+            }
+
+            /* Still-Frame-Siegel – 100ms Peak direkt nach SpinIn */
+            @keyframes mSealSnap {
+              0%   { filter: drop-shadow(0 0 0px rgba(255,255,255,0)); }
+              100% { filter: drop-shadow(0 0 14px rgba(255,255,255,.45)); }
+            }
+
           `}</style>
         </defs>
 
         {/* Spiral-Layer (nur beim Denken sichtbar, weicher Übergang) */}
         <g
-          aria-hidden="true"
-          style={{
-            transformOrigin: "72px 72px",
-            animation: isThinking ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite` : "none",
-            opacity: isThinking ? 0.5 : 0,
-            transform: isThinking ? "scale(1)" : "scale(0.96)",
-            transition: "opacity 1.2s ease, transform 1.2s ease",
-          }}
-        >
-          <circle cx="72" cy="72" r="56" fill="none" stroke={stroke} strokeOpacity="0.16" strokeWidth="3" strokeDasharray="6 10" />
-          <circle cx="72" cy="72" r="40" fill="none" stroke={stroke} strokeOpacity="0.18" strokeWidth="2.5" strokeDasharray="4 8" />
-          <circle cx="72" cy="72" r="24" fill="none" stroke={stroke} strokeOpacity="0.20" strokeWidth="2.5" strokeDasharray="2 6" />
-        </g>
+            aria-hidden="true"
+            style={{
+              transformOrigin: "72px 72px",
+              animation: isThinking ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite` : "none",
+              opacity: isThinking ? 0.5 : (isReady ? 0.18 : 0),
+              transform: isThinking ? "scale(1.06)" : (isReady ? "scale(1.02)" : "scale(0.98)"),
+              transition: "opacity 420ms ease, transform 420ms ease",
+            }}
+          >
 
-        {/* M-Form – atmet im Idle, bewegt sich ruhig beim Denken */}
-        <g
-          className="m-glow"
-          style={{
-            transformOrigin: "72px 72px",
-            animation: isIdle
-              ? "mIdlePulse 1800ms ease-in-out infinite alternate"
-              : isThinking
-              ? "mThinkingHold 2000ms ease-in-out infinite alternate"
-              : "none",
-          }}
-        >
+
+
+                    <circle cx="72" cy="72" r="56" fill="none" stroke={stroke} strokeOpacity="0.16" strokeWidth="3" strokeDasharray="6 10" />
+                    <circle cx="72" cy="72" r="40" fill="none" stroke={stroke} strokeOpacity="0.18" strokeWidth="2.5" strokeDasharray="4 8" />
+                    <circle cx="72" cy="72" r="24" fill="none" stroke={stroke} strokeOpacity="0.20" strokeWidth="2.5" strokeDasharray="2 6" />
+                  </g>
+
+                  {/* M-Form – atmet im Idle, bewegt sich ruhig beim Denken */}
+                <g
+            className="m-glow"
+            style={{
+              transformOrigin: "72px 72px",
+              animation: isIdle
+                ? "mIdlePulse 1800ms ease-in-out infinite alternate"
+                : isThinking
+                ? "mSpinOut 420ms ease forwards"
+                : isReady
+                ? "mSpinIn 520ms ease forwards, mSealSnap 100ms ease 520ms forwards"
+                : "none",
+            }}
+          >
+
+
           <path className="m-stroke" d="M24 116V34" />
           <path className="m-stroke" d="M120 116V34" />
           <path className="m-stroke" d="M24 34l48 58 48-58" />
         </g>
 
-        {/* Ready-Halo */}
+              {/* Kohärenz-Faden – nur Idle/Ready, NICHT im Thinking */}
+              {(isIdle || isReady) && (
+                <g className="m-glow" aria-hidden="true" style={{ pointerEvents: "none" }}>
+                  <path
+                    d="M24 116V34"
+                    fill="none"
+                    stroke="#9FF9FF"
+                    strokeWidth="4"
+                    strokeOpacity="0.65"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeDasharray="24 220"
+                    style={{ animation: "mCoherence 4500ms linear infinite" }}
+                  />
+                  <path
+                    d="M120 116V34"
+                    fill="none"
+                    stroke="#9FF9FF"
+                    strokeWidth="4"
+                    strokeOpacity="0.55"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeDasharray="24 220"
+                    style={{ animation: "mCoherence 4500ms linear infinite" }}
+                  />
+                  <path
+                    d="M24 34l48 58 48-58"
+                    fill="none"
+                    stroke="#E8FEFF"
+                    strokeWidth="4"
+                    strokeOpacity="0.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeDasharray="28 260"
+                    style={{ animation: "mCoherence 4800ms linear infinite" }}
+                  />
+                </g>
+              )}
+              {/* Faraday/E-Halo – 2s nach Antwort, dezent */}
+              {isReady && (
+                <g aria-hidden="true" style={{ animation: "mFaraday 2000ms ease-out forwards" }}>
+                  {Array.from({ length: 16 }).map((_, i) => {
+                    const angle = (i / 16) * Math.PI * 2;
+                    const x1 = 72 + Math.cos(angle) * 30;
+                    const y1 = 72 + Math.sin(angle) * 30;
+                    const x2 = 72 + Math.cos(angle) * 68;
+                    const y2 = 72 + Math.sin(angle) * 68;
+                    return (
+                      <line
+                        key={i}
+                        x1={x1} y1={y1} x2={x2} y2={y2}
+                        stroke={stroke}
+                        strokeOpacity={0.22}
+                        strokeWidth={1.5}
+                        strokeDasharray="2 6"
+                      />
+                    );
+                  })}
+                </g>
+              )}
+
+              {/* Ready-Halo */}
+
         <g
           aria-hidden="true"
           style={{
