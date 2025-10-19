@@ -159,10 +159,9 @@ export default function LogoM({
           `}</style>
         </defs>
 
-        {/* === G_SPIRAL — Starlight Filament ==================================== */}
+        {/* === G_SPIRAL — Glass Ribbon ========================================= */}
 <g
   id="G_SPIRAL"
-  className="m-glow"
   aria-hidden="true"
   style={{
     transformOrigin: "72px 72px",
@@ -175,11 +174,18 @@ export default function LogoM({
   }}
 >
   <defs>
-    <linearGradient id="filamentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stopColor="#60E6FF" stopOpacity="0" />
-      <stop offset="50%" stopColor="#60E6FF" stopOpacity="0.9" />
-      <stop offset="100%" stopColor="#60E6FF" stopOpacity="0" />
+    <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stopColor="rgba(96,230,255,0.1)" />
+      <stop offset="40%" stopColor="rgba(96,230,255,0.6)" />
+      <stop offset="60%" stopColor="rgba(255,255,255,0.8)" />
+      <stop offset="100%" stopColor="rgba(96,230,255,0.15)" />
     </linearGradient>
+    <filter id="glassSpecular" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="b" />
+      <feSpecularLighting in="b" surfaceScale="3" specularConstant="1.2" specularExponent="20" lighting-color="#FFFFFF">
+        <fePointLight x="90" y="60" z="40" />
+      </feSpecularLighting>
+    </filter>
   </defs>
 
   <path
@@ -189,25 +195,15 @@ export default function LogoM({
       a56,56 0 1,1 0.001,112
     "
     fill="none"
-    stroke="url(#filamentGradient)"
-    strokeWidth="4"
+    stroke="url(#ribbonGradient)"
+    strokeWidth="6"
     strokeLinecap="round"
-    strokeDasharray="10 220"
-    strokeDashoffset={isThinking ? "0" : "230"}
     style={{
-      opacity: isThinking ? 0.9 : 0,
-      transition: "opacity 400ms ease, stroke-dashoffset 2s linear",
-      animation: isThinking
-        ? "dashMove 2.2s linear infinite"
-        : "none",
+      opacity: isThinking ? 0.85 : 0,
+      filter: "url(#glassSpecular)",
+      transition: "opacity 400ms ease",
     }}
   />
-  <style>{`
-    @keyframes dashMove {
-      from { stroke-dashoffset: 230; }
-      to   { stroke-dashoffset: 0; }
-    }
-  `}</style>
 </g>
 
 
