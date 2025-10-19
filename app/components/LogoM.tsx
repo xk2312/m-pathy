@@ -159,37 +159,44 @@ export default function LogoM({
           `}</style>
         </defs>
 
-        {/* === G_SPIRAL (Parent bleibt sichtbar; Kinder regeln Sichtbarkeit) === */}
-        <g
-          id="G_SPIRAL"
-          className="m-glow"
-          aria-hidden="true"
-          style={{
-            transformOrigin: "72px 72px",
-            animation: isThinking
-              ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite, mSpiralPulse 2.4s ease-in-out infinite`
-              : "none",
-            transform: isThinking ? "scale(1.06)" : "scale(0.98)",
-            transition: "transform 480ms ease",
-            pointerEvents: "none",
-          }}
-        >
-          <circle
-            cx="72" cy="72" r="56" fill="none"
-            stroke={stroke} strokeOpacity="0.35" strokeWidth="4" strokeDasharray="6 10"
-            style={{ opacity: isThinking ? 0.75 : 0, transition: "opacity 300ms ease" }}
-          />
-          <circle
-            cx="72" cy="72" r="40" fill="none"
-            stroke={stroke} strokeOpacity="0.40" strokeWidth="3.5" strokeDasharray="4 8"
-            style={{ opacity: isThinking ? 0.65 : 0, transition: "opacity 300ms ease" }}
-          />
-          <circle
-            cx="72" cy="72" r="24" fill="none"
-            stroke={stroke} strokeOpacity="0.45" strokeWidth="3" strokeDasharray="2 6"
-            style={{ opacity: isThinking ? 0.55 : 0, transition: "opacity 300ms ease" }}
-          />
-        </g>
+        {/* === G_SPIRAL — Golden Helix (Aurea) =================================== */}
+<g
+  id="G_SPIRAL"
+  className="m-glow"
+  aria-hidden="true"
+  style={{
+    transformOrigin: "72px 72px",
+    animation: isThinking
+      ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite, mSpiralPulse 2.8s ease-in-out infinite`
+      : "none",
+    transform: isThinking ? "scale(1.06)" : "scale(0.98)",
+    transition: "transform 480ms ease",
+    pointerEvents: "none",
+  }}
+>
+  <path
+    d="
+      M72,72
+      m0,-56
+      a56,56 0 1,1 0.001,112
+      a34,34 0 1,0 0,-68
+      a21,21 0 1,1 0,42
+      a13,13 0 1,0 0,-26
+    "
+    fill="none"
+    stroke={stroke}
+    strokeWidth="3.5"
+    strokeOpacity="0.45"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{
+      opacity: isThinking ? 0.85 : 0,
+      transition: "opacity 400ms ease",
+      filter: "drop-shadow(0 0 10px rgba(96,230,255,0.45))",
+    }}
+  />
+</g>
+
 
         {/* === G_M (Parent bleibt sichtbar; Kinder regeln Sichtbarkeit) ======= */}
         <g
