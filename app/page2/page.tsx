@@ -1080,7 +1080,7 @@ return (
     }}
   >
     {/* ▼ Logo auf 60 %: 120→72 (mobile), 160→96 (desktop) */}
-    <LogoM size={isMobile ? 72 : 96} active={loading} />
+    <LogoM size={isMobile ? 72 : 96} active={loading} variant="auto" intensity="strong" />
   </div>
 </header>
 
