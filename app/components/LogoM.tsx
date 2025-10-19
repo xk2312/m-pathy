@@ -159,66 +159,65 @@ export default function LogoM({
           `}</style>
         </defs>
 
-       {/* === G_SPIRAL — Golden Helix (CW-Rotation, inward flow) ============== */}
+   {/* === G_SPIRAL — Glass Ribbon (true spiral + wide filter box) ========= */}
 <g
   id="G_SPIRAL"
-  className="m-glow"
   aria-hidden="true"
   style={{
     transformOrigin: "72px 72px",
-    animation: isThinking
-      ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite, mSpiralPulse 2.6s ease-in-out infinite`
-      : "none",
-    transform: isThinking ? "scale(1.05)" : "scale(0.98)",
+    animation: isThinking ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite` : "none",
+    transform: isThinking ? "scale(1.04)" : "scale(0.98)",
     transition: "transform 480ms ease",
     pointerEvents: "none",
   }}
 >
+  <defs>
+    <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stopColor="rgba(96,230,255,0.10)" />
+      <stop offset="40%"  stopColor="rgba(96,230,255,0.70)" />
+      <stop offset="60%"  stopColor="rgba(255,255,255,0.85)" />
+      <stop offset="100%" stopColor="rgba(96,230,255,0.15)" />
+    </linearGradient>
+    {/* größerer Filterbereich gegen abgeschnittenen Glow */}
+    <filter id="glassSpecular" x="-150%" y="-150%" width="400%" height="400%" filterUnits="objectBoundingBox">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="b" />
+      <feSpecularLighting in="b" surfaceScale="2.5" specularConstant="1.0" specularExponent="18" lighting-color="#FFFFFF">
+        <fePointLight x="110" y="52" z="60" />
+      </feSpecularLighting>
+    </filter>
+  </defs>
+
   <path
     d={
       (() => {
         const cx = 72, cy = 72;
-        const a = 3.2;      // Startfaktor
-        const b = 0.20;     // "Tightness"
-        const rMax = 52;    // Sicherheitsrand (kein Clipping)
-        const turns = 3.2;  // Umdrehungen
-        const steps = 240;
-
-        // Punkte erzeugen (rechte-Hand-Logspirale) …
-        const pts: string[] = [];
+        const a = 3.2, b = 0.20, rMax = 50, turns = 3.0, steps = 200; // rMax etwas kleiner -> Rand für Glow
+        let d = "", started = false;
         for (let i = 0; i <= steps; i++) {
           const t = (i / steps) * (Math.PI * 2 * turns);
           const r = a * Math.exp(b * t);
           if (r > rMax) break;
-          // … und HÄNDIGKEIT spiegeln, damit CW-Drehung "nach innen" wirkt:
-          const angle = -t; // ← Spiegelung der Händigkeit
-          const x = cx + r * Math.cos(angle);
-          const y = cy + r * Math.sin(angle);
-          pts.push(`${x.toFixed(2)} ${y.toFixed(2)}`);
+          const x = cx + r * Math.cos(t);
+          const y = cy + r * Math.sin(t);
+          d += (started ? ` L ${x.toFixed(2)} ${y.toFixed(2)}` : `M ${x.toFixed(2)} ${y.toFixed(2)}`);
+          started = true;
         }
-
-        // Für "inward flow" zusätzlich die Pfadrichtung umkehren:
-        pts.reverse();
-
-        // Pfadstring bauen
-        return pts.length
-          ? `M ${pts[0]} L ${pts.slice(1).join(" L ")}`
-          : "";
+        return d;
       })()
     }
     fill="none"
-    stroke={stroke}
-    strokeWidth={3.5}
-    strokeOpacity={0.50}
+    stroke="url(#ribbonGradient)"
+    strokeWidth={6}
     strokeLinecap="round"
     vectorEffect="non-scaling-stroke"
     style={{
-      opacity: isThinking ? 0.9 : 0,
-      transition: "opacity 380ms ease",
-      filter: "drop-shadow(0 0 8px rgba(96,230,255,0.35))",
+      opacity: isThinking ? 0.88 : 0,
+      filter: "url(#glassSpecular)",
+      transition: "opacity 360ms ease",
     }}
   />
 </g>
+
 
 
 
