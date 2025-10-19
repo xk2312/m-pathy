@@ -140,6 +140,11 @@ export default function LogoM({
               35%  { opacity:.9; transform: translateY(0); }
               100% { opacity:0; transform: translateY(-2px); }
             }
+            /* Smooth Fade-In fürs M nach Ready (kein Drehen) */
+            @keyframes fadeIn {
+              from { opacity: 0; transform: scale(0.94); }
+              to   { opacity: 1; transform: scale(1.00); }
+            }
 
             /* 100ms Snap-Peak nach SpinIn (nur Glanz, kein Visibility) */
             @keyframes mSealSnap {
@@ -159,39 +164,32 @@ export default function LogoM({
           `}</style>
         </defs>
 
-   {/* === G_SPIRAL — Glass Ribbon (true spiral + wide filter box) ========= */}
+   {/* === G_SPIRAL — Starlight Filament (true spiral + dash trail) ======= */}
 <g
   id="G_SPIRAL"
+  className="m-glow"
   aria-hidden="true"
   style={{
     transformOrigin: "72px 72px",
     animation: isThinking ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite` : "none",
-    transform: isThinking ? "scale(1.04)" : "scale(0.98)",
+    transform: isThinking ? "scale(1.05)" : "scale(0.98)",
     transition: "transform 480ms ease",
     pointerEvents: "none",
   }}
 >
   <defs>
-    <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%"   stopColor="rgba(96,230,255,0.10)" />
-      <stop offset="40%"  stopColor="rgba(96,230,255,0.70)" />
-      <stop offset="60%"  stopColor="rgba(255,255,255,0.85)" />
-      <stop offset="100%" stopColor="rgba(96,230,255,0.15)" />
+    <linearGradient id="filamentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stopColor="#60E6FF" stopOpacity="0" />
+      <stop offset="50%"  stopColor="#60E6FF" stopOpacity="0.95" />
+      <stop offset="100%" stopColor="#60E6FF" stopOpacity="0" />
     </linearGradient>
-    {/* größerer Filterbereich gegen abgeschnittenen Glow */}
-    <filter id="glassSpecular" x="-150%" y="-150%" width="400%" height="400%" filterUnits="objectBoundingBox">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="b" />
-      <feSpecularLighting in="b" surfaceScale="2.5" specularConstant="1.0" specularExponent="18" lighting-color="#FFFFFF">
-        <fePointLight x="110" y="52" z="60" />
-      </feSpecularLighting>
-    </filter>
   </defs>
 
   <path
     d={
       (() => {
         const cx = 72, cy = 72;
-        const a = 3.2, b = 0.20, rMax = 50, turns = 3.0, steps = 200; // rMax etwas kleiner -> Rand für Glow
+        const a = 3.2, b = 0.20, rMax = 52, turns = 3.2, steps = 240;
         let d = "", started = false;
         for (let i = 0; i <= steps; i++) {
           const t = (i / steps) * (Math.PI * 2 * turns);
@@ -206,21 +204,27 @@ export default function LogoM({
       })()
     }
     fill="none"
-    stroke="url(#ribbonGradient)"
-    strokeWidth={6}
+    stroke="url(#filamentGradient)"
+    strokeWidth={4}
     strokeLinecap="round"
+    strokeLinejoin="round"
     vectorEffect="non-scaling-stroke"
+    strokeDasharray="28 420"
+    strokeDashoffset={isThinking ? 0 : 448}
     style={{
-      opacity: isThinking ? 0.88 : 0,
-      filter: "url(#glassSpecular)",
-      transition: "opacity 360ms ease",
+      opacity: isThinking ? 0.95 : 0,
+      transition: "opacity 320ms ease, stroke-dashoffset 2.2s linear",
+      animation: isThinking ? "dashMove 2.2s linear infinite" : "none",
     }}
   />
+
+  <style>{`
+    @keyframes dashMove {
+      from { stroke-dashoffset: 448; }
+      to   { stroke-dashoffset: 0; }
+    }
+  `}</style>
 </g>
-
-
-
-
         {/* === G_M (Parent bleibt sichtbar; Kinder regeln Sichtbarkeit) ======= */}
         <g
           id="G_M"
@@ -228,14 +232,15 @@ export default function LogoM({
           style={{
             transformOrigin: "72px 72px",
             animation: isIdle
-              ? "mIdlePulse 1800ms ease-in-out infinite alternate"
-              : isThinking
-              ? "mSpinOut 460ms ease forwards"           // nur Transform
-              : isReady
-              ? "none"                                    // Ready solo
-              : isReveal
-              ? "mSpinIn 560ms ease forwards, mSealSnap 100ms ease 560ms forwards"
-              : "none",
+            ? "mIdlePulse 1800ms ease-in-out infinite alternate"
+            : isThinking
+            ? "mSpinOut 460ms ease forwards"             // M ausblenden beim Denken
+            : isReady
+            ? "none"                                      // Ready läuft solo (Faraday + Text)
+            : isReveal
+            ? "fadeIn 600ms ease forwards"                // ← nur sanftes Einblenden, kein Spin/Snap
+            : "none",
+          opacity: isReveal ? 0 : undefined,
           }}
         >
           <path
@@ -252,52 +257,47 @@ export default function LogoM({
           />
         </g>
 
-        {/* === READY SOLO (Faraday + Halo + Text) ============================ */}
-        {isReady && (
-          <>
-            {/* Faraday/Corona */}
-            <g aria-hidden="true" style={{ animation: "mFaraday 2000ms ease-out forwards" }}>
-              {Array.from({ length: 16 }).map((_, i) => {
-                const a = (i / 16) * Math.PI * 2;
-                const x1 = 72 + Math.cos(a) * 30;
-                const y1 = 72 + Math.sin(a) * 30;
-                const x2 = 72 + Math.cos(a) * 68;
-                const y2 = 72 + Math.sin(a) * 68;
-                return (
-                  <line
-                    key={i}
-                    x1={x1} y1={y1} x2={x2} y2={y2}
-                    stroke={stroke}
-                    strokeOpacity={0.22}
-                    strokeWidth={1.5}
-                    strokeDasharray="2 6"
-                  />
-                );
-              })}
-            </g>
+        {/* === READY SOLO (Faraday + Text only, no Halo/Circle) ============== */}
+{isReady && (
+  <>
+    {/* Faraday/Corona – kurzer elektrischer Effekt */}
+    <g aria-hidden="true" style={{ animation: "mFaraday 2000ms ease-out forwards" }}>
+      {Array.from({ length: 16 }).map((_, i) => {
+        const a = (i / 16) * Math.PI * 2;
+        const x1 = 72 + Math.cos(a) * 30;
+        const y1 = 72 + Math.sin(a) * 30;
+        const x2 = 72 + Math.cos(a) * 68;
+        const y2 = 72 + Math.sin(a) * 68;
+        return (
+          <line
+            key={i}
+            x1={x1} y1={y1} x2={x2} y2={y2}
+            stroke={stroke}
+            strokeOpacity={0.22}
+            strokeWidth={1.5}
+            strokeDasharray="2 6"
+          />
+        );
+      })}
+    </g>
 
-            {/* Ready-Halo */}
-            <g aria-hidden="true" style={{ animation: `mReadyGlow ${cfg.readyGlowMs}ms ease-out` }}>
-              <circle cx="72" cy="72" r="62" fill="none" stroke={stroke} strokeOpacity="0.22" strokeWidth="3" />
-              <circle cx="72" cy="72" r="68" fill="none" stroke={stroke} strokeOpacity="0.12" strokeWidth="2" />
-            </g>
-
-            {/* Ready-Text */}
-            <g style={{ animation: "mReadyText 900ms ease-out forwards" }}>
-              <text
-                x="72" y="78"
-                textAnchor="middle"
-                fontSize="18"
-                fontWeight="600"
-                fill={stroke}
-                fillOpacity="0.9"
-                style={{ letterSpacing: "0.6px" }}
-              >
-                Ready
-              </text>
-            </g>
-          </>
-        )}
+    {/* Ready-Text */}
+    <g style={{ animation: "mReadyText 900ms ease-out forwards" }}>
+      <text
+        x="72"
+        y="78"
+        textAnchor="middle"
+        fontSize="18"
+        fontWeight="600"
+        fill={stroke}
+        fillOpacity="0.9"
+        style={{ letterSpacing: "0.6px" }}
+      >
+        Ready
+      </text>
+    </g>
+  </>
+)}
       </svg>
     </div>
   );
