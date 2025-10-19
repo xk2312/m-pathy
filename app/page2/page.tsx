@@ -844,70 +844,39 @@ const runMFlow = useCallback(async (evt: MEvent, labelOverride?: string) => {
    Sehr defensive Browser-Hooks (nur Client, mit Try/Catch & harten Guards)
    ----------------------------------------------------------------------- */
 
-// Globale Click-Delegation: startet M-Flow inkl. konkretem Label (Mode/Expert)
+// Globale Click-Delegation: jedes Element mit data-m-event triggert runMFlow (robust)
 useEffect(() => {
-  function resolveEvtAndLabel(target: HTMLElement): { evt?: MEvent; label?: string } {
-    // A) direkt ausgezeichnet
-    const el = target.closest("[data-m-event]") as HTMLElement | null;
-    if (el) {
-      const evt = el.getAttribute("data-m-event") as MEvent | null;
-      if (!evt) return {};
-      const raw = el.getAttribute("data-m-label")
-        || el.getAttribute("aria-label")
-        || el.textContent
-        || "";
-      const label = evt === "mode" ? tMode(raw) : (evt === "expert" ? cap(raw) : undefined);
-      return { evt, label };
-    }
+  // im SSR nie anschließen
+  if (typeof document === "undefined") return;
 
-    // B) Fallbacks: typische Daten-Attribute in deinem UI
-    const modeEl = target.closest("[data-mode-id],[data-mode],[data-mode-label]") as HTMLElement | null;
-    if (modeEl) {
-      const raw =
-        modeEl.getAttribute("data-mode-label")
-        || modeEl.getAttribute("data-mode")
-        || modeEl.textContent
-        || "";
-      return { evt: "mode", label: tMode(raw) };
-    }
+  const onGlobalClick = (e: MouseEvent) => {
+    try {
+      const target = e.target as HTMLElement | null;
+      if (!target?.closest) return; // z.B. Textknoten
+      const host = target.closest<HTMLElement>("[data-m-event]");
+      if (!host) return;
 
-    const expertEl = target.closest("[data-expert-id],[data-expert],[data-expert-label]") as HTMLElement | null;
-    if (expertEl) {
-      const raw =
-        expertEl.getAttribute("data-expert-label")
-        || expertEl.getAttribute("data-expert")
-        || expertEl.textContent
-        || "";
-      return { evt: "expert", label: cap(raw) };
-    }
+      const evt = host.getAttribute("data-m-event") as MEvent | null;
+      if (!evt) return;
 
-    // C) Text-Heuristik (letzter Notnagel)
-    const txt = (target.getAttribute("aria-label") || target.textContent || "").trim();
-    if (txt) {
-      const s = slug(txt);
-      // erkenne bekannte Mode-Keys im Text
-      if (["calm","truth","oracle","balance","power","loop","body","ocean","minimal"].some(k => s.includes(k))) {
-        return { evt: "mode", label: tMode(txt) };
+      // optionales Label nutzen (für Modus/Experte)
+      const label =
+        host.getAttribute("data-m-label") ||
+        host.textContent?.trim() ||
+        undefined;
+
+      // runMFlow immer erst aufrufen, wenn vorhanden
+      if (typeof runMFlow === "function") {
+        runMFlow(evt, label);
       }
-      if (s.includes("expert") || s.includes("experte")) {
-        return { evt: "expert", label: cap(txt) };
-      }
+    } catch {
+      // niemals die App crashen lassen
     }
+  };
 
-    return {};
-  }
-
-  function onGlobalClick(e: MouseEvent) {
-    const tgt = e.target as HTMLElement | null;
-    if (!tgt) return;
-    const { evt, label } = resolveEvtAndLabel(tgt);
-    if (!evt) return;
-    runMFlow(evt, label);                        // << labelOverride liefert Frame 1
-  }
-
-  document.addEventListener("click", onGlobalClick);
+  document.addEventListener("click", onGlobalClick, { passive: true });
   return () => document.removeEventListener("click", onGlobalClick);
-}, [runMFlow, locale]);
+}, [runMFlow]);
   
 // Globale Click-Delegation
 useEffect(() => {
@@ -1013,127 +982,118 @@ useEffect(() => {
   return () => document.removeEventListener("change", onChange);
 }, [runMFlow]);
 
-  // ▼ Auswahl-Delegation (Dropdowns/Listboxen/Comboboxen → Label an runMFlow)
-  useEffect(() => {
-    if (typeof document === "undefined") return;
+  // Change-Delegation: erst bei wirklicher Auswahl animieren (nicht beim Öffnen)
+useEffect(() => {
+  if (typeof document === "undefined") return;
 
-    const onChange = (e: Event) => {
+  const onChange = (e: Event) => {
+    try {
       const el = e.target as HTMLElement | null;
       if (!el) return;
 
-      // Nur echte Auswahlen mit change-Event
-      if (!el.matches("select,[role='listbox'],[role='combobox']")) return;
+      // nur echte Auswahlen (native <select> oder ARIA Combobox/Listbox)
+      const isPicker =
+        (el as any).tagName === "SELECT" ||
+        el.matches?.("[role='combobox'],[role='listbox']");
+      if (!isPicker) return;
 
-      const host = (el.closest("[data-m-event]") as HTMLElement) || (el as any);
+      // „Host“: entfernter Button/Container, der data-m-event trägt – oder fallback el
+      const host =
+        (el.closest?.("[data-m-event]") as HTMLElement | null) || el;
+
       const evt = host.getAttribute("data-m-event") as MEvent | null;
       if (!evt) return;
 
-      let label = "";
+      // Label: bevorzugt die tatsächlich gewählte Option
+      let label: string | undefined;
       if ((el as HTMLSelectElement).selectedOptions?.length) {
-        label = (el as HTMLSelectElement).selectedOptions[0].textContent?.trim() || "";
+        label =
+          (el as HTMLSelectElement).selectedOptions[0].textContent?.trim() ||
+          undefined;
       } else {
-        label = host.getAttribute("data-m-label") || host.textContent?.trim() || "";
+        label =
+          host.getAttribute("data-m-label") ||
+          el.textContent?.trim() ||
+          undefined;
       }
-      runMFlow(evt, label || undefined);
-    };
 
-    document.addEventListener("change", onChange);
-    return () => document.removeEventListener("change", onChange);
-  }, [runMFlow]);
-
-  // Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
-  useEffect(() => {
-    if (typeof window === "undefined" || typeof document === "undefined") return;
-    // … (dein Auto-Tagging Code folgt hier)
-  }, []);
-
-
-// Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
-useEffect(() => {
-  // SSR-Schutz
-  if (typeof window === "undefined" || typeof document === "undefined") return;
-
-  const MAP: Record<string, MEvent> = {
-  "jetzt bauen": "builder",
-  "builder": "builder",
-  "onboarding": "onboarding",
-  "start onboarding": "onboarding",
-
-  // Experten / Modus
-  "experte": "expert",
-  "expert": "expert",
-  "mode": "mode",
-  "modus": "mode",
-
-  // häufige Varianten
-  "m · default": "mode",
-  "default": "mode",
-};
-
-
-  const norm = (s: string) => (s || "").trim().toLowerCase();
-
-  // Helper: für mode/expert sichtbaren Namen als data-m-label setzen
-  const ensureLabel = (el: HTMLElement) => {
-    const evtType = el.getAttribute("data-m-event");
-    if ((evtType === "mode" || evtType === "expert") && !el.hasAttribute("data-m-label")) {
-      const raw =
-        (el.textContent ||
-          el.getAttribute("aria-label") ||
-          el.getAttribute("title") ||
-          "")!.trim();
-      if (raw) el.setAttribute("data-m-label", raw);
+      if (typeof runMFlow === "function") {
+        runMFlow(evt, label);
+      }
+    } catch {
+      // still
     }
   };
 
-  // nach initialem Paint (vermeidet SSR/CSR-Mismatch)
-  let id = 0;
-  id = window.requestAnimationFrame(() => {
+  document.addEventListener("change", onChange);
+  return () => document.removeEventListener("change", onChange);
+}, [runMFlow]);
+
+// Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig, defensiv)
+useEffect(() => {
+  if (typeof document === "undefined" || typeof window === "undefined") return;
+
+  const MAP: Record<string, MEvent> = {
+    "jetzt bauen": "builder",
+    "builder": "builder",
+    "onboarding": "onboarding",
+    "start onboarding": "onboarding",
+    "expert": "expert",
+    "experte": "expert",
+    "mode": "mode",
+    "modus": "mode",
+  };
+
+  const norm = (s: string) => (s || "").trim().toLowerCase();
+
+  const id = window.requestAnimationFrame(() => {
     try {
-      const candidates = Array.from(
-  document.querySelectorAll<HTMLElement>("button, a, [data-action]") // dropped [role='button']
-);
+      const nodes = document.querySelectorAll<HTMLElement>(
+        'button, a, [role="button"], [data-action], select, [role="combobox"], [role="listbox"]'
+      );
 
-      for (const el of candidates) {
+      nodes.forEach((el) => {
         try {
-          if (el.hasAttribute("data-m-event")) {
-            ensureLabel(el);
-            continue;
-          }
+          if (el.hasAttribute("data-m-event")) return;
 
-          const txt = norm(
+          const text = norm(
             el.textContent ||
               el.getAttribute("aria-label") ||
               el.getAttribute("title") ||
               ""
           );
-          if (!txt) continue;
+          if (!text) return;
 
           // exakter Treffer
-          if (MAP[txt]) {
-            el.setAttribute("data-m-event", String(MAP[txt]));
-            ensureLabel(el);
-            continue;
+          if (MAP[text]) {
+            el.setAttribute("data-m-event", MAP[text]!);
+          } else {
+            // Teiltreffer („jetzt bauen!“ etc.)
+            const hit = Object.keys(MAP).find((k) => text.includes(k));
+            if (hit) el.setAttribute("data-m-event", MAP[hit]!);
           }
 
-          // Teiltreffer (z. B. "jetzt bauen!")
-          const hit = Object.keys(MAP).find((key) => txt.includes(key));
-          if (hit) {
-            el.setAttribute("data-m-event", String(MAP[hit as keyof typeof MAP]));
-            ensureLabel(el);
+          const evtType = el.getAttribute("data-m-event");
+          // Für Modus/Experte den sichtbaren Namen als data-m-label puffern
+          if ((evtType === "mode" || evtType === "expert") && !el.hasAttribute("data-m-label")) {
+            const raw =
+              (el as HTMLSelectElement).selectedOptions?.[0]?.textContent?.trim() ||
+              el.textContent?.trim() ||
+              el.getAttribute("aria-label") ||
+              el.getAttribute("title") ||
+              "";
+            if (raw) el.setAttribute("data-m-label", raw);
           }
         } catch {
-          // einzelnen Problem-Knoten ignorieren
+          /* einzelnes Element ignorieren */
         }
-      }
+      });
     } catch {
-      // niemals die App crashen lassen
+      /* niemals crashen */
     }
   });
 
-  return () => {
-    if (id) window.cancelAnimationFrame(id);
-  };
+  return () => window.cancelAnimationFrame(id);
 }, []);
 
 
