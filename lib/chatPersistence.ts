@@ -1,15 +1,16 @@
-// app/lib/chatPersistence.ts  (oder lib/chatPersistence.ts)
-// Keine "use client" nötig; defensiv gegen SSR/localStorage-Fehler.
+// /lib/chatPersistence.ts
+// Keine "use client" nötig; wir guard-en localStorage sauber ab.
 
 export type ChatMessage = {
   role: "system" | "user" | "assistant";
   content: string;
-  format?: "markdown" | "text";
+  format?: "plain" | "markdown" | "html";
 };
 
-const STORAGE_KEY = "m_chat_messages_v1";
+// stabiler Key + alte Keys für Migration
+const STORAGE_KEYS = ["m_chat_messages_v1", "m.chat.v1", "messages"];
 
-/** sichere Referenz auf localStorage, auch SSR-kompatibel */
+/** localStorage-Zugriff sicher kapseln */
 function safeStorage(): Storage | null {
   try {
     if (typeof window === "undefined") return null;
@@ -19,8 +20,8 @@ function safeStorage(): Storage | null {
   }
 }
 
-/** prüft minimale Gültigkeit einer gespeicherten Message */
-function isValidMessage(x: any): x is ChatMessage {
+/** Message-Gültigkeit prüfen */
+function isValid(x: any): x is ChatMessage {
   return (
     x &&
     typeof x === "object" &&
@@ -29,80 +30,77 @@ function isValidMessage(x: any): x is ChatMessage {
   );
 }
 
-/**
- * kürzt History und Textlängen, damit sie leichtgewichtig bleiben
- */
-export function truncateMessages<T extends { content?: string }>(
-  messages: T[],
+/** Kürzt History auf sinnvolle Länge (Anzahl + Zeichenlimit) */
+export function truncateMessages(
+  messages: ChatMessage[],
   maxMsgs = 80,
-  maxChars = 6000,
-  maxPerMsg = 4000
-): T[] {
+  maxChars = 8000
+): ChatMessage[] {
   if (!Array.isArray(messages)) return [];
-
-  // pro-Message-Limit
-  const clipped = messages.map((m) => {
-    if (!m || typeof m !== "object") return m;
-    const c = String(m.content ?? "");
-    return c.length > maxPerMsg
-      ? ({ ...m, content: c.slice(-maxPerMsg) } as T)
-      : m;
-  });
-
-  // Anzahl begrenzen (letzte N behalten)
-  let cut = clipped.slice(-maxMsgs);
-
-  // Gesamtzeichen approximativ begrenzen
-  let total = cut.reduce((n, m: any) => n + String(m?.content ?? "").length, 0);
-  while (total > maxChars && cut.length > 1) {
-    const first = cut.shift() as any;
-    total -= String(first?.content ?? "").length;
+  const clipped = messages.slice(-maxMsgs);
+  let total = clipped.reduce((sum, m) => sum + (m.content?.length ?? 0), 0);
+  while (total > maxChars && clipped.length > 1) {
+    const removed = clipped.shift()!;
+    total -= removed.content?.length ?? 0;
   }
-
-  return cut;
+  return clipped;
 }
 
-/** schreibt Messages sicher in localStorage */
-export function saveMessages(messages: readonly ChatMessage[]): void {
-  const storage = safeStorage();
-  if (!storage) return;
-
+/** Speichert Messages defensiv in localStorage */
+export function saveMessages(messages: ChatMessage[]): void {
+  const store = safeStorage();
+  if (!store) return;
   try {
     const safe = Array.isArray(messages)
       ? messages
-          .filter(isValidMessage)
+          .filter(isValid)
           .map((m) => ({
             role: m.role,
-            content: String(m.content ?? ""),
-            format: m.format,
+            content: m.content ?? "",
+            format:
+              m.format === "markdown" || m.format === "plain" || m.format === "html"
+                ? m.format
+                : "markdown",
           }))
       : [];
-    storage.setItem(STORAGE_KEY, JSON.stringify(safe));
+    store.setItem(STORAGE_KEYS[0], JSON.stringify(safe));
   } catch {
     // niemals crashen
   }
 }
 
-/** liest Messages aus localStorage */
+/** Lädt Messages defensiv aus localStorage */
 export function loadMessages(): ChatMessage[] {
-  const storage = safeStorage();
-  if (!storage) return [];
-
+  const store = safeStorage();
+  if (!store) return [];
   try {
-    const raw = storage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter(isValidMessage);
+    for (const key of STORAGE_KEYS) {
+      const raw = store.getItem(key);
+      if (!raw) continue;
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) {
+        return arr
+          .filter(isValid)
+          .map((m) => ({
+            role: m.role,
+            content: m.content ?? "",
+            format:
+              m.format === "markdown" || m.format === "plain" || m.format === "html"
+                ? m.format
+                : "markdown",
+          })) as ChatMessage[];
+      }
+    }
   } catch {
-    return [];
+    // still: niemals crashen
   }
+  return [];
 }
 
-/** löscht alle gespeicherten Messages (optional Debug) */
+/** Optionaler Reset – löscht Chat-History */
 export function clearMessages(): void {
-  const storage = safeStorage();
+  const store = safeStorage();
   try {
-    storage?.removeItem(STORAGE_KEY);
+    STORAGE_KEYS.forEach((key) => store?.removeItem(key));
   } catch {}
 }

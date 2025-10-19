@@ -38,24 +38,25 @@ import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
 import StickyFab from "../components/StickyFab";
+
 import { t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
 import { useMobileViewport } from "@/lib/useMobileViewport";
+
+// Chat-Persistenz (lokale Aliasse, damit der Rest des Files stabil bleibt)
 import {
   saveMessages as chatSaveMessages,
   loadMessages as chatLoadMessages,
   truncateMessages as chatTruncateMessages,
 } from "@/lib/chatPersistence";
-// Lokale, sprechende Aliasse – überall im File verwenden:
+
+// Lokale, sprechende Aliasse – bitte im ganzen File diese drei nutzen:
 const persist = {
   save: chatSaveMessages,
   load: chatLoadMessages,
-  cut : chatTruncateMessages,
+  cut:  chatTruncateMessages,
 };
 
-
-// ⚠️ NICHT importieren: useTheme aus "next-themes" (Konflikt mit lokalem Hook)
-// import { useTheme } from "next-themes"; // ❌ bitte entfernt lassen
 
 // ——— Theme-Token-Typen (global, einmalig) ———
 type ColorTokens = { bg0?: string; bg1?: string; text?: string };
@@ -716,6 +717,26 @@ const [input, setInput] = useState("");
 const [loading, setLoading] = useState(false);
 const [stickToBottom, setStickToBottom] = useState(true);
 const [mode, setMode] = useState<string>("DEFAULT");
+
+// Initiale Begrüßung / Restore (aus localStorage)
+useEffect(() => {
+  const restored = persist.load();
+  if (Array.isArray(restored) && restored.length > 0) {
+    // we map it softly to match ChatMessage type from this file
+    const normalized = restored.map((m: any) => ({
+      role: m.role ?? "assistant",
+      content: m.content ?? "",
+      format: (m.format === "markdown" || m.format === "html" || m.format === "plain")
+        ? m.format
+        : "markdown", // fallback format
+    }));
+    setMessages(normalized);
+    return;
+  }
+  setMessages([]);
+}, []);
+
+
 // === Local chat persistence (no external import) ==========================
 const STORAGE_KEY = "mpage2_messages_v1";
 
@@ -786,64 +807,37 @@ const tMode = (raw: string) => {
   return table[key] || cap(raw);
 };
 
-/**
- * UI-zentrale Routine: Frame „Load + Label“ → Ready
- * labelOverride = z. B. "Calm", "Biologist", …
- * (BITTE: Dies ist die EINZIGE runMFlow-Definition im File!)
- */
-const runMFlow = useCallback(
-  async (evt: MEvent, labelOverride?: string) => {
-    const prefix = LOAD_PREFIX[locale] ?? LOAD_PREFIX.en;
+// UI-zentrale Routine: eventLabel → READY
+const runMFlow = useCallback(async (evt: MEvent, labelOverride?: string) => {
+  const LOAD_PREFIX: Record<string, string> = {
+    en: "Load", de: "Lade", fr: "Charger", es: "Cargar", it: "Carica"
+  };
+  const prefix = LOAD_PREFIX[locale] ?? LOAD_PREFIX.en;
 
-    // Basislabel bestimmen (unterstützt spezielle Fälle)
-    const baseLabel = (() => {
-      const raw = (labelOverride || "").trim();
+  const baseLabel = (() => {
+    if (!labelOverride) {
+      if (evt === "builder")    return getLabel("builder");
+      if (evt === "onboarding") return getLabel("onboarding");
+      if (evt === "mode")       return getLabel("mode");
+      if (evt === "expert")     return getLabel("expert");
+    }
+    return (labelOverride || "").trim();
+  })();
 
-      if (!raw) {
-        // Fallbacks, wenn kein Override kommt
-        if (evt === "builder") return getLabel("builder");
-        if (evt === "onboarding") return getLabel("onboarding");
-        if (evt === "mode") return getLabel("mode");
-        if (evt === "expert") return getLabel("expert");
-        return getLabel(evt);
-      }
+  const frame = (evt === "mode" && /^default$/i.test(baseLabel))
+    ? (locale === "de" ? "Setze Default" : "Set default")
+    : `${prefix} ${baseLabel}`;
 
-      // Wenn Modus: lokalisiert schön schreiben
-      if (evt === "mode") return tMode(raw);
+  setFrameText(frame);
+  try { setLoading(true); } catch {}
 
-      // Experte/sonst: hübsch kapitalisieren
-      return cap(raw);
-    })();
+  await new Promise(r => setTimeout(r, 900));
+  setFrameText(null);
+  await new Promise(r => setTimeout(r, 700));
 
-    // Sonderfall „default“ bei Modus
-    const isDefault =
-      evt === "mode" &&
-      /^default$/i.test(baseLabel);
+  try { setLoading(false); } catch {}
+}, [locale, setLoading]);
 
-    const frameText1 = isDefault
-      ? (locale === "de" ? "Setze Default" : "Set default")
-      : `${prefix} ${baseLabel}`;
-
-    // 1) Frame zeigen + M/Spirale starten
-    setFrameText(frameText1);
-    try {
-      setLoading(true);
-    } catch {}
-
-    // 2) Frame sichtbar halten
-    await new Promise((r) => setTimeout(r, 900));
-
-    // 3) Frame ausblenden, M denkt kurz weiter
-    setFrameText(null);
-    await new Promise((r) => setTimeout(r, 700));
-
-    // 4) READY (LogoM reagiert auf loading=false)
-    try {
-      setLoading(false);
-    } catch {}
-  },
-  [locale, setLoading]
-);
 
 
 /* -----------------------------------------------------------------------
@@ -914,22 +908,67 @@ useEffect(() => {
   document.addEventListener("click", onGlobalClick);
   return () => document.removeEventListener("click", onGlobalClick);
 }, [runMFlow, locale]);
-  // Globale Click-Delegation
+  
+// Globale Click-Delegation
 useEffect(() => {
-  function onGlobalClick(e: MouseEvent) {
-    const tgt = (e.target as HTMLElement)?.closest?.("[data-m-event]") as HTMLElement | null;
+    function onGlobalClick(e: MouseEvent) {
+    const tgt = (e.target as HTMLElement) ?? null;
     if (!tgt) return;
 
-    const evt = tgt.getAttribute("data-m-event") as MEvent | null;
+    // 1) Ignore dropdowns/comboboxes completely (opening shouldn't animate)
+    if (
+      tgt.matches("select,[role='listbox'],[role='combobox']") ||
+      tgt.closest("select,[role='listbox'],[role='combobox']")
+    ) return;
+
+    const host = tgt.closest("[data-m-event]") as HTMLElement | null;
+    if (!host) return;
+
+    const evt = host.getAttribute("data-m-event") as MEvent | null;
     if (!evt) return;
 
-    // Dropdowns/Listen: Klick öffnet nur – wir reagieren später auf change
-    if (evt === "mode" || evt === "expert") return;
+    // 2) MODE: compute readable label and pass it
+    if (evt === "mode") {
+      const selected =
+        host.querySelector("[aria-selected='true']")?.textContent?.trim() ||
+        host.querySelector("option:checked")?.textContent?.trim() ||
+        tgt.textContent?.trim() || "";
+      if (selected) {
+        runMFlow("mode", selected);
+        return;
+      }
+    }
 
-    // Optionales Label aus data-m-label nehmen (falls hinterlegt)
-    const label = tgt.getAttribute("data-m-label") || undefined;
-    runMFlow(evt, label);
+    // default: keep old behavior
+    runMFlow(evt);
   }
+// Dropdown/combobox selections → pass chosen label (no placeholder)
+useEffect(() => {
+  if (typeof document === "undefined") return;
+
+  const onChange = (e: Event) => {
+    const el = e.target as HTMLElement | null;
+    if (!el) return;
+
+    if (!el.matches("select,[role='listbox'],[role='combobox']")) return;
+
+    const host = (el.closest("[data-m-event]") as HTMLElement) || (el as any);
+    const evt = host.getAttribute("data-m-event") as MEvent | null;
+    if (!evt) return;
+
+    const chosen =
+      (el as HTMLSelectElement).selectedOptions?.[0]?.textContent?.trim() ||
+      host.querySelector("[aria-selected='true']")?.textContent?.trim() ||
+      "";
+
+    if (!chosen) return;           // don't animate for placeholders like "Experte wählen"
+    runMFlow(evt, chosen);
+  };
+
+  document.addEventListener("change", onChange);
+  return () => document.removeEventListener("change", onChange);
+}, [runMFlow]);
+
 
   document.addEventListener("click", onGlobalClick);
   return () => document.removeEventListener("click", onGlobalClick);
@@ -1052,8 +1091,8 @@ useEffect(() => {
   id = window.requestAnimationFrame(() => {
     try {
       const candidates = Array.from(
-        document.querySelectorAll<HTMLElement>('button, a, [role="button"], [data-action]')
-      );
+  document.querySelectorAll<HTMLElement>("button, a, [data-action]") // dropped [role='button']
+);
 
       for (const el of candidates) {
         try {
