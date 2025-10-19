@@ -159,49 +159,54 @@ export default function LogoM({
           `}</style>
         </defs>
 
-        {/* === G_SPIRAL — Glass Ribbon ========================================= */}
+        {/* === G_SPIRAL — Golden Helix (true log spiral) ====================== */}
 <g
   id="G_SPIRAL"
+  className="m-glow"
   aria-hidden="true"
   style={{
     transformOrigin: "72px 72px",
     animation: isThinking
-      ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite`
+      ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite, mSpiralPulse 2.6s ease-in-out infinite`
       : "none",
     transform: isThinking ? "scale(1.05)" : "scale(0.98)",
     transition: "transform 480ms ease",
     pointerEvents: "none",
   }}
 >
-  <defs>
-    <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stopColor="rgba(96,230,255,0.1)" />
-      <stop offset="40%" stopColor="rgba(96,230,255,0.6)" />
-      <stop offset="60%" stopColor="rgba(255,255,255,0.8)" />
-      <stop offset="100%" stopColor="rgba(96,230,255,0.15)" />
-    </linearGradient>
-    <filter id="glassSpecular" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="b" />
-      <feSpecularLighting in="b" surfaceScale="3" specularConstant="1.2" specularExponent="20" lighting-color="#FFFFFF">
-        <fePointLight x="90" y="60" z="40" />
-      </feSpecularLighting>
-    </filter>
-  </defs>
-
   <path
-    d="
-      M72,72
-      m0,-56
-      a56,56 0 1,1 0.001,112
-    "
+    d={
+      (() => {
+        const cx = 72, cy = 72;
+        const a = 3.2;            // Start-Radius
+        const b = 0.20;           // Spiral-“Tightness”
+        const rMax = 52;          // Sicherheitsrand (Glow nicht clippen)
+        const turns = 3.2;        // Umdrehungen
+        const steps = 240;        // Glätte
+        let d = "";
+        let started = false;
+        for (let i = 0; i <= steps; i++) {
+          const t = (i / steps) * (Math.PI * 2 * turns);
+          const r = a * Math.exp(b * t);
+          if (r > rMax) break;
+          const x = cx + r * Math.cos(t);
+          const y = cy + r * Math.sin(t);
+          d += (started ? ` L ${x.toFixed(2)} ${y.toFixed(2)}` : `M ${x.toFixed(2)} ${y.toFixed(2)}`);
+          started = true;
+        }
+        return d;
+      })()
+    }
     fill="none"
-    stroke="url(#ribbonGradient)"
-    strokeWidth="6"
+    stroke={stroke}
+    strokeWidth={3.5}
+    strokeOpacity={0.50}
     strokeLinecap="round"
+    vectorEffect="non-scaling-stroke"
     style={{
-      opacity: isThinking ? 0.85 : 0,
-      filter: "url(#glassSpecular)",
-      transition: "opacity 400ms ease",
+      opacity: isThinking ? 0.9 : 0,
+      transition: "opacity 380ms ease",
+      filter: "drop-shadow(0 0 8px rgba(96,230,255,0.35))",
     }}
   />
 </g>
