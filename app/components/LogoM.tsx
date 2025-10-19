@@ -98,7 +98,13 @@ export default function LogoM({
             /* Spirale – Rotation (nur Transform an der Gruppe) */
             @keyframes mSpiralRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-            /* M eindrehen (Denken) – NUR Transform an der Gruppe */
+            /* Spirale – zarte Glow-Pulse-Aura */
+            @keyframes mSpiralPulse {
+              0%, 100% { filter: drop-shadow(0 0 6px rgba(96,230,255,0.25)); }
+              50%      { filter: drop-shadow(0 0 12px rgba(96,230,255,0.45)); }
+            }
+
+            /* M eindrehen (Denken) – NUR Transform an der Gruppe) */
             @keyframes mSpinOut {
               0%   { transform: scale(1.00) rotate(0deg); }
               60%  { transform: scale(0.96) rotate(120deg); }
@@ -145,6 +151,7 @@ export default function LogoM({
             @media (prefers-reduced-motion: reduce) {
               .m-glow { animation: none !important; }
               @keyframes mSpiralRotate { from { transform: none; } to { transform: none; } }
+              @keyframes mSpiralPulse { from { filter: none; } to { filter: none; } }
               @keyframes mSpinOut { from { transform: none; } to { transform: none; } }
               @keyframes mSpinIn  { from { transform: none; } to { transform: none; } }
               @keyframes mFaraday { from { opacity:0; } to { opacity:0; } }
@@ -155,10 +162,13 @@ export default function LogoM({
         {/* === G_SPIRAL (Parent bleibt sichtbar; Kinder regeln Sichtbarkeit) === */}
         <g
           id="G_SPIRAL"
+          className="m-glow"
           aria-hidden="true"
           style={{
             transformOrigin: "72px 72px",
-            animation: isThinking ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite` : "none",
+            animation: isThinking
+              ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite, mSpiralPulse 2.4s ease-in-out infinite`
+              : "none",
             transform: isThinking ? "scale(1.06)" : "scale(0.98)",
             transition: "transform 480ms ease",
             pointerEvents: "none",
@@ -166,18 +176,18 @@ export default function LogoM({
         >
           <circle
             cx="72" cy="72" r="56" fill="none"
-            stroke={stroke} strokeOpacity="0.16" strokeWidth="3" strokeDasharray="6 10"
-            style={{ opacity: isThinking ? 0.70 : 0, transition: "opacity 300ms ease" }}
+            stroke={stroke} strokeOpacity="0.35" strokeWidth="4" strokeDasharray="6 10"
+            style={{ opacity: isThinking ? 0.75 : 0, transition: "opacity 300ms ease" }}
           />
           <circle
             cx="72" cy="72" r="40" fill="none"
-            stroke={stroke} strokeOpacity="0.18" strokeWidth="2.5" strokeDasharray="4 8"
-            style={{ opacity: isThinking ? 0.60 : 0, transition: "opacity 300ms ease" }}
+            stroke={stroke} strokeOpacity="0.40" strokeWidth="3.5" strokeDasharray="4 8"
+            style={{ opacity: isThinking ? 0.65 : 0, transition: "opacity 300ms ease" }}
           />
           <circle
             cx="72" cy="72" r="24" fill="none"
-            stroke={stroke} strokeOpacity="0.20" strokeWidth="2.5" strokeDasharray="2 6"
-            style={{ opacity: isThinking ? 0.50 : 0, transition: "opacity 300ms ease" }}
+            stroke={stroke} strokeOpacity="0.45" strokeWidth="3" strokeDasharray="2 6"
+            style={{ opacity: isThinking ? 0.55 : 0, transition: "opacity 300ms ease" }}
           />
         </g>
 
