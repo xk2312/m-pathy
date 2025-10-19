@@ -159,32 +159,33 @@ export default function LogoM({
           `}</style>
         </defs>
 
-        {/* === G_SPIRAL — Golden Helix (true log spiral) ====================== */}
+       {/* === G_SPIRAL — Starlight Filament (true spiral + dash trail) ======= */}
 <g
   id="G_SPIRAL"
   className="m-glow"
   aria-hidden="true"
   style={{
     transformOrigin: "72px 72px",
-    animation: isThinking
-      ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite, mSpiralPulse 2.6s ease-in-out infinite`
-      : "none",
+    animation: isThinking ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite` : "none",
     transform: isThinking ? "scale(1.05)" : "scale(0.98)",
     transition: "transform 480ms ease",
     pointerEvents: "none",
   }}
 >
+  <defs>
+    <linearGradient id="filamentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stopColor="#60E6FF" stopOpacity="0" />
+      <stop offset="50%"  stopColor="#60E6FF" stopOpacity="0.95" />
+      <stop offset="100%" stopColor="#60E6FF" stopOpacity="0" />
+    </linearGradient>
+  </defs>
+
   <path
     d={
       (() => {
         const cx = 72, cy = 72;
-        const a = 3.2;            // Start-Radius
-        const b = 0.20;           // Spiral-“Tightness”
-        const rMax = 52;          // Sicherheitsrand (Glow nicht clippen)
-        const turns = 3.2;        // Umdrehungen
-        const steps = 240;        // Glätte
-        let d = "";
-        let started = false;
+        const a = 3.2, b = 0.20, rMax = 52, turns = 3.2, steps = 240;
+        let d = "", started = false;
         for (let i = 0; i <= steps; i++) {
           const t = (i / steps) * (Math.PI * 2 * turns);
           const r = a * Math.exp(b * t);
@@ -198,17 +199,26 @@ export default function LogoM({
       })()
     }
     fill="none"
-    stroke={stroke}
-    strokeWidth={3.5}
-    strokeOpacity={0.50}
+    stroke="url(#filamentGradient)"
+    strokeWidth={4}
     strokeLinecap="round"
+    strokeLinejoin="round"
     vectorEffect="non-scaling-stroke"
+    strokeDasharray="28 420"
+    strokeDashoffset={isThinking ? 0 : 448}
     style={{
-      opacity: isThinking ? 0.9 : 0,
-      transition: "opacity 380ms ease",
-      filter: "drop-shadow(0 0 8px rgba(96,230,255,0.35))",
+      opacity: isThinking ? 0.95 : 0,
+      transition: "opacity 320ms ease, stroke-dashoffset 2.2s linear",
+      animation: isThinking ? "dashMove 2.2s linear infinite" : "none",
     }}
   />
+
+  <style>{`
+    @keyframes dashMove {
+      from { stroke-dashoffset: 448; }
+      to   { stroke-dashoffset: 0; }
+    }
+  `}</style>
 </g>
 
 
