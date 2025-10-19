@@ -41,6 +41,7 @@ import StickyFab from "../components/StickyFab";
 import { t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
 import { useMobileViewport } from "@/lib/useMobileViewport";
+import { saveMessages, loadMessages, truncateMessages } from "@/lib/chatPersistence";
 
 // Lokale Chat-Persistenz (Laden/Speichern der Nachrichten)
 
@@ -768,24 +769,41 @@ const tMode = (raw: string) => {
 
 
 // UI-zentrale Routine: eventLabel → READY
-const runMFlow = useCallback(
-  async (evt: MEvent, labelOverride?: string) => {
-    // 1) Event-Label zeigen (falls override, sonst Standardlabel)
-    setFrameText(labelOverride ?? getLabel(evt));
-    try { setLoading(true); } catch {}
+const runMFlow = useCallback(async (evt: MEvent, labelOverride?: string) => {
+  // Prefix nach Browsersprache
+  const LOAD_PREFIX: Record<string, string> = { en: "Load", de: "Lade", fr: "Charger", es: "Cargar", it: "Carica" };
+  const prefix = LOAD_PREFIX[locale] ?? LOAD_PREFIX.en;
 
-    // 2) kurz stehen lassen (Frame 1)
-    await new Promise((r) => setTimeout(r, 900));
+  const baseLabel = (() => {
+    // Fallbacks für reine Events
+    if (!labelOverride) {
+      if (evt === "builder")      return getLabel("builder");      // z. B. „Bauen“
+      if (evt === "onboarding")   return getLabel("onboarding");
+      if (evt === "mode")         return getLabel("mode");
+      if (evt === "expert")       return getLabel("expert");
+    }
+    return labelOverride!.trim();
+  })();
 
-    // 3) Label ausblenden, M denkt noch kurz
-    setFrameText(null);
-    await new Promise((r) => setTimeout(r, 700));
+  // „Load …“ bzw. Sonderfall „set default“
+  const frame = (evt === "mode" && /^default$/i.test(baseLabel))
+    ? (locale === "de" ? "Setze Default" : "Set default")
+    : `${prefix} ${baseLabel}`;
 
-    // 4) READY-Phase (LogoM kümmert sich, wenn loading -> false)
-    try { setLoading(false); } catch {}
-  },
-  [getLabel, setLoading]
-);
+  // 1) Frame 1 (Text) + Denken starten
+  setFrameText(frame);
+  try { setLoading(true); } catch {}
+
+  // 2) Frame sichtbar halten
+  await new Promise(r => setTimeout(r, 900));
+
+  // 3) Ausblenden Frame 1, M denkt noch
+  setFrameText(null);
+  await new Promise(r => setTimeout(r, 700));
+
+  // 4) READY (LogoM übernimmt die Ready-Phase, wenn loading=false)
+  try { setLoading(false); } catch {}
+}, [locale, setLoading]);
 
 
 /* -----------------------------------------------------------------------
@@ -856,11 +874,58 @@ useEffect(() => {
   document.addEventListener("click", onGlobalClick);
   return () => document.removeEventListener("click", onGlobalClick);
 }, [runMFlow, locale]);
+  // Globale Click-Delegation: jedes Element mit data-m-event triggert runMFlow
+  useEffect(() => {
+    function onGlobalClick(e: MouseEvent) {
+      const el = (e.target as HTMLElement)?.closest?.("[data-m-event]") as HTMLElement | null;
+      if (!el) return;
+      const evt = el.getAttribute("data-m-event") as MEvent | null;
+      if (!evt) return;
+      runMFlow(evt);
+    }
+    document.addEventListener("click", onGlobalClick);
+    return () => document.removeEventListener("click", onGlobalClick);
+  }, [runMFlow]);
+
+  // ▼ Auswahl-Delegation (Dropdowns/Listboxen/Comboboxen → Label an runMFlow)
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const onChange = (e: Event) => {
+      const el = e.target as HTMLElement | null;
+      if (!el) return;
+
+      // Nur echte Auswahlen mit change-Event
+      if (!el.matches("select,[role='listbox'],[role='combobox']")) return;
+
+      const host = (el.closest("[data-m-event]") as HTMLElement) || (el as any);
+      const evt = host.getAttribute("data-m-event") as MEvent | null;
+      if (!evt) return;
+
+      let label = "";
+      if ((el as HTMLSelectElement).selectedOptions?.length) {
+        label = (el as HTMLSelectElement).selectedOptions[0].textContent?.trim() || "";
+      } else {
+        label = host.getAttribute("data-m-label") || host.textContent?.trim() || "";
+      }
+      runMFlow(evt, label || undefined);
+    };
+
+    document.addEventListener("change", onChange);
+    return () => document.removeEventListener("change", onChange);
+  }, [runMFlow]);
+
+  // Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof document === "undefined") return;
+    // … (dein Auto-Tagging Code folgt hier)
+  }, []);
 
 
 // Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
 useEffect(() => {
-  if (typeof document === "undefined") return;
+  // SSR-Schutz
+  if (typeof window === "undefined" || typeof document === "undefined") return;
 
   const MAP: Record<string, MEvent> = {
     "jetzt bauen": "builder",
@@ -875,58 +940,69 @@ useEffect(() => {
 
   const norm = (s: string) => (s || "").trim().toLowerCase();
 
-  // nach initialem Paint + Fonts, um SSR/CSR-Mismatch zu vermeiden
-const id = window.requestAnimationFrame(() => {
-  try {
-    const candidates = Array.from(
-      document.querySelectorAll<HTMLElement>('button, a, [role="button"], [data-action]')
-    );
-
-    for (const el of candidates) {
-      try {
-        if (el.hasAttribute("data-m-event")) continue;
-
-        const txt = norm(
-          el.textContent ||
+  // Helper: für mode/expert sichtbaren Namen als data-m-label setzen
+  const ensureLabel = (el: HTMLElement) => {
+    const evtType = el.getAttribute("data-m-event");
+    if ((evtType === "mode" || evtType === "expert") && !el.hasAttribute("data-m-label")) {
+      const raw =
+        (el.textContent ||
           el.getAttribute("aria-label") ||
           el.getAttribute("title") ||
-          ""
-        );
-        if (!txt) continue;
-
-        // exakter Treffer
-        if (MAP[txt]) {
-          el.setAttribute("data-m-event", MAP[txt]);
-          // bei mode/expert zusätzlich sichtbaren Namen als data-m-label setzen (falls noch nicht vorhanden)
-          const evtType = el.getAttribute("data-m-event");
-          if ((evtType === "mode" || evtType === "expert") && !el.hasAttribute("data-m-label")) {
-            const raw = (el.textContent || el.getAttribute("aria-label") || el.getAttribute("title") || "").trim();
-            if (raw) el.setAttribute("data-m-label", raw);
-          }
-          continue;
-        }
-
-        // Teiltreffer (z. B. "jetzt bauen!")
-        const hit = Object.keys(MAP).find((key) => txt.includes(key));
-        if (hit) {
-          el.setAttribute("data-m-event", MAP[hit]!);
-          const evtType = el.getAttribute("data-m-event");
-          if ((evtType === "mode" || evtType === "expert") && !el.hasAttribute("data-m-label")) {
-            const raw = (el.textContent || el.getAttribute("aria-label") || el.getAttribute("title") || "").trim();
-            if (raw) el.setAttribute("data-m-label", raw);
-          }
-        }
-      } catch {
-        // einen einzelnen Problem-Knoten ignorieren
-      }
+          "")!.trim();
+      if (raw) el.setAttribute("data-m-label", raw);
     }
-  } catch {
-    // niemals die App crashen lassen
-  }
-});
+  };
 
-return () => window.cancelAnimationFrame(id);
+  // nach initialem Paint (vermeidet SSR/CSR-Mismatch)
+  let id = 0;
+  id = window.requestAnimationFrame(() => {
+    try {
+      const candidates = Array.from(
+        document.querySelectorAll<HTMLElement>('button, a, [role="button"], [data-action]')
+      );
+
+      for (const el of candidates) {
+        try {
+          if (el.hasAttribute("data-m-event")) {
+            ensureLabel(el);
+            continue;
+          }
+
+          const txt = norm(
+            el.textContent ||
+              el.getAttribute("aria-label") ||
+              el.getAttribute("title") ||
+              ""
+          );
+          if (!txt) continue;
+
+          // exakter Treffer
+          if (MAP[txt]) {
+            el.setAttribute("data-m-event", String(MAP[txt]));
+            ensureLabel(el);
+            continue;
+          }
+
+          // Teiltreffer (z. B. "jetzt bauen!")
+          const hit = Object.keys(MAP).find((key) => txt.includes(key));
+          if (hit) {
+            el.setAttribute("data-m-event", String(MAP[hit as keyof typeof MAP]));
+            ensureLabel(el);
+          }
+        } catch {
+          // einzelnen Problem-Knoten ignorieren
+        }
+      }
+    } catch {
+      // niemals die App crashen lassen
+    }
+  });
+
+  return () => {
+    if (id) window.cancelAnimationFrame(id);
+  };
 }, []);
+
 
 
 // ===============================================================
