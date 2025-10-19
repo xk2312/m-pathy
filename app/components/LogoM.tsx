@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { MVariant } from "@/config/mLogoConfig";
 
-type Phase = "idle" | "thinking" | "ready";
+type Phase = "idle" | "thinking" | "ready" | "reveal";
 
 type Props = {
   size?: number;          // px – wird im Theater skaliert, 160 ist fein
@@ -20,20 +20,30 @@ export default function LogoM({
 
   // Phase-Automat (ready = kurzer, beruhigender Abschluss nach Denken)
   const prevActive = useRef(active);
-  const [phase, setPhase] = useState<Phase>(active ? "thinking" : "idle");
+      const [phase, setPhase] = useState<Phase>(active ? "thinking" : "idle");
 
   useEffect(() => {
-    if (active) {
-      setPhase("thinking");
-    } else if (prevActive.current && !active) {
-      setPhase("ready");
-      const t = setTimeout(() => setPhase("idle"), 1100); // sanfte Rückkehr
-      return () => clearTimeout(t);
-    } else {
-      setPhase("idle");
-    }
+  // Denken startet
+  if (active) {
+    setPhase("thinking");
     prevActive.current = active;
-  }, [active]);
+    return;
+  }
+
+  // Wechsel von thinking -> ready -> reveal -> idle
+  if (prevActive.current && !active) {
+    setPhase("ready");                     // Ready SOLO
+    const t1 = setTimeout(() => setPhase("reveal"), 2000);  // 2s Faraday/Ready
+    const t2 = setTimeout(() => setPhase("idle"),   2000 + 600); // 600ms SpinIn
+    prevActive.current = active;
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }
+
+  // sonst: idle
+  setPhase("idle");
+  prevActive.current = active;
+}, [active]);
+
 
   // Variantenset – alles ruhig, keine „Zitteraal“-Energie
   const cfg = useMemo(() => {
@@ -65,6 +75,7 @@ export default function LogoM({
   const isIdle = phase === "idle";
   const isThinking = phase === "thinking";
   const isReady = phase === "ready";
+  const isReveal = phase === "reveal";
 
   return (
     <div
@@ -149,12 +160,6 @@ export default function LogoM({
               100% { opacity: .0;  filter: drop-shadow(0 0 0px rgba(96,230,255,.00)); }
             }
 
-            /* Kohärenz-Faden – einmaliger Sweep pro 4.5s */
-            @keyframes mCoherence {
-              from { stroke-dashoffset: 0; }
-              to   { stroke-dashoffset: -240; }
-            }
-
             /* Still-Frame-Siegel – 100ms Peak direkt nach SpinIn */
             @keyframes mSealSnap {
               0%   { filter: drop-shadow(0 0 0px rgba(255,255,255,0)); }
@@ -170,9 +175,9 @@ export default function LogoM({
             style={{
               transformOrigin: "72px 72px",
               animation: isThinking ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite` : "none",
-              opacity: isThinking ? 0.5 : (isReady ? 0.18 : 0),
-              transform: isThinking ? "scale(1.06)" : (isReady ? "scale(1.02)" : "scale(0.98)"),
-              transition: "opacity 420ms ease, transform 420ms ease",
+              opacity: isThinking ? 0.7 : (isReady ? 0 : 0),
+              transform: isThinking ? "scale(1.06)" : "scale(0.98)",
+              transition: "opacity 480ms ease, transform 480ms ease",
             }}
           >
 
@@ -189,12 +194,15 @@ export default function LogoM({
             style={{
               transformOrigin: "72px 72px",
               animation: isIdle
-                ? "mIdlePulse 1800ms ease-in-out infinite alternate"
-                : isThinking
-                ? "mSpinOut 420ms ease forwards"
-                : isReady
-                ? "mSpinIn 520ms ease forwards, mSealSnap 100ms ease 520ms forwards"
-                : "none",
+              ? "mIdlePulse 1800ms ease-in-out infinite alternate"
+              : isThinking
+              ? "mSpinOut 460ms ease forwards"
+              : isReady
+              ? "none"                                // Ready läuft solo!
+              : isReveal
+              ? "mSpinIn 560ms ease forwards, mSealSnap 100ms ease 560ms forwards"
+              : "none",
+
             }}
           >
 
@@ -204,44 +212,7 @@ export default function LogoM({
           <path className="m-stroke" d="M24 34l48 58 48-58" />
         </g>
 
-              {/* Kohärenz-Faden – nur Idle/Ready, NICHT im Thinking */}
-              {(isIdle || isReady) && (
-                <g className="m-glow" aria-hidden="true" style={{ pointerEvents: "none" }}>
-                  <path
-                    d="M24 116V34"
-                    fill="none"
-                    stroke="#9FF9FF"
-                    strokeWidth="4"
-                    strokeOpacity="0.65"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeDasharray="24 220"
-                    style={{ animation: "mCoherence 4500ms linear infinite" }}
-                  />
-                  <path
-                    d="M120 116V34"
-                    fill="none"
-                    stroke="#9FF9FF"
-                    strokeWidth="4"
-                    strokeOpacity="0.55"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeDasharray="24 220"
-                    style={{ animation: "mCoherence 4500ms linear infinite" }}
-                  />
-                  <path
-                    d="M24 34l48 58 48-58"
-                    fill="none"
-                    stroke="#E8FEFF"
-                    strokeWidth="4"
-                    strokeOpacity="0.75"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeDasharray="28 260"
-                    style={{ animation: "mCoherence 4800ms linear infinite" }}
-                  />
-                </g>
-              )}
+            
               {/* Faraday/E-Halo – 2s nach Antwort, dezent */}
               {isReady && (
                 <g aria-hidden="true" style={{ animation: "mFaraday 2000ms ease-out forwards" }}>

@@ -8,7 +8,7 @@ type Props = { children: React.ReactNode };
 export default function MTheater({ children }: Props) {
   // mobile-first, dann per media query leicht größer
   return (
-    <div
+   <div
   aria-label="M Theater"
   style={{
     width: M_THEATER.mobile.width,
@@ -17,9 +17,13 @@ export default function MTheater({ children }: Props) {
     display: "grid",
     placeItems: "center",
     overflow: "hidden",
-    padding: "30px 0",         // ↑↑ M: 30px top/bottom
+    padding: "30px 0",        // ↑↑ M: 30px top/bottom
+    position: "relative",
+    transform: "scale(0.7)",  // gesamte Bühne auf 70 %
+    transformOrigin: "center", // zentrierte Skalierung
   }}
 >
+
 
       <style jsx>{`
         @media (min-width: 768px) {
