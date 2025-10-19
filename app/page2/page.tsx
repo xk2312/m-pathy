@@ -30,7 +30,9 @@ import React, {
 } from "react";
 import Image from "next/image";
 
-import LogoM from "../components/LogoM";
+import MTheater from "@/components/MTheater";
+import { M_CURRENT_VARIANT } from "@/config/mLogoConfig";
+import LogoM from "@/components/LogoM";
 import MessageInput from "../components/MessageInput";
 import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
@@ -1080,8 +1082,10 @@ return (
     }}
   >
     {/* ▼ Logo auf 60 %: 120→72 (mobile), 160→96 (desktop) */}
-    <LogoM size={isMobile ? 72 : 96} active={loading} variant="auto" intensity="strong" />
-  </div>
+    <MTheater>
+      <LogoM size={isMobile ? 160 : 180} active={loading} variant={M_CURRENT_VARIANT} />
+    </MTheater>
+      </div>
 </header>
 
     {/* === BÜHNE ====================================================== */}

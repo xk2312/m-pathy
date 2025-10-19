@@ -16,14 +16,16 @@
 
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@/app/*": ["./app/*"],
-      "@/components/*": ["./app/components/*", "./components/*"],   // ← erweitert
-      "@/modules/*": ["./app/modules/*"],
-      "@/lib/*": ["./lib/*"],
-      "@/styles/*": ["./styles/*"],
-      "@/public/*": ["./public/*"]
-    },
+    "@/*": ["./*"],
+    "@/app/*": ["./app/*"],
+    "@/components/*": ["./app/components/*", "./components/*"],
+    "@/modules/*": ["./app/modules/*"],
+    "@/lib/*": ["./lib/*"],
+    "@/styles/*": ["./styles/*"],
+    "@/public/*": ["./public/*"],
+    "@/config/*": ["./app/config/*", "./config/*"]   // ← NEU
+  },
+
 
     "types": ["node", "react", "react-dom"],
     "incremental": true,
