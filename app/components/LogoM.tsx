@@ -159,7 +159,7 @@ export default function LogoM({
           `}</style>
         </defs>
 
-        {/* === G_SPIRAL — Golden Helix (Aurea) =================================== */}
+        {/* === G_SPIRAL — Starlight Filament ==================================== */}
 <g
   id="G_SPIRAL"
   className="m-glow"
@@ -167,35 +167,49 @@ export default function LogoM({
   style={{
     transformOrigin: "72px 72px",
     animation: isThinking
-      ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite, mSpiralPulse 2.8s ease-in-out infinite`
+      ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite`
       : "none",
-    transform: isThinking ? "scale(1.06)" : "scale(0.98)",
+    transform: isThinking ? "scale(1.05)" : "scale(0.98)",
     transition: "transform 480ms ease",
     pointerEvents: "none",
   }}
 >
+  <defs>
+    <linearGradient id="filamentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stopColor="#60E6FF" stopOpacity="0" />
+      <stop offset="50%" stopColor="#60E6FF" stopOpacity="0.9" />
+      <stop offset="100%" stopColor="#60E6FF" stopOpacity="0" />
+    </linearGradient>
+  </defs>
+
   <path
     d="
       M72,72
       m0,-56
       a56,56 0 1,1 0.001,112
-      a34,34 0 1,0 0,-68
-      a21,21 0 1,1 0,42
-      a13,13 0 1,0 0,-26
     "
     fill="none"
-    stroke={stroke}
-    strokeWidth="3.5"
-    strokeOpacity="0.45"
+    stroke="url(#filamentGradient)"
+    strokeWidth="4"
     strokeLinecap="round"
-    strokeLinejoin="round"
+    strokeDasharray="10 220"
+    strokeDashoffset={isThinking ? "0" : "230"}
     style={{
-      opacity: isThinking ? 0.85 : 0,
-      transition: "opacity 400ms ease",
-      filter: "drop-shadow(0 0 10px rgba(96,230,255,0.45))",
+      opacity: isThinking ? 0.9 : 0,
+      transition: "opacity 400ms ease, stroke-dashoffset 2s linear",
+      animation: isThinking
+        ? "dashMove 2.2s linear infinite"
+        : "none",
     }}
   />
+  <style>{`
+    @keyframes dashMove {
+      from { stroke-dashoffset: 230; }
+      to   { stroke-dashoffset: 0; }
+    }
+  `}</style>
 </g>
+
 
 
         {/* === G_M (Parent bleibt sichtbar; Kinder regeln Sichtbarkeit) ======= */}
