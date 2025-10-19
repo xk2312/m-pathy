@@ -49,6 +49,52 @@ import { useMobileViewport } from "@/lib/useMobileViewport";
 type ColorTokens = { bg0?: string; bg1?: string; text?: string };
 type ThemeTokens = { color?: ColorTokens; [k: string]: any };
 
+// Gibt z. B. "de", "fr", "es", "en" zurück
+function getBrowserLang(): string {
+  if (typeof navigator === "undefined") return "en";
+  const lang = navigator.language || (navigator as any).userLanguage || "en";
+  return lang.split("-")[0].toLowerCase(); // "de-DE" -> "de"
+}
+/* =======================================================================
+   [ANCHOR:I18N] — Sprachlabels für Button-Events
+   ======================================================================= */
+
+// Typdefinition für alle Events, die M ansteuern kann
+type MEvent = "builder" | "onboarding" | "expert" | "mode";
+
+// Übersetzungen pro Sprache
+const LABELS: Record<string, Record<MEvent, string>> = {
+  en: {
+    builder: "Builder",
+    onboarding: "Onboarding",
+    expert: "Expert",
+    mode: "Mode",
+  },
+  de: {
+    builder: "Bauen",
+    onboarding: "Onboarding",
+    expert: "Experte",
+    mode: "Modus",
+  },
+  fr: {
+    builder: "Créer",
+    onboarding: "Démarrage",
+    expert: "Expert",
+    mode: "Mode",
+  },
+  es: {
+    builder: "Construir",
+    onboarding: "Inicio",
+    expert: "Experto",
+    mode: "Modo",
+  },
+  it: {
+    builder: "Costruire",
+    onboarding: "Avvio",
+    expert: "Esperto",
+    mode: "Modalità",
+  },
+};
 
 /* =======================================================================
    [ANCHOR:CONFIG] — Design Tokens, Themes, Personas, System Prompt
@@ -658,9 +704,98 @@ const [input, setInput] = useState("");
 const [loading, setLoading] = useState(false);
 const [stickToBottom, setStickToBottom] = useState(true);
 const [mode, setMode] = useState<string>("DEFAULT");
+
+// ── M-Flow Overlay (1. Frame: eventLabel)
+type MEvent = "builder" | "onboarding" | "expert" | "mode";
+const [frameText, setFrameText] = useState<string | null>(null);
+
+// Browser-Sprache -> "de" | "en" | "fr" | ...
+const locale = getBrowserLang();
+
+// Labels (du hast LABELS am [ANCHOR:I18N], wir nutzen es hier nur)
+const getLabel = (evt: MEvent) =>
+  (LABELS[locale] && LABELS[locale][evt]) || LABELS.en[evt];
+
+// UI-zentrale Routine: eventLabel → READY
+const runMFlow = useCallback(async (evt: MEvent) => {
+  // 1) Event-Label zeigen + M/Spirale starten
+  setFrameText(getLabel(evt));
+  try { setLoading(true); } catch {}
+
+  // 2) kurz stehen lassen (sichtbarer Frame 1)
+  await new Promise((r) => setTimeout(r, 900));
+
+  // 3) Event-Label ausblenden, M denkt noch kurz
+  setFrameText(null);
+  await new Promise((r) => setTimeout(r, 700));
+
+  // 4) READY-Phase (LogoM zeigt sie selbst, wenn loading -> false wechselt)
+  try { setLoading(false); } catch {}
+}, [locale, setLoading]);
+
+/* =======================================================================
+   Delegation + Auto-Tagging (Top-Level in Page2)
+   ======================================================================= */
+
+// Globale Click-Delegation: jedes Element mit data-m-event triggert runMFlow
+useEffect(() => {
+  function onGlobalClick(e: MouseEvent) {
+    const el = (e.target as HTMLElement)?.closest?.("[data-m-event]") as HTMLElement | null;
+    if (!el) return;
+    const evt = el.getAttribute("data-m-event") as MEvent | null;
+    if (!evt) return;
+    // nur UI-Flow starten; bestehende Button-Logik bleibt unberührt
+    runMFlow(evt);
+  }
+  document.addEventListener("click", onGlobalClick);
+  return () => document.removeEventListener("click", onGlobalClick);
+}, [runMFlow]);
+
+// Auto-Tagging: markiere gängige Buttons/Links mit data-m-event (ohne deren Code zu ändern)
+useEffect(() => {
+  const MAP: Record<string, MEvent> = {
+    "jetzt bauen": "builder",
+    "builder": "builder",
+
+    "onboarding": "onboarding",
+    "start onboarding": "onboarding",
+
+    "expert": "expert",
+    "experte": "expert",
+
+    "mode": "mode",
+    "modus": "mode",
+  };
+
+  const norm = (s: string) => s.trim().toLowerCase();
+
+  const candidates = Array.from(
+    document.querySelectorAll<HTMLElement>("button, a, [role='button'], [data-action']")
+  );
+
+  for (const el of candidates) {
+    if (el.hasAttribute("data-m-event")) continue;
+    const txt = norm(
+      el.textContent ||
+      el.getAttribute("aria-label") ||
+      el.getAttribute("title") ||
+      ""
+    );
+    if (!txt) continue;
+
+    if (MAP[txt]) {
+      el.setAttribute("data-m-event", MAP[txt]);
+      continue;
+    }
+    const hit = (Object.keys(MAP) as string[]).find((key) => txt.includes(key));
+    if (hit) el.setAttribute("data-m-event", MAP[hit as keyof typeof MAP]!);
+  }
+}, []);
+
 // ▼▼ NEU: Footer-Status (nur Anzeige)
 type FooterStatus = { modeLabel: string; expertLabel: string };
 const [status, setStatus] = useState<FooterStatus>({ modeLabel: "—", expertLabel: "—" });
+
 // Golden Prompt — micro-motion registers
 const breathRef = useRef<number>(0);            // breath phase accumulator
 const lastMotionRef = useRef<number[]>([]);     // flow memory (last intensities)
@@ -714,7 +849,6 @@ useEffect(() => {
     }
   };
 }, []);
-
 
 // Persist
 const persistMessages = saveMessages;
@@ -1083,8 +1217,31 @@ return (
   >
     {/* ▼ Logo auf 60 %: 120→72 (mobile), 160→96 (desktop) */}
     <MTheater>
-      <LogoM size={isMobile ? 160 : 180} active={loading} variant={M_CURRENT_VARIANT} />
-    </MTheater>
+  <LogoM size={160} active={loading} variant={M_CURRENT_VARIANT} />
+
+  {frameText && (
+    <div
+      aria-live="polite"
+      style={{
+        position: "absolute",
+        inset: 0,
+        display: "grid",
+        placeItems: "center",
+        pointerEvents: "none",
+        fontWeight: 700,
+        letterSpacing: "0.6px",
+        fontSize: 18,
+        color: "#60E6FF",
+        textShadow: "0 0 12px rgba(96,230,255,.45)",
+        opacity: 0.95,
+        transition: "opacity 220ms ease",
+      }}
+    >
+      {frameText}
+    </div>
+  )}
+</MTheater>
+
       </div>
 </header>
 
