@@ -165,8 +165,14 @@ export default function LogoM({
               0%   { filter: drop-shadow(0 0 0px rgba(255,255,255,0)); }
               100% { filter: drop-shadow(0 0 14px rgba(255,255,255,.45)); }
             }
+            /* Ready-Text – sanftes Ein-/Ausblenden */
+            @keyframes mReadyText {
+              0%   { opacity: 0; transform: translateY(4px); }
+              35%  { opacity: .9; transform: translateY(0); }
+              100% { opacity: 0; transform: translateY(-2px); }
+            }
 
-          `}</style>
+                      `}</style>
         </defs>
 
         {/* Spiral-Layer (nur beim Denken sichtbar, weicher Übergang) */}
@@ -192,18 +198,19 @@ export default function LogoM({
                 <g
             className="m-glow"
             style={{
-              transformOrigin: "72px 72px",
-              animation: isIdle
-              ? "mIdlePulse 1800ms ease-in-out infinite alternate"
-              : isThinking
-              ? "mSpinOut 460ms ease forwards"
-              : isReady
-              ? "none"                                // Ready läuft solo!
-              : isReveal
-              ? "mSpinIn 560ms ease forwards, mSealSnap 100ms ease 560ms forwards"
-              : "none",
+  transformOrigin: "72px 72px",
+  animation: isIdle
+    ? "mIdlePulse 1800ms ease-in-out infinite alternate"
+    : isThinking
+    ? "mSpinOut 460ms ease forwards"
+    : isReady
+    ? "none" // Ready läuft solo
+    : isReveal
+    ? "mSpinIn 560ms ease forwards, mSealSnap 100ms ease 560ms forwards"
+    : "none",
+  opacity: isThinking ? 0 : (isReady ? 0 : 1), // HARTE Sichtbarkeit
+}}
 
-            }}
           >
 
 

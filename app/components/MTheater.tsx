@@ -11,17 +11,18 @@ export default function MTheater({ children }: Props) {
    <div
   aria-label="M Theater"
   style={{
-    width: M_THEATER.mobile.width,
-    height: M_THEATER.mobile.height,
-    margin: "0 auto",
-    display: "grid",
-    placeItems: "center",
-    overflow: "hidden",
-    padding: "30px 0",        // ↑↑ M: 30px top/bottom
-    position: "relative",
-    transform: "scale(0.7)",  // gesamte Bühne auf 70 %
-    transformOrigin: "center", // zentrierte Skalierung
-  }}
+  width: M_THEATER.mobile.width,
+  height: M_THEATER.mobile.height,
+  margin: "0 auto",
+  display: "grid",
+  placeItems: "center",
+  overflow: "hidden",
+  padding: "30px 0",
+  position: "relative",
+  transform: "scale(0.7)",
+  transformOrigin: "center",
+}}
+
 >
 
 
