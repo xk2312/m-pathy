@@ -112,6 +112,13 @@ export default function LogoM({
               to   { transform: rotate(360deg); }
             }
 
+            /* sanftes Halten beim Denken – minimale Bewegung */
+            @keyframes mThinkingHold {
+              0%   { transform: scale(1.00) rotate(0deg);   }
+              50%  { transform: scale(1.015) rotate(2deg);  }
+              100% { transform: scale(1.00) rotate(0deg);   }
+            }
+
             /* Ready-Moment: kurzes, weiches Aufleuchten */
             @keyframes mReadyGlow {
               0%   { opacity: 0; transform: scale(0.98); }
@@ -128,27 +135,32 @@ export default function LogoM({
           `}</style>
         </defs>
 
-        {/* Spiral-Layer (nur beim Denken sichtbar) */}
+        {/* Spiral-Layer (nur beim Denken sichtbar, weicher Übergang) */}
         <g
           aria-hidden="true"
           style={{
             transformOrigin: "72px 72px",
             animation: isThinking ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite` : "none",
-            opacity: isThinking ? 0.35 : 0,
-            transition: "opacity .4s ease",
+            opacity: isThinking ? 0.5 : 0,
+            transform: isThinking ? "scale(1)" : "scale(0.96)",
+            transition: "opacity 1.2s ease, transform 1.2s ease",
           }}
         >
-          <circle cx="72" cy="72" r="56" fill="none" stroke={stroke} strokeOpacity="0.08" strokeWidth="2" strokeDasharray="6 10" />
-          <circle cx="72" cy="72" r="40" fill="none" stroke={stroke} strokeOpacity="0.10" strokeWidth="2" strokeDasharray="4 8" />
-          <circle cx="72" cy="72" r="24" fill="none" stroke={stroke} strokeOpacity="0.12" strokeWidth="2" strokeDasharray="2 6" />
+          <circle cx="72" cy="72" r="56" fill="none" stroke={stroke} strokeOpacity="0.16" strokeWidth="3" strokeDasharray="6 10" />
+          <circle cx="72" cy="72" r="40" fill="none" stroke={stroke} strokeOpacity="0.18" strokeWidth="2.5" strokeDasharray="4 8" />
+          <circle cx="72" cy="72" r="24" fill="none" stroke={stroke} strokeOpacity="0.20" strokeWidth="2.5" strokeDasharray="2 6" />
         </g>
 
-        {/* M-Form – atmet nur im Idle, bleibt ruhig beim Denken */}
+        {/* M-Form – atmet im Idle, bewegt sich ruhig beim Denken */}
         <g
           className="m-glow"
           style={{
             transformOrigin: "72px 72px",
-            animation: isIdle ? "mIdlePulse 1800ms ease-in-out infinite alternate" : "none",
+            animation: isIdle
+              ? "mIdlePulse 1800ms ease-in-out infinite alternate"
+              : isThinking
+              ? "mThinkingHold 2000ms ease-in-out infinite alternate"
+              : "none",
           }}
         >
           <path className="m-stroke" d="M24 116V34" />
@@ -169,7 +181,7 @@ export default function LogoM({
           <circle cx="72" cy="72" r="68" fill="none" stroke={stroke} strokeOpacity="0.12" strokeWidth="2" />
         </g>
 
-        {/* Ready-Text (sprachneutral – UI setzt Text daneben, hier minimalistisch) */}
+        {/* Ready-Text */}
         {isReady && (
           <g style={{ animation: "mReadyText 900ms ease-out forwards" }}>
             <text

@@ -17,6 +17,8 @@ export default function MTheater({ children }: Props) {
         display: "grid",
         placeItems: "center",
         overflow: "hidden",
+        padding: "30px 0",        // ← NEU: oben & unten 30 px
+
       }}
     >
       <style jsx>{`
