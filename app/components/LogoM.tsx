@@ -159,66 +159,65 @@ export default function LogoM({
           `}</style>
         </defs>
 
-       {/* === G_SPIRAL — Starlight Filament (true spiral + dash trail) ======= */}
+       {/* === G_SPIRAL — Golden Helix (CW-Rotation, inward flow) ============== */}
 <g
   id="G_SPIRAL"
   className="m-glow"
   aria-hidden="true"
   style={{
     transformOrigin: "72px 72px",
-    animation: isThinking ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite` : "none",
+    animation: isThinking
+      ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite, mSpiralPulse 2.6s ease-in-out infinite`
+      : "none",
     transform: isThinking ? "scale(1.05)" : "scale(0.98)",
     transition: "transform 480ms ease",
     pointerEvents: "none",
   }}
 >
-  <defs>
-    <linearGradient id="filamentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%"   stopColor="#60E6FF" stopOpacity="0" />
-      <stop offset="50%"  stopColor="#60E6FF" stopOpacity="0.95" />
-      <stop offset="100%" stopColor="#60E6FF" stopOpacity="0" />
-    </linearGradient>
-  </defs>
-
   <path
     d={
       (() => {
         const cx = 72, cy = 72;
-        const a = 3.2, b = 0.20, rMax = 52, turns = 3.2, steps = 240;
-        let d = "", started = false;
+        const a = 3.2;      // Startfaktor
+        const b = 0.20;     // "Tightness"
+        const rMax = 52;    // Sicherheitsrand (kein Clipping)
+        const turns = 3.2;  // Umdrehungen
+        const steps = 240;
+
+        // Punkte erzeugen (rechte-Hand-Logspirale) …
+        const pts: string[] = [];
         for (let i = 0; i <= steps; i++) {
           const t = (i / steps) * (Math.PI * 2 * turns);
           const r = a * Math.exp(b * t);
           if (r > rMax) break;
-          const x = cx + r * Math.cos(t);
-          const y = cy + r * Math.sin(t);
-          d += (started ? ` L ${x.toFixed(2)} ${y.toFixed(2)}` : `M ${x.toFixed(2)} ${y.toFixed(2)}`);
-          started = true;
+          // … und HÄNDIGKEIT spiegeln, damit CW-Drehung "nach innen" wirkt:
+          const angle = -t; // ← Spiegelung der Händigkeit
+          const x = cx + r * Math.cos(angle);
+          const y = cy + r * Math.sin(angle);
+          pts.push(`${x.toFixed(2)} ${y.toFixed(2)}`);
         }
-        return d;
+
+        // Für "inward flow" zusätzlich die Pfadrichtung umkehren:
+        pts.reverse();
+
+        // Pfadstring bauen
+        return pts.length
+          ? `M ${pts[0]} L ${pts.slice(1).join(" L ")}`
+          : "";
       })()
     }
     fill="none"
-    stroke="url(#filamentGradient)"
-    strokeWidth={4}
+    stroke={stroke}
+    strokeWidth={3.5}
+    strokeOpacity={0.50}
     strokeLinecap="round"
-    strokeLinejoin="round"
     vectorEffect="non-scaling-stroke"
-    strokeDasharray="28 420"
-    strokeDashoffset={isThinking ? 0 : 448}
     style={{
-      opacity: isThinking ? 0.95 : 0,
-      transition: "opacity 320ms ease, stroke-dashoffset 2.2s linear",
-      animation: isThinking ? "dashMove 2.2s linear infinite" : "none",
+      opacity: isThinking ? 0.9 : 0,
+      transition: "opacity 380ms ease",
+      filter: "drop-shadow(0 0 8px rgba(96,230,255,0.35))",
     }}
   />
-
-  <style>{`
-    @keyframes dashMove {
-      from { stroke-dashoffset: 448; }
-      to   { stroke-dashoffset: 0; }
-    }
-  `}</style>
 </g>
 
 
