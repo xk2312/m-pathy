@@ -42,6 +42,8 @@ import { t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
 import { useMobileViewport } from "@/lib/useMobileViewport";
 
+// Lokale Chat-Persistenz (Laden/Speichern der Nachrichten)
+
 // ⚠️ NICHT importieren: useTheme aus "next-themes" (Konflikt mit lokalem Hook)
 // import { useTheme } from "next-themes"; // ❌ bitte entfernt lassen
 
@@ -704,6 +706,27 @@ const [input, setInput] = useState("");
 const [loading, setLoading] = useState(false);
 const [stickToBottom, setStickToBottom] = useState(true);
 const [mode, setMode] = useState<string>("DEFAULT");
+// === Local chat persistence (no external import) ==========================
+const STORAGE_KEY = "mpage2_messages_v1";
+
+function truncateMessages(arr: ChatMessage[], max = 120): ChatMessage[] {
+  try { return (Array.isArray(arr) ? arr : []).slice(-max); } catch { return []; }
+}
+
+function saveMessages(arr: ChatMessage[]): void {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(truncateMessages(arr))); } catch {}
+}
+
+function loadMessages(): ChatMessage[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch { return []; }
+}
+
+// Alias für bestehende Stellen im Code:
+const persistMessages = saveMessages;
 
 // ── M-Flow Overlay (1. Frame: eventLabel)
 type MEvent = "builder" | "onboarding" | "expert" | "mode";
@@ -731,136 +754,94 @@ const runMFlow = useCallback(async (evt: MEvent) => {
 
   // 4) READY-Phase (LogoM zeigt sie selbst, wenn loading -> false wechselt)
   try { setLoading(false); } catch {}
-}, [locale, setLoading]);
+}, [locale]);
 
-/* =======================================================================
-   Delegation + Auto-Tagging (Top-Level in Page2)
-   ======================================================================= */
+/* -----------------------------------------------------------------------
+   Sehr defensive Browser-Hooks (nur Client, mit Try/Catch & harten Guards)
+   ----------------------------------------------------------------------- */
 
 // Globale Click-Delegation: jedes Element mit data-m-event triggert runMFlow
 useEffect(() => {
+  if (typeof document === "undefined") return;
+
+  const ALLOWED = new Set<MEvent>(["builder", "onboarding", "expert", "mode"]);
+
   function onGlobalClick(e: MouseEvent) {
-    const el = (e.target as HTMLElement)?.closest?.("[data-m-event]") as HTMLElement | null;
-    if (!el) return;
-    const evt = el.getAttribute("data-m-event") as MEvent | null;
-    if (!evt) return;
-    // nur UI-Flow starten; bestehende Button-Logik bleibt unberührt
-    runMFlow(evt);
+    try {
+      const target = e.target as Element | null;
+      if (!target || !("closest" in target)) return;
+      const el = (target as HTMLElement).closest?.("[data-m-event]") as HTMLElement | null;
+      if (!el) return;
+
+      const raw = el.getAttribute("data-m-event");
+      if (!raw) return;
+
+      // harte Typ-Guards
+      const evt = raw.toLowerCase() as MEvent;
+      if (!ALLOWED.has(evt)) return;
+
+      runMFlow(evt);
+    } catch (_) {
+      // niemals die App crashen lassen
+    }
   }
-  document.addEventListener("click", onGlobalClick);
+
+  document.addEventListener("click", onGlobalClick, { passive: true });
   return () => document.removeEventListener("click", onGlobalClick);
 }, [runMFlow]);
 
-// Auto-Tagging: markiere gängige Buttons/Links mit data-m-event (ohne deren Code zu ändern)
+// Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
 useEffect(() => {
+  if (typeof document === "undefined") return;
+
   const MAP: Record<string, MEvent> = {
     "jetzt bauen": "builder",
     "builder": "builder",
-
     "onboarding": "onboarding",
     "start onboarding": "onboarding",
-
     "expert": "expert",
     "experte": "expert",
-
     "mode": "mode",
     "modus": "mode",
   };
 
-  const norm = (s: string) => s.trim().toLowerCase();
+  const norm = (s: string) => (s || "").trim().toLowerCase();
 
-  const candidates = Array.from(
-    document.querySelectorAll<HTMLElement>("button, a, [role='button'], [data-action']")
-  );
+  // nach initialem Paint + Fonts, um SSR/CSR-Mismatch zu vermeiden
+  const id = window.requestAnimationFrame(() => {
+    try {
+      const candidates = Array.from(
+        document.querySelectorAll<HTMLElement>('button, a, [role="button"], [data-action]')
+      );
 
-  for (const el of candidates) {
-    if (el.hasAttribute("data-m-event")) continue;
-    const txt = norm(
-      el.textContent ||
-      el.getAttribute("aria-label") ||
-      el.getAttribute("title") ||
-      ""
-    );
-    if (!txt) continue;
+      for (const el of candidates) {
+        try {
+          if (el.hasAttribute("data-m-event")) continue;
 
-    if (MAP[txt]) {
-      el.setAttribute("data-m-event", MAP[txt]);
-      continue;
+          const txt = norm(
+            el.textContent ||
+            el.getAttribute("aria-label") ||
+            el.getAttribute("title") ||
+            ""
+          );
+          if (!txt) continue;
+
+          if (MAP[txt]) {
+            el.setAttribute("data-m-event", MAP[txt]);
+            continue;
+          }
+          const hit = Object.keys(MAP).find((key) => txt.includes(key));
+          if (hit) el.setAttribute("data-m-event", MAP[hit]!);
+        } catch {
+          // einen einzelnen Problem-Knoten ignorieren
+        }
+      }
+    } catch {
+      // niemals die App crashen lassen
     }
-    const hit = (Object.keys(MAP) as string[]).find((key) => txt.includes(key));
-    if (hit) el.setAttribute("data-m-event", MAP[hit as keyof typeof MAP]!);
-  }
-}, []);
+  });
 
-// ▼▼ NEU: Footer-Status (nur Anzeige)
-type FooterStatus = { modeLabel: string; expertLabel: string };
-const [status, setStatus] = useState<FooterStatus>({ modeLabel: "—", expertLabel: "—" });
-
-// Golden Prompt — micro-motion registers
-const breathRef = useRef<number>(0);            // breath phase accumulator
-const lastMotionRef = useRef<number[]>([]);     // flow memory (last intensities)
-const rafRef = useRef<number | null>(null);     // living continuum loop
-
-// Living Continuum Engine (perceptual continuity)
-useEffect(() => {
-  let mounted = true;
-  const tick = (t: number) => {
-    if (!mounted) return;
-
-    // 5s cycle; amplitude modulated by typing
-    const typingBias =
-      document.getElementById("gold-input")?.classList.contains("is-typing") ? 1 : 0.35;
-
-    const phase = ((t / 1000) % 5) * Math.PI * 2;
-    const amp = 0.003 * typingBias;
-    const scale = 1 + Math.sin(phase) * amp;
-
-    const dock = document.getElementById("m-input-dock");
-
-    // ❗ Niemals den Sticky-Container transformieren
-    if (dock) {
-      (dock as HTMLElement).style.transform = ""; // evtl. alte Werte neutralisieren
-
-      // ✅ Nur innere Kinder leicht „atmen“ lassen
-      const promptWrap = dock.querySelector(".gold-prompt-wrap") as HTMLElement | null;
-      const bar        = dock.querySelector(".gold-bar") as HTMLElement | null;
-
-      if (promptWrap) promptWrap.style.transform = `translateZ(0) scale(${scale})`;
-      if (bar)        bar.style.transform        = `translateZ(0) scale(${scale})`;
-    }
-
-    rafRef.current = requestAnimationFrame(tick);
-  };
-
-  rafRef.current = requestAnimationFrame(tick);
-
-  return () => {
-    mounted = false;
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
- 
-    // Cleanup: evtl. gesetzte Transforms wieder entfernen
-    const dock = document.getElementById("m-input-dock");
-    if (dock) {
-      (dock as HTMLElement).style.transform = "";
-      const promptWrap = dock.querySelector(".gold-prompt-wrap") as HTMLElement | null;
-      const bar        = dock.querySelector(".gold-bar") as HTMLElement | null;
-      if (promptWrap) promptWrap.style.transform = "";
-      if (bar)        bar.style.transform = "";
-    }
-  };
-}, []);
-
-// Persist
-const persistMessages = saveMessages;
-
-// Initiale Begrüßung / Restore
-useEffect(() => {
-  const restored = loadMessages();
-  if (Array.isArray(restored) && restored.length) {
-    setMessages(restored);
-    return;
-  }
-  setMessages([]);
+  return () => window.cancelAnimationFrame(id);
 }, []);
 
 
