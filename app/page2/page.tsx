@@ -12,16 +12,11 @@
  *  [ANCHOR:COMPONENTS]     – Header, Bubble, Conversation, InputDock
  *  [ANCHOR:BEHAVIOR]       – Chat State + sendMessage (Azure OpenAI)
  *  [ANCHOR:LAYOUT]         – Page Layout mit festen Abständen/Dock-Regeln
- *
- *  Philosophie:
- *  - Eine Datei steuert Form & Verhalten. M kann hier gezielt patchen.
- *  - Keine externen Abhängigkeiten nötig (CSS-in-TSX für dynamische Teile).
- *  - Statischer Bühnenlook (Hintergrund/Bubbles) darf zusätzlich in page2.module.css bleiben.
  */
 
 import React, {
   useEffect,
-  useLayoutEffect, // darf drin bleiben, wird hier aber nicht zwingend gebraucht
+  useLayoutEffect,
   useState,
   useRef,
   useCallback,
@@ -40,150 +35,180 @@ import MobileOverlay from "../components/MobileOverlay";
 import StickyFab from "../components/StickyFab";
 
 import { t } from "@/lib/i18n";
-import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
+import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import { useMobileViewport } from "@/lib/useMobileViewport";
 
-// Chat-Persistenz (lokale Aliasse, damit der Rest des Files stabil bleibt)
 import {
   saveMessages as chatSaveMessages,
   loadMessages as chatLoadMessages,
   truncateMessages as chatTruncateMessages,
 } from "@/lib/chatPersistence";
 
-// Lokale, sprechende Aliasse – bitte im ganzen File diese drei nutzen:
 const persist = {
   save: chatSaveMessages,
   load: chatLoadMessages,
   cut:  chatTruncateMessages,
 };
 
-
-// ——— Theme-Token-Typen (global, einmalig) ———
+// ——— Theme-Token-Typen ———
 type ColorTokens = { bg0?: string; bg1?: string; text?: string };
 type ThemeTokens = { color?: ColorTokens; [k: string]: any };
 
-// Gibt z. B. "de", "fr", "es", "en" zurück
+/* =======================================================================
+   [ANCHOR:I18N] — Sprachlabels & Tabellen
+   ======================================================================= */
+
+type MEvent = "builder" | "onboarding" | "expert" | "mode";
+
+const LABELS: Record<string, Record<MEvent, string>> = {
+  en: { builder: "Builder", onboarding: "Onboarding", expert: "Expert", mode: "Mode" },
+  de: { builder: "Bauen", onboarding: "Onboarding", expert: "Experte", mode: "Modus" },
+  fr: { builder: "Créer", onboarding: "Démarrage", expert: "Expert", mode: "Mode" },
+  es: { builder: "Construir", onboarding: "Inicio", expert: "Experto", mode: "Modo" },
+  it: { builder: "Costruire", onboarding: "Avvio", expert: "Esperto", mode: "Modalità" },
+};
+
+const LOAD_PREFIX: Record<string, string> = {
+  en: "Load", de: "Lade", fr: "Charger", es: "Cargar", it: "Carica",
+};
+
+const PLACEHOLDERS = new Set<string>([
+  "experte wählen", "experten wählen", "modus wählen", "mode wählen",
+  "choose expert", "select expert", "choose mode", "select mode",
+  "experte wählen …", "expert wählen …", "—",
+]);
+
+const MODE_LABELS: Record<string, Record<string, string>> = {
+  en: { calm:"Calm", truth:"Truth", oracle:"Oracle", balance:"Balance", power:"Power", loop:"Loop", body:"Body", ocean:"Ocean", minimal:"Minimal", default:"Default" },
+  de: { calm:"Ruhe", truth:"Wahrheit", oracle:"Orakel", balance:"Balance", power:"Kraft", loop:"Schleife", body:"Körper", ocean:"Ozean", minimal:"Minimal", default:"Default" },
+};
+
+export const UI_IDS = {
+  builderBtn: "#btn-builder",
+  onboardingBtn: "#btn-onboarding",
+  defaultBtn: "#btn-default",
+  councilBtn: "#btn-council13",
+};
+
+export const UI_GROUPS = {
+  mode:   { selector: "[data-group='mode'], select[data-m-event='mode'], [role='combobox'][data-m-event='mode']" },
+  expert: { selector: "[data-group='expert'], select[data-m-event='expert'], [role='combobox'][data-m-event='expert']" },
+};
+
+/* =======================================================================
+   [ANCHOR:UTILS] — Sprache & kleine Helfer
+   ======================================================================= */
+
 function getBrowserLang(): string {
   if (typeof navigator === "undefined") return "en";
   const lang = navigator.language || (navigator as any).userLanguage || "en";
-  return lang.split("-")[0].toLowerCase(); // "de-DE" -> "de"
+  return lang.split("-")[0].toLowerCase();
 }
-/* =======================================================================
-   [ANCHOR:I18N] — Sprachlabels für Button-Events
-   ======================================================================= */
 
-// Typdefinition für alle Events, die M ansteuern kann
-type MEvent = "builder" | "onboarding" | "expert" | "mode";
+const cap = (s: string) =>
+  String(s || "").trim().replace(/\s+/g, " ").replace(/^./, c => c.toUpperCase());
 
-// Übersetzungen pro Sprache
-const LABELS: Record<string, Record<MEvent, string>> = {
-  en: {
-    builder: "Builder",
-    onboarding: "Onboarding",
-    expert: "Expert",
-    mode: "Mode",
-  },
-  de: {
-    builder: "Bauen",
-    onboarding: "Onboarding",
-    expert: "Experte",
-    mode: "Modus",
-  },
-  fr: {
-    builder: "Créer",
-    onboarding: "Démarrage",
-    expert: "Expert",
-    mode: "Mode",
-  },
-  es: {
-    builder: "Construir",
-    onboarding: "Inicio",
-    expert: "Experto",
-    mode: "Modo",
-  },
-  it: {
-    builder: "Costruire",
-    onboarding: "Avvio",
-    expert: "Esperto",
-    mode: "Modalità",
-  },
+const slug = (s: string) =>
+  String(s || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, "-");
+
+const locale = getBrowserLang();
+
+const getStaticLabel = (evt: MEvent) =>
+  (LABELS[locale]?.[evt] ?? LABELS.en[evt]);
+
+const tMode = (raw: string) => {
+  const key = slug(raw);
+  const table = MODE_LABELS[locale] ?? MODE_LABELS.en;
+  return table[key] ?? cap(raw);
 };
+
+const loadWord = LOAD_PREFIX[locale] ?? LOAD_PREFIX.en;
+
+const isPicker = (el: Element | null) =>
+  !!el && el.matches?.("select,[role='combobox'],[role='listbox']");
+
+const isPlaceholder = (txt?: string) =>
+  !txt || PLACEHOLDERS.has(txt.trim().toLowerCase());
 
 /* =======================================================================
    [ANCHOR:CONFIG] — Design Tokens, Themes, Personas, System Prompt
    ======================================================================= */
 
-   type Tokens = {
-    radius: { sm: number; md: number; lg: number };
-    shadow: { soft: string; glowCyan: string };
-    color: {
-      bg0: string;
-      bg1: string;
-      text: string;
-      textMuted: string;
-      cyan: string;
-      cyanGlass: string;
-      cyanBorder: string;
-      slateGlass: string;
-      slateBorder: string;
-      glass: string;
-      glassBorder: string;
-    };
+type Tokens = {
+  radius: { sm: number; md: number; lg: number };
+  shadow: { soft: string; glowCyan: string };
+  color: {
+    bg0: string;
+    bg1: string;
+    text: string;
+    textMuted: string;
+    cyan: string;
+    cyanGlass: string;
+    cyanBorder: string;
+    slateGlass: string;
+    slateBorder: string;
+    glass: string;
+    glassBorder: string;
   };
-  
-  const TOKENS: Tokens = {
-    radius: { sm: 10, md: 12, lg: 16 },
-    shadow: {
-      soft: "0 14px 40px rgba(0,0,0,0.35)",
-      glowCyan: "0 0 28px rgba(34,211,238,0.12)",
-    },
-    color: {
-      bg0: "#000",
-      bg1: "#0c0f12",
-      text: "#E6F0F3",
-      textMuted: "rgba(230,240,243,0.65)",
-      cyan: "#22d3ee",
-      cyanGlass: "rgba(34,211,238,0.12)",
-      cyanBorder: "rgba(34,211,238,0.28)",
-      slateGlass: "rgba(148,163,184,0.10)",
-      slateBorder: "rgba(148,163,184,0.30)",
-      glass: "rgba(255,255,255,0.06)",
-      glassBorder: "rgba(255,255,255,0.12)",
-    },
+};
+
+const TOKENS: Tokens = {
+  radius: { sm: 10, md: 12, lg: 16 },
+  shadow: {
+    soft: "0 14px 40px rgba(0,0,0,0.35)",
+    glowCyan: "0 0 28px rgba(34,211,238,0.12)",
+  },
+  color: {
+    bg0: "#000",
+    bg1: "#0c0f12",
+    text: "#E6F0F3",
+    textMuted: "rgba(230,240,243,0.65)",
+    cyan: "#22d3ee",
+    cyanGlass: "rgba(34,211,238,0.12)",
+    cyanBorder: "rgba(34,211,238,0.28)",
+    slateGlass: "rgba(148,163,184,0.10)",
+    slateBorder: "rgba(148,163,184,0.30)",
+    glass: "rgba(255,255,255,0.06)",
+    glassBorder: "rgba(255,255,255,0.12)",
+  },
+};
+
+type Theme = {
+  name: string;
+  tokens: Tokens;
+  dock: {
+    desktop: { width: number; bottom: number; side: number };
+    mobile: { widthCalc: string; bottom: number; side: number };
   };
-  
-  type Theme = {
-    name: string;
-    tokens: Tokens;
+};
+
+const THEMES: Record<string, Theme> = {
+  m_default: {
+    name: "m_default",
+    tokens: TOKENS,
     dock: {
-      desktop: { width: number; bottom: number; side: number };
-      mobile: { widthCalc: string; bottom: number; side: number };
-    };
-  };
-  
-  const THEMES: Record<string, Theme> = {
-    m_default: {
-      name: "m_default",
-      tokens: TOKENS,
-      dock: {
-        desktop: { width: 600, bottom: 300, side: 24 },
-        mobile: { widthCalc: "calc(100% - 20px)", bottom: 50, side: 10 },
-      },
+      desktop: { width: 600, bottom: 300, side: 24 },
+      mobile: { widthCalc: "calc(100% - 20px)", bottom: 50, side: 10 },
     },
-  };
-  
-  const PERSONAS: Record<string, { theme: keyof typeof THEMES }> = {
-    default: { theme: "m_default" },
-  };
-  
-  // (optional, wenn in dieser Datei genutzt; sonst komplett entfernen)
-  const COUNCIL_COMMANDS: Record<string, string> = {
-    LUX: "INIT LUX-Anchor",
-    JURAXY: "INITIATE JURAXY-1/13",
-    DATAMASTER: "START DataMaster Session",
-    CHEMOMASTER: "START ChemoMaster 2.0 Loop",
-    SHADOWMASTER: "TRIGGER_SHADOW_ANALYSIS",
-  };  
+  },
+};
+
+const PERSONAS: Record<string, { theme: keyof typeof THEMES }> = {
+  default: { theme: "m_default" },
+};
+
+const COUNCIL_COMMANDS: Record<string, string> = {
+  LUX: "INIT LUX-Anchor",
+  JURAXY: "INITIATE JURAXY-1/13",
+  DATAMASTER: "START DataMaster Session",
+  CHEMOMASTER: "START ChemoMaster 2.0 Loop",
+  SHADOWMASTER: "TRIGGER_SHADOW_ANALYSIS",
+}; 
   
 /* =======================================================================
    [ANCHOR:HOOKS]  — Breakpoint + Theme Resolution
