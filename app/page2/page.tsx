@@ -840,196 +840,45 @@ const runMFlow = useCallback(async (evt: MEvent, labelOverride?: string) => {
 
 
 
-/* -----------------------------------------------------------------------
+/*/* -----------------------------------------------------------------------
    Sehr defensive Browser-Hooks (nur Client, mit Try/Catch & harten Guards)
    ----------------------------------------------------------------------- */
 
-// Globale Click-Delegation: jedes Element mit data-m-event triggert runMFlow (robust)
-useEffect(() => {
-  // im SSR nie anschließen
-  if (typeof document === "undefined") return;
+// ——— Helpers (lokal, ohne Re-Renders) ———
+const PLACEHOLDERS = new Set([
+  "experte wählen","experten wählen","mode wählen","modus wählen",
+  "choose expert","select expert","choose mode","select mode",
+  "expert wählen","modus wählen"
+]);
 
-  const onGlobalClick = (e: MouseEvent) => {
-    try {
-      const target = e.target as HTMLElement | null;
-      if (!target?.closest) return; // z.B. Textknoten
-      const host = target.closest<HTMLElement>("[data-m-event]");
-      if (!host) return;
+const isPicker = (el: Element | null) =>
+  !!el && el.matches?.("select,[role='combobox'],[role='listbox']");
 
-      const evt = host.getAttribute("data-m-event") as MEvent | null;
-      if (!evt) return;
+const getHost = (el: Element | null) =>
+  (el as HTMLElement | null)?.closest?.("[data-m-event]") as HTMLElement | null;
 
-      // optionales Label nutzen (für Modus/Experte)
-      const label =
-        host.getAttribute("data-m-label") ||
-        host.textContent?.trim() ||
-        undefined;
+const resolveLabel = (host: HTMLElement, target?: Element | null): string | undefined => {
+  // Priorität: data-m-label > option:checked > [aria-selected=true] > aria-label|title > Text
+  const checked = host.querySelector("option:checked") as HTMLOptionElement | null;
+  const ariaSel = host.querySelector("[aria-selected='true']") as HTMLElement | null;
 
-      // runMFlow immer erst aufrufen, wenn vorhanden
-      if (typeof runMFlow === "function") {
-        runMFlow(evt, label);
-      }
-    } catch {
-      // niemals die App crashen lassen
-    }
-  };
+  const raw =
+    host.getAttribute("data-m-label") ||
+    checked?.textContent ||
+    ariaSel?.textContent ||
+    (target as HTMLElement | null)?.textContent ||
+    host.getAttribute("aria-label") ||
+    host.getAttribute("title") ||
+    host.textContent ||
+    "";
 
-  document.addEventListener("click", onGlobalClick, { passive: true });
-  return () => document.removeEventListener("click", onGlobalClick);
-}, [runMFlow]);
-  
-// Globale Click-Delegation
-useEffect(() => {
-    function onGlobalClick(e: MouseEvent) {
-    const tgt = (e.target as HTMLElement) ?? null;
-    if (!tgt) return;
+  const txt = raw.trim();
+  if (!txt) return undefined;
+  if (PLACEHOLDERS.has(txt.toLowerCase())) return undefined; // keine Platzhalter animieren
+  return txt;
+};
 
-    // 1) Ignore dropdowns/comboboxes completely (opening shouldn't animate)
-    if (
-      tgt.matches("select,[role='listbox'],[role='combobox']") ||
-      tgt.closest("select,[role='listbox'],[role='combobox']")
-    ) return;
-
-    const host = tgt.closest("[data-m-event]") as HTMLElement | null;
-    if (!host) return;
-
-    const evt = host.getAttribute("data-m-event") as MEvent | null;
-    if (!evt) return;
-
-    // 2) MODE: compute readable label and pass it
-    if (evt === "mode") {
-      const selected =
-        host.querySelector("[aria-selected='true']")?.textContent?.trim() ||
-        host.querySelector("option:checked")?.textContent?.trim() ||
-        tgt.textContent?.trim() || "";
-      if (selected) {
-        runMFlow("mode", selected);
-        return;
-      }
-    }
-
-    // default: keep old behavior
-    runMFlow(evt);
-  }
-// Dropdown/combobox selections → pass chosen label (no placeholder)
-useEffect(() => {
-  if (typeof document === "undefined") return;
-
-  const onChange = (e: Event) => {
-    const el = e.target as HTMLElement | null;
-    if (!el) return;
-
-    if (!el.matches("select,[role='listbox'],[role='combobox']")) return;
-
-    const host = (el.closest("[data-m-event]") as HTMLElement) || (el as any);
-    const evt = host.getAttribute("data-m-event") as MEvent | null;
-    if (!evt) return;
-
-    const chosen =
-      (el as HTMLSelectElement).selectedOptions?.[0]?.textContent?.trim() ||
-      host.querySelector("[aria-selected='true']")?.textContent?.trim() ||
-      "";
-
-    if (!chosen) return;           // don't animate for placeholders like "Experte wählen"
-    runMFlow(evt, chosen);
-  };
-
-  document.addEventListener("change", onChange);
-  return () => document.removeEventListener("change", onChange);
-}, [runMFlow]);
-
-
-  document.addEventListener("click", onGlobalClick);
-  return () => document.removeEventListener("click", onGlobalClick);
-}, [runMFlow]);
-// Auswahl-Listener: feuert für <select> / ARIA-Combobox/Listbox
-useEffect(() => {
-  if (typeof document === "undefined") return;
-
-  const onChange = (e: Event) => {
-    const el = e.target as HTMLElement | null;
-    if (!el) return;
-
-    // Nur echte Auswahlen (native select oder ARIA)
-    const isPicker =
-      el.matches?.("select,[role='listbox'],[role='combobox']") ||
-      (el.closest?.("select,[role='listbox'],[role='combobox']") as HTMLElement | null);
-
-    if (!isPicker) return;
-
-    // Träger ermitteln, der das data-m-event hält
-    const host =
-      (el.closest?.("[data-m-event]") as HTMLElement | null) ||
-      (el as HTMLElement);
-
-    const evt = host.getAttribute("data-m-event") as MEvent | null;
-    if (!evt || (evt !== "mode" && evt !== "expert")) return;
-
-    // Sichtbare Beschriftung ermitteln
-    let label = "";
-    const sel = el as HTMLSelectElement;
-    if (sel.selectedOptions?.length) {
-      label = sel.selectedOptions[0].textContent?.trim() || "";
-    } else {
-      label = host.getAttribute("data-m-label") || host.textContent?.trim() || "";
-    }
-    if (!label) return;
-
-    runMFlow(evt, label);
-  };
-
-  document.addEventListener("change", onChange);
-  return () => document.removeEventListener("change", onChange);
-}, [runMFlow]);
-
-  // Change-Delegation: erst bei wirklicher Auswahl animieren (nicht beim Öffnen)
-useEffect(() => {
-  if (typeof document === "undefined") return;
-
-  const onChange = (e: Event) => {
-    try {
-      const el = e.target as HTMLElement | null;
-      if (!el) return;
-
-      // nur echte Auswahlen (native <select> oder ARIA Combobox/Listbox)
-      const isPicker =
-        (el as any).tagName === "SELECT" ||
-        el.matches?.("[role='combobox'],[role='listbox']");
-      if (!isPicker) return;
-
-      // „Host“: entfernter Button/Container, der data-m-event trägt – oder fallback el
-      const host =
-        (el.closest?.("[data-m-event]") as HTMLElement | null) || el;
-
-      const evt = host.getAttribute("data-m-event") as MEvent | null;
-      if (!evt) return;
-
-      // Label: bevorzugt die tatsächlich gewählte Option
-      let label: string | undefined;
-      if ((el as HTMLSelectElement).selectedOptions?.length) {
-        label =
-          (el as HTMLSelectElement).selectedOptions[0].textContent?.trim() ||
-          undefined;
-      } else {
-        label =
-          host.getAttribute("data-m-label") ||
-          el.textContent?.trim() ||
-          undefined;
-      }
-
-      if (typeof runMFlow === "function") {
-        runMFlow(evt, label);
-      }
-    } catch {
-      // still
-    }
-  };
-
-  document.addEventListener("change", onChange);
-  return () => document.removeEventListener("change", onChange);
-}, [runMFlow]);
-
-// Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig, defensiv)
+// ——— 1) Auto-Tagging (optional, einmalig) ———
 useEffect(() => {
   if (typeof document === "undefined" || typeof window === "undefined") return;
 
@@ -1043,7 +892,6 @@ useEffect(() => {
     "mode": "mode",
     "modus": "mode",
   };
-
   const norm = (s: string) => (s || "").trim().toLowerCase();
 
   const id = window.requestAnimationFrame(() => {
@@ -1057,24 +905,17 @@ useEffect(() => {
           if (el.hasAttribute("data-m-event")) return;
 
           const text = norm(
-            el.textContent ||
-              el.getAttribute("aria-label") ||
-              el.getAttribute("title") ||
-              ""
+            el.textContent || el.getAttribute("aria-label") || el.getAttribute("title") || ""
           );
           if (!text) return;
 
-          // exakter Treffer
-          if (MAP[text]) {
-            el.setAttribute("data-m-event", MAP[text]!);
-          } else {
-            // Teiltreffer („jetzt bauen!“ etc.)
-            const hit = Object.keys(MAP).find((k) => text.includes(k));
-            if (hit) el.setAttribute("data-m-event", MAP[hit]!);
-          }
+          // exakter oder Teil-Treffer
+          const direct = MAP[text];
+          const hit = direct ?? Object.keys(MAP).find((k) => text.includes(k));
+          if (hit) el.setAttribute("data-m-event", MAP[hit]!);
 
           const evtType = el.getAttribute("data-m-event");
-          // Für Modus/Experte den sichtbaren Namen als data-m-label puffern
+          // Für mode/expert sichtbaren Namen puffern
           if ((evtType === "mode" || evtType === "expert") && !el.hasAttribute("data-m-label")) {
             const raw =
               (el as HTMLSelectElement).selectedOptions?.[0]?.textContent?.trim() ||
@@ -1084,18 +925,70 @@ useEffect(() => {
               "";
             if (raw) el.setAttribute("data-m-label", raw);
           }
-        } catch {
-          /* einzelnes Element ignorieren */
-        }
+        } catch {/* einzelnes Element ignorieren */}
       });
-    } catch {
-      /* niemals crashen */
-    }
+    } catch {/* still */}
   });
 
   return () => window.cancelAnimationFrame(id);
 }, []);
 
+// ——— 2) Click-Delegation (keine Picker; Modus/Experte bekommen Label) ———
+useEffect(() => {
+  if (typeof document === "undefined") return;
+
+  const onClick = (e: MouseEvent) => {
+    try {
+      const tgt = e.target as Element | null;
+      if (!tgt) return;
+
+      // Öffnen von Select/Combobox/Listbox triggert NICHT
+      if (isPicker(tgt) || getHost(tgt)?.matches?.("select,[role='combobox'],[role='listbox']")) {
+        return;
+      }
+
+      const host = getHost(tgt);
+      if (!host) return;
+
+      const evt = host.getAttribute("data-m-event") as MEvent | null;
+      if (!evt) return;
+
+      // Für reine Buttons ohne Auswahl: ggf. Label auflösen (mode/expert)
+      const label = (evt === "mode" || evt === "expert") ? resolveLabel(host, tgt) : undefined;
+
+      runMFlow(evt, label);
+    } catch {/* still */}
+  };
+
+  document.addEventListener("click", onClick, { passive: true });
+  return () => document.removeEventListener("click", onClick);
+}, [runMFlow]);
+
+// ——— 3) Change-Delegation (nur Picker; erst nach echter Auswahl) ———
+useEffect(() => {
+  if (typeof document === "undefined") return;
+
+  const onChange = (e: Event) => {
+    try {
+      const el = e.target as Element | null;
+      if (!isPicker(el)) return;
+
+      const host = getHost(el!) ?? (el as HTMLElement | null);
+      if (!host) return;
+
+      const evt = host.getAttribute("data-m-event") as MEvent | null;
+      if (!evt) return;
+
+      const label = resolveLabel(host, el);
+      if (!label) return; // keine Platzhalter
+
+      runMFlow(evt, label);
+    } catch {/* still */}
+  };
+
+  document.addEventListener("change", onChange);
+  return () => document.removeEventListener("change", onChange);
+}, [runMFlow]);
 
 
 // ===============================================================
