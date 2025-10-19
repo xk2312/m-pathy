@@ -8,24 +8,23 @@ type Props = { children: React.ReactNode };
 export default function MTheater({ children }: Props) {
   // mobile-first, dann per media query leicht größer
   return (
-   <div
-  aria-label="M Theater"
-  style={{
-  width: M_THEATER.mobile.width,
-  height: M_THEATER.mobile.height,
-  margin: "0 auto",
-  display: "grid",
-  placeItems: "center",
-  overflow: "hidden",
-  padding: "30px 0",
-  position: "relative",
-  transform: "scale(0.7)",
-  transformOrigin: "center",
-}}
-
->
-
-
+    <div
+      aria-label="M Theater"
+      style={{
+        width: M_THEATER.mobile.width,
+        height: M_THEATER.mobile.height,
+        margin: "0 auto",
+        display: "grid",
+        placeItems: "center",
+        overflow: "hidden",
+        padding: "30px 0",       // M hat oben/unten 30px Luft (vor Scaling)
+        position: "relative",
+        transform: "scale(0.7)", // gesamte Bühne auf 70 %
+        transformOrigin: "center",
+        willChange: "transform",
+        isolation: "isolate",
+      }}
+    >
       <style jsx>{`
         @media (min-width: 768px) {
           div[aria-label="M Theater"] {

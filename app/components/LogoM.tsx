@@ -23,21 +23,18 @@ export default function LogoM({
   const [phase, setPhase] = useState<Phase>(active ? "thinking" : "idle");
 
   useEffect(() => {
-    // Denken startet
     if (active) {
       setPhase("thinking");
       prevActive.current = active;
       return;
     }
-    // thinking -> ready (solo 2s) -> reveal (M spin-in) -> idle
     if (prevActive.current && !active) {
-      setPhase("ready");
+      setPhase("ready"); // Ready solo (2s), dann Reveal (M spin-in), dann Idle
       const t1 = setTimeout(() => setPhase("reveal"), 2000);
-      const t2 = setTimeout(() => setPhase("idle"), 2000 + 600);
+      const t2 = setTimeout(() => setPhase("idle"),   2000 + 600);
       prevActive.current = active;
       return () => { clearTimeout(t1); clearTimeout(t2); };
     }
-    // sonst idle
     setPhase("idle");
     prevActive.current = active;
   }, [active]);
@@ -47,12 +44,12 @@ export default function LogoM({
       case "goldenRebirth": return { idlePulseAmp: 1.03, thinkSpinSec: 7.5, readyGlowMs: 900 };
       case "ocean":         return { idlePulseAmp: 1.02, thinkSpinSec: 9.0, readyGlowMs: 800 };
       case "body":          return { idlePulseAmp: 1.025, thinkSpinSec: 8.0, readyGlowMs: 900 };
-      case "loop":          return { idlePulseAmp: 1.02, thinkSpinSec: 10.0, readyGlowMs: 800 };
-      case "balance":       return { idlePulseAmp: 1.02, thinkSpinSec: 8.8, readyGlowMs: 900 };
-      case "power":         return { idlePulseAmp: 1.035, thinkSpinSec: 7.0, readyGlowMs: 850 };
-      case "oracle":        return { idlePulseAmp: 1.03, thinkSpinSec: 8.4, readyGlowMs: 900 };
+      case "loop":          return { idlePulseAmp: 1.02,  thinkSpinSec: 10.0, readyGlowMs: 800 };
+      case "balance":       return { idlePulseAmp: 1.02,  thinkSpinSec: 8.8,  readyGlowMs: 900 };
+      case "power":         return { idlePulseAmp: 1.035, thinkSpinSec: 7.0,  readyGlowMs: 850 };
+      case "oracle":        return { idlePulseAmp: 1.03,  thinkSpinSec: 8.4,  readyGlowMs: 900 };
       case "minimal":
-      default:              return { idlePulseAmp: 1.015, thinkSpinSec: 9.5, readyGlowMs: 700 };
+      default:              return { idlePulseAmp: 1.015, thinkSpinSec: 9.5,  readyGlowMs: 700 };
     }
   }, [variant]);
 
@@ -95,85 +92,96 @@ export default function LogoM({
             .m-stroke { fill:none; stroke:${stroke}; stroke-width:8; stroke-linecap:round; stroke-linejoin:round; stroke-opacity:.95; }
             .m-glow   { filter:url(#g); }
 
-            /* Idle – sanftes Atmen */
+            /* Idle – sanftes Atmen (nur Transform, kein Opacity an der Gruppe) */
             @keyframes mIdlePulse { from { transform: scale(1); } to { transform: scale(${cfg.idlePulseAmp}); } }
 
-            /* Spirale – Rotation */
+            /* Spirale – Rotation (nur Transform an der Gruppe) */
             @keyframes mSpiralRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-            /* M eindrehen/ausblenden (Denken) */
+            /* M eindrehen (Denken) – NUR Transform an der Gruppe */
             @keyframes mSpinOut {
-              0% { opacity:1; transform: scale(1.00) rotate(0deg); }
-              60%{ opacity:.25; transform: scale(0.96) rotate(120deg); }
-              100%{opacity:0; transform: scale(0.92) rotate(180deg); }
+              0%   { transform: scale(1.00) rotate(0deg); }
+              60%  { transform: scale(0.96) rotate(120deg); }
+              100% { transform: scale(0.92) rotate(180deg); }
             }
 
-            /* M herausdrehen/sättigen (Reveal nach Ready) */
+            /* M herausdrehen (Reveal) – NUR Transform an der Gruppe */
             @keyframes mSpinIn {
-              0% { opacity:0; transform: scale(0.92) rotate(180deg); }
-              40%{ opacity:.6; transform: scale(0.98) rotate(60deg); }
-              100%{opacity:1; transform: scale(1.00) rotate(0deg); }
+              0%   { transform: scale(0.92) rotate(180deg); }
+              40%  { transform: scale(0.98) rotate(60deg);  }
+              100% { transform: scale(1.00) rotate(0deg);   }
             }
 
             /* Ready – weiches Aufleuchten */
             @keyframes mReadyGlow {
-              0% { opacity:0; transform: scale(0.98); }
-              40%{ opacity:.9; transform: scale(1.02); }
-              100%{opacity:0; transform: scale(1.00); }
+              0%   { opacity:0; transform: scale(0.98); }
+              40%  { opacity:.9; transform: scale(1.02); }
+              100% { opacity:0; transform: scale(1.00); }
             }
 
             /* 2s Faraday/Corona */
             @keyframes mFaraday {
-              0% { opacity:.0;  filter: drop-shadow(0 0 0px rgba(96,230,255,.00)); }
-              10%{ opacity:.22; filter: drop-shadow(0 0 8px rgba(96,230,255,.30)); }
-              45%{ opacity:.25; filter: drop-shadow(0 0 12px rgba(96,230,255,.35)); }
-              80%{ opacity:.18; filter: drop-shadow(0 0 8px rgba(96,230,255,.25)); }
-              100%{opacity:.0;  filter: drop-shadow(0 0 0px rgba(96,230,255,.00)); }
+              0%   { opacity:.0;  filter: drop-shadow(0 0 0px rgba(96,230,255,.00)); }
+              10%  { opacity:.22; filter: drop-shadow(0 0 8px rgba(96,230,255,.30)); }
+              45%  { opacity:.25; filter: drop-shadow(0 0 12px rgba(96,230,255,.35)); }
+              80%  { opacity:.18; filter: drop-shadow(0 0 8px rgba(96,230,255,.25)); }
+              100% { opacity:.0;  filter: drop-shadow(0 0 0px rgba(96,230,255,.00)); }
             }
 
             /* Ready-Text */
             @keyframes mReadyText {
-              0% { opacity:0; transform: translateY(4px); }
-              35%{ opacity:.9; transform: translateY(0); }
-              100%{opacity:0; transform: translateY(-2px); }
+              0%   { opacity:0; transform: translateY(4px); }
+              35%  { opacity:.9; transform: translateY(0); }
+              100% { opacity:0; transform: translateY(-2px); }
             }
 
-            /* 100ms Snap-Peak nach SpinIn */
+            /* 100ms Snap-Peak nach SpinIn (nur Glanz, kein Visibility) */
             @keyframes mSealSnap {
-              0% { filter: drop-shadow(0 0 0px rgba(255,255,255,0)); }
-              100%{ filter: drop-shadow(0 0 14px rgba(255,255,255,.45)); }
+              0%   { filter: drop-shadow(0 0 0px rgba(255,255,255,0)); }
+              100% { filter: drop-shadow(0 0 14px rgba(255,255,255,.45)); }
             }
 
             /* PRM */
             @media (prefers-reduced-motion: reduce) {
               .m-glow { animation: none !important; }
               @keyframes mSpiralRotate { from { transform: none; } to { transform: none; } }
-              @keyframes mSpinOut { from { opacity:1; } to { opacity:0; } }
-              @keyframes mSpinIn  { from { opacity:0; } to { opacity:1; } }
+              @keyframes mSpinOut { from { transform: none; } to { transform: none; } }
+              @keyframes mSpinIn  { from { transform: none; } to { transform: none; } }
               @keyframes mFaraday { from { opacity:0; } to { opacity:0; } }
             }
           `}</style>
         </defs>
 
-        {/* === G_SPIRAL (eigenständig) ===================================== */}
+        {/* === G_SPIRAL (Parent bleibt sichtbar; Kinder regeln Sichtbarkeit) === */}
         <g
           id="G_SPIRAL"
           aria-hidden="true"
           style={{
             transformOrigin: "72px 72px",
             animation: isThinking ? `mSpiralRotate ${cfg.thinkSpinSec}s linear infinite` : "none",
-            opacity: isThinking ? 0.7 : 0,             // hart sichtbar nur beim Denken
             transform: isThinking ? "scale(1.06)" : "scale(0.98)",
-            transition: "opacity 480ms ease, transform 480ms ease",
+            transition: "transform 480ms ease",
             pointerEvents: "none",
           }}
         >
-          <circle cx="72" cy="72" r="56" fill="none" stroke={stroke} strokeOpacity="0.16" strokeWidth="3" strokeDasharray="6 10" />
-          <circle cx="72" cy="72" r="40" fill="none" stroke={stroke} strokeOpacity="0.18" strokeWidth="2.5" strokeDasharray="4 8" />
-          <circle cx="72" cy="72" r="24" fill="none" stroke={stroke} strokeOpacity="0.20" strokeWidth="2.5" strokeDasharray="2 6" />
+          <circle
+            cx="72" cy="72" r="56" fill="none"
+            stroke={stroke} strokeOpacity="0.16" strokeWidth="3" strokeDasharray="6 10"
+            style={{ opacity: isThinking ? 0.70 : 0, transition: "opacity 300ms ease" }}
+          />
+          <circle
+            cx="72" cy="72" r="40" fill="none"
+            stroke={stroke} strokeOpacity="0.18" strokeWidth="2.5" strokeDasharray="4 8"
+            style={{ opacity: isThinking ? 0.60 : 0, transition: "opacity 300ms ease" }}
+          />
+          <circle
+            cx="72" cy="72" r="24" fill="none"
+            stroke={stroke} strokeOpacity="0.20" strokeWidth="2.5" strokeDasharray="2 6"
+            style={{ opacity: isThinking ? 0.50 : 0, transition: "opacity 300ms ease" }}
+          />
         </g>
 
-        {/* === G_M (eigenständig) ========================================= */}
+        {/* === G_M (Parent bleibt sichtbar; Kinder regeln Sichtbarkeit) ======= */}
         <g
           id="G_M"
           className="m-glow"
@@ -182,21 +190,29 @@ export default function LogoM({
             animation: isIdle
               ? "mIdlePulse 1800ms ease-in-out infinite alternate"
               : isThinking
-              ? "mSpinOut 460ms ease forwards"
+              ? "mSpinOut 460ms ease forwards"           // nur Transform
               : isReady
-              ? "none" // Ready läuft solo
+              ? "none"                                    // Ready solo
               : isReveal
               ? "mSpinIn 560ms ease forwards, mSealSnap 100ms ease 560ms forwards"
               : "none",
-            opacity: isThinking ? 0 : (isReady ? 0 : 1), // harte Sichtbarkeit
           }}
         >
-          <path className="m-stroke" d="M24 116V34" />
-          <path className="m-stroke" d="M120 116V34" />
-          <path className="m-stroke" d="M24 34l48 58 48-58" />
+          <path
+            className="m-stroke" d="M24 116V34"
+            style={{ opacity: (isThinking || isReady) ? 0 : 1, transition: "opacity 200ms ease" }}
+          />
+          <path
+            className="m-stroke" d="M120 116V34"
+            style={{ opacity: (isThinking || isReady) ? 0 : 1, transition: "opacity 200ms ease" }}
+          />
+          <path
+            className="m-stroke" d="M24 34l48 58 48-58"
+            style={{ opacity: (isThinking || isReady) ? 0 : 1, transition: "opacity 200ms ease" }}
+          />
         </g>
 
-        {/* === READY SOLO (Faraday + Halo + Text) ========================== */}
+        {/* === READY SOLO (Faraday + Halo + Text) ============================ */}
         {isReady && (
           <>
             {/* Faraday/Corona */}
