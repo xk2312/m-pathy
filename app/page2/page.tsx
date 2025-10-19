@@ -41,9 +41,18 @@ import StickyFab from "../components/StickyFab";
 import { t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
 import { useMobileViewport } from "@/lib/useMobileViewport";
-import { saveMessages, loadMessages, truncateMessages } from "@/lib/chatPersistence";
+import {
+  saveMessages as chatSaveMessages,
+  loadMessages as chatLoadMessages,
+  truncateMessages as chatTruncateMessages,
+} from "@/lib/chatPersistence";
+// Lokale, sprechende Aliasse – überall im File verwenden:
+const persist = {
+  save: chatSaveMessages,
+  load: chatLoadMessages,
+  cut : chatTruncateMessages,
+};
 
-// Lokale Chat-Persistenz (Laden/Speichern der Nachrichten)
 
 // ⚠️ NICHT importieren: useTheme aus "next-themes" (Konflikt mit lokalem Hook)
 // import { useTheme } from "next-themes"; // ❌ bitte entfernt lassen
