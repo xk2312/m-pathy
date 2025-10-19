@@ -837,7 +837,7 @@ useEffect(() => {
   return () => {
     mounted = false;
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
-
+ 
     // Cleanup: evtl. gesetzte Transforms wieder entfernen
     const dock = document.getElementById("m-input-dock");
     if (dock) {
