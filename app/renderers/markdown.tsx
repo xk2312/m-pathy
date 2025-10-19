@@ -27,4 +27,4 @@ export function renderMarkdown({ content }: RenderInput): React.ReactNode {
   );
 }
 
-export default renderMarkdown;
+export default renderMarkdown; 

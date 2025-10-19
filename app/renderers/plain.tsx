@@ -16,4 +16,4 @@ export function renderPlain({ content }: RenderInput): React.ReactNode {
   );
 }
 
-export default renderPlain;
+export default renderPlain; 

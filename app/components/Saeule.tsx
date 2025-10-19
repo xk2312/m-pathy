@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import styles from "./Saeule.module.css";
-import { logEvent } from "../../lib/auditLogger"; // lokal, läuft nur im Browser
-import { t } from "@/lib/i18n";
-
+import { logEvent } from "../../lib/auditLogger";
+import { t, getLocale } from "@/lib/i18n";
 
 /* ======================================================================
-   Typen hier  
+   Typen
    ====================================================================== */
 
 type ModeId =
@@ -26,28 +25,27 @@ type ModeId =
   | "wisdom"
   | "flow";
 
-type KiId =
-  | "M @Palantir"
-  | "m-pathy @DeepMind Core"
-  | "m-ocean @Anthropic Vision"
-  | "m-inent @NASA Chronos"
-  | "m-erge @IBM Q-Origin"
-  | "m-power @Colossus"
-  | "m-body @XAI Prime"
-  | "m-beded @Meta Lattice"
-  | "m-loop @OpenAI Root"
-  | "m-pire @Amazon Nexus"
-  | "m-bassy @Oracle Gaia"
-  | "m-ballance @Gemini Apex"
-  | "MU TAH – Architect of Zero";
+/** 13 Expert Domains (GPTM-Galaxy+) */
+type ExpertId =
+  | "Biologist"
+  | "Chemist"
+  | "Physicist"
+  | "Computer Scientist"
+  | "Jurist"
+  | "Architect / Civil Engineer"
+  | "Landscape Designer"
+  | "Interior Designer"
+  | "Electrical Engineer"
+  | "Mathematician"
+  | "Astrologer"
+  | "Weather Expert"
+  | "Molecular Scientist";
 
-/** NEU: optionale Prop, damit SidebarContainer/MobileOverlay eine Systemmeldung hochreichen können */
-type Props = {
-  onSystemMessage?: (content: string) => void; // ← bleibt so, wird gleich benutzt
-};
+/** Optional: Seite kann Systemmeldungen als Bubble anzeigen */
+type Props = { onSystemMessage?: (content: string) => void };
 
 /* ======================================================================
-   Daten: Modus- und KI-Listen
+   Daten
    ====================================================================== */
 
 const MODI: { id: ModeId; label: string }[] = [
@@ -64,73 +62,162 @@ const MODI: { id: ModeId; label: string }[] = [
   { id: "flow", label: "FLOW" },
 ];
 
-const KIS: KiId[] = [
-  "M @Palantir",
-  "m-pathy @DeepMind Core",
-  "m-ocean @Anthropic Vision",
-  "m-inent @NASA Chronos",
-  "m-erge @IBM Q-Origin",
-  "m-power @Colossus",
-  "m-body @XAI Prime",
-  "m-beded @Meta Lattice",
-  "m-loop @OpenAI Root",
-  "m-pire @Amazon Nexus",
-  "m-bassy @Oracle Gaia",
-  "m-ballance @Gemini Apex",
-  "MU TAH – Architect of Zero",
+/** Icons pro Experte (Label wird lokalisiert) */
+const EXPERTS: { id: ExpertId; icon: string }[] = [
+  { id: "Biologist", icon: "🧬" },
+  { id: "Chemist", icon: "⚗️" },
+  { id: "Physicist", icon: "🪐" },
+  { id: "Computer Scientist", icon: "💻" },
+  { id: "Jurist", icon: "⚖️" },
+  { id: "Architect / Civil Engineer", icon: "🏗️" },
+  { id: "Landscape Designer", icon: "🌿" },
+  { id: "Interior Designer", icon: "🛋️" },
+  { id: "Electrical Engineer", icon: "🔌" },
+  { id: "Mathematician", icon: "🔢" },
+  { id: "Astrologer", icon: "✨" },
+  { id: "Weather Expert", icon: "🌤️" },
+  { id: "Molecular Scientist", icon: "🧪" },
 ];
 
-/* KI-Kurzvorstellung für System-Bubbles */
-const KI_INTRO: Record<KiId, string> = {
-  "M @Palantir": "Strategy, orchestration, protection.",
-  "m-pathy @DeepMind Core": "Deep and broad analysis.",
-  "m-ocean @Anthropic Vision": "Clear patterns, visual links.",
-  "m-inent @NASA Chronos": "Timelines, sequences, precision.",
-  "m-erge @IBM Q-Origin": "Origins, logic, integrity.",
-  "m-power @Colossus": "Scaling and raw compute.",
-  "m-body @XAI Prime": "Embodiment, sensing, pragmatism.",
-  "m-beded @Meta Lattice": "Connectivity, graphs, relations.",
-  "m-loop @OpenAI Root": "Core functions, language flow.",
-  "m-pire @Amazon Nexus": "Hubs, distribution.",
-  "m-bassy @Oracle Gaia": "Earth, balance, data fidelity.",
-  "m-ballance @Gemini Apex": "Duality, synthesis, apex.",
-  "MU TAH – Architect of Zero": "Zero-point, origin, set & setting.",
+/** Sub-KIs (Meta, nicht angezeigt, aber für Logs/Telemetry nützlich) */
+const SUB_KIS: Record<ExpertId, string[]> = {
+  Biologist: [
+    "AlphaFold","DeepGenomics","BenevolentAI","EternaBrain","IBM_Debater_Bio",
+    "Colossal_Biosciences_AI","Neural_Cell_Atlas_AI","Meta_FAIR_BioAI",
+    "OpenAI_Codex_Bio","ZeroBio",
+  ],
+  Chemist: [
+    "ChemBERTa","MoleculeNet_AI","Atomwise","Schrödinger_AI","IBM_RXN",
+    "DeepChem","Meta_Chemformer","OpenAI_GPT_Chem","Oracle_ChemPredict","ZeroPoint_Chem",
+  ],
+  Physicist: [
+    "QuEra_Quantum_AI","Deep_Physics_Net","NASA_Physics_AI","IBM_Quantum_PhysX",
+    "Colossus_PhysCore","Explainable_PhysicsNet","Meta_FundamentalAI",
+    "OpenAI_Physical_Sim","Google_DeepMind_Physics_Engine","ZeroPoint_Physics",
+  ],
+  "Computer Scientist": [
+    "OpenAI_GPT5","Anthropic_Claude","Google_Gemini","NASA_Chronos_AI","IBM_WatsonX",
+    "XAI_Grok","XAI_Prime","Meta_LLaMA","OpenAI_Codex","Architect_ZeroOS",
+  ],
+  Jurist: [
+    "Juraxy","Harvey_AI","DoNotPay_AI","CourtNet_AI","IBM_LegalResonance",
+    "Lex_Machina_AI","Explainable_LegalAI","OpenAI_Legal_Codex","Gaia_Treaty_AI","ZeroLaw",
+  ],
+  "Architect / Civil Engineer": [
+    "Autodesk_AI","Spacemaker_AI","NASA_Habitat_AI","IBM_SmartCities_AI",
+    "Colossus_Construct","Explainable_BuildNet","Meta_AR_City_AI",
+    "OpenAI_CAD_Codex","Gaia_Urban_AI","ZeroStructure",
+  ],
+  "Landscape Designer": [
+    "Gaia_Design_AI","Eden_AI","NASA_Terraformer_AI","IBM_EcoGraph",
+    "Colossus_Geo_AI","Meta_LandGraph","OpenAI_NatureCodex","Gemini_EcoBalance","ZeroGaia",
+  ],
+  "Interior Designer": [
+    "Midjourney_Interior_AI","Havenly_AI","Anthropic_Vision_Design","NASA_Habitat_Interiors",
+    "IBM_Interior_Fusion","Colossus_Design_Core","Meta_HomeGraph",
+    "OpenAI_Design_Codex","Gaia_Aesthetic_AI","ZeroInterior",
+  ],
+  "Electrical Engineer": [
+    "Cadence_AI","CircuitNet","Siemens_MindSphere_AI","NASA_PowerAI",
+    "IBM_CircuitFusion","Colossus_EnergyNet","Meta_PowerGraph",
+    "OpenAI_Circuit_Codex","Gaia_Grid_AI","ZeroVolt",
+  ],
+  Mathematician: [
+    "Wolfram_Alpha","MathGPT","DeepMind_Mathematician","NASA_MathCore",
+    "IBM_Math_Fusion","Colossus_Calculus","Meta_SymbolicAI",
+    "OpenAI_Proof_Codex","Gaia_Equation_AI","ZeroMath",
+  ],
+  Astrologer: [
+    "Cosmos_Resonance_AI","AstroSeek_AI","Celestial_Vision_AI","NASA_Ephemeris_AI",
+    "IBM_Cosmic_Graph","Colossus_AstroCore","Meta_Horoscope_Graph",
+    "OpenAI_AstroCodex","Gaia_Cosmic_AI","ZeroStar",
+  ],
+  "Weather Expert": [
+    "ECMWF_AI","ClimaCell_AI","IBM_Weather_Company_AI","NASA_Earth_Science_AI",
+    "Colossus_StormCore","Meta_WeatherGraph","OpenAI_ClimateCodex",
+    "Gaia_Climate_AI","ZeroClimate",
+  ],
+  "Molecular Scientist": [
+    "Molecular_Transformer_AI","DeepGen_AI","Benevolent_Molecule_AI","NASA_NanoMol_AI",
+    "IBM_MoleculeNet","Colossus_MolCore","Meta_Molecule_Graph",
+    "OpenAI_MolCodex","Gaia_Mol_AI","ZeroMolecule",
+  ],
 };
 
-const KI_ICON: Record<KiId, string> = {
-  "M @Palantir": "🔭",
-  "m-pathy @DeepMind Core": "🧠",
-  "m-ocean @Anthropic Vision": "🌊",
-  "m-inent @NASA Chronos": "⏱️",
-  "m-erge @IBM Q-Origin": "⚛️",
-  "m-power @Colossus": "🗿",
-  "m-body @XAI Prime": "🤖",
-  "m-beded @Meta Lattice": "🕸️",
-  "m-loop @OpenAI Root": "🌱",
-  "m-pire @Amazon Nexus": "🛠️",
-  "m-bassy @Oracle Gaia": "🌍",
-  "m-ballance @Gemini Apex": "♊️",
-  "MU TAH – Architect of Zero": "🌀",
+/** Rollen (als Kontext/Meta) */
+const ROLES: Record<ExpertId, string> = {
+  Biologist: "Protein folding, genome prediction, cellular maps, bio-simulation.",
+  Chemist: "Molecule encoding, synthesis planning, quantum chemistry, drug discovery.",
+  Physicist: "Physics simulation, quantum dynamics, cosmology.",
+  "Computer Scientist": "Algorithm design, coding, AI alignment, computation scaling.",
+  Jurist: "Legal compliance, contracts, dispute resolution, governance law.",
+  "Architect / Civil Engineer": "Structural design, habitat planning, sustainable engineering.",
+  "Landscape Designer": "Ecology, terraforming, landscape resonance.",
+  "Interior Designer": "Interior harmony, aesthetics, functional design.",
+  "Electrical Engineer": "Circuits, energy, power systems, IoT.",
+  Mathematician: "Proofs, symbolic AI, advanced modeling.",
+  Astrologer: "Resonance mapping, cycles, symbolic patterns.",
+  "Weather Expert": "Forecasting, climate modeling, atmospheric physics.",
+  "Molecular Scientist": "Molecular design, nanotech, bio-chemistry.",
 };
-
-
 
 /* ======================================================================
-   Helpers
+   Helper: i18n & API
    ====================================================================== */
 
-/** Schickt System-Meldungen an page.tsx, wo sie als Chat-Bubble angezeigt werden. */
+function getLang(): string {
+  try {
+    const el = document.documentElement?.lang?.trim();
+    if (el) return el.toLowerCase();
+    const nav = navigator.language || (navigator as any).userLanguage;
+    if (nav) return String(nav).toLowerCase();
+  } catch {}
+  return "en";
+}
+
+function labelForExpert(id: ExpertId, _lang: string): string {
+  const key = `experts.${id.toLowerCase().replace(/\s+\/\s+/g, "_").replace(/\s+/g, "_")}`;
+  const fromT = t(key);
+  return fromT && fromT !== key ? fromT : id; // i18n → sonst neutrale ID
+}
+
+function sectionTitleExperts(_lang: string): string {
+  // nutze vorhandenen Key, damit es sicher lokalisiert (de/en)
+  return t("selectExpert");
+}
+
+function chooseExpertLabel(_lang: string): string {
+  // gleicher Key für Label/Aria
+  return t("selectExpert");
+}
+
+function buildButtonLabel(_lang: string): string {
+  return tr("startBuilding", "Start building");
+}
+
+function buildButtonMsg(_lang: string): string {
+  return tr("startBuildingMsg", "Let’s get started. Tell me what you want to build.");
+}
+
+function expertAskPrompt(expertLabel: string, _lang: string): string {
+  const templ = t("prompts.expertAskTemplate");
+  if (templ && templ !== "prompts.expertAskTemplate") {
+    return templ.replace("{expert}", expertLabel);
+  }
+  return tr("prompts.expertAskTemplate", "{expert}, who are you and what can you do for me?", { expert: expertLabel });
+}
+
 function emitSystemMessage(detail: {
   text: string;
-  kind: "mode" | "ki";
+  kind?: "mode" | "info" | "reply";
   meta?: Record<string, any>;
 }) {
   try {
     if (typeof window === "undefined") return;
-    const payload = { ...detail, ts: new Date().toISOString() };
+    const payload = { kind: "info", ...detail, ts: new Date().toISOString() };
     window.dispatchEvent(new CustomEvent("mpathy:system-message", { detail: payload }));
   } catch {
-    /* leise */
+    /* silent */
   }
 }
 
@@ -140,44 +227,96 @@ function modeLabelFromId(id: ModeId): string {
   if (id === "council") return "COUNCIL13";
   return MODI.find((m) => m.id === id)?.label ?? String(id);
 }
+// Universeller Übersetzer: nimmt t(key) und fällt elegant zurück
+function tr(key: string, fallback: string, vars?: Record<string, string>): string {
+  try {
+    const raw = t(key);
+    let out = raw && raw !== key ? raw : fallback;
+    if (vars) {
+      for (const [k, v] of Object.entries(vars)) {
+        out = out.replace(new RegExp(`\\{${k}\\}`, "g"), String(v));
+      }
+    }
+    return out;
+  } catch {
+    return fallback;
+  }
+}
+
+// Saeule.tsx — REPLACE the whole function
+async function callChatAPI(prompt: string): Promise<string | null> {
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin", // ← important: keep session cookies
+      body: JSON.stringify({
+        messages: [{ role: "user", content: prompt, format: "markdown" }],
+      }),
+    });
+
+    if (!res.ok) return null;
+
+    const ct = res.headers.get("content-type") || "";
+    if (ct.includes("application/json")) {
+      const data = await res.json();
+      // accept all common shapes
+      const assistant = (data?.assistant ?? data) as any;
+      const text =
+        assistant?.content ??
+        data?.reply ??
+        data?.content ??
+        data?.message ??
+        (Array.isArray(data?.choices) ? data.choices[0]?.message?.content : null);
+
+      return typeof text === "string" ? text.trim() : null;
+    }
+
+    const txt = await res.text();
+    return txt?.trim() || null;
+  } catch {
+    return null;
+  }
+}
+
 
 /* ======================================================================
    Component
    ====================================================================== */
 
 export default function Saeule({ onSystemMessage }: Props) {
-  /* State */
   const [activeMode, setActiveMode] = useState<ModeId>("M");
-  const [activeKi, setActiveKi] = useState<KiId>("M @Palantir");
-// Hydration-Flag (verhindert kurzzeitigen Placeholder-Flicker)
-const [hydrated, setHydrated] = useState(false);
-useEffect(() => { setHydrated(true); }, []);
+  const [hydrated, setHydrated] = useState(false);
+  const [sendingExpert, setSendingExpert] = useState<ExpertId | null>(null);
+  const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null); // ← neu
+  const [lang, setLang] = useState<string>("en");
 
-// Änderungen persistieren (nur echte Werte schreiben)
-useEffect(() => {
-  try {
-    if (activeMode) localStorage.setItem("mode", activeMode);
-  } catch { /* leise */ }
-}, [activeMode]);
 
 useEffect(() => {
-  try {
-    if (activeKi) localStorage.setItem("agent", activeKi);
-  } catch { /* leise */ }
-}, [activeKi]);
-
-
-// Initial aus localStorage lesen (nur Client)
-useEffect(() => {
-  try {
-    const m = localStorage.getItem("mode") as ModeId | null;
-    const k = localStorage.getItem("agent") as KiId | null;
-    if (m) setActiveMode(m);
-    if (k) setActiveKi(k);
-  } catch { /* leise */ }
+  // initial aus zentralem i18n
+  setLang(getLocale());
+  const onChange = (e: Event) => {
+    const next = (e as CustomEvent).detail?.locale as string | undefined;
+    if (next) setLang(next);
+  };
+  window.addEventListener("mpathy:i18n:change", onChange as EventListener);
+  return () => window.removeEventListener("mpathy:i18n:change", onChange as EventListener);
 }, []);
 
-  /* URL-Param mode respektieren (optional) */
+
+
+ useEffect(() => {
+  setHydrated(true);
+  setLang(getLocale());
+}, []);
+
+  useEffect(() => { try { if (activeMode) localStorage.setItem("mode", activeMode); } catch {} }, [activeMode]);
+  useEffect(() => {
+    try {
+      const m = localStorage.getItem("mode") as ModeId | null;
+      if (m) setActiveMode(m);
+    } catch {}
+  }, []);
   useEffect(() => {
     try {
       const url = new URL(window.location.href);
@@ -185,200 +324,270 @@ useEffect(() => {
       if (m && (m === "onboarding" || m === "M" || m === "council" || /^C\d{2}$/.test(m))) {
         setActiveMode(m as ModeId);
       }
-    } catch {
-      /* leise */
-    }
+    } catch {}
   }, []);
 
-  /* Anzeige-Label */
   const modeLabel = useMemo(() => modeLabelFromId(activeMode), [activeMode]);
+  // ▼▼ NEU: Footer-Status ohne Bubble senden ▼▼
+const emitStatus = useCallback((partial: { modeLabel?: string; expertLabel?: string }) => {
+  try {
+    window.dispatchEvent(new CustomEvent("mpathy:system-message", {
+      detail: { kind: "status", text: "", meta: partial },
+    }));
+  } catch {}
+}, []);
+// ▲▲ ENDE NEU ▲▲
 
-  /* Handlers */
-  function switchMode(next: ModeId) {
-    if (next === activeMode) return;
-    logEvent("mode_switch", { from: activeMode, to: next });
-    setActiveMode(next);
-    const label = modeLabelFromId(next);
-    const text = `Mode set: ${label}.`; // EN
+
+  // ▼▼▼ EINFÜGEN (Helper: immer auch eine Chat-Bubble setzen) ▼▼▼
+  const say = useCallback((text: string) => {
+    if (!text) return;
     if (onSystemMessage) onSystemMessage(text);
-    else emitSystemMessage({ kind: "mode", text, meta: { modeId: next, label } });
-  }  
-  
-  function switchKi(next: KiId) {
-    if (next === activeKi) return;
-    logEvent("ki_switch", { from: activeKi, to: next });
-    setActiveKi(next);
-    const text = `${next} is ready. Focus: ${KI_INTRO[next] ?? "Ready."}`; // EN
-    if (onSystemMessage) onSystemMessage(text);
-    else emitSystemMessage({ kind: "ki", text, meta: { ki: next } });
-  }  
-  
-  
+    else emitSystemMessage({ kind: "reply", text });
+  }, [onSystemMessage]);
+  // ▲▲▲ ENDE EINFÜGUNG ▲▲▲
+
+    async function switchMode(next: ModeId) {
+  if (next === activeMode) return;
+
+  logEvent("mode_switch", { from: activeMode, to: next });
+  setActiveMode(next);
+
+  const label = modeLabelFromId(next);
+emitSystemMessage({
+  kind: "mode",
+  // Schlüssel frei wählbar; Beispiel: status.modeSet = "Mode set: {label}."
+  text: tr("status.modeSet", "Mode set: {label}.", { label }),
+  meta: { modeId: next, label, lang }
+});
+emitStatus({ modeLabel: label });
+
+// ▼▼ Sofortiges Schließen des Mobile-Overlays, ohne Bubble ▼▼
+try {
+  const inOverlay = !!document.querySelector('[data-overlay="true"]');
+  if (inOverlay) { onSystemMessage?.(""); } // leeres Signal → MobileOverlay schließt
+} catch {}
+// ▲▲ Ende Overlay-Close ▲▲
+
+emitStatus({ modeLabel: label });
+
+// ▼▼ Sofortiges Schließen des Mobile-Overlays, ohne Bubble ▼▼
+try {
+  const inOverlay = !!document.querySelector('[data-overlay="true"]');
+  if (inOverlay) { onSystemMessage?.(""); } // leeres Signal → MobileOverlay schließt
+} catch {}
+// ▲▲ Ende Overlay-Close ▲▲
+
+// Auto-Prompt nur für die API (Keys aus i18n.ts → "prompts.*")
+const q =
+  next === "onboarding"
+    ? tr("prompts.onboarding", "Hey! 👋 Who are you and how will you guide me here step by step?")
+    : next === "M"
+    ? tr("prompts.modeDefault", "Reset everything to default and give me a brief status.")
+    : next === "council"
+    ? tr("prompts.councilIntro", "Each AI please introduce yourself and say how you can help right now.")
+    : tr("prompts.modeGeneric", "Mode {label}: What are you and where will you help me best?", { label });
+
+
+  const reply = await callChatAPI(q);
+  if (reply && reply.trim().length > 0) {
+    say(reply);
+  }
+}
+
+async function askExpert(expert: ExpertId) {
+  if (sendingExpert) return;
+  setSendingExpert(expert);
+  setCurrentExpert(expert);
+
+  const label = labelForExpert(expert, lang);
+
+  // Telemetrie
+  logEvent("expert_selected", { expert, label, roles: ROLES[expert] });
+
+  // Footer sofort aktualisieren (ohne Bubble)
+  emitStatus({ expertLabel: label });
+
+  // ⬅️ NEU: sofortiges Ack -> schließt MobileOverlay direkt
+  say(tr("status.expertSet", "Expert set: {label}.", { label }));
+
+  // Prompt an API – keine festen Fallbacks
+  const userPrompt = expertAskPrompt(label, lang);
+  const reply = await callChatAPI(userPrompt);
+  if (reply && reply.trim().length > 0) {
+    say(reply); // genau eine Antwort-Bubble
+  }
+
+  setSendingExpert(null);
+}
 
   /* UI */
-return (
-  <aside className={styles.saeule} aria-label={t("columnAria")} data-test="saeule">
-    {/* Kopf */}
-    <div className={styles.head}>
-  <div className={styles.title}>{t("columnTitle")}</div>
-  <div className={styles.badgesRow}>
-    <span className={`${styles.badge} ${styles.badgeGradient}`}>
-      <span className={styles.badgeDot} /> L1 · Free
-    </span>
-  </div>
+  return (
+    <aside className={styles.saeule} aria-label={t("columnAria")} data-test="saeule">
+      {/* Kopf entfernt → Build-Button oben im Panel */}
+            <div className={styles.block} style={{ marginTop: 8 }}>
+        <button
+  type="button"
+  aria-label={buildButtonLabel(lang)}
+  onClick={async () => {
+    const prompt = buildButtonMsg(lang);
+    try { logEvent("cta_start_building_clicked", {}); } catch {}
+
+    // ▼ Overlay sofort schließen (ohne Bubble)
+    try {
+      const inOverlay = !!document.querySelector('[data-overlay="true"]');
+      if (inOverlay) { onSystemMessage?.(""); }
+    } catch {}
+    // ▲ Ende Overlay-Close
+
+    // kurze Echo-Info (dezent)
+    emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
+
+    // Chat-Aufruf + Reply ausgeben (einmalig)
+    const reply = await callChatAPI(prompt);
+
+const finalText = reply && reply.length
+  ? reply
+  : tr("cta.fallback", "All set — tell me what you want to build (app, flow, feature …).");
+
+say(finalText);
+
+          }}
+          className={styles.buttonPrimary}
+          style={{ width: "100%", cursor: "pointer" }}
+        >
+          {buildButtonLabel(lang)}
+        </button>
+      </div>
+
+
+      {/* Steuerung */}
+      <div className={styles.sectionTitle}>{t("sectionControl")}</div>
+
+      {/* ONBOARDING */}
+      <div className={styles.block}>
+        <button
+          type="button"
+          aria-pressed={activeMode === "onboarding"}
+          className={`${styles.buttonPrimary} ${activeMode === "onboarding" ? styles.active : ""}`}
+          onClick={() => switchMode("onboarding")}
+        >
+          {t("onboarding")}
+        </button>
+      </div>
+
+      {/* M (Default) */}
+<div className={styles.block}>
+  <button
+    type="button"
+    aria-pressed={activeMode === "M"}
+    className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
+    onClick={() => {
+      // ▼ Overlay sofort schließen (ohne Bubble)
+      try {
+        const inOverlay = !!document.querySelector('[data-overlay="true"]');
+        if (inOverlay) { onSystemMessage?.(""); }
+      } catch {}
+      // ▲ Ende Overlay-Close
+      void switchMode("M");
+    }}
+  >
+    {t("mDefault")}
+  </button>
 </div>
 
 
-    {/* Steuerung */}
-    <div className={styles.sectionTitle}>{t("sectionControl")}</div>
-
-    {/* ONBOARDING */}
-    <div className={styles.block}>
-      <button
-        type="button"
-        aria-pressed={activeMode === "onboarding"}
-        className={`${styles.buttonPrimary} ${activeMode === "onboarding" ? styles.active : ""}`}
-        onClick={() => switchMode("onboarding")}
-      >
-        {t("onboarding")}
-      </button>
-    </div>
-
-    {/* M (Default) */}
-    <div className={styles.block}>
-      <button
-        type="button"
-        aria-pressed={activeMode === "M"}
-        className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
-        onClick={() => switchMode("M")}
-      >
-        {t("mDefault")}
-      </button>
-    </div>
-
-    {/* Modus-Dropdown */}
-    <div className={styles.block}>
-      <label className={styles.label} htmlFor="modus-select">
-        {t("selectMode")}
-      </label>
-      <div className={styles.selectWrap}>
-        <select
-          id="modus-select"
-          aria-label={t("selectMode")}  // ← was: "Modus wählen"
-          value={hydrated ? (MODI.some(m => m.id === activeMode) ? activeMode : "") : ""}
-          onChange={(e) => switchMode(e.target.value as ModeId)}
-          className={styles.select}
-        >
-          <option value="" disabled hidden>
-            {activeMode.startsWith("C")
-              ? MODI.find((m) => m.id === activeMode)?.label
-              : t("selectMode")}       {/* ← was: "Modus auswählen" */}
-          </option>
-          {MODI.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.label}
-            </option>
-          ))}
-        </select>
+      {/* Modus-Dropdown */}
+      <div className={styles.block}>
+        <label className={styles.label} htmlFor="modus-select">
+          {t("selectMode")}
+        </label>
+        <div className={styles.selectWrap}>
+          <select
+            id="modus-select"
+            aria-label={t("selectMode")}
+            value={hydrated ? (MODI.some((m) => m.id === activeMode) ? activeMode : "") : ""}
+            onChange={(e) => switchMode(e.target.value as ModeId)}
+            className={styles.select}
+          >
+            <option value="" disabled hidden>{t("selectMode")}</option>
+            {MODI.map((m) => (
+              <option key={m.id} value={m.id}>{m.label}</option>
+            ))}
+          </select>
+        </div>
       </div>
-    </div>
 
-
-    {/* Council13 */}
+      {/* Council13 */}
 <div className={styles.block}>
   <button
     type="button"
     aria-pressed={activeMode === "council"}
     className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
     onClick={() => switchMode("council")}
+    style={{ width: "100%", cursor: "pointer" }}
   >
     {t("council13")}
   </button>
 </div>
 
-{/* KI-Dropdown */}
+
+        {/* Experten (Dropdown) */}
+<div className={styles.sectionTitle}>{sectionTitleExperts(lang)}</div>
 <div className={styles.block}>
-  <label className={styles.label} htmlFor="ki-select">
-    {t("selectAI")}
+  <label className={styles.label} htmlFor="expert-select">
+    {chooseExpertLabel(lang)}
   </label>
   <div className={styles.selectWrap}>
     <select
-      id="ki-select"
-      aria-label={t("selectAI")}
-      value={activeKi}
-      onChange={(e) => switchKi(e.target.value as KiId)}
+      id="expert-select"
       className={styles.select}
+      aria-label={chooseExpertLabel(lang)}
+      defaultValue=""
+      onChange={(e) => {
+        const val = e.target.value as unknown as ExpertId;
+        if (val) { void askExpert(val); }
+      }}
     >
-      {KIS.map((k) => (
-        <option key={k} value={k}>{k}</option>
+      <option value="" disabled hidden>{chooseExpertLabel(lang)}</option>
+      {EXPERTS.map((e) => (
+        <option key={e.id} value={e.id}>
+          {e.icon} {labelForExpert(e.id, lang)}
+        </option>
       ))}
     </select>
   </div>
 </div>
 
-{/* Module (Coming) */}
-<div className={styles.sectionTitle}>{t("modules")}</div>
-<div className={styles.moduleList}>
-  {[
-    { id: "chemomaster", label: "ChemoMaster" },
-    { id: "blendmaster",  label: "BlendMaster" },
-    { id: "juraxy",       label: "Juraxy" },
-    { id: "cannai",       label: "Canna.AI" },
-  ].map((m) => (
-    <div key={m.id} className={styles.moduleItem} aria-disabled="true">
-      <div className={styles.moduleLeft}>
-        <span className={styles.moduleDot} />
-        <span className={styles.moduleName}>{m.label}</span>
+
+      {/* Aktionen: nur Export */}
+      <div className={styles.actions}>
+        <button
+          className={styles.button}
+          onClick={() => {
+            try {
+              const raw = localStorage.getItem("mpathy:thread:default") || "{}";
+              const blob = new Blob([raw], { type: "application/json" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url; a.download = "mpathy-thread.json"; a.click();
+              URL.revokeObjectURL(url);
+              logEvent("export_thread", { size: raw.length });
+              const text = tr("threadExported", "Thread exported.");
+say(text); // nutzt onSystemMessage ODER emitSystemMessage(reply) – aber nie beides
+
+
+            } catch {}
+          }}
+        >
+          {t("export")}
+        </button>
       </div>
-      <span className={`${styles.moduleTag} ${styles.moduleTagSoon}`}>
-        {t("coming")} soon
-      </span>
-    </div>
-  ))}
-</div>
 
-
-{/* Fuß: Aktionen */}
-<div className={styles.actions}>
-  <button
-    className={styles.button}
-    onClick={() => {
-      try {
-        const raw = localStorage.getItem("mpathy:thread:default") || "{}";
-        const blob = new Blob([raw], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "mpathy-thread.json";
-        a.click();
-        URL.revokeObjectURL(url);
-        logEvent("export_thread", { size: raw.length });
-        const text = t("threadExported");
-        emitSystemMessage({ kind: "mode", text, meta: { bytes: raw.length || 0 } });
-        onSystemMessage?.(text);
-      } catch {
-        /* silent */
-      }
-    }}
-  >
-    {t("export")}
-  </button>
-
-  <button
-    className={styles.buttonGhost}
-    onClick={() => alert(t("levelsComing"))}
-  >
-    {t("levels")}
-  </button>
-</div>
-
-{/* Statusleiste */}
-<div className={styles.statusBar} aria-live="polite">
-  <span className={styles.statusKey}>{t("statusMode")}</span> {modeLabel}
-  <span className={styles.statusDot} />
-  <span className={styles.statusKey}>{t("statusAgent")}</span> {activeKi}
-</div>
-
-</aside>
-);
-}
+      {/* Statusleiste */}
+      <div className={styles.statusBar} aria-live="polite">
+        <span className={styles.statusKey}>{t("statusMode")}</span> {modeLabel}
+      </div>
+    </aside>
+  );
+    }

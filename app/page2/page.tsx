@@ -2,7 +2,7 @@
 
 /***
  * =========================================================
- *  M — PAGE2 MASTER (Single-File Design/Behavior Control)
+ *  M — PAGE2 MASTER (Single-File Design/Behavior - Control)
  * =========================================================
  *
  *  INDEX (Sprunganker):
@@ -21,10 +21,11 @@
 
 import React, {
   useEffect,
+  useLayoutEffect, // darf drin bleiben, wird hier aber nicht zwingend gebraucht
   useState,
   useRef,
   useCallback,
-  useMemo,       // ✅ hinzugefügt
+  useMemo,
   FormEvent,
 } from "react";
 import Image from "next/image";
@@ -324,11 +325,12 @@ function Bubble({
 
       return (
         <div
-          role="listitem"
-          aria-label={isUser ? t("youSaid") : t("assistantSays")}
-          style={{
-            display: "flex",
-            justifyContent: isUser ? "flex-end" : "flex-start",
+          role="group"                    // group statt listitem → Screenreader-Gruppe
+  aria-roledescription={isUser ? "user message" : "assistant message"}
+  aria-label={isUser ? t("youSaid") : t("assistantSays")}
+  style={{
+    display: "flex",
+    justifyContent: isUser ? "flex-end" : "flex-start",
             alignItems: "flex-start",
             gap: 10,
             margin: "6px 0",
@@ -352,7 +354,10 @@ function Bubble({
       
 }
 
-/** Nachrichtenliste (echter Scroll-Container ist die <section>) */
+/** Conversation-Ansicht.
+ *  Hinweis: Der EINZIGE Scrollport ist der Eltern-Container (rechte Spalte).
+ *  Diese <section> bekommt NUR Layout/Abstand – KEIN eigenes overflow.
+ */
 function Conversation({
   messages,
   tokens,
@@ -370,11 +375,14 @@ function Conversation({
   aria-live="polite"
   aria-relevant="additions"
   aria-label={t("conversationAria")}
-  style={{ /* … unverändert … */ }}
+  /* === EINFÜGEN START: sichtbarer Fußraum + Anti-Collapse === */
+  style={{ paddingBottom: padBottom, marginBottom: 0 }}
+  /* === EINFÜGEN ENDE ======================================= */
 >
   {messages.map((m, i) => (
     <Bubble key={i} msg={m} tokens={tokens} />
   ))}
+    <div className="chat-end-spacer" style={{ height: padBottom }} aria-hidden />
 </section>
   );
 }
@@ -495,74 +503,392 @@ export default function Page2() {
   const theme = useTheme("default");
   const activeTokens: Tokens = theme.tokens;
 
-  // Breakpoint + Seitenränder
-  const { isMobile } = useBreakpoint(768);
-  const sideMargin = isMobile ? theme.dock.mobile.side : theme.dock.desktop.side;
+// === Scroll-Enable NACH DOM-Load & Fonts, dann 2× rAF für stabiles Layout ===
+useEffect(() => {
+  let fired = false;
+  let raf1 = 0, raf2 = 0;
 
-  // Refs & Höhenmessung
-  const headerRef = useRef<HTMLDivElement>(null);
-  const convoRef = useRef<HTMLDivElement>(null);
-  const dockRef = useRef<HTMLDivElement>(null);
-  const [dockH, setDockH] = useState(0);
+  const nudge = () => {
+    if (fired) return;
+    fired = true;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        const el = convoRef.current as HTMLDivElement | null;
+        if (!el) return;
+        const prev = el.style.overflow;
+        el.style.overflow = "hidden";
+        el.scrollTop = (el.scrollTop || 0) + 1; // minimaler Impuls
+        void el.offsetHeight;                    // Reflow erzwingen
+        el.style.overflow = prev || "auto";
+      });
+    });
+  };
 
-  useEffect(() => {
-    const measure = () => {
-      if (dockRef.current) setDockH(dockRef.current.offsetHeight || 0);
+  // Wenn Fonts fertig sind, erst dann Layout als stabil ansehen
+  const afterFonts = () => {
+    if ("fonts" in document && (document as any).fonts?.ready) {
+      (document as any).fonts.ready.then(nudge).catch(nudge);
+    } else {
+      nudge();
+    }
+  };
+
+  // Warten bis DOM + Ressourcen geladen (Load-Event). Falls schon geladen → direkt weiter.
+  if (document.readyState === "complete") {
+    afterFonts();
+  } else {
+    const onLoad = () => { afterFonts(); };
+    window.addEventListener("load", onLoad, { once: true });
+    // Falls der Browser „complete“ erreicht, ohne echtes load zu feuern:
+    const onRS = () => {
+      if (document.readyState === "complete") {
+        window.removeEventListener("load", onLoad);
+        afterFonts();
+      }
     };
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (dockRef.current) ro.observe(dockRef.current);
-    if (headerRef.current) ro.observe(headerRef.current);
-    window.addEventListener("resize", measure);
+    document.addEventListener("readystatechange", onRS, { once: true });
     return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
+      window.removeEventListener("load", onLoad);
+      document.removeEventListener("readystatechange", onRS as any);
     };
-  }, []);
+  }
 
-  // Chat State
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [stickToBottom, setStickToBottom] = useState(true);
-  const [mode, setMode] = useState<string>("DEFAULT");
+  return () => {
+    if (raf1) cancelAnimationFrame(raf1);
+    if (raf2) cancelAnimationFrame(raf2);
+  };
+}, []);
 
-  // Persist
-  const persistMessages = saveMessages;
 
-  // Initiale Begrüßung / Restore
-  useEffect(() => {
-    const restored = loadMessages();
-    if (Array.isArray(restored) && restored.length) {
-      setMessages(restored);
+
+  // Breakpoint + Seitenränder
+const { isMobile } = useBreakpoint(768);
+const sideMargin = isMobile ? theme.dock.mobile.side : theme.dock.desktop.side;
+
+// Refs & Höhenmessung
+const headerRef = useRef<HTMLDivElement>(null);
+const convoRef = useRef<HTMLDivElement>(null);
+const dockRef   = useRef<HTMLDivElement>(null);
+const [dockH, setDockH] = useState(0);
+// ▼▼▼ EINZEILER HINZUFÜGEN (bleibt) ▼▼▼
+const endRef  = useRef<HTMLDivElement>(null);
+
+// zentrale Messung + einheitlicher Fußraum
+const [padBottom, setPadBottom] = useState(0);
+
+const measureDock = useCallback(() => {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const h = dockRef.current?.offsetHeight ?? 0;
+      setDockH(h);
+      setPadBottom(h);                           // einzige Fußraum-Quelle
+      document.documentElement.style.setProperty("--dock-h", `${h}px`);
+    });
+  });
+}, []);
+
+useEffect(() => {
+  measureDock();
+  const ro = new ResizeObserver(measureDock);
+  if (dockRef.current) ro.observe(dockRef.current);
+  if (headerRef.current) ro.observe(headerRef.current);
+  const onWinResize = () => measureDock();
+  window.addEventListener("resize", onWinResize);
+
+  // iOS Safari (Keyboard/URL-Bar): visualViewport-Sync
+  const vv = (window as any).visualViewport as VisualViewport | undefined;
+  const onVV = () => measureDock();
+  vv?.addEventListener("resize", onVV);
+  vv?.addEventListener("scroll", onVV);
+
+  return () => {
+    ro.disconnect();
+    window.removeEventListener("resize", onWinResize);
+    vv?.removeEventListener("resize", onVV);
+    vv?.removeEventListener("scroll", onVV);
+  };
+}, [measureDock]);
+
+
+// ▼▼▼ NEU: Dock-Höhe als CSS-Variable für Styles/Footroom setzen ▼▼▼
+useEffect(() => {
+  document.documentElement.style.setProperty("--dock-h", `${dockH}px`);
+}, [dockH]);
+//// === EINFÜGEN START: Mobile-Keyboard -> Kompaktmodus ===================
+const [compactStatus, setCompactStatus] = useState(false);
+
+useEffect(() => {
+  if (!('visualViewport' in window)) return;
+  const vv = window.visualViewport!;
+  const onChange = () => {
+    const keyboardOpen = (window.innerHeight - vv.height) > 120; // heuristik
+    setCompactStatus(keyboardOpen);
+  };
+  vv.addEventListener('resize', onChange);
+  vv.addEventListener('scroll', onChange);
+  onChange();
+  return () => {
+    vv.removeEventListener('resize', onChange);
+    vv.removeEventListener('scroll', onChange);
+  };
+}, []);
+//// === EINFÜGEN ENDE ======================================================
+ 
+// Initial Scroll "Unlock" — stabiler (double rAF) + Reflow-Nudge
+useEffect(() => {
+  const el = convoRef.current as HTMLDivElement | null;
+  if (!el) return;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const prev = el.style.overflow;
+      el.style.overflow = "hidden";
+      el.scrollTop = (el.scrollTop || 0) + 1; // minimaler Nudge
+      void el.offsetHeight;                   // Reflow erzwingen
+      el.style.overflow = prev || "auto";
+    });
+  });
+}, []);
+
+
+// Chat State
+const [messages, setMessages] = useState<ChatMessage[]>([]);
+const [input, setInput] = useState("");
+const [loading, setLoading] = useState(false);
+const [stickToBottom, setStickToBottom] = useState(true);
+const [mode, setMode] = useState<string>("DEFAULT");
+// ▼▼ NEU: Footer-Status (nur Anzeige)
+type FooterStatus = { modeLabel: string; expertLabel: string };
+const [status, setStatus] = useState<FooterStatus>({ modeLabel: "—", expertLabel: "—" });
+// Golden Prompt — micro-motion registers
+const breathRef = useRef<number>(0);            // breath phase accumulator
+const lastMotionRef = useRef<number[]>([]);     // flow memory (last intensities)
+const rafRef = useRef<number | null>(null);     // living continuum loop
+
+// Living Continuum Engine (perceptual continuity)
+useEffect(() => {
+  let mounted = true;
+  const tick = (t: number) => {
+    if (!mounted) return;
+
+    // 5s cycle; amplitude modulated by typing
+    const typingBias =
+      document.getElementById("gold-input")?.classList.contains("is-typing") ? 1 : 0.35;
+
+    const phase = ((t / 1000) % 5) * Math.PI * 2;
+    const amp = 0.003 * typingBias;
+    const scale = 1 + Math.sin(phase) * amp;
+
+    const dock = document.getElementById("m-input-dock");
+
+    // ❗ Niemals den Sticky-Container transformieren
+    if (dock) {
+      (dock as HTMLElement).style.transform = ""; // evtl. alte Werte neutralisieren
+
+      // ✅ Nur innere Kinder leicht „atmen“ lassen
+      const promptWrap = dock.querySelector(".gold-prompt-wrap") as HTMLElement | null;
+      const bar        = dock.querySelector(".gold-bar") as HTMLElement | null;
+
+      if (promptWrap) promptWrap.style.transform = `translateZ(0) scale(${scale})`;
+      if (bar)        bar.style.transform        = `translateZ(0) scale(${scale})`;
+    }
+
+    rafRef.current = requestAnimationFrame(tick);
+  };
+
+  rafRef.current = requestAnimationFrame(tick);
+
+  return () => {
+    mounted = false;
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+
+    // Cleanup: evtl. gesetzte Transforms wieder entfernen
+    const dock = document.getElementById("m-input-dock");
+    if (dock) {
+      (dock as HTMLElement).style.transform = "";
+      const promptWrap = dock.querySelector(".gold-prompt-wrap") as HTMLElement | null;
+      const bar        = dock.querySelector(".gold-bar") as HTMLElement | null;
+      if (promptWrap) promptWrap.style.transform = "";
+      if (bar)        bar.style.transform = "";
+    }
+  };
+}, []);
+
+
+// Persist
+const persistMessages = saveMessages;
+
+// Initiale Begrüßung / Restore
+useEffect(() => {
+  const restored = loadMessages();
+  if (Array.isArray(restored) && restored.length) {
+    setMessages(restored);
+    return;
+  }
+  setMessages([]);
+}, []);
+
+
+// ===============================================================
+// Systemmeldung (für Säule / Overlay / Onboarding)
+// ===============================================================
+const systemSay = useCallback((content: string) => {
+  if (!content) return;
+
+  setMessages((prev) => {
+    const next = truncateMessages([
+      ...(Array.isArray(prev) ? prev : []),
+      { role: "assistant", content, format: "markdown" },
+    ]);
+    persistMessages(next);
+    return next;
+  });
+
+  // ▼ immer ans Ende scrollen – Desktop sofort, Mobile mit kurzem Settle
+const scrollToBottom = () => {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (isMobile && endRef.current) {
+        // iOS/Mobile: stabil gegen Keyboard/visualViewport-Jank
+        endRef.current.scrollIntoView({ block: "end" });
+      } else {
+        const el = convoRef.current as HTMLDivElement | null;
+        if (el) el.scrollTop = el.scrollHeight;
+      }
+      setStickToBottom(true);
+    });
+  });
+};
+
+// Mobile kurz „settlen“ lassen, Desktop sofort
+if (isMobile) {
+  setTimeout(scrollToBottom, 90); // 60–120ms sweet spot
+} else {
+  scrollToBottom();
+}
+
+
+
+  // ▼ Antwort ist da → Puls beenden (deine bestehende Logik)
+  setLoading(false);
+  setMode("DEFAULT");
+}, [persistMessages]);
+
+
+
+  // Footer-Status (nur Anzeige in der Statusleiste, keine Bubble)
+const [footerStatus, setFooterStatus] = useState<{ modeLabel: string; expertLabel: string }>({
+  modeLabel: "—",
+  expertLabel: "—",
+});
+
+  // ===============================================================
+// BRIDGE — Saeule → Chat (Event → echte Nachricht)
+// ===============================================================
+useEffect(() => {
+  const onSystem = (e: Event) => {
+    const detail = (e as CustomEvent).detail ?? {};
+    const text: string = detail.text ?? "";
+    const kind: string = detail.kind ?? "info";
+    const meta = detail.meta ?? {};
+
+    const wasAtEnd = stickToBottom;
+
+    // 1) Footer-Status aktualisieren
+    if (kind === "status") {
+      const modeLabel = meta.modeLabel ?? detail.modeLabel;
+      const expertLabel = meta.expertLabel ?? detail.expertLabel;
+      setFooterStatus((s) => ({
+        modeLabel: typeof modeLabel === "string" && modeLabel.length ? modeLabel : s.modeLabel,
+        expertLabel: typeof expertLabel === "string" && expertLabel.length ? expertLabel : s.expertLabel,
+      }));
+
+      // Auswahl getroffen → "Denken" startet (Puls an)
+      if ((modeLabel && String(modeLabel).length) || (expertLabel && String(expertLabel).length)) {
+        try { setLoading(true); } catch {}
+      }
+
+      if (wasAtEnd) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const el = convoRef.current as HTMLDivElement | null;
+            if (el) el.scrollTop = el.scrollHeight;
+            setStickToBottom(true);
+          });
+        });
+      }
       return;
     }
-    setMessages([
-      { role: "assistant", content: "Welcome. I'm M. Mother of AI.", format: "markdown" },
-    ]);
-  }, []);
 
-  // Systemmeldung (für Säule/Overlay/Onboarding)
-  const systemSay = useCallback((content: string) => {
-    if (!content) return;
+    // 2) Initialer System-/Mode-Bubble: Puls EIN
+   if (kind === "mode") {
+  // Nur updaten, wenn eindeutig ein Moduswechsel signalisiert wird
+  const hasModeId =
+    typeof (meta?.modeId ?? (detail as any)?.modeId) === "string";
+
+  if (hasModeId) {
+    const modeLabel =
+      (meta?.label ?? meta?.modeLabel ?? (detail as any)?.modeLabel) as
+        | string
+        | undefined;
+    if (modeLabel && modeLabel.length) {
+      setFooterStatus((s) => ({ ...s, modeLabel }));
+    }
+  }
+
+  // Denken beginnt beim Moduswechsel
+  try { setLoading(true); } catch {}
+}
+
+
+    // 3) Falls eine Antwort signalisiert wird (reply/info), Puls AUS — auch wenn kein Text kommt
+    if (kind === "reply" || kind === "info") {
+      try { setLoading(false); } catch {}
+    }
+
+    // 4) Ohne Text keine Bubble anhängen (aber der obige loading-Fix greift bereits)
+    if (!text) return;
+
+    // 5) Sichtbare Bubble anhängen
     setMessages((prev) => {
-      const next = truncateMessages([
-        ...(Array.isArray(prev) ? prev : []),
-        { role: "assistant", content, format: "markdown" },
-      ]);
+      const role: Role = kind === "mode" ? "system" : "assistant";
+      const msg: ChatMessage = { role, content: text, format: "markdown" };
+      const next = truncateMessages([...(Array.isArray(prev) ? prev : []), msg]);
       persistMessages(next);
       return next;
     });
-  }, [persistMessages]);
 
+    // 6) Bei jeder sichtbaren Nicht-"mode"-Antwort sicherheitshalber Puls AUS
+    if (kind !== "mode") {
+      try { setLoading(false); } catch {}
+    }
+
+    requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    const el = convoRef.current as HTMLDivElement | null;
+    if (el) el.scrollTop = el.scrollHeight;
+    setStickToBottom(true);
+  });
+});
+
+  };
+
+  window.addEventListener("mpathy:system-message" as any, onSystem as any);
+  return () => window.removeEventListener("mpathy:system-message" as any, onSystem as any);
+}, [persistMessages, stickToBottom]);
+
+
+  // ===============================================================
   // Autosrollen ans Ende, wenn am Bottom
+  // ===============================================================
   useEffect(() => {
     const el = convoRef.current as HTMLDivElement | null;
     if (!el || !stickToBottom) return;
     requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; });
   }, [messages, dockH, stickToBottom]);
 
+  // ===============================================================
   // Scroll-Listener zur Bottom-Erkennung
+  // ===============================================================
   useEffect(() => {
     const el = convoRef.current as HTMLDivElement | null;
     if (!el) return;
@@ -575,123 +901,117 @@ export default function Page2() {
     return () => el.removeEventListener("scroll", onScroll);
   }, []);
 
-  /// app/page2/page.tsx — REPLACE ONLY THIS FUNCTION
-async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
-  const res = await fetch("/api/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "same-origin",                // ⬅︎ NEU: Session-Cookies mitgeben
-    body: JSON.stringify({ messages: context }),
-  });
-  if (!res.ok) throw new Error("Chat API failed");
-  const data = await res.json();
-  const assistant = (data.assistant ?? data);
-  return {
-    role: assistant.role ?? "assistant",
-    content: assistant.content ?? "",
-    format: assistant.format ?? "markdown",
-  } as ChatMessage;
-}
-
-
-  const onSendFromPrompt = useCallback(async (text: string) => {
-  const trimmed = (text ?? "").trim();
-  if (!trimmed) return;
-
-  const userMsg: ChatMessage = { role: "user", content: trimmed, format: "markdown" };
-  const optimistic = truncateMessages([...(messages ?? []), userMsg]);
-  setMessages(optimistic);
-  persistMessages(optimistic);
-  setLoading(true);
-  setMode("THINKING");
-
-  try {
-    const assistant = await sendMessageLocal(optimistic);
-    const next = truncateMessages([...(optimistic ?? []), assistant]);
-    setMessages(next);
-    persistMessages(next);
-  } catch {
-    const next = truncateMessages([
-      ...(optimistic ?? []),
-      { role: "assistant", content: "⚠️ Send failed. Please retry.", format: "markdown" },
-    ]);
-    setMessages(next);
-    persistMessages(next);
-  } finally {
-    setLoading(false);
-    setMode("DEFAULT");
+  // ===============================================================
+  // Lokale Chat-Sendefunktion (ruft echte API)
+  // ===============================================================
+  async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin", // Session mitgeben
+      body: JSON.stringify({ messages: context }),
+    });
+    if (!res.ok) throw new Error("Chat API failed");
+    const data = await res.json();
+    const assistant = data.assistant ?? data;
+    return {
+      role: assistant.role ?? "assistant",
+      content: assistant.content ?? "",
+      format: assistant.format ?? "markdown",
+    } as ChatMessage;
   }
-}, [messages, persistMessages]);
+
+  // ===============================================================
+  // Prompt-Handler – sendet Text aus Eingabefeld
+  // ===============================================================
+  const onSendFromPrompt = useCallback(async (text: string) => {
+    const trimmed = (text ?? "").trim();
+    if (!trimmed) return;
+
+    const userMsg: ChatMessage = { role: "user", content: trimmed, format: "markdown" };
+    const optimistic = truncateMessages([...(messages ?? []), userMsg]);
+    setMessages(optimistic);
+    persistMessages(optimistic);
+    setLoading(true);
+    setMode("THINKING");
+
+    try {
+      const assistant = await sendMessageLocal(optimistic);
+      const next = truncateMessages([...(optimistic ?? []), assistant]);
+      setMessages(next);
+      persistMessages(next);
+    } catch {
+      const next = truncateMessages([
+        ...(optimistic ?? []),
+        { role: "assistant", content: "⚠️ Send failed. Please retry.", format: "markdown" },
+      ]);
+      setMessages(next);
+      persistMessages(next);
+    } finally {
+      setLoading(false);
+      setMode("DEFAULT");
+    }
+  }, [messages, persistMessages]);
+
 
 
   /* =====================================================================
-     [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
-     ===================================================================== */
+   [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
+   ===================================================================== */
 
-  // Mobile Overlay
-  const [overlayOpen, setOverlayOpen] = useState(false);
+// Mobile Overlay
+const [overlayOpen, setOverlayOpen] = useState(false);
 
-  // Farben ausschließlich aus Tokens
-  const color = activeTokens.color;
-  const bg0 = color.bg0 ?? "#000000";
-  const bg1 = color.bg1 ?? "#0c0f12";
-  const textColor = color.text ?? "#E6F0F3";
+// Farben ausschließlich aus Tokens
+const color = activeTokens.color;
+const bg0 = color.bg0 ?? "#000000";
+const bg1 = color.bg1 ?? "#0c0f12";
+const textColor = color.text ?? "#E6F0F3";
 
-  // Seitenstil (radial + linear)
-  const pageStyle: React.CSSProperties = {
-    minHeight: "100dvh",
-    color: textColor,
-    background: [
-      "radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%)",
-      "radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%)",
-      `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000 100%)`,
-    ].join(", "),
-  };
+// Seitenstil (radial + linear)
+const pageStyle: React.CSSProperties = {
+  minHeight: "100dvh",
+  color: textColor,
+  background: [
+    "radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%)",
+    "radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%)",
+    `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000 100%)`,
+  ].join(", "),
+};
 
-  // Optional: Abstand unten (mobil über visualViewport gepflegt)
-const padBottom = `calc(${dockH}px + var(--safe-bottom) + 24px)`;
-
-/* 3.2 — Mobile Header State + Viewport Hook (BEGIN) */
+// Mobile Header State + Viewport Hook
 const [mState, setMState] = useState<"idle" | "shrink" | "typing">("idle");
-
-// Keyboard-/Viewport-Handling (setzt --vh / --safe-bottom / --dock-cap dynamisch)
 useMobileViewport(typeof document !== "undefined" ? document.body : null);
-/* 3.2 — Mobile Header State + Viewport Hook (END) */
-/* 3.3 — Scroll → Header shrink (BEGIN) */
+/* Scroll → Header shrink */
 useEffect(() => {
-  // nur auf Mobile und wenn das Scroll-Element existiert
   if (!isMobile || !convoRef?.current) return;
-
   const el = convoRef.current as HTMLElement;
-
   const onScroll = () => {
-    if (mState === "typing") return; // Tippen dominiert, nicht schrumpfen
+    if (mState === "typing") return;
     const y = el.scrollTop || 0;
     setMState(y > 24 ? "shrink" : "idle");
   };
-
   el.addEventListener("scroll", onScroll, { passive: true });
   return () => el.removeEventListener("scroll", onScroll);
 }, [isMobile, mState, convoRef]);
-/* 3.3 — Scroll → Header shrink (END) */
-/* 3.4 — Focus im Prompt/Dock → Header typing (BEGIN) */
+
+/* Focus im Prompt/Dock → Header typing */
 useEffect(() => {
   if (!isMobile) return;
-
   const onFocusIn = (e: FocusEvent) => {
     const t = e.target as HTMLElement | null;
-    // Wenn der Fokus in den Dock/Prompt-Bereich wandert → typing
     if (t && t.closest("#m-input-dock")) setMState("typing");
   };
-
   const onFocusOut = (e: FocusEvent) => {
     const t = e.target as HTMLElement | null;
     if (t && t.closest("#m-input-dock")) {
-      // Beim Verlassen: wenn gescrollt → shrink, sonst → idle
-      setMState((prev) => (prev === "typing" ? (convoRef?.current && (convoRef.current as HTMLElement).scrollTop > 24 ? "shrink" : "idle") : prev));
+      setMState((prev) =>
+        prev === "typing"
+          ? (convoRef?.current && (convoRef.current as HTMLElement).scrollTop > 24 ? "shrink" : "idle")
+          : prev
+      );
     }
   };
-
   document.addEventListener("focusin", onFocusIn);
   document.addEventListener("focusout", onFocusOut);
   return () => {
@@ -699,153 +1019,348 @@ useEffect(() => {
     document.removeEventListener("focusout", onFocusOut);
   };
 }, [isMobile, convoRef]);
-/* 3.4 — Focus im Prompt/Dock → Header typing (END) */
-/* 3.5 — CSS-Variable --header-h je State setzen (BEGIN) */
+
+/* CSS-Variable --header-h je State setzen */
 useEffect(() => {
   if (!isMobile) return;
-
   const root = document.documentElement;
   const value =
     mState === "typing"
-      ? "var(--header-h-typing)"   // 0px
+      ? "var(--header-h-typing)"
       : mState === "shrink"
-      ? "var(--header-h-shrink)"   // 72px
-      : "var(--header-h-idle)";    // 96px
-
+      ? "var(--header-h-shrink)"
+      : "var(--header-h-idle)";
   root.style.setProperty("--header-h", value);
 }, [isMobile, mState]);
-/* 3.5 — CSS-Variable --header-h je State setzen (END) */
 
+/* Dock-Höhe → --dock-h (für FAB-Offset & Spacer vorm Dock) */
+useEffect(() => {
+  const h = dockRef.current?.offsetHeight || 0;
+  document.documentElement.style.setProperty("--dock-h", `${h}px`);
+}, [dockH]);
+/* Dedupe-Gate gegen doppelte Auslösung (Touch→Click, Key→Click etc.) */
+const clickGateRef = useRef<number>(0);
+const withGate = (fn: () => void) => {
+  const now = Date.now();
+  if (now - clickGateRef.current < 350) return; // innerhalb 350ms: ignorieren
+  clickGateRef.current = now;
+  fn();
+};
+/* ⬇︎ NEU: Laufzeit-Gate gegen Mehrfachsendungen */
+const sendingRef = useRef(false);
 return (
   <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
-    {/* === HEADER: eigene BLOCK-Section, fixiert oben === */}
-    <header
-      ref={headerRef}
-      role="banner"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        height: isMobile ? "var(--header-h)" : "224px",
-        background: bg0,
-        borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
-      }}
-    >
-       <div
+    
+    
+    {/* === HEADER ===================================================== */}
+<header
+  ref={headerRef}
+  role="banner"
+  style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 100,
+    // ▼ Höhe auf 60 % der bisherigen Werte
+    height: isMobile ? "calc(var(--header-h) * 0.6)" : "calc(224px * 0.6)",
+    background: bg0,
+    borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
+  }}
+>
+  <div
     style={{
-      width: "100vw",          // volle Viewport-Breite
+      width: "100vw",
       maxWidth: "none",
       margin: 0,
       height: "100%",
       display: "flex",
-      justifyContent: "center",// exakt zentriert (horizontal)
-      alignItems: "center",    // exakt zentriert (vertikal in der Header-Höhe)
+      justifyContent: "center",
+      alignItems: "center",
     }}
   >
-    <LogoM size={isMobile ? 120 : 160} active={loading} />
+    {/* ▼ Logo auf 60 %: 120→72 (mobile), 160→96 (desktop) */}
+    <LogoM size={isMobile ? 72 : 96} active={loading} />
   </div>
-    </header>
+</header>
 
-    {/* === BÜHNE: startet unter dem fixierten Header === */}
-    <div
-      style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        marginInline: sideMargin,
-        minHeight: 0,
-        maxWidth: 1280,
-        alignSelf: "center",
-        width: "100%",
-        paddingTop: isMobile ? "var(--header-h)" : "224px", // folgt der Header-State-Maschine
-      }}
-    >
-      {/* Bühne: Desktop 2 Spalten (Säule links), Mobile 1 Spalte */}
-      <div
+    {/* === BÜHNE ====================================================== */}
+<div
+  style={{
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    marginInline: isMobile ? 0 : sideMargin,
+    minHeight: 0,
+    maxWidth: isMobile ? "none" : 1280,
+    alignSelf: "center",
+    width: "100%",
+    // ⬇️ Mobile & Desktop beide auf 60 % des ursprünglichen Header-Werts
+    paddingTop: isMobile ? "calc(var(--header-h) * 0.6)" : "calc(224px * 0.6)",
+  }}
+>
+
+      {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
+           <div
         style={{
           display: "grid",
           gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
           alignItems: "start",
           gap: 16,
-          flex: 1,
+          /* ⬇︎ Lass den Grid-Container frei atmen, sticky braucht das */
+          /* height: "100%",  ← ENTFERNT */
           minHeight: 0,
-          overflow: "visible",
-          /* ➜ Abstand unter dem Header für .saeule */
-          ["--header-offset" as any]: "16px", // bei Bedarf 24px/32px
+          overflow: "visible", // ⬅︎ statt "hidden": klebt stabil, nichts clippt
+          ["--header-offset" as any]: "16px",
         }}
       >
-        {/* Säule links */}
-        {!isMobile && <SidebarContainer onSystemMessage={systemSay} />}
 
-        {/* Rechte Spalte: Conversation + Dock */}
-        <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
-          {/* Scrollbarer Chronik-Container (einziger Scroll) */}
+{/* Säule links */}
+{!isMobile && (
+  <div
+    style={{
+      position: "sticky",
+      // ▼ Header (Desktop 224px) wurde auf 60 % reduziert → + 16px Puffer
+      top: "calc(224px * 0.6 + 16px)",
+      alignSelf: "start",
+      height: "fit-content",
+      // ▼ verfügbare Höhe: Viewport minus (reduzierter Header + Puffer)
+      maxHeight: "calc(100dvh - (224px * 0.6 + 16px))",
+      overflow: "auto",
+    }}
+  >
+    <SidebarContainer onSystemMessage={systemSay} />
+  </div>
+)}
+
+                <div
+          ref={convoRef as any}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+
+            /* ⬇︎ harte, verlässliche Block-Höhe relativ zum Viewport:
+               - var(--header-h) ist dein Top-Offset (mobil dynamisch)
+               - 224px ist dein Desktop-Top-Padding (siehe Bühne)
+               - var(--dock-h) ist der Bottom-Dock
+            */
+            flex: "0 1 auto",
+            height: isMobile
+  ? undefined                 // ⬅︎ KEINE feste Viewport-Höhe auf Mobile
+              : "calc(100dvh - (224px * 0.6) - var(--dock-h, 60px))",
+
+
+            minHeight: 0,
+            overflow: "auto",
+            pointerEvents: "auto",
+            touchAction: "pan-y",
+            WebkitOverflowScrolling: "touch",
+            overscrollBehavior: "contain",
+
+            // Single-Source Fußraum aus bestehendem State
+            paddingBottom: `${padBottom}px`,
+            scrollPaddingBottom: `${padBottom}px`,
+
+            paddingInline: isMobile
+              ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
+              : "12px",
+          }}
+        >
+
+          {/* Chronik wächst im Scroller */}
           <div
-            ref={convoRef as any}
-            style={{
-              flex: 1,
-              minHeight: 0,
-              overflow: "auto",
-              overscrollBehavior: "contain",
-              WebkitOverflowScrolling: "touch",
-              paddingTop: 8,
-              paddingBottom: padBottom,
-              scrollbarGutter: "stable",
-            }}
-            aria-label={t("conversationAria")}
-          >
-            <Conversation
-              messages={messages}
-              tokens={activeTokens}
-              padBottom={padBottom}
-              scrollRef={convoRef as any}
-            />
-          </div>
-
-          {/* Prompt Dock (sticky bottom) */}
-<div
-  id="m-input-dock"
-  ref={dockRef as any}
-  role="group"
-  aria-label="Chat Eingabeleiste"
   style={{
-    position: "sticky",
-    bottom: 0,
-    zIndex: 50,
-    background: bg0,
-
-    // ⬇ kompakter & Safe-Area über unsere Var
-    padding: "10px 10px calc(10px + var(--safe-bottom))",
-    marginTop: 6,
-
-    borderTop: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"}`,
-    backdropFilter: "blur(8px)",
-    boxShadow: "0 -6px 24px rgba(0,0,0,.35)",
-    overscrollBehavior: "contain",
-
-    // ⬇ Auto-Grow Kappe: Dock darf mobil max. bis zur Cap wachsen
-    maxHeight: "var(--dock-cap)",  // 30vh Portrait / 22vh Landscape (aus Hook)
-    overflow: "visible",
+    flex: 1,
+    minHeight: 0,
+    // ▼ berücksichtigt mobilen Header (60 %) + bisherigen 8px
+    paddingTop: isMobile ? "calc(var(--header-h) * 0.6 + 8px)" : 8,
+    paddingLeft: isMobile ? 0 : undefined,
+    paddingRight: isMobile ? 0 : undefined,
+    scrollbarGutter: "stable",
   }}
+  aria-label={t("conversationAria")}
 >
-  <MessageInput
-    onSend={onSendFromPrompt}
-    disabled={loading}
-    placeholder={t('writeMessage')}
 
-    // ⬇ mobil kompakt starten, weich wachsen
-    minRows={isMobile ? 1 : 3}
-    maxRows={isMobile ? 6 : 10}
-  />
-</div>
+ <Conversation
+  messages={messages}
+  tokens={activeTokens}
+  padBottom={`${padBottom}px`}
+  scrollRef={convoRef as any}
+/>
+{/* ⬇︎ unsichtbarer Anker: stabil ans Ende scrollen – v.a. Mobile/iOS */}
+<div ref={endRef} style={{ height: 1 }} aria-hidden="true" />
 
-        </div>
-      </div>
-    </div>
 
-    {/* Mobile Overlay / Onboarding unverändert darunter */}
+          </div>
+          {/* === BOTTOM STACK: Prompt, dann Icons+Status ================= */}
+          <div
+            id="m-input-dock"
+            ref={dockRef as any}
+            className="m-bottom-stack gold-dock"
+            role="group"
+            aria-label="Chat Eingabe & Status"
+          >
+            {/* Prompt … */}
+            <div className="gold-prompt-wrap">
+              <textarea
+                id="gold-input"
+                className="gold-textarea"
+                aria-label={t("writeMessage")}
+                placeholder={t("writeMessage")}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onFocus={() => {
+  // sofortige Messung bei Fokus
+  if (typeof requestAnimationFrame !== "undefined") {
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const h = dockRef.current?.offsetHeight || 0;
+        document.documentElement.style.setProperty("--dock-h", `${h}px`);
+        setPadBottom(h);
+      })
+    );
+  }
+}}
+
+                onInput={(e) => {
+  const ta = e.currentTarget;
+  // Autogrow (max 30% Viewport)
+  ta.style.height = "auto";
+  const cap = Math.min(ta.scrollHeight, Math.round((window?.innerHeight || 0) * 0.30));
+  ta.style.height = `${Math.max(44, cap)}px`;
+  ta.classList.add("is-typing");
+  // double-rAF: Dock-Höhe stabil messen
+  if (typeof requestAnimationFrame !== "undefined") {
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const h = dockRef.current?.offsetHeight || 0;
+        document.documentElement.style.setProperty("--dock-h", `${h}px`);
+        setPadBottom(h);
+      })
+    );
+  }
+}}
+
+                onBlur={(e) => {
+  const ta = e.currentTarget;
+  ta.classList.remove("is-typing");
+  ta.style.height = "44px"; // Reset auf Minimalhöhe
+  const h = dockRef.current?.offsetHeight || 0;
+  document.documentElement.style.setProperty("--dock-h", `${h}px`);
+  setPadBottom(h);
+}}
+
+                onKeyDown={(e) => {
+  const ev: any = e;
+  const isComposing = !!ev.isComposing || !!ev.nativeEvent?.isComposing;
+  if (
+    e.key !== "Enter" ||
+    e.shiftKey ||
+    e.repeat ||
+    isComposing ||
+    loading ||
+    !input.trim()
+  ) return;
+
+  e.preventDefault();
+
+  if (sendingRef.current) return;
+  sendingRef.current = true;
+
+  withGate(() => {
+    const dockEl = document.getElementById("m-input-dock");
+    dockEl?.classList.add("send-ripple");
+    void dockEl?.getBoundingClientRect();
+
+    onSendFromPrompt(input);
+    setInput("");
+
+    const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+    if (ta) {
+      ta.style.height = "44px";
+      ta.classList.remove("is-typing");
+    }
+    const h = dockRef.current?.offsetHeight || 0;
+    document.documentElement.style.setProperty("--dock-h", `${h}px`);
+    setPadBottom(h);
+  });
+
+  setTimeout(() => { sendingRef.current = false; }, 400);
+}}
+
+
+                rows={1}
+                spellCheck
+                autoCorrect="on"
+                autoCapitalize="sentences"
+              />
+              <button
+                type="button"
+                className="gold-send"
+                aria-label={t("send")}
+                disabled={loading || !input.trim()}
+                onClick={() => {
+  if (loading || !input.trim() || sendingRef.current) return;
+  sendingRef.current = true;
+
+  withGate(() => {
+    const dockEl = document.getElementById("m-input-dock");
+    dockEl?.classList.add("send-ripple");
+    void dockEl?.getBoundingClientRect();
+
+    onSendFromPrompt(input);
+    setInput("");
+
+    const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+    if (ta) {
+      ta.style.height = "44px";
+      ta.classList.remove("is-typing");
+    }
+    const h = dockRef.current?.offsetHeight || 0;
+    document.documentElement.style.setProperty("--dock-h", `${h}px`);
+    setPadBottom(h);
+  });
+
+  setTimeout(() => { sendingRef.current = false; }, 400);
+}}
+
+
+              >
+                {t("send")}
+              </button>
+            </div>
+
+            {/* ⚑ CHANGED: Icons + Status (gold-bar) gehören IN den Dock-Container */}
+            <div
+              className="gold-bar"
+              data-compact={compactStatus ? 1 : 0}
+            >
+              <div className="gold-tools" aria-label={t('promptTools') ?? 'Prompt tools'}>
+                <button type="button" aria-label={t('comingUpload')}    className="gt-btn">📎</button>
+                  <button type="button" aria-label={t('comingVoice')}     className="gt-btn">🎙️</button>
+                  <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
+                </div>
+
+                <div className="gold-stats">
+                  <div className="stat">
+                    <span className="dot" />
+                    <span className="label">Mode</span>
+                    <strong>{footerStatus.modeLabel || "—"}</strong>
+                  </div>
+                  <div className="stat">
+                    <span className="dot" />
+                    <span className="label">Expert</span>
+                    <strong>{footerStatus.expertLabel || "—"}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {/* === /BOTTOM STACK ========================================= */}
+        </div> {/* /Scroller */}
+      </div>   {/* /Grid */}
+    </div>     {/* /Bühne */}
+
+    {/* Mobile Overlay / Onboarding */}
     {isMobile && (
       <>
         <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
@@ -857,6 +1372,235 @@ return (
       </>
     )}
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
+    {/* === Golden Prompt — Styles ==================================== */}
+    <style jsx global>{`
+  html, body {
+  background:#000;
+  margin:0;
+  padding:0;
+  height:100dvh;       /* Root fixiert */
+  overflow-x:hidden;
+  overflow-y:hidden;   /* Body scrollt NICHT */
+}
+main {
+  height:100dvh;       /* ⬅️ WICHTIG: der direkte Wrapper bekommt feste Höhe */
+  display:grid;
+}
+
+  :root { --dock-h: 60px; --fab-z: 90; }
+  .mi-plus-btn { display: none !important; }
+
+      /* Dock niemals transformieren (Sticky + Transform = Bug) */
+      #m-input-dock { transform: none !important; }
+
+      /* Dock Container — robust: immer fixed (Desktop & Mobile) */
+      #m-input-dock {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: var(--safe-bottom, 0px);
+        z-index: 90;
+      }
+      #m-input-dock.m-bottom-stack{
+        background: rgba(8,14,18,0.90);
+        backdrop-filter: blur(8px);
+        border-top: 1px solid rgba(255,255,255,0.10);
+        box-shadow: 0 -4px 18px rgba(0,0,0,.40);
+        padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
+        overscroll-behavior: contain;
+        width: auto;
+        margin: 0;
+        border-radius: 0;
+      }
+
+      /* Kinder dürfen animieren */
+      .gold-prompt-wrap,
+      .gold-bar { will-change: transform; }
+
+      /* Prompt Grid */
+      .gold-prompt-wrap{
+        display:grid; grid-template-columns: 1fr max-content;
+        gap:10px; align-items:stretch;
+        width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+        margin:0 auto;
+      }
+      .gold-textarea{
+        width:100%; min-height:44px; max-height:var(--dock-cap,30vh);
+        resize:none; border-radius:12px; padding:10px 12px; line-height:1.5;
+        border:1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"};
+        background:rgba(255,255,255,0.04); color:${activeTokens.color.text};
+        outline:none; background-clip: padding-box;
+        transition: box-shadow 120ms cubic-bezier(.2,.6,.2,1), border-color 120ms cubic-bezier(.2,.6,.2,1);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
+      }
+      .gold-textarea:is(:hover,:focus,.is-typing){
+        box-shadow: 0 0 0 1px ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"},
+                    0 0 18px rgba(34,211,238,0.18);
+        border-color: ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
+      }
+      .gold-send{
+        height:44px; min-width:96px; white-space:nowrap;
+        padding:0 16px; border-radius:12px; font-weight:700;
+        border:1px solid ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
+        background:${activeTokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"};
+        color:${activeTokens.color.text}; cursor:pointer; background-clip: padding-box;
+        transition: transform 120ms cubic-bezier(.2,.6,.2,1), box-shadow 120ms cubic-bezier(.2,.6,.2,1);
+        display:inline-flex; align-items:center; justify-content:center;
+      }
+      .gold-send:hover:not(:disabled){ transform: translateY(-1px); }
+      .gold-send:active:not(:disabled){ transform: translateY(0); }
+      .gold-send:disabled{ opacity:.45; cursor:default; }
+
+      /* Icons + Status unter Prompt */
+      .gold-bar{
+        width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+        margin:3px auto 0 auto;
+        display:flex; align-items:center; justify-content:flex-start; gap:12px;
+      }
+      .gold-tools{ display:flex; gap:8px; }
+      .gt-btn{
+        display:inline-flex; align-items:center; justify-content:center;
+        height:36px; min-width:36px; padding:0 12px;
+        border-radius:10px; border:1px solid rgba(49,65,86,.7);
+        background:#0b1220; color:#e6f0f3; font-weight:700;
+        transition:transform 120ms cubic-bezier(.2,.6,.2,1);
+      }
+      .gt-btn:active{ transform:scale(.98); }
+
+      /* Statuschips: Mode / Expert */
+      .gold-stats {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        margin-left: 12px;
+        min-width:0;
+      }
+      .gold-stats .stat {
+        display: flex; align-items: center; gap: 8px;
+        padding: 4px 10px; border-radius: 999px;
+        background: rgba(255, 255, 255, .06);
+        border: 1px solid rgba(255, 255, 255, .10);
+        backdrop-filter: blur(6px);
+        max-width:100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+      }
+      .gold-stats .dot { width: 8px; height: 8px; border-radius: 50%; background: #42f6ff; box-shadow: 0 0 8px currentColor; flex: 0 0 8px; }
+      .gold-stats .label { opacity: .75; letter-spacing: .02em; }
+      .gold-stats strong { font-weight: 600; }
+
+      /* Fallback für sichtbares Chat-Ende – neutralisiert, da Fußraum via paddingBottom kommt */
+.chat-end-spacer{
+  height: 0;
+  pointer-events: none;
+}
+
+
+      /* Mobile: Dock edge-to-edge + Safe-Area + Status rechts (übereinander) */
+      @media (max-width: 768px){
+        #m-input-dock.m-bottom-stack{
+          left: max(0px, env(safe-area-inset-left));
+          right: max(0px, env(safe-area-inset-right));
+          bottom: max(0px, env(safe-area-inset-bottom));
+          padding: 8px max(8px, env(safe-area-inset-left))
+                   calc(8px + env(safe-area-inset-bottom))
+                   max(8px, env(safe-area-inset-right));
+          background: rgba(8,14,18,0.90) !important;
+          border-top: 1px solid rgba(255,255,255,0.10) !important;
+          box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
+          z-index: 90 !important;
+        }
+        .gold-prompt-wrap,
+        .gold-bar{
+          width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
+          margin-left: auto; margin-right: auto;
+        }
+
+        /* Tools links, Mode/Expert rechts übereinander */
+        .gold-bar{
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          column-gap:10px;
+          flex-wrap:nowrap;
+        }
+        .gold-tools{ flex:0 0 auto; }
+
+        .gold-stats{
+          flex:1 1 auto;
+          display:flex;
+          flex-direction:column;     /* übereinander */
+          align-items:flex-end;      /* rechtsbündig */
+          gap:6px;
+          min-width:160px;
+          max-width:60vw;
+          min-height:0;
+        }
+        .gold-stats .stat{
+          padding:3px 8px; gap:6px;
+          max-width:100%;
+        }
+        .gold-stats .dot{ width:6px; height:6px; flex:0 0 6px; }
+        .gold-stats .label{ font-size:12px; opacity:.8; letter-spacing:.01em; }
+        .gold-stats strong{ font-size:12px; font-weight:600; letter-spacing:.01em; }
+
+        /* Kompaktmodus bei offenem Keyboard / sehr wenig Höhe */
+        .gold-bar[data-compact="1"]{ row-gap:6px; }
+        @media (max-height: 560px){
+          .gold-bar[data-compact="1"] .gold-stats{ display:none; }
+          #m-input-dock.m-bottom-stack{
+            padding: 6px max(8px, env(safe-area-inset-left))
+                     calc(6px + env(safe-area-inset-bottom))
+                     max(8px, env(safe-area-inset-right));
+          }
+          .gold-prompt-wrap{ grid-template-columns: 1fr max-content; gap:6px; }
+        }
+      }
+
+      /* Ripple / Inertia */
+      .gold-dock.send-ripple{
+        animation: gp-inertia 320ms cubic-bezier(.2,.6,.2,1) 1, gp-ripple 680ms ease-out 1;
+      }
+      @keyframes gp-inertia{ 0%{transform:translateY(0)} 55%{transform:translateY(-3px)} 100%{transform:translateY(0)} }
+      @keyframes gp-ripple{
+        0%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
+        15%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 1000px rgba(34,211,238,0.08); }
+        100%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
+      }
+
+      /* Entkopplung von Legacy input-bar.css */
+      #m-input-dock .gold-prompt-wrap,
+      #m-input-dock .gold-textarea,
+      #m-input-dock .gold-send{
+        position: static !important; float: none !important; inset: auto !important; box-sizing: border-box !important;
+      }
+
+      /* FAB über Dock */
+      .sticky-fab, [data-sticky-fab], button[aria-label="Menü öffnen"]{
+        bottom: calc(var(--dock-h, 60px) + 12px) !important;
+        z-index: var(--fab-z) !important;
+      }
+
+      /* Desktop: Margin-Collapse-Guard am Listenende */
+      @media (min-width: 769px){
+        section[role="log"]{ border-bottom: 0.1px solid transparent; }
+        section[role="log"] > *:last-child{ margin-bottom: 0 !important; }
+      }
+        /* ▼ Mobile-Override: Root & Main nicht starr machen */
+@media (max-width: 768px){
+  html, body{
+    height: auto;         /* Root darf mitschrumpfen */
+    min-height: 100svh;   /* sichtbarer Viewport (iOS-freundlich) */
+    overflow-y: auto;     /* kein globales Freeze */
+  }
+  main{
+    height: auto;         /* Main nicht mehr 100dvh erzwingen */
+    min-height: 100svh;   /* genug Höhe, aber elastisch */
+    overflow: hidden;     /* Scroll bleibt delegiert an rechts */
+  }
+  /* iOS Auto-Zoom vermeiden */
+  #gold-input, .gold-textarea{ font-size:16px; }
+}
+
+    `}</style>
   </main>
 );
 }

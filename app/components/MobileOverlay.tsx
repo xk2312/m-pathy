@@ -40,24 +40,8 @@ useEffect(() => {
   if (open) closingRef.current = false;
 }, [open]);
 
-useEffect(() => {
-  if (!open) return;
-  const handler = (e: Event) => {
-    if (closingRef.current) return; // ← verhindert Doppeltrigger
-    const ce = e as CustomEvent<any>;
-    const msg =
-      typeof ce.detail === "string"
-        ? ce.detail
-        : (ce.detail && typeof ce.detail.text === "string" ? ce.detail.text : "");
-    if (msg && msg.trim()) {
-      closingRef.current = true;
-      onSystemMessage?.(msg);
-      onClose();
-    }
-  };
-  window.addEventListener("mpathy:system-message", handler as EventListener);
-  return () => window.removeEventListener("mpathy:system-message", handler as EventListener);
-}, [open, onSystemMessage, onClose]);
+// ❌ Kein window.addEventListener mehr hier.
+// Der Flow läuft ausschließlich über forwardSystemMessage → onSystemMessage (Prop).
 
 
   // Body-Scroll-Lock

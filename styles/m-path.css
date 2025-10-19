@@ -7,53 +7,86 @@
 
 html, body {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   background: #000;
-  overflow: hidden;
+
+  /* Nur horizontales Clipping beibehalten – kein globales Y-Scrolling hier */
+  overflow-x: hidden;
+  /* overflow-y: auto;  ← ENTFERNT */
+
   font-family: "Segoe UI", system-ui, sans-serif;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: none;
+
+  /* Interaktion (Mobile) – konsistent mit global.css */
+  user-select: text;
+  -webkit-user-select: text;
+  touch-action: pan-y pinch-zoom;
 }
+
 
 /* ===== Bühne: 13% Abstand vom Top ===== */
 .stage {
-  width: 100vw;
-  height: 100vh;
+  /* Breite folgt Layout, vermeidet horizontales Scrollen */
+  width: 100%;
+  /* Statt harter Fixhöhe: adaptiv, aber mindestens volle Viewhöhe (mobil-sicher) */
+  min-height: 100dvh;
+
   background: #000;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 13vh; /* exakt laut Anforderung */
+
+  /* gewünschter Abstand bleibt bestehen */
+  padding-top: 13vh;
+
   gap: 24px;
+
+  /* Scrollfluss nicht blockieren */
+  overflow: visible;
 }
 
-/* ===== M-Container: festes Quadrat (Mobile-First) ===== */
-:root {
-  --m-size: 350px; /* Einheitliche Breite/Höhe für alle Geräte */
-}
 
 /* ===== M-Container: Golden Ratio =====
    Breite fix 350px (mobile-first), Höhe = Breite * 1.618 */
-   #m-wrapper {
-    width: 350px;
-    height: calc(350px * 1.618);
-    display: grid;
-    place-items: center;
-    margin-inline: auto;
-    overflow: hidden;
-    background: transparent;
-  }
-  
-  /* Canvas füllt den Wrapper */
-  #m-wrapper canvas,
-  .m-canvas {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
-    background: #000;
-  }
+#m-wrapper {
+  width: 350px;
+  height: calc(350px * 1.618);
+  display: grid;
+  place-items: center;
+  margin-inline: auto;
+  overflow: hidden;
+  background: transparent;
+
+  /* Stacking-Kontext für Button darüber */
+  position: relative;
+}
+
+/* Canvas füllt den Wrapper – aber blockiert KEINE Eingaben/Scroll-Gesten */
+#m-wrapper canvas,
+.m-canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  background: #000;
+
+  /* entscheidend: Canvas ist rein dekorativ */
+  pointer-events: none;   /* verhindert, dass Touch/Wheel „verschluckt“ werden */
+}
+
+/* ---------- SCOPE ---------- */
+.zenith-scope { 
+  /* … bestehende Variablen … */
+  position: relative; 
+  width: 100%;
+
+  /* stellt sicher, dass der Button über Canvas klickbar bleibt */
+  z-index: 2;
+}
+.zenith-scope .zenith-btn { 
+  z-index: 3;  /* Button über evtl. Partikel/Canvas-Schichten */
+}
+
 
 /* Utilities */
 .m-point-glow {

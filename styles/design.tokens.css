@@ -1,0 +1,72 @@
+/* =====================================================================
+   GalaxyBuilder · Design Tokens Manifest (v1.0)
+   Purpose: zentrale Style-Definitionen für alle Module
+   Created: by DevLoop (Iterations 1–5)
+   Triketon Seal Reference: TRK-2048-GLO-M001
+   ===================================================================== */
+
+:root {
+  /* === Core Colors === */
+  --color-bg: #0a0f14;
+  --color-fg: #e6f7ff;
+  --color-accent: #00ffff;
+  --color-warn: #ffd700;
+  --color-shadow: rgba(0,255,255,0.12);
+
+  /* === Radii === */
+  --rz-sm: 10px;
+  --rz-md: 16px;
+  --rz-lg: 20px;
+  --rz-2xl: 24px;
+  --rz-round: 999px;
+
+  /* === Shadows & Glow === */
+  --sh-sm: 0 2px 8px rgba(0,255,255,0.10);
+  --sh-md: 0 6px 24px rgba(0,255,255,0.12);
+  --sh-lg: 0 12px 40px rgba(0,255,255,0.15);
+  --glow: 0 0 0 1px rgba(0,255,255,0.25), 0 0 18px rgba(0,255,255,0.18);
+
+  /* === Timings & Easing === */
+  --t-fast: 90ms;
+  --t-mid: 120ms;
+  --t-slow: 200ms;
+  --ease: cubic-bezier(.2,.6,.2,1);
+
+  /* === Typography === */
+  --font-sans: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'SFMono-Regular', Menlo, Consolas, monospace;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --letter-spacing-base: .1px;
+  --line-height-base: 1.6;
+
+  /* === Z-Index Layers === */
+  --z-base: 1;
+  --z-overlay: 60;
+  --z-fab: 70;
+
+  /* === Motion Safeguard === */
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; transform: none !important; }
+  }
+}
+
+/* =====================================================================
+   Reference Palette (audit only)
+   ===================================================================== */
+:root {
+  --tone-dark-0: #000;
+  --tone-dark-1: #0b1014;
+  --tone-dark-2: #111820;
+  --tone-accent-aqua: #00ffff;
+  --tone-accent-indigo: #3f6b8a;
+  --tone-warn-gold: #ffd700;
+}
+
+/* =====================================================================
+   Export Notes:
+   - Wird automatisch in Tailwind-Plugins und global.css importiert.
+   - Für JS-Zugriff: `import 'styles/design.tokens.css'`
+   - Für CSS Modules: `@import 'styles/design.tokens.css';`
+   ===================================================================== */

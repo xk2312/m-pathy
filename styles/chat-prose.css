@@ -1,98 +1,133 @@
-/* Chat‑Typografie: wirkt NUR innerhalb des Inhalts‑Wrappers .md-prose
-   Ziel: saubere Lesbarkeit auf dunklem Hintergrund, ohne Global‑Leaks. */
+/* Chat-Typografie (Markdown)
+   Scope: wirkt NUR innerhalb .md-prose
+   Ziel: hohe Lesbarkeit auf dunklem BG, dezente Akzente, keine Global-Leaks. */
 
-   .md-prose {
-    color: inherit;               /* erbt Textfarbe der Bubble */
-    line-height: 1.65;
-    word-break: break-word;
-  }
-  
-  /* Headings – klare Hierarchie, mehr Abstand nach oben als unten */
-  .md-prose h1,
-  .md-prose h2,
-  .md-prose h3,
-  .md-prose h4 {
-    font-weight: 700;
-    line-height: 1.25;
-    margin-top: 1.2em;
-    margin-bottom: 0.5em;
-  }
-  .md-prose h1 { font-size: 1.6rem; }
-  .md-prose h2 { font-size: 1.35rem; }
-  .md-prose h3 { font-size: 1.2rem; }
-  .md-prose h4 { font-size: 1.05rem; }
-  
-  /* Paragraphs */
-  .md-prose p { margin: 0.75em 0; }
-  
-  /* Links – dezent, sicher (neues Tab via Renderer) */
-  .md-prose a {
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-  .md-prose a:hover { opacity: 0.9; }
-  
-  /* Lists */
-  .md-prose ul,
-  .md-prose ol { margin: 0.75em 0 0.75em 1.25em; padding: 0; }
-  .md-prose li { margin: 0.25em 0; }
-  
-  /* Blockquote */
-  .md-prose blockquote {
-    margin: 1em 0;
-    padding-left: 0.9em;
-    border-left: 2px solid rgba(255,255,255,0.2);
-    opacity: 0.95;
-  }
-  
-  /* Code – inline */
-  .md-prose code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    font-size: 0.95em;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 6px;
-    padding: 0.15em 0.35em;
-  }
-  
-  /* Code – Blöcke */
-  .md-prose pre {
-    margin: 1em 0;
-    padding: 0.9em 1em;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10px;
-    overflow-x: auto;
-  }
-  .md-prose pre > code {
-    background: transparent;
-    border: 0;
-    padding: 0;
-  }
-  
-  /* Tabellen */
-  .md-prose table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1em 0;
-  }
-  .md-prose th,
-  .md-prose td {
-    border: 1px solid rgba(255,255,255,0.12);
-    padding: 0.5em 0.6em;
-  }
-  .md-prose th {
-    text-align: left;
-    background: rgba(255,255,255,0.03);
-  }
-  
-  /* Sonstiges */
-  .md-prose hr {
-    border: none;
-    border-top: 1px solid rgba(255,255,255,0.12);
-    margin: 1.2em 0;
-  }
-  .md-prose img { max-width: 100%; display: block; margin: 0.5em 0; border-radius: 8px; }
-  .md-prose strong { font-weight: 700; }
-  .md-prose em { font-style: italic; }
-  
+:root {
+  /* Fallbacks, falls design.tokens.css nicht geladen ist */
+  --prose-text:            var(--color-text, #e6f0f3);
+  --prose-muted:           var(--color-text-muted, rgba(230,240,243,0.75));
+  --prose-accent:          var(--color-accent, #7dd3fc);
+  --prose-accent-weak:     color-mix(in oklab, var(--prose-accent) 75%, transparent);
+  --prose-border:          var(--glass-border, rgba(255,255,255,0.12));
+  --prose-surface:         var(--glass, rgba(255,255,255,0.04));
+  --prose-surface-strong:  color-mix(in oklab, #0c1820 85%, white 15%);
+}
+
+/* Root des Scopes */
+.md-prose {
+  color: inherit;                  /* erbt Bubble-Farbe */
+  line-height: 1.65;
+  word-break: break-word;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headings – klare Hierarchie */
+.md-prose h1,
+.md-prose h2,
+.md-prose h3,
+.md-prose h4 {
+  color: var(--prose-text);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  text-wrap: balance;
+}
+.md-prose h1 { font-size: clamp(1.45rem, 1.1rem + 1vw, 1.9rem); }
+.md-prose h2 { font-size: clamp(1.30rem, 1.0rem + 0.7vw, 1.60rem); }
+.md-prose h3 { font-size: clamp(1.14rem, 0.95rem + 0.5vw, 1.30rem); }
+.md-prose h4 { font-size: 1.05rem; }
+
+/* Paragraphs */
+.md-prose p { margin: 0.75em 0; }
+
+/* Links – dezente Akzente */
+.md-prose a {
+  color: var(--prose-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color .15s ease, opacity .15s ease;
+}
+.md-prose a:hover { color: var(--prose-accent-weak); opacity: .95; }
+
+/* Lists */
+.md-prose ul,
+.md-prose ol {
+  margin: 0.75em 0 0.75em 1.25em;
+  padding: 0;
+}
+.md-prose li { margin: 0.25em 0; }
+.md-prose ul  { list-style: disc; }
+.md-prose ol  { list-style: decimal; }
+
+/* Blockquote */
+.md-prose blockquote {
+  margin: 1em 0;
+  padding-left: 0.9em;
+  border-left: 2px solid color-mix(in oklab, var(--prose-accent) 45%, transparent);
+  color: var(--prose-muted);
+}
+
+/* Code – inline */
+.md-prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.95em;
+  background: var(--prose-surface);
+  border: 1px solid var(--prose-border);
+  border-radius: 6px;
+  padding: 0.15em 0.35em;
+  color: var(--prose-accent);
+}
+
+/* Code – Blöcke */
+.md-prose pre {
+  margin: 1em 0;
+  padding: 0.9em 1em;
+  background: var(--prose-surface-strong);
+  border: 1px solid var(--prose-border);
+  border-radius: 10px;
+  overflow-x: auto;
+}
+.md-prose pre > code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--prose-text);
+}
+
+/* Tabellen */
+.md-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+.md-prose th,
+.md-prose td {
+  border: 1px solid var(--prose-border);
+  padding: 0.5em 0.6em;
+}
+.md-prose th {
+  text-align: left;
+  background: color-mix(in oklab, var(--prose-accent) 12%, transparent);
+  color: var(--prose-accent);
+}
+
+/* Sonstiges */
+.md-prose hr {
+  border: none;
+  border-top: 1px solid var(--prose-border);
+  margin: 1.2em 0;
+}
+.md-prose img {
+  max-width: 100%;
+  display: block;
+  margin: 0.5em 0;
+  border-radius: 8px;
+}
+.md-prose strong { font-weight: 700; }
+.md-prose em { font-style: italic; }
+
+/* Motion respect (falls Nutzer Animationen reduziert) */
+@media (prefers-reduced-motion: reduce) {
+  .md-prose a { transition: none; }
+}

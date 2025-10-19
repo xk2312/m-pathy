@@ -1,11 +1,12 @@
 import "./global.css";
 import "../styles/chat-prose.css";
-import "../styles/input-bar.css";
+// import "../styles/input-bar.css";
 
 import React from "react";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import Providers from "./providers";
+import LangAttrUpdater from "./components/LangAttrUpdater";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
@@ -28,9 +29,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head />
       <body
-        className={`${inter.className} min-h-dvh bg-gradient-to-b from-blue-50 via-white to-blue-100 text-slate-900 antialiased`}
-        style={{ overscrollBehaviorY: "none", WebkitTapHighlightColor: "transparent" }}
-      >
+      className={`${inter.className} min-h-dvh bg-gradient-to-b from-blue-50 via-white to-blue-100 text-slate-900 antialiased`}
+      style={{ overscrollBehaviorY: "auto", WebkitTapHighlightColor: "transparent" }}
+    >
+
+        <LangAttrUpdater />
         <Providers>{children}</Providers>
 
         {/* Portal-Container für Overlays/Toasts */}
@@ -50,4 +53,4 @@ export default function RootLayout({ children }: RootLayoutProps) {
       </body>
     </html>
   );
-} 
+}

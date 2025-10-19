@@ -5,12 +5,15 @@ import React, { type ReactNode } from 'react';
 // Sie entscheidet pro Nachricht, WIE gerendert wird (plain/markdown/html),
 // ruft die Renderer-Registry auf und kapselt einen sicheren Fallback.
 
-// ⚠️ Diese Imports werden in den nächsten Schritten angelegt:
-// - ../renderers/registry (Schritt 4)
-// - ../config/features (Schritt 8)
+// ⚠️ Diese Imports werden in späteren Schritten angelegt:
+// - ../renderers/registry (liefert renderMessage())
+// - ../config/features (liefert defaultRenderer)
 import { renderMessage } from '../renderers/registry';
 import { defaultRenderer } from '../config/features';
 
+/* ============================================================
+   Typdefinitionen
+   ============================================================ */
 export type MessageRole = 'user' | 'assistant' | 'system';
 export type MessageFormat = 'plain' | 'markdown' | 'html';
 
@@ -29,6 +32,9 @@ export type MessageBodyProps = {
   className?: string;
 };
 
+/* ============================================================
+   Komponente
+   ============================================================ */
 export default function MessageBody({ msg, className }: MessageBodyProps) {
   // Bevorzugte Reihenfolge: explizites msg.format → Feature-Default → 'plain'
   const fmt: MessageFormat = (msg.format ?? (defaultRenderer as MessageFormat) ?? 'plain');
@@ -44,7 +50,14 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
   } catch (err) {
     // Harte Sicherheitsleine: Immer anzeigbar, niemals Crash
     node = (
-      <span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{msg.content}</span>
+      <span
+        style={{
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+        }}
+      >
+        {msg.content}
+      </span>
     );
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line no-console

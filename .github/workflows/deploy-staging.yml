@@ -1,0 +1,40 @@
+name: deploy-staging
+
+on:
+  push:
+    branches: ["staging"]
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SSH_USER: ${{ secrets.STAGING_USER }}
+      SSH_HOST: ${{ secrets.STAGING_HOST }}
+    steps:
+      - name: Checkout (metadata only)
+        uses: actions/checkout@v4
+
+      - name: Prepare SSH
+        shell: bash
+        run: |
+          set -euo pipefail
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.STAGING_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          if [ -n "${{ secrets.STAGING_KNOWN_HOSTS }}" ]; then
+            printf '%s\n' "${{ secrets.STAGING_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          else
+            ssh-keyscan -p 22 "$SSH_HOST" >> ~/.ssh/known_hosts
+          fi
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Deploy via SSH (call server wrapper)
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes \
+            "${SSH_USER}@${SSH_HOST}" '/srv/app/bin/deploy_staging.sh'

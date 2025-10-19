@@ -129,3 +129,25 @@
     width: calc(100% - 20px);
   }
 }
+/* === Route-übergreifender Scroll-Unlock NUR auf page2 ================= */
+/* Neutralisiert typische Body/HTML-Locks, falls von vorheriger Seite gesetzt */
+html.no-scroll,
+body.no-scroll,
+html.lock,
+body.lock,
+html.modal-open,
+body.modal-open {
+  overflow: auto !important;
+  position: static !important;
+}
+
+/* Falls voriger Screen Inline-Styles gesetzt hat: zurück auf Standard */
+html,
+body {
+  overflow: auto !important;
+  position: static !important;
+  height: auto !important;
+  width: auto !important;
+  touch-action: auto !important;
+  overscroll-behavior: auto !important;
+}

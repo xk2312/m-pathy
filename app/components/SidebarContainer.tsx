@@ -3,11 +3,14 @@
 import { useEffect, useState } from "react";
 import Saeule from "./Saeule";
 
-
+/* ======================================================================
+   Props & Hook
+   ====================================================================== */
 type Props = {
   onSystemMessage?: (content: string) => void;
 };
 
+/** Reagiert auf Desktop/Mobile — reagiert sanft mit MatchMedia */
 function useIsDesktop(minWidth = 1024) {
   const [isDesktop, setIsDesktop] = useState<boolean>(() => {
     if (typeof window === "undefined") return true; // SSR-Fallback: Desktop
@@ -18,10 +21,12 @@ function useIsDesktop(minWidth = 1024) {
     if (typeof window === "undefined") return;
     const mq = window.matchMedia(`(min-width: ${minWidth}px)`);
     const onChange = () => setIsDesktop(mq.matches);
+
     mq.addEventListener?.("change", onChange);
-    // Safari/Legacy fallback
+    // Safari-Fallback
     // @ts-ignore
     mq.addListener?.(onChange);
+
     return () => {
       mq.removeEventListener?.("change", onChange);
       // @ts-ignore
@@ -32,21 +37,46 @@ function useIsDesktop(minWidth = 1024) {
   return isDesktop;
 }
 
+/* ======================================================================
+   Component
+   ====================================================================== */
+
 export default function SidebarContainer({ onSystemMessage }: Props) {
   const isDesktop = useIsDesktop(1024);
 
   return (
-    <aside
+        <aside
       aria-label="Sidebar Container"
       data-test="sidebar-container"
-      style={{ display: "contents" }} // übernimmt Layout vom Parent
+      /* KEIN display: contents – Containing-Block bleibt stabil */
+      style={{
+        cursor: "pointer",
+        pointerEvents: "auto",
+      }}
     >
-      {isDesktop ? (
-        // Desktop: Säule statisch anzeigen
-        <Saeule onSystemMessage={onSystemMessage} />
+            {isDesktop ? (
+        /* Desktop: Sticky kommt vom Parent in page.tsx */
+        <div
+          style={{
+            position: "static",
+            alignSelf: "start",
+            zIndex: "var(--z-base, 1)",
+          }}
+        >
+          <Saeule onSystemMessage={onSystemMessage} />
+        </div>
       ) : (
-        // Mobile: Overlay/StickyFab folgen in Schritt 4/5
-        <div aria-hidden="true" data-test="sidebar-mobile-placeholder" />
+
+        /* Mobile: Platzhalter */
+        <div
+          aria-hidden="true"
+          data-test="sidebar-mobile-placeholder"
+          style={{
+            minHeight: 0,
+            opacity: 0.5,
+            cursor: "default",
+          }}
+        />
       )}
     </aside>
   );

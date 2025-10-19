@@ -1,7 +1,12 @@
+'use client';
+
 import React from 'react';
 import renderPlain, { type RenderInput as PlainInput } from './plain';
 import renderMarkdown, { type RenderInput as MarkdownInput } from './markdown';
 
+/* ============================================================
+   Typdefinitionen
+   ============================================================ */
 export type MessageFormat = 'plain' | 'markdown' | 'html';
 
 export type RenderMessageInput = {
@@ -11,12 +16,18 @@ export type RenderMessageInput = {
   meta?: Record<string, unknown>;
 };
 
-// Zentrale Registry: wählt den passenden Renderer aus.
-// Sicherheitsprinzip: Unbekannte/noch nicht implementierte Formate → Fallback auf plain.
+/* ============================================================
+   Registry – zentrale Routerfunktion für Renderer
+   ============================================================ */
+/**
+ * Wählt den passenden Renderer anhand des Formats aus.
+ * Sicherheitsprinzip:
+ *  - unbekannte oder fehlerhafte Formate → Fallback auf plain
+ *  - kein Absturz, niemals „undefined“ zurückgeben
+ */
 export function renderMessage(input: RenderMessageInput): React.ReactNode {
-  const fmt = input.format;
   try {
-    switch (fmt) {
+    switch (input.format) {
       case 'markdown':
         return renderMarkdown(input as MarkdownInput);
       case 'plain':
@@ -30,7 +41,7 @@ export function renderMessage(input: RenderMessageInput): React.ReactNode {
   } catch (err) {
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line no-console
-      console.warn('[registry] Renderer error, falling back to plain', err);
+      console.warn('[registry] Renderer error → fallback to plain', err);
     }
     return renderPlain(input as PlainInput);
   }
