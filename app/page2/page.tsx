@@ -749,70 +749,101 @@ const locale = getBrowserLang();
 const getLabel = (evt: MEvent) =>
   (LABELS[locale] && LABELS[locale][evt]) || LABELS.en[evt];
 
-// --- helpers for labels ---
+/* Wort/Prefix für „Load/Lade“ je nach Browsersprache (einmalig) */
+const LOAD_PREFIX: Record<string, string> = {
+  en: "Load",
+  de: "Lade",
+  fr: "Charger",
+  es: "Cargar",
+  it: "Carica",
+};
+
+/* --- helpers for labels --- */
 const cap = (s: string) =>
-  String(s || "").replace(/\s+/g, " ").trim().replace(/^./, c => c.toUpperCase());
+  String(s || "").replace(/\s+/g, " ").trim().replace(/^./, (c) => c.toUpperCase());
 
 const slug = (s: string) =>
   String(s || "")
     .toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // accents off
-    .replace(/[^a-z0-9]+/g, " ")                      // keep words
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // accents off
+    .replace(/[^a-z0-9]+/g, " ")
     .trim()
-    .replace(/\s+/g, "-");                             // words -> slug
+    .replace(/\s+/g, "-");
 
-// --- localized labels for known modes ---
+/* --- localized labels for known modes --- */
 const MODE_LABELS: Record<string, Record<string, string>> = {
-  en: { calm:"Calm", truth:"Truth", oracle:"Oracle", balance:"Balance", power:"Power", loop:"Loop", body:"Body", ocean:"Ocean", minimal:"Minimal" },
-  de: { calm:"Ruhe", truth:"Wahrheit", oracle:"Orakel", balance:"Balance", power:"Kraft", loop:"Schleife", body:"Körper", ocean:"Ozean", minimal:"Minimal" },
-  fr: { calm:"Calme", truth:"Vérité", oracle:"Oracle", balance:"Équilibre", power:"Puissance", loop:"Boucle", body:"Corps", ocean:"Océan", minimal:"Minimal" },
-  es: { calm:"Calma", truth:"Verdad", oracle:"Oráculo", balance:"Equilibrio", power:"Poder", loop:"Bucle", body:"Cuerpo", ocean:"Océano", minimal:"Minimal" },
-  it: { calm:"Calma", truth:"Verità", oracle:"Oracolo", balance:"Equilibrio", power:"Potenza", loop:"Loop", body:"Corpo", ocean:"Oceano", minimal:"Minimo" },
+  en: { calm: "Calm", truth: "Truth", oracle: "Oracle", balance: "Balance", power: "Power", loop: "Loop", body: "Body", ocean: "Ocean", minimal: "Minimal" },
+  de: { calm: "Ruhe", truth: "Wahrheit", oracle: "Orakel", balance: "Balance", power: "Kraft", loop: "Schleife", body: "Körper", ocean: "Ozean", minimal: "Minimal" },
+  fr: { calm: "Calme", truth: "Vérité", oracle: "Oracle", balance: "Équilibre", power: "Puissance", loop: "Boucle", body: "Corps", ocean: "Océan", minimal: "Minimal" },
+  es: { calm: "Calma", truth: "Verdad", oracle: "Oráculo", balance: "Equilibrio", power: "Poder", loop: "Bucle", body: "Cuerpo", ocean: "Océano", minimal: "Minimal" },
+  it: { calm: "Calma", truth: "Verità", oracle: "Oracolo", balance: "Equilibrio", power: "Potenza", loop: "Loop", body: "Corpo", ocean: "Oceano", minimal: "Minimo" },
 };
 
 const tMode = (raw: string) => {
-  const key = slug(raw);                        // "Calm", "CALM", etc. -> "calm"
+  const key = slug(raw); // "Calm", "CALM" -> "calm"
   const table = MODE_LABELS[locale] || MODE_LABELS.en;
-  return table[key] || cap(raw);                // fallback: raw pretty-cased
+  return table[key] || cap(raw);
 };
 
+/**
+ * UI-zentrale Routine: Frame „Load + Label“ → Ready
+ * labelOverride = z. B. "Calm", "Biologist", …
+ * (BITTE: Dies ist die EINZIGE runMFlow-Definition im File!)
+ */
+const runMFlow = useCallback(
+  async (evt: MEvent, labelOverride?: string) => {
+    const prefix = LOAD_PREFIX[locale] ?? LOAD_PREFIX.en;
 
-// UI-zentrale Routine: eventLabel → READY
-const runMFlow = useCallback(async (evt: MEvent, labelOverride?: string) => {
-  // Prefix nach Browsersprache
-  const LOAD_PREFIX: Record<string, string> = { en: "Load", de: "Lade", fr: "Charger", es: "Cargar", it: "Carica" };
-  const prefix = LOAD_PREFIX[locale] ?? LOAD_PREFIX.en;
+    // Basislabel bestimmen (unterstützt spezielle Fälle)
+    const baseLabel = (() => {
+      const raw = (labelOverride || "").trim();
 
-  const baseLabel = (() => {
-    // Fallbacks für reine Events
-    if (!labelOverride) {
-      if (evt === "builder")      return getLabel("builder");      // z. B. „Bauen“
-      if (evt === "onboarding")   return getLabel("onboarding");
-      if (evt === "mode")         return getLabel("mode");
-      if (evt === "expert")       return getLabel("expert");
-    }
-    return labelOverride!.trim();
-  })();
+      if (!raw) {
+        // Fallbacks, wenn kein Override kommt
+        if (evt === "builder") return getLabel("builder");
+        if (evt === "onboarding") return getLabel("onboarding");
+        if (evt === "mode") return getLabel("mode");
+        if (evt === "expert") return getLabel("expert");
+        return getLabel(evt);
+      }
 
-  // „Load …“ bzw. Sonderfall „set default“
-  const frame = (evt === "mode" && /^default$/i.test(baseLabel))
-    ? (locale === "de" ? "Setze Default" : "Set default")
-    : `${prefix} ${baseLabel}`;
+      // Wenn Modus: lokalisiert schön schreiben
+      if (evt === "mode") return tMode(raw);
 
-  // 1) Frame 1 (Text) + Denken starten
-  setFrameText(frame);
-  try { setLoading(true); } catch {}
+      // Experte/sonst: hübsch kapitalisieren
+      return cap(raw);
+    })();
 
-  // 2) Frame sichtbar halten
-  await new Promise(r => setTimeout(r, 900));
+    // Sonderfall „default“ bei Modus
+    const isDefault =
+      evt === "mode" &&
+      /^default$/i.test(baseLabel);
 
-  // 3) Ausblenden Frame 1, M denkt noch
-  setFrameText(null);
-  await new Promise(r => setTimeout(r, 700));
+    const frameText1 = isDefault
+      ? (locale === "de" ? "Setze Default" : "Set default")
+      : `${prefix} ${baseLabel}`;
 
-  // 4) READY (LogoM übernimmt die Ready-Phase, wenn loading=false)
-  try { setLoading(false); } catch {}
-}, [locale, setLoading]);
+    // 1) Frame zeigen + M/Spirale starten
+    setFrameText(frameText1);
+    try {
+      setLoading(true);
+    } catch {}
+
+    // 2) Frame sichtbar halten
+    await new Promise((r) => setTimeout(r, 900));
+
+    // 3) Frame ausblenden, M denkt kurz weiter
+    setFrameText(null);
+    await new Promise((r) => setTimeout(r, 700));
+
+    // 4) READY (LogoM reagiert auf loading=false)
+    try {
+      setLoading(false);
+    } catch {}
+  },
+  [locale, setLoading]
+);
 
 
 /* -----------------------------------------------------------------------
@@ -883,18 +914,65 @@ useEffect(() => {
   document.addEventListener("click", onGlobalClick);
   return () => document.removeEventListener("click", onGlobalClick);
 }, [runMFlow, locale]);
-  // Globale Click-Delegation: jedes Element mit data-m-event triggert runMFlow
-  useEffect(() => {
-    function onGlobalClick(e: MouseEvent) {
-      const el = (e.target as HTMLElement)?.closest?.("[data-m-event]") as HTMLElement | null;
-      if (!el) return;
-      const evt = el.getAttribute("data-m-event") as MEvent | null;
-      if (!evt) return;
-      runMFlow(evt);
+  // Globale Click-Delegation
+useEffect(() => {
+  function onGlobalClick(e: MouseEvent) {
+    const tgt = (e.target as HTMLElement)?.closest?.("[data-m-event]") as HTMLElement | null;
+    if (!tgt) return;
+
+    const evt = tgt.getAttribute("data-m-event") as MEvent | null;
+    if (!evt) return;
+
+    // Dropdowns/Listen: Klick öffnet nur – wir reagieren später auf change
+    if (evt === "mode" || evt === "expert") return;
+
+    // Optionales Label aus data-m-label nehmen (falls hinterlegt)
+    const label = tgt.getAttribute("data-m-label") || undefined;
+    runMFlow(evt, label);
+  }
+
+  document.addEventListener("click", onGlobalClick);
+  return () => document.removeEventListener("click", onGlobalClick);
+}, [runMFlow]);
+// Auswahl-Listener: feuert für <select> / ARIA-Combobox/Listbox
+useEffect(() => {
+  if (typeof document === "undefined") return;
+
+  const onChange = (e: Event) => {
+    const el = e.target as HTMLElement | null;
+    if (!el) return;
+
+    // Nur echte Auswahlen (native select oder ARIA)
+    const isPicker =
+      el.matches?.("select,[role='listbox'],[role='combobox']") ||
+      (el.closest?.("select,[role='listbox'],[role='combobox']") as HTMLElement | null);
+
+    if (!isPicker) return;
+
+    // Träger ermitteln, der das data-m-event hält
+    const host =
+      (el.closest?.("[data-m-event]") as HTMLElement | null) ||
+      (el as HTMLElement);
+
+    const evt = host.getAttribute("data-m-event") as MEvent | null;
+    if (!evt || (evt !== "mode" && evt !== "expert")) return;
+
+    // Sichtbare Beschriftung ermitteln
+    let label = "";
+    const sel = el as HTMLSelectElement;
+    if (sel.selectedOptions?.length) {
+      label = sel.selectedOptions[0].textContent?.trim() || "";
+    } else {
+      label = host.getAttribute("data-m-label") || host.textContent?.trim() || "";
     }
-    document.addEventListener("click", onGlobalClick);
-    return () => document.removeEventListener("click", onGlobalClick);
-  }, [runMFlow]);
+    if (!label) return;
+
+    runMFlow(evt, label);
+  };
+
+  document.addEventListener("change", onChange);
+  return () => document.removeEventListener("change", onChange);
+}, [runMFlow]);
 
   // ▼ Auswahl-Delegation (Dropdowns/Listboxen/Comboboxen → Label an runMFlow)
   useEffect(() => {
@@ -937,15 +1015,22 @@ useEffect(() => {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
   const MAP: Record<string, MEvent> = {
-    "jetzt bauen": "builder",
-    "builder": "builder",
-    "onboarding": "onboarding",
-    "start onboarding": "onboarding",
-    "expert": "expert",
-    "experte": "expert",
-    "mode": "mode",
-    "modus": "mode",
-  };
+  "jetzt bauen": "builder",
+  "builder": "builder",
+  "onboarding": "onboarding",
+  "start onboarding": "onboarding",
+
+  // Experten / Modus
+  "experte": "expert",
+  "expert": "expert",
+  "mode": "mode",
+  "modus": "mode",
+
+  // häufige Varianten
+  "m · default": "mode",
+  "default": "mode",
+};
+
 
   const norm = (s: string) => (s || "").trim().toLowerCase();
 

@@ -1,17 +1,16 @@
 // app/lib/chatPersistence.ts  (oder lib/chatPersistence.ts)
+// Keine "use client" nötig; defensiv gegen SSR/localStorage-Fehler.
 
-// Keine "use client" nötig; wir guard-en localStorage sauber ab.
-const STORAGE_KEY = "m_chat_messages_v1";
-
-// Minimal-Form, die wir speichern/lesen (bewusst ohne hartes App-Interface)
-type PersistedMessage = {
+export type ChatMessage = {
   role: "system" | "user" | "assistant";
   content: string;
-  format?: string; // z. B. "markdown"
+  format?: "markdown" | "text";
 };
 
-// sehr defensiv: läuft auch serverseitig ohne window
-function safeGetStorage(): Storage | null {
+const STORAGE_KEY = "m_chat_messages_v1";
+
+/** sichere Referenz auf localStorage, auch SSR-kompatibel */
+function safeStorage(): Storage | null {
   try {
     if (typeof window === "undefined") return null;
     return window.localStorage ?? null;
@@ -20,20 +19,18 @@ function safeGetStorage(): Storage | null {
   }
 }
 
-function isValidMessage(x: any): x is PersistedMessage {
+/** prüft minimale Gültigkeit einer gespeicherten Message */
+function isValidMessage(x: any): x is ChatMessage {
   return (
     x &&
     typeof x === "object" &&
-    (x.role === "system" || x.role === "user" || x.role === "assistant") &&
+    ["system", "user", "assistant"].includes(x.role) &&
     typeof x.content === "string"
   );
 }
 
 /**
- * Schneidet die History auf sinnvolle Größe.
- * - maxMsgs: maximale Anzahl Messages
- * - maxChars: harte Obergrenze für die gesamte Zeichenanzahl (approx)
- * - maxPerMsg: pro-Message-Limit (hält Ausreißer klein)
+ * kürzt History und Textlängen, damit sie leichtgewichtig bleiben
  */
 export function truncateMessages<T extends { content?: string }>(
   messages: T[],
@@ -42,20 +39,20 @@ export function truncateMessages<T extends { content?: string }>(
   maxPerMsg = 4000
 ): T[] {
   if (!Array.isArray(messages)) return [];
+
   // pro-Message-Limit
   const clipped = messages.map((m) => {
     if (!m || typeof m !== "object") return m;
     const c = String(m.content ?? "");
-    if (c.length > maxPerMsg) {
-      return { ...m, content: c.slice(-maxPerMsg) } as T;
-    }
-    return m;
+    return c.length > maxPerMsg
+      ? ({ ...m, content: c.slice(-maxPerMsg) } as T)
+      : m;
   });
 
   // Anzahl begrenzen (letzte N behalten)
   let cut = clipped.slice(-maxMsgs);
 
-  // Gesamtzeichen approximativ begrenzen (von vorne wegnehmen)
+  // Gesamtzeichen approximativ begrenzen
   let total = cut.reduce((n, m: any) => n + String(m?.content ?? "").length, 0);
   while (total > maxChars && cut.length > 1) {
     const first = cut.shift() as any;
@@ -65,27 +62,32 @@ export function truncateMessages<T extends { content?: string }>(
   return cut;
 }
 
-/** Speichert Messages defensiv in localStorage. */
-export function saveMessages(messages: any[]): void {
-  const storage = safeGetStorage();
+/** schreibt Messages sicher in localStorage */
+export function saveMessages(messages: readonly ChatMessage[]): void {
+  const storage = safeStorage();
   if (!storage) return;
+
   try {
-    // nur serialisierbare, valide Messages speichern
     const safe = Array.isArray(messages)
       ? messages
           .filter(isValidMessage)
-          .map((m) => ({ role: m.role, content: String(m.content ?? ""), format: m.format }))
+          .map((m) => ({
+            role: m.role,
+            content: String(m.content ?? ""),
+            format: m.format,
+          }))
       : [];
     storage.setItem(STORAGE_KEY, JSON.stringify(safe));
   } catch {
-    // still: niemals die App crashen lassen
+    // niemals crashen
   }
 }
 
-/** Lädt Messages aus localStorage (oder [] bei Fehler). */
-export function loadMessages(): any[] {
-  const storage = safeGetStorage();
+/** liest Messages aus localStorage */
+export function loadMessages(): ChatMessage[] {
+  const storage = safeStorage();
   if (!storage) return [];
+
   try {
     const raw = storage.getItem(STORAGE_KEY);
     if (!raw) return [];
@@ -97,9 +99,9 @@ export function loadMessages(): any[] {
   }
 }
 
-/** Optional: zum Debuggen/Zurücksetzen */
+/** löscht alle gespeicherten Messages (optional Debug) */
 export function clearMessages(): void {
-  const storage = safeGetStorage();
+  const storage = safeStorage();
   try {
     storage?.removeItem(STORAGE_KEY);
   } catch {}
