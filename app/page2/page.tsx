@@ -716,30 +716,12 @@ const [input, setInput] = useState("");
 const [loading, setLoading] = useState(false);
 const [stickToBottom, setStickToBottom] = useState(true);
 const [mode, setMode] = useState<string>("DEFAULT");
-// === Local chat persistence (no external import) ==========================
-const STORAGE_KEY = "mpage2_messages_v1";
-
-function truncateMessages(arr: ChatMessage[], max = 120): ChatMessage[] {
-  try { return (Array.isArray(arr) ? arr : []).slice(-max); } catch { return []; }
-}
-
-function saveMessages(arr: ChatMessage[]): void {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(truncateMessages(arr))); } catch {}
-}
-
-function loadMessages(): ChatMessage[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch { return []; }
-}
 
 // Alias für bestehende Stellen im Code:
-const persistMessages = saveMessages;
+const persistMessages = persist.save;
 
 // ── M-Flow Overlay (1. Frame: eventLabel)
-type MEvent = "builder" | "onboarding" | "expert" | "mode";
+// (Typ MEvent bereits am I18N-Anchor definiert; Duplikat hier entfernt)
 const [frameText, setFrameText] = useState<string | null>(null);
 
 // Browser-Sprache -> "de" | "en" | "fr" | ...
@@ -813,7 +795,6 @@ const runMFlow = useCallback(async (evt: MEvent, labelOverride?: string) => {
   // 4) READY (LogoM übernimmt die Ready-Phase, wenn loading=false)
   try { setLoading(false); } catch {}
 }, [locale, setLoading]);
-
 
 /* -----------------------------------------------------------------------
    Sehr defensive Browser-Hooks (nur Client, mit Try/Catch & harten Guards)
@@ -1011,8 +992,6 @@ useEffect(() => {
     if (id) window.cancelAnimationFrame(id);
   };
 }, []);
-
-
 
 // ===============================================================
 // Systemmeldung (für Säule / Overlay / Onboarding)
