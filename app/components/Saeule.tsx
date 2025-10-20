@@ -575,27 +575,34 @@ say(finalText);
   }}
 >
   {/* Export – links, 50% */}
-  <button
-    className={styles.button}
-    style={{ width: "50%" }}
-    onClick={() => {
-      try {
-        const raw = localStorage.getItem("mpathy:thread:default") || "{}";
-        const blob = new Blob([raw], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url; a.download = "mpathy-thread.json"; a.click();
-        URL.revokeObjectURL(url);
-        logEvent("export_thread", { size: raw.length });
-        const text = tr("threadExported", "Thread exported.");
-        say(text);
-      } catch {}
-    }}
-    aria-label={tr("exportAria", "Export thread")}
-    title={tr("export", "Export")}
-  >
-    {t("export")}
-  </button>
+<button
+  className={styles.button}
+  style={{
+    width: "50%",
+    // Barrierefrei: hoher Kontrast auf dunklem Panel
+    background: canClear ? "rgba(220, 38, 38, 0.18)" : "rgba(180, 180, 190, 0.10)", // sanfter Rot-Hintergrund nur aktiv
+    borderColor: canClear ? "rgba(248, 113, 113, 0.85)" : "rgba(120,130,140,0.45)",
+    color: canClear ? "rgba(255,255,255,0.98)" : "rgba(200,205,210,0.65)",          // Weiß auf dunkel = starker Kontrast
+    boxShadow: canClear ? "inset 0 0 0 1px rgba(248,113,113,0.55)" : "none",
+    cursor: canClear ? "pointer" : "default",
+  }}
+  onClick={() => {
+    if (!canClear) return;
+    try {
+      onClearChat?.();
+      logEvent("clear_thread", {});
+      say(tr("threadCleared", "Chat cleared."));
+    } catch {}
+  }}
+  disabled={!canClear}
+  aria-label={tr("clearChatAria", "Clear chat")}
+  title={tr("clearChat", "Clear")}
+  role="button"
+  data-test="btn-clear-chat"
+>
+  {tr("clearChat", "Clear")}
+</button>
+
 
   {/* Clear – rechts, 50% (sanft destruktiv) */}
   <button
