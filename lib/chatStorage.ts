@@ -77,15 +77,32 @@ export function clearChat(): void {
   } catch { /* ignore */ }
 }
 
-/** Key für Export/Debug */
+/** Export thread key used by the Export button */
+export const THREAD_EXPORT_KEY = "mpathy:thread:default";
+
+/** Hard clear: remove chat + thread export (and optionally reload) */
+export function hardClearChat(opts: { reload?: boolean } = { reload: true }): void {
+  try {
+    if (typeof window === "undefined") return;
+    const ls = window.localStorage;
+    ls.removeItem(CHAT_STORAGE_KEY);
+    ls.removeItem(THREAD_EXPORT_KEY);
+    if (opts.reload) {
+      // allow React to flush before reload
+      setTimeout(() => window.location.reload(), 0);
+    }
+  } catch { /* ignore */ }
+}
+
 export function getChatStorageKey(): string {
   return CHAT_STORAGE_KEY;
 }
 
-/** Kleine Helfer, um später UI anzudocken (ohne React-Abhängigkeit) */
+/** Clear handler factory (no bubble, prepares for hard clear) */
 export function makeClearHandler(setMessages: (m: ChatMessage[]) => void) {
   return () => {
     clearChat();
     setMessages([]);
   };
 }
+

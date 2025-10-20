@@ -42,7 +42,7 @@ import { t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
 import { useMobileViewport } from "@/lib/useMobileViewport";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
-import { loadChat, saveChat, clearChat,initChatStorage, makeClearHandler  } from "@/lib/chatStorage";
+import { loadChat, saveChat, clearChat,initChatStorage, makeClearHandler, hardClearChat  } from "@/lib/chatStorage";
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
 const persist = {
@@ -713,7 +713,12 @@ const [messages, setMessages] = React.useState<any[]>(() => {
 });
 
 // ⬇︎ NEU: vorbereiteter Clear-Handler (ohne UI, noch nicht aufgerufen)
-const onClearChat = React.useMemo(() => makeClearHandler(setMessages), [setMessages]);
+const onClearChat = React.useCallback(() => {
+  // wipe UI state immediately
+  setMessages([]);
+  // wipe storage (chat + export) and reload page (no residual bubbles)
+  hardClearChat({ reload: true });
+}, [setMessages]);
 
 // Autosave — persistiert jede Messages-Änderung in localStorage
 useEffect(() => {

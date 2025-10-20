@@ -608,12 +608,13 @@ say(finalText);
       boxShadow: "inset 0 0 0 1px rgba(248,113,113,0.55)",
     }}
     onClick={() => {
-      try {
-        onClearChat?.();                          // leert Storage + UI
-        logEvent("clear_thread", {});
-        say(tr("threadCleared", "Chat cleared."));
-      } catch {}
-    }}
+  try {
+    logEvent("clear_thread", {});
+    onClearChat?.();                          // hard clear + reload (defined in page2)
+    // no bubble here — page will reload clean
+  } catch {}
+}}
+
     aria-label={tr("clearChatAria", "Clear chat")}
     title={tr("clearChat", "Clear")}
     role="button"
