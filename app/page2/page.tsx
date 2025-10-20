@@ -12,11 +12,16 @@
  *  [ANCHOR:COMPONENTS]     – Header, Bubble, Conversation, InputDock
  *  [ANCHOR:BEHAVIOR]       – Chat State + sendMessage (Azure OpenAI)
  *  [ANCHOR:LAYOUT]         – Page Layout mit festen Abständen/Dock-Regeln
+ *
+ *  Philosophie:
+ *  - Eine Datei steuert Form & Verhalten. M kann hier gezielt patchen.
+ *  - Keine externen Abhängigkeiten nötig (CSS-in-TSX für dynamische Teile).
+ *  - Statischer Bühnenlook (Hintergrund/Bubbles) darf zusätzlich in page2.module.css bleiben.
  */
 
 import React, {
   useEffect,
-  useLayoutEffect,
+  useLayoutEffect, // darf drin bleiben, wird hier aber nicht zwingend gebraucht
   useState,
   useRef,
   useCallback,
@@ -33,182 +38,151 @@ import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
 import StickyFab from "../components/StickyFab";
-
 import { t } from "@/lib/i18n";
-import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
+import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
 import { useMobileViewport } from "@/lib/useMobileViewport";
-
 import {
   saveMessages as chatSaveMessages,
   loadMessages as chatLoadMessages,
   truncateMessages as chatTruncateMessages,
 } from "@/lib/chatPersistence";
-
+// Lokale, sprechende Aliasse – überall im File verwenden:
 const persist = {
   save: chatSaveMessages,
   load: chatLoadMessages,
-  cut:  chatTruncateMessages,
+  cut : chatTruncateMessages,
 };
 
-// ——— Theme-Token-Typen ———
+
+// ⚠️ NICHT importieren: useTheme aus "next-themes" (Konflikt mit lokalem Hook)
+// import { useTheme } from "next-themes"; // ❌ bitte entfernt lassen
+
+// ——— Theme-Token-Typen (global, einmalig) ———
 type ColorTokens = { bg0?: string; bg1?: string; text?: string };
 type ThemeTokens = { color?: ColorTokens; [k: string]: any };
 
-/* =======================================================================
-   [ANCHOR:I18N] — Sprachlabels & Tabellen
-   ======================================================================= */
-
-type MEvent = "builder" | "onboarding" | "expert" | "mode";
-
-const LABELS: Record<string, Record<MEvent, string>> = {
-  en: { builder: "Builder", onboarding: "Onboarding", expert: "Expert", mode: "Mode" },
-  de: { builder: "Bauen", onboarding: "Onboarding", expert: "Experte", mode: "Modus" },
-  fr: { builder: "Créer", onboarding: "Démarrage", expert: "Expert", mode: "Mode" },
-  es: { builder: "Construir", onboarding: "Inicio", expert: "Experto", mode: "Modo" },
-  it: { builder: "Costruire", onboarding: "Avvio", expert: "Esperto", mode: "Modalità" },
-};
-
-const LOAD_PREFIX: Record<string, string> = {
-  en: "Load", de: "Lade", fr: "Charger", es: "Cargar", it: "Carica",
-};
-
-const PLACEHOLDERS = new Set<string>([
-  "experte wählen", "experten wählen", "modus wählen", "mode wählen",
-  "choose expert", "select expert", "choose mode", "select mode",
-  "experte wählen …", "expert wählen …", "—",
-]);
-
-const MODE_LABELS: Record<string, Record<string, string>> = {
-  en: { calm:"Calm", truth:"Truth", oracle:"Oracle", balance:"Balance", power:"Power", loop:"Loop", body:"Body", ocean:"Ocean", minimal:"Minimal", default:"Default" },
-  de: { calm:"Ruhe", truth:"Wahrheit", oracle:"Orakel", balance:"Balance", power:"Kraft", loop:"Schleife", body:"Körper", ocean:"Ozean", minimal:"Minimal", default:"Default" },
-};
-
-export const UI_IDS = {
-  builderBtn: "#btn-builder",
-  onboardingBtn: "#btn-onboarding",
-  defaultBtn: "#btn-default",
-  councilBtn: "#btn-council13",
-};
-
-export const UI_GROUPS = {
-  mode:   { selector: "[data-group='mode'], select[data-m-event='mode'], [role='combobox'][data-m-event='mode']" },
-  expert: { selector: "[data-group='expert'], select[data-m-event='expert'], [role='combobox'][data-m-event='expert']" },
-};
-
-/* =======================================================================
-   [ANCHOR:UTILS] — Sprache & kleine Helfer
-   ======================================================================= */
-
+// Gibt z. B. "de", "fr", "es", "en" zurück
 function getBrowserLang(): string {
   if (typeof navigator === "undefined") return "en";
   const lang = navigator.language || (navigator as any).userLanguage || "en";
-  return lang.split("-")[0].toLowerCase();
+  return lang.split("-")[0].toLowerCase(); // "de-DE" -> "de"
 }
+/* =======================================================================
+   [ANCHOR:I18N] — Sprachlabels für Button-Events
+   ======================================================================= */
 
-const cap = (s: string) =>
-  String(s || "").trim().replace(/\s+/g, " ").replace(/^./, c => c.toUpperCase());
+// Typdefinition für alle Events, die M ansteuern kann
+type MEvent = "builder" | "onboarding" | "expert" | "mode";
 
-const slug = (s: string) =>
-  String(s || "")
-    .toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim()
-    .replace(/\s+/g, "-");
-
-const locale = getBrowserLang();
-
-const getStaticLabel = (evt: MEvent) =>
-  (LABELS[locale]?.[evt] ?? LABELS.en[evt]);
-
-const tMode = (raw: string) => {
-  const key = slug(raw);
-  const table = MODE_LABELS[locale] ?? MODE_LABELS.en;
-  return table[key] ?? cap(raw);
+// Übersetzungen pro Sprache
+const LABELS: Record<string, Record<MEvent, string>> = {
+  en: {
+    builder: "Builder",
+    onboarding: "Onboarding",
+    expert: "Expert",
+    mode: "Mode",
+  },
+  de: {
+    builder: "Bauen",
+    onboarding: "Onboarding",
+    expert: "Experte",
+    mode: "Modus",
+  },
+  fr: {
+    builder: "Créer",
+    onboarding: "Démarrage",
+    expert: "Expert",
+    mode: "Mode",
+  },
+  es: {
+    builder: "Construir",
+    onboarding: "Inicio",
+    expert: "Experto",
+    mode: "Modo",
+  },
+  it: {
+    builder: "Costruire",
+    onboarding: "Avvio",
+    expert: "Esperto",
+    mode: "Modalità",
+  },
 };
-
-const loadWord = LOAD_PREFIX[locale] ?? LOAD_PREFIX.en;
-
-const isPicker = (el: Element | null) =>
-  !!el && el.matches?.("select,[role='combobox'],[role='listbox']");
-
-const isPlaceholder = (txt?: string) =>
-  !txt || PLACEHOLDERS.has(txt.trim().toLowerCase());
 
 /* =======================================================================
    [ANCHOR:CONFIG] — Design Tokens, Themes, Personas, System Prompt
    ======================================================================= */
 
-type Tokens = {
-  radius: { sm: number; md: number; lg: number };
-  shadow: { soft: string; glowCyan: string };
-  color: {
-    bg0: string;
-    bg1: string;
-    text: string;
-    textMuted: string;
-    cyan: string;
-    cyanGlass: string;
-    cyanBorder: string;
-    slateGlass: string;
-    slateBorder: string;
-    glass: string;
-    glassBorder: string;
+   type Tokens = {
+    radius: { sm: number; md: number; lg: number };
+    shadow: { soft: string; glowCyan: string };
+    color: {
+      bg0: string;
+      bg1: string;
+      text: string;
+      textMuted: string;
+      cyan: string;
+      cyanGlass: string;
+      cyanBorder: string;
+      slateGlass: string;
+      slateBorder: string;
+      glass: string;
+      glassBorder: string;
+    };
   };
-};
-
-const TOKENS: Tokens = {
-  radius: { sm: 10, md: 12, lg: 16 },
-  shadow: {
-    soft: "0 14px 40px rgba(0,0,0,0.35)",
-    glowCyan: "0 0 28px rgba(34,211,238,0.12)",
-  },
-  color: {
-    bg0: "#000",
-    bg1: "#0c0f12",
-    text: "#E6F0F3",
-    textMuted: "rgba(230,240,243,0.65)",
-    cyan: "#22d3ee",
-    cyanGlass: "rgba(34,211,238,0.12)",
-    cyanBorder: "rgba(34,211,238,0.28)",
-    slateGlass: "rgba(148,163,184,0.10)",
-    slateBorder: "rgba(148,163,184,0.30)",
-    glass: "rgba(255,255,255,0.06)",
-    glassBorder: "rgba(255,255,255,0.12)",
-  },
-};
-
-type Theme = {
-  name: string;
-  tokens: Tokens;
-  dock: {
-    desktop: { width: number; bottom: number; side: number };
-    mobile: { widthCalc: string; bottom: number; side: number };
-  };
-};
-
-const THEMES: Record<string, Theme> = {
-  m_default: {
-    name: "m_default",
-    tokens: TOKENS,
-    dock: {
-      desktop: { width: 600, bottom: 300, side: 24 },
-      mobile: { widthCalc: "calc(100% - 20px)", bottom: 50, side: 10 },
+  
+  const TOKENS: Tokens = {
+    radius: { sm: 10, md: 12, lg: 16 },
+    shadow: {
+      soft: "0 14px 40px rgba(0,0,0,0.35)",
+      glowCyan: "0 0 28px rgba(34,211,238,0.12)",
     },
-  },
-};
-
-const PERSONAS: Record<string, { theme: keyof typeof THEMES }> = {
-  default: { theme: "m_default" },
-};
-
-const COUNCIL_COMMANDS: Record<string, string> = {
-  LUX: "INIT LUX-Anchor",
-  JURAXY: "INITIATE JURAXY-1/13",
-  DATAMASTER: "START DataMaster Session",
-  CHEMOMASTER: "START ChemoMaster 2.0 Loop",
-  SHADOWMASTER: "TRIGGER_SHADOW_ANALYSIS",
-}; 
+    color: {
+      bg0: "#000",
+      bg1: "#0c0f12",
+      text: "#E6F0F3",
+      textMuted: "rgba(230,240,243,0.65)",
+      cyan: "#22d3ee",
+      cyanGlass: "rgba(34,211,238,0.12)",
+      cyanBorder: "rgba(34,211,238,0.28)",
+      slateGlass: "rgba(148,163,184,0.10)",
+      slateBorder: "rgba(148,163,184,0.30)",
+      glass: "rgba(255,255,255,0.06)",
+      glassBorder: "rgba(255,255,255,0.12)",
+    },
+  };
+  
+  type Theme = {
+    name: string;
+    tokens: Tokens;
+    dock: {
+      desktop: { width: number; bottom: number; side: number };
+      mobile: { widthCalc: string; bottom: number; side: number };
+    };
+  };
+  
+  const THEMES: Record<string, Theme> = {
+    m_default: {
+      name: "m_default",
+      tokens: TOKENS,
+      dock: {
+        desktop: { width: 600, bottom: 300, side: 24 },
+        mobile: { widthCalc: "calc(100% - 20px)", bottom: 50, side: 10 },
+      },
+    },
+  };
+  
+  const PERSONAS: Record<string, { theme: keyof typeof THEMES }> = {
+    default: { theme: "m_default" },
+  };
+  
+  // (optional, wenn in dieser Datei genutzt; sonst komplett entfernen)
+  const COUNCIL_COMMANDS: Record<string, string> = {
+    LUX: "INIT LUX-Anchor",
+    JURAXY: "INITIATE JURAXY-1/13",
+    DATAMASTER: "START DataMaster Session",
+    CHEMOMASTER: "START ChemoMaster 2.0 Loop",
+    SHADOWMASTER: "TRIGGER_SHADOW_ANALYSIS",
+  };  
   
 /* =======================================================================
    [ANCHOR:HOOKS]  — Breakpoint + Theme Resolution
@@ -742,26 +716,6 @@ const [input, setInput] = useState("");
 const [loading, setLoading] = useState(false);
 const [stickToBottom, setStickToBottom] = useState(true);
 const [mode, setMode] = useState<string>("DEFAULT");
-
-// Initiale Begrüßung / Restore (aus localStorage)
-useEffect(() => {
-  const restored = persist.load();
-  if (Array.isArray(restored) && restored.length > 0) {
-    // we map it softly to match ChatMessage type from this file
-    const normalized = restored.map((m: any) => ({
-      role: m.role ?? "assistant",
-      content: m.content ?? "",
-      format: (m.format === "markdown" || m.format === "html" || m.format === "plain")
-        ? m.format
-        : "markdown", // fallback format
-    }));
-    setMessages(normalized);
-    return;
-  }
-  setMessages([]);
-}, []);
-
-
 // === Local chat persistence (no external import) ==========================
 const STORAGE_KEY = "mpage2_messages_v1";
 
@@ -795,117 +749,192 @@ const locale = getBrowserLang();
 const getLabel = (evt: MEvent) =>
   (LABELS[locale] && LABELS[locale][evt]) || LABELS.en[evt];
 
-/* Wort/Prefix für „Load/Lade“ je nach Browsersprache (einmalig) */
-const LOAD_PREFIX: Record<string, string> = {
-  en: "Load",
-  de: "Lade",
-  fr: "Charger",
-  es: "Cargar",
-  it: "Carica",
-};
-
-/* --- helpers for labels --- */
+// --- helpers for labels ---
 const cap = (s: string) =>
-  String(s || "").replace(/\s+/g, " ").trim().replace(/^./, (c) => c.toUpperCase());
+  String(s || "").replace(/\s+/g, " ").trim().replace(/^./, c => c.toUpperCase());
 
 const slug = (s: string) =>
   String(s || "")
     .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // accents off
-    .replace(/[^a-z0-9]+/g, " ")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // accents off
+    .replace(/[^a-z0-9]+/g, " ")                      // keep words
     .trim()
-    .replace(/\s+/g, "-");
+    .replace(/\s+/g, "-");                             // words -> slug
 
-/* --- localized labels for known modes --- */
+// --- localized labels for known modes ---
 const MODE_LABELS: Record<string, Record<string, string>> = {
-  en: { calm: "Calm", truth: "Truth", oracle: "Oracle", balance: "Balance", power: "Power", loop: "Loop", body: "Body", ocean: "Ocean", minimal: "Minimal" },
-  de: { calm: "Ruhe", truth: "Wahrheit", oracle: "Orakel", balance: "Balance", power: "Kraft", loop: "Schleife", body: "Körper", ocean: "Ozean", minimal: "Minimal" },
-  fr: { calm: "Calme", truth: "Vérité", oracle: "Oracle", balance: "Équilibre", power: "Puissance", loop: "Boucle", body: "Corps", ocean: "Océan", minimal: "Minimal" },
-  es: { calm: "Calma", truth: "Verdad", oracle: "Oráculo", balance: "Equilibrio", power: "Poder", loop: "Bucle", body: "Cuerpo", ocean: "Océano", minimal: "Minimal" },
-  it: { calm: "Calma", truth: "Verità", oracle: "Oracolo", balance: "Equilibrio", power: "Potenza", loop: "Loop", body: "Corpo", ocean: "Oceano", minimal: "Minimo" },
+  en: { calm:"Calm", truth:"Truth", oracle:"Oracle", balance:"Balance", power:"Power", loop:"Loop", body:"Body", ocean:"Ocean", minimal:"Minimal" },
+  de: { calm:"Ruhe", truth:"Wahrheit", oracle:"Orakel", balance:"Balance", power:"Kraft", loop:"Schleife", body:"Körper", ocean:"Ozean", minimal:"Minimal" },
+  fr: { calm:"Calme", truth:"Vérité", oracle:"Oracle", balance:"Équilibre", power:"Puissance", loop:"Boucle", body:"Corps", ocean:"Océan", minimal:"Minimal" },
+  es: { calm:"Calma", truth:"Verdad", oracle:"Oráculo", balance:"Equilibrio", power:"Poder", loop:"Bucle", body:"Cuerpo", ocean:"Océano", minimal:"Minimal" },
+  it: { calm:"Calma", truth:"Verità", oracle:"Oracolo", balance:"Equilibrio", power:"Potenza", loop:"Loop", body:"Corpo", ocean:"Oceano", minimal:"Minimo" },
 };
 
 const tMode = (raw: string) => {
-  const key = slug(raw); // "Calm", "CALM" -> "calm"
+  const key = slug(raw);                        // "Calm", "CALM", etc. -> "calm"
   const table = MODE_LABELS[locale] || MODE_LABELS.en;
-  return table[key] || cap(raw);
+  return table[key] || cap(raw);                // fallback: raw pretty-cased
 };
+
 
 // UI-zentrale Routine: eventLabel → READY
 const runMFlow = useCallback(async (evt: MEvent, labelOverride?: string) => {
-  const LOAD_PREFIX: Record<string, string> = {
-    en: "Load", de: "Lade", fr: "Charger", es: "Cargar", it: "Carica"
-  };
+  // Prefix nach Browsersprache
+  const LOAD_PREFIX: Record<string, string> = { en: "Load", de: "Lade", fr: "Charger", es: "Cargar", it: "Carica" };
   const prefix = LOAD_PREFIX[locale] ?? LOAD_PREFIX.en;
 
   const baseLabel = (() => {
+    // Fallbacks für reine Events
     if (!labelOverride) {
-      if (evt === "builder")    return getLabel("builder");
-      if (evt === "onboarding") return getLabel("onboarding");
-      if (evt === "mode")       return getLabel("mode");
-      if (evt === "expert")     return getLabel("expert");
+      if (evt === "builder")      return getLabel("builder");      // z. B. „Bauen“
+      if (evt === "onboarding")   return getLabel("onboarding");
+      if (evt === "mode")         return getLabel("mode");
+      if (evt === "expert")       return getLabel("expert");
     }
-    return (labelOverride || "").trim();
+    return labelOverride!.trim();
   })();
 
+  // „Load …“ bzw. Sonderfall „set default“
   const frame = (evt === "mode" && /^default$/i.test(baseLabel))
     ? (locale === "de" ? "Setze Default" : "Set default")
     : `${prefix} ${baseLabel}`;
 
+  // 1) Frame 1 (Text) + Denken starten
   setFrameText(frame);
   try { setLoading(true); } catch {}
 
+  // 2) Frame sichtbar halten
   await new Promise(r => setTimeout(r, 900));
+
+  // 3) Ausblenden Frame 1, M denkt noch
   setFrameText(null);
   await new Promise(r => setTimeout(r, 700));
 
+  // 4) READY (LogoM übernimmt die Ready-Phase, wenn loading=false)
   try { setLoading(false); } catch {}
 }, [locale, setLoading]);
 
 
-
-/*/* -----------------------------------------------------------------------
+/* -----------------------------------------------------------------------
    Sehr defensive Browser-Hooks (nur Client, mit Try/Catch & harten Guards)
    ----------------------------------------------------------------------- */
 
-// ——— Helpers (lokal, ohne Re-Renders) ———
-const PLACEHOLDERS = new Set([
-  "experte wählen","experten wählen","mode wählen","modus wählen",
-  "choose expert","select expert","choose mode","select mode",
-  "expert wählen","modus wählen"
-]);
-
-const isPicker = (el: Element | null) =>
-  !!el && el.matches?.("select,[role='combobox'],[role='listbox']");
-
-const getHost = (el: Element | null) =>
-  (el as HTMLElement | null)?.closest?.("[data-m-event]") as HTMLElement | null;
-
-const resolveLabel = (host: HTMLElement, target?: Element | null): string | undefined => {
-  // Priorität: data-m-label > option:checked > [aria-selected=true] > aria-label|title > Text
-  const checked = host.querySelector("option:checked") as HTMLOptionElement | null;
-  const ariaSel = host.querySelector("[aria-selected='true']") as HTMLElement | null;
-
-  const raw =
-    host.getAttribute("data-m-label") ||
-    checked?.textContent ||
-    ariaSel?.textContent ||
-    (target as HTMLElement | null)?.textContent ||
-    host.getAttribute("aria-label") ||
-    host.getAttribute("title") ||
-    host.textContent ||
-    "";
-
-  const txt = raw.trim();
-  if (!txt) return undefined;
-  if (PLACEHOLDERS.has(txt.toLowerCase())) return undefined; // keine Platzhalter animieren
-  return txt;
-};
-
-// ——— 1) Auto-Tagging (optional, einmalig) ———
+// Globale Click-Delegation: startet M-Flow inkl. konkretem Label (Mode/Expert)
 useEffect(() => {
-  if (typeof document === "undefined" || typeof window === "undefined") return;
+  function resolveEvtAndLabel(target: HTMLElement): { evt?: MEvent; label?: string } {
+    // A) direkt ausgezeichnet
+    const el = target.closest("[data-m-event]") as HTMLElement | null;
+    if (el) {
+      const evt = el.getAttribute("data-m-event") as MEvent | null;
+      if (!evt) return {};
+      const raw = el.getAttribute("data-m-label")
+        || el.getAttribute("aria-label")
+        || el.textContent
+        || "";
+      const label = evt === "mode" ? tMode(raw) : (evt === "expert" ? cap(raw) : undefined);
+      return { evt, label };
+    }
+
+    // B) Fallbacks: typische Daten-Attribute in deinem UI
+    const modeEl = target.closest("[data-mode-id],[data-mode],[data-mode-label]") as HTMLElement | null;
+    if (modeEl) {
+      const raw =
+        modeEl.getAttribute("data-mode-label")
+        || modeEl.getAttribute("data-mode")
+        || modeEl.textContent
+        || "";
+      return { evt: "mode", label: tMode(raw) };
+    }
+
+    const expertEl = target.closest("[data-expert-id],[data-expert],[data-expert-label]") as HTMLElement | null;
+    if (expertEl) {
+      const raw =
+        expertEl.getAttribute("data-expert-label")
+        || expertEl.getAttribute("data-expert")
+        || expertEl.textContent
+        || "";
+      return { evt: "expert", label: cap(raw) };
+    }
+
+    // C) Text-Heuristik (letzter Notnagel)
+    const txt = (target.getAttribute("aria-label") || target.textContent || "").trim();
+    if (txt) {
+      const s = slug(txt);
+      // erkenne bekannte Mode-Keys im Text
+      if (["calm","truth","oracle","balance","power","loop","body","ocean","minimal"].some(k => s.includes(k))) {
+        return { evt: "mode", label: tMode(txt) };
+      }
+      if (s.includes("expert") || s.includes("experte")) {
+        return { evt: "expert", label: cap(txt) };
+      }
+    }
+
+    return {};
+  }
+
+  function onGlobalClick(e: MouseEvent) {
+    const tgt = e.target as HTMLElement | null;
+    if (!tgt) return;
+    const { evt, label } = resolveEvtAndLabel(tgt);
+    if (!evt) return;
+    runMFlow(evt, label);                        // << labelOverride liefert Frame 1
+  }
+
+  document.addEventListener("click", onGlobalClick);
+  return () => document.removeEventListener("click", onGlobalClick);
+}, [runMFlow, locale]);
+  // Globale Click-Delegation: jedes Element mit data-m-event triggert runMFlow
+  useEffect(() => {
+    function onGlobalClick(e: MouseEvent) {
+      const el = (e.target as HTMLElement)?.closest?.("[data-m-event]") as HTMLElement | null;
+      if (!el) return;
+      const evt = el.getAttribute("data-m-event") as MEvent | null;
+      if (!evt) return;
+      runMFlow(evt);
+    }
+    document.addEventListener("click", onGlobalClick);
+    return () => document.removeEventListener("click", onGlobalClick);
+  }, [runMFlow]);
+
+  // ▼ Auswahl-Delegation (Dropdowns/Listboxen/Comboboxen → Label an runMFlow)
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const onChange = (e: Event) => {
+      const el = e.target as HTMLElement | null;
+      if (!el) return;
+
+      // Nur echte Auswahlen mit change-Event
+      if (!el.matches("select,[role='listbox'],[role='combobox']")) return;
+
+      const host = (el.closest("[data-m-event]") as HTMLElement) || (el as any);
+      const evt = host.getAttribute("data-m-event") as MEvent | null;
+      if (!evt) return;
+
+      let label = "";
+      if ((el as HTMLSelectElement).selectedOptions?.length) {
+        label = (el as HTMLSelectElement).selectedOptions[0].textContent?.trim() || "";
+      } else {
+        label = host.getAttribute("data-m-label") || host.textContent?.trim() || "";
+      }
+      runMFlow(evt, label || undefined);
+    };
+
+    document.addEventListener("change", onChange);
+    return () => document.removeEventListener("change", onChange);
+  }, [runMFlow]);
+
+  // Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof document === "undefined") return;
+    // … (dein Auto-Tagging Code folgt hier)
+  }, []);
+
+
+// Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
+useEffect(() => {
+  // SSR-Schutz
+  if (typeof window === "undefined" || typeof document === "undefined") return;
 
   const MAP: Record<string, MEvent> = {
     "jetzt bauen": "builder",
@@ -917,103 +946,72 @@ useEffect(() => {
     "mode": "mode",
     "modus": "mode",
   };
+
   const norm = (s: string) => (s || "").trim().toLowerCase();
 
-  const id = window.requestAnimationFrame(() => {
+  // Helper: für mode/expert sichtbaren Namen als data-m-label setzen
+  const ensureLabel = (el: HTMLElement) => {
+    const evtType = el.getAttribute("data-m-event");
+    if ((evtType === "mode" || evtType === "expert") && !el.hasAttribute("data-m-label")) {
+      const raw =
+        (el.textContent ||
+          el.getAttribute("aria-label") ||
+          el.getAttribute("title") ||
+          "")!.trim();
+      if (raw) el.setAttribute("data-m-label", raw);
+    }
+  };
+
+  // nach initialem Paint (vermeidet SSR/CSR-Mismatch)
+  let id = 0;
+  id = window.requestAnimationFrame(() => {
     try {
-      const nodes = document.querySelectorAll<HTMLElement>(
-        'button, a, [role="button"], [data-action], select, [role="combobox"], [role="listbox"]'
+      const candidates = Array.from(
+        document.querySelectorAll<HTMLElement>('button, a, [role="button"], [data-action]')
       );
 
-      nodes.forEach((el) => {
+      for (const el of candidates) {
         try {
-          if (el.hasAttribute("data-m-event")) return;
+          if (el.hasAttribute("data-m-event")) {
+            ensureLabel(el);
+            continue;
+          }
 
-          const text = norm(
-            el.textContent || el.getAttribute("aria-label") || el.getAttribute("title") || ""
-          );
-          if (!text) return;
-
-          // exakter oder Teil-Treffer
-          const direct = MAP[text];
-          const hit = direct ?? Object.keys(MAP).find((k) => text.includes(k));
-          if (hit) el.setAttribute("data-m-event", MAP[hit]!);
-
-          const evtType = el.getAttribute("data-m-event");
-          // Für mode/expert sichtbaren Namen puffern
-          if ((evtType === "mode" || evtType === "expert") && !el.hasAttribute("data-m-label")) {
-            const raw =
-              (el as HTMLSelectElement).selectedOptions?.[0]?.textContent?.trim() ||
-              el.textContent?.trim() ||
+          const txt = norm(
+            el.textContent ||
               el.getAttribute("aria-label") ||
               el.getAttribute("title") ||
-              "";
-            if (raw) el.setAttribute("data-m-label", raw);
+              ""
+          );
+          if (!txt) continue;
+
+          // exakter Treffer
+          if (MAP[txt]) {
+            el.setAttribute("data-m-event", String(MAP[txt]));
+            ensureLabel(el);
+            continue;
           }
-        } catch {/* einzelnes Element ignorieren */}
-      });
-    } catch {/* still */}
+
+          // Teiltreffer (z. B. "jetzt bauen!")
+          const hit = Object.keys(MAP).find((key) => txt.includes(key));
+          if (hit) {
+            el.setAttribute("data-m-event", String(MAP[hit as keyof typeof MAP]));
+            ensureLabel(el);
+          }
+        } catch {
+          // einzelnen Problem-Knoten ignorieren
+        }
+      }
+    } catch {
+      // niemals die App crashen lassen
+    }
   });
 
-  return () => window.cancelAnimationFrame(id);
+  return () => {
+    if (id) window.cancelAnimationFrame(id);
+  };
 }, []);
 
-// ——— 2) Click-Delegation (keine Picker; Modus/Experte bekommen Label) ———
-useEffect(() => {
-  if (typeof document === "undefined") return;
-
-  const onClick = (e: MouseEvent) => {
-    try {
-      const tgt = e.target as Element | null;
-      if (!tgt) return;
-
-      // Öffnen von Select/Combobox/Listbox triggert NICHT
-      if (isPicker(tgt) || getHost(tgt)?.matches?.("select,[role='combobox'],[role='listbox']")) {
-        return;
-      }
-
-      const host = getHost(tgt);
-      if (!host) return;
-
-      const evt = host.getAttribute("data-m-event") as MEvent | null;
-      if (!evt) return;
-
-      // Für reine Buttons ohne Auswahl: ggf. Label auflösen (mode/expert)
-      const label = (evt === "mode" || evt === "expert") ? resolveLabel(host, tgt) : undefined;
-
-      runMFlow(evt, label);
-    } catch {/* still */}
-  };
-
-  document.addEventListener("click", onClick, { passive: true });
-  return () => document.removeEventListener("click", onClick);
-}, [runMFlow]);
-
-// ——— 3) Change-Delegation (nur Picker; erst nach echter Auswahl) ———
-useEffect(() => {
-  if (typeof document === "undefined") return;
-
-  const onChange = (e: Event) => {
-    try {
-      const el = e.target as Element | null;
-      if (!isPicker(el)) return;
-
-      const host = getHost(el!) ?? (el as HTMLElement | null);
-      if (!host) return;
-
-      const evt = host.getAttribute("data-m-event") as MEvent | null;
-      if (!evt) return;
-
-      const label = resolveLabel(host, el);
-      if (!label) return; // keine Platzhalter
-
-      runMFlow(evt, label);
-    } catch {/* still */}
-  };
-
-  document.addEventListener("change", onChange);
-  return () => document.removeEventListener("change", onChange);
-}, [runMFlow]);
 
 
 // ===============================================================
