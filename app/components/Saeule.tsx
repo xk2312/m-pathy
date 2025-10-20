@@ -571,67 +571,58 @@ say(finalText);
     display: "flex",
     gap: 8,
     alignItems: "stretch",
-    flexWrap: "nowrap", // ⬅︎ Mobile: kein ungewolltes Umbrechen
+    flexWrap: "nowrap",
   }}
 >
-  {/* Export – links, 50% */}
-<button
-  className={styles.button}
-  style={{
-    width: "50%",
-    // Barrierefrei: hoher Kontrast auf dunklem Panel
-    background: canClear ? "rgba(220, 38, 38, 0.18)" : "rgba(180, 180, 190, 0.10)", // sanfter Rot-Hintergrund nur aktiv
-    borderColor: canClear ? "rgba(248, 113, 113, 0.85)" : "rgba(120,130,140,0.45)",
-    color: canClear ? "rgba(255,255,255,0.98)" : "rgba(200,205,210,0.65)",          // Weiß auf dunkel = starker Kontrast
-    boxShadow: canClear ? "inset 0 0 0 1px rgba(248,113,113,0.55)" : "none",
-    cursor: canClear ? "pointer" : "default",
-  }}
-  onClick={() => {
-    if (!canClear) return;
-    try {
-      onClearChat?.();
-      logEvent("clear_thread", {});
-      say(tr("threadCleared", "Chat cleared."));
-    } catch {}
-  }}
-  disabled={!canClear}
-  aria-label={tr("clearChatAria", "Clear chat")}
-  title={tr("clearChat", "Clear")}
-  role="button"
-  data-test="btn-clear-chat"
->
-  {tr("clearChat", "Clear")}
-</button>
+  {/* Export – links, 50% (Label fix mit Fallback) */}
+  <button
+    className={styles.button}
+    style={{ width: "50%", cursor: "pointer" }}
+    onClick={() => {
+      try {
+        const raw = localStorage.getItem("mpathy:thread:default") || "{}";
+        const blob = new Blob([raw], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url; a.download = "mpathy-thread.json"; a.click();
+        URL.revokeObjectURL(url);
+        logEvent("export_thread", { size: raw.length });
+        say(tr("threadExported", "Thread exported."));
+      } catch {}
+    }}
+    aria-label={tr("exportAria", "Export thread")}
+    title={tr("export", "Export")}
+  >
+    {tr("export", "Export")}
+  </button>
 
-
-  {/* Clear – rechts, 50% (sanft destruktiv) */}
+  {/* Clear – rechts, 50% (immer aktiv, hoher Kontrast) */}
   <button
     className={styles.button}
     style={{
       width: "50%",
-      // sanfter „destructive“-Touch, ohne Alarm
-      borderColor: "rgba(255, 99, 99, 0.55)",
-      color: "rgba(255, 120, 120, 0.95)",
-      // leichte Hover-/Active-Hinweise, inline damit kein CSS nötig
-      // (inline > CSS-Module-Spezifität)
+      cursor: "pointer",
+      background: "rgba(220, 38, 38, 0.18)",     // sanfter Rot-Hintergrund
+      borderColor: "rgba(248, 113, 113, 0.85)",   // sichtbare Kontur
+      color: "rgba(255,255,255,0.98)",            // starker Kontrast auf dunkel
+      boxShadow: "inset 0 0 0 1px rgba(248,113,113,0.55)",
     }}
     onClick={() => {
       try {
-        if (!canClear) return;
-        if (onClearChat) {
-          onClearChat(); // leert Storage + UI (makeClearHandler)
-          logEvent("clear_thread", {});
-          say(tr("threadCleared", "Chat cleared."));
-        }
+        onClearChat?.();                          // leert Storage + UI
+        logEvent("clear_thread", {});
+        say(tr("threadCleared", "Chat cleared."));
       } catch {}
     }}
-    disabled={!canClear}
     aria-label={tr("clearChatAria", "Clear chat")}
     title={tr("clearChat", "Clear")}
+    role="button"
+    data-test="btn-clear-chat"
   >
     {tr("clearChat", "Clear")}
   </button>
 </div>
+
 
 
 
