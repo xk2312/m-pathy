@@ -768,95 +768,55 @@ const tMode = (raw: string) => {
 
 
 // UI-zentrale Routine: eventLabel → READY
-const runMFlow = useCallback(
-  async (evt: MEvent, labelOverride?: string) => {
-    // 1) Event-Label zeigen (falls override, sonst Standardlabel)
-    setFrameText(labelOverride ?? getLabel(evt));
-    try { setLoading(true); } catch {}
+const runMFlow = useCallback(async (evt: MEvent) => {
+  // 1) Event-Label zeigen + M/Spirale starten
+  setFrameText(getLabel(evt));
+  try { setLoading(true); } catch {}
 
-    // 2) kurz stehen lassen (Frame 1)
-    await new Promise((r) => setTimeout(r, 900));
+  // 2) kurz stehen lassen (sichtbarer Frame 1)
+  await new Promise((r) => setTimeout(r, 900));
 
-    // 3) Label ausblenden, M denkt noch kurz
-    setFrameText(null);
-    await new Promise((r) => setTimeout(r, 700));
+  // 3) Event-Label ausblenden, M denkt noch kurz
+  setFrameText(null);
+  await new Promise((r) => setTimeout(r, 700));
 
-    // 4) READY-Phase (LogoM kümmert sich, wenn loading -> false)
-    try { setLoading(false); } catch {}
-  },
-  [getLabel, setLoading]
-);
-
+  // 4) READY-Phase (LogoM zeigt sie selbst, wenn loading -> false wechselt)
+  try { setLoading(false); } catch {}
+}, [locale]);
 
 /* -----------------------------------------------------------------------
    Sehr defensive Browser-Hooks (nur Client, mit Try/Catch & harten Guards)
    ----------------------------------------------------------------------- */
 
-// Globale Click-Delegation: startet M-Flow inkl. konkretem Label (Mode/Expert)
+// Globale Click-Delegation: jedes Element mit data-m-event triggert runMFlow
 useEffect(() => {
-  function resolveEvtAndLabel(target: HTMLElement): { evt?: MEvent; label?: string } {
-    // A) direkt ausgezeichnet
-    const el = target.closest("[data-m-event]") as HTMLElement | null;
-    if (el) {
-      const evt = el.getAttribute("data-m-event") as MEvent | null;
-      if (!evt) return {};
-      const raw = el.getAttribute("data-m-label")
-        || el.getAttribute("aria-label")
-        || el.textContent
-        || "";
-      const label = evt === "mode" ? tMode(raw) : (evt === "expert" ? cap(raw) : undefined);
-      return { evt, label };
-    }
+  if (typeof document === "undefined") return;
 
-    // B) Fallbacks: typische Daten-Attribute in deinem UI
-    const modeEl = target.closest("[data-mode-id],[data-mode],[data-mode-label]") as HTMLElement | null;
-    if (modeEl) {
-      const raw =
-        modeEl.getAttribute("data-mode-label")
-        || modeEl.getAttribute("data-mode")
-        || modeEl.textContent
-        || "";
-      return { evt: "mode", label: tMode(raw) };
-    }
-
-    const expertEl = target.closest("[data-expert-id],[data-expert],[data-expert-label]") as HTMLElement | null;
-    if (expertEl) {
-      const raw =
-        expertEl.getAttribute("data-expert-label")
-        || expertEl.getAttribute("data-expert")
-        || expertEl.textContent
-        || "";
-      return { evt: "expert", label: cap(raw) };
-    }
-
-    // C) Text-Heuristik (letzter Notnagel)
-    const txt = (target.getAttribute("aria-label") || target.textContent || "").trim();
-    if (txt) {
-      const s = slug(txt);
-      // erkenne bekannte Mode-Keys im Text
-      if (["calm","truth","oracle","balance","power","loop","body","ocean","minimal"].some(k => s.includes(k))) {
-        return { evt: "mode", label: tMode(txt) };
-      }
-      if (s.includes("expert") || s.includes("experte")) {
-        return { evt: "expert", label: cap(txt) };
-      }
-    }
-
-    return {};
-  }
+  const ALLOWED = new Set<MEvent>(["builder", "onboarding", "expert", "mode"]);
 
   function onGlobalClick(e: MouseEvent) {
-    const tgt = e.target as HTMLElement | null;
-    if (!tgt) return;
-    const { evt, label } = resolveEvtAndLabel(tgt);
-    if (!evt) return;
-    runMFlow(evt, label);                        // << labelOverride liefert Frame 1
+    try {
+      const target = e.target as Element | null;
+      if (!target || !("closest" in target)) return;
+      const el = (target as HTMLElement).closest?.("[data-m-event]") as HTMLElement | null;
+      if (!el) return;
+
+      const raw = el.getAttribute("data-m-event");
+      if (!raw) return;
+
+      // harte Typ-Guards
+      const evt = raw.toLowerCase() as MEvent;
+      if (!ALLOWED.has(evt)) return;
+
+      runMFlow(evt);
+    } catch (_) {
+      // niemals die App crashen lassen
+    }
   }
 
-  document.addEventListener("click", onGlobalClick);
+  document.addEventListener("click", onGlobalClick, { passive: true });
   return () => document.removeEventListener("click", onGlobalClick);
-}, [runMFlow, locale]);
-
+}, [runMFlow]);
 
 // Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
 useEffect(() => {
@@ -876,56 +836,40 @@ useEffect(() => {
   const norm = (s: string) => (s || "").trim().toLowerCase();
 
   // nach initialem Paint + Fonts, um SSR/CSR-Mismatch zu vermeiden
-const id = window.requestAnimationFrame(() => {
-  try {
-    const candidates = Array.from(
-      document.querySelectorAll<HTMLElement>('button, a, [role="button"], [data-action]')
-    );
+  const id = window.requestAnimationFrame(() => {
+    try {
+      const candidates = Array.from(
+        document.querySelectorAll<HTMLElement>('button, a, [role="button"], [data-action]')
+      );
 
-    for (const el of candidates) {
-      try {
-        if (el.hasAttribute("data-m-event")) continue;
+      for (const el of candidates) {
+        try {
+          if (el.hasAttribute("data-m-event")) continue;
 
-        const txt = norm(
-          el.textContent ||
-          el.getAttribute("aria-label") ||
-          el.getAttribute("title") ||
-          ""
-        );
-        if (!txt) continue;
+          const txt = norm(
+            el.textContent ||
+            el.getAttribute("aria-label") ||
+            el.getAttribute("title") ||
+            ""
+          );
+          if (!txt) continue;
 
-        // exakter Treffer
-        if (MAP[txt]) {
-          el.setAttribute("data-m-event", MAP[txt]);
-          // bei mode/expert zusätzlich sichtbaren Namen als data-m-label setzen (falls noch nicht vorhanden)
-          const evtType = el.getAttribute("data-m-event");
-          if ((evtType === "mode" || evtType === "expert") && !el.hasAttribute("data-m-label")) {
-            const raw = (el.textContent || el.getAttribute("aria-label") || el.getAttribute("title") || "").trim();
-            if (raw) el.setAttribute("data-m-label", raw);
+          if (MAP[txt]) {
+            el.setAttribute("data-m-event", MAP[txt]);
+            continue;
           }
-          continue;
+          const hit = Object.keys(MAP).find((key) => txt.includes(key));
+          if (hit) el.setAttribute("data-m-event", MAP[hit]!);
+        } catch {
+          // einen einzelnen Problem-Knoten ignorieren
         }
-
-        // Teiltreffer (z. B. "jetzt bauen!")
-        const hit = Object.keys(MAP).find((key) => txt.includes(key));
-        if (hit) {
-          el.setAttribute("data-m-event", MAP[hit]!);
-          const evtType = el.getAttribute("data-m-event");
-          if ((evtType === "mode" || evtType === "expert") && !el.hasAttribute("data-m-label")) {
-            const raw = (el.textContent || el.getAttribute("aria-label") || el.getAttribute("title") || "").trim();
-            if (raw) el.setAttribute("data-m-label", raw);
-          }
-        }
-      } catch {
-        // einen einzelnen Problem-Knoten ignorieren
       }
+    } catch {
+      // niemals die App crashen lassen
     }
-  } catch {
-    // niemals die App crashen lassen
-  }
-});
+  });
 
-return () => window.cancelAnimationFrame(id);
+  return () => window.cancelAnimationFrame(id);
 }, []);
 
 
