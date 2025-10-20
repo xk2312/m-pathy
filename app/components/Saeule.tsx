@@ -42,7 +42,12 @@ type ExpertId =
   | "Molecular Scientist";
 
 /** Optional: Seite kann Systemmeldungen als Bubble anzeigen */
-type Props = { onSystemMessage?: (content: string) => void };
+type Props = {
+  onSystemMessage?: (content: string) => void;
+  onClearChat?: () => void;   // ⬅︎ NEU: Clear-Handler (kommt aus page2)
+  canClear?: boolean;         // ⬅︎ NEU: Disabled-Logik
+};
+
 
 /* ======================================================================
    Daten
@@ -284,7 +289,7 @@ async function callChatAPI(prompt: string): Promise<string | null> {
    Component
    ====================================================================== */
 
-export default function Saeule({ onSystemMessage }: Props) {
+  export default function Saeule({ onSystemMessage, onClearChat, canClear }: Props) {
   const [activeMode, setActiveMode] = useState<ModeId>("M");
   const [hydrated, setHydrated] = useState(false);
   const [sendingExpert, setSendingExpert] = useState<ExpertId | null>(null);
@@ -559,30 +564,69 @@ say(finalText);
   </div>
 </div>
 
+{/* Aktionen: Export (links, 50%) + Clear (rechts, 50%) */}
+<div
+  className={styles.actions}
+  style={{
+    display: "flex",
+    gap: 8,
+    alignItems: "stretch",
+    flexWrap: "nowrap", // ⬅︎ Mobile: kein ungewolltes Umbrechen
+  }}
+>
+  {/* Export – links, 50% */}
+  <button
+    className={styles.button}
+    style={{ width: "50%" }}
+    onClick={() => {
+      try {
+        const raw = localStorage.getItem("mpathy:thread:default") || "{}";
+        const blob = new Blob([raw], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url; a.download = "mpathy-thread.json"; a.click();
+        URL.revokeObjectURL(url);
+        logEvent("export_thread", { size: raw.length });
+        const text = tr("threadExported", "Thread exported.");
+        say(text);
+      } catch {}
+    }}
+    aria-label={tr("exportAria", "Export thread")}
+    title={tr("export", "Export")}
+  >
+    {t("export")}
+  </button>
 
-      {/* Aktionen: nur Export */}
-      <div className={styles.actions}>
-        <button
-          className={styles.button}
-          onClick={() => {
-            try {
-              const raw = localStorage.getItem("mpathy:thread:default") || "{}";
-              const blob = new Blob([raw], { type: "application/json" });
-              const url = URL.createObjectURL(blob);
-              const a = document.createElement("a");
-              a.href = url; a.download = "mpathy-thread.json"; a.click();
-              URL.revokeObjectURL(url);
-              logEvent("export_thread", { size: raw.length });
-              const text = tr("threadExported", "Thread exported.");
-say(text); // nutzt onSystemMessage ODER emitSystemMessage(reply) – aber nie beides
+  {/* Clear – rechts, 50% (sanft destruktiv) */}
+  <button
+    className={styles.button}
+    style={{
+      width: "50%",
+      // sanfter „destructive“-Touch, ohne Alarm
+      borderColor: "rgba(255, 99, 99, 0.55)",
+      color: "rgba(255, 120, 120, 0.95)",
+      // leichte Hover-/Active-Hinweise, inline damit kein CSS nötig
+      // (inline > CSS-Module-Spezifität)
+    }}
+    onClick={() => {
+      try {
+        if (!canClear) return;
+        if (onClearChat) {
+          onClearChat(); // leert Storage + UI (makeClearHandler)
+          logEvent("clear_thread", {});
+          say(tr("threadCleared", "Chat cleared."));
+        }
+      } catch {}
+    }}
+    disabled={!canClear}
+    aria-label={tr("clearChatAria", "Clear chat")}
+    title={tr("clearChat", "Clear")}
+  >
+    {tr("clearChat", "Clear")}
+  </button>
+</div>
 
 
-            } catch {}
-          }}
-        >
-          {t("export")}
-        </button>
-      </div>
 
       {/* Statusleiste */}
       <div className={styles.statusBar} aria-live="polite">

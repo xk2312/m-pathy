@@ -42,7 +42,7 @@ import { t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
 import { useMobileViewport } from "@/lib/useMobileViewport";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
-import { loadChat, saveChat, clearChat,initChatStorage  } from "@/lib/chatStorage";
+import { loadChat, saveChat, clearChat,initChatStorage, makeClearHandler  } from "@/lib/chatStorage";
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
 const persist = {
@@ -706,13 +706,14 @@ useEffect(() => {
 
 
 // Chat State
-// … anderer State …
-// ↓ Lazy-Restore: Migration + Load VOR dem ersten Render
 const [messages, setMessages] = React.useState<any[]>(() => {
-  initChatStorage();           // ⬅︎ MIGRATION hier, synchron
-  const restored = loadChat(); // erst danach lesen
+  initChatStorage();
+  const restored = loadChat();
   return restored ?? [];
 });
+
+// ⬇︎ NEU: vorbereiteter Clear-Handler (ohne UI, noch nicht aufgerufen)
+const onClearChat = React.useMemo(() => makeClearHandler(setMessages), [setMessages]);
 
 // Autosave — persistiert jede Messages-Änderung in localStorage
 useEffect(() => {
@@ -720,6 +721,7 @@ useEffect(() => {
     saveChat(messages);
   }
 }, [messages]);
+
 
 // … weiterer Code …
 
