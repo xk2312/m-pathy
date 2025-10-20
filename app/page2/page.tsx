@@ -41,21 +41,16 @@ import StickyFab from "../components/StickyFab";
 import { t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
 import { useMobileViewport } from "@/lib/useMobileViewport";
-import {
-  saveMessages as chatSaveMessages,
-  loadMessages as chatLoadMessages,
-  truncateMessages as chatTruncateMessages,
-} from "@/lib/chatPersistence";
-// Lokale, sprechende Aliasse – überall im File verwenden:
+// ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
+import { loadChat, saveChat, clearChat } from "@/lib/chatStorage";
+
+// Kompatibler Alias – damit restlicher Code unverändert bleiben kann
 const persist = {
-  save: chatSaveMessages,
-  load: chatLoadMessages,
-  cut : chatTruncateMessages,
+  save: saveChat,
+  load: loadChat,
+  // bisheriger „cut“-Semantik (120) beibehalten:
+  cut : (arr: any[], max = 120) => Array.isArray(arr) ? arr.slice(-max) : [],
 };
-
-
-// ⚠️ NICHT importieren: useTheme aus "next-themes" (Konflikt mit lokalem Hook)
-// import { useTheme } from "next-themes"; // ❌ bitte entfernt lassen
 
 // ——— Theme-Token-Typen (global, einmalig) ———
 type ColorTokens = { bg0?: string; bg1?: string; text?: string };
@@ -711,29 +706,32 @@ useEffect(() => {
 
 
 // Chat State
-const [messages, setMessages] = useState<ChatMessage[]>([]);
+// … anderer State …
+// ⬇︎ Lazy-Restore: erster Render hat bereits den gespeicherten Verlauf
+const [messages, setMessages] = React.useState<any[]>(() => {
+  const restored = loadChat();
+  return restored ?? [];
+});
+// Autosave — persistiert jede Messages-Änderung in localStorage
+useEffect(() => {
+  if (Array.isArray(messages)) {
+    saveChat(messages);
+  }
+}, [messages]);
+
+// … weiterer Code …
+
 const [input, setInput] = useState("");
 const [loading, setLoading] = useState(false);
 const [stickToBottom, setStickToBottom] = useState(true);
+// … weiterer Code …
+
 const [mode, setMode] = useState<string>("DEFAULT");
-// === Local chat persistence (no external import) ==========================
-const STORAGE_KEY = "mpage2_messages_v1";
 
-function truncateMessages(arr: ChatMessage[], max = 120): ChatMessage[] {
-  try { return (Array.isArray(arr) ? arr : []).slice(-max); } catch { return []; }
-}
+// (entfernt) — lokaler Persistenzblock wurde gestrichen
+// Persistenz läuft zentral über lib/chatStorage.ts  → siehe persist.* oben
+// … weiterer Code …
 
-function saveMessages(arr: ChatMessage[]): void {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(truncateMessages(arr))); } catch {}
-}
-
-function loadMessages(): ChatMessage[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch { return []; }
-}
 
 // Alias für bestehende Stellen im Code:
 const persistMessages = saveMessages;
