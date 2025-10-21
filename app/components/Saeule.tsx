@@ -334,13 +334,14 @@ useEffect(() => {
 
   const modeLabel = useMemo(() => modeLabelFromId(activeMode), [activeMode]);
   // ▼▼ NEU: Footer-Status ohne Bubble senden ▼▼
-const emitStatus = useCallback((partial: { modeLabel?: string; expertLabel?: string }) => {
+const emitStatus = useCallback((partial: { modeLabel?: string; expertLabel?: string; busy?: boolean }) => {
   try {
     window.dispatchEvent(new CustomEvent("mpathy:system-message", {
       detail: { kind: "status", text: "", meta: partial },
     }));
   } catch {}
 }, []);
+
 // ▲▲ ENDE NEU ▲▲
 
 

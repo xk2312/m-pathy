@@ -1112,10 +1112,12 @@ useEffect(() => {
         expertLabel: typeof expertLabel === "string" && expertLabel.length ? expertLabel : s.expertLabel,
       }));
 
-      // Auswahl getroffen → "Denken" startet (Puls an)
-      if ((modeLabel && String(modeLabel).length) || (expertLabel && String(expertLabel).length)) {
-        try { setLoading(true); } catch {}
-      }
+      // Puls NUR starten, wenn explizit busy:true gesetzt ist
+const busy = (meta?.busy ?? (detail as any)?.busy) === true;
+if (busy) {
+  try { setLoading(true); } catch {}
+}
+
 
       if (wasAtEnd) {
         requestAnimationFrame(() => {
