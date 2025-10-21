@@ -466,9 +466,6 @@ say(finalText);
       </div>
 
 
-      {/* Steuerung */}
-      <div className={styles.sectionTitle}>{t("sectionControl")}</div>
-
       {/* ONBOARDING */}
       <div className={styles.block}>
         <button
@@ -538,7 +535,6 @@ say(finalText);
 
 
         {/* Experten (Dropdown) */}
-<div className={styles.sectionTitle}>{sectionTitleExperts(lang)}</div>
 <div className={styles.block}>
   <label className={styles.label} htmlFor="expert-select">
     {chooseExpertLabel(lang)}
