@@ -521,7 +521,7 @@ say(finalText);
         </div>
       </div>
            {/* Experten (Dropdown) */}
-<div className={styles.block}>
+
 
   <div className={styles.selectWrap}>
     <select
@@ -538,7 +538,7 @@ say(finalText);
       {/* …options… */}
     </select>
   </div>
-</div>
+
 
       {/* Council13 */}
 <div className={styles.block}>
