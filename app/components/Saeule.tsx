@@ -293,7 +293,7 @@ async function callChatAPI(prompt: string): Promise<string | null> {
   const [activeMode, setActiveMode] = useState<ModeId>("M");
   const [hydrated, setHydrated] = useState(false);
   const [sendingExpert, setSendingExpert] = useState<ExpertId | null>(null);
-  const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null); // ← neu
+  const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null);
   const [lang, setLang] = useState<string>("en");
 
 
@@ -520,24 +520,32 @@ say(finalText);
           </select>
         </div>
       </div>
+           
+           
            {/* Experten (Dropdown) */}
 
 
   <div className={styles.selectWrap}>
-    <select
-      id="expert-select"
-      className={styles.select}
-      aria-label={chooseExpertLabel(lang)}  // A11y bleibt über den Select erhalten
-      defaultValue=""
-      onChange={(e) => {
-        const val = e.target.value as unknown as ExpertId;
-        if (val) { void askExpert(val); }
-      }}
-    >
-      <option value="" disabled hidden>{chooseExpertLabel(lang)}</option>
-      {/* …options… */}
-    </select>
-  </div> 
+  <select
+    id="expert-select"
+    className={styles.select}
+    aria-label={chooseExpertLabel(lang)}
+    value={hydrated ? (currentExpert ?? "") : ""}   // ⬅︎ kontrolliert, wie Modis
+    onChange={(e) => {
+      const val = e.target.value as ExpertId;
+      setCurrentExpert(val);                        // ⬅︎ State setzen (Kontrolle)
+      void askExpert(val);                          // ⬅︎ Auswahl anwenden
+    }}
+  >
+    <option value="" disabled hidden>{chooseExpertLabel(lang)}</option>
+    {EXPERTS.map((e) => (
+      <option key={e.id} value={e.id}>
+        {e.icon} {labelForExpert(e.id, lang)}
+      </option>
+    ))}
+  </select>
+</div>
+
 
 
       {/* Council13 */}
