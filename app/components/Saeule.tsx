@@ -401,30 +401,33 @@ const q =
 }
 
 async function askExpert(expert: ExpertId) {
-  if (sendingExpert) return;
+  // Doppel-Trigger vermeiden
+  if (sendingExpert || expert === currentExpert) return;
+
   setSendingExpert(expert);
   setCurrentExpert(expert);
 
   const label = labelForExpert(expert, lang);
 
-  // Telemetrie
-  logEvent("expert_selected", { expert, label, roles: ROLES[expert] });
+  try {
+    // Telemetrie
+    logEvent("expert_selected", { expert, label, roles: ROLES[expert] });
 
-  // Footer sofort aktualisieren (ohne Bubble)
-  emitStatus({ expertLabel: label });
+    // ⚠️ KEIN emitStatus mehr vorab – vermeidet MLogo-Load beim Öffnen
+    // Softe Bestätigung (optional als Bubble)
+    say(tr("status.expertSet", "Expert set: {label}.", { label }));
 
-  // ⬅️ NEU: sofortiges Ack -> schließt MobileOverlay direkt
-  say(tr("status.expertSet", "Expert set: {label}.", { label }));
-
-  // Prompt an API – keine festen Fallbacks
-  const userPrompt = expertAskPrompt(label, lang);
-  const reply = await callChatAPI(userPrompt);
-  if (reply && reply.trim().length > 0) {
-    say(reply); // genau eine Antwort-Bubble
+    // Prompt an API – keine festen Fallbacks
+    const userPrompt = expertAskPrompt(label, lang);
+    const reply = await callChatAPI(userPrompt);
+    if (reply && reply.trim().length > 0) {
+      say(reply); // genau eine Antwort-Bubble
+    }
+  } finally {
+    setSendingExpert(null);
   }
-
-  setSendingExpert(null);
 }
+
 
   /* UI */
   return (
