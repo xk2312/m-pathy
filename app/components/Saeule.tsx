@@ -521,35 +521,23 @@ say(finalText);
         </div>
       </div>
            {/* Experten (Dropdown) */}
-<div
-  className={styles.selectWrap}
-  // ⬇︎ Isoliere den Bereich gegen Eltern-Click-Handler (kein MLogo-Trigger)
-  onClickCapture={(e) => { e.stopPropagation(); }}
-  onMouseDownCapture={(e) => { e.stopPropagation(); }}
-  onPointerDownCapture={(e) => { e.stopPropagation(); }}
-  onTouchStartCapture={(e) => { e.stopPropagation(); }}
-  style={{ pointerEvents: "auto" }} // Select bleibt bedienbar
->
-  <select
-    id="expert-select"
-    className={styles.select}
-    aria-label={chooseExpertLabel(lang)}  // A11y bleibt über den Select erhalten
-    defaultValue=""
-    // ⬇︎ Verhindere, dass der erste Tap/Klick nach oben „durchschlägt“
-    onClick={(e) => { e.stopPropagation(); }}
-    onMouseDown={(e) => { e.stopPropagation(); }}
-    onPointerDown={(e) => { e.stopPropagation(); }}
-    onTouchStart={(e) => { e.stopPropagation(); }}
-    onChange={(e) => {
-      const val = e.target.value as unknown as ExpertId;
-      if (val) { void askExpert(val); }
-    }}
-  >
-    <option value="" disabled hidden>{chooseExpertLabel(lang)}</option>
-    {/* …options… */}
-  </select>
-</div>
 
+
+  <div className={styles.selectWrap}>
+    <select
+      id="expert-select"
+      className={styles.select}
+      aria-label={chooseExpertLabel(lang)}  // A11y bleibt über den Select erhalten
+      defaultValue=""
+      onChange={(e) => {
+        const val = e.target.value as unknown as ExpertId;
+        if (val) { void askExpert(val); }
+      }}
+    >
+      <option value="" disabled hidden>{chooseExpertLabel(lang)}</option>
+      {/* …options… */}
+    </select>
+  </div>
 
 
       {/* Council13 */}
