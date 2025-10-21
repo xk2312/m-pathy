@@ -502,7 +502,7 @@ say(finalText);
       {/* Modus-Dropdown */}
       <div className={styles.block}>
         <label className={styles.label} htmlFor="modus-select">
-  {tr("labels.modes", "Optimize M")}
+  {tr("labels.modes", "Modis & Experts")}
 </label>
 
         <div className={styles.selectWrap}>
