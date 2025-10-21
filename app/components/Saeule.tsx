@@ -502,7 +502,7 @@ say(finalText);
       {/* Modus-Dropdown */}
       <div className={styles.block}>
         <label className={styles.label} htmlFor="modus-select">
-  {tr("labels.modes", "Modis")}
+  {tr("labels.modes", "Optimize M")}
 </label>
 
         <div className={styles.selectWrap}>
@@ -520,22 +520,7 @@ say(finalText);
           </select>
         </div>
       </div>
-
-      {/* Council13 */}
-<div className={styles.block}>
-  <button
-    type="button"
-    aria-pressed={activeMode === "council"}
-    className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
-    onClick={() => switchMode("council")}
-    style={{ width: "100%", cursor: "pointer" }}
-  >
-    {t("council13")}
-  </button>
-</div>
-
-
-        {/* Experten (Dropdown) */}
+           {/* Experten (Dropdown) */}
 <div className={styles.block}>
 
   <div className={styles.selectWrap}>
@@ -554,6 +539,22 @@ say(finalText);
     </select>
   </div>
 </div>
+
+      {/* Council13 */}
+<div className={styles.block}>
+  <button
+    type="button"
+    aria-pressed={activeMode === "council"}
+    className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
+    onClick={() => switchMode("council")}
+    style={{ width: "100%", cursor: "pointer" }}
+  >
+    {t("council13")}
+  </button>
+</div>
+
+
+   
 
 
 {/* Aktionen: Export (links, 50%) + Clear (rechts, 50%) */}
