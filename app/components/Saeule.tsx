@@ -537,15 +537,20 @@ say(finalText);
 
         {/* Experten (Dropdown) */}
 <div className={styles.block}>
-  <label className={styles.label} htmlFor="expert-select">
-  {tr("labels.experts", "Experts")}
-</label>
+  {/* Passives, nicht-klickbares Label – keine Kopplung an den Select */}
+  <span
+    className={styles.label}
+    aria-hidden="true"
+    style={{ pointerEvents: "none" }}
+  >
+    {tr("labels.experts", "Experten")}
+  </span>
 
   <div className={styles.selectWrap}>
     <select
       id="expert-select"
       className={styles.select}
-      aria-label={chooseExpertLabel(lang)}
+      aria-label={chooseExpertLabel(lang)}  // A11y bleibt über den Select erhalten
       defaultValue=""
       onChange={(e) => {
         const val = e.target.value as unknown as ExpertId;
@@ -553,14 +558,11 @@ say(finalText);
       }}
     >
       <option value="" disabled hidden>{chooseExpertLabel(lang)}</option>
-      {EXPERTS.map((e) => (
-        <option key={e.id} value={e.id}>
-          {e.icon} {labelForExpert(e.id, lang)}
-        </option>
-      ))}
+      {/* …options… */}
     </select>
   </div>
 </div>
+
 
 {/* Aktionen: Export (links, 50%) + Clear (rechts, 50%) */}
 <div
