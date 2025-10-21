@@ -502,8 +502,9 @@ say(finalText);
       {/* Modus-Dropdown */}
       <div className={styles.block}>
         <label className={styles.label} htmlFor="modus-select">
-          {t("selectMode")}
-        </label>
+  {tr("labels.modes", "Modis")}
+</label>
+
         <div className={styles.selectWrap}>
           <select
             id="modus-select"
@@ -537,8 +538,9 @@ say(finalText);
         {/* Experten (Dropdown) */}
 <div className={styles.block}>
   <label className={styles.label} htmlFor="expert-select">
-    {chooseExpertLabel(lang)}
-  </label>
+  {tr("labels.experts", "Experts")}
+</label>
+
   <div className={styles.selectWrap}>
     <select
       id="expert-select"
