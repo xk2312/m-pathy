@@ -711,6 +711,8 @@ const [messages, setMessages] = React.useState<any[]>(() => {
   const restored = loadChat();
   return restored ?? [];
 });
+// ⬇︎ Guard-Ref: blockiert Autosave während "Clear"
+const clearingRef = React.useRef(false);
 
 // ⬇︎ NEU: vorbereiteter Clear-Handler (ohne UI, noch nicht aufgerufen)
 const onClearChat = React.useCallback(() => {
@@ -720,8 +722,9 @@ const onClearChat = React.useCallback(() => {
   hardClearChat({ reload: true });
 }, [setMessages]);
 
-// Autosave — persistiert jede Messages-Änderung in localStorage
+// Autosave — pausiert, wenn gerade "Clear" läuft
 useEffect(() => {
+  if (clearingRef.current) return; // ⬅︎ blockiert Schreibvorgang während Clear
   if (Array.isArray(messages)) {
     saveChat(messages);
   }

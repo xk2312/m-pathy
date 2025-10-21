@@ -607,11 +607,10 @@ say(finalText);
       color: "rgba(255,255,255,0.98)",            // starker Kontrast auf dunkel
       boxShadow: "inset 0 0 0 1px rgba(248,113,113,0.55)",
     }}
-    onClick={() => {
+   onClick={() => {
   try {
     logEvent("clear_thread", {});
-    onClearChat?.();                          // hard clear + reload (defined in page2)
-    // no bubble here — page will reload clean
+    onClearChat?.();  // startet Hard-Clear + Reload
   } catch {}
 }}
 

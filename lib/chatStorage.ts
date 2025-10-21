@@ -77,22 +77,31 @@ export function clearChat(): void {
   } catch { /* ignore */ }
 }
 
-/** Export thread key used by the Export button */
 export const THREAD_EXPORT_KEY = "mpathy:thread:default";
 
-/** Hard clear: remove chat + thread export (and optionally reload) */
+/** Hard clear: remove new + legacy chat keys and thread export; optional reload */
 export function hardClearChat(opts: { reload?: boolean } = { reload: true }): void {
   try {
     if (typeof window === "undefined") return;
     const ls = window.localStorage;
+
+    // 1) Chat-Keys entfernen (neu + legacy)
     ls.removeItem(CHAT_STORAGE_KEY);
+    for (const k of LEGACY_KEYS) {
+      ls.removeItem(k);
+    }
+
+    // 2) begleitende Artefakte entfernen (Export)
     ls.removeItem(THREAD_EXPORT_KEY);
+
+    // 3) Neu laden
     if (opts.reload) {
-      // allow React to flush before reload
+      // kleiner Delay, damit React-State flushen kann, aber kein Spielraum für Race
       setTimeout(() => window.location.reload(), 0);
     }
   } catch { /* ignore */ }
 }
+
 
 export function getChatStorageKey(): string {
   return CHAT_STORAGE_KEY;
