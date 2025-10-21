@@ -85,22 +85,32 @@ export function hardClearChat(opts: { reload?: boolean } = { reload: true }): vo
     if (typeof window === "undefined") return;
     const ls = window.localStorage;
 
-    // 1) Chat-Keys entfernen (neu + legacy)
+    console.log("[P5] hardClearChat BEFORE", {
+      v1: !!ls.getItem(CHAT_STORAGE_KEY),
+      legacy: LEGACY_KEYS.map(k => [k, !!ls.getItem(k)]),
+      exportKey: !!ls.getItem(THREAD_EXPORT_KEY),
+    });
+
     ls.removeItem(CHAT_STORAGE_KEY);
     for (const k of LEGACY_KEYS) {
       ls.removeItem(k);
     }
-
-    // 2) begleitende Artefakte entfernen (Export)
     ls.removeItem(THREAD_EXPORT_KEY);
 
-    // 3) Neu laden
+    console.log("[P5] hardClearChat AFTER", {
+      v1: !!ls.getItem(CHAT_STORAGE_KEY),
+      legacy: LEGACY_KEYS.map(k => [k, !!ls.getItem(k)]),
+      exportKey: !!ls.getItem(THREAD_EXPORT_KEY),
+    });
+
     if (opts.reload) {
-      // kleiner Delay, damit React-State flushen kann, aber kein Spielraum für Race
       setTimeout(() => window.location.reload(), 0);
     }
-  } catch { /* ignore */ }
+  } catch (e) {
+    console.error("[P5] hardClearChat ERROR:", e);
+  }
 }
+
 
 
 export function getChatStorageKey(): string {

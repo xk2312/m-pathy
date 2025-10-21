@@ -575,26 +575,40 @@ say(finalText);
   }}
 >
   {/* Export – links, 50% (Label fix mit Fallback) */}
-  <button
-    className={styles.button}
-    style={{ width: "50%", cursor: "pointer" }}
-    onClick={() => {
-      try {
-        const raw = localStorage.getItem("mpathy:thread:default") || "{}";
-        const blob = new Blob([raw], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url; a.download = "mpathy-thread.json"; a.click();
-        URL.revokeObjectURL(url);
-        logEvent("export_thread", { size: raw.length });
-        say(tr("threadExported", "Thread exported."));
-      } catch {}
-    }}
-    aria-label={tr("exportAria", "Export thread")}
-    title={tr("export", "Export")}
-  >
-    {tr("export", "Export")}
-  </button>
+ <button
+  className={styles.button}
+  style={{
+    width: "50%",
+    cursor: "pointer",
+    background: "rgba(220, 38, 38, 0.18)",
+    borderColor: "rgba(248, 113, 113, 0.85)",
+    color: "rgba(255,255,255,0.98)",
+    boxShadow: "inset 0 0 0 1px rgba(248,113,113,0.55)",
+  }}
+  onClick={() => {
+    console.log("[P1] Clear button clicked");
+    console.log("[P2] typeof onClearChat =", typeof onClearChat);
+    // Logger darf den Clear NICHT blockieren:
+    try {
+      logEvent("clear_thread", {});
+      console.log("[P3] logEvent(clear_thread) OK");
+    } catch (e) {
+      console.warn("[P3] logEvent FAILED:", e);
+    }
+    try {
+      onClearChat?.();
+    } catch (e) {
+      console.error("[P2→P4] onClearChat threw:", e);
+    }
+  }}
+  aria-label={tr("clearChatAria", "Clear chat")}
+  title={tr("clearChat", "Clear")}
+  role="button"
+  data-test="btn-clear-chat"
+>
+  {tr("clearChat", "Clear")}
+</button>
+
 
   {/* Clear – rechts, 50% (immer aktiv, hoher Kontrast) */}
   <button

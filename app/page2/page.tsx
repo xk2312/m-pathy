@@ -711,29 +711,39 @@ const [messages, setMessages] = React.useState<any[]>(() => {
   const restored = loadChat();
   return restored ?? [];
 });
+
 // ⬇︎ Guard-Ref: blockiert Autosave während "Clear"
 const clearingRef = React.useRef(false);
 
 // ⬇︎ NEU: vorbereiteter Clear-Handler (ohne UI, noch nicht aufgerufen)
 // Hard-Clear: UI sofort leeren, Autosave pausieren, Storage wipe + Reload
 const onClearChat = React.useCallback(() => {
-  clearingRef.current = true;   // ⬅︎ Autosave blockieren
+  console.log("[P4] onClearChat entered");
+  clearingRef.current = true;     // P6 zeigt jetzt clearing:true
   try {
-    setMessages([]);            // UI sofort leer
-    hardClearChat({ reload: true }); // löscht mpathy:chat:v1, Legacy-Keys, Export + reload
-  } finally {
-    // kein Reset nötig, die Seite lädt neu
+    setMessages([]);              // UI sofort leer
+    console.log("[P4] setMessages([]) done");
+    hardClearChat({ reload: true });
+    console.log("[P4] hardClearChat called (reload scheduled)");
+  } catch (e) {
+    console.error("[P4] onClearChat error:", e);
   }
 }, []);
 
 
+
 // Autosave — pausiert, wenn gerade "Clear" läuft
 useEffect(() => {
-  if (clearingRef.current) return; // ⬅︎ blockiert Schreibvorgang während Clear
+  console.log("[P6] autosave fired", {
+    clearing: clearingRef.current,
+    len: Array.isArray(messages) ? messages.length : "n/a",
+  });
+  if (clearingRef.current) return;
   if (Array.isArray(messages)) {
     saveChat(messages);
   }
 }, [messages]);
+
 
 
 // … weiterer Code …
