@@ -8,6 +8,8 @@ import Saeule from "./Saeule";
    ====================================================================== */
 type Props = {
   onSystemMessage?: (content: string) => void;
+  onClearChat?: () => void;   // ⬅︎ neu – wird an Saeule weitergereicht
+  canClear?: boolean;         // ⬅︎ optional – falls benötigt
 };
 
 /** Reagiert auf Desktop/Mobile — reagiert sanft mit MatchMedia */
@@ -41,11 +43,15 @@ function useIsDesktop(minWidth = 1024) {
    Component
    ====================================================================== */
 
-export default function SidebarContainer({ onSystemMessage }: Props) {
+export default function SidebarContainer({
+  onSystemMessage,
+  onClearChat,
+  canClear,
+}: Props) {
   const isDesktop = useIsDesktop(1024);
 
   return (
-        <aside
+    <aside
       aria-label="Sidebar Container"
       data-test="sidebar-container"
       /* KEIN display: contents – Containing-Block bleibt stabil */
@@ -54,7 +60,7 @@ export default function SidebarContainer({ onSystemMessage }: Props) {
         pointerEvents: "auto",
       }}
     >
-            {isDesktop ? (
+      {isDesktop ? (
         /* Desktop: Sticky kommt vom Parent in page.tsx */
         <div
           style={{
@@ -63,10 +69,13 @@ export default function SidebarContainer({ onSystemMessage }: Props) {
             zIndex: "var(--z-base, 1)",
           }}
         >
-          <Saeule onSystemMessage={onSystemMessage} />
+          <Saeule
+            onSystemMessage={onSystemMessage}
+            onClearChat={onClearChat}   // ⬅︎ Leitung zum Clear-Handler
+            canClear={canClear}         // ⬅︎ optional
+          />
         </div>
       ) : (
-
         /* Mobile: Platzhalter */
         <div
           aria-hidden="true"

@@ -719,12 +719,11 @@ const clearingRef = React.useRef(false);
 // Hard-Clear: UI sofort leeren, Autosave pausieren, Storage wipe + Reload
 const onClearChat = React.useCallback(() => {
   console.log("[P4] onClearChat entered");
-  clearingRef.current = true;     // P6 zeigt jetzt clearing:true
+  clearingRef.current = true;
   try {
-    setMessages([]);              // UI sofort leer
-    console.log("[P4] setMessages([]) done");
-    hardClearChat({ reload: true });
-    console.log("[P4] hardClearChat called (reload scheduled)");
+    setMessages([]);                  // UI sofort leer
+    hardClearChat({ reload: true });  // Storage wipe (neu+legacy+export) + Reload
+    console.log("[P4] hardClearChat called");
   } catch (e) {
     console.error("[P4] onClearChat error:", e);
   }
@@ -1456,18 +1455,21 @@ return (
   <div
     style={{
       position: "sticky",
-      // ▼ Header (Desktop 224px) wurde auf 60 % reduziert → + 16px Puffer
       top: "calc(224px * 0.6 + 16px)",
       alignSelf: "start",
       height: "fit-content",
-      // ▼ verfügbare Höhe: Viewport minus (reduzierter Header + Puffer)
       maxHeight: "calc(100dvh - (224px * 0.6 + 16px))",
       overflow: "auto",
     }}
   >
-    <SidebarContainer onSystemMessage={systemSay} />
+    <SidebarContainer
+      onSystemMessage={systemSay}
+      onClearChat={onClearChat}   // ← der echte Clear-Handler (hard clear + reload)
+      /* canClear={canClear} */   // ← optional, falls du Disable-Logik nutzt
+    />
   </div>
 )}
+
 
                 <div
           ref={convoRef as any}
