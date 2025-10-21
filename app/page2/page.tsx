@@ -715,12 +715,17 @@ const [messages, setMessages] = React.useState<any[]>(() => {
 const clearingRef = React.useRef(false);
 
 // ⬇︎ NEU: vorbereiteter Clear-Handler (ohne UI, noch nicht aufgerufen)
+// Hard-Clear: UI sofort leeren, Autosave pausieren, Storage wipe + Reload
 const onClearChat = React.useCallback(() => {
-  // wipe UI state immediately
-  setMessages([]);
-  // wipe storage (chat + export) and reload page (no residual bubbles)
-  hardClearChat({ reload: true });
-}, [setMessages]);
+  clearingRef.current = true;   // ⬅︎ Autosave blockieren
+  try {
+    setMessages([]);            // UI sofort leer
+    hardClearChat({ reload: true }); // löscht mpathy:chat:v1, Legacy-Keys, Export + reload
+  } finally {
+    // kein Reset nötig, die Seite lädt neu
+  }
+}, []);
+
 
 // Autosave — pausiert, wenn gerade "Clear" läuft
 useEffect(() => {
