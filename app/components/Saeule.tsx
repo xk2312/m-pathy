@@ -537,14 +537,6 @@ say(finalText);
 
         {/* Experten (Dropdown) */}
 <div className={styles.block}>
-  {/* Passives, nicht-klickbares Label – keine Kopplung an den Select */}
-  <span
-    className={styles.label}
-    aria-hidden="true"
-    style={{ pointerEvents: "none" }}
-  >
-    {tr("labels.experts", "Experten")}
-  </span>
 
   <div className={styles.selectWrap}>
     <select
