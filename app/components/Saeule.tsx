@@ -412,13 +412,21 @@ async function askExpert(expert: ExpertId) {
   logEvent("expert_selected", { expert, label, roles: ROLES[expert] });
 
   // Footer sofort aktualisieren (ohne Bubble)
-  emitStatus({ expertLabel: label });
+emitStatus({ expertLabel: label });
 
-  // ⬅️ NEU: sofortiges Ack -> schließt MobileOverlay direkt
-  say(tr("status.expertSet", "Expert set: {label}.", { label }));
+// ⬅️ UI-only: MobileOverlay schließen – ohne System-Event/Bubble/Loading
+if (typeof window !== "undefined" &&
+    (window.matchMedia?.("(max-width: 768px)").matches ||
+     // Fallback für ältere Browser:
+     /Mobi|Android/i.test(navigator.userAgent))) {
+  window.dispatchEvent(
+    new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "expert-selected" } })
+  );
+}
 
-  // Prompt an API – keine festen Fallbacks
-  const userPrompt = expertAskPrompt(label, lang);
+// Prompt an API – keine festen Fallbacks
+const userPrompt = expertAskPrompt(label, lang);
+
   const reply = await callChatAPI(userPrompt);
   if (reply && reply.trim().length > 0) {
     say(reply); // genau eine Antwort-Bubble
