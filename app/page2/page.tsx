@@ -845,68 +845,29 @@ const runMFlow = useCallback(async (evt: MEvent, labelOverride?: string) => {
 
 // Globale Click-Delegation: startet M-Flow inkl. konkretem Label (Mode/Expert)
 useEffect(() => {
-  function resolveEvtAndLabel(target: HTMLElement): { evt?: MEvent; label?: string } {
-    // A) direkt ausgezeichnet
-    const el = target.closest("[data-m-event]") as HTMLElement | null;
-    if (el) {
-      const evt = el.getAttribute("data-m-event") as MEvent | null;
-      if (!evt) return {};
-      const raw = el.getAttribute("data-m-label")
-        || el.getAttribute("aria-label")
-        || el.textContent
-        || "";
-      const label = evt === "mode" ? tMode(raw) : (evt === "expert" ? cap(raw) : undefined);
-      return { evt, label };
-    }
-
-    // B) Fallbacks: typische Daten-Attribute in deinem UI
-    const modeEl = target.closest("[data-mode-id],[data-mode],[data-mode-label]") as HTMLElement | null;
-    if (modeEl) {
-      const raw =
-        modeEl.getAttribute("data-mode-label")
-        || modeEl.getAttribute("data-mode")
-        || modeEl.textContent
-        || "";
-      return { evt: "mode", label: tMode(raw) };
-    }
-
-    const expertEl = target.closest("[data-expert-id],[data-expert],[data-expert-label]") as HTMLElement | null;
-    if (expertEl) {
-      const raw =
-        expertEl.getAttribute("data-expert-label")
-        || expertEl.getAttribute("data-expert")
-        || expertEl.textContent
-        || "";
-      return { evt: "expert", label: cap(raw) };
-    }
-
-    // C) Text-Heuristik (letzter Notnagel)
-    const txt = (target.getAttribute("aria-label") || target.textContent || "").trim();
-    if (txt) {
-      const s = slug(txt);
-      // erkenne bekannte Mode-Keys im Text
-      if (["calm","truth","oracle","balance","power","loop","body","ocean","minimal"].some(k => s.includes(k))) {
-        return { evt: "mode", label: tMode(txt) };
-      }
-      if (s.includes("expert") || s.includes("experte")) {
-        return { evt: "expert", label: cap(txt) };
-      }
-    }
-
-    return {};
-  }
-
   function onGlobalClick(e: MouseEvent) {
-    const tgt = e.target as HTMLElement | null;
-    if (!tgt) return;
-    const { evt, label } = resolveEvtAndLabel(tgt);
+    const el = (e.target as HTMLElement)?.closest?.("[data-m-event]") as HTMLElement | null;
+    if (!el) return;
+
+    const evt = el.getAttribute("data-m-event") as MEvent | null;
     if (!evt) return;
-    runMFlow(evt, label);                        // << labelOverride liefert Frame 1
+
+    // Label nur von genau diesem Element ableiten (kein Fallback/Text-Scan)
+    const raw =
+      el.getAttribute("data-m-label") ||
+      el.getAttribute("aria-label") ||
+      el.textContent ||
+      "";
+    const label = evt === "mode" ? tMode(raw) : (evt === "expert" ? cap(raw) : undefined);
+
+    runMFlow(evt, label);
   }
 
   document.addEventListener("click", onGlobalClick);
   return () => document.removeEventListener("click", onGlobalClick);
 }, [runMFlow, locale]);
+
+
   // Globale Click-Delegation: jedes Element mit data-m-event triggert runMFlow
   useEffect(() => {
     function onGlobalClick(e: MouseEvent) {
