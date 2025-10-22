@@ -413,6 +413,7 @@ async function askExpert(expert: ExpertId) {
 
   // Footer sofort aktualisieren (ohne Bubble)
 emitStatus({ expertLabel: label });
+emitStatus({ expertLabel: label, busy: true }); // ↩︎ startet M-Pulse NUR bei echter Auswahl – wie Modis
 
 // ⬅️ UI-only: MobileOverlay schließen – ohne System-Event/Bubble/Loading
 if (typeof window !== "undefined" &&
@@ -537,7 +538,6 @@ say(finalText);
   <select
     id="expert-select"
     className={styles.select}
-    data-m-event="expert"                  // ⬅︎ nur diese Markierung hinzufügen
     aria-label={chooseExpertLabel(lang)}
     value={hydrated ? (currentExpert ?? "") : ""} // ⬅︎ kontrolliert, wie Modis
     onChange={(e) => {
