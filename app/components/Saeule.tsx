@@ -501,12 +501,17 @@ say(finalText);
         if (inOverlay) { onSystemMessage?.(""); }
       } catch {}
       // ▲ Ende Overlay-Close
+
+      // 👉 Start Thinking (wie bei Modis)
+      emitStatus({ modeLabel: t("mDefault"), busy: true });
+
       void switchMode("M");
     }}
   >
     {t("mDefault")}
   </button>
 </div>
+
 
 
       {/* Modus-Dropdown */}
