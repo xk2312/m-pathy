@@ -444,7 +444,13 @@ const userPrompt = expertAskPrompt(label, lang);
     const prompt = buildButtonMsg(lang);
     try { logEvent("cta_start_building_clicked", {}); } catch {}
 
-  
+    // ▼ Overlay sofort schließen (ohne Bubble)
+    try {
+      const inOverlay = !!document.querySelector('[data-overlay="true"]');
+      if (inOverlay) { onSystemMessage?.(""); }
+    } catch {}
+    // ▲ Ende Overlay-Close
+
     // kurze Echo-Info (dezent)
     emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
 
@@ -485,7 +491,7 @@ say(finalText);
     aria-pressed={activeMode === "M"}
     className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
     onClick={() => {
-
+      
       // ▲ Ende Overlay-Close
       void switchMode("M");
     }}
