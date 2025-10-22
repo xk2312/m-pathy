@@ -533,15 +533,16 @@ say(finalText);
            
            {/* Experten (Dropdown) */}
 
-
-  <div className={styles.selectWrap}>
+    <div className={styles.selectWrap}>
   <select
     id="expert-select"
     className={styles.select}
+    data-m-event="expert"                  // ⬅︎ nur diese Markierung hinzufügen
     aria-label={chooseExpertLabel(lang)}
-    value={hydrated ? (currentExpert ?? "") : ""}   // ⬅︎ kontrolliert, wie Modis
+    value={hydrated ? (currentExpert ?? "") : ""} // ⬅︎ kontrolliert, wie Modis
     onChange={(e) => {
-      const val = e.target.value as ExpertId;
+      const val =
+ e.target.value as ExpertId;
       setCurrentExpert(val);                        // ⬅︎ State setzen (Kontrolle)
       void askExpert(val);                          // ⬅︎ Auswahl anwenden
     }}
