@@ -366,19 +366,13 @@ emitSystemMessage({
   text: tr("status.modeSet", "Mode set: {label}.", { label }),
   meta: { modeId: next, label, lang }
 });
+// Footer sofort aktualisieren (ohne Bubble)
 emitStatus({ modeLabel: label });
+emitStatus({ modeLabel: label, busy: true }); // start Thinking wie beim Expertenpfad
 
 // ▼▼ Sofortiges Schließen des Mobile-Overlays, ohne Bubble ▼▼
 try {
-  const inOverlay = !!document.querySelector('[data-overlay="true"]');
-  if (inOverlay) { onSystemMessage?.(""); } // leeres Signal → MobileOverlay schließt
-} catch {}
-// ▲▲ Ende Overlay-Close ▲▲
 
-emitStatus({ modeLabel: label });
-
-// ▼▼ Sofortiges Schließen des Mobile-Overlays, ohne Bubble ▼▼
-try {
   const inOverlay = !!document.querySelector('[data-overlay="true"]');
   if (inOverlay) { onSystemMessage?.(""); } // leeres Signal → MobileOverlay schließt
 } catch {}
@@ -501,17 +495,12 @@ say(finalText);
         if (inOverlay) { onSystemMessage?.(""); }
       } catch {}
       // ▲ Ende Overlay-Close
-
-      // 👉 Start Thinking (wie bei Modis)
-      emitStatus({ modeLabel: t("mDefault"), busy: true });
-
       void switchMode("M");
     }}
   >
     {t("mDefault")}
   </button>
 </div>
-
 
 
       {/* Modus-Dropdown */}
