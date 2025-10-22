@@ -366,19 +366,14 @@ emitSystemMessage({
   text: tr("status.modeSet", "Mode set: {label}.", { label }),
   meta: { modeId: next, label, lang }
 });
-// Footer sofort aktualisieren (ohne Bubble)
 emitStatus({ modeLabel: label });
 
-
-// ▼▼ Sofortiges Schließen des Mobile-Overlays — UI-only, kein System-Event ▼▼
+// ▼▼ Sofortiges Schließen des Mobile-Overlays, ohne Bubble ▼▼
 try {
   const inOverlay = !!document.querySelector('[data-overlay="true"]');
-  if (inOverlay) {
-    window.dispatchEvent(new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "mode-switch" } }));
-  }
+  if (inOverlay) { onSystemMessage?.(""); } // leeres Signal → MobileOverlay schließt
 } catch {}
 // ▲▲ Ende Overlay-Close ▲▲
-
 
 // Auto-Prompt nur für die API (Keys aus i18n.ts → "prompts.*")
 const q =
@@ -491,7 +486,11 @@ say(finalText);
     aria-pressed={activeMode === "M"}
     className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
     onClick={() => {
-      
+      // ▼ Overlay sofort schließen (ohne Bubble)
+      try {
+        const inOverlay = !!document.querySelector('[data-overlay="true"]');
+        if (inOverlay) { onSystemMessage?.(""); }
+      } catch {}
       // ▲ Ende Overlay-Close
       void switchMode("M");
     }}
