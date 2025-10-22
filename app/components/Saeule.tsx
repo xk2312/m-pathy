@@ -368,15 +368,17 @@ emitSystemMessage({
 });
 // Footer sofort aktualisieren (ohne Bubble)
 emitStatus({ modeLabel: label });
-emitStatus({ modeLabel: label, busy: true }); // start Thinking wie beim Expertenpfad
 
-// ▼▼ Sofortiges Schließen des Mobile-Overlays, ohne Bubble ▼▼
+
+// ▼▼ Sofortiges Schließen des Mobile-Overlays — UI-only, kein System-Event ▼▼
 try {
-
   const inOverlay = !!document.querySelector('[data-overlay="true"]');
-  if (inOverlay) { onSystemMessage?.(""); } // leeres Signal → MobileOverlay schließt
+  if (inOverlay) {
+    window.dispatchEvent(new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "mode-switch" } }));
+  }
 } catch {}
 // ▲▲ Ende Overlay-Close ▲▲
+
 
 // Auto-Prompt nur für die API (Keys aus i18n.ts → "prompts.*")
 const q =
@@ -442,13 +444,7 @@ const userPrompt = expertAskPrompt(label, lang);
     const prompt = buildButtonMsg(lang);
     try { logEvent("cta_start_building_clicked", {}); } catch {}
 
-    // ▼ Overlay sofort schließen (ohne Bubble)
-    try {
-      const inOverlay = !!document.querySelector('[data-overlay="true"]');
-      if (inOverlay) { onSystemMessage?.(""); }
-    } catch {}
-    // ▲ Ende Overlay-Close
-
+  
     // kurze Echo-Info (dezent)
     emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
 
@@ -489,11 +485,7 @@ say(finalText);
     aria-pressed={activeMode === "M"}
     className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
     onClick={() => {
-      // ▼ Overlay sofort schließen (ohne Bubble)
-      try {
-        const inOverlay = !!document.querySelector('[data-overlay="true"]');
-        if (inOverlay) { onSystemMessage?.(""); }
-      } catch {}
+
       // ▲ Ende Overlay-Close
       void switchMode("M");
     }}
