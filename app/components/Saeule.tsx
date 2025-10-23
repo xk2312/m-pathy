@@ -289,12 +289,15 @@ async function callChatAPI(prompt: string): Promise<string | null> {
    Component
    ====================================================================== */
 
-  export default function Saeule({ onSystemMessage, onClearChat, canClear }: Props) {
-  const [activeMode, setActiveMode] = useState<ModeId>("M");
+ export default function Saeule({ onSystemMessage, onClearChat, canClear }: Props) {
+  const [activeMode, setActiveMode] = useState<ModeId>(() => {
+    try { return (localStorage.getItem("mode") as ModeId) || "M"; } catch { return "M"; }
+  });
   const [hydrated, setHydrated] = useState(false);
   const [sendingExpert, setSendingExpert] = useState<ExpertId | null>(null);
   const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null);
   const [lang, setLang] = useState<string>("en");
+
 
 
 useEffect(() => {
@@ -314,6 +317,14 @@ useEffect(() => {
   setHydrated(true);
   setLang(getLocale());
 }, []);
+
+useEffect(() => {
+  try {
+    const e = localStorage.getItem("expert") as ExpertId | null;
+    if (e) setCurrentExpert(e);
+  } catch {}
+}, []);
+
 
   useEffect(() => { try { if (activeMode) localStorage.setItem("mode", activeMode); } catch {} }, [activeMode]);
   useEffect(() => {
@@ -401,10 +412,11 @@ async function askExpert(expert: ExpertId) {
   if (sendingExpert) return;
   setSendingExpert(expert);
   setCurrentExpert(expert);
+  try { localStorage.setItem("expert", expert); } catch {}   // ← NEU: persist
 
   const label = labelForExpert(expert, lang);
+  // Telemetrie …
 
-  // Telemetrie
   logEvent("expert_selected", { expert, label, roles: ROLES[expert] });
 
   // Footer sofort aktualisieren (ohne Bubble)
