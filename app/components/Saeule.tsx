@@ -435,46 +435,52 @@ const userPrompt = expertAskPrompt(label, lang);
   /* UI */
   return (
     <aside className={styles.saeule} aria-label={t("columnAria")} data-test="saeule">
-      {/* Kopf entfernt → Build-Button oben im Panel */}
-            <div className={styles.block} style={{ marginTop: 8 }}>
-        <button
-  type="button"
-  aria-label={buildButtonLabel(lang)}
-  onClick={async () => {
-    const prompt = buildButtonMsg(lang);
-    try { logEvent("cta_start_building_clicked", {}); } catch {}
+      
+     {/* Kopf entfernt → Build-Button oben im Panel */}
+<div className={styles.block} style={{ marginTop: 8 }}>
+  <button
+    type="button"
+    aria-label={buildButtonLabel(lang)}
+    data-m-event="builder"                  // ← NEU (optional, Telemetrie/Parity)
+    data-m-label={buildButtonLabel(lang)}   // ← NEU (optional, Telemetrie/Parity)
+    onClick={async () => {
+      emitStatus({ busy: true });           // ← NEU: M-Logo sofort in Thinking
 
-    // ▼ Overlay sofort schließen (ohne Bubble)
-    try {
-      if (typeof window !== "undefined" &&
-    (window.matchMedia?.("(max-width: 768px)").matches ||
-     /Mobi|Android/i.test(navigator.userAgent))) {
-  window.dispatchEvent(
-    new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "expert-selected" } })
-  );
-}
-    } catch {}
-    // ▲ Ende Overlay-Close
+      const prompt = buildButtonMsg(lang);
+      try { logEvent("cta_start_building_clicked", {}); } catch {}
 
-    // kurze Echo-Info (dezent)
-    emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
+      // ▼ Overlay sofort schließen (ohne Bubble)
+      try {
+        if (typeof window !== "undefined" &&
+          (window.matchMedia?.("(max-width: 768px)").matches ||
+           /Mobi|Android/i.test(navigator.userAgent))) {
+          window.dispatchEvent(
+            new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "expert-selected" } })
+          );
+        }
+      } catch {}
+      // ▲ Ende Overlay-Close
 
-    // Chat-Aufruf + Reply ausgeben (einmalig)
-    const reply = await callChatAPI(prompt);
+      // kurze Echo-Info (dezent)
+      emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
 
-const finalText = reply && reply.length
-  ? reply
-  : tr("cta.fallback", "All set — tell me what you want to build (app, flow, feature …).");
+      // Chat-Aufruf + Reply ausgeben (einmalig)
+      const reply = await callChatAPI(prompt);
 
-say(finalText);
+      const finalText = reply && reply.length
+        ? reply
+        : tr("cta.fallback", "All set — tell me what you want to build (app, flow, feature …).");
 
-          }}
-          className={styles.buttonPrimary}
-          style={{ width: "100%", cursor: "pointer" }}
-        >
-          {buildButtonLabel(lang)}
-        </button>
-      </div>
+      say(finalText);
+
+    }}
+    className={styles.buttonPrimary}
+    style={{ width: "100%", cursor: "pointer" }}
+  >
+    {buildButtonLabel(lang)}
+  </button>
+</div>
+
 
 
       {/* ONBOARDING */}
