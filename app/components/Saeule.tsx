@@ -446,8 +446,13 @@ const userPrompt = expertAskPrompt(label, lang);
 
     // ▼ Overlay sofort schließen (ohne Bubble)
     try {
-      const inOverlay = !!document.querySelector('[data-overlay="true"]');
-      if (inOverlay) { onSystemMessage?.(""); }
+      if (typeof window !== "undefined" &&
+    (window.matchMedia?.("(max-width: 768px)").matches ||
+     /Mobi|Android/i.test(navigator.userAgent))) {
+  window.dispatchEvent(
+    new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "expert-selected" } })
+  );
+}
     } catch {}
     // ▲ Ende Overlay-Close
 
