@@ -17,7 +17,7 @@ export default function MTheater({ children }: Props) {
         display: "grid",
         placeItems: "center",
         overflow: "hidden",
-        padding: "0px 0",       // M hat oben/unten 30px Luft (vor Scaling)
+        padding: "1px 0",       // M hat oben/unten 30px Luft (vor Scaling)
         position: "relative",
         transform: "scale(0.7)", // gesamte Bühne auf 70 %
         transformOrigin: "center",
