@@ -1669,7 +1669,9 @@ return (
           open={overlayOpen}
           onClose={() => setOverlayOpen(false)}
           onSystemMessage={systemSay}
-        />
+          onClearChat={onClearChat}       // ← NEU: Clear-Handler durchreichen
+
+          />
       </>
     )}
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
