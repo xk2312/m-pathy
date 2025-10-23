@@ -12,7 +12,7 @@ export type MVariant =
 
 // Bühne/Theater: feste, beruhigende Koordinaten – mobile zuerst
 export const M_THEATER = {
-  mobile:  { width: 360, height: 200 },   // 350–450 war Vorgabe → 360 als sicherer Default
+  mobile:  { width: 360, height: 130 },   // 350–450 war Vorgabe → 360 als sicherer Default
   tablet:  { width: 420, height: 200 },
   desktop: { width: 480, height: 200 },
 };
