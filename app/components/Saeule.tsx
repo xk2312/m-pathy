@@ -248,8 +248,31 @@ function tr(key: string, fallback: string, vars?: Record<string, string>): strin
   }
 }
 
+/* ▼▼ Sprach-Hint — 13 Sprachen, GPT-4.1 kompatibel ▼▼ */
+function langHint(lang: string): string {
+  const base = (lang || "en").slice(0, 2).toLowerCase();
+  const map: Record<string, string> = {
+    en: "Please answer in English.",
+    de: "Bitte antworte auf Deutsch.",
+    fr: "Veuillez répondre en français.",
+    es: "Por favor, responde en español.",
+    it: "Per favore rispondi in italiano.",
+    pt: "Por favor, responda em português.",
+    nl: "Antwoord alstublieft in het Nederlands.",
+    ru: "Пожалуйста, ответьте по-русски.",
+    zh: "请用中文回答。",
+    ja: "日本語で答えてください。",
+    ko: "한국어로 대답해 주세요.",
+    ar: "من فضلك أجب بالعربية.",
+    hi: "कृपया हिंदी में उत्तर दें।",
+  };
+  return `[${map[base] ?? map.en}]`;
+}
+/* ▲▲ Ende Sprach-Hint ▲▲ */
+
 // Saeule.tsx — REPLACE the whole function
 async function callChatAPI(prompt: string): Promise<string | null> {
+
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
@@ -401,8 +424,9 @@ const q =
     ? tr("prompts.councilIntro", "Each AI please introduce yourself and say how you can help right now.")
     : tr("prompts.modeGeneric", "Mode {label}: What are you and where will you help me best?", { label });
 
+const qLang = `${q}\n\n${langHint(lang)}`;          // ← NEU
+const reply = await callChatAPI(qLang);             // ← Variable geändert
 
-  const reply = await callChatAPI(q);
   if (reply && reply.trim().length > 0) {
     say(reply);
   }
@@ -435,8 +459,10 @@ if (typeof window !== "undefined" &&
 
 // Prompt an API – keine festen Fallbacks
 const userPrompt = expertAskPrompt(label, lang);
+const q = `${userPrompt}\n\n${langHint(lang)}`;     // ← NEU
 
-  const reply = await callChatAPI(userPrompt);
+const reply = await callChatAPI(q);                 // ← Variable geändert
+
   if (reply && reply.trim().length > 0) {
     say(reply); // genau eine Antwort-Bubble
   }
@@ -459,7 +485,8 @@ const userPrompt = expertAskPrompt(label, lang);
       emitStatus({ busy: true });           // ← NEU: M-Logo sofort in Thinking
 
       const prompt = buildButtonMsg(lang);
-      try { logEvent("cta_start_building_clicked", {}); } catch {}
+const q = `${prompt}\n\n${langHint(lang)}`;          // ← NEU
+try { logEvent("cta_start_building_clicked", {}); } catch {}
 
       // ▼ Overlay sofort schließen (ohne Bubble)
       try {
@@ -477,8 +504,7 @@ const userPrompt = expertAskPrompt(label, lang);
       emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
 
       // Chat-Aufruf + Reply ausgeben (einmalig)
-      const reply = await callChatAPI(prompt);
-
+const reply = await callChatAPI(q);  
       const finalText = reply && reply.length
         ? reply
         : tr("cta.fallback", "All set — tell me what you want to build (app, flow, feature …).");
