@@ -227,9 +227,9 @@ function emitSystemMessage(detail: {
 }
 
 function modeLabelFromId(id: ModeId): string {
-  if (id === "onboarding") return "ONBOARDING";
-  if (id === "M") return "M (Default)";
-  if (id === "council") return "COUNCIL13";
+  if (id === "onboarding") return tr("mode.onboarding", "ONBOARDING");
+  if (id === "M")         return tr("mode.default",    "M · Default");
+  if (id === "council")   return tr("mode.council",    "COUNCIL13");
   return MODI.find((m) => m.id === id)?.label ?? String(id);
 }
 // Universeller Übersetzer: nimmt t(key) und fällt elegant zurück
@@ -320,6 +320,14 @@ async function callChatAPI(prompt: string): Promise<string | null> {
   const [sendingExpert, setSendingExpert] = useState<ExpertId | null>(null);
   const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null);
   const [lang, setLang] = useState<string>("en");
+// === i18n Labels (13 Languages compatible) ===
+const labelBuild = tr("cta.build", "Jetzt bauen");
+const labelExport = tr("cta.export", "Export");
+const labelClear = tr("cta.clear", "Chat leeren");
+const labelOnboarding = tr("mode.onboarding", "ONBOARDING");
+const labelDefault = tr("mode.default", "M · Default");
+const labelModeSelect = tr("mode.select", "Modus wählen");
+const labelExpertSelect = tr("expert.select", "Experten wählen");
 
 
 
@@ -476,17 +484,19 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
       
      {/* Kopf entfernt → Build-Button oben im Panel */}
 <div className={styles.block} style={{ marginTop: 8 }}>
+  {/* Kopf entfernt → Build-Button oben im Panel */}
+<div className={styles.block} style={{ marginTop: 8 }}>
   <button
     type="button"
-    aria-label={buildButtonLabel(lang)}
-    data-m-event="builder"                  // ← NEU (optional, Telemetrie/Parity)
-    data-m-label={buildButtonLabel(lang)}   // ← NEU (optional, Telemetrie/Parity)
+    aria-label={tr("cta.build", "Jetzt bauen")}         // ← i18n Key
+    data-m-event="builder"
+    data-m-label={tr("cta.build", "Jetzt bauen")}
     onClick={async () => {
-      emitStatus({ busy: true });           // ← NEU: M-Logo sofort in Thinking
+      emitStatus({ busy: true });                       // M-Logo sofort in Thinking
 
       const prompt = buildButtonMsg(lang);
-const q = `${prompt}\n\n${langHint(lang)}`;          // ← NEU
-try { logEvent("cta_start_building_clicked", {}); } catch {}
+      const q = `${prompt}\n\n${langHint(lang)}`;       // Sprachhinweis (13-Sprachen)
+      try { logEvent("cta_start_building_clicked", {}); } catch {}
 
       // ▼ Overlay sofort schließen (ohne Bubble)
       try {
@@ -504,19 +514,21 @@ try { logEvent("cta_start_building_clicked", {}); } catch {}
       emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
 
       // Chat-Aufruf + Reply ausgeben (einmalig)
-const reply = await callChatAPI(q);  
+      const reply = await callChatAPI(q);
+
       const finalText = reply && reply.length
         ? reply
         : tr("cta.fallback", "All set — tell me what you want to build (app, flow, feature …).");
 
       say(finalText);
-
     }}
     className={styles.buttonPrimary}
     style={{ width: "100%", cursor: "pointer" }}
   >
-    {buildButtonLabel(lang)}
+    {tr("cta.build", "Jetzt bauen")}                     {/* dynamisches Label */}
   </button>
+</div>
+
 </div>
 
 
@@ -524,33 +536,35 @@ const reply = await callChatAPI(q);
       {/* ONBOARDING */}
       <div className={styles.block}>
         <button
-          type="button"
-          aria-pressed={activeMode === "onboarding"}
-          className={`${styles.buttonPrimary} ${activeMode === "onboarding" ? styles.active : ""}`}
-          onClick={() => switchMode("onboarding")}
-        >
-          {t("onboarding")}
-        </button>
+  type="button"
+  aria-pressed={activeMode === "onboarding"}
+  className={`${styles.buttonPrimary} ${activeMode === "onboarding" ? styles.active : ""}`}
+  onClick={() => switchMode("onboarding")}
+>
+  {tr("mode.onboarding", "ONBOARDING")}
+</button>
+
       </div>
 
       {/* M (Default) */}
 <div className={styles.block}>
   <button
-    type="button"
-    aria-pressed={activeMode === "M"}
-    className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
-    onClick={() => {
-      // ▼ Overlay sofort schließen (ohne Bubble)
-      try {
-        const inOverlay = !!document.querySelector('[data-overlay="true"]');
-        if (inOverlay) { onSystemMessage?.(""); }
-      } catch {}
-      // ▲ Ende Overlay-Close
-      void switchMode("M");
-    }}
-  >
-    {t("mDefault")}
-  </button>
+  type="button"
+  aria-pressed={activeMode === "M"}
+  className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
+  onClick={() => {
+    // ▼ Overlay sofort schließen (ohne Bubble)
+    try {
+      const inOverlay = !!document.querySelector('[data-overlay="true"]');
+      if (inOverlay) { onSystemMessage?.(""); }
+    } catch {}
+    // ▲ Ende Overlay-Close
+    void switchMode("M");
+  }}
+>
+  {tr("mode.default", "M · Default")}
+</button>
+
 </div>
 
 
@@ -560,60 +574,61 @@ const reply = await callChatAPI(q);
   {tr("labels.modes", "Modis & Experts")}
 </label>
 
-        <div className={styles.selectWrap}>
-          <select
-            id="modus-select"
-            aria-label={t("selectMode")}
-            value={hydrated ? (MODI.some((m) => m.id === activeMode) ? activeMode : "") : ""}
-            onChange={(e) => switchMode(e.target.value as ModeId)}
-            className={styles.select}
-          >
-            <option value="" disabled hidden>{t("selectMode")}</option>
-            {MODI.map((m) => (
-              <option key={m.id} value={m.id}>{m.label}</option>
-            ))}
-          </select>
+<select
+  id="modus-select"
+  aria-label={tr("mode.select", "Modus wählen")}               // ← Fallback-sicher
+  value={hydrated ? (MODI.some((m) => m.id === activeMode) ? activeMode : "") : ""}
+  onChange={(e) => switchMode(e.target.value as ModeId)}
+  className={styles.select}
+>
+  <option value="" disabled hidden>{tr("mode.select", "Modus wählen")}</option>
+  {MODI.map((m) => (
+    <option key={m.id} value={m.id}>{m.label}</option>
+  ))}
+</select>
+
         </div>
-      </div>
+    
            
            
            {/* Experten (Dropdown) */}
 
     <div className={styles.selectWrap}>
   <select
-    id="expert-select"
-    className={styles.select}
-    aria-label={chooseExpertLabel(lang)}
-    value={hydrated ? (currentExpert ?? "") : ""} // ⬅︎ kontrolliert, wie Modis
-    onChange={(e) => {
-      const val =
- e.target.value as ExpertId;
-      setCurrentExpert(val);                        // ⬅︎ State setzen (Kontrolle)
-      void askExpert(val);                          // ⬅︎ Auswahl anwenden
-    }}
-  >
-    <option value="" disabled hidden>{chooseExpertLabel(lang)}</option>
-    {EXPERTS.map((e) => (
-      <option key={e.id} value={e.id}>
-        {e.icon} {labelForExpert(e.id, lang)}
-      </option>
-    ))}
-  </select>
+  id="expert-select"
+  className={styles.select}
+  aria-label={tr("expert.select", "Experten wählen")}           // ← Fallback-sicher
+  value={hydrated ? (currentExpert ?? "") : ""}
+  onChange={(e) => {
+    const val = e.target.value as ExpertId;
+    setCurrentExpert(val);
+    void askExpert(val);
+  }}
+>
+  <option value="" disabled hidden>{tr("expert.select", "Experten wählen")}</option>
+  {EXPERTS.map((e) => (
+    <option key={e.id} value={e.id}>
+      {e.icon} {labelForExpert(e.id, lang)}
+    </option>
+  ))}
+</select>
+
 </div>
 
 
 
       {/* Council13 */}
 <div className={styles.block}>
-  <button
-    type="button"
-    aria-pressed={activeMode === "council"}
-    className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
-    onClick={() => switchMode("council")}
-    style={{ width: "100%", cursor: "pointer" }}
-  >
-    {t("council13")}
-  </button>
+ <button
+  type="button"
+  aria-pressed={activeMode === "council"}
+  className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
+  onClick={() => switchMode("council")}
+  style={{ width: "100%", cursor: "pointer" }}
+>
+  {tr("mode.council", "COUNCIL13")}
+</button>
+
 </div>
 
 
