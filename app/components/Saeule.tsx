@@ -332,15 +332,26 @@ const labelExpertSelect = tr("expert.select", "Experten wählen");
 
 
 useEffect(() => {
-  // initial aus zentralem i18n
-  setLang(getLocale());
+  // initial: bevorzugt <html lang>, dann navigator.language, Fallback getLocale()
+  try {
+    const htmlLang = (document.documentElement?.lang || "").trim().toLowerCase();
+    const navLang = (navigator.language || (navigator as any).userLanguage || "en")
+      .split("-")[0].toLowerCase();
+    const initial = htmlLang || navLang || getLocale() || "en";
+    setLang(initial);
+  } catch {
+    setLang(getLocale());
+  }
+
+  // Live-Updates aus globalem i18n
   const onChange = (e: Event) => {
     const next = (e as CustomEvent).detail?.locale as string | undefined;
-    if (next) setLang(next);
+    if (next) setLang(String(next).toLowerCase());
   };
   window.addEventListener("mpathy:i18n:change", onChange as EventListener);
   return () => window.removeEventListener("mpathy:i18n:change", onChange as EventListener);
 }, []);
+
 
 
 

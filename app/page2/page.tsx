@@ -768,6 +768,19 @@ const [frameText, setFrameText] = useState<string | null>(null);
 
 // Browser-Sprache -> "de" | "en" | "fr" | ...
 const locale = getBrowserLang();
+// ▼ Sync globaler i18n-Status mit Browser-Sprache (Client-only)
+useEffect(() => {
+  try {
+    const root = document.documentElement;
+    const prev = (root.getAttribute("lang") || "").toLowerCase();
+    const next = (locale || "en").toLowerCase();
+    if (next && prev !== next) {
+      root.setAttribute("lang", next);
+      window.dispatchEvent(new CustomEvent("mpathy:i18n:change", { detail: { locale: next } }));
+    }
+  } catch { /* silent */ }
+}, [locale]);
+
 
 // Labels (du hast LABELS am [ANCHOR:I18N], wir nutzen es hier nur)
 const getLabel = (evt: MEvent) =>

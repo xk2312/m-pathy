@@ -41,6 +41,22 @@ useEffect(() => {
   if (open) closingRef.current = false;
 }, [open]);
 
+// ▼ Overlay-Open → i18n auf Browser-Sprache synchronisieren (nur wenn abweichend)
+useEffect(() => {
+  if (!open) return;
+  try {
+    const nav = (navigator.language || (navigator as any).userLanguage || "en")
+      .split("-")[0].toLowerCase();
+    const root = document.documentElement;
+    const prev = (root.getAttribute("lang") || "").toLowerCase();
+    if (nav && prev !== nav) {
+      root.setAttribute("lang", nav);
+      window.dispatchEvent(new CustomEvent("mpathy:i18n:change", { detail: { locale: nav } }));
+    }
+  } catch { /* silent */ }
+}, [open]);
+
+
 // ❌ Kein window.addEventListener mehr hier.
 // Der Flow läuft ausschließlich über forwardSystemMessage → onSystemMessage (Prop).
 
