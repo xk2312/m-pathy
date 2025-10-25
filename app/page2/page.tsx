@@ -30,7 +30,9 @@ import React, {
 } from "react";
 import Image from "next/image";
 
-import LogoM from "../components/LogoM";
+import MTheater from "@/components/MTheater";
+import { M_CURRENT_VARIANT } from "@/config/mLogoConfig";
+import LogoM from "@/components/LogoM";
 import MessageInput from "../components/MessageInput";
 import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
@@ -39,14 +41,67 @@ import StickyFab from "../components/StickyFab";
 import { t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
 import { useMobileViewport } from "@/lib/useMobileViewport";
+// ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
+import { loadChat, saveChat, clearChat,initChatStorage, makeClearHandler, hardClearChat  } from "@/lib/chatStorage";
 
-// ⚠️ NICHT importieren: useTheme aus "next-themes" (Konflikt mit lokalem Hook)
-// import { useTheme } from "next-themes"; // ❌ bitte entfernt lassen
+// Kompatibler Alias – damit restlicher Code unverändert bleiben kann
+const persist = {
+  save: saveChat,
+  load: loadChat,
+  // bisheriger „cut“-Semantik (120) beibehalten:
+  cut : (arr: any[], max = 120) => Array.isArray(arr) ? arr.slice(-max) : [],
+};
 
 // ——— Theme-Token-Typen (global, einmalig) ———
 type ColorTokens = { bg0?: string; bg1?: string; text?: string };
 type ThemeTokens = { color?: ColorTokens; [k: string]: any };
 
+// Gibt z. B. "de", "fr", "es", "en" zurück
+function getBrowserLang(): string {
+  if (typeof navigator === "undefined") return "en";
+  const lang = navigator.language || (navigator as any).userLanguage || "en";
+  return lang.split("-")[0].toLowerCase(); // "de-DE" -> "de"
+}
+/* =======================================================================
+   [ANCHOR:I18N] — Sprachlabels für Button-Events
+   ======================================================================= */
+
+// Typdefinition für alle Events, die M ansteuern kann
+type MEvent = "builder" | "onboarding" | "expert" | "mode";
+
+// Übersetzungen pro Sprache
+const LABELS: Record<string, Record<MEvent, string>> = {
+  en: {
+    builder: "Builder",
+    onboarding: "Onboarding",
+    expert: "Expert",
+    mode: "Mode",
+  },
+  de: {
+    builder: "Bauen",
+    onboarding: "Onboarding",
+    expert: "Experte",
+    mode: "Modus",
+  },
+  fr: {
+    builder: "Créer",
+    onboarding: "Démarrage",
+    expert: "Expert",
+    mode: "Mode",
+  },
+  es: {
+    builder: "Construir",
+    onboarding: "Inicio",
+    expert: "Experto",
+    mode: "Modo",
+  },
+  it: {
+    builder: "Costruire",
+    onboarding: "Avvio",
+    expert: "Esperto",
+    mode: "Modalità",
+  },
+};
 
 /* =======================================================================
    [ANCHOR:CONFIG] — Design Tokens, Themes, Personas, System Prompt
@@ -651,81 +706,310 @@ useEffect(() => {
 
 
 // Chat State
-const [messages, setMessages] = useState<ChatMessage[]>([]);
+const [messages, setMessages] = React.useState<any[]>(() => {
+  initChatStorage();
+  const restored = loadChat();
+  return restored ?? [];
+});
+
+// ⬇︎ Guard-Ref: blockiert Autosave während "Clear"
+const clearingRef = React.useRef(false);
+
+// ⬇︎ NEU: vorbereiteter Clear-Handler (ohne UI, noch nicht aufgerufen)
+// Hard-Clear: UI sofort leeren, Autosave pausieren, Storage wipe + Reload
+const onClearChat = React.useCallback(() => {
+  console.log("[P4] onClearChat entered");
+  clearingRef.current = true;
+  try {
+    setMessages([]);                  // UI sofort leer
+    hardClearChat({ reload: true });  // Storage wipe (neu+legacy+export) + Reload
+    console.log("[P4] hardClearChat called");
+  } catch (e) {
+    console.error("[P4] onClearChat error:", e);
+  }
+}, []);
+
+
+
+// Autosave — pausiert, wenn gerade "Clear" läuft
+useEffect(() => {
+  console.log("[P6] autosave fired", {
+    clearing: clearingRef.current,
+    len: Array.isArray(messages) ? messages.length : "n/a",
+  });
+  if (clearingRef.current) return;
+  if (Array.isArray(messages)) {
+    saveChat(messages);
+  }
+}, [messages]);
+
+
+
+// … weiterer Code …
+
 const [input, setInput] = useState("");
 const [loading, setLoading] = useState(false);
 const [stickToBottom, setStickToBottom] = useState(true);
+// … weiterer Code …
+
 const [mode, setMode] = useState<string>("DEFAULT");
-// ▼▼ NEU: Footer-Status (nur Anzeige)
-type FooterStatus = { modeLabel: string; expertLabel: string };
-const [status, setStatus] = useState<FooterStatus>({ modeLabel: "—", expertLabel: "—" });
-// Golden Prompt — micro-motion registers
-const breathRef = useRef<number>(0);            // breath phase accumulator
-const lastMotionRef = useRef<number[]>([]);     // flow memory (last intensities)
-const rafRef = useRef<number | null>(null);     // living continuum loop
 
-// Living Continuum Engine (perceptual continuity)
-useEffect(() => {
-  let mounted = true;
-  const tick = (t: number) => {
-    if (!mounted) return;
-
-    // 5s cycle; amplitude modulated by typing
-    const typingBias =
-      document.getElementById("gold-input")?.classList.contains("is-typing") ? 1 : 0.35;
-
-    const phase = ((t / 1000) % 5) * Math.PI * 2;
-    const amp = 0.003 * typingBias;
-    const scale = 1 + Math.sin(phase) * amp;
-
-    const dock = document.getElementById("m-input-dock");
-
-    // ❗ Niemals den Sticky-Container transformieren
-    if (dock) {
-      (dock as HTMLElement).style.transform = ""; // evtl. alte Werte neutralisieren
-
-      // ✅ Nur innere Kinder leicht „atmen“ lassen
-      const promptWrap = dock.querySelector(".gold-prompt-wrap") as HTMLElement | null;
-      const bar        = dock.querySelector(".gold-bar") as HTMLElement | null;
-
-      if (promptWrap) promptWrap.style.transform = `translateZ(0) scale(${scale})`;
-      if (bar)        bar.style.transform        = `translateZ(0) scale(${scale})`;
-    }
-
-    rafRef.current = requestAnimationFrame(tick);
-  };
-
-  rafRef.current = requestAnimationFrame(tick);
-
-  return () => {
-    mounted = false;
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-
-    // Cleanup: evtl. gesetzte Transforms wieder entfernen
-    const dock = document.getElementById("m-input-dock");
-    if (dock) {
-      (dock as HTMLElement).style.transform = "";
-      const promptWrap = dock.querySelector(".gold-prompt-wrap") as HTMLElement | null;
-      const bar        = dock.querySelector(".gold-bar") as HTMLElement | null;
-      if (promptWrap) promptWrap.style.transform = "";
-      if (bar)        bar.style.transform = "";
-    }
-  };
-}, []);
+// (entfernt) — lokaler Persistenzblock wurde gestrichen
+// Persistenz läuft zentral über lib/chatStorage.ts  → siehe persist.* oben
+// … weiterer Code …
 
 
-// Persist
+// Alias für bestehende Stellen im Code:
 const persistMessages = saveMessages;
 
-// Initiale Begrüßung / Restore
+// ── M-Flow Overlay (1. Frame: eventLabel)
+type MEvent = "builder" | "onboarding" | "expert" | "mode";
+const [frameText, setFrameText] = useState<string | null>(null);
+
+// Browser-Sprache -> "de" | "en" | "fr" | ...
+const locale = getBrowserLang();
+// ▼ Sync globaler i18n-Status mit Browser-Sprache (Client-only)
 useEffect(() => {
-  const restored = loadMessages();
-  if (Array.isArray(restored) && restored.length) {
-    setMessages(restored);
-    return;
+  try {
+    const root = document.documentElement;
+    const prev = (root.getAttribute("lang") || "").toLowerCase();
+    const next = (locale || "en").toLowerCase();
+    if (next && prev !== next) {
+      root.setAttribute("lang", next);
+      window.dispatchEvent(new CustomEvent("mpathy:i18n:change", { detail: { locale: next } }));
+    }
+  } catch { /* silent */ }
+}, [locale]);
+
+
+// Labels (du hast LABELS am [ANCHOR:I18N], wir nutzen es hier nur)
+const getLabel = (evt: MEvent) =>
+  (LABELS[locale] && LABELS[locale][evt]) || LABELS.en[evt];
+
+// --- helpers for labels ---
+const cap = (s: string) =>
+  String(s || "").replace(/\s+/g, " ").trim().replace(/^./, c => c.toUpperCase());
+
+const slug = (s: string) =>
+  String(s || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // accents off
+    .replace(/[^a-z0-9]+/g, " ")                      // keep words
+    .trim()
+    .replace(/\s+/g, "-");                             // words -> slug
+
+// --- localized labels for known modes ---
+const MODE_LABELS: Record<string, Record<string, string>> = {
+  en: { calm:"Calm", truth:"Truth", oracle:"Oracle", balance:"Balance", power:"Power", loop:"Loop", body:"Body", ocean:"Ocean", minimal:"Minimal" },
+  de: { calm:"Ruhe", truth:"Wahrheit", oracle:"Orakel", balance:"Balance", power:"Kraft", loop:"Schleife", body:"Körper", ocean:"Ozean", minimal:"Minimal" },
+  fr: { calm:"Calme", truth:"Vérité", oracle:"Oracle", balance:"Équilibre", power:"Puissance", loop:"Boucle", body:"Corps", ocean:"Océan", minimal:"Minimal" },
+  es: { calm:"Calma", truth:"Verdad", oracle:"Oráculo", balance:"Equilibrio", power:"Poder", loop:"Bucle", body:"Cuerpo", ocean:"Océano", minimal:"Minimal" },
+  it: { calm:"Calma", truth:"Verità", oracle:"Oracolo", balance:"Equilibrio", power:"Potenza", loop:"Loop", body:"Corpo", ocean:"Oceano", minimal:"Minimo" },
+};
+
+const tMode = (raw: string) => {
+  const key = slug(raw);                        // "Calm", "CALM", etc. -> "calm"
+  const table = MODE_LABELS[locale] || MODE_LABELS.en;
+  return table[key] || cap(raw);                // fallback: raw pretty-cased
+};
+
+
+// UI-zentrale Routine: eventLabel → READY
+const runMFlow = useCallback(async (evt: MEvent, labelOverride?: string) => {
+  // Prefix nach Browsersprache
+  const LOAD_PREFIX: Record<string, string> = { en: "Load", de: "Lade", fr: "Charger", es: "Cargar", it: "Carica" };
+  const prefix = LOAD_PREFIX[locale] ?? LOAD_PREFIX.en;
+
+  const baseLabel = (() => {
+    // Fallbacks für reine Events
+    if (!labelOverride) {
+      if (evt === "builder")      return getLabel("builder");      // z. B. „Bauen“
+      if (evt === "onboarding")   return getLabel("onboarding");
+      if (evt === "mode")         return getLabel("mode");
+      if (evt === "expert")       return getLabel("expert");
+    }
+    return labelOverride!.trim();
+  })();
+
+  // „Load …“ bzw. Sonderfall „set default“
+  const frame = (evt === "mode" && /^default$/i.test(baseLabel))
+    ? (locale === "de" ? "Setze Default" : "Set default")
+    : `${prefix} ${baseLabel}`;
+
+  // 1) Frame 1 (Text) + Denken starten
+  setFrameText(frame);
+  try { setLoading(true); } catch {}
+
+  // 2) Frame sichtbar halten
+  await new Promise(r => setTimeout(r, 900));
+
+  // 3) Ausblenden Frame 1, M denkt noch
+  setFrameText(null);
+  await new Promise(r => setTimeout(r, 700));
+
+  // 4) READY (LogoM übernimmt die Ready-Phase, wenn loading=false)
+  try { setLoading(false); } catch {}
+}, [locale, setLoading]);
+
+
+/* -----------------------------------------------------------------------
+   Sehr defensive Browser-Hooks (nur Client, mit Try/Catch & harten Guards)
+   ----------------------------------------------------------------------- */
+
+// Globale Click-Delegation: startet M-Flow inkl. konkretem Label (Mode/Expert)
+useEffect(() => {
+  function onGlobalClick(e: MouseEvent) {
+    const el = (e.target as HTMLElement)?.closest?.("[data-m-event]") as HTMLElement | null;
+    if (!el) return;
+
+    const evt = el.getAttribute("data-m-event") as MEvent | null;
+    if (!evt) return;
+
+    // Label nur von genau diesem Element ableiten (kein Fallback/Text-Scan)
+    const raw =
+      el.getAttribute("data-m-label") ||
+      el.getAttribute("aria-label") ||
+      el.textContent ||
+      "";
+    const label = evt === "mode" ? tMode(raw) : (evt === "expert" ? cap(raw) : undefined);
+
+    runMFlow(evt, label);
   }
-  setMessages([]);
+
+  document.addEventListener("click", onGlobalClick);
+  return () => document.removeEventListener("click", onGlobalClick);
+}, [runMFlow, locale]);
+
+
+  // Globale Click-Delegation: jedes Element mit data-m-event triggert runMFlow
+  useEffect(() => {
+    function onGlobalClick(e: MouseEvent) {
+      const el = (e.target as HTMLElement)?.closest?.("[data-m-event]") as HTMLElement | null;
+      if (!el) return;
+      const evt = el.getAttribute("data-m-event") as MEvent | null;
+      if (!evt) return;
+      runMFlow(evt);
+    }
+    document.addEventListener("click", onGlobalClick);
+    return () => document.removeEventListener("click", onGlobalClick);
+  }, [runMFlow]);
+
+  // ▼ Auswahl-Delegation (Dropdowns/Listboxen/Comboboxen → Label an runMFlow)
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const onChange = (e: Event) => {
+      const el = e.target as HTMLElement | null;
+      if (!el) return;
+
+      // Nur echte Auswahlen mit change-Event
+      if (!el.matches("select,[role='listbox'],[role='combobox']")) return;
+
+      const host = (el.closest("[data-m-event]") as HTMLElement) || (el as any);
+      const evt = host.getAttribute("data-m-event") as MEvent | null;
+      if (!evt) return;
+
+      let label = "";
+      if ((el as HTMLSelectElement).selectedOptions?.length) {
+        label = (el as HTMLSelectElement).selectedOptions[0].textContent?.trim() || "";
+      } else {
+        label = host.getAttribute("data-m-label") || host.textContent?.trim() || "";
+      }
+      runMFlow(evt, label || undefined);
+    };
+
+    document.addEventListener("change", onChange);
+    return () => document.removeEventListener("change", onChange);
+  }, [runMFlow]);
+
+  // Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof document === "undefined") return;
+    // … (dein Auto-Tagging Code folgt hier)
+  }, []);
+
+
+// Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
+useEffect(() => {
+  // SSR-Schutz
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+
+  const MAP: Record<string, MEvent> = {
+    "jetzt bauen": "builder",
+    "builder": "builder",
+    "onboarding": "onboarding",
+    "start onboarding": "onboarding",
+    "expert": "expert",
+    "experte": "expert",
+    "mode": "mode",
+    "modus": "mode",
+  };
+
+  const norm = (s: string) => (s || "").trim().toLowerCase();
+
+  // Helper: für mode/expert sichtbaren Namen als data-m-label setzen
+  const ensureLabel = (el: HTMLElement) => {
+    const evtType = el.getAttribute("data-m-event");
+    if ((evtType === "mode" || evtType === "expert") && !el.hasAttribute("data-m-label")) {
+      const raw =
+        (el.textContent ||
+          el.getAttribute("aria-label") ||
+          el.getAttribute("title") ||
+          "")!.trim();
+      if (raw) el.setAttribute("data-m-label", raw);
+    }
+  };
+
+  // nach initialem Paint (vermeidet SSR/CSR-Mismatch)
+  let id = 0;
+  id = window.requestAnimationFrame(() => {
+    try {
+      const candidates = Array.from(
+        document.querySelectorAll<HTMLElement>('button, a, [role="button"], [data-action]')
+      );
+
+      for (const el of candidates) {
+        try {
+          if (el.hasAttribute("data-m-event")) {
+            ensureLabel(el);
+            continue;
+          }
+
+          const txt = norm(
+            el.textContent ||
+              el.getAttribute("aria-label") ||
+              el.getAttribute("title") ||
+              ""
+          );
+          if (!txt) continue;
+
+          // exakter Treffer
+          if (MAP[txt]) {
+            el.setAttribute("data-m-event", String(MAP[txt]));
+            ensureLabel(el);
+            continue;
+          }
+
+          // Teiltreffer (z. B. "jetzt bauen!")
+          const hit = Object.keys(MAP).find((key) => txt.includes(key));
+          if (hit) {
+            el.setAttribute("data-m-event", String(MAP[hit as keyof typeof MAP]));
+            ensureLabel(el);
+          }
+        } catch {
+          // einzelnen Problem-Knoten ignorieren
+        }
+      }
+    } catch {
+      // niemals die App crashen lassen
+    }
+  });
+
+  return () => {
+    if (id) window.cancelAnimationFrame(id);
+  };
 }, []);
+
 
 
 // ===============================================================
@@ -802,10 +1086,12 @@ useEffect(() => {
         expertLabel: typeof expertLabel === "string" && expertLabel.length ? expertLabel : s.expertLabel,
       }));
 
-      // Auswahl getroffen → "Denken" startet (Puls an)
-      if ((modeLabel && String(modeLabel).length) || (expertLabel && String(expertLabel).length)) {
-        try { setLoading(true); } catch {}
-      }
+      // Puls NUR starten, wenn explizit busy:true gesetzt ist
+const busy = (meta?.busy ?? (detail as any)?.busy) === true;
+if (busy) {
+  try { setLoading(true); } catch {}
+}
+
 
       if (wasAtEnd) {
         requestAnimationFrame(() => {
@@ -1080,8 +1366,33 @@ return (
     }}
   >
     {/* ▼ Logo auf 60 %: 120→72 (mobile), 160→96 (desktop) */}
-    <LogoM size={isMobile ? 72 : 96} active={loading} variant="auto" intensity="strong" />
-  </div>
+    <MTheater>
+  <LogoM size={160} active={loading} variant={M_CURRENT_VARIANT} />
+
+  {frameText && (
+    <div
+      aria-live="polite"
+      style={{
+        position: "absolute",
+        inset: 0,
+        display: "grid",
+        placeItems: "center",
+        pointerEvents: "none",
+        fontWeight: 700,
+        letterSpacing: "0.6px",
+        fontSize: 18,
+        color: "#60E6FF",
+        textShadow: "0 0 12px rgba(96,230,255,.45)",
+        opacity: 0.95,
+        transition: "opacity 220ms ease",
+      }}
+    >
+      {frameText}
+    </div>
+  )}
+</MTheater>
+
+      </div>
 </header>
 
     {/* === BÜHNE ====================================================== */}
@@ -1120,18 +1431,21 @@ return (
   <div
     style={{
       position: "sticky",
-      // ▼ Header (Desktop 224px) wurde auf 60 % reduziert → + 16px Puffer
       top: "calc(224px * 0.6 + 16px)",
       alignSelf: "start",
       height: "fit-content",
-      // ▼ verfügbare Höhe: Viewport minus (reduzierter Header + Puffer)
       maxHeight: "calc(100dvh - (224px * 0.6 + 16px))",
       overflow: "auto",
     }}
   >
-    <SidebarContainer onSystemMessage={systemSay} />
+    <SidebarContainer
+      onSystemMessage={systemSay}
+      onClearChat={onClearChat}   // ← der echte Clear-Handler (hard clear + reload)
+      /* canClear={canClear} */   // ← optional, falls du Disable-Logik nutzt
+    />
   </div>
 )}
+
 
                 <div
           ref={convoRef as any}
@@ -1368,7 +1682,9 @@ return (
           open={overlayOpen}
           onClose={() => setOverlayOpen(false)}
           onSystemMessage={systemSay}
-        />
+          onClearChat={onClearChat}       // ← NEU: Clear-Handler durchreichen
+
+          />
       </>
     )}
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />

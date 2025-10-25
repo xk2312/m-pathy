@@ -7,18 +7,19 @@ import { t } from "@/lib/i18n";
 type Props = {
   open: boolean;
   onClose: () => void;
-  /** optional: id eines Elements, das beim Öffnen fokussiert werden soll */
   initialFocusId?: string;
-  /** optional: Systemmeldung nach außen reichen (passt zu onSystemMessage in deinem Layout) */
   onSystemMessage?: (content: string) => void;
+  onClearChat?: () => void;          // ← NEU
 };
 
 export default function MobileOverlay({
   open,
   onClose,
   initialFocusId,
-  onSystemMessage, // ← wird genutzt
+  onSystemMessage,
+  onClearChat,                         // ← NEU
 }: Props) {
+
   const drawerRef = useRef<HTMLDivElement>(null);
 
   // Systemmeldung aus Säule → Bubble senden + Overlay schließen (Desktop-Verhalten spiegeln)
@@ -39,6 +40,22 @@ const forwardSystemMessage = useCallback(
 useEffect(() => {
   if (open) closingRef.current = false;
 }, [open]);
+
+// ▼ Overlay-Open → i18n auf Browser-Sprache synchronisieren (nur wenn abweichend)
+useEffect(() => {
+  if (!open) return;
+  try {
+    const nav = (navigator.language || (navigator as any).userLanguage || "en")
+      .split("-")[0].toLowerCase();
+    const root = document.documentElement;
+    const prev = (root.getAttribute("lang") || "").toLowerCase();
+    if (nav && prev !== nav) {
+      root.setAttribute("lang", nav);
+      window.dispatchEvent(new CustomEvent("mpathy:i18n:change", { detail: { locale: nav } }));
+    }
+  } catch { /* silent */ }
+}, [open]);
+
 
 // ❌ Kein window.addEventListener mehr hier.
 // Der Flow läuft ausschließlich über forwardSystemMessage → onSystemMessage (Prop).
@@ -175,7 +192,10 @@ useEffect(() => {
   }}
 >
   {/* WICHTIG: Prop durchreichen → Bubble + Close bei Auswahl */}
-  <Saeule onSystemMessage={forwardSystemMessage} />
+<Saeule
+  onSystemMessage={forwardSystemMessage}
+  onClearChat={onClearChat}           // ← NEU
+/>
 </div>
 
       </div>

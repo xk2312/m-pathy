@@ -42,7 +42,12 @@ type ExpertId =
   | "Molecular Scientist";
 
 /** Optional: Seite kann Systemmeldungen als Bubble anzeigen */
-type Props = { onSystemMessage?: (content: string) => void };
+type Props = {
+  onSystemMessage?: (content: string) => void;
+  onClearChat?: () => void;   // ⬅︎ NEU: Clear-Handler (kommt aus page2)
+  canClear?: boolean;         // ⬅︎ NEU: Disabled-Logik
+};
+
 
 /* ======================================================================
    Daten
@@ -222,9 +227,9 @@ function emitSystemMessage(detail: {
 }
 
 function modeLabelFromId(id: ModeId): string {
-  if (id === "onboarding") return "ONBOARDING";
-  if (id === "M") return "M (Default)";
-  if (id === "council") return "COUNCIL13";
+  if (id === "onboarding") return tr("mode.onboarding", "ONBOARDING");
+  if (id === "M")         return tr("mode.default",    "M · Default");
+  if (id === "council")   return tr("mode.council",    "COUNCIL13");
   return MODI.find((m) => m.id === id)?.label ?? String(id);
 }
 // Universeller Übersetzer: nimmt t(key) und fällt elegant zurück
@@ -243,8 +248,31 @@ function tr(key: string, fallback: string, vars?: Record<string, string>): strin
   }
 }
 
+/* ▼▼ Sprach-Hint — 13 Sprachen, GPT-4.1 kompatibel ▼▼ */
+function langHint(lang: string): string {
+  const base = (lang || "en").slice(0, 2).toLowerCase();
+  const map: Record<string, string> = {
+    en: "Please answer in English.",
+    de: "Bitte antworte auf Deutsch.",
+    fr: "Veuillez répondre en français.",
+    es: "Por favor, responde en español.",
+    it: "Per favore rispondi in italiano.",
+    pt: "Por favor, responda em português.",
+    nl: "Antwoord alstublieft in het Nederlands.",
+    ru: "Пожалуйста, ответьте по-русски.",
+    zh: "请用中文回答。",
+    ja: "日本語で答えてください。",
+    ko: "한국어로 대답해 주세요.",
+    ar: "من فضلك أجب بالعربية.",
+    hi: "कृपया हिंदी में उत्तर दें।",
+  };
+  return `[${map[base] ?? map.en}]`;
+}
+/* ▲▲ Ende Sprach-Hint ▲▲ */
+
 // Saeule.tsx — REPLACE the whole function
 async function callChatAPI(prompt: string): Promise<string | null> {
+
   try {
     const res = await fetch("/api/chat", {
       method: "POST",
@@ -284,20 +312,41 @@ async function callChatAPI(prompt: string): Promise<string | null> {
    Component
    ====================================================================== */
 
-export default function Saeule({ onSystemMessage }: Props) {
-  const [activeMode, setActiveMode] = useState<ModeId>("M");
+ export default function Saeule({ onSystemMessage, onClearChat, canClear }: Props) {
+  const [activeMode, setActiveMode] = useState<ModeId>(() => {
+    try { return (localStorage.getItem("mode") as ModeId) || "M"; } catch { return "M"; }
+  });
   const [hydrated, setHydrated] = useState(false);
   const [sendingExpert, setSendingExpert] = useState<ExpertId | null>(null);
-  const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null); // ← neu
+  const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null);
   const [lang, setLang] = useState<string>("en");
+// === i18n Labels (13 Languages compatible) ===
+const labelBuild = tr("cta.build", "Jetzt bauen");
+const labelExport = tr("cta.export", "Export");
+const labelClear = tr("cta.clear", "Chat leeren");
+const labelOnboarding = tr("mode.onboarding", "ONBOARDING");
+const labelDefault = tr("mode.default", "M · Default");
+const labelModeSelect = tr("mode.select", "Modus wählen");
+const labelExpertSelect = tr("expert.select", "Experten wählen");
+
 
 
 useEffect(() => {
-  // initial aus zentralem i18n
-  setLang(getLocale());
+  // initial: bevorzugt <html lang>, dann navigator.language, Fallback getLocale()
+  try {
+    const htmlLang = (document.documentElement?.lang || "").trim().toLowerCase();
+    const navLang = (navigator.language || (navigator as any).userLanguage || "en")
+      .split("-")[0].toLowerCase();
+    const initial = htmlLang || navLang || getLocale() || "en";
+    setLang(initial);
+  } catch {
+    setLang(getLocale());
+  }
+
+  // Live-Updates aus globalem i18n
   const onChange = (e: Event) => {
     const next = (e as CustomEvent).detail?.locale as string | undefined;
-    if (next) setLang(next);
+    if (next) setLang(String(next).toLowerCase());
   };
   window.addEventListener("mpathy:i18n:change", onChange as EventListener);
   return () => window.removeEventListener("mpathy:i18n:change", onChange as EventListener);
@@ -305,10 +354,19 @@ useEffect(() => {
 
 
 
+
  useEffect(() => {
   setHydrated(true);
   setLang(getLocale());
 }, []);
+
+useEffect(() => {
+  try {
+    const e = localStorage.getItem("expert") as ExpertId | null;
+    if (e) setCurrentExpert(e);
+  } catch {}
+}, []);
+
 
   useEffect(() => { try { if (activeMode) localStorage.setItem("mode", activeMode); } catch {} }, [activeMode]);
   useEffect(() => {
@@ -329,13 +387,14 @@ useEffect(() => {
 
   const modeLabel = useMemo(() => modeLabelFromId(activeMode), [activeMode]);
   // ▼▼ NEU: Footer-Status ohne Bubble senden ▼▼
-const emitStatus = useCallback((partial: { modeLabel?: string; expertLabel?: string }) => {
+const emitStatus = useCallback((partial: { modeLabel?: string; expertLabel?: string; busy?: boolean }) => {
   try {
     window.dispatchEvent(new CustomEvent("mpathy:system-message", {
       detail: { kind: "status", text: "", meta: partial },
     }));
   } catch {}
 }, []);
+
 // ▲▲ ENDE NEU ▲▲
 
 
@@ -360,23 +419,19 @@ emitSystemMessage({
   text: tr("status.modeSet", "Mode set: {label}.", { label }),
   meta: { modeId: next, label, lang }
 });
+// Footer sofort aktualisieren (ohne Bubble)
 emitStatus({ modeLabel: label });
 
-// ▼▼ Sofortiges Schließen des Mobile-Overlays, ohne Bubble ▼▼
+
+// ▼▼ Sofortiges Schließen des Mobile-Overlays — UI-only, kein System-Event ▼▼
 try {
   const inOverlay = !!document.querySelector('[data-overlay="true"]');
-  if (inOverlay) { onSystemMessage?.(""); } // leeres Signal → MobileOverlay schließt
+  if (inOverlay) {
+    window.dispatchEvent(new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "mode-switch" } }));
+  }
 } catch {}
 // ▲▲ Ende Overlay-Close ▲▲
 
-emitStatus({ modeLabel: label });
-
-// ▼▼ Sofortiges Schließen des Mobile-Overlays, ohne Bubble ▼▼
-try {
-  const inOverlay = !!document.querySelector('[data-overlay="true"]');
-  if (inOverlay) { onSystemMessage?.(""); } // leeres Signal → MobileOverlay schließt
-} catch {}
-// ▲▲ Ende Overlay-Close ▲▲
 
 // Auto-Prompt nur für die API (Keys aus i18n.ts → "prompts.*")
 const q =
@@ -388,8 +443,9 @@ const q =
     ? tr("prompts.councilIntro", "Each AI please introduce yourself and say how you can help right now.")
     : tr("prompts.modeGeneric", "Mode {label}: What are you and where will you help me best?", { label });
 
+const qLang = `${q}\n\n${langHint(lang)}`;          // ← NEU
+const reply = await callChatAPI(qLang);             // ← Variable geändert
 
-  const reply = await callChatAPI(q);
   if (reply && reply.trim().length > 0) {
     say(reply);
   }
@@ -399,21 +455,33 @@ async function askExpert(expert: ExpertId) {
   if (sendingExpert) return;
   setSendingExpert(expert);
   setCurrentExpert(expert);
+  try { localStorage.setItem("expert", expert); } catch {}   // ← NEU: persist
 
   const label = labelForExpert(expert, lang);
+  // Telemetrie …
 
-  // Telemetrie
   logEvent("expert_selected", { expert, label, roles: ROLES[expert] });
 
   // Footer sofort aktualisieren (ohne Bubble)
-  emitStatus({ expertLabel: label });
+emitStatus({ expertLabel: label });
+emitStatus({ expertLabel: label, busy: true }); // ↩︎ startet M-Pulse NUR bei echter Auswahl – wie Modis
 
-  // ⬅️ NEU: sofortiges Ack -> schließt MobileOverlay direkt
-  say(tr("status.expertSet", "Expert set: {label}.", { label }));
+// ⬅️ UI-only: MobileOverlay schließen – ohne System-Event/Bubble/Loading
+if (typeof window !== "undefined" &&
+    (window.matchMedia?.("(max-width: 768px)").matches ||
+     // Fallback für ältere Browser:
+     /Mobi|Android/i.test(navigator.userAgent))) {
+  window.dispatchEvent(
+    new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "expert-selected" } })
+  );
+}
 
-  // Prompt an API – keine festen Fallbacks
-  const userPrompt = expertAskPrompt(label, lang);
-  const reply = await callChatAPI(userPrompt);
+// Prompt an API – keine festen Fallbacks
+const userPrompt = expertAskPrompt(label, lang);
+const q = `${userPrompt}\n\n${langHint(lang)}`;     // ← NEU
+
+const reply = await callChatAPI(q);                 // ← Variable geändert
+
   if (reply && reply.trim().length > 0) {
     say(reply); // genau eine Antwort-Bubble
   }
@@ -424,165 +492,215 @@ async function askExpert(expert: ExpertId) {
   /* UI */
   return (
     <aside className={styles.saeule} aria-label={t("columnAria")} data-test="saeule">
-      {/* Kopf entfernt → Build-Button oben im Panel */}
-            <div className={styles.block} style={{ marginTop: 8 }}>
+      
+     {/* Kopf entfernt → Build-Button oben im Panel */}
+<div className={styles.block} style={{ marginTop: 8 }}>
+  {/* Kopf entfernt → Build-Button oben im Panel */}
+<div className={styles.block} style={{ marginTop: 8 }}>
+  <button
+    type="button"
+    aria-label={tr("cta.build", "Jetzt bauen")}         // ← i18n Key
+    data-m-event="builder"
+    data-m-label={tr("cta.build", "Jetzt bauen")}
+    onClick={async () => {
+      emitStatus({ busy: true });                       // M-Logo sofort in Thinking
+
+      const prompt = buildButtonMsg(lang);
+      const q = `${prompt}\n\n${langHint(lang)}`;       // Sprachhinweis (13-Sprachen)
+      try { logEvent("cta_start_building_clicked", {}); } catch {}
+
+      // ▼ Overlay sofort schließen (ohne Bubble)
+      try {
+        if (typeof window !== "undefined" &&
+          (window.matchMedia?.("(max-width: 768px)").matches ||
+           /Mobi|Android/i.test(navigator.userAgent))) {
+          window.dispatchEvent(
+            new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "expert-selected" } })
+          );
+        }
+      } catch {}
+      // ▲ Ende Overlay-Close
+
+      // kurze Echo-Info (dezent)
+      emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
+
+      // Chat-Aufruf + Reply ausgeben (einmalig)
+      const reply = await callChatAPI(q);
+
+      const finalText = reply && reply.length
+        ? reply
+        : tr("cta.fallback", "All set — tell me what you want to build (app, flow, feature …).");
+
+      say(finalText);
+    }}
+    className={styles.buttonPrimary}
+    style={{ width: "100%", cursor: "pointer" }}
+  >
+    {tr("cta.build", "Jetzt bauen")}                     {/* dynamisches Label */}
+  </button>
+</div>
+
+</div>
+
+
+
+      {/* ONBOARDING */}
+      <div className={styles.block}>
         <button
   type="button"
-  aria-label={buildButtonLabel(lang)}
-  onClick={async () => {
-    const prompt = buildButtonMsg(lang);
-    try { logEvent("cta_start_building_clicked", {}); } catch {}
+  aria-pressed={activeMode === "onboarding"}
+  className={`${styles.buttonPrimary} ${activeMode === "onboarding" ? styles.active : ""}`}
+  onClick={() => switchMode("onboarding")}
+>
+  {tr("mode.onboarding", "ONBOARDING")}
+</button>
 
+      </div>
+
+      {/* M (Default) */}
+<div className={styles.block}>
+  <button
+  type="button"
+  aria-pressed={activeMode === "M"}
+  className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
+  onClick={() => {
     // ▼ Overlay sofort schließen (ohne Bubble)
     try {
       const inOverlay = !!document.querySelector('[data-overlay="true"]');
       if (inOverlay) { onSystemMessage?.(""); }
     } catch {}
     // ▲ Ende Overlay-Close
+    void switchMode("M");
+  }}
+>
+  {tr("mode.default", "M · Default")}
+</button>
 
-    // kurze Echo-Info (dezent)
-    emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
-
-    // Chat-Aufruf + Reply ausgeben (einmalig)
-    const reply = await callChatAPI(prompt);
-
-const finalText = reply && reply.length
-  ? reply
-  : tr("cta.fallback", "All set — tell me what you want to build (app, flow, feature …).");
-
-say(finalText);
-
-          }}
-          className={styles.buttonPrimary}
-          style={{ width: "100%", cursor: "pointer" }}
-        >
-          {buildButtonLabel(lang)}
-        </button>
-      </div>
-
-
-      {/* Steuerung */}
-      <div className={styles.sectionTitle}>{t("sectionControl")}</div>
-
-      {/* ONBOARDING */}
-      <div className={styles.block}>
-        <button
-          type="button"
-          aria-pressed={activeMode === "onboarding"}
-          className={`${styles.buttonPrimary} ${activeMode === "onboarding" ? styles.active : ""}`}
-          onClick={() => switchMode("onboarding")}
-        >
-          {t("onboarding")}
-        </button>
-      </div>
-
-      {/* M (Default) */}
-<div className={styles.block}>
-  <button
-    type="button"
-    aria-pressed={activeMode === "M"}
-    className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
-    onClick={() => {
-      // ▼ Overlay sofort schließen (ohne Bubble)
-      try {
-        const inOverlay = !!document.querySelector('[data-overlay="true"]');
-        if (inOverlay) { onSystemMessage?.(""); }
-      } catch {}
-      // ▲ Ende Overlay-Close
-      void switchMode("M");
-    }}
-  >
-    {t("mDefault")}
-  </button>
 </div>
 
 
       {/* Modus-Dropdown */}
       <div className={styles.block}>
         <label className={styles.label} htmlFor="modus-select">
-          {t("selectMode")}
-        </label>
-        <div className={styles.selectWrap}>
-          <select
-            id="modus-select"
-            aria-label={t("selectMode")}
-            value={hydrated ? (MODI.some((m) => m.id === activeMode) ? activeMode : "") : ""}
-            onChange={(e) => switchMode(e.target.value as ModeId)}
-            className={styles.select}
-          >
-            <option value="" disabled hidden>{t("selectMode")}</option>
-            {MODI.map((m) => (
-              <option key={m.id} value={m.id}>{m.label}</option>
-            ))}
-          </select>
+  {tr("labels.modes", "Modis & Experts")}
+</label>
+
+<select
+  id="modus-select"
+  aria-label={tr("mode.select", "Modus wählen")}               // ← Fallback-sicher
+  value={hydrated ? (MODI.some((m) => m.id === activeMode) ? activeMode : "") : ""}
+  onChange={(e) => switchMode(e.target.value as ModeId)}
+  className={styles.select}
+>
+  <option value="" disabled hidden>{tr("mode.select", "Modus wählen")}</option>
+  {MODI.map((m) => (
+    <option key={m.id} value={m.id}>{m.label}</option>
+  ))}
+</select>
+
         </div>
-      </div>
+    
+           
+           
+           {/* Experten (Dropdown) */}
+
+    <div className={styles.selectWrap}>
+  <select
+  id="expert-select"
+  className={styles.select}
+  aria-label={tr("expert.select", "Experten wählen")}           // ← Fallback-sicher
+  value={hydrated ? (currentExpert ?? "") : ""}
+  onChange={(e) => {
+    const val = e.target.value as ExpertId;
+    setCurrentExpert(val);
+    void askExpert(val);
+  }}
+>
+  <option value="" disabled hidden>{tr("expert.select", "Experten wählen")}</option>
+  {EXPERTS.map((e) => (
+    <option key={e.id} value={e.id}>
+      {e.icon} {labelForExpert(e.id, lang)}
+    </option>
+  ))}
+</select>
+
+</div>
+
+
 
       {/* Council13 */}
 <div className={styles.block}>
+ <button
+  type="button"
+  aria-pressed={activeMode === "council"}
+  className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
+  onClick={() => switchMode("council")}
+  style={{ width: "100%", cursor: "pointer" }}
+>
+  {tr("mode.council", "COUNCIL13")}
+</button>
+
+</div>
+
+
+   
+
+
+{/* Aktionen: Export (links, 50%) + Clear (rechts, 50%) */}
+<div
+  className={styles.actions}
+  style={{ display: "flex", gap: 8, alignItems: "stretch", flexWrap: "nowrap" }}
+>
+  {/* Export – links, 50% */}
   <button
-    type="button"
-    aria-pressed={activeMode === "council"}
-    className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
-    onClick={() => switchMode("council")}
-    style={{ width: "100%", cursor: "pointer" }}
+    className={styles.button}
+    style={{ width: "50%", cursor: "pointer" }}
+    onClick={() => {
+      try {
+        const raw = localStorage.getItem("mpathy:thread:default") || "{}";
+        const blob = new Blob([raw], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url; a.download = "mpathy-thread.json"; a.click();
+        URL.revokeObjectURL(url);
+        logEvent("export_thread", { size: raw.length });
+        say(tr("threadExported", "Thread exported."));
+      } catch {}
+    }}
+    aria-label={tr("exportAria", "Export thread")}
+    title={tr("export", "Export")}
   >
-    {t("council13")}
+    {tr("export", "Export")}
+  </button>
+
+  {/* Clear – rechts, 50% (immer aktiv) */}
+  <button
+    className={styles.button}
+    style={{
+      width: "50%",
+      cursor: "pointer",
+      background: "rgba(220, 38, 38, 0.18)",
+      borderColor: "rgba(248, 113, 113, 0.85)",
+      color: "rgba(255,255,255,0.98)",
+      boxShadow: "inset 0 0 0 1px rgba(248,113,113,0.55)",
+    }}
+    onClick={() => {
+      console.log("[P1] Clear button clicked");
+      console.log("[P2] typeof onClearChat =", typeof onClearChat);
+      try { onClearChat?.(); } catch (e) { console.error("[P2→P4] onClearChat threw:", e); }
+    }}
+    aria-label={tr("clearChatAria", "Clear chat")}
+    title={tr("clearChat", "Clear")}
+    role="button"
+    data-test="btn-clear-chat"
+  >
+    {tr("clearChat", "Clear")}
   </button>
 </div>
 
 
-        {/* Experten (Dropdown) */}
-<div className={styles.sectionTitle}>{sectionTitleExperts(lang)}</div>
-<div className={styles.block}>
-  <label className={styles.label} htmlFor="expert-select">
-    {chooseExpertLabel(lang)}
-  </label>
-  <div className={styles.selectWrap}>
-    <select
-      id="expert-select"
-      className={styles.select}
-      aria-label={chooseExpertLabel(lang)}
-      defaultValue=""
-      onChange={(e) => {
-        const val = e.target.value as unknown as ExpertId;
-        if (val) { void askExpert(val); }
-      }}
-    >
-      <option value="" disabled hidden>{chooseExpertLabel(lang)}</option>
-      {EXPERTS.map((e) => (
-        <option key={e.id} value={e.id}>
-          {e.icon} {labelForExpert(e.id, lang)}
-        </option>
-      ))}
-    </select>
-  </div>
-</div>
 
 
-      {/* Aktionen: nur Export */}
-      <div className={styles.actions}>
-        <button
-          className={styles.button}
-          onClick={() => {
-            try {
-              const raw = localStorage.getItem("mpathy:thread:default") || "{}";
-              const blob = new Blob([raw], { type: "application/json" });
-              const url = URL.createObjectURL(blob);
-              const a = document.createElement("a");
-              a.href = url; a.download = "mpathy-thread.json"; a.click();
-              URL.revokeObjectURL(url);
-              logEvent("export_thread", { size: raw.length });
-              const text = tr("threadExported", "Thread exported.");
-say(text); // nutzt onSystemMessage ODER emitSystemMessage(reply) – aber nie beides
-
-
-            } catch {}
-          }}
-        >
-          {t("export")}
-        </button>
-      </div>
 
       {/* Statusleiste */}
       <div className={styles.statusBar} aria-live="polite">

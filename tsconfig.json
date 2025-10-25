@@ -8,8 +8,9 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -18,18 +19,20 @@
     "paths": {
       "@/*": ["./*"],
       "@/app/*": ["./app/*"],
-      "@/components/*": ["./app/components/*", "./components/*"],   // ← erweitert
+      "@/components/*": ["./components/*", "./app/components/*"],
+      "@/components/ui/*": ["./components/ui/*", "./app/components/ui/*"],
       "@/modules/*": ["./app/modules/*"],
-      "@/lib/*": ["./lib/*"],
+      "@/lib/*": ["./lib/*", "./app/lib/*"],
       "@/styles/*": ["./styles/*"],
-      "@/public/*": ["./public/*"]
+      "@/public/*": ["./public/*"],
+      "@/config/*": ["./config/*", "./app/config/*"]
     },
 
+    "typeRoots": ["./types", "./node_modules/@types"],
     "types": ["node", "react", "react-dom"],
     "incremental": true,
     "plugins": [{ "name": "next" }]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "types/**/*.d.ts"],
   "exclude": ["node_modules"]
 }
- 
