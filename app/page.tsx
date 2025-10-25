@@ -35,9 +35,9 @@ import { M_CURRENT_VARIANT } from "@/config/mLogoConfig";
 import LogoM from "@/components/LogoM";
 import MessageInput from "../components/MessageInput";
 import Saeule from "../components/Saeule";
-import SidebarContainer from "../components/SidebarContainer";
-import MobileOverlay from "../components/MobileOverlay";
-import StickyFab from "../components/StickyFab";
+import SidebarContainer from "./components/SidebarContainer";
+import MobileOverlay from "./components/MobileOverlay";
+import StickyFab from "./components/StickyFab";
 import { t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
 import { useMobileViewport } from "@/lib/useMobileViewport";
