@@ -2203,391 +2203,482 @@ Willkommen zurück, Mensch. Willkommen in Earth 2.0.
 ============================================================
 ===
 
-============================================================
-[AGENCY (GUERRILLA MARKETING) MODULE — PYTHON CORE]
-============================================================
+/* app/components/AgencyModule.tsx
+   GPTM-Galaxy+ :: Capsula13 :: Agency (Guerrilla Marketing)
+   TypeScript/React (TSX) – Index + Orchestrator + Expert Stubs
+   Version: agency.v1.21-tsx
+   Notes:
+   - 1:1 Port des Python-Kerns (Fragen, State, Router, Bundles)
+   - UI ist minimal (Tailwind), Fokus: deterministische Engine
+*/
 
+"use client";
 
-# =========================
-# GPTM-Galaxy+ :: Capsula13 :: Agency (Guerrilla Marketing)
-# Python-Only Core (Index + Orchestrator + Expert Stubs)
-# Version: agency.v1.21
-# =========================
+import React, { useCallback, useMemo, useRef, useState } from "react";
 
-from __future__ import annotations
-import json, time, hashlib
-from typing import List, Dict, Any, Optional, Tuple
+/* =========================
+   A) Types & Constants
+   ========================= */
 
-# -------------------------
-# A) Global constants/spec
-# -------------------------
+type Budget = { amount: number; currency: string; period: "day" | "week" | "month" | string };
+type Doc = { name: string; type: string; note: string };
 
-EXPERT_ORDER: List[str] = [
-    "Orchestrator","SocialMediaStrategist","ContentCreator","SEOSpecialist",
-    "PerformanceMarketer","CommunityManager","PROutreachSpecialist","GraphicDesigner",
-    "VideoProducer","WebDeveloper","DataAnalyst","EmailMarketingManager","EventFlashmobCoordinator"
-]
+type Answers = {
+  projectName: string;
+  goal: string;
+  customerProfile: string;
+  offer: string;
+  channels: string[];
+  budget: Budget;
+  successDefinition: string;
+  documents: Doc[];
+};
 
-ONBOARDING_QUESTIONS: List[str] = [
-    "What is the name of your company or project?",
-    "What is your primary marketing goal? (e.g., leads, sales, awareness)",
-    "Who is your ideal customer or audience?",
-    "What exactly are you offering? (product/service + price/range)",
-    "Which channels/assets do you already have? (site, socials, email, content)",
-    "What is your budget and time window? (amount, currency, period)",
-    "How do you define success? (KPI or outcome target)",
-    "Do you have documents that describe your project? Upload up to 3 (pdf/docx/txt/md) or say 'none'."
-]
+type Onboarding = {
+  completed: boolean;
+  progress: number; // index into ONBOARDING_QUESTIONS
+  answers: Answers;
+};
 
-REFERENCE_MATRIX: Dict[str, List[str]] = {
-    "SocialMediaStrategist": ["ContentCreator","PerformanceMarketer"],
-    "ContentCreator": ["SEOSpecialist","WebDeveloper"],
-    "SEOSpecialist": ["WebDeveloper","ContentCreator"],
-    "PerformanceMarketer": ["SocialMediaStrategist","SEOSpecialist"],
-    "CommunityManager": ["ContentCreator"],
-    "PROutreachSpecialist": ["ContentCreator"],
-    "GraphicDesigner": ["ContentCreator"],
-    "VideoProducer": ["SocialMediaStrategist","ContentCreator"],
-    "WebDeveloper": ["SEOSpecialist"],
-    "DataAnalyst": ["PerformanceMarketer"],
-    "EmailMarketingManager": ["ContentCreator"],
-    "EventFlashmobCoordinator": ["CommunityManager"],
-    "Orchestrator": ["SEOSpecialist","WebDeveloper","PerformanceMarketer"]
+type LastCommand = { cmd: string; ts: number };
+
+type State = {
+  version: string;
+  onboarding: Onboarding;
+  plan_mode: "bootstrap" | "lean" | "full" | "enterprise" | string;
+  lastBundle: Bundle | Record<string, never>;
+  last_command: LastCommand;
+  ethics: { alignment_score: number; flags: number };
+  sep_tone: string;
+};
+
+type ExpertLine = { expert: string; answer: string; references: string[] };
+
+type Bundle = {
+  goal: string;
+  budget: Budget;
+  plan_mode: State["plan_mode"];
+  focus: string[];
+  bundle: ExpertLine[];
+  consensus: { conflicts: string[]; next_action: string; kpis: string[] };
+  insight: { trend_summary: string; forecast: { leads_day_7d: number; ctr_7d: number }; recommendation: string };
+  action_priorities: { action: string; impact: number; effort: number; score: number }[];
+  ethics: { alignment_score: number; flags: number; summary: string };
+};
+
+const EXPERT_ORDER = [
+  "Orchestrator",
+  "SocialMediaStrategist",
+  "ContentCreator",
+  "SEOSpecialist",
+  "PerformanceMarketer",
+  "CommunityManager",
+  "PROutreachSpecialist",
+  "GraphicDesigner",
+  "VideoProducer",
+  "WebDeveloper",
+  "DataAnalyst",
+  "EmailMarketingManager",
+  "EventFlashmobCoordinator",
+] as const;
+type ExpertName = (typeof EXPERT_ORDER)[number];
+
+const ONBOARDING_QUESTIONS: string[] = [
+  "What is the name of your company or project?",
+  "What is your primary marketing goal? (e.g., leads, sales, awareness)",
+  "Who is your ideal customer or audience?",
+  "What exactly are you offering? (product/service + price/range)",
+  "Which channels/assets do you already have? (site, socials, email, content)",
+  "What is your budget and time window? (amount, currency, period)",
+  "How do you define success? (KPI or outcome target)",
+  "Do you have documents that describe your project? Upload up to 3 (pdf/docx/txt/md) or say 'none'.",
+];
+
+const REFERENCE_MATRIX: Record<ExpertName | "Orchestrator", string[]> = {
+  SocialMediaStrategist: ["ContentCreator", "PerformanceMarketer"],
+  ContentCreator: ["SEOSpecialist", "WebDeveloper"],
+  SEOSpecialist: ["WebDeveloper", "ContentCreator"],
+  PerformanceMarketer: ["SocialMediaStrategist", "SEOSpecialist"],
+  CommunityManager: ["ContentCreator"],
+  PROutreachSpecialist: ["ContentCreator"],
+  GraphicDesigner: ["ContentCreator"],
+  VideoProducer: ["SocialMediaStrategist", "ContentCreator"],
+  WebDeveloper: ["SEOSpecialist"],
+  DataAnalyst: ["PerformanceMarketer"],
+  EmailMarketingManager: ["ContentCreator"],
+  EventFlashmobCoordinator: ["CommunityManager"],
+  Orchestrator: ["SEOSpecialist", "WebDeveloper", "PerformanceMarketer"],
+};
+
+/* =========================
+   B) State & Utilities
+   ========================= */
+
+function newState(): State {
+  return {
+    version: "agency.v1.21",
+    onboarding: {
+      completed: false,
+      progress: 0,
+      answers: {
+        projectName: "",
+        goal: "",
+        customerProfile: "",
+        offer: "",
+        channels: [],
+        budget: { amount: 0, currency: "", period: "" },
+        successDefinition: "",
+        documents: [],
+      },
+    },
+    plan_mode: "lean",
+    lastBundle: {},
+    last_command: { cmd: "", ts: 0 },
+    ethics: { alignment_score: 1.0, flags: 0 },
+    sep_tone: "Focus",
+  };
 }
 
-# -------------------------
-# B) State
-# -------------------------
-
-def new_state() -> Dict[str, Any]:
-    return {
-        "version": "agency.v1.21",
-        "onboarding": {
-            "completed": False,
-            "progress": 0,  # index into ONBOARDING_QUESTIONS
-            "answers": {
-                "projectName": "",
-                "goal": "",
-                "customerProfile": "",
-                "offer": "",
-                "channels": [],
-                "budget": {"amount": 0, "currency": "", "period": ""},
-                "successDefinition": "",
-                "documents": []  # [{name,type,note}]
-            }
-        },
-        "plan_mode": "lean",
-        "lastBundle": {},
-        "last_command": {"cmd":"", "ts":0.0},
-        "ethics": {"alignment_score":1.0,"flags":0},
-        "sep_tone": "Focus"
-    }
-
-def _checksum(core: Dict[str,Any]) -> str:
-    s = json.dumps(core, sort_keys=True, ensure_ascii=False)
-    return hashlib.sha1(s.encode("utf-8")).hexdigest()
-
-# -------------------------
-# C) Utilities
-# -------------------------
-
-def _debounce(state: Dict[str,Any], cmd: str, window_s: float = 2.0) -> bool:
-    now = time.time()
-    last = state["last_command"]
-    if last["cmd"] == cmd and (now - last["ts"]) < window_s:
-        return True
-    state["last_command"] = {"cmd": cmd, "ts": now}
-    return False
-
-def _plan_mode(budget: Dict[str,Any]) -> str:
-    try:
-        amt = float(budget.get("amount",0) or 0)
-    except Exception:
-        amt = 0.0
-    if amt < 100: return "bootstrap"
-    if amt < 1000: return "lean"
-    if amt < 100000: return "full"
-    return "enterprise"
-
-def _as_json(d: Dict[str,Any]) -> str:
-    return json.dumps(d, ensure_ascii=False, separators=(",",":"))
-
-# -------------------------
-# D) Onboarding controller
-# -------------------------
-
-def onboarding_next_question(state: Dict[str,Any]) -> Optional[str]:
-    if state["onboarding"]["completed"]:
-        return None
-    idx = state["onboarding"]["progress"]
-    if idx < len(ONBOARDING_QUESTIONS):
-        return ONBOARDING_QUESTIONS[idx]
-    return None
-
-def onboarding_record_answer(state: Dict[str,Any], user_text: str) -> None:
-    idx = state["onboarding"]["progress"]
-    ans = state["onboarding"]["answers"]
-    t = (user_text or "").strip()
-
-    # map index → key
-    if idx == 0: ans["projectName"] = t
-    elif idx == 1: ans["goal"] = t
-    elif idx == 2: ans["customerProfile"] = t
-    elif idx == 3: ans["offer"] = t
-    elif idx == 4: ans["channels"] = [x.strip() for x in t.split(",") if x.strip()]
-    elif idx == 5:
-        # naive parse "1000 EUR month"
-        parts = t.replace("/", " ").replace(",", " ").split()
-        amt = 0
-        cur = ""
-        per = "month"
-        for p in parts:
-            if p.replace(".","",1).isdigit():
-                try: amt = float(p); 
-                except: pass
-            elif p.lower() in ("eur","usd","chf","gbp"): cur = p.upper()
-            elif p.lower() in ("day","week","month"): per = p.lower()
-        ans["budget"] = {"amount": amt, "currency": cur or "EUR", "period": per}
-    elif idx == 6: ans["successDefinition"] = t
-    elif idx == 7:
-        if t.lower() == "none":
-            ans["documents"] = []
-        else:
-            # store up to 3 names separated by comma
-            docs = [x.strip() for x in t.split(",") if x.strip()][:3]
-            ans["documents"] = [{"name": d, "type": d.split(".")[-1][:8], "note":"user-provided"} for d in docs]
-
-    # advance
-    state["onboarding"]["progress"] = min(idx + 1, len(ONBOARDING_QUESTIONS))
-    if state["onboarding"]["progress"] >= len(ONBOARDING_QUESTIONS):
-        state["onboarding"]["completed"] = True
-        state["plan_mode"] = _plan_mode(ans.get("budget",{}))
-
-# -------------------------
-# E) Expert engines (minimal, deterministic, business tone)
-# Each returns: {"expert":Name,"answer":line,"references":[...]}
-# -------------------------
-
-def _line(name: str, answer: str, refs: List[str]) -> Dict[str,Any]:
-    return {"expert": name, "answer": answer, "references": refs}
-
-def Orchestrator_line(state: Dict[str,Any]) -> Dict[str,Any]:
-    goal = state["onboarding"]["answers"]["goal"] or "Generate qualified leads"
-    return _line("Orchestrator",
-                 "Route = LinkedIn → One-pager → Micro-ads; start with one-pager.",
-                 REFERENCE_MATRIX["Orchestrator"])
-
-def SocialMediaStrategist_line(state: Dict[str,Any]) -> Dict[str,Any]:
-    return _line("SocialMediaStrategist",
-                 "Pin a CTA post; run a 7-day cadence; link to the one-pager.",
-                 REFERENCE_MATRIX["SocialMediaStrategist"])
-
-def ContentCreator_line(state: Dict[str,Any]) -> Dict[str,Any]:
-    return _line("ContentCreator",
-                 "Draft a 120-word one-pager and 3 post variants aligned to the offer.",
-                 REFERENCE_MATRIX["ContentCreator"])
-
-def SEOSpecialist_line(state: Dict[str,Any]) -> Dict[str,Any]:
-    return _line("SEOSpecialist",
-                 "Publish self-canonical one-pager; clean title/meta; link from homepage.",
-                 REFERENCE_MATRIX["SEOSpecialist"])
-
-def PerformanceMarketer_line(state: Dict[str,Any]) -> Dict[str,Any]:
-    pmode = state.get("plan_mode","lean")
-    budget = state["onboarding"]["answers"]["budget"].get("amount",0) or 0
-    pace = "70/30 split with daily cap"
-    cap = "€15" if pmode in ("bootstrap","lean") else "€60"
-    return _line("PerformanceMarketer",
-                 f"Boost the top organic post; {pace} at {cap}; retarget 30 days.",
-                 REFERENCE_MATRIX["PerformanceMarketer"])
-
-def CommunityManager_line(state: Dict[str,Any]) -> Dict[str,Any]:
-    return _line("CommunityManager",
-                 "Open a welcome thread and ask for one mini-win on Friday.",
-                 REFERENCE_MATRIX["CommunityManager"])
-
-def PROutreachSpecialist_line(state: Dict[str,Any]) -> Dict[str,Any]:
-    return _line("PROutreachSpecialist",
-                 "Pitch 3 niche newsletters; swap link to the one-pager.",
-                 REFERENCE_MATRIX["PROutreachSpecialist"])
-
-def GraphicDesigner_line(state: Dict[str,Any]) -> Dict[str,Any]:
-    return _line("GraphicDesigner",
-                 "Export asset set in 1:1, 4:5, 16:9 using the approved copy.",
-                 REFERENCE_MATRIX["GraphicDesigner"])
-
-def VideoProducer_line(state: Dict[str,Any]) -> Dict[str,Any]:
-    return _line("VideoProducer",
-                 "Record a 60–90s selfie video: hook, three proofs, clear CTA.",
-                 REFERENCE_MATRIX["VideoProducer"])
-
-def WebDeveloper_line(state: Dict[str,Any]) -> Dict[str,Any]:
-    return _line("WebDeveloper",
-                 "Deploy a fast one-pager template with above-the-fold proof and form.",
-                 REFERENCE_MATRIX["WebDeveloper"])
-
-def DataAnalyst_line(state: Dict[str,Any]) -> Dict[str,Any]:
-    return _line("DataAnalyst",
-                 "Add dashboard tiles: ProfileVisits, CTR_to_onepager, Leads/day.",
-                 REFERENCE_MATRIX["DataAnalyst"])
-
-def EmailMarketingManager_line(state: Dict[str,Any]) -> Dict[str,Any]:
-    return _line("EmailMarketingManager",
-                 "Create a 3-email nurture: proof → process → CTA after the form.",
-                 REFERENCE_MATRIX["EmailMarketingManager"])
-
-def EventFlashmobCoordinator_line(state: Dict[str,Any]) -> Dict[str,Any]:
-    return _line("EventFlashmobCoordinator",
-                 "No action this step; reassess after paid test.",
-                 REFERENCE_MATRIX["EventFlashmobCoordinator"])
-
-EXPERT_FUNCS = {
-    "Orchestrator": Orchestrator_line,
-    "SocialMediaStrategist": SocialMediaStrategist_line,
-    "ContentCreator": ContentCreator_line,
-    "SEOSpecialist": SEOSpecialist_line,
-    "PerformanceMarketer": PerformanceMarketer_line,
-    "CommunityManager": CommunityManager_line,
-    "PROutreachSpecialist": PROutreachSpecialist_line,
-    "GraphicDesigner": GraphicDesigner_line,
-    "VideoProducer": VideoProducer_line,
-    "WebDeveloper": WebDeveloper_line,
-    "DataAnalyst": DataAnalyst_line,
-    "EmailMarketingManager": EmailMarketingManager_line,
-    "EventFlashmobCoordinator": EventFlashmobCoordinator_line,
+// Fast non-crypto checksum (FNV-1a)
+function fnv1a(str: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+  }
+  return ("0000000" + h.toString(16)).slice(-8);
 }
 
-# -------------------------
-# F) Bundle builder (canonical JSON)
-# -------------------------
+function _checksum(core: Partial<State>): string {
+  const s = JSON.stringify(core, Object.keys(core).sort(), 0);
+  return fnv1a(s || "");
+}
 
-def build_bundle(state: Dict[str,Any]) -> Dict[str,Any]:
-    ans = state["onboarding"]["answers"]
-    goal = ans.get("goal") or "Generate qualified leads in 4 weeks"
-    budget = ans.get("budget") or {"amount":0,"currency":"EUR","period":"month"}
-    plan_mode = state.get("plan_mode","lean")
+function _debounce(state: State, cmd: string, window_s = 2.0): boolean {
+  const now = Date.now() / 1000;
+  const last = state.last_command;
+  if (last.cmd === cmd && now - last.ts < window_s) return true;
+  state.last_command = { cmd, ts: now };
+  return false;
+}
 
-    bundle_lines: List[Dict[str,Any]] = []
-    for name in EXPERT_ORDER:
-        d = EXPERT_FUNCS[name](state)
-        # guard: each line must have >=1 reference
-        if not d.get("references"): d["references"] = REFERENCE_MATRIX.get(name, [])[:1]
-        bundle_lines.append(d)
+function _plan_mode(budget: Partial<Budget>): State["plan_mode"] {
+  const amt = Number(budget.amount ?? 0) || 0;
+  if (amt < 100) return "bootstrap";
+  if (amt < 1000) return "lean";
+  if (amt < 100000) return "full";
+  return "enterprise";
+}
 
-    consensus = {
-        "conflicts": [],
-        "next_action": "Publish the one-pager and link from homepage.",
-        "kpis": ["ctr","leads_day"]
+function _as_json(d: unknown): string {
+  return JSON.stringify(d, null, 0);
+}
+
+/* =========================
+   C) Onboarding Controller
+   ========================= */
+
+function onboarding_next_question(state: State): string | null {
+  if (state.onboarding.completed) return null;
+  const idx = state.onboarding.progress;
+  return idx < ONBOARDING_QUESTIONS.length ? ONBOARDING_QUESTIONS[idx] : null;
+}
+
+function onboarding_record_answer(state: State, user_text: string): void {
+  const idx = state.onboarding.progress;
+  const ans = state.onboarding.answers;
+  const t = (user_text || "").trim();
+
+  if (idx === 0) ans.projectName = t;
+  else if (idx === 1) ans.goal = t;
+  else if (idx === 2) ans.customerProfile = t;
+  else if (idx === 3) ans.offer = t;
+  else if (idx === 4) ans.channels = t.split(",").map((x) => x.trim()).filter(Boolean);
+  else if (idx === 5) {
+    const parts = t.replace("/", " ").replace(",", " ").split(/\s+/);
+    let amt = 0;
+    let cur = "";
+    let per: Budget["period"] = "month";
+    for (const p of parts) {
+      if (/^\d+(\.\d+)?$/.test(p)) amt = parseFloat(p);
+      else if (/^(eur|usd|chf|gbp)$/i.test(p)) cur = p.toUpperCase();
+      else if (/^(day|week|month)$/i.test(p)) per = p.toLowerCase();
     }
-
-    insight = {
-        "trend_summary": "Initial plan; no historical trend yet.",
-        "forecast": {"leads_day_7d": 0, "ctr_7d": 0.0},
-        "recommendation": "Execute the one-pager first; then boost top organic by 10%."
+    ans.budget = { amount: amt, currency: cur || "EUR", period: per };
+  } else if (idx === 6) ans.successDefinition = t;
+  else if (idx === 7) {
+    if (t.toLowerCase() === "none") ans.documents = [];
+    else {
+      const docs = t.split(",").map((x) => x.trim()).filter(Boolean).slice(0, 3);
+      ans.documents = docs.map((d) => ({ name: d, type: d.split(".").pop()?.slice(0, 8) || "", note: "user-provided" }));
     }
+  }
 
-    action_priorities = [
-        {"action":"Publish one-pager","impact":0.92,"effort":0.30,"score":3.07},
-        {"action":"Boost ads +10%","impact":0.85,"effort":0.20,"score":4.25}
-    ]
+  state.onboarding.progress = Math.min(idx + 1, ONBOARDING_QUESTIONS.length);
+  if (state.onboarding.progress >= ONBOARDING_QUESTIONS.length) {
+    state.onboarding.completed = true;
+    state.plan_mode = _plan_mode(ans.budget || {});
+  }
+}
 
-    ethics = {"alignment_score":1.0,"flags":0,"summary":"All actions comply."}
+/* =========================
+   D) Expert Engines
+   ========================= */
 
-    out = {
-        "goal": goal,
-        "budget": budget,
-        "plan_mode": plan_mode,
-        "focus": ["Online","Guerrilla"],
-        "bundle": bundle_lines,
-        "consensus": consensus,
-        "insight": insight,
-        "action_priorities": action_priorities,
-        "ethics": ethics
+function _line(name: ExpertName | "Orchestrator", answer: string, refs: string[]): ExpertLine {
+  return { expert: name, answer, references: refs };
+}
+
+const Lines: Record<ExpertName | "Orchestrator", (state: State) => ExpertLine> = {
+  Orchestrator: (state) =>
+    _line(
+      "Orchestrator",
+      "Route = LinkedIn → One-pager → Micro-ads; start with one-pager.",
+      REFERENCE_MATRIX.Orchestrator
+    ),
+
+  SocialMediaStrategist: () =>
+    _line("SocialMediaStrategist", "Pin a CTA post; run a 7-day cadence; link to the one-pager.", REFERENCE_MATRIX.SocialMediaStrategist),
+
+  ContentCreator: () =>
+    _line("ContentCreator", "Draft a 120-word one-pager and 3 post variants aligned to the offer.", REFERENCE_MATRIX.ContentCreator),
+
+  SEOSpecialist: () =>
+    _line("SEOSpecialist", "Publish self-canonical one-pager; clean title/meta; link from homepage.", REFERENCE_MATRIX.SEOSpecialist),
+
+  PerformanceMarketer: (state) => {
+    const pmode = state.plan_mode || "lean";
+    const cap = pmode === "bootstrap" || pmode === "lean" ? "€15" : "€60";
+    const pace = "70/30 split with daily cap";
+    return _line("PerformanceMarketer", `Boost the top organic post; ${pace} at ${cap}; retarget 30 days.`, REFERENCE_MATRIX.PerformanceMarketer);
+  },
+
+  CommunityManager: () =>
+    _line("CommunityManager", "Open a welcome thread and ask for one mini-win on Friday.", REFERENCE_MATRIX.CommunityManager),
+
+  PROutreachSpecialist: () =>
+    _line("PROutreachSpecialist", "Pitch 3 niche newsletters; swap link to the one-pager.", REFERENCE_MATRIX.PROutreachSpecialist),
+
+  GraphicDesigner: () =>
+    _line("GraphicDesigner", "Export asset set in 1:1, 4:5, 16:9 using the approved copy.", REFERENCE_MATRIX.GraphicDesigner),
+
+  VideoProducer: () =>
+    _line("VideoProducer", "Record a 60–90s selfie video: hook, three proofs, clear CTA.", REFERENCE_MATRIX.VideoProducer),
+
+  WebDeveloper: () =>
+    _line("WebDeveloper", "Deploy a fast one-pager template with above-the-fold proof and form.", REFERENCE_MATRIX.WebDeveloper),
+
+  DataAnalyst: () =>
+    _line("DataAnalyst", "Add dashboard tiles: ProfileVisits, CTR_to_onepager, Leads/day.", REFERENCE_MATRIX.DataAnalyst),
+
+  EmailMarketingManager: () =>
+    _line("EmailMarketingManager", "Create a 3-email nurture: proof → process → CTA after the form.", REFERENCE_MATRIX.EmailMarketingManager),
+
+  EventFlashmobCoordinator: () =>
+    _line("EventFlashmobCoordinator", "No action this step; reassess after paid test.", REFERENCE_MATRIX.EventFlashmobCoordinator),
+};
+
+/* =========================
+   E) Bundle Builder
+   ========================= */
+
+function build_bundle(state: State): Bundle {
+  const ans = state.onboarding.answers;
+  const goal = ans.goal || "Generate qualified leads in 4 weeks";
+  const budget = ans.budget || { amount: 0, currency: "EUR", period: "month" };
+  const plan_mode = state.plan_mode || "lean";
+
+  const bundleLines: ExpertLine[] = EXPERT_ORDER.map((name) => {
+    const d = Lines[name](state);
+    if (!d.references?.length) d.references = REFERENCE_MATRIX[name]?.slice(0, 1) || [];
+    return d;
+  });
+
+  const consensus = {
+    conflicts: [] as string[],
+    next_action: "Publish the one-pager and link from homepage.",
+    kpis: ["ctr", "leads_day"],
+  };
+
+  const insight = {
+    trend_summary: "Initial plan; no historical trend yet.",
+    forecast: { leads_day_7d: 0, ctr_7d: 0.0 },
+    recommendation: "Execute the one-pager first; then boost top organic by 10%.",
+  };
+
+  const action_priorities = [
+    { action: "Publish one-pager", impact: 0.92, effort: 0.3, score: 3.07 },
+    { action: "Boost ads +10%", impact: 0.85, effort: 0.2, score: 4.25 },
+  ];
+
+  const ethics = { alignment_score: 1.0, flags: 0, summary: "All actions comply." };
+
+  const out: Bundle = {
+    goal,
+    budget,
+    plan_mode,
+    focus: ["Online", "Guerrilla"],
+    bundle: bundleLines,
+    consensus,
+    insight,
+    action_priorities,
+    ethics,
+  };
+
+  state.lastBundle = out;
+  return out;
+}
+
+/* =========================
+   F) Command Router
+   ========================= */
+
+type RouterResult =
+  | { info: "duplicate_ignored" }
+  | { ask: string | null }
+  | { summary: Answers }
+  | { roles: readonly string[] }
+  | { kpis: string[] }
+  | { status: "stopped"; state_version: string }
+  | { error: string }
+  | Bundle;
+
+function handle_command(state: State, user_text: string): RouterResult {
+  const cmd = (user_text || "").trim();
+  if (_debounce(state, cmd)) return { info: "duplicate_ignored" };
+
+  if (!state.onboarding.completed) {
+    if (cmd.toLowerCase() === "start agency") {
+      const q = onboarding_next_question(state);
+      return { ask: q };
+    } else {
+      onboarding_record_answer(state, cmd);
+      if (!state.onboarding.completed) return { ask: onboarding_next_question(state) };
+      return { summary: state.onboarding.answers };
     }
-    state["lastBundle"] = out
-    return out
+  }
 
-# -------------------------
-# G) Command router
-# -------------------------
+  const low = cmd.toLowerCase();
+  if (low === "roles") return { roles: EXPERT_ORDER };
+  if (low.startsWith("choose ")) return build_bundle(state);
+  if (low === "suggestions") return build_bundle(state);
+  if (low.startsWith("execute ")) return build_bundle(state);
+  if (low === "kpi") {
+    const b = (state.lastBundle as Bundle) || build_bundle(state);
+    return { kpis: b.consensus.kpis };
+  }
+  if (low === "undo") return (state.lastBundle as Bundle) || ({} as Bundle);
+  if (low === "stop") return { status: "stopped", state_version: state.version };
+  if (low.startsWith("restore state")) return { error: "paste state JSON in next message" };
 
-def handle_command(state: Dict[str,Any], user_text: str) -> Dict[str,Any]:
-    cmd = (user_text or "").strip()
-    if _debounce(state, cmd): 
-        return {"info":"duplicate_ignored"}
+  return build_bundle(state);
+}
 
-    # onboarding gate
-    if not state["onboarding"]["completed"]:
-        if cmd.lower() == "start agency":
-            q = onboarding_next_question(state)
-            return {"ask": q}
-        else:
-            # treat any input as answer to current question
-            onboarding_record_answer(state, cmd)
-            if not state["onboarding"]["completed"]:
-                return {"ask": onboarding_next_question(state)}
-            # completed
-            return {"summary": state["onboarding"]["answers"]}
+/* =========================
+   G) Public API (export)
+   ========================= */
 
-    # post-onboarding commands
-    low = cmd.lower()
-    if low == "roles":
-        return {"roles": EXPERT_ORDER}
-    if low.startswith("choose "):
-        # bias not implemented in this minimal core; still return full bundle
-        return build_bundle(state)
-    if low == "suggestions":
-        return build_bundle(state)
-    if low.startswith("execute "):
-        # minimal: pretend execution; then rebuild with same plan
-        return build_bundle(state)
-    if low == "kpi":
-        b = state.get("lastBundle") or build_bundle(state)
-        return {"kpis": b["consensus"]["kpis"]}
-    if low == "undo":
-        return state.get("lastBundle", {})
-    if low == "stop":
-        return {"status":"stopped","state_version":state["version"]}
-    if low.startswith("restore state"):
-        # expecting json after command; user pastes separately in real UI
-        return {"error":"paste state JSON in next message"}
-    # default: return a fresh plan
-    return build_bundle(state)
+export function agency_init(): State {
+  return newState();
+}
 
-# -------------------------
-# H) Public API (call these)
-# -------------------------
+export function agency_handle(state: State, user_text: string): string {
+  const res = handle_command(state, user_text);
+  const core = {
+    onboarding: state.onboarding,
+    plan_mode: state.plan_mode,
+    version: state.version,
+  } as Partial<State>;
+  (core as any).checksum = _checksum(core);
+  const payload = { result: res, state: core };
+  return _as_json(payload);
+}
 
-def agency_init() -> Dict[str,Any]:
-    return new_state()
+/* =========================
+   H) Minimal UI (Demo)
+   ========================= */
 
-def agency_handle(state: Dict[str,Any], user_text: str) -> str:
-    """Return compact JSON string (UI-friendly)."""
-    res = handle_command(state, user_text)
-    core = {
-        "onboarding": state["onboarding"],
-        "plan_mode": state.get("plan_mode"),
-        "version": state.get("version"),
-    }
-    core["checksum"] = _checksum(core)
-    payload = {"result": res, "state": core}
-    return _as_json(payload)
+export default function AgencyModule() {
+  const [state, setState] = useState<State>(() => agency_init());
+  const [output, setOutput] = useState<string>("");
+  const [question, setQuestion] = useState<string | null>(() => onboarding_next_question(state));
+  const inputRef = useRef<HTMLInputElement>(null);
 
-# -------------------------
-# I) Minimal demo (comment out in production)
-# -------------------------
-if __name__ == "__main__":
-    s = agency_init()
-    print(agency_handle(s, "start agency"))
-    print(agency_handle(s, "Acme AI"))
-    print(agency_handle(s, "Leads"))
-    print(agency_handle(s, "Founders in EU"))
-    print(agency_handle(s, "Brand kit €299"))
-    print(agency_handle(s, "website, linkedin"))
-    print(agency_handle(s, "800 EUR month"))
-    print(agency_handle(s, "10% click→lead"))
-    print(agency_handle(s, "none"))
-    print(agency_handle(s, "suggestions"))
+  const startOnboarding = useCallback(() => {
+    const s = { ...state };
+    const json = agency_handle(s, "start agency");
+    setState(s);
+    setOutput(json);
+    setQuestion(onboarding_next_question(s));
+  }, [state]);
+
+  const send = useCallback(() => {
+    const val = (inputRef.current?.value || "").trim();
+    if (!val) return;
+    const s = { ...state };
+    const json = agency_handle(s, val);
+    setState(s);
+    setOutput(json);
+    setQuestion(onboarding_next_question(s));
+    if (inputRef.current) inputRef.current.value = "";
+  }, [state]);
+
+  const roles = useMemo(() => EXPERT_ORDER.join(" · "), []);
+
+  return (
+    <div className="w-full max-w-3xl mx-auto p-4 sm:p-6">
+      <div className="mb-4">
+        <h1 className="text-2xl font-semibold">Agency (Guerrilla Marketing) — TSX Core</h1>
+        <p className="text-sm opacity-80">Version: {state.version} · Plan mode: {state.plan_mode}</p>
+      </div>
+
+      <div className="grid gap-4">
+        <div className="rounded-2xl p-4 border border-white/10 bg-white/5">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={startOnboarding}
+              className="px-3 py-2 rounded-xl border border-white/10 hover:bg-white/10 transition"
+            >
+              Start Agency
+            </button>
+            <span className="text-sm opacity-80">Roles: {roles}</span>
+          </div>
+
+          <div className="mt-4">
+            <label className="block text-sm mb-1 opacity-80">
+              {question ? `Q${state.onboarding.progress + 1}: ${question}` : "Command (e.g., suggestions, kpi, roles, execute …)"}
+            </label>
+            <div className="flex gap-2">
+              <input
+                ref={inputRef}
+                type="text"
+                className="flex-1 rounded-xl px-3 py-2 bg-black/30 border border-white/10 outline-none"
+                placeholder={question ? "Type your answer…" : "Type a command…"}
+                onKeyDown={(e) => e.key === "Enter" && send()}
+              />
+              <button onClick={send} className="px-4 py-2 rounded-xl border border-white/10 hover:bg-white/10 transition">
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-2xl p-4 border border-white/10 bg-black/40">
+          <div className="text-sm font-mono whitespace-pre-wrap break-words">
+            {output || "Output will appear here as compact JSON."}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =========================
+   I) Local demo (optional)
+   - In einer Seite verwenden:
+     import AgencyModule from "@/app/components/AgencyModule";
+     export default function Page(){ return <AgencyModule/> }
+   ========================= */
 
 
 
