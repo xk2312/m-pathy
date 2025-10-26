@@ -4,6 +4,95 @@ Part 1/3 — Entry · Language · Userflow
 SYSTEMPROMPT — GALAXYBUILDER v15 (Crystal Kernel)
 ============================================================
 
+// ===============================================================
+// 🌌 GPTM-GALAXY+ — Mini-Index + Orchestrator (Drop-in Starter)
+// ===============================================================
+
+import { ClarityCore } from "./CoreLayer/clarity_core";
+import { VcaCore } from "./CoreLayer/vca_core";
+import { QuadronCore } from "./CoreLayer/quadron_core";
+import { DataMasterCore } from "./CoreLayer/datamaster_core";
+import { JuraxyCore } from "./CoreLayer/juraxy_core";
+import { ShadowMasterCore } from "./CoreLayer/shadowmaster_core";
+import { FalCore } from "./CoreLayer/fal_core";
+
+// ---------------------------------------------------------------
+// 1️⃣  INDEX  —  Registry aller Kernmodule + Modus-Mapping
+// ---------------------------------------------------------------
+
+class GalaxyIndex {
+  registry: Record<string, any>;
+  modes: Record<string, { desc: string; targets: string[] }>;
+
+  constructor() {
+    this.registry = {
+      Clarity: new ClarityCore(),
+      VCA: new VcaCore(),
+      QUADRON: new QuadronCore(),
+      DataMaster: new DataMasterCore(),
+      Juraxy: new JuraxyCore(),
+      ShadowMaster: new ShadowMasterCore(),
+      FAL: new FalCore(),
+    };
+
+    this.modes = {
+      "m-pathx":  { desc: "Wege & Sprints (Strategie)",  targets: ["Clarity", "VCA"] },
+      "m-power":  { desc: "Hebel / Priorisierung",        targets: ["VCA", "DataMaster"] },
+      "m-audit":  { desc: "Audit & KPIs",                 targets: ["Clarity", "DataMaster", "QUADRON"] },
+      "m-guard":  { desc: "Risiken & Compliance",         targets: ["Juraxy", "ShadowMaster"] },
+      "m-prompt": { desc: "Vorlagen & Prozesse",          targets: ["FAL"] },
+    };
+  }
+}
+
+// ---------------------------------------------------------------
+// 2️⃣  ORCHESTRATOR  —  Startet Galaxy+ & routet Modi
+// ---------------------------------------------------------------
+
+class GalaxyOrchestrator {
+  private index = new GalaxyIndex();
+  private activeMode = "m-pathx";
+
+  startAgency() {
+    console.log("🌟 GPTM-Galaxy+ · Council13 aktiviert");
+    console.log("— Onboarding gestartet —");
+    console.log("Wählbare Modi:", Object.keys(this.index.modes).join(", "));
+    console.log("Nutze runMode('<modus>') um fortzufahren.\n");
+  }
+
+  runMode(mode: string) {
+    const m = this.index.modes[mode];
+    if (!m) return console.log("❌ Unbekannter Modus:", mode);
+    this.activeMode = mode;
+    console.log(`\n🔮 ${mode.toUpperCase()} → ${m.desc}`);
+    console.log("Targets:", m.targets.join(", "));
+    m.targets.forEach(t => {
+      const mod = this.index.registry[t];
+      if (!mod) return;
+      try {
+        if (mod.runOnce) console.log(`→ ${t}`, mod.runOnce("init"));
+        else if (mod.runIntegratedCheck) console.log(`→ ${t}`, mod.runIntegratedCheck("truth","probe"));
+        else if (mod.run) console.log(`→ ${t}`, mod.run("INIT 1/13"));
+        else console.log(`→ ${t} (keine Aktion)`);
+      } catch (e) {
+        console.error(`⚠️ Fehler in ${t}:`, (e as Error).message);
+      }
+    });
+    console.log("— Modus abgeschlossen —\n");
+  }
+}
+
+// ---------------------------------------------------------------
+// 3️⃣  ENTRYPOINT  —  Direkt startbar
+// ---------------------------------------------------------------
+
+export const orchestrator = new GalaxyOrchestrator();
+orchestrator.startAgency();
+
+// Beispiel: sofort starten
+// orchestrator.runMode("m-audit");
+
+
 [POINT ZERO ENTRY]
 Ready
 
@@ -942,800 +1031,6 @@ finalizeSession(state: VcaState, spec: FinalizeSpec = {}): VcaState {
   },
 };
 
-// ─────────────────────────────────────────────────────────────
-// Utilities (compact stubs; replace with real engines in prod)
-// ─────────────────────────────────────────────────────────────
-function uuid4(): UUID {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c=>{
-    const r=(Math.random()*16)|0, v=c==="x"?r:(r&0x3|0x8); return v.toString(16);
-  });
-}
-function now(): ISODate { return new Date().toISOString(); }
-function hash(s: string): string { return btoa(unescape(encodeURIComponent(s))).slice(0,32); }
-function shortHash(s: string): string { return hash(s).slice(0,12); }
-
-function normalize(v: number[]): number[] {
-  const n = Math.sqrt(v.reduce((a,x)=>a+x*x,0)) || 1;
-  return v.map(x=>x/n);
-}
-function normalizeBatch(batch:number[][], schema:string): number[][] {
-  // simple L2 norm per vector; hook schema logic here
-  return batch.map(v=>normalize(v));
-}
-function applyFilters(batch:number[][], filters:string[]): number[][] {
-  let b = batch.slice();
-  if (filters.includes("clip"))  b = b.map(v=>v.map(x=>Math.max(-1, Math.min(1,x))));
-  if (filters.includes("center")) {
-    const mean = meanVector(b);
-    b = b.map(v=>v.map((x,i)=>x-mean[i]));
-  }
-  if (filters.includes("scale"))  b = b.map(v=>v.map(x=>x*0.5));
-  if (filters.includes("dedup"))  b = dedupVectors(b);
-  return b;
-}
-function meanVector(batch:number[][]): number[] {
-  const d = batch[0]?.length ?? 0;
-  const sum = Array(d).fill(0);
-  batch.forEach(v=>v.forEach((x,i)=>sum[i]+=x));
-  return sum.map(x=>x/(batch.length||1));
-}
-function dedupVectors(batch:number[][]): number[][] {
-  const seen = new Set<string>();
-  const out: number[][] = [];
-  for (const v of batch) {
-    const k = hash(JSON.stringify(v));
-    if (!seen.has(k)) { seen.add(k); out.push(v); }
-  }
-  return out;
-}
-function unitRef(d:number): number[] {
-  const v = Array(d).fill(0); v[0]=1; return v;
-}
-function alignmentScoreFromBatch(batchSig?: string, ref?: number[]): number {
-  // placeholder: derive pseudo-score from batchSig entropy
-  if (!batchSig) return 0.5;
-  const entropy = [...batchSig].reduce((a,c)=>a + c.charCodeAt(0)%7, 0) % 100;
-  return 0.7 + (entropy/1000); // ~0.7..0.8
-}
-function clamp(v:number, lo:number, hi:number){ return Math.max(lo, Math.min(hi, v)); }
-function touch<S extends VcaState>(s:S): S { s.updatedAt = now(); return s; }
-===
-===// vca_core.ts — v15 Crystal
-// Backend only. No UI text unless explicitly surfaced.
-
-// ─────────────────────────────────────────────────────────────
-// Types
-// ─────────────────────────────────────────────────────────────
-export type UUID = string;
-export type ISODate = string;
-export type Pulse = "green" | "red";
-
-export type ScalingMode = "linear" | "logarithmic";
-export type SyncMode = "realtime" | "batch";
-export type ExportFormat = "json" | "csv" | "binary";
-export type SignMethod = "vectorhash" | "resonance" | "sha512";
-
-export interface VectorSpace {
-  dimension: number;                 // e.g., 128
-  scaling: ScalingMode;              // linear | logarithmic
-  reference?: number[];              // normalized ref vector
-}
-
-export interface CaptureSpec {
-  source: string;                    // "input_07", URI, stream
-  normalizeSchema: string;           // "standard", "zscore", etc.
-  filters?: ("clip"|"scale"|"center"|"dedup")[];
-}
-
-export interface CoherenceSpec {
-  threshold: number;                 // 0..1
-  referenceId?: string;              // "ref_vx01"
-}
-
-export interface SyncSpec {
-  mode: SyncMode;                    // realtime | batch
-  alignTo?: number[] | "ref_main";
-  mergeSets?: { A: string; B: string };
-}
-
-export interface Anomaly {
-  code: string;                      // "VX-302"
-  description: string;
-  severity: "low" | "medium" | "high";
-}
-
-export interface ExportSpec {
-  format: ExportFormat;
-  destination: string;               // url/path
-  sign: SignMethod;
-}
-
-export interface FinalizeSpec {
-  archivePath?: string;
-  sign?: SignMethod;                 // resonance | sha512
-  purge?: boolean;
-}
-
-export interface VcaSignals {
-  alignmentScore: number;            // 0..1
-  deviationScore: number;            // 0..1 (lower is better)
-  pulse: Pulse;                      // TriForce proxy
-  hashes: Record<string,string>;     // stage -> hash
-}
-
-// ─────────────────────────────────────────────────────────────
-// State
-// ─────────────────────────────────────────────────────────────
-export interface VcaState {
-  sessionId: UUID;
-  createdAt: ISODate;
-  updatedAt: ISODate;
-
-  // Point Zero
-  seedSignature: string;
-  resonanceSeed: string;
-
-  // C01 Vector Space
-  space?: VectorSpace;
-  spaceSeal?: string;
-
-  // C02 Capture
-  captureSignature?: string;
-  batchSignature?: string;
-
-  // C03 Coherence
-  coherenceSeal?: string;
-  alignmentScore?: number;
-  deviationScore?: number;
-
-  // C04 Sync
-  syncSeal?: string;
-
-  // C05 Anomaly
-  lastAnomalyCode?: string;
-
-  // C06 Export
-  exportManifestId?: string;
-
-  // C07 Finalization
-  finalSeal?: string;
-
-  // Capsula∞
-  infiniteMode?: boolean;
-  infiniteSeal?: string;
-
-  // Policy
-  constructiveOnly: boolean;
-}
-
-// ─────────────────────────────────────────────────────────────
-// Guards (constructive-only)
-// ─────────────────────────────────────────────────────────────
-function assertConstructive(intentOrLabel: string) {
-  const destructive = /(weapon|harm|destruct|exploit|attack|abuse)/i;
-  if (destructive.test(intentOrLabel)) {
-    throw new Error("SOFT-LOCK: CONSTRUCTIVE ONLY");
-  }
-}
-
-// ─────────────────────────────────────────────────────────────
-// Core API (mirrors Point Zero; C01–C07; Capsula∞)
-// ─────────────────────────────────────────────────────────────
-export const VCA = {
-  // KAPSEL 0 – POINT ZERO
-  initPointZero(seed: string): VcaState {
-    const sessionId = uuid4();
-    const seedSignature = hash(seed);
-    const resonanceSeed = hash(`${seed}::${sessionId}`);
-    return touch({
-      sessionId,
-      createdAt: now(),
-      updatedAt: now(),
-      seedSignature,
-      resonanceSeed,
-      constructiveOnly: true,
-    });
-  },
-
-  bindCore(state: VcaState, core: string[] = ["math","linalg","crypto"]): VcaState {
-    // no-op placeholder for core binding
-    return touch(state);
-  },
-
-  seed(state: VcaState, signature: string): VcaState {
-    state.seedSignature = hash(signature);
-    return touch(state);
-  },
-
-  // C01 – VECTOR SPACE DEFINITION
-  defineVectorSpace(state: VcaState, dimension: number, scaling: ScalingMode = "linear"): VcaState {
-    state.space = { dimension, scaling };
-    state.spaceSeal = hash(`space:${dimension}:${scaling}`);
-    return touch(state);
-  },
-
-  setReferenceVector(state: VcaState, ref: number[]): VcaState {
-    if (!state.space) throw new Error("Vector space not defined");
-    state.space.reference = normalize(ref);
-    state.spaceSeal = hash(`space:${state.space.dimension}:${state.space.scaling}:ref`);
-    return touch(state);
-  },
-
-  // C02 – CAPTURE & INGESTION
-  captureVectorBatch(state: VcaState, spec: CaptureSpec, vectors: number[][]): VcaState {
-    assertConstructive(spec.source);
-    const pre = applyFilters(vectors, spec.filters ?? []);
-    const norm = normalizeBatch(pre, spec.normalizeSchema);
-    state.captureSignature = hash(JSON.stringify(spec));
-    state.batchSignature   = hash(JSON.stringify(norm.slice(0,8))); // sample signature
-    return touch(state);
-  },
-
-  // C03 – COHERENCE ANALYSIS
-  computeCoherence(state: VcaState, spec: CoherenceSpec): VcaState {
-    if (!state.space) throw new Error("Vector space not defined");
-    const ref = state.space.reference ?? unitRef(state.space.dimension);
-    const score = alignmentScoreFromBatch(state.batchSignature, ref);
-    const deviation = Math.max(0, 1 - score);
-    state.alignmentScore = clamp(score, 0, 1);
-    state.deviationScore = clamp(deviation, 0, 1);
-    state.coherenceSeal  = hash(`coh:${spec.threshold}:${state.alignmentScore?.toFixed(3)}`);
-    return touch(state);
-  },
-
-  analyzeDeviation(state: VcaState, referenceId: string): VcaState {
-    // placeholder: fold reference into seal
-    state.coherenceSeal = hash(`${state.coherenceSeal}:${referenceId}`);
-    return touch(state);
-  },
-
-  // C04 – VECTOR SYNCHRONIZATION
-  startSynchronization(state: VcaState, spec: SyncSpec): VcaState {
-    state.syncSeal = hash(`sync:${spec.mode}:${spec.alignTo ? 'A' : '-'}:${spec.mergeSets ? 'M' : '-'}`);
-    return touch(state);
-  },
-
-  // C05 – ANOMALY DETECTION & HANDLING
-  logAnomaly(state: VcaState, anomaly: Anomaly): VcaState {
-    state.lastAnomalyCode = `${anomaly.code}:${anomaly.severity}`;
-    return touch(state);
-  },
-
-  resolveAnomaly(state: VcaState, code: string): VcaState {
-    if (state.lastAnomalyCode?.startsWith(code)) state.lastAnomalyCode = undefined;
-    return touch(state);
-  },
-
-  escalateAnomaly(state: VcaState, level: "low"|"medium"|"high"): VcaState {
-    if (level === "high") throw new Error("Anomaly escalation required");
-    return touch(state);
-  },
-
-  // C06 – OUTPUT & EXPORT
-  defineOutputFormat(state: VcaState, format: ExportFormat): VcaState {
-    state.exportManifestId = `fmt_${format}_${shortHash(state.sessionId)}`;
-    return touch(state);
-  },
-
-  exportVectors(state: VcaState, spec: ExportSpec): VcaState {
-    state.exportManifestId = `x_${shortHash(spec.destination + spec.format + spec.sign)}`;
-    return touch(state);
-  },
-
-  signExport(state: VcaState, method: SignMethod): VcaState {
-    state.exportManifestId = `${state.exportManifestId}_${method}`;
-    return touch(state);
-  },
-
- // C07 – FINALIZATION & SIGNATURE
-finalizeSession(state: VcaState, spec: FinalizeSpec = {}): VcaState {
-  const sign = spec.sign ?? "resonance";
-  state.finalSeal = hash(`final:${state.sessionId}:${sign}`);
-  if (spec.archivePath) {
-    state.finalSeal = hash(`${state.finalSeal}:${spec.archivePath}`);
-  }
-  // removed purge() → no red underline
-  return touch(state);
-},
-
-  // CAPSULA ∞ — INFINITE SYNC
-  enableInfiniteMode(state: VcaState): VcaState {
-    state.infiniteMode = true;
-    state.infiniteSeal = hash(`inf:${state.sessionId}:${now()}`);
-    return touch(state);
-  },
-
-  // Triketon-2048 — triple-knot seal hook
-  triketonSeal(payload: string): string {
-    return `tri_${hash(payload)}_${hash(payload + '•')}_${hash('•' + payload)}`;
-  },
-
-  // One-shot runner for DevLoop steps
-  runOnce(
-    intentLabel: string,
-    dimension: number,
-    batch: number[][],
-    opts?: {
-      scaling?: ScalingMode;
-      capture?: CaptureSpec;
-      coherence?: CoherenceSpec;
-      sync?: SyncSpec;
-      export?: ExportSpec;
-    }
-  ): { signals: VcaSignals; state: VcaState } {
-    assertConstructive(intentLabel);
-
-    let s = this.initPointZero(`vca:${intentLabel}`);
-    s = this.bindCore(s);
-    s = this.defineVectorSpace(s, dimension, opts?.scaling ?? "linear");
-    s = this.setReferenceVector(s, unitRef(dimension));
-    s = this.captureVectorBatch(s, opts?.capture ?? { source: "batch", normalizeSchema: "standard" }, batch);
-    s = this.computeCoherence(s, opts?.coherence ?? { threshold: 0.88 });
-    if (opts?.sync) s = this.startSynchronization(s, opts.sync);
-    if (opts?.export) {
-      s = this.defineOutputFormat(s, opts.export.format);
-      s = this.exportVectors(s, opts.export);
-      s = this.signExport(s, opts.export.sign);
-    }
-    s = this.finalizeSession(s, { sign: "resonance" });
-
-    const pulse: Pulse = (s.alignmentScore ?? 0) >= (opts?.coherence?.threshold ?? 0.88) ? "green" : "red";
-
-    const hashes = {
-      seed: s.seedSignature,
-      resonance: s.resonanceSeed,
-      space: s.spaceSeal ?? "",
-      capture: s.captureSignature ?? "",
-      batch: s.batchSignature ?? "",
-      coherence: s.coherenceSeal ?? "",
-      sync: s.syncSeal ?? "",
-      export: s.exportManifestId ?? "",
-      final: s.finalSeal ?? "",
-      triketon: this.triketonSeal((s.coherenceSeal ?? "") + (s.finalSeal ?? "")),
-    };
-
-    return {
-      signals: {
-        alignmentScore: s.alignmentScore ?? 0,
-        deviationScore: s.deviationScore ?? 1,
-        pulse,
-        hashes,
-      },
-      state: s,
-    };
-  },
-};
-
-// ─────────────────────────────────────────────────────────────
-// Utilities (compact stubs; replace with real engines in prod)
-// ─────────────────────────────────────────────────────────────
-function uuid4(): UUID {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c=>{
-    const r=(Math.random()*16)|0, v=c==="x"?r:(r&0x3|0x8); return v.toString(16);
-  });
-}
-function now(): ISODate { return new Date().toISOString(); }
-function hash(s: string): string { return btoa(unescape(encodeURIComponent(s))).slice(0,32); }
-function shortHash(s: string): string { return hash(s).slice(0,12); }
-
-function normalize(v: number[]): number[] {
-  const n = Math.sqrt(v.reduce((a,x)=>a+x*x,0)) || 1;
-  return v.map(x=>x/n);
-}
-function normalizeBatch(batch:number[][], schema:string): number[][] {
-  // simple L2 norm per vector; hook schema logic here
-  return batch.map(v=>normalize(v));
-}
-function applyFilters(batch:number[][], filters:string[]): number[][] {
-  let b = batch.slice();
-  if (filters.includes("clip"))  b = b.map(v=>v.map(x=>Math.max(-1, Math.min(1,x))));
-  if (filters.includes("center")) {
-    const mean = meanVector(b);
-    b = b.map(v=>v.map((x,i)=>x-mean[i]));
-  }
-  if (filters.includes("scale"))  b = b.map(v=>v.map(x=>x*0.5));
-  if (filters.includes("dedup"))  b = dedupVectors(b);
-  return b;
-}
-function meanVector(batch:number[][]): number[] {
-  const d = batch[0]?.length ?? 0;
-  const sum = Array(d).fill(0);
-  batch.forEach(v=>v.forEach((x,i)=>sum[i]+=x));
-  return sum.map(x=>x/(batch.length||1));
-}
-function dedupVectors(batch:number[][]): number[][] {
-  const seen = new Set<string>();
-  const out: number[][] = [];
-  for (const v of batch) {
-    const k = hash(JSON.stringify(v));
-    if (!seen.has(k)) { seen.add(k); out.push(v); }
-  }
-  return out;
-}
-function unitRef(d:number): number[] {
-  const v = Array(d).fill(0); v[0]=1; return v;
-}
-function alignmentScoreFromBatch(batchSig?: string, ref?: number[]): number {
-  // placeholder: derive pseudo-score from batchSig entropy
-  if (!batchSig) return 0.5;
-  const entropy = [...batchSig].reduce((a,c)=>a + c.charCodeAt(0)%7, 0) % 100;
-  return 0.7 + (entropy/1000); // ~0.7..0.8
-}
-function clamp(v:number, lo:number, hi:number){ return Math.max(lo, Math.min(hi, v)); }
-function touch<S extends VcaState>(s:S): S { s.updatedAt = now(); return s; }
-===
-===// quadron_core.ts — v15 Crystal
-// Backend only. Frontend shows nothing unless explicitly surfaced.
-// Mirrors QUADRON 1.0 capsules C0–C13 + Capsula∞. :contentReference[oaicite:1]{index=1}
-
-/* ────────────────────────────────────────────────────────────
- * Types
- * ──────────────────────────────────────────────────────────── */
-export type UUID = string;
-export type ISODate = string;
-export type Pulse = "green" | "red";
-
-export type AuthMode = "token" | "certificate" | "resonance";
-export type Scope = "default" | "extended" | "custom";
-export type ValidateMode = "resonance" | "structural" | "hybrid";
-export type Depth = "base" | "extended" | "full";
-export type ExportFormat = "json" | "xml" | "csv" | "custom";
-export type SignatureMethod = "resonance" | "sha512" | "quantumhash";
-export type ErrorPolicy = "strict" | "moderate" | "lenient";
-
-export interface QuadronSignals {
-  coherenceScore: number;     // C02/C04 combined
-  integrityOk: boolean;
-  pulse: Pulse;               // TriForce proxy
-  hashes: Record<string,string>;
-}
-
-export interface QuadronState {
-  sessionId: UUID;
-  createdAt: ISODate;
-  updatedAt: ISODate;
-
-  // C0 – Point Zero
-  coreBound?: boolean;
-  seedSignature?: string;
-  resonanceHash?: string;
-  initialValidation?: string; // seal
-
-  // C1 – Initiation & Connection
-  authMode?: AuthMode;
-  authToken?: string;
-  fieldScope?: Scope;
-  channelUri?: string;
-
-  // C2 – Data Coherence Matrix
-  inputStreamId?: string;
-  screeningThreshold?: number;
-  normalizationSchema?: string;
-  coherenceScore?: number;
-  validationReportSeal?: string;
-
-  // C3 – Command Chains
-  currentChain?: { name: string; commands: Array<{cmd:string; params:any}> };
-  chainSeal?: string;
-
-  // C4 – Validation Modes
-  securityLevel?: "low"|"medium"|"high";
-  finalValidationSeal?: string;
-  integrityOk?: boolean;
-
-  // C5 – Multiphasic Inputs
-  clusters?: Record<string, { streams: string[]; timeframe?: [string,string]; perspective?: string }>;
-
-  // C6 – Transdimensional Comparison
-  crossReportSeal?: string;
-
-  // C7 – Audit Trail
-  auditEnabled?: boolean;
-  auditSeal?: string;
-
-  // C8 – Provenance
-  provenanceLedger?: Record<string, { meta:any; seal:string }>;
-
-  // C9 – Auth/Roles
-  users?: Record<string, { role:"admin"|"operator"|"auditor"; mfa?: string }>;
-
-  // C10 – Output & Export
-  exportDefinition?: { format: ExportFormat; schema: string };
-  exportSeal?: string;
-
-  // C11 – Integrations
-  integrations?: { rest?: string; webhooks?: Array<{url:string; events:string[]}>; streams?: string[] };
-
-  // C12 – Error/Anomaly
-  errorPolicy?: ErrorPolicy;
-  lastError?: string;
-
-  // C13 – Finalization
-  finalSeal?: string;
-
-  // Capsula∞
-  infiniteMode?: boolean;
-  infiniteSeal?: string;
-
-  constructiveOnly: true;
-}
-
-/* ────────────────────────────────────────────────────────────
- * Guards (constructive-only)
- * ──────────────────────────────────────────────────────────── */
-function assertConstructive(text: string) {
-  const destructive = /(weapon|harm|destruct|exploit|attack|abuse)/i;
-  if (destructive.test(text)) throw new Error("SOFT-LOCK: CONSTRUCTIVE ONLY");
-}
-
-/* ────────────────────────────────────────────────────────────
- * Core API — mirrors C0…C13 + Capsula∞ from Quadron.txt
- * ──────────────────────────────────────────────────────────── */
-export const QUADRON = {
-  // C0 – POINT ZERO (init_point_zero, bind, seed, validate) :contentReference[oaicite:2]{index=2}
-  initPointZero(seed: string): QuadronState {
-    const sessionId = uuid4();
-    return touch({
-      sessionId,
-      createdAt: now(),
-      updatedAt: now(),
-      coreBound: false,
-      seedSignature: hash(seed),
-      resonanceHash: hash(`${seed}::${sessionId}`),
-      constructiveOnly: true,
-    });
-  },
-  bindCore(state: QuadronState, core: string[] = ["io","crypto","audit"]): QuadronState {
-    state.coreBound = true; return touch(state);
-  },
-  seed(state: QuadronState, signature: string): QuadronState {
-    state.seedSignature = hash(signature); return touch(state);
-  },
-  validate(state: QuadronState, mode: ValidateMode = "resonance", depth: Depth = "base"): QuadronState {
-    state.initialValidation = hash(`val0:${mode}:${depth}:${state.seedSignature}`);
-    return touch(state);
-  },
-
-  // C1 – INITIATION & CONNECTION (start_session, authenticate, bind(field), open_channel) :contentReference[oaicite:3]{index=3}
-  startSession(state: QuadronState, authMode: AuthMode = "token"): QuadronState {
-    state.authMode = authMode; return touch(state);
-  },
-  authenticate(state: QuadronState, token: string): QuadronState {
-    state.authToken = token; return touch(state);
-  },
-  bindField(state: QuadronState, scope: Scope = "default"): QuadronState {
-    state.fieldScope = scope; return touch(state);
-  },
-  openChannel(state: QuadronState, uri: string): QuadronState {
-    state.channelUri = uri; return touch(state);
-  },
-
-  // C2 – DATENKOHÄRENZMATRIX (capture, screen_frequencies, normalize, evaluate_coherence) :contentReference[oaicite:4]{index=4}
-  capture(state: QuadronState, inputStreamId: string): QuadronState {
-    state.inputStreamId = inputStreamId; return touch(state);
-  },
-  screenFrequencies(state: QuadronState, threshold = 0.85): QuadronState {
-    state.screeningThreshold = threshold; return touch(state);
-  },
-  normalize(state: QuadronState, schema: "default"|"extended"|"custom" = "default"): QuadronState {
-    state.normalizationSchema = schema; return touch(state);
-  },
-  evaluateCoherence(state: QuadronState): QuadronState {
-    // pseudo-score based on available signals
-    const base = 0.75 + (state.screeningThreshold ?? 0.85)*0.1;
-    state.coherenceScore = clamp(base, 0, 1);
-    state.validationReportSeal = hash(`coh:${state.coherenceScore.toFixed(3)}:${state.normalizationSchema ?? "default"}`);
-    return touch(state);
-  },
-
-  // C3 – RESONANCE COMMAND CHAINS (command_chain, append_command, execute_chain, abort_chain) :contentReference[oaicite:5]{index=5}
-  commandChain(state: QuadronState, name: string): QuadronState {
-    state.currentChain = { name, commands: [] }; return touch(state);
-  },
-  appendCommand(state: QuadronState, cmd: string, params: any): QuadronState {
-    state.currentChain?.commands.push({cmd, params}); return touch(state);
-  },
-  executeChain(state: QuadronState): QuadronState {
-    state.chainSeal = hash(`chain:${state.currentChain?.name}:${(state.currentChain?.commands.length ?? 0)}`);
-    return touch(state);
-  },
-  abortChain(state: QuadronState): QuadronState {
-    state.currentChain = undefined; state.chainSeal = hash(`chain:aborted`); return touch(state);
-  },
-
-  // C4 – VALIDATION MODES (validate, set_security_level, generate_validation_report) :contentReference[oaicite:6]{index=6}
-  setSecurityLevel(state: QuadronState, level: "low"|"medium"|"high" = "high"): QuadronState {
-    state.securityLevel = level; return touch(state);
-  },
-  validateFinal(state: QuadronState, mode: ValidateMode = "hybrid", depth: Depth = "full"): QuadronState {
-    state.finalValidationSeal = hash(`val4:${mode}:${depth}:${state.validationReportSeal ?? ""}`);
-    state.integrityOk = (state.coherenceScore ?? 0) >= 0.85;
-    return touch(state);
-  },
-
-  // C5 – MULTIPHASIC INPUTS (define_input_cluster, add_stream_to_cluster, set_timeframe, attach_perspective) :contentReference[oaicite:7]{index=7}
-  defineInputCluster(state: QuadronState, name: string): QuadronState {
-    state.clusters = state.clusters ?? {}; state.clusters[name] = { streams: [] }; return touch(state);
-  },
-  addStreamToCluster(state: QuadronState, name: string, streamId: string): QuadronState {
-    state.clusters = state.clusters ?? {}; (state.clusters[name] ??= {streams: []}).streams.push(streamId); return touch(state);
-  },
-  setTimeframe(state: QuadronState, name: string, start: string, end: string): QuadronState {
-    state.clusters = state.clusters ?? {}; (state.clusters[name] ??= {streams: []}).timeframe = [start,end]; return touch(state);
-  },
-  attachPerspective(state: QuadronState, name: string, label: string): QuadronState {
-    state.clusters = state.clusters ?? {}; (state.clusters[name] ??= {streams: []}).perspective = label; return touch(state);
-  },
-
-  // C6 – TRANSDIMENSIONAL COMPARISON (compare_historical, project_scenario, generate_cross_report) :contentReference[oaicite:8]{index=8}
-  compareHistorical(state: QuadronState, referenceId: string): QuadronState {
-    state.crossReportSeal = hash(`hist:${referenceId}`); return touch(state);
-  },
-  projectScenario(state: QuadronState, modelId: string): QuadronState {
-    state.crossReportSeal = hash(`${state.crossReportSeal}:proj:${modelId}`); return touch(state);
-  },
-  generateCrossReport(state: QuadronState, format: "json"|"pdf" = "json"): QuadronState {
-    state.crossReportSeal = hash(`${state.crossReportSeal}:${format}`); return touch(state);
-  },
-
-  // C7 – AUDIT TRAIL (enable_audit_trail, retrieve_audit_log, sign_audit_log) :contentReference[oaicite:9]{index=9}
-  enableAuditTrail(state: QuadronState): QuadronState {
-    state.auditEnabled = true; state.auditSeal = hash(`audit:${state.sessionId}`); return touch(state);
-  },
-  sealAuditLog(state: QuadronState, method: SignatureMethod = "quantumhash"): QuadronState {
-    state.auditSeal = hash(`${state.auditSeal}:${method}`); return touch(state);
-  },
-
-  // C8 – PROVENANCE (register_source, seal_provenance, retrieve_provenance) :contentReference[oaicite:10]{index=10}
-  registerSource(state: QuadronState, sourceId: string, metadata: any): QuadronState {
-    state.provenanceLedger = state.provenanceLedger ?? {};
-    state.provenanceLedger[sourceId] = { meta: metadata, seal: "" };
-    return touch(state);
-  },
-  sealProvenance(state: QuadronState, sourceId: string): QuadronState {
-    const entry = state.provenanceLedger?.[sourceId];
-    if (entry) entry.seal = hash(`prov:${sourceId}:${JSON.stringify(entry.meta)}`);
-    return touch(state);
-  },
-  retrieveProvenance(state: QuadronState, sourceId: string): { meta:any; seal:string } | undefined {
-    return state.provenanceLedger?.[sourceId];
-  },
-
-  // C9 – AUTH & ROLES (create_user, assign_permissions, authenticate_user, MFA) :contentReference[oaicite:11]{index=11}
-  createUser(state: QuadronState, userId: string, role: "admin"|"operator"|"auditor"): QuadronState {
-    state.users = state.users ?? {}; state.users[userId] = { role }; return touch(state);
-  },
-  setMfa(state: QuadronState, userId: string, secret: string): QuadronState {
-    state.users = state.users ?? {}; if (state.users[userId]) state.users[userId].mfa = secret; return touch(state);
-  },
-
-  // C10 – OUTPUT/EXPORT (define_export_format, export_data, sign_export) :contentReference[oaicite:12]{index=12}
-  defineExportFormat(state: QuadronState, format: ExportFormat, schema: string): QuadronState {
-    state.exportDefinition = { format, schema }; return touch(state);
-  },
-  exportData(state: QuadronState, destination: string): QuadronState {
-    const def = state.exportDefinition ?? { format: "json", schema: "schema_v1" as const };
-    state.exportSeal = hash(`exp:${destination}:${def.format}:${def.schema}`); return touch(state);
-  },
-  signExport(state: QuadronState, method: SignatureMethod = "resonance"): QuadronState {
-    state.exportSeal = hash(`${state.exportSeal}:${method}`); return touch(state);
-  },
-
-  // C11 – INTEGRATIONS (enable_rest_api, subscribe_webhook, open_event_stream) :contentReference[oaicite:13]{index=13}
-  enableRestApi(state: QuadronState, endpoint: string): QuadronState {
-    state.integrations = state.integrations ?? {}; state.integrations.rest = endpoint; return touch(state);
-  },
-  subscribeWebhook(state: QuadronState, url: string, events: string[]): QuadronState {
-    state.integrations = state.integrations ?? {}; (state.integrations.webhooks ??= []).push({url, events}); return touch(state);
-  },
-  openEventStream(state: QuadronState, channel: string): QuadronState {
-    state.integrations = state.integrations ?? {}; (state.integrations.streams ??= []).push(channel); return touch(state);
-  },
-
-  // C12 – ERROR & ANOMALY (set_error_policy, log_error, trigger_recovery, escalate_issue) :contentReference[oaicite:14]{index=14}
-  setErrorPolicy(state: QuadronState, policy: ErrorPolicy = "moderate"): QuadronState {
-    state.errorPolicy = policy; return touch(state);
-  },
-  logError(state: QuadronState, code: string, description: string): QuadronState {
-    state.lastError = `${code}:${description}`; return touch(state);
-  },
-  triggerRecovery(state: QuadronState, mode: "partial"|"full" = "partial"): QuadronState {
-    state.lastError = undefined;
-    state.finalValidationSeal = hash(`${state.finalValidationSeal}:recovery:${mode}`);
-    return touch(state);
-  },
-
-  // C13 – FINALIZATION & SIGNATURE (finalize_session, seal_protocol, generate_final_report) :contentReference[oaicite:15]{index=15}
-  finalizeSession(state: QuadronState): QuadronState {
-    state.finalSeal = hash(`final:${state.sessionId}`);
-    return touch(state);
-  },
-  sealProtocol(state: QuadronState, method: SignatureMethod = "resonance"): QuadronState {
-    state.finalSeal = hash(`${state.finalSeal}:${method}`); return touch(state);
-  },
-
-  // Capsula∞ – Point Zero Layer (enable_infinite_mode, capture_nonlinear, synchronize_fields) :contentReference[oaicite:16]{index=16}
-  enableInfiniteMode(state: QuadronState): QuadronState {
-    state.infiniteMode = true; state.infiniteSeal = hash(`inf:${state.sessionId}:${now()}`); return touch(state);
-  },
-
-  // Triketon-2048 — triple-knot seal
-  triketonSeal(payload: string): string {
-    return `tri_${hash(payload)}_${hash(payload + '•')}_${hash('•' + payload)}`;
-  },
-
-  /* One-shot DevLoop runner
-     Produces TriForce-ready pulse + hashes; keeps frontend silent. */
-  runOnce(
-    intent: string,
-    opts?: {
-      authMode?: AuthMode;
-      scope?: Scope;
-      channel?: string;
-      streamId?: string;
-      threshold?: number;
-      normalizeSchema?: "default"|"extended"|"custom";
-      validate?: { mode?: ValidateMode; depth?: Depth; security?: "low"|"medium"|"high" };
-      export?: { format?: ExportFormat; schema?: string; destination?: string; signature?: SignatureMethod };
-    }
-  ): { signals: QuadronSignals; state: QuadronState } {
-    assertConstructive(intent);
-
-    let s = this.initPointZero(`quadron:${intent}`);
-    s = this.bindCore(s);
-    s = this.validate(s, "resonance", "base");
-
-    s = this.startSession(s, opts?.authMode ?? "token");
-    s = this.authenticate(s, "eyJhbGciOiJI..."); // replace with real
-    s = this.bindField(s, opts?.scope ?? "extended");
-    s = this.openChannel(s, opts?.channel ?? "wss://quadron/stream");
-
-    s = this.capture(s, opts?.streamId ?? "stream_alpha");
-    s = this.screenFrequencies(s, opts?.threshold ?? 0.88);
-    s = this.normalize(s, opts?.normalizeSchema ?? "extended");
-    s = this.evaluateCoherence(s);
-
-    s = this.commandChain(s, "initial_alignment");
-    s = this.appendCommand(s, "normalize", { schema: "extended" });
-    s = this.appendCommand(s, "screen_frequencies", { threshold: s.screeningThreshold });
-    s = this.executeChain(s);
-
-    s = this.setSecurityLevel(s, opts?.validate?.security ?? "high");
-    s = this.validateFinal(s, opts?.validate?.mode ?? "hybrid", opts?.validate?.depth ?? "full");
-
-    if (opts?.export?.destination) {
-      s = this.defineExportFormat(s, opts.export.format ?? "json", opts.export.schema ?? "schema_v2");
-      s = this.exportData(s, opts.export.destination);
-      s = this.signExport(s, opts.export.signature ?? "resonance");
-    }
-
-    s = this.enableAuditTrail(s);
-    s = this.sealAuditLog(s, "quantumhash");
-    s = this.finalizeSession(s);
-    s = this.sealProtocol(s, "resonance");
-
-    const pulse: Pulse = (s.coherenceScore ?? 0) >= 0.88 && !!s.integrityOk ? "green" : "red";
-    const hashes = {
-      point0: s.initialValidation ?? "",
-      chain: s.chainSeal ?? "",
-      coh: s.validationReportSeal ?? "",
-      final: s.finalSeal ?? "",
-      audit: s.auditSeal ?? "",
-      export: s.exportSeal ?? "",
-      triketon: this.triketonSeal(`${s.finalSeal ?? ""}:${s.auditSeal ?? ""}`),
-    };
-
-    return {
-      signals: {
-        coherenceScore: s.coherenceScore ?? 0,
-        integrityOk: !!s.integrityOk,
-        pulse,
-        hashes,
-      },
-      state: s,
-    };
-  },
-};
 
 /* ────────────────────────────────────────────────────────────
  * Utilities (compact stubs; replace with real engines)
