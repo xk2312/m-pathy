@@ -319,7 +319,9 @@ div[data-convo="1"] {
 }
 
 /* ---------- Tables ---------- */
-.md .md-table-wrap {
+/* Apply to BOTH .md and .markdown (alias) */
+.md .md-table-wrap,
+.markdown .md-table-wrap {
   overflow-x: auto;
   margin: 10px 0 14px;
   border-radius: 10px;
@@ -328,21 +330,23 @@ div[data-convo="1"] {
   box-shadow: 0 8px 24px rgba(0,0,0,0.25);
 }
 
-.md table {
+.md table,
+.markdown table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 }
 
-.md th,
-.md td {
+.md th, .md td,
+.markdown th, .markdown td {
   padding: 10px 12px;
   text-align: left;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   vertical-align: top;
 }
 
-.md thead th {
+.md thead th,
+.markdown thead th {
   font-weight: 700;
   background: rgba(255,255,255,0.04);
   position: sticky;
@@ -350,15 +354,23 @@ div[data-convo="1"] {
   z-index: 1;
 }
 
-.md tbody tr:nth-child(even) td {
+.md tbody tr:nth-child(even) td,
+.markdown tbody tr:nth-child(even) td {
   background: rgba(255,255,255,0.02);
 }
 
 /* runde Ecken an der Außenkante */
-.md table tr:first-child th:first-child { border-top-left-radius: 10px; }
-.md table tr:first-child th:last-child  { border-top-right-radius: 10px; }
-.md table tr:last-child  td:first-child { border-bottom-left-radius: 10px; }
-.md table tr:last-child  td:last-child  { border-bottom-right-radius: 10px; }
+.md table tr:first-child th:first-child,
+.markdown table tr:first-child th:first-child { border-top-left-radius: 10px; }
+
+.md table tr:first-child th:last-child,
+.markdown table tr:first-child th:last-child  { border-top-right-radius: 10px; }
+
+.md table tr:last-child  td:first-child,
+.markdown table tr:last-child  td:first-child { border-bottom-left-radius: 10px; }
+
+.md table tr:last-child  td:last-child,
+.markdown table tr:last-child  td:last-child  { border-bottom-right-radius: 10px; }
 
 /* ---------- Code: fenced blocks ---------- */
 .md .md-code {
@@ -406,3 +418,21 @@ div[data-convo="1"] {
 /* ---------- Lists spacing ---------- */
 .md ul, .md ol { padding-left: 1.25em; margin: 8px 0 12px; }
 .md li + li    { margin-top: 4px; }
+
+/* === GPTM: Table Mobile Fallback (no wrapper needed) === */
+/* On narrow screens, allow inline scroll for tables that were not wrapped. */
+@media (max-width: 768px) {
+  .md table,
+  .markdown table {
+    display: block;              /* enable overflow on the element itself */
+    overflow-x: auto;            /* horizontal scroll */
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+
+  /* keep cells readable when narrow; you may remove if wrapping is preferred */
+  .md table th, .md table td,
+  .markdown table th, .markdown table td {
+    white-space: nowrap;         /* prevent ugly multi-line cell breaks */
+  }
+}
