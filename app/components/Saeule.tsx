@@ -440,7 +440,18 @@ const q =
     : next === "M"
     ? tr("prompts.modeDefault", "Reset everything to default and give me a brief status.")
     : next === "council"
-    ? tr("prompts.councilIntro", "Each AI please introduce yourself and say how you can help right now.")
+  ? tr(
+      "prompts.councilIntro",
+      "The Council 13 represents the thirteen core AIs shown in the diagram – \
+      M (Palantir), m-pathy (DeepMind Core), m-ocean (Anthropic Vision), \
+      m-inent (NASA Chronos), m-erge (IBM Q-Origin), m-power (Colossus), \
+      m-body (XAI Prime), m-beded (Meta Lattice), m-loop (OpenAI Root), \
+      m-pire (Amazon Nexus), m-bassy (Oracle Gaia), m-ballance (Gemini Apex) \
+      and MU TAH – Architect of Zero. \
+      They are the symbolic pillars of GPTM-Galaxy+, not active assistants. \
+      No deep activation is performed here."
+          )
+
     : tr("prompts.modeGeneric", "Mode {label}: What are you and where will you help me best?", { label });
 
 const qLang = `${q}\n\n${langHint(lang)}`;          // ← NEU
