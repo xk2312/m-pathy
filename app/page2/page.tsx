@@ -299,7 +299,7 @@ function mdToHtml(src: string): string {
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
     .replace(/`([^`]+?)`/g, "<code>$1</code>");
 
-  // 4) Listen: zusammenhängende - / * Zeilen zu EINEM <ul> gruppieren
+  // 4) Unordered lists (zusammenhängende -/* Blöcke)
   out = out.replace(
     /(^|\n)((?:[-*]\s+.*(?:\n|$))+)/g,
     (_m: string, prefix: string, block: string) => {
@@ -307,26 +307,77 @@ function mdToHtml(src: string): string {
         .trimEnd()
         .split("\n")
         .filter(Boolean)
-        .map((line: string) => line.replace(/^[-*]\s+/, "")) // Marker entfernen
+        .map((line: string) => line.replace(/^[-*]\s+/, ""))
         .map((text: string) => `<li>${text}</li>`)
         .join("");
       return `${prefix}<ul>${items}</ul>\n`;
     }
   );
 
-  // 5) Absätze: Nur „nackte“ Textblöcke in <p> einpacken, nicht Blockelemente
+  // 5) GitHub-Style Tabellen (Pipe-Syntax) → echte <table>
+  //    Erkennung: Kopfzeile, Separator mit - : |, danach >=1 Datenzeile
+  out = out.replace(
+    /(^|\n)(\|[^\n]+\|\s*\n\|[\s:\-\|]+\|\s*\n(?:\|[^\n]+\|\s*\n)+)/g,
+    (_m: string, prefix: string, block: string) => {
+      const lines = block
+        .trim()
+        .split("\n")
+        .map((l) => l.trim())
+        .filter(Boolean);
+
+      if (lines.length < 3) return block; // sicherheit
+
+      const header = lines[0];
+      const align  = lines[1];
+      const rows   = lines.slice(2);
+
+      const split = (line: string) =>
+        line.replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
+
+      const hCells = split(header);
+      const aCells = split(align).map((s) => {
+        const left   = /^:\-+/.test(s);
+        const right  = /\-+:$/.test(s);
+        return right && left ? "center" : right ? "right" : "left";
+      });
+
+      const thead = `<thead><tr>${hCells
+        .map((c, i) => `<th scope="col" style="text-align:${aCells[i] ?? "left"}">${c}</th>`)
+        .join("")}</tr></thead>`;
+
+      const tbody = `<tbody>${rows
+        .map((r) => {
+          const cells = split(r);
+          return `<tr>${cells
+            .map((c, i) => `<td style="text-align:${aCells[i] ?? "left"}">${c}</td>`)
+            .join("")}</tr>`;
+        })
+        .join("")}</tbody>`;
+
+      return `${prefix}<div class="md-table-wrap"><table class="gptm-table">${thead}${tbody}</table></div>\n`;
+    }
+  );
+
+  // 6) Absätze: Nur „nackte“ Textblöcke einpacken
   const blocks = out.split(/\n{2,}/);
   const rendered = blocks
     .map((b) => {
       const t = b.trim();
       if (!t) return "";
-      if (/^<(h1|h2|h3|ul|ol|pre|blockquote|table|hr)\b/i.test(t)) return t;
+      // Block-Elemente NICHT in <p> einwickeln
+      if (
+        /^<(h1|h2|h3|ul|ol|pre|blockquote|table|hr)\b/i.test(t) ||
+        t.startsWith('<div class="md-table-wrap"')
+      ) {
+        return t;
+      }
       return `<p>${t}</p>`;
     })
     .join("\n");
 
   return rendered;
 }
+
 
 /** Body einer Nachricht: entscheidet Markdown vs. Plaintext */
 function MessageBody({ msg }: { msg: ChatMessage }) {
