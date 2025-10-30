@@ -279,6 +279,7 @@ function Header() {
   );
 }
 
+<<<<<<< HEAD
 /* --- Markdown Mini-Renderer (XSS-safe: erst escapen, dann Muster ersetzen) --- */
 function mdToHtml(src: string): string {
   // 1) Escapen
@@ -1920,3 +1921,7 @@ main {
   </main>
 );
 }
+=======
+// Ganze Seite client-only rendern (kein SSR/SSG)
+export default dynamic(() => Promise.resolve(Page), { ssr: false });
+>>>>>>> staging
