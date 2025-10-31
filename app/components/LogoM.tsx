@@ -16,6 +16,10 @@ export default function LogoM({
   active = false,
   variant = "goldenRebirth",
 }: Props) {
+  // 🔽 responsive Anpassung: kleiner auf Mobile
+  const finalSize =
+    typeof window !== "undefined" && window.innerWidth < 768 ? size * 0.55 : size;
+
   const stroke = "#60E6FF";
 
   // Phase-Automat
@@ -60,11 +64,12 @@ export default function LogoM({
 
   return (
     <div
-      role="img"
-      aria-label="M"
-      style={{
-        width: size,
-        height: size,
+  role="img"
+  aria-label="M"
+  style={{
+    width: finalSize,
+    height: finalSize,
+
         display: "block",
         filter: isReady
           ? "drop-shadow(0 0 22px rgba(96,230,255,0.55))"
