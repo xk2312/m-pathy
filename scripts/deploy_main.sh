@@ -8,87 +8,128 @@ SSH_KEY="${SSH_KEY:-$HOME/.ssh/id_ed25519}"
 SSH_HOST="${SSH_HOST:-deploy@188.245.206.61}"
 SERVICE="${SERVICE:-mpathy}"
 REMOTE_NAME="${REMOTE_NAME:-origin}"         # Git remote name
-PROMOTE_MODE="${PROMOTE_MODE:-auto}"         # auto|skip  (set skip to deploy current main without promotion)
+PROMOTE_MODE="${PROMOTE_MODE:-auto}"         # auto|skip  (skip = deploy current origin/main without promotion)
+
+usage() {
+  cat <<'HLP'
+Usage: deploy_main.sh [--help] [--mode auto|skip]
+
+What it does:
+  1) LOCAL SYNC: forces your local 'main' and 'staging' to match the remote (origin/*)
+  2) PROMOTION:  sets origin/main = origin/staging (direct push if allowed, else PR+merge)
+  3) DEPLOY:     builds and deploys origin/main to the production server
+
+Options:
+  --help            Show this help and exit
+  --mode auto|skip  Promotion step (default: auto)
+
+Environment:
+  REPO_DIR, SSH_KEY, SSH_HOST, SERVICE, REMOTE_NAME, PROMOTE_MODE
+HLP
+}
+
+while [[ "${1:-}" != "" ]]; do
+  case "$1" in
+    --help) usage; exit 0 ;;
+    --mode) shift; PROMOTE_MODE="${1:-auto}" ;;
+    *) echo "Unknown arg: $1"; usage; exit 64 ;;
+  esac
+  shift || true
+done
 
 # ====== PRECHECKS (local) =====================================================
 if [[ ! -d "$REPO_DIR/.git" ]]; then
   echo "❌ Repo nicht gefunden: $REPO_DIR"; exit 1
 fi
 
-if ! command -v gh >/dev/null 2>&1; then
-  [[ "$PROMOTE_MODE" == "auto" ]] && {
-    echo "❌ GitHub CLI 'gh' fehlt. Installiere es (brew install gh) und 'gh auth login'."; exit 1; }
-fi
-
+# Must be on main and clean (we’ll hard-sync branches right after)
 git -C "$REPO_DIR" fetch --all --prune
-
 CUR_BRANCH="$(git -C "$REPO_DIR" rev-parse --abbrev-ref HEAD)"
 if [[ "$CUR_BRANCH" != "main" ]]; then
   echo "❌ Du bist auf '$CUR_BRANCH', erwartet: 'main'"; exit 2
 fi
-
-# Working tree must be clean
 if [[ -n "$(git -C "$REPO_DIR" status --porcelain)" ]]; then
   echo "❌ Working tree nicht clean. Bitte commit/stash."; exit 3
 fi
 
-# Fast-forward local branches
-git -C "$REPO_DIR" pull --ff-only
-git -C "$REPO_DIR" checkout staging >/dev/null 2>&1 || true
-git -C "$REPO_DIR" pull --ff-only || true
-git -C "$REPO_DIR" checkout main >/dev/null 2>&1
+# ====== LOCAL SYNC (force local branches to match remotes) ====================
+# So sieht VS Code genau das, was wirklich auf origin/* liegt.
+git -C "$REPO_DIR" fetch --all --prune
+git -C "$REPO_DIR" switch staging >/dev/null 2>&1 || true
+git -C "$REPO_DIR" reset --hard "${REMOTE_NAME}/staging" 2>/dev/null || true
+git -C "$REPO_DIR" switch main >/dev/null
+git -C "$REPO_DIR" reset --hard "${REMOTE_NAME}/main"
 
-# ====== PROMOTE staging → main (via PR, enforced) ============================
+# ====== PROMOTE staging → main ===============================================
 if [[ "$PROMOTE_MODE" == "auto" ]]; then
-  # Determine if staging is ahead of main at origin
+  # We want origin/main to become origin/staging (i.e. deploy latest staging)
+  echo "==> Promote: origin/main ← origin/staging"
+
+  # Try fast path: set local main = origin/staging and push
+  git -C "$REPO_DIR" reset --hard "${REMOTE_NAME}/staging"
   set +e
-  DIFF_OUT="$(git -C "$REPO_DIR" rev-list --left-right --count \
-             ${REMOTE_NAME}/main...${REMOTE_NAME}/staging 2>/dev/null)"
+  git -C "$REPO_DIR" push "$REMOTE_NAME" main
+  PUSH_RC=$?
   set -e
-  AHEAD_STAGING="$(echo "$DIFF_OUT" | awk '{print $2+0}')"
-  if [[ "$AHEAD_STAGING" -gt 0 ]]; then
+  if [[ $PUSH_RC -ne 0 ]]; then
+    echo "ℹ️  Direct push blocked by branch protection. Falling back to PR."
+    if ! command -v gh >/dev/null 2>&1; then
+      echo "❌ GitHub CLI 'gh' fehlt. Installiere: brew install gh && gh auth login"; exit 4
+    fi
     TS="$(date +%Y%m%d-%H%M%S)"
     REL_BRANCH="auto/promote-${TS}"
-    echo "ℹ️  staging ist $AHEAD_STAGING Commits voraus. Erstelle PR…"
 
-    # Create release branch from remote staging
+    # Create the branch from origin/staging and push it
     git -C "$REPO_DIR" branch -f "$REL_BRANCH" "${REMOTE_NAME}/staging"
     git -C "$REPO_DIR" push -u "$REMOTE_NAME" "$REL_BRANCH" --force
 
-    # Create PR to main and auto-merge (squash) when checks pass
-    PR_URL="$(cd "$REPO_DIR" && \
-      gh pr create --base main --head "$REL_BRANCH" \
-        --title "Promote staging → main ($TS)" \
-        --body "Auto-promotion from staging to main: $TS" --repo "$(git remote get-url "$REMOTE_NAME")" \
-        2>/dev/null)"
+    # Create PR to main
+    cd "$REPO_DIR"
+    PR_URL="$(gh pr create --base main --head "$REL_BRANCH" \
+      --title "Promote staging → main ($TS)" \
+      --body "Auto-promotion from staging to main: $TS" 2>/dev/null || true)"
     if [[ -z "${PR_URL:-}" ]]; then
-      echo "❌ PR-Erstellung fehlgeschlagen (gh)."; exit 4
+      echo "❌ PR-Erstellung fehlgeschlagen."; exit 5
     fi
     echo "PR: $PR_URL"
 
-    # Merge (squash); if checks required by branch protection, this waits for them
-    cd "$REPO_DIR"
-    gh pr merge --squash --delete-branch --auto "$PR_URL" >/dev/null
-    echo "✅ PR wird automatisch gemerged, sobald Checks grün sind…"
+    # Try auto-merge; if not allowed, this will exit non-zero
+    set +e
+    gh pr merge --squash --delete-branch --auto "$PR_URL"
+    MERGE_RC=$?
+    set -e
+    if [[ $MERGE_RC -ne 0 ]]; then
+      echo "ℹ️  Auto-merge nicht erlaubt. Bitte PR manuell mergen, dann erneut 'deploy-main' ausführen."
+      exit 6
+    fi
 
-    # Poll until main contains the PR commit (simple wait loop)
+    # Wait for merge
     echo -n "⏳ Warte auf Merge"
-    for i in {1..60}; do
-      git fetch "$REMOTE_NAME" >/dev/null 2>&1 || true
-      MERGED="$(gh pr view "$PR_URL" --json state -q '.state' 2>/dev/null || echo "")"
-      [[ "$MERGED" == "MERGED" ]] && break
+    for i in {1..90}; do
+      STATE="$(gh pr view "$PR_URL" --json state -q '.state' 2>/dev/null || echo "")"
+      [[ "$STATE" == "MERGED" ]] && break
       echo -n "."
       sleep 2
     done
     echo
 
-    # Refresh local main
+    # Refresh local branches to remote truth
+    git -C "$REPO_DIR" fetch --all --prune
     git -C "$REPO_DIR" switch main >/dev/null
-    git -C "$REPO_DIR" pull --ff-only
-    echo "✅ staging → main Promotion abgeschlossen."
+    git -C "$REPO_DIR" reset --hard "${REMOTE_NAME}/main"
+    git -C "$REPO_DIR" switch staging >/dev/null 2>&1 || true
+    git -C "$REPO_DIR" reset --hard "${REMOTE_NAME}/staging" 2>/dev/null || true
+    git -C "$REPO_DIR" switch main >/dev/null
   else
-    echo "ℹ️  staging ist nicht voraus. Keine Promotion nötig."
+    echo "✅ origin/main erfolgreich auf origin/staging aktualisiert."
+    # Re-sync local to remote main we just pushed
+    git -C "$REPO_DIR" fetch --all --prune
+    git -C "$REPO_DIR" reset --hard "${REMOTE_NAME}/main"
   fi
+else
+  echo "ℹ️  PROMOTE_MODE=skip → überspringe Promotion; deploye aktuellen origin/main."
+  git -C "$REPO_DIR" fetch --all --prune
+  git -C "$REPO_DIR" reset --hard "${REMOTE_NAME}/main"
 fi
 
 # ====== BUILD SOURCE: origin/main tarball ====================================
@@ -107,7 +148,7 @@ LOG_DIR="/var/log/mpathy"
 mkdir -p "$REL" "$LOG_DIR"
 cd "$REL"
 
-echo "==> Fetch tarball: \$REPO_TGZ"
+echo "==> Fetch tarball: $REPO_TGZ"
 curl -fsSL "$REPO_TGZ" | tar xz --strip-components=1
 
 # Guard: no merge markers in critical file
