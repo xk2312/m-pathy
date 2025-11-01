@@ -45,24 +45,12 @@ fi
 # Must be on main and clean (we’ll hard-sync branches right after)
 git -C "$REPO_DIR" fetch --all --prune
 CUR_BRANCH="$(git -C "$REPO_DIR" rev-parse --abbrev-ref HEAD)"
-
-# Wenn nicht auf main: bei cleanem Baum automatisch umschalten.
 if [[ "$CUR_BRANCH" != "main" ]]; then
-  if [[ -z "$(git -C "$REPO_DIR" status --porcelain)" ]]; then
-    echo "ℹ️  Auto-switch: '$CUR_BRANCH' → 'main'"
-    git -C "$REPO_DIR" switch main >/dev/null
-  else
-    echo "❌ Du bist auf '$CUR_BRANCH' und der Working Tree ist nicht clean."
-    echo "   Bitte commit/stash oder wechsle manuell auf 'main'."
-    exit 2
-  fi
+  echo "❌ Du bist auf '$CUR_BRANCH', erwartet: 'main'"; exit 2
 fi
-
-# (Sicherheitscheck bleibt bestehen)
 if [[ -n "$(git -C "$REPO_DIR" status --porcelain)" ]]; then
   echo "❌ Working tree nicht clean. Bitte commit/stash."; exit 3
 fi
-
 
 # ====== LOCAL SYNC (force local branches to match remotes) ====================
 # So sieht VS Code genau das, was wirklich auf origin/* liegt.
