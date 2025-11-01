@@ -76,7 +76,7 @@ export default function LogoM({
           : isThinking
           ? "drop-shadow(0 0 16px rgba(96,230,255,0.42))"
           : "drop-shadow(0 0 9px rgba(96,230,255,0.28))",
-        transition: "filter .35s ease",
+        transition: "filter .35s ease", 
       }}
     >
       <svg
