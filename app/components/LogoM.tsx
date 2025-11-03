@@ -72,7 +72,7 @@ export default function LogoM({
 
         display: "block",
         filter: isReady
-          ? "drop-shadow(0 0 22px rgba(96,230,255,0.55))"
+          ? "drop-shadow(0 0 22px rgba(96,230,255,0.55))" 
           : isThinking
           ? "drop-shadow(0 0 16px rgba(96,230,255,0.42))"
           : "drop-shadow(0 0 9px rgba(96,230,255,0.28))",
