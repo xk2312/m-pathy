@@ -43,3 +43,4 @@ mpathy_local_diag_*
 !prompts/GPTX.txt
 
 tsconfig.tsbuildinfo
+.env.payment
