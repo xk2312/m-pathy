@@ -169,6 +169,19 @@ LOG_DIR="/var/log/mpathy"
 mkdir -p "$REL" "$LOG_DIR"
 cd "$REL"
 
+# --- Node20 Bootstrap (idempotent, minimal) ---
+if [ -f /srv/app/shared/scripts/env.node20.sh ]; then
+  . /srv/app/shared/scripts/env.node20.sh
+else
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+  nvm install 20 >/dev/null 2>&1 || true
+  nvm use 20    >/dev/null 2>&1 || true
+  corepack enable >/dev/null 2>&1 || true
+  corepack prepare pnpm@10 --activate >/dev/null 2>&1 || true
+fi
+node -v; npm -v || true
+
 echo "==> Fetch tarball: $REPO_TGZ"
 curl -fsSL "$REPO_TGZ" | tar xz --strip-components=1
 
@@ -181,6 +194,7 @@ echo "==> npm ci"
 npm ci --include=dev --no-audit --no-fund
 echo "==> npm run build"
 npm run build
+
 
 echo "==> rsync -> $CUR"
 rsync -a --delete . "$CUR/"
