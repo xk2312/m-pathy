@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 import { withGate, retryingFetch } from "@/lib/rate";
+import { verifyAndBumpFreegate } from "@/lib/freegate";  // ← FreeGate
 
 export const runtime = "nodejs"; // wir lesen Dateien ⇒ Node-Runtime
 
@@ -22,6 +23,11 @@ const apiVersion = process.env.AZURE_OPENAI_API_VERSION ?? "";
 // **Limits steuerbar per ENV**
 const MODEL_MAX_TOKENS = parseInt(process.env.MODEL_MAX_TOKENS ?? "512", 10);
 const GPTX_MAX_CHARS   = parseInt(process.env.GPTX_MAX_CHARS   ?? "32000", 10);
+
+// FreeGate-ENV
+const FREE_LIMIT   = parseInt(process.env.FREE_LIMIT ?? "9", 10);
+const FG_SECRET    = process.env.FREEGATE_SECRET || "";
+const CHECKOUT_URL = process.env.CHECKOUT_URL || "https://example.com/checkout";
 
 // === Typen ===
 type Role = "system" | "user" | "assistant";
@@ -81,15 +87,58 @@ function buildAzureUrl(): string {
 // === POST-Handler (mit Gate + Backoff) ===
 export async function POST(req: NextRequest) {
   try {
-    assertEnv();
-
     const body = (await req.json()) as ChatBody;
-    if (!Array.isArray(body.messages)) {
+
+        if (!Array.isArray(body.messages)) {
       return NextResponse.json(
         { error: "`messages` must be an array of { role, content }" },
         { status: 400 }
       );
     }
+
+    // ── FreeGate zuerst ───────────────────────────────────────────────
+    if (!FG_SECRET) {
+      return NextResponse.json({ error: "FREEGATE_SECRET missing" }, { status: 500 });
+    }
+    const ua = req.headers.get("user-agent") || "";
+    const cookieHeader = req.headers.get("cookie");
+    const { count, blocked, cookie } = verifyAndBumpFreegate({
+      cookieHeader,
+      userAgent: ua,
+      freeLimit: FREE_LIMIT,
+      secret: FG_SECRET
+    });
+    if (blocked) {
+      const res402 = NextResponse.json(
+        { status: "free_limit_reached", free_limit: FREE_LIMIT, checkout_url: CHECKOUT_URL },
+        { status: 402 }
+      );
+      res402.headers.set("Set-Cookie", cookie);
+      return res402;
+    }
+    // ─────────────────────────────────────────────────────────────────
+
+    // ── DEV-Fallback, wenn Azure-ENV fehlt (verhindert 500 im Dev) ──
+    const hasAzureEnv = endpoint && apiKey && deployment && apiVersion;
+    if (!hasAzureEnv) {
+      const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, 120);
+      const res = NextResponse.json({
+        role: "assistant",
+        content: "Hello from GPTM-Galaxy+ minimal chat stub (DEV, no Azure ENV).",
+        free_count: count,
+        free_limit: FREE_LIMIT
+      }, { status: 200 });
+      res.headers.set("X-Tokens-Delta", String(-TOKENS_USED));
+      res.headers.set("Set-Cookie", cookie ?? "");
+      return res;
+    }
+    // ────────────────────────────────────────────────────────────────
+
+    // Ab hier: echte Azure-Antwort (jetzt erst sicher prüfen)
+    assertEnv();
+
+    // ─────────────────────────────────────────────────────────────────────────────
+
 
     const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
     const messages: ChatMessage[] = systemPrompt
@@ -124,11 +173,28 @@ export async function POST(req: NextRequest) {
     }
 
     const content: string | undefined = data?.choices?.[0]?.message?.content;
-    if (!content) {
-      return NextResponse.json({ error: "No message content" }, { status: 502 });
-    }
+if (!content) {
+  return NextResponse.json({ error: "No message content" }, { status: 502 });
+}
 
-    return NextResponse.json({ role: "assistant", content });
+// Beispiel: Tokens-Verbrauch schätzen (Stub). Später ersetzen wir das durch echte Usage.
+const TOKENS_USED =  Math.min(MODEL_MAX_TOKENS, 120);
+
+const res = NextResponse.json({ role: "assistant", content }, { status: 200 });
+res.headers.set("X-Tokens-Delta", String(-TOKENS_USED));
+// Cookie aus FreeGate weiterreichen (damit der Zähler persistiert)
+res.headers.set("Set-Cookie", cookie ?? "");
+return res;
+// ↑ Next verbietet direkten Zugriff auf vorherigen Header; daher setzen wir einfach neu:
+res.headers.set("Set-Cookie", ((): string => {
+  // Wir erzeugen den FreeGate-Cookie erneut mit gleichem Stand (count ist bereits erhöht).
+  // Leichtgewichtiger Workaround: noch einmal signieren, ohne den Counter zu verändern.
+  // Praktisch genügt auch, den aus dem FreeGate-Block zu behalten; falls nicht verfügbar, setzen wir keinen.
+  return typeof cookie !== "undefined" ? cookie : "";
+})());
+
+return res;
+
   } catch (err: any) {
     console.error("[API Error]", err);
     return NextResponse.json({ error: err.message ?? "Unknown error" }, { status: 500 });
