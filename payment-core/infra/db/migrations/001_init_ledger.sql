@@ -100,7 +100,7 @@ BEGIN
   END IF;
 END$$;
 
--- 6) Seed (nur wenn keine balances existieren)
+-- 6) Seed (nur, wenn keine balances existieren)
 INSERT INTO public.users (email)
 SELECT NULL
 WHERE NOT EXISTS (SELECT 1 FROM public.users);
