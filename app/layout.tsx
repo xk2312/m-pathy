@@ -11,8 +11,8 @@ import LangAttrUpdater from "./components/LangAttrUpdater";
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "GalaxyEducation – TECH Beginner",
-  description: "Learn tech basics with M",
+  title: "m-pathy - resonant creation",
+  description: "Create your reality with M",
 };
 
 export const viewport: Viewport = {
