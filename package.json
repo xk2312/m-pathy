@@ -1,6 +1,7 @@
 {
     "name": "m-pathy",
     "version": "0.1.0",
+    "packageManager": "pnpm@10.14.0",
     "private": true,
     "scripts": {
         "prebuild": "rm -rf mpathy_local_diag_*",
