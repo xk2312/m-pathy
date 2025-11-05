@@ -1,0 +1,61 @@
+// app/api/buy/checkout-session/route.ts
+import Stripe from "stripe";
+
+function env(name: string, fallback?: string) {
+  const v = process.env[name] ?? fallback;
+  if (!v) throw new Error(`Missing env ${name}`);
+  return v;
+}
+
+// Lazy-Init: erst in der Request, nie zur Build-Zeit
+function getStripe(): Stripe {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error("Missing env STRIPE_SECRET_KEY");
+  return new Stripe(key, { apiVersion: "2025-10-29.clover" });
+}
+
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json().catch(() => ({}));
+    const priceId: string | undefined = body?.priceId;
+    const quantity: number = Number(body?.quantity ?? 1);
+    const mode: "payment" = "payment";
+
+    const base = env("STAGING_BASE_URL", env("APP_BASE_URL", "https://m-pathy.ai"));
+    const successUrl: string = body?.successUrl ?? `${base}/?checkout=success`;
+    const cancelUrl: string = body?.cancelUrl ?? `${base}/?checkout=cancel`;
+
+    if (!priceId || !priceId.startsWith("price_")) {
+      return new Response(JSON.stringify({ error: "priceId required" }), {
+        status: 400,
+        headers: { "content-type": "application/json" },
+      });
+    }
+    if (!process.env.STRIPE_SECRET_KEY?.startsWith("sk_")) {
+      return new Response(JSON.stringify({ error: "Stripe not configured" }), {
+        status: 500,
+        headers: { "content-type": "application/json" },
+      });
+    }
+
+       const stripe = getStripe();
+    const session = await stripe.checkout.sessions.create({
+      mode,
+      line_items: [{ price: priceId, quantity }],
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+    });
+
+    return new Response(JSON.stringify({ url: session.url }), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
+  } catch (err: any) {
+    const detail = typeof err?.message === "string" ? err.message.slice(0, 500) : "internal_error";
+    return new Response(JSON.stringify({ error: detail }), {
+      status: 500,
+      headers: { "content-type": "application/json" },
+    });
+  }
+}
