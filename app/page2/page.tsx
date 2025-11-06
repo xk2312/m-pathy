@@ -805,6 +805,9 @@ const [stickToBottom, setStickToBottom] = useState(true);
 
 const [mode, setMode] = useState<string>("DEFAULT");
 
+// Preis-ID aus ENV für den Client (nur ID, kein Secret)
+const PRICE_1M = process.env.NEXT_PUBLIC_STRIPE_PRICE_1M as string | undefined;
+
 // (entfernt) — lokaler Persistenzblock wurde gestrichen
 // Persistenz läuft zentral über lib/chatStorage.ts  → siehe persist.* oben
 // … weiterer Code …
@@ -1239,24 +1242,49 @@ if (busy) {
   }, []);
 
   // ===============================================================
-  // Lokale Chat-Sendefunktion (ruft echte API)
-  // ===============================================================
-  async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "same-origin", // Session mitgeben
-      body: JSON.stringify({ messages: context }),
-    });
-    if (!res.ok) throw new Error("Chat API failed");
-    const data = await res.json();
-    const assistant = data.assistant ?? data;
-    return {
-      role: assistant.role ?? "assistant",
-      content: assistant.content ?? "",
-      format: assistant.format ?? "markdown",
-    } as ChatMessage;
+// Lokale Chat-Sendefunktion (ruft echte API)
+// ===============================================================
+async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ messages: context }),
+  });
+
+  // NEU: FreeGate-Limit erreicht → 402 → Stripe Checkout starten
+  if (res.status === 402) {
+    try {
+      const info = await res.json().catch(() => ({}));
+      const priceId = PRICE_1M; // rein clientseitig unkritisch
+      const r2 = await fetch("/api/buy/checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceId }),
+      });
+      const j2 = await r2.json().catch(() => ({}));
+      if (j2?.url) {
+        window.location.href = j2.url as string; // Redirect zu Stripe
+        // wir geben eine neutrale Message zurück, falls der Redirect blockiert
+        return { role: "assistant", content: "Opening checkout…", format: "markdown" } as ChatMessage;
+      } else {
+        return { role: "assistant", content: "⚠️ Checkout failed.", format: "markdown" } as ChatMessage;
+      }
+    } catch {
+      return { role: "assistant", content: "⚠️ Checkout error.", format: "markdown" } as ChatMessage;
+    }
   }
+
+  if (!res.ok) throw new Error("Chat API failed");
+  const data = await res.json();
+  const assistant = data.assistant ?? data;
+  return {
+    role: assistant.role ?? "assistant",
+    content: assistant.content ?? "",
+    format: assistant.format ?? "markdown",
+  } as ChatMessage;
+}
+
 
   // ===============================================================
   // Prompt-Handler – sendet Text aus Eingabefeld
