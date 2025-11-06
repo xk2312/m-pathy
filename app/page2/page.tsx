@@ -1252,27 +1252,43 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
     body: JSON.stringify({ messages: context }),
   });
 
-  // NEU: FreeGate-Limit erreicht → 402 → Stripe Checkout starten
+  // === FreeGate 402 → Stripe Checkout ===
   if (res.status === 402) {
+    let checkoutUrl = "";
     try {
-      const info = await res.json().catch(() => ({}));
-      const priceId = PRICE_1M; // rein clientseitig unkritisch
-      const r2 = await fetch("/api/buy/checkout-session", {
+      const payload = await res.json().catch(() => ({} as any));
+      // Falls Server bereits eine fertige URL liefert, nimm die.
+      checkoutUrl = payload?.checkout_url || "";
+    } catch { /* ignore */ }
+
+    // Wenn keine URL mitkam, erzeuge eine Session über unsere eigene Route.
+    if (!checkoutUrl) {
+      const priceId =
+        process.env.NEXT_PUBLIC_STRIPE_PRICE_1M ||
+        (globalThis as any).__NEXT_PUBLIC_STRIPE_PRICE_1M; // Fallback
+
+      if (!priceId || !String(priceId).startsWith("price_")) {
+        throw new Error("Checkout unavailable (missing NEXT_PUBLIC_STRIPE_PRICE_1M)");
+      }
+
+      const mk = await fetch("/api/buy/checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ priceId }),
       });
-      const j2 = await r2.json().catch(() => ({}));
-      if (j2?.url) {
-        window.location.href = j2.url as string; // Redirect zu Stripe
-        // wir geben eine neutrale Message zurück, falls der Redirect blockiert
-        return { role: "assistant", content: "Opening checkout…", format: "markdown" } as ChatMessage;
-      } else {
-        return { role: "assistant", content: "⚠️ Checkout failed.", format: "markdown" } as ChatMessage;
+      if (!mk.ok) {
+        const j = await mk.json().catch(() => ({}));
+        throw new Error(j?.error || "Stripe checkout session failed");
       }
-    } catch {
-      return { role: "assistant", content: "⚠️ Checkout error.", format: "markdown" } as ChatMessage;
+      const j = await mk.json();
+      checkoutUrl = j?.url || "";
     }
+
+    if (!checkoutUrl) throw new Error("No checkout URL available");
+    // Sofort zur Kasse
+    window.location.href = checkoutUrl;
+    // Wir geben hier eine neutrale “pending”-Nachricht zurück, falls der Redirect blockiert wurde.
+    return { role: "assistant", content: "Opening checkout …", format: "markdown" } as ChatMessage;
   }
 
   if (!res.ok) throw new Error("Chat API failed");
