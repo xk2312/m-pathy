@@ -38,11 +38,13 @@ try {
     }
   } catch (_) {}
 
-  // Build lokal im Runner
+  // Build lokal im Runner (pnpm via corepack)
   sh('node -v');
-  sh('npm -v');
-  sh('npm ci');
-  sh('npm run build');
+  sh('corepack enable || true');
+  sh('corepack prepare pnpm@10.14.0 --activate || true');
+  sh('pnpm -v || true');
+  sh('pnpm install --frozen-lockfile');
+  sh('pnpm build');
 
   // Stabiles Snapshot-Packaging
   const work = mkdtempSync(join(tmpdir(), 'mpathy-'));
@@ -76,7 +78,11 @@ try {
     `EOF`,
     `sudo chmod 600 ${REMOTE_ENV}`,
     `cd ${REMOTE_DIR}`,
-    `npm ci --omit=dev`,
+    // pnpm via corepack (Fallback: global pnpm)
+    `command -v corepack >/dev/null 2>&1 && corepack enable || true`,
+    `command -v corepack >/dev/null 2>&1 && corepack prepare pnpm@10.14.0 --activate || true`,
+    `command -v pnpm >/dev/null 2>&1 || sudo npm i -g pnpm@10.14.0`,
+    `pnpm install --frozen-lockfile --prod`,
     `sudo systemctl daemon-reload || true`,
     `sudo systemctl restart ${SERVICE}`,
     `sudo systemctl status ${SERVICE} --no-pager -l | head -n 50 || true`,
