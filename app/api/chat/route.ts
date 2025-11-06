@@ -9,10 +9,12 @@ export const runtime = "nodejs"; // wir lesen Dateien ⇒ Node-Runtime
 
 // === 0.1: ENV laden falls Production ===
 if (process.env.NODE_ENV === "production") {
-  dotenv.config({ path: "/srv/m-pathy/.env.production" });
+  // Server-Pfad entspricht deinem Deploy-Layout
+  dotenv.config({ path: "/srv/app/current/.env.production" });
 } else {
   dotenv.config(); // auch im Dev laden
 }
+
 
 // === 0.2: ENV Variablen vorbereiten ===
 const endpoint   = process.env.AZURE_OPENAI_ENDPOINT ?? "";
@@ -96,27 +98,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── FreeGate zuerst ───────────────────────────────────────────────
-    if (!FG_SECRET) {
-      return NextResponse.json({ error: "FREEGATE_SECRET missing" }, { status: 500 });
-    }
-    const ua = req.headers.get("user-agent") || "";
-    const cookieHeader = req.headers.get("cookie");
-    const { count, blocked, cookie } = verifyAndBumpFreegate({
-      cookieHeader,
-      userAgent: ua,
-      freeLimit: FREE_LIMIT,
-      secret: FG_SECRET
-    });
-    if (blocked) {
-      const res402 = NextResponse.json(
-        { status: "free_limit_reached", free_limit: FREE_LIMIT, checkout_url: CHECKOUT_URL },
-        { status: 402 }
-      );
-      res402.headers.set("Set-Cookie", cookie);
-      return res402;
-    }
-    // ─────────────────────────────────────────────────────────────────
+   // ── FreeGate (BS13: Dry-Run – nur zählen & Cookie setzen, kein 402) ──
+if (!FG_SECRET) {
+  return NextResponse.json({ error: "FREEGATE_SECRET missing" }, { status: 500 });
+}
+const ua = req.headers.get("user-agent") || "";
+const cookieHeader = req.headers.get("cookie");
+const { count, cookie } = verifyAndBumpFreegate({
+  cookieHeader,
+  userAgent: ua,
+  freeLimit: FREE_LIMIT,
+  secret: FG_SECRET
+}); // blocked wird bewusst ignoriert
+
+// Hinweis: Das tatsächliche Blocken (402) schalten wir erst in BS13/7 ein.
+
 
     // ── DEV-Fallback, wenn Azure-ENV fehlt (verhindert 500 im Dev) ──
     const hasAzureEnv = endpoint && apiKey && deployment && apiVersion;
@@ -182,18 +178,11 @@ const TOKENS_USED =  Math.min(MODEL_MAX_TOKENS, 120);
 
 const res = NextResponse.json({ role: "assistant", content }, { status: 200 });
 res.headers.set("X-Tokens-Delta", String(-TOKENS_USED));
-// Cookie aus FreeGate weiterreichen (damit der Zähler persistiert)
-res.headers.set("Set-Cookie", cookie ?? "");
+res.headers.set("X-Free-Used", String(count));
+res.headers.set("X-Free-Limit", String(FREE_LIMIT));
+if (cookie) res.headers.set("Set-Cookie", cookie);
 return res;
-// ↑ Next verbietet direkten Zugriff auf vorherigen Header; daher setzen wir einfach neu:
-res.headers.set("Set-Cookie", ((): string => {
-  // Wir erzeugen den FreeGate-Cookie erneut mit gleichem Stand (count ist bereits erhöht).
-  // Leichtgewichtiger Workaround: noch einmal signieren, ohne den Counter zu verändern.
-  // Praktisch genügt auch, den aus dem FreeGate-Block zu behalten; falls nicht verfügbar, setzen wir keinen.
-  return typeof cookie !== "undefined" ? cookie : "";
-})());
 
-return res;
 
   } catch (err: any) {
     console.error("[API Error]", err);
