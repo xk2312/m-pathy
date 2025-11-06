@@ -33,6 +33,9 @@ jobs:
           fi
           chmod 644 ~/.ssh/known_hosts
 
+      - name: Echo target
+        run: echo "Target host: $SSH_HOST (should be 78.47.96.191)"
+
       - name: Deploy via SSH (call server wrapper)
         shell: bash
         run: |
