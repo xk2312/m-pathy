@@ -1,20 +1,20 @@
+// app/api/chat/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 import { withGate, retryingFetch } from "@/lib/rate";
-import { verifyAndBumpFreegate } from "@/lib/freegate";  // ← FreeGate
+import { verifyAndBumpFreegate } from "@/lib/freegate"; // FreeGate
 
 export const runtime = "nodejs"; // wir lesen Dateien ⇒ Node-Runtime
 
-// === 0.1: ENV laden falls Production ===
+// === 0.1: ENV laden ===
 if (process.env.NODE_ENV === "production") {
-  // Server-Pfad entspricht deinem Deploy-Layout
+  // Dein Deploy-Layout
   dotenv.config({ path: "/srv/app/current/.env.production" });
 } else {
-  dotenv.config(); // auch im Dev laden
+  dotenv.config();
 }
-
 
 // === 0.2: ENV Variablen vorbereiten ===
 const endpoint   = process.env.AZURE_OPENAI_ENDPOINT ?? "";
@@ -62,7 +62,6 @@ function loadSystemPrompt(protocol = "GPTX") {
       if (process.env.NODE_ENV !== "production") {
         console.log("✅ SYSTEM PROMPT LOADED:", content.slice(0, 80));
       }
-      // Markdown-Wrap beibehalten (kompatibel zu deinem bisherigen Verhalten)
       return `\`\`\`markdown\n${content.trim()}\n\`\`\``;
     } else {
       console.warn("⚠️ Prompt-Datei nicht gefunden:", promptPath);
@@ -86,35 +85,44 @@ function buildAzureUrl(): string {
   return `${base}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
 }
 
-// === POST-Handler (mit Gate + Backoff) ===
+// === POST-Handler (mit Gate + Backoff + FreeGate) ===
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as ChatBody;
 
-        if (!Array.isArray(body.messages)) {
+    if (!Array.isArray(body.messages)) {
       return NextResponse.json(
         { error: "`messages` must be an array of { role, content }" },
         { status: 400 }
       );
     }
 
-   // ── FreeGate (BS13: Dry-Run – nur zählen & Cookie setzen, kein 402) ──
-if (!FG_SECRET) {
-  return NextResponse.json({ error: "FREEGATE_SECRET missing" }, { status: 500 });
-}
-const ua = req.headers.get("user-agent") || "";
-const cookieHeader = req.headers.get("cookie");
-const { count, cookie } = verifyAndBumpFreegate({
-  cookieHeader,
-  userAgent: ua,
-  freeLimit: FREE_LIMIT,
-  secret: FG_SECRET
-}); // blocked wird bewusst ignoriert
+    // ── FreeGate (BS13/7: jetzt *mit* 402 + Checkout) ─────────────────
+    if (!FG_SECRET) {
+      return NextResponse.json({ error: "FREEGATE_SECRET missing" }, { status: 500 });
+    }
+        const ua = req.headers.get("user-agent") || "";
+    const cookieHeader = req.headers.get("cookie"); // string | null (passt zur FreeGate-Signatur)
 
-// Hinweis: Das tatsächliche Blocken (402) schalten wir erst in BS13/7 ein.
+    const { count, blocked, cookie } = verifyAndBumpFreegate({
+      cookieHeader,
+      userAgent: ua,
+      freeLimit: FREE_LIMIT,
 
+      secret: FG_SECRET
+    });
 
-    // ── DEV-Fallback, wenn Azure-ENV fehlt (verhindert 500 im Dev) ──
+    if (blocked) {
+      const r = NextResponse.json(
+        { status: "free_limit_reached", free_limit: FREE_LIMIT, checkout_url: CHECKOUT_URL },
+        { status: 402 }
+      );
+      if (cookie) r.headers.set("Set-Cookie", cookie);
+      return r;
+    }
+    // ──────────────────────────────────────────────────────────────────
+
+    // ── DEV-Fallback, wenn Azure-ENV fehlt ────────────────────────────
     const hasAzureEnv = endpoint && apiKey && deployment && apiVersion;
     if (!hasAzureEnv) {
       const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, 120);
@@ -125,16 +133,15 @@ const { count, cookie } = verifyAndBumpFreegate({
         free_limit: FREE_LIMIT
       }, { status: 200 });
       res.headers.set("X-Tokens-Delta", String(-TOKENS_USED));
-      res.headers.set("Set-Cookie", cookie ?? "");
+      res.headers.set("X-Free-Used", String(count));
+      res.headers.set("X-Free-Limit", String(FREE_LIMIT));
+      if (cookie) res.headers.set("Set-Cookie", cookie);
       return res;
     }
-    // ────────────────────────────────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────────
 
     // Ab hier: echte Azure-Antwort (jetzt erst sicher prüfen)
     assertEnv();
-
-    // ─────────────────────────────────────────────────────────────────────────────
-
 
     const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
     const messages: ChatMessage[] = systemPrompt
@@ -144,7 +151,7 @@ const { count, cookie } = verifyAndBumpFreegate({
     const payload = {
       messages,
       temperature: body.temperature ?? 0.7,
-      max_tokens: MODEL_MAX_TOKENS, // kleiner halten → weniger 429 
+      max_tokens: MODEL_MAX_TOKENS, // kleiner halten → weniger 429
     };
 
     const init: RequestInit = {
@@ -152,9 +159,6 @@ const { count, cookie } = verifyAndBumpFreegate({
       headers: { "Content-Type": "application/json", "api-key": apiKey },
       body: JSON.stringify(payload),
     };
-    console.log("Endpoint in runtime:", process.env.AZURE_OPENAI_ENDPOINT);
-    console.log("🔍 Azure URL in use:", buildAzureUrl());
-    console.log("🔑 API Key (masked):", apiKey ? apiKey.slice(0, 5) + "..." : "MISSING");
 
     // Concurrency-Gate + Retry-After Backoff
     const response = await withGate(() => retryingFetch(buildAzureUrl(), init, 5));
@@ -169,20 +173,21 @@ const { count, cookie } = verifyAndBumpFreegate({
     }
 
     const content: string | undefined = data?.choices?.[0]?.message?.content;
-if (!content) {
-  return NextResponse.json({ error: "No message content" }, { status: 502 });
-}
+    if (!content) {
+      return NextResponse.json({ error: "No message content" }, { status: 502 });
+    }
 
-// Beispiel: Tokens-Verbrauch schätzen (Stub). Später ersetzen wir das durch echte Usage.
-const TOKENS_USED =  Math.min(MODEL_MAX_TOKENS, 120);
+    // Beispiel: Tokens-Verbrauch schätzen (Stub). Später ersetzen wir das durch echte Usage.
+    const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, 120);
 
-const res = NextResponse.json({ role: "assistant", content }, { status: 200 });
-res.headers.set("X-Tokens-Delta", String(-TOKENS_USED));
-res.headers.set("X-Free-Used", String(count));
-res.headers.set("X-Free-Limit", String(FREE_LIMIT));
-if (cookie) res.headers.set("Set-Cookie", cookie);
-return res;
-
+    const res = NextResponse.json({ role: "assistant", content }, { status: 200 });
+    res.headers.set("X-Tokens-Delta", String(-TOKENS_USED));
+    res.headers.set("X-Free-Used", String(count));
+    res.headers.set("X-Free-Limit", String(FREE_LIMIT));
+    if (cookie) {
+      res.headers.set("Set-Cookie", cookie);
+    }
+    return res;
 
   } catch (err: any) {
     console.error("[API Error]", err);
