@@ -8,8 +8,9 @@ mkdir -p "$OUT"
 echo "===== VERSIONS =====" > "$OUT/00_env.txt"
 echo "PWD: $(pwd)" >> "$OUT/00_env.txt"
 node -v >> "$OUT/00_env.txt" 2>&1 || true
-npm -v  >> "$OUT/00_env.txt"  2>&1 || true
+pnpm -v >> "$OUT/00_env.txt" 2>&1 || true
 git --version >> "$OUT/00_env.txt" 2>&1 || true
+
 
 # Git-Zustand
 git rev-parse --abbrev-ref HEAD > "$OUT/01_git.txt" 2>&1 || true
@@ -55,12 +56,15 @@ done
 
 # Build-Logs (lokal, ohne zu brechen, optional)
 {
-  echo "===== npm ci (dry-run style) ====="
-  npm ci --dry-run || true
+  echo "===== pnpm install (dry-run, frozen-lockfile) ====="
+  corepack enable || true
+  corepack prepare pnpm@10.14.0 --activate || true
+  pnpm install --frozen-lockfile --dry-run || true
   echo
   echo "===== next build (—help only; KEIN Buildlauf) ====="
   npx next --help || true
 } > "$OUT/04_local_checks.txt" 2>&1
+
 
 tar -czf "${OUT}.tar.gz" "$OUT"
 echo ">> Local diagnostics written to: ${OUT}.tar.gz"

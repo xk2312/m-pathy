@@ -44,13 +44,16 @@ try {
   // ignore
 }
 
-// ---- 1) Node/Next-Version ausgeben ----
+// ---- 1) Tool-Versions / pnpm via corepack ----
 sh('node -v');
-sh('npm -v');
+sh('corepack enable || true');
+sh('corepack prepare pnpm@10.14.0 --activate || true');
+sh('pnpm -v || true');
 
-// ---- 2) Build (bricht sofort bei Fehlern) ----
-sh('npm ci --omit=dev');      // reproduzierbare Prod-Install (CI)
-sh('npm run build');          // next build
+// ---- 2) Build (reproducible) ----
+sh('pnpm install --frozen-lockfile');
+sh('pnpm build');
+
 
 // ---- 3) Packen (stabile Snapshot-Variante) ----
 const work = mkdtempSync(join(tmpdir(), 'mpathy-'));
@@ -91,9 +94,13 @@ EOF
 sudo chmod 600 ${REMOTE_ENV}
 
 cd ${REMOTE_DIR}
-sudo npm ci --omit=dev
+command -v corepack >/dev/null 2>&1 && corepack enable || true
+command -v corepack >/dev/null 2>&1 && corepack prepare pnpm@10.14.0 --activate || true
+command -v pnpm >/dev/null 2>&1 || sudo npm i -g pnpm@10.14.0
+pnpm install --frozen-lockfile --prod
 sudo systemctl daemon-reload || true
 sudo systemctl restart ${SERVICE_NAME}
+
 sudo systemctl status ${SERVICE_NAME} --no-pager -l | head -n 50
 `;
 
