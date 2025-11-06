@@ -14,9 +14,18 @@ else
   exit 1
 fi
 
-# Defaults
-APP_BASE_URL="${APP_BASE_URL:-http://localhost:3000}"
+# Defaults mit Auto-Port-Erkennung (dev springt häufig auf 3001)
+if [ -z "${APP_BASE_URL:-}" ]; then
+  if lsof -i :3001 >/dev/null 2>&1; then
+    APP_BASE_URL="http://localhost:3001"
+  elif lsof -i :3000 >/dev/null 2>&1; then
+    APP_BASE_URL="http://localhost:3000"
+  else
+    APP_BASE_URL="http://localhost:3000"
+  fi
+fi
 STAGING_BASE_URL="${STAGING_BASE_URL:-$APP_BASE_URL}"
+
 
 # Helper
 jq_bin() { command -v jq >/dev/null 2>&1 && echo jq || echo cat; }

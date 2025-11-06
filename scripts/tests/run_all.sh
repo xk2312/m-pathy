@@ -2,18 +2,29 @@
 set -euo pipefail
 DIR="$(cd "$(dirname "$0")"; pwd)"
 
+run() {
+  local name="$1"; shift
+  echo "---- $name ----"
+  set +e
+  "$@"
+  local rc=$?
+  set -e
+  echo "[$name] exit=$rc"
+  echo
+}
+
 echo "== Acceptance (A1–A6) =="
-bash "$DIR/A1_live.sh"
-bash "$DIR/A2_ready.sh"
-bash "$DIR/A3_ledger_probe.sh"
-bash "$DIR/A4_chat_freegate.sh"
-bash "$DIR/A5_checkout_400.sh"
-bash "$DIR/A6_checkout_200.sh"
+run "A1_live"            bash "$DIR/A1_live.sh"
+run "A2_ready"           bash "$DIR/A2_ready.sh"
+run "A3_ledger_probe"    bash "$DIR/A3_ledger_probe.sh"
+run "A4_chat_freegate"   bash "$DIR/A4_chat_freegate.sh"
+run "A5_checkout_400"    bash "$DIR/A5_checkout_400.sh"
+run "A6_checkout_200"    bash "$DIR/A6_checkout_200.sh"
 
 echo
 echo "== Risk/Edge/Fault/Security =="
-bash "$DIR/RP_run.sh"
-bash "$DIR/EFK_scan.sh"
+run "RP_run"             bash "$DIR/RP_run.sh"
+run "EFK_scan"           bash "$DIR/EFK_scan.sh"
 
 echo
 echo "✅ Fertig."

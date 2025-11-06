@@ -20,6 +20,5 @@ check_json "/api/live"
 check_json "/api/ready"
 check_json "/api/ledger/probe"
 
-# Methoden-Guard (POST only) für Checkout
 STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X GET "$APP_BASE_URL/api/buy/checkout-session")
 test "$STATUS" -ge 400 && echo "✓ checkout-session GET blockiert (Status $STATUS)"

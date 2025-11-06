@@ -13,5 +13,4 @@ else
   printf "%s\n" "$BODY"
 fi
 
-# nie mit Fehler beenden – wir wollen Diagnose, nicht Abbruch
 exit 0
