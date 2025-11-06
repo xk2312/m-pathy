@@ -1,7 +1,16 @@
 // app/api/buy/checkout-session/route.ts
 import Stripe from "stripe";
+import dotenv from "dotenv";
+
+// ENV laden (Dev: .env.payment, Prod: Deploy-Path)
+if (process.env.NODE_ENV === "production") {
+  dotenv.config({ path: "/srv/app/current/.env.production" });
+} else {
+  dotenv.config({ path: ".env.payment" });
+}
 
 function env(name: string, fallback?: string) {
+
   const v = process.env[name] ?? fallback;
   if (!v) throw new Error(`Missing env ${name}`);
   return v;
