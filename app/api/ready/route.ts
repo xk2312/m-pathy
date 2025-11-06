@@ -18,8 +18,6 @@ async function checkDB(timeoutMs = 2000) {
     "";
 
   if (!url) throw new Error("DATABASE_URL missing");
-
-  // @ts-expect-error – pg hat in unserem Setup keine .d.ts, Laufzeit ist ok
   const { Client } = await import("pg");
 
   const client = new Client({
