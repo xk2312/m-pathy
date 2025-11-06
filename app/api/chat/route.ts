@@ -96,52 +96,37 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+    
+// — FreeGate (BS13/7: jetzt *mit* 402 + Checkout) —
+if (!FG_SECRET) {
+  return NextResponse.json({ error: "FREEGATE_SECRET missing" }, { status: 500 });
+}
+const ua = req.headers.get("user-agent") || "";
+const cookieHeader = req.headers.get("cookie") ?? null;
 
-    // ── FreeGate (BS13/7: jetzt *mit* 402 + Checkout) ─────────────────
-    if (!FG_SECRET) {
-      return NextResponse.json({ error: "FREEGATE_SECRET missing" }, { status: 500 });
-    }
-        const ua = req.headers.get("user-agent") || "";
-    const cookieHeader = req.headers.get("cookie"); // string | null (passt zur FreeGate-Signatur)
+const { count, blocked, cookie } = verifyAndBumpFreegate({
+  cookieHeader,
+  userAgent: ua,
+  freeLimit: FREE_LIMIT,
+  secret: FG_SECRET,
+});
 
-    const { count, blocked, cookie } = verifyAndBumpFreegate({
-      cookieHeader,
-      userAgent: ua,
-      freeLimit: FREE_LIMIT,
+// Bei Limit: sofort 402 + Header setzen und beenden
+if (blocked) {
+  const r = NextResponse.json(
+    { status: "free_limit_reached", free_limit: FREE_LIMIT, checkout_url: CHECKOUT_URL },
+    { status: 402 }
+  );
+  r.headers.set("X-Free-Used", String(count));
+  r.headers.set("X-Free-Limit", String(FREE_LIMIT));
+  r.headers.set("X-Tokens-Delta", "0");
+  if (cookie) r.headers.set("Set-Cookie", cookie);
+  return r;
+}
 
-      secret: FG_SECRET
-    });
+// — Ab hier: echte Azure-Antwort —
+assertEnv();
 
-    if (blocked) {
-      const r = NextResponse.json(
-        { status: "free_limit_reached", free_limit: FREE_LIMIT, checkout_url: CHECKOUT_URL },
-        { status: 402 }
-      );
-      if (cookie) r.headers.set("Set-Cookie", cookie);
-      return r;
-    }
-    // ──────────────────────────────────────────────────────────────────
-
-    // ── DEV-Fallback, wenn Azure-ENV fehlt ────────────────────────────
-    const hasAzureEnv = endpoint && apiKey && deployment && apiVersion;
-    if (!hasAzureEnv) {
-      const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, 120);
-      const res = NextResponse.json({
-        role: "assistant",
-        content: "Hello from GPTM-Galaxy+ minimal chat stub (DEV, no Azure ENV).",
-        free_count: count,
-        free_limit: FREE_LIMIT
-      }, { status: 200 });
-      res.headers.set("X-Tokens-Delta", String(-TOKENS_USED));
-      res.headers.set("X-Free-Used", String(count));
-      res.headers.set("X-Free-Limit", String(FREE_LIMIT));
-      if (cookie) res.headers.set("Set-Cookie", cookie);
-      return res;
-    }
-    // ──────────────────────────────────────────────────────────────────
-
-    // Ab hier: echte Azure-Antwort (jetzt erst sicher prüfen)
-    assertEnv();
 
     const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
     const messages: ChatMessage[] = systemPrompt
