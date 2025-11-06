@@ -44,3 +44,7 @@ mpathy_local_diag_*
 
 tsconfig.tsbuildinfo
 .env.payment
+
+# Local test artifacts
+/tmp/
+*.cookies
