@@ -60,14 +60,18 @@ async function checkSMTP(timeoutMs = 2000) {
   return true;
 }
 
-export async function GET() {
+export async function GET(req: Request) {
+  // Timeout aus Query lesen (ms) – robust, vermeidet req.nextUrl Fehler
+  const url = new URL(req.url);
+  const timeoutMs = Number(url.searchParams.get("timeout_ms") ?? "2000");
+
   const results: Record<string, { ok: boolean; error?: string }> = {
     db: { ok: false },
     smtp: { ok: false },
   };
 
-  try { await checkDB(); results.db.ok = true; } catch (e:any) { results.db = { ok:false, error: e?.message || String(e) }; }
-  try { await checkSMTP(); results.smtp.ok = true; } catch (e:any) { results.smtp = { ok:false, error: e?.message || String(e) }; }
+  try { await checkDB(timeoutMs); results.db.ok = true; } catch (e: any) { results.db = { ok: false, error: e?.message || String(e) }; }
+  try { await checkSMTP(timeoutMs); results.smtp.ok = true; } catch (e: any) { results.smtp = { ok: false, error: e?.message || String(e) }; }
 
   const allOk = results.db.ok && results.smtp.ok;
   const status = allOk ? 200 : 503;
