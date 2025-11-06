@@ -13,7 +13,18 @@ if (process.env.NODE_ENV === "production") {
   // Dein Deploy-Layout
   dotenv.config({ path: "/srv/app/current/.env.production" });
 } else {
-  dotenv.config();
+  // Dev: .env.local > .env.payment > .env (Fallback)
+  const cwd = process.cwd();
+  const envLocal   = path.join(cwd, ".env.local");
+  const envPayment = path.join(cwd, ".env.payment");
+
+  if (fs.existsSync(envLocal)) {
+    dotenv.config({ path: envLocal, override: true });
+  } else if (fs.existsSync(envPayment)) {
+    dotenv.config({ path: envPayment, override: true });
+  } else {
+    dotenv.config();
+  }
 }
 
 // === 0.2: ENV Variablen vorbereiten ===
@@ -96,7 +107,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    
+
 // — FreeGate (BS13/7: jetzt *mit* 402 + Checkout) —
 if (!FG_SECRET) {
   return NextResponse.json({ error: "FREEGATE_SECRET missing" }, { status: 500 });
