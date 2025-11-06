@@ -8,6 +8,7 @@ if [[ ! -f "$ENV_FILE" ]]; then
   echo "❌ ENV file not found: $ENV_FILE"
   exit 1
 fi
+
 # robust: übernimmt auch Werte mit Leerzeichen/@/Klammern/Quotes
 set -a
 . "$ENV_FILE"
@@ -21,25 +22,35 @@ if ! command -v psql >/dev/null 2>&1; then
   exit 1
 fi
 
-PSQL="psql -v ON_ERROR_STOP=1 \"$DATABASE_URL\""
+# psql Basiskommando (keine RC-Datei, bei Fehlern abbrechen)
+PSQL_BASE=(psql -X -v ON_ERROR_STOP=1 -d "$DATABASE_URL")
 
 echo "==> connectivity check"
-eval $PSQL -c "select version();"
-eval $PSQL -c "select current_database() as db, current_user as usr;"
+PGCONNECT_TIMEOUT=5 "${PSQL_BASE[@]}" -qAtc 'select 1;' >/dev/null
+PGCONNECT_TIMEOUT=5 "${PSQL_BASE[@]}" -qAtc 'select current_database(), current_user;' >/dev/null
 
 # --- run migrations (sorted) ---
-MIG_DIR="${MIG_DIR:-lib/payment-core/infra/db/migrations}"
+MIG_DIR="${MIG_DIR:-payment-core/infra/db/migrations}"
 if [[ ! -d "$MIG_DIR" ]]; then
   echo "❌ migrations dir not found: $MIG_DIR"
   exit 1
 fi
 
+# Dateien sammeln & sortieren
+shopt -s nullglob
+files=( "$MIG_DIR"/*.sql )
+shopt -u nullglob
+if (( ${#files[@]} == 0 )); then
+  echo "ℹ️  no *.sql found in $MIG_DIR (nothing to apply)"
+  exit 0
+fi
+IFS=$'\n' read -r -d '' -a sorted < <(printf '%s\n' "${files[@]}" | sort && printf '\0')
+
 echo "==> applying migrations from: $MIG_DIR"
 APPLIED=0
-# apply *.sql in lexical order (001_*.sql, 002_*.sql, …)
-for f in $(ls -1 "$MIG_DIR"/*.sql | sort); do
-  echo "----> $f"
-  eval $PSQL -f "$f"
+for f in "${sorted[@]}"; do
+  echo "----> $(basename "$f")"
+  "${PSQL_BASE[@]}" -f "$f"
   ((APPLIED+=1))
 done
 
