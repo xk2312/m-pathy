@@ -7,9 +7,15 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getPool } from "@/lib/ledger"; // nur für Pool, nicht für Credit – wir nutzen DB-Funktionen direkt
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-10-29.clover" as Stripe.LatestApiVersion,
-});
+let _stripe: Stripe | null = null;
+function getStripe(): Stripe {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!_stripe) {
+    if (!key) throw new Error("STRIPE_SECRET_KEY missing");
+    _stripe = new Stripe(key, { apiVersion: "2025-10-29.clover" as Stripe.LatestApiVersion });
+  }
+  return _stripe;
+}
 
 function env(name: string) {
   const v = process.env[name];
@@ -24,13 +30,14 @@ export async function POST(req: Request) {
   let event: Stripe.Event;
 
   // rohen Body holen, NICHT req.json()
-  const rawBody = await req.text();
+    const rawBody = await req.text();
 
   try {
-    event = stripe.webhooks.constructEvent(rawBody, sig || "", whSecret);
+    event = getStripe().webhooks.constructEvent(rawBody, sig || "", whSecret);
   } catch (err: any) {
     return NextResponse.json(
       { ok: false, status: "invalid_signature", message: String(err?.message || err) },
+
       { status: 400 }
     );
   }
