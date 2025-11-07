@@ -26,5 +26,8 @@ echo "== Risk/Edge/Fault/Security =="
 run "RP_run"             bash "$DIR/RP_run.sh"
 run "EFK_scan"           bash "$DIR/EFK_scan.sh"
 
+echo "== Webhook =="
+run "A7_webhook_verify"  bash "$DIR/A7_webhook_verify.sh"
+
 echo
 echo "✅ Fertig."

@@ -43,16 +43,14 @@ export async function credit(userId: string, amount: number): Promise<number> {
   assertUser(userId);
   const v = toInt(amount);
   const pool = await getPool();
-  const sql = `
-    INSERT INTO balances (user_id, amount)
-    VALUES ($1, $2)
-    ON CONFLICT (user_id)
-    DO UPDATE SET amount = COALESCE(balances.amount, balances.tokens, 0) + EXCLUDED.amount
-    RETURNING COALESCE(amount, tokens) AS balance
-  `;
-  const { rows } = await pool.query(sql, [userId, v]);
+  // nutzt DB-Funktion, die Non-Negativ & >0 garantiert
+  const { rows } = await pool.query(
+    "SELECT ledger_credit($1::bigint, $2::bigint) AS balance",
+    [Number(userId), v]
+  );
   return Number(rows[0]?.balance ?? 0);
 }
+
 
 /**
  * debit – verringert Guthaben, verhindert Negativsaldo.
@@ -62,17 +60,13 @@ export async function debit(userId: string, amount: number): Promise<number> {
   assertUser(userId);
   const v = toInt(amount);
   const pool = await getPool();
-  const sql = `
-    UPDATE balances
-       SET amount = COALESCE(amount, tokens, 0) - $2
-     WHERE user_id = $1
-       AND COALESCE(amount, tokens, 0) >= $2
-    RETURNING COALESCE(amount, tokens) AS balance
-  `;
-  const { rowCount, rows } = await pool.query(sql, [userId, v]);
-  if (rowCount === 0) throw new Error("insufficient funds or user not found");
+  const { rows } = await pool.query(
+    "SELECT ledger_debit($1::bigint, $2::bigint) AS balance",
+    [Number(userId), v]
+  );
   return Number(rows[0]?.balance ?? 0);
 }
+
 
 /**
  * getBalance – liest aktuellen Stand, Default 0.
@@ -80,11 +74,10 @@ export async function debit(userId: string, amount: number): Promise<number> {
 export async function getBalance(userId: string): Promise<number> {
   assertUser(userId);
   const pool = await getPool();
-  const sql = `
-    SELECT COALESCE(amount, tokens, 0) AS balance
-      FROM balances
-     WHERE user_id = $1
-  `;
-  const { rows } = await pool.query(sql, [userId]);
+  const { rows } = await pool.query(
+    "SELECT ledger_get_balance($1::bigint) AS balance",
+    [Number(userId)]
+  );
   return Number(rows[0]?.balance ?? 0);
 }
+
