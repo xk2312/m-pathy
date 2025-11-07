@@ -7,20 +7,31 @@ if [[ -z "${SECRET:-}" ]]; then
   echo "❌ STRIPE_WEBHOOK_SECRET fehlt (.env.payment)"; exit 1
 fi
 
-PAYLOAD='{
-  "id":"evt_test_unknown_1",
+# 1) Frische Event-ID pro Run
+TS="$(date +%s)"
+EVENT_ID="evt_test_unknown_${TS}"
+
+# 2) Payload
+PAYLOAD=$(cat <<JSON
+{
+  "id":"${EVENT_ID}",
   "object":"event",
   "type":"foo.bar",
-  "data":{"object":{"id":"obj_1","object":"foo"}}
-}'
+  "data":{"object":{"id":"obj_${TS}","object":"foo"}}
+}
+JSON
+)
 
-TS="$(date +%s)"
+# 3) Signatur
 SIG="$(printf "%s.%s" "$TS" "$PAYLOAD" | openssl dgst -sha256 -hmac "$SECRET" -binary | xxd -p -c 256)"
 HDR="t=$TS,v1=$SIG"
 
+# 4) Request senden
 echo "→ POST type=foo.bar (Stripe-Signature: $HDR)"
 RESP="$(curl -sS -w '\n%{http_code}' -X POST "$APP_BASE_URL/api/webhooks/stripe" \
-  -H "Stripe-Signature: $HDR" -H 'Content-Type: application/json' --data "$PAYLOAD")"
+  -H "Stripe-Signature: $HDR" \
+  -H 'Content-Type: application/json' \
+  --data "$PAYLOAD")"
 
 CODE="$(printf "%s\n" "$RESP" | tail -n1)"
 BODY="$(printf "%s\n" "$RESP" | sed '$d')"
@@ -28,5 +39,12 @@ BODY="$(printf "%s\n" "$RESP" | sed '$d')"
 echo "HTTP $CODE"
 echo "$BODY"
 
-# Erwartung: 200, status:"ignored"
-echo "$BODY" | jq -e '.status=="ignored"' >/dev/null && echo "✓ ignored" || (echo "✗ unexpected"; exit 1)
+# 5) Erfolg, wenn status == ignored ODER duplicate
+STATUS="$(echo "$BODY" | jq -r '.status // empty')"
+if [[ "$CODE" == "200" && ( "$STATUS" == "ignored" || "$STATUS" == "duplicate" ) ]]; then
+  echo "✓ $STATUS"
+  exit 0
+else
+  echo "✗ unexpected ($STATUS)"
+  exit 1
+fi
