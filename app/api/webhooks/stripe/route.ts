@@ -55,11 +55,11 @@ export async function POST(req: Request) {
     );
 
     // Standard-Flags
-    let credited = false;
+        let credited = false;
     let creditAmount = 0;
     let debited  = false;
     let debitAmount = 0;
-    let status: "credited" | "failed" | "refunded" | "subscription_update" | "recorded" = "recorded";
+    let status: "credited" | "failed" | "refunded" | "subscription_update" | "recorded" | "ignored" = "recorded";
 
     // 1) Kauf abgeschlossen → Credit (bereits vorhanden)
     if (event.type === "checkout.session.completed") {
@@ -137,12 +137,16 @@ export async function POST(req: Request) {
     }
 
     // 4) Subscriptions (create/delete) → nur dokumentieren (kein Ledger)
-    else if (
+       else if (
       event.type === "customer.subscription.created" ||
       event.type === "customer.subscription.deleted" ||
       event.type === "customer.subscription.updated"
     ) {
       status = "subscription_update";
+    }
+    // 5) Unbekannte Events → ignorieren, aber sauber quittieren
+    else {
+      status = "ignored";
     }
 
     await client.query("COMMIT");
@@ -160,12 +164,24 @@ export async function POST(req: Request) {
       { status: 200 }
     );
 
-  } catch (e: any) {
+
+    } catch (e: any) {
     // duplicate key (idempotent): event schon verbucht
     if (String(e?.message || "").includes("duplicate key") || String(e?.code || "") === "23505") {
       await client.query("ROLLBACK");
       return NextResponse.json(
         { ok: true, status: "duplicate", event_id: event.id, type: event.type },
+        { status: 200 }
+      );
+    }
+    // Serialization Failure (z. B. Deadlock / 40001) → weiches Retry-Signal
+    if (
+      String(e?.code || "") === "40001" ||
+      /serialization failure/i.test(String(e?.message || ""))
+    ) {
+      await client.query("ROLLBACK").catch(() => {});
+      return NextResponse.json(
+        { ok: true, status: "retry", message: "serialization_failure" },
         { status: 200 }
       );
     }
@@ -175,6 +191,7 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   } finally {
+
     client.release();
   }
 }
