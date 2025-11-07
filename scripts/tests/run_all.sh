@@ -28,6 +28,7 @@ run "EFK_scan"           bash "$DIR/EFK_scan.sh"
 
 echo "== Webhook =="
 run "A7_webhook_verify"  bash "$DIR/A7_webhook_verify.sh"
+run "A8_webhook_multi"   bash "$DIR/A8_webhook_multi_event.sh"
 
 echo
 echo "✅ Fertig."
