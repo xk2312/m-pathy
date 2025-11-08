@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 /* Chat-typografische Erweiterung (für .md-prose) */
-@import "../styles/chat-prose.css";
 /* syntax theme for rehype-highlight */
 @import "highlight.js/styles/github-dark.css";
 
@@ -490,3 +489,17 @@ section:target { animation: section-fade .2s ease forwards; }
   }
 }
 
+/* CTA wins against prose link styles */
+.x-cta,
+.x-cta:link,
+.x-cta:visited {
+  text-decoration: none !important;
+  color: #000 !important;
+  background: var(--cta-bg) !important;
+  padding: .75rem 1.25rem !important; /* ≈ py-3 px-5 */
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 1rem !important;      /* ≈ rounded-2xl */
+  box-shadow: 0 1px 2px rgba(255,255,255,.15) !important;
+}
