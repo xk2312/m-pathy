@@ -1,5 +1,4 @@
 // app/(site)/subscription/page.tsx
-"use client";
 import { useEffect } from "react";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
