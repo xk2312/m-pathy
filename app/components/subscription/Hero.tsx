@@ -26,21 +26,16 @@ export default function Hero(){
 
         <div className="mt-6 sm:mt-8">
           <a
-            href="#showcases"
-            aria-label={t("hero_cta")}
-            onClick={() => log("hero_cta_click")}
-            className="
-              x-cta inline-flex items-center justify-center rounded-2xl
-              !px-[1.25rem] !py-[.75rem] text-base sm:text-lg
-              !no-underline visited:!no-underline visited:!text-black
-              shadow-sm !ring-1 !ring-white/15
-              focus:outline-none focus:!ring-2 focus:!ring-white/60
-              hover:translate-y-[-1px] transition-all ease-in-out duration-150
-            "
-            role="button"
-          >
-            {t("hero_cta")}
-          </a>
+  href="#showcases"
+  className="group relative inline-flex items-center justify-center rounded-2xl
+             px-6 py-3 text-base sm:text-lg font-medium text-black bg-white
+             transition-transform duration-200 ease-in-out
+             hover:-translate-y-[2px] focus-visible:outline-none"
+>
+  <span className="absolute -inset-px rounded-2xl bg-white opacity-5 blur-md group-hover:opacity-10 transition duration-200" />
+  <span className="relative z-10">Jetzt beginnen</span>
+</a>
+
         </div>
       </div>
     </section>
