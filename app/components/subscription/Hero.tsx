@@ -25,26 +25,17 @@ export default function Hero(){
         <p className="mt-3 sm:mt-4 text-white/70">{t("hero_sub")}</p>
 
         <div className="mt-6 sm:mt-8">
-          <a
-  href="#showcases"
-  aria-label={t("hero_cta")}
-  onClick={() => log("hero_cta_click_oracle")}
-  className="
-    x-cta inline-flex items-center justify-center rounded-[1.5rem]
-    !px-[1.25rem] !py-[.75rem] text-base sm:text-lg
-    !no-underline visited:!no-underline visited:!text-black
-    bg-gradient-to-r from-[#6EE7B7] via-[#3B82F6] to-[#9333EA]
-    shadow-xl shadow-purple-700/30
-    animate-[pulse_3.5s_ease-in-out_infinite]
-    focus:outline-none focus:!ring-2 focus:!ring-white/70
-    hover:scale-[1.03] hover:brightness-110 transition-all duration-300
-  "
-  role="button"
->
-  {t("hero_cta")}
-</a>
-
-        </div>
+  <a
+    id="hero-cta"
+    href="#showcases"
+    aria-label={t("hero_cta")}
+    onClick={() => log("hero_cta_click_oracle")}
+    className="x-cta"
+    role="button"
+  >
+    {t("hero_cta")}
+  </a>
+</div>
       </div>
     </section>
   );
