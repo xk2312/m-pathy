@@ -15,10 +15,10 @@ export default function Hero(){
       {/* Always render; reduced-motion disables animation via CSS */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 x-micro-pulse bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.08),_transparent_60%)]"
+        className="pointer-events-none absolute inset-0 x-micro-pulse
+                   bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.08),_transparent_60%)]"
       />
       <div className="relative max-w-xl mx-auto text-center">
-
         <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">{t("hero_title")}</h1>
         <p className="mt-3 sm:mt-4 text-white/70">{t("hero_sub")}</p>
         <div className="mt-6 sm:mt-8">
@@ -26,11 +26,14 @@ export default function Hero(){
             href="#showcases"
             aria-label={t("hero_cta")}
             onClick={() => log("hero_cta_click")}
-            className="x-cta inline-flex items-center justify-center rounded-2xl px-5 py-3 text-base sm:text-lg bg-white text-black hover:translate-y-[-1px] focus:outline-none focus:ring-2 focus:ring-white/60"
+            className="x-cta inline-flex items-center justify-center rounded-2xl px-5 py-3
+                       text-base sm:text-lg bg-white text-black hover:translate-y-[-1px]
+                       focus:outline-none focus:ring-2 focus:ring-white/60"
           >
             {t("hero_cta")}
           </a>
         </div>
+
 
       </div>
     </section>
