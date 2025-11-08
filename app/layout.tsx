@@ -1,5 +1,5 @@
-import "./global.css";
 import "../styles/chat-prose.css";
+import "./global.css";
 // import "../styles/input-bar.css";
 
 import React from "react";
