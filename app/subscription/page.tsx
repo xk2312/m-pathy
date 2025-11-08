@@ -2,7 +2,7 @@
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
 
-// use absolute aliases for clarity (no ../)
+// absolute, eindeutig auf app/components/**
 import Hero from "@/app/components/subscription/Hero";
 import ShowcaseCarousel from "@/app/components/subscription/ShowcaseCarousel";
 import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
@@ -16,7 +16,7 @@ export default function SubscriptionPage(){
   return (
     <LanguageProvider dict={dict}>
       <main className="min-h-dvh bg-black text-white selection:bg-white/20">
-        {/* Anchor targets enable CSS :target fade and CTA jump */}
+        {/* Anker für CSS :target und Hero-CTA */}
         <section id="top" className="px-4 py-10 sm:py-14">
           <Hero />
         </section>
@@ -40,6 +40,7 @@ export default function SubscriptionPage(){
         <section id="cta" className="px-4 py-10 sm:py-14">
           <FinalCTA />
         </section>
+
       </main>
     </LanguageProvider>
   );
