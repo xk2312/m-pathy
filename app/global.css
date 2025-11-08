@@ -431,8 +431,62 @@ div[data-convo="1"] {
   }
 
   /* keep cells readable when narrow; you may remove if wrapping is preferred */
-  .md table th, .md table td,
+   .md table th, .md table td,
   .markdown table th, .markdown table td {
     white-space: nowrap;         /* prevent ugly multi-line cell breaks */
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   17.3 Design Optimization tokens + motion guards
+   ───────────────────────────────────────────────────────────── */
+:root {
+  /* Chromatic minimalism: ≤3 active hues */
+  --hue-primary: 0deg;     /* neutral/white base */
+  --hue-accent: 220deg;    /* cool blue */
+  --hue-warm: 42deg;       /* gentle gold */
+
+  --cta-bg: hsl(var(--hue-accent) 100% 55%);
+  --cta-bg-warm: linear-gradient(90deg,
+    hsl(var(--hue-accent) 100% 55%) 0%,
+    hsl(var(--hue-warm) 95% 58%) 100%
+  );
+  --halo: 0 0 0 6px rgba(255,255,255,0.06);
+}
+
+/* Micro-pulse (very subtle; compositor-safe) */
+@keyframes micro-pulse {
+  0%, 100% { opacity: .08; transform: translateZ(0); }
+  50%      { opacity: .10; transform: translateZ(0); }
+}
+
+/* Focus/hover halo for primary CTA */
+@keyframes halo-in   { from { box-shadow: none; } to { box-shadow: var(--halo); } }
+@keyframes halo-out  { from { box-shadow: var(--halo); } to { box-shadow: none; } }
+
+/* Section cross-fade (for :target anchors) */
+@keyframes section-fade { from { opacity: .6; } to { opacity: 1; } }
+
+/* Utilities */
+.x-micro-pulse { animation: micro-pulse 4s ease-in-out infinite; }
+
+.x-cta {
+  background: var(--cta-bg);
+  transition: background .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+.x-cta:hover { background: var(--cta-bg-warm); }
+.x-cta:focus-visible { animation: halo-in .16s ease forwards; }
+.x-cta:where(:not(:focus-visible)) { animation: halo-out .16s ease forwards; }
+
+section:target { animation: section-fade .2s ease forwards; }
+
+/* Reduced-motion guard */
+@media (prefers-reduced-motion: reduce) {
+  .x-micro-pulse,
+  .x-cta,
+  section:target {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+

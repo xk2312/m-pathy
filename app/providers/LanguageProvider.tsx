@@ -51,6 +51,11 @@ export function LanguageProvider({ dict, children }: { dict: Dict; children: Rea
 
   const value = useMemo(()=>({ lang, t, hint: langHint(lang), setLang }),[lang,t]);
   return <LanguageCtx.Provider value={value}>{children}</LanguageCtx.Provider>;
+  
+  useEffect(() => {
+  document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+}, [lang]);
+
 }
 
 export function useLang(){ return useContext(LanguageCtx); }
