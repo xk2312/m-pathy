@@ -1,4 +1,6 @@
 // app/(site)/subscription/page.tsx
+"use client";
+
 import { useEffect } from "react";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
@@ -10,8 +12,6 @@ import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
 import ModesAuto from "@/app/components/subscription/ModesAuto";
 import TrustPanel from "@/app/components/subscription/TrustPanel";
 import FinalCTA from "@/app/components/subscription/FinalCTA";
-
-export const metadata = { title: "m-pathy.ai — Subscription" };
 
 export default function SubscriptionPage(){
   useEffect(() => {
