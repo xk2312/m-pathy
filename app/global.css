@@ -1,6 +1,6 @@
-@tailwind base;
+/*@tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities;*/
 
 /* Chat-typografische Erweiterung (für .md-prose) */
 @import "../styles/chat-prose.css";
