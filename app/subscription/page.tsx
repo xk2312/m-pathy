@@ -29,7 +29,7 @@ export default function SubscriptionPage(){
       <main className="min-h-dvh bg-black text-white selection:bg-white/20">
         {/* Anker für CSS :target und Hero-CTA */}
 
-<section id="top" className="px-4 pt-24 pb-16 sm:pt-32 sm:pb-20">
+<section id="top" className="px-4 py-20 sm:py-28">
           <Hero />
         </section>
 
