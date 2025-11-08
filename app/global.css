@@ -510,10 +510,12 @@ section:target {
     transition: none !important;
   }
 }
+
 html.enable-scroll {
   overflow-y: auto !important;
 }
 
+/* ─── Scoped CTA Override (final: mode_wisdom) ───── */
 .x-cta,
 .x-cta:link,
 .x-cta:visited,
@@ -534,10 +536,12 @@ html.enable-scroll {
   align-items: center !important;
   text-decoration: none !important;
 }
+
 #hero-cta:hover {
   background: #c4a9ff !important;
   transform: translateY(-1px) scale(1.01);
 }
+
 #hero-cta:focus-visible {
   outline: 2px solid rgba(255,255,255,.6) !important;
   outline-offset: 2px !important;
