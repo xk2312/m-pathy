@@ -514,27 +514,31 @@ html.enable-scroll {
   overflow-y: auto !important;
 }
 
-/* ─── Scoped CTA Override (wins against prose link rules) ───── */
 .x-cta,
 .x-cta:link,
 .x-cta:visited,
 #hero-cta,
 #hero-cta:link,
 #hero-cta:visited {
-  text-decoration: none !important;
-  color: #000 !important;
-  background: var(--cta-bg) !important;
-  padding: .75rem 1.25rem !important;      /* ≈ py-3 px-5 */
+  margin-top: 1.5rem !important;                        /* +24px */
+  padding: .85rem 1.5rem !important;                   /* leicht größer */
+  background: #b095f7 !important;                     /* mode_wisdom */
+  color: black !important;
+  font-style: italic !important;
+  font-weight: 500 !important;
+  border-radius: 1.25rem !important;                   /* ≈ rounded-3xl */
+  box-shadow: 0 3px 6px rgba(255, 255, 255, 0.25) !important;
+  transition: all 180ms ease-in-out !important;
   display: inline-flex !important;
-  align-items: center !important;
   justify-content: center !important;
-  border-radius: 1rem !important;          /* ≈ rounded-2xl */
-  box-shadow: 0 1px 2px rgba(255,255,255,.15) !important;
+  align-items: center !important;
+  text-decoration: none !important;
 }
 #hero-cta:hover {
-  background: var(--cta-bg-warm) !important;
-  transform: translateY(-1px);
+  background: #c4a9ff !important;
+  transform: translateY(-1px) scale(1.01);
 }
 #hero-cta:focus-visible {
-  box-shadow: 0 0 0 2px rgba(255,255,255,.6) !important;
+  outline: 2px solid rgba(255,255,255,.6) !important;
+  outline-offset: 2px !important;
 }
