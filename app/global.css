@@ -1,6 +1,6 @@
-/*@tailwind base;
+@tailwind base;
 @tailwind components;
-@tailwind utilities;*/
+@tailwind utilities;
 
 /* Chat-typografische Erweiterung (für .md-prose) */
 @import "../styles/chat-prose.css";
@@ -436,7 +436,6 @@ div[data-convo="1"] {
     white-space: nowrap;         /* prevent ugly multi-line cell breaks */
   }
 }
-
 /* ─────────────────────────────────────────────────────────────
    17.3 Design Optimization tokens + motion guards
    ───────────────────────────────────────────────────────────── */
@@ -457,7 +456,7 @@ div[data-convo="1"] {
 /* Micro-pulse (very subtle; compositor-safe) */
 @keyframes micro-pulse {
   0%, 100% { opacity: .08; transform: translateZ(0); }
-  50%      { opacity: .10; transform: translateZ(0); }
+  50%      { opacity: .12; transform: translateZ(0); }
 }
 
 /* Focus/hover halo for primary CTA */
@@ -467,18 +466,34 @@ div[data-convo="1"] {
 /* Section cross-fade (for :target anchors) */
 @keyframes section-fade { from { opacity: .6; } to { opacity: 1; } }
 
-/* Utilities */
-.x-micro-pulse { animation: micro-pulse 4s ease-in-out infinite; }
+/* ─── Utilities ─────────────────────────────────────────────── */
+.x-micro-pulse {
+  animation: micro-pulse 4s ease-in-out infinite;
+  will-change: opacity;
+}
 
 .x-cta {
   background: var(--cta-bg);
-  transition: background .16s ease, box-shadow .16s ease, transform .16s ease;
+  transition:
+    background .16s ease,
+    box-shadow .16s ease,
+    transform .16s ease;
 }
-.x-cta:hover { background: var(--cta-bg-warm); }
-.x-cta:focus-visible { animation: halo-in .16s ease forwards; }
-.x-cta:where(:not(:focus-visible)) { animation: halo-out .16s ease forwards; }
+.x-cta:hover {
+  background: var(--cta-bg-warm);
+  transform: translateY(-1px);
+}
+.x-cta:focus-visible {
+  animation: halo-in .16s ease forwards;
+}
+.x-cta:where(:not(:focus-visible)) {
+  animation: halo-out .16s ease forwards;
+}
 
-section:target { animation: section-fade .2s ease forwards; }
+/* Section fade on anchor jump */
+section:target {
+  animation: section-fade .2s ease forwards;
+}
 
 /* Reduced-motion guard */
 @media (prefers-reduced-motion: reduce) {
@@ -490,17 +505,27 @@ section:target { animation: section-fade .2s ease forwards; }
   }
 }
 
-/* CTA wins against prose link styles */
+/* ─── Scoped CTA Override (wins against prose link rules) ───── */
 .x-cta,
 .x-cta:link,
-.x-cta:visited {
+.x-cta:visited,
+#hero-cta,
+#hero-cta:link,
+#hero-cta:visited {
   text-decoration: none !important;
   color: #000 !important;
   background: var(--cta-bg) !important;
-  padding: .75rem 1.25rem !important; /* ≈ py-3 px-5 */
+  padding: .75rem 1.25rem !important;      /* ≈ py-3 px-5 */
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  border-radius: 1rem !important;      /* ≈ rounded-2xl */
+  border-radius: 1rem !important;          /* ≈ rounded-2xl */
   box-shadow: 0 1px 2px rgba(255,255,255,.15) !important;
+}
+#hero-cta:hover {
+  background: var(--cta-bg-warm) !important;
+  transform: translateY(-1px);
+}
+#hero-cta:focus-visible {
+  box-shadow: 0 0 0 2px rgba(255,255,255,.6) !important;
 }

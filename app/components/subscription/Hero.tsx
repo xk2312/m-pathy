@@ -2,12 +2,14 @@
 "use client";
 import { useLang } from "@/app/providers/LanguageProvider";
 
-export default function Hero(){
+export default function Hero() {
   const { t } = useLang();
 
   // tiny analytics shim (no PII)
-  function log(evt: string, detail?: any){
-    try { window.dispatchEvent(new CustomEvent(evt, { detail })); } catch {}
+  function log(evt: string, detail?: any) {
+    try {
+      window.dispatchEvent(new CustomEvent(evt, { detail }));
+    } catch {}
   }
 
   return (
@@ -21,15 +23,19 @@ export default function Hero(){
 
       {/* Content above pulse */}
       <div className="relative z-10 max-w-xl mx-auto text-center">
-        <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">{t("hero_title")}</h1>
+        <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">
+          {t("hero_title")}
+        </h1>
         <p className="mt-3 sm:mt-4 text-white/70">{t("hero_sub")}</p>
 
         <div className="mt-6 sm:mt-8">
           <a
+            id="hero-cta"
             href="#showcases"
             aria-label={t("hero_cta")}
             onClick={() => log("hero_cta_click")}
             className="
+              not-prose
               x-cta inline-flex items-center justify-center rounded-2xl
               !px-5 !py-3 text-base sm:text-lg
               !bg-white !text-black hover:translate-y-[-1px]
