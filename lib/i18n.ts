@@ -300,3 +300,48 @@ if (typeof window !== "undefined") {
 
   attachLocaleWatchers();
 }
+// add this export
+export const dict = {
+  en: {
+    hero_title: "The Operating System for Creation",
+    hero_sub: "From idea to impact in minutes.",
+    hero_cta: "Begin your journey",
+    s1_title: "start agency",
+    s1_sub: "Launch campaigns that learn.",
+    s2_title: "NEM — Biology × Chemistry",
+    s2_sub: "Design new entities safely.",
+    s2_why: "Why possible on m-pathy.ai? Orchestrated roles, constraint checks, symbolic proof.",
+    s3_title: "GalaxyEducation — Blockchain",
+    s3_sub: "Understand blockchain in 60s.",
+    council_hint: "Tap a light to meet the council.",
+    modes_hint: "Modes adapt to you — automatically.",
+    trust_title: "Own your data.",
+    trust_sub: "One-tap JSON export & delete.",
+    cta_title: "Start with GalaxyBuilder",
+    cta_sub: "Build the future with clarity.",
+    cta_btn_primary: "Get started",
+    cta_btn_secondary: "See pricing",
+  },
+  de: {
+    hero_title: "Das Betriebssystem für Schöpfung",
+    hero_sub: "Von der Idee zur Wirkung in Minuten.",
+    hero_cta: "Jetzt beginnen",
+    s1_title: "start agency",
+    s1_sub: "Starte Kampagnen, die lernen.",
+    s2_title: "NEM — Biologie × Chemie",
+    s2_sub: "Entwickle neue Einheiten sicher.",
+    s2_why: "Warum auf m-pathy.ai? Orchestrierte Rollen, Constraint-Checks, symbolischer Proof.",
+    s3_title: "GalaxyEducation — Blockchain",
+    s3_sub: "Verstehe Blockchain in 60s.",
+    council_hint: "Tippe ein Licht an, um den Rat zu treffen.",
+    modes_hint: "Modi passen sich automatisch an.",
+    trust_title: "Du besitzt deine Daten.",
+    trust_sub: "JSON-Export & Löschen mit einem Tipp.",
+    cta_title: "Starte mit GalaxyBuilder",
+    cta_sub: "Baue die Zukunft mit Klarheit.",
+    cta_btn_primary: "Loslegen",
+    cta_btn_secondary: "Preise ansehen",
+  },
+  // weitere Sprachen können identisch gespiegelt werden …
+} as const;
+export type UIDict = typeof dict; 
