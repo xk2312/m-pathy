@@ -20,7 +20,7 @@ export default function Hero(){
       />
 
       {/* Content above pulse */}
-<div className="relative z-10 max-w-xl mx-auto text-center mt-20 sm:mt-28">
+        <div className="relative z-10 max-w-xl mx-auto text-center mt-20 sm:mt-28">
         <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">{t("hero_title")}</h1>
         <p className="mt-3 sm:mt-4 text-white/70">{t("hero_sub")}</p>
 
@@ -36,6 +36,7 @@ export default function Hero(){
     {t("hero_cta")}
   </a>
 </div>
+
       </div>
     </section>
   );
