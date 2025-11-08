@@ -23,6 +23,12 @@ html, body {
   touch-action: pan-y pinch-zoom;
 }
 
+/* Scroll-Freigabe nur wenn explizit gesetzt */
+html.enable-scroll {
+  overflow-y: auto !important;
+}
+
+
 html {
   overflow-x: hidden;
   overflow-y: hidden;        /* ⬅︎ Body/Seite scrollt NICHT */
@@ -503,6 +509,9 @@ section:target {
     animation: none !important;
     transition: none !important;
   }
+}
+html.enable-scroll {
+  overflow-y: auto !important;
 }
 
 /* ─── Scoped CTA Override (wins against prose link rules) ───── */

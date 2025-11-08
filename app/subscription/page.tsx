@@ -1,4 +1,6 @@
 // app/(site)/subscription/page.tsx
+"use client";
+import { useEffect } from "react";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
 
@@ -13,6 +15,13 @@ import FinalCTA from "@/app/components/subscription/FinalCTA";
 export const metadata = { title: "m-pathy.ai — Subscription" };
 
 export default function SubscriptionPage(){
+  useEffect(() => {
+    document.documentElement.classList.add("enable-scroll");
+    return () => {
+      document.documentElement.classList.remove("enable-scroll");
+    };
+  }, []);
+
   return (
     <LanguageProvider dict={dict}>
       <main className="min-h-dvh bg-black text-white selection:bg-white/20">
@@ -40,7 +49,6 @@ export default function SubscriptionPage(){
         <section id="cta" className="px-4 py-10 sm:py-14">
           <FinalCTA />
         </section>
-
       </main>
     </LanguageProvider>
   );
