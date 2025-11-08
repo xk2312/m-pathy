@@ -2,13 +2,13 @@
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
 
-// relative zu app/subscription → app/components/…
-import Hero from "../components/subscription/Hero";
-import ShowcaseCarousel from "../components/subscription/ShowcaseCarousel";
-import CouncilOrbit from "../components/subscription/CouncilOrbit";
-import ModesAuto from "../components/subscription/ModesAuto";
-import TrustPanel from "../components/subscription/TrustPanel";
-import FinalCTA from "../components/subscription/FinalCTA";
+// use absolute aliases for clarity (no ../)
+import Hero from "@/app/components/subscription/Hero";
+import ShowcaseCarousel from "@/app/components/subscription/ShowcaseCarousel";
+import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
+import ModesAuto from "@/app/components/subscription/ModesAuto";
+import TrustPanel from "@/app/components/subscription/TrustPanel";
+import FinalCTA from "@/app/components/subscription/FinalCTA";
 
 export const metadata = { title: "m-pathy.ai — Subscription" };
 
@@ -16,20 +16,30 @@ export default function SubscriptionPage(){
   return (
     <LanguageProvider dict={dict}>
       <main className="min-h-dvh bg-black text-white selection:bg-white/20">
-        <Hero />
-        <section className="px-4 py-10 sm:py-14">
+        {/* Anchor targets enable CSS :target fade and CTA jump */}
+        <section id="top" className="px-4 py-10 sm:py-14">
+          <Hero />
+        </section>
+
+        <section id="showcases" className="px-4 py-10 sm:py-14">
           <ShowcaseCarousel />
         </section>
-        <section className="px-4 py-10 sm:py-14">
+
+        <section id="council" className="px-4 py-10 sm:py-14">
           <CouncilOrbit />
         </section>
-        <section className="px-4 py-10 sm:py-14">
+
+        <section id="modes" className="px-4 py-10 sm:py-14">
           <ModesAuto />
         </section>
-        <section className="px-4 py-10 sm:py-14">
+
+        <section id="trust" className="px-4 py-10 sm:py-14">
           <TrustPanel />
         </section>
-        <FinalCTA />
+
+        <section id="cta" className="px-4 py-10 sm:py-14">
+          <FinalCTA />
+        </section>
       </main>
     </LanguageProvider>
   );
