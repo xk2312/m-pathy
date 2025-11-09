@@ -33,7 +33,46 @@ export default function SubscriptionPage(){
   <Hero />
 </section>
 
-<section id="showcases" className="px-4 pt-12 sm:pt-16 pb-10 sm:pb-14">
+<section
+  id="showcases"
+  className="relative px-4 pt-12 sm:pt-16 pb-10 sm:pb-14"
+>
+  {/* 🌌 Breathing Galaxy (dekorativ, a11y-hidden) */}
+  <div
+    aria-hidden="true"
+    className="pointer-events-none absolute -inset-x-24 -top-20 h-[420px] sm:h-[520px] z-[-1] opacity-50"
+  >
+    {/* Violet core */}
+    <span
+      className="absolute inset-0 mix-blend-screen blur-3xl animate-pulse"
+      style={{
+        background:
+          "radial-gradient(50% 50% at 50% 50%, rgba(139,92,246,0.35) 0%, rgba(139,92,246,0.00) 60%)",
+        animationDuration: "2600ms",
+      }}
+    />
+    {/* Cyan halo */}
+    <span
+      className="absolute inset-x-10 top-10 mix-blend-screen blur-3xl animate-pulse"
+      style={{
+        background:
+          "radial-gradient(45% 45% at 60% 40%, rgba(34,211,238,0.22) 0%, rgba(34,211,238,0.00) 60%)",
+        animationDuration: "3200ms",
+        animationDelay: "160ms",
+      }}
+    />
+    {/* Warm accent */}
+    <span
+      className="absolute inset-x-24 top-16 mix-blend-screen blur-2xl animate-pulse"
+      style={{
+        background:
+          "radial-gradient(40% 40% at 40% 55%, rgba(251,191,36,0.16) 0%, rgba(251,191,36,0.00) 60%)",
+        animationDuration: "3400ms",
+        animationDelay: "320ms",
+      }}
+    />
+  </div>
+
   <ShowcaseCarousel />
 </section>
 
