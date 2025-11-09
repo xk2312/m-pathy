@@ -35,12 +35,12 @@ export default function SubscriptionPage(){
 
 <section
   id="showcases"
-  className="relative px-4 pt-12 sm:pt-16 pb-10 sm:pb-14"
+  className="relative px-4 pt-12 sm:pt-16 pb-10 sm:pb-14 overflow-visible"
 >
   {/* 🌌 Breathing Galaxy (dekorativ, a11y-hidden) */}
   <div
     aria-hidden="true"
-    className="pointer-events-none absolute -inset-x-24 -top-20 h-[420px] sm:h-[520px] z-[-1] opacity-50"
+    className="pointer-events-none absolute -inset-x-24 -top-20 h-[420px] sm:h-[520px] z-0 opacity-50"
   >
     {/* Violet core */}
     <span
@@ -71,9 +71,11 @@ export default function SubscriptionPage(){
         animationDelay: "320ms",
       }}
     />
-  </div>
+   </div>
 
-  <ShowcaseCarousel />
+  <div className="relative z-10">
+    <ShowcaseCarousel />
+  </div>
 </section>
 
 
