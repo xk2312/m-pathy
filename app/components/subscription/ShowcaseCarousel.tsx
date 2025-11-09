@@ -141,17 +141,18 @@ function Tabs({ labels, idx, setIdx }:{
     else if (key === "Enter" || key === " ") { e.preventDefault(); activate(idx); }
   }
 
-  return (
+    return (
     <div
       role="tablist"
       aria-label="Showcases"
       onKeyDown={onKeyDown}
-      className="mt-3 inline-flex items-center gap-2 rounded-2xl border border-white/10 p-1 bg-white/5"
+      className="mt-3 inline-flex items-center gap-2 rounded-2xl border border-white/10 p-1 bg-white/5 text-white"
     >
+
             {labels.map((label, i) => {
         const selected = i === idx;
         return (
-          <button
+                    <button
             key={i}
             role="tab"
             aria-selected={selected}
@@ -160,16 +161,16 @@ function Tabs({ labels, idx, setIdx }:{
             ref={(el) => { btnRefs.current[i] = el; }}  // returns void
             onClick={() => activate(i)}
             className={[
-
-              "px-3 py-1.5 rounded-xl text-sm",
+              "px-3 py-1.5 rounded-xl text-sm leading-none whitespace-nowrap font-medium",
               "transition-transform focus-visible:outline-2 focus-visible:outline-cyan-300/55 focus-visible:outline-offset-2",
               selected
                 ? "bg-white/20 text-white"
-                : "bg-transparent text-white/70 hover:text-white"
+                : "bg-transparent text-white/80 hover:text-white"
             ].join(" ")}
           >
             {label}
           </button>
+
         );
       })}
     </div>
