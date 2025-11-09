@@ -25,16 +25,22 @@ export default function SubscriptionPage() {
     <LanguageProvider dict={dict}>
       {/* Grundgerüst: volle Breite für den Hintergrund, Inhalte immer zentriert */}
       <main className="min-h-dvh bg-black text-white selection:bg-white/20 antialiased">
-        {/* ───────── Hero ───────── */}
-        <section id="top" className="py-16 sm:py-24 lg:py-28">
+        {/* ───────── Hero ─────────
+            Wunsch: +60px Padding nach oben */}
+        <section
+          id="top"
+          className="pt-[60px] sm:pt-[80px] lg:pt-[100px] pb-16 sm:pb-24 lg:pb-28"
+        >
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid place-items-center">
-            {/* falls Hero intern schmaler ist, bleibt er trotzdem zentriert */}
             <Hero />
           </div>
         </section>
 
         {/* ───────── Showcase (Tabs / Start Agency) ───────── */}
-        <section id="showcases" className="relative py-14 sm:py-18 lg:py-20 overflow-visible motion-safe">
+        <section
+          id="showcases"
+          className="relative py-14 sm:py-18 lg:py-20 overflow-visible motion-safe"
+        >
           <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
             {/* 🌌 dekorative Galaxy, in der Breite begrenzt & mittig */}
             <div
