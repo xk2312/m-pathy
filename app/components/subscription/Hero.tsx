@@ -5,7 +5,6 @@ import { useLang } from "@/app/providers/LanguageProvider";
 export default function Hero() {
   const { t } = useLang();
 
-  // tiny analytics shim (no PII)
   function log(evt: string, detail?: any) {
     try {
       window.dispatchEvent(new CustomEvent(evt, { detail }));
@@ -13,7 +12,8 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative px-4 pt-[50px] pb-10 sm:pt-[70px] sm:pb-14 overflow-hidden">
+    // ⬇️ Änderung 1: Top-Padding von 50/70px -> 110/130px (+60px)
+    <section className="relative px-4 pt-[110px] pb-10 sm:pt-[130px] sm:pb-14 overflow-hidden">
       {/* Hintergrundpuls */}
       <div
         aria-hidden
@@ -25,7 +25,11 @@ export default function Hero() {
         <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">
           {t("hero_title")}
         </h1>
-        <p className="mt-3 sm:mt-4 text-white/70">{t("hero_sub")}</p>
+
+        {/* ⬇️ Änderung 2: Mindestens 5px Abstand Headline → Subtext */}
+        <p className="mt-[5px] sm:mt-[6px] text-white/70">
+          {t("hero_sub")}
+        </p>
 
         <div className="mt-8 sm:mt-10">
           <a
