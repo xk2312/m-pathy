@@ -123,14 +123,16 @@ export default function ShowcaseCarousel(){
     };
   }, [idx, rm]);
 
-  return (
+    return (
     <div id="showcases" ref={ref} className="max-w-xl mx-auto">
-      {/* 🔹 Tab-Leiste – A11y komplett mit Keyboard */}
-      <Tabs
-        labels={slides.map(s => s.title)}
-        idx={idx}
-        setIdx={setIdx}
-      />
+      {/* 🔹 Tab-Leiste – finaler Abstand & Semantik */}
+      <div className="mt-8 sm:mt-12">
+        <Tabs
+          labels={slides.map(s => s.title)}
+          idx={idx}
+          setIdx={setIdx}
+        />
+      </div>
 
       {/* Panel mit korrekter A11y-Semantik */}
       <h3 className="mt-4 text-2xl font-semibold" id={`panel-title-${idx}`}>
