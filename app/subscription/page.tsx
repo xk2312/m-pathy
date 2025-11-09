@@ -12,7 +12,6 @@ import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
 import ModesAuto from "@/app/components/subscription/ModesAuto";
 import TrustPanel from "@/app/components/subscription/TrustPanel";
 import FinalCTA from "@/app/components/subscription/FinalCTA";
-// import VariantsPreview from "@/app/components/cta/VariantsPreview"; // aktuell nicht sichtbar benötigt
 
 export default function SubscriptionPage() {
   useEffect(() => {
@@ -24,25 +23,23 @@ export default function SubscriptionPage() {
 
   return (
     <LanguageProvider dict={dict}>
+      {/* Grundgerüst: volle Breite für den Hintergrund, Inhalte immer zentriert */}
       <main className="min-h-dvh bg-black text-white selection:bg-white/20 antialiased">
-        {/* ───────────────── Hero ───────────────── */}
+        {/* ───────── Hero ───────── */}
         <section id="top" className="py-16 sm:py-24 lg:py-28">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid place-items-center">
+            {/* falls Hero intern schmaler ist, bleibt er trotzdem zentriert */}
             <Hero />
           </div>
         </section>
 
-        {/* ───────────────── Showcase (Tabs/Start Agency) ───────────────── */}
-        <section
-          id="showcases"
-          className="relative py-12 sm:py-16 lg:py-20 overflow-visible motion-safe"
-        >
-          {/* zentrierter Container */}
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-            {/* 🌌 Breathing Galaxy – dekorativ, hinter dem Content */}
+        {/* ───────── Showcase (Tabs / Start Agency) ───────── */}
+        <section id="showcases" className="relative py-14 sm:py-18 lg:py-20 overflow-visible motion-safe">
+          <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+            {/* 🌌 dekorative Galaxy, in der Breite begrenzt & mittig */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute left-1/2 -translate-x-1/2 -top-10 sm:-top-14 z-0 w-[min(1100px,96vw)] h-[380px] sm:h-[480px] opacity-70"
+              className="pointer-events-none absolute left-1/2 -translate-x-1/2 -top-12 sm:-top-16 z-0 w-[min(1100px,96vw)] h-[380px] sm:h-[480px] opacity-65"
             >
               <span
                 className="absolute inset-0 mix-blend-screen blur-3xl"
@@ -67,37 +64,37 @@ export default function SubscriptionPage() {
               />
             </div>
 
-            {/* Inhalt liegt sicher über der Galaxy */}
-            <div className="relative z-10">
+            {/* Inhalt sicher über der Galaxy und immer zentriert */}
+            <div className="relative z-10 grid place-items-center">
               <ShowcaseCarousel />
             </div>
           </div>
         </section>
 
-        {/* ───────────────── Council ───────────────── */}
+        {/* ───────── Council ───────── */}
         <section id="council" className="py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid place-items-center">
             <CouncilOrbit />
           </div>
         </section>
 
-        {/* ───────────────── Modes ───────────────── */}
+        {/* ───────── Modes ───────── */}
         <section id="modes" className="py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid place-items-center">
             <ModesAuto />
           </div>
         </section>
 
-        {/* ───────────────── Trust ───────────────── */}
+        {/* ───────── Trust ───────── */}
         <section id="trust" className="py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid place-items-center">
             <TrustPanel />
           </div>
         </section>
 
-        {/* ───────────────── Final CTA ───────────────── */}
+        {/* ───────── Final CTA ───────── */}
         <section id="cta" className="py-20 sm:py-24 lg:py-28">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid place-items-center">
             <FinalCTA />
           </div>
         </section>
