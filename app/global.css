@@ -544,3 +544,8 @@ html.enable-scroll {
   outline: 2px solid rgba(255,255,255,.6) !important;
   outline-offset: 2px !important;
 }
+/* additiv, bricht nichts */
+.x-cta { margin-bottom: 0.5rem; } /* Sicherheitsabstand für große Schatten */
+@media (min-width: 640px) {
+  .x-cta { margin-bottom: 0.75rem; }
+}
