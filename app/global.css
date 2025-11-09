@@ -549,3 +549,16 @@ html.enable-scroll {
 @media (min-width: 640px) {
   .x-cta { margin-bottom: 0.75rem; }
 }
+/* Galaxy breath — sichtbar, aber ruhig */
+@keyframes galaxy-breath {
+  0%, 100% { opacity: .22; transform: scale(.985); }
+  50%      { opacity: .45; transform: scale(1.015); }
+}
+
+/* Helper: nur animieren, wenn Motion erlaubt ist */
+.motion-safe .x-galaxy { animation: galaxy-breath 3.2s var(--ease) infinite; }
+
+/* falls du den harten globalen RRM-Kill switch behältst: ok */
+@media (prefers-reduced-motion: reduce){
+  .x-galaxy { animation: none !important; transform: none !important; }
+}

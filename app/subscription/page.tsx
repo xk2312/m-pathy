@@ -35,48 +35,36 @@ export default function SubscriptionPage(){
 
 <section
   id="showcases"
-  className="relative px-4 pt-12 sm:pt-16 pb-10 sm:pb-14 overflow-visible"
+  className="relative px-4 pt-12 sm:pt-16 pb-10 sm:pb-14 overflow-visible motion-safe"
 >
-  {/* 🌌 Breathing Galaxy (dekorativ, a11y-hidden) */}
   <div
     aria-hidden="true"
-    className="pointer-events-none absolute -inset-x-24 -top-20 h-[420px] sm:h-[520px] z-0 opacity-50"
+    className="pointer-events-none absolute -inset-x-24 -top-20 h-[420px] sm:h-[520px] z-0"
   >
-    {/* Violet core */}
     <span
-      className="absolute inset-0 mix-blend-screen blur-3xl animate-pulse"
-      style={{
-        background:
-          "radial-gradient(50% 50% at 50% 50%, rgba(139,92,246,0.35) 0%, rgba(139,92,246,0.00) 60%)",
-        animationDuration: "2600ms",
-      }}
+      className="x-galaxy absolute inset-0 mix-blend-screen blur-3xl"
+      style={{ background:
+        "radial-gradient(50% 50% at 50% 50%, rgba(139,92,246,0.40) 0%, rgba(139,92,246,0.00) 60%)" }}
     />
-    {/* Cyan halo */}
     <span
-      className="absolute inset-x-10 top-10 mix-blend-screen blur-3xl animate-pulse"
-      style={{
-        background:
-          "radial-gradient(45% 45% at 60% 40%, rgba(34,211,238,0.22) 0%, rgba(34,211,238,0.00) 60%)",
-        animationDuration: "3200ms",
-        animationDelay: "160ms",
-      }}
+      className="x-galaxy absolute inset-x-10 top-10 mix-blend-screen blur-3xl"
+      style={{ background:
+        "radial-gradient(45% 45% at 60% 40%, rgba(34,211,238,0.28) 0%, rgba(34,211,238,0.00) 60%)",
+        animationDelay: "180ms" }}
     />
-    {/* Warm accent */}
     <span
-      className="absolute inset-x-24 top-16 mix-blend-screen blur-2xl animate-pulse"
-      style={{
-        background:
-          "radial-gradient(40% 40% at 40% 55%, rgba(251,191,36,0.16) 0%, rgba(251,191,36,0.00) 60%)",
-        animationDuration: "3400ms",
-        animationDelay: "320ms",
-      }}
+      className="x-galaxy absolute inset-x-24 top-16 mix-blend-screen blur-2xl"
+      style={{ background:
+        "radial-gradient(40% 40% at 40% 55%, rgba(251,191,36,0.22) 0%, rgba(251,191,36,0.00) 60%)",
+        animationDelay: "360ms" }}
     />
-   </div>
+  </div>
 
   <div className="relative z-10">
     <ShowcaseCarousel />
   </div>
 </section>
+
 
 
         <section id="council" className="px-4 py-10 sm:py-14">
