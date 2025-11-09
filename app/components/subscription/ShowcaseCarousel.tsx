@@ -193,26 +193,30 @@ function Tabs({ labels, idx, setIdx }:{
         const selected = i === idx;
         return (
           <button
-            key={i}
-            role="tab"
-            aria-selected={selected}
-            aria-controls={`panel-${i}`}
-            id={`tab-${i}`}
-                       ref={(el) => { btnRefs.current[i] = el; }}  // returns void
-            onClick={() => activate(i)}
-            className={[
-              "px-3 py-1.5 rounded-xl text-sm leading-none whitespace-nowrap font-medium",
-              "backdrop-blur-[2px] shadow-sm",
-              "transition-transform duration-150 hover:-translate-y-px",
-              "focus-visible:outline-2 focus-visible:outline-cyan-300/55 focus-visible:outline-offset-2",
-              selected
-                ? "bg-white/20 text-white ring-1 ring-white/15"
-                : "bg-white/10 text-white/80 hover:text-white ring-1 ring-white/10"
-            ].join(" ")}
-          >
-            {label}
+  key={i}
+  role="tab"
+  aria-selected={selected}
+  aria-controls={`panel-${i}`}
+  id={`tab-${i}`}
+  ref={(el) => { btnRefs.current[i] = el; }}  // returns void
+  onClick={() => activate(i)}
+  type="button"
+  className={[
+    // reset & base (kompatibel, keine Slash-Opacity, kein Arbitrary)
+    "appearance-none border-0 bg-transparent",
+    "px-3 py-2 rounded-xl text-sm leading-none whitespace-nowrap font-medium",
+    "shadow-sm transition-transform duration-150 hover:-translate-y-px",
+    "focus-visible:outline-2 focus-visible:outline-cyan-300/55 focus-visible:outline-offset-2",
+    selected
+      // aktiv: halbtransparente weiße Fläche + weiße Schrift
+      ? "bg-white bg-opacity-20 text-white ring-1 ring-white"
+      // inaktiv: leichte Tönung + weiße Schrift mit 80% Opazität
+      : "bg-white bg-opacity-10 text-white opacity-80 hover:opacity-100 ring-1 ring-white"
+  ].join(" ")}
+>
+  {label}
+</button>
 
-          </button>
         );
       })}
     </div>
