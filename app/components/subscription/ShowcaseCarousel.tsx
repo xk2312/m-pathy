@@ -77,16 +77,15 @@ export default function ShowcaseCarousel(){
     };
   }, [slides.length]);
 
-  return (
+    return (
     <div id="showcases" ref={ref} className="max-w-xl mx-auto">
-      <Chip>start agency</Chip>
-
-      {/* 🔹 Neue Tab-Leiste (A11y-Basis, Click-only) */}
+      {/* 🔹 Tab-Leiste – Chip entfernt, um Redundanz zu vermeiden */}
       <Tabs
         labels={slides.map(s => s.title)}
         idx={idx}
         setIdx={setIdx}
       />
+
 
       <h3 className="mt-4 text-2xl font-semibold">{slides[idx].title}</h3>
       <p className="mt-1 text-white/70">{slides[idx].sub}</p>
