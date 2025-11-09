@@ -55,7 +55,7 @@ export default function ShowcaseCarousel(){
 
 
     {/* 2) Einziger Detail-Block für Campaign Plan – unter den Tiles */}
-   <div
+    <div
   role="region"
   aria-label="Campaign Plan Details"
   className={[
@@ -65,10 +65,14 @@ export default function ShowcaseCarousel(){
   ].join(" ")}
 >
   <div className="p-5 sm:p-6">
-    …
-  </div>
-</div>
-
+        <h4 className="text-white font-medium">3-Phasen-Plan</h4>
+        <ol className="mt-3 list-decimal list-inside text-white/80 space-y-1">
+          <li>Scope &amp; Constraints</li>
+          <li>Design &amp; Validation</li>
+          <li>Launch &amp; Learn</li>
+        </ol>
+      </div>
+    </div>
   </>
 )
 
