@@ -1,8 +1,7 @@
-// app/components/subscription/ShowcaseCarousel.tsx
+// components/subscription/ShowcaseCarousel.tsx
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
-
 
 type Slide = { key:string; title:string; sub:string; body: JSX.Element; };
 
@@ -10,6 +9,22 @@ export default function ShowcaseCarousel(){
   const { t } = useLang();
   const [idx, setIdx] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+
+  // ── Reduced-Motion Guard
+  const [rm, setRm] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setRm(mq.matches);
+    update();
+    // older Safari fallback
+    if (mq.addEventListener) mq.addEventListener("change", update);
+    else (mq as any).addListener?.(update);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener("change", update);
+      else (mq as any).removeListener?.(update);
+    };
+  }, []);
 
   const slides: Slide[] = [
     {
@@ -58,7 +73,7 @@ export default function ShowcaseCarousel(){
     },
   ];
 
-  // basic swipe (belassen)
+  // ── basic swipe (belassen)
   useEffect(()=>{
     const el = ref.current; if(!el) return;
     let x0=0, x=0;
@@ -78,6 +93,28 @@ export default function ShowcaseCarousel(){
       el.removeEventListener("touchend", onTouchEnd);
     };
   }, [slides.length]);
+
+  // ── Panel Fade-In (transform/opacity ≤ 200 ms; deaktiviert bei RRM)
+  const panelRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (rm) return; // RRM: keine Animation
+    const el = panelRef.current;
+    if (!el) return;
+    el.style.willChange = "opacity, transform";
+    el.style.opacity = "0";
+    el.style.transform = "translateY(8px)";
+    el.style.transition = "opacity 180ms var(--ease), transform 180ms var(--ease)";
+    // nächste Frame → Zielzustand
+    requestAnimationFrame(() => {
+      el.style.opacity = "1";
+      el.style.transform = "translateY(0)";
+    });
+    // Cleanup
+    return () => {
+      el.style.transition = "";
+      el.style.willChange = "";
+    };
+  }, [idx, rm]);
 
   return (
     <div id="showcases" ref={ref} className="max-w-xl mx-auto">
@@ -100,6 +137,7 @@ export default function ShowcaseCarousel(){
         aria-labelledby={`tab-${idx}`}
         tabIndex={0}
         className="outline-none"
+        ref={panelRef}
       >
         {slides[idx].body}
       </div>
@@ -117,21 +155,17 @@ function Chip({children}:{children:React.ReactNode}){
 function Tabs({ labels, idx, setIdx }:{
   labels: string[]; idx:number; setIdx:(v:number)=>void;
 }){
-  // Refs für Fokus-Steuerung
   const btnRefs = useRef<Array<HTMLButtonElement|null>>([]);
 
   function focusTab(i:number){
     const btn = btnRefs.current[i];
     if (btn) btn.focus();
   }
-
   function activate(i:number){
     const next = Math.max(0, Math.min(labels.length - 1, i));
     setIdx(next);
-    // Fokus zum aktiven Tab
     requestAnimationFrame(()=> focusTab(next));
   }
-
   function onKeyDown(e:React.KeyboardEvent){
     const { key } = e;
     if (key === "ArrowRight") { e.preventDefault(); activate(idx + 1); }
@@ -141,18 +175,17 @@ function Tabs({ labels, idx, setIdx }:{
     else if (key === "Enter" || key === " ") { e.preventDefault(); activate(idx); }
   }
 
-    return (
+  return (
     <div
       role="tablist"
       aria-label="Showcases"
       onKeyDown={onKeyDown}
       className="mt-3 inline-flex items-center gap-2 rounded-2xl border border-white/10 p-1 bg-white/5 text-white"
     >
-
-            {labels.map((label, i) => {
+      {labels.map((label, i) => {
         const selected = i === idx;
         return (
-                    <button
+          <button
             key={i}
             role="tab"
             aria-selected={selected}
@@ -162,7 +195,9 @@ function Tabs({ labels, idx, setIdx }:{
             onClick={() => activate(i)}
             className={[
               "px-3 py-1.5 rounded-xl text-sm leading-none whitespace-nowrap font-medium",
-              "transition-transform focus-visible:outline-2 focus-visible:outline-cyan-300/55 focus-visible:outline-offset-2",
+              // sanfter Hover-Lift (compositor-sicher)
+              "transition-transform duration-150 hover:-translate-y-px",
+              "focus-visible:outline-2 focus-visible:outline-cyan-300/55 focus-visible:outline-offset-2",
               selected
                 ? "bg-white/20 text-white"
                 : "bg-transparent text-white/80 hover:text-white"
@@ -170,7 +205,6 @@ function Tabs({ labels, idx, setIdx }:{
           >
             {label}
           </button>
-
         );
       })}
     </div>
