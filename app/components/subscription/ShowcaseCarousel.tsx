@@ -1,7 +1,8 @@
-// components/subscription/ShowcaseCarousel.tsx
+// app/components/subscription/ShowcaseCarousel.tsx
 "use client";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
+
 
 type Slide = { key:string; title:string; sub:string; body: JSX.Element; };
 
@@ -9,6 +10,7 @@ export default function ShowcaseCarousel(){
   const { t } = useLang();
   const [idx, setIdx] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+
   const slides: Slide[] = [
     {
       key:"s1",
@@ -77,19 +79,30 @@ export default function ShowcaseCarousel(){
     };
   }, [slides.length]);
 
-    return (
+  return (
     <div id="showcases" ref={ref} className="max-w-xl mx-auto">
-      {/* 🔹 Tab-Leiste – Chip entfernt, um Redundanz zu vermeiden */}
+      {/* 🔹 Tab-Leiste – A11y komplett mit Keyboard */}
       <Tabs
         labels={slides.map(s => s.title)}
         idx={idx}
         setIdx={setIdx}
       />
 
-
-      <h3 className="mt-4 text-2xl font-semibold">{slides[idx].title}</h3>
+      {/* Panel mit korrekter A11y-Semantik */}
+      <h3 className="mt-4 text-2xl font-semibold" id={`panel-title-${idx}`}>
+        {slides[idx].title}
+      </h3>
       <p className="mt-1 text-white/70">{slides[idx].sub}</p>
-      {slides[idx].body}
+
+      <div
+        role="tabpanel"
+        id={`panel-${idx}`}
+        aria-labelledby={`tab-${idx}`}
+        tabIndex={0}
+        className="outline-none"
+      >
+        {slides[idx].body}
+      </div>
 
       {/* Sekundär-Nav (Dots) bleibt vorerst erhalten */}
       <Dots n={slides.length} idx={idx} setIdx={setIdx} />
@@ -104,13 +117,38 @@ function Chip({children}:{children:React.ReactNode}){
 function Tabs({ labels, idx, setIdx }:{
   labels: string[]; idx:number; setIdx:(v:number)=>void;
 }){
+  // Refs für Fokus-Steuerung
+  const btnRefs = useRef<Array<HTMLButtonElement|null>>([]);
+
+  function focusTab(i:number){
+    const btn = btnRefs.current[i];
+    if (btn) btn.focus();
+  }
+
+  function activate(i:number){
+    const next = Math.max(0, Math.min(labels.length - 1, i));
+    setIdx(next);
+    // Fokus zum aktiven Tab
+    requestAnimationFrame(()=> focusTab(next));
+  }
+
+  function onKeyDown(e:React.KeyboardEvent){
+    const { key } = e;
+    if (key === "ArrowRight") { e.preventDefault(); activate(idx + 1); }
+    else if (key === "ArrowLeft") { e.preventDefault(); activate(idx - 1); }
+    else if (key === "Home") { e.preventDefault(); activate(0); }
+    else if (key === "End") { e.preventDefault(); activate(labels.length - 1); }
+    else if (key === "Enter" || key === " ") { e.preventDefault(); activate(idx); }
+  }
+
   return (
     <div
       role="tablist"
       aria-label="Showcases"
+      onKeyDown={onKeyDown}
       className="mt-3 inline-flex items-center gap-2 rounded-2xl border border-white/10 p-1 bg-white/5"
     >
-      {labels.map((label, i) => {
+            {labels.map((label, i) => {
         const selected = i === idx;
         return (
           <button
@@ -119,10 +157,12 @@ function Tabs({ labels, idx, setIdx }:{
             aria-selected={selected}
             aria-controls={`panel-${i}`}
             id={`tab-${i}`}
-            onClick={() => setIdx(i)}
+            ref={(el) => { btnRefs.current[i] = el; }}  // returns void
+            onClick={() => activate(i)}
             className={[
+
               "px-3 py-1.5 rounded-xl text-sm",
-              "transition-transform",
+              "transition-transform focus-visible:outline-2 focus-visible:outline-cyan-300/55 focus-visible:outline-offset-2",
               selected
                 ? "bg-white/20 text-white"
                 : "bg-transparent text-white/70 hover:text-white"
