@@ -29,13 +29,14 @@ export default function SubscriptionPage(){
       <main className="min-h-dvh bg-black text-white selection:bg-white/20">
         {/* Anker für CSS :target und Hero-CTA */}
 
-<section id="top" className="px-4 py-20 sm:py-28">
-          <Hero />
-        </section>
+<section id="top" className="px-4 pt-20 sm:pt-28 pb-8 sm:pb-10">
+  <Hero />
+</section>
 
-        <section id="showcases" className="px-4 py-10 sm:py-14">
-          <ShowcaseCarousel />
-        </section>
+<section id="showcases" className="px-4 pt-12 sm:pt-16 pb-10 sm:pb-14">
+  <ShowcaseCarousel />
+</section>
+
 
         <section id="council" className="px-4 py-10 sm:py-14">
           <CouncilOrbit />
