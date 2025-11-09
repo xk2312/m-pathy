@@ -26,21 +26,20 @@ export default function SubscriptionPage() {
       {/* Grundgerüst: volle Breite für den Hintergrund, Inhalte immer zentriert */}
       <main className="min-h-dvh bg-black text-white selection:bg-white/20 antialiased">
         {/* ───────── Hero ─────────
-            Wunsch: +60px Padding nach oben */}
+            Top-Luft zentral hier; Hero selbst hat keine äußere Section */}
         <section
-  id="top"
-  className="pt-[120px] sm:pt-[140px] lg:pt-[160px] pb-16 sm:pb-24 lg:pb-28"
->
-<div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
-    <Hero />
-  </div>
-</section>
-
+          id="top"
+          className="pt-[120px] sm:pt-[140px] lg:pt-[160px] pb-20 sm:pb-24 lg:pb-28"
+        >
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
+            <Hero />
+          </div>
+        </section>
 
         {/* ───────── Showcase (Tabs / Start Agency) ───────── */}
         <section
           id="showcases"
-          className="relative py-14 sm:py-18 lg:py-20 overflow-visible motion-safe"
+          className="relative py-16 sm:py-18 lg:py-20 overflow-visible motion-safe"
         >
           <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
             {/* 🌌 dekorative Galaxy, in der Breite begrenzt & mittig */}
@@ -72,7 +71,7 @@ export default function SubscriptionPage() {
             </div>
 
             {/* Inhalt sicher über der Galaxy und immer zentriert */}
-            <div className="relative z-10 grid place-items-center">
+            <div className="relative z-10 flex justify-center">
               <ShowcaseCarousel />
             </div>
           </div>
@@ -80,28 +79,28 @@ export default function SubscriptionPage() {
 
         {/* ───────── Council ───────── */}
         <section id="council" className="py-16 sm:py-20 lg:py-24">
-<div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
             <CouncilOrbit />
           </div>
         </section>
 
         {/* ───────── Modes ───────── */}
         <section id="modes" className="py-16 sm:py-20 lg:py-24">
-<div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
             <ModesAuto />
           </div>
         </section>
 
         {/* ───────── Trust ───────── */}
         <section id="trust" className="py-16 sm:py-20 lg:py-24">
-<div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
             <TrustPanel />
           </div>
         </section>
 
         {/* ───────── Final CTA ───────── */}
         <section id="cta" className="py-20 sm:py-24 lg:py-28">
-<div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
             <FinalCTA />
           </div>
         </section>
