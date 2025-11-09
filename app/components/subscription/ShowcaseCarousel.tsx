@@ -36,42 +36,39 @@ export default function ShowcaseCarousel(){
             body: (
   <>
     {/* 1) Tile-Zeile – nur "Campaign Plan" wird klickbar */}
-    <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <button
-        type="button"
-        onClick={() => setOpenTile(openTile === 0 ? null : 0)}
-        aria-expanded={openTile === 0}
-        className="rounded-2xl p-4 sm:p-5 bg-white/5 border border-white/10 ring-1 ring-white/10
-                   backdrop-blur-[2px] shadow-sm text-white/85 text-left
-                   transition-transform duration-150 hover:-translate-y-px focus-visible:outline-2
-                   focus-visible:outline-cyan-300/55 focus-visible:outline-offset-2"
-      >
-        Campaign Plan
-      </button>
+    <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-5">
+  <button
+    type="button"
+    onClick={() => setOpenTile(openTile === 0 ? null : 0)}
+    aria-expanded={openTile === 0}
+    className="cursor-pointer rounded-2xl p-4 sm:p-5 bg-white/5 border border-white/10 ring-1 ring-white/10
+               backdrop-blur-[2px] shadow-sm text-white/85 text-left
+               transition-transform duration-150 hover:-translate-y-px focus-visible:outline-2
+               focus-visible:outline-cyan-300/55 focus-visible:outline-offset-2"
+  >
+    Campaign Plan
+  </button>
 
-      <Tile label="Smart Landing" />
-      <Tile label="Email Flow" />
-    </div>
+  <Tile label="Smart Landing" />
+  <Tile label="Email Flow" />
+</div>
+
 
     {/* 2) Einziger Detail-Block für Campaign Plan – unter den Tiles */}
-    <div
-      role="region"
-      aria-label="Campaign Plan Details"
-      className={[
-        "mt-3 overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-[2px]",
-        openTile === 0 ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none",
-        "transition duration-200 will-change-transform"
-      ].join(" ")}
-    >
-      <div className="p-4 sm:p-5">
-        <h4 className="text-white font-medium">3-Phasen-Plan</h4>
-        <ol className="mt-3 list-decimal list-inside text-white/80 space-y-1">
-          <li>Scope &amp; Constraints</li>
-          <li>Design &amp; Validation</li>
-          <li>Launch &amp; Learn</li>
-        </ol>
-      </div>
-    </div>
+   <div
+  role="region"
+  aria-label="Campaign Plan Details"
+  className={[
+    "mt-5 mb-4 overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-[2px]",
+    openTile === 0 ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none",
+    "transition duration-200 will-change-transform"
+  ].join(" ")}
+>
+  <div className="p-5 sm:p-6">
+    …
+  </div>
+</div>
+
   </>
 )
 
