@@ -14,10 +14,12 @@ export default function Hero() {
     <div className="relative overflow-hidden w-full">
       {/* Hintergrundpuls */}
       <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 x-micro-pulse
-                   bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.14),_transparent_58%)]"
-      />
+  aria-hidden
+  className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 z-0
+             x-micro-pulse w-[min(1100px,92vw)] h-[300px] sm:h-[360px]
+             bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.14),_transparent_58%)]"
+/>
+
       {/* Inhalt */}
       <div className="relative z-10 max-w-xl mx-auto text-center">
         <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">

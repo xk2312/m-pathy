@@ -31,7 +31,7 @@ export default function SubscriptionPage() {
   id="top"
   className="pt-[120px] sm:pt-[140px] lg:pt-[160px] pb-16 sm:pb-24 lg:pb-28"
 >
-  <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid place-items-center">
+<div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
     <Hero />
   </div>
 </section>
@@ -80,28 +80,28 @@ export default function SubscriptionPage() {
 
         {/* ───────── Council ───────── */}
         <section id="council" className="py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid place-items-center">
+<div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
             <CouncilOrbit />
           </div>
         </section>
 
         {/* ───────── Modes ───────── */}
         <section id="modes" className="py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid place-items-center">
+<div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
             <ModesAuto />
           </div>
         </section>
 
         {/* ───────── Trust ───────── */}
         <section id="trust" className="py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid place-items-center">
+<div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
             <TrustPanel />
           </div>
         </section>
 
         {/* ───────── Final CTA ───────── */}
         <section id="cta" className="py-20 sm:py-24 lg:py-28">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid place-items-center">
+<div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
             <FinalCTA />
           </div>
         </section>
