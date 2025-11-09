@@ -31,11 +31,12 @@ export default function ShowcaseCarousel(){
       key:"s1",
       title: t("s1_title"),
       sub: t("s1_sub"),
-      body: (
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            body: (
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Tile label="Campaign Plan" />
           <Tile label="Smart Landing" />
           <Tile label="Email Flow" />
+
         </div>
       )
     },
@@ -63,11 +64,12 @@ export default function ShowcaseCarousel(){
       key:"s3",
       title: t("s3_title"),
       sub: t("s3_sub"),
-      body: (
-        <div className="mt-4 grid grid-cols-1 gap-3">
+            body: (
+        <div className="mt-4 grid grid-cols-1 gap-4">
           <Frame title="Ledger" />
           <Frame title="Blocks" />
           <Frame title="Consensus + mini JSON" />
+
         </div>
       )
     },
@@ -191,19 +193,20 @@ function Tabs({ labels, idx, setIdx }:{
             aria-selected={selected}
             aria-controls={`panel-${i}`}
             id={`tab-${i}`}
-            ref={(el) => { btnRefs.current[i] = el; }}  // returns void
+                       ref={(el) => { btnRefs.current[i] = el; }}  // returns void
             onClick={() => activate(i)}
             className={[
               "px-3 py-1.5 rounded-xl text-sm leading-none whitespace-nowrap font-medium",
-              // sanfter Hover-Lift (compositor-sicher)
+              "backdrop-blur-[2px] shadow-sm",
               "transition-transform duration-150 hover:-translate-y-px",
               "focus-visible:outline-2 focus-visible:outline-cyan-300/55 focus-visible:outline-offset-2",
               selected
-                ? "bg-white/20 text-white"
-                : "bg-transparent text-white/80 hover:text-white"
+                ? "bg-white/20 text-white ring-1 ring-white/15"
+                : "bg-white/10 text-white/80 hover:text-white ring-1 ring-white/10"
             ].join(" ")}
           >
             {label}
+
           </button>
         );
       })}
@@ -212,16 +215,34 @@ function Tabs({ labels, idx, setIdx }:{
 }
 
 function Tile({label}:{label:string}){
-  return <div className="rounded-xl border border-white/10 p-4 text-white/80">{label}</div>;
+  return (
+    <div
+      className="rounded-2xl p-4 sm:p-5 bg-white/5 border border-white/10 ring-1 ring-white/10
+                 backdrop-blur-[2px] shadow-sm text-white/85
+                 transition-transform duration-150 hover:-translate-y-px"
+    >
+      {label}
+    </div>
+  );
 }
 function Avatar({label}:{label:string}){
   return <div className="rounded-full bg-white/10 border border-white/15 px-3 py-1 text-sm">{label}</div>;
 }
+
 function Frame({title}:{title:string}){
-  return <div className="rounded-xl border border-white/10 p-4 text-white/80">{title}</div>;
+  return (
+    <div
+      className="rounded-2xl p-4 sm:p-5 bg-white/5 border border-white/10 ring-1 ring-white/10
+                 backdrop-blur-[2px] shadow-sm text-white/85
+                 transition-transform duration-150 hover:-translate-y-px"
+    >
+      {title}
+    </div>
+  );
 }
 function Dots({n, idx, setIdx}:{n:number; idx:number; setIdx:(v:number)=>void;}){
   return (
+
     <div className="mt-4 flex items-center gap-2" aria-hidden="true">
       {Array.from({length:n}).map((_,i)=>(
         <button key={i} onClick={()=>setIdx(i)} aria-label={`Slide ${i+1}`}
