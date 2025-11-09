@@ -56,7 +56,7 @@ export default function ShowcaseCarousel(){
     },
   ];
 
-  // basic swipe
+  // basic swipe (belassen)
   useEffect(()=>{
     const el = ref.current; if(!el) return;
     let x0=0, x=0;
@@ -80,9 +80,19 @@ export default function ShowcaseCarousel(){
   return (
     <div id="showcases" ref={ref} className="max-w-xl mx-auto">
       <Chip>start agency</Chip>
-      <h3 className="mt-3 text-2xl font-semibold">{slides[idx].title}</h3>
+
+      {/* 🔹 Neue Tab-Leiste (A11y-Basis, Click-only) */}
+      <Tabs
+        labels={slides.map(s => s.title)}
+        idx={idx}
+        setIdx={setIdx}
+      />
+
+      <h3 className="mt-4 text-2xl font-semibold">{slides[idx].title}</h3>
       <p className="mt-1 text-white/70">{slides[idx].sub}</p>
       {slides[idx].body}
+
+      {/* Sekundär-Nav (Dots) bleibt vorerst erhalten */}
       <Dots n={slides.length} idx={idx} setIdx={setIdx} />
     </div>
   );
@@ -91,6 +101,42 @@ export default function ShowcaseCarousel(){
 function Chip({children}:{children:React.ReactNode}){
   return <span className="inline-block text-sm px-3 py-1 rounded-full bg-white/10 border border-white/15">{children}</span>;
 }
+
+function Tabs({ labels, idx, setIdx }:{
+  labels: string[]; idx:number; setIdx:(v:number)=>void;
+}){
+  return (
+    <div
+      role="tablist"
+      aria-label="Showcases"
+      className="mt-3 inline-flex items-center gap-2 rounded-2xl border border-white/10 p-1 bg-white/5"
+    >
+      {labels.map((label, i) => {
+        const selected = i === idx;
+        return (
+          <button
+            key={i}
+            role="tab"
+            aria-selected={selected}
+            aria-controls={`panel-${i}`}
+            id={`tab-${i}`}
+            onClick={() => setIdx(i)}
+            className={[
+              "px-3 py-1.5 rounded-xl text-sm",
+              "transition-transform",
+              selected
+                ? "bg-white/20 text-white"
+                : "bg-transparent text-white/70 hover:text-white"
+            ].join(" ")}
+          >
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function Tile({label}:{label:string}){
   return <div className="rounded-xl border border-white/10 p-4 text-white/80">{label}</div>;
 }
@@ -102,7 +148,7 @@ function Frame({title}:{title:string}){
 }
 function Dots({n, idx, setIdx}:{n:number; idx:number; setIdx:(v:number)=>void;}){
   return (
-    <div className="mt-4 flex items-center gap-2">
+    <div className="mt-4 flex items-center gap-2" aria-hidden="true">
       {Array.from({length:n}).map((_,i)=>(
         <button key={i} onClick={()=>setIdx(i)} aria-label={`Slide ${i+1}`}
           className={`h-2.5 w-2.5 rounded-full ${i===idx?"bg-white":"bg-white/25"}`} />
