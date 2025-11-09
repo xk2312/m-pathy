@@ -562,3 +562,16 @@ html.enable-scroll {
 @media (prefers-reduced-motion: reduce){
   .x-galaxy { animation: none !important; transform: none !important; }
 }
+@keyframes galaxy-breath-strong {
+  0%, 100% { opacity: .18; transform: translateY(0) scale(.975); filter: brightness(1); }
+  50%      { opacity: .55; transform: translateY(-6px) scale(1.03); filter: brightness(1.12); }
+}
+
+.x-galaxy {
+  will-change: opacity, transform, filter;
+  animation: galaxy-breath-strong 3.6s var(--ease, cubic-bezier(.25,.1,.25,1)) infinite;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .x-galaxy { animation: none !important; transform: none !important; filter: none !important; }
+}
