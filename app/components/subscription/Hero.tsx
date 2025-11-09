@@ -6,30 +6,25 @@ export default function Hero() {
   const { t } = useLang();
 
   function log(evt: string, detail?: any) {
-    try {
-      window.dispatchEvent(new CustomEvent(evt, { detail }));
-    } catch {}
+    try { window.dispatchEvent(new CustomEvent(evt, { detail })); } catch {}
   }
 
+  // Keine eigene Section mehr – Page steuert die Abstände
   return (
-    // ⬇️ Änderung 1: Top-Padding von 50/70px -> 110/130px (+60px)
-    <section className="relative px-4 pt-[110px] pb-10 sm:pt-[130px] sm:pb-14 overflow-hidden">
+    <div className="relative overflow-hidden w-full">
       {/* Hintergrundpuls */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 x-micro-pulse bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.14),_transparent_58%)]"
+        className="pointer-events-none absolute inset-0 z-0 x-micro-pulse
+                   bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.14),_transparent_58%)]"
       />
-
       {/* Inhalt */}
-      <div className="relative z-10 max-w-xl mx-auto text-center mt-16 sm:mt-24">
+      <div className="relative z-10 max-w-xl mx-auto text-center">
         <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">
           {t("hero_title")}
         </h1>
-
-        {/* ⬇️ Änderung 2: Mindestens 5px Abstand Headline → Subtext */}
-        <p className="mt-[5px] sm:mt-[6px] text-white/70">
-          {t("hero_sub")}
-        </p>
+        {/* exakt ~5–6 px Abstand */}
+        <p className="mt-[6px] text-white/70">{t("hero_sub")}</p>
 
         <div className="mt-8 sm:mt-10">
           <a
@@ -44,6 +39,6 @@ export default function Hero() {
           </a>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

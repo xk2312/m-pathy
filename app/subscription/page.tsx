@@ -28,13 +28,14 @@ export default function SubscriptionPage() {
         {/* ───────── Hero ─────────
             Wunsch: +60px Padding nach oben */}
         <section
-          id="top"
-          className="pt-[60px] sm:pt-[80px] lg:pt-[100px] pb-16 sm:pb-24 lg:pb-28"
-        >
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid place-items-center">
-            <Hero />
-          </div>
-        </section>
+  id="top"
+  className="pt-[120px] sm:pt-[140px] lg:pt-[160px] pb-16 sm:pb-24 lg:pb-28"
+>
+  <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 grid place-items-center">
+    <Hero />
+  </div>
+</section>
+
 
         {/* ───────── Showcase (Tabs / Start Agency) ───────── */}
         <section
