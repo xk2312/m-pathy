@@ -40,26 +40,31 @@ export default function ShowcaseCarousel(){
         </div>
       )
     },
-    {
+        {
       key:"s2",
       title: t("s2_title"),
       sub: t("s2_sub"),
       body: (
         <div className="mt-4 space-y-3">
           <div className="flex items-center gap-3">
-            <Avatar label="Biologist" /><span className="text-white/80">×</span><Avatar label="Chemist" />
+            <Avatar label="Biologist" />
+            <span className="text-white/80">×</span>
+            <Avatar label="Chemist" />
           </div>
-          <div className="rounded-xl border border-white/10 p-4">
-            <ol className="list-decimal pl-5 space-y-1 text-white/80">
-              <li>NEM Step 1 — Scope & Constraints</li>
-              <li>NEM Step 2 — Design & Validation</li>
-              <li>NEM Step 3 — Review & Report</li>
+
+          {/* ⬇︎ Liste + Copy als sauberer, eigenständiger JSX-Block */}
+          <div className="rounded-2xl p-4 sm:p-5 bg-white/5 border border-white/10 ring-1 ring-white/10 backdrop-blur-[2px] shadow-sm">
+            <ol className="list-decimal pl-5 space-y-1 text-white/85">
+              <li>NEM Step 1 — Scope &amp; Constraints</li>
+              <li>NEM Step 2 — Design &amp; Validation</li>
+              <li>NEM Step 3 — Review &amp; Report</li>
             </ol>
             <p className="mt-3 text-white/60 text-sm">{t("s2_why")}</p>
           </div>
         </div>
       )
     },
+
     {
       key:"s3",
       title: t("s3_title"),
