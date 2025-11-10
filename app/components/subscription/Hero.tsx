@@ -6,7 +6,7 @@ export default function Hero() {
 
   return (
     <div className="relative w-full">
-      <div className="mx-auto max-w-[820px] px-2 text-center">
+      <div className="mx-auto max-w-[900px] px-2 text-center">
         {/* Titel */}
         <h1
           className="text-[clamp(28px,5vw,52px)] font-semibold leading-[1.15] tracking-tight
@@ -16,12 +16,13 @@ export default function Hero() {
         </h1>
 
         {/* Subhead */}
-        <p className="mt-2 text-[15px] md:text-[17px] text-white/70">
+        <p className="mt-[30px] text-[15px] md:text-[17px] text-white/70">
           {t("hero_sub")}
         </p>
 
+
         {/* CTA – margin top 20px, 60px Abstand nach unten */}
-        <div className="mt-[20px] mb-[60px] flex w-full justify-center">
+          <div className="mt-[32px] md:mt-[40px] mb-[60px] flex w-full justify-center">
           <button
             type="button"
             aria-label={t("hero_cta")}
