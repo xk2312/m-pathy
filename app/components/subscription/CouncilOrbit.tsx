@@ -1,72 +1,68 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useLang } from "@/app/providers/LanguageProvider";
+import { i18n } from "@/lib/i18n";
 
 /**
- * Interactive Council of 12 (inline SVG)
- * - Hover: kleiner „unerwarteter“ Effekt (Pulse + Arc-Highlight)
- * - Click: Orbit dreht RECHTSRUM, bis der Rat auf 12 Uhr steht
- * - Center: Textbaustein mit Close (setzt auf Default zurück)
- *
- * ViewBox ist 1000x1000; Mittelpunkt (500,500).
+ * Council Orbit (SVG, i18n, upright labels)
+ * - Orbit dreht rechtsrum zum gewählten Rat
+ * - Labels bleiben horizontal (Gegenrotation pro Label)
+ * - Center-Card mit „Matrix“-KPI-Panel (grün), per i18n
  */
-type Council = {
-  id: string;
+
+type CouncilItem = {
   title: string;
   subtitle: string;
+  kpi?: { superpower: string; focus: string; signal: string };
 };
 
-const COUNCILS: Council[] = [
-  { id: "m",        title: "M",         subtitle: "featuring Palantir" },
-  { id: "m-pathy",  title: "m-pathy",   subtitle: "featuring DeepMind Core" },
-  { id: "m-ocean",  title: "m-ocean",   subtitle: "featuring Anthropic Vision" },
-  { id: "m-inent",  title: "m-inent",   subtitle: "featuring NASA Chronos" },
-  { id: "m-erge",   title: "m-erge",    subtitle: "featuring IBM Q-Origin" },
-  { id: "m-power",  title: "m-power",   subtitle: "featuring Colossus" },
-  { id: "m-body",   title: "m-body",    subtitle: "featuring XAI Prime" },
-  { id: "m-beded",  title: "m-beded",   subtitle: "featuring Meta Lattice" },
-  { id: "m-loop",   title: "m-loop",    subtitle: "featuring OpenAI Root" },
-  { id: "m-pire",   title: "m-pire",    subtitle: "featuring Amazon Nexus" },
-  { id: "m-bassy",  title: "m-bassy",   subtitle: "featuring Oracle Gaia" },
-  { id: "m-ballance", title: "m-ballance", subtitle: "featuring Gemini Apex" },
-];
-
-// Geometrie
 const CX = 500, CY = 500;
-const R_LABEL = 330;   // Radius für Labels
-const R_TICK_IN = 280; // Linien innen
-const R_TICK_OUT = 470;// Linien außen (Orbit-Linien)
-const INNER_R = 160;   // Zentrum für Textpanel
+const R_LABEL = 330;
+const R_TICK_IN = 280;
+const R_TICK_OUT = 470;
+const INNER_R = 160;
+
+// Reihenfolge = geometrische Reihenfolge (0° = 12 Uhr, Uhrzeigersinn)
+const COUNCIL_IDS = [
+  "m", "m-pathy", "m-ocean", "m-inent", "m-erge", "m-power",
+  "m-body", "m-beded", "m-loop", "m-pire", "m-bassy", "m-ballance",
+] as const;
+type CouncilId = typeof COUNCIL_IDS[number];
 
 export default function CouncilOrbit() {
-  // globaler Rotationswinkel des kompletten Orbits (deg, 0 = top)
+  const { lang } = useLang();
+  const active =
+    (i18n as Record<string, any>)[(lang || "en").slice(0, 2)] ?? i18n.en;
+
+  const getItem = (id: CouncilId): CouncilItem =>
+    active?.council?.items?.[id] ?? { title: id, subtitle: "" };
+
   const [angle, setAngle] = useState(0);
   const [targetAngle, setTargetAngle] = useState<number | null>(null);
   const animRef = useRef<number | null>(null);
 
-  // fokussierter Rat (zeigt Panel)
-  const [focused, setFocused] = useState<Council | null>(null);
-  // Hover-ID für Microeffekt
-  const [hoverId, setHoverId] = useState<string | null>(null);
+  const [focused, setFocused] = useState<CouncilId | null>(null);
+  const [hoverId, setHoverId] = useState<CouncilId | null>(null);
 
-  // Precompute: 12 Winkel (0° = 12 Uhr, positiv = im Uhrzeigersinn)
-  const itemAngles = useMemo(() => {
-    const step = 360 / COUNCILS.length; // 30°
-    // Start: M oben (0°), dann im Uhrzeigersinn
-    return COUNCILS.map((c, i) => ({ id: c.id, theta: i * step }));
-  }, []);
+  // Basiswinkel pro Rat (0°, 30°, 60° …)
+  const itemAngles = useMemo(
+    () => COUNCIL_IDS.map((id, i) => ({ id, theta: i * (360 / COUNCIL_IDS.length) })),
+    []
+  );
 
-  // rAF: rechtsrum zum Ziel drehen
+  // rAF – immer rechtsrum drehen
   useEffect(() => {
     if (targetAngle == null) return;
-    // stelle sicher, dass Ziel > aktueller Winkel (rechtsrum)
+
     let current = angle % 360;
     if (current < 0) current += 360;
+
     let target = targetAngle % 360;
     if (target < 0) target += 360;
-    if (target <= current) target += 360; // immer vorwärts
+    if (target <= current) target += 360; // vorwärts erzwingen
 
-    const speed = 2.4; // deg pro frame (~144deg/s bei 60fps)
+    const speed = 2.4; // deg/frame
     const tick = () => {
       current += speed;
       if (current >= target) {
@@ -86,52 +82,47 @@ export default function CouncilOrbit() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetAngle]);
 
-  // Hilfsfunktionen
-  const toRad = (deg: number) => (deg - 90) * (Math.PI / 180); // -90, damit 0° nach oben zeigt
+  // Helpers
+  const toRad = (deg: number) => (deg - 90) * (Math.PI / 180);
   const posOnCircle = (thetaDeg: number, r: number) => {
     const a = toRad(thetaDeg);
     return { x: CX + r * Math.cos(a), y: CY + r * Math.sin(a) };
   };
 
-  const onHover = (id: string | null) => setHoverId(id);
-
-  const onSelect = (c: Council) => {
-    // gewünschten Zielwinkel bestimmen: item-angle auf 0° bringen
-    const base = itemAngles.find(a => a.id === c.id)?.theta ?? 0;
-    // Gruppe rotiert um +angle; sichtbarer Winkel des Items = base + angle
-    // wir wollen base + angle -> 0 (mod 360) ⇒ angle_target ≡ -base (mod 360)
-    const desired = -base;
+  const onSelect = (id: CouncilId) => {
+    const base = itemAngles.find(a => a.id === id)?.theta ?? 0;
+    const desired = -base; // dieses Item soll nach oben (0°)
     setTargetAngle(desired);
-    setFocused(c);
+    setFocused(id);
   };
-
   const onClose = () => {
     setFocused(null);
-    // zurück in Idle: langsam etwas „atmen“? hier: auf Winkel 0
     setTargetAngle(0);
   };
 
-  // UI
+  // Für sauberes JSX ohne IIFE:
+  const focusedItem: CouncilItem | null = focused ? getItem(focused) : null;
+  const focusedKpi = focusedItem?.kpi ?? {
+    superpower: "",
+    focus: "",
+    signal: "",
+  };
+
   return (
     <div className="mx-auto w-full max-w-[900px] p-4">
-      <svg
-        viewBox="0 0 1000 1000"
-        role="img"
-        aria-label="Council of 12"
-        className="block w-full h-auto"
-      >
+      <svg viewBox="0 0 1000 1000" className="block w-full h-auto" role="img" aria-label="Council of 12">
         <defs>
-          {/* dezent: Hintergrund-Softwash (13% Schwarz) */}
+          {/* Soft-Wash 13% */}
           <radialGradient id="wash" cx="50%" cy="50%" r="65%">
             <stop offset="0%" stopColor="#000" stopOpacity="0.13" />
             <stop offset="100%" stopColor="#000" stopOpacity="0.13" />
           </radialGradient>
 
-          {/* Arc-Highlight für Hover */}
+          {/* Hover-Arc */}
           <linearGradient id="hl" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0" stopColor="#fff" stopOpacity="0" />
-            <stop offset="0.5" stopColor="#fff" stopOpacity="0.8" />
-            <stop offset="1" stopColor="#fff" stopOpacity="0" />
+            <stop offset="0"   stopColor="#fff" stopOpacity="0" />
+            <stop offset="0.5" stopColor="#fff" stopOpacity="0.85" />
+            <stop offset="1"   stopColor="#fff" stopOpacity="0" />
           </linearGradient>
 
           <style>
@@ -147,22 +138,21 @@ export default function CouncilOrbit() {
           </style>
         </defs>
 
-        {/* sanft getönter Hintergrund */}
+        {/* getönter Hintergrund */}
         <rect x="0" y="0" width="1000" height="1000" fill="url(#wash)" />
 
-        {/* Orbit-Gruppe: rotiert um (CX,CY) */}
+        {/* Orbit-Gruppe rotiert */}
         <g transform={`rotate(${angle} ${CX} ${CY})`}>
-          {/* Minuten-/Stundenlinien (vereinfachte Iris) */}
+          {/* 60 Ticks (Iris) */}
           {Array.from({ length: 60 }).map((_, i) => {
-            const theta = (i * 6); // 6°-Schritte
+            const theta = i * 6;
             const p1 = posOnCircle(theta, R_TICK_IN);
             const p2 = posOnCircle(theta, R_TICK_OUT);
-            // leichte Alternierung für „Stunde“
             const thick = i % 5 === 0;
+
             const isHovered = (() => {
               if (!hoverId) return false;
               const base = itemAngles.find(a => a.id === hoverId)?.theta ?? 0;
-              // im gedrehten Raum: ein Item „deckelt“ +/- 7.5° um seinen Basiswinkel
               const local = (base + angle) % 360;
               const diff = Math.min(
                 Math.abs(((theta - local + 360) % 360)),
@@ -173,7 +163,7 @@ export default function CouncilOrbit() {
 
             return (
               <line
-                key={`tick-${i}`}
+                key={`t-${i}`}
                 x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y}
                 stroke={thick ? "#ffffff" : "#00ffff"}
                 strokeOpacity={thick ? 0.75 : 0.35}
@@ -184,22 +174,22 @@ export default function CouncilOrbit() {
             );
           })}
 
-          {/* 12 Räte: Labels + Hover-Arc + Hotspot */}
-          {COUNCILS.map((c, idx) => {
-            const base = itemAngles[idx].theta;
-            const labelPos = posOnCircle(base, R_LABEL);
+          {/* 12 Räte */}
+          {itemAngles.map(({ id, theta }) => {
+            const item = getItem(id as CouncilId);
+            const labelPos = posOnCircle(theta, R_LABEL);
+
+            // Hover-Arc (±10°)
             const arcInner = 300, arcOuter = 350;
-            // kleiner Arc-Sweep unter dem Label (±10°)
-            const a1 = base - 10, a2 = base + 10;
+            const a1 = theta - 10, a2 = theta + 10;
             const a1i = posOnCircle(a1, arcInner), a1o = posOnCircle(a1, arcOuter);
             const a2i = posOnCircle(a2, arcInner), a2o = posOnCircle(a2, arcOuter);
             const largeArc = Math.abs(a2 - a1) > 180 ? 1 : 0;
-
-            const hovered = hoverId === c.id;
+            const hovered = hoverId === id;
 
             return (
-              <g key={c.id}>
-                {/* Hover-Arc (ring sector) */}
+              <g key={id}>
+                {/* Arc */}
                 <path
                   d={`M ${a1i.x} ${a1i.y}
                       A ${arcInner} ${arcInner} 0 ${largeArc} 1 ${a2i.x} ${a2i.y}
@@ -210,18 +200,18 @@ export default function CouncilOrbit() {
                   className={`arc ${hovered ? "show" : ""}`}
                 />
 
-                {/* Label – HORIZONTAL HALTEN: Konterrotation -angle */}
+                {/* Label – gegenrotieren, damit horizontal */}
                 <g
                   transform={`translate(${labelPos.x} ${labelPos.y}) rotate(${-angle} 0 0)`}
                   style={{ cursor: "pointer" }}
-                  aria-label={c.title}
+                  aria-label={item.title}
                   role="button"
                   tabIndex={0}
-                  onMouseEnter={() => onHover(c.id)}
-                  onMouseLeave={() => onHover(null)}
-                  onClick={() => onSelect(c)}
+                  onMouseEnter={() => setHoverId(id as CouncilId)}
+                  onMouseLeave={() => setHoverId(null)}
+                  onClick={() => onSelect(id as CouncilId)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") onSelect(c);
+                    if (e.key === "Enter" || e.key === " ") onSelect(id as CouncilId);
                   }}
                 >
                   <text
@@ -231,7 +221,7 @@ export default function CouncilOrbit() {
                     fontFamily="Garamond, serif"
                     fontSize={20}
                   >
-                    {c.title}
+                    {item.title}
                   </text>
                   <text
                     className={`label ${hovered ? "hover" : ""}`}
@@ -242,52 +232,80 @@ export default function CouncilOrbit() {
                     fontFamily="Garamond, serif"
                     fontSize={14}
                   >
-                    {c.subtitle}
+                    {item.subtitle}
                   </text>
                 </g>
 
-                {/* größerer unsichtbarer Hotspot (Trefferfläche) */}
+                {/* große Trefferfläche */}
                 <circle
                   cx={labelPos.x}
                   cy={labelPos.y - 6}
                   r={32}
                   fill="transparent"
-                  onMouseEnter={() => onHover(c.id)}
-                  onMouseLeave={() => onHover(null)}
-                  onClick={() => onSelect(c)}
+                  onMouseEnter={() => setHoverId(id as CouncilId)}
+                  onMouseLeave={() => setHoverId(null)}
+                  onClick={() => onSelect(id as CouncilId)}
                 />
               </g>
             );
           })}
         </g>
 
-        {/* Center-Textpanel (nur wenn fokussiert) */}
-        {focused && (
+        {/* Center-Panel (Matrix / grün) */}
+        {focusedItem && (
           <g className="center-card" opacity={1} transform={`translate(${CX} ${CY})`}>
-            {/* Hintergrundscheibe minimal transparent */}
-            <circle r={INNER_R} fill="rgba(0,0,0,0.55)" stroke="#fff" strokeOpacity="0.06" />
+            <circle r={INNER_R} fill="rgba(0,0,0,0.55)" stroke="#00ff88" strokeOpacity="0.08" />
+            {/* Title */}
             <text
               x={0}
-              y={-10}
+              y={-30}
               textAnchor="middle"
-              fill="#fff"
-              fontFamily="Garamond, serif"
-              fontSize={26}
+              fill="#9AFB8F"
+              fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
+              fontSize={22}
+              style={{ textShadow: "0 0 6px rgba(0,255,120,0.35)" }}
             >
-              {focused.title}
+              {focusedItem.title}
             </text>
+            {/* Subtitle */}
             <text
               x={0}
-              y={20}
+              y={-8}
               textAnchor="middle"
-              fill="#C7C7C7"
-              fontFamily="Garamond, serif"
-              fontSize={16}
+              fill="#BFFFC2"
+              fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
+              fontSize={13}
+              opacity={0.9}
             >
-              {focused.subtitle}
+              {focusedItem.subtitle}
             </text>
 
-            {/* Close-Button */}
+            {/* KPIs */}
+            <g transform="translate(-115,14)">
+              <text
+                x={0}
+                y={0}
+                fill="#7CFF7C"
+                fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
+                fontSize={13}
+              >{`> superpower: ${focusedKpi.superpower}`}</text>
+              <text
+                x={0}
+                y={20}
+                fill="#7CFF7C"
+                fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
+                fontSize={13}
+              >{`> focus: ${focusedKpi.focus}`}</text>
+              <text
+                x={0}
+                y={40}
+                fill="#7CFF7C"
+                fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
+                fontSize={13}
+              >{`> signal: ${focusedKpi.signal}`}</text>
+            </g>
+
+            {/* Close */}
             <g
               transform={`translate(${INNER_R - 18} ${-INNER_R + 18})`}
               onClick={onClose}
@@ -295,13 +313,13 @@ export default function CouncilOrbit() {
               tabIndex={0}
               style={{ cursor: "pointer" }}
             >
-              <circle r="12" fill="#fff" fillOpacity="0.9" />
+              <circle r="12" fill="#7CFF7C" />
               <text
                 y="4"
                 textAnchor="middle"
-                fontFamily="system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+                fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
                 fontSize="14"
-                fill="#000"
+                fill="#001b0b"
               >
                 ×
               </text>
