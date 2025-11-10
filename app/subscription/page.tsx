@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
 
-// Komponenten
 import Hero from "@/app/components/subscription/Hero";
 import ShowcaseCarousel from "@/app/components/subscription/ShowcaseCarousel";
 import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
@@ -20,7 +19,6 @@ export default function SubscriptionPage() {
 
   return (
     <LanguageProvider dict={dict}>
-      {/* A11y-Skiplink erscheint nur bei Tastaturfokus */}
       <a
         href="#content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[999] focus:rounded-md focus:px-3 focus:py-2 focus:bg-white/10"
@@ -32,17 +30,18 @@ export default function SubscriptionPage() {
         id="content"
         role="main"
         aria-label="Subscription"
-        className="relative isolate min-h-dvh bg-black text-white selection:bg-white/20 antialiased"
+        className="relative isolate min-h-dvh bg-black text-white selection:bg-white/20 antialiased overflow-x-hidden"
       >
-        {/* PAGE FRAME: zentriert alles horizontal */}
+        {/* FRAME: hard center */}
         <div className="w-full flex justify-center">
-          {/* PAGE CONTAINER: max Breite + skalierende Paddings + konstanter Rhythmus */}
+          {/* CONTAINER: clamp paddings, min-w guard to prevent overflow-shift */}
           <div
             className="
-              w-full max-w-[1280px]
+              min-w-0 w-full max-w-[1280px]
               px-[clamp(10px,4vw,90px)] py-[clamp(20px,5vw,90px)]
               space-y-[clamp(48px,6vw,70px)]
               [&>section]:m-0
+              /* outline outline-1 outline-fuchsia-500 */ 
             "
           >
             <section id="top">
