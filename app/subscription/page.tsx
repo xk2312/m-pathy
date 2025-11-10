@@ -44,12 +44,14 @@ export default function SubscriptionPage() {
         <div className="w-full flex justify-center">
           <div
             className="
-              w-full max-w-[1280px]
-              px-[clamp(10px,4vw,90px)]
-              py-[clamp(20px,5vw,90px)]
-              space-y-[clamp(48px,6vw,70px)]
-              [&>section]:m-0
-            "
+  w-full max-w-[1280px]
+  px-[clamp(10px,4vw,90px)]
+  py-[clamp(20px,5vw,90px)]
+  space-y-[clamp(48px,6vw,70px)]
+  [&>section]:m-0
+  [&>section#top]:pb-[30px]        /* ← 30px Padding unterm HERO-Abschnitt */
+"
+
           >
             {/* === Hero oben === */}
             <section id="top">

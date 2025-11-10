@@ -1,5 +1,4 @@
 "use client";
-
 import { useLang } from "@/app/providers/LanguageProvider";
 
 export default function Hero() {
@@ -7,34 +6,28 @@ export default function Hero() {
 
   return (
     <div className="relative w-full">
-      {/* Inhalt kompakt & mittig */}
       <div className="mx-auto max-w-[820px] px-2 text-center">
-        {/* Titel */}
         <h1
-          className="
-            text-[clamp(28px,5vw,52px)]
-            font-semibold leading-[1.15] tracking-tight
-            bg-gradient-to-b from-white to-white/75 text-transparent bg-clip-text
-          "
+          className="text-[clamp(28px,5vw,52px)] font-semibold leading-[1.15] tracking-tight
+                     bg-gradient-to-b from-white to-white/75 text-transparent bg-clip-text"
         >
           {t("hero_title")}
         </h1>
 
-        {/* Subhead (falls nicht gewünscht: Zeile entfernen) */}
         <p className="mt-2 text-[15px] md:text-[17px] text-white/70">
           {t("hero_sub")}
         </p>
 
-        {/* CTA – 60px Abstand oben & unten, klarer großer Button */}
+        {/* CTA: 60px Abstand oben/unten IMMER sichtbar */}
         <div className="mt-[60px] mb-[60px] flex w-full justify-center">
           <button
             type="button"
             aria-label={t("hero_cta")}
             className="
               inline-flex items-center justify-center
-              px-[36px] md:px-[44px]        /* Breite */
-              py-[38px] md:py-[42px]        /* Höhe (deutlich größer) */
-              text-[20px] md:text-[22px] font-semibold
+              h-[72px] md:h-[84px]            /* ← feste Höhe */
+              px-[40px] md:px-[48px]          /* ← breite Schultern */
+              text-[22px] md:text-[24px] leading-none font-semibold
               rounded-2xl text-black
               bg-[hsl(255,95%,75%)]
               shadow-[0_8px_24px_rgba(180,150,255,0.28)]
