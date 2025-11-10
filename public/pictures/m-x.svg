@@ -1,6 +1,5 @@
 <svg width="1400" height="1400" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- sehr dezente Lichtdusche -->
     <radialGradient id="lightwash" cx="50%" cy="50%" r="65%">
       <stop offset="0%"  stop-color="#fff" stop-opacity="0.10"/>
       <stop offset="40%" stop-color="#fff" stop-opacity="0.05"/>
@@ -8,29 +7,25 @@
       <stop offset="100%" stop-color="#000" stop-opacity="0"/>
     </radialGradient>
 
-    <!-- weiches Weißglühen -->
     <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="2" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
 
-    <!-- Clip auf den Kreis -->
     <clipPath id="clipClock"><circle cx="500" cy="500" r="200"/></clipPath>
 
-    <!-- Grundlinien -->
     <line id="minLine"  x1="500" y1="300" x2="500" y2="700" stroke="#00ffff" stroke-width="0.45" stroke-linecap="round" opacity="0.35"/>
-    <line id="hourLine" x1="500" y1="300" x2="500" y2="700" stroke="#fff" stroke-width="1.4"  stroke-linecap="round" opacity="0.70"/>
+    <line id="hourLine" x1="500" y1="300" x2="500" y2="700" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity="0.70"/>
   </defs>
 
-  <!-- halbtransparenter Hintergrund -->
+  <!-- Halbtransparenter Hintergrund -->
   <rect x="0" y="0" width="1000" height="1000" fill="rgba(0,0,0,0.13)"/>
 
-  <!-- Hauptkreis -->
-  <circle cx="500" cy="500" r="200" fill="none" stroke="none" filter="url(#glow)"/>
+  <!-- Kein sichtbarer Kreis, kein Filter -->
+  <circle cx="500" cy="500" r="200" fill="none" stroke="none"/>
 
-  <!-- Minuten (Iris) -->
-  <g clip-path="url(#clipClock)" filter="url(#glow)">
-    <!-- 60 Linien -->
+  <!-- Minutenlinien -->
+  <g clip-path="url(#clipClock)">
     <use href="#minLine" transform="rotate(0 500 500)"/>
     <use href="#minLine" transform="rotate(6 500 500)"/>
     <use href="#minLine" transform="rotate(12 500 500)"/>
@@ -94,7 +89,7 @@
   </g>
 
   <!-- Stundenlinien -->
-  <g clip-path="url(#clipClock)" filter="url(#glow)">
+  <g clip-path="url(#clipClock)">
     <use href="#hourLine" transform="rotate(0 500 500)"/>
     <use href="#hourLine" transform="rotate(30 500 500)"/>
     <use href="#hourLine" transform="rotate(60 500 500)"/>
