@@ -4,13 +4,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { i18n } from "@/lib/i18n";
 
-/**
- * Council Orbit (SVG, i18n, upright labels)
- * - Orbit dreht rechtsrum zum gewählten Rat
- * - Labels bleiben horizontal (Gegenrotation pro Label)
- * - Center-Card mit „Matrix“-KPI-Panel (grün), per i18n
- */
-
 type CouncilItem = {
   title: string;
   subtitle: string;
@@ -23,7 +16,6 @@ const R_TICK_IN = 280;
 const R_TICK_OUT = 470;
 const INNER_R = 160;
 
-// Reihenfolge = geometrische Reihenfolge (0° = 12 Uhr, Uhrzeigersinn)
 const COUNCIL_IDS = [
   "m", "m-pathy", "m-ocean", "m-inent", "m-erge", "m-power",
   "m-body", "m-beded", "m-loop", "m-pire", "m-bassy", "m-ballance",
@@ -45,13 +37,11 @@ export default function CouncilOrbit() {
   const [focused, setFocused] = useState<CouncilId | null>(null);
   const [hoverId, setHoverId] = useState<CouncilId | null>(null);
 
-  // Basiswinkel pro Rat (0°, 30°, 60° …)
   const itemAngles = useMemo(
     () => COUNCIL_IDS.map((id, i) => ({ id, theta: i * (360 / COUNCIL_IDS.length) })),
     []
   );
 
-  // rAF – immer rechtsrum drehen
   useEffect(() => {
     if (targetAngle == null) return;
 
@@ -60,9 +50,9 @@ export default function CouncilOrbit() {
 
     let target = targetAngle % 360;
     if (target < 0) target += 360;
-    if (target <= current) target += 360; // vorwärts erzwingen
+    if (target <= current) target += 360;
 
-    const speed = 2.4; // deg/frame
+    const speed = 2.4;
     const tick = () => {
       current += speed;
       if (current >= target) {
@@ -82,7 +72,6 @@ export default function CouncilOrbit() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetAngle]);
 
-  // Helpers
   const toRad = (deg: number) => (deg - 90) * (Math.PI / 180);
   const posOnCircle = (thetaDeg: number, r: number) => {
     const a = toRad(thetaDeg);
@@ -91,7 +80,7 @@ export default function CouncilOrbit() {
 
   const onSelect = (id: CouncilId) => {
     const base = itemAngles.find(a => a.id === id)?.theta ?? 0;
-    const desired = -base; // dieses Item soll nach oben (0°)
+    const desired = -base;
     setTargetAngle(desired);
     setFocused(id);
   };
@@ -100,7 +89,6 @@ export default function CouncilOrbit() {
     setTargetAngle(0);
   };
 
-  // Für sauberes JSX ohne IIFE:
   const focusedItem: CouncilItem | null = focused ? getItem(focused) : null;
   const focusedKpi = focusedItem?.kpi ?? {
     superpower: "",
@@ -110,15 +98,18 @@ export default function CouncilOrbit() {
 
   return (
     <div className="mx-auto w-full max-w-[900px] p-4">
-      <svg viewBox="0 0 1000 1000" className="block w-full h-auto" role="img" aria-label="Council of 12">
+      <svg
+        viewBox="0 0 1000 1000"
+        className="block w-full h-auto"
+        role="img"
+        aria-label="Council of 12"
+      >
         <defs>
-          {/* Soft-Wash 13% */}
           <radialGradient id="wash" cx="50%" cy="50%" r="65%">
             <stop offset="0%" stopColor="#000" stopOpacity="0.13" />
             <stop offset="100%" stopColor="#000" stopOpacity="0.13" />
           </radialGradient>
 
-          {/* Hover-Arc */}
           <linearGradient id="hl" x1="0" x2="1" y1="0" y2="0">
             <stop offset="0"   stopColor="#fff" stopOpacity="0" />
             <stop offset="0.5" stopColor="#fff" stopOpacity="0.85" />
@@ -134,16 +125,29 @@ export default function CouncilOrbit() {
               .arc { opacity: 0; transition: opacity .18s ease; }
               .arc.show { opacity: .9; }
               .center-card { transition: opacity .18s ease, transform .25s ease; }
+
+              /* KPI-HTML im foreignObject */
+              .kpi {
+                color: #7CFF7C;
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace;
+                font-size: 13px;
+                line-height: 1.45;
+                text-align: left;
+                word-break: break-word;
+                hyphens: auto;
+                text-shadow: 0 0 4px rgba(0,255,120,0.25);
+              }
+              .kpi p { margin: 0; }
+              .kpi p + p { margin-top: 6px; }
             `}
           </style>
         </defs>
 
-        {/* getönter Hintergrund */}
+        {/* sanfter Hintergrund */}
         <rect x="0" y="0" width="1000" height="1000" fill="url(#wash)" />
 
-        {/* Orbit-Gruppe rotiert */}
+        {/* Orbit */}
         <g transform={`rotate(${angle} ${CX} ${CY})`}>
-          {/* 60 Ticks (Iris) */}
           {Array.from({ length: 60 }).map((_, i) => {
             const theta = i * 6;
             const p1 = posOnCircle(theta, R_TICK_IN);
@@ -174,12 +178,10 @@ export default function CouncilOrbit() {
             );
           })}
 
-          {/* 12 Räte */}
           {itemAngles.map(({ id, theta }) => {
             const item = getItem(id as CouncilId);
             const labelPos = posOnCircle(theta, R_LABEL);
 
-            // Hover-Arc (±10°)
             const arcInner = 300, arcOuter = 350;
             const a1 = theta - 10, a2 = theta + 10;
             const a1i = posOnCircle(a1, arcInner), a1o = posOnCircle(a1, arcOuter);
@@ -189,7 +191,6 @@ export default function CouncilOrbit() {
 
             return (
               <g key={id}>
-                {/* Arc */}
                 <path
                   d={`M ${a1i.x} ${a1i.y}
                       A ${arcInner} ${arcInner} 0 ${largeArc} 1 ${a2i.x} ${a2i.y}
@@ -200,7 +201,7 @@ export default function CouncilOrbit() {
                   className={`arc ${hovered ? "show" : ""}`}
                 />
 
-                {/* Label – gegenrotieren, damit horizontal */}
+                {/* Gegenrotation, damit Labels horizontal bleiben */}
                 <g
                   transform={`translate(${labelPos.x} ${labelPos.y}) rotate(${-angle} 0 0)`}
                   style={{ cursor: "pointer" }}
@@ -236,7 +237,7 @@ export default function CouncilOrbit() {
                   </text>
                 </g>
 
-                {/* große Trefferfläche */}
+                {/* größerer Hotspot */}
                 <circle
                   cx={labelPos.x}
                   cy={labelPos.y - 6}
@@ -251,11 +252,11 @@ export default function CouncilOrbit() {
           })}
         </g>
 
-        {/* Center-Panel (Matrix / grün) */}
+        {/* Center-Panel */}
         {focusedItem && (
           <g className="center-card" opacity={1} transform={`translate(${CX} ${CY})`}>
             <circle r={INNER_R} fill="rgba(0,0,0,0.55)" stroke="#00ff88" strokeOpacity="0.08" />
-            {/* Title */}
+
             <text
               x={0}
               y={-30}
@@ -267,7 +268,6 @@ export default function CouncilOrbit() {
             >
               {focusedItem.title}
             </text>
-            {/* Subtitle */}
             <text
               x={0}
               y={-8}
@@ -280,30 +280,19 @@ export default function CouncilOrbit() {
               {focusedItem.subtitle}
             </text>
 
-            {/* KPIs */}
-            <g transform="translate(-115,14)">
-              <text
-                x={0}
-                y={0}
-                fill="#7CFF7C"
-                fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
-                fontSize={13}
-              >{`> superpower: ${focusedKpi.superpower}`}</text>
-              <text
-                x={0}
-                y={20}
-                fill="#7CFF7C"
-                fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
-                fontSize={13}
-              >{`> focus: ${focusedKpi.focus}`}</text>
-              <text
-                x={0}
-                y={40}
-                fill="#7CFF7C"
-                fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
-                fontSize={13}
-              >{`> signal: ${focusedKpi.signal}`}</text>
-            </g>
+            {/* HTML im Kreis – bricht automatisch um */}
+            <foreignObject
+              x={-INNER_R + 18}
+              y={8}
+              width={INNER_R * 2 - 36}
+              height={INNER_R * 2 - 56}
+            >
+              <div className="kpi">
+                <p>{`> superpower: ${focusedKpi.superpower}`}</p>
+                <p>{`> focus: ${focusedKpi.focus}`}</p>
+                <p>{`> signal: ${focusedKpi.signal}`}</p>
+              </div>
+            </foreignObject>
 
             {/* Close */}
             <g
