@@ -67,11 +67,6 @@ canvas { display: block; }
   0%   { opacity:.9; transform: translate(0,0) scale(1); filter: blur(0); }
   100% { opacity:0; transform: translate(var(--dx), var(--dy)) scale(0.3); filter: blur(2px); }
 }
-
-/* ── Motion/A11y ─────────────────────────────────────────── */
-@media (prefers-reduced-motion: reduce){
-  .btn, .btn::before, .crystal, .isExiting { transition:none !important; animation:none !important; }
-}
 @media (prefers-reduced-motion: reduce){
   * { animation: none !important; transition: none !important; transform: none !important; }
 }
@@ -241,12 +236,6 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 :focus-visible {
   outline: 2px solid rgba(34,211,238,0.55);
   outline-offset: 2px;
-}
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
-    animation: none !important;
-  }
 }
 :root { --dock-h: 60px; } /* Fallback */
 @media (max-width: 768px){
@@ -442,5 +431,3 @@ div[data-convo="1"] {
 }
 /* minimal global baseline (keine Design-Overrides) */
 :root { --ease: cubic-bezier(.25,.1,.25,1); } /* optional, falls Komponenten es nutzen */
-
-html.enable-scroll { overflow-y: auto !important; } /* von Page.tsx verwendet */
