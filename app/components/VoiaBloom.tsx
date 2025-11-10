@@ -129,26 +129,11 @@ export default function VoiaBloom() {
 
   return (
     <div className="fixed inset-0 z-0 pointer-events-none">
-      {/* Pulsierender Core (dekorativ, klicktransparent) */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-        <div className="w-[20vw] max-w-[180px] aspect-square rounded-full
-                        bg-[radial-gradient(circle_at_center,#fff0f5,#9b59b6)]
-                        shadow-[0_0_60px_rgba(255,255,255,0.30),inset_0_0_30px_rgba(155,89,182,0.50)]
-                        motion-safe:animate-[bloomPulse_4s_ease-in-out_infinite]" />
-      </div>
-
       {/* Canvas */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full filter blur-[0.5px] contrast-[110%] opacity-80"
       />
-
-      <style jsx>{`
-        @keyframes bloomPulse {
-          0%,100% { transform: translate(-50%, -50%) scale(1); }
-          50%     { transform: translate(-50%, -50%) scale(1.08); }
-        }
-      `}</style>
     </div>
   );
 }
