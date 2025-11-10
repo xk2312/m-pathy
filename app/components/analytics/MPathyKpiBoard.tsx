@@ -311,7 +311,12 @@ export default function MPathyKpiBoard() {
           {/* Overview */}
           <TabsContent value="Overview" className="mt-6 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card style={{ background: PALETTE.card, borderColor: PALETTE.border }}>
+<Card
+  style={{
+    background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+    borderColor: PALETTE.border,
+  }}
+>
                 <CardHeader><CardTitle>Gesamtvergleich</CardTitle></CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto rounded-2xl border" style={{ borderColor: PALETTE.border }}>
@@ -341,7 +346,12 @@ export default function MPathyKpiBoard() {
                 </CardContent>
               </Card>
 
-              <Card style={{ background: PALETTE.card, borderColor: PALETTE.border }}>
+<Card
+  style={{
+    background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+    borderColor: PALETTE.border,
+  }}
+>
                 <CardHeader><CardTitle>Layer‑Radar (wähle Tab)</CardTitle></CardHeader>
                 <CardContent>
                   <div className="rounded-2xl border p-2" style={{ borderColor: PALETTE.border }}>
@@ -356,7 +366,12 @@ export default function MPathyKpiBoard() {
           {(["Core", "Empathy", "Trust", "Clarity"] as const).map((layer) => (
             <TabsContent key={layer} value={layer} className="mt-6 space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card style={{ background: PALETTE.card, borderColor: PALETTE.border }}>
+<Card
+  style={{
+    background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+    borderColor: PALETTE.border,
+  }}
+>
                   <CardHeader>
                     <CardTitle>
                       <span className="mr-2 inline-block h-2 w-2 rounded-full" style={{ background: PALETTE.layers[layer] }} />
@@ -368,7 +383,12 @@ export default function MPathyKpiBoard() {
                   </CardContent>
                 </Card>
 
-                <Card style={{ background: PALETTE.card, borderColor: PALETTE.border }}>
+<Card
+  style={{
+    background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+    borderColor: PALETTE.border,
+  }}
+>
                   <CardHeader><CardTitle>{layer} · Radar</CardTitle></CardHeader>
                   <CardContent><LayerRadar layer={layer} /></CardContent>
                 </Card>
