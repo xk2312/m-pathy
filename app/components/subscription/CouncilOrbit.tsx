@@ -7,8 +7,8 @@ export default function CouncilOrbit() {
 
   return (
     <div className="w-full">
-      {/* Nur das Panel, kein Hinweis mehr */}
-      <div className="mx-auto w-full max-w-[900px] rounded-2xl border border-white/10 p-4">
+      {/* Panel ohne Border */}
+      <div className="mx-auto w-full max-w-[900px] rounded-2xl p-4">
         <div className="relative w-full aspect-square overflow-hidden">
           <Image
             src="/pictures/m-x.svg"
