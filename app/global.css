@@ -89,35 +89,11 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
 /* z-Layer Konvention (für Overlays/Drawer/FAB) */
 :root {
-  --z-base: 1;
-  --z-overlay: 60;
-  --z-fab: 70;
   --dock-h: 60px; /* fallback dock height */
-    /* === Galaxy Design Tokens === */
-  --color-bg: #0a0f14;
-  --color-fg: #e6f7ff;
-
-
-  /* Radii */
-  --rz-sm: 10px;
-  --rz-lg: 20px;
-  --rz-2xl: 24px;
-
-  /* Shadows & Glow */
-  --sh-sm: 0 2px 8px rgba(0,255,255,0.10);
-  --sh-md: 0 6px 24px rgba(0,255,255,0.12);
-  --sh-lg: 0 12px 40px rgba(0,255,255,0.15);
-  --glow: 0 0 0 1px rgba(0,255,255,0.25), 0 0 18px rgba(0,255,255,0.18);
-
-  /* Timings & Easing */
-  --t-fast: 90ms;
-  --t-mid: 120ms;
-  --t-slow: 200ms;
-  --ease: cubic-bezier(.2,.6,.2,1);
-
   /* --- Safe-area Desktop Default --- */
-  --safe-bottom: 0px; /* Wichtig: Desktop-Fallback = 0px */
+  --safe-bottom: 0px; /* Desktop-Fallback; @supports block aktualisiert diesen Wert */
 }
+
 
 /* Wenn der Browser safe-area kennt, mappe sie auf die Variable. */
 @supports (padding: max(0px)) {
