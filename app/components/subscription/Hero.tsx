@@ -33,7 +33,7 @@ export default function Hero() {
             className="
               inline-flex items-center justify-center
               px-[36px] md:px-[44px]        /* Breite */
-              py-[28px] md:py-[32px]        /* Höhe (deutlich größer) */
+              py-[38px] md:py-[42px]        /* Höhe (deutlich größer) */
               text-[20px] md:text-[22px] font-semibold
               rounded-2xl text-black
               bg-[hsl(255,95%,75%)]
