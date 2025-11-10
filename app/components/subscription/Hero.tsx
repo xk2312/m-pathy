@@ -1,113 +1,54 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
 
 export default function Hero() {
   const { t } = useLang();
-  const layer1 = useRef<HTMLDivElement>(null);
-  const layer2 = useRef<HTMLDivElement>(null);
-  const btnRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (media.matches) return;
-    const move = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 8;
-      const y = (e.clientY / window.innerHeight - 0.5) * 8;
-      if (layer1.current) layer1.current.style.transform = `translate(${x}px, ${y}px) scale(1.01)`;
-      if (layer2.current) layer2.current.style.transform = `translate(${-x}px, ${-y}px) scale(1.02)`;
-    };
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
-  }, []);
-
-  const ripple = (e: React.MouseEvent) => {
-    if (!btnRef.current) return;
-    const btn = btnRef.current;
-    const r = btn.getBoundingClientRect();
-    const x = e.clientX - r.left;
-    const y = e.clientY - r.top;
-    const span = document.createElement("span");
-    span.className = "hero-ripple";
-    span.style.left = `${x}px`;
-    span.style.top = `${y}px`;
-    btn.appendChild(span);
-    span.addEventListener("animationend", () => span.remove());
-  };
 
   return (
-    <div className="relative w-full overflow-hidden pb-4 md:pb-6">
-      {/* schlankere Glows */}
-      <div
-        ref={layer1}
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 blur-[90px] opacity-25 motion-safe:animate-[pulse_10s_ease-in-out_infinite]"
-        style={{ background: "radial-gradient(circle at 30% 40%, rgba(139,92,246,0.28), transparent 70%)" }}
-      />
-      <div
-        ref={layer2}
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-20 blur-[120px] opacity-22 motion-safe:animate-[pulse_12s_ease-in-out_infinite]"
-        style={{ background: "radial-gradient(circle at 70% 60%, rgba(34,211,238,0.18), transparent 65%)" }}
-      />
-
-      {/* Inhalt */}
-      <div className="relative z-10 mx-auto max-w-[900px] min-w-0 text-center">
+    <div className="relative w-full">
+      {/* Inhalt kompakt & mittig */}
+      <div className="mx-auto max-w-[820px] px-2 text-center">
+        {/* Titel */}
         <h1
-          className="text-[clamp(28px,5vw,56px)] font-semibold leading-[1.15] tracking-tight
-                     bg-gradient-to-b from-white to-white/70 text-transparent bg-clip-text"
+          className="
+            text-[clamp(28px,5vw,52px)]
+            font-semibold leading-[1.15] tracking-tight
+            bg-gradient-to-b from-white to-white/75 text-transparent bg-clip-text
+          "
         >
           {t("hero_title")}
         </h1>
 
-        <p className="mt-2 md:mt-3 text-[15px] md:text-[17px] text-white/70">
+        {/* Subhead (falls nicht gewünscht: Zeile entfernen) */}
+        <p className="mt-2 text-[15px] md:text-[17px] text-white/70">
           {t("hero_sub")}
         </p>
 
-        {/* CTA-Wrapper: Abstand mit PADDING, nicht margin */}
-        <div className="pt-[60px] pb-[60px] flex w-full justify-center">
+        {/* CTA – 60px Abstand oben & unten, klarer großer Button */}
+        <div className="mt-[60px] mb-[60px] flex w-full justify-center">
           <button
-            ref={btnRef}
             type="button"
             aria-label={t("hero_cta")}
-            onClick={ripple}
-            onMouseUp={() => btnRef.current?.blur()}
             className="
-              relative inline-flex items-center justify-center
-              px-[24px] md:px-[32px]            /* Breite */
-              py-[18px] md:py-[24px]            /* Höhe */
-              text-[18px] md:text-[22px] leading-none font-semibold
+              inline-flex items-center justify-center
+              px-[36px] md:px-[44px]        /* Breite */
+              py-[28px] md:py-[32px]        /* Höhe (deutlich größer) */
+              text-[20px] md:text-[22px] font-semibold
               rounded-2xl text-black
               bg-[hsl(255,95%,75%)]
-              shadow-[0_0_24px_rgba(180,150,255,0.35)]
-              transition-transform duration-300
-              motion-safe:hover:scale-[1.04]
-              motion-safe:active:scale-[0.98]
-              focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/80
-              min-w-[220px] md:min-w-[280px]    /* Mindestbreite für „groß“ */
+              shadow-[0_8px_24px_rgba(180,150,255,0.28)]
+              transition-[transform,box-shadow] duration-200
+              hover:-translate-y-[1px] hover:shadow-[0_10px_30px_rgba(180,150,255,0.35)]
+              active:translate-y-0
+              focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/85
+              min-w-[320px]
             "
           >
-            <span className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
-              <span className="hero-shine" />
-            </span>
             {t("hero_cta")}
           </button>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes pulse { 0%,100%{transform:scale(1);opacity:.25} 50%{transform:scale(1.03);opacity:.4} }
-        .hero-shine {
-          position:absolute; inset:-180%;
-          background:linear-gradient(120deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.35) 50%,rgba(255,255,255,0) 100%);
-          transform:translateX(-50%); animation:shine 3.2s ease-in-out infinite; will-change:transform;
-        }
-        @keyframes shine { 0%{transform:translateX(-60%) rotate(.001deg)} 50%{transform:translateX(60%) rotate(.001deg)} 100%{transform:translateX(-60%) rotate(.001deg)} }
-        .hero-ripple { position:absolute; width:12px;height:12px;border-radius:9999px; transform:translate(-50%,-50%); background:rgba(255,255,255,.8); animation:ripple 600ms ease-out forwards; pointer-events:none; mix-blend-mode:screen; }
-        @keyframes ripple { 0%{opacity:.5; transform:translate(-50%,-50%) scale(1)} 100%{opacity:0; transform:translate(-50%,-50%) scale(16)} }
-        @media (prefers-reduced-motion: reduce) { .hero-shine{animation:none} }
-      `}</style>
     </div>
   );
 }
