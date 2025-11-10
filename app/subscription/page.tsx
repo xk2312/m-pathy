@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
 
-// Komponenten (rendern ihr eigenes Layout & Motion)
+// Komponenten
 import Hero from "@/app/components/subscription/Hero";
 import ShowcaseCarousel from "@/app/components/subscription/ShowcaseCarousel";
 import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
@@ -21,11 +21,15 @@ export default function SubscriptionPage() {
 
   return (
     <LanguageProvider dict={dict}>
-      {/* Nur Grundgerüst + Container-Padding + Section-Gap */}
       <main className="min-h-dvh bg-black text-white selection:bg-white/20 antialiased">
-        <div className="w-full px-[10px] py-[20px] lg:px-[90px] lg:py-[90px]">
-          {/* Einheitlicher vertikaler Abstand zwischen den Sektionen */}
-          <div className="space-y-[70px]">
+        {/* 
+          🔹 Zentrierter Container:
+             - feste horizontale Mitte
+             - dynamisches Padding (mobile vs. desktop)
+             - vertical spacing 70px zwischen Sections
+        */}
+        <div className="flex justify-center w-full">
+          <div className="w-full max-w-[1280px] px-[10px] py-[20px] lg:px-[90px] lg:py-[90px] space-y-[70px]">
             <section id="top">
               <Hero />
             </section>
