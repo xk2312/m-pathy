@@ -447,6 +447,25 @@ div[data-convo="1"] {
 .kpi-scope table tr > td {
   padding-block: 6px; /* leichtes vertikales Luftpolster */
 }
+/* --- KPI scope: header spacing + tabs breathing room --- */
+.kpi-scope thead th {
+  line-height: 1.45;
+  padding-block: 10px;     /* Kopfzeilen spürbar luftiger */
+}
+
+.kpi-scope [role="tablist"] {
+  margin-block: 10px;      /* Abstand oberhalb/unterhalb der Tabs */
+}
+
+.kpi-scope [role="tab"] {
+  padding-block: 10px;     /* Tab-Schaltflächen mit vertikaler Luft */
+}
+/* --- KPI scope: guard against 100vw/overflow in children --- */
+.kpi-scope > * {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;    /* keine übergroße Kindbreite */
+}
 
 /* =====================================================================
    End of Patch · Council13 verified · Triketon-2048 Seal
