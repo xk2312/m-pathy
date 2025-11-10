@@ -501,6 +501,11 @@ div[data-convo="1"] {
 .kpi-scope [class*="core"] {
   padding-left: 10px;
 }
+/* --- KPI scope: button inner padding adjustment --- */
+.kpi-scope button {
+  padding-left: 20px !important;  /* vorher px-4 → 16px, jetzt +4px ≈ +5px visuell */
+  padding-right: 20px !important;
+}
 
 /* =====================================================================
    End of Patch · Council13 verified · Triketon-2048 Seal
