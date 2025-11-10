@@ -49,7 +49,8 @@ export default function SubscriptionPage() {
   py-[clamp(20px,5vw,90px)]
   space-y-[clamp(48px,6vw,70px)]
   [&>section]:m-0
-  [&>section#top]:pb-[30px]        /* ← 30px Padding unterm HERO-Abschnitt */
+  [&>section#top]:pb-[30px]    /* fix für Hero-zu-Carousel Abstand */
+  [&>section#showcases]:pt-[30px] /* oberes Padding fürs Carousel */
 "
 
           >
