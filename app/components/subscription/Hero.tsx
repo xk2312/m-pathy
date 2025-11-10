@@ -18,8 +18,8 @@ export default function Hero() {
         {t("hero_sub")}
       </p>
 
-      {/* CTA-Button */}
-      <div className="mt-[32px] flex w-full justify-center">
+      {/* CTA-Button mit zusätzlichem Abstand nach unten (40 px) */}
+      <div className="mt-[32px] mb-[40px] flex w-full justify-center">
         <button
           type="button"
           aria-label={t("hero_cta")}
@@ -37,6 +37,11 @@ export default function Hero() {
           {t("hero_cta")}
         </button>
       </div>
+
+      {/* Hinweis unter dem Button */}
+      <p className="text-center text-[16px] md:text-[18px] text-[#C7C7C7]">
+        {t("council_hint")}
+      </p>
     </div>
   );
 }
