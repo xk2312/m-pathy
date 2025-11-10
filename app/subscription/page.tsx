@@ -3,13 +3,13 @@
 import { useEffect } from "react";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
-import dynamic from "next/dynamic"; // + NEU
+import dynamic from "next/dynamic";
 
 import VoiaBloom from "@/app/components/VoiaBloom";
 import Hero from "@/app/components/subscription/Hero";
 import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
 
-// + NEU: KPI Board (Client-only; Recharts braucht Browser)
+// KPI Board (Client-only; Recharts braucht Browser)
 const MPathyKpiBoard = dynamic(
   () => import("@/app/components/analytics/MPathyKpiBoard"),
   { ssr: false }
@@ -30,37 +30,36 @@ export default function SubscriptionPage() {
         role="main"
         className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
       >
-        {/* ELTERN: Nur Container steuert Außenabstände.
-           Top-Abstand HART per Inline-Style (calc mit --ry), damit nichts ihn überstimmt. */}
+        {/* Eltern steuern Außenabstände.
+            Top-Abstand hart per calc(var(--ry) * 1.5) → 96px bei --ry=64px */}
         <div
           className="mx-auto w-full max-w-[1280px]
                      px-[clamp(10px,4vw,90px)]
                      pb-[clamp(20px,5vw,90px)]"
-          style={{ paddingTop: "calc(var(--ry) * 1.5)" }} // = 96px bei --ry=64px
+          style={{ paddingTop: "calc(var(--ry) * 1.5)" }}
         >
-          {/* SECTION: HERO — Mitte, Breite via --page-max, unten 72px (32 + 40) */}
-          <section className="flex justify-center pb-[72px]">
-            <div className="w-full" style={{ maxWidth: "var(--page-max)" }}>
+          {/* SECTION: HERO – zentral über page-center */}
+          <section className="pt-[72px] pb-[72px]">
+            <div className="page-center">
               <Hero />
             </div>
           </section>
 
-                              {/* SECTION: COUNCIL — oben 72px (32 + 40), Mitte, Breite via --page-max */}
-          <section className="flex justify-center pt-[72px]">
-            <div className="w-full" style={{ maxWidth: "var(--page-max)" }}>
+          {/* SECTION: COUNCIL – zentral über page-center */}
+          <section className="pt-[72px]">
+            <div className="page-center">
               <CouncilOrbit />
             </div>
           </section>
 
-          {/* SECTION: KPI — Eltern steuern Mitte & Abstand über Tokens */}
+          {/* SECTION: KPI – zentral + lockere Tabellenzeilen */}
           <section className="pt-[72px]">
             <div className="page-center kpi-scope">
               <MPathyKpiBoard />
             </div>
           </section>
 
-          {/* weitere Sections später hier explizit, gleiches Muster */}
-
+          {/* Weitere Sections folgen im selben Muster */}
         </div>
       </main>
     </LanguageProvider>
