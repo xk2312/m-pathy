@@ -18,16 +18,35 @@ export default function SubscriptionPage() {
     return () => document.documentElement.classList.remove("enable-scroll");
   }, []);
 
-  return (
+    return (
     <LanguageProvider dict={dict}>
-      <main className="min-h-dvh bg-black text-white selection:bg-white/20 antialiased">
-        {/* 
-          Zentrierter Eltern-Container (immer mittig):
-          - max Breite
-          - Padding: mobile 10/20, desktop 90/90
-          - Abstand zwischen Sections: 70px
-        */}
-        <div className="mx-auto w-full max-w-[1280px] px-[10px] py-[20px] lg:px-[90px] lg:py-[90px] space-y-[70px]">
+      {/* A11y-Skiplink erscheint nur bei Tastaturfokus */}
+      <a
+        href="#content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[999] focus:rounded-md focus:px-3 focus:py-2 focus:bg-white/10"
+      >
+        Skip to content
+      </a>
+
+      <main
+        id="content"
+        role="main"
+        aria-label="Subscription"
+        className="relative isolate min-h-dvh bg-black text-white selection:bg-white/20 antialiased"
+      >
+        {/* Eltern-Container:
+            - echte Zentrierung über mx-auto
+            - Breite begrenzt (max-w-[1280px])
+            - Padding via clamp (mobil → desktop)
+            - Vertikal-Rhythmus: 48px → 70px */}
+        <div
+          className="
+            block w-full mx-auto max-w-[1280px]
+            px-[clamp(10px,4vw,90px)] py-[clamp(20px,5vw,90px)]
+            space-y-[clamp(48px,6vw,70px)]
+            [&>section]:m-0
+          "
+        >
           <section id="top">
             <Hero />
           </section>
