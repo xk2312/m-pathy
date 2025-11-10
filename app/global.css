@@ -516,6 +516,15 @@ div[data-convo="1"] {
 /* Tabs dürfen immer Events bekommen und über Randkanten liegen */
 .kpi-scope [role="tablist"] { pointer-events: auto; position: relative; z-index: 2; }
 .kpi-scope [role="tab"] { pointer-events: auto; }
+/* --- KPI scope: spacing between bullet and section title --- */
+.kpi-scope h3 span.rounded-full {
+  margin-right: 5px;
+}
+
+/* falls CardTitle andere Überschrift nutzt (Fallback) */
+.kpi-scope .card-title span.rounded-full {
+  margin-right: 5px;
+}
 
 /* =====================================================================
    End of Patch · Council13 verified · Triketon-2048 Seal
