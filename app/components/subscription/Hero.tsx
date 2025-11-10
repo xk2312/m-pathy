@@ -96,34 +96,33 @@ export default function Hero() {
         </p>
 
         {/* CTA – groß, atmend, brillant; Mobile first */}
-        <div className="mt-8 sm:mt-10 flex w-full justify-center">
-          <button
-            ref={btnRef}
-            type="button"
-            aria-label={t("hero_cta")}
-            onClick={ripple}
-            onMouseUp={() => btnRef.current?.blur()}
-            className="
-              relative inline-flex items-center justify-center
-              px-6 py-3 sm:px-8 sm:py-4
-              text-base sm:text-lg font-semibold
-              rounded-2xl
-              text-black
-              bg-[hsl(255,95%,75%)]
-              shadow-[0_0_25px_rgba(180,150,255,0.35)]
-              transition-transform duration-300
-              motion-safe:hover:scale-[1.04]
-              motion-safe:active:scale-[0.98]
-              focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/80
-            "
-          >
-            {/* Shine-Sweep */}
-            <span className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
-              <span className="hero-shine" />
-            </span>
-            {t("hero_cta")}
-          </button>
-        </div>
+            <div className="mt-[60px] mb-[60px] flex w-full justify-center">
+            <button
+              ref={btnRef}
+              type="button"
+              aria-label={t("hero_cta")}
+              onClick={ripple}
+              onMouseUp={() => btnRef.current?.blur()}
+              className="
+                relative inline-flex items-center justify-center
+                px-10 py-5 sm:px-12 sm:py-6
+                text-base sm:text-lg font-semibold
+                rounded-2xl text-black
+                bg-[hsl(255,95%,75%)]
+                shadow-[0_0_25px_rgba(180,150,255,0.35)]
+                transition-transform duration-300
+                motion-safe:hover:scale-[1.04]
+                motion-safe:active:scale-[0.98]
+                focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/80
+              "
+            >
+              <span className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
+                <span className="hero-shine" />
+              </span>
+              {t("hero_cta")}
+            </button>
+          </div>
+
       </div>
 
       <style jsx>{`
