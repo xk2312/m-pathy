@@ -49,19 +49,33 @@ export function CardContent({ className = "", ...props }: Classable) {
   return <div className={cx("px-4 pb-4", className)} {...props} />;
 }
 
-// Tabs (Context‑based, minimal API-compatible with our usage)
- type TabKey = "Overview" | "Core" | "Empathy" | "Trust" | "Clarity";
- type TabsCtx = { value: TabKey; onValueChange: (v: TabKey) => void };
- const TabsContext = createContext<TabsCtx | null>(null);
+// Tabs (Context-based, minimal API-compatible with our usage)
+type TabKey = "Overview" | "Core" | "Empathy" | "Trust" | "Clarity";
+type TabsCtx = { value: TabKey; onValueChange: (v: TabKey) => void };
+const TabsContext = createContext<TabsCtx | null>(null);
 
 export function Tabs(
   { value, onValueChange, className = "", children }:
   { value: TabKey; onValueChange: (v: TabKey) => void; className?: string; children: React.ReactNode }
 ) {
-  return <div className={className}><TabsContext.Provider value={{ value, onValueChange }}>{children}</TabsContext.Provider></div>;
+  return (
+    <div className={className}>
+      <TabsContext.Provider value={{ value, onValueChange }}>
+        {children}
+      </TabsContext.Provider>
+    </div>
+  );
 }
+
 export function TabsList({ className = "", children }: { className?: string; children: React.ReactNode }) {
-  return <div role="tablist" className={cx("flex gap-2", className)}>{children}</div>;
+  return (
+    <div
+      role="tablist"
+      className={cx("flex gap-2 relative z-[2] pointer-events-auto", className)}
+    >
+      {children}
+    </div>
+  );
 }
 
 export function TabsTrigger(
@@ -70,18 +84,27 @@ export function TabsTrigger(
 ) {
   const ctx = useContext(TabsContext)!;
   const active = ctx.value === value;
+
   return (
     <button
-  type="button"
-  role="tab"
-  aria-selected={active}
-  className={cx(
-    "px-3 py-2 rounded-xl border cursor-pointer",
-    active ? "bg-white text-[#0B0E12] border-white" : "bg-white/10 text-white border-white/20 hover:bg-white/20",
-    className
-  )}
->
-
+      type="button"
+      role="tab"
+      id={`tab-${value}`}
+      aria-selected={active}
+      aria-controls={`panel-${value}`}
+      tabIndex={0}
+      onClick={(e) => { e.stopPropagation(); ctx.onValueChange(value); }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); ctx.onValueChange(value); }
+      }}
+      className={cx(
+        "px-3 py-2 rounded-xl border cursor-pointer pointer-events-auto focus:outline-none focus-visible:ring-2",
+        active
+          ? "bg-white text-[#0B0E12] border-white"
+          : "bg-white/10 text-white border-white/20 hover:bg-white/20",
+        className
+      )}
+    >
       {children}
     </button>
   );
@@ -93,8 +116,18 @@ export function TabsContent(
 ) {
   const ctx = useContext(TabsContext)!;
   if (ctx.value !== value) return null;
-  return <div className={className}>{children}</div>;
+  return (
+    <div
+      role="tabpanel"
+      id={`panel-${value}`}
+      aria-labelledby={`tab-${value}`}
+      className={className}
+    >
+      {children}
+    </div>
+  );
 }
+
 
 // ───────────────────────────────────────────────────────────────────────────────
 // KPI DATA + PALETTE

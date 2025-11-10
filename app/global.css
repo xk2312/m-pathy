@@ -513,6 +513,9 @@ div[data-convo="1"] {
 .kpi-scope a {
   cursor: pointer;
 }
+/* Tabs dürfen immer Events bekommen und über Randkanten liegen */
+.kpi-scope [role="tablist"] { pointer-events: auto; position: relative; z-index: 2; }
+.kpi-scope [role="tab"] { pointer-events: auto; }
 
 /* =====================================================================
    End of Patch · Council13 verified · Triketon-2048 Seal
