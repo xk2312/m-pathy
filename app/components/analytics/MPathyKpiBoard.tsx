@@ -283,7 +283,11 @@ export default function MPathyKpiBoard() {
   const jsonPretty = useMemo(() => JSON.stringify(CRITERIA, null, 2), []);
 
   return (
-    <div className={hc ? "hc" : ""} style={{ color: PALETTE.text, background: PALETTE.bg }}>
+  <div
+    className={hc ? "hc" : ""}
+    style={{ color: PALETTE.text, background: "transparent" }}
+  >
+
       <div className="mx-auto max-w-7xl p-4 sm:p-8">
         <div className="mb-6 flex flex-col gap-2">
           <h1 className="text-3xl font-semibold tracking-tight">m‑Pathy KPI Board</h1>
