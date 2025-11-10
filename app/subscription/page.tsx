@@ -45,19 +45,26 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-          {/* SECTION: COUNCIL — oben 72px (32 + 40), Mitte, Breite via --page-max */}
+                    {/* SECTION: COUNCIL — oben 72px (32 + 40), Mitte, Breite via --page-max */}
           <section className="flex justify-center pt-[72px]">
             <div className="w-full" style={{ maxWidth: "var(--page-max)" }}>
               <CouncilOrbit />
             </div>
           </section>
 
-          {/* + NEU: SECTION KPI — volle Elternbreite; Abstände bleiben bei Eltern */}
-          <section className="pt-[72px]">
-            <MPathyKpiBoard />
+          {/* SECTION: KPI — mittig + 10px links/rechts, Breite via --page-max */}
+                    <section className="pt-[72px]">
+            <div
+              className="mx-auto w-full"
+              style={{ maxWidth: "var(--page-max)", paddingInline: "10px" }}
+            >
+              <MPathyKpiBoard />
+            </div>
           </section>
 
+
           {/* weitere Sections später hier explizit, gleiches Muster */}
+
         </div>
       </main>
     </LanguageProvider>

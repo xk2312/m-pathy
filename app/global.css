@@ -88,6 +88,16 @@ section::-webkit-scrollbar-track { background: transparent; }
 section::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
 section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
+/* --- KPI scope: leichte Entzerrung der Tabellenzeilen --- */
+.kpi-scope {
+  line-height: 1.35;               /* sanfte Auflockerung */
+}
+.kpi-scope table tr > th,
+.kpi-scope table tr > td {
+  padding-block: 6px;              /* etwas Luft oben/unten */
+}
+
+
 /* ── Hilfsklassen ────────────────────────────────────────── */
 /* Falls du lokal selektieren verbieten willst: */
 .no-copy { user-select: none !important; -webkit-user-select: none !important; }
