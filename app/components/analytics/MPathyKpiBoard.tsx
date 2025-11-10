@@ -61,8 +61,9 @@ export function Tabs(
   return <div className={className}><TabsContext.Provider value={{ value, onValueChange }}>{children}</TabsContext.Provider></div>;
 }
 export function TabsList({ className = "", children }: { className?: string; children: React.ReactNode }) {
-  return <div className={cx("flex gap-2", className)}>{children}</div>;
+  return <div role="tablist" className={cx("flex gap-2", className)}>{children}</div>;
 }
+
 export function TabsTrigger(
   { value, className = "", children }:
   { value: TabKey; className?: string; children: React.ReactNode }
@@ -71,6 +72,9 @@ export function TabsTrigger(
   const active = ctx.value === value;
   return (
     <button
+      type="button"
+      role="tab"
+      aria-selected={active}
       onClick={() => ctx.onValueChange(value)}
       className={cx(
         "px-3 py-2 rounded-xl border",
@@ -82,6 +86,7 @@ export function TabsTrigger(
     </button>
   );
 }
+
 export function TabsContent(
   { value, className = "", children }:
   { value: TabKey; className?: string; children: React.ReactNode }
