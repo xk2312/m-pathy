@@ -7,7 +7,7 @@ import dynamic from "next/dynamic"; // + NEU
 
 import VoiaBloom from "@/app/components/VoiaBloom";
 import Hero from "@/app/components/subscription/Hero";
-import CouncilOrbit from "@/components/subscription/CouncilOrbit";
+import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
 
 // + NEU: KPI Board (Client-only; Recharts braucht Browser)
 const MPathyKpiBoard = dynamic(
