@@ -1,7 +1,6 @@
+// app/layout.tsx  — neutral, ohne Theme/Prose
 import "./global.css";
-import "../styles/chat-prose.css";
-
-// import "../styles/input-bar.css";
+// ❌ keine globalen Prose-Styles hier importieren
 
 import React from "react";
 import type { Metadata, Viewport } from "next";
@@ -12,7 +11,7 @@ import LangAttrUpdater from "./components/LangAttrUpdater";
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "m-pathy - resonant creation",
+  title: "m-pathy – resonant creation",
   description: "Create your reality with M",
 };
 
@@ -30,17 +29,19 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head />
       <body
-      className={`${inter.className} min-h-dvh bg-gradient-to-b from-blue-50 via-white to-blue-100 text-slate-900 antialiased`}
-      style={{ overscrollBehaviorY: "auto", WebkitTapHighlightColor: "transparent" }}
-    >
-
+        className={`${inter.className} min-h-dvh antialiased`}
+        style={{
+          overscrollBehaviorY: "auto",
+          WebkitTapHighlightColor: "transparent",
+          margin: 0,
+          padding: 0,
+        }}
+      >
         <LangAttrUpdater />
         <Providers>{children}</Providers>
 
-        {/* Portal-Container für Overlays/Toasts */}
         <div id="overlay-root" />
 
-        {/* Safe-area Spacer */}
         <div
           aria-hidden="true"
           style={{
