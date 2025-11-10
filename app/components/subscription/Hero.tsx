@@ -4,17 +4,17 @@ import { useLang } from "@/app/providers/LanguageProvider";
 export default function Hero() {
   const { t } = useLang();
 
-  return (
-    <div className="text-center">
+    return (
+    <div className="text-center flex flex-col items-center gap-[40px]">
       <h1 className="text-[clamp(28px,5vw,52px)] font-semibold leading-[1.15] tracking-tight
                      bg-gradient-to-b from-white to-white/75 text-transparent bg-clip-text">
         {t("hero_title")}
       </h1>
 
-            {/* Subhead mit exakt 30px nach oben */}
-      <p className="mt-[30px] text-[16px] md:text-[18px] text-[#C7C7C7]">
+      <p className="text-[16px] md:text-[18px] text-[#C7C7C7]">
         {t("hero_sub")}
       </p>
+
 
       {/* Button: oben 32px, unten 0 — Section regelt weiteren Abstand */}
       <div className="mt-[32px] flex w-full justify-center">
