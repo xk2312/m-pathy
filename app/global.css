@@ -91,9 +91,11 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
   --z-base: 1;
   --z-overlay: 60;
   --z-fab: 70;
+  --dock-h: 60px; /* fallback dock height */
     /* === Galaxy Design Tokens === */
   --color-bg: #0a0f14;
   --color-fg: #e6f7ff;
+
 
   /* Radii */
   --rz-sm: 10px;
@@ -237,10 +239,11 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
   outline: 2px solid rgba(34,211,238,0.55);
   outline-offset: 2px;
 }
-:root { --dock-h: 60px; } /* Fallback */
+/* (removed duplicate :root --dock-h; now defined in main :root) */
 @media (max-width: 768px){
   html, body { overflow-x: hidden; }
 }
+
 
 /* gezielt den Chat-Scroller dunkler stylen */
 div[data-convo="1"]::-webkit-scrollbar-track { background: transparent; }
@@ -429,5 +432,3 @@ div[data-convo="1"] {
     white-space: nowrap;         /* prevent ugly multi-line cell breaks */
   }
 }
-/* minimal global baseline (keine Design-Overrides) */
-:root { --ease: cubic-bezier(.25,.1,.25,1); } /* optional, falls Komponenten es nutzen */
