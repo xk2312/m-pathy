@@ -18,7 +18,7 @@ export default function SubscriptionPage() {
     return () => document.documentElement.classList.remove("enable-scroll");
   }, []);
 
-    return (
+  return (
     <LanguageProvider dict={dict}>
       {/* A11y-Skiplink erscheint nur bei Tastaturfokus */}
       <a
@@ -34,42 +34,41 @@ export default function SubscriptionPage() {
         aria-label="Subscription"
         className="relative isolate min-h-dvh bg-black text-white selection:bg-white/20 antialiased"
       >
-        {/* Eltern-Container:
-            - echte Zentrierung über mx-auto
-            - Breite begrenzt (max-w-[1280px])
-            - Padding via clamp (mobil → desktop)
-            - Vertikal-Rhythmus: 48px → 70px */}
-        <div
-          className="
-            block w-full mx-auto max-w-[1280px]
-            px-[clamp(10px,4vw,90px)] py-[clamp(20px,5vw,90px)]
-            space-y-[clamp(48px,6vw,70px)]
-            [&>section]:m-0
-          "
-        >
-          <section id="top">
-            <Hero />
-          </section>
+        {/* Flex-Wrapper erzwingt echte horizontale Zentrierung */}
+        <div className="w-full flex justify-center">
+          {/* Eltern-Container */}
+          <div
+            className="
+              w-full max-w-[1280px]
+              px-[clamp(10px,4vw,90px)] py-[clamp(20px,5vw,90px)]
+              space-y-[clamp(48px,6vw,70px)]
+              [&>section]:m-0
+            "
+          >
+            <section id="top">
+              <Hero />
+            </section>
 
-          <section id="showcases">
-            <ShowcaseCarousel />
-          </section>
+            <section id="showcases">
+              <ShowcaseCarousel />
+            </section>
 
-          <section id="council">
-            <CouncilOrbit />
-          </section>
+            <section id="council">
+              <CouncilOrbit />
+            </section>
 
-          <section id="modes">
-            <ModesAuto />
-          </section>
+            <section id="modes">
+              <ModesAuto />
+            </section>
 
-          <section id="trust">
-            <TrustPanel />
-          </section>
+            <section id="trust">
+              <TrustPanel />
+            </section>
 
-          <section id="cta">
-            <FinalCTA />
-          </section>
+            <section id="cta">
+              <FinalCTA />
+            </section>
+          </div>
         </div>
       </main>
     </LanguageProvider>
