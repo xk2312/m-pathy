@@ -4,22 +4,23 @@ import { useLang } from "@/app/providers/LanguageProvider";
 export default function Hero() {
   const { t } = useLang();
 
-    return (
+  return (
     <div className="text-center flex flex-col items-center gap-[40px]">
-      <h1 className="text-[clamp(28px,5vw,52px)] font-semibold leading-[1.15] tracking-tight
-                     bg-gradient-to-b from-white to-white/75 text-transparent bg-clip-text">
+      <h1
+        className="text-[clamp(28px,5vw,52px)] font-semibold leading-[1.15] tracking-tight
+                   bg-gradient-to-b from-white to-white/75 text-transparent bg-clip-text"
+      >
         {t("hero_title")}
       </h1>
 
-            <p className="text-[16px] md:text-[18px] font-medium text-[#C7C7C7]">
+      {/* Subhead – leicht kräftiger */}
+      <p className="text-[16px] md:text-[18px] font-medium text-[#C7C7C7]">
         {t("hero_sub")}
       </p>
 
-
-
-      {/* Button: oben 32px, unten 0 — Section regelt weiteren Abstand */}
+      {/* CTA-Button */}
       <div className="mt-[32px] flex w-full justify-center">
-                <button
+        <button
           type="button"
           aria-label={t("hero_cta")}
           className="
@@ -36,6 +37,11 @@ export default function Hero() {
           {t("hero_cta")}
         </button>
       </div>
+
+      {/* Hinweistext – fester Abstand Button → Text */}
+      <p className="mt-[40px] text-center text-[16px] md:text-[18px] text-[#C7C7C7]">
+        {t("council_hint")}
+      </p>
     </div>
   );
 }
