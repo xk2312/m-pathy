@@ -23,12 +23,13 @@ export default function SubscriptionPage() {
         role="main"
         className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
       >
-        {/* ELTERN: nur Container. Kein :where, keine Attribute, kein space-y.
-            Alles pro Section EXPLIZIT. */}
+        {/* ELTERN: Nur Container steuert Außenabstände.
+           Top-Abstand HART per Inline-Style (calc mit --ry), damit nichts ihn überstimmt. */}
         <div
           className="mx-auto w-full max-w-[1280px]
                      px-[clamp(10px,4vw,90px)]
-                     pt-[64px] md:pt-[96px] pb-[clamp(20px,5vw,90px)]"
+                     pb-[clamp(20px,5vw,90px)]"
+          style={{ paddingTop: "calc(var(--ry) * 1.5)" }} // = 96px bei --ry=64px
         >
           {/* SECTION: HERO — Mitte, Breite via --page-max, unten 32px */}
           <section className="flex justify-center pb-[32px]">
