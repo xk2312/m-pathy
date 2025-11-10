@@ -6,12 +6,15 @@ import { dict } from "@/lib/i18n";
 
 import VoiaBloom from "@/app/components/VoiaBloom";
 
+// aktive Komponenten
 import Hero from "@/app/components/subscription/Hero";
-import ShowcaseCarousel from "@/app/components/subscription/ShowcaseCarousel";
 import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
-import ModesAuto from "@/app/components/subscription/ModesAuto";
-import TrustPanel from "@/app/components/subscription/TrustPanel";
-import FinalCTA from "@/app/components/subscription/FinalCTA";
+
+// auskommentierte Komponenten
+// import ShowcaseCarousel from "@/app/components/subscription/ShowcaseCarousel";
+// import ModesAuto from "@/app/components/subscription/ModesAuto";
+// import TrustPanel from "@/app/components/subscription/TrustPanel";
+// import FinalCTA from "@/app/components/subscription/FinalCTA";
 
 export default function SubscriptionPage() {
   useEffect(() => {
@@ -21,7 +24,6 @@ export default function SubscriptionPage() {
 
   return (
     <LanguageProvider dict={dict}>
-      {/* Interaktiver Hintergrund */}
       <VoiaBloom />
 
       {/* A11y: Skiplink */}
@@ -33,16 +35,13 @@ export default function SubscriptionPage() {
         Skip to content
       </a>
 
-      {/* Hauptinhalt (liegt über dem Hintergrund) */}
       <main
         id="content"
         role="main"
         aria-label="Subscription"
         className="relative isolate z-10 min-h-dvh bg-transparent text-white selection:bg-white/20 antialiased"
       >
-        {/* Zentrierter Frame */}
         <div className="w-full flex justify-center">
-          {/* Eltern-Container */}
           <div
             className="
               w-full max-w-[1280px]
@@ -52,16 +51,19 @@ export default function SubscriptionPage() {
               [&>section]:m-0
             "
           >
+            {/* === Hero oben === */}
             <section id="top">
               <Hero />
             </section>
 
-            <section id="showcases">
-              <ShowcaseCarousel />
-            </section>
-
+            {/* === Council Orbit === */}
             <section id="council">
               <CouncilOrbit />
+            </section>
+
+            {/*
+            <section id="showcases">
+              <ShowcaseCarousel />
             </section>
 
             <section id="modes">
@@ -75,6 +77,7 @@ export default function SubscriptionPage() {
             <section id="cta">
               <FinalCTA />
             </section>
+            */}
           </div>
         </div>
       </main>
