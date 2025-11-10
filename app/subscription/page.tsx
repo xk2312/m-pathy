@@ -1,17 +1,50 @@
 // app/(site)/subscription/page.tsx
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, PropsWithChildren } from "react";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
 
-// absolute, eindeutig auf app/components/**
+// Inhalte
 import Hero from "@/app/components/subscription/Hero";
 import ShowcaseCarousel from "@/app/components/subscription/ShowcaseCarousel";
 import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
 import ModesAuto from "@/app/components/subscription/ModesAuto";
 import TrustPanel from "@/app/components/subscription/TrustPanel";
 import FinalCTA from "@/app/components/subscription/FinalCTA";
+
+/* ──────────────────────────────────────────────────────────
+   Layout-Primitives (einmal definieren, dann nicht anfassen)
+   - Container: zentrale Breite + horizontale Paddings
+   - Section: vertikale Luft (size-Varianten), liefert id/ARIA
+   ────────────────────────────────────────────────────────── */
+
+function Container({ children }: PropsWithChildren) {
+  return (
+    <div className="mx-auto w-full max-w-[1120px] px-4 sm:px-6 lg:px-8">
+      {/* 1120px ≈ angenehm lesbar, nicht gequetscht, nicht zu breit */}
+      {children}
+    </div>
+  );
+}
+
+function Section({
+  id,
+  size = "default",
+  children,
+}: PropsWithChildren<{ id: string; size?: "hero" | "default" | "loose" }>) {
+  const pad =
+    size === "hero"
+      ? "pt-[120px] sm:pt-[140px] lg:pt-[160px] pb-16 sm:pb-24 lg:pb-28"
+      : size === "loose"
+      ? "py-20 sm:py-24 lg:py-28"
+      : "py-16 sm:py-20 lg:py-24";
+  return (
+    <section id={id} className={pad} aria-labelledby={`${id}-title`}>
+      <Container>{children}</Container>
+    </section>
+  );
+}
 
 export default function SubscriptionPage() {
   useEffect(() => {
@@ -23,87 +56,50 @@ export default function SubscriptionPage() {
 
   return (
     <LanguageProvider dict={dict}>
-      {/* Grundgerüst: volle Breite für den Hintergrund, Inhalte immer zentriert */}
+      {/* Grundgerüst: bleibt stabil */}
       <main className="min-h-dvh bg-black text-white selection:bg-white/20 antialiased">
-        {/* ───────── Hero ─────────
-            Top-Luft zentral hier; Hero selbst hat keine äußere Section */}
-        <section
-          id="top"
-          className="pt-[120px] sm:pt-[140px] lg:pt-[160px] pb-20 sm:pb-24 lg:pb-28"
-        >
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
+        {/* Hero: große Bühne */}
+        <Section id="top" size="hero">
+          {/* Komponenten liefern ihren Inhalt + Feintuning selbst */}
+          <div className="flex justify-center">
             <Hero />
           </div>
-        </section>
+        </Section>
 
-        {/* ───────── Showcase (Tabs / Start Agency) ───────── */}
-        <section
-          id="showcases"
-          className="relative py-16 sm:py-18 lg:py-20 overflow-visible motion-safe"
-        >
-          <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-            {/* 🌌 dekorative Galaxy, in der Breite begrenzt & mittig */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute left-1/2 -translate-x-1/2 -top-12 sm:-top-16 z-0 w-[min(1100px,96vw)] h-[380px] sm:h-[480px] opacity-65"
-            >
-              <span
-                className="absolute inset-0 mix-blend-screen blur-3xl"
-                style={{
-                  background:
-                    "radial-gradient(50% 50% at 50% 50%, rgba(139,92,246,0.40) 0%, rgba(139,92,246,0.00) 62%)",
-                }}
-              />
-              <span
-                className="absolute inset-x-8 top-6 mix-blend-screen blur-3xl"
-                style={{
-                  background:
-                    "radial-gradient(45% 45% at 60% 40%, rgba(34,211,238,0.28) 0%, rgba(34,211,238,0.00) 60%)",
-                }}
-              />
-              <span
-                className="absolute inset-x-16 top-10 mix-blend-screen blur-2xl"
-                style={{
-                  background:
-                    "radial-gradient(40% 40% at 40% 55%, rgba(251,191,36,0.22) 0%, rgba(251,191,36,0.00) 60%)",
-                }}
-              />
-            </div>
-
-            {/* Inhalt sicher über der Galaxy und immer zentriert */}
-            <div className="relative z-10 flex justify-center">
-              <ShowcaseCarousel />
-            </div>
+        {/* Showcase: Tabs / Start Agency – Galaxy/Deko wird in der Komponente selbst gehandhabt */}
+        <Section id="showcases">
+          <div className="flex justify-center">
+            <ShowcaseCarousel />
           </div>
-        </section>
+        </Section>
 
-        {/* ───────── Council ───────── */}
-        <section id="council" className="py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
+        {/* Council */}
+        <Section id="council">
+          <div className="flex justify-center">
             <CouncilOrbit />
           </div>
-        </section>
+        </Section>
 
-        {/* ───────── Modes ───────── */}
-        <section id="modes" className="py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
+        {/* Modes */}
+        <Section id="modes">
+          <div className="flex justify-center">
             <ModesAuto />
           </div>
-        </section>
+        </Section>
 
-        {/* ───────── Trust ───────── */}
-        <section id="trust" className="py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
+        {/* Trust */}
+        <Section id="trust">
+          <div className="flex justify-center">
             <TrustPanel />
           </div>
-        </section>
+        </Section>
 
-        {/* ───────── Final CTA ───────── */}
-        <section id="cta" className="py-20 sm:py-24 lg:py-28">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
+        {/* Final CTA */}
+        <Section id="cta" size="loose">
+          <div className="flex justify-center">
             <FinalCTA />
           </div>
-        </section>
+        </Section>
       </main>
     </LanguageProvider>
   );

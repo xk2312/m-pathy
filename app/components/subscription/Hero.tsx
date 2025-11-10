@@ -9,10 +9,10 @@ export default function Hero() {
     try { window.dispatchEvent(new CustomEvent(evt, { detail })); } catch {}
   }
 
-  // Keine eigene Section – Abstände kommen aus page.tsx
+  // Keine äußere Section – Page.tsx liefert den Rahmen
   return (
-    <div className="relative overflow-hidden w-full">
-      {/* Hintergrundpuls: mittig & begrenzt, damit nichts nach links „zieht“ */}
+    <div className="relative w-full">
+      {/* Deko-Glow: mittig, begrenzt, compositor-safe */}
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 z-0
@@ -22,14 +22,10 @@ export default function Hero() {
 
       {/* Inhalt */}
       <div className="relative z-10 max-w-xl mx-auto text-center">
-        <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">
+        <h1 id="top-title" className="text-3xl sm:text-5xl font-semibold tracking-tight">
           {t("hero_title")}
         </h1>
-
-        {/* Mikro-Abstand zwischen Titel und Subline */}
-        <p className="mt-[6px] text-white/70">
-          {t("hero_sub")}
-        </p>
+        <p className="mt-[6px] text-white/70">{t("hero_sub")}</p>
 
         <div className="mt-8 sm:mt-10">
           <a
