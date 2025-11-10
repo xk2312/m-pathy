@@ -466,6 +466,20 @@ div[data-convo="1"] {
   margin-right: auto;
   max-width: 100%;    /* keine übergroße Kindbreite */
 }
+/* --- KPI scope: fine-tune tabs + first column padding --- */
+.kpi-scope [role="tablist"] {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.kpi-scope [role="tab"] {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.kpi-scope table tr > *:first-child {
+  padding-left: 5px;
+}
 
 /* =====================================================================
    End of Patch · Council13 verified · Triketon-2048 Seal
