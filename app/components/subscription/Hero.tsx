@@ -11,14 +11,15 @@ export default function Hero() {
         {t("hero_title")}
       </h1>
 
-      {/* Subhead mit exakt 30px nach oben */}
-      <p className="mt-[30px] text-[15px] md:text-[17px] text-white/70">
+            {/* Subhead mit exakt 30px nach oben */}
+      <p className="mt-[30px] text-[16px] md:text-[18px] text-[#C7C7C7]">
         {t("hero_sub")}
       </p>
 
-      {/* Button: oben 40px, unten 0 — Section regelt weiteren Abstand */}
-      <div className="mt-[40px] flex w-full justify-center">
+      {/* Button: oben 32px, unten 0 — Section regelt weiteren Abstand */}
+      <div className="mt-[32px] flex w-full justify-center">
         <button
+
           type="button"
           aria-label={t("hero_cta")}
           className="

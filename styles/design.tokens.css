@@ -13,6 +13,10 @@
   --color-warn: #ffd700;
   --color-shadow: rgba(0,255,255,0.12);
 
+  /* === Layout Axis & Rhythm === */
+  --page-max: 900px;   /* zentrale Inhaltsbreite für Hero/Council */
+  --ry: 64px;          /* vertikaler Grundtakt (z. B. 32+32) */
+
   /* === Radii === */
   --rz-sm: 10px;
   --rz-md: 16px;

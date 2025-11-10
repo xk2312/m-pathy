@@ -8,7 +8,7 @@ export default function CouncilOrbit() {
   return (
     <div className="w-full">
       {/* zusätzlicher Luftpolster im Kind (optional) */}
-      <p className="mx-auto mb-6 max-w-[900px] text-center text-white/70">
+      <p className="mx-auto mb-6 max-w-[900px] text-center text-[16px] md:text-[18px] text-[#C7C7C7]">
         {t("council_hint")}
       </p>
 
