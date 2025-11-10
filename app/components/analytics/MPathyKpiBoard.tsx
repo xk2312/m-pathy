@@ -27,7 +27,7 @@ export function Button(
   { className = "", variant = "default", ...props }:
   React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "default"|"secondary"|"ghost" }
 ) {
-  const base = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 disabled:opacity-50 disabled:pointer-events-none h-10 px-4";
+const base = "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 disabled:opacity-50 disabled:pointer-events-none h-10 px-4 cursor-pointer";
   const map = {
     default: "bg-white/10 hover:bg-white/20 text-white border border-white/20",
     secondary: "bg-cyan-500/15 hover:bg-cyan-500/25 text-white border border-cyan-300/30",
@@ -72,16 +72,16 @@ export function TabsTrigger(
   const active = ctx.value === value;
   return (
     <button
-      type="button"
-      role="tab"
-      aria-selected={active}
-      onClick={() => ctx.onValueChange(value)}
-      className={cx(
-        "px-3 py-2 rounded-xl border",
-        active ? "bg-white text-[#0B0E12] border-white" : "bg-white/10 text-white border-white/20 hover:bg-white/20",
-        className
-      )}
-    >
+  type="button"
+  role="tab"
+  aria-selected={active}
+  className={cx(
+    "px-3 py-2 rounded-xl border cursor-pointer",
+    active ? "bg-white text-[#0B0E12] border-white" : "bg-white/10 text-white border-white/20 hover:bg-white/20",
+    className
+  )}
+>
+
       {children}
     </button>
   );
@@ -228,7 +228,7 @@ function LayerTable({ layer }: { layer: "Core" | "Empathy" | "Trust" | "Clarity"
               <td className="px-4 py-3 flex items-center gap-2">
                 <span>{r.label}</span>
                 {r.tooltip ? (
-                  <span className="inline-flex items-center cursor-help" title={r.tooltip}>
+<span className="inline-flex items-center cursor-pointer" title={r.tooltip}>
                     <Info className="h-4 w-4" />
                   </span>
                 ) : null}
@@ -296,7 +296,14 @@ export default function MPathyKpiBoard() {
 
         <div className="mb-4 flex flex-wrap items-center gap-2">
           <Button variant="secondary" onClick={() => download("m-pathy-kpis.csv", toCsv())} title="Download CSV"><Download className="h-4 w-4 mr-2" /> CSV</Button>
-          <Button variant="secondary" onClick={() => copy(jsonPretty)} title="Copy JSON"><Copy className="h-4 w-4 mr-2" /> JSON</Button>
+          <Button
+            variant="secondary"
+            onClick={() => download("m-pathy-kpis.json", jsonPretty, "application/json;charset=utf-8")}
+            title="Download JSON"
+            >
+            <Copy className="h-4 w-4 mr-2" /> JSON
+            </Button>
+
           <Button variant="secondary" onClick={() => window.print()} title="Print / PDF"><Printer className="h-4 w-4 mr-2" /> Print</Button>
           <Button variant="secondary" onClick={() => setHc(v => !v)} title="High Contrast (H)"><Highlighter className="h-4 w-4 mr-2" /> High Contrast</Button>
         </div>

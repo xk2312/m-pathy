@@ -506,6 +506,13 @@ div[data-convo="1"] {
   padding-left: 20px !important;  /* vorher px-4 → 16px, jetzt +4px ≈ +5px visuell */
   padding-right: 20px !important;
 }
+/* KPI scope: enforce pointer on all actionable controls */
+.kpi-scope button,
+.kpi-scope [role="tab"],
+.kpi-scope [role="button"],
+.kpi-scope a {
+  cursor: pointer;
+}
 
 /* =====================================================================
    End of Patch · Council13 verified · Triketon-2048 Seal
