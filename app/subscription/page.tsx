@@ -34,9 +34,9 @@ export default function SubscriptionPage() {
         aria-label="Subscription"
         className="relative isolate min-h-dvh bg-black text-white selection:bg-white/20 antialiased"
       >
-        {/* Flex-Wrapper erzwingt echte horizontale Zentrierung */}
+        {/* PAGE FRAME: zentriert alles horizontal */}
         <div className="w-full flex justify-center">
-          {/* Eltern-Container */}
+          {/* PAGE CONTAINER: max Breite + skalierende Paddings + konstanter Rhythmus */}
           <div
             className="
               w-full max-w-[1280px]
