@@ -302,7 +302,7 @@ if (typeof window !== "undefined") {
 }
 export const dict = {
   en: {
-    hero_title: "The Operating System for Creation",
+    hero_title: "Your Operating System for Creation",
     hero_sub: "From idea to impact in minutes.",
     hero_cta: "Begin your journey",
     s1_title: "start agency",
@@ -322,7 +322,7 @@ export const dict = {
     cta_btn_secondary: "See pricing",
   },
   de: {
-    hero_title: "Das Betriebssystem für Schöpfung",
+    hero_title: "Dein Betriebssystem für Schöpfung",
     hero_sub: "Von der Idee zur Wirkung in Minuten.",
     hero_cta: "Jetzt beginnen",
     s1_title: "start agency",
