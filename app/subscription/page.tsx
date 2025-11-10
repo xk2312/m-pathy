@@ -38,12 +38,13 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-          {/* SECTION: COUNCIL — oben 32px, Mitte, Breite via --page-max */}
-          <section className="flex justify-center pt-[32px]">
+                    {/* SECTION: COUNCIL — oben 72px (32 + 40), Mitte, Breite via --page-max */}
+          <section className="flex justify-center pt-[72px]">
             <div className="w-full" style={{ maxWidth: "var(--page-max)" }}>
               <CouncilOrbit />
             </div>
           </section>
+
 
           {/* weitere Sections später hier explizit, gleiches Muster */}
         </div>
