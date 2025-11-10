@@ -26,12 +26,17 @@ html, body {
 html.enable-scroll {
   overflow-y: auto !important;
 }
-
+/* ⬇︎ Beim Entsperren auch overscroll wieder erlauben (hebt body:contain auf) */
+html.enable-scroll,
+html.enable-scroll body {
+  overscroll-behavior-y: auto !important;
+}
 
 html {
   overflow-x: hidden;
   overflow-y: hidden;        /* ⬅︎ Body/Seite scrollt NICHT */
 }
+
 body {
   background-color: #000;
   overscroll-behavior-y: contain; /* optional restriktiver */
@@ -70,8 +75,8 @@ canvas { display: block; }
 }
 @media (prefers-reduced-motion: reduce){
   * { animation: none !important; transition: none !important; transform: none !important; }
+  html { scroll-behavior: auto !important; } /* kein smooth scroll bei RRM */
 }
-
 /* ── Chat-Farben (wie bei dir) ───────────────────────────── */
 .message { color: #fff; }
 .message.user { color: #0ff; }
