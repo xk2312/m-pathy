@@ -31,8 +31,8 @@ export default function SubscriptionPage() {
                      pb-[clamp(20px,5vw,90px)]"
           style={{ paddingTop: "calc(var(--ry) * 1.5)" }} // = 96px bei --ry=64px
         >
-          {/* SECTION: HERO — Mitte, Breite via --page-max, unten 32px */}
-          <section className="flex justify-center pb-[32px]">
+          {/* SECTION: HERO — Mitte, Breite via --page-max, unten 72px (32 + 40) */}
+          <section className="flex justify-center pb-[72px]">
             <div className="w-full" style={{ maxWidth: "var(--page-max)" }}>
               <Hero />
             </div>
