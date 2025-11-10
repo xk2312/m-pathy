@@ -32,40 +32,57 @@ export default function SubscriptionPage() {
         aria-label="Subscription"
         className="relative isolate min-h-dvh bg-black text-white selection:bg-white/20 antialiased overflow-x-hidden"
       >
-        {/* FRAME: hard center */}
+        {/* PAGE FRAME */}
         <div className="w-full flex justify-center">
-          {/* CONTAINER: clamp paddings, min-w guard to prevent overflow-shift */}
+          {/* PAGE CONTAINER */}
           <div
             className="
               min-w-0 w-full max-w-[1280px]
               px-[clamp(10px,4vw,90px)] py-[clamp(20px,5vw,90px)]
               space-y-[clamp(48px,6vw,70px)]
               [&>section]:m-0
-              /* outline outline-1 outline-fuchsia-500 */ 
             "
           >
-            <section id="top">
-              <Hero />
+            {/* ===== Section 1: Hero ===== */}
+            <section id="top" className="w-full flex justify-center overflow-x-hidden">
+              <div className="min-w-0 w-full max-w-[1100px]">
+                <Hero />
+              </div>
             </section>
 
-            <section id="showcases">
-              <ShowcaseCarousel />
+            {/* ===== Section 2: Carousel ===== */}
+            <section id="showcases" className="w-full flex justify-center overflow-x-hidden">
+              <div className="min-w-0 w-full max-w-[900px]">
+                <ShowcaseCarousel />
+              </div>
             </section>
 
-            <section id="council">
-              <CouncilOrbit />
+            {/* ===== Section 3: CouncilOrbit (oft der Übeltäter) ===== */}
+            <section id="council" className="w-full flex justify-center overflow-x-hidden">
+              <div className="min-w-0 w-full max-w-[1100px]">
+                <CouncilOrbit />
+              </div>
             </section>
 
-            <section id="modes">
-              <ModesAuto />
+            {/* ===== Section 4: Modes ===== */}
+            <section id="modes" className="w-full flex justify-center overflow-x-hidden">
+              <div className="min-w-0 w-full max-w-[1100px]">
+                <ModesAuto />
+              </div>
             </section>
 
-            <section id="trust">
-              <TrustPanel />
+            {/* ===== Section 5: Trust ===== */}
+            <section id="trust" className="w-full flex justify-center overflow-x-hidden">
+              <div className="min-w-0 w-full max-w-[1100px]">
+                <TrustPanel />
+              </div>
             </section>
 
-            <section id="cta">
-              <FinalCTA />
+            {/* ===== Section 6: CTA ===== */}
+            <section id="cta" className="w-full flex justify-center overflow-x-hidden">
+              <div className="min-w-0 w-full max-w-[1100px]">
+                <FinalCTA />
+              </div>
             </section>
           </div>
         </div>
