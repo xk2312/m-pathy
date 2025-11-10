@@ -480,6 +480,27 @@ div[data-convo="1"] {
 .kpi-scope table tr > *:first-child {
   padding-left: 5px;
 }
+/* --- KPI scope: column symmetry + label indentation --- */
+
+/* gleiche Innenabstände links und rechts in allen Zellen */
+.kpi-scope table tr > *:first-child {
+  padding-left: 5px;
+}
+.kpi-scope table tr > *:last-child {
+  padding-right: 5px;
+}
+
+/* Überschriften und Abschnittstitel (Core, Core · Tabelle usw.) leicht eingerückt */
+.kpi-scope h2,
+.kpi-scope h3 {
+  padding-left: 10px;
+}
+
+/* Falls "Core · ..." Text in custom Spans/Divs sitzt */
+.kpi-scope [class*="Core"],
+.kpi-scope [class*="core"] {
+  padding-left: 10px;
+}
 
 /* =====================================================================
    End of Patch · Council13 verified · Triketon-2048 Seal
