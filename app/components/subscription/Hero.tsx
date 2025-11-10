@@ -37,11 +37,6 @@ export default function Hero() {
           {t("hero_cta")}
         </button>
       </div>
-
-      {/* Hinweistext – fester Abstand Button → Text */}
-      <p className="mt-[40px] text-center text-[16px] md:text-[18px] text-[#C7C7C7]">
-        {t("council_hint")}
-      </p>
     </div>
   );
 }
