@@ -1,7 +1,7 @@
 /* =====================================================================
-   GalaxyBuilder · Design Tokens Manifest (v1.0)
+   GalaxyBuilder · Design Tokens Manifest (v1.1)
    Purpose: zentrale Style-Definitionen für alle Module
-   Created: by DevLoop (Iterations 1–5)
+   Created: by DevLoop (Iterations 1–5 + KPI-Center Patch)
    Triketon Seal Reference: TRK-2048-GLO-M001
    ===================================================================== */
 
@@ -14,8 +14,12 @@
   --color-shadow: rgba(0,255,255,0.12);
 
   /* === Layout Axis & Rhythm === */
-  --page-max: 900px;   /* zentrale Inhaltsbreite für Hero/Council */
-  --ry: 64px;          /* vertikaler Grundtakt (z. B. 32+32) */
+  --page-max: 900px;          /* zentrale Inhaltsbreite (Hero / Council / KPI) */
+  --ry: 64px;                 /* vertikaler Grundtakt (z. B. 32 + 32) */
+
+  /* === Page Center Tokens (NEU) === */
+  --page-pad-inline: 10px;    /* Seiteninnenabstand links/rechts (mobile + desktop) */
+  --page-inner-max: var(--page-max); /* einheitliche zentrale Breitenquelle */
 
   /* === Radii === */
   --rz-sm: 10px;
@@ -28,7 +32,8 @@
   --sh-sm: 0 2px 8px rgba(0,255,255,0.10);
   --sh-md: 0 6px 24px rgba(0,255,255,0.12);
   --sh-lg: 0 12px 40px rgba(0,255,255,0.15);
-  --glow: 0 0 0 1px rgba(0,255,255,0.25), 0 0 18px rgba(0,255,255,0.18);
+  --glow: 0 0 0 1px rgba(0,255,255,0.25),
+          0 0 18px rgba(0,255,255,0.18);
 
   /* === Timings & Easing === */
   --t-fast: 90ms;
@@ -49,10 +54,17 @@
   --z-base: 1;
   --z-overlay: 60;
   --z-fab: 70;
+}
 
-  /* === Motion Safeguard === */
-  @media (prefers-reduced-motion: reduce) {
-    * { animation: none !important; transition: none !important; transform: none !important; }
+/* =====================================================================
+   Motion Safeguard
+   (global – beeinflusst keine Layoutwerte)
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
   }
 }
 
@@ -69,8 +81,8 @@
 }
 
 /* =====================================================================
-   Export Notes:
-   - Wird automatisch in Tailwind-Plugins und global.css importiert.
-   - Für JS-Zugriff: `import 'styles/design.tokens.css'`
-   - Für CSS Modules: `@import 'styles/design.tokens.css';`
+   Export Notes
+   - Automatisch in Tailwind-Plugins & global.css importiert
+   - Für JS:   import 'styles/design.tokens.css'
+   - Für CSS Modules:  @import 'styles/design.tokens.css';
    ===================================================================== */

@@ -424,3 +424,30 @@ div[data-convo="1"] {
     white-space: nowrap;         /* prevent ugly multi-line cell breaks */
   }
 }
+/* =====================================================================
+   ⬇️ GalaxyBuilder Patch · KPI Centering & Row Density (v1.1)
+   Purpose: Zentriert Elterncontainer & lockert KPI-Zeilen spacing
+   ===================================================================== */
+
+/* Eltern-Pattern: erzwingt Mitte & Innenabstand über Tokens */
+.page-center {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--page-inner-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad-inline);
+}
+
+/* KPI-scope: sanft lockerere Zeilen, ohne globale Nebenwirkung */
+.kpi-scope {
+  line-height: 1.35;
+}
+
+.kpi-scope table tr > th,
+.kpi-scope table tr > td {
+  padding-block: 6px; /* leichtes vertikales Luftpolster */
+}
+
+/* =====================================================================
+   End of Patch · Council13 verified · Triketon-2048 Seal
+   ===================================================================== */
