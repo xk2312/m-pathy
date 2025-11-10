@@ -4,10 +4,8 @@ import { useEffect } from "react";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
 
-// Hintergrund-Effekt
 import VoiaBloom from "@/app/components/VoiaBloom";
 
-// Komponenten
 import Hero from "@/app/components/subscription/Hero";
 import ShowcaseCarousel from "@/app/components/subscription/ShowcaseCarousel";
 import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
@@ -16,7 +14,6 @@ import TrustPanel from "@/app/components/subscription/TrustPanel";
 import FinalCTA from "@/app/components/subscription/FinalCTA";
 
 export default function SubscriptionPage() {
-  // Scroll-Policy aktivieren (damit die Seite scrollbar bleibt)
   useEffect(() => {
     document.documentElement.classList.add("enable-scroll");
     return () => document.documentElement.classList.remove("enable-scroll");
@@ -24,10 +21,10 @@ export default function SubscriptionPage() {
 
   return (
     <LanguageProvider dict={dict}>
-      {/* === Interaktiver Canvas-Hintergrund === */}
+      {/* Interaktiver Hintergrund */}
       <VoiaBloom />
 
-      {/* A11y-Skiplink */}
+      {/* A11y: Skiplink */}
       <a
         href="#content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[999]
@@ -36,14 +33,14 @@ export default function SubscriptionPage() {
         Skip to content
       </a>
 
-      {/* === Hauptinhalt === */}
+      {/* Hauptinhalt (liegt über dem Hintergrund) */}
       <main
         id="content"
         role="main"
         aria-label="Subscription"
-        className="relative isolate min-h-dvh bg-transparent text-white selection:bg-white/20 antialiased"
+        className="relative isolate z-10 min-h-dvh bg-transparent text-white selection:bg-white/20 antialiased"
       >
-        {/* Flex-Wrapper für echte horizontale Zentrierung */}
+        {/* Zentrierter Frame */}
         <div className="w-full flex justify-center">
           {/* Eltern-Container */}
           <div
