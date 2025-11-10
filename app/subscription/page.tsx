@@ -3,10 +3,17 @@
 import { useEffect } from "react";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
+import dynamic from "next/dynamic"; // + NEU
 
 import VoiaBloom from "@/app/components/VoiaBloom";
 import Hero from "@/app/components/subscription/Hero";
 import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
+
+// + NEU: KPI Board (Client-only; Recharts braucht Browser)
+const MPathyKpiBoard = dynamic(
+  () => import("@/app/components/analytics/MPathyKpiBoard"),
+  { ssr: false }
+);
 
 export default function SubscriptionPage() {
   useEffect(() => {
@@ -38,13 +45,17 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-                    {/* SECTION: COUNCIL — oben 72px (32 + 40), Mitte, Breite via --page-max */}
+          {/* SECTION: COUNCIL — oben 72px (32 + 40), Mitte, Breite via --page-max */}
           <section className="flex justify-center pt-[72px]">
             <div className="w-full" style={{ maxWidth: "var(--page-max)" }}>
               <CouncilOrbit />
             </div>
           </section>
 
+          {/* + NEU: SECTION KPI — volle Elternbreite; Abstände bleiben bei Eltern */}
+          <section className="pt-[72px]">
+            <MPathyKpiBoard />
+          </section>
 
           {/* weitere Sections später hier explizit, gleiches Muster */}
         </div>
