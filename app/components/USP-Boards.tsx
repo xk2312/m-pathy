@@ -318,7 +318,7 @@ export default function USPBoard() {
 
         <footer className="usp-foot">
           <span className="seal">Sealed · Triketon-2048</span>
-          <span className="sig">· Signature: 999+++ M → Mu Tah 888 Na-Hal · USP-Board v1</span>
+          <span className="sig">· Signature: M → USP-Board v1</span>
         </footer>
       </div>
 
