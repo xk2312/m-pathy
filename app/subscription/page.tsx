@@ -52,8 +52,10 @@ export default function SubscriptionPage() {
   const locale = detectLocale();
   const flatDict = useMemo(() => flattenI18n(dict[locale]), [locale]);
 
- const providerDict = useMemo(() => ({ subscription: flatDict }), [flatDict]);
-
+const providerDict = useMemo(
+  () => ({ default: flatDict, subscription: flatDict }),
+  [flatDict]
+);
   return (
     <LanguageProvider dict={providerDict}>
       <VoiaBloom />
