@@ -15,23 +15,37 @@ const MPathyKpiBoard = dynamic(
   { ssr: false }
 );
 
-// ────────────────────────────────
-// Locale-Erkennung + Dict-Flatten
-// ────────────────────────────────
+// ------------------------------
+// Locale-Detection & Flatten
+// ------------------------------
 type LocaleKey = keyof typeof dict;
 
-const detectLocale = (): LocaleKey => {
-  if (typeof navigator !== "undefined") {
-    const code = (navigator.language || "en").slice(0, 2).toLowerCase() as LocaleKey;
-    if (code in dict) return code;
-  }
+/** sehr robuste Locale-Erkennung (SSR-safe) */
+function detectLocale(): LocaleKey {
+  try {
+    // 1) <html lang="..">
+    if (typeof document !== "undefined") {
+      const lang = document.documentElement?.lang?.toLowerCase();
+      if (lang) {
+        const base = lang.split("-")[0] as LocaleKey;
+        if (base in dict) return base;
+      }
+    }
+    // 2) navigator.language
+    if (typeof navigator !== "undefined") {
+      const base = (navigator.language || "en").slice(0, 2).toLowerCase() as LocaleKey;
+      if (base in dict) return base;
+    }
+  } catch { /* noop */ }
   return "en";
-};
+}
 
-const flattenI18n = (obj: any, prefix = ""): Record<string, string> => {
+/** verschachtelte Objekte -> flache Map: "a.b.c": "…" */
+function flattenI18n(obj: unknown, prefix = ""): Record<string, string> {
   const out: Record<string, string> = {};
-  for (const k in obj) {
-    const v = obj[k];
+  if (!obj || typeof obj !== "object") return out;
+  for (const k of Object.keys(obj as Record<string, unknown>)) {
+    const v = (obj as Record<string, unknown>)[k];
     const key = prefix ? `${prefix}.${k}` : k;
     if (v && typeof v === "object") {
       Object.assign(out, flattenI18n(v, key));
@@ -40,30 +54,25 @@ const flattenI18n = (obj: any, prefix = ""): Record<string, string> => {
     }
   }
   return out;
-};
+}
 
-// ────────────────────────────────
-// Page-Komponente
-// ────────────────────────────────
 export default function SubscriptionPage() {
   useEffect(() => {
     document.documentElement.classList.add("enable-scroll");
     return () => document.documentElement.classList.remove("enable-scroll");
   }, []);
 
-  // Aktive Browsersprache
+  // aktive Locale + flaches Wörterbuch
   const locale = detectLocale();
-
-  // EN als Fallback + aktive Locale drüber mergen → immer vollständige Map
-  const flatDict = useMemo(() => {
-    const enFlat = flattenI18n(dict.en);
-    const locFlat = flattenI18n(dict[locale]);
-    return { ...enFlat, ...locFlat };
+  const flat = useMemo(() => {
+    // EN als Basis, aktive Sprache darüber – garantiert vollständige Keys
+    const base = flattenI18n(dict.en);
+    const loc  = flattenI18n(dict[locale]);
+    return { ...base, ...loc };
   }, [locale]);
 
-  // LanguageProvider erwartet eine Namespace-Map: Record<string, Record<string,string>>
-  // -> Wir liefern genau EIN Namespace ("current") mit unserer flachen Map.
-  const providerDict = useMemo(() => ({ current: flatDict }), [flatDict]);
+  // Provider erwartet: Record<namespace, Record<string,string>>
+  const providerDict = useMemo(() => ({ common: flat }), [flat]);
 
   return (
     <LanguageProvider dict={providerDict}>
@@ -74,28 +83,27 @@ export default function SubscriptionPage() {
         role="main"
         className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
       >
-        {/* Eltern steuern Außenabstände. Top-Abstand via calc(var(--ry) * 1.5) */}
         <div
-          className="subscription-root
+          className="mx-auto w-full max-w-[1280px]
                      px-[clamp(10px,4vw,90px)]
                      pb-[clamp(20px,5vw,90px)]"
           style={{ paddingTop: "calc(var(--ry) * 1.5)" }}
         >
-          {/* SECTION: HERO – zentral über page-center */}
+          {/* SECTION: HERO */}
           <section className="pt-[72px] pb-[72px]">
             <div className="page-center">
               <Hero />
             </div>
           </section>
 
-          {/* SECTION: COUNCIL – zentral über page-center */}
+          {/* SECTION: COUNCIL */}
           <section className="pt-[72px]">
             <div className="page-center">
               <CouncilOrbit />
             </div>
           </section>
 
-          {/* SECTION: KPI – vertikaler Abstand 70–130px (responsive) */}
+          {/* SECTION: KPI */}
           <section className="pt-[clamp(70px,12vw,130px)]">
             <div
               className="page-center kpi-scope"
@@ -104,8 +112,6 @@ export default function SubscriptionPage() {
               <MPathyKpiBoard />
             </div>
           </section>
-
-          {/* Weitere Sections folgen im selben Muster */}
         </div>
       </main>
     </LanguageProvider>
