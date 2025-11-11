@@ -542,3 +542,24 @@ div[data-convo="1"] {
   max-width: none;
   margin-inline: -5%;
 }
+@media (min-width: 1024px) {
+  .subscription-root {
+    margin-inline: auto !important;
+    max-width: var(--page-max) !important;
+    display: block;
+  }
+}
+
+/* KPI: mobil/tablet bündig, Desktop breiter */
+.kpi-scope {                     /* < 1024px */
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;
+}
+@media (min-width: 1024px) {     /* ≥ 1024px */
+  .kpi-scope {
+    width: 120%;
+    max-width: none;
+    margin-inline: -5%;
+  }
+}
