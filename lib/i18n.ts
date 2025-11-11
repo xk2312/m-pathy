@@ -231,11 +231,19 @@ export function setLocale(locale: Locale) {
  * Keep the type open so unknown keys don't break the build.
  */
 export function t(key: string): string {
-  const dict = DICTS[currentLocale] || en;
-  if (key in dict) return dict[key];
-  if (key in en) return (en as Dict)[key];
-  return key;
+  const ui = DICTS[currentLocale] || en;                // Legacy-UI
+  const uxAll = (dict as any) || {};                    // Neues UI-Dict
+  const ux = uxAll[currentLocale] || uxAll.en || {};    // Locale→EN Fallback
+
+  const v =
+    (ui as any)[key] ??
+    (ux as any)[key] ??
+    (en as any)[key] ??
+    (uxAll.en ? (uxAll.en as any)[key] : undefined);
+
+  return typeof v === "string" ? v : key;
 }
+
 
 /** Übersetzen mit Fallback-Text und einfachen Platzhaltern {name} */
 export function tr(key: string, fallback: string, vars?: Record<string, string>): string {
