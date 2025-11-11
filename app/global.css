@@ -529,3 +529,11 @@ div[data-convo="1"] {
 /* =====================================================================
    End of Patch · Council13 verified · Triketon-2048 Seal
    ===================================================================== */
+/* Point Zero · Desktop Center Guard for /subscription */
+@media (min-width: 1024px) {
+  .subscription-root {
+    margin-inline: auto !important;
+    max-width: var(--page-max) !important;
+    display: block;
+  }
+}

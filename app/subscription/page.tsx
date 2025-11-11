@@ -25,20 +25,19 @@ export default function SubscriptionPage() {
     <LanguageProvider dict={dict}>
       <VoiaBloom />
 
-          <main
+      <main
         id="content"
         role="main"
         className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
       >
-        {/* ELTERN: Nur Container steuert Außenabstände.
-           Top-Abstand HART per Inline-Style (calc mit --ry), damit nichts ihn überstimmt. */}
+        {/* Eltern steuern Außenabstände.
+            Top-Abstand hart per calc(var(--ry) * 1.5) → 96px bei --ry=64px */}
         <div
-          className="mx-auto max-w-[min(100%,var(--page-max))]
+          className="subscription-root
                      px-[clamp(10px,4vw,90px)]
                      pb-[clamp(20px,5vw,90px)]"
-          style={{ paddingTop: "calc(var(--ry) * 1.5)" }} // = 96px bei --ry=64px
+          style={{ paddingTop: "calc(var(--ry) * 1.5)" }}
         >
-
           {/* SECTION: HERO – zentral über page-center */}
           <section className="pt-[72px] pb-[72px]">
             <div className="page-center">
@@ -53,16 +52,15 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-                    {/* SECTION: KPI – vertikaler Abstand 70–130px (responsive) */}
-<section className="pt-[clamp(70px,12vw,130px)]">
-  <div
-    className="page-center kpi-scope"
-    style={{ maxWidth: "calc(var(--page-inner-max) * 1.2)" }}
-  >
-    <MPathyKpiBoard />
-  </div>
-</section>
-
+          {/* SECTION: KPI – vertikaler Abstand 70–130px (responsive) */}
+          <section className="pt-[clamp(70px,12vw,130px)]">
+            <div
+              className="page-center kpi-scope"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.2)" }}
+            >
+              <MPathyKpiBoard />
+            </div>
+          </section>
 
           {/* Weitere Sections folgen im selben Muster */}
         </div>
