@@ -429,8 +429,6 @@ criteria: {
     cta_btn_primary: "Loslegen",
     cta_btn_secondary: "Preise ansehen",
 
-    /* 2/13 — de */
-de: {
   tabs: { overview:"Übersicht", core:"Core", empathy:"Empathie", trust:"Vertrauen", clarity:"Klarheit" },
   kpi: {
     title:"m-Pathy KPI-Tafel",
@@ -517,7 +515,7 @@ de: {
     multimodal_input: { label:"Multimodale Eingabe (Bilder/PDFs)" },
     creativity_content: { label:"Kreativität bei Content-Erstellung" }
   }
-}
+
 
   },
   fr: {
@@ -651,8 +649,6 @@ fr: {
     cta_btn_primary: "Empezar",
     cta_btn_secondary: "Ver precios",
 
-    /* 4/13 — es */
-es: {
   tabs: { overview:"Resumen", core:"Core", empathy:"Empatía", trust:"Confianza", clarity:"Claridad" },
   kpi: {
     title:"Panel de KPIs de m-Pathy",
@@ -739,7 +735,7 @@ es: {
     multimodal_input: { label:"Entrada multimodal (imágenes/PDF)" },
     creativity_content: { label:"Creatividad para redacción de contenido" }
   }
-}
+
 
   },
   it: {
@@ -762,8 +758,6 @@ es: {
     cta_btn_primary: "Inizia",
     cta_btn_secondary: "Vedi prezzi",
 
-    /* 5/13 — it */
-it: {
   tabs: { overview:"Panoramica", core:"Core", empathy:"Empatia", trust:"Fiducia", clarity:"Chiarezza" },
   kpi: {
     title:"Pannello KPI di m-Pathy",
@@ -850,7 +844,7 @@ it: {
     multimodal_input: { label:"Input multimodale (immagini/PDF)" },
     creativity_content: { label:"Creatività nella creazione di contenuti" }
   }
-}
+
 
   },
   pt: {
@@ -873,8 +867,7 @@ it: {
     cta_btn_primary: "Começar",
     cta_btn_secondary: "Ver preços",
 
-    /* 6/13 — pt */
-pt: {
+
   tabs: { overview:"Visão geral", core:"Núcleo", empathy:"Empatia", trust:"Confiança", clarity:"Clareza" },
   kpi: {
     title:"Painel de KPIs m-Pathy",
@@ -961,7 +954,7 @@ pt: {
     multimodal_input: { label:"Entrada multimodal (imagens/PDFs)" },
     creativity_content: { label:"Criatividade para criação de conteúdo" }
   }
-}
+
 
   },
   nl: {
@@ -984,8 +977,6 @@ pt: {
     cta_btn_primary: "Starten",
     cta_btn_secondary: "Prijzen bekijken",
 
-    /* 7/13 — nl */
-nl: {
   tabs: { overview:"Overzicht", core:"Kern", empathy:"Empathie", trust:"Vertrouwen", clarity:"Helderheid" },
   kpi: {
     title:"m-Pathy KPI-dashboard",
@@ -1072,7 +1063,7 @@ nl: {
     multimodal_input: { label:"Multimodale invoer (afbeeldingen/PDF’s)" },
     creativity_content: { label:"Creativiteit voor contentcreatie" }
   }
-}
+
 
   },
   ru: {
@@ -1095,8 +1086,7 @@ nl: {
     cta_btn_primary: "Начать",
     cta_btn_secondary: "Посмотреть цены",
 
-    /* 8/13 — ru */
-ru: {
+
   tabs: { overview:"Обзор", core:"Ядро", empathy:"Эмпатия", trust:"Доверие", clarity:"Ясность" },
   kpi: {
     title:"Панель KPI m-Pathy",
@@ -1183,7 +1173,7 @@ ru: {
     multimodal_input: { label:"Мультимодальный ввод (изображения/PDF)" },
     creativity_content: { label:"Креативность при создании контента" }
   }
-}
+
 
   },
   zh: {
@@ -1206,8 +1196,7 @@ ru: {
     cta_btn_primary: "开始",
     cta_btn_secondary: "查看定价",
 
-    /* 9/13 — zh */
-zh: {
+
   tabs: { overview:"概览", core:"核心", empathy:"共情", trust:"信任", clarity:"清晰" },
   kpi: {
     title:"m-Pathy 指标面板",
@@ -1294,7 +1283,7 @@ zh: {
     multimodal_input: { label:"多模态输入（图片/PDF）" },
     creativity_content: { label:"内容创作的创造力" }
   }
-}
+
 
   },
   ja: {
@@ -1317,8 +1306,6 @@ zh: {
     cta_btn_primary: "はじめる",
     cta_btn_secondary: "料金を見る",
 
-    /* 10/13 — ja */
-ja: {
   tabs: { overview:"概要", core:"コア", empathy:"共感", trust:"信頼", clarity:"明瞭さ" },
   kpi: {
     title:"m-Pathy KPI ボード",
@@ -1405,7 +1392,7 @@ ja: {
     multimodal_input: { label:"マルチモーダル入力（画像 / PDF）" },
     creativity_content: { label:"コンテンツ作成における創造性" }
   }
-}
+
 
   },
   ko: {
@@ -1427,8 +1414,8 @@ ja: {
     cta_sub: "명료함으로 미래를 빚다.",
     cta_btn_primary: "시작하기",
     cta_btn_secondary: "가격 보기",
-    /* 11/13 — ko */
-ko: {
+
+
   tabs: { overview:"개요", core:"코어", empathy:"공감", trust:"신뢰", clarity:"명료성" },
   kpi: {
     title:"m-Pathy KPI 보드",
@@ -1515,7 +1502,7 @@ ko: {
     multimodal_input: { label:"멀티모달 입력 (이미지/PDF)" },
     creativity_content: { label:"콘텐츠 제작의 창의성" }
   }
-}
+
   },
   ar: {
     hero_title: "نظام التشغيل للإبداع",
@@ -1537,8 +1524,7 @@ ko: {
     cta_btn_primary: "ابدأ",
     cta_btn_secondary: "شاهد الأسعار",
 
-    /* 12/13 — ar */
-ar: {
+
   tabs: { overview:"نظرة عامة", core:"النواة", empathy:"التعاطف", trust:"الثقة", clarity:"الوضوح" },
   kpi: {
     title:"لوحة مؤشرات m-Pathy",
@@ -1625,7 +1611,7 @@ ar: {
     multimodal_input: { label:"إدخال متعدد الوسائط (صور / PDF)" },
     creativity_content: { label:"الإبداع في إنشاء المحتوى" }
   }
-}
+
 
   },
   hi: {
@@ -1648,8 +1634,7 @@ ar: {
     cta_btn_primary: "शुरू करें",
     cta_btn_secondary: "कीमतें देखें",
 
-    /* 13/13 — hi */
-hi: {
+
   tabs: { overview:"सारांश", core:"कोर", empathy:"सहानुभूति", trust:"विश्वास", clarity:"स्पष्टता" },
   kpi: {
     title:"m-Pathy KPI बोर्ड",
@@ -1736,7 +1721,7 @@ hi: {
     multimodal_input: { label:"मल्टीमॉडल इनपुट (छवियाँ / PDF)" },
     creativity_content: { label:"सामग्री निर्माण में रचनात्मकता" }
   }
-}
+
 
   },
 } as const;
