@@ -537,9 +537,6 @@ criteria: {
     cta_sub: "Construisez l’avenir avec clarté.",
     cta_btn_primary: "Commencer",
     cta_btn_secondary: "Voir les tarifs",
-
-    /* 3/13 — fr */
-fr: {
   tabs: { overview:"Vue d’ensemble", core:"Noyau", empathy:"Empathie", trust:"Confiance", clarity:"Clarté" },
   kpi: {
     title:"Tableau des KPI m-Pathy",
@@ -626,7 +623,7 @@ fr: {
     multimodal_input: { label:"Entrée multimodale (images/PDF)" },
     creativity_content: { label:"Créativité pour la rédaction de contenu" }
   }
-}
+
 
   },
   es: {
