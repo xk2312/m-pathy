@@ -49,19 +49,21 @@ export default function SubscriptionPage() {
   const locale = detectLocale();
 
   // 2) EN als Fallback + Locale darüber mergen → immer vollständige Map
+  //    Zusätzlich werden alle Keys unter "common.*" gespiegelt (ns-agnostisch).
   const flatDict = useMemo(() => {
     const enFlat = flattenI18n(dict.en);
     const locFlat = flattenI18n(dict[locale]);
-    return { ...enFlat, ...locFlat };
+    const d = { ...enFlat, ...locFlat };
+    const pref = Object.fromEntries(Object.entries(d).map(([k, v]) => [`common.${k}`, v]));
+    return { ...d, ...pref };
   }, [locale]);
 
-  // 3) genau EIN Namespace liefern (z. B. "common")
-    const providerDict = useMemo(() => ({ "": flatDict, common: flatDict }), [flatDict]);
+  // 3) genau EIN Namespace liefern: leerer Default ("")
+  const providerDict = useMemo(() => ({ "": flatDict }), [flatDict]);
 
   return (
-    // 4) KEIN ns-Prop verwenden – Provider kennt nur { dict }
+    // Provider nur mit dict (kein ns-Prop)
     <LanguageProvider dict={providerDict}>
-
       <VoiaBloom />
       <main
         id="content"
