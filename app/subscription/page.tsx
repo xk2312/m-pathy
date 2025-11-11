@@ -3,6 +3,7 @@
 import { useEffect, useMemo } from "react";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
+import * as i18nLib from "@/lib/i18n"; // <- für t()-Shim
 import dynamic from "next/dynamic";
 
 import VoiaBloom from "@/app/components/VoiaBloom";
@@ -55,8 +56,20 @@ export default function SubscriptionPage() {
     return { ...enFlat, ...locFlat };
   }, [locale]);
 
-  // 3) Provider erhält direkt die flache Map (kein Namespace)
-  const providerDict = useMemo(() => flatDict as any, [flatDict]);
+  // 3) Provider: ein Namespace "common" (harmlos für KPI-Board)
+  const providerDict = useMemo(() => ({ common: flatDict }), [flatDict]);
+
+  // 4) t()-Shim: Hero ruft altes t() → wir erweitern es lokal um unsere flatDict-Lookups
+  useEffect(() => {
+    const lib = i18nLib as any;
+    if (typeof lib.t !== "function") return;
+    const originalT = lib.t;
+    lib.t = (key: string) => {
+      const v = flatDict[key] ?? flatDict[`common.${key}`];
+      return typeof v === "string" && v ? v : originalT(key);
+    };
+    return () => { lib.t = originalT; };
+  }, [flatDict]);
 
   return (
     <LanguageProvider dict={providerDict}>
