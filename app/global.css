@@ -537,3 +537,8 @@ div[data-convo="1"] {
     display: block;
   }
 }
+.kpi-scope {
+  width: 110%;
+  max-width: none;
+  margin-inline: -5%;
+}
