@@ -33,61 +33,79 @@ const flattenI18n = (obj: any, prefix = ""): Record<string, string> => {
   for (const k in obj) {
     const v = obj[k];
     const key = prefix ? `${prefix}.${k}` : k;
-    if (v && typeof v === "object") Object.assign(out, flattenI18n(v, key));
-    else out[key] = String(v ?? "");
+    if (v && typeof v === "object") {
+      Object.assign(out, flattenI18n(v, key));
+    } else {
+      out[key] = String(v ?? "");
+    }
   }
   return out;
 };
 
+// ────────────────────────────────
+// Page-Komponente
+// ────────────────────────────────
 export default function SubscriptionPage() {
   useEffect(() => {
     document.documentElement.classList.add("enable-scroll");
     return () => document.documentElement.classList.remove("enable-scroll");
   }, []);
 
-  // 1) aktive Locale
+  // Aktive Browsersprache
   const locale = detectLocale();
 
-  // 2) EN als Fallback + Locale darüber mergen → immer vollständige Map
+  // EN als Fallback + aktive Locale drüber mergen → immer vollständige Map
   const flatDict = useMemo(() => {
     const enFlat = flattenI18n(dict.en);
     const locFlat = flattenI18n(dict[locale]);
     return { ...enFlat, ...locFlat };
   }, [locale]);
 
-  // 3) genau EIN Namespace liefern (z. B. "common")
-  const providerDict = useMemo(() => ({ common: flatDict }), [flatDict]);
+  // LanguageProvider erwartet eine Namespace-Map: Record<string, Record<string,string>>
+  // -> Wir liefern genau EIN Namespace ("current") mit unserer flachen Map.
+  const providerDict = useMemo(() => ({ current: flatDict }), [flatDict]);
 
   return (
-    // 4) KEIN ns-Prop verwenden – Provider kennt nur { dict }
     <LanguageProvider dict={providerDict}>
       <VoiaBloom />
+
       <main
         id="content"
         role="main"
         className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
       >
+        {/* Eltern steuern Außenabstände. Top-Abstand via calc(var(--ry) * 1.5) */}
         <div
-          className="subscription-root px-[clamp(10px,4vw,90px)] pb-[clamp(20px,5vw,90px)]"
+          className="subscription-root
+                     px-[clamp(10px,4vw,90px)]
+                     pb-[clamp(20px,5vw,90px)]"
           style={{ paddingTop: "calc(var(--ry) * 1.5)" }}
         >
+          {/* SECTION: HERO – zentral über page-center */}
           <section className="pt-[72px] pb-[72px]">
             <div className="page-center">
               <Hero />
             </div>
           </section>
 
+          {/* SECTION: COUNCIL – zentral über page-center */}
           <section className="pt-[72px]">
             <div className="page-center">
               <CouncilOrbit />
             </div>
           </section>
 
+          {/* SECTION: KPI – vertikaler Abstand 70–130px (responsive) */}
           <section className="pt-[clamp(70px,12vw,130px)]">
-            <div className="page-center kpi-scope" style={{ maxWidth: "calc(var(--page-inner-max) * 1.2)" }}>
+            <div
+              className="page-center kpi-scope"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.2)" }}
+            >
               <MPathyKpiBoard />
             </div>
           </section>
+
+          {/* Weitere Sections folgen im selben Muster */}
         </div>
       </main>
     </LanguageProvider>
