@@ -52,15 +52,16 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-                    {/* SECTION: KPI – zentral, +20% Arbeitsbreite, kpi-scope aktiv */}
-          <section className="pt-[72px]">
-            <div
-              className="page-center kpi-scope"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.2)" }}
-            >
-              <MPathyKpiBoard />
-            </div>
-          </section>
+                    {/* SECTION: KPI – vertikaler Abstand 70–130px (responsive) */}
+<section className="pt-[clamp(70px,12vw,130px)]">
+  <div
+    className="page-center kpi-scope"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.2)" }}
+  >
+    <MPathyKpiBoard />
+  </div>
+</section>
+
 
           {/* Weitere Sections folgen im selben Muster */}
         </div>
