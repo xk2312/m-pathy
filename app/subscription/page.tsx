@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
 import dynamic from "next/dynamic";
@@ -15,14 +15,47 @@ const MPathyKpiBoard = dynamic(
   { ssr: false }
 );
 
+// ────────────────────────────────
+// Locale-Erkennung + Dict-Flatten
+// ────────────────────────────────
+type LocaleKey = keyof typeof dict;
+
+const detectLocale = (): LocaleKey => {
+  if (typeof navigator !== "undefined") {
+    const code = (navigator.language || "en").slice(0, 2).toLowerCase() as LocaleKey;
+    if (code in dict) return code;
+  }
+  return "en";
+};
+
+const flattenI18n = (obj: any, prefix = ""): Record<string, string> => {
+  const out: Record<string, string> = {};
+  for (const k in obj) {
+    const v = obj[k];
+    const key = prefix ? `${prefix}.${k}` : k;
+    if (v && typeof v === "object") Object.assign(out, flattenI18n(v, key));
+    else out[key] = String(v ?? "");
+  }
+  return out;
+};
+
+// ────────────────────────────────
+// Page-Komponente
+// ────────────────────────────────
 export default function SubscriptionPage() {
   useEffect(() => {
     document.documentElement.classList.add("enable-scroll");
     return () => document.documentElement.classList.remove("enable-scroll");
   }, []);
 
+  // Aktive Locale ermitteln + flatten
+  const locale = detectLocale();
+  const flatDict = useMemo(() => flattenI18n(dict[locale]), [locale]);
+
+ const providerDict = useMemo(() => ({ subscription: flatDict }), [flatDict]);
+
   return (
-    <LanguageProvider dict={dict}>
+    <LanguageProvider dict={providerDict}>
       <VoiaBloom />
 
       <main

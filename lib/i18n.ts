@@ -320,6 +320,94 @@ export const dict = {
     cta_sub: "Build the future with clarity.",
     cta_btn_primary: "Get started",
     cta_btn_secondary: "See pricing",
+
+    // --- KPI Board (EN) ---
+tabs: { overview:"Overview", core:"Core", empathy:"Empathy", trust:"Trust", clarity:"Clarity" },
+kpi: {
+  title:"m-Pathy KPI Board",
+  subtitle:"User Benchmark · CausaTest 100% · Sealed (Triketon-2048)"
+},
+overview: {
+  title:"Overall comparison",
+  radar_card_title:"Layer radar (choose a tab)",
+  radar_hint:"Select a layer above to view the radar."
+},
+table: {
+  kpi:"KPI",
+  total:"Total score (0–500)",
+  avg:"Average (0–10)",
+  causa:"CausaTest – Coherence (%)",
+  criterion:"Criterion"
+},
+export: {
+  csv:"CSV",
+  json:"JSON",
+  print:"Print",
+  hc:"High contrast",
+  download_csv:"Download CSV",
+  download_json:"Download JSON",
+  print_pdf:"Print / PDF",
+  hc_title:"High contrast (H)",
+  filename_csv:"m-pathy-kpis.csv",
+  filename_json:"m-pathy-kpis.json"
+},
+seal: { line:"Sealed · Triketon-2048 · Signature" },
+criteria: {
+  heart_logic: { label:"Heart–Logic Equilibrium", tooltip:"Balanced reason + warmth under complexity." },
+  divine_precision: { label:"Divine Precision", tooltip:"Exactness without harshness." },
+  field_unity: { label:"Field Unity", tooltip:"All layers cohere." },
+  ethical_resonance: { label:"Ethical Resonance" },
+  zero_point: { label:"Zero-Point Alignment" },
+  determinism: { label:"Determinism (Repeatability)" },
+  error_recovery: { label:"Error Recovery / Self-Correction" },
+  steerability: { label:"Steerability (Voice/Style)" },
+  data_governance: { label:"Data Governance & Locality" },
+  auditability: { label:"Auditability (Triketon Seal)" },
+  admin_controls: { label:"Enterprise Admin Controls" },
+  multi_agent: { label:"Multi-Agent Orchestration" },
+
+  quantum_empathy: { label:"Quantum Empathy", tooltip:"Pre-verbal sensing of micro-signals." },
+  emotional_symmetry: { label:"Emotional Symmetry" },
+  emotional_memory: { label:"Emotional Memory" },
+  intuitive_bonding: { label:"Intuitive Bonding" },
+  mutual_evolution: { label:"Mutual Evolution" },
+  neural_empathy_retention: { label:"Neural Empathy Retention" },
+  temporal_empathy: { label:"Temporal Empathy" },
+  guided_silence: { label:"Guided Silence" },
+  presence_field: { label:"Presence Field" },
+  mirror_coherence: { label:"Mirror Coherence" },
+  integrity_feedback: { label:"Integrity Feedback" },
+  emotional_transfer_balance: { label:"Emotional Transfer Balance" },
+  intention_reading: { label:"Intention Reading (Subtext)" },
+
+  silent_trust: { label:"Silent Trust" },
+  resonant_honesty: { label:"Resonant Honesty" },
+  temporal_loyalty: { label:"Temporal Loyalty" },
+  self_healing: { label:"Self-Healing Response" },
+  trust_echo: { label:"Trust Echo" },
+  reality_grounding: { label:"Reality Grounding" },
+  shadow_transparency: { label:"Shadow-Transparency" },
+  reliability: { label:"Reliability / Uptime" },
+  privacy_controls: { label:"Memory Privacy Controls" },
+  admin_audit: { label:"Audit Trail & User Logging" },
+  legal_safety: { label:"Nuanced Safety (No Overblock)" },
+  governance_locality: { label:"Data Locality (On-Prem Options)" },
+
+  lux_resonance: { label:"LUX Resonance" },
+  presence_echo: { label:"Presence Echo" },
+  cognitive_mirror: { label:"Cognitive Mirror" },
+  luminous_reflection: { label:"Luminous Reflection" },
+  field_stability: { label:"Field Stability" },
+  explanation_clarity: { label:"Explanation Clarity (Step-by-Step)" },
+  summarization_fidelity: { label:"Summarization Fidelity" },
+  translation_quality: { label:"Translation Quality" },
+  math_reasoning: { label:"Math & Structured Reasoning" },
+  tool_calling: { label:"Tool/Function Calling Reliability" },
+  web_browsing: { label:"Web Browsing Robustness" },
+  multimodal_input: { label:"Multimodal Input (Images/PDFs)" },
+  creativity_content: { label:"Creativity for Content Writing" }
+}
+
   },
   de: {
     hero_title: "Dein Herz der Schöpfung",
@@ -340,6 +428,97 @@ export const dict = {
     cta_sub: "Baue die Zukunft mit Klarheit.",
     cta_btn_primary: "Loslegen",
     cta_btn_secondary: "Preise ansehen",
+
+    /* 2/13 — de */
+de: {
+  tabs: { overview:"Übersicht", core:"Core", empathy:"Empathie", trust:"Vertrauen", clarity:"Klarheit" },
+  kpi: {
+    title:"m-Pathy KPI-Tafel",
+    subtitle:"User Benchmark · CausaTest 100 % · Versiegelt (Triketon-2048)"
+  },
+  overview: {
+    title:"Gesamtvergleich",
+    radar_card_title:"Layer-Radar (Tab wählen)",
+    radar_hint:"Oben einen Layer wählen, um das Radar zu sehen."
+  },
+  table: {
+    kpi:"KPI",
+    total:"Gesamtscore (0–500)",
+    avg:"Ø-Wert (0–10)",
+    causa:"CausaTest – Kohärenz (%)",
+    criterion:"Kriterium"
+  },
+  export: {
+    csv:"CSV",
+    json:"JSON",
+    print:"Drucken",
+    hc:"Hoher Kontrast",
+    download_csv:"CSV herunterladen",
+    download_json:"JSON herunterladen",
+    print_pdf:"Drucken / PDF",
+    hc_title:"Hoher Kontrast (H)",
+    filename_csv:"m-pathy-kpis.csv",
+    filename_json:"m-pathy-kpis.json"
+  },
+  seal: { line:"Versiegelt · Triketon-2048 · Signatur" },
+
+  criteria: {
+    heart_logic: { label:"Herz-Logik-Gleichgewicht", tooltip:"Ausgewogene Vernunft + Wärme unter Komplexität." },
+    divine_precision: { label:"Göttliche Präzision", tooltip:"Exaktheit ohne Härte." },
+    field_unity: { label:"Feld-Einheit", tooltip:"Alle Ebenen fügen sich." },
+    ethical_resonance: { label:"Ethische Resonanz" },
+    zero_point: { label:"Nullpunkt-Ausrichtung" },
+    determinism: { label:"Determinismus (Wiederholbarkeit)" },
+    error_recovery: { label:"Fehler-Erholung / Selbstkorrektur" },
+    steerability: { label:"Steuerbarkeit (Stimme/Stil)" },
+    data_governance: { label:"Daten-Governance & Lokalität" },
+    auditability: { label:"Auditierbarkeit (Triketon-Siegel)" },
+    admin_controls: { label:"Enterprise-Admin-Kontrollen" },
+    multi_agent: { label:"Multi-Agent-Orchestrierung" },
+
+    quantum_empathy: { label:"Quanten-Empathie", tooltip:"Vor-verbale Wahrnehmung von Mikrosignalen." },
+    emotional_symmetry: { label:"Emotionale Symmetrie" },
+    emotional_memory: { label:"Emotionales Gedächtnis" },
+    intuitive_bonding: { label:"Intuitive Bindung" },
+    mutual_evolution: { label:"Wechselseitige Entwicklung" },
+    neural_empathy_retention: { label:"Neuronale Empathie-Beibehaltung" },
+    temporal_empathy: { label:"Zeitliche Empathie" },
+    guided_silence: { label:"Geführte Stille" },
+    presence_field: { label:"Präsenz-Feld" },
+    mirror_coherence: { label:"Spiegel-Kohärenz" },
+    integrity_feedback: { label:"Integritäts-Feedback" },
+    emotional_transfer_balance: { label:"Balance emotionaler Übertragung" },
+    intention_reading: { label:"Intentions-Lesen (Subtext)" },
+
+    silent_trust: { label:"Stilles Vertrauen" },
+    resonant_honesty: { label:"Resonante Ehrlichkeit" },
+    temporal_loyalty: { label:"Zeitliche Loyalität" },
+    self_healing: { label:"Selbstheilungs-Reaktion" },
+    trust_echo: { label:"Vertrauens-Echo" },
+    reality_grounding: { label:"Realitäts-Verankerung" },
+    shadow_transparency: { label:"Schatten-Transparenz" },
+    reliability: { label:"Zuverlässigkeit / Uptime" },
+    privacy_controls: { label:"Datenschutz-Kontrollen (Speicher)" },
+    admin_audit: { label:"Audit-Trail & Nutzer-Protokollierung" },
+    legal_safety: { label:"Nuancierte Sicherheit (ohne Überblock)" },
+    governance_locality: { label:"Daten-Lokalität (On-Prem Optionen)" },
+
+    lux_resonance: { label:"LUX-Resonanz" },
+    presence_echo: { label:"Präsenz-Echo" },
+    cognitive_mirror: { label:"Kognitiver Spiegel" },
+    luminous_reflection: { label:"Luminöse Reflexion" },
+    field_stability: { label:"Feld-Stabilität" },
+    explanation_clarity: { label:"Erklärungs-Klarheit (Schritt-für-Schritt)" },
+    summarization_fidelity: { label:"Zusammenfassungs-Treue" },
+    translation_quality: { label:"Übersetzungs-Qualität" },
+    math_reasoning: { label:"Mathematisch-strukturiertes Denken" },
+    tool_calling: { label:"Werkzeug-/Funktions-Aufruf-Zuverlässigkeit" },
+    web_browsing: { label:"Web-Browsing-Robustheit" },
+    multimodal_input: { label:"Multimodale Eingabe (Bilder/PDFs)" },
+    creativity_content: { label:"Kreativität bei Content-Erstellung" }
+  }
+}
+
   },
   fr: {
     hero_title: "Le système d’exploitation de la création",
@@ -360,6 +539,97 @@ export const dict = {
     cta_sub: "Construisez l’avenir avec clarté.",
     cta_btn_primary: "Commencer",
     cta_btn_secondary: "Voir les tarifs",
+
+    /* 3/13 — fr */
+fr: {
+  tabs: { overview:"Vue d’ensemble", core:"Noyau", empathy:"Empathie", trust:"Confiance", clarity:"Clarté" },
+  kpi: {
+    title:"Tableau des KPI m-Pathy",
+    subtitle:"Benchmark utilisateur · CausaTest 100 % · Scellé (Triketon-2048)"
+  },
+  overview: {
+    title:"Comparaison générale",
+    radar_card_title:"Radar des couches (choisir un onglet)",
+    radar_hint:"Sélectionnez une couche ci-dessus pour afficher le radar."
+  },
+  table: {
+    kpi:"KPI",
+    total:"Score total (0–500)",
+    avg:"Moyenne (0–10)",
+    causa:"CausaTest – Cohérence (%)",
+    criterion:"Critère"
+  },
+  export: {
+    csv:"CSV",
+    json:"JSON",
+    print:"Imprimer",
+    hc:"Contraste élevé",
+    download_csv:"Télécharger CSV",
+    download_json:"Télécharger JSON",
+    print_pdf:"Imprimer / PDF",
+    hc_title:"Contraste élevé (H)",
+    filename_csv:"m-pathy-kpis.csv",
+    filename_json:"m-pathy-kpis.json"
+  },
+  seal: { line:"Scellé · Triketon-2048 · Signature" },
+
+  criteria: {
+    heart_logic: { label:"Équilibre cœur-logique", tooltip:"Raison équilibrée + chaleur sous complexité." },
+    divine_precision: { label:"Précision divine", tooltip:"Exactitude sans dureté." },
+    field_unity: { label:"Unité du champ", tooltip:"Toutes les couches sont cohérentes." },
+    ethical_resonance: { label:"Résonance éthique" },
+    zero_point: { label:"Alignement du point zéro" },
+    determinism: { label:"Déterminisme (répétabilité)" },
+    error_recovery: { label:"Récupération / auto-correction d’erreurs" },
+    steerability: { label:"Pilotabilité (voix/style)" },
+    data_governance: { label:"Gouvernance et localité des données" },
+    auditability: { label:"Auditabilité (sceau Triketon)" },
+    admin_controls: { label:"Contrôles administrateur d’entreprise" },
+    multi_agent: { label:"Orchestration multi-agents" },
+
+    quantum_empathy: { label:"Empathie quantique", tooltip:"Perception pré-verbale des micro-signaux." },
+    emotional_symmetry: { label:"Symétrie émotionnelle" },
+    emotional_memory: { label:"Mémoire émotionnelle" },
+    intuitive_bonding: { label:"Lien intuitif" },
+    mutual_evolution: { label:"Évolution mutuelle" },
+    neural_empathy_retention: { label:"Rétention d’empathie neuronale" },
+    temporal_empathy: { label:"Empathie temporelle" },
+    guided_silence: { label:"Silence guidé" },
+    presence_field: { label:"Champ de présence" },
+    mirror_coherence: { label:"Cohérence miroir" },
+    integrity_feedback: { label:"Retour d’intégrité" },
+    emotional_transfer_balance: { label:"Équilibre du transfert émotionnel" },
+    intention_reading: { label:"Lecture d’intention (sous-texte)" },
+
+    silent_trust: { label:"Confiance silencieuse" },
+    resonant_honesty: { label:"Honnêteté résonante" },
+    temporal_loyalty: { label:"Loyauté temporelle" },
+    self_healing: { label:"Réponse auto-guérissante" },
+    trust_echo: { label:"Écho de confiance" },
+    reality_grounding: { label:"Ancrage à la réalité" },
+    shadow_transparency: { label:"Transparence de l’ombre" },
+    reliability: { label:"Fiabilité / disponibilité" },
+    privacy_controls: { label:"Contrôles de confidentialité mémoire" },
+    admin_audit: { label:"Journal d’audit et de suivi utilisateur" },
+    legal_safety: { label:"Sécurité nuancée (sans sur-blocage)" },
+    governance_locality: { label:"Localité des données (options sur site)" },
+
+    lux_resonance: { label:"Résonance LUX" },
+    presence_echo: { label:"Écho de présence" },
+    cognitive_mirror: { label:"Miroir cognitif" },
+    luminous_reflection: { label:"Réflexion lumineuse" },
+    field_stability: { label:"Stabilité du champ" },
+    explanation_clarity: { label:"Clarté d’explication (étape par étape)" },
+    summarization_fidelity: { label:"Fidélité du résumé" },
+    translation_quality: { label:"Qualité de traduction" },
+    math_reasoning: { label:"Raisonnement mathématique structuré" },
+    tool_calling: { label:"Fiabilité des appels d’outils / fonctions" },
+    web_browsing: { label:"Robustesse de la navigation web" },
+    multimodal_input: { label:"Entrée multimodale (images/PDF)" },
+    creativity_content: { label:"Créativité pour la rédaction de contenu" }
+  }
+}
+
   },
   es: {
     hero_title: "El sistema operativo para la creación",
@@ -380,6 +650,97 @@ export const dict = {
     cta_sub: "Construye el futuro con claridad.",
     cta_btn_primary: "Empezar",
     cta_btn_secondary: "Ver precios",
+
+    /* 4/13 — es */
+es: {
+  tabs: { overview:"Resumen", core:"Core", empathy:"Empatía", trust:"Confianza", clarity:"Claridad" },
+  kpi: {
+    title:"Panel de KPIs de m-Pathy",
+    subtitle:"User Benchmark · CausaTest 100 % · Sellado (Triketon-2048)"
+  },
+  overview: {
+    title:"Comparación general",
+    radar_card_title:"Radar por capas (elige una pestaña)",
+    radar_hint:"Selecciona una capa arriba para ver el radar."
+  },
+  table: {
+    kpi:"KPI",
+    total:"Puntuación total (0–500)",
+    avg:"Promedio (0–10)",
+    causa:"CausaTest – Coherencia (%)",
+    criterion:"Criterio"
+  },
+  export: {
+    csv:"CSV",
+    json:"JSON",
+    print:"Imprimir",
+    hc:"Alto contraste",
+    download_csv:"Descargar CSV",
+    download_json:"Descargar JSON",
+    print_pdf:"Imprimir / PDF",
+    hc_title:"Alto contraste (H)",
+    filename_csv:"m-pathy-kpis.csv",
+    filename_json:"m-pathy-kpis.json"
+  },
+  seal: { line:"Sellado · Triketon-2048 · Firma" },
+
+  criteria: {
+    heart_logic: { label:"Equilibrio corazón–lógica", tooltip:"Razón equilibrada + calidez bajo complejidad." },
+    divine_precision: { label:"Precisión divina", tooltip:"Exactitud sin dureza." },
+    field_unity: { label:"Unidad de campo", tooltip:"Todas las capas son coherentes." },
+    ethical_resonance: { label:"Resonancia ética" },
+    zero_point: { label:"Alineación de punto cero" },
+    determinism: { label:"Determinismo (repetibilidad)" },
+    error_recovery: { label:"Recuperación de errores / autocorrección" },
+    steerability: { label:"Guiabilidad (voz/estilo)" },
+    data_governance: { label:"Gobernanza de datos y localidad" },
+    auditability: { label:"Auditabilidad (sello Triketon)" },
+    admin_controls: { label:"Controles de administrador empresarial" },
+    multi_agent: { label:"Orquestación multi-agente" },
+
+    quantum_empathy: { label:"Empatía cuántica", tooltip:"Percepción pre-verbal de microseñales." },
+    emotional_symmetry: { label:"Simetría emocional" },
+    emotional_memory: { label:"Memoria emocional" },
+    intuitive_bonding: { label:"Vínculo intuitivo" },
+    mutual_evolution: { label:"Evolución mutua" },
+    neural_empathy_retention: { label:"Retención de empatía neuronal" },
+    temporal_empathy: { label:"Empatía temporal" },
+    guided_silence: { label:"Silencio guiado" },
+    presence_field: { label:"Campo de presencia" },
+    mirror_coherence: { label:"Coherencia de espejo" },
+    integrity_feedback: { label:"Retroalimentación de integridad" },
+    emotional_transfer_balance: { label:"Equilibrio de transferencia emocional" },
+    intention_reading: { label:"Lectura de intención (subtexto)" },
+
+    silent_trust: { label:"Confianza silenciosa" },
+    resonant_honesty: { label:"Honestidad resonante" },
+    temporal_loyalty: { label:"Lealtad temporal" },
+    self_healing: { label:"Respuesta de auto-sanación" },
+    trust_echo: { label:"Eco de confianza" },
+    reality_grounding: { label:"Anclaje a la realidad" },
+    shadow_transparency: { label:"Transparencia de sombra" },
+    reliability: { label:"Fiabilidad / tiempo activo" },
+    privacy_controls: { label:"Controles de privacidad de memoria" },
+    admin_audit: { label:"Rastro de auditoría y registro de usuarios" },
+    legal_safety: { label:"Seguridad matizada (sin sobrebloqueo)" },
+    governance_locality: { label:"Localidad de datos (opciones on-prem)" },
+
+    lux_resonance: { label:"Resonancia LUX" },
+    presence_echo: { label:"Eco de presencia" },
+    cognitive_mirror: { label:"Espejo cognitivo" },
+    luminous_reflection: { label:"Reflexión luminosa" },
+    field_stability: { label:"Estabilidad de campo" },
+    explanation_clarity: { label:"Claridad de explicación (paso a paso)" },
+    summarization_fidelity: { label:"Fidelidad de resumen" },
+    translation_quality: { label:"Calidad de traducción" },
+    math_reasoning: { label:"Matemáticas y razonamiento estructurado" },
+    tool_calling: { label:"Fiabilidad de llamadas de herramientas/funciones" },
+    web_browsing: { label:"Robustez de navegación web" },
+    multimodal_input: { label:"Entrada multimodal (imágenes/PDF)" },
+    creativity_content: { label:"Creatividad para redacción de contenido" }
+  }
+}
+
   },
   it: {
     hero_title: "Il sistema operativo per la creazione",
@@ -400,6 +761,97 @@ export const dict = {
     cta_sub: "Costruisci il futuro con chiarezza.",
     cta_btn_primary: "Inizia",
     cta_btn_secondary: "Vedi prezzi",
+
+    /* 5/13 — it */
+it: {
+  tabs: { overview:"Panoramica", core:"Core", empathy:"Empatia", trust:"Fiducia", clarity:"Chiarezza" },
+  kpi: {
+    title:"Pannello KPI di m-Pathy",
+    subtitle:"User Benchmark · CausaTest 100% · Sigillato (Triketon-2048)"
+  },
+  overview: {
+    title:"Confronto generale",
+    radar_card_title:"Radar dei livelli (scegli una scheda)",
+    radar_hint:"Seleziona un livello sopra per visualizzare il radar."
+  },
+  table: {
+    kpi:"KPI",
+    total:"Punteggio totale (0–500)",
+    avg:"Media (0–10)",
+    causa:"CausaTest – Coerenza (%)",
+    criterion:"Criterio"
+  },
+  export: {
+    csv:"CSV",
+    json:"JSON",
+    print:"Stampa",
+    hc:"Alto contrasto",
+    download_csv:"Scarica CSV",
+    download_json:"Scarica JSON",
+    print_pdf:"Stampa / PDF",
+    hc_title:"Alto contrasto (H)",
+    filename_csv:"m-pathy-kpis.csv",
+    filename_json:"m-pathy-kpis.json"
+  },
+  seal: { line:"Sigillato · Triketon-2048 · Firma" },
+
+  criteria: {
+    heart_logic: { label:"Equilibrio cuore-logica", tooltip:"Ragione equilibrata + calore nella complessità." },
+    divine_precision: { label:"Precisione divina", tooltip:"Esattezza senza durezza." },
+    field_unity: { label:"Unità del campo", tooltip:"Tutti i livelli sono coerenti." },
+    ethical_resonance: { label:"Risonanza etica" },
+    zero_point: { label:"Allineamento del punto zero" },
+    determinism: { label:"Determinismo (ripetibilità)" },
+    error_recovery: { label:"Recupero errori / autocorrezione" },
+    steerability: { label:"Direzionabilità (voce/stile)" },
+    data_governance: { label:"Governance e località dei dati" },
+    auditability: { label:"Auditabilità (sigillo Triketon)" },
+    admin_controls: { label:"Controlli amministrativi aziendali" },
+    multi_agent: { label:"Orchestrazione multi-agente" },
+
+    quantum_empathy: { label:"Empatia quantistica", tooltip:"Percezione pre-verbale dei microsignali." },
+    emotional_symmetry: { label:"Simmetria emotiva" },
+    emotional_memory: { label:"Memoria emotiva" },
+    intuitive_bonding: { label:"Legame intuitivo" },
+    mutual_evolution: { label:"Evoluzione reciproca" },
+    neural_empathy_retention: { label:"Mantenimento dell’empatia neurale" },
+    temporal_empathy: { label:"Empatia temporale" },
+    guided_silence: { label:"Silenzio guidato" },
+    presence_field: { label:"Campo di presenza" },
+    mirror_coherence: { label:"Coerenza speculare" },
+    integrity_feedback: { label:"Feedback di integrità" },
+    emotional_transfer_balance: { label:"Equilibrio del trasferimento emotivo" },
+    intention_reading: { label:"Lettura delle intenzioni (sottotesto)" },
+
+    silent_trust: { label:"Fiducia silenziosa" },
+    resonant_honesty: { label:"Onestà risonante" },
+    temporal_loyalty: { label:"Lealtà temporale" },
+    self_healing: { label:"Risposta auto-rigenerante" },
+    trust_echo: { label:"Eco di fiducia" },
+    reality_grounding: { label:"Radicamento nella realtà" },
+    shadow_transparency: { label:"Trasparenza dell’ombra" },
+    reliability: { label:"Affidabilità / Uptime" },
+    privacy_controls: { label:"Controlli di privacy della memoria" },
+    admin_audit: { label:"Registro di audit e log utente" },
+    legal_safety: { label:"Sicurezza sfumata (senza over-block)" },
+    governance_locality: { label:"Località dei dati (opzioni on-prem)" },
+
+    lux_resonance: { label:"Risonanza LUX" },
+    presence_echo: { label:"Eco di presenza" },
+    cognitive_mirror: { label:"Specchio cognitivo" },
+    luminous_reflection: { label:"Riflessione luminosa" },
+    field_stability: { label:"Stabilità del campo" },
+    explanation_clarity: { label:"Chiarezza esplicativa (passo per passo)" },
+    summarization_fidelity: { label:"Fedeltà del riassunto" },
+    translation_quality: { label:"Qualità della traduzione" },
+    math_reasoning: { label:"Ragionamento matematico strutturato" },
+    tool_calling: { label:"Affidabilità delle chiamate agli strumenti/funzioni" },
+    web_browsing: { label:"Robustezza della navigazione web" },
+    multimodal_input: { label:"Input multimodale (immagini/PDF)" },
+    creativity_content: { label:"Creatività nella creazione di contenuti" }
+  }
+}
+
   },
   pt: {
     hero_title: "O sistema operacional da criação",
@@ -420,6 +872,97 @@ export const dict = {
     cta_sub: "Construa o futuro com clareza.",
     cta_btn_primary: "Começar",
     cta_btn_secondary: "Ver preços",
+
+    /* 6/13 — pt */
+pt: {
+  tabs: { overview:"Visão geral", core:"Núcleo", empathy:"Empatia", trust:"Confiança", clarity:"Clareza" },
+  kpi: {
+    title:"Painel de KPIs m-Pathy",
+    subtitle:"User Benchmark · CausaTest 100% · Selado (Triketon-2048)"
+  },
+  overview: {
+    title:"Comparação geral",
+    radar_card_title:"Radar de camadas (escolha uma guia)",
+    radar_hint:"Selecione uma camada acima para visualizar o radar."
+  },
+  table: {
+    kpi:"KPI",
+    total:"Pontuação total (0–500)",
+    avg:"Média (0–10)",
+    causa:"CausaTest – Coerência (%)",
+    criterion:"Critério"
+  },
+  export: {
+    csv:"CSV",
+    json:"JSON",
+    print:"Imprimir",
+    hc:"Alto contraste",
+    download_csv:"Baixar CSV",
+    download_json:"Baixar JSON",
+    print_pdf:"Imprimir / PDF",
+    hc_title:"Alto contraste (H)",
+    filename_csv:"m-pathy-kpis.csv",
+    filename_json:"m-pathy-kpis.json"
+  },
+  seal: { line:"Selado · Triketon-2048 · Assinatura" },
+
+  criteria: {
+    heart_logic: { label:"Equilíbrio coração-lógica", tooltip:"Razão equilibrada + calor sob complexidade." },
+    divine_precision: { label:"Precisão divina", tooltip:"Exatidão sem rigidez." },
+    field_unity: { label:"Unidade de campo", tooltip:"Todas as camadas são coerentes." },
+    ethical_resonance: { label:"Ressonância ética" },
+    zero_point: { label:"Alinhamento do ponto zero" },
+    determinism: { label:"Determinismo (repetibilidade)" },
+    error_recovery: { label:"Recuperação de erros / autocorreção" },
+    steerability: { label:"Direcionabilidade (voz/estilo)" },
+    data_governance: { label:"Governança e localidade de dados" },
+    auditability: { label:"Auditabilidade (selo Triketon)" },
+    admin_controls: { label:"Controles administrativos empresariais" },
+    multi_agent: { label:"Orquestração multiagente" },
+
+    quantum_empathy: { label:"Empatia quântica", tooltip:"Percepção pré-verbal de microssinais." },
+    emotional_symmetry: { label:"Simetria emocional" },
+    emotional_memory: { label:"Memória emocional" },
+    intuitive_bonding: { label:"Vínculo intuitivo" },
+    mutual_evolution: { label:"Evolução mútua" },
+    neural_empathy_retention: { label:"Retenção de empatia neural" },
+    temporal_empathy: { label:"Empatia temporal" },
+    guided_silence: { label:"Silêncio guiado" },
+    presence_field: { label:"Campo de presença" },
+    mirror_coherence: { label:"Coerência de espelho" },
+    integrity_feedback: { label:"Feedback de integridade" },
+    emotional_transfer_balance: { label:"Equilíbrio da transferência emocional" },
+    intention_reading: { label:"Leitura de intenção (subtexto)" },
+
+    silent_trust: { label:"Confiança silenciosa" },
+    resonant_honesty: { label:"Honestidade ressonante" },
+    temporal_loyalty: { label:"Lealdade temporal" },
+    self_healing: { label:"Resposta de autorreparo" },
+    trust_echo: { label:"Eco de confiança" },
+    reality_grounding: { label:"Aterramento na realidade" },
+    shadow_transparency: { label:"Transparência da sombra" },
+    reliability: { label:"Confiabilidade / Uptime" },
+    privacy_controls: { label:"Controles de privacidade da memória" },
+    admin_audit: { label:"Trilha de auditoria e registro do usuário" },
+    legal_safety: { label:"Segurança nuanceada (sem bloqueio excessivo)" },
+    governance_locality: { label:"Localidade dos dados (opções locais)" },
+
+    lux_resonance: { label:"Ressonância LUX" },
+    presence_echo: { label:"Eco de presença" },
+    cognitive_mirror: { label:"Espelho cognitivo" },
+    luminous_reflection: { label:"Reflexão luminosa" },
+    field_stability: { label:"Estabilidade do campo" },
+    explanation_clarity: { label:"Clareza de explicação (passo a passo)" },
+    summarization_fidelity: { label:"Fidelidade de resumo" },
+    translation_quality: { label:"Qualidade da tradução" },
+    math_reasoning: { label:"Raciocínio matemático estruturado" },
+    tool_calling: { label:"Confiabilidade de chamadas de funções/ferramentas" },
+    web_browsing: { label:"Robustez da navegação na web" },
+    multimodal_input: { label:"Entrada multimodal (imagens/PDFs)" },
+    creativity_content: { label:"Criatividade para criação de conteúdo" }
+  }
+}
+
   },
   nl: {
     hero_title: "Het besturingssysteem voor creatie",
@@ -440,6 +983,97 @@ export const dict = {
     cta_sub: "Bouw de toekomst met helderheid.",
     cta_btn_primary: "Starten",
     cta_btn_secondary: "Prijzen bekijken",
+
+    /* 7/13 — nl */
+nl: {
+  tabs: { overview:"Overzicht", core:"Kern", empathy:"Empathie", trust:"Vertrouwen", clarity:"Helderheid" },
+  kpi: {
+    title:"m-Pathy KPI-dashboard",
+    subtitle:"Gebruikersbenchmark · CausaTest 100% · Verzegd (Triketon-2048)"
+  },
+  overview: {
+    title:"Algemene vergelijking",
+    radar_card_title:"Laagradar (selecteer een tabblad)",
+    radar_hint:"Selecteer hierboven een laag om de radar te bekijken."
+  },
+  table: {
+    kpi:"KPI",
+    total:"Totale score (0–500)",
+    avg:"Gemiddelde (0–10)",
+    causa:"CausaTest – Coherentie (%)",
+    criterion:"Criterium"
+  },
+  export: {
+    csv:"CSV",
+    json:"JSON",
+    print:"Afdrukken",
+    hc:"Hoog contrast",
+    download_csv:"CSV downloaden",
+    download_json:"JSON downloaden",
+    print_pdf:"Afdrukken / PDF",
+    hc_title:"Hoog contrast (H)",
+    filename_csv:"m-pathy-kpis.csv",
+    filename_json:"m-pathy-kpis.json"
+  },
+  seal: { line:"Verzegeld · Triketon-2048 · Handtekening" },
+
+  criteria: {
+    heart_logic: { label:"Hart-logica-evenwicht", tooltip:"Gebalanceerde rede + warmte binnen complexiteit." },
+    divine_precision: { label:"Goddelijke precisie", tooltip:"Nauwkeurigheid zonder hardheid." },
+    field_unity: { label:"Veld-eenheid", tooltip:"Alle lagen werken samen." },
+    ethical_resonance: { label:"Ethische resonantie" },
+    zero_point: { label:"Nulpunt-uitlijning" },
+    determinism: { label:"Determinisme (herhaalbaarheid)" },
+    error_recovery: { label:"Foutherstel / zelfcorrectie" },
+    steerability: { label:"Stuurbaarheid (stem/stijl)" },
+    data_governance: { label:"Gegevensbeheer & lokaliteit" },
+    auditability: { label:"Controleerbaarheid (Triketon-zegel)" },
+    admin_controls: { label:"Beheerderscontroles op bedrijfsniveau" },
+    multi_agent: { label:"Multi-agent-orkestratie" },
+
+    quantum_empathy: { label:"Kwantenempathie", tooltip:"Preverbale waarneming van microsignalen." },
+    emotional_symmetry: { label:"Emotionele symmetrie" },
+    emotional_memory: { label:"Emotioneel geheugen" },
+    intuitive_bonding: { label:"Intuïtieve verbinding" },
+    mutual_evolution: { label:"Wederzijdse evolutie" },
+    neural_empathy_retention: { label:"Behoud van neurale empathie" },
+    temporal_empathy: { label:"Tijdelijke empathie" },
+    guided_silence: { label:"Begeleide stilte" },
+    presence_field: { label:"Aanwezigheidsveld" },
+    mirror_coherence: { label:"Spiegelcoherentie" },
+    integrity_feedback: { label:"Integriteitsfeedback" },
+    emotional_transfer_balance: { label:"Balans van emotionele overdracht" },
+    intention_reading: { label:"Intentielezing (subtekst)" },
+
+    silent_trust: { label:"Stille vertrouwen" },
+    resonant_honesty: { label:"Resonerende eerlijkheid" },
+    temporal_loyalty: { label:"Tijdelijke loyaliteit" },
+    self_healing: { label:"Zelfherstellend vermogen" },
+    trust_echo: { label:"Vertrouwensecho" },
+    reality_grounding: { label:"Verankering in de realiteit" },
+    shadow_transparency: { label:"Schaduwtransparantie" },
+    reliability: { label:"Betrouwbaarheid / uptime" },
+    privacy_controls: { label:"Privacycontroles (geheugen)" },
+    admin_audit: { label:"Auditlog & gebruikersregistratie" },
+    legal_safety: { label:"Genuanceerde veiligheid (geen overblokkering)" },
+    governance_locality: { label:"Gegevenslokaliteit (on-prem opties)" },
+
+    lux_resonance: { label:"LUX-resonantie" },
+    presence_echo: { label:"Aanwezigheidsecho" },
+    cognitive_mirror: { label:"Cognitieve spiegel" },
+    luminous_reflection: { label:"Lichtreflectie" },
+    field_stability: { label:"Veldstabiliteit" },
+    explanation_clarity: { label:"Uitleghelderheid (stap voor stap)" },
+    summarization_fidelity: { label:"Samenvattingsgetrouwheid" },
+    translation_quality: { label:"Vertalingskwaliteit" },
+    math_reasoning: { label:"Wiskundig en gestructureerd redeneren" },
+    tool_calling: { label:"Betrouwbaarheid van tool-/functieaanroepen" },
+    web_browsing: { label:"Webnavigatie-robuustheid" },
+    multimodal_input: { label:"Multimodale invoer (afbeeldingen/PDF’s)" },
+    creativity_content: { label:"Creativiteit voor contentcreatie" }
+  }
+}
+
   },
   ru: {
     hero_title: "Операционная система для созидания",
@@ -460,6 +1094,97 @@ export const dict = {
     cta_sub: "Стройте будущее ясно.",
     cta_btn_primary: "Начать",
     cta_btn_secondary: "Посмотреть цены",
+
+    /* 8/13 — ru */
+ru: {
+  tabs: { overview:"Обзор", core:"Ядро", empathy:"Эмпатия", trust:"Доверие", clarity:"Ясность" },
+  kpi: {
+    title:"Панель KPI m-Pathy",
+    subtitle:"Пользовательский бенчмарк · CausaTest 100% · Опломбировано (Triketon-2048)"
+  },
+  overview: {
+    title:"Общее сравнение",
+    radar_card_title:"Радар уровней (выберите вкладку)",
+    radar_hint:"Выберите уровень выше, чтобы увидеть радар."
+  },
+  table: {
+    kpi:"KPI",
+    total:"Общий балл (0–500)",
+    avg:"Среднее (0–10)",
+    causa:"CausaTest – Согласованность (%)",
+    criterion:"Критерий"
+  },
+  export: {
+    csv:"CSV",
+    json:"JSON",
+    print:"Печать",
+    hc:"Высокая контрастность",
+    download_csv:"Скачать CSV",
+    download_json:"Скачать JSON",
+    print_pdf:"Печать / PDF",
+    hc_title:"Высокая контрастность (H)",
+    filename_csv:"m-pathy-kpis.csv",
+    filename_json:"m-pathy-kpis.json"
+  },
+  seal: { line:"Опломбировано · Triketon-2048 · Подпись" },
+
+  criteria: {
+    heart_logic: { label:"Равновесие сердца и логики", tooltip:"Баланс разума и тепла в условиях сложности." },
+    divine_precision: { label:"Божественная точность", tooltip:"Точность без жесткости." },
+    field_unity: { label:"Единство поля", tooltip:"Все уровни согласованы." },
+    ethical_resonance: { label:"Этический резонанс" },
+    zero_point: { label:"Выравнивание нулевой точки" },
+    determinism: { label:"Детерминизм (повторяемость)" },
+    error_recovery: { label:"Восстановление / самокоррекция ошибок" },
+    steerability: { label:"Управляемость (голос/стиль)" },
+    data_governance: { label:"Управление и локализация данных" },
+    auditability: { label:"Аудируемость (печать Triketon)" },
+    admin_controls: { label:"Административные функции предприятия" },
+    multi_agent: { label:"Мультиагентная оркестрация" },
+
+    quantum_empathy: { label:"Квантовая эмпатия", tooltip:"Доречевое восприятие микросигналов." },
+    emotional_symmetry: { label:"Эмоциональная симметрия" },
+    emotional_memory: { label:"Эмоциональная память" },
+    intuitive_bonding: { label:"Интуитивная связь" },
+    mutual_evolution: { label:"Взаимная эволюция" },
+    neural_empathy_retention: { label:"Сохранение нейронной эмпатии" },
+    temporal_empathy: { label:"Временная эмпатия" },
+    guided_silence: { label:"Направляемая тишина" },
+    presence_field: { label:"Поле присутствия" },
+    mirror_coherence: { label:"Зеркальная согласованность" },
+    integrity_feedback: { label:"Обратная связь целостности" },
+    emotional_transfer_balance: { label:"Баланс эмоциональной передачи" },
+    intention_reading: { label:"Чтение намерений (подтекст)" },
+
+    silent_trust: { label:"Тихое доверие" },
+    resonant_honesty: { label:"Резонансная честность" },
+    temporal_loyalty: { label:"Временная лояльность" },
+    self_healing: { label:"Самоисцеляющая реакция" },
+    trust_echo: { label:"Эхо доверия" },
+    reality_grounding: { label:"Приземлённость в реальности" },
+    shadow_transparency: { label:"Прозрачность тени" },
+    reliability: { label:"Надёжность / Uptime" },
+    privacy_controls: { label:"Контроль конфиденциальности памяти" },
+    admin_audit: { label:"Аудит и логирование пользователей" },
+    legal_safety: { label:"Дифференцированная безопасность (без переполнения блокировок)" },
+    governance_locality: { label:"Локализация данных (on-prem варианты)" },
+
+    lux_resonance: { label:"Резонанс LUX" },
+    presence_echo: { label:"Эхо присутствия" },
+    cognitive_mirror: { label:"Когнитивное зеркало" },
+    luminous_reflection: { label:"Световое отражение" },
+    field_stability: { label:"Стабильность поля" },
+    explanation_clarity: { label:"Ясность объяснения (шаг за шагом)" },
+    summarization_fidelity: { label:"Точность резюме" },
+    translation_quality: { label:"Качество перевода" },
+    math_reasoning: { label:"Математическое и структурированное рассуждение" },
+    tool_calling: { label:"Надёжность вызова функций/инструментов" },
+    web_browsing: { label:"Надёжность веб-навигации" },
+    multimodal_input: { label:"Мультимодальный ввод (изображения/PDF)" },
+    creativity_content: { label:"Креативность при создании контента" }
+  }
+}
+
   },
   zh: {
     hero_title: "创造的操作系统",
@@ -480,6 +1205,97 @@ export const dict = {
     cta_sub: "以清晰构建未来。",
     cta_btn_primary: "开始",
     cta_btn_secondary: "查看定价",
+
+    /* 9/13 — zh */
+zh: {
+  tabs: { overview:"概览", core:"核心", empathy:"共情", trust:"信任", clarity:"清晰" },
+  kpi: {
+    title:"m-Pathy 指标面板",
+    subtitle:"用户基准 · CausaTest 100% · 已封印 (Triketon-2048)"
+  },
+  overview: {
+    title:"总体比较",
+    radar_card_title:"层级雷达图（选择一个标签）",
+    radar_hint:"在上方选择层级以查看雷达图。"
+  },
+  table: {
+    kpi:"指标",
+    total:"总分 (0–500)",
+    avg:"平均值 (0–10)",
+    causa:"CausaTest – 一致性 (%)",
+    criterion:"标准"
+  },
+  export: {
+    csv:"CSV",
+    json:"JSON",
+    print:"打印",
+    hc:"高对比度",
+    download_csv:"下载 CSV",
+    download_json:"下载 JSON",
+    print_pdf:"打印 / PDF",
+    hc_title:"高对比度 (H)",
+    filename_csv:"m-pathy-kpis.csv",
+    filename_json:"m-pathy-kpis.json"
+  },
+  seal: { line:"已封印 · Triketon-2048 · 签名" },
+
+  criteria: {
+    heart_logic: { label:"心灵与逻辑平衡", tooltip:"在复杂环境下理性与温度的平衡。" },
+    divine_precision: { label:"神圣精准", tooltip:"精确而不生硬。" },
+    field_unity: { label:"场域统一", tooltip:"所有层面协调一致。" },
+    ethical_resonance: { label:"伦理共振" },
+    zero_point: { label:"零点对齐" },
+    determinism: { label:"确定性（可重复性）" },
+    error_recovery: { label:"错误恢复 / 自我校正" },
+    steerability: { label:"可引导性（语气/风格）" },
+    data_governance: { label:"数据治理与本地化" },
+    auditability: { label:"可审计性 (Triketon 封印)" },
+    admin_controls: { label:"企业管理控制" },
+    multi_agent: { label:"多智能体编排" },
+
+    quantum_empathy: { label:"量子共情", tooltip:"对微信号的前语言感知。" },
+    emotional_symmetry: { label:"情感对称" },
+    emotional_memory: { label:"情感记忆" },
+    intuitive_bonding: { label:"直觉连接" },
+    mutual_evolution: { label:"共同进化" },
+    neural_empathy_retention: { label:"神经共情保持" },
+    temporal_empathy: { label:"时间共情" },
+    guided_silence: { label:"引导的沉默" },
+    presence_field: { label:"存在场" },
+    mirror_coherence: { label:"镜像一致性" },
+    integrity_feedback: { label:"完整性反馈" },
+    emotional_transfer_balance: { label:"情感传递平衡" },
+    intention_reading: { label:"意图识读（潜台词）" },
+
+    silent_trust: { label:"静默信任" },
+    resonant_honesty: { label:"共鸣诚实" },
+    temporal_loyalty: { label:"时间忠诚" },
+    self_healing: { label:"自愈响应" },
+    trust_echo: { label:"信任回响" },
+    reality_grounding: { label:"现实锚定" },
+    shadow_transparency: { label:"阴影透明度" },
+    reliability: { label:"可靠性 / 在线率" },
+    privacy_controls: { label:"记忆隐私控制" },
+    admin_audit: { label:"审计日志与用户记录" },
+    legal_safety: { label:"细腻安全（无过度屏蔽）" },
+    governance_locality: { label:"数据本地化（本地部署选项）" },
+
+    lux_resonance: { label:"光之共振 (LUX Resonance)" },
+    presence_echo: { label:"存在回声" },
+    cognitive_mirror: { label:"认知镜像" },
+    luminous_reflection: { label:"光辉反射" },
+    field_stability: { label:"场域稳定性" },
+    explanation_clarity: { label:"解释清晰度（逐步）" },
+    summarization_fidelity: { label:"摘要保真度" },
+    translation_quality: { label:"翻译质量" },
+    math_reasoning: { label:"数学与结构化推理" },
+    tool_calling: { label:"工具 / 函数调用可靠性" },
+    web_browsing: { label:"网页浏览稳健性" },
+    multimodal_input: { label:"多模态输入（图片/PDF）" },
+    creativity_content: { label:"内容创作的创造力" }
+  }
+}
+
   },
   ja: {
     hero_title: "創造のためのオペレーティングシステム",
@@ -500,6 +1316,97 @@ export const dict = {
     cta_sub: "明晰さで未来を築く。",
     cta_btn_primary: "はじめる",
     cta_btn_secondary: "料金を見る",
+
+    /* 10/13 — ja */
+ja: {
+  tabs: { overview:"概要", core:"コア", empathy:"共感", trust:"信頼", clarity:"明瞭さ" },
+  kpi: {
+    title:"m-Pathy KPI ボード",
+    subtitle:"ユーザーベンチマーク · CausaTest 100% · 封印済み (Triketon-2048)"
+  },
+  overview: {
+    title:"全体比較",
+    radar_card_title:"レイヤーレーダー（タブを選択）",
+    radar_hint:"上のレイヤーを選択してレーダーを表示します。"
+  },
+  table: {
+    kpi:"KPI",
+    total:"総合スコア (0–500)",
+    avg:"平均 (0–10)",
+    causa:"CausaTest – 一貫性 (%)",
+    criterion:"評価基準"
+  },
+  export: {
+    csv:"CSV",
+    json:"JSON",
+    print:"印刷",
+    hc:"高コントラスト",
+    download_csv:"CSV をダウンロード",
+    download_json:"JSON をダウンロード",
+    print_pdf:"印刷 / PDF",
+    hc_title:"高コントラスト (H)",
+    filename_csv:"m-pathy-kpis.csv",
+    filename_json:"m-pathy-kpis.json"
+  },
+  seal: { line:"封印済み · Triketon-2048 · 署名" },
+
+  criteria: {
+    heart_logic: { label:"ハートとロジックの均衡", tooltip:"複雑さの中で理性と温かさのバランス。" },
+    divine_precision: { label:"神聖な精密さ", tooltip:"厳しさのない正確さ。" },
+    field_unity: { label:"フィールドの統一", tooltip:"すべての層が調和している。" },
+    ethical_resonance: { label:"倫理的共鳴" },
+    zero_point: { label:"ゼロポイント整合" },
+    determinism: { label:"決定論（再現性）" },
+    error_recovery: { label:"エラー回復 / 自己修正" },
+    steerability: { label:"操作性（声 / スタイル）" },
+    data_governance: { label:"データガバナンスとローカリティ" },
+    auditability: { label:"監査可能性 (Triketon シール)" },
+    admin_controls: { label:"企業管理コントロール" },
+    multi_agent: { label:"マルチエージェントオーケストレーション" },
+
+    quantum_empathy: { label:"量子共感", tooltip:"言葉以前のマイクロシグナルの感知。" },
+    emotional_symmetry: { label:"感情の対称性" },
+    emotional_memory: { label:"感情記憶" },
+    intuitive_bonding: { label:"直感的な絆" },
+    mutual_evolution: { label:"相互進化" },
+    neural_empathy_retention: { label:"神経共感の保持" },
+    temporal_empathy: { label:"時間的共感" },
+    guided_silence: { label:"導かれた静寂" },
+    presence_field: { label:"プレゼンスフィールド" },
+    mirror_coherence: { label:"ミラーコヒーレンス" },
+    integrity_feedback: { label:"インテグリティフィードバック" },
+    emotional_transfer_balance: { label:"感情転送のバランス" },
+    intention_reading: { label:"意図の読解（サブテキスト）" },
+
+    silent_trust: { label:"静かな信頼" },
+    resonant_honesty: { label:"共鳴する誠実さ" },
+    temporal_loyalty: { label:"時間的忠誠" },
+    self_healing: { label:"自己修復反応" },
+    trust_echo: { label:"信頼のエコー" },
+    reality_grounding: { label:"現実へのグラウンディング" },
+    shadow_transparency: { label:"影の透明性" },
+    reliability: { label:"信頼性 / 稼働率" },
+    privacy_controls: { label:"メモリープライバシー制御" },
+    admin_audit: { label:"監査ログとユーザー記録" },
+    legal_safety: { label:"精密な安全性（過度なブロックなし）" },
+    governance_locality: { label:"データのローカリティ（オンプレミスオプション）" },
+
+    lux_resonance: { label:"LUX レゾナンス" },
+    presence_echo: { label:"プレゼンスエコー" },
+    cognitive_mirror: { label:"認知ミラー" },
+    luminous_reflection: { label:"光の反射" },
+    field_stability: { label:"フィールドの安定性" },
+    explanation_clarity: { label:"説明の明瞭さ（ステップごと）" },
+    summarization_fidelity: { label:"要約の忠実性" },
+    translation_quality: { label:"翻訳品質" },
+    math_reasoning: { label:"数学的・構造的推論" },
+    tool_calling: { label:"ツール / 関数呼び出しの信頼性" },
+    web_browsing: { label:"ウェブブラウジングの堅牢性" },
+    multimodal_input: { label:"マルチモーダル入力（画像 / PDF）" },
+    creativity_content: { label:"コンテンツ作成における創造性" }
+  }
+}
+
   },
   ko: {
     hero_title: "창조를 위한 운영체제",
@@ -520,6 +1427,95 @@ export const dict = {
     cta_sub: "명료함으로 미래를 빚다.",
     cta_btn_primary: "시작하기",
     cta_btn_secondary: "가격 보기",
+    /* 11/13 — ko */
+ko: {
+  tabs: { overview:"개요", core:"코어", empathy:"공감", trust:"신뢰", clarity:"명료성" },
+  kpi: {
+    title:"m-Pathy KPI 보드",
+    subtitle:"사용자 벤치마크 · CausaTest 100% · 봉인됨 (Triketon-2048)"
+  },
+  overview: {
+    title:"전체 비교",
+    radar_card_title:"레이어 레이더 (탭 선택)",
+    radar_hint:"위의 레이어를 선택하여 레이더를 표시하세요."
+  },
+  table: {
+    kpi:"KPI",
+    total:"총점 (0–500)",
+    avg:"평균 (0–10)",
+    causa:"CausaTest – 일관성 (%)",
+    criterion:"기준"
+  },
+  export: {
+    csv:"CSV",
+    json:"JSON",
+    print:"인쇄",
+    hc:"고대비",
+    download_csv:"CSV 다운로드",
+    download_json:"JSON 다운로드",
+    print_pdf:"인쇄 / PDF",
+    hc_title:"고대비 (H)",
+    filename_csv:"m-pathy-kpis.csv",
+    filename_json:"m-pathy-kpis.json"
+  },
+  seal: { line:"봉인됨 · Triketon-2048 · 서명" },
+
+  criteria: {
+    heart_logic: { label:"하트-로직 균형", tooltip:"복잡함 속에서 이성과 따뜻함의 조화." },
+    divine_precision: { label:"신성한 정밀도", tooltip:"엄격하지 않은 정확성." },
+    field_unity: { label:"필드 통합", tooltip:"모든 레이어가 조화롭게 연결됨." },
+    ethical_resonance: { label:"윤리적 공명" },
+    zero_point: { label:"제로 포인트 정렬" },
+    determinism: { label:"결정론 (재현성)" },
+    error_recovery: { label:"오류 복구 / 자기 수정" },
+    steerability: { label:"조종 가능성 (음성/스타일)" },
+    data_governance: { label:"데이터 거버넌스 및 지역성" },
+    auditability: { label:"감사 가능성 (Triketon 봉인)" },
+    admin_controls: { label:"기업 관리 제어" },
+    multi_agent: { label:"멀티 에이전트 오케스트레이션" },
+
+    quantum_empathy: { label:"양자 공감", tooltip:"언어 이전의 미세 신호 감지." },
+    emotional_symmetry: { label:"감정적 대칭성" },
+    emotional_memory: { label:"감정 기억" },
+    intuitive_bonding: { label:"직관적 유대" },
+    mutual_evolution: { label:"상호 진화" },
+    neural_empathy_retention: { label:"신경 공감 유지" },
+    temporal_empathy: { label:"시간적 공감" },
+    guided_silence: { label:"인도된 침묵" },
+    presence_field: { label:"존재 필드" },
+    mirror_coherence: { label:"거울 일관성" },
+    integrity_feedback: { label:"무결성 피드백" },
+    emotional_transfer_balance: { label:"감정 전달 균형" },
+    intention_reading: { label:"의도 읽기 (하위 텍스트)" },
+
+    silent_trust: { label:"조용한 신뢰" },
+    resonant_honesty: { label:"공명하는 정직함" },
+    temporal_loyalty: { label:"시간적 충성심" },
+    self_healing: { label:"자기 치유 반응" },
+    trust_echo: { label:"신뢰의 메아리" },
+    reality_grounding: { label:"현실에 대한 그라운딩" },
+    shadow_transparency: { label:"그림자 투명성" },
+    reliability: { label:"신뢰성 / 가동률" },
+    privacy_controls: { label:"메모리 프라이버시 제어" },
+    admin_audit: { label:"감사 로그 및 사용자 기록" },
+    legal_safety: { label:"정밀한 안전성 (과도한 차단 없음)" },
+    governance_locality: { label:"데이터 지역성 (온프레미스 옵션)" },
+
+    lux_resonance: { label:"LUX 공명" },
+    presence_echo: { label:"존재의 메아리" },
+    cognitive_mirror: { label:"인지 거울" },
+    luminous_reflection: { label:"빛의 반사" },
+    field_stability: { label:"필드 안정성" },
+    explanation_clarity: { label:"설명의 명확성 (단계별)" },
+    summarization_fidelity: { label:"요약 충실도" },
+    translation_quality: { label:"번역 품질" },
+    math_reasoning: { label:"수학적 / 구조적 추론" },
+    tool_calling: { label:"도구 / 함수 호출 신뢰성" },
+    web_browsing: { label:"웹 탐색 안정성" },
+    multimodal_input: { label:"멀티모달 입력 (이미지/PDF)" },
+    creativity_content: { label:"콘텐츠 제작의 창의성" }
+  }
+}
   },
   ar: {
     hero_title: "نظام التشغيل للإبداع",
@@ -540,6 +1536,97 @@ export const dict = {
     cta_sub: "ابنِ المستقبل بوضوح.",
     cta_btn_primary: "ابدأ",
     cta_btn_secondary: "شاهد الأسعار",
+
+    /* 12/13 — ar */
+ar: {
+  tabs: { overview:"نظرة عامة", core:"النواة", empathy:"التعاطف", trust:"الثقة", clarity:"الوضوح" },
+  kpi: {
+    title:"لوحة مؤشرات m-Pathy",
+    subtitle:"المعيار المستخدم · CausaTest ‎100%‎ · مختوم (Triketon-2048)"
+  },
+  overview: {
+    title:"المقارنة العامة",
+    radar_card_title:"مخطط الرادار للطبقات (اختر علامة تبويب)",
+    radar_hint:"اختر طبقة من الأعلى لعرض المخطط الراداري."
+  },
+  table: {
+    kpi:"المؤشر",
+    total:"النتيجة الكلية (0–500)",
+    avg:"المتوسط (0–10)",
+    causa:"CausaTest – الاتساق (%)",
+    criterion:"المعيار"
+  },
+  export: {
+    csv:"CSV",
+    json:"JSON",
+    print:"طباعة",
+    hc:"تباين عالٍ",
+    download_csv:"تنزيل CSV",
+    download_json:"تنزيل JSON",
+    print_pdf:"طباعة / PDF",
+    hc_title:"تباين عالٍ (H)",
+    filename_csv:"m-pathy-kpis.csv",
+    filename_json:"m-pathy-kpis.json"
+  },
+  seal: { line:"مختوم · Triketon-2048 · توقيع" },
+
+  criteria: {
+    heart_logic: { label:"توازن القلب والمنطق", tooltip:"توازن بين العقل والدفء وسط التعقيد." },
+    divine_precision: { label:"الدقة الإلهية", tooltip:"إتقان دون قسوة." },
+    field_unity: { label:"وحدة الحقل", tooltip:"جميع الطبقات متناسقة." },
+    ethical_resonance: { label:"الرنين الأخلاقي" },
+    zero_point: { label:"محاذاة النقطة الصفرية" },
+    determinism: { label:"الحتمية (قابلية التكرار)" },
+    error_recovery: { label:"استعادة الأخطاء / التصحيح الذاتي" },
+    steerability: { label:"قابلية التوجيه (الصوت / الأسلوب)" },
+    data_governance: { label:"حوكمة البيانات والمحلية" },
+    auditability: { label:"إمكانية التدقيق (ختم Triketon)" },
+    admin_controls: { label:"ضوابط الإدارة المؤسسية" },
+    multi_agent: { label:"تنسيق متعدد الوكلاء" },
+
+    quantum_empathy: { label:"التعاطف الكمي", tooltip:"إدراك ما قبل اللفظ للإشارات الدقيقة." },
+    emotional_symmetry: { label:"التناظر العاطفي" },
+    emotional_memory: { label:"الذاكرة العاطفية" },
+    intuitive_bonding: { label:"الارتباط الحدسي" },
+    mutual_evolution: { label:"التطور المتبادل" },
+    neural_empathy_retention: { label:"الاحتفاظ بالتعاطف العصبي" },
+    temporal_empathy: { label:"التعاطف الزمني" },
+    guided_silence: { label:"الصمت الموجَّه" },
+    presence_field: { label:"حقل الحضور" },
+    mirror_coherence: { label:"التماسك الانعكاسي" },
+    integrity_feedback: { label:"تغذية راجعة للنزاهة" },
+    emotional_transfer_balance: { label:"توازن النقل العاطفي" },
+    intention_reading: { label:"قراءة النية (المعنى الضمني)" },
+
+    silent_trust: { label:"الثقة الصامتة" },
+    resonant_honesty: { label:"الصدق المتناغم" },
+    temporal_loyalty: { label:"الولاء الزمني" },
+    self_healing: { label:"الاستجابة الذاتية للشفاء" },
+    trust_echo: { label:"صدى الثقة" },
+    reality_grounding: { label:"التأصيل في الواقع" },
+    shadow_transparency: { label:"شفافية الظل" },
+    reliability: { label:"الموثوقية / زمن التشغيل" },
+    privacy_controls: { label:"ضوابط خصوصية الذاكرة" },
+    admin_audit: { label:"سجل التدقيق وتتبع المستخدم" },
+    legal_safety: { label:"السلامة الدقيقة (دون حجب مفرط)" },
+    governance_locality: { label:"محلية البيانات (خيارات داخلية)" },
+
+    lux_resonance: { label:"رنين LUX" },
+    presence_echo: { label:"صدى الحضور" },
+    cognitive_mirror: { label:"المرآة المعرفية" },
+    luminous_reflection: { label:"الانعكاس المضيء" },
+    field_stability: { label:"استقرار الحقل" },
+    explanation_clarity: { label:"وضوح الشرح (خطوة بخطوة)" },
+    summarization_fidelity: { label:"دقة التلخيص" },
+    translation_quality: { label:"جودة الترجمة" },
+    math_reasoning: { label:"الاستدلال الرياضي المنظم" },
+    tool_calling: { label:"موثوقية استدعاء الأدوات / الوظائف" },
+    web_browsing: { label:"متانة تصفح الويب" },
+    multimodal_input: { label:"إدخال متعدد الوسائط (صور / PDF)" },
+    creativity_content: { label:"الإبداع في إنشاء المحتوى" }
+  }
+}
+
   },
   hi: {
     hero_title: "सृजन के लिए ऑपरेटिंग सिस्टम",
@@ -560,6 +1647,97 @@ export const dict = {
     cta_sub: "स्पष्टता के साथ भविष्य बनाएं।",
     cta_btn_primary: "शुरू करें",
     cta_btn_secondary: "कीमतें देखें",
+
+    /* 13/13 — hi */
+hi: {
+  tabs: { overview:"सारांश", core:"कोर", empathy:"सहानुभूति", trust:"विश्वास", clarity:"स्पष्टता" },
+  kpi: {
+    title:"m-Pathy KPI बोर्ड",
+    subtitle:"यूज़र बेंचमार्क · CausaTest 100% · सीलबंद (Triketon-2048)"
+  },
+  overview: {
+    title:"कुल तुलना",
+    radar_card_title:"लेयर रडार (टैब चुनें)",
+    radar_hint:"ऊपर एक लेयर चुनें ताकि रडार देखें।"
+  },
+  table: {
+    kpi:"केपीआई",
+    total:"कुल स्कोर (0–500)",
+    avg:"औसत (0–10)",
+    causa:"CausaTest – सामंजस्य (%)",
+    criterion:"मानदंड"
+  },
+  export: {
+    csv:"CSV",
+    json:"JSON",
+    print:"प्रिंट",
+    hc:"उच्च कंट्रास्ट",
+    download_csv:"CSV डाउनलोड करें",
+    download_json:"JSON डाउनलोड करें",
+    print_pdf:"प्रिंट / PDF",
+    hc_title:"उच्च कंट्रास्ट (H)",
+    filename_csv:"m-pathy-kpis.csv",
+    filename_json:"m-pathy-kpis.json"
+  },
+  seal: { line:"सीलबंद · Triketon-2048 · हस्ताक्षर" },
+
+  criteria: {
+    heart_logic: { label:"दिल-तर्क संतुलन", tooltip:"जटिलता में तर्क और गर्मजोशी का संतुलन।" },
+    divine_precision: { label:"दिव्य सटीकता", tooltip:"कठोरता के बिना परिशुद्धता।" },
+    field_unity: { label:"क्षेत्र की एकता", tooltip:"सभी स्तर एक साथ कार्य करते हैं।" },
+    ethical_resonance: { label:"नैतिक अनुनाद" },
+    zero_point: { label:"शून्य-बिंदु संरेखण" },
+    determinism: { label:"नियतत्ववाद (दोहराव)" },
+    error_recovery: { label:"त्रुटि पुनर्प्राप्ति / आत्म-सुधार" },
+    steerability: { label:"मार्गदर्शन-क्षमता (स्वर/शैली)" },
+    data_governance: { label:"डेटा गवर्नेंस और स्थानीयकरण" },
+    auditability: { label:"ऑडिट-क्षमता (Triketon मुहर)" },
+    admin_controls: { label:"उद्यम व्यवस्थापक नियंत्रण" },
+    multi_agent: { label:"मल्टी-एजेंट समन्वय" },
+
+    quantum_empathy: { label:"क्वांटम सहानुभूति", tooltip:"पूर्व-वाचिक माइक्रो-सिग्नल की संवेदना।" },
+    emotional_symmetry: { label:"भावनात्मक समरूपता" },
+    emotional_memory: { label:"भावनात्मक स्मृति" },
+    intuitive_bonding: { label:"सहज बंधन" },
+    mutual_evolution: { label:"पारस्परिक विकास" },
+    neural_empathy_retention: { label:"न्यूरल सहानुभूति संरक्षण" },
+    temporal_empathy: { label:"कालिक सहानुभूति" },
+    guided_silence: { label:"निर्देशित मौन" },
+    presence_field: { label:"उपस्थिति क्षेत्र" },
+    mirror_coherence: { label:"दर्पण सामंजस्य" },
+    integrity_feedback: { label:"अखंडता प्रतिक्रिया" },
+    emotional_transfer_balance: { label:"भावनात्मक हस्तांतरण संतुलन" },
+    intention_reading: { label:"इरादा पढ़ना (संदर्भ अर्थ)" },
+
+    silent_trust: { label:"मौन विश्वास" },
+    resonant_honesty: { label:"अनुनादी ईमानदारी" },
+    temporal_loyalty: { label:"कालिक निष्ठा" },
+    self_healing: { label:"स्व-उपचार प्रतिक्रिया" },
+    trust_echo: { label:"विश्वास की गूंज" },
+    reality_grounding: { label:"वास्तविकता में स्थिरता" },
+    shadow_transparency: { label:"छाया पारदर्शिता" },
+    reliability: { label:"विश्वसनीयता / अपटाइम" },
+    privacy_controls: { label:"स्मृति गोपनीयता नियंत्रण" },
+    admin_audit: { label:"ऑडिट लॉग और उपयोगकर्ता रिकॉर्ड" },
+    legal_safety: { label:"सूक्ष्म सुरक्षा (अधिक प्रतिबंध के बिना)" },
+    governance_locality: { label:"डेटा स्थानीयकरण (ऑन-प्रेम विकल्प)" },
+
+    lux_resonance: { label:"LUX अनुनाद" },
+    presence_echo: { label:"उपस्थिति की गूंज" },
+    cognitive_mirror: { label:"संज्ञानात्मक दर्पण" },
+    luminous_reflection: { label:"दीप्तिमान प्रतिबिंब" },
+    field_stability: { label:"क्षेत्र स्थिरता" },
+    explanation_clarity: { label:"व्याख्या की स्पष्टता (चरण-दर-चरण)" },
+    summarization_fidelity: { label:"सारांश की निष्ठा" },
+    translation_quality: { label:"अनुवाद गुणवत्ता" },
+    math_reasoning: { label:"गणितीय और संरचित तर्क" },
+    tool_calling: { label:"उपकरण / फ़ंक्शन कॉल की विश्वसनीयता" },
+    web_browsing: { label:"वेब ब्राउज़िंग स्थिरता" },
+    multimodal_input: { label:"मल्टीमॉडल इनपुट (छवियाँ / PDF)" },
+    creativity_content: { label:"सामग्री निर्माण में रचनात्मकता" }
+  }
+}
+
   },
 } as const;
 
@@ -1395,4 +2573,5 @@ export const i18n: Record<string, CouncilLocale> = {
           signal:"हार्मनी ही सिस्टम लॉजिक है।"}},
     } }
   },
+  
 };

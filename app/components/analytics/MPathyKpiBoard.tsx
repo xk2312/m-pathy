@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState, createContext, useContext } from "react";
+import React, { useEffect, useMemo, useRef, useState, createContext, useContext,useCallback  } from "react";
 import { Info, Download, Copy, Printer, Highlighter } from "lucide-react";
 import {
   Radar,
@@ -8,6 +8,12 @@ import {
   PolarRadiusAxis,
   ResponsiveContainer,
 } from "recharts";
+// i18n
+// i18n
+
+import { dict } from "@/lib/i18n"; // du hast /lib/i18n.ts bestätigt
+
+
 
 /**
  * Self‑Contained Build (No external UI kit)
@@ -129,6 +135,7 @@ export function TabsContent(
 }
 
 
+
 // ───────────────────────────────────────────────────────────────────────────────
 // KPI DATA + PALETTE
 // ───────────────────────────────────────────────────────────────────────────────
@@ -238,18 +245,50 @@ function useHighContrast() {
   useEffect(() => { const onKey = (e: KeyboardEvent) => { if (e.key.toLowerCase() === "h") setHc(v => !v); }; window.addEventListener("keydown", onKey); return () => window.removeEventListener("keydown", onKey); }, []);
   return { hc, setHc };
 }
+// Locale-aware NumberFormat (1 Nachkommastelle)
+const makeNF1 = (locale: string) =>
+  new Intl.NumberFormat(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+// ── Local i18n shim (nutzt dein dict; fallback = "en")
+type LocaleKey = keyof typeof dict;
+
+const detectLocale = (): LocaleKey => {
+  if (typeof navigator !== "undefined") {
+    const code = (navigator.language || "en").slice(0, 2).toLowerCase() as LocaleKey;
+    if (code in dict) return code;
+  }
+  return "en";
+};
+
+function useI18nLocal() {
+  const [locale, setLocale] = React.useState<LocaleKey>(detectLocale());
+  const t = useCallback((path: string): string => {
+    const parts = path.split(".");
+    let cur: any = dict[locale];
+    for (const p of parts) cur = cur?.[p];
+    return typeof cur === "string" ? cur : "";
+  }, [locale]);
+  return { t, locale, setLocale };
+}
+
 
 // ───────────────────────────────────────────────────────────────────────────────
 // KPI RENDERERS
 // ───────────────────────────────────────────────────────────────────────────────
-function LayerTable({ layer }: { layer: "Core" | "Empathy" | "Trust" | "Clarity" }) {
+function LayerTable(
+  { layer, nf1, t }: {
+    layer: "Core" | "Empathy" | "Trust" | "Clarity";
+    nf1: Intl.NumberFormat;
+    t: (key: string) => string;
+  }
+) {
   const rows = CRITERIA.filter((c) => c.layer === layer);
   return (
     <div className="overflow-x-auto rounded-2xl border" style={{ borderColor: PALETTE.border }}>
       <table className="w-full text-sm" style={{ color: PALETTE.text }}>
         <thead style={{ background: PALETTE.header, color: PALETTE.text }}>
           <tr>
-            <th className="px-4 py-3 text-left">Kriterium</th>
+            <th className="px-4 py-3 text-left">{t("table.criterion")}</th>
             {SYSTEMS.map((s) => (
               <th key={s} className="px-4 py-3 text-right">{s}</th>
             ))}
@@ -259,9 +298,12 @@ function LayerTable({ layer }: { layer: "Core" | "Empathy" | "Trust" | "Clarity"
           {rows.map((r) => (
             <tr key={r.id} className="border-t" style={{ borderColor: PALETTE.border }}>
               <td className="px-4 py-3 flex items-center gap-2">
-                <span>{r.label}</span>
+                <span>{t(`criteria.${r.id}.label`) || r.label}</span>
                 {r.tooltip ? (
-<span className="inline-flex items-center cursor-pointer" title={r.tooltip}>
+                  <span
+                    className="inline-flex items-center cursor-pointer"
+                    title={t(`criteria.${r.id}.tooltip`) || r.tooltip}
+                  >
                     <Info className="h-4 w-4" />
                   </span>
                 ) : null}
@@ -270,9 +312,19 @@ function LayerTable({ layer }: { layer: "Core" | "Empathy" | "Trust" | "Clarity"
                 const val = r.scores[s];
                 const top = val >= 9.7;
                 return (
-                  <td key={s} className="px-4 py-3 text-right font-semibold relative" style={{ color: PALETTE.text }}>
-                    <span className={top ? "relative z-[1] after:content-[''] after:absolute after:inset-0 after:-z-[1] after:rounded after:shadow-[0_0_0.35rem_0.06rem_rgba(255,227,107,0.35)]" : ""}>
-                      {val.toFixed(1)}
+                  <td
+                    key={s}
+                    className="px-4 py-3 text-right font-semibold relative"
+                    style={{ color: PALETTE.text }}
+                  >
+                    <span
+                      className={
+                        top
+                          ? "relative z-[1] after:content-[''] after:absolute after:inset-0 after:-z-[1] after:rounded after:shadow-[0_0_0.35rem_0.06rem_rgba(255,227,107,0.35)]"
+                          : ""
+                      }
+                    >
+                      {nf1.format(val)}
                     </span>
                   </td>
                 );
@@ -285,11 +337,23 @@ function LayerTable({ layer }: { layer: "Core" | "Empathy" | "Trust" | "Clarity"
   );
 }
 
-function LayerRadar({ layer }: { layer: "Core" | "Empathy" | "Trust" | "Clarity" }) {
+function LayerRadar(
+  { layer, t }: {
+    layer: "Core" | "Empathy" | "Trust" | "Clarity";
+    t: (key: string) => string;
+  }
+) {
   const data = useMemo(() => {
     const rows = CRITERIA.filter((c) => c.layer === layer);
-    return rows.map((r) => ({ subject: r.label, mp: r.scores["m-pathy"], gpt: r.scores["GPT-5"], claude: r.scores["Claude"], gemini: r.scores["Gemini"] }));
-  }, [layer]);
+    return rows.map((r) => ({
+      subject: t(`criteria.${r.id}.label`) || r.label,
+      mp: r.scores["m-pathy"],
+      gpt: r.scores["GPT-5"],
+      claude: r.scores["Claude"],
+      gemini: r.scores["Gemini"],
+    }));
+  }, [layer, t]);
+
   return (
     <div className="h-[360px]">
       <ResponsiveContainer width="100%" height="100%">
@@ -297,8 +361,8 @@ function LayerRadar({ layer }: { layer: "Core" | "Empathy" | "Trust" | "Clarity"
           <PolarGrid stroke="rgba(255,255,255,0.25)" />
           <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10, fill: PALETTE.text }} />
           <PolarRadiusAxis domain={[0, 10]} tick={{ fill: PALETTE.text }} tickCount={6} />
-          <Radar name="m‑pathy" dataKey="mp" fillOpacity={0.25} />
-          <Radar name="GPT‑5" dataKey="gpt" fillOpacity={0.15} />
+          <Radar name="m-pathy" dataKey="mp" fillOpacity={0.25} />
+          <Radar name="GPT-5" dataKey="gpt" fillOpacity={0.15} />
           <Radar name="Claude" dataKey="claude" fillOpacity={0.15} />
           <Radar name="Gemini" dataKey="gemini" fillOpacity={0.15} />
         </RadarChart>
@@ -306,6 +370,7 @@ function LayerRadar({ layer }: { layer: "Core" | "Empathy" | "Trust" | "Clarity"
     </div>
   );
 }
+
 
 // ───────────────────────────────────────────────────────────────────────────────
 // PAGE
@@ -315,6 +380,11 @@ export default function MPathyKpiBoard() {
   const { hc, setHc } = useHighContrast();
   const jsonPretty = useMemo(() => JSON.stringify(CRITERIA, null, 2), []);
 
+  // i18n + NumberFormat
+    const { t, locale } = useI18nLocal();
+  const nf1 = useMemo(() => makeNF1(locale), [locale]);
+
+
   return (
   <div
     className={hc ? "hc" : ""}
@@ -323,29 +393,38 @@ export default function MPathyKpiBoard() {
 
       <div className="mx-auto max-w-7xl p-4 sm:p-8">
         <div className="mb-6 flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold tracking-tight">m‑Pathy KPI Board</h1>
-          <p className="text-sm">User Benchmark · CausaTest 100% · Versiegelt (Triketon‑2048)</p>
-        </div>
+          <h1 className="text-3xl font-semibold tracking-tight">{t("kpi.title")}</h1>
+<p className="text-sm">{t("kpi.subtitle")}</p>
+</div>
 
         <div className="mb-4 flex flex-wrap items-center gap-2">
-          <Button variant="secondary" onClick={() => download("m-pathy-kpis.csv", toCsv())} title="Download CSV"><Download className="h-4 w-4 mr-2" /> CSV</Button>
-          <Button
-            variant="secondary"
-            onClick={() => download("m-pathy-kpis.json", jsonPretty, "application/json;charset=utf-8")}
-            title="Download JSON"
-            >
-            <Copy className="h-4 w-4 mr-2" /> JSON
-            </Button>
+          <Button variant="secondary" onClick={() => download(t("export.filename_csv"), toCsv())} title={t("export.download_csv")}>
+  <Download className="h-4 w-4 mr-2" /> {t("export.csv")}
+</Button>
+<Button
+  variant="secondary"
+  onClick={() => download(t("export.filename_json"), jsonPretty, "application/json;charset=utf-8")}
+  title={t("export.download_json")}
+>
+  <Copy className="h-4 w-4 mr-2" /> {t("export.json")}
+</Button>
 
-          <Button variant="secondary" onClick={() => window.print()} title="Print / PDF"><Printer className="h-4 w-4 mr-2" /> Print</Button>
-          <Button variant="secondary" onClick={() => setHc(v => !v)} title="High Contrast (H)"><Highlighter className="h-4 w-4 mr-2" /> High Contrast</Button>
-        </div>
+<Button variant="secondary" onClick={() => window.print()} title={t("export.print_pdf")}>
+  <Printer className="h-4 w-4 mr-2" /> {t("export.print")}
+</Button>
+<Button variant="secondary" onClick={() => setHc(v => !v)} title={t("export.hc_title")}>
+  <Highlighter className="h-4 w-4 mr-2" /> {t("export.hc")}
+</Button>
+ </div>
 
         <Tabs value={tab} onValueChange={(v: TabKey) => setTab(v)} className="w-full">
           <TabsList className="grid w-full grid-cols-5 rounded-2xl p-1" >
-            {["Overview", "Core", "Empathy", "Trust", "Clarity"].map((k) => (
-              <TabsTrigger key={k as TabKey} value={k as TabKey} className="rounded-xl px-3 py-2">{k}</TabsTrigger>
-            ))}
+            {(["Overview","Core","Empathy","Trust","Clarity"] as const).map((k) => (
+  <TabsTrigger key={k} value={k} className="rounded-xl px-3 py-2">
+    {t(`tabs.${k.toLowerCase()}`)}
+  </TabsTrigger>
+))}
+
           </TabsList>
 
           {/* Overview */}
@@ -358,27 +437,27 @@ export default function MPathyKpiBoard() {
     borderColor: PALETTE.border,
   }}
 >
-                <CardHeader><CardTitle>Gesamtvergleich</CardTitle></CardHeader>
+<CardHeader><CardTitle>{t("overview.title")}</CardTitle></CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto rounded-2xl border" style={{ borderColor: PALETTE.border }}>
                     <table className="w-full text-sm" style={{ color: PALETTE.text }}>
                       <thead style={{ background: PALETTE.header }}>
                         <tr>
-                          <th className="px-4 py-3 text-left">KPI</th>
+<th className="px-4 py-3 text-left">{t("table.kpi")}</th>
                           {SYSTEMS.map((s) => (<th key={s} className="px-4 py-3 text-right">{s}</th>))}
                         </tr>
                       </thead>
                       <tbody>
                         <tr className="border-t" style={{ borderColor: PALETTE.border }}>
-                          <td className="px-4 py-3">Gesamtscore (0–500)</td>
+<td className="px-4 py-3">{t("table.total")}</td>
                           {SYSTEMS.map((s) => (<td key={s} className="px-4 py-3 text-right font-semibold">{OVERALL.total[s as SystemKey]}</td>))}
                         </tr>
                         <tr className="border-t" style={{ borderColor: PALETTE.border }}>
-                          <td className="px-4 py-3">Ø‑Wert (0–10)</td>
-                          {SYSTEMS.map((s) => (<td key={s} className="px-4 py-3 text-right font-semibold">{OVERALL.avg[s as SystemKey].toFixed(2)}</td>))}
+<td className="px-4 py-3">{t("table.avg")}</td>
+{SYSTEMS.map((s) => (<td key={s} className="px-4 py-3 text-right font-semibold">{nf1.format(OVERALL.avg[s as SystemKey])}</td>))}
                         </tr>
                         <tr className="border-t" style={{ borderColor: PALETTE.border }}>
-                          <td className="px-4 py-3">CausaTest – Kohärenz (%)</td>
+<td className="px-4 py-3">{t("table.causa")}</td>
                           {SYSTEMS.map((s) => (<td key={s} className="px-4 py-3 text-right font-semibold">{OVERALL.causa[s as SystemKey]}</td>))}
                         </tr>
                       </tbody>
@@ -393,10 +472,10 @@ export default function MPathyKpiBoard() {
     borderColor: PALETTE.border,
   }}
 >
-                <CardHeader><CardTitle>Layer‑Radar (wähle Tab)</CardTitle></CardHeader>
+<CardHeader><CardTitle>{t("overview.radar_card_title")}</CardTitle></CardHeader>
                 <CardContent>
                   <div className="rounded-2xl border p-2" style={{ borderColor: PALETTE.border }}>
-                    <div className="text-sm">Oben einen Layer wählen, um das Radar zu sehen.</div>
+<div className="text-sm">{t("overview.radar_hint")}</div>
                   </div>
                 </CardContent>
               </Card>
@@ -420,7 +499,7 @@ export default function MPathyKpiBoard() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <LayerTable layer={layer} />
+                    <LayerTable layer={layer} nf1={nf1} t={t} />
                   </CardContent>
                 </Card>
 
@@ -431,7 +510,7 @@ export default function MPathyKpiBoard() {
   }}
 >
                   <CardHeader><CardTitle>{layer} · Radar</CardTitle></CardHeader>
-                  <CardContent><LayerRadar layer={layer} /></CardContent>
+                  <CardContent><LayerRadar layer={layer} t={t} /></CardContent>
                 </Card>
               </div>
             </TabsContent>
