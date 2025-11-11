@@ -48,15 +48,15 @@ export default function SubscriptionPage() {
   // 1) aktive Locale
   const locale = detectLocale();
 
-  // 2) EN als Fallback + Locale darüber mergen → immer vollständige Map (flat)
-  const flatDict = useMemo(() => {
-    const enFlat = flattenI18n(dict.en);
-    const locFlat = flattenI18n(dict[locale]);
-    return { ...enFlat, ...locFlat };
-  }, [locale]);
+  // 2) flache Sprach-Maps bilden
+  const enFlat = useMemo(() => flattenI18n(dict.en), []);
+  const locFlat = useMemo(() => flattenI18n(dict[locale]), [locale]);
 
-  // 3) Provider erhält direkt die flache Map (kein Namespace)
-  const providerDict = useMemo(() => flatDict as any, [flatDict]);
+  // 3) Provider bekommt das korrekte Shape: { en: {...}, [locale]: {...} }
+  const providerDict = useMemo(
+    () => ({ en: enFlat, [locale]: { ...enFlat, ...locFlat } }),
+    [enFlat, locFlat, locale]
+  );
 
   return (
     <LanguageProvider dict={providerDict}>
