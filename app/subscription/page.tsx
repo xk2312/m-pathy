@@ -25,19 +25,20 @@ export default function SubscriptionPage() {
     <LanguageProvider dict={dict}>
       <VoiaBloom />
 
-      <main
+          <main
         id="content"
         role="main"
         className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
       >
-        {/* Eltern steuern Außenabstände.
-            Top-Abstand hart per calc(var(--ry) * 1.5) → 96px bei --ry=64px */}
+        {/* ELTERN: Nur Container steuert Außenabstände.
+           Top-Abstand HART per Inline-Style (calc mit --ry), damit nichts ihn überstimmt. */}
         <div
-          className="mx-auto w-full max-w-[1280px]
+          className="mx-auto max-w-[min(100%,var(--page-max))]
                      px-[clamp(10px,4vw,90px)]
                      pb-[clamp(20px,5vw,90px)]"
-          style={{ paddingTop: "calc(var(--ry) * 1.5)" }}
+          style={{ paddingTop: "calc(var(--ry) * 1.5)" }} // = 96px bei --ry=64px
         >
+
           {/* SECTION: HERO – zentral über page-center */}
           <section className="pt-[72px] pb-[72px]">
             <div className="page-center">
