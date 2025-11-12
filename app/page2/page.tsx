@@ -43,6 +43,7 @@ import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // �
 import { useMobileViewport } from "@/lib/useMobileViewport";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
 import { loadChat, saveChat, clearChat,initChatStorage, makeClearHandler, hardClearChat  } from "@/lib/chatStorage";
+import { useSearchParams } from "next/navigation"; // <<< neu: ?prefill lesen
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
 const persist = {
@@ -799,9 +800,28 @@ useEffect(() => {
 // … weiterer Code …
 
 const [input, setInput] = useState("");
+// ── prefill from URL (?prefill=...)
+const search = useSearchParams();
+useEffect(() => {
+  const raw = search?.get("prefill");
+  if (!raw) return;
+
+  // decodeURIComponent is safe here because link was encoded
+  let text = raw;
+  try { text = decodeURIComponent(raw); } catch {}
+  setInput(text);
+
+  // optional: focus the prompt field on next frame (non-breaking if not found)
+  requestAnimationFrame(() => {
+    document.querySelector<HTMLTextAreaElement>("textarea, [contenteditable='true']")?.focus();
+  });
+}, [search]);
+
 const [loading, setLoading] = useState(false);
 const [stickToBottom, setStickToBottom] = useState(true);
+
 // … weiterer Code …
+
 
 const [mode, setMode] = useState<string>("DEFAULT");
 
