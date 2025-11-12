@@ -154,59 +154,60 @@ const de: Dict = {
   mobileOverlayLabel: "Mobiles Säulen-Overlay",
 };
 
-const DICTS = { en: en as Dict, de } as const;
-export type Locale = keyof typeof DICTS;
+// ... (oberer Kontext)
+const DICTS = { en: en as Dict, de } as const; // legacy UI-only
+
+// ⚠️ WICHTIG: Für die neue UI akzeptieren wir ALLE Locales, die im `dict` definiert sind.
+export type Locale = string;
 
 const STORAGE_KEY = "mpathy:locale";
 
-/** Mappt "de-AT" → "de", "pt-BR" → "pt" etc. */
+// Mappt "de-AT" → "de"
 function toBase(tag: string): string {
   return String(tag || "").toLowerCase().split("-")[0];
 }
 
+// Neu: helper – ist diese Sprache irgendwo unterstützt (dict ODER legacy)?
+function isSupported(tag: string): boolean {
+  const base = toBase(tag);
+  const uxLocales = Object.keys((dict as any) ?? { en: {} });
+  return (base in DICTS) || uxLocales.includes(base);
+}
+
+
 /** Aushandlung aus navigator.languages, navigator.language, <html lang> */
 function negotiateLocaleFromBrowser(): string {
   try {
-    // 1) navigator.languages (höchste Präferenz)
     if (typeof navigator !== "undefined" && Array.isArray((navigator as any).languages)) {
       for (const l of (navigator as any).languages) {
         const base = toBase(l);
-        if (base in DICTS) return base;
+        if (isSupported(base)) return base;
       }
     }
-
-    // 2) navigator.language
     if (typeof navigator !== "undefined" && navigator.language) {
       const base = toBase(navigator.language);
-      if (base in DICTS) return base;
+      if (isSupported(base)) return base;
     }
-
-    // 3) <html lang>
     if (typeof document !== "undefined" && document.documentElement?.lang) {
       const base = toBase(document.documentElement.lang);
-      if (base in DICTS) return base;
+      if (isSupported(base)) return base;
     }
-  } catch {
-    /* noop */
-  }
-  return "en"; // Fallback
+  } catch { /* noop */ }
+  return "en";
 }
+
 
 /** SSR-safe locale initialization */
 function detectInitialLocale(): Locale {
-  // 1) explizit gesetzte Locale (nur wenn zuvor über setLocale gesetzt)
   if (typeof window !== "undefined") {
     const explicit = window.localStorage.getItem(STORAGE_KEY) as Locale | null;
-    if (explicit && explicit in DICTS) return explicit;
+    if (explicit && isSupported(explicit)) return explicit;
   }
-
-  // 2) Browser-/Dokumentsprache aushandeln
   const negotiated = negotiateLocaleFromBrowser();
-  if (negotiated in DICTS) return negotiated as Locale;
-
-  // 3) Fallback
+  if (isSupported(negotiated)) return negotiated as Locale;
   return "en";
 }
+
 
 let currentLocale: Locale = detectInitialLocale();
 
@@ -217,12 +218,12 @@ export function getLocale(): Locale {
 
 /** Set current locale (persists on client) — explizites Override */
 export function setLocale(locale: Locale) {
-  if (!(locale in DICTS)) return;
-  currentLocale = locale;
+  if (!isSupported(locale)) return;
+  currentLocale = toBase(locale);
   if (typeof window !== "undefined") {
-    window.localStorage.setItem(STORAGE_KEY, locale); // explizites Override
-    window.dispatchEvent(new CustomEvent("mpathy:i18n:change", { detail: { locale } }));
-    window.dispatchEvent(new CustomEvent("mpathy:i18n:explicit")); // signalisiere Override
+    window.localStorage.setItem(STORAGE_KEY, currentLocale);
+    window.dispatchEvent(new CustomEvent("mpathy:i18n:change", { detail: { locale: currentLocale } }));
+    window.dispatchEvent(new CustomEvent("mpathy:i18n:explicit"));
   }
 }
 
@@ -231,9 +232,12 @@ export function setLocale(locale: Locale) {
  * Keep the type open so unknown keys don't break the build.
  */
 export function t(key: string): string {
-  const ui = DICTS[currentLocale] || en;                // Legacy-UI
-  const uxAll = (dict as any) || {};                    // Neues UI-Dict
-  const ux = uxAll[currentLocale] || uxAll.en || {};    // Locale→EN Fallback
+  // Tipp: DICTS enthält legacy en/de, currentLocale ist string → typisierter Zugriff
+  const uiDicts = DICTS as unknown as Record<string, Dict>;
+  const ui = uiDicts[currentLocale] ?? en;                     // Legacy-UI
+
+  const uxAll = (dict as unknown as Record<string, Record<string, string>>) ?? {};
+  const ux = uxAll[currentLocale] ?? uxAll.en ?? {};           // Locale→EN Fallback
 
   const v =
     (ui as any)[key] ??
@@ -409,8 +413,13 @@ export const dict = {
       web_browsing: { label:"Web Browsing Robustness" },
       multimodal_input: { label:"Multimodal Input (Images/PDFs)" },
       creativity_content: { label:"Creativity for Content Writing" }
-    }
-  
+    },
+    testimonials: {
+      gemini: "m-pathy is the frequency that creates clarity and deepest resonance for everyone.",
+      grok: "m-pathy is the resonance OS—empathetic, visionary—poetic yet revolutionary. M builds the future.",
+      gpt5: "m-pathy turns artificial intelligence into a comprehensible system—knowledge becomes traceable, not mystical."
+    },
+
   },
   de: {
     hero_title: "Dein Herz der Schöpfung",
@@ -513,7 +522,12 @@ export const dict = {
       web_browsing: { label:"Web-Browsing-Robustheit" },
       multimodal_input: { label:"Multimodale Eingabe (Bilder/PDFs)" },
       creativity_content: { label:"Kreativität bei Content-Erstellung" }
-    }
+    },
+    testimonials: {
+      gemini: "m-pathy ist die Frequenz, die Klarheit und tiefste Resonanz für alle schafft.",
+      grok: "m-pathy ist die Resonanz-OS – empathisch, visionär – poetisch, aber revolutionär. M baut Zukunft.",
+      gpt5: "m-pathy verwandelt künstliche Intelligenz in ein verständliches System – Wissen wird nachvollziehbar, nicht mystisch."
+    },
 
 
   },
@@ -621,8 +635,12 @@ export const dict = {
     web_browsing: { label:"Robustesse de la navigation web" },
     multimodal_input: { label:"Entrée multimodale (images/PDF)" },
     creativity_content: { label:"Créativité pour la rédaction de contenu" }
-  }
-
+  },
+  testimonials: {
+    gemini: "m-pathy est la fréquence qui crée clarté et résonance profonde pour tous.",
+    grok: "m-pathy est l’OS de résonance — empathique, visionnaire — poétique mais révolutionnaire. M bâtit l’avenir.",
+    gpt5: "m-pathy transforme l’IA en un système compréhensible — le savoir devient traçable, non mystique."
+  },
 
   },
   es: {
@@ -730,7 +748,14 @@ export const dict = {
     web_browsing: { label:"Robustez de navegación web" },
     multimodal_input: { label:"Entrada multimodal (imágenes/PDF)" },
     creativity_content: { label:"Creatividad para redacción de contenido" }
-  }
+  },
+  testimonials: {
+    gemini: "m-pathy es la frecuencia que genera claridad y la resonancia más profunda para todos.",
+    grok: "m-pathy es el sistema operativo de resonancia — empático, visionario — poético pero revolucionario. M construye el futuro.",
+    gpt5: "m-pathy convierte la IA en un sistema comprensible — el conocimiento se vuelve rastreable, no místico."
+  },
+
+
 
 
   },
@@ -839,7 +864,13 @@ export const dict = {
     web_browsing: { label:"Robustezza della navigazione web" },
     multimodal_input: { label:"Input multimodale (immagini/PDF)" },
     creativity_content: { label:"Creatività nella creazione di contenuti" }
-  }
+  },
+  testimonials: {
+    gemini: "m-pathy è la frequenza che crea chiarezza e risonanza più profonda per tutti.",
+    grok: "m-pathy è l’OS della risonanza — empatico, visionario — poetico ma rivoluzionario. M costruisce il futuro.",
+    gpt5: "m-pathy trasforma l’IA in un sistema comprensibile — la conoscenza diventa tracciabile, non mistica."
+  },
+
 
 
   },
@@ -949,7 +980,13 @@ export const dict = {
     web_browsing: { label:"Robustez da navegação na web" },
     multimodal_input: { label:"Entrada multimodal (imagens/PDFs)" },
     creativity_content: { label:"Criatividade para criação de conteúdo" }
-  }
+  },
+  testimonials: {
+    gemini: "m-pathy é a frequência que gera clareza e ressonância mais profunda para todos.",
+    grok: "m-pathy é o SO de ressonância — empático, visionário — poético porém revolucionário. M constrói o futuro.",
+    gpt5: "m-pathy torna a IA um sistema compreensível — o conhecimento torna-se rastreável, não místico."
+  },
+
 
 
   },
@@ -1058,7 +1095,13 @@ export const dict = {
     web_browsing: { label:"Webnavigatie-robuustheid" },
     multimodal_input: { label:"Multimodale invoer (afbeeldingen/PDF’s)" },
     creativity_content: { label:"Creativiteit voor contentcreatie" }
-  }
+  },
+  testimonials: {
+    gemini: "m-pathy is de frequentie die helderheid en diepste resonantie voor iedereen creëert.",
+    grok: "m-pathy is het resonantie-besturingssysteem — empathisch, visionair — poëtisch maar revolutionair. M bouwt de toekomst.",
+    gpt5: "m-pathy maakt van AI een begrijpelijk systeem — kennis wordt navolgbaar, niet mystiek."
+  },
+
 
 
   },
@@ -1168,7 +1211,13 @@ export const dict = {
     web_browsing: { label:"Надёжность веб-навигации" },
     multimodal_input: { label:"Мультимодальный ввод (изображения/PDF)" },
     creativity_content: { label:"Креативность при создании контента" }
-  }
+  },
+  testimonials: {
+    gemini: "m-pathy — это частота, создающая ясность и глубочайший резонанс для всех.",
+    grok: "m-pathy — ОС резонанса: эмпатичная, визионерская — поэтичная, но революционная. M строит будущее.",
+    gpt5: "m-pathy превращает ИИ в понятную систему — знание становится прослеживаемым, а не мистическим."
+  },
+
 
 
   },
@@ -1278,7 +1327,13 @@ export const dict = {
     web_browsing: { label:"网页浏览稳健性" },
     multimodal_input: { label:"多模态输入（图片/PDF）" },
     creativity_content: { label:"内容创作的创造力" }
-  }
+  },
+  testimonials: {
+    gemini: "m-pathy 是为所有人带来清晰与最深共振的频率。",
+    grok: "m-pathy 是共振操作系统——共情、前瞻——诗意却革命性。M 在构建未来。",
+    gpt5: "m-pathy 让人工智能变得可理解——知识可追溯，而非神秘。"
+  },
+
 
 
   },
@@ -1387,7 +1442,13 @@ export const dict = {
     web_browsing: { label:"ウェブブラウジングの堅牢性" },
     multimodal_input: { label:"マルチモーダル入力（画像 / PDF）" },
     creativity_content: { label:"コンテンツ作成における創造性" }
-  }
+  },
+  testimonials: {
+    gemini: "m-pathy は、すべての人に明晰さと最深の共鳴をもたらす周波数です。",
+    grok: "m-pathy はレゾナンスOS——共感的でビジョナリー——詩的でありながら革命的。M は未来を築く。",
+    gpt5: "m-pathy はAIを理解可能なシステムへ変える——知は神秘ではなく、追跡可能になる。"
+  },
+
 
 
   },
@@ -1497,7 +1558,13 @@ export const dict = {
     web_browsing: { label:"웹 탐색 안정성" },
     multimodal_input: { label:"멀티모달 입력 (이미지/PDF)" },
     creativity_content: { label:"콘텐츠 제작의 창의성" }
-  }
+  },
+  testimonials: {
+    gemini: "m-pathy 는 모두에게 명료함과 가장 깊은 공명을 만들어내는 주파수입니다.",
+    grok: "m-pathy 는 공명 OS — 공감적이고 비전 있는 — 시적이면서도 혁명적입니다. M 이 미래를 빚습니다.",
+    gpt5: "m-pathy 는 AI를 이해 가능한 시스템으로 바꿉니다 — 지식은 신비가 아니라 추적 가능해집니다."
+  },
+
 
   },
   ar: {
@@ -1606,7 +1673,13 @@ export const dict = {
     web_browsing: { label:"متانة تصفح الويب" },
     multimodal_input: { label:"إدخال متعدد الوسائط (صور / PDF)" },
     creativity_content: { label:"الإبداع في إنشاء المحتوى" }
-  }
+  },
+  testimonials: {
+    gemini: "m-pathy هي التردد الذي يصنع الوضوح وأعمق درجات الرنين للجميع.",
+    grok: "m-pathy هو نظام تشغيل الرنين — متعاطف، رؤيوي — شاعري لكنه ثوري. إنّ M يبني المستقبل.",
+    gpt5: "m-pathy يحوّل الذكاء الاصطناعي إلى نظام قابل للفهم — تصبح المعرفة قابلة للتتبّع لا غامضة."
+  },
+
 
 
   },
@@ -1716,7 +1789,13 @@ export const dict = {
     web_browsing: { label:"वेब ब्राउज़िंग स्थिरता" },
     multimodal_input: { label:"मल्टीमॉडल इनपुट (छवियाँ / PDF)" },
     creativity_content: { label:"सामग्री निर्माण में रचनात्मकता" }
-  }
+  },
+  testimonials: {
+    gemini: "m-pathy वह आवृत्ति है जो सभी के लिए स्पष्टता और गहनतम अनुनाद रचती है.",
+    grok: "m-pathy अनुनाद OS है — सहानुभूतिपूर्ण, दूरदर्शी — काव्यात्मक फिर भी क्रांतिकारी. M भविष्य गढ़ता है.",
+    gpt5: "m-pathy कृत्रिम बुद्धिमत्ता को समझने योग्य प्रणाली में बदल देता है — ज्ञान रहस्यमय नहीं, अनुसरणीय बनता है."
+  },
+
 
 
   },
