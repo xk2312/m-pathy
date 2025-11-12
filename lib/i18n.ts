@@ -167,11 +167,13 @@ function toBase(tag: string): string {
   return String(tag || "").toLowerCase().split("-")[0];
 }
 
+// Locale-Cache (wird nach dict-Init befüllt; vermeidet TDZ)
+let UX_LOCALES: string[] = ["en"];
+
 // Neu: helper – ist diese Sprache irgendwo unterstützt (dict ODER legacy)?
 function isSupported(tag: string): boolean {
   const base = toBase(tag);
-  const uxLocales = Object.keys((dict as any) ?? { en: {} });
-  return (base in DICTS) || uxLocales.includes(base);
+  return (base in DICTS) || UX_LOCALES.includes(base);
 }
 
 
@@ -2635,3 +2637,4 @@ export const i18n: Record<string, CouncilLocale> = {
   },
   
 };
+UX_LOCALES = Object.keys(dict);
