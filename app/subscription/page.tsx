@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import VoiaBloom from "@/app/components/VoiaBloom";
 import Hero from "@/app/components/subscription/Hero";
 import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
+import Testimonial from "@/app/components/subscription/testimonial";
 
 // KPI Board (Client-only; Recharts braucht Browser)
 const MPathyKpiBoard = dynamic(
@@ -39,6 +40,18 @@ const flattenI18n = (obj: any, prefix = ""): Record<string, string> => {
   return out;
 };
 
+          {/* Buffer #2 – unter dem KPI-Board (30→130 px) */}
+          <div className="h-[clamp(30px,10vw,130px)]" aria-hidden="true" />
+
+          {/* ──────────────────────────────────────────────────────────
+              Testimonial Section – EamesVision · Human Clarity
+              Sanftes Fade, viel Raum, i18n-verkabelt
+              ────────────────────────────────────────────────────────── */}
+          <section className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]">
+            <div className="page-center" style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}>
+              <Testimonial />
+            </div>
+          </section>
 export default function SubscriptionPage() {
   useEffect(() => {
     document.documentElement.classList.add("enable-scroll");
@@ -104,7 +117,7 @@ export default function SubscriptionPage() {
               <div
                 id="testimonial-slot"
                 data-slot="testimonials"
-                aria-label="Testimonials slot"
+                aria-label="estimonials slot"
                 className="min-h-[120px]"
               />
             </div>
