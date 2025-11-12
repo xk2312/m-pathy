@@ -188,41 +188,49 @@ const IonBeamButton: React.FC<{ label: string; onClick: () => void }> = ({ label
 
       {/* Kategorie-Pills */}
       <div className="mx-auto max-w-[min(100%,1120px)]">
-        <div className="flex flex-wrap items-center justify-center gap-3.5 md:gap-5 px-2 md:px-0">
-          {CATS.map(({ id, label }) => {
-            const activeNow = id === active;
-            return (
-              <button
-                key={id}
-                onClick={() => setActive(id as CatId)}
-                aria-pressed={activeNow}
-                className={[
-                  "group relative flex items-center gap-3 md:gap-3.5 rounded-[22px]",
-                  "bg-white/6 hover:bg-white/10 transition-colors backdrop-blur-md",
-                  "ring-1 ring-white/12 shadow-[0_10px_36px_rgba(0,0,0,0.38)]",
-                  activeNow ? "shadow-[0_0_0_2px_rgba(0,255,255,0.20)]" : "",
-                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40",
-                ].join(" ")}
-                style={{ padding: "5px 7px" }}
-              >
-                <span className={(activeNow ? "text-cyan-300" : "text-white/80") + " [&>svg]:w-7 [&>svg]:h-7 md:[&>svg]:w-8 md:[&>svg]:h-8"}>
-                  {ICONS[id as CatId]}
-                </span>
-                <span className="text-[15px] md:text-[16px] font-medium tracking-[0.1px]">
-                  {label}
-                </span>
-                {activeNow && (
-                  <motion.span
-                    layoutId="pp-glow"
-                    className="pointer-events-none absolute inset-0 rounded-[22px]"
-                    style={{ boxShadow: "0 0 46px 12px rgba(0,255,255,0.18)" }}
-                  />
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+  <div className="flex flex-wrap items-center justify-center gap-3.5 md:gap-5 px-2 md:px-0">
+    {CATS.map(({ id, label }) => {
+      const activeNow = id === active;
+      return (
+        <button
+          key={id}
+          type="button"
+          onClick={() => setActive(id as typeof active)}
+          aria-pressed={activeNow}
+          className={[
+            "group relative flex items-center gap-3 md:gap-3.5 rounded-[22px] cursor-pointer",
+            "bg-white/6 hover:bg-white/10 transition-colors backdrop-blur-md",
+            "ring-1 ring-white/12 shadow-[0_10px_36px_rgba(0,0,0,0.38)]",
+            activeNow ? "shadow-[0_0_0_2px_rgba(0,255,255,0.20)]" : "",
+            "focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40",
+          ].join(" ")}
+          style={{ padding: "5px 7px" }}
+        >
+          <span
+            className={
+              (activeNow ? "text-cyan-300" : "text-white/80") +
+              " [&>svg]:w-7 [&>svg]:h-7 md:[&>svg]:w-8 md:[&>svg]:h-8"
+            }
+          >
+            {ICONS[id as keyof typeof ICONS]}
+          </span>
+          <span className="text-[15px] md:text-[16px] font-medium tracking-[0.1px]">
+            {label}
+          </span>
+
+          {activeNow && (
+            <motion.span
+              layoutId="pp-glow"
+              className="pointer-events-none absolute inset-0 rounded-[22px]"
+              style={{ boxShadow: "0 0 46px 12px rgba(0,255,255,0.18)" }}
+            />
+          )}
+        </button>
+      );
+    })}
+  </div>
+</div>
+
 
       {/* Buffer: Tabs → Liste */}
       <div aria-hidden className="w-full" style={{ height: "var(--pp-tabs-to-list)" }} />
