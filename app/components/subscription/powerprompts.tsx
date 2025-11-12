@@ -130,42 +130,46 @@ export default function PowerPrompts() {
   };
 
   /** Ion Beam – Button (Skin-Komponente) */
-  const IonBeamButton: React.FC<{label: string; onClick: () => void}> = ({ label, onClick }) => {
-    return (
-      <motion.button
-        whileHover={{ y: -1, scale: 1.02 }}
-        whileTap={{ scale: 0.985 }}
-        onClick={onClick}
-        className={[
-          "group relative inline-flex items-center justify-center rounded-2xl select-none",
-          "ring-1",
-        ].join(" ")}
+const IonBeamButton: React.FC<{ label: string; onClick: () => void }> = ({ label, onClick }) => {
+  return (
+    <motion.button
+      whileHover={{ y: -1, scale: 1.02 }}
+      whileTap={{ scale: 0.985 }}
+      onClick={onClick}
+      className={[
+        "group relative inline-flex items-center justify-center rounded-2xl select-none",
+        "ring-1 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40",
+      ].join(" ")}
+      style={{
+        padding: "var(--pp-row-pad-y) var(--pp-row-pad-x)",
+        background: "var(--pp-ion-base-bg)",
+        borderColor: "var(--pp-cyan-line)",
+        boxShadow: `0 0 36px var(--pp-cyan-soft)`,
+        transition: "background 120ms ease, box-shadow 180ms ease",
+      }}
+    >
+      {/* Sweep-Licht – läuft bei Hover quer über den Button */}
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 -left-full w-[160%] blur-[var(--pp-ion-sweep-blur)]"
         style={{
-          padding: "var(--pp-row-pad-y) var(--pp-row-pad-x)",
-          background: "var(--pp-ion-base-bg)",
-          borderColor: "var(--pp-cyan-line)",
-          boxShadow: `0 0 36px var(--pp-cyan-soft)`,
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(34,211,238,0.35) 40%, rgba(34,211,238,0.9) 50%, rgba(34,211,238,0.35) 60%, transparent 100%)",
+          opacity: 0.0,
         }}
-      >
-        {/* Sweep-Licht – läuft bei Hover quer über den Button */}
-        <motion.span
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 -left-full w-[160%] blur-[var(--pp-ion-sweep-blur)]"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent 0%, rgba(34,211,238,0.35) 40%, rgba(34,211,238,0.9) 50%, rgba(34,211,238,0.35) 60%, transparent 100%)",
-            opacity: 0.0,
-          }}
-          initial={{ x: "-20%", opacity: 0 }}
-          whileHover={{ x: "20%", opacity: 1 }}
-          transition={{ duration: 0.22 }}
-        />
-        <span className="relative z-10 text-[15px] md:text-[16px] font-semibold tracking-[-0.005em]">
-          {label}
-        </span>
-      </motion.button>
-    );
-  };
+        initial={{ x: "-20%", opacity: 0 }}
+        whileHover={{ x: "20%", opacity: 1 }}
+        transition={{ duration: 0.22 }}
+      />
+
+      {/* Textinhalt */}
+      <span className="relative z-10 text-[15px] md:text-[16px] font-semibold tracking-[-0.005em] text-white">
+        {label}
+      </span>
+    </motion.button>
+  );
+};
+
 
   return (
     <section aria-label="Power Prompts" className="relative py-16 md:py-28">
