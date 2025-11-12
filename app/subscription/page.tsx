@@ -84,7 +84,7 @@ export default function SubscriptionPage() {
 
                    {/* KPI-Tafel – +100 px Abstand zum Council-Orbit */}
           <section className="pt-[clamp(170px,20vw,230px)]">
-            <div className="page-center kpi-scope" style={{ maxWidth: "calc(var(--page-inner-max) * 1.2)" }}>
+            <div className="page-center kpi-scope" style={{ maxWidth: "calc(var(--page-inner-max) * 1.3)" }}>
               <MPathyKpiBoard />
             </div>
           </section>
