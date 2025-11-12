@@ -9,6 +9,7 @@ import VoiaBloom from "@/app/components/VoiaBloom";
 import Hero from "@/app/components/subscription/Hero";
 import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
 import Testimonial from "@/app/components/subscription/testimonial"; // Klein, korrekt
+import PowerPrompts from "@/app/components/subscription/powerprompts"; // neu
 
 // KPI Board (Client-only; Recharts braucht Browser)
 const MPathyKpiBoard = dynamic(
@@ -77,7 +78,10 @@ export default function SubscriptionPage() {
               <Hero />
             </div>
           </section>
+
+          {/* Buffer – unter Hero */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+
           {/* ─────────────── COUNCIL ORBIT ─────────────── */}
           <section className="pt-[72px]">
             <div className="page-center">
@@ -85,7 +89,7 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-          {/* Buffer #1 – zwischen CouncilOrbit und KPI (20→100 px) */}
+          {/* Buffer #1 – zwischen CouncilOrbit und KPI (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
           {/* ─────────────── KPI BOARD ─────────────── */}
@@ -98,7 +102,7 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-          {/* Buffer #2 – unter dem KPI-Board (30→130 px) */}
+          {/* Buffer #2 – unter dem KPI-Board (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
           {/* ─────────────── TESTIMONIAL SECTION ─────────────── */}
@@ -114,7 +118,23 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-          {/* Buffer #3 – unter Testimonial (30→130 px) */}
+          {/* Buffer #3 – unter Testimonial (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+
+          {/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
+          <section
+            className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]"
+            aria-label="PowerPrompts section"
+          >
+            <div
+              className="page-center"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
+            >
+              <PowerPrompts />
+            </div>
+          </section>
+
+          {/* Buffer #4 – unter PowerPrompts (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
         </div>
       </main>
