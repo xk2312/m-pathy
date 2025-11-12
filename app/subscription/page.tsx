@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 import VoiaBloom from "@/app/components/VoiaBloom";
 import Hero from "@/app/components/subscription/Hero";
 import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
-import Testimonial from "@/app/components/subscription/testimonial";
+import Testimonial from "@/app/components/subscription/testimonial"; // ← klein geschrieben, korrekt
 
 // KPI Board (Client-only; Recharts braucht Browser)
 const MPathyKpiBoard = dynamic(
@@ -40,18 +40,6 @@ const flattenI18n = (obj: any, prefix = ""): Record<string, string> => {
   return out;
 };
 
-          {/* Buffer #2 – unter dem KPI-Board (30→130 px) */}
-          <div className="h-[clamp(30px,10vw,130px)]" aria-hidden="true" />
-
-          {/* ──────────────────────────────────────────────────────────
-              Testimonial Section – EamesVision · Human Clarity
-              Sanftes Fade, viel Raum, i18n-verkabelt
-              ────────────────────────────────────────────────────────── */}
-          <section className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]">
-            <div className="page-center" style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}>
-              <Testimonial />
-            </div>
-          </section>
 export default function SubscriptionPage() {
   useEffect(() => {
     document.documentElement.classList.add("enable-scroll");
@@ -83,12 +71,14 @@ export default function SubscriptionPage() {
           className="subscription-root px-[clamp(10px,4vw,90px)] pb-[clamp(20px,5vw,90px)]"
           style={{ paddingTop: "calc(var(--ry) * 1.5)" }}
         >
+          {/* ─────────────── HERO ─────────────── */}
           <section className="pt-[72px] pb-[72px]">
             <div className="page-center">
               <Hero />
             </div>
           </section>
 
+          {/* ─────────────── COUNCIL ORBIT ─────────────── */}
           <section className="pt-[72px]">
             <div className="page-center">
               <CouncilOrbit />
@@ -98,8 +88,12 @@ export default function SubscriptionPage() {
           {/* Buffer #1 – zwischen CouncilOrbit und KPI (20→100 px) */}
           <div className="h-[clamp(20px,8vw,100px)]" aria-hidden="true" />
 
+          {/* ─────────────── KPI BOARD ─────────────── */}
           <section className="pt-[clamp(70px,12vw,130px)]">
-            <div className="page-center kpi-scope" style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}>
+            <div
+              className="page-center kpi-scope"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+            >
               <MPathyKpiBoard />
             </div>
           </section>
@@ -107,19 +101,16 @@ export default function SubscriptionPage() {
           {/* Buffer #2 – unter dem KPI-Board (30→130 px) */}
           <div className="h-[clamp(30px,10vw,130px)]" aria-hidden="true" />
 
-          {/* ──────────────────────────────────────────────────────────
-              Testimonial-Slot – vorbereitet für app/components/subscription/testimonial.tsx
-              Atmung: großzügige Top/Bottom-Abstände, kein Druck auf Nachbarn
-              Keine Imports nötig; Slot ist neutral, bis die Komponente existiert.
-              ────────────────────────────────────────────────────────── */}
-          <section className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]">
-            <div className="page-center" style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}>
-              <div
-                id="testimonial-slot"
-                data-slot="testimonials"
-                aria-label="estimonials slot"
-                className="min-h-[120px]"
-              />
+          {/* ─────────────── TESTIMONIAL SECTION ─────────────── */}
+          <section
+            className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]"
+            aria-label="Testimonials section"
+          >
+            <div
+              className="page-center"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
+            >
+              <Testimonial />
             </div>
           </section>
         </div>
