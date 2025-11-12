@@ -90,3 +90,17 @@
    - Für JS:   import 'styles/design.tokens.css'
    - Für CSS Modules:  @import 'styles/design.tokens.css';
    ===================================================================== */
+/* ─────────────────────────────────────────────
+   PowerPrompts – Spacing & Geometry Tokens
+   Quelle der Wahrheit für Abstände/Padding
+   ───────────────────────────────────────────── */
+:root {
+  /* Zeilen-Innenabstand (oben/unten, links/rechts) */
+  --pp-row-pad-y: 13px;
+  --pp-row-pad-x: 20px;
+
+  /* Puffer zwischen Elementen (echte Buffer-DIVs) */
+  --pp-sub-to-tabs: 130px; /* Subheadline → Kategorie-Buttons */
+  --pp-tabs-to-list: 30px; /* Kategorie-Buttons → Erste Zeile */
+  --pp-row-buffer: 30px;   /* Unter JEDER Zeile */
+}

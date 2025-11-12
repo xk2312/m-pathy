@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { motion } from "framer-motion";
 
-// Zielpfad für Page 2 (per ENV überschreibbar)
+/** Zielpfad für Page 2 (per ENV überschreibbar) */
 const PAGE2_PATH = process.env.NEXT_PUBLIC_PAGE2_PATH ?? "/page2";
 
 type CatId = "parents" | "students" | "couples" | "doctors" | "marketing" | "universal";
@@ -49,7 +49,7 @@ const ICONS: Record<CatId, JSX.Element> = {
   ),
 };
 
-// Englische Baselines (Fallbacks, falls i18n-Keys fehlen)
+/** Englische Baselines (Fallbacks, falls i18n-Keys fehlen) */
 const BASE = {
   title: "Power Prompts",
   hint: "Pick a category and start with a magical question.",
@@ -81,7 +81,6 @@ export default function PowerPrompts() {
   const router = useRouter();
   const { t } = useLang();
 
-  // i18n: sicherer Getter mit Fallback
   const safeT = (key: string): string => {
     const v = t(key);
     return v && v !== key ? v : (BASE as any)[key.split(".").slice(-1)[0]] ?? key;
@@ -112,7 +111,7 @@ export default function PowerPrompts() {
       { id: "universal", label: GROUP_LABEL("universal") },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [t] // re-eval bei Locale-Wechsel
+    [t]
   );
 
   const QUESTIONS: Record<CatId, string[]> = useMemo(
@@ -136,44 +135,23 @@ export default function PowerPrompts() {
   };
 
   return (
-    <section
-      aria-label="Power Prompts"
-      className="relative py-16 md:py-28"
-      style={
-        {
-          // Buffer-Parameter
-          // Subheadline → Buttons
-          "--pp-gap-top": "130px",
-          // Buttons → erste Promptzeile
-          "--pp-gap-bottom": "30px",
-        } as React.CSSProperties
-      }
-    >
-      {/* Title + hint */}
-      <div className="text-center mb-[var(--pp-gap-top)]">
+    <section aria-label="Power Prompts" className="relative py-16 md:py-28">
+      {/* Headline + Subheadline */}
+      <div className="text-center">
         <h2 className="text-[clamp(34px,6vw,72px)] leading-[1.05] font-semibold text-white tracking-tight">
           {title}
         </h2>
-        <p
-          className="mt-5 md:mt-6 mx-auto text-center max-w-3xl
-                     text-[clamp(15px,2vw,18px)] leading-relaxed text-white/80
-                     px-4"
-        >
+        <p className="mt-5 md:mt-6 mx-auto text-center max-w-3xl text-[clamp(15px,2vw,18px)] leading-relaxed text-white/80 px-4">
           {hint}
         </p>
-            </div>
+      </div>
 
-      {/* Buffer between subheadline and pills */}
-      <div className="w-full h-[130px]" aria-hidden="true" />
+      {/* Buffer: Subheadline → Tabs */}
+      <div aria-hidden className="w-full" style={{ height: "var(--pp-sub-to-tabs)" }} />
 
-      {/* Category pills */}
+      {/* Kategorie-Pills */}
       <div className="mx-auto max-w-[min(100%,1120px)]">
-        <div
-          className="flex flex-wrap items-center justify-center gap-3.5 md:gap-5
-                     px-2 md:px-0"
-        >
-
-
+        <div className="flex flex-wrap items-center justify-center gap-3.5 md:gap-5 px-2 md:px-0">
           {CATS.map(({ id, label }) => {
             const activeNow = id === active;
             return (
@@ -182,25 +160,13 @@ export default function PowerPrompts() {
                 onClick={() => setActive(id)}
                 aria-pressed={activeNow}
                 className={[
-                  // Größe + Haptik (Padding via inline style, um 5×7 exakt zu garantieren)
                   "group relative flex items-center gap-3 md:gap-3.5 rounded-[22px]",
-                  // Materialität
                   "bg-white/6 hover:bg-white/10 transition-colors backdrop-blur-md",
-                  // Kontur + Tiefe
                   "ring-1 ring-white/12 shadow-[0_10px_36px_rgba(0,0,0,0.38)]",
-                  // Aktiver Glow-Ring
                   activeNow ? "shadow-[0_0_0_2px_rgba(0,255,255,0.20)]" : "",
-                  // Fokus-Sichtbarkeit
                   "focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40",
                 ].join(" ")}
-                style={
-                  {
-                    // Präzises Innenpadding je Pill
-                    "--pp-pill-px": "7px",
-                    "--pp-pill-py": "5px",
-                    padding: "var(--pp-pill-py) var(--pp-pill-px)",
-                  } as React.CSSProperties
-                }
+                style={{ padding: "5px 7px" }}
               >
                 <span
                   className={
@@ -224,20 +190,26 @@ export default function PowerPrompts() {
               </button>
             );
           })}
-               </div>
+        </div>
+      </div>
 
-        {/* Buffer between pills and question list */}
-        <div className="w-full h-[30px]" aria-hidden="true" />
+      {/* Buffer: Tabs → Liste */}
+      <div aria-hidden className="w-full" style={{ height: "var(--pp-tabs-to-list)" }} />
 
-        {/* Questions list */}
-        <div className="mx-auto max-w-[min(100%,1040px)] space-y-5 md:space-y-6">
-
-          {QUESTIONS[active].map((q, i) => (
+      {/* Fragenliste (keine space-y, echte Buffer darunter) */}
+      <div className="mx-auto max-w-[min(100%,1040px)]">
+        {QUESTIONS[active].map((q, i) => (
+          <div key={i}>
             <div
-              key={i}
               className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 md:gap-6
-                         rounded-3xl bg-white/6 ring-1 ring-white/12 px-6 md:px-7 py-5 md:py-6 backdrop-blur-md
+                         rounded-3xl bg-white/6 ring-1 ring-white/12 backdrop-blur-md
                          shadow-[0_14px_42px_rgba(0,0,0,0.38)]"
+              style={{
+                paddingTop: "var(--pp-row-pad-y)",
+                paddingBottom: "var(--pp-row-pad-y)",
+                paddingLeft: "var(--pp-row-pad-x)",
+                paddingRight: "var(--pp-row-pad-x)",
+              }}
             >
               <div className="text-[17px] md:text-[18px] leading-[1.45] text-white/95">
                 {q}
@@ -256,8 +228,13 @@ export default function PowerPrompts() {
                 {t("pp.ask") !== "pp.ask" ? t("pp.ask") : BASE.ask}
               </motion.button>
             </div>
-          ))}
-        </div>
+
+            {/* echter Buffer unter jeder Zeile */}
+            {i < QUESTIONS[active].length - 1 && (
+              <div aria-hidden className="w-full" style={{ height: "var(--pp-row-buffer)" }} />
+            )}
+          </div>
+        ))}
       </div>
     </section>
   );
