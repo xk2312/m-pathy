@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 import VoiaBloom from "@/app/components/VoiaBloom";
 import Hero from "@/app/components/subscription/Hero";
 import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
-import Testimonial from "@/app/components/subscription/testimonial"; // ← klein geschrieben, korrekt
+import Testimonial from "@/app/components/subscription/testimonial"; // Klein, korrekt
 
 // KPI Board (Client-only; Recharts braucht Browser)
 const MPathyKpiBoard = dynamic(
@@ -113,6 +113,9 @@ export default function SubscriptionPage() {
               <Testimonial />
             </div>
           </section>
+
+          {/* Buffer #3 – unter Testimonial (30→130 px) */}
+          <div className="h-[clamp(30px,10vw,130px)]" aria-hidden="true" />
         </div>
       </main>
     </LanguageProvider>
