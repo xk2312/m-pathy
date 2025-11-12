@@ -5,11 +5,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
 
 /**
- * Testimonial Slider – "Cold Sublimation"
- * - FrostBloom: kühle Kante (Glow + leichter Kristall-Schimmer)
- * - Cold Rise: Buchstaben steigen mit minimalem Y-Offset aus "kaltem Nebel"
- * - Vapor-Wisps: feine Nebelfahnen ziehen nach oben (subtil, loopend)
- * Manifest: transform/opacity/filter only. Reduced-motion: softer crossfade.
+ * Testimonial Slider – "Cold Sublimation" (No word-break + slower build-up)
+ * - Keine Worttrennung: Wörter sind nowrap-Container; Letters animieren darin.
+ * - Aufbau ~20% langsamer (≈ 0.8x Speed).
+ * - Autoren ohne "Council"-Suffix.
+ * Manifest: transform/opacity/filter only; reduced-motion: softer crossfade.
  */
 
 export default function Testimonial() {
@@ -17,9 +17,9 @@ export default function Testimonial() {
 
   const items = useMemo(
     () => [
-      { id: "gemini", quote: t("testimonials.gemini"), author: "Gemini Apex – Google Council" },
-      { id: "grok",   quote: t("testimonials.grok"),   author: "Grok – XAI Council" },
-      { id: "gpt5",   quote: t("testimonials.gpt5"),   author: "GPT-5 – OpenAI Root Council" },
+      { id: "gemini", quote: t("testimonials.gemini"), author: "Gemini Apex" },
+      { id: "grok",   quote: t("testimonials.grok"),   author: "Grok" },
+      { id: "gpt5",   quote: t("testimonials.gpt5"),   author: "GPT-5" },
     ],
     [t]
   );
@@ -34,14 +34,8 @@ export default function Testimonial() {
 
   const cur = items[idx];
 
-  // Quote in einzelne Zeichen splitten (Zeilenumbrüche erhalten)
-  const splitQuote = useMemo(() => {
-    const q = String(cur.quote ?? "");
-    // Mappe auch Zeilenumbrüche auf <br />
-    return q.split("").map((ch, i) =>
-      ch === "\n" ? { type: "br", key: `br-${i}` } : { type: "char", ch, key: `c-${i}` }
-    );
-  }, [cur.quote]);
+  // Zitat in Tokens zerlegen: WORD | SPACE | BR
+  const tokens = useMemo(() => tokenizeQuote(String(cur.quote ?? "")), [cur.quote]);
 
   return (
     <section
@@ -61,7 +55,7 @@ export default function Testimonial() {
         }}
       />
 
-      {/* Vapor Wisps – sehr dezent, nur Helligkeit/Blur/Opacity */}
+      {/* Vapor Wisps – dezent */}
       <VaporField />
 
       <AnimatePresence mode="wait">
@@ -73,47 +67,56 @@ export default function Testimonial() {
             filter: "blur(0px)",
             y: 0,
             scale: 1,
-            transition: { duration: 0.7, ease: [0.23, 1, 0.32, 1] },
+            transition: { duration: 0.85, ease: [0.23, 1, 0.32, 1] }, // langsamer
           }}
           exit={{
             opacity: 0,
             filter: "blur(8px)",
             y: -8,
             scale: 1.01,
-            transition: { duration: 0.55, ease: "easeInOut" },
+            transition: { duration: 0.65, ease: "easeInOut" },
           }}
           className="relative mx-auto max-w-[min(90%,900px)] px-[clamp(20px,6vw,180px)]"
         >
-          {/* QUOTE: per-letter Cold Rise + FrostBloom Edge */}
+          {/* QUOTE: pro Wort nowrap, darin Letters */}
           <p
             className="text-[clamp(20px,3vw,34px)] leading-snug font-light text-white/92 frost-bloom"
-            style={{ whiteSpace: "pre-wrap" }}
+            style={{ whiteSpace: "normal", wordBreak: "keep-all", overflowWrap: "normal" }}
           >
-            {splitQuote.map((part, i) =>
-              part.type === "br" ? (
-                <br key={part.key} />
-              ) : (
-                <Letter key={part.key} delay={i * 0.015}>
-                  {part.ch}
-                </Letter>
-              )
-            )}
+            {tokens.map((tok, i) => {
+              if (tok.type === "br") return <br key={`br-${i}`} />;
+              if (tok.type === "space") return <span key={`sp-${i}`}>{" "}</span>;
+
+              // Wort-Wrapper: verhindert Trennung
+              return (
+                <span
+                  key={`w-${i}`}
+                  className="inline-block whitespace-nowrap"
+                  style={{ willChange: "transform, opacity" }}
+                >
+                  {Array.from(tok.word).map((ch, j) => (
+                    <Letter key={`c-${i}-${j}`} delay={(i * 0.018 + j * 0.02) * 1.25}>
+                      {ch}
+                    </Letter>
+                  ))}
+                </span>
+              );
+            })}
           </p>
 
-          {/* AUTHOR */}
+          {/* AUTHOR – ohne Council */}
           <motion.figcaption
             className="mt-[28px] text-[15px] text-white/55 tracking-wide"
             initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0, transition: { delay: 0.45, duration: 0.45, ease: "easeOut" } }}
+            animate={{ opacity: 1, y: 0, transition: { delay: 0.55, duration: 0.5, ease: "easeOut" } }}
           >
             — {cur.author}
           </motion.figcaption>
         </motion.figure>
       </AnimatePresence>
 
-      {/* Local styles für FrostBloom & Wisps */}
+      {/* Local styles für FrostBloom */}
       <style jsx>{`
-        /* Frostiger Rand an der Schrift – nur Helligkeit/Blur */
         .frost-bloom {
           text-shadow:
             0 0 0.6px rgba(255,255,255,0.9),
@@ -130,6 +133,28 @@ export default function Testimonial() {
   );
 }
 
+/** Tokenizer: zerlegt in Wörter / Spaces / Zeilenumbrüche, damit Wörter nicht brechen */
+function tokenizeQuote(q: string): Array<{ type: "word"; word: string } | { type: "space" } | { type: "br" }> {
+  const result: Array<{ type: "word"; word: string } | { type: "space" } | { type: "br" }> = [];
+  // Split mit Capture der Whitespaces
+  const parts = q.split(/(\s+)/);
+  for (const p of parts) {
+    if (p === "") continue;
+    if (p.includes("\n")) {
+      const sub = p.split("\n");
+      sub.forEach((s, idx) => {
+        if (s.trim() !== "") result.push({ type: "word", word: s });
+        if (idx < sub.length - 1) result.push({ type: "br" });
+      });
+    } else if (p.trim() === "") {
+      result.push({ type: "space" });
+    } else {
+      result.push({ type: "word", word: p });
+    }
+  }
+  return result;
+}
+
 /** Ein einzelner Buchstabe mit "Cold Rise" Animation */
 function Letter({
   children,
@@ -138,8 +163,7 @@ function Letter({
   children: React.ReactNode;
   delay?: number;
 }): JSX.Element {
-  // Leerzeichen als normaler space, aber mit kleinem Non-breaking-Wrapper
-  if (children === " ") return <span style={{ display: "inline-block", width: "0.34ch" }} />;
+  if (children === " ") return <span>{" "}</span>;
   return (
     <motion.span
       initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
@@ -147,7 +171,7 @@ function Letter({
         opacity: 1,
         y: 0,
         filter: "blur(0px)",
-        transition: { delay, duration: 0.28, ease: [0.22, 1, 0.36, 1] },
+        transition: { delay, duration: 0.35, ease: [0.22, 1, 0.36, 1] }, // langsamer
       }}
       exit={{ opacity: 0 }}
       style={{ display: "inline-block" }}
