@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { motion } from "framer-motion";
 
+// Zielpfad für Page 2 (falls später anders): per ENV überschreibbar
+const PAGE2_PATH = process.env.NEXT_PUBLIC_PAGE2_PATH ?? "/m-pathy/page2";
+
+
 type CatId = "parents" | "students" | "couples" | "doctors" | "marketing" | "universal";
 
 const ICONS: Record<CatId, JSX.Element> = {
@@ -98,9 +102,9 @@ export default function PowerPrompts() {
 
   const [active, setActive] = useState<CatId>("parents");
 
-  const onAsk = (text: string) => {
+    const onAsk = (text: string) => {
     const q = encodeURIComponent(text);
-    router.push(`/subscription/page2?prefill=${q}`);
+    router.push(`${PAGE2_PATH}?prefill=${q}`); // korrekt: /m-pathy/page2
   };
 
   const title = (() => {
