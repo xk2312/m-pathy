@@ -2942,123 +2942,61 @@ Object.assign(dict.hi ?? {}, {
   pp_title: "स्रोत कमांड",
   pp_hint: "जो तुम खोजते हो उसे लिखो — और जो लिखते हो वही बनो।"
 });
-// ─── Council Visit – Prompt & Label (13 Locales) ─────────────────────────────
+// ─────────────────────────────────────────────
+// Council Visit – FLAT KEYS (MEFL SAFE VERSION)
+// ─────────────────────────────────────────────
 
-// EN (fallback)
-Object.assign(dict.en ?? {}, {
-  council: {
-    visit_label: "Visit {{name}}",
-    prompt_template:
-      "@{{name}} (e.g., m-loop) Please explain the 5 most important points, in a minimal way, how you can help me.",
-  },
-});
+;(dict.en as any)["council.visit_label"] = "Visit {{name}}";
+;(dict.en as any)["council.prompt_template"] =
+  "@{{name}} (e.g., m-loop) Please explain the 5 most important points, in a minimal way, how you can help me.";
 
-// DE
-Object.assign(dict.de ?? {}, {
-  council: {
-    visit_label: "Besuche {{name}}",
-    prompt_template:
-      "@{{name}} (z. B. m-loop) Bitte erkläre mir die wichtigsten 5 Punkte, minimalistisch, wobei du mir helfen kannst.",
-  },
-});
+;(dict.de as any)["council.visit_label"] = "Besuche {{name}}";
+;(dict.de as any)["council.prompt_template"] =
+  "@{{name}} (z. B. m-loop) Bitte erkläre mir die wichtigsten 5 Punkte, minimalistisch, wobei du mir helfen kannst.";
 
-// FR
-Object.assign(dict.fr ?? {}, {
-  council: {
-    visit_label: "Visiter {{name}}",
-    prompt_template:
-      "@{{name}} (p. ex. m-loop) Explique-moi, de façon minimaliste, les 5 points essentiels par lesquels tu peux m’aider.",
-  },
-});
+;(dict.fr as any)["council.visit_label"] = "Visiter {{name}}";
+;(dict.fr as any)["council.prompt_template"] =
+  "@{{name}} (p. ex. m-loop) Explique-moi de façon minimaliste les 5 points essentiels par lesquels tu peux m’aider.";
 
-// ES
-Object.assign(dict.es ?? {}, {
-  council: {
-    visit_label: "Visitar {{name}}",
-    prompt_template:
-      "@{{name}} (p. ej., m-loop) Explícame de forma minimalista los 5 puntos más importantes en los que puedes ayudarme.",
-  },
-});
+;(dict.es as any)["council.visit_label"] = "Visitar {{name}}";
+;(dict.es as any)["council.prompt_template"] =
+  "@{{name}} (p. ej. m-loop) Explícame de forma minimalista los 5 puntos más importantes en los que puedes ayudarme.";
 
-// IT
-Object.assign(dict.it ?? {}, {
-  council: {
-    visit_label: "Visita {{name}}",
-    prompt_template:
-      "@{{name}} (es. m-loop) Spiegami in modo minimalista i 5 punti principali in cui puoi aiutarmi.",
-  },
-});
+;(dict.it as any)["council.visit_label"] = "Visita {{name}}";
+;(dict.it as any)["council.prompt_template"] =
+  "@{{name}} (es. m-loop) Spiegami in modo minimalista i 5 punti principali in cui puoi aiutarmi.";
 
-// PT
-Object.assign(dict.pt ?? {}, {
-  council: {
-    visit_label: "Visitar {{name}}",
-    prompt_template:
-      "@{{name}} (ex.: m-loop) Explique, de forma minimalista, os 5 pontos mais importantes em que você pode me ajudar.",
-  },
-});
+;(dict.pt as any)["council.visit_label"] = "Visitar {{name}}";
+;(dict.pt as any)["council.prompt_template"] =
+  "@{{name}} (ex.: m-loop) Explique de forma minimalista os 5 pontos mais importantes em que você pode me ajudar.";
 
-// NL
-Object.assign(dict.nl ?? {}, {
-  council: {
-    visit_label: "Bezoek {{name}}",
-    prompt_template:
-      "@{{name}} (bijv. m-loop) Leg mij minimalistisch de 5 belangrijkste punten uit waarop je me kunt helpen.",
-  },
-});
+;(dict.nl as any)["council.visit_label"] = "Bezoek {{name}}";
+;(dict.nl as any)["council.prompt_template"] =
+  "@{{name}} (bijv. m-loop) Leg mij minimalistisch de 5 belangrijkste punten uit waarop je me kunt helpen.";
 
-// RU
-Object.assign(dict.ru ?? {}, {
-  council: {
-    visit_label: "Посетить {{name}}",
-    prompt_template:
-      "@{{name}} (например, m-loop) Пожалуйста, в минималистичной форме объясни 5 самых важных пунктов, в которых ты можешь помочь.",
-  },
-});
+;(dict.ru as any)["council.visit_label"] = "Посетить {{name}}";
+;(dict.ru as any)["council.prompt_template"] =
+  "@{{name}} (например m-loop) Пожалуйста, минималистично объясни 5 самых важных пунктов.";
 
-// ZH (Simplified)
-Object.assign(dict.zh ?? {}, {
-  council: {
-    visit_label: "访问 {{name}}",
-    prompt_template:
-      "@{{name}}（例如 m-loop）请以极简方式说明你能帮助我的 5 个最重要方面。",
-  },
-});
+;(dict.zh as any)["council.visit_label"] = "访问 {{name}}";
+;(dict.zh as any)["council.prompt_template"] =
+  "@{{name}}（例如 m-loop）请以极简方式说明你能帮助我的 5 个最重要方面。";
 
-// JA
-Object.assign(dict.ja ?? {}, {
-  council: {
-    visit_label: "{{name}} を訪問",
-    prompt_template:
-      "@{{name}}（例：m-loop）あなたが私をどのように助けられるか、最も重要な5点をミニマルに説明してください。",
-  },
-});
+;(dict.ja as any)["council.visit_label"] = "{{name}} を訪問";
+;(dict.ja as any)["council.prompt_template"] =
+  "@{{name}}（例：m-loop）あなたが私をどのように助けられるか、5つの重要ポイントを簡潔に説明してください。";
 
-// KO
-Object.assign(dict.ko ?? {}, {
-  council: {
-    visit_label: "{{name}} 방문",
-    prompt_template:
-      "@{{name}} (예: m-loop) 도와줄 수 있는 가장 중요한 5가지를 미니멀하게 설명해 주세요.",
-  },
-});
+;(dict.ko as any)["council.visit_label"] = "{{name}} 방문";
+;(dict.ko as any)["council.prompt_template"] =
+  "@{{name}} (예: m-loop) 도와줄 수 있는 가장 중요한 5가지를 미니멀하게 설명해 주세요.";
 
-// AR
-Object.assign(dict.ar ?? {}, {
-  council: {
-    visit_label: "زر {{name}}",
-    prompt_template:
-      "@{{name}} (مثلاً m-loop) رجاءً اشرح لي باختصار أهم 5 نقاط يمكنك مساعدتي فيها.",
-  },
-});
+;(dict.ar as any)["council.visit_label"] = "زر {{name}}";
+;(dict.ar as any)["council.prompt_template"] =
+  "@{{name}} (مثلاً m-loop) رجاءً اشرح لي باختصار أهم 5 نقاط يمكنك مساعدتي فيها.";
 
-// HI
-Object.assign(dict.hi ?? {}, {
-  council: {
-    visit_label: "{{name}} देखें",
-    prompt_template:
-      "@{{name}} (उदा. m-loop) कृपया संक्षिप्त रूप में वे 5 सबसे महत्वपूर्ण बिंदु समझाइए जिनमें आप मेरी मदद कर सकते हैं।",
-  },
-});
+;(dict.hi as any)["council.visit_label"] = "{{name}} देखें";
+;(dict.hi as any)["council.prompt_template"] =
+  "@{{name}} (उदा. m-loop) कृपया संक्षिप्त रूप में वे 5 सबसे महत्वपूर्ण बिंदु समझाइए जिनमें आप मेरी मदद कर सकते हैं.";
+
 
 UX_LOCALES = Object.keys(dict);
