@@ -82,13 +82,17 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-                   {/* KPI-Tafel – +100 px Abstand zum Council-Orbit */}
-          <section className="pt-[clamp(170px,20vw,230px)]">
-            <div className="page-center kpi-scope" style={{ maxWidth: "calc(var(--page-inner-max) * 1.3)" }}>
+          {/* Buffer #1 – zwischen CouncilOrbit und KPI (20→100 px) */}
+          <div className="h-[clamp(20px,8vw,100px)]" aria-hidden="true" />
+
+          <section className="pt-[clamp(70px,12vw,130px)]">
+            <div className="page-center kpi-scope" style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}>
               <MPathyKpiBoard />
             </div>
           </section>
 
+          {/* Buffer #2 – unter dem KPI-Board (30→130 px) */}
+          <div className="h-[clamp(30px,10vw,130px)]" aria-hidden="true" />
 
           {/* ──────────────────────────────────────────────────────────
               Testimonial-Slot – vorbereitet für app/components/subscription/testimonial.tsx
