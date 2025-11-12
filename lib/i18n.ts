@@ -2875,5 +2875,72 @@ Object.assign(dict.hi ?? {}, {
     u3: "मुझे चेरी के आकार का ड्रोन चाहिए। GalaxyBuilder शुरू करो।",
   },
 });
+// === PowerPrompts – Title & Hint (13 locales) ===
+// Konsenstitel: "The Source Command" · Hint: "Type what you seek — and become what you write."
+
+Object.assign(dict.en ?? {}, {
+  pp_title: "The Source Command",
+  pp_hint: "Type what you seek — and become what you write."
+});
+
+Object.assign(dict.de ?? {}, {
+  pp_title: "Der Quell-Befehl",
+  pp_hint: "Tippe, was du suchst — und werde, was du schreibst."
+});
+
+Object.assign(dict.fr ?? {}, {
+  pp_title: "La Commande Source",
+  pp_hint: "Tape ce que tu cherches — et deviens ce que tu écris."
+});
+
+Object.assign(dict.es ?? {}, {
+  pp_title: "El Comando Fuente",
+  pp_hint: "Escribe lo que buscas — y conviértete en lo que escribes."
+});
+
+Object.assign(dict.it ?? {}, {
+  pp_title: "Il Comando Sorgente",
+  pp_hint: "Scrivi ciò che cerchi — e diventa ciò che scrivi."
+});
+
+Object.assign(dict.pt ?? {}, {
+  pp_title: "O Comando Fonte",
+  pp_hint: "Digite o que procura — e torne-se o que escreve."
+});
+
+Object.assign(dict.nl ?? {}, {
+  pp_title: "Het Bron-Commando",
+  pp_hint: "Typ wat je zoekt — en word wat je schrijft."
+});
+
+Object.assign(dict.ru ?? {}, {
+  pp_title: "Команда Истока",
+  pp_hint: "Напиши то, что ищешь — и стань тем, что пишешь."
+});
+
+Object.assign(dict.zh ?? {}, {
+  pp_title: "源指令",
+  pp_hint: "写下你所寻求的——并成为你所书写的。"
+});
+
+Object.assign(dict.ja ?? {}, {
+  pp_title: "ソースコマンド",
+  pp_hint: "求めるものを打ち込み、書くものに自らがなる。"
+});
+
+Object.assign(dict.ko ?? {}, {
+  pp_title: "소스 명령",
+  pp_hint: "찾는 것을 적으세요 — 그리고 당신이 쓰는 것이 되세요."
+});
+
+Object.assign(dict.ar ?? {}, {
+  pp_title: "أمر المصدر",
+  pp_hint: "اكتب ما تبحث عنه — واصبح ما تكتبه."
+});
+
+Object.assign(dict.hi ?? {}, {
+  pp_title: "स्रोत कमांड",
+  pp_hint: "जो तुम खोजते हो उसे लिखो — और जो लिखते हो वही बनो।"
+});
 
 UX_LOCALES = Object.keys(dict);
