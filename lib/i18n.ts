@@ -336,7 +336,7 @@ export const dict = {
     cta_btn_secondary: "See pricing",
     tabs: { overview:"Overview", core:"Core", empathy:"Empathy", trust:"Trust", clarity:"Clarity" },
     kpi: {
-      title:"m-Pathy KPI Board",
+      title:"m-pathy KPI Board",
       subtitle:"User Benchmark · CausaTest 100% · Sealed (Triketon-2048)"
     },
     overview: {
@@ -444,7 +444,7 @@ export const dict = {
     cta_btn_secondary: "Preise ansehen",
     tabs: { overview:"Übersicht", core:"Core", empathy:"Empathie", trust:"Vertrauen", clarity:"Klarheit" },
     kpi: {
-      title:"m-Pathy KPI-Tafel",
+      title:"m-pathy KPI-Tafel",
       subtitle:"User Benchmark · CausaTest 100 % · Versiegelt (Triketon-2048)"
     },
     overview: {
@@ -554,7 +554,7 @@ export const dict = {
     cta_btn_secondary: "Voir les tarifs",
   tabs: { overview:"Vue d’ensemble", core:"Noyau", empathy:"Empathie", trust:"Confiance", clarity:"Clarté" },
   kpi: {
-    title:"Tableau des KPI m-Pathy",
+    title:"Tableau des KPI m-pathy",
     subtitle:"Benchmark utilisateur · CausaTest 100 % · Scellé (Triketon-2048)"
   },
   overview: {
@@ -667,7 +667,7 @@ export const dict = {
 
   tabs: { overview:"Resumen", core:"Core", empathy:"Empatía", trust:"Confianza", clarity:"Claridad" },
   kpi: {
-    title:"Panel de KPIs de m-Pathy",
+    title:"Panel de KPIs de m-pathy",
     subtitle:"User Benchmark · CausaTest 100 % · Sellado (Triketon-2048)"
   },
   overview: {
@@ -783,7 +783,7 @@ export const dict = {
 
   tabs: { overview:"Panoramica", core:"Core", empathy:"Empatia", trust:"Fiducia", clarity:"Chiarezza" },
   kpi: {
-    title:"Pannello KPI di m-Pathy",
+    title:"Pannello KPI di m-pathy",
     subtitle:"User Benchmark · CausaTest 100% · Sigillato (Triketon-2048)"
   },
   overview: {
@@ -899,7 +899,7 @@ export const dict = {
 
   tabs: { overview:"Visão geral", core:"Núcleo", empathy:"Empatia", trust:"Confiança", clarity:"Clareza" },
   kpi: {
-    title:"Painel de KPIs m-Pathy",
+    title:"Painel de KPIs m-pathy",
     subtitle:"User Benchmark · CausaTest 100% · Selado (Triketon-2048)"
   },
   overview: {
@@ -1014,7 +1014,7 @@ export const dict = {
 
   tabs: { overview:"Overzicht", core:"Kern", empathy:"Empathie", trust:"Vertrouwen", clarity:"Helderheid" },
   kpi: {
-    title:"m-Pathy KPI-dashboard",
+    title:"m-pathy KPI-dashboard",
     subtitle:"Gebruikersbenchmark · CausaTest 100% · Verzegd (Triketon-2048)"
   },
   overview: {
@@ -1130,7 +1130,7 @@ export const dict = {
 
   tabs: { overview:"Обзор", core:"Ядро", empathy:"Эмпатия", trust:"Доверие", clarity:"Ясность" },
   kpi: {
-    title:"Панель KPI m-Pathy",
+    title:"Панель KPI m-pathy",
     subtitle:"Пользовательский бенчмарк · CausaTest 100% · Опломбировано (Triketon-2048)"
   },
   overview: {
@@ -1246,7 +1246,7 @@ export const dict = {
 
   tabs: { overview:"概览", core:"核心", empathy:"共情", trust:"信任", clarity:"清晰" },
   kpi: {
-    title:"m-Pathy 指标面板",
+    title:"m-pathy 指标面板",
     subtitle:"用户基准 · CausaTest 100% · 已封印 (Triketon-2048)"
   },
   overview: {
@@ -1361,7 +1361,7 @@ export const dict = {
 
   tabs: { overview:"概要", core:"コア", empathy:"共感", trust:"信頼", clarity:"明瞭さ" },
   kpi: {
-    title:"m-Pathy KPI ボード",
+    title:"m-pathy KPI ボード",
     subtitle:"ユーザーベンチマーク · CausaTest 100% · 封印済み (Triketon-2048)"
   },
   overview: {
@@ -1477,7 +1477,7 @@ export const dict = {
 
   tabs: { overview:"개요", core:"코어", empathy:"공감", trust:"신뢰", clarity:"명료성" },
   kpi: {
-    title:"m-Pathy KPI 보드",
+    title:"m-pathy KPI 보드",
     subtitle:"사용자 벤치마크 · CausaTest 100% · 봉인됨 (Triketon-2048)"
   },
   overview: {
@@ -1592,7 +1592,7 @@ export const dict = {
 
   tabs: { overview:"نظرة عامة", core:"النواة", empathy:"التعاطف", trust:"الثقة", clarity:"الوضوح" },
   kpi: {
-    title:"لوحة مؤشرات m-Pathy",
+    title:"لوحة مؤشرات m-pathy",
     subtitle:"المعيار المستخدم · CausaTest ‎100%‎ · مختوم (Triketon-2048)"
   },
   overview: {
@@ -1708,7 +1708,7 @@ export const dict = {
 
   tabs: { overview:"सारांश", core:"कोर", empathy:"सहानुभूति", trust:"विश्वास", clarity:"स्पष्टता" },
   kpi: {
-    title:"m-Pathy KPI बोर्ड",
+    title:"m-pathy KPI बोर्ड",
     subtitle:"यूज़र बेंचमार्क · CausaTest 100% · सीलबंद (Triketon-2048)"
   },
   overview: {
