@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { motion } from "framer-motion";
 
-// Zielpfad für Page 2 (falls später anders): per ENV überschreibbar
+// Zielpfad für Page 2 (per ENV überschreibbar)
 const PAGE2_PATH = process.env.NEXT_PUBLIC_PAGE2_PATH ?? "/page2";
 
 type CatId = "parents" | "students" | "couples" | "doctors" | "marketing" | "universal";
@@ -13,46 +13,54 @@ type CatId = "parents" | "students" | "couples" | "doctors" | "marketing" | "uni
 const ICONS: Record<CatId, JSX.Element> = {
   parents: (
     <svg viewBox="0 0 24 24" className="w-6 h-6 fill-none stroke-current">
-      <path d="M12 6a3 3 0 1 1 0 6M5 11a2.5 2.5 0 1 1 .01-5.01M19 11a2.5 2.5 0 1 0-.01-5.01" strokeWidth="1.6" strokeLinecap="round"/>
-      <path d="M3 21c0-3 3.5-5 6.5-5s6.5 2 6.5 5" strokeWidth="1.6" strokeLinecap="round"/>
+      <path d="M12 6a3 3 0 1 1 0 6M5 10.5a2.5 2.5 0 1 1 0-5M19 10.5a2.5 2.5 0 1 1 0-5" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M3 21c0-3 3.5-5 6.5-5s6.5 2 6.5 5" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   ),
   students: (
     <svg viewBox="0 0 24 24" className="w-6 h-6 fill-none stroke-current">
-      <path d="M3 7l9-4 9 4-9 4-9-4z" strokeWidth="1.6" strokeLinecap="round"/>
-      <path d="M6 10v4a6 6 0 0 0 12 0v-4" strokeWidth="1.6" strokeLinecap="round"/>
+      <path d="M3 7l9-4 9 4-9 4-9-4z" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M6 10v4a6 6 0 0 0 12 0v-4" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   ),
   couples: (
     <svg viewBox="0 0 24 24" className="w-6 h-6 fill-none stroke-current">
-      <path d="M12 7a3 3 0 1 1 0 6M6.5 8.5a2.5 2.5 0 1 1 0 5M17.5 8.5a2.5 2.5 0 1 0 0 5" strokeWidth="1.6" strokeLinecap="round"/>
-      <path d="M5 20c0-2.6 2.8-4.5 7-4.5S19 17.4 19 20" strokeWidth="1.6" strokeLinecap="round"/>
+      <path d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM16 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" strokeWidth="1.6" />
+      <path d="M4.5 20c0-2.5 3-4.5 7.5-4.5S19.5 17.5 19.5 20" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   ),
   doctors: (
     <svg viewBox="0 0 24 24" className="w-6 h-6 fill-none stroke-current">
-      <rect x="4" y="5" width="16" height="14" rx="2" strokeWidth="1.6"/>
-      <path d="M12 8v8M9 12h6" strokeWidth="1.6" strokeLinecap="round"/>
+      <rect x="4" y="5" width="16" height="14" rx="2" strokeWidth="1.6" />
+      <path d="M12 8v8M9 12h6" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   ),
   marketing: (
     <svg viewBox="0 0 24 24" className="w-6 h-6 fill-none stroke-current">
-      <path d="M4 11V6l12-3v16l-12-3v-5" strokeWidth="1.6" strokeLinecap="round"/>
-      <circle cx="18.5" cy="18.5" r="2" strokeWidth="1.6"/>
+      <path d="M4 11V6l12-3v16l-12-3v-5" strokeWidth="1.6" strokeLinecap="round" />
+      <circle cx="18.5" cy="18.5" r="2" strokeWidth="1.6" />
     </svg>
   ),
   universal: (
     <svg viewBox="0 0 24 24" className="w-6 h-6 fill-none stroke-current">
-      <circle cx="12" cy="12" r="6" strokeWidth="1.6"/>
-      <path d="M12 2v4M12 18v4M2 12h4M18 12h4" strokeWidth="1.6" strokeLinecap="round"/>
+      <circle cx="12" cy="12" r="6" strokeWidth="1.6" />
+      <path d="M12 2v4M12 18v4M2 12h4M18 12h4" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   ),
 };
 
-// English baselines (only used if a key is missing → ensures UI never shows "pp.u1")
+// Englische Baselines (Fallbacks, falls i18n-Keys fehlen)
 const BASE = {
   title: "Power Prompts",
   hint: "Pick a category and start with a magical question.",
+  groups: {
+    parents: "Parents",
+    students: "Students",
+    couples: "Couples",
+    doctors: "Doctors",
+    marketing: "Marketing",
+    universal: "Universal",
+  },
   e1: 'Explain God to my 4-year-old daughter with love, clarity and wonder.',
   e2: 'Explain “false narrative” to my 5-year-old son in a gentle, simple way.',
   s1: "Explain Pythagoras simply.",
@@ -65,45 +73,18 @@ const BASE = {
   m2: "I need a guerrilla tactic to drive heavy sales for my new Chrome plugin.",
   u1: "I need a business concept. Start Capsula13.",
   u2: "I need a NEM. Start ChemoMaster.",
-  u3: "I need a cherry-sized drone. Start GalaxyBuilder."
-} as const;
+  u3: "I need a cherry-sized drone. Start GalaxyBuilder.",
+  ask: "Ask directly",
+};
 
 export default function PowerPrompts() {
-  const { t } = useLang();
   const router = useRouter();
+  const { t } = useLang();
 
-  // Safe translator: if t(key) returns the raw key, use BASE fallback
-  const safeT = (key: keyof typeof BASE) => {
-    const v = t(`pp.${key}`);
-    return v === `pp.${key}` ? BASE[key] : v;
-  };
-
-  const CATS = useMemo(
-    () => ([
-      { id: "parents",   label: t("pp.groups.parents") },
-      { id: "students",  label: t("pp.groups.students") },
-      { id: "couples",   label: t("pp.groups.couples") },
-      { id: "doctors",   label: t("pp.groups.doctors") },
-      { id: "marketing", label: t("pp.groups.marketing") },
-      { id: "universal", label: t("pp.groups.universal") },
-    ] as { id: CatId; label: string }[]),
-    [t]
-  );
-
-  const QUESTIONS: Record<CatId, string[]> = useMemo(() => ({
-    parents:   [safeT("e1"), safeT("e2")],
-    students:  [safeT("s1"), safeT("s2")],
-    couples:   [safeT("p1"), safeT("p2")],
-    doctors:   [safeT("a3"), safeT("a4")],
-    marketing: [safeT("m1"), safeT("m2")],
-    universal: [safeT("u1"), safeT("u2"), safeT("u3")],
-  }), [t]); // refresh on locale change
-
-  const [active, setActive] = useState<CatId>("parents");
-
-  const onAsk = (text: string) => {
-    const q = encodeURIComponent(text);
-    router.push(`${PAGE2_PATH}?prefill=${q}`); // führt jetzt korrekt zu /page2
+  // i18n: sicherer Getter mit Fallback
+  const safeT = (key: string): string => {
+    const v = t(key);
+    return v && v !== key ? v : (BASE as any)[key.split(".").slice(-1)[0]] ?? key;
   };
 
   const title = (() => {
@@ -116,42 +97,86 @@ export default function PowerPrompts() {
     return v === "pp.hint" ? BASE.hint : v;
   })();
 
+  const GROUP_LABEL = (id: CatId) => {
+    const v = t(`pp.groups.${id}`);
+    return v === `pp.groups.${id}` ? BASE.groups[id] : v;
+  };
+
+  const CATS: Array<{ id: CatId; label: string }> = useMemo(
+    () => [
+      { id: "parents", label: GROUP_LABEL("parents") },
+      { id: "students", label: GROUP_LABEL("students") },
+      { id: "couples", label: GROUP_LABEL("couples") },
+      { id: "doctors", label: GROUP_LABEL("doctors") },
+      { id: "marketing", label: GROUP_LABEL("marketing") },
+      { id: "universal", label: GROUP_LABEL("universal") },
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [t] // re-eval bei Locale-Wechsel
+  );
+
+  const QUESTIONS: Record<CatId, string[]> = useMemo(
+    () => ({
+      parents: [safeT("pp.e1") || BASE.e1, safeT("pp.e2") || BASE.e2],
+      students: [safeT("pp.s1") || BASE.s1, safeT("pp.s2") || BASE.s2],
+      couples: [safeT("pp.p1") || BASE.p1, safeT("pp.p2") || BASE.p2],
+      doctors: [safeT("pp.a3") || BASE.a3, safeT("pp.a4") || BASE.a4],
+      marketing: [safeT("pp.m1") || BASE.m1, safeT("pp.m2") || BASE.m2],
+      universal: [safeT("pp.u1") || BASE.u1, safeT("pp.u2") || BASE.u2, safeT("pp.u3") || BASE.u3],
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [t]
+  );
+
+  const [active, setActive] = useState<CatId>("parents");
+
+  const onAsk = (text: string) => {
+    const q = encodeURIComponent(text);
+    router.push(`${PAGE2_PATH}?prefill=${q}`);
+  };
+
   return (
-    <section aria-label="Power Prompts" className="relative">
+    <section aria-label="Power Prompts" className="relative py-16 md:py-28">
       {/* Title + hint */}
-      <div className="text-center mb-6">
-        <h2 className="text-[clamp(22px,4vw,44px)] leading-tight font-semibold text-white">
+      <div className="text-center mb-10 md:mb-14">
+        <h2 className="text-[clamp(34px,6vw,72px)] leading-[1.05] font-semibold text-white tracking-tight">
           {title}
         </h2>
-        <p className="mt-2 text-white/70">{hint}</p>
+        <p className="mt-4 md:mt-5 max-w-2xl mx-auto text-base md:text-lg text-white/75">{hint}</p>
       </div>
 
-      {/* Tabs with icons */}
-      <div className="page-center">
-        <div className="flex flex-wrap items-center justify-center gap-3">
+      {/* Category pills */}
+      <div className="mx-auto max-w-[min(100%,1040px)]">
+        <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
           {CATS.map(({ id, label }) => {
             const activeNow = id === active;
             return (
               <button
                 key={id}
                 onClick={() => setActive(id)}
-                className={[
-                  "group relative flex items-center gap-2 px-4 py-2 rounded-2xl",
-                  "bg-white/5 hover:bg-white/10 transition-colors",
-                  "ring-1 ring-white/10",
-                  activeNow ? "shadow-[0_0_0_2px_rgba(0,255,255,0.15)]" : ""
-                ].join(" ")}
                 aria-pressed={activeNow}
+                className={[
+                  "group relative flex items-center gap-3 md:gap-3.5 px-5 md:px-6 py-3 md:py-3.5 rounded-3xl",
+                  "bg-white/5 hover:bg-white/10 transition-colors backdrop-blur",
+                  "ring-1 ring-white/10 shadow-[0_8px_28px_rgba(0,0,0,0.35)]",
+                  activeNow ? "shadow-[0_0_0_2px_rgba(0,255,255,0.15)]" : "",
+                ].join(" ")}
               >
-                <span className={activeNow ? "text-cyan-300" : "text-white/80"}>
+                <span
+                  className={
+                    (activeNow ? "text-cyan-300" : "text-white/80") +
+                    " [&>svg]:w-7 [&>svg]:h-7 md:[&>svg]:w-8 md:[&>svg]:h-8"
+                  }
+                >
                   {ICONS[id]}
                 </span>
-                <span className="text-sm">{label}</span>
+                <span className="text-[15px] md:text-base">{label}</span>
+
                 {activeNow && (
                   <motion.span
                     layoutId="pp-glow"
-                    className="absolute inset-0 rounded-2xl"
-                    style={{ boxShadow: "0 0 24px 6px rgba(0,255,255,0.15)" }}
+                    className="absolute inset-0 rounded-3xl"
+                    style={{ boxShadow: "0 0 36px 10px rgba(0,255,255,0.16)" }}
                   />
                 )}
               </button>
@@ -160,24 +185,25 @@ export default function PowerPrompts() {
         </div>
 
         {/* Questions list */}
-        <div className="mt-8 mx-auto max-w-[min(100%,900px)] space-y-3">
+        <div className="mt-12 md:mt-16 mx-auto max-w-[min(100%,980px)] space-y-4 md:space-y-5">
           {QUESTIONS[active].map((q, i) => (
             <div
               key={i}
-              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl bg-white/4 ring-1 ring-white/10 px-4 py-3"
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 md:gap-5 rounded-2xl bg-white/5 ring-1 ring-white/10 px-5 md:px-6 py-4 md:py-5 backdrop-blur"
             >
-              <div className="text-[15px] leading-snug">{q}</div>
+              <div className="text-[16px] md:text-[17px] leading-snug">{q}</div>
 
               <motion.button
-                whileHover={{ y: -1, scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ y: -1, scale: 1.02 }}
+                whileTap={{ scale: 0.985 }}
                 onClick={() => onAsk(q)}
-                className="inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-medium
-                           bg-white/8 hover:bg-white/12 active:bg-white/16
-                           ring-1 ring-white/15 backdrop-blur
+                className="inline-flex items-center justify-center rounded-xl px-4 md:px-5 py-2.5 md:py-3
+                           text-[15px] md:text-base font-semibold tracking-[-0.01em]
+                           bg-white/10 hover:bg-white/14 active:bg-white/16
+                           ring-1 ring-white/20 shadow-[0_10px_30px_rgba(0,0,0,0.35)]
                            transition"
               >
-                {t("pp.ask")}
+                {t("pp.ask") !== "pp.ask" ? t("pp.ask") : BASE.ask}
               </motion.button>
             </div>
           ))}
