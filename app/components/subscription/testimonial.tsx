@@ -5,11 +5,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
 
 /**
- * Testimonial Slider – "Cold Sublimation" (No word-break + slower build-up)
- * - Keine Worttrennung: Wörter sind nowrap-Container; Letters animieren darin.
- * - Aufbau ~20% langsamer (≈ 0.8x Speed).
- * - Autoren ohne "Council"-Suffix.
- * Manifest: transform/opacity/filter only; reduced-motion: softer crossfade.
+ * Testimonial Slider – "Cold Sublimation"
+ * - Keine Worttrennung: Wörter bleiben ungebrochen.
+ * - Aufbau leicht verlangsamt (~0.8x).
+ * - Autoren mit beidseitigem Trennstrich — Name —.
+ * - Manifest-konform (transform/opacity/filter only).
  */
 
 export default function Testimonial() {
@@ -17,24 +17,22 @@ export default function Testimonial() {
 
   const items = useMemo(
     () => [
-      { id: "gemini", quote: t("testimonials.gemini"), author: "Gemini Apex" },
-      { id: "grok",   quote: t("testimonials.grok"),   author: "Grok" },
-      { id: "gpt5",   quote: t("testimonials.gpt5"),   author: "GPT-5" },
+      { id: "gemini", quote: t("testimonials.gemini"), author: "— Gemini Apex —" },
+      { id: "grok", quote: t("testimonials.grok"), author: "— Grok —" },
+      { id: "gpt5", quote: t("testimonials.gpt5"), author: "— GPT-5 —" },
     ],
     [t]
   );
 
   const [idx, setIdx] = useState(0);
 
-  // Auto-Cycle alle 8s
+  // Auto-Cycle alle 8 s
   useEffect(() => {
     const id = setInterval(() => setIdx((i) => (i + 1) % items.length), 8000);
     return () => clearInterval(id);
   }, [items.length]);
 
   const cur = items[idx];
-
-  // Zitat in Tokens zerlegen: WORD | SPACE | BR
   const tokens = useMemo(() => tokenizeQuote(String(cur.quote ?? "")), [cur.quote]);
 
   return (
@@ -42,7 +40,7 @@ export default function Testimonial() {
       aria-label="Testimonials (Cold Sublimation)"
       className="relative w-full text-center flex flex-col items-center justify-center min-h-[300px] overflow-hidden"
     >
-      {/* Subtiler „kalter“ Hintergrund-Schimmer */}
+      {/* Subtiler Hintergrund-Schimmer */}
       <motion.div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
@@ -55,7 +53,6 @@ export default function Testimonial() {
         }}
       />
 
-      {/* Vapor Wisps – dezent */}
       <VaporField />
 
       <AnimatePresence mode="wait">
@@ -67,7 +64,7 @@ export default function Testimonial() {
             filter: "blur(0px)",
             y: 0,
             scale: 1,
-            transition: { duration: 0.85, ease: [0.23, 1, 0.32, 1] }, // langsamer
+            transition: { duration: 0.85, ease: [0.23, 1, 0.32, 1] },
           }}
           exit={{
             opacity: 0,
@@ -78,7 +75,7 @@ export default function Testimonial() {
           }}
           className="relative mx-auto max-w-[min(90%,900px)] px-[clamp(20px,6vw,180px)]"
         >
-          {/* QUOTE: pro Wort nowrap, darin Letters */}
+          {/* Quote */}
           <p
             className="text-[clamp(20px,3vw,34px)] leading-snug font-light text-white/92 frost-bloom"
             style={{ whiteSpace: "normal", wordBreak: "keep-all", overflowWrap: "normal" }}
@@ -87,7 +84,6 @@ export default function Testimonial() {
               if (tok.type === "br") return <br key={`br-${i}`} />;
               if (tok.type === "space") return <span key={`sp-${i}`}>{" "}</span>;
 
-              // Wort-Wrapper: verhindert Trennung
               return (
                 <span
                   key={`w-${i}`}
@@ -104,18 +100,21 @@ export default function Testimonial() {
             })}
           </p>
 
-          {/* AUTHOR – ohne Council */}
+          {/* Author */}
           <motion.figcaption
             className="mt-[28px] text-[15px] text-white/55 tracking-wide"
             initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0, transition: { delay: 0.55, duration: 0.5, ease: "easeOut" } }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              transition: { delay: 0.55, duration: 0.5, ease: "easeOut" },
+            }}
           >
-            — {cur.author}
+            {cur.author}
           </motion.figcaption>
         </motion.figure>
       </AnimatePresence>
 
-      {/* Local styles für FrostBloom */}
       <style jsx>{`
         .frost-bloom {
           text-shadow:
@@ -133,10 +132,11 @@ export default function Testimonial() {
   );
 }
 
-/** Tokenizer: zerlegt in Wörter / Spaces / Zeilenumbrüche, damit Wörter nicht brechen */
-function tokenizeQuote(q: string): Array<{ type: "word"; word: string } | { type: "space" } | { type: "br" }> {
+/* Zerlegt Zitat in Wörter / Spaces / Zeilenumbrüche */
+function tokenizeQuote(
+  q: string
+): Array<{ type: "word"; word: string } | { type: "space" } | { type: "br" }> {
   const result: Array<{ type: "word"; word: string } | { type: "space" } | { type: "br" }> = [];
-  // Split mit Capture der Whitespaces
   const parts = q.split(/(\s+)/);
   for (const p of parts) {
     if (p === "") continue;
@@ -155,7 +155,7 @@ function tokenizeQuote(q: string): Array<{ type: "word"; word: string } | { type
   return result;
 }
 
-/** Ein einzelner Buchstabe mit "Cold Rise" Animation */
+/* Einzelner Buchstabe mit "Cold Rise"-Bewegung */
 function Letter({
   children,
   delay = 0,
@@ -171,7 +171,7 @@ function Letter({
         opacity: 1,
         y: 0,
         filter: "blur(0px)",
-        transition: { delay, duration: 0.35, ease: [0.22, 1, 0.36, 1] }, // langsamer
+        transition: { delay, duration: 0.35, ease: [0.22, 1, 0.36, 1] },
       }}
       exit={{ opacity: 0 }}
       style={{ display: "inline-block" }}
@@ -181,7 +181,7 @@ function Letter({
   );
 }
 
-/** Subtile Vapor-Wisps (vier leichte Nebelfahnen, loopend) */
+/* Feine Nebelfahnen im Hintergrund */
 function VaporField() {
   return (
     <>
