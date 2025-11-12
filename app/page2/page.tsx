@@ -43,7 +43,6 @@ import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // �
 import { useMobileViewport } from "@/lib/useMobileViewport";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
 import { loadChat, saveChat, clearChat,initChatStorage, makeClearHandler, hardClearChat  } from "@/lib/chatStorage";
-import { useSearchParams } from "next/navigation"; // <<< neu: ?prefill lesen
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
 const persist = {
@@ -800,25 +799,27 @@ useEffect(() => {
 // … weiterer Code …
 
 const [input, setInput] = useState("");
-// ── prefill from URL (?prefill=...)
-const search = useSearchParams();
+
+// Prefill via URL (?prefill=...), rein clientseitig (kein Next-Hook → SSG-sicher)
 useEffect(() => {
-  const raw = search?.get("prefill");
+  if (typeof window === "undefined") return;
+  const sp = new URLSearchParams(window.location.search);
+  const raw = sp.get("prefill");
   if (!raw) return;
 
-  // decodeURIComponent is safe here because link was encoded
   let text = raw;
   try { text = decodeURIComponent(raw); } catch {}
   setInput(text);
 
-  // optional: focus the prompt field on next frame (non-breaking if not found)
+  // Fokus non-blocking, falls es ein Textfeld mit dieser ID gibt
   requestAnimationFrame(() => {
-    document.querySelector<HTMLTextAreaElement>("textarea, [contenteditable='true']")?.focus();
+    document.getElementById("chat-input")?.focus();
   });
-}, [search]);
+}, []);
 
 const [loading, setLoading] = useState(false);
 const [stickToBottom, setStickToBottom] = useState(true);
+
 
 // … weiterer Code …
 
