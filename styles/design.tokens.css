@@ -54,6 +54,10 @@
   --z-base: 1;
   --z-overlay: 60;
   --z-fab: 70;
+  /* === Layout Buffers (vertical spacing) === */
+  --buffer-min: 30px;           /* mobile minimum space */
+  --buffer-max: 130px;          /* desktop maximum space */
+  --buffer-fluid: clamp(var(--buffer-min), 10vw, var(--buffer-max)); /* responsive vertical spacing */
 }
 
 /* =====================================================================

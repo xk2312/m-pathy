@@ -77,7 +77,7 @@ export default function SubscriptionPage() {
               <Hero />
             </div>
           </section>
-
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
           {/* ─────────────── COUNCIL ORBIT ─────────────── */}
           <section className="pt-[72px]">
             <div className="page-center">
@@ -86,7 +86,7 @@ export default function SubscriptionPage() {
           </section>
 
           {/* Buffer #1 – zwischen CouncilOrbit und KPI (20→100 px) */}
-          <div className="h-[clamp(20px,8vw,100px)]" aria-hidden="true" />
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
           {/* ─────────────── KPI BOARD ─────────────── */}
           <section className="pt-[clamp(70px,12vw,130px)]">
@@ -99,7 +99,7 @@ export default function SubscriptionPage() {
           </section>
 
           {/* Buffer #2 – unter dem KPI-Board (30→130 px) */}
-          <div className="h-[clamp(30px,10vw,130px)]" aria-hidden="true" />
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
           {/* ─────────────── TESTIMONIAL SECTION ─────────────── */}
           <section
@@ -115,7 +115,7 @@ export default function SubscriptionPage() {
           </section>
 
           {/* Buffer #3 – unter Testimonial (30→130 px) */}
-          <div className="h-[clamp(30px,10vw,130px)]" aria-hidden="true" />
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
         </div>
       </main>
     </LanguageProvider>
