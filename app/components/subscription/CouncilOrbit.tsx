@@ -280,7 +280,7 @@ export default function CouncilOrbit() {
               {focusedItem.subtitle}
             </text>
 
-            {/* HTML im Kreis – bricht automatisch um */}
+                        {/* HTML im Kreis – bricht automatisch um */}
             <foreignObject
               x={-INNER_R + 18}
               y={8}
@@ -291,12 +291,60 @@ export default function CouncilOrbit() {
                 <p>{`> superpower: ${focusedKpi.superpower}`}</p>
                 <p>{`> focus: ${focusedKpi.focus}`}</p>
                 <p>{`> signal: ${focusedKpi.signal}`}</p>
+                            </div>
+            </foreignObject>
+
+            {/* Visit Button */}
+            <foreignObject
+              x={-INNER_R + 18}
+              y={INNER_R - 42}
+              width={INNER_R * 2 - 36}
+              height={42}
+            >
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <button
+                  style={{
+                    padding: "10px 16px",
+                    borderRadius: "12px",
+                    border: "1px solid var(--pp-cyan-line, #22d3ee)",
+                    background: "rgba(0,0,0,0.45)",
+                    backdropFilter: "blur(6px)",
+                    color: "#7CFF7C",
+                    fontFamily:
+                      'ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace',
+                    fontSize: "13px",
+                    cursor: "pointer",
+                    boxShadow: "0 0 16px rgba(34,211,238,0.35)",
+                    transition: "all .18s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0 0 28px rgba(34,211,238,0.6)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0 0 16px rgba(34,211,238,0.35)";
+                  }}
+                  onClick={() => {
+                    const name = focusedItem?.title ?? "";
+                    const tmpl = active?.council?.prompt_template ?? "@{{name}}";
+                    const final = tmpl.replace("{{name}}", name);
+                    const encoded = encodeURIComponent(final);
+                    window.location.href = `/page2?prefill=${encoded}`;
+                  }}
+                >
+                  {(active?.council?.visit_label ?? "Visit {{name}}").replace(
+                    "{{name}}",
+                    focusedItem?.title ?? ""
+                  )}
+                </button>
               </div>
             </foreignObject>
 
             {/* Close */}
             <g
               transform={`translate(${INNER_R - 18} ${-INNER_R + 18})`}
+
               onClick={onClose}
               role="button"
               tabIndex={0}

@@ -126,3 +126,43 @@
   --pp-ion-base-bg: rgba(255,255,255,0.08); /* Button-Basis */
   --pp-ion-hover-bg: rgba(0,255,255,0.14);  /* Button-Hover-Basis */
 }
+/* =====================================================================
+   Council · Visit-AI Button Tokens (Ion Beam v1)
+   ===================================================================== */
+
+:root {
+  /* Größe & Rhythmus */
+  --council-visit-pad-y: 11px;
+  --council-visit-pad-x: 22px;
+  --council-visit-radius: 999px;
+  --council-visit-font-size: 15px;
+  --council-visit-font-size-md: 16px;
+  --council-visit-font-weight: 600;
+  --council-visit-letter-spacing: -0.005em;
+
+  /* Farben (basiert auf Aqua-DNA) */
+  --council-visit-bg: rgba(5, 12, 20, 0.92);              /* Button-Basis */
+  --council-visit-bg-hover: rgba(8, 24, 32, 0.96);        /* Hover-Basis */
+  --council-visit-bg-active: rgba(3, 14, 20, 0.95);       /* Tap */
+  --council-visit-border: rgba(0, 255, 255, 0.65);        /* Cyan-Line */
+  --council-visit-border-hover: rgba(0, 255, 255, 0.85);
+  --council-visit-text: #ffffff;
+
+  /* Glow & Schatten */
+  --council-visit-glow-soft: 0 0 32px rgba(0, 255, 255, 0.22);
+  --council-visit-glow-strong: 0 0 44px rgba(0, 255, 255, 0.32);
+  --council-visit-shadow-base: 0 14px 40px rgba(0, 0, 0, 0.65);
+
+  /* Ion-Beam Sweep (für Framer Motion) */
+  --council-visit-sweep-duration: 0.22s;
+  --council-visit-sweep-blur: 7px;
+  --council-visit-sweep-alpha-min: 0;
+  --council-visit-sweep-alpha-max: 1;
+
+  /* Motion-Scale (Hover/Tap) */
+  --council-visit-scale-hover: 1.03;
+  --council-visit-scale-tap: 0.985;
+
+  /* Focus / A11y */
+  --council-visit-focus-ring: 0 0 0 2px rgba(34, 211, 238, 0.55);
+}
