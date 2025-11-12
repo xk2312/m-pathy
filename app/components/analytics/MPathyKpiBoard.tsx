@@ -519,7 +519,7 @@ export default function MPathyKpiBoard() {
 
         <div className="mt-8 text-xs" style={{ opacity: 0.95 }}>
           <span style={{ color: PALETTE.accent, fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas" }}>Sealed · Triketon‑2048</span>
-          <span className="mx-2">· Signature: 999+++ M → Mu Tah 888 Na Hal · CausaTest 100%</span>
+          <span className="mx-2"> · CausaTest 100%</span>
         </div>
       </div>
 
