@@ -136,9 +136,21 @@ export default function PowerPrompts() {
   };
 
   return (
-    <section aria-label="Power Prompts" className="relative py-16 md:py-28">
+    <section
+      aria-label="Power Prompts"
+      className="relative py-16 md:py-28"
+      style={
+        {
+          // Buffer-Parameter
+          // Subheadline → Buttons
+          "--pp-gap-top": "130px",
+          // Buttons → erste Promptzeile
+          "--pp-gap-bottom": "30px",
+        } as React.CSSProperties
+      }
+    >
       {/* Title + hint */}
-            <div className="text-center mb-[60px] md:mb-[60px]">
+      <div className="text-center mb-[var(--pp-gap-top)]">
         <h2 className="text-[clamp(34px,6vw,72px)] leading-[1.05] font-semibold text-white tracking-tight">
           {title}
         </h2>
@@ -152,31 +164,38 @@ export default function PowerPrompts() {
       </div>
 
       {/* Category pills */}
-      <div className="mx-auto max-w-[min(100%,1120px)] mb-[30px]">
+      <div className="mx-auto max-w-[min(100%,1120px)] mb-[var(--pp-gap-bottom)]">
         <div
           className="flex flex-wrap items-center justify-center gap-3.5 md:gap-5
                      px-2 md:px-0"
         >
-
-
           {CATS.map(({ id, label }) => {
             const activeNow = id === active;
             return (
-                            <button
+              <button
                 key={id}
                 onClick={() => setActive(id)}
                 aria-pressed={activeNow}
                 className={[
-                  // Größe + Haptik
-                    "group relative flex items-center gap-3 md:gap-3.5 px-[7px] md:px-[7px] py-[5px] md:py-[5px] rounded-[22px]",                  // Materialität
+                  // Größe + Haptik (Padding via inline style, um 5×7 exakt zu garantieren)
+                  "group relative flex items-center gap-3 md:gap-3.5 rounded-[22px]",
+                  // Materialität
                   "bg-white/6 hover:bg-white/10 transition-colors backdrop-blur-md",
                   // Kontur + Tiefe
                   "ring-1 ring-white/12 shadow-[0_10px_36px_rgba(0,0,0,0.38)]",
                   // Aktiver Glow-Ring
                   activeNow ? "shadow-[0_0_0_2px_rgba(0,255,255,0.20)]" : "",
                   // Fokus-Sichtbarkeit
-                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
+                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40",
                 ].join(" ")}
+                style={
+                  {
+                    // Präzises Innenpadding je Pill
+                    "--pp-pill-px": "7px",
+                    "--pp-pill-py": "5px",
+                    padding: "var(--pp-pill-py) var(--pp-pill-px)",
+                  } as React.CSSProperties
+                }
               >
                 <span
                   className={
@@ -198,13 +217,12 @@ export default function PowerPrompts() {
                   />
                 )}
               </button>
-
             );
           })}
         </div>
 
         {/* Questions list */}
-                <div className="mt-14 md:mt-20 mx-auto max-w-[min(100%,1040px)] space-y-5 md:space-y-6">
+        <div className="mt-14 md:mt-20 mx-auto max-w-[min(100%,1040px)] space-y-5 md:space-y-6">
           {QUESTIONS[active].map((q, i) => (
             <div
               key={i}
@@ -231,7 +249,6 @@ export default function PowerPrompts() {
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );
