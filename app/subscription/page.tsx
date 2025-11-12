@@ -82,9 +82,25 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-          <section className="pt-[clamp(70px,12vw,130px)]">
+                   <section className="pt-[clamp(70px,12vw,130px)]">
             <div className="page-center kpi-scope" style={{ maxWidth: "calc(var(--page-inner-max) * 1.2)" }}>
               <MPathyKpiBoard />
+            </div>
+          </section>
+
+          {/* ──────────────────────────────────────────────────────────
+              Testimonial-Slot – vorbereitet für app/components/subscription/testimonial.tsx
+              Atmung: großzügige Top/Bottom-Abstände, kein Druck auf Nachbarn
+              Keine Imports nötig; Slot ist neutral, bis die Komponente existiert.
+              ────────────────────────────────────────────────────────── */}
+          <section className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]">
+            <div className="page-center" style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}>
+              <div
+                id="testimonial-slot"
+                data-slot="testimonials"
+                aria-label="Testimonials slot"
+                className="min-h-[120px]"
+              />
             </div>
           </section>
         </div>
