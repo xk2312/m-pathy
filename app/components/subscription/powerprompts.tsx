@@ -161,14 +161,19 @@ export default function PowerPrompts() {
         >
           {hint}
         </p>
-      </div>
+            </div>
+
+      {/* Buffer between subheadline and pills */}
+      <div className="w-full h-[130px]" aria-hidden="true" />
 
       {/* Category pills */}
-      <div className="mx-auto max-w-[min(100%,1120px)] mb-[var(--pp-gap-bottom)]">
+      <div className="mx-auto max-w-[min(100%,1120px)]">
         <div
           className="flex flex-wrap items-center justify-center gap-3.5 md:gap-5
                      px-2 md:px-0"
         >
+
+
           {CATS.map(({ id, label }) => {
             const activeNow = id === active;
             return (
@@ -219,10 +224,14 @@ export default function PowerPrompts() {
               </button>
             );
           })}
-        </div>
+               </div>
+
+        {/* Buffer between pills and question list */}
+        <div className="w-full h-[30px]" aria-hidden="true" />
 
         {/* Questions list */}
-        <div className="mt-14 md:mt-20 mx-auto max-w-[min(100%,1040px)] space-y-5 md:space-y-6">
+        <div className="mx-auto max-w-[min(100%,1040px)] space-y-5 md:space-y-6">
+
           {QUESTIONS[active].map((q, i) => (
             <div
               key={i}
