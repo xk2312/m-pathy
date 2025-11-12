@@ -82,11 +82,13 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-                   <section className="pt-[clamp(70px,12vw,130px)]">
+                   {/* KPI-Tafel – +100 px Abstand zum Council-Orbit */}
+          <section className="pt-[clamp(170px,20vw,230px)]">
             <div className="page-center kpi-scope" style={{ maxWidth: "calc(var(--page-inner-max) * 1.2)" }}>
               <MPathyKpiBoard />
             </div>
           </section>
+
 
           {/* ──────────────────────────────────────────────────────────
               Testimonial-Slot – vorbereitet für app/components/subscription/testimonial.tsx
