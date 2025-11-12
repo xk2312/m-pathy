@@ -96,30 +96,25 @@ export default function PowerPrompts() {
     return v === "pp.hint" ? BASE.hint : v;
   })();
 
-  const GROUP_LABEL = (id: CatId) => {
-    const v = t(`pp.groups.${id}`);
-    return v === `pp.groups.${id}` ? BASE.groups[id] : v;
-  };
-
-  const CATS: Array<{ id: CatId; label: string }> = useMemo(
-    () => [
-      { id: "parents", label: GROUP_LABEL("parents") },
-      { id: "students", label: GROUP_LABEL("students") },
-      { id: "couples", label: GROUP_LABEL("couples") },
-      { id: "doctors", label: GROUP_LABEL("doctors") },
-      { id: "marketing", label: GROUP_LABEL("marketing") },
-      { id: "universal", label: GROUP_LABEL("universal") },
-    ],
+  const CATS = useMemo(
+    () => ([
+      { id: "parents",    label: t("pp.groups.parents")    !== "pp.groups.parents"    ? t("pp.groups.parents")    : BASE.groups.parents },
+      { id: "students",   label: t("pp.groups.students")   !== "pp.groups.students"   ? t("pp.groups.students")   : BASE.groups.students },
+      { id: "couples",    label: t("pp.groups.couples")    !== "pp.groups.couples"    ? t("pp.groups.couples")    : BASE.groups.couples },
+      { id: "doctors",    label: t("pp.groups.doctors")    !== "pp.groups.doctors"    ? t("pp.groups.doctors")    : BASE.groups.doctors },
+      { id: "marketing",  label: t("pp.groups.marketing")  !== "pp.groups.marketing"  ? t("pp.groups.marketing")  : BASE.groups.marketing },
+      { id: "universal",  label: t("pp.groups.universal")  !== "pp.groups.universal"  ? t("pp.groups.universal")  : BASE.groups.universal },
+    ] as Array<{id: CatId; label: string}>),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [t]
   );
 
   const QUESTIONS: Record<CatId, string[]> = useMemo(
     () => ({
-      parents: [safeT("pp.e1") || BASE.e1, safeT("pp.e2") || BASE.e2],
-      students: [safeT("pp.s1") || BASE.s1, safeT("pp.s2") || BASE.s2],
-      couples: [safeT("pp.p1") || BASE.p1, safeT("pp.p2") || BASE.p2],
-      doctors: [safeT("pp.a3") || BASE.a3, safeT("pp.a4") || BASE.a4],
+      parents:   [safeT("pp.e1") || BASE.e1, safeT("pp.e2") || BASE.e2],
+      students:  [safeT("pp.s1") || BASE.s1, safeT("pp.s2") || BASE.s2],
+      couples:   [safeT("pp.p1") || BASE.p1, safeT("pp.p2") || BASE.p2],
+      doctors:   [safeT("pp.a3") || BASE.a3, safeT("pp.a4") || BASE.a4],
       marketing: [safeT("pp.m1") || BASE.m1, safeT("pp.m2") || BASE.m2],
       universal: [safeT("pp.u1") || BASE.u1, safeT("pp.u2") || BASE.u2, safeT("pp.u3") || BASE.u3],
     }),
@@ -132,6 +127,44 @@ export default function PowerPrompts() {
   const onAsk = (text: string) => {
     const q = encodeURIComponent(text);
     router.push(`${PAGE2_PATH}?prefill=${q}`);
+  };
+
+  /** Ion Beam – Button (Skin-Komponente) */
+  const IonBeamButton: React.FC<{label: string; onClick: () => void}> = ({ label, onClick }) => {
+    return (
+      <motion.button
+        whileHover={{ y: -1, scale: 1.02 }}
+        whileTap={{ scale: 0.985 }}
+        onClick={onClick}
+        className={[
+          "group relative inline-flex items-center justify-center rounded-2xl select-none",
+          "ring-1",
+        ].join(" ")}
+        style={{
+          padding: "var(--pp-row-pad-y) var(--pp-row-pad-x)",
+          background: "var(--pp-ion-base-bg)",
+          borderColor: "var(--pp-cyan-line)",
+          boxShadow: `0 0 36px var(--pp-cyan-soft)`,
+        }}
+      >
+        {/* Sweep-Licht – läuft bei Hover quer über den Button */}
+        <motion.span
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 -left-full w-[160%] blur-[var(--pp-ion-sweep-blur)]"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(34,211,238,0.35) 40%, rgba(34,211,238,0.9) 50%, rgba(34,211,238,0.35) 60%, transparent 100%)",
+            opacity: 0.0,
+          }}
+          initial={{ x: "-20%", opacity: 0 }}
+          whileHover={{ x: "20%", opacity: 1 }}
+          transition={{ duration: 0.22 }}
+        />
+        <span className="relative z-10 text-[15px] md:text-[16px] font-semibold tracking-[-0.005em]">
+          {label}
+        </span>
+      </motion.button>
+    );
   };
 
   return (
@@ -157,7 +190,7 @@ export default function PowerPrompts() {
             return (
               <button
                 key={id}
-                onClick={() => setActive(id)}
+                onClick={() => setActive(id as CatId)}
                 aria-pressed={activeNow}
                 className={[
                   "group relative flex items-center gap-3 md:gap-3.5 rounded-[22px]",
@@ -168,18 +201,12 @@ export default function PowerPrompts() {
                 ].join(" ")}
                 style={{ padding: "5px 7px" }}
               >
-                <span
-                  className={
-                    (activeNow ? "text-cyan-300" : "text-white/80") +
-                    " [&>svg]:w-7 [&>svg]:h-7 md:[&>svg]:w-8 md:[&>svg]:h-8"
-                  }
-                >
-                  {ICONS[id]}
+                <span className={(activeNow ? "text-cyan-300" : "text-white/80") + " [&>svg]:w-7 [&>svg]:h-7 md:[&>svg]:w-8 md:[&>svg]:h-8"}>
+                  {ICONS[id as CatId]}
                 </span>
                 <span className="text-[15px] md:text-[16px] font-medium tracking-[0.1px]">
                   {label}
                 </span>
-
                 {activeNow && (
                   <motion.span
                     layoutId="pp-glow"
@@ -196,37 +223,33 @@ export default function PowerPrompts() {
       {/* Buffer: Tabs → Liste */}
       <div aria-hidden className="w-full" style={{ height: "var(--pp-tabs-to-list)" }} />
 
-      {/* Fragenliste (keine space-y, echte Buffer darunter) */}
+      {/* Fragenliste – Textkarte links, Ion-Beam-CTA rechts */}
       <div className="mx-auto max-w-[min(100%,1040px)]">
         {QUESTIONS[active].map((q, i) => (
           <div key={i}>
             <div
-              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 md:gap-6
-                         rounded-3xl bg-white/6 ring-1 ring-white/12 backdrop-blur-md
-                         shadow-[0_14px_42px_rgba(0,0,0,0.38)]"
-              style={{
-                paddingTop: "var(--pp-row-pad-y)",
-                paddingBottom: "var(--pp-row-pad-y)",
-                paddingLeft: "var(--pp-row-pad-x)",
-                paddingRight: "var(--pp-row-pad-x)",
-              }}
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 md:gap-6"
             >
-              <div className="text-[17px] md:text-[18px] leading-[1.45] text-white/95">
-                {q}
+              {/* Textkarte – runde Umrandung umfasst NUR den Text */}
+              <div
+                className="rounded-3xl bg-white/6 ring-1 ring-white/12 backdrop-blur-md shadow-[0_14px_42px_rgba(0,0,0,0.38)]"
+                style={{
+                  paddingTop: "var(--pp-row-pad-y)",
+                  paddingBottom: "var(--pp-row-pad-y)",
+                  paddingLeft: "var(--pp-row-pad-x)",
+                  paddingRight: "var(--pp-row-pad-x)",
+                }}
+              >
+                <div className="text-[17px] md:text-[18px] leading-[1.45] text-white/95">
+                  {q}
+                </div>
               </div>
 
-              <motion.button
-                whileHover={{ y: -1, scale: 1.02 }}
-                whileTap={{ scale: 0.985 }}
+              {/* CTA – Ion Beam (separater Button, nicht im Card-Ring) */}
+              <IonBeamButton
+                label={t("pp.ask") !== "pp.ask" ? t("pp.ask") : BASE.ask}
                 onClick={() => onAsk(q)}
-                className="inline-flex items-center justify-center rounded-2xl px-5 md:px-6 py-3 md:py-3.5
-                           text-[15px] md:text-[16px] font-semibold tracking-[-0.005em]
-                           bg-white/12 hover:bg-white/16 active:bg-white/18
-                           ring-1 ring-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.4)]
-                           transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
-              >
-                {t("pp.ask") !== "pp.ask" ? t("pp.ask") : BASE.ask}
-              </motion.button>
+              />
             </div>
 
             {/* echter Buffer unter jeder Zeile */}

@@ -104,3 +104,25 @@
   --pp-tabs-to-list: 30px; /* Kategorie-Buttons → Erste Zeile */
   --pp-row-buffer: 30px;   /* Unter JEDER Zeile */
 }
+/* ─────────────────────────────────────────────
+   PowerPrompts – Tokens (Button + Rhythm)
+   ───────────────────────────────────────────── */
+:root{
+  /* Rhythmus (bereits eingeführt, hier der Vollständigkeit halber) */
+  --pp-row-pad-y: 13px;
+  --pp-row-pad-x: 20px;
+  --pp-sub-to-tabs: 130px;
+  --pp-tabs-to-list: 30px;
+  --pp-row-buffer: 30px;
+
+  /* Cyan DNA */
+  --pp-cyan:        #22d3ee;               /* tailwind cyan-300 */
+  --pp-cyan-soft:   rgba(34,211,238,0.18);  /* weicher Glow */
+  --pp-cyan-line:   rgba(34,211,238,0.65);  /* Outline */
+
+  /* Ion Beam – Timing & Physik */
+  --pp-ion-sweep-ms: 220ms;                 /* Sweep-Dauer */
+  --pp-ion-sweep-blur: 6px;                 /* Sweep-Weichzeichnung */
+  --pp-ion-base-bg: rgba(255,255,255,0.08); /* Button-Basis */
+  --pp-ion-hover-bg: rgba(0,255,255,0.14);  /* Button-Hover-Basis */
+}
