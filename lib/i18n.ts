@@ -2942,5 +2942,213 @@ Object.assign(dict.hi ?? {}, {
   pp_title: "स्रोत कमांड",
   pp_hint: "जो तुम खोजते हो उसे लिखो — और जो लिखते हो वही बनो।"
 });
+// ─── PowerPrompts – fehlende Labels, Titel, Hint, Ask ─────────────────────────
+Object.assign(dict.de ?? {}, {
+  pp: {
+    title: "Power-Prompts",
+    hint: "Wähle eine Kategorie und starte mit einer magischen Frage.",
+    ask: "Direkt fragen",
+    groups: {
+      parents: "Eltern",
+      students: "Schüler",
+      couples: "Paare",
+      doctors: "Ärzte",
+      marketing: "Marketing",
+      universal: "Universal",
+    },
+  },
+});
+
+Object.assign(dict.en ?? {}, {
+  pp: {
+    title: "Power Prompts",
+    hint: "Pick a category and start with a magical question.",
+    ask: "Ask now",
+    groups: {
+      parents: "Parents",
+      students: "Students",
+      couples: "Couples",
+      doctors: "Doctors",
+      marketing: "Marketing",
+      universal: "Universal",
+    },
+  },
+});
+
+Object.assign(dict.fr ?? {}, {
+  pp: {
+    title: "Prompts magiques",
+    hint: "Choisis une catégorie et lance une question magique.",
+    ask: "Demander",
+    groups: {
+      parents: "Parents",
+      students: "Étudiants",
+      couples: "Couples",
+      doctors: "Médecins",
+      marketing: "Marketing",
+      universal: "Universel",
+    },
+  },
+});
+
+Object.assign(dict.es ?? {}, {
+  pp: {
+    title: "Prompts de poder",
+    hint: "Elige una categoría y lanza una pregunta mágica.",
+    ask: "Preguntar",
+    groups: {
+      parents: "Padres",
+      students: "Estudiantes",
+      couples: "Parejas",
+      doctors: "Médicos",
+      marketing: "Marketing",
+      universal: "Universal",
+    },
+  },
+});
+
+Object.assign(dict.it ?? {}, {
+  pp: {
+    title: "Prompt Potenti",
+    hint: "Scegli una categoria e avvia una domanda magica.",
+    ask: "Chiedi ora",
+    groups: {
+      parents: "Genitori",
+      students: "Studenti",
+      couples: "Coppie",
+      doctors: "Medici",
+      marketing: "Marketing",
+      universal: "Universale",
+    },
+  },
+});
+
+Object.assign(dict.pt ?? {}, {
+  pp: {
+    title: "Prompts Poderosos",
+    hint: "Escolha uma categoria e faça uma pergunta mágica.",
+    ask: "Perguntar",
+    groups: {
+      parents: "Pais",
+      students: "Estudantes",
+      couples: "Casais",
+      doctors: "Médicos",
+      marketing: "Marketing",
+      universal: "Universal",
+    },
+  },
+});
+
+Object.assign(dict.nl ?? {}, {
+  pp: {
+    title: "Power-prompts",
+    hint: "Kies een categorie en start met een magische vraag.",
+    ask: "Nu vragen",
+    groups: {
+      parents: "Ouders",
+      students: "Studenten",
+      couples: "Stellen",
+      doctors: "Artsen",
+      marketing: "Marketing",
+      universal: "Universeel",
+    },
+  },
+});
+
+Object.assign(dict.ru ?? {}, {
+  pp: {
+    title: "Мощные промпты",
+    hint: "Выберите категорию и задайте магический вопрос.",
+    ask: "Спросить",
+    groups: {
+      parents: "Родители",
+      students: "Студенты",
+      couples: "Пары",
+      doctors: "Врачи",
+      marketing: "Маркетинг",
+      universal: "Универсал",
+    },
+  },
+});
+
+Object.assign(dict.zh ?? {}, {
+  pp: {
+    title: "魔法提示",
+    hint: "选择分类，提出一个神奇的问题。",
+    ask: "立即提问",
+    groups: {
+      parents: "父母",
+      students: "学生",
+      couples: "伴侣",
+      doctors: "医生",
+      marketing: "营销",
+      universal: "通用",
+    },
+  },
+});
+
+Object.assign(dict.ja ?? {}, {
+  pp: {
+    title: "パワープロンプト",
+    hint: "カテゴリを選んで魔法の質問を始めよう。",
+    ask: "今すぐ聞く",
+    groups: {
+      parents: "保護者",
+      students: "学生",
+      couples: "カップル",
+      doctors: "医師",
+      marketing: "マーケティング",
+      universal: "ユニバーサル",
+    },
+  },
+});
+
+Object.assign(dict.ko ?? {}, {
+  pp: {
+    title: "파워 프롬프트",
+    hint: "카테고리를 선택하고 마법 같은 질문을 시작하세요.",
+    ask: "바로 질문",
+    groups: {
+      parents: "부모",
+      students: "학생",
+      couples: "커플",
+      doctors: "의사",
+      marketing: "마케팅",
+      universal: "유니버설",
+    },
+  },
+});
+
+Object.assign(dict.ar ?? {}, {
+  pp: {
+    title: "مطالبات قوية",
+    hint: "اختر فئة وابدأ بسؤال سحري.",
+    ask: "اسأل الآن",
+    groups: {
+      parents: "الآباء",
+      students: "الطلاب",
+      couples: "الأزواج",
+      doctors: "الأطباء",
+      marketing: "التسويق",
+      universal: "عام",
+    },
+  },
+});
+
+Object.assign(dict.hi ?? {}, {
+  pp: {
+    title: "पावर प्रॉम्प्ट्स",
+    hint: "एक श्रेणी चुनें और जादुई सवाल पूछें।",
+    ask: "अभी पूछें",
+    groups: {
+      parents: "माता-पिता",
+      students: "छात्र",
+      couples: "युगल",
+      doctors: "डॉक्टर्स",
+      marketing: "मार्केटिंग",
+      universal: "यूनिवर्सल",
+    },
+  },
+});
 
 UX_LOCALES = Object.keys(dict);
