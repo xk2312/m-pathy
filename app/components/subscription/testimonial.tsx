@@ -5,16 +5,17 @@ import { useEffect, useMemo, useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
 
 /**
- * Testimonial Slider – Concept m-beded ("Neural Fade")
- * Zitat kondensiert aus einem weichen, neuronalen Netz (Depth-Blur),
- * wird klar, zeigt eine kurze Spiegelung, löst sich wieder auf.
- * Manifest-konform: nur opacity/transform/filter; Reduced-Motion: sanfter Crossfade.
+ * Testimonial Slider – "Cold Sublimation"
+ * - FrostBloom: kühle Kante (Glow + leichter Kristall-Schimmer)
+ * - Cold Rise: Buchstaben steigen mit minimalem Y-Offset aus "kaltem Nebel"
+ * - Vapor-Wisps: feine Nebelfahnen ziehen nach oben (subtil, loopend)
+ * Manifest: transform/opacity/filter only. Reduced-motion: softer crossfade.
  */
 
 export default function Testimonial() {
   const { t } = useLang();
 
-  const testimonials = useMemo(
+  const items = useMemo(
     () => [
       { id: "gemini", quote: t("testimonials.gemini"), author: "Gemini Apex – Google Council" },
       { id: "grok",   quote: t("testimonials.grok"),   author: "Grok – XAI Council" },
@@ -23,101 +24,172 @@ export default function Testimonial() {
     [t]
   );
 
-  const [index, setIndex] = useState(0);
+  const [idx, setIdx] = useState(0);
 
   // Auto-Cycle alle 8s
   useEffect(() => {
-    const id = setInterval(() => setIndex((i) => (i + 1) % testimonials.length), 8000);
+    const id = setInterval(() => setIdx((i) => (i + 1) % items.length), 8000);
     return () => clearInterval(id);
-  }, [testimonials.length]);
+  }, [items.length]);
 
-  const current = testimonials[index];
+  const cur = items[idx];
+
+  // Quote in einzelne Zeichen splitten (Zeilenumbrüche erhalten)
+  const splitQuote = useMemo(() => {
+    const q = String(cur.quote ?? "");
+    // Mappe auch Zeilenumbrüche auf <br />
+    return q.split("").map((ch, i) =>
+      ch === "\n" ? { type: "br", key: `br-${i}` } : { type: "char", ch, key: `c-${i}` }
+    );
+  }, [cur.quote]);
 
   return (
     <section
-      aria-label="Testimonials (m-beded · Neural Fade)"
-      className="relative w-full text-center flex flex-col items-center justify-center min-h-[280px] overflow-hidden"
+      aria-label="Testimonials (Cold Sublimation)"
+      className="relative w-full text-center flex flex-col items-center justify-center min-h-[300px] overflow-hidden"
     >
-      {/* Subtiles neuronales Gitter im Hintergrund */}
-      <div
+      {/* Subtiler „kalter“ Hintergrund-Schimmer */}
+      <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.12]"
+        className="absolute inset-0 pointer-events-none"
+        animate={{ opacity: [0.05, 0.12, 0.05], scale: [1, 1.03, 1] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
         style={{
           background:
-            "repeating-linear-gradient(120deg, rgba(255,255,255,0.6) 0 1px, transparent 1px 22px)," +
-            "repeating-linear-gradient(60deg, rgba(255,255,255,0.3) 0 1px, transparent 1px 18px)",
-          filter: "blur(2px)",
-          mixBlendMode: "screen",
+            "radial-gradient(60% 40% at 50% 60%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 30%, transparent 70%)",
+          filter: "blur(8px)",
         }}
       />
 
+      {/* Vapor Wisps – sehr dezent, nur Helligkeit/Blur/Opacity */}
+      <VaporField />
+
       <AnimatePresence mode="wait">
-        <motion.div
-          key={current.id}
-          initial={{ opacity: 0, filter: "blur(10px)", scale: 0.985, y: 8 }}
+        <motion.figure
+          key={cur.id}
+          initial={{ opacity: 0, filter: "blur(10px)", y: 10, scale: 0.985 }}
           animate={{
             opacity: 1,
             filter: "blur(0px)",
-            scale: 1,
             y: 0,
-            transition: { duration: 0.8, ease: [0.23, 1, 0.32, 1] },
+            scale: 1,
+            transition: { duration: 0.7, ease: [0.23, 1, 0.32, 1] },
           }}
           exit={{
             opacity: 0,
-            filter: "blur(10px)",
+            filter: "blur(8px)",
+            y: -8,
             scale: 1.01,
-            y: -6,
-            transition: { duration: 0.6, ease: "easeInOut" },
+            transition: { duration: 0.55, ease: "easeInOut" },
           }}
-          className="relative flex flex-col items-center justify-center px-[clamp(20px,6vw,180px)]"
+          className="relative mx-auto max-w-[min(90%,900px)] px-[clamp(20px,6vw,180px)]"
         >
-          {/* Haupttext */}
-          <motion.p
-            className="text-[clamp(20px,3vw,32px)] leading-snug font-light text-white/92"
-            style={{ whiteSpace: "pre-line" }}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0, transition: { delay: 0.28, duration: 0.5, ease: "easeOut" } }}
+          {/* QUOTE: per-letter Cold Rise + FrostBloom Edge */}
+          <p
+            className="text-[clamp(20px,3vw,34px)] leading-snug font-light text-white/92 frost-bloom"
+            style={{ whiteSpace: "pre-wrap" }}
           >
-            “{current.quote}”
-          </motion.p>
+            {splitQuote.map((part, i) =>
+              part.type === "br" ? (
+                <br key={part.key} />
+              ) : (
+                <Letter key={part.key} delay={i * 0.015}>
+                  {part.ch}
+                </Letter>
+              )
+            )}
+          </p>
 
-          {/* Autor */}
-          <motion.span
-            className="mt-[26px] text-[15px] text-white/55 font-normal tracking-wide"
+          {/* AUTHOR */}
+          <motion.figcaption
+            className="mt-[28px] text-[15px] text-white/55 tracking-wide"
             initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0, transition: { delay: 0.5, duration: 0.45, ease: "easeOut" } }}
+            animate={{ opacity: 1, y: 0, transition: { delay: 0.45, duration: 0.45, ease: "easeOut" } }}
           >
-            — {current.author}
-          </motion.span>
-
-          {/* Spiegelung mit weicher Maskierung */}
-          <motion.div
-            aria-hidden="true"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.35, transition: { delay: 0.55, duration: 0.6 } }}
-            exit={{ opacity: 0, transition: { duration: 0.4 } }}
-            className="mt-[22px] w-full select-none"
-          >
-            <div className="mx-auto max-w-[min(90%,800px)]">
-              <div
-                className="text-[clamp(20px,3vw,32px)] leading-snug font-light text-white/90"
-                style={{
-                  transform: "scaleY(-1)",
-                  opacity: 0.35,
-                  filter: "blur(2px)",
-                  whiteSpace: "pre-line",
-                  WebkitMaskImage:
-                    "linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.2) 40%, rgba(0,0,0,0))",
-                  maskImage:
-                    "linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.2) 40%, rgba(0,0,0,0))",
-                }}
-              >
-                “{current.quote}”
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
+            — {cur.author}
+          </motion.figcaption>
+        </motion.figure>
       </AnimatePresence>
+
+      {/* Local styles für FrostBloom & Wisps */}
+      <style jsx>{`
+        /* Frostiger Rand an der Schrift – nur Helligkeit/Blur */
+        .frost-bloom {
+          text-shadow:
+            0 0 0.6px rgba(255,255,255,0.9),
+            0 0 8px rgba(255,255,255,0.18),
+            0 0 18px rgba(255,255,255,0.10);
+        }
+        @media (prefers-reduced-motion: no-preference) {
+          .frost-bloom {
+            filter: drop-shadow(0 0 0.25rem rgba(255,255,255,0.12));
+          }
+        }
+      `}</style>
     </section>
+  );
+}
+
+/** Ein einzelner Buchstabe mit "Cold Rise" Animation */
+function Letter({
+  children,
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+}): JSX.Element {
+  // Leerzeichen als normaler space, aber mit kleinem Non-breaking-Wrapper
+  if (children === " ") return <span style={{ display: "inline-block", width: "0.34ch" }} />;
+  return (
+    <motion.span
+      initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        transition: { delay, duration: 0.28, ease: [0.22, 1, 0.36, 1] },
+      }}
+      exit={{ opacity: 0 }}
+      style={{ display: "inline-block" }}
+    >
+      {children}
+    </motion.span>
+  );
+}
+
+/** Subtile Vapor-Wisps (vier leichte Nebelfahnen, loopend) */
+function VaporField() {
+  return (
+    <>
+      {[0, 1, 2, 3].map((i) => (
+        <motion.div
+          key={i}
+          aria-hidden="true"
+          className="absolute pointer-events-none"
+          style={{
+            left: `${20 + i * 18}%`,
+            bottom: "8%",
+            width: "180px",
+            height: "220px",
+            background:
+              "radial-gradient(40% 30% at 50% 90%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.10) 35%, transparent 70%)",
+            filter: "blur(12px)",
+            mixBlendMode: "screen",
+          }}
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: [0.0, 0.22, 0.0],
+            y: [-10, -70 - i * 8, -120 - i * 12],
+            scale: [1, 1.06, 1],
+          }}
+          transition={{
+            duration: 6 + i,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.75,
+          }}
+        />
+      ))}
+    </>
   );
 }
