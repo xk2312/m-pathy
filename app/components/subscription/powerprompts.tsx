@@ -6,8 +6,7 @@ import { useLang } from "@/app/providers/LanguageProvider";
 import { motion } from "framer-motion";
 
 // Zielpfad für Page 2 (falls später anders): per ENV überschreibbar
-const PAGE2_PATH = process.env.NEXT_PUBLIC_PAGE2_PATH ?? "/m-pathy/page2";
-
+const PAGE2_PATH = process.env.NEXT_PUBLIC_PAGE2_PATH ?? "/page2";
 
 type CatId = "parents" | "students" | "couples" | "doctors" | "marketing" | "universal";
 
@@ -98,13 +97,13 @@ export default function PowerPrompts() {
     doctors:   [safeT("a3"), safeT("a4")],
     marketing: [safeT("m1"), safeT("m2")],
     universal: [safeT("u1"), safeT("u2"), safeT("u3")],
-  }), [t]); // t in deps so it refreshes on locale change
+  }), [t]); // refresh on locale change
 
   const [active, setActive] = useState<CatId>("parents");
 
-    const onAsk = (text: string) => {
+  const onAsk = (text: string) => {
     const q = encodeURIComponent(text);
-    router.push(`${PAGE2_PATH}?prefill=${q}`); // korrekt: /m-pathy/page2
+    router.push(`${PAGE2_PATH}?prefill=${q}`); // führt jetzt korrekt zu /page2
   };
 
   const title = (() => {
