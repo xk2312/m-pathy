@@ -230,56 +230,7 @@ export default function PowerPrompts() {
         <div className="w-full h-[30px]" aria-hidden="true" />
 
         {/* Questions list */}
-                <div className="mx-auto max-w-[min(100%,1040px)]">
-          {QUESTIONS[active].map((q, i) => (
-            <div key={i}>
-              <div
-                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 md:gap-6
-                           rounded-3xl bg-white/6 ring-1 ring-white/12 px-6 md:px-7 py-[13px] md:py-[13px] backdrop-blur-md
-                           shadow-[0_14px_42px_rgba(0,0,0,0.38)]"
-              >
-                <div className="text-[17px] md:text-[18px] leading-[1.45] text-white/95">
-                  {q}
-                </div>
-
-                <motion.button
-                  whileHover={{ y: -1, scale: 1.02 }}
-                  whileTap={{ scale: 0.985 }}
-                  onClick={() => onAsk(q)}
-                  className="inline-flex items-center justify-center rounded-2xl px-5 md:px-6 py-3 md:py-3.5
-                             text-[15px] md:text-[16px] font-semibold tracking-[-0.005em]
-                             bg-white/12 hover:bg-white/16 active:bg-white/18
-                             ring-1 ring-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.4)]
-                             transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
-                >
-                  {t('pp.ask') !== 'pp.ask' ? t('pp.ask') : BASE.ask}
-                </motion.button>
-              </div>
-
-              {/* Real buffer between rows */}
-              {i < QUESTIONS[active].length - 1 && (
-                <div className="w-full h-[50px]" aria-hidden="true" />
-              )}
-            </div>
-          ))}
-        </div>
-
-
-              <motion.button
-                whileHover={{ y: -1, scale: 1.02 }}
-                whileTap={{ scale: 0.985 }}
-                onClick={() => onAsk(q)}
-                className="inline-flex items-center justify-center rounded-2xl px-5 md:px-6 py-3 md:py-3.5
-                           text-[15px] md:text-[16px] font-semibold tracking-[-0.005em]
-                           bg-white/12 hover:bg-white/16 active:bg-white/18
-                           ring-1 ring-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.4)]
-                           transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
-              >
-                {t("pp.ask") !== "pp.ask" ? t("pp.ask") : BASE.ask}
-              </motion.button>
-            </div>
-          ))}
-        </div>
+       √
       </div>
     </section>
   );
