@@ -138,12 +138,13 @@ export default function PowerPrompts() {
   return (
     <section aria-label="Power Prompts" className="relative py-16 md:py-28">
       {/* Title + hint */}
-            <div className="text-center mb-12 md:mb-16">
+            <div className="text-center mb-[60px] md:mb-[60px]">
         <h2 className="text-[clamp(34px,6vw,72px)] leading-[1.05] font-semibold text-white tracking-tight">
           {title}
         </h2>
         <p
-          className="mt-5 md:mt-6 max-w-3xl mx-auto text-[clamp(15px,2vw,18px)] leading-relaxed text-white/80
+          className="mt-5 md:mt-6 mx-auto text-center max-w-3xl
+                     text-[clamp(15px,2vw,18px)] leading-relaxed text-white/80
                      px-4"
         >
           {hint}
@@ -151,11 +152,12 @@ export default function PowerPrompts() {
       </div>
 
       {/* Category pills */}
-      <div className="mx-auto max-w-[min(100%,1120px)]">
+      <div className="mx-auto max-w-[min(100%,1120px)] mb-[30px]">
         <div
           className="flex flex-wrap items-center justify-center gap-3.5 md:gap-5
                      px-2 md:px-0"
         >
+
 
           {CATS.map(({ id, label }) => {
             const activeNow = id === active;
@@ -166,8 +168,7 @@ export default function PowerPrompts() {
                 aria-pressed={activeNow}
                 className={[
                   // Größe + Haptik
-                  "group relative flex items-center gap-3 md:gap-3.5 px-6 md:px-7 py-3.5 md:py-4 rounded-[22px]",
-                  // Materialität
+                    "group relative flex items-center gap-3 md:gap-3.5 px-[7px] md:px-[7px] py-[5px] md:py-[5px] rounded-[22px]",                  // Materialität
                   "bg-white/6 hover:bg-white/10 transition-colors backdrop-blur-md",
                   // Kontur + Tiefe
                   "ring-1 ring-white/12 shadow-[0_10px_36px_rgba(0,0,0,0.38)]",
