@@ -138,28 +138,43 @@ export default function PowerPrompts() {
   return (
     <section aria-label="Power Prompts" className="relative py-16 md:py-28">
       {/* Title + hint */}
-      <div className="text-center mb-10 md:mb-14">
+            <div className="text-center mb-12 md:mb-16">
         <h2 className="text-[clamp(34px,6vw,72px)] leading-[1.05] font-semibold text-white tracking-tight">
           {title}
         </h2>
-        <p className="mt-4 md:mt-5 max-w-2xl mx-auto text-base md:text-lg text-white/75">{hint}</p>
+        <p
+          className="mt-5 md:mt-6 max-w-3xl mx-auto text-[clamp(15px,2vw,18px)] leading-relaxed text-white/80
+                     px-4"
+        >
+          {hint}
+        </p>
       </div>
 
       {/* Category pills */}
-      <div className="mx-auto max-w-[min(100%,1040px)]">
-        <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+      <div className="mx-auto max-w-[min(100%,1120px)]">
+        <div
+          className="flex flex-wrap items-center justify-center gap-3.5 md:gap-5
+                     px-2 md:px-0"
+        >
+
           {CATS.map(({ id, label }) => {
             const activeNow = id === active;
             return (
-              <button
+                            <button
                 key={id}
                 onClick={() => setActive(id)}
                 aria-pressed={activeNow}
                 className={[
-                  "group relative flex items-center gap-3 md:gap-3.5 px-5 md:px-6 py-3 md:py-3.5 rounded-3xl",
-                  "bg-white/5 hover:bg-white/10 transition-colors backdrop-blur",
-                  "ring-1 ring-white/10 shadow-[0_8px_28px_rgba(0,0,0,0.35)]",
-                  activeNow ? "shadow-[0_0_0_2px_rgba(0,255,255,0.15)]" : "",
+                  // Größe + Haptik
+                  "group relative flex items-center gap-3 md:gap-3.5 px-6 md:px-7 py-3.5 md:py-4 rounded-[22px]",
+                  // Materialität
+                  "bg-white/6 hover:bg-white/10 transition-colors backdrop-blur-md",
+                  // Kontur + Tiefe
+                  "ring-1 ring-white/12 shadow-[0_10px_36px_rgba(0,0,0,0.38)]",
+                  // Aktiver Glow-Ring
+                  activeNow ? "shadow-[0_0_0_2px_rgba(0,255,255,0.20)]" : "",
+                  // Fokus-Sichtbarkeit
+                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
                 ].join(" ")}
               >
                 <span
@@ -170,44 +185,52 @@ export default function PowerPrompts() {
                 >
                   {ICONS[id]}
                 </span>
-                <span className="text-[15px] md:text-base">{label}</span>
+                <span className="text-[15px] md:text-[16px] font-medium tracking-[0.1px]">
+                  {label}
+                </span>
 
                 {activeNow && (
                   <motion.span
                     layoutId="pp-glow"
-                    className="absolute inset-0 rounded-3xl"
-                    style={{ boxShadow: "0 0 36px 10px rgba(0,255,255,0.16)" }}
+                    className="pointer-events-none absolute inset-0 rounded-[22px]"
+                    style={{ boxShadow: "0 0 46px 12px rgba(0,255,255,0.18)" }}
                   />
                 )}
               </button>
+
             );
           })}
         </div>
 
         {/* Questions list */}
-        <div className="mt-12 md:mt-16 mx-auto max-w-[min(100%,980px)] space-y-4 md:space-y-5">
+                <div className="mt-14 md:mt-20 mx-auto max-w-[min(100%,1040px)] space-y-5 md:space-y-6">
           {QUESTIONS[active].map((q, i) => (
             <div
               key={i}
-              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 md:gap-5 rounded-2xl bg-white/5 ring-1 ring-white/10 px-5 md:px-6 py-4 md:py-5 backdrop-blur"
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 md:gap-6
+                         rounded-3xl bg-white/6 ring-1 ring-white/12 px-6 md:px-7 py-5 md:py-6 backdrop-blur-md
+                         shadow-[0_14px_42px_rgba(0,0,0,0.38)]"
             >
-              <div className="text-[16px] md:text-[17px] leading-snug">{q}</div>
+              <div className="text-[17px] md:text-[18px] leading-[1.45] text-white/95">
+                {q}
+              </div>
 
               <motion.button
                 whileHover={{ y: -1, scale: 1.02 }}
                 whileTap={{ scale: 0.985 }}
                 onClick={() => onAsk(q)}
-                className="inline-flex items-center justify-center rounded-xl px-4 md:px-5 py-2.5 md:py-3
-                           text-[15px] md:text-base font-semibold tracking-[-0.01em]
-                           bg-white/10 hover:bg-white/14 active:bg-white/16
-                           ring-1 ring-white/20 shadow-[0_10px_30px_rgba(0,0,0,0.35)]
-                           transition"
+                className="inline-flex items-center justify-center rounded-2xl px-5 md:px-6 py-3 md:py-3.5
+                           text-[15px] md:text-[16px] font-semibold tracking-[-0.005em]
+                           bg-white/12 hover:bg-white/16 active:bg-white/18
+                           ring-1 ring-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.4)]
+                           transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
               >
                 {t("pp.ask") !== "pp.ask" ? t("pp.ask") : BASE.ask}
               </motion.button>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );
