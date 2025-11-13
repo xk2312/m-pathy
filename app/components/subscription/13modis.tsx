@@ -227,13 +227,42 @@ export default function Modes13() {
     return out;
   }, [t]);
 
-  const active = modes.find((m) => m.id === activeId) ?? modes[0];
+   const active = modes.find((m) => m.id === activeId) ?? modes[0];
 
   const onSelect = (id: ModeId) => {
     setActiveId(id);
     const g = BASE_MODES[id]?.group;
     if (g) setActiveGroup(g);
   };
+
+  /* FLOW — Mode Sequencer */
+  React.useEffect(() => {
+    if (activeId !== "flow") return;
+
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReduced) return;
+
+    // Reihenfolge: alle Modi außer FLOW selbst
+    const seq = MODE_ORDER.filter((id) => id !== "flow");
+    let i = 0;
+
+    const tick = () => {
+      const next = seq[i % seq.length];
+      const g = BASE_MODES[next].group;
+      setActiveId(next);
+      setActiveGroup(g);
+      i++;
+    };
+
+    // langsame, meditative Geschwindigkeit
+    tick();
+    const interval = setInterval(tick, 1600);
+
+    return () => clearInterval(interval);
+  }, [activeId]);
 
   return (
 

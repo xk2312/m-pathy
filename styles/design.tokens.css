@@ -216,12 +216,14 @@
 
   /* ---------- CORE ---------- */
   --mode-flow-aura-intensity:     0.90;
-  --mode-flow-pulse-duration:     var(--modes-pulse-duration-mid);
+  /* Flow: sehr weiche, langsame Aura-Pulse */
+  --mode-flow-pulse-duration:     4800ms;
   --mode-flow-halo-strength:      0.80;
 
   --mode-onboarding-aura-intensity: 0.55;
   --mode-onboarding-pulse-duration: var(--modes-pulse-duration-mid);
   --mode-onboarding-halo-strength:  0.55;
+
 
   --mode-build-aura-intensity:      0.65;
   --mode-build-pulse-duration:      var(--modes-pulse-duration-fast);
