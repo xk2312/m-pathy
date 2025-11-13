@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './ZenithButton.module.css';
 
@@ -8,9 +8,14 @@ type Position = 'under' | 'over';
 
 interface Props {
   position?: Position;
-  onNavigate?: string;   // z.B. '/start' oder '#next'
-  appearDelayMs?: number; // optional: Verzögerung nach m:formed (Default 0)
-  resetFlagOnMount?: boolean; // HMR-Fix: default true
+  onNavigate?: string;
+  appearDelayMs?: number;
+  resetFlagOnMount?: boolean;
+
+  // 🔥 NEU:
+  children?: ReactNode;
+  label?: string;
+  "aria-label"?: string;
 }
 
 // TS: Window-Flag typisieren
@@ -23,13 +28,20 @@ export default function ZenithButton({
   onNavigate,
   appearDelayMs = 0,
   resetFlagOnMount = true,
+
+  // 🔥 NEU:
+  children,
+  label,
+  "aria-label": ariaLabelProp,
 }: Props) {
   const router = useRouter();
   const rootRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
+  const text = children ?? label ?? "Weiter";
+  const ariaLabel = ariaLabelProp ?? label ?? "Weiter";
+
   useEffect(() => {
-    // HMR/Navigation-Reset, damit der Button nicht "kleben" bleibt
     if (resetFlagOnMount) window.__mFormedFired = false;
 
     const show = () => {
@@ -41,22 +53,20 @@ export default function ZenithButton({
       return undefined;
     };
 
-    // Falls das M schon fertig war (z. B. schneller Dispatch), sofort anzeigen
     if (window.__mFormedFired) {
       const cleanup = show();
       return cleanup;
     }
 
-    // Einmalig auf das Canvas-Ereignis warten
     const onFormed = () => {
       window.__mFormedFired = true;
       show();
     };
+
     window.addEventListener('m:formed', onFormed, { once: true });
     return () => window.removeEventListener('m:formed', onFormed);
   }, [appearDelayMs, resetFlagOnMount]);
 
-  // GAR NICHT rendern, bis sichtbar
   if (!visible) return null;
 
   const burstDust = (x: number, y: number, count = 22) => {
@@ -68,11 +78,11 @@ export default function ZenithButton({
       const angle = (Math.PI * 2) * (i / count) + Math.random() * 0.6;
       const radius = 40 + Math.random() * 90;
       const dx = Math.cos(angle) * radius;
-      const dy = (Math.sin(angle) * radius) - 120;
+      const dy = Math.sin(angle) * radius - 120;
       p.style.setProperty('--dx', `${dx}px`);
       p.style.setProperty('--dy', `${dy}px`);
       p.style.left = `${x - 3}px`;
-      p.style.top  = `${y - 3}px`;
+      p.style.top = `${y - 3}px`;
       p.style.animation = `zenithDust ${0.7 + Math.random() * 0.5}s ease forwards`;
       root.appendChild(p);
       setTimeout(() => p.remove(), 1200);
@@ -82,7 +92,7 @@ export default function ZenithButton({
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const cx = rect.left + rect.width / 2 + window.scrollX;
-    const cy = rect.top  + rect.height / 2 + window.scrollY;
+    const cy = rect.top + rect.height / 2 + window.scrollY;
     burstDust(cx, cy, 26);
     e.currentTarget.classList.add(styles.isExiting);
     setTimeout(() => {
@@ -97,8 +107,14 @@ export default function ZenithButton({
 
   return (
     <div className={styles.scope} data-position={position} ref={rootRef}>
-      <button className={styles.btn} onClick={handleClick} aria-label="Weiter">
-        <span className={styles.label}>DIVE DEEPER</span>
+      <button
+        className={styles.btn}
+        onClick={handleClick}
+        aria-label={ariaLabel}
+      >
+        {/* 🔥 DYNAMISCHE LABEL-LOGIK */}
+        <span className={styles.label}>{text}</span>
+
         <span className={`${styles.crystal} ${styles.c1}`} />
         <span className={`${styles.crystal} ${styles.c2}`} />
         <span className={`${styles.crystal} ${styles.c3}`} />
