@@ -198,9 +198,11 @@ const MODE_GROUPS: { id: ModeGroupId; modes: ModeId[] }[] = [
 export default function Modes13() {
   const { t } = useLang();
   const [activeId, setActiveId] = useState<ModeId>("flow");
+  const [activeGroup, setActiveGroup] = useState<ModeGroupId>("core");
 
   const modes = useMemo(() => {
     const out: ModeMetaBase[] = [];
+
     for (const id of MODE_ORDER) {
       const base = BASE_MODES[id];
       const prefix = `modes.${id}`;
@@ -229,9 +231,12 @@ export default function Modes13() {
 
   const onSelect = (id: ModeId) => {
     setActiveId(id);
+    const g = BASE_MODES[id]?.group;
+    if (g) setActiveGroup(g);
   };
 
   return (
+
     <section
       className="m-modes13"
       aria-labelledby="m-modes13-title"
@@ -260,7 +265,7 @@ export default function Modes13() {
 
         {/* Mobile-Order: 1) Dropdown, 2) Figur, 3) Beschreibung */}
         <div className="m-modes13-main">
-          {/* Mode-Selector (Dropdown + Gruppen) */}
+                   {/* Mode-Selector (Tabs + aktive Gruppe) */}
           <div className="m-modes13-selector" aria-label="Mode selector">
             <span className="m-modes13-selector-label">
               {t("modes.dropdown.label") !== "modes.dropdown.label"
@@ -268,49 +273,86 @@ export default function Modes13() {
                 : "Choose a mode"}
             </span>
 
+            {/* Tab-Leiste für die Gruppen (Core, Intellect, Creator, Heart, Spirit) */}
+            <div
+              className="m-modes13-tabs"
+              role="tablist"
+              aria-label="Mode groups"
+            >
+              {MODE_GROUPS.map((group) => {
+                const isActive = group.id === activeGroup;
+                const label =
+                  t(`modes.group.${group.id}`) !== `modes.group.${group.id}`
+                    ? t(`modes.group.${group.id}`)
+                    : GROUP_LABELS[group.id];
+
+                return (
+                  <button
+                    key={group.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    className={
+                      "m-modes13-tab" +
+                      (isActive ? " m-modes13-tab--active" : "")
+                    }
+                    onClick={() => setActiveGroup(group.id)}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Pills der aktuell aktiven Gruppe */}
             <div className="m-modes13-groups" role="listbox">
-              {MODE_GROUPS.map((group) => (
-                <div
-                  key={group.id}
-                  className="m-modes13-group"
-                  data-group={group.id}
-                >
-                  <div className="m-modes13-group-title">
-                    {t(`modes.group.${group.id}`) !== `modes.group.${group.id}`
-                      ? t(`modes.group.${group.id}`)
-                      : GROUP_LABELS[group.id]}
+              {MODE_GROUPS.map((group) => {
+                if (group.id !== activeGroup) return null;
+
+                return (
+                  <div
+                    key={group.id}
+                    className="m-modes13-group"
+                    data-group={group.id}
+                  >
+                    <div className="m-modes13-group-title">
+                      {t(`modes.group.${group.id}`) !== `modes.group.${group.id}`
+                        ? t(`modes.group.${group.id}`)
+                        : GROUP_LABELS[group.id]}
+                    </div>
+                    <div className="m-modes13-group-modes">
+                      {group.modes.map((id) => {
+                        const mode = modes.find((m) => m.id === id);
+                        if (!mode) return null;
+                        const isActive = mode.id === active.id;
+                        return (
+                          <button
+                            key={mode.id}
+                            type="button"
+                            className={
+                              "m-modes13-pill" +
+                              (isActive ? " m-modes13-pill--active" : "")
+                            }
+                            data-mode-pill={mode.id}
+                            aria-pressed={isActive}
+                            onClick={() => onSelect(mode.id)}
+                          >
+                            <span className="m-modes13-pill-name">
+                              {mode.name}
+                            </span>
+                            <span className="m-modes13-pill-label">
+                              {mode.label}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                  <div className="m-modes13-group-modes">
-                    {group.modes.map((id) => {
-                      const mode = modes.find((m) => m.id === id);
-                      if (!mode) return null;
-                      const isActive = mode.id === active.id;
-                      return (
-                        <button
-                          key={mode.id}
-                          type="button"
-                          className={
-                            "m-modes13-pill" +
-                            (isActive ? " m-modes13-pill--active" : "")
-                          }
-                          data-mode-pill={mode.id}
-                          aria-pressed={isActive}
-                          onClick={() => onSelect(mode.id)}
-                        >
-                          <span className="m-modes13-pill-name">
-                            {mode.name}
-                          </span>
-                          <span className="m-modes13-pill-label">
-                            {mode.label}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
+
 
           {/* Figur + Aura (Desktop links, Mobile mittig) */}
           <div className="m-modes13-figure-shell">

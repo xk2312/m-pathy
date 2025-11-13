@@ -626,6 +626,77 @@ div[data-convo="1"] {
   opacity: 0.7;
 }
 
+/* Tabs (Core / Intellect / Creator / Heart / Spirit) */
+.m-modes13-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid hsl(0 0% 100% / 0.08);
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.m-modes13-tabs::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+.m-modes13-tab {
+  position: relative;
+  padding: 6px 10px 10px;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.72;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  outline: none;
+  transition:
+    opacity var(--modes-select-transition),
+    transform 120ms ease-out;
+}
+
+.m-modes13-tab:hover,
+.m-modes13-tab:focus-visible {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+/* Cyan-Linie mit Glow für active */
+.m-modes13-tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      ellipse at center,
+      hsl(190 100% 70% / 0.9) 0%,
+      hsl(190 100% 70% / 0.0) 70%
+    );
+  opacity: 0;
+  transform: scaleX(0.7);
+  filter: blur(1.5px);
+  transition:
+    opacity 160ms ease-out,
+    transform 160ms ease-out;
+}
+
+.m-modes13-tab--active {
+  opacity: 1;
+}
+
+.m-modes13-tab--active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+
 .m-modes13-groups {
   display: flex;
   flex-direction: column;
@@ -781,10 +852,9 @@ div[data-convo="1"] {
 /* Beschreibung / Output */
 
 .m-modes13-description {
-  max-width: 40rem;
-  margin-top: 8px;
+  max-width: 32rem;
+  margin-top: 6px;
 }
-
 .m-modes13-description-title {
   font-size: 0.9rem;
   letter-spacing: 0.12em;
