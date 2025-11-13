@@ -571,7 +571,8 @@ div[data-convo="1"] {
 
 .m-modes13 {
   position: relative;
-  padding-block: clamp(72px, 12vw, 140px);
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
 .m-modes13-inner {
