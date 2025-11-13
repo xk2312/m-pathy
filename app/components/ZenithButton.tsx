@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './ZenithButton.module.css';
 
-type Position = 'under' | 'over';
+type Position = 'under' | 'over' | 'hero';
 
 interface Props {
   position?: Position;
@@ -67,7 +67,10 @@ export default function ZenithButton({
     return () => window.removeEventListener('m:formed', onFormed);
   }, [appearDelayMs, resetFlagOnMount]);
 
-  if (!visible) return null;
+const isHero = position === "hero";
+
+// Nur nicht-Hero-Varianten dürfen invisible sein
+if (!isHero && !visible) return null;
 
   const burstDust = (x: number, y: number, count = 22) => {
     const root = rootRef.current;

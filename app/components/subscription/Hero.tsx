@@ -27,12 +27,10 @@ export default function Hero() {
         {t("hero_sub")}
       </p>
 
-                  {/* CTA-Button mit zusätzlichem Abstand nach unten (40 px) */}
-      <div className="mt-[32px] mb-[40px] flex w-full justify-center">
-        <ZenithButton aria-label={t("hero_cta")}>
-          {t("hero_cta")}
-        </ZenithButton>
-      </div>
+       <ZenithButton position="hero" aria-label={t("hero_cta")}>
+  {t("hero_cta")}
+</ZenithButton>
+
 
 
 
