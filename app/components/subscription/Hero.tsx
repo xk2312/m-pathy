@@ -27,9 +27,10 @@ export default function Hero() {
         {t("hero_sub")}
       </p>
 
-       <ZenithButton position="hero" aria-label={t("hero_cta")}>
+       <ZenithButton position="inline" aria-label={t("hero_cta")}>
   {t("hero_cta")}
 </ZenithButton>
+
 
 
 

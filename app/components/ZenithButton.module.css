@@ -131,4 +131,15 @@
     pointer-events: none;
     opacity: 0;
   }
-  
+  .inlineScope {
+  position: relative;
+  width: auto;
+  height: auto;
+  pointer-events: auto;
+}
+
+.inlineScope .btn {
+  position: relative;
+  left: 0;
+  transform: none;
+}
