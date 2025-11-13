@@ -2,6 +2,8 @@
 
 import React, { useMemo, useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
+import { modes15 } from "@/lib/i18n.modes";
+
 
 // --------------------------------------------------------
 // Types & static mode registry
@@ -210,24 +212,24 @@ export default function Modes13() {
 
     for (const id of MODE_ORDER) {
       const base = BASE_MODES[id];
-      const prefix = `modes.${id}`;
-      const nameKey = `${prefix}.name`;
-      const labelKey = `${prefix}.label`;
-      const descKey = `${prefix}.description`;
+      const prefix = `modes15.${id}`;
+const nameKey = `${prefix}.name`;
+const labelKey = `${prefix}.label`;
+const descKey = `${prefix}.description`;
 
-      const nameT = t(nameKey);
-      const labelT = t(labelKey);
-      const descT = t(descKey);
 
-      const safe = (val: string, key: string, fallback: string) =>
-        !val || val === key ? fallback : val;
+          const nameT = t(nameKey);
+    const labelT = t(labelKey);
+    const descT = t(descKey);
 
-      out.push({
-        ...base,
-        name: safe(nameT, nameKey, base.name),
-        label: safe(labelT, labelKey, base.label),
-        description: safe(descT, descKey, base.description),
-      });
+    out.push({
+      ...base,
+      // Direkte Fallbacks: wenn kein Übersetzungstreffer, nutze base.*
+      name: nameT && nameT !== nameKey ? nameT : base.name,
+      label: labelT && labelT !== labelKey ? labelT : base.label,
+      description: descT && descT !== descKey ? descT : base.description,
+    });
+
     }
     return out;
   }, [t]);
@@ -289,20 +291,16 @@ React.useEffect(() => {
         {/* Kopfbereich */}
         <header className="m-modes13-header">
           <p className="m-modes13-kicker">
-            {t("modes.kicker") !== "modes.kicker"
-              ? t("modes.kicker")
-              : "Modes · GPTM-Galaxy core states"}
-          </p>
-          <h2 id="m-modes13-title" className="m-modes13-title">
-            {t("modes.title") !== "modes.title"
-              ? t("modes.title")
-              : "Your operating modes"}
-          </h2>
-          <p className="m-modes13-subtitle">
-            {t("modes.subtitle") !== "modes.subtitle"
-              ? t("modes.subtitle")
-              : "Choose a mode to see how GPTM-Galaxy behaves – or let FLOW orchestrate them for you."}
-          </p>
+  {t("modes15.kicker") || "15 Modes by m-pathy"}
+</p>
+<h2 id="m-modes13-title" className="m-modes13-title">
+  {t("modes15.title") || "Your operating modes"}
+</h2>
+<p className="m-modes13-subtitle">
+  {t("modes15.subtitle") ||
+    "Choose a mode to see how m-pathy behaves — or let FLOW orchestrate them for you."}
+</p>
+
         </header>
 
         {/* Mobile-Order: 1) Textspalte, 2) Figur */}
@@ -311,11 +309,9 @@ React.useEffect(() => {
           <div className="m-modes13-left">
             {/* Mode-Selector (Tabs + aktive Gruppe) */}
             <div className="m-modes13-selector" aria-label="Mode selector">
-              <span className="m-modes13-selector-label">
-                {t("modes.dropdown.label") !== "modes.dropdown.label"
-                  ? t("modes.dropdown.label")
-                  : "Choose a mode"}
-              </span>
+             <span className="m-modes13-selector-label">
+  {t("modes15.dropdown.label") || "Choose a mode"}
+</span>
 
               {/* Tab-Leiste für die Gruppen (Core, Intellect, Creator, Heart, Spirit) */}
               <div
@@ -327,7 +323,7 @@ React.useEffect(() => {
                   const isActive = group.id === activeGroup;
                   const label =
                     t(`modes.group.${group.id}`) !== `modes.group.${group.id}`
-                      ? t(`modes.group.${group.id}`)
+                      ? t(`modes15.group.${group.id}`)
                       : GROUP_LABELS[group.id];
 
                   return (
