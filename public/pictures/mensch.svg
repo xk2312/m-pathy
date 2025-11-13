@@ -1,0 +1,72 @@
+<svg width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="600" fill="#202020"/>
+
+  <circle cx="300" cy="300" r="250" fill="none" stroke="#555555" stroke-width="2" stroke-dasharray="8 4"/>
+  <rect x="50" y="50" width="500" height="500" fill="none" stroke="#555555" stroke-width="2" stroke-dasharray="8 4"/>
+
+  <g fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+    
+    <circle cx="300" cy="105" r="30" fill="#ffffff" stroke-width="0"/>
+    <line x1="300" y1="135" x2="300" y2="155" stroke-width="5"/>
+
+    <path
+      d="M300 155 
+         Q340 180 340 280 
+         Q340 330 300 330 
+         Q260 330 260 280 
+         Q260 180 300 155"
+      fill="#ffffff" 
+      fill-opacity="0.15"
+      stroke="#ffffff"
+      stroke-width="3"
+    />
+
+    <path
+      d="M320 165 
+         Q400 170 450 180 
+         Q490 190 530 230"
+      stroke-width="8"
+    />
+    <circle cx="540" cy="245" r="6" fill="#ffffff" stroke-width="0"/>
+    
+    <path
+      d="M280 165 
+         Q200 170 150 180 
+         Q110 190 70 230"
+      stroke-width="8"
+    />
+    <circle cx="60" cy="245" r="6" fill="#ffffff" stroke-width="0"/>
+
+    <path
+      d="M290 330 
+         Q270 380 270 430 
+         Q270 470 240 545"
+      stroke-width="10"
+    />
+    <path d="M240 545 L255 550 L270 545" stroke-width="8"/>
+    
+    <path
+      d="M310 330 
+         Q330 380 330 430 
+         Q330 470 360 545"
+      stroke-width="10"
+    />
+    <path d="M360 545 L345 550 L330 545" stroke-width="8"/>
+    
+    <path
+      d="M320 175 
+         Q330 250 340 350 
+         Q350 450 350 500"
+      stroke="#aaaaaa"
+      stroke-width="5"
+    />
+    <path
+      d="M280 175 
+         Q270 250 260 350 
+         Q250 450 250 500"
+      stroke="#aaaaaa"
+      stroke-width="5"
+    />
+
+  </g>
+</svg>

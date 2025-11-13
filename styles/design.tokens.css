@@ -166,3 +166,43 @@
   /* Focus / A11y */
   --council-visit-focus-ring: 0 0 0 2px rgba(34, 211, 238, 0.55);
 }
+/* ─────────────────────────────────────────────
+   Modes – Aura Colors & Timing (13 Modis)
+   Diese Tokens werden von app/components/subscription/13modis.tsx verwendet.
+   ───────────────────────────────────────────── */
+
+:root {
+  /* Basis: chromatischer Minimalismus (Gold · Blau · Violett) */
+  --mode-onboarding-color: #f4d27a;  /* warmes Gold, Willkommen */
+  --mode-research-color:   #7fb6ff;  /* klares Research-Blau   */
+  --mode-council-color:    #c5a9ff;  /* violetter Rat          */
+  --mode-calm-color:       #6fa8ff;  /* tiefes Calm-Blau       */
+  --mode-play-color:       #ffb3c6;  /* sanftes Play-Rosé      */
+  --mode-oracle-color:     #e6b7ff;  /* mystisches Violett     */
+  --mode-joy-color:        #ffe082;  /* helles Joy-Gold        */
+  --mode-vision-color:     #9ad7ff;  /* Vision-Cyan            */
+  --mode-empathy-color:    #ffbcd4;  /* weiches Empathy-Rosé   */
+  --mode-love-color:       #ff99c2;  /* warmes Love-Pink       */
+  --mode-wisdom-color:     #f4f0ff;  /* milchiges Wisdom-Licht */
+  --mode-truth-color:      #e0f2ff;  /* Truth-Ice-Blue         */
+  --mode-peace-color:      #c9e8ff;  /* Peace-Blue             */
+
+  /* Aura-Motion – global für alle 13 Modi (Transform/Opacity only) */
+  --mode-aura-breath-scale-min: 0.98;
+  --mode-aura-breath-scale-max: 1.02;
+  --mode-aura-breath-duration:  3.6s;
+  --mode-aura-transition:       240ms ease-out;
+
+  /* Pills / Selector */
+  --mode-pill-radius:           999px;
+  --mode-pill-gap:              0.5rem;
+  --mode-pill-padding-inline:   0.9rem;
+  --mode-pill-padding-block:    0.45rem;
+  --mode-pill-active-scale:     1.04;
+  --mode-pill-transition:       160ms ease-out;
+
+  /* Text */
+  --mode-text-title-size:       1.05rem;
+  --mode-text-body-size:        0.9rem;
+  --mode-text-max-width:        40rem;
+}

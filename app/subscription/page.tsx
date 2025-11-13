@@ -10,6 +10,8 @@ import Hero from "@/app/components/subscription/Hero";
 import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
 import Testimonial from "@/app/components/subscription/testimonial"; // Klein, korrekt
 import PowerPrompts from "@/app/components/subscription/powerprompts"; // neu
+import Modis13 from "@/app/components/subscription/13modis"; // 13 Modi – neuer Abschnitt
+
 
 // KPI Board (Client-only; Recharts braucht Browser)
 const MPathyKpiBoard = dynamic(
@@ -121,7 +123,7 @@ export default function SubscriptionPage() {
           {/* Buffer #3 – unter Testimonial (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
-          {/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
+                {/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
           <section
             className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]"
             aria-label="PowerPrompts section"
@@ -136,8 +138,25 @@ export default function SubscriptionPage() {
 
           {/* Buffer #4 – unter PowerPrompts (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+
+          {/* ─────────────── 13 MODES SECTION ─────────────── */}
+          <section
+            className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]"
+            aria-label="Modes section"
+          >
+            <div
+              className="page-center"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
+            >
+              <Modis13 />
+            </div>
+          </section>
+
+          {/* Buffer #5 – unter 13 Modes (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
         </div>
       </main>
     </LanguageProvider>
   );
 }
+
