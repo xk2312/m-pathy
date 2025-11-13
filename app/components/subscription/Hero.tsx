@@ -23,22 +23,22 @@ export default function Hero() {
       </h1>
 
       {/* Subhead – leicht kräftiger */}
-      <p className="text-[16px] md:text-[18px] font-medium text-[#C7C7C7]">
+            <p className="text-[16px] md:text-[18px] font-medium text-[#C7C7C7]">
         {t("hero_sub")}
       </p>
 
-       <ZenithButton position="inline" aria-label={t("hero_cta")}>
-  {t("hero_cta")}
-</ZenithButton>
-
-
-
-
+      {/* CTA – inline Zenith */}
+      <div className="mt-[32px] mb-[40px] flex w-full justify-center">
+        <ZenithButton position="inline" aria-label={t("hero_cta")}>
+          {t("hero_cta")}
+        </ZenithButton>
+      </div>
 
       {/* Hinweis unter dem Button */}
       <p className="text-center text-[16px] md:text-[18px] text-[#C7C7C7]">
         {t("council_hint")}
       </p>
+
     </div>
   );
 }

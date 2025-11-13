@@ -4,21 +4,19 @@ import { useEffect, useRef, useState, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './ZenithButton.module.css';
 
-type Position = 'under' | 'over' | 'hero';
+type Position = 'under' | 'over' | 'inline';
 
 interface Props {
   position?: Position;
   onNavigate?: string;
   appearDelayMs?: number;
   resetFlagOnMount?: boolean;
-
-  // 🔥 NEU:
   children?: ReactNode;
   label?: string;
   "aria-label"?: string;
 }
 
-// TS: Window-Flag typisieren
+// Window Flag
 declare global {
   interface Window { __mFormedFired?: boolean }
 }
@@ -28,12 +26,11 @@ export default function ZenithButton({
   onNavigate,
   appearDelayMs = 0,
   resetFlagOnMount = true,
-
-  // 🔥 NEU:
   children,
   label,
   "aria-label": ariaLabelProp,
 }: Props) {
+
   const router = useRouter();
   const rootRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -41,6 +38,58 @@ export default function ZenithButton({
   const text = children ?? label ?? "Weiter";
   const ariaLabel = ariaLabelProp ?? label ?? "Weiter";
 
+  /** -----------------------------------------
+   *  CLICK HANDLER
+   * ----------------------------------------*/
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2 + window.scrollX;
+    const cy = rect.top + rect.height / 2 + window.scrollY;
+
+    burstDust(cx, cy, 26);
+    e.currentTarget.classList.add(styles.isExiting);
+
+    setTimeout(() => {
+      if (!onNavigate) return;
+      if (onNavigate.startsWith("#")) {
+        document.querySelector(onNavigate)?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        router.push(onNavigate);
+      }
+    }, 520);
+  };
+
+  /** -----------------------------------------
+   *  BURST PARTICLES
+   * ----------------------------------------*/
+  const burstDust = (x: number, y: number, count = 22) => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('span');
+      p.className = styles.zenithDust;
+
+      const angle = (Math.PI * 2) * (i / count) + Math.random() * 0.6;
+      const radius = 40 + Math.random() * 90;
+
+      const dx = Math.cos(angle) * radius;
+      const dy = Math.sin(angle) * radius - 120;
+
+      p.style.setProperty('--dx', `${dx}px`);
+      p.style.setProperty('--dy', `${dy}px`);
+      p.style.left = `${x - 3}px`;
+      p.style.top  = `${y - 3}px`;
+      p.style.animation = `zenithDust ${0.7 + Math.random() * 0.5}s ease forwards`;
+
+      root.appendChild(p);
+      setTimeout(() => p.remove(), 1200);
+    }
+  };
+
+  /** -----------------------------------------
+   *  VISIBILITY LOGIC (Canvas → appear)
+   * ----------------------------------------*/
   useEffect(() => {
     if (resetFlagOnMount) window.__mFormedFired = false;
 
@@ -52,6 +101,11 @@ export default function ZenithButton({
       setVisible(true);
       return undefined;
     };
+
+    if (position === "inline") {
+      setVisible(true);
+      return;
+    }
 
     if (window.__mFormedFired) {
       const cleanup = show();
@@ -65,59 +119,43 @@ export default function ZenithButton({
 
     window.addEventListener('m:formed', onFormed, { once: true });
     return () => window.removeEventListener('m:formed', onFormed);
-  }, [appearDelayMs, resetFlagOnMount]);
 
-const isHero = position === "hero";
+  }, [appearDelayMs, resetFlagOnMount, position]);
 
-// Nur nicht-Hero-Varianten dürfen invisible sein
-if (!isHero && !visible) return null;
+  // Für under/over: erst sichtbar machen wenn ready
+  if (position !== "inline" && !visible) return null;
 
-  const burstDust = (x: number, y: number, count = 22) => {
-    const root = rootRef.current;
-    if (!root) return;
-    for (let i = 0; i < count; i++) {
-      const p = document.createElement('span');
-      p.className = styles.zenithDust;
-      const angle = (Math.PI * 2) * (i / count) + Math.random() * 0.6;
-      const radius = 40 + Math.random() * 90;
-      const dx = Math.cos(angle) * radius;
-      const dy = Math.sin(angle) * radius - 120;
-      p.style.setProperty('--dx', `${dx}px`);
-      p.style.setProperty('--dy', `${dy}px`);
-      p.style.left = `${x - 3}px`;
-      p.style.top = `${y - 3}px`;
-      p.style.animation = `zenithDust ${0.7 + Math.random() * 0.5}s ease forwards`;
-      root.appendChild(p);
-      setTimeout(() => p.remove(), 1200);
-    }
-  };
+  /** -----------------------------------------
+   *   INLINE MODE (Hero)
+   * ----------------------------------------*/
+  if (position === "inline") {
+    return (
+      <div ref={rootRef} className={styles.inlineScope}>
+        <button
+          className={styles.btn}
+          onClick={handleClick}
+          aria-label={ariaLabel}
+        >
+          <span className={styles.label}>{text}</span>
+          <span className={`${styles.crystal} ${styles.c1}`} />
+          <span className={`${styles.crystal} ${styles.c2}`} />
+          <span className={`${styles.crystal} ${styles.c3}`} />
+        </button>
+      </div>
+    );
+  }
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2 + window.scrollX;
-    const cy = rect.top + rect.height / 2 + window.scrollY;
-    burstDust(cx, cy, 26);
-    e.currentTarget.classList.add(styles.isExiting);
-    setTimeout(() => {
-      if (!onNavigate) return;
-      if (onNavigate.startsWith('#')) {
-        document.querySelector(onNavigate)?.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        router.push(onNavigate);
-      }
-    }, 520);
-  };
-
+  /** -----------------------------------------
+   *   DEFAULT MODE (under / over)
+   * ----------------------------------------*/
   return (
-    <div className={styles.scope} data-position={position} ref={rootRef}>
+    <div ref={rootRef} className={styles.scope} data-position={position}>
       <button
         className={styles.btn}
         onClick={handleClick}
         aria-label={ariaLabel}
       >
-        {/* 🔥 DYNAMISCHE LABEL-LOGIK */}
         <span className={styles.label}>{text}</span>
-
         <span className={`${styles.crystal} ${styles.c1}`} />
         <span className={`${styles.crystal} ${styles.c2}`} />
         <span className={`${styles.crystal} ${styles.c3}`} />
