@@ -304,7 +304,7 @@ export default function Modes13() {
               })}
             </div>
 
-            {/* Pills der aktuell aktiven Gruppe */}
+                       {/* Pills der aktuell aktiven Gruppe */}
             <div className="m-modes13-groups" role="listbox">
               {MODE_GROUPS.map((group) => {
                 if (group.id !== activeGroup) return null;
@@ -315,13 +315,10 @@ export default function Modes13() {
                     className="m-modes13-group"
                     data-group={group.id}
                   >
-                    <div className="m-modes13-group-title">
-                      {t(`modes.group.${group.id}`) !== `modes.group.${group.id}`
-                        ? t(`modes.group.${group.id}`)
-                        : GROUP_LABELS[group.id]}
-                    </div>
+                    {/* Gruppentitel entfällt – Tabs zeigen die Kategorie */}
                     <div className="m-modes13-group-modes">
                       {group.modes.map((id) => {
+
                         const mode = modes.find((m) => m.id === id);
                         if (!mode) return null;
                         const isActive = mode.id === active.id;
