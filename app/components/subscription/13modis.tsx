@@ -2,7 +2,6 @@
 
 import React, { useMemo, useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
-import { modes15 } from "@/lib/i18n.modes";
 
 
 // --------------------------------------------------------

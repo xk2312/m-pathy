@@ -11,6 +11,7 @@ import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
 import Testimonial from "@/app/components/subscription/testimonial"; // Klein, korrekt
 import PowerPrompts from "@/app/components/subscription/powerprompts"; // neu
 import Modis13 from "@/app/components/subscription/13modis"; // 13 Modi – neuer Abschnitt
+import { modes15 } from "@/lib/i18n.modes";
 
 
 // KPI Board (Client-only; Recharts braucht Browser)
@@ -52,14 +53,36 @@ export default function SubscriptionPage() {
   // 1) aktive Locale
   const locale = detectLocale();
 
-  // 2) flache Sprach-Maps bilden
+    // 2) flache Sprach-Maps bilden (Subscription + 15 Modes)
   const enFlat = useMemo(() => flattenI18n(dict.en), []);
-  const locFlat = useMemo(() => flattenI18n(dict[locale]), [locale]);
+
+  const enModesFlat = useMemo(
+    () => flattenI18n(modes15.en ?? {}),
+    []
+  );
+
+  const locFlat = useMemo(
+    () => flattenI18n(dict[locale as keyof typeof dict] ?? {}),
+    [locale]
+  );
+
+  const locModesFlat = useMemo(
+    () => flattenI18n((modes15 as any)[locale] ?? {}),
+    [locale]
+  );
 
   // 3) Provider bekommt das korrekte Shape: { en: {...}, [locale]: {...} }
   const providerDict = useMemo(
-    () => ({ en: enFlat, [locale]: { ...enFlat, ...locFlat } }),
-    [enFlat, locFlat, locale]
+    () => ({
+      en: { ...enFlat, ...enModesFlat },
+      [locale]: {
+        ...enFlat,
+        ...enModesFlat,
+        ...locFlat,
+        ...locModesFlat,
+      },
+    }),
+    [enFlat, enModesFlat, locFlat, locModesFlat, locale]
   );
 
   return (
