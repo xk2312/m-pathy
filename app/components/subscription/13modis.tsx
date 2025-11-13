@@ -197,10 +197,15 @@ const MODE_GROUPS: { id: ModeGroupId; modes: ModeId[] }[] = [
 
 export default function Modes13() {
   const { t } = useLang();
-  const [activeId, setActiveId] = useState<ModeId>("flow");
+   const [activeId, setActiveId] = useState<ModeId>("flow");
   const [activeGroup, setActiveGroup] = useState<ModeGroupId>("core");
 
+  /* Visual-only State (Aura / Halo / Pulse Sequencer) */
+  const [visualId, setVisualId] = useState<ModeId>("flow");
+  const [visualGroup, setVisualGroup] = useState<ModeGroupId>("core");
+
   const modes = useMemo(() => {
+
     const out: ModeMetaBase[] = [];
 
     for (const id of MODE_ORDER) {
@@ -229,49 +234,57 @@ export default function Modes13() {
 
    const active = modes.find((m) => m.id === activeId) ?? modes[0];
 
-  const onSelect = (id: ModeId) => {
-    setActiveId(id);
-    const g = BASE_MODES[id]?.group;
-    if (g) setActiveGroup(g);
+ const onSelect = (id: ModeId) => {
+  setActiveId(id);
+  const g = BASE_MODES[id]?.group;
+  if (g) setActiveGroup(g);
+
+  // Sequencer stoppen & visuelles Feedback zurücksetzen
+  setVisualId(id);
+  setVisualGroup(g);
+};
+
+ /* FLOW — Mode Sequencer (nur visuell) */
+React.useEffect(() => {
+  if (activeId !== "flow") return;
+
+  const prefersReduced =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (prefersReduced) return;
+
+  // Reihenfolge aller Modi außer FLOW
+  const seq = MODE_ORDER.filter((id) => id !== "flow");
+  let i = 0;
+
+  const tick = () => {
+    const next = seq[i % seq.length];
+    const g = BASE_MODES[next].group;
+
+    // NUR visuelle Effekte ändern
+    setVisualId(next);
+    setVisualGroup(g);
+
+    i++;
   };
 
-  /* FLOW — Mode Sequencer */
-  React.useEffect(() => {
-    if (activeId !== "flow") return;
+  tick();
+  const interval = setInterval(tick, 2600); // schön langsam
 
-    const prefersReduced =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return () => clearInterval(interval);
+}, [activeId]);
 
-    if (prefersReduced) return;
-
-    // Reihenfolge: alle Modi außer FLOW selbst
-    const seq = MODE_ORDER.filter((id) => id !== "flow");
-    let i = 0;
-
-    const tick = () => {
-      const next = seq[i % seq.length];
-      const g = BASE_MODES[next].group;
-      setActiveId(next);
-      setActiveGroup(g);
-      i++;
-    };
-
-    // langsame, meditative Geschwindigkeit
-    tick();
-    const interval = setInterval(tick, 1600);
-
-    return () => clearInterval(interval);
-  }, [activeId]);
 
   return (
 
-    <section
-      className="m-modes13"
-      aria-labelledby="m-modes13-title"
-      data-mode={active.id}
-      data-mode-group={active.group}
-    >
+   <section
+  className="m-modes13"
+  aria-labelledby="m-modes13-title"
+  data-mode={visualId}
+  data-mode-group={visualGroup}
+>
+
       <div className="m-modes13-inner">
         {/* Kopfbereich */}
         <header className="m-modes13-header">
