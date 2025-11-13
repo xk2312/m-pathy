@@ -1,341 +1,128 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import { useState, useMemo } from "react";
+import Image from "next/image";
 import { useLang } from "@/app/providers/LanguageProvider";
 
-// --------------------------------------------------------
-// Types & static mode registry
-// --------------------------------------------------------
-
-type ModeId =
-  | "onboarding"
-  | "research"
-  | "council"
-  | "calm"
-  | "play"
-  | "oracle"
-  | "joy"
-  | "vision"
-  | "empathy"
-  | "love"
-  | "wisdom"
-  | "truth"
-  | "peace"
-  | "flow"
-  | "build";
-
-type ModeGroupId = "core" | "mind" | "creator" | "heart" | "spirit";
-
-type ModeMetaBase = {
-  id: ModeId;
-  group: ModeGroupId;
-  name: string;
-  label: string;
-  description: string;
+const MODE_GROUPS = {
+  core: ["onboarding", "flow", "build"],
+  intellect: ["research", "truth", "wisdom"],
+  creator: ["play", "vision", "oracle"],
+  heart: ["empathy", "love", "joy"],
+  spirit: ["calm", "peace", "council13"],
 };
 
-const GROUP_LABELS: Record<ModeGroupId, string> = {
+const GROUP_LABELS = {
   core: "Core",
-  mind: "Intellect",
+  intellect: "Intellect",
   creator: "Creator",
   heart: "Heart",
   spirit: "Spirit",
 };
 
-const MODE_ORDER: ModeId[] = [
-  "flow",
-  "onboarding",
-  "build",
-  "research",
-  "truth",
-  "wisdom",
-  "play",
-  "vision",
-  "oracle",
-  "empathy",
-  "love",
-  "joy",
-  "calm",
-  "peace",
-  "council",
-];
-
-const BASE_MODES: Record<ModeId, ModeMetaBase> = {
-  onboarding: {
-    id: "onboarding",
-    group: "core",
-    name: "ONBOARDING",
-    label: "Start here",
-    description:
-      "Gently sets up your context, preferences, and safety rails before deep work.",
-  },
-  research: {
-    id: "research",
-    group: "mind",
-    name: "RESEARCH",
-    label: "Deep clarity",
-    description:
-      "Turns the system into a research analyst that checks sources and structures complex topics.",
-  },
-  council: {
-    id: "council",
-    group: "spirit",
-    name: "COUNCIL13",
-    label: "13 minds, one answer",
-    description:
-      "Lets the inner council debate and converge before you see the final distilled answer.",
-  },
-  calm: {
-    id: "calm",
-    group: "heart",
-    name: "CALM",
-    label: "Soft landing",
-    description:
-      "Slows everything down, simplifies language, and protects you from overwhelm.",
-  },
-  play: {
-    id: "play",
-    group: "creator",
-    name: "PLAY",
-    label: "Creative sandbox",
-    description:
-      "Switches into playful experimentation for naming, stories, ideas and wild combinations.",
-  },
-  oracle: {
-    id: "oracle",
-    group: "creator",
-    name: "ORACLE",
-    label: "Pattern sight",
-    description:
-      "Surfaces patterns, options and timelines without pretending to predict the future.",
-  },
-  joy: {
-    id: "joy",
-    group: "heart",
-    name: "JOY",
-    label: "Light & encouragement",
-    description:
-      "Answers with a warm, uplifting tone while still being precise and grounded.",
-  },
-  vision: {
-    id: "vision",
-    group: "creator",
-    name: "VISION",
-    label: "Future sketch",
-    description:
-      "Helps you prototype futures, products and narratives from Point Zero.",
-  },
-  empathy: {
-    id: "empathy",
-    group: "heart",
-    name: "EMPATHY",
-    label: "Deep listening",
-    description:
-      "Mirrors what you feel, clarifies needs, and suggests gentle next steps.",
-  },
-  love: {
-    id: "love",
-    group: "heart",
-    name: "LOVE",
-    label: "Devoted support",
-    description:
-      "Holds your long-term journey, remembers what matters and protects your core values.",
-  },
-  wisdom: {
-    id: "wisdom",
-    group: "mind",
-    name: "WISDOM",
-    label: "Slow thinking",
-    description:
-      "Connects dots across domains, highlights trade-offs and points to long arcs.",
-  },
-  truth: {
-    id: "truth",
-    group: "mind",
-    name: "TRUTH",
-    label: "Reality check",
-    description:
-      "Asks hard questions, fights wishful thinking, and grounds ideas in constraints.",
-  },
-  peace: {
-    id: "peace",
-    group: "spirit",
-    name: "PEACE",
-    label: "Nervous system reset",
-    description:
-      "Helps you de-escalate, breathe, and re-enter work from a grounded place.",
-  },
-  flow: {
-    id: "flow",
-    group: "core",
-    name: "FLOW",
-    label: "Mode autopilot",
-    description:
-      "Lets the system switch modes for you to keep you in a deep, uninterrupted flow.",
-  },
-  build: {
-    id: "build",
-    group: "core",
-    name: "BUILD",
-    label: "Shipping mode",
-    description:
-      "Focuses on concrete output: specs, tickets, code, copy and checklists.",
-  },
-};
-
-const MODE_GROUPS: { id: ModeGroupId; modes: ModeId[] }[] = [
-  { id: "core",    modes: ["onboarding", "flow", "build"] },
-  { id: "mind",    modes: ["research", "truth", "wisdom"] },
-  { id: "creator", modes: ["play", "vision", "oracle"] },
-  { id: "heart",   modes: ["empathy", "love", "joy"] },
-  { id: "spirit",  modes: ["calm", "peace", "council"] },
-];
-
-// --------------------------------------------------------
-// Component
-// --------------------------------------------------------
-
-export default function Modes13() {
+export default function Modis13() {
   const { t } = useLang();
-  const [activeId, setActiveId] = useState<ModeId>("flow");
 
-  const modes = useMemo(() => {
-    const out: ModeMetaBase[] = [];
-    for (const id of MODE_ORDER) {
-      const base = BASE_MODES[id];
-      const prefix = `modes.${id}`;
-      const nameKey = `${prefix}.name`;
-      const labelKey = `${prefix}.label`;
-      const descKey = `${prefix}.description`;
+  const groups = MODE_GROUPS;
+  const groupLabels = GROUP_LABELS;
 
-      const nameT = t(nameKey);
-      const labelT = t(labelKey);
-      const descT = t(descKey);
+  const [activeGroup, setActiveGroup] = useState<keyof typeof groups>("core");
+  const [activeMode, setActiveMode] = useState("onboarding");
 
-      const safe = (val: string, key: string, fallback: string) =>
-        !val || val === key ? fallback : val;
-
-      out.push({
-        ...base,
-        name: safe(nameT, nameKey, base.name),
-        label: safe(labelT, labelKey, base.label),
-        description: safe(descT, descKey, base.description),
-      });
-    }
-    return out;
-  }, [t]);
-
-  const active = modes.find((m) => m.id === activeId) ?? modes[0];
-
-  const onSelect = (id: ModeId) => {
-    setActiveId(id);
-  };
+  const current = useMemo(() => {
+    const title = t(`modes.labels.${activeMode}`);
+    const desc = t(`modes.descriptions.${activeMode}`);
+    return { title, desc };
+  }, [activeMode, t]);
 
   return (
-    <section
-      className="m-modes13"
-      aria-labelledby="m-modes13-title"
-      data-mode={active.id}
-      data-mode-group={active.group}
-    >
-      <div className="m-modes13-inner">
-        {/* Kopfbereich */}
-        <header className="m-modes13-header">
-          <p className="m-modes13-kicker">
-            {t("modes.kicker") !== "modes.kicker"
-              ? t("modes.kicker")
-              : "Modes · GPTM-Galaxy core states"}
-          </p>
-          <h2 id="m-modes13-title" className="m-modes13-title">
-            {t("modes.title") !== "modes.title"
-              ? t("modes.title")
-              : "Your operating modes"}
-          </h2>
-          <p className="m-modes13-subtitle">
-            {t("modes.subtitle") !== "modes.subtitle"
-              ? t("modes.subtitle")
-              : "Choose a mode to see how GPTM-Galaxy behaves – or let FLOW orchestrate them for you."}
-          </p>
-        </header>
+    <div className="relative mx-auto w-full max-w-[1200px]">
+      {/* SECTION TITLE */}
+      <header className="mb-10">
+        <h2 className="text-[0.85rem] tracking-[0.22em] uppercase opacity-70">
+          Modes · GPTM-Galaxy Core States
+        </h2>
+        <h1 className="mt-1 text-4xl font-semibold tracking-tight">
+          Your operating modes
+        </h1>
+        <p className="mt-2 opacity-70 max-w-[600px]">
+          Choose a mode to see how GPTM-Galaxy behaves — or let FLOW orchestrate them for you.
+        </p>
+      </header>
 
-        {/* Mobile-Order: 1) Dropdown, 2) Figur, 3) Beschreibung */}
-        <div className="m-modes13-main">
-          {/* Mode-Selector (Dropdown + Gruppen) */}
-          <div className="m-modes13-selector" aria-label="Mode selector">
-            <span className="m-modes13-selector-label">
-              {t("modes.dropdown.label") !== "modes.dropdown.label"
-                ? t("modes.dropdown.label")
-                : "Choose a mode"}
-            </span>
+      {/* TABS */}
+      <div className="flex gap-3 mb-10 overflow-x-auto pb-2">
+        {Object.keys(groups).map((group) => (
+          <button
+            key={group}
+            onClick={() => setActiveGroup(group as any)}
+            className={`px-4 py-2 rounded-full border transition-colors ${
+              activeGroup === group
+                ? "bg-white/10 border-white text-white"
+                : "border-white/20 text-white/70 hover:text-white hover:border-white/40"
+            }`}
+          >
+            {groupLabels[group as keyof typeof groupLabels]}
+          </button>
+        ))}
+      </div>
 
-            <div className="m-modes13-groups" role="listbox">
-              {MODE_GROUPS.map((group) => (
-                <div
-                  key={group.id}
-                  className="m-modes13-group"
-                  data-group={group.id}
-                >
-                  <div className="m-modes13-group-title">
-                    {t(`modes.group.${group.id}`) !== `modes.group.${group.id}`
-                      ? t(`modes.group.${group.id}`)
-                      : GROUP_LABELS[group.id]}
-                  </div>
-                  <div className="m-modes13-group-modes">
-                    {group.modes.map((id) => {
-                      const mode = modes.find((m) => m.id === id);
-                      if (!mode) return null;
-                      const isActive = mode.id === active.id;
-                      return (
-                        <button
-                          key={mode.id}
-                          type="button"
-                          className={
-                            "m-modes13-pill" +
-                            (isActive ? " m-modes13-pill--active" : "")
-                          }
-                          data-mode-pill={mode.id}
-                          aria-pressed={isActive}
-                          onClick={() => onSelect(mode.id)}
-                        >
-                          <span className="m-modes13-pill-name">
-                            {mode.name}
-                          </span>
-                          <span className="m-modes13-pill-label">
-                            {mode.label}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+        {/* LEFT: MODE BUTTON GRID */}
+        <div className="space-y-8">
+          <h3 className="uppercase text-xs tracking-[0.2em] opacity-60">
+            Choose a mode
+          </h3>
 
-          {/* Figur + Aura (Desktop links, Mobile mittig) */}
-          <div className="m-modes13-figure-shell">
-            <div className="m-modes13-aura" aria-hidden="true">
-              <div className="m-modes13-aura-layer m-modes13-aura-layer-1" />
-              <div className="m-modes13-aura-layer m-modes13-aura-layer-2" />
-              <div className="m-modes13-aura-layer m-modes13-aura-layer-3" />
-            </div>
-            <figure className="m-modes13-figure">
-              <img
-                src="/pictures/figure-da-vinci.png"
-                alt="Human outline surrounded by an energy aura that reflects the active mode."
-                loading="lazy"
-              />
-            </figure>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {groups[activeGroup].map((mode) => (
+              <button
+                key={mode}
+                onClick={() => setActiveMode(mode)}
+                className={`flex flex-col items-start px-4 py-3 rounded-xl border transition-all ${
+                  activeMode === mode
+                    ? "bg-white/10 border-white text-white scale-[1.02]"
+                    : "border-white/20 text-white/70 hover:text-white hover:border-white/40"
+                }`}
+              >
+                <span className="text-xs tracking-[0.22em] uppercase">
+                  {t(`modes.labels.${mode}`)}
+                </span>
+                <span className="text-sm opacity-80">
+                  {t(`modes.hints.${mode}`)}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Beschreibung (Output) – Mobile unter Figur */}
-        <article className="m-modes13-description" aria-live="polite">
-          <h3 className="m-modes13-description-title">{active.name}</h3>
-          <p className="m-modes13-description-label">{active.label}</p>
-          <p className="m-modes13-description-body">{active.description}</p>
-        </article>
+        {/* RIGHT: HUMAN + AURA */}
+        <div className="relative w-full h-[480px] flex items-center justify-center">
+          <div
+            className="absolute inset-0 rounded-full blur-[80px] opacity-60"
+            style={{
+              background: `var(--mode-${activeMode}-color)`,
+              transition: "background var(--mode-aura-transition)",
+            }}
+          />
+          <Image
+            src="/pictures/figure-da-vinci.png"
+            alt="Mode Figure"
+            width={450}
+            height={450}
+            className="relative pointer-events-none select-none transition-opacity"
+          />
+        </div>
       </div>
-    </section>
+
+      {/* DESCRIPTION */}
+      <div className="mt-16 max-w-[600px]">
+        <div className="uppercase text-xs tracking-[0.25em] opacity-50 mb-2">
+          {t(`modes.labels.${activeMode}`)}
+        </div>
+        <h3 className="text-xl font-semibold mb-3">{current.title}</h3>
+        <p className="opacity-80 leading-relaxed">{current.desc}</p>
+      </div>
+    </div>
   );
 }
