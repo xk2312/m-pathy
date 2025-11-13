@@ -327,13 +327,14 @@ export default function CouncilOrbit() {
                   }}
                   onClick={() => {
                     const name = focusedItem?.title ?? "";
-                    const tmpl = active?.council?.prompt_template ?? "@{{name}}";
+                    const tmpl = active["council.prompt_template"] ?? "@{{name}}";
                     const final = tmpl.replace("{{name}}", name);
                     const encoded = encodeURIComponent(final);
                     window.location.href = `/page2?prefill=${encoded}`;
                   }}
                 >
-                  {(active?.council?.visit_label ?? "Visit {{name}}").replace(
+                  
+                                    {(active["council.visit_label"] ?? "Visit {{name}}").replace(
                     "{{name}}",
                     focusedItem?.title ?? ""
                   )}
