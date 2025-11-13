@@ -182,11 +182,11 @@
   /* -----------------------------------------------------------
      2) Aura-Geometrie & Blur
      ----------------------------------------------------------- */
-  --modes-aura-radius-inner:   90px;
-  --modes-aura-radius-middle:  120px;
-  --modes-aura-radius-outer:   150px;
+  --modes-aura-radius-inner:   80px;
+  --modes-aura-radius-middle:  110px;
+  --modes-aura-radius-outer:   140px;
 
-  --modes-aura-blur:           38px;
+  --modes-aura-blur:           28px;
 
   /* -----------------------------------------------------------
      3) Timing / Standard-Motion
@@ -200,7 +200,7 @@
   /* -----------------------------------------------------------
      4) Human-Figure
      ----------------------------------------------------------- */
-  --modes-figure-max-width:    460px;
+  --modes-figure-max-width:    420px;
   --modes-figure-max-width-sm: 320px;   /* Mobile */
   --modes-figure-glow:         0.45;    /* 0–1 glow multiplier */
 
