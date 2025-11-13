@@ -141,7 +141,7 @@ export default function SubscriptionPage() {
 
         {/* ———————— 13 MODES SECTION ———————— */}
 <section
-  className="pt-[clamp(40px,8vw,80px)] pb-[clamp(40px,8vw,80px)]"
+  className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
   aria-label="Modes section"
 >
   <div
