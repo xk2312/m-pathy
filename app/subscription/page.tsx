@@ -139,9 +139,9 @@ export default function SubscriptionPage() {
           {/* Buffer #4 – unter PowerPrompts (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
-         {/* ─────────────── 13 MODES SECTION ─────────────── */}
+        {/* ———————— 13 MODES SECTION ———————— */}
 <section
-  className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]"
+  className="pt-[clamp(40px,8vw,80px)] pb-[clamp(40px,8vw,80px)]"
   aria-label="Modes section"
 >
   <div
@@ -151,6 +151,7 @@ export default function SubscriptionPage() {
     <Modis13 />
   </div>
 </section>
+
 
 {/* Buffer #5 – unter 13 Modes (Design-Token) */}
 <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
