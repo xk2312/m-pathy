@@ -263,95 +263,105 @@ export default function Modes13() {
           </p>
         </header>
 
-        {/* Mobile-Order: 1) Dropdown, 2) Figur, 3) Beschreibung */}
+        {/* Mobile-Order: 1) Textspalte, 2) Figur */}
         <div className="m-modes13-main">
-                   {/* Mode-Selector (Tabs + aktive Gruppe) */}
-          <div className="m-modes13-selector" aria-label="Mode selector">
-            <span className="m-modes13-selector-label">
-              {t("modes.dropdown.label") !== "modes.dropdown.label"
-                ? t("modes.dropdown.label")
-                : "Choose a mode"}
-            </span>
+          {/* Linke Spalte: Tabs, Pills, Beschreibung */}
+          <div className="m-modes13-left">
+            {/* Mode-Selector (Tabs + aktive Gruppe) */}
+            <div className="m-modes13-selector" aria-label="Mode selector">
+              <span className="m-modes13-selector-label">
+                {t("modes.dropdown.label") !== "modes.dropdown.label"
+                  ? t("modes.dropdown.label")
+                  : "Choose a mode"}
+              </span>
 
-            {/* Tab-Leiste für die Gruppen (Core, Intellect, Creator, Heart, Spirit) */}
-            <div
-              className="m-modes13-tabs"
-              role="tablist"
-              aria-label="Mode groups"
-            >
-              {MODE_GROUPS.map((group) => {
-                const isActive = group.id === activeGroup;
-                const label =
-                  t(`modes.group.${group.id}`) !== `modes.group.${group.id}`
-                    ? t(`modes.group.${group.id}`)
-                    : GROUP_LABELS[group.id];
+              {/* Tab-Leiste für die Gruppen (Core, Intellect, Creator, Heart, Spirit) */}
+              <div
+                className="m-modes13-tabs"
+                role="tablist"
+                aria-label="Mode groups"
+              >
+                {MODE_GROUPS.map((group) => {
+                  const isActive = group.id === activeGroup;
+                  const label =
+                    t(`modes.group.${group.id}`) !== `modes.group.${group.id}`
+                      ? t(`modes.group.${group.id}`)
+                      : GROUP_LABELS[group.id];
 
-                return (
-                  <button
-                    key={group.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    className={
-                      "m-modes13-tab" +
-                      (isActive ? " m-modes13-tab--active" : "")
-                    }
-                    onClick={() => setActiveGroup(group.id)}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
+                  return (
+                    <button
+                      key={group.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      className={
+                        "m-modes13-tab" +
+                        (isActive ? " m-modes13-tab--active" : "")
+                      }
+                      onClick={() => setActiveGroup(group.id)}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
 
-                       {/* Pills der aktuell aktiven Gruppe */}
-            <div className="m-modes13-groups" role="listbox">
-              {MODE_GROUPS.map((group) => {
-                if (group.id !== activeGroup) return null;
+              {/* Pills der aktuell aktiven Gruppe */}
+              <div className="m-modes13-groups" role="listbox">
+                {MODE_GROUPS.map((group) => {
+                  if (group.id !== activeGroup) return null;
 
-                return (
-                  <div
-                    key={group.id}
-                    className="m-modes13-group"
-                    data-group={group.id}
-                  >
-                    {/* Gruppentitel entfällt – Tabs zeigen die Kategorie */}
-                    <div className="m-modes13-group-modes">
-                      {group.modes.map((id) => {
-
-                        const mode = modes.find((m) => m.id === id);
-                        if (!mode) return null;
-                        const isActive = mode.id === active.id;
-                        return (
-                          <button
-                            key={mode.id}
-                            type="button"
-                            className={
-                              "m-modes13-pill" +
-                              (isActive ? " m-modes13-pill--active" : "")
-                            }
-                            data-mode-pill={mode.id}
-                            aria-pressed={isActive}
-                            onClick={() => onSelect(mode.id)}
-                          >
-                            <span className="m-modes13-pill-name">
-                              {mode.name}
-                            </span>
-                            <span className="m-modes13-pill-label">
-                              {mode.label}
-                            </span>
-                          </button>
-                        );
-                      })}
+                  return (
+                    <div
+                      key={group.id}
+                      className="m-modes13-group"
+                      data-group={group.id}
+                    >
+                      {/* Gruppentitel entfällt – Tabs zeigen die Kategorie */}
+                      <div className="m-modes13-group-modes">
+                        {group.modes.map((id) => {
+                          const mode = modes.find((m) => m.id === id);
+                          if (!mode) return null;
+                          const isActive = mode.id === active.id;
+                          return (
+                            <button
+                              key={mode.id}
+                              type="button"
+                              className={
+                                "m-modes13-pill" +
+                                (isActive ? " m-modes13-pill--active" : "")
+                              }
+                              data-mode-pill={mode.id}
+                              aria-pressed={isActive}
+                              onClick={() => onSelect(mode.id)}
+                            >
+                              <span className="m-modes13-pill-name">
+                                {mode.name}
+                              </span>
+                              <span className="m-modes13-pill-label">
+                                {mode.label}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
+
+            {/* Beschreibung (Output) – Desktop unter den Pills, Mobile unter Figur durch Flow */}
+            <article className="m-modes13-description" aria-live="polite">
+              <h3 className="m-modes13-description-title">{active.name}</h3>
+              <p className="m-modes13-description-label">{active.label}</p>
+              <p className="m-modes13-description-body">
+                {active.description}
+              </p>
+            </article>
           </div>
 
-
-          {/* Figur + Aura (Desktop links, Mobile mittig) */}
+          {/* Rechte Spalte: Figur + Aura */}
           <div className="m-modes13-figure-shell">
             <div className="m-modes13-aura" aria-hidden="true">
               <div className="m-modes13-aura-layer m-modes13-aura-layer-1" />
@@ -368,12 +378,6 @@ export default function Modes13() {
           </div>
         </div>
 
-        {/* Beschreibung (Output) – Mobile unter Figur */}
-        <article className="m-modes13-description" aria-live="polite">
-          <h3 className="m-modes13-description-title">{active.name}</h3>
-          <p className="m-modes13-description-label">{active.label}</p>
-          <p className="m-modes13-description-body">{active.description}</p>
-        </article>
       </div>
     </section>
   );

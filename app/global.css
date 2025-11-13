@@ -613,6 +613,11 @@ div[data-convo="1"] {
   gap: 16px;
   margin-top: 10px; /* Header → Tabs ≈ 30 % des alten 32px-Abstands */
 }
+.m-modes13-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
 .m-modes13-selector {
   display: flex;
@@ -984,7 +989,7 @@ div[data-convo="1"] {
     gap: 48px;
   }
 
-  .m-modes13-selector {
+  .m-modes13-left {
     flex: 1 1 0;
   }
 
@@ -993,7 +998,11 @@ div[data-convo="1"] {
     max-width: var(--modes-figure-max-width);
   }
 
+  .m-modes13-description {
+    margin-top: 12px;
+  }
 }
+
 
 /* Reduced Motion: alle Animationen stark eindämpfen */
 
