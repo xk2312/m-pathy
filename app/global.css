@@ -563,3 +563,385 @@ div[data-convo="1"] {
     margin-inline: -5%;
   }
 }
+
+/* =====================================================================
+   Modes13 – Human Aura & Mode Selector
+   (app/components/subscription/13modis.tsx)
+   ===================================================================== */
+
+.m-modes13 {
+  position: relative;
+  padding-block: clamp(72px, 12vw, 140px);
+}
+
+.m-modes13-inner {
+  max-width: var(--page-inner-max);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.m-modes13-header {
+  max-width: 40rem;
+}
+
+.m-modes13-kicker {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 0.35rem;
+}
+
+.m-modes13-title {
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  line-height: 1.15;
+  margin-bottom: 0.4rem;
+}
+
+.m-modes13-subtitle {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-width: 34rem;
+  opacity: 0.85;
+}
+
+.m-modes13-main {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.m-modes13-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.m-modes13-selector-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.m-modes13-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.m-modes13-group {
+  padding: 10px 0;
+  border-radius: 12px;
+}
+
+.m-modes13-group-title {
+  font-size: var(--modes-menu-heading-size);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  opacity: 0.72;
+  margin-bottom: 6px;
+}
+
+.m-modes13-group-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Mode-Pills */
+
+.m-modes13-pill {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  border-radius: var(--modes-menu-item-radius);
+  padding-block: var(--modes-menu-item-pad-y);
+  padding-inline: var(--modes-menu-item-pad-x);
+  border: 1px solid hsl(0 0% 100% / 0.16);
+  background: hsl(0 0% 100% / 0.02);
+  color: hsl(0 0% 96%);
+  cursor: pointer;
+  outline: none;
+  gap: 2px;
+  transition:
+    background-color var(--modes-select-transition),
+    border-color var(--modes-select-transition),
+    transform 120ms ease-out,
+    box-shadow 160ms ease-out;
+}
+
+.m-modes13-pill:hover,
+.m-modes13-pill:focus-visible {
+  background: hsl(0 0% 100% / 0.06);
+  border-color: hsl(0 0% 100% / 0.26);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px hsl(0 0% 0% / 0.35);
+}
+
+.m-modes13-pill--active {
+  background: var(--modes-menu-item-bg-hover);
+  border-color: hsl(0 0% 100% / 0.35);
+  box-shadow: 0 0 0 1px hsl(0 0% 100% / 0.4);
+}
+
+.m-modes13-pill-name {
+  font-size: 0.7rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.m-modes13-pill-label {
+  font-size: 0.85rem;
+  opacity: 0.92;
+}
+
+/* Figur + Aura */
+
+.m-modes13-figure-shell {
+  position: relative;
+  width: 100%;
+  max-width: var(--modes-figure-max-width-sm);
+  margin-inline: auto;
+}
+
+.m-modes13-figure {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.m-modes13-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 32px hsl(0 0% 0% / 0.9));
+  opacity: calc(0.7 + var(--modes-current-halo-strength, 0.6) * 0.3);
+  transition:
+    opacity 200ms cubic-bezier(0.33, 0, 0.2, 1),
+    filter 200ms cubic-bezier(0.33, 0, 0.2, 1);
+}
+
+.m-modes13-aura {
+  position: absolute;
+  inset: -10% -10% -20%;
+  pointer-events: none;
+  filter: blur(var(--modes-aura-blur));
+  opacity: 1;
+}
+
+.m-modes13-aura-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: radial-gradient(circle, currentColor 0%, transparent 65%);
+  opacity: calc(var(--modes-current-aura-intensity, 0.7) * 0.6);
+  transform-origin: center;
+  animation: modes-aura-pulse var(--modes-current-pulse-duration, var(--modes-pulse-duration-mid)) ease-in-out infinite alternate;
+}
+
+.m-modes13-aura-layer-2 {
+  transform: scale(1.15);
+  opacity: calc(var(--modes-current-aura-intensity, 0.7) * 0.45);
+}
+
+.m-modes13-aura-layer-3 {
+  transform: scale(1.32);
+  opacity: calc(var(--modes-current-aura-intensity, 0.7) * 0.32);
+}
+
+/* Aura-Farbe nach Gruppe */
+
+.m-modes13[data-mode-group="core"] .m-modes13-aura {
+  color: var(--modes-aura-core);
+}
+
+.m-modes13[data-mode-group="mind"] .m-modes13-aura {
+  color: var(--modes-aura-intellect);
+}
+
+.m-modes13[data-mode-group="creator"] .m-modes13-aura {
+  color: var(--modes-aura-intellect);
+}
+
+.m-modes13[data-mode-group="heart"] .m-modes13-aura {
+  color: var(--modes-aura-heart);
+}
+
+.m-modes13[data-mode-group="spirit"] .m-modes13-aura {
+  color: var(--modes-aura-spirit);
+}
+
+/* Beschreibung / Output */
+
+.m-modes13-description {
+  max-width: 40rem;
+  margin-top: 8px;
+}
+
+.m-modes13-description-title {
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin-bottom: 0.3rem;
+}
+
+.m-modes13-description-label {
+  font-size: var(--modes-label-font-size);
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.m-modes13-description-body {
+  font-size: var(--modes-desc-font-size);
+  line-height: var(--modes-desc-line-height);
+  color: var(--modes-desc-color);
+}
+
+/* Per-Mode Mapping → current intensity / pulse / halo */
+
+.m-modes13[data-mode="flow"] {
+  --modes-current-aura-intensity: var(--mode-flow-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-flow-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-flow-halo-strength);
+}
+
+.m-modes13[data-mode="onboarding"] {
+  --modes-current-aura-intensity: var(--mode-onboarding-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-onboarding-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-onboarding-halo-strength);
+}
+
+.m-modes13[data-mode="build"] {
+  --modes-current-aura-intensity: var(--mode-build-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-build-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-build-halo-strength);
+}
+
+.m-modes13[data-mode="research"] {
+  --modes-current-aura-intensity: var(--mode-research-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-research-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-research-halo-strength);
+}
+
+.m-modes13[data-mode="truth"] {
+  --modes-current-aura-intensity: var(--mode-truth-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-truth-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-truth-halo-strength);
+}
+
+.m-modes13[data-mode="wisdom"] {
+  --modes-current-aura-intensity: var(--mode-wisdom-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-wisdom-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-wisdom-halo-strength);
+}
+
+.m-modes13[data-mode="play"] {
+  --modes-current-aura-intensity: var(--mode-play-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-play-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-play-halo-strength);
+}
+
+.m-modes13[data-mode="vision"] {
+  --modes-current-aura-intensity: var(--mode-vision-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-vision-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-vision-halo-strength);
+}
+
+.m-modes13[data-mode="oracle"] {
+  --modes-current-aura-intensity: var(--mode-oracle-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-oracle-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-oracle-halo-strength);
+}
+
+.m-modes13[data-mode="empathy"] {
+  --modes-current-aura-intensity: var(--mode-empathy-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-empathy-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-empathy-halo-strength);
+}
+
+.m-modes13[data-mode="love"] {
+  --modes-current-aura-intensity: var(--mode-love-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-love-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-love-halo-strength);
+}
+
+.m-modes13[data-mode="joy"] {
+  --modes-current-aura-intensity: var(--mode-joy-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-joy-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-joy-halo-strength);
+}
+
+.m-modes13[data-mode="calm"] {
+  --modes-current-aura-intensity: var(--mode-peace-aura-intensity);
+  --modes-current-pulse-duration: var(--modes-pulse-duration-slow);
+  --modes-current-halo-strength:  0.85;
+}
+
+.m-modes13[data-mode="peace"] {
+  --modes-current-aura-intensity: var(--mode-peace-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-peace-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-peace-halo-strength);
+}
+
+.m-modes13[data-mode="council"] {
+  --modes-current-aura-intensity: var(--mode-council-aura-intensity);
+  --modes-current-pulse-duration: var(--mode-council-pulse-duration);
+  --modes-current-halo-strength:  var(--mode-council-halo-strength);
+}
+
+/* Aura-Pulse Animation (Transform + Opacity only) */
+
+@keyframes modes-aura-pulse {
+  from {
+    opacity: calc(var(--modes-current-aura-intensity, 0.7) * 0.5);
+    transform: scale(0.96);
+  }
+  to {
+    opacity: var(--modes-current-aura-intensity, 0.7);
+    transform: scale(1.04);
+  }
+}
+
+/* Layout: Desktop – Figur & Panel nebeneinander */
+
+@media (min-width: 1024px) {
+  .m-modes13-main {
+    flex-direction: row;
+    align-items: center;
+    gap: 48px;
+  }
+
+  .m-modes13-selector {
+    flex: 1 1 0;
+  }
+
+  .m-modes13-figure-shell {
+    flex: 1 1 0;
+    max-width: var(--modes-figure-max-width);
+  }
+
+  .m-modes13-description {
+    margin-top: 12px;
+  }
+}
+
+/* Reduced Motion: alle Animationen stark eindämpfen */
+
+@media (prefers-reduced-motion: reduce) {
+  .m-modes13 *,
+  .m-modes13 *::before,
+  .m-modes13 *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0ms !important;
+  }
+}
+

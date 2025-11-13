@@ -166,43 +166,151 @@
   /* Focus / A11y */
   --council-visit-focus-ring: 0 0 0 2px rgba(34, 211, 238, 0.55);
 }
-/* ─────────────────────────────────────────────
-   Modes – Aura Colors & Timing (13 Modis)
-   Diese Tokens werden von app/components/subscription/13modis.tsx verwendet.
-   ───────────────────────────────────────────── */
+/* =====================================================================
+   MODE SYSTEM · HUMAN AURA / DROPDOWN / MOTION
+   ===================================================================== */
 
 :root {
-  /* Basis: chromatischer Minimalismus (Gold · Blau · Violett) */
-  --mode-onboarding-color: #f4d27a;  /* warmes Gold, Willkommen */
-  --mode-research-color:   #7fb6ff;  /* klares Research-Blau   */
-  --mode-council-color:    #c5a9ff;  /* violetter Rat          */
-  --mode-calm-color:       #6fa8ff;  /* tiefes Calm-Blau       */
-  --mode-play-color:       #ffb3c6;  /* sanftes Play-Rosé      */
-  --mode-oracle-color:     #e6b7ff;  /* mystisches Violett     */
-  --mode-joy-color:        #ffe082;  /* helles Joy-Gold        */
-  --mode-vision-color:     #9ad7ff;  /* Vision-Cyan            */
-  --mode-empathy-color:    #ffbcd4;  /* weiches Empathy-Rosé   */
-  --mode-love-color:       #ff99c2;  /* warmes Love-Pink       */
-  --mode-wisdom-color:     #f4f0ff;  /* milchiges Wisdom-Licht */
-  --mode-truth-color:      #e0f2ff;  /* Truth-Ice-Blue         */
-  --mode-peace-color:      #c9e8ff;  /* Peace-Blue             */
+  /* -----------------------------------------------------------
+     1) Grundfarben (3-Farbsystem nach deinen Vorgaben)
+     ----------------------------------------------------------- */
+  --modes-aura-core:        hsl(205 98% 68%);   /* Flow, Calm, Default */
+  --modes-aura-intellect:   hsl(265 92% 72%);   /* Wisdom, Truth, Research */
+  --modes-aura-heart:       hsl(345 92% 72%);   /* Love, Joy, Empathy */
+  --modes-aura-spirit:      hsl(180 90% 76%);   /* Peace, Council (reserved slot) */
 
-  /* Aura-Motion – global für alle 13 Modi (Transform/Opacity only) */
-  --mode-aura-breath-scale-min: 0.98;
-  --mode-aura-breath-scale-max: 1.02;
-  --mode-aura-breath-duration:  3.6s;
-  --mode-aura-transition:       240ms ease-out;
+  /* -----------------------------------------------------------
+     2) Aura-Geometrie & Blur
+     ----------------------------------------------------------- */
+  --modes-aura-radius-inner:   90px;
+  --modes-aura-radius-middle:  120px;
+  --modes-aura-radius-outer:   150px;
 
-  /* Pills / Selector */
-  --mode-pill-radius:           999px;
-  --mode-pill-gap:              0.5rem;
-  --mode-pill-padding-inline:   0.9rem;
-  --mode-pill-padding-block:    0.45rem;
-  --mode-pill-active-scale:     1.04;
-  --mode-pill-transition:       160ms ease-out;
+  --modes-aura-blur:           38px;
 
-  /* Text */
-  --mode-text-title-size:       1.05rem;
-  --mode-text-body-size:        0.9rem;
-  --mode-text-max-width:        40rem;
+  /* -----------------------------------------------------------
+     3) Timing / Standard-Motion
+     ----------------------------------------------------------- */
+  --modes-pulse-duration-slow:   2400ms;
+  --modes-pulse-duration-mid:    1600ms;
+  --modes-pulse-duration-fast:   900ms;
+
+  --modes-sequence-interval:     6000ms;  /* Flow Sequencer */
+
+  /* -----------------------------------------------------------
+     4) Human-Figure
+     ----------------------------------------------------------- */
+  --modes-figure-max-width:    460px;
+  --modes-figure-max-width-sm: 320px;   /* Mobile */
+  --modes-figure-glow:         0.45;    /* 0–1 glow multiplier */
+
+  /* ===========================================================
+     5) Per-Mode Intensity Tokens (3 pro Mode)
+        - aura-intensity: 0–1
+        - pulse-duration: uses one of:
+            var(--modes-pulse-duration-slow)
+            var(--modes-pulse-duration-mid)
+            var(--modes-pulse-duration-fast)
+        - halo-strength: 0–1
+     =========================================================== */
+
+  /* ---------- CORE ---------- */
+  --mode-flow-aura-intensity:     0.90;
+  --mode-flow-pulse-duration:     var(--modes-pulse-duration-mid);
+  --mode-flow-halo-strength:      0.80;
+
+  --mode-onboarding-aura-intensity: 0.55;
+  --mode-onboarding-pulse-duration: var(--modes-pulse-duration-mid);
+  --mode-onboarding-halo-strength:  0.55;
+
+  --mode-build-aura-intensity:      0.65;
+  --mode-build-pulse-duration:      var(--modes-pulse-duration-fast);
+  --mode-build-halo-strength:       0.70;
+
+  /* ---------- MIND ---------- */
+  --mode-research-aura-intensity:   0.70;
+  --mode-research-pulse-duration:   var(--modes-pulse-duration-fast);
+  --mode-research-halo-strength:    0.50;
+
+  --mode-truth-aura-intensity:      0.80;
+  --mode-truth-pulse-duration:      var(--modes-pulse-duration-mid);
+  --mode-truth-halo-strength:       0.85;
+
+  --mode-wisdom-aura-intensity:     0.60;
+  --mode-wisdom-pulse-duration:     var(--modes-pulse-duration-slow);
+  --mode-wisdom-halo-strength:      0.90;
+
+  /* ---------- CREATOR ---------- */
+  --mode-play-aura-intensity:       0.78;
+  --mode-play-pulse-duration:       var(--modes-pulse-duration-mid);
+  --mode-play-halo-strength:        0.65;
+
+  --mode-vision-aura-intensity:     0.72;
+  --mode-vision-pulse-duration:     var(--modes-pulse-duration-mid);
+  --mode-vision-halo-strength:      0.60;
+
+  --mode-oracle-aura-intensity:     0.82;
+  --mode-oracle-pulse-duration:     var(--modes-pulse-duration-fast);
+  --mode-oracle-halo-strength:      0.75;
+
+  /* ---------- HEART ---------- */
+  --mode-empathy-aura-intensity:    0.88;
+  --mode-empathy-pulse-duration:    var(--modes-pulse-duration-mid);
+  --mode-empathy-halo-strength:     0.75;
+
+  --mode-love-aura-intensity:       0.95;
+  --mode-love-pulse-duration:       var(--modes-pulse-duration-slow);
+  --mode-love-halo-strength:        0.95;
+
+  --mode-joy-aura-intensity:        0.85;
+  --mode-joy-pulse-duration:        var(--modes-pulse-duration-fast);
+  --mode-joy-halo-strength:         0.70;
+
+  /* ---------- SPIRIT (Peace + Council) ---------- */
+  --mode-peace-aura-intensity:      0.40;  /* später aktivierbar */
+  --mode-peace-pulse-duration:      var(--modes-pulse-duration-slow);
+  --mode-peace-halo-strength:       0.90;
+
+  --mode-council-aura-intensity:    0.75;
+  --mode-council-pulse-duration:    var(--modes-pulse-duration-slow);
+  --mode-council-halo-strength:     0.80;
+
+  /* ===========================================================
+     6) Dropdown / Panel Styling Tokens
+     =========================================================== */
+
+  --modes-panel-max-width:     500px;
+  --modes-panel-gap:           24px;
+  --modes-panel-radius:        14px;
+
+  --modes-select-height:       48px;
+  --modes-select-pad-inline:   16px;
+  --modes-select-radius:       12px;
+  --modes-select-bg:           hsl(0 0% 12% / 0.45);
+  --modes-select-bg-hover:     hsl(0 0% 18% / 0.60);
+  --modes-select-border:       1px solid hsl(0 0% 100% / 0.08);
+  --modes-select-shadow:       0px 4px 12px hsl(0 0% 0% / 0.25);
+  --modes-select-icon-size:    14px;
+  --modes-select-transition:   160ms cubic-bezier(0.33, 0.0, 0.2, 1);
+
+  --modes-menu-bg:             hsl(0 0% 10% / 0.92);
+  --modes-menu-border:         1px solid hsl(0 0% 100% / 0.12);
+  --modes-menu-radius:         14px;
+  --modes-menu-shadow:         0px 12px 40px hsl(0 0% 0% / 0.45);
+  --modes-menu-gap:            8px;
+
+  --modes-menu-item-pad-y:     8px;
+  --modes-menu-item-pad-x:     14px;
+  --modes-menu-item-radius:    8px;
+  --modes-menu-item-bg-hover:  hsl(0 0% 100% / 0.08);
+  --modes-menu-item-color-active: hsl(0 0% 98%);
+
+  --modes-menu-heading-color:  hsl(0 0% 70%);
+  --modes-menu-heading-size:   12px;
+
+  --modes-label-font-size:     1rem;
+  --modes-label-color:         hsl(0 0% 98%);
+  --modes-desc-font-size:      0.875rem;
+  --modes-desc-line-height:    1.45;
+  --modes-desc-color:          hsl(0 0% 86%);
 }

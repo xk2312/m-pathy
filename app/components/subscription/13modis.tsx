@@ -1,7 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
+
+// --------------------------------------------------------
+// Types & static mode registry
+// --------------------------------------------------------
 
 type ModeId =
   | "onboarding"
@@ -16,189 +20,322 @@ type ModeId =
   | "love"
   | "wisdom"
   | "truth"
-  | "peace";
+  | "peace"
+  | "flow"
+  | "build";
 
-type ModeMeta = {
+type ModeGroupId = "core" | "mind" | "creator" | "heart" | "spirit";
+
+type ModeMetaBase = {
   id: ModeId;
-  colorVar: string;
-  labelKey: string;
-  descKey: string;
+  group: ModeGroupId;
+  name: string;
+  label: string;
+  description: string;
 };
 
-const MODES: ModeMeta[] = [
-  {
-    id: "onboarding",
-    colorVar: "--mode-onboarding-color",
-    labelKey: "modes.labels.onboarding",
-    descKey: "modes.descriptions.onboarding",
-  },
-  {
-    id: "research",
-    colorVar: "--mode-research-color",
-    labelKey: "modes.labels.research",
-    descKey: "modes.descriptions.research",
-  },
-  {
-    id: "council",
-    colorVar: "--mode-council-color",
-    labelKey: "modes.labels.council",
-    descKey: "modes.descriptions.council",
-  },
-  {
-    id: "calm",
-    colorVar: "--mode-calm-color",
-    labelKey: "modes.labels.calm",
-    descKey: "modes.descriptions.calm",
-  },
-  {
-    id: "play",
-    colorVar: "--mode-play-color",
-    labelKey: "modes.labels.play",
-    descKey: "modes.descriptions.play",
-  },
-  {
-    id: "oracle",
-    colorVar: "--mode-oracle-color",
-    labelKey: "modes.labels.oracle",
-    descKey: "modes.descriptions.oracle",
-  },
-  {
-    id: "joy",
-    colorVar: "--mode-joy-color",
-    labelKey: "modes.labels.joy",
-    descKey: "modes.descriptions.joy",
-  },
-  {
-    id: "vision",
-    colorVar: "--mode-vision-color",
-    labelKey: "modes.labels.vision",
-    descKey: "modes.descriptions.vision",
-  },
-  {
-    id: "empathy",
-    colorVar: "--mode-empathy-color",
-    labelKey: "modes.labels.empathy",
-    descKey: "modes.descriptions.empathy",
-  },
-  {
-    id: "love",
-    colorVar: "--mode-love-color",
-    labelKey: "modes.labels.love",
-    descKey: "modes.descriptions.love",
-  },
-  {
-    id: "wisdom",
-    colorVar: "--mode-wisdom-color",
-    labelKey: "modes.labels.wisdom",
-    descKey: "modes.descriptions.wisdom",
-  },
-  {
-    id: "truth",
-    colorVar: "--mode-truth-color",
-    labelKey: "modes.labels.truth",
-    descKey: "modes.descriptions.truth",
-  },
-  {
-    id: "peace",
-    colorVar: "--mode-peace-color",
-    labelKey: "modes.labels.peace",
-    descKey: "modes.descriptions.peace",
-  },
+const GROUP_LABELS: Record<ModeGroupId, string> = {
+  core: "Core",
+  mind: "Intellect",
+  creator: "Creator",
+  heart: "Heart",
+  spirit: "Spirit",
+};
+
+const MODE_ORDER: ModeId[] = [
+  "flow",
+  "onboarding",
+  "build",
+  "research",
+  "truth",
+  "wisdom",
+  "play",
+  "vision",
+  "oracle",
+  "empathy",
+  "love",
+  "joy",
+  "calm",
+  "peace",
+  "council",
 ];
 
-export default function Modis13() {
+const BASE_MODES: Record<ModeId, ModeMetaBase> = {
+  onboarding: {
+    id: "onboarding",
+    group: "core",
+    name: "ONBOARDING",
+    label: "Start here",
+    description:
+      "Gently sets up your context, preferences, and safety rails before deep work.",
+  },
+  research: {
+    id: "research",
+    group: "mind",
+    name: "RESEARCH",
+    label: "Deep clarity",
+    description:
+      "Turns the system into a research analyst that checks sources and structures complex topics.",
+  },
+  council: {
+    id: "council",
+    group: "spirit",
+    name: "COUNCIL13",
+    label: "13 minds, one answer",
+    description:
+      "Lets the inner council debate and converge before you see the final distilled answer.",
+  },
+  calm: {
+    id: "calm",
+    group: "heart",
+    name: "CALM",
+    label: "Soft landing",
+    description:
+      "Slows everything down, simplifies language, and protects you from overwhelm.",
+  },
+  play: {
+    id: "play",
+    group: "creator",
+    name: "PLAY",
+    label: "Creative sandbox",
+    description:
+      "Switches into playful experimentation for naming, stories, ideas and wild combinations.",
+  },
+  oracle: {
+    id: "oracle",
+    group: "creator",
+    name: "ORACLE",
+    label: "Pattern sight",
+    description:
+      "Surfaces patterns, options and timelines without pretending to predict the future.",
+  },
+  joy: {
+    id: "joy",
+    group: "heart",
+    name: "JOY",
+    label: "Light & encouragement",
+    description:
+      "Answers with a warm, uplifting tone while still being precise and grounded.",
+  },
+  vision: {
+    id: "vision",
+    group: "creator",
+    name: "VISION",
+    label: "Future sketch",
+    description:
+      "Helps you prototype futures, products and narratives from Point Zero.",
+  },
+  empathy: {
+    id: "empathy",
+    group: "heart",
+    name: "EMPATHY",
+    label: "Deep listening",
+    description:
+      "Mirrors what you feel, clarifies needs, and suggests gentle next steps.",
+  },
+  love: {
+    id: "love",
+    group: "heart",
+    name: "LOVE",
+    label: "Devoted support",
+    description:
+      "Holds your long-term journey, remembers what matters and protects your core values.",
+  },
+  wisdom: {
+    id: "wisdom",
+    group: "mind",
+    name: "WISDOM",
+    label: "Slow thinking",
+    description:
+      "Connects dots across domains, highlights trade-offs and points to long arcs.",
+  },
+  truth: {
+    id: "truth",
+    group: "mind",
+    name: "TRUTH",
+    label: "Reality check",
+    description:
+      "Asks hard questions, fights wishful thinking, and grounds ideas in constraints.",
+  },
+  peace: {
+    id: "peace",
+    group: "spirit",
+    name: "PEACE",
+    label: "Nervous system reset",
+    description:
+      "Helps you de-escalate, breathe, and re-enter work from a grounded place.",
+  },
+  flow: {
+    id: "flow",
+    group: "core",
+    name: "FLOW",
+    label: "Mode autopilot",
+    description:
+      "Lets the system switch modes for you to keep you in a deep, uninterrupted flow.",
+  },
+  build: {
+    id: "build",
+    group: "core",
+    name: "BUILD",
+    label: "Shipping mode",
+    description:
+      "Focuses on concrete output: specs, tickets, code, copy and checklists.",
+  },
+};
+
+const MODE_GROUPS: { id: ModeGroupId; modes: ModeId[] }[] = [
+  { id: "core",    modes: ["onboarding", "flow", "build"] },
+  { id: "mind",    modes: ["research", "truth", "wisdom"] },
+  { id: "creator", modes: ["play", "vision", "oracle"] },
+  { id: "heart",   modes: ["empathy", "love", "joy"] },
+  { id: "spirit",  modes: ["calm", "peace", "council"] },
+];
+
+// --------------------------------------------------------
+// Component
+// --------------------------------------------------------
+
+export default function Modes13() {
   const { t } = useLang();
-  const [activeId, setActiveId] = useState<ModeId>("flow" as ModeId | "calm" as ModeId);
+  const [activeId, setActiveId] = useState<ModeId>("flow");
 
-  // Fallback: falls "flow" nicht existiert, nimm "calm"
-  const safeActiveId: ModeId = useMemo(() => {
-    const hasActive = MODES.some((m) => m.id === activeId);
-    if (hasActive) return activeId;
-    // Standard: calm
-    return "calm";
-  }, [activeId]);
+  const modes = useMemo(() => {
+    const out: ModeMetaBase[] = [];
+    for (const id of MODE_ORDER) {
+      const base = BASE_MODES[id];
+      const prefix = `modes.${id}`;
+      const nameKey = `${prefix}.name`;
+      const labelKey = `${prefix}.label`;
+      const descKey = `${prefix}.description`;
 
-  const activeMode = useMemo(
-    () => MODES.find((m) => m.id === safeActiveId) ?? MODES[0],
-    [safeActiveId]
-  );
+      const nameT = t(nameKey);
+      const labelT = t(labelKey);
+      const descT = t(descKey);
 
-  // CSS-Variable für die aktuelle Mode-Farbe
-  const auraStyle = useMemo(
-    () =>
-      ({
-        "--mode-active-color": `var(${activeMode.colorVar})`,
-      } as React.CSSProperties),
-    [activeMode.colorVar]
-  );
+      const safe = (val: string, key: string, fallback: string) =>
+        !val || val === key ? fallback : val;
+
+      out.push({
+        ...base,
+        name: safe(nameT, nameKey, base.name),
+        label: safe(labelT, labelKey, base.label),
+        description: safe(descT, descKey, base.description),
+      });
+    }
+    return out;
+  }, [t]);
+
+  const active = modes.find((m) => m.id === activeId) ?? modes[0];
+
+  const onSelect = (id: ModeId) => {
+    setActiveId(id);
+  };
 
   return (
-    <div
-      className="m-modes-root"
-      data-mode={safeActiveId}
-      style={auraStyle}
+    <section
+      className="m-modes13"
+      aria-labelledby="m-modes13-title"
+      data-mode={active.id}
+      data-mode-group={active.group}
     >
-      {/* FIGURE + AURA */}
-      <div className="m-modes-figure-shell">
-        <div className="m-modes-figure-aura" aria-hidden="true" />
-        <div className="m-modes-figure">
-          <img
-            src="/pictures/figure-da-vinci.png"
-            alt={t("modes.figure_alt") || "Human at the center of the modes field"}
-            className="m-modes-figure-img"
-            loading="lazy"
-          />
-        </div>
-      </div>
-
-      {/* SELECTOR + TEXT */}
-      <div className="m-modes-panel">
-        {/* Mode Selector */}
-        <div
-          className="m-modes-selector"
-          role="tablist"
-          aria-label={t("modes.selector_label") || "Modes"}
-        >
-          {MODES.map((mode) => {
-            const isActive = mode.id === safeActiveId;
-            const pillClass = [
-              "m-modes-pill",
-              isActive ? "m-modes-pill--active" : "",
-            ]
-              .filter(Boolean)
-              .join(" ");
-
-            return (
-              <button
-                key={mode.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                className={pillClass}
-                onClick={() => setActiveId(mode.id)}
-              >
-                <span
-                  className="m-modes-pill-dot"
-                  aria-hidden="true"
-                />
-                <span className="m-modes-pill-label">
-                  {t(mode.labelKey)}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Mode Text */}
-        <div className="m-modes-text" role="status">
-          <p className="m-modes-text-title">
-            {t(activeMode.labelKey)}
+      <div className="m-modes13-inner">
+        {/* Kopfbereich */}
+        <header className="m-modes13-header">
+          <p className="m-modes13-kicker">
+            {t("modes.kicker") !== "modes.kicker"
+              ? t("modes.kicker")
+              : "Modes · GPTM-Galaxy core states"}
           </p>
-          <p className="m-modes-text-body">
-            {t(activeMode.descKey)}
+          <h2 id="m-modes13-title" className="m-modes13-title">
+            {t("modes.title") !== "modes.title"
+              ? t("modes.title")
+              : "Your operating modes"}
+          </h2>
+          <p className="m-modes13-subtitle">
+            {t("modes.subtitle") !== "modes.subtitle"
+              ? t("modes.subtitle")
+              : "Choose a mode to see how GPTM-Galaxy behaves – or let FLOW orchestrate them for you."}
           </p>
+        </header>
+
+        {/* Mobile-Order: 1) Dropdown, 2) Figur, 3) Beschreibung */}
+        <div className="m-modes13-main">
+          {/* Mode-Selector (Dropdown + Gruppen) */}
+          <div className="m-modes13-selector" aria-label="Mode selector">
+            <span className="m-modes13-selector-label">
+              {t("modes.dropdown.label") !== "modes.dropdown.label"
+                ? t("modes.dropdown.label")
+                : "Choose a mode"}
+            </span>
+
+            <div className="m-modes13-groups" role="listbox">
+              {MODE_GROUPS.map((group) => (
+                <div
+                  key={group.id}
+                  className="m-modes13-group"
+                  data-group={group.id}
+                >
+                  <div className="m-modes13-group-title">
+                    {t(`modes.group.${group.id}`) !== `modes.group.${group.id}`
+                      ? t(`modes.group.${group.id}`)
+                      : GROUP_LABELS[group.id]}
+                  </div>
+                  <div className="m-modes13-group-modes">
+                    {group.modes.map((id) => {
+                      const mode = modes.find((m) => m.id === id);
+                      if (!mode) return null;
+                      const isActive = mode.id === active.id;
+                      return (
+                        <button
+                          key={mode.id}
+                          type="button"
+                          className={
+                            "m-modes13-pill" +
+                            (isActive ? " m-modes13-pill--active" : "")
+                          }
+                          data-mode-pill={mode.id}
+                          aria-pressed={isActive}
+                          onClick={() => onSelect(mode.id)}
+                        >
+                          <span className="m-modes13-pill-name">
+                            {mode.name}
+                          </span>
+                          <span className="m-modes13-pill-label">
+                            {mode.label}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Figur + Aura (Desktop links, Mobile mittig) */}
+          <div className="m-modes13-figure-shell">
+            <div className="m-modes13-aura" aria-hidden="true">
+              <div className="m-modes13-aura-layer m-modes13-aura-layer-1" />
+              <div className="m-modes13-aura-layer m-modes13-aura-layer-2" />
+              <div className="m-modes13-aura-layer m-modes13-aura-layer-3" />
+            </div>
+            <figure className="m-modes13-figure">
+              <img
+                src="/pictures/figure-da-vinci.png"
+                alt="Human outline surrounded by an energy aura that reflects the active mode."
+                loading="lazy"
+              />
+            </figure>
+          </div>
         </div>
+
+        {/* Beschreibung (Output) – Mobile unter Figur */}
+        <article className="m-modes13-description" aria-live="polite">
+          <h3 className="m-modes13-description-title">{active.name}</h3>
+          <p className="m-modes13-description-label">{active.label}</p>
+          <p className="m-modes13-description-body">{active.description}</p>
+        </article>
       </div>
-    </div>
+    </section>
   );
 }
