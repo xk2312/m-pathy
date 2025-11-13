@@ -609,7 +609,7 @@ div[data-convo="1"] {
 .m-modes13-main {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 16px;
   margin-top: 10px; /* Header → Tabs ≈ 30 % des alten 32px-Abstands */
 }
 
@@ -704,7 +704,7 @@ div[data-convo="1"] {
 }
 
 .m-modes13-group {
-  padding: 10px 0;
+  padding: 4px 0;
   border-radius: 12px;
 }
 
