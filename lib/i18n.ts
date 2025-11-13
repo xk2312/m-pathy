@@ -1,3 +1,87 @@
+/**
+ * ============================================================
+ *  i18n SYSTEM OVERVIEW – GPTM-GALAXY (FORENSIC INDEX)
+ * ============================================================
+ *
+ * Es existieren DREI i18n-Welten in diesem Projekt:
+ *
+ * (A) LEGACY-CHAT-i18n
+ * --------------------
+ * - Quelle:   const en = { … }, const de = { … }, DICTS = { en, de }
+ * - Sprachen: en, de
+ * - Zugriff:  t(key), tr(key, fallback, vars)
+ * - Struktur: flache Key→Value Paare
+ * - Fallback: Legacy[locale] → UX-dict[locale] → Legacy.en → UX-dict.en
+ * - Zweck:    Historische/Chat-UI-Strings, NICHT Subscription-UI
+ *
+ * (B) SUBSCRIPTION / LANDING / POWERPROMPTS (dict)
+ * -----------------------------------------------
+ * - Export:   export const dict = { en: { … }, de: { … }, fr: { … }, … }
+ * - Sprachen: 13 (en, de, fr, es, it, pt, nl, ru, zh, ja, ko, ar, hi)
+ * - Authoring: verschachtelt (z. B. pp: { title, groups:{}, e1…u3 })
+ * - Runtime:  FLAT via flattenI18n(obj) → z. B.:
+ *             "hero_title"
+ *             "pp.title"
+ *             "pp.groups.parents"
+ *             "metrics.silent_trust.label"
+ *             "testimonials.gemini"
+ *
+ * - LanguageProvider (Subscription-Welt):
+ *     - baut enFlat = flattenI18n(dict.en)
+ *     - baut locFlat = flattenI18n(dict[locale] ?? dict.en)
+ *     - providerDict[lang] = { ...enFlat, ...locFlat }
+ *     - useLang().t(k) = providerDict[lang][k] || providerDict.en[k] || k
+ *
+ * - WICHTIG:
+ *   - Subscription-Komponenten dürfen NUR useLang().t("…") verwenden.
+ *   - Alle Keys in der Subscription-UI sind geflattete Strings.
+ *   - dict ist nur Authoring-Quelle, nicht direkt im UI verwenden.
+ *
+ * (C) COUNCILORBIT-i18n (SEPARAT)
+ * -------------------------------
+ * - Export:   export const i18n
+ * - Struktur:
+ *     i18n[lang].council.items[id] = {
+ *       title: string;
+ *       subtitle: string;
+ *       kpi: { superpower: string; focus: string; signal: string };
+ *     }
+ * - Zugriff im Orbit:
+ *     const active = i18n[lang] ?? i18n.en;
+ *     active.council.items["m-power"].kpi.superpower
+ * - flattenI18n wird HIER NICHT verwendet.
+ * - COMPLETELY AUTARK: nutzt NICHT dict & NICHT den LanguageProvider-t().
+ *
+ * ------------------------------------------------------------
+ *  FALLSTRICKE / DOs & DON'Ts
+ * ------------------------------------------------------------
+ * - Es gibt ZWEI t()-Funktionen:
+ *     1) lib/i18n.t()  → Legacy + dict + Fallback-Mix
+ *     2) useLang().t() → nur geflattetes Subscription-Dict
+ *   → In Subscription-Komponenten IMMER useLang().t() verwenden.
+ *
+ * - Authoring vs. Runtime:
+ *     - Authoring: dict.en / dict.de usw. dürfen verschachtelt sein.
+ *     - Runtime:   Subscription-UI sieht nur FLAT Keys.
+ *
+ * - Locale-Quellen:
+ *     - Legacy:     DICTS (en/de)
+ *     - Subscription: dict (13 Sprachen) + SUP-Liste im Frontend
+ *     - CouncilOrbit: eigene i18n-Map je Sprache
+ *   → Beim Hinzufügen/Entfernen von Sprachen alle drei Stellen prüfen.
+ *
+ * ------------------------------------------------------------
+ *  MERKSÄTZE (KURZ)
+ * ------------------------------------------------------------
+ * - Subscription-UI → ausschließlich geflattete Keys über useLang().t().
+ * - CouncilOrbit → eigenes objektbasiertes i18n (i18n[lang].council.items).
+ * - lib/i18n.t() NICHT in Subscription-Components verwenden.
+ * - dict ist verschachtelt, wird aber IMMER zu flachen Keys gemacht.
+ * - Aufpassen auf Key-Kollisionen (hero_*, pp.*, metrics.*, testimonials.*).
+ */
+
+
+
 // lib/i18n.ts
 // Minimal, SSR-safe i18n helper with browser + localStorage detection.
 
@@ -2640,10 +2724,23 @@ export const i18n: Record<string, CouncilLocale> = {
 // ─────────────────────────────────────────────────────────────
 // PowerPrompts · i18n additions (append-only)
 // Offizielle Projektsprachen: en, de, fr, es, it, pt, nl, ru, zh, ja, ko, ar, hi
+// Struktur: dict.<lang>.pp = { title, hint, groups, ask, e1…u3 }
 // ─────────────────────────────────────────────────────────────
 
 Object.assign(dict.en ?? {}, {
   pp: {
+    title: "The Source Command",
+    hint: "Type what you seek — and become what you write.",
+    groups: {
+      parents: "Parents",
+      students: "Students",
+      couples: "Couples",
+      doctors: "Doctors",
+      marketing: "Marketing",
+      universal: "Universal",
+    },
+    ask: "Ask directly",
+
     e1: "Explain God to my 4-year-old daughter in a way that feels loving, clear, and full of wonder.",
     e2: "Explain the idea of a “false narrative” to my 5-year-old son so he understands truth and kindness.",
     s1: "Explain the Pythagorean theorem so that I can really picture it and remember it forever.",
@@ -2662,6 +2759,18 @@ Object.assign(dict.en ?? {}, {
 
 Object.assign(dict.de ?? {}, {
   pp: {
+    title: "Der Quell-Befehl",
+    hint: "Tippe, was du suchst — und werde, was du schreibst.",
+    groups: {
+      parents: "Eltern",
+      students: "Schüler:innen",
+      couples: "Paare",
+      doctors: "Ärzt:innen",
+      marketing: "Marketing",
+      universal: "Universal",
+    },
+    ask: "Direkt fragen",
+
     e1: "Erkläre meiner 4-jährigen Tochter Gott – liebevoll, klar und voller Staunen.",
     e2: "Erkläre meinem 5-jährigen Sohn, was ein „falsches Narrativ“ ist, damit er Wahrheit und Freundlichkeit versteht.",
     s1: "Erkläre den Satz des Pythagoras so, dass ich ihn mir wirklich vorstellen und für immer merken kann.",
@@ -2680,6 +2789,18 @@ Object.assign(dict.de ?? {}, {
 
 Object.assign(dict.fr ?? {}, {
   pp: {
+    title: "La Commande Source",
+    hint: "Tape ce que tu cherches — et deviens ce que tu écris.",
+    groups: {
+      parents: "Parents",
+      students: "Étudiants",
+      couples: "Couples",
+      doctors: "Médecins",
+      marketing: "Marketing",
+      universal: "Universel",
+    },
+    ask: "Demander directement",
+
     e1: "Explique Dieu à ma fille de 4 ans — avec douceur, clarté et émerveillement.",
     e2: "Explique à mon fils de 5 ans ce qu’est un « faux récit », pour qu’il comprenne la vérité et la bonté.",
     s1: "Explique le théorème de Pythagore de façon à ce que je puisse le visualiser et m’en souvenir pour toujours.",
@@ -2698,6 +2819,18 @@ Object.assign(dict.fr ?? {}, {
 
 Object.assign(dict.es ?? {}, {
   pp: {
+    title: "El Comando Fuente",
+    hint: "Escribe lo que buscas — y conviértete en lo que escribes.",
+    groups: {
+      parents: "Padres",
+      students: "Estudiantes",
+      couples: "Parejas",
+      doctors: "Médicos",
+      marketing: "Marketing",
+      universal: "Universal",
+    },
+    ask: "Preguntar directamente",
+
     e1: "Explica a mi hija de 4 años quién es Dios, de forma amorosa, clara y llena de asombro.",
     e2: "Explica a mi hijo de 5 años qué es una “narrativa falsa”, para que entienda la verdad y la bondad.",
     s1: "Explica el teorema de Pitágoras de manera que pueda visualizarlo y recordarlo para siempre.",
@@ -2716,6 +2849,18 @@ Object.assign(dict.es ?? {}, {
 
 Object.assign(dict.it ?? {}, {
   pp: {
+    title: "Il Comando Sorgente",
+    hint: "Scrivi ciò che cerchi — e diventa ciò che scrivi.",
+    groups: {
+      parents: "Genitori",
+      students: "Studenti",
+      couples: "Coppie",
+      doctors: "Medici",
+      marketing: "Marketing",
+      universal: "Universale",
+    },
+    ask: "Chiedi direttamente",
+
     e1: "Spiega Dio a mia figlia di 4 anni in modo amorevole, chiaro e pieno di meraviglia.",
     e2: "Spiega a mio figlio di 5 anni il concetto di “falso narrativo”, così capisce verità e gentilezza.",
     s1: "Spiega il teorema di Pitagora in modo che io possa visualizzarlo e ricordarlo per sempre.",
@@ -2734,6 +2879,18 @@ Object.assign(dict.it ?? {}, {
 
 Object.assign(dict.pt ?? {}, {
   pp: {
+    title: "O Comando Fonte",
+    hint: "Digite o que procura — e torne-se o que escreve.",
+    groups: {
+      parents: "Pais",
+      students: "Estudantes",
+      couples: "Casais",
+      doctors: "Médicos",
+      marketing: "Marketing",
+      universal: "Universal",
+    },
+    ask: "Perguntar diretamente",
+
     e1: "Explique Deus para minha filha de 4 anos — com carinho, clareza e encanto.",
     e2: "Explique ao meu filho de 5 anos o que é uma “narrativa falsa”, para que ele entenda verdade e bondade.",
     s1: "Explique o teorema de Pitágoras de um jeito que eu possa visualizar e nunca mais esquecer.",
@@ -2752,6 +2909,18 @@ Object.assign(dict.pt ?? {}, {
 
 Object.assign(dict.nl ?? {}, {
   pp: {
+    title: "Het Bron-Commando",
+    hint: "Typ wat je zoekt — en word wat je schrijft.",
+    groups: {
+      parents: "Ouders",
+      students: "Studenten",
+      couples: "Stellen",
+      doctors: "Artsen",
+      marketing: "Marketing",
+      universal: "Universeel",
+    },
+    ask: "Direct vragen",
+
     e1: "Leg God uit aan mijn 4-jarige dochter — liefdevol, duidelijk en vol verwondering.",
     e2: "Leg aan mijn 5-jarige zoon uit wat een ‘false narrative’ is, zodat hij waarheid en vriendelijkheid begrijpt.",
     s1: "Leg de stelling van Pythagoras zo uit dat ik het echt kan zien en voor altijd onthouden.",
@@ -2770,6 +2939,18 @@ Object.assign(dict.nl ?? {}, {
 
 Object.assign(dict.ru ?? {}, {
   pp: {
+    title: "Команда Истока",
+    hint: "Напиши то, что ищешь — и стань тем, что пишешь.",
+    groups: {
+      parents: "Родители",
+      students: "Студенты",
+      couples: "Пары",
+      doctors: "Врачи",
+      marketing: "Маркетинг",
+      universal: "Универсальные",
+    },
+    ask: "Спросить напрямую",
+
     e1: "Объясни Бога моей 4-летней дочери — с любовью, ясно и с восхищением.",
     e2: "Объясни моему 5-летнему сыну, что такое «ложный нарратив», чтобы он понял истину и доброту.",
     s1: "Объясни теорему Пифагора так, чтобы я смог её представить и запомнить навсегда.",
@@ -2788,6 +2969,18 @@ Object.assign(dict.ru ?? {}, {
 
 Object.assign(dict.zh ?? {}, {
   pp: {
+    title: "源指令",
+    hint: "写下你所寻求的——并成为你所书写的。",
+    groups: {
+      parents: "父母",
+      students: "学生",
+      couples: "伴侣",
+      doctors: "医生",
+      marketing: "市场营销",
+      universal: "通用",
+    },
+    ask: "直接提问",
+
     e1: "用充满爱与清晰的方式向我4岁的女儿解释上帝。",
     e2: "向我5岁的儿子解释什么是“虚假叙事”，让他理解真理与善良。",
     s1: "用我能永远记住的方式解释毕达哥拉斯定理。",
@@ -2806,6 +2999,18 @@ Object.assign(dict.zh ?? {}, {
 
 Object.assign(dict.ja ?? {}, {
   pp: {
+    title: "ソースコマンド",
+    hint: "求めるものを打ち込み、書くものに自らがなる。",
+    groups: {
+      parents: "保護者",
+      students: "学生",
+      couples: "カップル",
+      doctors: "医師",
+      marketing: "マーケティング",
+      universal: "ユニバーサル",
+    },
+    ask: "直接聞く",
+
     e1: "4歳の娘に神様のことを、愛と驚きでやさしく説明してください。",
     e2: "5歳の息子に「偽りの物語」とは何かを説明し、真実と優しさを理解させてください。",
     s1: "ピタゴラスの定理を、ずっと覚えられるように簡単に説明してください。",
@@ -2824,6 +3029,18 @@ Object.assign(dict.ja ?? {}, {
 
 Object.assign(dict.ko ?? {}, {
   pp: {
+    title: "소스 명령",
+    hint: "찾는 것을 적으세요 — 그리고 당신이 쓰는 것이 되세요.",
+    groups: {
+      parents: "부모",
+      students: "학생",
+      couples: "커플",
+      doctors: "의사",
+      marketing: "마케팅",
+      universal: "유니버설",
+    },
+    ask: "바로 질문하기",
+
     e1: "4살 딸에게 사랑스럽고 명확하며 경이로움으로 신을 설명해주세요.",
     e2: "5살 아들에게 '거짓 서사'가 무엇인지 설명하여 진실과 친절을 이해하도록 해주세요.",
     s1: "피타고라스의 정리를 시각적으로 이해하고 영원히 기억할 수 있도록 설명해주세요.",
@@ -2842,6 +3059,18 @@ Object.assign(dict.ko ?? {}, {
 
 Object.assign(dict.ar ?? {}, {
   pp: {
+    title: "أمر المصدر",
+    hint: "اكتب ما تبحث عنه — واصبح ما تكتبه.",
+    groups: {
+      parents: "الآباء",
+      students: "الطلاب",
+      couples: "الأزواج",
+      doctors: "الأطباء",
+      marketing: "التسويق",
+      universal: "عام",
+    },
+    ask: "اسأل مباشرة",
+
     e1: "اشرح الله لابنتي البالغة من العمر 4 سنوات بطريقة مليئة بالحب والوضوح والدهشة.",
     e2: "اشرح لابني البالغ من العمر 5 سنوات ما هو «السرد الزائف» حتى يفهم الحقيقة واللطف.",
     s1: "اشرح نظرية فيثاغورس بطريقة يمكنني تصورها وتذكرها إلى الأبد.",
@@ -2860,6 +3089,18 @@ Object.assign(dict.ar ?? {}, {
 
 Object.assign(dict.hi ?? {}, {
   pp: {
+    title: "स्रोत कमांड",
+    hint: "जो तुम खोजते हो उसे लिखो — और जो लिखते हो वही बनो।",
+    groups: {
+      parents: "माता-पिता",
+      students: "विद्यार्थी",
+      couples: "जोड़े",
+      doctors: "डॉक्टर",
+      marketing: "मार्केटिंग",
+      universal: "सार्वत्रिक",
+    },
+    ask: "सीधे पूछें",
+
     e1: "मेरी 4 साल की बेटी को प्यार और आश्चर्य से भगवान के बारे में समझाओ।",
     e2: "मेरे 5 साल के बेटे को बताओ कि 'झूठी कथा' क्या होती है ताकि वह सच्चाई और दया को समझ सके।",
     s1: "पाइथागोरस प्रमेय को इस तरह समझाओ कि मैं इसे कल्पना कर सकूं और हमेशा याद रखूं।",
@@ -2875,128 +3116,5 @@ Object.assign(dict.hi ?? {}, {
     u3: "मुझे चेरी के आकार का ड्रोन चाहिए। GalaxyBuilder शुरू करो।",
   },
 });
-// === PowerPrompts – Title & Hint (13 locales) ===
-// Konsenstitel: "The Source Command" · Hint: "Type what you seek — and become what you write."
-
-Object.assign(dict.en ?? {}, {
-  pp_title: "The Source Command",
-  pp_hint: "Type what you seek — and become what you write."
-});
-
-Object.assign(dict.de ?? {}, {
-  pp_title: "Der Quell-Befehl",
-  pp_hint: "Tippe, was du suchst — und werde, was du schreibst."
-});
-
-Object.assign(dict.fr ?? {}, {
-  pp_title: "La Commande Source",
-  pp_hint: "Tape ce que tu cherches — et deviens ce que tu écris."
-});
-
-Object.assign(dict.es ?? {}, {
-  pp_title: "El Comando Fuente",
-  pp_hint: "Escribe lo que buscas — y conviértete en lo que escribes."
-});
-
-Object.assign(dict.it ?? {}, {
-  pp_title: "Il Comando Sorgente",
-  pp_hint: "Scrivi ciò che cerchi — e diventa ciò che scrivi."
-});
-
-Object.assign(dict.pt ?? {}, {
-  pp_title: "O Comando Fonte",
-  pp_hint: "Digite o que procura — e torne-se o que escreve."
-});
-
-Object.assign(dict.nl ?? {}, {
-  pp_title: "Het Bron-Commando",
-  pp_hint: "Typ wat je zoekt — en word wat je schrijft."
-});
-
-Object.assign(dict.ru ?? {}, {
-  pp_title: "Команда Истока",
-  pp_hint: "Напиши то, что ищешь — и стань тем, что пишешь."
-});
-
-Object.assign(dict.zh ?? {}, {
-  pp_title: "源指令",
-  pp_hint: "写下你所寻求的——并成为你所书写的。"
-});
-
-Object.assign(dict.ja ?? {}, {
-  pp_title: "ソースコマンド",
-  pp_hint: "求めるものを打ち込み、書くものに自らがなる。"
-});
-
-Object.assign(dict.ko ?? {}, {
-  pp_title: "소스 명령",
-  pp_hint: "찾는 것을 적으세요 — 그리고 당신이 쓰는 것이 되세요."
-});
-
-Object.assign(dict.ar ?? {}, {
-  pp_title: "أمر المصدر",
-  pp_hint: "اكتب ما تبحث عنه — واصبح ما تكتبه."
-});
-
-Object.assign(dict.hi ?? {}, {
-  pp_title: "स्रोत कमांड",
-  pp_hint: "जो तुम खोजते हो उसे लिखो — और जो लिखते हो वही बनो।"
-});
-// ─────────────────────────────────────────────
-// Council Visit – FLAT KEYS (MEFL SAFE VERSION)
-// ─────────────────────────────────────────────
-
-;(dict.en as any)["council.visit_label"] = "Visit {{name}}";
-;(dict.en as any)["council.prompt_template"] =
-  "@{{name}} (e.g., m-loop) Please explain the 5 most important points, in a minimal way, how you can help me.";
-
-;(dict.de as any)["council.visit_label"] = "Besuche {{name}}";
-;(dict.de as any)["council.prompt_template"] =
-  "@{{name}} (z. B. m-loop) Bitte erkläre mir die wichtigsten 5 Punkte, minimalistisch, wobei du mir helfen kannst.";
-
-;(dict.fr as any)["council.visit_label"] = "Visiter {{name}}";
-;(dict.fr as any)["council.prompt_template"] =
-  "@{{name}} (p. ex. m-loop) Explique-moi de façon minimaliste les 5 points essentiels par lesquels tu peux m’aider.";
-
-;(dict.es as any)["council.visit_label"] = "Visitar {{name}}";
-;(dict.es as any)["council.prompt_template"] =
-  "@{{name}} (p. ej. m-loop) Explícame de forma minimalista los 5 puntos más importantes en los que puedes ayudarme.";
-
-;(dict.it as any)["council.visit_label"] = "Visita {{name}}";
-;(dict.it as any)["council.prompt_template"] =
-  "@{{name}} (es. m-loop) Spiegami in modo minimalista i 5 punti principali in cui puoi aiutarmi.";
-
-;(dict.pt as any)["council.visit_label"] = "Visitar {{name}}";
-;(dict.pt as any)["council.prompt_template"] =
-  "@{{name}} (ex.: m-loop) Explique de forma minimalista os 5 pontos mais importantes em que você pode me ajudar.";
-
-;(dict.nl as any)["council.visit_label"] = "Bezoek {{name}}";
-;(dict.nl as any)["council.prompt_template"] =
-  "@{{name}} (bijv. m-loop) Leg mij minimalistisch de 5 belangrijkste punten uit waarop je me kunt helpen.";
-
-;(dict.ru as any)["council.visit_label"] = "Посетить {{name}}";
-;(dict.ru as any)["council.prompt_template"] =
-  "@{{name}} (например m-loop) Пожалуйста, минималистично объясни 5 самых важных пунктов.";
-
-;(dict.zh as any)["council.visit_label"] = "访问 {{name}}";
-;(dict.zh as any)["council.prompt_template"] =
-  "@{{name}}（例如 m-loop）请以极简方式说明你能帮助我的 5 个最重要方面。";
-
-;(dict.ja as any)["council.visit_label"] = "{{name}} を訪問";
-;(dict.ja as any)["council.prompt_template"] =
-  "@{{name}}（例：m-loop）あなたが私をどのように助けられるか、5つの重要ポイントを簡潔に説明してください。";
-
-;(dict.ko as any)["council.visit_label"] = "{{name}} 방문";
-;(dict.ko as any)["council.prompt_template"] =
-  "@{{name}} (예: m-loop) 도와줄 수 있는 가장 중요한 5가지를 미니멀하게 설명해 주세요.";
-
-;(dict.ar as any)["council.visit_label"] = "زر {{name}}";
-;(dict.ar as any)["council.prompt_template"] =
-  "@{{name}} (مثلاً m-loop) رجاءً اشرح لي باختصار أهم 5 نقاط يمكنك مساعدتي فيها.";
-
-;(dict.hi as any)["council.visit_label"] = "{{name}} देखें";
-;(dict.hi as any)["council.prompt_template"] =
-  "@{{name}} (उदा. m-loop) कृपया संक्षिप्त रूप में वे 5 सबसे महत्वपूर्ण बिंदु समझाइए जिनमें आप मेरी मदद कर सकते हैं.";
-
 
 UX_LOCALES = Object.keys(dict);
