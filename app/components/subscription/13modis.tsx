@@ -2,6 +2,8 @@
 
 import React, { useMemo, useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
+import dynamic from "next/dynamic";
+const ZenithButton = dynamic(() => import("@/app/components/ZenithButton"), { ssr: false });
 
 
 // --------------------------------------------------------
@@ -390,12 +392,18 @@ React.useEffect(() => {
 
             {/* Beschreibung (Output) – Desktop unter den Pills, Mobile unter Figur durch Flow */}
             <article className="m-modes13-description" aria-live="polite">
-              <h3 className="m-modes13-description-title">{active.name}</h3>
-              <p className="m-modes13-description-label">{active.label}</p>
-              <p className="m-modes13-description-body">
-                {active.description}
-              </p>
-            </article>
+  <h3 className="m-modes13-description-title">{active.name}</h3>
+  <p className="m-modes13-description-label">{active.label}</p>
+  <p className="m-modes13-description-body">{active.description}</p>
+
+  {/* CTA / Button unter der Beschreibung */}
+  <div style={{ marginTop: "32px" }}>
+    <ZenithButton position="inline" aria-label={t("hero_cta")}>
+      {t("hero_cta")}
+    </ZenithButton>
+  </div>
+</article>
+
           </div>
 
           {/* Rechte Spalte: Figur + Aura */}
