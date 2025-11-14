@@ -33,10 +33,10 @@ export default function Experts13() {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<ExpertId | null>(null);
 
-  // Gemeinsame Klasse für alle Expert-Pills
+   // Gemeinsame Klasse für alle Expert-Pills
   const pillClass =
     "m-experts13-pill inline-flex items-center justify-between gap-2 " +
-    "px-4 py-2 rounded-2xl bg-white/5 ring-1 ring-white/10 text-white/90 text-sm text-left " +
+    "px-[7px] py-[7px] rounded-2xl bg-white/5 ring-1 ring-white/10 text-white/90 text-sm text-left " +
     "hover:bg-white/10 hover:ring-cyan-300/40 transition-all duration-200";
 
   // Zuordnung: Expert → Icon (Emoji als Platzhalter)
