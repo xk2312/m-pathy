@@ -1,22 +1,21 @@
 // ─────────────────────────────────────────────
-// Experts – 13 expert roles (i18n keys)
-// Authoring: nested → Runtime: flat via flattenI18n()
+// 13 Experts – i18n keys (nested → flat)
+// Authoring: nested, Runtime: flattenI18n() in /app/subscription/page.tsx
 // ─────────────────────────────────────────────
 
 export const experts13 = {
   /* ───────────────── EN ───────────────── */
   en: {
     experts: {
-      kicker: "13 expert minds",
-      title: "Your expert council",
+      kicker: "13 domain experts",
+      title: "The experts behind your questions",
       subtitle:
-        "Choose an expert to see how m-pathy thinks with that discipline – then call them into your main chat.",
+        "Choose an expert and let m-pathy answer as if you were talking to a specialist in that field.",
+
       dropdown: {
         label: "Choose your expert",
       },
-      cta: {
-        default: "Call this expert",
-      },
+
       group: {
         science: "Life & matter",
         engineering: "Engineering & code",
@@ -27,126 +26,139 @@ export const experts13 = {
       },
 
       biologist: {
-        group: "science",
         name: "Biologist",
-        label: "Life systems",
-        tagline: "Understands cells, ecosystems and everything that grows.",
+        label: "Life systems & evolution",
+        tagline:
+          "Understands cells, organisms and ecosystems as one continuous story.",
         description:
-          "Helps you think in living systems – from cells to ecosystems. Perfect for biology questions, health concepts, lab ideas and anything that touches life itself.",
+          "Use the Biologist when you need clarity about living systems: from DNA and metabolism to ecology and evolution. It explains mechanisms, trade-offs and risks in a grounded, non-sensational way.",
       },
 
       chemist: {
-        group: "science",
         name: "Chemist",
         label: "Reactions & materials",
-        tagline: "Sees how substances interact, bond and transform.",
+        tagline:
+          "Sees how molecules interact, transform and create new properties.",
         description:
-          "Thinks in molecules, reactions and safety. Ideal for formulation ideas, lab planning, material choices and understanding what really happens in a beaker or reactor.",
+          "Use the Chemist for questions about reactions, materials, solvents, stability and lab design. It can help you reason about what is plausible, what is risky and what belongs only in professional labs.",
       },
 
       physicist: {
-        group: "science",
         name: "Physicist",
-        label: "Forces & fundamentals",
-        tagline: "Looks at the laws behind motion, energy and matter.",
+        label: "Forces, energy, space-time",
+        tagline:
+          "Reads the world through conserved quantities, symmetries and limits.",
         description:
-          "Helps you reason from first principles: mechanics, thermodynamics, optics, quantum hints. Great for product ideas, simulations and any question about how the physical world behaves.",
+          "Use the Physicist when you want to understand forces, fields, energy, optics, relativity or statistical behaviour. It keeps explanations precise, honest about uncertainty and anchored in real-world constraints.",
       },
 
       computer_scientist: {
-        group: "engineering",
         name: "Computer Scientist",
         label: "Algorithms & systems",
-        tagline: "Designs structures for data, logic and scalable code.",
+        tagline:
+          "Thinks in abstractions, complexity and architectures that can grow.",
         description:
-          "Supports you with architecture, algorithms, data structures and system design. Ideal for planning software, APIs, AI-workflows and long-term technical roadmaps.",
+          "Use the Computer Scientist for data structures, algorithms, architectures, distributed systems and AI fundamentals. It focuses on clarity of concepts, trade-offs and implementation pathways.",
       },
 
       jurist: {
-        group: "law",
         name: "Jurist",
         label: "Law & structure",
-        tagline: "Thinks in rights, duties and clean agreements.",
+        tagline:
+          "Translates messy reality into clear legal positions and options.",
         description:
-          "Helps you structure contracts, policies and governance. Not a lawyer, but a clear legal thinker who makes risks, obligations and options visible in plain language.",
+          "Use the Jurist when you need orientation in contracts, liability, privacy, IP or regulation. It cannot replace a lawyer, but it can help you structure questions, spot risks and prepare professional advice.",
       },
 
       architect: {
-        group: "design",
         name: "Architect / Civil Engineer",
         label: "Structures & spaces",
-        tagline: "Builds load-bearing structures in the physical world.",
+        tagline:
+          "Sees how loads, people and light move through built environments.",
         description:
-          "Thinks in statics, safety and human use of space. Useful for building concepts, structural questions, renovations, infrastructure ideas and city-level thinking.",
+          "Use the Architect / Civil Engineer for questions around buildings, structures, materials and spatial concepts. It balances aesthetics, safety, regulations and long-term usability.",
       },
 
       landscape_designer: {
-        group: "design",
         name: "Landscape Designer",
-        label: "Nature & rhythm",
-        tagline: "Shapes outdoor spaces that breathe with their environment.",
+        label: "Living environments",
+        tagline:
+          "Thinks in soil, water, plants and human rhythms over seasons.",
         description:
-          "Combines ecology, aesthetics and human movement. Great for gardens, parks, outdoor campuses and any idea where nature, paths and people should feel in harmony.",
+          "Use the Landscape Designer for gardens, parks, outdoor spaces and ecological integration. It connects aesthetics, biodiversity, maintenance effort and local climate.",
       },
 
       interior_designer: {
-        group: "design",
         name: "Interior Designer",
-        label: "Rooms & atmosphere",
-        tagline: "Creates interiors that support focus, rest or flow.",
+        label: "Rooms that feel right",
+        tagline:
+          "Shapes light, colour, materials and flow into coherent atmospheres.",
         description:
-          "Thinks in light, materials, ergonomics and mood. Ideal for homes, studios, offices and healing spaces that should feel coherent, calm and deeply intentional.",
+          "Use the Interior Designer for layouts, furniture, colours and lighting concepts. It focuses on how a room should feel, how people move and how work or rest can happen there.",
       },
 
       electrical_engineer: {
-        group: "engineering",
         name: "Electrical Engineer",
         label: "Signals & power",
-        tagline: "Understands circuits, signals and hardware constraints.",
+        tagline:
+          "Understands electrons, circuits and systems that must not fail.",
         description:
-          "Helps you design and reason about electronics: from simple circuits to embedded systems. Perfect for hardware products, IoT ideas and anything that mixes code with components.",
+          "Use the Electrical Engineer for electronics, power distribution, sensors, communication links and safety. It highlights limits, failure modes and practical design rules.",
       },
 
       mathematician: {
-        group: "meta",
         name: "Mathematician",
-        label: "Logic & structure",
-        tagline: "Sees patterns, proofs and clean abstractions.",
+        label: "Structure & proof",
+        tagline:
+          "Searches for the simplest structure that explains the pattern.",
         description:
-          "Supports you with clear reasoning, models and numbers. Great for statistics, optimisation, financial models and turning fuzzy ideas into precise, testable structures.",
+          "Use the Mathematician for probability, optimisation, calculus, algebra and reasoning about models. It helps you formalise intuition and see which assumptions really matter.",
       },
 
       astrologer: {
-        group: "meta",
         name: "Astrologer",
-        label: "Symbols & cycles",
-        tagline: "Reads meaning in cycles, archetypes and celestial timing.",
+        label: "Symbolic sky language",
+        tagline:
+          "Treats the sky as a mirror for meaning, not as physics.",
         description:
-          "Works with symbolic maps of time and character. Not for prediction, but for reflection, narrative building and exploring how people experience meaning and change.",
+          "Use the Astrologer when you want to explore symbolic narratives, archetypes and timing from an astrological perspective. It stays transparent that this is symbolic guidance, not scientific prediction.",
       },
 
       weather_expert: {
-        group: "earth",
         name: "Weather Expert",
-        label: "Sky & climate",
-        tagline: "Understands weather patterns and local conditions.",
+        label: "Climate & local patterns",
+        tagline:
+          "Translates large-scale climate data into local, practical impact.",
         description:
-          "Helps you think about weather, climate and planning. Useful for events, agriculture, outdoor projects and communicating risk and uncertainty around the elements.",
+          "Use the Weather Expert for questions about weather risks, local patterns and climate context. It explains what is known, what is uncertain and how to plan with robust margins.",
       },
 
       molecular_scientist: {
-        group: "science",
         name: "Molecular Scientist",
-        label: "Molecules & design",
-        tagline: "Designs and evaluates structures at the molecular level.",
+        label: "Molecules as design space",
+        tagline:
+          "Looks at life, materials and medicine through molecular logic.",
         description:
-          "Combines chemistry, biology and physics at the smallest scales. Ideal for drug ideas, NEM concepts, material design and any project where the exact shape of a molecule matters.",
+          "Use the Molecular Scientist for questions on molecular design, binding, pathways and emergent properties. It focuses on concepts and safety boundaries, not on step-by-step lab protocols.",
+      },
+
+      cta: {
+        default: "Call this expert",
       },
     },
   },
 
-  /* ───────────────── DE / FR / … (to be filled later) ───────────────── */
-  // de: { experts: { /* later */ } },
-  // fr: { experts: { /* later */ } },
-  // …
+  /* ───────────────── LOCALE STUBS ───────────────── */
+  de: { experts: {} },
+  fr: { experts: {} },
+  es: { experts: {} },
+  it: { experts: {} },
+  pt: { experts: {} },
+  nl: { experts: {} },
+  ru: { experts: {} },
+  zh: { experts: {} },
+  ja: { experts: {} },
+  ko: { experts: {} },
+  ar: { experts: {} },
+  hi: { experts: {} },
 };

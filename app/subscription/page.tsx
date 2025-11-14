@@ -11,8 +11,10 @@ import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
 import Testimonial from "@/app/components/subscription/testimonial"; // Klein, korrekt
 import PowerPrompts from "@/app/components/subscription/powerprompts"; // neu
 import Modis13 from "@/app/components/subscription/13modis"; // 13 Modi – neuer Abschnitt
-import { modes15 } from "@/lib/i18n.modes";
 import Experts13 from "@/app/components/subscription/13experts"; 
+import { modes15 } from "@/lib/i18n.modes";
+import { experts13 } from "@/lib/i18n.experts";
+
 
 // KPI Board (Client-only; Recharts braucht Browser)
 const MPathyKpiBoard = dynamic(
@@ -53,11 +55,16 @@ export default function SubscriptionPage() {
   // 1) aktive Locale
   const locale = detectLocale();
 
-    // 2) flache Sprach-Maps bilden (Subscription + 15 Modes)
+    // 2) flache Sprach-Maps bilden (Subscription + 15 Modes + 13 Experts)
   const enFlat = useMemo(() => flattenI18n(dict.en), []);
 
   const enModesFlat = useMemo(
     () => flattenI18n(modes15.en ?? {}),
+    []
+  );
+
+  const enExpertsFlat = useMemo(
+    () => flattenI18n(experts13.en ?? {}),
     []
   );
 
@@ -71,19 +78,28 @@ export default function SubscriptionPage() {
     [locale]
   );
 
+  const locExpertsFlat = useMemo(
+    () => flattenI18n((experts13 as any)[locale] ?? {}),
+    [locale]
+  );
+
+
   // 3) Provider bekommt das korrekte Shape: { en: {...}, [locale]: {...} }
-  const providerDict = useMemo(
+   const providerDict = useMemo(
     () => ({
-      en: { ...enFlat, ...enModesFlat },
+      en: { ...enFlat, ...enModesFlat, ...enExpertsFlat },
       [locale]: {
         ...enFlat,
         ...enModesFlat,
+        ...enExpertsFlat,
         ...locFlat,
         ...locModesFlat,
+        ...locExpertsFlat,
       },
     }),
-    [enFlat, enModesFlat, locFlat, locModesFlat, locale]
+    [enFlat, enModesFlat, enExpertsFlat, locFlat, locModesFlat, locExpertsFlat, locale]
   );
+
 
   return (
     <LanguageProvider dict={providerDict}>
