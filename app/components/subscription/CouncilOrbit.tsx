@@ -231,7 +231,7 @@ export default function CouncilOrbit() {
 
   // Basislängen
   const fullLength = R_TICK_OUT - R_TICK_IN;
-  const lengthWhite = fullLength * 0.2;      // weiße = 20 % der alten Länge
+  const lengthWhite = fullLength * 0.2*0.618;      // weiße = 20 % der alten Länge
   const lengthCyan = lengthWhite * 1.382;    // cyan ≈ 1.382 × weiß
 
   const thick = i % 5 === 0;
