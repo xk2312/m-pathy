@@ -28,10 +28,16 @@ type ExpertId =
   | "astrologer";
 
 export default function Experts13() {
-  const { t } = useLang();
+    const { t } = useLang();
 
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<ExpertId | null>(null);
+
+  const handleSelect = (id: ExpertId) => {
+    setSelected(id);
+    setOpen(false);
+  };
+
 
   // Gemeinsame Klasse für alle Expert-Pills
   const pillClass =
@@ -122,7 +128,7 @@ export default function Experts13() {
             </h3>
                         <div className="flex flex-col gap-3">
               <button
-                onClick={() => setSelected("biologist")}
+                onClick={() => handleSelect("biologist")}
                 className={pillClass}
                 style={{
                   padding:
@@ -138,7 +144,7 @@ export default function Experts13() {
 
 
               <button
-                onClick={() => setSelected("chemist")}
+                onClick={() => handleSelect("chemist")}
                 className={pillClass}
                 style={{
   padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
@@ -153,7 +159,7 @@ export default function Experts13() {
               </button>
 
               <button
-                onClick={() => setSelected("molecular_scientist")}
+                onClick={() => handleSelect("molecular_scientist")}
                 className={pillClass}
                 style={{
   padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
@@ -178,7 +184,7 @@ export default function Experts13() {
             </h3>
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => setSelected("physicist")}
+                onClick={() => handleSelect("physicist")}
                 className={pillClass}
                 style={{
   padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
@@ -193,7 +199,7 @@ export default function Experts13() {
               </button>
 
               <button
-                onClick={() => setSelected("electrical_engineer")}
+                onClick={() => handleSelect("electrical_engineer")}
                 className={pillClass}
                 style={{
   padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
@@ -210,7 +216,7 @@ export default function Experts13() {
               </button>
 
               <button
-                onClick={() => setSelected("computer_scientist")}
+                onClick={() => handleSelect("computer_scientist")}
                 className={pillClass}
                 style={{
   padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
@@ -235,7 +241,7 @@ export default function Experts13() {
             </h3>
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => setSelected("architect")}
+                onClick={() => handleSelect("architect")}
                 className={pillClass}
                 style={{
   padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
@@ -250,7 +256,7 @@ export default function Experts13() {
               </button>
 
               <button
-                onClick={() => setSelected("landscape_designer")}
+                onClick={() => handleSelect("landscape_designer")}
                 className={pillClass}
                 style={{
   padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
@@ -267,7 +273,7 @@ export default function Experts13() {
               </button>
 
               <button
-                onClick={() => setSelected("interior_designer")}
+                onClick={() => handleSelect("interior_designer")}
                 className={pillClass}
                 style={{
   padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
@@ -292,7 +298,7 @@ export default function Experts13() {
             </h3>
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => setSelected("jurist")}
+                onClick={() => handleSelect("jurist")}
                 className={pillClass}
                 style={{
   padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
@@ -315,7 +321,7 @@ export default function Experts13() {
             </h3>
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => setSelected("weather_expert")}
+                onClick={() => handleSelect("weather_expert")}
                 className={pillClass}
                 style={{
   padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
@@ -340,7 +346,7 @@ export default function Experts13() {
             </h3>
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => setSelected("mathematician")}
+                onClick={() => handleSelect("mathematician")}
                 className={pillClass}
                 style={{
   padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
@@ -357,7 +363,7 @@ export default function Experts13() {
               </button>
 
               <button
-                onClick={() => setSelected("astrologer")}
+                onClick={() => handleSelect("astrologer")}
                 className={pillClass}
                 style={{
   padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
