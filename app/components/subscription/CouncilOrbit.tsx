@@ -176,17 +176,23 @@ export default function CouncilOrbit() {
 
               /* KPI-HTML im foreignObject */
               .kpi {
-                color: #9AFB8F;
-                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace;
-                font-size: 13px;
-                line-height: 1.45;
-                text-align: left;
-                word-break: break-word;
-                hyphens: auto;
-                text-shadow: 0 0 4px rgba(0, 255, 120, 0.25);
-              }
-              .kpi p { margin: 0; }
-              .kpi p + p { margin-top: 6px; }
+  color: rgba(255,255,255,0.88);      /* Harmonisches Weiß */
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.45;
+  text-align: left;
+  word-break: break-word;
+  hyphens: auto;
+  text-shadow: 0 0 3px rgba(255,255,255,0.15); /* sanft & clean */
+}
+.kpi p { margin: 0; }
+.kpi p + p { margin-top: 8px; }
+
+/* Neuer Buffer unter KPI-Block */
+.kpi {
+  margin-bottom: 20px;
+}
+
             `}
           </style>
         </defs>
@@ -351,18 +357,19 @@ export default function CouncilOrbit() {
             </text>
 
             {/* HTML im Kreis – bricht automatisch um */}
-            <foreignObject
-              x={-INNER_R + 18}
-              y={8}
-              width={INNER_R * 2 - 36}
-              height={INNER_R * 2 - 80}
-            >
-              <div className="kpi">
-                <p>{`> superpower: ${focusedKpi.superpower}`}</p>
-                <p>{`> focus: ${focusedKpi.focus}`}</p>
-                <p>{`> signal: ${focusedKpi.signal}`}</p>
-              </div>
-            </foreignObject>
+<foreignObject
+  x={-INNER_R + 18}
+  y={8}
+  width={INNER_R * 2 - 36}
+  height={INNER_R * 2 - 80}
+>
+  <div className="kpi">
+    <p>{`> superpower: ${focusedKpi.superpower}`}</p>
+    <p>{`> focus: ${focusedKpi.focus}`}</p>
+    <p>{`> signal: ${focusedKpi.signal}`}</p>
+  </div>
+</foreignObject>
+
 
             {/* Visit Button – größer + weiter weg von der Kreisunterkante */}
             <foreignObject
