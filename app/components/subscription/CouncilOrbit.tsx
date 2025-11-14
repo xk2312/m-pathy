@@ -117,7 +117,7 @@ export default function CouncilOrbit() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-[900px] p-4">
+  <div className="mx-auto w-full max-w-[900px] px-2 py-4">
       <svg
         viewBox="0 0 1000 1000"
         className="block h-auto w-full"
@@ -294,40 +294,42 @@ export default function CouncilOrbit() {
                   }}
                 >
                   {/* Mercury-Pulse-Halo hinter Titel & Subtitle */}
-                  <rect
-                    className={`halo ${
-                      hovered || focused === (id as CouncilId)
-                        ? "halo-pulse"
-                        : ""
-                    }`}
-                    x={-120}
-                    y={-28}
-                    width={240}
-                    height={52}
-                    rx={22}
-                  />
+<rect
+  className={`halo ${
+    hovered || focused === (id as CouncilId)
+      ? "halo-pulse"
+      : ""
+  }`}
+  x={-120}
+  y={-30}
+  width={240}
+  height={60}   // unten mehr Raum
+  rx={24}
+/>
 
-                  <text
-                    className={`label ${hovered ? "hover" : ""}`}
-                    textAnchor="middle"
-                    fill="var(--pp-cyan-line, #22d3ee)"
-                    opacity={0.95}
-                    fontFamily="Garamond, serif"
-                    fontSize={20}
-                  >
-                    {item.title}
-                  </text>
-                  <text
-                    className={`label ${hovered ? "hover" : ""}`}
-                    y={20}
-                    textAnchor="middle"
-                    fill="var(--pp-cyan-line, #22d3ee)"
-                    opacity={0.8}
-                    fontFamily="Garamond, serif"
-                    fontSize={14}
-                  >
-                    {item.subtitle}
-                  </text>
+<text
+  className={`label ${hovered ? "hover" : ""}`}
+  y={-2}
+  textAnchor="middle"
+  fill="var(--pp-cyan-line, #22d3ee)"
+  opacity={0.95}
+  fontFamily="Garamond, serif"
+  fontSize={20}
+>
+  {item.title}
+</text>
+<text
+  className={`label ${hovered ? "hover" : ""}`}
+  y={18}
+  textAnchor="middle"
+  fill="var(--pp-cyan-line, #22d3ee)"
+  opacity={0.8}
+  fontFamily="Garamond, serif"
+  fontSize={14}
+>
+  {item.subtitle}
+</text>
+
                 </g>
 
 
@@ -347,12 +349,13 @@ export default function CouncilOrbit() {
         </g>
 
         {/* Center-Panel – 30px nach oben verschoben */}
-        {focusedItem && (
-          <g
-            className="center-card"
-            opacity={1}
-            transform={`translate(${CX} ${CY - 30})`}
-          >
+       {focusedItem && (
+  <g
+    className="center-card"
+    opacity={1}
+    transform={`translate(${CX} ${CY - 60})`}
+  >
+
             <circle
               r={INNER_R}
               fill="rgba(0,0,0,0.55)"
