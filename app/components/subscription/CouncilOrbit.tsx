@@ -14,7 +14,7 @@ const CX = 500,
   CY = 500;
 
 // Krone um 80 % verkleinert
-const R_LABEL = 353;
+const R_LABEL = 373;
 const R_TICK_IN = 224;   // 280 * 0.8
 const R_TICK_OUT = 376;  // 470 * 0.8
 
