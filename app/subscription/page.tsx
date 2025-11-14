@@ -166,7 +166,7 @@ export default function SubscriptionPage() {
 
 {/* Buffer — unter 13 Experts */}
 <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-
+<div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
                 {/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
           <section
