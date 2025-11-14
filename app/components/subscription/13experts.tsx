@@ -120,21 +120,30 @@ export default function Experts13() {
             <h3 className="text-white/60 text-sm mb-4">
               {t("experts.group.science")}
             </h3>
-            <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-3">
               <button
                 onClick={() => setSelected("biologist")}
                 className={pillClass}
+                style={{
+                  padding:
+                    "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
+                }}
               >
-                <span className="flex items-center gap-2 ml-[7px]">
+                <span className="flex items-center gap-2">
                   <span aria-hidden="true">{expertIcons.biologist}</span>
                   <span>{t("experts.biologist.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs mr-[7px]">View</span>
+                <span className="text-white/30 text-xs">View</span>
               </button>
+
 
               <button
                 onClick={() => setSelected("chemist")}
                 className={pillClass}
+                style={{
+  padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
+}}
+
               >
                 <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">{expertIcons.chemist}</span>
@@ -146,6 +155,10 @@ export default function Experts13() {
               <button
                 onClick={() => setSelected("molecular_scientist")}
                 className={pillClass}
+                style={{
+  padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
+}}
+
               >
                 <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
@@ -167,6 +180,10 @@ export default function Experts13() {
               <button
                 onClick={() => setSelected("physicist")}
                 className={pillClass}
+                style={{
+  padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
+}}
+
               >
                 <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">{expertIcons.physicist}</span>
@@ -178,6 +195,10 @@ export default function Experts13() {
               <button
                 onClick={() => setSelected("electrical_engineer")}
                 className={pillClass}
+                style={{
+  padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
+}}
+
               >
                 <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
@@ -191,6 +212,10 @@ export default function Experts13() {
               <button
                 onClick={() => setSelected("computer_scientist")}
                 className={pillClass}
+                style={{
+  padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
+}}
+
               >
                 <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
@@ -212,6 +237,10 @@ export default function Experts13() {
               <button
                 onClick={() => setSelected("architect")}
                 className={pillClass}
+                style={{
+  padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
+}}
+
               >
                 <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">{expertIcons.architect}</span>
@@ -223,6 +252,10 @@ export default function Experts13() {
               <button
                 onClick={() => setSelected("landscape_designer")}
                 className={pillClass}
+                style={{
+  padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
+}}
+
               >
                 <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
@@ -236,6 +269,10 @@ export default function Experts13() {
               <button
                 onClick={() => setSelected("interior_designer")}
                 className={pillClass}
+                style={{
+  padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
+}}
+
               >
                 <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
@@ -257,6 +294,10 @@ export default function Experts13() {
               <button
                 onClick={() => setSelected("jurist")}
                 className={pillClass}
+                style={{
+  padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
+}}
+
               >
                 <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">{expertIcons.jurist}</span>
@@ -276,6 +317,10 @@ export default function Experts13() {
               <button
                 onClick={() => setSelected("weather_expert")}
                 className={pillClass}
+                style={{
+  padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
+}}
+
               >
                 <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
@@ -297,6 +342,10 @@ export default function Experts13() {
               <button
                 onClick={() => setSelected("mathematician")}
                 className={pillClass}
+                style={{
+  padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
+}}
+
               >
                 <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
@@ -310,6 +359,10 @@ export default function Experts13() {
               <button
                 onClick={() => setSelected("astrologer")}
                 className={pillClass}
+                style={{
+  padding: "var(--experts-pill-pad-y) var(--experts-pill-pad-x)",
+}}
+
               >
                 <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">{expertIcons.astrologer}</span>

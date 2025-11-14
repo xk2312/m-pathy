@@ -316,3 +316,27 @@
   --modes-desc-line-height:    1.45;
   --modes-desc-color:          hsl(0 0% 86%);
 }
+:root {
+  --modes-label-font-size:     1rem;
+  --modes-label-color:         hsl(0 0% 98%);
+  --modes-desc-font-size:      0.875rem;
+  --modes-desc-line-height:    1.45;
+  --modes-desc-color:          hsl(0 0% 86%);
+}
+
+/* ─────────────────────────────────────────────
+   13 Experts – Spacing & Geometry Tokens
+   Quelle der Wahrheit für Header, Dropdown & Pills
+   ───────────────────────────────────────────── */
+:root {
+  /* Header & Dropdown Rhythmus */
+  --experts-header-gap:          30px;  /* H2 → Dropdown */
+  --experts-dropdown-gap:        13px;  /* Dropdown → Kategorien */
+  --experts-dropdown-pad-y:      13px;  /* Innen: oben/unten */
+  --experts-dropdown-pad-x:      13px;  /* Innen: links/rechts */
+
+  /* Expert-Pills */
+  --experts-pill-pad-y:          7px;   /* oben/unten */
+  --experts-pill-pad-x:          7px;   /* links/rechts (Icon & View) */
+}
+
