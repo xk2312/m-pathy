@@ -105,10 +105,11 @@ export default function CouncilOrbit() {
         aria-label="Council of 12"
       >
         <defs>
-          <radialGradient id="wash" cx="50%" cy="50%" r="65%">
-            <stop offset="0%" stopColor="#000" stopOpacity="0.13" />
-            <stop offset="100%" stopColor="#000" stopOpacity="0.13" />
+                    <radialGradient id="wash" cx="50%" cy="50%" r="65%">
+            <stop offset="0%" stopColor="#000" stopOpacity="0.03" />
+            <stop offset="100%" stopColor="#000" stopOpacity="0.06" />
           </radialGradient>
+
 
           <linearGradient id="hl" x1="0" x2="1" y1="0" y2="0">
             <stop offset="0"   stopColor="#fff" stopOpacity="0" />
@@ -116,32 +117,54 @@ export default function CouncilOrbit() {
             <stop offset="1"   stopColor="#fff" stopOpacity="0" />
           </linearGradient>
 
-          <style>
+                    <style>
             {`
-              .label { transition: transform .18s ease, opacity .18s ease, letter-spacing .18s ease; transform-box: fill-box; transform-origin: center; }
-              .label.hover { transform: translateY(-2px) scale(1.04); letter-spacing: .3px; }
-              .tick { transition: opacity .18s ease; }
-              .tick.hover { opacity: .95; }
-              .arc { opacity: 0; transition: opacity .18s ease; }
-              .arc.show { opacity: .9; }
-              .center-card { transition: opacity .18s ease, transform .25s ease; }
+              .label {
+                transition:
+                  transform .22s cubic-bezier(0.25, 0.8, 0.25, 1),
+                  opacity .22s cubic-bezier(0.25, 0.8, 0.25, 1);
+                transform-box: fill-box;
+                transform-origin: center;
+              }
+              .label.hover {
+                transform: translateY(-2px) scale(1.04);
+                letter-spacing: .3px;
+              }
+              .tick {
+                transition: opacity .22s cubic-bezier(0.25, 0.8, 0.25, 1);
+              }
+              .tick.hover {
+                opacity: .95;
+              }
+              .arc {
+                opacity: 0;
+                transition: opacity .22s cubic-bezier(0.25, 0.8, 0.25, 1);
+              }
+              .arc.show {
+                opacity: .9;
+              }
+              .center-card {
+                transition:
+                  opacity .22s cubic-bezier(0.25, 0.8, 0.25, 1),
+                  transform .28s cubic-bezier(0.25, 0.8, 0.25, 1);
+              }
 
               /* KPI-HTML im foreignObject */
-                            .kpi {
-                color: var(--pp-cyan-line, #22d3ee);
+              .kpi {
+                color: #7CFF7C;
                 font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace;
                 font-size: 13px;
                 line-height: 1.45;
                 text-align: left;
                 word-break: break-word;
                 hyphens: auto;
-                text-shadow: 0 0 4px rgba(34,211,238,0.25);
-
+                text-shadow: 0 0 4px rgba(0,255,120,0.25);
               }
               .kpi p { margin: 0; }
               .kpi p + p { margin-top: 6px; }
             `}
           </style>
+
         </defs>
 
         {/* sanfter Hintergrund */}
@@ -170,9 +193,10 @@ export default function CouncilOrbit() {
               <line
                 key={`t-${i}`}
                 x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y}
-                stroke={thick ? "#ffffff" : "#00ffff"}
-                strokeOpacity={thick ? 0.75 : 0.35}
+                                stroke={thick ? "#ffffff" : "#00ffff"}
+                strokeOpacity={thick ? 0.8 : 0.35}
                 strokeWidth={thick ? 1.6 : 0.5}
+
                 className={`tick ${isHovered ? "hover" : ""}`}
                 strokeLinecap="round"
               />
@@ -254,10 +278,19 @@ export default function CouncilOrbit() {
           })}
         </g>
 
-                {/* Center-Panel */}
+             {/* Center-Panel */}
         {focusedItem && (
-          <g className="center-card" opacity={1} transform={`translate(${CX} ${CY - 30})`}>
-            <circle r={INNER_R} fill="rgba(0,0,0,0.55)" stroke="#00ff88" strokeOpacity="0.08" />
+          <g
+            className="center-card"
+            opacity={1}
+            transform={`translate(${CX} ${CY - 30})`}
+          >
+            <circle
+              r={INNER_R}
+              fill="rgba(0,0,0,0.55)"
+              stroke="#00ff88"
+              strokeOpacity="0.08"
+            />
 
             <text
               x={0}
@@ -298,37 +331,31 @@ export default function CouncilOrbit() {
                             </div>
             </foreignObject>
 
-                        {/* Visit Button */}
+                              {/* Visit Button */}
             <foreignObject
               x={-INNER_R + 18}
-              y={INNER_R - 42}
+              y={INNER_R - 86}
               width={INNER_R * 2 - 36}
-              height={70}
+              height={56}
             >
-                          <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  marginTop: "30px",
-                }}
-              >
+              <div style={{ display: "flex", justifyContent: "center" }}>
                 <button
                   style={{
-                    padding: "18px 30px",
-                    borderRadius: "18px",
+                    padding: "16px 26px",
+                    borderRadius: "14px",
                     border: "1px solid var(--pp-cyan-line, #22d3ee)",
                     background: "rgba(0,0,0,0.45)",
                     backdropFilter: "blur(6px)",
-                    color: "var(--pp-cyan-line, #22d3ee)",
+                    color: "#7CFF7C",
                     fontFamily:
                       'ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace',
-                    fontSize: "21px",
+                    fontSize: "18px",
                     cursor: "pointer",
-                    boxShadow: "0 0 24px rgba(34,211,238,0.55)",
+                    boxShadow: "0 0 16px rgba(34,211,238,0.35)",
                     transition: "all .18s ease",
-
-
                   }}
+
+
                   onMouseEnter={(e) => {
                     e.currentTarget.style.boxShadow =
                       "0 0 28px rgba(34,211,238,0.6)";
