@@ -33,7 +33,7 @@ export default function Experts13() {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<ExpertId | null>(null);
 
-   // Gemeinsame Klasse für alle Expert-Pills
+  // Gemeinsame Klasse für alle Expert-Pills
   const pillClass =
     "m-experts13-pill inline-flex items-center justify-between gap-2 " +
     "px-[7px] py-[7px] rounded-2xl bg-white/5 ring-1 ring-white/10 text-white/90 text-sm text-left " +
@@ -59,7 +59,6 @@ export default function Experts13() {
   const currentIcon = selected ? expertIcons[selected] : undefined;
 
   const title = t("experts.title");
-  const subtitle = t("experts.subtitle");
   const dropdownLabel = t("experts.dropdown.label");
 
   const callLabel = t("experts.cta.default");
@@ -70,7 +69,6 @@ export default function Experts13() {
       `experts.${selected}.name`
     )}. I need your expertise now.`;
     const url = `/subscription/page2?prefill=${encodeURIComponent(prefill)}`;
-    // Wir bleiben simpel und nutzen location – identisch zu anderen Flows
     window.location.href = url;
   };
 
@@ -80,15 +78,17 @@ export default function Experts13() {
       className="m-experts13 pt-[clamp(40px,6vw,80px)] pb-[clamp(40px,6vw,80px)]"
     >
       {/* HEADER */}
-            <div className="m-experts13-header text-center max-w-3xl mx-auto" style={{ marginBottom: "30px" }}>
+      <div
+        className="m-experts13-header text-center max-w-3xl mx-auto"
+        style={{ marginBottom: "30px" }}
+      >
         <h2 className="text-[clamp(34px,6vw,52px)] leading-[1.1] font-semibold tracking-tight text-white">
           {title}
         </h2>
       </div>
 
-
-            {/* DROPDOWN TRIGGER */}
-            <div
+      {/* DROPDOWN TRIGGER */}
+      <div
         className="m-experts13-dropdown flex justify-center"
         style={{ marginBottom: "13px" }}
       >
@@ -101,12 +101,10 @@ export default function Experts13() {
           hover:bg-white/10 hover:ring-cyan-300/40
           focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
           style={{ width: "min(90%, 720px)", padding: "13px 13px" }}
-
         >
           <span className="text-white/90 font-medium tracking-wide">
             {dropdownLabel}
           </span>
-
 
           <span className="text-white/60 group-hover:text-cyan-300 transition-colors">
             ▼
@@ -127,35 +125,35 @@ export default function Experts13() {
                 onClick={() => setSelected("biologist")}
                 className={pillClass}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">{expertIcons.biologist}</span>
                   <span>{t("experts.biologist.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs">View</span>
+                <span className="text-white/30 text-xs mr-[7px]">View</span>
               </button>
 
               <button
                 onClick={() => setSelected("chemist")}
                 className={pillClass}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">{expertIcons.chemist}</span>
                   <span>{t("experts.chemist.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs">View</span>
+                <span className="text-white/30 text-xs mr-[7px]">View</span>
               </button>
 
               <button
                 onClick={() => setSelected("molecular_scientist")}
                 className={pillClass}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
                     {expertIcons.molecular_scientist}
                   </span>
                   <span>{t("experts.molecular_scientist.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs">View</span>
+                <span className="text-white/30 text-xs mr-[7px]">View</span>
               </button>
             </div>
           </div>
@@ -170,37 +168,37 @@ export default function Experts13() {
                 onClick={() => setSelected("physicist")}
                 className={pillClass}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">{expertIcons.physicist}</span>
                   <span>{t("experts.physicist.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs">View</span>
+                <span className="text-white/30 text-xs mr-[7px]">View</span>
               </button>
 
               <button
                 onClick={() => setSelected("electrical_engineer")}
                 className={pillClass}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
                     {expertIcons.electrical_engineer}
                   </span>
                   <span>{t("experts.electrical_engineer.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs">View</span>
+                <span className="text-white/30 text-xs mr-[7px]">View</span>
               </button>
 
               <button
                 onClick={() => setSelected("computer_scientist")}
                 className={pillClass}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
                     {expertIcons.computer_scientist}
                   </span>
                   <span>{t("experts.computer_scientist.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs">View</span>
+                <span className="text-white/30 text-xs mr-[7px]">View</span>
               </button>
             </div>
           </div>
@@ -215,37 +213,37 @@ export default function Experts13() {
                 onClick={() => setSelected("architect")}
                 className={pillClass}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">{expertIcons.architect}</span>
                   <span>{t("experts.architect.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs">View</span>
+                <span className="text-white/30 text-xs mr-[7px]">View</span>
               </button>
 
               <button
                 onClick={() => setSelected("landscape_designer")}
                 className={pillClass}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
                     {expertIcons.landscape_designer}
                   </span>
                   <span>{t("experts.landscape_designer.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs">View</span>
+                <span className="text-white/30 text-xs mr-[7px]">View</span>
               </button>
 
               <button
                 onClick={() => setSelected("interior_designer")}
                 className={pillClass}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
                     {expertIcons.interior_designer}
                   </span>
                   <span>{t("experts.interior_designer.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs">View</span>
+                <span className="text-white/30 text-xs mr-[7px]">View</span>
               </button>
             </div>
           </div>
@@ -260,11 +258,11 @@ export default function Experts13() {
                 onClick={() => setSelected("jurist")}
                 className={pillClass}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">{expertIcons.jurist}</span>
                   <span>{t("experts.jurist.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs">View</span>
+                <span className="text-white/30 text-xs mr-[7px]">View</span>
               </button>
             </div>
           </div>
@@ -279,13 +277,13 @@ export default function Experts13() {
                 onClick={() => setSelected("weather_expert")}
                 className={pillClass}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
                     {expertIcons.weather_expert}
                   </span>
                   <span>{t("experts.weather_expert.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs">View</span>
+                <span className="text-white/30 text-xs mr-[7px]">View</span>
               </button>
             </div>
           </div>
@@ -300,24 +298,24 @@ export default function Experts13() {
                 onClick={() => setSelected("mathematician")}
                 className={pillClass}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">
                     {expertIcons.mathematician}
                   </span>
                   <span>{t("experts.mathematician.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs">View</span>
+                <span className="text-white/30 text-xs mr-[7px]">View</span>
               </button>
 
               <button
                 onClick={() => setSelected("astrologer")}
                 className={pillClass}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 ml-[7px]">
                   <span aria-hidden="true">{expertIcons.astrologer}</span>
                   <span>{t("experts.astrologer.name")}</span>
                 </span>
-                <span className="text-white/30 text-xs">View</span>
+                <span className="text-white/30 text-xs mr-[7px]">View</span>
               </button>
             </div>
           </div>
