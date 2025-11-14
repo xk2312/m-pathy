@@ -223,16 +223,24 @@ export default function CouncilOrbit() {
         {/* sanfter Hintergrund – Voia bleibt im Lead */}
         <rect x="0" y="0" width="1000" height="1000" fill="url(#wash)" />
 
-        {/* Orbit */}
+                {/* Orbit */}
         <g transform={`rotate(${angle} ${CX} ${CY})`}>
           {/* Ticks / Strahlen */}
-                 {Array.from({ length: 60 }).map((_, i) => {
+          {Array.from({ length: 60 }).map((_, i) => {
             const theta = i * 6;
+
+            // Basislängen
+            const lengthWhite = R_TICK_OUT - R_TICK_IN;
+            const lengthCyan = lengthWhite / 1.382; // ≈ 0.72 * weiß
+
             const thick = i % 5 === 0;
-            // weiße Kronen-Linien etwas kürzer, damit sie nicht durch die Pills schneiden
-            const rOut = thick ? 310 : R_TICK_OUT;
+            const outerRadius = thick
+              ? R_TICK_OUT
+              : R_TICK_IN + lengthCyan;
+
             const p1 = posOnCircle(theta, R_TICK_IN);
-            const p2 = posOnCircle(theta, rOut);
+            const p2 = posOnCircle(theta, outerRadius);
+
 
             const isHovered = (() => {
               if (!hoverId) return false;
@@ -366,15 +374,15 @@ export default function CouncilOrbit() {
               strokeOpacity="0.08"
             />
 
-            {/* Titel & Subtitle der KI */}
+                        {/* Titel & Subtitle der KI */}
             <text
               x={0}
               y={-30}
               textAnchor="middle"
-              fill="#9AFB8F"
+              fill="var(--pp-cyan-line, #22d3ee)"
               fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
               fontSize={22}
-              style={{ textShadow: "0 0 6px rgba(0,255,120,0.35)" }}
+              style={{ textShadow: "0 0 6px rgba(34,211,238,0.35)" }}
             >
               {focusedItem.title}
             </text>
@@ -382,13 +390,14 @@ export default function CouncilOrbit() {
               x={0}
               y={-8}
               textAnchor="middle"
-              fill="#BFFFC2"
+              fill="var(--pp-cyan-line, #22d3ee)"
               fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
               fontSize={13}
               opacity={0.9}
             >
               {focusedItem.subtitle}
             </text>
+
 
             {/* HTML + Button in EINEM foreignObject = Flow funktioniert */}
 <foreignObject
