@@ -375,26 +375,35 @@ export default function Experts13() {
         </div>
       )}
 
-      {/* EXPERT PANEL — erscheint erst wenn selected */}
+       {/* EXPERT PANEL — erscheint erst wenn selected */}
       {selected && (
-        <div className="m-experts13-panel max-w-4xl mx-auto bg-white/5 ring-1 ring-white/10 backdrop-blur-md rounded-3xl px-8 py-7 mt-10">
-          {/* Icon */}
-          {currentIcon && (
-            <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/15">
-              <span className="text-xl" aria-hidden="true">
-                {currentIcon}
-              </span>
+        <div
+          className="m-experts13-panel max-w-4xl mx-auto bg-white/5 ring-1 ring-white/10 backdrop-blur-md rounded-3xl mt-10"
+          style={{
+            padding:
+              "var(--experts-panel-pad-y, 13px) var(--experts-panel-pad-x, 13px)",
+          }}
+        >
+          {/* Header: Icon + Name + Label nebeneinander */}
+          <div className="flex items-start gap-4 mb-4">
+            {currentIcon && (
+              <div className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/15">
+                <span className="text-xl" aria-hidden="true">
+                  {currentIcon}
+                </span>
+              </div>
+            )}
+
+            <div>
+              <h3 className="text-[clamp(24px,4vw,34px)] font-semibold text-white mb-1">
+                {t(`experts.${selected}.name`)}
+              </h3>
+
+              <p className="text-cyan-300/90 text-sm tracking-wide">
+                {t(`experts.${selected}.label`)}
+              </p>
             </div>
-          )}
-
-          {/* Name + Label */}
-          <h3 className="text-[clamp(24px,4vw,34px)] font-semibold text-white mb-1">
-            {t(`experts.${selected}.name`)}
-          </h3>
-
-          <p className="text-cyan-300/90 text-sm tracking-wide mb-4">
-            {t(`experts.${selected}.label`)}
-          </p>
+          </div>
 
           {/* Tagline */}
           <p className="text-white/80 text-[clamp(14px,2vw,18px)] leading-relaxed mb-3">
@@ -424,6 +433,7 @@ export default function Experts13() {
           </div>
         </div>
       )}
+
     </section>
   );
 }

@@ -317,12 +317,22 @@
   --modes-desc-color:          hsl(0 0% 86%);
 }
 :root {
-  --modes-label-font-size:     1rem;
+    --modes-label-font-size:     1rem;
   --modes-label-color:         hsl(0 0% 98%);
   --modes-desc-font-size:      0.875rem;
   --modes-desc-line-height:    1.45;
   --modes-desc-color:          hsl(0 0% 86%);
 }
+
+/* ─────────────────────────────────────────────
+   13 Experts – Detail-Panel
+   ───────────────────────────────────────────── */
+:root {
+  /* Innenabstand im großen Kasten (oben/unten & links/rechts) */
+  --experts-panel-pad-y: 13px;
+  --experts-panel-pad-x: 13px;
+}
+
 
 /* ─────────────────────────────────────────────
    13 Experts – Spacing & Geometry Tokens
@@ -337,6 +347,6 @@
 
   /* Expert-Pills */
   --experts-pill-pad-y:          7px;   /* oben/unten */
-  --experts-pill-pad-x:          7px;   /* links/rechts (Icon & View) */
+  --experts-pill-pad-x:          10px;   /* links/rechts (Icon & View) */
 }
 
