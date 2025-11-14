@@ -124,7 +124,7 @@ export default function CouncilOrbit() {
         role="img"
         aria-label="Council of 12"
       >
-        <defs>
+                <defs>
           {/* sehr leichter globaler Wash – Voia bleibt Bühne */}
           <radialGradient id="wash" cx="50%" cy="50%" r="65%">
             <stop offset="0%" stopColor="#000" stopOpacity="0.03" />
@@ -137,6 +137,13 @@ export default function CouncilOrbit() {
             <stop offset="0.5" stopColor="#fff" stopOpacity="0.85" />
             <stop offset="1" stopColor="#fff" stopOpacity="0" />
           </linearGradient>
+
+          {/* Mercury-Pulse – flüssiger Silber-Halo hinter den KI-Labels */}
+          <radialGradient id="mercuryGradient" cx="50%" cy="50%" r="0.9">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
+            <stop offset="40%" stopColor="#e5f7ff" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#00ffff" stopOpacity="0.0" />
+          </radialGradient>
 
           <style>
             {`
@@ -174,28 +181,44 @@ export default function CouncilOrbit() {
                   transform .28s cubic-bezier(0.25, 0.8, 0.25, 1);
               }
 
+              /* Mercury-Halo hinter den KI-Labels */
+              .halo {
+                fill: url(#mercuryGradient);
+                opacity: 0.32;
+                transform-box: fill-box;
+                transform-origin: center;
+                transition:
+                  opacity .6s cubic-bezier(0.25, 0.8, 0.25, 1),
+                  transform .6s cubic-bezier(0.25, 0.8, 0.25, 1);
+              }
+              .halo-pulse {
+                animation: haloPulse 5.2s ease-in-out infinite;
+              }
+
+              @keyframes haloPulse {
+                0%   { transform: scale(1);    opacity: 0.26; }
+                40%  { transform: scale(1.06); opacity: 0.40; }
+                100% { transform: scale(1);    opacity: 0.26; }
+              }
+
               /* KPI-HTML im foreignObject */
               .kpi {
-  color: rgba(255,255,255,0.88);      /* Harmonisches Weiß */
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace;
-  font-size: 13px;
-  line-height: 1.45;
-  text-align: left;
-  word-break: break-word;
-  hyphens: auto;
-  text-shadow: 0 0 3px rgba(255,255,255,0.15); /* sanft & clean */
-}
-.kpi p { margin: 0; }
-.kpi p + p { margin-top: 8px; }
-
-/* Neuer Buffer unter KPI-Block */
-.kpi {
-  margin-bottom: 20px;
-}
-
+                color: rgba(255,255,255,0.88);
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace;
+                font-size: 13px;
+                line-height: 1.45;
+                text-align: left;
+                word-break: break-word;
+                hyphens: auto;
+                text-shadow: 0 0 3px rgba(255,255,255,0.15);
+                margin-bottom: 0;
+              }
+              .kpi p { margin: 0; }
+              .kpi p + p { margin-top: 8px; }
             `}
           </style>
         </defs>
+
 
         {/* sanfter Hintergrund – Voia bleibt im Lead */}
         <rect x="0" y="0" width="1000" height="1000" fill="url(#wash)" />
@@ -265,7 +288,7 @@ export default function CouncilOrbit() {
                   className={`arc ${hovered ? "show" : ""}`}
                 />
 
-                {/* Gegenrotation, damit Labels horizontal bleiben */}
+                                {/* Gegenrotation, damit Labels horizontal bleiben */}
                 <g
                   transform={`translate(${labelPos.x} ${labelPos.y}) rotate(${-angle} 0 0)`}
                   style={{ cursor: "pointer" }}
@@ -280,6 +303,20 @@ export default function CouncilOrbit() {
                       onSelect(id as CouncilId);
                   }}
                 >
+                  {/* Mercury-Pulse-Halo hinter Titel & Subtitle */}
+                  <rect
+                    className={`halo ${
+                      hovered || focused === (id as CouncilId)
+                        ? "halo-pulse"
+                        : ""
+                    }`}
+                    x={-120}
+                    y={-28}
+                    width={240}
+                    height={52}
+                    rx={22}
+                  />
+
                   <text
                     className={`label ${hovered ? "hover" : ""}`}
                     textAnchor="middle"
@@ -302,6 +339,7 @@ export default function CouncilOrbit() {
                     {item.subtitle}
                   </text>
                 </g>
+
 
                 {/* größerer Hotspot */}
                 <circle
