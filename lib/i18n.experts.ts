@@ -13,7 +13,7 @@ export const experts13 = {
         "Choose an expert and talk to a specialist in that field.",
 
       dropdown: {
-        label: "Choose your expert",
+        label: "Choose an expert and talk to a specialist in that field",
       },
 
       group: {

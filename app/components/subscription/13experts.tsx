@@ -80,18 +80,15 @@ export default function Experts13() {
       className="m-experts13 pt-[clamp(40px,6vw,80px)] pb-[clamp(40px,6vw,80px)]"
     >
       {/* HEADER */}
-      <div className="m-experts13-header text-center max-w-3xl mx-auto mb-10">
+            <div className="m-experts13-header text-center max-w-3xl mx-auto" style={{ marginBottom: "30px" }}>
         <h2 className="text-[clamp(34px,6vw,52px)] leading-[1.1] font-semibold tracking-tight text-white">
           {title}
         </h2>
-
-        <p className="text-white/80 text-[clamp(14px,2vw,18px)] leading-relaxed mt-4">
-          {subtitle}
-        </p>
       </div>
 
+
             {/* DROPDOWN TRIGGER */}
-      <div
+            <div
         className="m-experts13-dropdown flex justify-center"
         style={{ marginBottom: "13px" }}
       >
@@ -103,7 +100,8 @@ export default function Experts13() {
           transition-all duration-200
           hover:bg-white/10 hover:ring-cyan-300/40
           focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
-          style={{ width: "min(90%, 720px)", padding: "13px 7px" }}
+          style={{ width: "min(90%, 720px)", padding: "13px 13px" }}
+
         >
           <span className="text-white/90 font-medium tracking-wide">
             {dropdownLabel}
