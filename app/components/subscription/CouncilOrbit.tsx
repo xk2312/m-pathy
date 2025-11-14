@@ -254,18 +254,17 @@ export default function CouncilOrbit() {
           })}
         </g>
 
-        {/* Center-Panel */}
+                {/* Center-Panel */}
         {focusedItem && (
-          <g className="center-card" opacity={1} transform={`translate(${CX} ${CY})`}>
+          <g className="center-card" opacity={1} transform={`translate(${CX} ${CY - 30})`}>
             <circle r={INNER_R} fill="rgba(0,0,0,0.55)" stroke="#00ff88" strokeOpacity="0.08" />
-
-                        <circle r={INNER_R} fill="rgba(0,0,0,0.55)" stroke="#00ff88" strokeOpacity="0.08" />
 
             <text
               x={0}
               y={-30}
               textAnchor="middle"
               fill="var(--pp-cyan-line, #22d3ee)"
+
               fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
               fontSize={22}
               style={{ textShadow: "0 0 6px rgba(34,211,238,0.35)" }}
@@ -306,7 +305,7 @@ export default function CouncilOrbit() {
               width={INNER_R * 2 - 36}
               height={70}
             >
-              <div
+                          <div
                 style={{
                   display: "flex",
                   justifyContent: "center",
@@ -315,7 +314,7 @@ export default function CouncilOrbit() {
               >
                 <button
                   style={{
-                    padding: "15px 24px",
+                    padding: "18px 30px",
                     borderRadius: "18px",
                     border: "1px solid var(--pp-cyan-line, #22d3ee)",
                     background: "rgba(0,0,0,0.45)",
@@ -323,10 +322,11 @@ export default function CouncilOrbit() {
                     color: "var(--pp-cyan-line, #22d3ee)",
                     fontFamily:
                       'ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace',
-                    fontSize: "19px",
+                    fontSize: "21px",
                     cursor: "pointer",
                     boxShadow: "0 0 24px rgba(34,211,238,0.55)",
                     transition: "all .18s ease",
+
 
                   }}
                   onMouseEnter={(e) => {
