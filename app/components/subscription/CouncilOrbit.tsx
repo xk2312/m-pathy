@@ -226,49 +226,48 @@ export default function CouncilOrbit() {
                 {/* Orbit */}
         <g transform={`rotate(${angle} ${CX} ${CY})`}>
           {/* Ticks / Strahlen */}
-          {Array.from({ length: 60 }).map((_, i) => {
-            const theta = i * 6;
+{Array.from({ length: 60 }).map((_, i) => {
+  const theta = i * 6;
 
-            // Basislängen
-            const lengthWhite = R_TICK_OUT - R_TICK_IN;
-            const lengthCyan = lengthWhite / 1.382; // ≈ 0.72 * weiß
+  // Basislängen
+  const lengthWhite = R_TICK_OUT - R_TICK_IN;
+  const lengthCyan = lengthWhite * 1.382; // grün ≈ 1.382 × weiß
 
-            const thick = i % 5 === 0;
-            const outerRadius = thick
-              ? R_TICK_OUT
-              : R_TICK_IN + lengthCyan;
+  const thick = i % 5 === 0;
+  const outerRadius = thick
+    ? R_TICK_OUT              // weiße Strahlen: unverändert
+    : R_TICK_IN + lengthCyan; // cyan: etwas länger als weiß
 
-            const p1 = posOnCircle(theta, R_TICK_IN);
-            const p2 = posOnCircle(theta, outerRadius);
+  const p1 = posOnCircle(theta, R_TICK_IN);
+  const p2 = posOnCircle(theta, outerRadius);
 
+  const isHovered = (() => {
+    if (!hoverId) return false;
 
-            const isHovered = (() => {
-              if (!hoverId) return false;
+    const base = itemAngles.find((a) => a.id === hoverId)?.theta ?? 0;
+    const local = (base + angle) % 360;
+    const diff = Math.min(
+      Math.abs(((theta - local + 360) % 360)),
+      Math.abs(((local - theta + 360) % 360))
+    );
+    return diff < 7.6;
+  })();
 
-              const base = itemAngles.find((a) => a.id === hoverId)?.theta ?? 0;
-              const local = (base + angle) % 360;
-              const diff = Math.min(
-                Math.abs(((theta - local + 360) % 360)),
-                Math.abs(((local - theta + 360) % 360))
-              );
-              return diff < 7.6;
-            })();
-
-            return (
-              <line
-                key={`t-${i}`}
-                x1={p1.x}
-                y1={p1.y}
-                x2={p2.x}
-                y2={p2.y}
-                stroke={thick ? "#ffffff" : "#00ffff"}
-                strokeOpacity={thick ? 0.8 : 0.35}
-                strokeWidth={thick ? 1.6 : 0.5}
-                className={`tick ${isHovered ? "hover" : ""}`}
-                strokeLinecap="round"
-              />
-            );
-          })}
+  return (
+    <line
+      key={`t-${i}`}
+      x1={p1.x}
+      y1={p1.y}
+      x2={p2.x}
+      y2={p2.y}
+      stroke={thick ? "#ffffff" : "#00ffff"}
+      strokeOpacity={thick ? 0.8 : 0.35}
+      strokeWidth={thick ? 1.6 : 0.5}
+      className={`tick ${isHovered ? "hover" : ""}`}
+      strokeLinecap="round"
+    />
+  );
+})}
 
           {/* Labels & Arcs */}
           {itemAngles.map(({ id, theta }) => {
