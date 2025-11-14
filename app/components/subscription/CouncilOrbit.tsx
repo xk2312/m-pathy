@@ -142,12 +142,13 @@ export default function CouncilOrbit() {
             <stop offset="1" stopColor="#fff" stopOpacity="0" />
           </linearGradient>
 
-          {/* Mercury-Pulse – flüssiger Silber-Halo hinter den KI-Labels */}
-          <radialGradient id="mercuryGradient" cx="50%" cy="50%" r="0.9">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
-            <stop offset="40%" stopColor="#e5f7ff" stopOpacity="0.55" />
-            <stop offset="100%" stopColor="#00ffff" stopOpacity="0.0" />
+                    {/* Mercury-Pulse – flüssiger, dunkler Graphit-Halo hinter den KI-Labels */}
+          <radialGradient id="mercuryGradient" cx="50%" cy="50%" r="0.95">
+            <stop offset="0%" stopColor="#111827" stopOpacity="0.96" />
+            <stop offset="55%" stopColor="#020617" stopOpacity="0.98" />
+            <stop offset="100%" stopColor="#020617" stopOpacity="0" />
           </radialGradient>
+
 
           <style>
             {`
@@ -185,21 +186,25 @@ export default function CouncilOrbit() {
                   transform .28s cubic-bezier(0.25, 0.8, 0.25, 1);
               }
 
-              /* Mercury-Halo hinter den KI-Labels */
+                           /* Mercury-Halo hinter den KI-Labels – dunkler Verlauf + edler Rand */
               .halo {
                 fill: url(#mercuryGradient);
-                opacity: 0.32;
+                opacity: 0.96;
+                stroke: rgba(148,163,184,0.85);       /* edler Graphit-Rand */
+                stroke-width: 1.1;
                 transform-box: fill-box;
                 transform-origin: center;
                 transition:
-                  opacity .6s cubic-bezier(0.25, 0.8, 0.25, 1),
-                  transform .6s cubic-bezier(0.25, 0.8, 0.25, 1);
+                  opacity .45s cubic-bezier(0.25, 0.8, 0.25, 1),
+                  transform .6s cubic-bezier(0.25, 0.8, 0.25, 1),
+                  stroke .3s ease-out;
               }
               .halo-pulse {
                 animation: haloPulse 5.2s ease-in-out infinite;
               }
 
               @keyframes haloPulse {
+
                 0%   { transform: scale(1);    opacity: 0.26; }
                 40%  { transform: scale(1.06); opacity: 0.40; }
                 100% { transform: scale(1);    opacity: 0.26; }
