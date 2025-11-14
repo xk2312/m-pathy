@@ -127,15 +127,16 @@ export default function CouncilOrbit() {
               .center-card { transition: opacity .18s ease, transform .25s ease; }
 
               /* KPI-HTML im foreignObject */
-              .kpi {
-                color: #7CFF7C;
+                            .kpi {
+                color: var(--pp-cyan-line, #22d3ee);
                 font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace;
                 font-size: 13px;
                 line-height: 1.45;
                 text-align: left;
                 word-break: break-word;
                 hyphens: auto;
-                text-shadow: 0 0 4px rgba(0,255,120,0.25);
+                text-shadow: 0 0 4px rgba(34,211,238,0.25);
+
               }
               .kpi p { margin: 0; }
               .kpi p + p { margin-top: 6px; }
@@ -215,10 +216,10 @@ export default function CouncilOrbit() {
                     if (e.key === "Enter" || e.key === " ") onSelect(id as CouncilId);
                   }}
                 >
-                  <text
+                                   <text
                     className={`label ${hovered ? "hover" : ""}`}
                     textAnchor="middle"
-                    fill="#fff"
+                    fill="var(--pp-cyan-line, #22d3ee)"
                     fontFamily="Garamond, serif"
                     fontSize={20}
                   >
@@ -228,9 +229,10 @@ export default function CouncilOrbit() {
                     className={`label ${hovered ? "hover" : ""}`}
                     y={20}
                     textAnchor="middle"
-                    fill="#fff"
+                    fill="var(--pp-cyan-line, #22d3ee)"
                     opacity={0.9}
                     fontFamily="Garamond, serif"
+
                     fontSize={14}
                   >
                     {item.subtitle}
@@ -257,14 +259,16 @@ export default function CouncilOrbit() {
           <g className="center-card" opacity={1} transform={`translate(${CX} ${CY})`}>
             <circle r={INNER_R} fill="rgba(0,0,0,0.55)" stroke="#00ff88" strokeOpacity="0.08" />
 
+                        <circle r={INNER_R} fill="rgba(0,0,0,0.55)" stroke="#00ff88" strokeOpacity="0.08" />
+
             <text
               x={0}
               y={-30}
               textAnchor="middle"
-              fill="#9AFB8F"
+              fill="var(--pp-cyan-line, #22d3ee)"
               fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
               fontSize={22}
-              style={{ textShadow: "0 0 6px rgba(0,255,120,0.35)" }}
+              style={{ textShadow: "0 0 6px rgba(34,211,238,0.35)" }}
             >
               {focusedItem.title}
             </text>
@@ -272,8 +276,9 @@ export default function CouncilOrbit() {
               x={0}
               y={-8}
               textAnchor="middle"
-              fill="#BFFFC2"
+              fill="var(--pp-cyan-line, #22d3ee)"
               fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
+
               fontSize={13}
               opacity={0.9}
             >
@@ -294,28 +299,35 @@ export default function CouncilOrbit() {
                             </div>
             </foreignObject>
 
-            {/* Visit Button */}
+                        {/* Visit Button */}
             <foreignObject
               x={-INNER_R + 18}
               y={INNER_R - 42}
               width={INNER_R * 2 - 36}
-              height={42}
+              height={70}
             >
-              <div style={{ display: "flex", justifyContent: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "30px",
+                }}
+              >
                 <button
                   style={{
-                    padding: "10px 16px",
-                    borderRadius: "12px",
+                    padding: "15px 24px",
+                    borderRadius: "18px",
                     border: "1px solid var(--pp-cyan-line, #22d3ee)",
                     background: "rgba(0,0,0,0.45)",
                     backdropFilter: "blur(6px)",
-                    color: "#7CFF7C",
+                    color: "var(--pp-cyan-line, #22d3ee)",
                     fontFamily:
                       'ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace',
-                    fontSize: "13px",
+                    fontSize: "19px",
                     cursor: "pointer",
-                    boxShadow: "0 0 16px rgba(34,211,238,0.35)",
+                    boxShadow: "0 0 24px rgba(34,211,238,0.55)",
                     transition: "all .18s ease",
+
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.boxShadow =
@@ -342,7 +354,7 @@ export default function CouncilOrbit() {
               </div>
             </foreignObject>
 
-            {/* Close */}
+                      {/* Close */}
             <g
               transform={`translate(${INNER_R - 18} ${-INNER_R + 18})`}
 
@@ -351,9 +363,10 @@ export default function CouncilOrbit() {
               tabIndex={0}
               style={{ cursor: "pointer" }}
             >
-              <circle r="12" fill="#7CFF7C" />
+              <circle r="12" fill="var(--pp-cyan-line, #22d3ee)" />
               <text
                 y="4"
+
                 textAnchor="middle"
                 fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
                 fontSize="14"
