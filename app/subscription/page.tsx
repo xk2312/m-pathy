@@ -117,18 +117,6 @@ export default function SubscriptionPage() {
           {/* Buffer #1 – zwischen CouncilOrbit und KPI (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
-          {/* ─────────────── KPI BOARD ─────────────── */}
-          <section className="pt-[clamp(70px,12vw,130px)]">
-            <div
-              className="page-center kpi-scope"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-            >
-              <MPathyKpiBoard />
-            </div>
-          </section>
-
-          {/* Buffer #2 – unter dem KPI-Board (Design-Token) */}
-          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
           {/* ─────────────── TESTIMONIAL SECTION ─────────────── */}
           <section
@@ -144,6 +132,23 @@ export default function SubscriptionPage() {
           </section>
 
           {/* Buffer #3 – unter Testimonial (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+
+          {/* ———————— 13 MODES SECTION ———————— */}
+          <section
+            className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
+            aria-label="Modes section"
+          >
+            <div
+              className="page-center"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
+            >
+              <Modis13 />
+            </div>
+          </section>
+
+
+          {/* Buffer #5 – unter 13 Modes (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
                 {/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
@@ -162,22 +167,18 @@ export default function SubscriptionPage() {
           {/* Buffer #4 – unter PowerPrompts (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
-        {/* ———————— 13 MODES SECTION ———————— */}
-<section
-  className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
-  aria-label="Modes section"
->
-  <div
-    className="page-center"
-    style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
-  >
-    <Modis13 />
-  </div>
-</section>
+  {/* ─────────────── KPI BOARD ─────────────── */}
+          <section className="pt-[clamp(70px,12vw,130px)]">
+            <div
+              className="page-center kpi-scope"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+            >
+              <MPathyKpiBoard />
+            </div>
+          </section>
 
-
-{/* Buffer #5 – unter 13 Modes (Design-Token) */}
-<div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+          {/* Buffer #2 – unter dem KPI-Board (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
         </div>
       </main>
