@@ -8,9 +8,9 @@ export const experts13 = {
   en: {
     experts: {
       kicker: "13 domain experts",
-      title: "The experts behind your questions",
+      title: "The experts you deserve.",
       subtitle:
-        "Choose an expert and let m-pathy answer as if you were talking to a specialist in that field.",
+        "Choose an expert and talk to a specialist in that field.",
 
       dropdown: {
         label: "Choose your expert",
