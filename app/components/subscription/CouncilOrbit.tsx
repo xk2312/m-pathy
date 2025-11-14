@@ -356,31 +356,49 @@ export default function CouncilOrbit() {
               {focusedItem.subtitle}
             </text>
 
-            {/* HTML im Kreis – bricht automatisch um */}
+            {/* HTML + Button in EINEM foreignObject = Flow funktioniert */}
 <foreignObject
   x={-INNER_R + 18}
   y={8}
   width={INNER_R * 2 - 36}
-  height={INNER_R * 2 - 80}
+  height={INNER_R * 2 - 20}   // viel mehr Raum
 >
-  <div className="kpi">
-    <p>{`> superpower: ${focusedKpi.superpower}`}</p>
-    <p>{`> focus: ${focusedKpi.focus}`}</p>
-    <p>{`> signal: ${focusedKpi.signal}`}</p>
+  <div style={{ display: "flex", flexDirection: "column" }}>
+    <div className="kpi">
+      <p>{`> superpower: ${focusedKpi.superpower}`}</p>
+      <p>{`> focus: ${focusedKpi.focus}`}</p>
+      <p>{`> signal: ${focusedKpi.signal}`}</p>
+    </div>
 
-    {/* ECHTER BUFFER */}
-    <div style={{ height: "20px" }}></div>
+    {/* ECHTER Buffer */}
+    <div style={{ height: "20px" }} />
+
+    {/* CTA-BUTTON */}
+    <button
+      style={{
+        alignSelf: "center",
+        padding: "16px 26px",
+        borderRadius: "16px",
+        border: "1px solid var(--pp-cyan-line, #22d3ee)",
+        background: "rgba(0,0,0,0.45)",
+        backdropFilter: "blur(6px)",
+        color: "var(--pp-cyan-line, #22d3ee)",
+        fontFamily:
+          'ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace',
+        fontSize: "18px",
+        cursor: "pointer",
+        boxShadow: "0 0 20px rgba(34,211,238,0.5)",
+        transition: "box-shadow .18s ease, transform .18s ease",
+      }}
+    >
+      {(active["council.visit_label"] ?? "Visit {{name}}").replace(
+        "{{name}}",
+        focusedItem?.title ?? ""
+      )}
+    </button>
   </div>
 </foreignObject>
 
-
-            {/* Visit Button – größer + weiter weg von der Kreisunterkante */}
-            <foreignObject
-              x={-INNER_R + 18}
-              y={INNER_R - 90}
-              width={INNER_R * 2 - 36}
-              height={120}
-            >
               <div
                 style={{
                   display: "flex",
@@ -428,7 +446,6 @@ export default function CouncilOrbit() {
                   )}
                 </button>
               </div>
-            </foreignObject>
 
             {/* Close-Button */}
             <g
