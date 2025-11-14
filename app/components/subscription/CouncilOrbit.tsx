@@ -143,11 +143,18 @@ export default function CouncilOrbit() {
           </linearGradient>
 
                     {/* Mercury-Pulse – flüssiger, dunkler Graphit-Halo hinter den KI-Labels */}
-          <radialGradient id="mercuryGradient" cx="50%" cy="50%" r="0.95">
-            <stop offset="0%" stopColor="#111827" stopOpacity="0.96" />
-            <stop offset="55%" stopColor="#020617" stopOpacity="0.98" />
-            <stop offset="100%" stopColor="#020617" stopOpacity="0" />
-          </radialGradient>
+                    <radialGradient id="mercuryGradient" cx="50%" cy="50%" r="0.95">
+  
+  <stop offset="0%" stopColor="#1f1f1f" stopOpacity="0.92" />
+
+
+  <stop offset="55%" stopColor="#0f0f0f" stopOpacity="0.96" />
+
+
+  <stop offset="100%" stopColor="#000000" stopOpacity="0.0" />
+</radialGradient>
+
+
 
 
           <style>
@@ -188,17 +195,22 @@ export default function CouncilOrbit() {
 
                            /* Mercury-Halo hinter den KI-Labels – dunkler Verlauf + edler Rand */
               .halo {
-                fill: url(#mercuryGradient);
-                opacity: 0.96;
-                stroke: rgba(148,163,184,0.85);       /* edler Graphit-Rand */
-                stroke-width: 1.1;
-                transform-box: fill-box;
-                transform-origin: center;
-                transition:
-                  opacity .45s cubic-bezier(0.25, 0.8, 0.25, 1),
-                  transform .6s cubic-bezier(0.25, 0.8, 0.25, 1),
-                  stroke .3s ease-out;
-              }
+  fill: url(#mercuryGradient);
+  opacity: 0.92;
+
+  /* Edler, leicht heller Premium-Rand */
+  stroke: rgba(180, 180, 180, 0.85);     /* #b4b4b4 */
+  stroke-width: 1.2;
+
+  transform-box: fill-box;
+  transform-origin: center;
+
+  transition:
+    opacity .45s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform .6s cubic-bezier(0.25, 0.8, 0.25, 1),
+    stroke .35s ease-out;
+}
+
               .halo-pulse {
                 animation: haloPulse 5.2s ease-in-out infinite;
               }
