@@ -12,7 +12,7 @@ type CouncilItem = {
 
 const CX = 500,
   CY = 500;
-const R_LABEL = 330;
+const R_LABEL = 360;
 const R_TICK_IN = 280;
 const R_TICK_OUT = 470;
 const INNER_R = 160;
