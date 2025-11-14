@@ -439,6 +439,13 @@ export default function CouncilOrbit() {
         boxShadow: "0 0 20px rgba(34,211,238,0.5)",
         transition: "box-shadow .18s ease, transform .18s ease",
       }}
+      onClick={() => {
+        const name = focusedItem?.title ?? "";
+        const tmpl = active["council.prompt_template"] ?? "@{{name}}";
+        const final = tmpl.replace("{{name}}", name);
+        const encoded = encodeURIComponent(final);
+        window.location.href = `/page2?prefill=${encoded}`;
+      }}
     >
       {(active["council.visit_label"] ?? "Visit {{name}}").replace(
         "{{name}}",
@@ -448,53 +455,6 @@ export default function CouncilOrbit() {
   </div>
 </foreignObject>
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  marginTop: "24px",
-                }}
-              >
-                <button
-                  style={{
-                    padding: "16px 26px",
-                    borderRadius: "16px",
-                    border: "1px solid var(--pp-cyan-line, #22d3ee)",
-                    background: "rgba(0,0,0,0.45)",
-                    backdropFilter: "blur(6px)",
-                    color: "var(--pp-cyan-line, #22d3ee)",
-                    fontFamily:
-                      'ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace',
-                    fontSize: "18px",
-                    cursor: "pointer",
-                    boxShadow: "0 0 20px rgba(34,211,238,0.5)",
-                    transition: "box-shadow .18s ease, transform .18s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow =
-                      "0 0 26px rgba(34,211,238,0.65)";
-                    e.currentTarget.style.transform = "translateY(-1px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow =
-                      "0 0 20px rgba(34,211,238,0.5)";
-                    e.currentTarget.style.transform = "translateY(0)";
-                  }}
-                  onClick={() => {
-                    const name = focusedItem?.title ?? "";
-                    const tmpl =
-                      active["council.prompt_template"] ?? "@{{name}}";
-                    const final = tmpl.replace("{{name}}", name);
-                    const encoded = encodeURIComponent(final);
-                    window.location.href = `/page2?prefill=${encoded}`;
-                  }}
-                >
-                  {(active["council.visit_label"] ?? "Visit {{name}}").replace(
-                    "{{name}}",
-                    focusedItem?.title ?? ""
-                  )}
-                </button>
-              </div>
 
             {/* Close-Button */}
             <g
