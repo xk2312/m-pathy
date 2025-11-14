@@ -10,17 +10,28 @@ type CouncilItem = {
   kpi?: { superpower: string; focus: string; signal: string };
 };
 
-const CX = 500, CY = 500;
+const CX = 500,
+  CY = 500;
 const R_LABEL = 330;
 const R_TICK_IN = 280;
 const R_TICK_OUT = 470;
 const INNER_R = 160;
 
 const COUNCIL_IDS = [
-  "m", "m-pathy", "m-ocean", "m-inent", "m-erge", "m-power",
-  "m-body", "m-beded", "m-loop", "m-pire", "m-bassy", "m-ballance",
+  "m",
+  "m-pathy",
+  "m-ocean",
+  "m-inent",
+  "m-erge",
+  "m-power",
+  "m-body",
+  "m-beded",
+  "m-loop",
+  "m-pire",
+  "m-bassy",
+  "m-ballance",
 ] as const;
-type CouncilId = typeof COUNCIL_IDS[number];
+type CouncilId = (typeof COUNCIL_IDS)[number];
 
 export default function CouncilOrbit() {
   const { lang } = useLang();
@@ -38,7 +49,11 @@ export default function CouncilOrbit() {
   const [hoverId, setHoverId] = useState<CouncilId | null>(null);
 
   const itemAngles = useMemo(
-    () => COUNCIL_IDS.map((id, i) => ({ id, theta: i * (360 / COUNCIL_IDS.length) })),
+    () =>
+      COUNCIL_IDS.map((id, i) => ({
+        id,
+        theta: i * (360 / COUNCIL_IDS.length),
+      })),
     []
   );
 
@@ -64,10 +79,14 @@ export default function CouncilOrbit() {
       setAngle(current);
       animRef.current = requestAnimationFrame(tick);
     };
+
     animRef.current = requestAnimationFrame(tick);
+
     return () => {
-      if (animRef.current) cancelAnimationFrame(animRef.current);
-      animRef.current = null;
+      if (animRef.current) {
+        cancelAnimationFrame(animRef.current);
+        animRef.current = null;
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetAngle]);
@@ -79,11 +98,12 @@ export default function CouncilOrbit() {
   };
 
   const onSelect = (id: CouncilId) => {
-    const base = itemAngles.find(a => a.id === id)?.theta ?? 0;
+    const base = itemAngles.find((a) => a.id === id)?.theta ?? 0;
     const desired = -base;
     setTargetAngle(desired);
     setFocused(id);
   };
+
   const onClose = () => {
     setFocused(null);
     setTargetAngle(0);
@@ -100,29 +120,31 @@ export default function CouncilOrbit() {
     <div className="mx-auto w-full max-w-[900px] p-4">
       <svg
         viewBox="0 0 1000 1000"
-        className="block w-full h-auto"
+        className="block h-auto w-full"
         role="img"
         aria-label="Council of 12"
       >
         <defs>
-                    <radialGradient id="wash" cx="50%" cy="50%" r="65%">
+          {/* sehr leichter globaler Wash – Voia bleibt Bühne */}
+          <radialGradient id="wash" cx="50%" cy="50%" r="65%">
             <stop offset="0%" stopColor="#000" stopOpacity="0.03" />
             <stop offset="100%" stopColor="#000" stopOpacity="0.06" />
           </radialGradient>
 
-
+          {/* Highlight für die kleinen Arcs hinter den Labels */}
           <linearGradient id="hl" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0"   stopColor="#fff" stopOpacity="0" />
+            <stop offset="0" stopColor="#fff" stopOpacity="0" />
             <stop offset="0.5" stopColor="#fff" stopOpacity="0.85" />
-            <stop offset="1"   stopColor="#fff" stopOpacity="0" />
+            <stop offset="1" stopColor="#fff" stopOpacity="0" />
           </linearGradient>
 
-                    <style>
+          <style>
             {`
               .label {
                 transition:
                   transform .22s cubic-bezier(0.25, 0.8, 0.25, 1),
-                  opacity .22s cubic-bezier(0.25, 0.8, 0.25, 1);
+                  opacity .22s cubic-bezier(0.25, 0.8, 0.25, 1),
+                  letter-spacing .22s cubic-bezier(0.25, 0.8, 0.25, 1);
                 transform-box: fill-box;
                 transform-origin: center;
               }
@@ -130,12 +152,14 @@ export default function CouncilOrbit() {
                 transform: translateY(-2px) scale(1.04);
                 letter-spacing: .3px;
               }
+
               .tick {
                 transition: opacity .22s cubic-bezier(0.25, 0.8, 0.25, 1);
               }
               .tick.hover {
                 opacity: .95;
               }
+
               .arc {
                 opacity: 0;
                 transition: opacity .22s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -143,6 +167,7 @@ export default function CouncilOrbit() {
               .arc.show {
                 opacity: .9;
               }
+
               .center-card {
                 transition:
                   opacity .22s cubic-bezier(0.25, 0.8, 0.25, 1),
@@ -151,27 +176,27 @@ export default function CouncilOrbit() {
 
               /* KPI-HTML im foreignObject */
               .kpi {
-                color: #7CFF7C;
+                color: #9AFB8F;
                 font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace;
                 font-size: 13px;
                 line-height: 1.45;
                 text-align: left;
                 word-break: break-word;
                 hyphens: auto;
-                text-shadow: 0 0 4px rgba(0,255,120,0.25);
+                text-shadow: 0 0 4px rgba(0, 255, 120, 0.25);
               }
               .kpi p { margin: 0; }
               .kpi p + p { margin-top: 6px; }
             `}
           </style>
-
         </defs>
 
-        {/* sanfter Hintergrund */}
+        {/* sanfter Hintergrund – Voia bleibt im Lead */}
         <rect x="0" y="0" width="1000" height="1000" fill="url(#wash)" />
 
         {/* Orbit */}
         <g transform={`rotate(${angle} ${CX} ${CY})`}>
+          {/* Ticks / Strahlen */}
           {Array.from({ length: 60 }).map((_, i) => {
             const theta = i * 6;
             const p1 = posOnCircle(theta, R_TICK_IN);
@@ -180,7 +205,7 @@ export default function CouncilOrbit() {
 
             const isHovered = (() => {
               if (!hoverId) return false;
-              const base = itemAngles.find(a => a.id === hoverId)?.theta ?? 0;
+              const base = itemAngles.find((a) => a.id === hoverId)?.theta ?? 0;
               const local = (base + angle) % 360;
               const diff = Math.min(
                 Math.abs(((theta - local + 360) % 360)),
@@ -192,30 +217,38 @@ export default function CouncilOrbit() {
             return (
               <line
                 key={`t-${i}`}
-                x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y}
-                                stroke={thick ? "#ffffff" : "#00ffff"}
+                x1={p1.x}
+                y1={p1.y}
+                x2={p2.x}
+                y2={p2.y}
+                stroke={thick ? "#ffffff" : "#00ffff"}
                 strokeOpacity={thick ? 0.8 : 0.35}
                 strokeWidth={thick ? 1.6 : 0.5}
-
                 className={`tick ${isHovered ? "hover" : ""}`}
                 strokeLinecap="round"
               />
             );
           })}
 
+          {/* Labels & Arcs */}
           {itemAngles.map(({ id, theta }) => {
             const item = getItem(id as CouncilId);
             const labelPos = posOnCircle(theta, R_LABEL);
 
-            const arcInner = 300, arcOuter = 350;
-            const a1 = theta - 10, a2 = theta + 10;
-            const a1i = posOnCircle(a1, arcInner), a1o = posOnCircle(a1, arcOuter);
-            const a2i = posOnCircle(a2, arcInner), a2o = posOnCircle(a2, arcOuter);
+            const arcInner = 300,
+              arcOuter = 350;
+            const a1 = theta - 10,
+              a2 = theta + 10;
+            const a1i = posOnCircle(a1, arcInner),
+              a1o = posOnCircle(a1, arcOuter);
+            const a2i = posOnCircle(a2, arcInner),
+              a2o = posOnCircle(a2, arcOuter);
             const largeArc = Math.abs(a2 - a1) > 180 ? 1 : 0;
             const hovered = hoverId === id;
 
             return (
               <g key={id}>
+                {/* Highlight-Segment hinter der KI-Beschriftung */}
                 <path
                   d={`M ${a1i.x} ${a1i.y}
                       A ${arcInner} ${arcInner} 0 ${largeArc} 1 ${a2i.x} ${a2i.y}
@@ -237,13 +270,15 @@ export default function CouncilOrbit() {
                   onMouseLeave={() => setHoverId(null)}
                   onClick={() => onSelect(id as CouncilId)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") onSelect(id as CouncilId);
+                    if (e.key === "Enter" || e.key === " ")
+                      onSelect(id as CouncilId);
                   }}
                 >
-                                   <text
+                  <text
                     className={`label ${hovered ? "hover" : ""}`}
                     textAnchor="middle"
                     fill="var(--pp-cyan-line, #22d3ee)"
+                    opacity={0.95}
                     fontFamily="Garamond, serif"
                     fontSize={20}
                   >
@@ -254,9 +289,8 @@ export default function CouncilOrbit() {
                     y={20}
                     textAnchor="middle"
                     fill="var(--pp-cyan-line, #22d3ee)"
-                    opacity={0.9}
+                    opacity={0.8}
                     fontFamily="Garamond, serif"
-
                     fontSize={14}
                   >
                     {item.subtitle}
@@ -278,7 +312,7 @@ export default function CouncilOrbit() {
           })}
         </g>
 
-             {/* Center-Panel */}
+        {/* Center-Panel – 30px nach oben verschoben */}
         {focusedItem && (
           <g
             className="center-card"
@@ -292,15 +326,15 @@ export default function CouncilOrbit() {
               strokeOpacity="0.08"
             />
 
+            {/* Titel & Subtitle der KI */}
             <text
               x={0}
               y={-30}
               textAnchor="middle"
-              fill="var(--pp-cyan-line, #22d3ee)"
-
+              fill="#9AFB8F"
               fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
               fontSize={22}
-              style={{ textShadow: "0 0 6px rgba(34,211,238,0.35)" }}
+              style={{ textShadow: "0 0 6px rgba(0,255,120,0.35)" }}
             >
               {focusedItem.title}
             </text>
@@ -308,72 +342,77 @@ export default function CouncilOrbit() {
               x={0}
               y={-8}
               textAnchor="middle"
-              fill="var(--pp-cyan-line, #22d3ee)"
+              fill="#BFFFC2"
               fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
-
               fontSize={13}
               opacity={0.9}
             >
               {focusedItem.subtitle}
             </text>
 
-                        {/* HTML im Kreis – bricht automatisch um */}
+            {/* HTML im Kreis – bricht automatisch um */}
             <foreignObject
               x={-INNER_R + 18}
               y={8}
               width={INNER_R * 2 - 36}
-              height={INNER_R * 2 - 56}
+              height={INNER_R * 2 - 80}
             >
               <div className="kpi">
                 <p>{`> superpower: ${focusedKpi.superpower}`}</p>
                 <p>{`> focus: ${focusedKpi.focus}`}</p>
                 <p>{`> signal: ${focusedKpi.signal}`}</p>
-                            </div>
+              </div>
             </foreignObject>
 
-                              {/* Visit Button */}
+            {/* Visit Button – größer + weiter weg von der Kreisunterkante */}
             <foreignObject
               x={-INNER_R + 18}
-              y={INNER_R - 86}
+              y={INNER_R - 90}
               width={INNER_R * 2 - 36}
-              height={56}
+              height={70}
             >
-              <div style={{ display: "flex", justifyContent: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "24px",
+                }}
+              >
                 <button
                   style={{
                     padding: "16px 26px",
-                    borderRadius: "14px",
+                    borderRadius: "16px",
                     border: "1px solid var(--pp-cyan-line, #22d3ee)",
                     background: "rgba(0,0,0,0.45)",
                     backdropFilter: "blur(6px)",
-                    color: "#7CFF7C",
+                    color: "var(--pp-cyan-line, #22d3ee)",
                     fontFamily:
                       'ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace',
                     fontSize: "18px",
                     cursor: "pointer",
-                    boxShadow: "0 0 16px rgba(34,211,238,0.35)",
-                    transition: "all .18s ease",
+                    boxShadow: "0 0 20px rgba(34,211,238,0.5)",
+                    transition: "box-shadow .18s ease, transform .18s ease",
                   }}
-
-
                   onMouseEnter={(e) => {
                     e.currentTarget.style.boxShadow =
-                      "0 0 28px rgba(34,211,238,0.6)";
+                      "0 0 26px rgba(34,211,238,0.65)";
+                    e.currentTarget.style.transform = "translateY(-1px)";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.boxShadow =
-                      "0 0 16px rgba(34,211,238,0.35)";
+                      "0 0 20px rgba(34,211,238,0.5)";
+                    e.currentTarget.style.transform = "translateY(0)";
                   }}
                   onClick={() => {
                     const name = focusedItem?.title ?? "";
-                    const tmpl = active["council.prompt_template"] ?? "@{{name}}";
+                    const tmpl =
+                      active["council.prompt_template"] ?? "@{{name}}";
                     const final = tmpl.replace("{{name}}", name);
                     const encoded = encodeURIComponent(final);
                     window.location.href = `/page2?prefill=${encoded}`;
                   }}
                 >
-                  
-                                    {(active["council.visit_label"] ?? "Visit {{name}}").replace(
+                  {(active["council.visit_label"] ?? "Visit {{name}}").replace(
                     "{{name}}",
                     focusedItem?.title ?? ""
                   )}
@@ -381,10 +420,9 @@ export default function CouncilOrbit() {
               </div>
             </foreignObject>
 
-                      {/* Close */}
+            {/* Close-Button */}
             <g
               transform={`translate(${INNER_R - 18} ${-INNER_R + 18})`}
-
               onClick={onClose}
               role="button"
               tabIndex={0}
@@ -393,7 +431,6 @@ export default function CouncilOrbit() {
               <circle r="12" fill="var(--pp-cyan-line, #22d3ee)" />
               <text
                 y="4"
-
                 textAnchor="middle"
                 fontFamily='ui-monospace, SFMono-Regular, Menlo, Monaco, "Liberation Mono", Consolas, monospace'
                 fontSize="14"
