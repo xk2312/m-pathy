@@ -277,17 +277,7 @@ export default function CouncilOrbit() {
 
             return (
               <g key={id}>
-                {/* Highlight-Segment hinter der KI-Beschriftung */}
-                <path
-                  d={`M ${a1i.x} ${a1i.y}
-                      A ${arcInner} ${arcInner} 0 ${largeArc} 1 ${a2i.x} ${a2i.y}
-                      L ${a2o.x} ${a2o.y}
-                      A ${arcOuter} ${arcOuter} 0 ${largeArc} 0 ${a1o.x} ${a1o.y}
-                      Z`}
-                  fill="url(#hl)"
-                  className={`arc ${hovered ? "show" : ""}`}
-                />
-
+            
                                 {/* Gegenrotation, damit Labels horizontal bleiben */}
                 <g
                   transform={`translate(${labelPos.x} ${labelPos.y}) rotate(${-angle} 0 0)`}
@@ -399,9 +389,11 @@ export default function CouncilOrbit() {
   x={-INNER_R + 18}
   y={8}
   width={INNER_R * 2 - 36}
-  height={INNER_R * 2 - 20}   // viel mehr Raum
+  height={INNER_R * 2 - 20}
 >
+  {/* viel mehr Raum */}
   <div style={{ display: "flex", flexDirection: "column" }}>
+
     <div className="kpi">
       <p>{`> superpower: ${focusedKpi.superpower}`}</p>
       <p>{`> focus: ${focusedKpi.focus}`}</p>
