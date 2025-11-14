@@ -90,21 +90,25 @@ export default function Experts13() {
         </p>
       </div>
 
-      {/* DROPDOWN TRIGGER */}
-      <div className="m-experts13-dropdown flex justify-center mb-8">
+            {/* DROPDOWN TRIGGER */}
+      <div
+        className="m-experts13-dropdown flex justify-center"
+        style={{ marginBottom: "13px" }}
+      >
         <button
           onClick={() => setOpen((v) => !v)}
           className="m-experts13-trigger group relative inline-flex items-center justify-between 
-          rounded-full px-6 py-3
+          rounded-full
           bg-white/5 ring-1 ring-white/10 backdrop-blur-md
           transition-all duration-200
           hover:bg-white/10 hover:ring-cyan-300/40
           focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
-          style={{ width: "min(90%, 720px)" }}
+          style={{ width: "min(90%, 720px)", padding: "13px 7px" }}
         >
           <span className="text-white/90 font-medium tracking-wide">
             {dropdownLabel}
           </span>
+
 
           <span className="text-white/60 group-hover:text-cyan-300 transition-colors">
             ▼
