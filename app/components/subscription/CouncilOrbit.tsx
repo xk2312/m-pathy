@@ -194,22 +194,26 @@ export default function CouncilOrbit() {
               }
 
                            /* Mercury-Halo hinter den KI-Labels – dunkler Verlauf + edler Rand */
-              .halo {
+             /* DEFAULT = ehemals Hover (heller, sichtbarer, lebendig) */
+.halo {
   fill: url(#mercuryGradient);
-  opacity: 0.92;
-
-  /* Edler, leicht heller Premium-Rand */
-  stroke: rgba(180, 180, 180, 0.85);     /* #b4b4b4 */
-  stroke-width: 1.2;
-
-  transform-box: fill-box;
-  transform-origin: center;
-
+  opacity: 0.55;                    /* vorher 0.32 → jetzt heller */
+  stroke: rgba(200,200,200,0.92);   /* edles hellgrau */
+  stroke-width: 1.3;
+  transform: scale(1.05);           /* leicht größer, mehr Präsenz */
   transition:
-    opacity .45s cubic-bezier(0.25, 0.8, 0.25, 1),
-    transform .6s cubic-bezier(0.25, 0.8, 0.25, 1),
-    stroke .35s ease-out;
+    opacity .35s ease,
+    transform .45s ease,
+    stroke .25s ease;
 }
+
+/* HOVER = ehemals Default (etwas dunkler, subtiler, tiefer) */
+.halo:hover {
+  opacity: 0.30;                     /* dezenter */
+  stroke: rgba(150,150,150,0.45);    /* dunklerer Rand */
+  transform: scale(1.00);            /* zurückfahren */
+}
+
 
               .halo-pulse {
                 animation: haloPulse 5.2s ease-in-out infinite;
