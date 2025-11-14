@@ -12,10 +12,14 @@ type CouncilItem = {
 
 const CX = 500,
   CY = 500;
-const R_LABEL = 383;
-const R_TICK_IN = 280;
-const R_TICK_OUT = 470;
-const INNER_R = 160;
+
+// Krone um 80 % verkleinert
+const R_LABEL = 264;     // 330 * 0.8
+const R_TICK_IN = 224;   // 280 * 0.8
+const R_TICK_OUT = 376;  // 470 * 0.8
+
+const INNER_R = 160;     // Center-Panel bleibt unverändert
+
 
 const COUNCIL_IDS = [
   "m",
