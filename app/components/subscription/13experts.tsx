@@ -117,7 +117,7 @@ export default function Experts13() {
         <div className="m-experts13-categories max-w-5xl mx-auto grid gap-x-10 gap-y-8 md:grid-cols-2 lg:grid-cols-3 mb-12">
           {/* GROUP 1 – Life & Matter */}
           <div>
-            <h3 className="text-white/60 text-sm mb-4">
+            <h3 className="text-white/60 text-sm mb-2">
               {t("experts.group.science")}
             </h3>
                         <div className="flex flex-col gap-3">
@@ -173,7 +173,7 @@ export default function Experts13() {
 
           {/* GROUP 2 – Engineering & Code */}
           <div>
-            <h3 className="text-white/60 text-sm mb-4">
+            <h3 className="text-white/60 text-sm mb-2">
               {t("experts.group.engineering")}
             </h3>
             <div className="flex flex-col gap-3">
@@ -230,7 +230,7 @@ export default function Experts13() {
 
           {/* GROUP 3 – Space & Form */}
           <div>
-            <h3 className="text-white/60 text-sm mb-4">
+            <h3 className="text-white/60 text-sm mb-2">
               {t("experts.group.design")}
             </h3>
             <div className="flex flex-col gap-3">
@@ -287,7 +287,7 @@ export default function Experts13() {
 
           {/* GROUP 4 – Law & Ethics */}
           <div>
-            <h3 className="text-white/60 text-sm mb-4">
+            <h3 className="text-white/60 text-sm mb-2">
               {t("experts.group.law")}
             </h3>
             <div className="flex flex-col gap-3">
@@ -310,7 +310,7 @@ export default function Experts13() {
 
           {/* GROUP 5 – Earth & Weather */}
           <div>
-            <h3 className="text-white/60 text-sm mb-4">
+            <h3 className="text-white/60 text-sm mb-2">
               {t("experts.group.earth")}
             </h3>
             <div className="flex flex-col gap-3">
@@ -335,7 +335,7 @@ export default function Experts13() {
 
           {/* GROUP 6 – Math & Stars */}
           <div>
-            <h3 className="text-white/60 text-sm mb-4">
+            <h3 className="text-white/60 text-sm mb-2">
               {t("experts.group.meta")}
             </h3>
             <div className="flex flex-col gap-3">
