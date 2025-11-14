@@ -226,14 +226,17 @@ export default function CouncilOrbit() {
         {/* Orbit */}
         <g transform={`rotate(${angle} ${CX} ${CY})`}>
           {/* Ticks / Strahlen */}
-          {Array.from({ length: 60 }).map((_, i) => {
+                 {Array.from({ length: 60 }).map((_, i) => {
             const theta = i * 6;
-            const p1 = posOnCircle(theta, R_TICK_IN);
-            const p2 = posOnCircle(theta, R_TICK_OUT);
             const thick = i % 5 === 0;
+            // weiße Kronen-Linien etwas kürzer, damit sie nicht durch die Pills schneiden
+            const rOut = thick ? 310 : R_TICK_OUT;
+            const p1 = posOnCircle(theta, R_TICK_IN);
+            const p2 = posOnCircle(theta, rOut);
 
             const isHovered = (() => {
               if (!hoverId) return false;
+
               const base = itemAngles.find((a) => a.id === hoverId)?.theta ?? 0;
               const local = (base + angle) % 360;
               const diff = Math.min(
