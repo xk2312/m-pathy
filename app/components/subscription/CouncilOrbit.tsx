@@ -225,22 +225,22 @@ export default function CouncilOrbit() {
 
                 {/* Orbit */}
         <g transform={`rotate(${angle} ${CX} ${CY})`}>
- 
  {/* Ticks / Strahlen */}
 {Array.from({ length: 60 }).map((_, i) => {
   const theta = i * 6;
 
   // Basislängen
-  const lengthWhite = R_TICK_OUT - R_TICK_IN;
-  const lengthCyan = lengthWhite * 1.382;
+  const fullLength = R_TICK_OUT - R_TICK_IN;
+  const lengthWhite = fullLength * 0.2;      // weiße = 20 % der alten Länge
+  const lengthCyan = lengthWhite * 1.382;    // cyan ≈ 1.382 × weiß
 
   const thick = i % 5 === 0;
-  const outerRadius = thick
-    ? R_TICK_OUT
-    : R_TICK_IN + lengthCyan;
 
   const p1 = posOnCircle(theta, R_TICK_IN);
-  const p2 = posOnCircle(theta, outerRadius);
+  const p2 = posOnCircle(
+    theta,
+    R_TICK_IN + (thick ? lengthWhite : lengthCyan)
+  );
 
   const isHovered = (() => {
     if (!hoverId) return false;
