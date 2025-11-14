@@ -14,7 +14,7 @@ const CX = 500,
   CY = 500;
 
 // Krone um 80 % verkleinert
-const R_LABEL = 264;     // 330 * 0.8
+const R_LABEL = 334;
 const R_TICK_IN = 224;   // 280 * 0.8
 const R_TICK_OUT = 376;  // 470 * 0.8
 
@@ -279,7 +279,7 @@ export default function CouncilOrbit() {
             const item = getItem(id as CouncilId);
             const labelPos = posOnCircle(theta, R_LABEL);
 
-            const arcInner = 300,
+            const arcInner = 310,
               arcOuter = 350;
             const a1 = theta - 10,
               a2 = theta + 10;
