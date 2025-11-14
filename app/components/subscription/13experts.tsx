@@ -46,10 +46,11 @@ export default function Experts13() {
 
 
   // Gemeinsame Klasse für alle Expert-Pills
-  const pillClass =
-    "m-experts13-pill inline-flex items-center justify-between gap-2 " +
+const pillClass =
+    "m-experts13-pill inline-flex items-center justify-between gap-2 cursor-pointer " +
     "px-[7px] py-[7px] rounded-2xl bg-white/5 ring-1 ring-white/10 text-white/90 text-sm text-left " +
     "hover:bg-white/10 hover:ring-cyan-300/40 transition-all duration-200";
+
 
   // Zuordnung: Expert → Icon (Emoji als Platzhalter)
   const expertIcons: Record<ExpertId, string> = {
@@ -104,14 +105,15 @@ export default function Experts13() {
         className="m-experts13-dropdown flex justify-center"
         style={{ marginBottom: "13px" }}
       >
-        <button
-          onClick={() => setOpen((v) => !v)}
-          className="m-experts13-trigger group relative inline-flex items-center justify-between 
-          rounded-full
+       <button
+  onClick={() => setOpen((v) => !v)}
+  className="m-experts13-trigger group relative inline-flex items-center justify-between 
+          rounded-full cursor-pointer
           bg-white/5 ring-1 ring-white/10 backdrop-blur-md
           transition-all duration-200
           hover:bg-white/10 hover:ring-cyan-300/40
           focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40"
+
           style={{ width: "min(90%, 720px)", padding: "13px 13px" }}
         >
           <span className="text-white/90 font-medium tracking-wide">
@@ -430,13 +432,14 @@ export default function Experts13() {
           {/* CTA BUTTON – Call this expert */}
           <div className="mt-4 flex justify-end">
             <button
-              onClick={handleCall}
-              className="group inline-flex items-center gap-2 px-6 py-3 rounded-full 
+  onClick={handleCall}
+  className="group inline-flex items-center gap-2 px-6 py-3 rounded-full cursor-pointer
               bg-white/5 ring-1 ring-white/10 backdrop-blur-md
               text-white/90 font-medium tracking-wide
               hover:bg-white/10 hover:ring-cyan-300/40
               transition-all duration-200"
-            >
+>
+
               {callLabel}
               <span className="text-cyan-300 group-hover:translate-x-1 transition-transform">
                 →
