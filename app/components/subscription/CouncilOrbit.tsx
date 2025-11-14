@@ -367,6 +367,9 @@ export default function CouncilOrbit() {
     <p>{`> superpower: ${focusedKpi.superpower}`}</p>
     <p>{`> focus: ${focusedKpi.focus}`}</p>
     <p>{`> signal: ${focusedKpi.signal}`}</p>
+
+    {/* ECHTER BUFFER */}
+    <div style={{ height: "20px" }}></div>
   </div>
 </foreignObject>
 
