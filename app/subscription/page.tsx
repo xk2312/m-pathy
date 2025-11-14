@@ -12,7 +12,7 @@ import Testimonial from "@/app/components/subscription/testimonial"; // Klein, k
 import PowerPrompts from "@/app/components/subscription/powerprompts"; // neu
 import Modis13 from "@/app/components/subscription/13modis"; // 13 Modi – neuer Abschnitt
 import { modes15 } from "@/lib/i18n.modes";
-
+import Experts13 from "@/app/components/subscription/13experts"; 
 
 // KPI Board (Client-only; Recharts braucht Browser)
 const MPathyKpiBoard = dynamic(
@@ -150,6 +150,23 @@ export default function SubscriptionPage() {
 
           {/* Buffer #5 – unter 13 Modes (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+
+          {/* ———————— 13 EXPERTS SECTION ———————— */}
+          <section
+            className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
+            aria-label="Experts section"
+          >
+            <div
+              className="page-center"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
+            >
+              <Experts13 />
+            </div>
+          </section>
+
+{/* Buffer — unter 13 Experts */}
+<div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+
 
                 {/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
           <section
