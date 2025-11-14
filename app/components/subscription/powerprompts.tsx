@@ -186,8 +186,8 @@ const IonBeamButton: React.FC<{ label: string; onClick: () => void }> = ({ label
       {/* Buffer: Subheadline → Tabs */}
       <div aria-hidden className="w-full" style={{ height: "var(--pp-sub-to-tabs)" }} />
 
-      {/* Kategorie-Pills */}
-      <div className="mx-auto max-w-[min(100%,1120px)]">
+           {/* Kategorie-Pills */}
+      <div className="mx-auto max-w-[min(100%,1344px)]">
   <div className="flex flex-wrap items-center justify-center gap-3.5 md:gap-5 px-2 md:px-0">
     {CATS.map(({ id, label }) => {
       const activeNow = id === active;
