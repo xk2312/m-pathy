@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useLang } from "@/app/providers/LanguageProvider";
+
+/** Zielpfad für Page 2 (identisch zu PowerPrompts) */
+const PAGE2_PATH = process.env.NEXT_PUBLIC_PAGE2_PATH ?? "/page2";
 
 /**
  * 13Experts – Expertenauswahl
@@ -28,7 +32,8 @@ type ExpertId =
   | "astrologer";
 
 export default function Experts13() {
-    const { t } = useLang();
+  const { t } = useLang();
+  const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<ExpertId | null>(null);
@@ -37,6 +42,7 @@ export default function Experts13() {
     setSelected(id);
     setOpen(false);
   };
+
 
 
   // Gemeinsame Klasse für alle Expert-Pills
@@ -67,16 +73,16 @@ export default function Experts13() {
   const title = t("experts.title");
   const dropdownLabel = t("experts.dropdown.label");
 
-  const callLabel = t("experts.cta.default");
+    const callLabel = t("experts.cta.default");
 
   const handleCall = () => {
     if (!selected) return;
-    const prefill = `Please take the role of a ${t(
-      `experts.${selected}.name`
-    )}. I need your expertise now.`;
-    const url = `/subscription/page2?prefill=${encodeURIComponent(prefill)}`;
-    window.location.href = url;
+    const expertName = t(`experts.${selected}.name`);
+    const prefill = `@${expertName} `;
+    const url = `${PAGE2_PATH}?prefill=${encodeURIComponent(prefill)}`;
+    router.push(url);
   };
+
 
   return (
     <section
