@@ -225,25 +225,25 @@ export default function CouncilOrbit() {
 
                 {/* Orbit */}
         <g transform={`rotate(${angle} ${CX} ${CY})`}>
-          {/* Ticks / Strahlen */}
+ 
+ {/* Ticks / Strahlen */}
 {Array.from({ length: 60 }).map((_, i) => {
   const theta = i * 6;
 
   // Basislängen
   const lengthWhite = R_TICK_OUT - R_TICK_IN;
-  const lengthCyan = lengthWhite * 1.382; // grün ≈ 1.382 × weiß
+  const lengthCyan = lengthWhite * 1.382;
 
   const thick = i % 5 === 0;
   const outerRadius = thick
-    ? R_TICK_OUT              // weiße Strahlen: unverändert
-    : R_TICK_IN + lengthCyan; // cyan: etwas länger als weiß
+    ? R_TICK_OUT
+    : R_TICK_IN + lengthCyan;
 
   const p1 = posOnCircle(theta, R_TICK_IN);
   const p2 = posOnCircle(theta, outerRadius);
 
   const isHovered = (() => {
     if (!hoverId) return false;
-
     const base = itemAngles.find((a) => a.id === hoverId)?.theta ?? 0;
     const local = (base + angle) % 360;
     const diff = Math.min(
@@ -268,6 +268,7 @@ export default function CouncilOrbit() {
     />
   );
 })}
+
 
           {/* Labels & Arcs */}
           {itemAngles.map(({ id, theta }) => {
