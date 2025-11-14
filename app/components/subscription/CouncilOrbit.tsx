@@ -369,7 +369,7 @@ export default function CouncilOrbit() {
               x={-INNER_R + 18}
               y={INNER_R - 90}
               width={INNER_R * 2 - 36}
-              height={70}
+              height={120}
             >
               <div
                 style={{
