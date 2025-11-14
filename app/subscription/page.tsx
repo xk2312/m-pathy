@@ -158,7 +158,7 @@ export default function SubscriptionPage() {
           >
             <div
               className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
             >
               <PowerPrompts />
             </div>
