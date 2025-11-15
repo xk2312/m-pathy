@@ -8,37 +8,56 @@ const ZenithButton = dynamic(
   { ssr: false }
 );
 
-
-
 export default function Hero() {
   const { t } = useLang();
 
   return (
-    <div className="text-center flex flex-col items-center gap-[40px]">
+    <div
+      className="
+        text-center
+        flex flex-col items-center
+        mx-auto
+        max-w-[var(--h-a0-max-width)]
+      "
+    >
       <h1
-        className="text-[clamp(28px,5vw,52px)] font-semibold leading-[1.15] tracking-tight
-                   bg-gradient-to-b from-white to-white/75 text-transparent bg-clip-text"
+        className="
+          font-semibold
+          tracking-tight
+          bg-gradient-to-b from-white to-white/75
+          text-transparent bg-clip-text
+        "
+        style={{
+          fontSize: "var(--h-a0-size)",
+          lineHeight: "var(--h-a0-line)",
+        }}
       >
         {t("hero_title")}
       </h1>
 
-      {/* Subhead – leicht kräftiger */}
-            <p className="text-[16px] md:text-[18px] font-medium text-[#C7C7C7]">
+      {/* Subhead – jetzt über A0-Subtitle-Tokens */}
+      <p
+        className="mt-[var(--h-a0-gap-title-sub)] font-medium text-[#C7C7C7]"
+        style={{
+          fontSize: "var(--h-a0-sub-size)",
+          lineHeight: "var(--h-a0-sub-line)",
+          opacity: "var(--h-a0-sub-opacity)",
+        }}
+      >
         {t("hero_sub")}
       </p>
 
-      {/* CTA – inline Zenith */}
-      <div className="mt-[32px] mb-[40px] flex w-full justify-center">
+      {/* CTA – Abstand über globalen Subtitle→Content-Gap */}
+      <div className="mt-[var(--h-gap-sub-content)] mb-[40px] flex w-full justify-center">
         <ZenithButton position="inline" aria-label={t("hero_cta")}>
           {t("hero_cta")}
         </ZenithButton>
       </div>
 
-      {/* Hinweis unter dem Button */}
+      {/* Hinweis unter dem Button – typografisch wie bisher */}
       <p className="text-center text-[16px] md:text-[18px] text-[#C7C7C7]">
         {t("council_hint")}
       </p>
-
     </div>
   );
 }

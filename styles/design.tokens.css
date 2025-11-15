@@ -350,3 +350,96 @@
   --experts-pill-pad-x:          10px;   /* links/rechts (Icon & View) */
 }
 
+/* =====================================================================
+   Heading System · A0–A4
+   Zweck: Einheitliche Überschriften / Subtitles / Kicker
+   Mapping: Hero (A0) · Modes/KPI (A1) · Experts/Source/Testimonials (A2)
+            Orbit (A3) · Footer/Microcopy (A4)
+   ===================================================================== */
+
+:root {
+  /* === Headline Sizes (fluid) =============================== */
+  /* Hero – Section 1 */
+  --h-a0-size: clamp(2.6rem, 5vw, 4rem);
+  --h-a0-line: 1.05;
+  --h-a0-weight: 600;
+  --h-a0-letter: -0.02em;
+
+  /* XL Sections – Modes, KPI */
+  --h-a1-size: clamp(2rem, 3.8vw, 2.8rem);
+  --h-a1-line: 1.1;
+  --h-a1-weight: 600;
+  --h-a1-letter: -0.01em;
+
+  /* Large Sections – Experts, Source Command, Testimonials */
+  --h-a2-size: clamp(1.7rem, 3.2vw, 2.2rem);
+  --h-a2-line: 1.15;
+  --h-a2-weight: 600;
+  --h-a2-letter: -0.01em;
+
+  /* Medium – Panels, Orbit, UI-Subtitles */
+  --h-a3-size: clamp(1.25rem, 2.4vw, 1.4rem);
+  --h-a3-line: 1.3;
+  --h-a3-weight: 500;
+  --h-a3-letter: 0;
+
+  /* Micro – Footer, Legal, Attribution (z. B. — Grok —) */
+  --h-a4-size: 0.78rem;
+  --h-a4-line: 1.35;
+  --h-a4-weight: 400;
+  --h-a4-letter: 0.02em;
+
+  /* === Max Widths (Textbreite) ============================== */
+  --h-a0-max-width: 780px;  /* Hero */
+  --h-a1-max-width: 740px;  /* Modes, KPI */
+  --h-a2-max-width: 700px;  /* Experts, Source, Testimonials */
+  --h-a3-max-width: 680px;  /* Panels / Orbit */
+
+  /* === Subtitles (pro Level) ================================ */
+  --h-a0-sub-size: 1.3rem;
+  --h-a0-sub-line: 1.4;
+  --h-a0-sub-opacity: 0.78;
+
+  --h-a1-sub-size: 1.15rem;
+  --h-a1-sub-line: 1.45;
+  --h-a1-sub-opacity: 0.75;
+
+  --h-a2-sub-size: 1.05rem;
+  --h-a2-sub-line: 1.45;
+  --h-a2-sub-opacity: 0.78;
+
+  --h-a3-sub-size: 0.95rem;
+  --h-a3-sub-line: 1.45;
+  --h-a3-sub-opacity: 0.68;
+
+  /* === Kicker (z. B. "15 MODI VON M-PATHY") ================= */
+  --h-kicker-size: 0.85rem;
+  --h-kicker-weight: 500;
+  --h-kicker-letter: 0.08em;
+  --h-kicker-opacity: 0.65;
+  --h-kicker-transform: uppercase;
+
+  /* === Vertical Rhythm (Section-Abstände) =================== */
+  /* Abstand Section ↔ Section (desktop) */
+  --h-space-a0-section: 96px;
+  --h-space-a1-section: 80px;
+  --h-space-a2-section: 72px;
+  --h-space-a3-section: 48px;
+  --h-space-a4-section: 32px;
+
+  /* Abstand innerhalb der Section */
+  --h-a0-gap-title-sub: 36px;
+  --h-a1-gap-title-sub: 28px;
+  --h-a2-gap-title-sub: 24px;
+  --h-a3-gap-title-sub: 20px;
+
+  --h-gap-kicker-title: 12px;   /* Kicker → Headline */
+  --h-gap-sub-content: 32px;    /* Subtitle → erster Inhalt */
+
+  /* Mobile-Skalierung (Multiplikatoren für Section-Abstände) */
+  --h-mobile-space-scale-a0: 0.8;
+  --h-mobile-space-scale-a1: 0.8;
+  --h-mobile-space-scale-a2: 0.85;
+  --h-mobile-space-scale-a3: 0.9;
+  --h-mobile-space-scale-a4: 0.95;
+}
