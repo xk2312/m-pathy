@@ -122,7 +122,23 @@ export default function SubscriptionPage() {
 
           {/* Buffer – unter Hero */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+ 
+ {/* ———————— 13 EXPERTS SECTION ———————— */}
+          <section
+            className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
+            aria-label="Experts section"
+          >
+            <div
+              className="page-center"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
+            >
+              <Experts13 />
+            </div>
+          </section>
 
+{/* Buffer — unter 13 Experts */}
+<div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+<div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
           {/* ─────────────── COUNCIL ORBIT ─────────────── */}
           <section className="pt-[72px]">
             <div className="page-center">
@@ -167,22 +183,7 @@ export default function SubscriptionPage() {
           {/* Buffer #5 – unter 13 Modes (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
-          {/* ———————— 13 EXPERTS SECTION ———————— */}
-          <section
-            className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
-            aria-label="Experts section"
-          >
-            <div
-              className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
-            >
-              <Experts13 />
-            </div>
-          </section>
-
-{/* Buffer — unter 13 Experts */}
-<div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-<div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+         
 
                 {/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
           <section
