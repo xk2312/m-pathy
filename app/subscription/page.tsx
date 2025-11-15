@@ -122,7 +122,21 @@ export default function SubscriptionPage() {
 
           {/* Buffer – unter Hero */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
- 
+ {/* ─────────────── TESTIMONIAL SECTION ─────────────── */}
+          <section
+            className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]"
+            aria-label="Testimonials section"
+          >
+            <div
+              className="page-center"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
+            >
+              <Testimonial />
+            </div>
+          </section>
+
+          {/* Buffer #3 – unter Testimonial (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
  {/* ———————— 13 EXPERTS SECTION ———————— */}
           <section
             className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
@@ -150,21 +164,7 @@ export default function SubscriptionPage() {
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
 
-          {/* ─────────────── TESTIMONIAL SECTION ─────────────── */}
-          <section
-            className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]"
-            aria-label="Testimonials section"
-          >
-            <div
-              className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
-            >
-              <Testimonial />
-            </div>
-          </section>
-
-          {/* Buffer #3 – unter Testimonial (Design-Token) */}
-          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+          
 
           {/* ———————— 13 MODES SECTION ———————— */}
           <section
