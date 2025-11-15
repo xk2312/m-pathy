@@ -13,13 +13,16 @@ export default function Hero() {
 
   return (
     <div
-      className="
-        text-center
-        flex flex-col items-center
-        mx-auto
-        max-w-[var(--h-a0-max-width)]
-      "
-    >
+  className="
+    text-center
+    flex flex-col items-center
+    mx-auto
+    max-w-[var(--h-a0-max-width)]
+    pt-[var(--h-space-a0-section)]
+    pb-[var(--h-space-a0-section)]
+  "
+>
+
       <h1
         className="
           font-semibold
