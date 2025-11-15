@@ -238,9 +238,13 @@ export default function PowerPrompts() {
         />
 
         {/* Textinhalt */}
-        <span className="relative z-10 text-[15px] md:text-[16px] font-semibold tracking-[-0.005em] text-white">
-          {label}
-        </span>
+       <span
+  className="relative z-10 text-[15px] md:text-[16px] font-semibold tracking-[-0.005em] text-white"
+  style={{ whiteSpace: "nowrap" }}
+>
+  {label}
+</span>
+
       </motion.button>
     );
   };
