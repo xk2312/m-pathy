@@ -435,10 +435,6 @@
   --h-gap-kicker-title: 12px;   /* Kicker → Headline */
   --h-gap-sub-content: 40px;    /* Subtitle → erster Inhalt */
 
-
-  --h-gap-kicker-title: 12px;   /* Kicker → Headline */
-  --h-gap-sub-content: 32px;    /* Subtitle → erster Inhalt */
-
   /* Mobile-Skalierung (Multiplikatoren für Section-Abstände) */
   --h-mobile-space-scale-a0: 0.8;
   --h-mobile-space-scale-a1: 0.8;
