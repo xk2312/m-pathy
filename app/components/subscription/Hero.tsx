@@ -40,11 +40,11 @@ export default function Hero() {
         {t("hero_title")}
       </h1>
 
-      {/* A0 Subline */}
+      {/* A0 Subline – GOLDEN 50px */}
       <p
         className="font-medium text-[#C7C7C7]"
         style={{
-          marginTop: "var(--h-a0-gap-title-sub)",
+          marginTop: "50px",
           fontSize: "var(--h-a0-sub-size)",
           lineHeight: "var(--h-a0-sub-line)",
           opacity: "var(--h-a0-sub-opacity)",
@@ -53,14 +53,12 @@ export default function Hero() {
         {t("hero_sub")}
       </p>
 
-      {/* CTA */}
+      {/* CTA – GOLDEN 40 / 46 */}
       <div
-        className="
-          flex w-full justify-center
-        "
+        className="flex w-full justify-center"
         style={{
-          marginTop: "var(--h-gap-sub-content)",
-          marginBottom: "var(--h-gap-sub-content)",
+          marginTop: "40px",
+          marginBottom: "46px",
         }}
       >
         <ZenithButton position="inline" aria-label={t("hero_cta")}>
@@ -68,18 +66,7 @@ export default function Hero() {
         </ZenithButton>
       </div>
 
-      {/* Hinweis */}
-      <p
-        className="text-center text-[#C7C7C7]"
-        style={{
-          marginTop: "var(--h-gap-sub-content)",
-          fontSize: "var(--h-a1-sub-size)",
-          lineHeight: "var(--h-a1-sub-line)",
-          opacity: "var(--h-a1-sub-opacity)",
-        }}
-      >
-        {t("council_hint")}
-      </p>
+      {/* Hinweis wurde entfernt */}
     </div>
   );
 }
