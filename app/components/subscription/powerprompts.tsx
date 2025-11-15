@@ -279,10 +279,14 @@ export default function PowerPrompts() {
         style={{ height: "var(--pp-sub-to-tabs)" }}
       />
 
-      {/* Kategorie-Pills */}
-      <div className="mx-auto max-w-[min(100%,1344px)]">
-        <div className="flex flex-wrap items-center justify-center gap-3.5 md:gap-5 px-2 md:px-0">
+            {/* Kategorie-Pills */}
+      <div
+        className="mx-auto w-full"
+        style={{ maxWidth: "calc(var(--page-inner-max) * 1.6)" }}
+      >
+        <div className="flex flex-wrap md:flex-nowrap items-center justify-center gap-3.5 md:gap-4 px-2 md:px-0">
           {CATS.map(({ id, label }) => {
+
             const activeNow = id === active;
             return (
               <button
@@ -335,9 +339,13 @@ export default function PowerPrompts() {
         style={{ height: "var(--pp-tabs-to-list)" }}
       />
 
-      {/* Fragenliste – Textkarte links, Ion-Beam-CTA rechts */}
-      <div className="mx-auto max-w-[min(100%,1248px)]">
+        {/* Fragenliste – Textkarte links, Ion-Beam-CTA rechts */}
+      <div
+        className="mx-auto w-full"
+        style={{ maxWidth: "calc(var(--page-inner-max) * 1.6)" }}
+      >
         {QUESTIONS[active].map((q, i) => (
+
           <div key={i}>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 md:gap-6">
               {/* Textkarte */}

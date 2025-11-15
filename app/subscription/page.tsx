@@ -172,7 +172,7 @@ export default function SubscriptionPage() {
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
 {/* ─────────────── COUNCIL ORBIT ─────────────── */}
-          <section className="pt-[72px]">
+           <section className="pt-[72px]">
             <div className="page-center">
               <CouncilOrbit />
             </div>
@@ -181,17 +181,17 @@ export default function SubscriptionPage() {
           {/* Buffer #1 – zwischen CouncilOrbit und KPI (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
                 {/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
-          <section
-            className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]"
-            aria-label="PowerPrompts section"
-          >
-            <div
-              className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-            >
-              <PowerPrompts />
-            </div>
-          </section>
+         <section
+  className="pt-[var(--h-space-a2-section)] pb-[var(--h-space-a2-section)]"
+  aria-label="PowerPrompts section"
+>
+  <div
+    className="page-center"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+  >
+    <PowerPrompts />
+  </div>
+</section>
 
           {/* Buffer #4 – unter PowerPrompts (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
