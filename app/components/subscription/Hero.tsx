@@ -48,16 +48,17 @@ export default function Hero() {
       </p>
 
       {/* CTA – Abstand über globalen Subtitle→Content-Gap */}
-      <div className="mt-[var(--h-gap-sub-content)] mb-[40px] flex w-full justify-center">
+            <div className="mt-[var(--h-gap-sub-content)] mb-[40px] flex w-full justify-center">
         <ZenithButton position="inline" aria-label={t("hero_cta")}>
           {t("hero_cta")}
         </ZenithButton>
       </div>
 
-      {/* Hinweis unter dem Button – typografisch wie bisher */}
-      <p className="text-center text-[16px] md:text-[18px] text-[#C7C7C7]">
+      {/* Hinweis unter dem Button – mit zusätzlichem Abstand */}
+      <p className="mt-[32px] text-center text-[16px] md:text-[18px] text-[#C7C7C7]">
         {t("council_hint")}
       </p>
+
     </div>
   );
 }

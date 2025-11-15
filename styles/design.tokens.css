@@ -427,11 +427,14 @@
   --h-space-a3-section: 48px;
   --h-space-a4-section: 32px;
 
-  /* Abstand innerhalb der Section */
-  --h-a0-gap-title-sub: 36px;
-  --h-a1-gap-title-sub: 28px;
+    --h-a0-gap-title-sub: 48px;
+  --h-a1-gap-title-sub: 32px;
   --h-a2-gap-title-sub: 24px;
   --h-a3-gap-title-sub: 20px;
+
+  --h-gap-kicker-title: 12px;   /* Kicker → Headline */
+  --h-gap-sub-content: 40px;    /* Subtitle → erster Inhalt */
+
 
   --h-gap-kicker-title: 12px;   /* Kicker → Headline */
   --h-gap-sub-content: 32px;    /* Subtitle → erster Inhalt */
