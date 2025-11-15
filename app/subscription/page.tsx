@@ -120,8 +120,7 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-          {/* Buffer – unter Hero */}
-          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+      
  {/* ─────────────── TESTIMONIAL SECTION ─────────────── */}
           <section
             className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]"
