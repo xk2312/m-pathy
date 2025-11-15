@@ -170,16 +170,16 @@ export default function SubscriptionPage() {
 
           {/* Buffer #5 – unter 13 Modes (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-
 {/* ─────────────── COUNCIL ORBIT ─────────────── */}
-           <section className="pt-[72px]">
-            <div className="page-center">
-              <CouncilOrbit />
-            </div>
-          </section>
+{/*
+<section className="pt-[72px]">
+  <div className="page-center">
+    <CouncilOrbit />
+  </div>
+</section>
+*/}
 
-          {/* Buffer #1 – zwischen CouncilOrbit und KPI (Design-Token) */}
-          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+        
                 {/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
          <section
   className="pt-[var(--h-space-a2-section)] pb-[var(--h-space-a2-section)]"
