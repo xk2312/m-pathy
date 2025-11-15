@@ -3,6 +3,9 @@
 import React, { useMemo, useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
 import dynamic from "next/dynamic";
+
+const PAGE2_PATH = process.env.NEXT_PUBLIC_PAGE2_PATH ?? "/page2";
+
 const ZenithButton = dynamic(() => import("@/app/components/ZenithButton"), { ssr: false });
 
 
@@ -207,7 +210,7 @@ export default function Modes13() {
   const [visualId, setVisualId] = useState<ModeId>("flow");
   const [visualGroup, setVisualGroup] = useState<ModeGroupId>("core");
 
-  const modes = useMemo(() => {
+   const modes = useMemo(() => {
 
     const out: ModeMetaBase[] = [];
 
@@ -235,7 +238,15 @@ export default function Modes13() {
     return out;
   }, [t]);
 
-   const active = modes.find((m) => m.id === activeId) ?? modes[0];
+  const active = modes.find((m) => m.id === activeId) ?? modes[0];
+
+  // Ziel-URL für Page2 inkl. Prefill "@{Modusname.}"
+  const page2Target = useMemo(() => {
+    const modeName = active?.name ?? BASE_MODES[activeId].name;
+    const prefill = `@{${modeName}.}`;
+    return `${PAGE2_PATH}?prefill=${encodeURIComponent(prefill)}`;
+  }, [active?.name, activeId]);
+
 
  const onSelect = (id: ModeId) => {
   setActiveId(id);
@@ -397,12 +408,17 @@ React.useEffect(() => {
   <p className="m-modes13-description-body">{active.description}</p>
 
   {/* CTA / Button unter der Beschreibung */}
-  <div style={{ marginTop: "32px" }}>
-    <ZenithButton position="inline" aria-label={t("hero_cta")}>
-      {t("hero_cta")}
-    </ZenithButton>
-  </div>
+<div style={{ marginTop: "32px" }}>
+  <ZenithButton
+    position="inline"
+    aria-label={t("hero_cta")}
+    onNavigate={page2Target}
+  >
+    {t("hero_cta")}
+  </ZenithButton>
+</div>
 </article>
+
 
           </div>
 
