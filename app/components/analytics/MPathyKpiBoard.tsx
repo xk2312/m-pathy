@@ -423,8 +423,10 @@ export default function MPathyKpiBoard() {
           <TabsContent value="Overview" className="mt-6 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card
+                className="border-0"
                 style={{
                   background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+                  border: "none",
                 }}
               >
                 <CardHeader>
@@ -509,8 +511,10 @@ export default function MPathyKpiBoard() {
               </Card>
 
               <Card
+                className="border-0"
                 style={{
                   background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+                  border: "none",
                 }}
               >
                 <CardHeader>
@@ -539,8 +543,10 @@ export default function MPathyKpiBoard() {
               >
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <Card
+                    className="border-0"
                     style={{
                       background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+                      border: "none",
                     }}
                   >
                     <CardHeader>
@@ -560,8 +566,10 @@ export default function MPathyKpiBoard() {
                   </Card>
 
                   <Card
+                    className="border-0"
                     style={{
                       background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+                      border: "none",
                     }}
                   >
                     <CardHeader>
