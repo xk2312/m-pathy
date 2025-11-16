@@ -398,7 +398,7 @@ export default function MPathyKpiBoard() {
         </div>
 
         {/* Buffer zwischen Subtitle und Tabs (statt der 4 Buttons) */}
-        <div aria-hidden className="w-full" style={{ height: "80px" }} />
+        <div aria-hidden className="w-full" style={{ height: "130px" }} />
 
         <Tabs
           value={tab}
