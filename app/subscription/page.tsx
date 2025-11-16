@@ -136,8 +136,6 @@ export default function SubscriptionPage() {
 
           {/* Buffer #3 – unter Testimonial (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-
-          {/* Buffer #3 – unter Testimonial (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
           
           {/* Divider 1 – Aurora Line */}
@@ -156,6 +154,9 @@ export default function SubscriptionPage() {
               />
             </div>
           </section>
+
+          {/* Buffer #3 – unter Testimonial (Design-Token) */}
+                    <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
   {/* ———————— 13 EXPERTS SECTION ———————— */}
           <section
@@ -204,8 +205,9 @@ export default function SubscriptionPage() {
                           </section>
                           */}
 
-        
-                {/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
+      
+      
+{/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
          <section
           className="pt-[var(--h-space-a2-section)] pb-[var(--h-space-a2-section)]"
           aria-label="PowerPrompts section"
@@ -238,10 +240,11 @@ export default function SubscriptionPage() {
             />
           </div>
         </section>
+        
                   {/* Buffer #3 – unter Testimonial (Design-Token) */}
                   <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
-          {/* ─────────────── KPI BOARD ─────────────── */}
+{/* ─────────────── KPI BOARD ─────────────── */}
                   <section className="pt-[clamp(70px,12vw,130px)]">
                     <div
                       className="page-center kpi-scope"
