@@ -194,15 +194,22 @@ export default function SecuritySection() {
                 </p>
 
                 <button
-                  type="button"
-                  className="m-button-secondary inline-flex items-center justify-center"
-                  style={{
-                    padding: "7px 13px", // 7px oben/unten, 13px links/rechts – wie besprochen
-                  }}
-                  onClick={() => handleAsk(card.prefill)}
+                type="button"
+                className="m-button-secondary inline-flex items-center justify-center gap-2 cursor-pointer group"
+                style={{
+                    padding: "7px 13px",
+                }}
+                onClick={() => handleAsk(card.prefill)}
                 >
-                  {texts.ctaLabel}
+                {texts.ctaLabel}
+                <span
+                    className="text-cyan-300 text-base transition-transform duration-[180ms] ease-out group-hover:translate-x-[3px]"
+                >
+                    →
+                </span>
                 </button>
+
+
               </article>
             );
           })}
