@@ -154,76 +154,9 @@ export default function SubscriptionPage() {
     />
   </div>
 </section>
-{/* Buffer #3 – unter Testimonial (Design-Token) */}
+          {/* Buffer #3 – unter Testimonial (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-{/* Divider 2 – Double Hairline */}
-<section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
-  <div
-    className="page-center"
-    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-  >
-    <div className="mx-auto w-full max-w-full">
-      <div
-        style={{
-          height: "var(--sub-divider-2-height)",
-          backgroundColor: "var(--sub-divider-2-fill)",
-        }}
-      />
-      <div
-        style={{
-          height: "var(--sub-divider-2-gap)",
-        }}
-      />
-      <div
-        style={{
-          height: "var(--sub-divider-2-height)",
-          backgroundColor: "var(--sub-divider-2-fill)",
-        }}
-      />
-    </div>
-  </div>
-</section>
-{/* Buffer #3 – unter Testimonial (Design-Token) */}
-          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-{/* Divider 3 – Star Belt */}
-<section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
-  <div
-    className="page-center"
-    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-  >
-    <div
-      className="mx-auto rounded-full"
-      style={{
-        height: "var(--sub-divider-3-height)",
-        backgroundImage: "var(--sub-divider-3-fill)",
-        opacity: "var(--sub-divider-3-opacity)",
-      }}
-    />
-  </div>
-</section>
-{/* Buffer #3 – unter Testimonial (Design-Token) */}
-          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-{/* Divider 4 – Capsule Glow Bar */}
-<section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
-  <div
-    className="page-center flex justify-center"
-    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-  >
-    <div
-      className="rounded-full"
-      style={{
-        width: "100%",
-        height: "var(--sub-divider-4-height)",
-        maxWidth: "calc(var(--page-inner-max) * 1.0)",
-        background: "var(--sub-divider-4-bg)",
-        border: "var(--sub-divider-4-border)",
-        boxShadow: "var(--sub-divider-4-glow)",
-      }}
-    />
-  </div>
-</section>
-{/* Buffer #3 – unter Testimonial (Design-Token) */}
-          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+
   {/* ———————— 13 EXPERTS SECTION ———————— */}
           <section
             className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
@@ -237,9 +170,28 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-  {/* Buffer — unter 13 Experts */}
-            <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-            <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+  {/* Buffer #3 – unter Testimonial (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+ 
+ 
+{/* Divider 1 – Aurora Line */}
+<section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
+  <div
+    className="page-center"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+  >
+    <div
+      className="mx-auto rounded-full"
+      style={{
+        height: "var(--sub-divider-1-height)",
+        background: "var(--sub-divider-1-fill)",
+        boxShadow: "var(--sub-divider-1-glow)",
+      }}
+    />
+  </div>
+</section>
+          {/* Buffer #3 – unter Testimonial (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
           
          
          {/* ———————— 13 MODES SECTION ———————— */}
@@ -256,8 +208,27 @@ export default function SubscriptionPage() {
           </section>
 
 
-          {/* Buffer #5 – unter 13 Modes (Design-Token) */}
+          {/* Buffer #3 – unter Testimonial (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+ 
+ 
+{/* Divider 1 – Aurora Line */}
+<section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
+  <div
+    className="page-center"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+  >
+    <div
+      className="mx-auto rounded-full"
+      style={{
+        height: "var(--sub-divider-1-height)",
+        background: "var(--sub-divider-1-fill)",
+        boxShadow: "var(--sub-divider-1-glow)",
+      }}
+    />
+  </div>
+</section>
+          {/* Buffer #3 – unter Testimonial (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
 {/* ─────────────── COUNCIL ORBIT ─────────────── */}
@@ -283,7 +254,27 @@ export default function SubscriptionPage() {
   </div>
 </section>
 
-          {/* Buffer #4 – unter PowerPrompts (Design-Token) */}
+  {/* Buffer #3 – unter Testimonial (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+ 
+ 
+{/* Divider 1 – Aurora Line */}
+<section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
+  <div
+    className="page-center"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+  >
+    <div
+      className="mx-auto rounded-full"
+      style={{
+        height: "var(--sub-divider-1-height)",
+        background: "var(--sub-divider-1-fill)",
+        boxShadow: "var(--sub-divider-1-glow)",
+      }}
+    />
+  </div>
+</section>
+          {/* Buffer #3 – unter Testimonial (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
   {/* ─────────────── KPI BOARD ─────────────── */}
@@ -305,3 +296,25 @@ export default function SubscriptionPage() {
   );
 }
 
+{/* Buffer #3 – unter Testimonial (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+ 
+ 
+{/* Divider 1 – Aurora Line */}
+<section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
+  <div
+    className="page-center"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+  >
+    <div
+      className="mx-auto rounded-full"
+      style={{
+        height: "var(--sub-divider-1-height)",
+        background: "var(--sub-divider-1-fill)",
+        boxShadow: "var(--sub-divider-1-glow)",
+      }}
+    />
+  </div>
+</section>
+          {/* Buffer #3 – unter Testimonial (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
