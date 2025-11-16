@@ -154,7 +154,8 @@ export default function SubscriptionPage() {
     />
   </div>
 </section>
-
+{/* Buffer #3 – unter Testimonial (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 {/* Divider 2 – Double Hairline */}
 <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
   <div
@@ -182,7 +183,8 @@ export default function SubscriptionPage() {
     </div>
   </div>
 </section>
-
+{/* Buffer #3 – unter Testimonial (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 {/* Divider 3 – Star Belt */}
 <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
   <div
@@ -218,7 +220,8 @@ export default function SubscriptionPage() {
     />
   </div>
 </section>
-
+{/* Buffer #3 – unter Testimonial (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
   {/* ———————— 13 EXPERTS SECTION ———————— */}
           <section
             className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
