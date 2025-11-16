@@ -262,10 +262,7 @@ export default function PowerPrompts() {
 return (
   <section aria-label="Power Prompts" className="relative">
     {/* Headline + Subheadline – A2 Headingsystem */}
-    <div
-      className="mx-auto flex flex-col items-start text-left"
-      style={{ maxWidth: "var(--page-inner-max)" }}
-    >
+    <div className="mx-auto flex flex-col items-start text-left">
       <p
         className="text-white/80"
         style={{
