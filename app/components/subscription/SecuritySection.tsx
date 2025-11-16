@@ -2,9 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useLang } from "@/app/providers/LanguageProvider";
+import { dict as securityDict } from "@/lib/i18n.security";
 
 // Zielpfad wie bei PowerPrompts / Experts
 const PAGE2_PATH = process.env.NEXT_PUBLIC_PAGE2_PATH ?? "/page2";
+
 
 /** Karten-IDs – 4 Sicherheits-Ebenen */
 type CardId = "emotional" | "storage" | "deletion" | "triketon";
@@ -48,32 +50,40 @@ const BASE = {
   ctaLabel: "Ask Digital Security Expert",
 };
 
-/** Hilfsfunktion: i18n mit Fallback auf BASE */
+/** Hilfsfunktion: Security-i18n mit Fallback auf BASE */
 function useSecurityText() {
-  const { t } = useLang();
+  const { lang } = useLang();
 
-  const safe = (key: string, fallback: string): string => {
-    if (!t) return fallback;
-    const value = t(key);
-    if (!value || value === key) return fallback;
-    return value;
+  // Aktuelle Locale aus i18n.security.ts, Fallback auf Englisch
+  const locale = (securityDict as any)[lang] ?? securityDict.en;
+
+  // Mapping: interne CardId -> Key in i18n.security.ts
+  const cardKeyMap: Record<CardId, string> = {
+    emotional: "emotional",
+    storage: "local_only", // wichtig: storage ↔ local_only
+    deletion: "deletion",
+    triketon: "triketon",
   };
 
   return {
-    kicker: safe("security.kicker", BASE.kicker),
-    title: safe("security.title", BASE.title),
-    intro: safe("security.intro", BASE.intro),
-    ctaLabel: safe("security.cta.label", BASE.ctaLabel),
+    kicker: locale?.kicker || BASE.kicker,
+    title: locale?.title || BASE.title,
+    intro: locale?.intro || BASE.intro,
+    ctaLabel: locale?.cta_label || BASE.ctaLabel,
     card: (id: CardId) => {
+      const dictKey = cardKeyMap[id];
+      const dictCard = locale?.cards?.[dictKey] ?? {};
       const baseCard = BASE.cards[id];
+
       return {
-        title: safe(`security.${id}.title`, baseCard.title),
-        body: safe(`security.${id}.body`, baseCard.body),
-        prefill: safe(`security.${id}.prefill`, baseCard.prefill),
+        title: dictCard.title || baseCard.title,
+        body: dictCard.body || baseCard.body,
+        prefill: dictCard.prefill || baseCard.prefill,
       };
     },
   };
 }
+
 
 export default function SecuritySection() {
   const router = useRouter();
