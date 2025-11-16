@@ -1,140 +1,201 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useLang } from "@/app/providers/LanguageProvider";
 
-export default function SecuritySection() {
+// Zielpfad wie bei PowerPrompts / Experts
+const PAGE2_PATH = process.env.NEXT_PUBLIC_PAGE2_PATH ?? "/page2";
+
+/** Karten-IDs – 4 Sicherheits-Ebenen */
+type CardId = "emotional" | "storage" | "deletion" | "triketon";
+
+/** Englische Defaults (BASE) – werden genutzt, wenn kein i18n vorhanden ist */
+const BASE = {
+  kicker: "SECURITY BY DESIGN",
+  title: "Your safety, by design – emotional, private and auditable.",
+  intro:
+    "m-pathy.ai gives you four layers of security: emotional protection, local-only chats, full deletability and cryptographic sealing with Triketon.",
+  cards: {
+    emotional: {
+      title: "Emotional safety – FLOW & CALM",
+      body:
+        "FLOW protects you from overload, CALM slows everything down. No judgement, no provocation – only resonance and a safe dialogue.",
+      prefill:
+        "@Digital Security Expert: Tell me everything about emotional security on m-pathy.ai. Answer minimalistically.",
+    },
+    storage: {
+      title: "No server-side chat storage",
+      body:
+        "Chats are not stored on our servers. Conversations stay on your device – no cloud archive, no tracking, no shadow copies.",
+      prefill:
+        "@Digital Security Expert: Explain the 'no server-side storage of personal data and chats' principle on m-pathy.ai – minimalistic, please.",
+    },
+    deletion: {
+      title: "Full deletability – you stay in control",
+      body:
+        "You can delete threads at any time. When you delete, they are gone – there is no hidden backup on our side.",
+      prefill:
+        "@Digital Security Expert: How permanently can I delete my threads on m-pathy.ai? Answer minimalistically.",
+    },
+    triketon: {
+      title: "Triketon – 3×256-bit hashing",
+      body:
+        "Every secured action can be sealed with Triketon: a triple 256-bit hash with salt (time, page, context). Today in beta, later for content proof and origin certificates.",
+      prefill:
+        "@Digital Security Expert: Tell me how Triketon works on m-pathy.ai and how it protects my content. Answer minimalistically.",
+    },
+  },
+  ctaLabel: "Ask Digital Security Expert",
+};
+
+/** Hilfsfunktion: i18n mit Fallback auf BASE */
+function useSecurityText() {
   const { t } = useLang();
+
+  const safe = (key: string, fallback: string): string => {
+    if (!t) return fallback;
+    const value = t(key);
+    if (!value || value === key) return fallback;
+    return value;
+  };
+
+  return {
+    kicker: safe("security.kicker", BASE.kicker),
+    title: safe("security.title", BASE.title),
+    intro: safe("security.intro", BASE.intro),
+    ctaLabel: safe("security.cta.label", BASE.ctaLabel),
+    card: (id: CardId) => {
+      const baseCard = BASE.cards[id];
+      return {
+        title: safe(`security.${id}.title`, baseCard.title),
+        body: safe(`security.${id}.body`, baseCard.body),
+        prefill: safe(`security.${id}.prefill`, baseCard.prefill),
+      };
+    },
+  };
+}
+
+export default function SecuritySection() {
+  const router = useRouter();
+  const texts = useSecurityText();
+
+  const cards: { id: CardId }[] = [
+    { id: "emotional" },
+    { id: "storage" },
+    { id: "deletion" },
+    { id: "triketon" },
+  ];
+
+  const handleAsk = (prefill: string) => {
+    const url = `${PAGE2_PATH}?prefill=${encodeURIComponent(prefill)}`;
+    router.push(url);
+  };
 
   return (
     <section
-      aria-label="security"
+      aria-label="Security section"
       className="pt-[var(--h-space-a2-section)] pb-[var(--h-space-a2-section)]"
     >
       <div
-        className="page-center"
+        className="page-center security-scope"
         style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
       >
-        {/* KICKER */}
-        <p className="text-white/40 tracking-widest text-xs mb-[var(--sec-gap-kicker-title)] font-medium">
-          SECURITY BY DESIGN
-        </p>
-
-        {/* TITLE */}
-        <h2 className="text-[clamp(32px,5vw,52px)] leading-[1.1] font-semibold tracking-tight text-white mb-[var(--sec-gap-title-intro)]">
-          {t("security.title")}
-        </h2>
-
-        {/* INTRO */}
-        <p className="text-white/70 text-[clamp(15px,2vw,18px)] leading-relaxed max-w-[700px] mb-[var(--sec-gap-intro-cards)]">
-          {t("security.intro")}
-        </p>
-
-        {/* GRID */}
+        {/* HEADER – selbe DNA wie PowerPrompts / Aktionsbefehle */}
         <div
-          className="grid"
+          className="max-w-[var(--h-a2-max-width)]"
+          style={{ marginBottom: "var(--h-gap-sub-content)" }}
+        >
+          <p
+            className="text-white/80"
+            style={{
+              fontSize: "var(--h-kicker-size)",
+              fontWeight: "var(--h-kicker-weight)",
+              letterSpacing: "var(--h-kicker-letter)",
+              textTransform: "var(--h-kicker-transform)" as any,
+              opacity: "var(--h-kicker-opacity)",
+              marginBottom: "var(--h-gap-kicker-title)",
+            }}
+          >
+            {texts.kicker}
+          </p>
+
+          <h2
+            className="font-semibold tracking-tight text-white"
+            style={{
+              fontSize: "var(--h-a2-size)",
+              lineHeight: "var(--h-a2-line)",
+              letterSpacing: "var(--h-a2-letter)",
+            }}
+          >
+            {texts.title}
+          </h2>
+
+          <p
+            className="text-white"
+            style={{
+              marginTop: "var(--h-a2-gap-title-sub)",
+              fontSize: "var(--h-a2-sub-size)",
+              lineHeight: "var(--h-a2-sub-line)",
+              opacity: "var(--h-a2-sub-opacity)",
+            }}
+          >
+            {texts.intro}
+          </p>
+        </div>
+
+        {/* GRID – 4 KARTEN, zwei Reihen, zwei Spalten – auto-fit, max 900px */}
+        <div
+          className="grid gap-[var(--h-gap-sub-content)]"
           style={{
-            gap: "var(--sec-card-grid-gap)",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
           }}
         >
-          {/* CARD 1 */}
-          <div
-            className="rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur-sm"
-            style={{
-              padding: "var(--sec-card-pad-y) var(--sec-card-pad-x)",
-            }}
-          >
-            <div className="mb-[var(--sec-card-gap-title-body)]">
-              {/* ICON 1 */}
-              <div className="opacity-[var(--sec-icon-opacity)]">
-                {/* hier später SVG */}
-              </div>
-            </div>
+          {cards.map(({ id }) => {
+            const card = texts.card(id);
 
-            <h3 className="text-white font-semibold text-lg mb-[var(--sec-card-gap-title-body)]">
-              {t("security.card1.title")}
-            </h3>
+            return (
+              <article
+                key={id}
+                className="security-card rounded-3xl bg-white/5 ring-1 ring-white/10 backdrop-blur-md"
+                style={{
+                  padding: "var(--sec-card-pad-y) var(--sec-card-pad-x)",
+                }}
+              >
+                {/* Icon-Placeholder – hier später SVGs im Stil der Aktionsbefehle */}
+                <div className="mb-[var(--h-card-icon-space)]">
+                  {/* TODO: replace with real SVG icons */}
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/70 text-sm">
+                    {id === "emotional"
+                      ? "☺"
+                      : id === "storage"
+                      ? "💾"
+                      : id === "deletion"
+                      ? "⌫"
+                      : "🔐"}
+                  </span>
+                </div>
 
-            <p className="text-white/70 text-sm leading-relaxed mb-[var(--sec-card-gap-body-button)]">
-              {t("security.card1.body")}
-            </p>
+                <h3 className="text-white font-semibold text-lg mb-[var(--h-card-title-space)]">
+                  {card.title}
+                </h3>
 
-            <button className="m-button-secondary">
-              {t("security.card1.cta")}
-            </button>
-          </div>
+                <p className="text-white/75 text-sm leading-relaxed mb-[var(--h-card-body-space)]">
+                  {card.body}
+                </p>
 
-          {/* CARD 2 */}
-          <div
-            className="rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur-sm"
-            style={{
-              padding: "var(--sec-card-pad-y) var(--sec-card-pad-x)",
-            }}
-          >
-            <div className="mb-[var(--sec-card-gap-title-body)]">
-              <div className="opacity-[var(--sec-icon-opacity)]">{/* SVG */}</div>
-            </div>
-
-            <h3 className="text-white font-semibold text-lg mb-[var(--sec-card-gap-title-body)]">
-              {t("security.card2.title")}
-            </h3>
-
-            <p className="text-white/70 text-sm leading-relaxed mb-[var(--sec-card-gap-body-button)]">
-              {t("security.card2.body")}
-            </p>
-
-            <button className="m-button-secondary">
-              {t("security.card2.cta")}
-            </button>
-          </div>
-
-          {/* CARD 3 */}
-          <div
-            className="rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur-sm"
-            style={{
-              padding: "var(--sec-card-pad-y) var(--sec-card-pad-x)",
-            }}
-          >
-            <div className="mb-[var(--sec-card-gap-title-body)]">
-              <div className="opacity-[var(--sec-icon-opacity)]">{/* SVG */}</div>
-            </div>
-
-            <h3 className="text-white font-semibold text-lg mb-[var(--sec-card-gap-title-body)]">
-              {t("security.card3.title")}
-            </h3>
-
-            <p className="text-white/70 text-sm leading-relaxed mb-[var(--sec-card-gap-body-button)]">
-              {t("security.card3.body")}
-            </p>
-
-            <button className="m-button-secondary">
-              {t("security.card3.cta")}
-            </button>
-          </div>
-
-          {/* CARD 4 */}
-          <div
-            className="rounded-2xl bg-white/5 ring-1 ring-white/10 backdrop-blur-sm"
-            style={{
-              padding: "var(--sec-card-pad-y) var(--sec-card-pad-x)",
-            }}
-          >
-            <div className="mb-[var(--sec-card-gap-title-body)]">
-              <div className="opacity-[var(--sec-icon-opacity)]">{/* SVG */}</div>
-            </div>
-
-            <h3 className="text-white font-semibold text-lg mb-[var(--sec-card-gap-title-body)]">
-              {t("security.card4.title")}
-            </h3>
-
-            <p className="text-white/70 text-sm leading-relaxed mb-[var(--sec-card-gap-body-button)]">
-              {t("security.card4.body")}
-            </p>
-
-            <button className="m-button-secondary">
-              {t("security.card4.cta")}
-            </button>
-          </div>
+                <button
+                  type="button"
+                  className="m-button-secondary inline-flex items-center justify-center"
+                  style={{
+                    padding: "7px 13px", // 7px oben/unten, 13px links/rechts – wie besprochen
+                  }}
+                  onClick={() => handleAsk(card.prefill)}
+                >
+                  {texts.ctaLabel}
+                </button>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
