@@ -261,46 +261,44 @@ export default function PowerPrompts() {
 
   return (
     <section aria-label="Power Prompts" className="relative">
-      {/* Headline + Subheadline – A2 Headingsystem */}
-      <div className="mx-auto flex flex-col items-center text-center max-w-[var(--h-a2-max-width)]">
-        {/* Kicker – gleiche Tokens wie 13Modis */}
-        <p
-  className="text-white/80"
-  style={{
-    fontSize: "var(--h-kicker-size)",
-    fontWeight: "var(--h-kicker-weight)",
-    letterSpacing: "var(--h-kicker-letter)",
-    textTransform: "var(--h-kicker-transform)" as any,
-    opacity: "var(--h-kicker-opacity)",
-    marginBottom: "var(--h-gap-kicker-title)",
-  }}
->
-  {kicker}
-</p>
+  {/* Headline + Subheadline – A2 Headingsystem */}
+  <div className="mx-auto flex flex-col items-start text-left max-w-[var(--h-a2-max-width)]">
+    <p
+      className="text-white/80"
+      style={{
+        fontSize: "var(--h-kicker-size)",
+        fontWeight: "var(--h-kicker-weight)",
+        letterSpacing: "var(--h-kicker-letter)",
+        textTransform: "var(--h-kicker-transform)" as any,
+        opacity: "var(--h-kicker-opacity)",
+        marginBottom: "var(--h-gap-kicker-title)",
+      }}
+    >
+      {kicker}
+    </p>
+    <h2
+      className="font-semibold tracking-tight text-white"
+      style={{
+        fontSize: "var(--h-a2-size)",
+        lineHeight: "var(--h-a2-line)",
+        letterSpacing: "var(--h-a2-letter)",
+      }}
+    >
+      {title}
+    </h2>
+    <p
+      className="text-white"
+      style={{
+        marginTop: "var(--h-gap-title-sub)",
+        fontSize: "var(--h-sub-size)",
+        lineHeight: "var(--h-sub-line)",
+        letterSpacing: "var(--h-sub-letter)",
+      }}
+    >
+      {hint}
+    </p>
+  </div>
 
-        <h2
-          className="font-semibold tracking-tight text-white"
-          style={{
-            fontSize: "var(--h-a2-size)",
-            lineHeight: "var(--h-a2-line)",
-            letterSpacing: "var(--h-a2-letter)",
-          }}
-        >
-          {title}
-        </h2>
-        <p
-          className="text-white/80"
-
-          style={{
-            marginTop: "var(--h-a2-gap-title-sub)",
-            fontSize: "var(--h-a2-sub-size)",
-            lineHeight: "var(--h-a2-sub-line)",
-            opacity: "var(--h-a2-sub-opacity)",
-          }}
-        >
-          {hint}
-        </p>
-      </div>
 
       {/* Buffer: Subheadline → Tabs (Token-gesteuert) */}
       <div
