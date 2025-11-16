@@ -201,6 +201,8 @@ export default function SubscriptionPage() {
     />
   </div>
 </section>
+{/* Buffer #3 – unter Testimonial (Design-Token) */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 {/* Divider 4 – Capsule Glow Bar */}
 <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
   <div
