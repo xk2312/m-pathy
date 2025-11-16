@@ -377,88 +377,132 @@ function LayerRadar(
 // ───────────────────────────────────────────────────────────────────────────────
 export default function MPathyKpiBoard() {
   const [tab, setTab] = useState<TabKey>("Overview");
-  const { hc, setHc } = useHighContrast();
+  const { hc } = useHighContrast();
   const jsonPretty = useMemo(() => JSON.stringify(CRITERIA, null, 2), []);
 
   // i18n + NumberFormat
-    const { t, locale } = useI18nLocal();
+  const { t, locale } = useI18nLocal();
   const nf1 = useMemo(() => makeNF1(locale), [locale]);
 
-
   return (
-  <div
-    className={hc ? "hc" : ""}
-    style={{ color: PALETTE.text, background: "transparent" }}
-  >
-
+    <div
+      className={hc ? "hc" : ""}
+      style={{ color: PALETTE.text, background: "transparent" }}
+    >
       <div className="mx-auto max-w-7xl p-4 sm:p-8">
         <div className="mb-6 flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold tracking-tight">{t("kpi.title")}</h1>
-<p className="text-sm">{t("kpi.subtitle")}</p>
-</div>
+          <h1 className="text-3xl font-semibold tracking-tight">
+            {t("kpi.title")}
+          </h1>
+          <p className="text-sm">{t("kpi.subtitle")}</p>
+        </div>
 
-        <div className="mb-4 flex flex-wrap items-center gap-2">
-          <Button variant="secondary" onClick={() => download(t("export.filename_csv"), toCsv())} title={t("export.download_csv")}>
-  <Download className="h-4 w-4 mr-2" /> {t("export.csv")}
-</Button>
-<Button
-  variant="secondary"
-  onClick={() => download(t("export.filename_json"), jsonPretty, "application/json;charset=utf-8")}
-  title={t("export.download_json")}
->
-  <Copy className="h-4 w-4 mr-2" /> {t("export.json")}
-</Button>
+        {/* Buffer zwischen Subtitle und Tabs (statt der 4 Buttons) */}
+        <div aria-hidden className="w-full" style={{ height: "80px" }} />
 
-<Button variant="secondary" onClick={() => window.print()} title={t("export.print_pdf")}>
-  <Printer className="h-4 w-4 mr-2" /> {t("export.print")}
-</Button>
-<Button variant="secondary" onClick={() => setHc(v => !v)} title={t("export.hc_title")}>
-  <Highlighter className="h-4 w-4 mr-2" /> {t("export.hc")}
-</Button>
- </div>
-
-        <Tabs value={tab} onValueChange={(v: TabKey) => setTab(v)} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 rounded-2xl p-1" >
-            {(["Overview","Core","Empathy","Trust","Clarity"] as const).map((k) => (
-  <TabsTrigger key={k} value={k} className="rounded-xl px-3 py-2">
-    {t(`tabs.${k.toLowerCase()}`)}
-  </TabsTrigger>
-))}
-
+        <Tabs
+          value={tab}
+          onValueChange={(v: TabKey) => setTab(v)}
+          className="w-full"
+        >
+          <TabsList className="grid w-full grid-cols-5 rounded-2xl p-1">
+            {(["Overview", "Core", "Empathy", "Trust", "Clarity"] as const).map(
+              (k) => (
+                <TabsTrigger
+                  key={k}
+                  value={k}
+                  className="rounded-xl px-3 py-2"
+                >
+                  {t(`tabs.${k.toLowerCase()}`)}
+                </TabsTrigger>
+              )
+            )}
           </TabsList>
 
           {/* Overview */}
           <TabsContent value="Overview" className="mt-6 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-<Card
-  style={{
-    background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
-    borderColor: PALETTE.border,
-  }}
->
-<CardHeader><CardTitle>{t("overview.title")}</CardTitle></CardHeader>
+              <Card
+                style={{
+                  background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+                  borderColor: PALETTE.border,
+                }}
+              >
+                <CardHeader>
+                  <CardTitle>{t("overview.title")}</CardTitle>
+                </CardHeader>
                 <CardContent>
-                  <div className="overflow-x-auto rounded-2xl border" style={{ borderColor: PALETTE.border }}>
-                    <table className="w-full text-sm" style={{ color: PALETTE.text }}>
+                  <div
+                    className="overflow-x-auto rounded-2xl border"
+                    style={{ borderColor: PALETTE.border }}
+                  >
+                    <table
+                      className="w-full text-sm"
+                      style={{ color: PALETTE.text }}
+                    >
                       <thead style={{ background: PALETTE.header }}>
                         <tr>
-<th className="px-4 py-3 text-left">{t("table.kpi")}</th>
-                          {SYSTEMS.map((s) => (<th key={s} className="px-4 py-3 text-right">{s}</th>))}
+                          <th className="px-4 py-3 text-left">
+                            {t("table.kpi")}
+                          </th>
+                          {SYSTEMS.map((s) => (
+                            <th
+                              key={s}
+                              className="px-4 py-3 text-right"
+                            >
+                              {s}
+                            </th>
+                          ))}
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="border-t" style={{ borderColor: PALETTE.border }}>
-<td className="px-4 py-3">{t("table.total")}</td>
-                          {SYSTEMS.map((s) => (<td key={s} className="px-4 py-3 text-right font-semibold">{OVERALL.total[s as SystemKey]}</td>))}
+                        <tr
+                          className="border-t"
+                          style={{ borderColor: PALETTE.border }}
+                        >
+                          <td className="px-4 py-3">
+                            {t("table.total")}
+                          </td>
+                          {SYSTEMS.map((s) => (
+                            <td
+                              key={s}
+                              className="px-4 py-3 text-right font-semibold"
+                            >
+                              {OVERALL.total[s as SystemKey]}
+                            </td>
+                          ))}
                         </tr>
-                        <tr className="border-t" style={{ borderColor: PALETTE.border }}>
-<td className="px-4 py-3">{t("table.avg")}</td>
-{SYSTEMS.map((s) => (<td key={s} className="px-4 py-3 text-right font-semibold">{nf1.format(OVERALL.avg[s as SystemKey])}</td>))}
+                        <tr
+                          className="border-t"
+                          style={{ borderColor: PALETTE.border }}
+                        >
+                          <td className="px-4 py-3">
+                            {t("table.avg")}
+                          </td>
+                          {SYSTEMS.map((s) => (
+                            <td
+                              key={s}
+                              className="px-4 py-3 text-right font-semibold"
+                            >
+                              {nf1.format(OVERALL.avg[s as SystemKey])}
+                            </td>
+                          ))}
                         </tr>
-                        <tr className="border-t" style={{ borderColor: PALETTE.border }}>
-<td className="px-4 py-3">{t("table.causa")}</td>
-                          {SYSTEMS.map((s) => (<td key={s} className="px-4 py-3 text-right font-semibold">{OVERALL.causa[s as SystemKey]}</td>))}
+                        <tr
+                          className="border-t"
+                          style={{ borderColor: PALETTE.border }}
+                        >
+                          <td className="px-4 py-3">
+                            {t("table.causa")}
+                          </td>
+                          {SYSTEMS.map((s) => (
+                            <td
+                              key={s}
+                              className="px-4 py-3 text-right font-semibold"
+                            >
+                              {OVERALL.causa[s as SystemKey]}
+                            </td>
+                          ))}
                         </tr>
                       </tbody>
                     </table>
@@ -466,16 +510,25 @@ export default function MPathyKpiBoard() {
                 </CardContent>
               </Card>
 
-<Card
-  style={{
-    background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
-    borderColor: PALETTE.border,
-  }}
->
-<CardHeader><CardTitle>{t("overview.radar_card_title")}</CardTitle></CardHeader>
+              <Card
+                style={{
+                  background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+                  borderColor: PALETTE.border,
+                }}
+              >
+                <CardHeader>
+                  <CardTitle>
+                    {t("overview.radar_card_title")}
+                  </CardTitle>
+                </CardHeader>
                 <CardContent>
-                  <div className="rounded-2xl border p-2" style={{ borderColor: PALETTE.border }}>
-<div className="text-sm">{t("overview.radar_hint")}</div>
+                  <div
+                    className="rounded-2xl border p-2"
+                    style={{ borderColor: PALETTE.border }}
+                  >
+                    <div className="text-sm">
+                      {t("overview.radar_hint")}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -483,42 +536,68 @@ export default function MPathyKpiBoard() {
           </TabsContent>
 
           {/* Layer Tabs */}
-          {(["Core", "Empathy", "Trust", "Clarity"] as const).map((layer) => (
-            <TabsContent key={layer} value={layer} className="mt-6 space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-<Card
-  style={{
-    background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
-    borderColor: PALETTE.border,
-  }}
->
-                  <CardHeader>
-                    <CardTitle>
-                      <span className="mr-2 inline-block h-2 w-2 rounded-full" style={{ background: PALETTE.layers[layer] }} />
-                      {layer} · Tabelle (alle KPIs)
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <LayerTable layer={layer} nf1={nf1} t={t} />
-                  </CardContent>
-                </Card>
+          {(["Core", "Empathy", "Trust", "Clarity"] as const).map(
+            (layer) => (
+              <TabsContent
+                key={layer}
+                value={layer}
+                className="mt-6 space-y-6"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card
+                    style={{
+                      background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+                      borderColor: PALETTE.border,
+                    }}
+                  >
+                    <CardHeader>
+                      <CardTitle>
+                        <span
+                          className="mr-2 inline-block h-2 w-2 rounded-full"
+                          style={{
+                            background: PALETTE.layers[layer],
+                          }}
+                        />
+                        {layer} · Tabelle (alle KPIs)
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <LayerTable layer={layer} nf1={nf1} t={t} />
+                    </CardContent>
+                  </Card>
 
-<Card
-  style={{
-    background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
-    borderColor: PALETTE.border,
-  }}
->
-                  <CardHeader><CardTitle>{layer} · Radar</CardTitle></CardHeader>
-                  <CardContent><LayerRadar layer={layer} t={t} /></CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-          ))}
+                  <Card
+                    style={{
+                      background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+                      borderColor: PALETTE.border,
+                    }}
+                  >
+                    <CardHeader>
+                      <CardTitle>{layer} · Radar</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <LayerRadar layer={layer} t={t} />
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+            )
+          )}
         </Tabs>
 
-        <div className="mt-8 text-xs" style={{ opacity: 0.95 }}>
-          <span style={{ color: PALETTE.accent, fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas" }}>Sealed · Triketon‑2048</span>
+        <div
+          className="mt-8 text-xs"
+          style={{ opacity: 0.95 }}
+        >
+          <span
+            style={{
+              color: PALETTE.accent,
+              fontFamily:
+                "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas",
+            }}
+          >
+            Sealed · Triketon-2048
+          </span>
           <span className="mx-2"> · CausaTest 100%</span>
         </div>
       </div>
