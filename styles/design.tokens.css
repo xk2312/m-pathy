@@ -443,48 +443,45 @@
   --h-mobile-space-scale-a4: 0.95;
 }
 /* ─────────────────────────────────────────────
-   Subscription · Interstitial Sections
-   (Divider, Label-Pills, Quote-Band, Micro-Stats)
+   Subscription · Interstitial Dividers (no text)
    ───────────────────────────────────────────── */
 
 :root {
-  /* Vertikale Abstände für Zwischen-Elemente */
-  --sub-inter-gap-y: clamp(48px, 9vw, 96px);
+  /* Gemeinsamer vertikaler Abstand */
+  --sub-divider-gap-y: clamp(40px, 8vw, 80px);
 
-  /* Linie / Divider */
-  --sub-inter-line-max: calc(var(--page-inner-max) * 1.31);
-  --sub-inter-line-height: 1px;
-  --sub-inter-line-color: rgba(255, 255, 255, 0.08);
-  --sub-inter-line-glow: 0 0 36px rgba(56, 189, 248, 0.32);
+  /* Divider 1 – Aurora Line */
+  --sub-divider-1-height: 1px;
+  --sub-divider-1-fill: linear-gradient(
+    90deg,
+    rgba(15, 23, 42, 0) 0%,
+    rgba(56, 189, 248, 0.65) 50%,
+    rgba(15, 23, 42, 0) 100%
+  );
+  --sub-divider-1-glow: 0 0 40px rgba(56, 189, 248, 0.48);
 
-  /* Label-Pills (Chips) */
-  --sub-inter-pill-size: 11px;
-  --sub-inter-pill-letter: 0.18em;
-  --sub-inter-pill-transform: uppercase;
-  --sub-inter-pill-pad-y: 0.35rem;
-  --sub-inter-pill-pad-x: 0.9rem;
-  --sub-inter-pill-radius: 999px;
-  --sub-inter-pill-bg: rgba(15, 23, 42, 0.9);
-  --sub-inter-pill-border: rgba(148, 163, 184, 0.55);
-  --sub-inter-pill-text: rgba(226, 232, 240, 0.86);
+  /* Divider 2 – Double Hairline */
+  --sub-divider-2-height: 1px;
+  --sub-divider-2-gap: 6px;
+  --sub-divider-2-fill: rgba(148, 163, 184, 0.40);
 
-  /* Quote-Band */
-  --sub-inter-quote-pad-y: 1.35rem;
-  --sub-inter-quote-pad-x: 1.8rem;
-  --sub-inter-quote-bg: radial-gradient(
-    circle at top,
-    rgba(56, 189, 248, 0.16),
+  /* Divider 3 – Star Belt (dotted) */
+  --sub-divider-3-height: 2px;
+  --sub-divider-3-fill: repeating-linear-gradient(
+    90deg,
+    rgba(148, 163, 184, 0.0) 0,
+    rgba(148, 163, 184, 0.55) 3px,
+    rgba(148, 163, 184, 0.0) 9px
+  );
+  --sub-divider-3-opacity: 0.6;
+
+  /* Divider 4 – Capsule Glow Bar */
+  --sub-divider-4-height: 32px;
+  --sub-divider-4-bg: radial-gradient(
+    circle at 50% 0%,
+    rgba(56, 189, 248, 0.35),
     rgba(15, 23, 42, 0.96)
   );
-  --sub-inter-quote-border: 1px solid rgba(148, 163, 184, 0.55);
-  --sub-inter-quote-glow: 0 18px 60px rgba(15, 23, 42, 0.9);
-  --sub-inter-quote-size: 0.95rem;
-  --sub-inter-quote-line: 1.6;
-  --sub-inter-quote-text: rgba(248, 250, 252, 0.98);
-
-  /* Micro-Stats / Info-Zeile */
-  --sub-inter-meta-size: 11px;
-  --sub-inter-meta-letter: 0.16em;
-  --sub-inter-meta-opacity: 0.78;
-  --sub-inter-meta-gap-x: 0.9rem;
+  --sub-divider-4-border: 1px solid rgba(148, 163, 184, 0.5);
+  --sub-divider-4-glow: 0 20px 60px rgba(0, 0, 0, 0.9);
 }
