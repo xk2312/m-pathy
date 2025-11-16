@@ -173,7 +173,6 @@ export default function SubscriptionPage() {
 
           {/* Buffer #3 – unter Testimonial (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
           
           {/* Divider 1 – Aurora Line */}
           <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
