@@ -136,9 +136,71 @@ export default function SubscriptionPage() {
 
           {/* Buffer #3 – unter Testimonial (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+ 
+ 
+{/* Divider 1 – Aurora Line */}
+<section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
+  <div
+    className="page-center"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+  >
+    <div
+      className="mx-auto rounded-full"
+      style={{
+        height: "var(--sub-divider-1-height)",
+        background: "var(--sub-divider-1-fill)",
+        boxShadow: "var(--sub-divider-1-glow)",
+      }}
+    />
+  </div>
+</section>
 
-{/* Interstitial #1 – Soft Line Divider */}
-<section aria-hidden className="pt-[var(--sub-inter-gap-y)] pb-[var(--sub-inter-gap-y)]">
+{/* Divider 2 – Double Hairline */}
+<section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
+  <div
+    className="page-center"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+  >
+    <div className="mx-auto w-full max-w-full">
+      <div
+        style={{
+          height: "var(--sub-divider-2-height)",
+          backgroundColor: "var(--sub-divider-2-fill)",
+        }}
+      />
+      <div
+        style={{
+          height: "var(--sub-divider-2-gap)",
+        }}
+      />
+      <div
+        style={{
+          height: "var(--sub-divider-2-height)",
+          backgroundColor: "var(--sub-divider-2-fill)",
+        }}
+      />
+    </div>
+  </div>
+</section>
+
+{/* Divider 3 – Star Belt */}
+<section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
+  <div
+    className="page-center"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+  >
+    <div
+      className="mx-auto rounded-full"
+      style={{
+        height: "var(--sub-divider-3-height)",
+        backgroundImage: "var(--sub-divider-3-fill)",
+        opacity: "var(--sub-divider-3-opacity)",
+      }}
+    />
+  </div>
+</section>
+{/* Divider 4 – Capsule Glow Bar */}
+<section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
   <div
     className="page-center flex justify-center"
     style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
@@ -147,17 +209,17 @@ export default function SubscriptionPage() {
       className="rounded-full"
       style={{
         width: "100%",
-        maxWidth: "var(--sub-inter-line-max)",
-        height: "var(--sub-inter-line-height)",
-        background: "var(--sub-inter-line-color)",
-        boxShadow: "var(--sub-inter-line-glow)",
+        height: "var(--sub-divider-4-height)",
+        maxWidth: "calc(var(--page-inner-max) * 1.0)",
+        background: "var(--sub-divider-4-bg)",
+        border: "var(--sub-divider-4-border)",
+        boxShadow: "var(--sub-divider-4-glow)",
       }}
     />
   </div>
 </section>
 
-
- {/* ———————— 13 EXPERTS SECTION ———————— */}
+  {/* ———————— 13 EXPERTS SECTION ———————— */}
           <section
             className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
             aria-label="Experts section"
@@ -170,36 +232,11 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-{/* Buffer — unter 13 Experts */}
-<div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-<div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+  {/* Buffer — unter 13 Experts */}
+            <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+            <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
           
-
-   {/* Interstitial #2 – Label-Pill für nächste Sektion */}
-<section aria-hidden className="pt-[var(--sub-inter-gap-y)] pb-[var(--sub-inter-gap-y)]">
-  <div
-    className="page-center flex justify-start"
-    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-  >
-    <span
-      className="inline-flex items-center border"
-      style={{
-        padding: "var(--sub-inter-pill-pad-y) var(--sub-inter-pill-pad-x)",
-        borderRadius: "var(--sub-inter-pill-radius)",
-        borderColor: "var(--sub-inter-pill-border)",
-        background: "var(--sub-inter-pill-bg)",
-        fontSize: "var(--sub-inter-pill-size)",
-        letterSpacing: "var(--sub-inter-pill-letter)",
-        textTransform: "var(--sub-inter-pill-transform)" as any,
-        color: "var(--sub-inter-pill-text)",
-      }}
-    >
-      Nächste Station · 13 Expert:innen
-    </span>
-  </div>
-</section>
-
-
+         
          {/* ———————— 13 MODES SECTION ———————— */}
           <section
             className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
@@ -227,89 +264,22 @@ export default function SubscriptionPage() {
 </section>
 */}
 
-{/* Interstitial #3 – Quote-Band */}
-<section className="pt-[var(--sub-inter-gap-y)] pb-[var(--sub-inter-gap-y)]">
-  <div
-    className="page-center"
-    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-  >
-    <div
-      className="rounded-[24px]"
-      style={{
-        padding: "var(--sub-inter-quote-pad-y) var(--sub-inter-quote-pad-x)",
-        background: "var(--sub-inter-quote-bg)",
-        border: "var(--sub-inter-quote-border)",
-        boxShadow: "var(--sub-inter-quote-glow)",
-      }}
-    >
-      <p
-        className="text-center"
-        style={{
-          fontSize: "var(--sub-inter-quote-size)",
-          lineHeight: "var(--sub-inter-quote-line)",
-          color: "var(--sub-inter-quote-text)",
-        }}
-      >
-        „Jede Eingabe ist ein Startsignal – die Richtung bestimmst du.“
-      </p>
-    </div>
-  </div>
-</section>
-
+        
                 {/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
          <section
   className="pt-[var(--h-space-a2-section)] pb-[var(--h-space-a2-section)]"
   aria-label="PowerPrompts section"
 >
   <div
-    className="page-center pp-scope"
+    className="page-center"
     style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
   >
     <PowerPrompts />
   </div>
 </section>
 
-
           {/* Buffer #4 – unter PowerPrompts (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-  
-  {/* Interstitial #4 – Micro-Stats Strip */}
-<section aria-hidden className="pt-[var(--sub-inter-gap-y)] pb-[var(--sub-inter-gap-y)]">
-  <div
-    className="page-center flex flex-wrap items-center"
-    style={{
-      maxWidth: "calc(var(--page-inner-max) * 1.31)",
-      columnGap: "var(--sub-inter-meta-gap-x)",
-      rowGap: "0.5rem",
-    }}
-  >
-    {[
-      "Sealed · Triketon-2048",
-      "CausaTest 100 %",
-      "Council13 · Audit abgeschlossen",
-    ].map((label) => (
-      <span
-        key={label}
-        className="inline-flex items-center border"
-        style={{
-          padding: "var(--sub-inter-pill-pad-y) var(--sub-inter-pill-pad-x)",
-          borderRadius: "var(--sub-inter-pill-radius)",
-          borderColor: "var(--sub-inter-pill-border)",
-          background: "var(--sub-inter-pill-bg)",
-          fontSize: "var(--sub-inter-meta-size)",
-          letterSpacing: "var(--sub-inter-meta-letter)",
-          textTransform: "var(--sub-inter-pill-transform)" as any,
-          color: "var(--sub-inter-pill-text)",
-          opacity: "var(--sub-inter-meta-opacity)",
-        }}
-      >
-        {label}
-      </span>
-    ))}
-  </div>
-</section>
-
 
   {/* ─────────────── KPI BOARD ─────────────── */}
           <section className="pt-[clamp(70px,12vw,130px)]">
