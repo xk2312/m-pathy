@@ -2729,8 +2729,10 @@ export const i18n: Record<string, CouncilLocale> = {
 
 Object.assign(dict.en ?? {}, {
   pp: {
-    title: "The Source Command",
-    hint: "Type what you seek — and become what you write.",
+    kicker: "Action Prompts",
+title: "Intention in Motion",
+hint: "Say what you want — and let form follow intention.",
+
     groups: {
       parents: "Parents",
       students: "Students",
@@ -2759,8 +2761,10 @@ Object.assign(dict.en ?? {}, {
 
 Object.assign(dict.de ?? {}, {
   pp: {
-    title: "Der Quell-Befehl",
-    hint: "Tippe, was du suchst — und werde, was du schreibst.",
+    kicker: "Aktionsbefehle",
+title: "Intention in Bewegung",
+hint: "Sag, was du willst — und lass die Form deiner Absicht folgen.",
+
     groups: {
       parents: "Eltern",
       students: "Schüler:innen",
@@ -2789,8 +2793,10 @@ Object.assign(dict.de ?? {}, {
 
 Object.assign(dict.fr ?? {}, {
   pp: {
-    title: "La Commande Source",
-    hint: "Tape ce que tu cherches — et deviens ce que tu écris.",
+    kicker: "Commandes d’action",
+title: "Intention en mouvement",
+hint: "Dis ce que tu veux — et laisse la forme suivre ton intention.",
+
     groups: {
       parents: "Parents",
       students: "Étudiants",
@@ -2819,8 +2825,11 @@ Object.assign(dict.fr ?? {}, {
 
 Object.assign(dict.es ?? {}, {
   pp: {
-    title: "El Comando Fuente",
-    hint: "Escribe lo que buscas — y conviértete en lo que escribes.",
+   kicker: "Comandos de acción",
+title: "Intención en movimiento",
+hint: "Di lo que quieres — y deja que la forma siga tu intención.",
+
+
     groups: {
       parents: "Padres",
       students: "Estudiantes",
@@ -2849,8 +2858,10 @@ Object.assign(dict.es ?? {}, {
 
 Object.assign(dict.it ?? {}, {
   pp: {
-    title: "Il Comando Sorgente",
-    hint: "Scrivi ciò che cerchi — e diventa ciò che scrivi.",
+   kicker: "Comandi d’azione",
+title: "Intenzione in movimento",
+hint: "Dì ciò che vuoi — e lascia che la forma segua l’intenzione.",
+
     groups: {
       parents: "Genitori",
       students: "Studenti",
@@ -2879,8 +2890,10 @@ Object.assign(dict.it ?? {}, {
 
 Object.assign(dict.pt ?? {}, {
   pp: {
-    title: "O Comando Fonte",
-    hint: "Digite o que procura — e torne-se o que escreve.",
+kicker: "Comandos de ação",
+title: "Intenção em movimento",
+hint: "Diga o que você quer — e deixe a forma seguir a intenção.",
+
     groups: {
       parents: "Pais",
       students: "Estudantes",
@@ -2909,8 +2922,10 @@ Object.assign(dict.pt ?? {}, {
 
 Object.assign(dict.nl ?? {}, {
   pp: {
-    title: "Het Bron-Commando",
-    hint: "Typ wat je zoekt — en word wat je schrijft.",
+    kicker: "Actie-opdrachten",
+title: "Intentie in beweging",
+hint: "Zeg wat je wilt — en laat de vorm jouw intentie volgen.",
+
     groups: {
       parents: "Ouders",
       students: "Studenten",
@@ -2939,8 +2954,10 @@ Object.assign(dict.nl ?? {}, {
 
 Object.assign(dict.ru ?? {}, {
   pp: {
-    title: "Команда Истока",
-    hint: "Напиши то, что ищешь — и стань тем, что пишешь.",
+    kicker: "Команды действия",
+title: "Интенция в движении",
+hint: "Скажи, чего ты хочешь — и пусть форма следует намерению.",
+
     groups: {
       parents: "Родители",
       students: "Студенты",
@@ -2969,8 +2986,10 @@ Object.assign(dict.ru ?? {}, {
 
 Object.assign(dict.zh ?? {}, {
   pp: {
-    title: "源指令",
-    hint: "写下你所寻求的——并成为你所书写的。",
+    kicker: "行动指令",
+title: "意图在流动",
+hint: "说出你的需要——让形式随意图而生。",
+
     groups: {
       parents: "父母",
       students: "学生",
@@ -2999,8 +3018,10 @@ Object.assign(dict.zh ?? {}, {
 
 Object.assign(dict.ja ?? {}, {
   pp: {
-    title: "ソースコマンド",
-    hint: "求めるものを打ち込み、書くものに自らがなる。",
+   kicker: "アクションコマンド",
+title: "動き出す意図",
+hint: "望むことを伝えてください —— その意図に形が続きます。",
+
     groups: {
       parents: "保護者",
       students: "学生",
@@ -3029,8 +3050,10 @@ Object.assign(dict.ja ?? {}, {
 
 Object.assign(dict.ko ?? {}, {
   pp: {
-    title: "소스 명령",
-    hint: "찾는 것을 적으세요 — 그리고 당신이 쓰는 것이 되세요.",
+    kicker: "액션 프롬프트",
+title: "움직이는 의도",
+hint: "원하는 것을 말하세요 — 그리고 형태는 그 의도를 따라옵니다.",
+
     groups: {
       parents: "부모",
       students: "학생",
@@ -3059,8 +3082,10 @@ Object.assign(dict.ko ?? {}, {
 
 Object.assign(dict.ar ?? {}, {
   pp: {
-    title: "أمر المصدر",
-    hint: "اكتب ما تبحث عنه — واصبح ما تكتبه.",
+  kicker: "أوامر الحركة",
+title: "النية في حركة",
+hint: "قل ما تريد — ودع الشكل يتبع نيتك.",
+
     groups: {
       parents: "الآباء",
       students: "الطلاب",
@@ -3089,8 +3114,10 @@ Object.assign(dict.ar ?? {}, {
 
 Object.assign(dict.hi ?? {}, {
   pp: {
-    title: "स्रोत कमांड",
-    hint: "जो तुम खोजते हो उसे लिखो — और जो लिखते हो वही बनो।",
+    kicker: "एक्शन प्रॉम्प्ट्स",
+title: "गतिमान इरादा",
+hint: "जो तुम चाहते हो, उसे कहो — और रूप तुम्हारी इच्छा का अनुसरण करेगा।",
+
     groups: {
       parents: "माता-पिता",
       students: "विद्यार्थी",

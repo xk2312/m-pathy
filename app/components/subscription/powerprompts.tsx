@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { motion } from "framer-motion";
 
+
 /** Zielpfad für Page 2 (per ENV überschreibbar) */
 const PAGE2_PATH = process.env.NEXT_PUBLIC_PAGE2_PATH ?? "/page2";
 
@@ -82,11 +83,13 @@ const ICONS: Record<CatId, JSX.Element> = {
 
 /** Englische Baselines (Fallbacks, falls i18n-Keys fehlen) */
 const BASE = {
-  title: "Power Prompts",
-  hint: "Pick a category and start with a magical question.",
+  kicker: "Action Prompts",
+  title: "Intention in Motion",
+  hint: "Say what you want — and let form follow intention.",
   groups: {
     parents: "Parents",
     students: "Students",
+
     couples: "Couples",
     doctors: "Doctors",
     marketing: "Marketing",
@@ -117,6 +120,11 @@ export default function PowerPrompts() {
     return v && v !== key ? v : (BASE as any)[key.split(".").slice(-1)[0]] ?? key;
   };
 
+  const kicker = (() => {
+    const v = t("pp.kicker");
+    return v === "pp.kicker" ? BASE.kicker : v;
+  })();
+
   const title = (() => {
     const v = t("pp.title");
     return v === "pp.title" ? BASE.title : v;
@@ -128,6 +136,7 @@ export default function PowerPrompts() {
   })();
 
   const CATS = useMemo(
+
     () =>
       ([
         {
@@ -249,10 +258,26 @@ export default function PowerPrompts() {
     );
   };
 
+
   return (
     <section aria-label="Power Prompts" className="relative">
       {/* Headline + Subheadline – A2 Headingsystem */}
       <div className="mx-auto flex flex-col items-center text-center max-w-[var(--h-a2-max-width)]">
+        {/* Kicker – gleiche Tokens wie 13Modis */}
+        <p
+  className="text-white/80"
+  style={{
+    fontSize: "var(--h-kicker-size)",
+    fontWeight: "var(--h-kicker-weight)",
+    letterSpacing: "var(--h-kicker-letter)",
+    textTransform: "var(--h-kicker-transform)" as any,
+    opacity: "var(--h-kicker-opacity)",
+    marginBottom: "var(--h-gap-kicker-title)",
+  }}
+>
+  {kicker}
+</p>
+
         <h2
           className="font-semibold tracking-tight text-white"
           style={{
@@ -265,6 +290,7 @@ export default function PowerPrompts() {
         </h2>
         <p
           className="text-white/80"
+
           style={{
             marginTop: "var(--h-a2-gap-title-sub)",
             fontSize: "var(--h-a2-sub-size)",
