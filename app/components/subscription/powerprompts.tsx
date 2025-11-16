@@ -286,17 +286,18 @@ export default function PowerPrompts() {
     >
       {title}
     </h2>
-    <p
+        <p
       className="text-white"
       style={{
-        marginTop: "var(--h-gap-title-sub)",
-        fontSize: "var(--h-sub-size)",
-        lineHeight: "var(--h-sub-line)",
-        letterSpacing: "var(--h-sub-letter)",
+        marginTop: "var(--h-a2-gap-title-sub)",
+        fontSize: "var(--h-a2-sub-size)",
+        lineHeight: "var(--h-a2-sub-line)",
+        opacity: "var(--h-a2-sub-opacity)",
       }}
     >
       {hint}
     </p>
+
   </div>
 
 
