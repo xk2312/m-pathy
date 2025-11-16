@@ -259,48 +259,52 @@ export default function PowerPrompts() {
   };
 
 
-    return (
-    <section aria-label="Power Prompts" className="relative">
-      {/* Headline + Subheadline – A2 Headingsystem */}
-      <div className="mx-auto flex flex-col items-start text-left max-w-[var(--h-a2-max-width)]">
-        <p
-          className="text-white/80"
-          style={{
-            margin: 0,
-            fontSize: "var(--h-kicker-size)",
-            fontWeight: "var(--h-kicker-weight)",
-            letterSpacing: "var(--h-kicker-letter)",
-            textTransform: "var(--h-kicker-transform)" as any,
-            opacity: "var(--h-kicker-opacity)",
-            marginBottom: "var(--h-gap-kicker-title)",
-          }}
-        >
-          {kicker}
-        </p>
-        <h2
-          className="font-semibold tracking-tight text-white"
-          style={{
-            margin: 0,
-            fontSize: "var(--h-a2-size)",
-            lineHeight: "var(--h-a2-line)",
-            letterSpacing: "var(--h-a2-letter)",
-          }}
-        >
-          {title}
-        </h2>
-        <p
-          className="text-white"
-          style={{
-            margin: 0,
-            marginTop: "var(--h-a2-gap-title-sub)",
-            fontSize: "var(--h-a2-sub-size)",
-            lineHeight: "var(--h-a2-sub-line)",
-            opacity: "var(--h-a2-sub-opacity)",
-          }}
-        >
-          {hint}
-        </p>
-      </div>
+return (
+  <section aria-label="Power Prompts" className="relative">
+    {/* Headline + Subheadline – A2 Headingsystem */}
+    <div
+      className="mx-auto flex flex-col items-start text-left"
+      style={{ maxWidth: "var(--page-inner-max)" }}
+    >
+      <p
+        className="text-white/80"
+        style={{
+          margin: 0,
+          fontSize: "var(--h-kicker-size)",
+          fontWeight: "var(--h-kicker-weight)",
+          letterSpacing: "var(--h-kicker-letter)",
+          textTransform: "var(--h-kicker-transform)" as any,
+          opacity: "var(--h-kicker-opacity)",
+          marginBottom: "var(--h-gap-kicker-title)",
+        }}
+      >
+        {kicker}
+      </p>
+      <h2
+        className="font-semibold tracking-tight text-white"
+        style={{
+          margin: 0,
+          fontSize: "var(--h-a2-size)",
+          lineHeight: "var(--h-a2-line)",
+          letterSpacing: "var(--h-a2-letter)",
+        }}
+      >
+        {title}
+      </h2>
+      <p
+        className="text-white"
+        style={{
+          margin: 0,
+          marginTop: "var(--h-a2-gap-title-sub)",
+          fontSize: "var(--h-a2-sub-size)",
+          lineHeight: "var(--h-a2-sub-line)",
+          opacity: "var(--h-a2-sub-opacity)",
+        }}
+      >
+        {hint}
+      </p>
+    </div>
+    {/* … Tabs & Liste … */}
 
 
 
