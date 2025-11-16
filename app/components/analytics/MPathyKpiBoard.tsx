@@ -423,20 +423,19 @@ export default function MPathyKpiBoard() {
           <TabsContent value="Overview" className="mt-6 space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card
-  style={{
-    background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
-    border: "none",
-  }}
->
-  <CardHeader>
-    <CardTitle>{t("overview.title")}</CardTitle>
-  </CardHeader>
-  <CardContent>
-    <div className="overflow-x-auto rounded-2xl">
-      <table
-        className="w-full text-sm"
-        style={{ color: PALETTE.text }}
-      >
+                style={{
+                  background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+                }}
+              >
+                <CardHeader>
+                  <CardTitle>{t("overview.title")}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto rounded-2xl">
+                    <table
+                      className="w-full text-sm"
+                      style={{ color: PALETTE.text }}
+                    >
                       <thead style={{ background: PALETTE.header }}>
                         <tr>
                           <th className="px-4 py-3 text-left">
@@ -481,7 +480,9 @@ export default function MPathyKpiBoard() {
                               key={s}
                               className="px-4 py-3 text-right font-semibold"
                             >
-                              {nf1.format(OVERALL.avg[s as SystemKey])}
+                              {nf1.format(
+                                OVERALL.avg[s as SystemKey]
+                              )}
                             </td>
                           ))}
                         </tr>
@@ -508,25 +509,23 @@ export default function MPathyKpiBoard() {
               </Card>
 
               <Card
-  style={{
-    background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
-    border: "none",
-  }}
->
-  <CardHeader>
-    <CardTitle>
-      {t("overview.radar_card_title")}
-    </CardTitle>
-  </CardHeader>
-  <CardContent>
-    <div className="rounded-2xl p-2">
-      <div className="text-sm">
-        {t("overview.radar_hint")}
-      </div>
-    </div>
-  </CardContent>
-</Card>
-
+                style={{
+                  background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
+                }}
+              >
+                <CardHeader>
+                  <CardTitle>
+                    {t("overview.radar_card_title")}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="rounded-2xl p-2">
+                    <div className="text-sm">
+                      {t("overview.radar_hint")}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
@@ -542,7 +541,6 @@ export default function MPathyKpiBoard() {
                   <Card
                     style={{
                       background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
-                      borderColor: PALETTE.border,
                     }}
                   >
                     <CardHeader>
@@ -564,7 +562,6 @@ export default function MPathyKpiBoard() {
                   <Card
                     style={{
                       background: "rgba(18, 21, 26, 0.5)", // 50 % sichtbar
-                      borderColor: PALETTE.border,
                     }}
                   >
                     <CardHeader>
@@ -578,6 +575,7 @@ export default function MPathyKpiBoard() {
               </TabsContent>
             )
           )}
+
         </Tabs>
 
         <div
