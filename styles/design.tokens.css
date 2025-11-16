@@ -132,10 +132,11 @@
 
 :root {
   /* Größe & Rhythmus */
-  --council-visit-pad-y: 11px;
-  --council-visit-pad-x: 22px;
+  --council-visit-pad-y: 7px;
+  --council-visit-pad-x: 13px;
   --council-visit-radius: 999px;
   --council-visit-font-size: 15px;
+
   --council-visit-font-size-md: 16px;
   --council-visit-font-weight: 600;
   --council-visit-letter-spacing: -0.005em;
@@ -350,9 +351,40 @@
   --experts-pill-pad-x:          10px;   /* links/rechts (Icon & View) */
 }
 
+/* ─────────────────────────────────────────────
+   Security Section – Spacing & Geometry Tokens
+   Quelle der Wahrheit für "Security by Design"
+   ───────────────────────────────────────────── */
+:root {
+  /* Section Rhythmus */
+  --sec-gap-kicker-title:   12px;  /* SECURITY BY DESIGN → Title */
+  --sec-gap-title-intro:    32px;  /* Title → Intro-Text */
+  --sec-gap-intro-cards:    48px;  /* Intro → erste Card-Zeile */
+  --sec-gap-card-row:       40px;  /* A-Card → B/C/D-Row */
+  --sec-gap-card-bottom:    80px;  /* Cards → nächste Section */
+
+  /* Card Layout */
+  --sec-card-max-width:     var(--page-max); /* 900px */
+  --sec-card-grid-gap:      24px;            /* Abstand zwischen B/C/D */
+
+  /* Card Innenabstände */
+  --sec-card-pad-y:         20px;
+  --sec-card-pad-x:         20px;
+  --sec-card-gap-title-body: 14px;
+  --sec-card-gap-body-button: 18px;
+
+  /* Icon & Mobile */
+  --sec-icon-size:          22px;
+  --sec-icon-stroke:        1.5;
+  --sec-icon-opacity:       0.85;
+  --sec-icon-pad:           7px;
+  --sec-mobile-scale:       0.85; /* 85 % der Desktop-Abstände auf Mobile */
+}
+
 /* =====================================================================
    Heading System · A0–A4
    Zweck: Einheitliche Überschriften / Subtitles / Kicker
+
    Mapping: Hero (A0) · Modes/KPI (A1) · Experts/Source/Testimonials (A2)
             Orbit (A3) · Footer/Microcopy (A4)
    ===================================================================== */
