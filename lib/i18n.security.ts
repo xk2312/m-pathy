@@ -1,6 +1,6 @@
 // lib/i18n.security.ts (Inhaltsvorschlag)
 
-export const security = {
+export const dict = {
   en: {
     // Section Header
     kicker: "SECURITY BY DESIGN",
