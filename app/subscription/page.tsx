@@ -181,19 +181,19 @@ export default function SubscriptionPage() {
 </section>
 */}
 
-        
                 {/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
          <section
   className="pt-[var(--h-space-a2-section)] pb-[var(--h-space-a2-section)]"
   aria-label="PowerPrompts section"
 >
   <div
-    className="page-center"
+    className="page-center pp-scope"
     style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
   >
     <PowerPrompts />
   </div>
 </section>
+
 
           {/* Buffer #4 – unter PowerPrompts (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
