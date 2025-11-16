@@ -14,6 +14,7 @@ import Modis13 from "@/app/components/subscription/13modis"; // 13 Modi – neue
 import Experts13 from "@/app/components/subscription/13experts"; 
 import { modes15 } from "@/lib/i18n.modes";
 import { experts13 } from "@/lib/i18n.experts";
+import SecuritySection from "@/app/components/subscription/SecuritySection";
 
 
 // KPI Board (Client-only; Recharts braucht Browser)
@@ -281,100 +282,11 @@ export default function SubscriptionPage() {
                     <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
 {/* ─────────────── SECURITY BY DESIGN ─────────────── */}
-            <section
-              aria-label="Security section"
-              className="pt-[var(--h-space-a2-section)] pb-[var(--h-space-a2-section)]"
-            >
-              <div
-                className="page-center security-scope"
-                style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
-              >
-                {/* HEADER */}
-                <div className="mb-[var(--h-space-a2-header)]">
-                  <p className="text-white/40 tracking-widest text-xs mb-[10px] font-medium">
-                    SECURITY BY DESIGN
-                  </p>
+          <SecuritySection />
 
-                  <h2 className="text-[clamp(32px,5vw,52px)] leading-[1.1] font-semibold tracking-tight text-white">
-                    {/* i18n: security.title */}
-                  </h2>
+{/* Buffer nach Security */}
+<div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
-                  <p className="text-white/70 text-[clamp(15px,2vw,18px)] leading-relaxed mt-[var(--h-space-a2-subline)] max-w-[700px]">
-                    {/* i18n: security.intro */}
-                  </p>
-                </div>
-
-                {/* GRID – 4 CARDS */}
-                <div
-                  className="grid gap-[var(--h-gap-card)]"
-                  style={{
-                    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-                  }}
-                >
-                  {/* CARD 1 */}
-                  <div className="security-card">
-                    {/* Icon */}
-                    <div className="mb-[var(--h-card-icon-space)]">
-                      {/* SVG here */}
-                    </div>
-
-                    <h3 className="text-white font-semibold text-lg mb-[var(--h-card-title-space)]">
-                      {/* i18n: security.card1.title */}
-                    </h3>
-
-                    <p className="text-white/70 text-sm leading-relaxed mb-[var(--h-card-body-space)]">
-                      {/* i18n: security.card1.body */}
-                    </p>
-
-                    <button className="m-button-secondary">
-                      {/* i18n: security.card1.cta */}
-                    </button>
-                  </div>
-
-                  {/* CARD 2 */}
-                  <div className="security-card">
-                    <div className="mb-[var(--h-card-icon-space)]">{/* SVG */}</div>
-                    <h3 className="text-white font-semibold text-lg mb-[var(--h-card-title-space)]">
-                      {/* i18n: security.card2.title */}
-                    </h3>
-                    <p className="text-white/70 text-sm leading-relaxed mb-[var(--h-card-body-space)]">
-                      {/* i18n: security.card2.body */}
-                    </p>
-                    <button className="m-button-secondary">
-                      {/* i18n: security.card2.cta */}
-                    </button>
-                  </div>
-
-                  {/* CARD 3 */}
-                  <div className="security-card">
-                    <div className="mb-[var(--h-card-icon-space)]">{/* SVG */}</div>
-                    <h3 className="text-white font-semibold text-lg mb-[var(--h-card-title-space)]">
-                      {/* i18n: security.card3.title */}
-                    </h3>
-                    <p className="text-white/70 text-sm leading-relaxed mb-[var(--h-card-body-space)]">
-                      {/* i18n: security.card3.body */}
-                    </p>
-                    <button className="m-button-secondary">
-                      {/* i18n: security.card3.cta */}
-                    </button>
-                  </div>
-
-                  {/* CARD 4 */}
-                  <div className="security-card">
-                    <div className="mb-[var(--h-card-icon-space)]">{/* SVG */}</div>
-                    <h3 className="text-white font-semibold text-lg mb-[var(--h-card-title-space)]">
-                      {/* i18n: security.card4.title */}
-                    </h3>
-                    <p className="text-white/70 text-sm leading-relaxed mb-[var(--h-card-body-space)]">
-                      {/* i18n: security.card4.body */}
-                    </p>
-                    <button className="m-button-secondary">
-                      {/* i18n: security.card4.cta */}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </section>
 
           {/* Buffer nach Security */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
