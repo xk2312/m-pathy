@@ -280,6 +280,127 @@ export default function SubscriptionPage() {
           {/* Buffer #3 – unter Testimonial (Design-Token) */}
                     <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
 
+{/* ─────────────── SECURITY BY DESIGN ─────────────── */}
+            <section
+              aria-label="Security section"
+              className="pt-[var(--h-space-a2-section)] pb-[var(--h-space-a2-section)]"
+            >
+              <div
+                className="page-center security-scope"
+                style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
+              >
+                {/* HEADER */}
+                <div className="mb-[var(--h-space-a2-header)]">
+                  <p className="text-white/40 tracking-widest text-xs mb-[10px] font-medium">
+                    SECURITY BY DESIGN
+                  </p>
+
+                  <h2 className="text-[clamp(32px,5vw,52px)] leading-[1.1] font-semibold tracking-tight text-white">
+                    {/* i18n: security.title */}
+                  </h2>
+
+                  <p className="text-white/70 text-[clamp(15px,2vw,18px)] leading-relaxed mt-[var(--h-space-a2-subline)] max-w-[700px]">
+                    {/* i18n: security.intro */}
+                  </p>
+                </div>
+
+                {/* GRID – 4 CARDS */}
+                <div
+                  className="grid gap-[var(--h-gap-card)]"
+                  style={{
+                    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                  }}
+                >
+                  {/* CARD 1 */}
+                  <div className="security-card">
+                    {/* Icon */}
+                    <div className="mb-[var(--h-card-icon-space)]">
+                      {/* SVG here */}
+                    </div>
+
+                    <h3 className="text-white font-semibold text-lg mb-[var(--h-card-title-space)]">
+                      {/* i18n: security.card1.title */}
+                    </h3>
+
+                    <p className="text-white/70 text-sm leading-relaxed mb-[var(--h-card-body-space)]">
+                      {/* i18n: security.card1.body */}
+                    </p>
+
+                    <button className="m-button-secondary">
+                      {/* i18n: security.card1.cta */}
+                    </button>
+                  </div>
+
+                  {/* CARD 2 */}
+                  <div className="security-card">
+                    <div className="mb-[var(--h-card-icon-space)]">{/* SVG */}</div>
+                    <h3 className="text-white font-semibold text-lg mb-[var(--h-card-title-space)]">
+                      {/* i18n: security.card2.title */}
+                    </h3>
+                    <p className="text-white/70 text-sm leading-relaxed mb-[var(--h-card-body-space)]">
+                      {/* i18n: security.card2.body */}
+                    </p>
+                    <button className="m-button-secondary">
+                      {/* i18n: security.card2.cta */}
+                    </button>
+                  </div>
+
+                  {/* CARD 3 */}
+                  <div className="security-card">
+                    <div className="mb-[var(--h-card-icon-space)]">{/* SVG */}</div>
+                    <h3 className="text-white font-semibold text-lg mb-[var(--h-card-title-space)]">
+                      {/* i18n: security.card3.title */}
+                    </h3>
+                    <p className="text-white/70 text-sm leading-relaxed mb-[var(--h-card-body-space)]">
+                      {/* i18n: security.card3.body */}
+                    </p>
+                    <button className="m-button-secondary">
+                      {/* i18n: security.card3.cta */}
+                    </button>
+                  </div>
+
+                  {/* CARD 4 */}
+                  <div className="security-card">
+                    <div className="mb-[var(--h-card-icon-space)]">{/* SVG */}</div>
+                    <h3 className="text-white font-semibold text-lg mb-[var(--h-card-title-space)]">
+                      {/* i18n: security.card4.title */}
+                    </h3>
+                    <p className="text-white/70 text-sm leading-relaxed mb-[var(--h-card-body-space)]">
+                      {/* i18n: security.card4.body */}
+                    </p>
+                    <button className="m-button-secondary">
+                      {/* i18n: security.card4.cta */}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+          {/* Buffer nach Security */}
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+
+          {/* Divider 1 – Aurora Line */}
+                    <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
+                      <div
+                        className="page-center"
+                        style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+                      >
+                        <div
+                          className="mx-auto rounded-full"
+                          style={{
+                            height: "var(--sub-divider-1-height)",
+                            background: "var(--sub-divider-1-fill)",
+                            boxShadow: "var(--sub-divider-1-glow)",
+                          }}
+                        />
+                      </div>
+                    </section>
+
+          {/* Buffer #3 – unter Testimonial (Design-Token) */}
+                    <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+
+
+
 {/* ─────────────── KPI BOARD ─────────────── */}
                   <section className="pt-[clamp(70px,12vw,130px)]">
                     <div
