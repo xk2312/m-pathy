@@ -197,7 +197,7 @@ export default function SubscriptionPage() {
 
           {/* Buffer #4 – unter PowerPrompts (Design-Token) */}
           <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-
+          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
   {/* ─────────────── KPI BOARD ─────────────── */}
           <section className="pt-[clamp(70px,12vw,130px)]">
             <div
