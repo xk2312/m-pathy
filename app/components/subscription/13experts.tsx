@@ -428,24 +428,22 @@ const pillClass =
           <p className="text-white/70 text-[clamp(14px,2vw,17px)] leading-relaxed mb-6">
             {t(`experts.${selected}.description`)}
           </p>
-
           {/* CTA BUTTON – Call this expert */}
           <div className="mt-4 flex justify-end">
             <button
-  onClick={handleCall}
-  className="group inline-flex items-center gap-2 px-6 py-3 rounded-full cursor-pointer
-              bg-white/5 ring-1 ring-white/10 backdrop-blur-md
-              text-white/90 font-medium tracking-wide
-              hover:bg-white/10 hover:ring-cyan-300/40
-              transition-all duration-200"
->
-
+              onClick={handleCall}
+              className="m-btn md primary group"
+            >
               {callLabel}
-              <span className="text-cyan-300 group-hover:translate-x-1 transition-transform">
+              <span
+                className="ml-2 text-cyan-300 group-hover:translate-x-1 transition-transform"
+                aria-hidden="true"
+              >
                 →
               </span>
             </button>
           </div>
+
         </div>
       )}
 
