@@ -16,7 +16,7 @@ export default function Subscribe() {
         className="page-center"
         style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
       >
-        {/* HEADER */}
+        {/* HEADER – A2-Block + Token-Gap nach unten */}
         <header
           className="max-w-[var(--h-a2-max-width)]"
           style={{ marginBottom: "var(--h-gap-sub-content)" }}
@@ -63,7 +63,7 @@ export default function Subscribe() {
         {/* MAIN CARD */}
         <div className="rounded-3xl border border-white/10 bg-white/5 px-6 py-7 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:items-start">
-            {/* LEFT – Price, Tokens, CTA */}
+            {/* LEFT – Price, Tokens, CTA (mit Buffer-Tokens) */}
             <div className="space-y-6">
               {/* Badge */}
               <div className="flex items-center gap-3">
@@ -98,12 +98,15 @@ export default function Subscribe() {
                   </p>
                 </div>
 
-                {/* CTA – höher + 13px Luft oben/unten */}
+                {/* CTA – über Buffer-Magazin */}
                 <div
-                  className="pt-1"
-                  style={{ marginTop: "var(--h-gap-sub-content)" }}
+                  className="pt-0"
+                  style={{ marginTop: "var(--h-gap-xs)" }} // 70px Abstand zum Tokenblock
                 >
-                  <p className="text-xs text-white/60 mb-[13px]">
+                  <p
+                    className="text-xs text-white/60"
+                    style={{ marginBottom: "var(--h-gap-xxs)" }} // 30px über dem Button
+                  >
                     {locale.cta_preline}
                   </p>
                   <button
@@ -119,7 +122,10 @@ export default function Subscribe() {
                       →
                     </span>
                   </button>
-                  <p className="mt-[13px] text-xs text-white/55">
+                  <p
+                    className="text-xs text-white/55"
+                    style={{ marginTop: "var(--h-gap-xxs)" }} // 30px unter dem Button
+                  >
                     {locale.cta_subline}
                   </p>
                 </div>
