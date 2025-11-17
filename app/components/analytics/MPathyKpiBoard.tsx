@@ -8,10 +8,10 @@ import {
   PolarRadiusAxis,
   ResponsiveContainer,
 } from "recharts";
-// i18n
-// i18n
 
-import { dict } from "@/lib/i18n"; // du hast /lib/i18n.ts bestätigt
+// i18n – globaler Provider
+import { useLang } from "@/app/providers/LanguageProvider";
+
 
 
 
@@ -249,28 +249,6 @@ function useHighContrast() {
 const makeNF1 = (locale: string) =>
   new Intl.NumberFormat(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
-// ── Local i18n shim (nutzt dein dict; fallback = "en")
-type LocaleKey = keyof typeof dict;
-
-const detectLocale = (): LocaleKey => {
-  if (typeof navigator !== "undefined") {
-    const code = (navigator.language || "en").slice(0, 2).toLowerCase() as LocaleKey;
-    if (code in dict) return code;
-  }
-  return "en";
-};
-
-function useI18nLocal() {
-  const [locale, setLocale] = React.useState<LocaleKey>(detectLocale());
-  const t = useCallback((path: string): string => {
-    const parts = path.split(".");
-    let cur: any = dict[locale];
-    for (const p of parts) cur = cur?.[p];
-    return typeof cur === "string" ? cur : "";
-  }, [locale]);
-  return { t, locale, setLocale };
-}
-
 
 // ───────────────────────────────────────────────────────────────────────────────
 // KPI RENDERERS
@@ -380,14 +358,15 @@ export default function MPathyKpiBoard() {
   const { hc } = useHighContrast();
   const jsonPretty = useMemo(() => JSON.stringify(CRITERIA, null, 2), []);
 
-  // i18n + NumberFormat
-  const { t, locale } = useI18nLocal();
-  const nf1 = useMemo(() => makeNF1(locale), [locale]);
+  // i18n + NumberFormat – aus dem globalen LanguageProvider
+  const { t, lang } = useLang();
+  const nf1 = useMemo(() => makeNF1(lang), [lang]);
 
   return (
     <div
       className={hc ? "hc" : ""}
       style={{ color: PALETTE.text, background: "transparent" }}
+
     >
       <div className="mx-auto max-w-7xl p-4 sm:p-8">
         <div className="mb-6 flex flex-col gap-2">
