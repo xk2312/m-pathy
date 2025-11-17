@@ -100,7 +100,7 @@ export default function SubscriptionPage() {
       <VoiaBloom />
       <Navigation />
 
-            <main
+          <main
         id="content"
         role="main"
         className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
@@ -109,10 +109,17 @@ export default function SubscriptionPage() {
           className="subscription-root px-[clamp(10px,4vw,90px)] pb-[clamp(20px,5vw,90px)]"
         >
 
+          {/* NAVIGATION BUFFER */}
+          <div
+            aria-hidden="true"
+            style={{ height: "var(--nav-height-lg)" }}
+          />
+
           {/* ─────────────── HERO ─────────────── */}
           <section className="pt-[72px] pb-[72px]">
             <div className="page-center">
               <Hero />
+
             </div>
           </section>
 
