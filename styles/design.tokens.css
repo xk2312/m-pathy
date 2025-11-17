@@ -559,11 +559,22 @@
 }
 :root {
   /* BUFFER MAGAZIN – SPOTY APPROVED */
-  --h-gap-xxs: 30px;   /* Micro buffer */
-  --h-gap-xs: 70px;    /* Small buffer */
-  --h-gap-sm: 130px;   /* Section buffer */
-  --h-gap-md: 210px;   /* Big section transition */
+  --h-gap-xxs: 30px;    /* Micro buffer */
+  --h-gap-xs: 70px;     /* Small buffer */
+  --h-gap-sm: 130px;    /* Section buffer */
+  --h-gap-md: 210px;    /* Big section transition */
+
+  /* SUPER BUFFER – ULTRA GAPS */
+  --h-gap-xl: 382px;    /* Super buffer 1 */
+  --h-gap-2xl: 500px;   /* Super buffer 2 */
+  --h-gap-3xl: 618px;   /* Super buffer 3 */
+
+  /* MOBILE SCALING – 50 % */
+  --h-gap-xl-sm: calc(var(--h-gap-xl) * 0.5);
+  --h-gap-2xl-sm: calc(var(--h-gap-2xl) * 0.5);
+  --h-gap-3xl-sm: calc(var(--h-gap-3xl) * 0.5);
 }
+
 :root {
   /* BUTTON SIZES — divine spacing */
   --btn-radius-full: 9999px;

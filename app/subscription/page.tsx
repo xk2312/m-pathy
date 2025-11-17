@@ -108,19 +108,14 @@ export default function SubscriptionPage() {
         <div
   className="subscription-root px-[clamp(10px,4vw,90px)] pb-[clamp(20px,5vw,90px)]"
 >
-
-  {/* NAVIGATION BUFFER x2 */}
+  {/* SUPER BUFFER 618px */}
   <div
     aria-hidden="true"
-    style={{ height: "var(--nav-height-lg)" }}
-  />
-  <div
-    aria-hidden="true"
-    style={{ height: "var(--nav-height-lg)" }}
+    style={{ height: "var(--h-gap-3xl)" }}
   />
 
   {/* ─────────────── HERO ─────────────── */}
-  <section className="pt-[72px] pb-[72px]">
+          <section className="pt-[96px] pb-[96px]">
 
             <div className="page-center">
               <Hero />
