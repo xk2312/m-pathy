@@ -526,3 +526,116 @@
   --h-gap-sm: 130px;   /* Section buffer */
   --h-gap-md: 210px;   /* Big section transition */
 }
+:root {
+  /* BUTTON SIZES — divine spacing */
+  --btn-radius-full: 9999px;
+
+  /* Heights */
+  --btn-height-sm: 38px;
+  --btn-height-md: 46px;
+  --btn-height-lg: 54px;
+
+  /* Horizontal padding (computed) */
+  --btn-pad-sm: 18px;
+  --btn-pad-md: 24px;
+  --btn-pad-lg: 30px;
+
+  /* Typography */
+  --btn-font-sm: 13px;
+  --btn-font-md: 14px;
+  --btn-font-lg: 15px;
+
+  --btn-line-sm: 1.35;
+  --btn-line-md: 1.4;
+  --btn-line-lg: 1.45;
+
+  /* Motion */
+  --btn-transition: 0.22s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+:root {
+  --btn-bg-primary: #ffffff;
+  --btn-bg-primary-hover: rgba(255,255,255,0.92);
+
+  --btn-bg-secondary: rgba(255,255,255,0.12);
+  --btn-bg-secondary-hover: rgba(255,255,255,0.18);
+
+  --btn-text-primary: #000;
+  --btn-text-secondary: #fff;
+
+  --btn-shadow-primary: 0 1px 3px rgba(0,0,0,0.12);
+  --btn-shadow-hover: 0 2px 6px rgba(0,0,0,0.16);
+}
+/* CORE BUTTON STYLE — the heart of m-pathy */
+
+.m-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: var(--btn-radius-full);
+  font-weight: 500;
+
+  transition:
+    background var(--btn-transition),
+    transform var(--btn-transition),
+    opacity var(--btn-transition),
+    box-shadow var(--btn-transition);
+
+  cursor: pointer;
+  user-select: none;
+}
+
+/* SIZES */
+.m-btn.sm {
+  height: var(--btn-height-sm);
+  padding: 0 var(--btn-pad-sm);
+  font-size: var(--btn-font-sm);
+  line-height: var(--btn-line-sm);
+}
+
+.m-btn.md {
+  height: var(--btn-height-md);
+  padding: 0 var(--btn-pad-md);
+  font-size: var(--btn-font-md);
+  line-height: var(--btn-line-md);
+}
+
+.m-btn.lg {
+  height: var(--btn-height-lg);
+  padding: 0 var(--btn-pad-lg);
+  font-size: var(--btn-font-lg);
+  line-height: var(--btn-line-lg);
+}
+
+/* VARIANTS */
+.m-btn.primary {
+  background: var(--btn-bg-primary);
+  color: var(--btn-text-primary);
+  box-shadow: var(--btn-shadow-primary);
+}
+.m-btn.primary:hover {
+  background: var(--btn-bg-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--btn-shadow-hover);
+}
+
+.m-btn.secondary {
+  background: var(--btn-bg-secondary);
+  color: var(--btn-text-secondary);
+}
+.m-btn.secondary:hover {
+  background: var(--btn-bg-secondary-hover);
+}
+:root {
+  /* BUTTON EXTERNAL SPACING (vertical spacing for all M-buttons) */
+  --btn-gap-y: 20px;   /* Goldener Standard */
+  --btn-gap-y-lg: 26px; /* Für große Conversion-Buttons */
+}
+.m-btn {
+  margin-top: var(--btn-gap-y);
+  margin-bottom: var(--btn-gap-y);
+}
+.m-btn.lg {
+  margin-top: var(--btn-gap-y-lg);
+  margin-bottom: var(--btn-gap-y-lg);
+}

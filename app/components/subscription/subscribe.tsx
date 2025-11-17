@@ -109,19 +109,15 @@ export default function Subscribe() {
                   >
                     {locale.cta_preline}
                   </p>
-                  <button
+                    <button
                     type="button"
                     aria-label={locale.cta_aria}
-                    className="group inline-flex w-full items-center justify-center rounded-full bg-white px-6 py-4 text-sm font-medium text-black transition-[background,transform,opacity] duration-200 ease-out hover:bg-white/90 hover:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-                  >
-                    <span>{locale.cta_label}</span>
-                    <span
-                      className="ml-2 inline-block translate-x-0 text-black/70 transition-transform duration-200 ease-out group-hover:translate-x-1"
-                      aria-hidden="true"
+                    className="m-btn lg primary w-full"
                     >
-                      →
-                    </span>
-                  </button>
+                    {locale.cta_label}
+                    <span className="arrow ml-2">→</span>
+                    </button>
+
                   <p
                     className="text-xs text-white/55"
                     style={{ marginTop: "var(--h-gap-xxs)" }} // 30px unter dem Button
