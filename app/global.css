@@ -7,7 +7,16 @@
 @import "highlight.js/styles/github-dark.css";
 
 /* ── Base Reset ───────────────────────────────────────────── */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* GLOBAL RESET – cleaned (preserves Tailwind margins) */
+* {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+/* Remove only browser default margin */
+body {
+  margin: 0;
+}
 
 /* Wichtig: Scroll wieder erlauben + Selektieren aktivieren */
 html, body {
