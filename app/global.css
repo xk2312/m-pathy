@@ -50,6 +50,7 @@ body {
   background-color: #000;
   overscroll-behavior-y: contain; /* optional restriktiver */
   -webkit-tap-highlight-color: transparent;
+  padding-top: var(--nav-safe-top, 0px); /* Platz für die fixierte Navigation */
 }
 
 
@@ -116,7 +117,11 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
   --dock-h: 60px; /* fallback dock height */
   /* --- Safe-area Desktop Default --- */
   --safe-bottom: 0px; /* Desktop-Fallback; @supports block aktualisiert diesen Wert */
+
+  /* Navigation layer (zwischen Base und Overlays/Dock) */
+  --z-nav: 40;
 }
+
 
 
 /* Wenn der Browser safe-area kennt, mappe sie auf die Variable. */

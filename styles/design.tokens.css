@@ -472,13 +472,51 @@
   /* Mobile-Skalierung (Multiplikatoren für Section-Abstände) */
   --h-mobile-space-scale-a0: 0.8;
   --h-mobile-space-scale-a1: 0.8;
-  --h-mobile-space-scale-a2: 0.85;
+   --h-mobile-space-scale-a2: 0.85;
   --h-mobile-space-scale-a3: 0.9;
   --h-mobile-space-scale-a4: 0.95;
 }
+
+/* ─────────────────────────────────────────────
+   Navigation · Tokens (V1)
+   Quelle der Wahrheit für Orbit, Logo & Tail
+   ───────────────────────────────────────────── */
+:root {
+  /* Höhen */
+  --nav-height-lg: 96px;
+  --nav-height-sm: 64px;
+  --nav-height-mobile: 56px;
+
+  /* Logo-Dimensionen */
+  --nav-logo-size-lg: 48px;
+  --nav-logo-size-sm: 32px;
+  --nav-logo-size-mobile: 28px;
+
+  /* Tail-Chip */
+  --nav-tail-height: 24px;
+  --nav-tail-width-lg: 72px;
+  --nav-tail-width-sm: 20px;
+  --nav-tail-bg: rgba(255,255,255,0.06);
+  --nav-tail-border: rgba(255,255,255,0.12);
+
+  /* Orbit Glow */
+  --nav-orbit-glow: 0 0 22px rgba(255,255,255,0.18);
+
+  /* Motion */
+  --nav-motion-fast: 140ms ease-out;
+  --nav-motion-medium: 240ms cubic-bezier(0.22,0.61,0.36,1);
+  --nav-motion-slow: 380ms ease;
+
+  /* Safe-Top & Padding */
+  --nav-safe-top: var(--nav-height-sm);
+  --nav-padding-inline: 12px;
+  --nav-padding-block: 6px;
+}
+
 /* ─────────────────────────────────────────────
    Subscription · Interstitial Dividers (no text)
    ───────────────────────────────────────────── */
+
 
 :root {
   /* Gemeinsamer vertikaler Abstand */

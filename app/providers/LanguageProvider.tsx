@@ -49,13 +49,24 @@ export function LanguageProvider({ dict, children }: { dict: Dict; children: Rea
     return (k: string) => dict[lang]?.[k] ?? dict.en?.[k] ?? k;
   }, [lang, dict]);
 
-  const value = useMemo(()=>({ lang, t, hint: langHint(lang), setLang }),[lang,t]);
-  return <LanguageCtx.Provider value={value}>{children}</LanguageCtx.Provider>;
-  
+  // HTML-Richtung + Sprache setzen (für RTL + A11y)
   useEffect(() => {
-  document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
-}, [lang]);
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.documentElement.lang = lang || "en";
+  }, [lang]);
 
+  const value = useMemo(
+    () => ({ lang, t, hint: langHint(lang), setLang }),
+    [lang, t]
+  );
+
+  return (
+    <LanguageCtx.Provider value={value}>
+      {children}
+    </LanguageCtx.Provider>
+  );
 }
 
-export function useLang(){ return useContext(LanguageCtx); }
+export function useLang() {
+  return useContext(LanguageCtx);
+}

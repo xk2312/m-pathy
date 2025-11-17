@@ -9,6 +9,7 @@ import { modes15 } from "@/lib/i18n.modes";
 import { experts13 } from "@/lib/i18n.experts";
 
 import VoiaBloom from "@/app/components/VoiaBloom";
+import Navigation from "@/app/components/navigation/navigation";
 import Hero from "@/app/components/subscription/Hero";
 import Testimonial from "@/app/components/subscription/testimonial";
 import PowerPrompts from "@/app/components/subscription/powerprompts";
@@ -94,20 +95,20 @@ export default function SubscriptionPage() {
     }),
     [enFlat, enModesFlat, enExpertsFlat, locFlat, locModesFlat, locExpertsFlat, locale]
   );
-
   return (
     <LanguageProvider dict={providerDict}>
       <VoiaBloom />
+      <Navigation />
 
-      <main
+            <main
         id="content"
         role="main"
         className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
       >
         <div
           className="subscription-root px-[clamp(10px,4vw,90px)] pb-[clamp(20px,5vw,90px)]"
-          style={{ paddingTop: "calc(var(--ry) * 1.5)" }}
         >
+
           {/* ─────────────── HERO ─────────────── */}
           <section className="pt-[72px] pb-[72px]">
             <div className="page-center">
