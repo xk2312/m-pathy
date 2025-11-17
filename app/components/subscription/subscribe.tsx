@@ -16,7 +16,7 @@ export default function Subscribe() {
         className="page-center"
         style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
       >
-        {/* HEADER – wie SecuritySection: A2-Block + Token-Gap nach unten */}
+        {/* HEADER */}
         <header
           className="max-w-[var(--h-a2-max-width)]"
           style={{ marginBottom: "var(--h-gap-sub-content)" }}
@@ -63,7 +63,7 @@ export default function Subscribe() {
         {/* MAIN CARD */}
         <div className="rounded-3xl border border-white/10 bg-white/5 px-6 py-7 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:items-start">
-            {/* LEFT – Price, Tokens, CTA (luftig) */}
+            {/* LEFT – Price, Tokens, CTA */}
             <div className="space-y-6">
               {/* Badge */}
               <div className="flex items-center gap-3">
@@ -98,18 +98,18 @@ export default function Subscribe() {
                   </p>
                 </div>
 
-                {/* CTA – gehört in die linke Spalte, mit Token-Gap nach oben */}
+                {/* CTA – höher + 13px Luft oben/unten */}
                 <div
                   className="pt-1"
                   style={{ marginTop: "var(--h-gap-sub-content)" }}
                 >
-                  <p className="mb-2 text-xs text-white/60">
+                  <p className="text-xs text-white/60 mb-[13px]">
                     {locale.cta_preline}
                   </p>
                   <button
                     type="button"
                     aria-label={locale.cta_aria}
-                    className="group inline-flex w-full items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition-[background,transform,opacity] duration-200 ease-out hover:bg-white/90 hover:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                    className="group inline-flex w-full items-center justify-center rounded-full bg-white px-6 py-4 text-sm font-medium text-black transition-[background,transform,opacity] duration-200 ease-out hover:bg-white/90 hover:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                   >
                     <span>{locale.cta_label}</span>
                     <span
@@ -119,7 +119,7 @@ export default function Subscribe() {
                       →
                     </span>
                   </button>
-                  <p className="mt-2 text-xs text-white/55">
+                  <p className="mt-[13px] text-xs text-white/55">
                     {locale.cta_subline}
                   </p>
                 </div>
@@ -128,7 +128,6 @@ export default function Subscribe() {
 
             {/* RIGHT – 3 Bullets + kurze Safety-Zeile */}
             <div className="space-y-5">
-              {/* Benefits – exakt 3 Bullets */}
               <div>
                 <p className="text-sm font-semibold text-white/80">
                   {locale.benefits_title}
@@ -140,7 +139,6 @@ export default function Subscribe() {
                 </ul>
               </div>
 
-              {/* Klarheit & Sicherheit – 1 Zeile */}
               <div className="rounded-2xl border border-white/10 bg-black/40 px-4 py-4">
                 <p className="text-xs font-semibold text-white/75 mb-1">
                   {locale.safety_title}
