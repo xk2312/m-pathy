@@ -34,7 +34,7 @@ export default function Subscribe() {
         </header>
 
         {/* Main Card */}
-        <div className="mt-[clamp(40px,7vw,72px)]">
+        <div className="mt-[clamp(130px,12vw,160px)]">
           <div className="rounded-3xl border border-white/10 bg-white/5 px-6 py-7 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:items-start">
               {/* Left: Price & Tokens */}
