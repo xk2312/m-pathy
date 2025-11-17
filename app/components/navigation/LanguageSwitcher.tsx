@@ -165,12 +165,13 @@ export default function LanguageSwitcher() {
               {options.map((opt) => (
                 <li key={opt.code}>
                   <button
-                    type="button"
-                    onClick={() => handleSelect(opt.code)}
-                    role="option"
-                    aria-selected={opt.code === lang}
-                    className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-white/80 hover:text-white hover:bg-white/5 focus-visible:outline-none focus-visible:bg-white/10"
-                  >
+              type="button"
+              onClick={() => handleSelect(opt.code)}
+              role="option"
+              aria-selected={opt.code === lang}
+              className="cursor-pointer flex w-full items-center gap-2 px-3 py-1.5 text-xs text-white/80 hover:text-white hover:bg-white/5 focus-visible:outline-none focus-visible:bg-white/10"
+            >
+
                     <span className="text-sm leading-none">{opt.flag}</span>
                     <span className="uppercase tracking-wide">{opt.code}</span>
                     <span className="ml-auto text-[10px] opacity-60">
@@ -233,10 +234,11 @@ export default function LanguageSwitcher() {
                 {options.map((opt) => (
                   <li key={opt.code}>
                     <button
-                      type="button"
-                      onClick={() => handleSelect(opt.code)}
-                      className="flex w-full items-center gap-2 px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-                    >
+                  type="button"
+                  onClick={() => handleSelect(opt.code)}
+                  className="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                >
+
                       <span className="text-lg leading-none">{opt.flag}</span>
                       <span className="uppercase tracking-wide">
                         {opt.code}
