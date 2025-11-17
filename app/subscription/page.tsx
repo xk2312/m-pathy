@@ -106,17 +106,22 @@ export default function SubscriptionPage() {
         className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
       >
         <div
-          className="subscription-root px-[clamp(10px,4vw,90px)] pb-[clamp(20px,5vw,90px)]"
-        >
+  className="subscription-root px-[clamp(10px,4vw,90px)] pb-[clamp(20px,5vw,90px)]"
+>
 
-          {/* NAVIGATION BUFFER */}
-          <div
-            aria-hidden="true"
-            style={{ height: "var(--nav-height-lg)" }}
-          />
+  {/* NAVIGATION BUFFER x2 */}
+  <div
+    aria-hidden="true"
+    style={{ height: "var(--nav-height-lg)" }}
+  />
+  <div
+    aria-hidden="true"
+    style={{ height: "var(--nav-height-lg)" }}
+  />
 
-          {/* ─────────────── HERO ─────────────── */}
-          <section className="pt-[72px] pb-[72px]">
+  {/* ─────────────── HERO ─────────────── */}
+  <section className="pt-[72px] pb-[72px]">
+
             <div className="page-center">
               <Hero />
 
