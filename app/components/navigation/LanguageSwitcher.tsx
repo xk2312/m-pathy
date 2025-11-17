@@ -148,10 +148,11 @@ export default function LanguageSwitcher() {
           <span className="text-[10px] leading-none opacity-80">▾</span>
         </button>
 
-        {open && (
+              {open && (
           <div
-            className="absolute right-0 mt-2 min-w-[10rem] rounded-2xl border bg-black/80 backdrop-blur-md shadow-lg overflow-hidden"
+            className="absolute right-0 top-full mt-2 min-w-[10rem] rounded-2xl border bg-black/80 backdrop-blur-md shadow-lg overflow-hidden"
             style={{
+
               borderColor: "var(--nav-tail-border)",
               boxShadow: "var(--nav-orbit-glow)",
               transition: reducedMotion
