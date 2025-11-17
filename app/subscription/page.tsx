@@ -80,9 +80,9 @@ export default function SubscriptionPage() {
     [locale]
   );
 
-  // 3) Provider bekommt das korrekte Shape: { en: {...}, [locale]: {...} }
-  const providerDict = useMemo(
-    () => ({
+  // 3) Provider bekommt das korrekte Shape: alle 13 Sprachen mit EN-Master als Basis
+  const providerDict = useMemo(() => {
+    const base: Record<LocaleKey, Record<string, string>> = {
       en: { ...enFlat, ...enModesFlat, ...enExpertsFlat },
       [locale]: {
         ...enFlat,
@@ -92,9 +92,28 @@ export default function SubscriptionPage() {
         ...locModesFlat,
         ...locExpertsFlat,
       },
-    }),
-    [enFlat, enModesFlat, enExpertsFlat, locFlat, locModesFlat, locExpertsFlat, locale]
-  );
+    } as any;
+
+    (Object.keys(dict) as LocaleKey[]).forEach((code) => {
+      if (code === "en" || code === locale) return;
+
+      const flat = flattenI18n(dict[code] ?? {});
+      const modesFlat = flattenI18n((modes15 as any)[code] ?? {});
+      const expertsFlat = flattenI18n((experts13 as any)[code] ?? {});
+
+      base[code] = {
+        ...enFlat,
+        ...enModesFlat,
+        ...enExpertsFlat,
+        ...flat,
+        ...modesFlat,
+        ...expertsFlat,
+      };
+    });
+
+    return base;
+  }, [enFlat, enModesFlat, enExpertsFlat, locFlat, locModesFlat, locExpertsFlat, locale]);
+
   return (
     <LanguageProvider dict={providerDict}>
       <VoiaBloom />
