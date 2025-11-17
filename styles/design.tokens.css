@@ -508,7 +508,7 @@
   --nav-motion-slow: 380ms ease;
 
   /* Safe-Top & Padding */
-  --nav-safe-top: var(--nav-height-sm);
+  --nav-safe-top: var(--nav-height-lg);
   --nav-padding-inline: 12px;
   --nav-padding-block: 6px;
 }
