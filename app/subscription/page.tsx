@@ -157,8 +157,26 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-          {/* Buffer #3 – unter Testimonial (Design-Token) */}
-                    <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+                  {/* Buffer – 210px (Design-Token) */}
+            <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
+            {/* Divider 1 – Aurora Line */}
+            <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
+              <div
+                className="page-center"
+                style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+              >
+                <div
+                  className="mx-auto rounded-full"
+                  style={{
+                    height: "var(--sub-divider-1-height)",
+                    background: "var(--sub-divider-1-fill)",
+                    boxShadow: "var(--sub-divider-1-glow)",
+                  }}
+                />
+              </div>
+            </section>
+            {/* Buffer – 130px (Design-Token) */}
+  <          div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
 
   {/* ———————— 13 EXPERTS SECTION ———————— */}
           <section
@@ -173,28 +191,26 @@ export default function SubscriptionPage() {
             </div>
           </section>
 
-          {/* Buffer #3 – unter Testimonial (Design-Token) */}
-          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-          
-          {/* Divider 1 – Aurora Line */}
-          <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
-            <div
-              className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-            >
+                  {/* Buffer – 210px (Design-Token) */}
+            <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
+            {/* Divider 1 – Aurora Line */}
+            <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
               <div
-                className="mx-auto rounded-full"
-                style={{
-                  height: "var(--sub-divider-1-height)",
-                  background: "var(--sub-divider-1-fill)",
-                  boxShadow: "var(--sub-divider-1-glow)",
-                }}
-              />
-            </div>
-          </section>
-
-          {/* Buffer #3 – unter Testimonial (Design-Token) */}
-                    <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+                className="page-center"
+                style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+              >
+                <div
+                  className="mx-auto rounded-full"
+                  style={{
+                    height: "var(--sub-divider-1-height)",
+                    background: "var(--sub-divider-1-fill)",
+                    boxShadow: "var(--sub-divider-1-glow)",
+                  }}
+                />
+              </div>
+            </section>
+            {/* Buffer – 130px (Design-Token) */}
+  <          div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
          
 {/* ———————— 13 MODES SECTION ———————— */}
           <section
@@ -210,30 +226,26 @@ export default function SubscriptionPage() {
           </section>
 
 
-          {/* Buffer #3 – unter Testimonial (Design-Token) */}
-          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-          <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-          
-          {/* Divider 1 – Aurora Line */}
-          <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
-            <div
-              className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-            >
+            {/* Buffer – 210px (Design-Token) */}
+            <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
+            {/* Divider 1 – Aurora Line */}
+            <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
               <div
-                className="mx-auto rounded-full"
-                style={{
-                  height: "var(--sub-divider-1-height)",
-                  background: "var(--sub-divider-1-fill)",
-                  boxShadow: "var(--sub-divider-1-glow)",
-                }}
-              />
-            </div>
-          </section>
-
-          {/* Buffer #3 – unter Testimonial (Design-Token) */}
-                    <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-
+                className="page-center"
+                style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+              >
+                <div
+                  className="mx-auto rounded-full"
+                  style={{
+                    height: "var(--sub-divider-1-height)",
+                    background: "var(--sub-divider-1-fill)",
+                    boxShadow: "var(--sub-divider-1-glow)",
+                  }}
+                />
+              </div>
+            </section>
+            {/* Buffer – 130px (Design-Token) */}
+  <          div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
                           {/* ─────────────── COUNCIL ORBIT ─────────────── */}
                           {/*
                           <section className="pt-[72px]">
@@ -258,47 +270,10 @@ export default function SubscriptionPage() {
               </div>
             </section>
 
-            {/* Buffer vor Subscribe */}
-            <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-
-              {/* Buffer #3 – unter Testimonial (Design-Token) */}
-                  <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-                  
-         {/* Buffer #3 – unter Testimonial (Design-Token) */}
-                  <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-        
-          
-          {/* Divider 1 – Aurora Line */}
-          <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
-            <div
-              className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-            >
-              <div
-                className="mx-auto rounded-full"
-                style={{
-                  height: "var(--sub-divider-1-height)",
-                  background: "var(--sub-divider-1-fill)",
-                  boxShadow: "var(--sub-divider-1-glow)",
-                }}
-              />
-            </div>
-          </section>
-
-          {/* Buffer #3 – unter Testimonial (Design-Token) */}
-                    <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-
-{/* ─────────────── SUBSCRIBE SECTION (Offer) ─────────────── */}
-  <Subscribe />
-
-            {/* Buffer nach Subscribe */}
-            <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-
-            {/* Divider – Aurora Line vor Security */}
-            <section
-              aria-hidden
-              className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]"
-            >
+            {/* Buffer – 210px (Design-Token) */}
+            <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
+            {/* Divider 1 – Aurora Line */}
+            <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
               <div
                 className="page-center"
                 style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
@@ -313,41 +288,59 @@ export default function SubscriptionPage() {
                 />
               </div>
             </section>
+            {/* Buffer – 130px (Design-Token) */}
+  <          div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
 
-{/* Buffer vor Security */}
-<div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+
+{/* ─────────────── SUBSCRIBE SECTION (Offer) ─────────────── */}
+  <Subscribe />
+
+            {/* Buffer – 210px (Design-Token) */}
+            <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
+            {/* Divider 1 – Aurora Line */}
+            <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
+              <div
+                className="page-center"
+                style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+              >
+                <div
+                  className="mx-auto rounded-full"
+                  style={{
+                    height: "var(--sub-divider-1-height)",
+                    background: "var(--sub-divider-1-fill)",
+                    boxShadow: "var(--sub-divider-1-glow)",
+                  }}
+                />
+              </div>
+            </section>
+            {/* Buffer – 130px (Design-Token) */}
+  <          div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
 
 {/* ─────────────── SECURITY BY DESIGN ─────────────── */}
 <SecuritySection />
 
 
 
-              {/* Buffer nach Security */}
-              <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-
-
-                        {/* Buffer nach Security */}
-                        <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-
-                        {/* Divider 1 – Aurora Line */}
-                                  <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
-                                    <div
-                                      className="page-center"
-                                      style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-                                    >
-                                      <div
-                                        className="mx-auto rounded-full"
-                                        style={{
-                                          height: "var(--sub-divider-1-height)",
-                                          background: "var(--sub-divider-1-fill)",
-                                          boxShadow: "var(--sub-divider-1-glow)",
-                                        }}
-                                      />
-                                    </div>
-                                  </section>
-
-                        {/* Buffer #3 – unter Testimonial (Design-Token) */}
-                                  <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+              {/* Buffer – 210px (Design-Token) */}
+            <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
+            {/* Divider 1 – Aurora Line */}
+            <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
+              <div
+                className="page-center"
+                style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+              >
+                <div
+                  className="mx-auto rounded-full"
+                  style={{
+                    height: "var(--sub-divider-1-height)",
+                    background: "var(--sub-divider-1-fill)",
+                    boxShadow: "var(--sub-divider-1-glow)",
+                  }}
+                />
+              </div>
+            </section>
+            {/* Buffer – 130px (Design-Token) */}
+  <          div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
 
 {/* ─────────────── KPI BOARD ─────────────── */}
                   <section className="pt-[clamp(70px,12vw,130px)]">
@@ -368,29 +361,23 @@ export default function SubscriptionPage() {
         }
 
 
-        {/* Buffer #3 – unter Testimonial (Design-Token) */}
-                  <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-                  
-         {/* Buffer #3 – unter Testimonial (Design-Token) */}
-                  <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
-        
-          
-          {/* Divider 1 – Aurora Line */}
-          <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
-            <div
-              className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-            >
+                {/* Buffer – 210px (Design-Token) */}
+            <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
+            {/* Divider 1 – Aurora Line */}
+            <section aria-hidden className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]">
               <div
-                className="mx-auto rounded-full"
-                style={{
-                  height: "var(--sub-divider-1-height)",
-                  background: "var(--sub-divider-1-fill)",
-                  boxShadow: "var(--sub-divider-1-glow)",
-                }}
-              />
-            </div>
-          </section>
-
-          {/* Buffer #3 – unter Testimonial (Design-Token) */}
-                    <div style={{ height: "var(--buffer-fluid)" }} aria-hidden="true" />
+                className="page-center"
+                style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+              >
+                <div
+                  className="mx-auto rounded-full"
+                  style={{
+                    height: "var(--sub-divider-1-height)",
+                    background: "var(--sub-divider-1-fill)",
+                    boxShadow: "var(--sub-divider-1-glow)",
+                  }}
+                />
+              </div>
+            </section>
+            {/* Buffer – 130px (Design-Token) */}
+  <          div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
