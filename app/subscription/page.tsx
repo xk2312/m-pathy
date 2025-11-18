@@ -17,6 +17,8 @@ import Modis13 from "@/app/components/subscription/13modis";
 import Experts13 from "@/app/components/subscription/13experts";
 import Subscribe from "@/app/components/subscription/subscribe";
 import SecuritySection from "@/app/components/subscription/SecuritySection";
+import Footer from "@/app/components/subscription/footer";
+
 // import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
 
 // KPI Board (Client-only; Recharts braucht Browser)
@@ -345,6 +347,11 @@ export default function SubscriptionPage() {
           {/* Abschluss-Buffer – 130px (KPI → Footer/Ende) */}
           <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
         </div>
+        {/* ─────────────── FOOTER ─────────────── */}
+        import Footer from "@/app/components/subscription/footer";
+
+        <Footer />
+
       </main>
     </LanguageProvider>
   );
