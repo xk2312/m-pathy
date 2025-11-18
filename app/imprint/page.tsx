@@ -9,9 +9,6 @@ export default function ImprintPage() {
     <>
       <Navigation />
 
-      {/* SUPER BUFFER – 382px */}
-      <div aria-hidden="true" style={{ height: "var(--h-gap-xl)" }} />
-
       <LegalPageShell pageKey="imprint" />
 
       <Footer />

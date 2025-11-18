@@ -9,8 +9,6 @@ export default function LegalInfoPage() {
     <>
       <Navigation />
 
-      {/* SUPER BUFFER – 382px */}
-      <div aria-hidden="true" style={{ height: "var(--h-gap-xl)" }} />
 
       <LegalPageShell pageKey="legal" />
 

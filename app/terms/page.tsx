@@ -9,9 +9,6 @@ export default function TermsPage() {
     <>
       <Navigation />
 
-      {/* SUPER BUFFER – 382px */}
-      <div aria-hidden="true" style={{ height: "var(--h-gap-xl)" }} />
-
       <LegalPageShell pageKey="terms" />
 
       <Footer />
