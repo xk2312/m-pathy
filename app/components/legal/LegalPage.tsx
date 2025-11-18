@@ -67,8 +67,8 @@ function LegalContent({ pageKey }: { pageKey: LegalPageKey }) {
   return (
     <main className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20">
       <div className="page-center px-[clamp(10px,4vw,90px)] pb-[clamp(40px,6vw,90px)]">
-        {/* SUPER BUFFER – 618px über Buffer-Magazin */}
-        <div aria-hidden style={{ height: "var(--h-gap-3xl)" }} />
+        {/* SUPER BUFFER – 382px über Buffer-Magazin */}
+        <div aria-hidden style={{ height: "var(--h-gap-xl)" }} />
 
         {/* Titelblock */}
         <header className="max-w-3xl space-y-4 mb-[clamp(32px,4vw,48px)]">
