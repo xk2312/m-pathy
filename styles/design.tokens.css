@@ -557,6 +557,12 @@
   --sub-divider-4-border: 1px solid rgba(148, 163, 184, 0.5);
   --sub-divider-4-glow: 0 20px 60px rgba(0, 0, 0, 0.9);
 }
+
+/* Subscription · Card-Inner Padding */
+:root {
+  --sub-card-inner-padding: 13px;
+}
+
 :root {
   /* BUFFER MAGAZIN – SPOTY APPROVED */
   --h-gap-xxs: 30px;    /* Micro buffer */

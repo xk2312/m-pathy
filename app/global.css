@@ -1032,4 +1032,8 @@ div[data-convo="1"] {
     transition-duration: 0ms !important;
   }
 }
+/* Subscription · Card-Inner Layout */
+.subscription-card-inner {
+  padding: var(--sub-card-inner-padding, 13px);
+}
 
