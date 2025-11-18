@@ -695,27 +695,34 @@
   margin-bottom: var(--btn-gap-y-lg);
 }
 /* ─────────────────────────────────────────────
-   FOOTER — TOKENS
+   FOOTER — TOKENS (Spoty Refined)
    ───────────────────────────────────────────── */
 :root {
-  /* Höhen & Abstände */
-  --footer-pad-y: clamp(40px, 6vw, 80px);
-  --footer-pad-x: clamp(20px, 5vw, 80px);
-  --footer-gap: clamp(24px, 4vw, 48px);
+  /* Vertical + Horizontal Padding */
+  --footer-pad-y: clamp(70px, 8vw, 120px);
+  --footer-pad-x: clamp(20px, 6vw, 100px);
 
-  /* Farben */
-  --footer-bg: rgba(0, 0, 0, 0.35);
-  --footer-border: rgba(255, 255, 255, 0.08);
+  /* Column Gap & Grid Behavior */
+  --footer-col-min: 260px;
+  --footer-col-gap: clamp(32px, 4vw, 64px);
+  --footer-row-gap: clamp(10px, 1.5vw, 18px);
 
-  /* Typografie */
-  --footer-motto-size: clamp(15px, 1.3vw, 18px);
-  --footer-text-size: clamp(13px, 1.2vw, 15px);
-  --footer-link-size: clamp(13px, 1.1vw, 14px);
+  /* Typography */
+  --footer-motto-size: clamp(18px, 1.6vw, 22px);
+  --footer-motto-weight: 500;
 
+  --footer-text-size: clamp(14px, 1.2vw, 16px);
+  --footer-link-size: clamp(13px, 1.1vw, 15px);
+
+  /* Colors */
   --footer-muted: rgba(255, 255, 255, 0.55);
-  --footer-strong: rgba(255, 255, 255, 0.85);
+  --footer-strong: rgba(255, 255, 255, 0.90);
 
-  /* Responsive Grid */
-  --footer-col-min: 240px;
-  --footer-col-gap: clamp(24px, 3vw, 40px);
+  /* Background */
+  --footer-bg: rgba(0, 0, 0, 0.32);       /* leichter, weicher */
+  --footer-border: rgba(255, 255, 255, 0.10);
+
+  /* Footer Bottom Spacing */
+  --footer-bottom-pad: clamp(40px, 6vw, 80px);
 }
+

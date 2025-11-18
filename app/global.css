@@ -1037,72 +1037,84 @@ div[data-convo="1"] {
   padding: var(--sub-card-inner-padding, 13px);
 }
 /* ─────────────────────────────────────────────
-   FOOTER — LAYOUT + STRUCTURE
+   FOOTER — LAYOUT + STRUCTURE (Spoty Refined)
    ───────────────────────────────────────────── */
-
 .footer-root {
   width: 100%;
   padding: var(--footer-pad-y) var(--footer-pad-x);
   background: var(--footer-bg);
   border-top: 1px solid var(--footer-border);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
 }
 
 .footer-inner {
   max-width: var(--page-inner-max);
   margin-inline: auto;
+
   display: grid;
-  gap: var(--footer-gap);
+  gap: var(--footer-col-gap);
   grid-template-columns: repeat(auto-fit, minmax(var(--footer-col-min), 1fr));
 }
 
 .footer-motto {
   font-size: var(--footer-motto-size);
-  font-weight: 500;
+  font-weight: var(--footer-motto-weight);
+  line-height: 1.35;
   color: var(--footer-strong);
-  line-height: 1.4;
+  margin-bottom: var(--footer-row-gap);
 }
 
 .footer-company {
   font-size: var(--footer-text-size);
-  opacity: 0.8;
-  line-height: 1.4;
+  line-height: 1.45;
+  opacity: 0.85;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.footer-email {
+  margin-top: var(--footer-row-gap);
+  font-size: var(--footer-text-size);
+  color: var(--footer-strong);
+  opacity: 0.85;
+  text-decoration: none;
+}
+.footer-email:hover {
+  opacity: 1;
 }
 
 .footer-links {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
-
 .footer-links a {
   font-size: var(--footer-link-size);
-  color: var(--footer-strong);
   text-decoration: none;
+  color: var(--footer-strong);
   opacity: 0.85;
   transition: opacity 0.2s ease;
 }
-
 .footer-links a:hover {
   opacity: 1;
 }
 
 .footer-pay {
   font-size: var(--footer-text-size);
+  line-height: 1.45;
   color: var(--footer-muted);
-  line-height: 1.35;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .footer-copy {
   grid-column: 1 / -1;
+  margin-top: var(--footer-bottom-pad);
+  padding-top: var(--footer-bottom-pad);
   text-align: center;
-  margin-top: var(--footer-gap);
-  padding-top: var(--footer-gap);
   border-top: 1px solid var(--footer-border);
   font-size: var(--footer-link-size);
   opacity: 0.6;
 }
-
