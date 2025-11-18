@@ -11,7 +11,6 @@ export default function RefundPage() {
 
       <LegalPageShell pageKey="refund" />
 
-      <Footer />
     </>
   );
 }

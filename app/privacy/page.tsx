@@ -11,7 +11,6 @@ export default function PrivacyPage() {
 
       <LegalPageShell pageKey="privacy" />
 
-      <Footer />
     </>
   );
 }

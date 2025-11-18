@@ -12,7 +12,6 @@ export default function LegalInfoPage() {
 
       <LegalPageShell pageKey="legal" />
 
-      <Footer />
     </>
   );
 }

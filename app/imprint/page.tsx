@@ -11,7 +11,6 @@ export default function ImprintPage() {
 
       <LegalPageShell pageKey="imprint" />
 
-      <Footer />
     </>
   );
 }

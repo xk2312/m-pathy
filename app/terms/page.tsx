@@ -11,7 +11,6 @@ export default function TermsPage() {
 
       <LegalPageShell pageKey="terms" />
 
-      <Footer />
     </>
   );
 }
