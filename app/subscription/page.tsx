@@ -348,7 +348,6 @@ export default function SubscriptionPage() {
           <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
         </div>
         {/* ─────────────── FOOTER ─────────────── */}
-        import Footer from "@/app/components/subscription/footer";
 
         <Footer />
 
