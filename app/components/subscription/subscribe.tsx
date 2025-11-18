@@ -60,10 +60,11 @@ export default function Subscribe() {
           </p>
         </header>
 
-        {/* MAIN CARD */}
-        <div className="rounded-3xl border border-white/10 bg-white/5 px-6 py-7 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
+              {/* MAIN CARD */}
+        <div className="subscription-card-inner rounded-3xl border border-white/10 bg-white/5">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:items-start">
             {/* LEFT – Price, Tokens, CTA (mit Buffer-Tokens) */}
+
             <div className="space-y-6">
               {/* Badge */}
               <div className="flex items-center gap-3">
