@@ -1,6 +1,11 @@
-// app/providers/LanguageProvider.tsx
 "use client";
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 type Dict = Record<string, Record<string, string>>;
 
@@ -62,7 +67,7 @@ export function LanguageProvider({
 }) {
   const [lang, setLangState] = useState<Lang>("en");
 
-  // zentrale Apply-Funktion: State + HTML + Hint + Cookie
+  // zentrale Apply-Funktion: State + HTML + Hint + Persistenz
   const applyLang = (next: string) => {
     const base = (next || "en").slice(0, 2).toLowerCase();
     const safe = (SUP as readonly string[]).includes(base as Lang)
@@ -71,31 +76,51 @@ export function LanguageProvider({
 
     setLangState(safe);
 
-    // HTML-Attribute setzen (für A11y + RTL)
+    // HTML-Attribute (A11y + RTL)
     document.documentElement.lang = safe;
     document.documentElement.dir = safe === "ar" ? "rtl" : "ltr";
 
-    // Hint + Cookie persistieren
-    localStorage.setItem("langHint", langHint(safe));
+    // Persistenz: letzte Sprache + Hint + Cookie
+    try {
+      localStorage.setItem("langLast", safe);
+      localStorage.setItem("langHint", langHint(safe));
+    } catch {
+      // ignore storage errors (SSR/Safari private mode etc.)
+    }
+
     document.cookie = `lang=${safe}; path=/; max-age=31536000`;
   };
 
-  // API nach außen: strikt typisiertes setLang
+  // öffentliches setLang (nur typisiert durchreichen)
   const setLang = (next: Lang) => {
     applyLang(next);
   };
 
-  // initial aus Cookie/Browser lesen
+  // Initial-Boot: zuerst localStorage, dann Cookie, dann Browser-Sprache
   useEffect(() => {
-    const cookie = document.cookie
-      .split("; ")
-      .find((s) => s.startsWith("lang="))
-      ?.split("=")[1];
+    let initial: string | null = null;
 
-    const nav = (navigator.language || "en").slice(0, 2).toLowerCase();
-    const initial = cookie || nav;
+    try {
+      const stored = localStorage.getItem("langLast");
+      if (stored) initial = stored;
+    } catch {
+      // ignore
+    }
 
-    applyLang(initial);
+    if (!initial) {
+      const cookie = document.cookie
+        .split("; ")
+        .find((s) => s.startsWith("lang="))
+        ?.split("=")[1];
+      if (cookie) initial = cookie;
+    }
+
+    if (!initial) {
+      const nav = (navigator.language || "en").slice(0, 2).toLowerCase();
+      initial = nav;
+    }
+
+    applyLang(initial || "en");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
