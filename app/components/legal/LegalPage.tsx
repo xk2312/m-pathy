@@ -1,6 +1,7 @@
+// app/components/legal/LegalPage.tsx
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { LanguageProvider, useLang } from "@/app/providers/LanguageProvider";
 import { dict } from "@/lib/i18n";
 import { legalDict, LegalPageKey } from "@/lib/i18n.legal";
@@ -61,12 +62,14 @@ function LegalContent({ pageKey }: { pageKey: LegalPageKey }) {
   const locale = legalDict[lang] ?? legalDict.en;
   const page = locale[pageKey];
 
-  // Abschnitts-IDs behalten die Reihenfolge aus dem Dict
   const sections = page.sections;
 
   return (
     <main className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20">
-      <div className="page-center px-[clamp(10px,4vw,90px)] pb-[clamp(40px,6vw,90px)] pt-[clamp(96px,8vw,130px)]">
+      <div className="page-center px-[clamp(10px,4vw,90px)] pb-[clamp(40px,6vw,90px)]">
+        {/* SUPER BUFFER – 618px über Buffer-Magazin */}
+        <div aria-hidden style={{ height: "var(--h-gap-3xl)" }} />
+
         {/* Titelblock */}
         <header className="max-w-3xl space-y-4 mb-[clamp(32px,4vw,48px)]">
           <p className="text-sm font-medium uppercase tracking-[0.22em] text-white/55">
@@ -78,9 +81,7 @@ function LegalContent({ pageKey }: { pageKey: LegalPageKey }) {
           <p className="text-sm text-white/60 max-w-2xl whitespace-pre-line">
             {page.intro}
           </p>
-          <p className="text-xs text-white/45">
-            {page.last_updated}
-          </p>
+          <p className="text-xs text-white/45">{page.last_updated}</p>
         </header>
 
         {/* Inhalt */}
@@ -107,9 +108,17 @@ function LegalContent({ pageKey }: { pageKey: LegalPageKey }) {
  * LegalPageShell
  * - kapselt LanguageProvider + Navigation + Footer
  * - pageKey bestimmt, welcher Legal-Content geladen wird
+ * - aktiviert enable-scroll, damit die Seite scrollen kann
  */
 export function LegalPageShell({ pageKey }: { pageKey: LegalPageKey }) {
-  // providerDict ist stabil; useMemo hier rein nur zur Sicherheit
+  // Scroll-Lock aufheben (wie bei /subscription)
+  useEffect(() => {
+    document.documentElement.classList.add("enable-scroll");
+    return () => {
+      document.documentElement.classList.remove("enable-scroll");
+    };
+  }, []);
+
   const dictForProvider = useMemo(() => legalProviderDict, []);
 
   return (
