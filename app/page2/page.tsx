@@ -1900,29 +1900,42 @@ return (
   }
 
   /* Desktop: Cockpit-Breite = Viewport minus Säule */
-  @media (min-width: 769px){
-    #m-input-dock.m-bottom-stack{
-      /* links Platz für die Säule lassen */
-      padding-left: calc(var(--saeule-w, 320px) + 10px);
-      padding-right: 10px;
+    @media (min-width: 769px){
+
+    /* 🎯 Gemeinsame Bühnenbegrenzung */
+    :root {
+      --stage-max: 900px;       /* zentrale Breite für Prompt & Badges */
+      --stage-pad: 48px;        /* Luft rechts/links innerhalb der Bühne */
     }
 
+    #m-input-dock.m-bottom-stack{
+      /* Säule links bleibt bestehen */
+      padding-left: calc(var(--saeule-w, 320px) + 10px);
+      padding-right: var(--stage-pad);
+    }
+
+    /* 🎯 Prompt & Gold-Bar: einheitliche, zentrierte Bühne */
     .gold-prompt-wrap,
     .gold-bar{
-      /* Prompt & Status haben jetzt eine klare, begrenzte Bühne
-         – schmaler und zentriert in der rechten Spalte */
       width: min(
-        960px,
-        calc(100vw - var(--saeule-w, 320px) - 96px)
+        var(--stage-max),
+        calc(100vw - var(--saeule-w, 320px) - var(--stage-pad) * 2)
       );
       margin-left: auto;
       margin-right: auto;
+      max-width: var(--stage-max);
+    }
+
+    /* 🎯 Grid-Ausfransen verhindern */
+    .gold-prompt-wrap{
+      grid-template-columns: 1fr max-content;
+      max-width: var(--stage-max);
     }
   }
 
-
   .gold-textarea{
-    width:100%; min-height:44px; max-height:var(--dock-cap,30vh);
+    width:100%; min-height:44px;
+ max-height:var(--dock-cap,30vh);
     resize:none; border-radius:12px; padding:10px 12px; line-height:1.5;
     border:1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"};
     background:rgba(255,255,255,0.04); color:${activeTokens.color.text};
