@@ -1909,14 +1909,17 @@ return (
 
     .gold-prompt-wrap,
     .gold-bar{
+      /* Prompt & Status haben jetzt eine klare, begrenzte Bühne
+         – schmaler und zentriert in der rechten Spalte */
       width: min(
-        1100px,
-        calc(100vw - var(--saeule-w, 320px) - 32px)
+        960px,
+        calc(100vw - var(--saeule-w, 320px) - 96px)
       );
-      margin-left: 0;
-      margin-right: 0;
+      margin-left: auto;
+      margin-right: auto;
     }
   }
+
 
   .gold-textarea{
     width:100%; min-height:44px; max-height:var(--dock-cap,30vh);
