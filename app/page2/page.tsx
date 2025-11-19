@@ -1467,9 +1467,17 @@ return (
     // ▼ Höhe auf 60 % der bisherigen Werte
     height: isMobile ? "calc(var(--header-h) * 0.6)" : "calc(224px * 0.6)",
     background: bg0,
-    borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
+    borderBottom: `1px solid ${
+      activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"
+    }`,
+    // ▼ Cockpit-Breite = Viewport minus Säule
+    paddingLeft: isMobile
+      ? 16
+      : "calc(var(--saeule-w, 320px) + 16px)",
+    paddingRight: 16,
   }}
 >
+
   <div
     style={{
       width: "100vw",
