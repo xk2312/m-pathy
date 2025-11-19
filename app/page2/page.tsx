@@ -408,8 +408,9 @@ function Bubble({
 }) {
   const isUser = msg.role === "user";
 
-   const bubbleBase: React.CSSProperties = {
-    maxWidth: "min(900px, 100%)",
+  // Basis nur noch für die EINZIGE echte Bubble (User rechts)
+  const userBubble: React.CSSProperties = {
+    maxWidth: "min(620px, 100%)",
     borderRadius: TOKENS.radius.lg,
     padding: "18px 22px",
     lineHeight: 1.6,
@@ -417,58 +418,54 @@ function Bubble({
     border: "1px solid",
     color: tokens.color.text,
     boxShadow: TOKENS.shadow.soft,
+    marginLeft: "auto",
+    marginRight: 0,
+    background: tokens.color.cyanGlass,
+    borderColor: tokens.color.cyanBorder,
   };
 
-  const bubbleStyle: React.CSSProperties = isUser
-    ? {
-        // einzige echte "Bubble": User rechts
-        ...bubbleBase,
-        maxWidth: "min(620px, 100%)",
-        marginLeft: "auto",
-        marginRight: 0,
-        background: tokens.color.cyanGlass,
-        borderColor: tokens.color.cyanBorder,
-      }
-    : {
-        // offene, zentrierte Antwortfläche (Gemini-Style)
-        ...bubbleBase,
-        marginLeft: "auto",
-        marginRight: "auto",
-        background: tokens.color.glass,
-        borderColor: tokens.color.glassBorder,
-      };
+  // M-Antwort: nur göttlicher Text, keine Fläche, kein Rahmen
+  const assistantText: React.CSSProperties = {
+    maxWidth: "min(900px, 100%)",
+    marginLeft: "auto",
+    marginRight: "auto",
+    padding: "4px 2px",
+    lineHeight: 1.7,
+    color: tokens.color.text,
+  };
 
+  const bubbleStyle: React.CSSProperties = isUser ? userBubble : assistantText;
 
-      return (
-        <div
-          role="group"                    // group statt listitem → Screenreader-Gruppe
-  aria-roledescription={isUser ? "user message" : "assistant message"}
-  aria-label={isUser ? t("youSaid") : t("assistantSays")}
-  style={{
-    display: "flex",
-    justifyContent: isUser ? "flex-end" : "flex-start",
-            alignItems: "flex-start",
-            gap: 10,
-            margin: "6px 0",
-          }}
-        >
-          {!isUser && (
-            <Image
-              src="/pictures/m.svg"
-              alt="M"
-              width={22}
-              height={22}
-              style={{ marginTop: 6, flex: "0 0 22px" }}
-            />
-          )}
-      
-          <div style={bubbleStyle}>
-            <MessageBody msg={msg} />
-          </div>
-        </div>
-      );
-      
+  return (
+    <div
+      role="group"
+      aria-roledescription={isUser ? "user message" : "assistant message"}
+      aria-label={isUser ? t("youSaid") : t("assistantSays")}
+      style={{
+        display: "flex",
+        justifyContent: isUser ? "flex-end" : "flex-start",
+        alignItems: "flex-start",
+        gap: 10,
+        margin: "6px 0",
+      }}
+    >
+      {!isUser && (
+        <Image
+          src="/pictures/m.svg"
+          alt="M"
+          width={22}
+          height={22}
+          style={{ marginTop: 6, flex: "0 0 22px" }}
+        />
+      )}
+
+      <div style={bubbleStyle}>
+        <MessageBody msg={msg} />
+      </div>
+    </div>
+  );
 }
+
 
 /** Conversation-Ansicht.
  *  Hinweis: Der EINZIGE Scrollport ist der Eltern-Container (rechte Spalte).
