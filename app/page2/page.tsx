@@ -1364,6 +1364,9 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
 // Mobile Overlay
 const [overlayOpen, setOverlayOpen] = useState(false);
 
+// Prompt-Modus: Launch (zentriert) vs. Flight (unten angedockt)
+const hasMessages = (messages?.length ?? 0) > 0;
+
 // Farben ausschließlich aus Tokens
 const color = activeTokens.color;
 const bg0 = color.bg0 ?? "#000000";
@@ -1634,14 +1637,17 @@ return (
             <div ref={endRef} style={{ height: 1 }} aria-hidden="true" />
           </div>
 
-          {/* === BOTTOM STACK: Prompt, dann Icons + Status ================= */}
+                    {/* === BOTTOM STACK: Prompt, dann Icons + Status ================= */}
           <div
             id="m-input-dock"
             ref={dockRef as any}
-            className="m-bottom-stack gold-dock"
+            className={`m-bottom-stack gold-dock ${
+              hasMessages ? "gold-dock--flight" : "gold-dock--launch"
+            }`}
             role="group"
             aria-label="Chat Eingabe & Status"
           >
+
 
             <div className="gold-prompt-wrap">
               <textarea
@@ -1832,23 +1838,40 @@ return (
   :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 320px; }
   .mi-plus-btn { display: none !important; }
 
-  /* Dock niemals transformieren (Sticky + Transform = Bug) */
-  #m-input-dock { transform: none !important; }
+  /* Dock niemals transformieren im Flight-Modus (Sticky + Transform = Bug) */
+  #m-input-dock.gold-dock--flight { transform: none !important; }
+
 
   /* Dock Container — robust: immer fixed (Desktop & Mobile) */
-  #m-input-dock {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: var(--safe-bottom, 0px);
-    z-index: 90;
-  }
-
-  /* Desktop: Dock beginnt rechts neben der Säule, wie das Cockpit */
+  /* Desktop: Launch-Modus – Prompt als „Raumschiff“ mittig im Cockpit */
   @media (min-width: 769px){
-    #m-input-dock {
+    #m-input-dock.gold-dock--launch{
+      top: 50%;
+      bottom: auto;
       left: var(--saeule-w, 320px);
       right: 0;
+      transform: translateY(-50%);
+      display:flex;
+      justify-content:center;
+      padding-inline: 24px;
+    }
+
+    #m-input-dock.gold-dock--launch .gold-prompt-wrap,
+    #m-input-dock.gold-dock--launch .gold-bar{
+      width: min(
+        720px,
+        calc(100vw - var(--saeule-w, 320px) - 48px)
+      );
+      margin-inline: 0;
+    }
+  }
+
+  /* Desktop: Flight-Modus – Prompt unten angedockt wie bisher */
+  @media (min-width: 769px){
+    #m-input-dock.gold-dock--flight{
+      left: var(--saeule-w, 320px);
+      right: 0;
+      bottom: var(--safe-bottom, 0px);
     }
   }
 
