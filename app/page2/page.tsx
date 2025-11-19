@@ -1539,65 +1539,81 @@ return (
 
 
       {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
-<div
-  style={{
-    flex: 1,
-    display: "flex",
-    flexDirection: isMobile ? "column" : "row",
-    marginInline: 0,
-    minHeight: 0,
-    maxWidth: "none",
-    alignSelf: "stretch",
-    width: "100%",
-    paddingTop: isMobile ? "calc(var(--header-h) * 0.6)" : "calc(224px * 0.6)",
-  }}
->
+      <section
+        aria-label="Chat layout"
+        style={{
+          display: "grid",
+          gridTemplateColumns: isMobile
+            ? "minmax(0,1fr)"
+            : "minmax(260px, 320px) minmax(0,1fr)",
+          alignItems: "start",
+          gap: 16,
+          minHeight: 0,
+          overflow: "visible",
+        }}
+      >
 
-  {/* Säule links */}
-  {!isMobile && (
-    <div
-      style={{
-        position: "sticky",
-        top: 16,
-        alignSelf: "stretch",
-        height: "100%",
-        marginTop: "-calc(224px * 0.6)",
-        paddingTop: "calc(224px * 0.6 + 16px)",
-        paddingBottom: "calc(var(--dock-h, 60px) + 16px)",
-        maxHeight: "calc(100dvh - var(--dock-h, 60px) - 32px)",
-        overflow: "visible",
-      }}
-    >
-      <SidebarContainer
-        onSystemMessage={systemSay}
-        onClearChat={onClearChat}
-      />
-    </div>
-  )}
-
-  {/* RECHTE BÜHNE – Chat-Scroller */}
+{/* Säule links */}
+{!isMobile && (
   <div
-    ref={convoRef as any}
     style={{
-      display: "flex",
-      flexDirection: "column",
-      flex: 1,
-      minHeight: 0,
-      overflow: "auto",
-      pointerEvents: "auto",
-      touchAction: "pan-y",
-      WebkitOverflowScrolling: "touch",
-      overscrollBehavior: "contain",
+      // Säule klebt jetzt am Viewport-Rand und spannt zwischen Header und Dock
+      position: "sticky",
+      top: 16,
+      alignSelf: "stretch",
+      height: "100%",
 
-      paddingBottom: `${padBottom}px`,
-      scrollPaddingBottom: `${padBottom}px`,
+      // nach oben in den Logo-Bereich ziehen
+      marginTop: "-calc(224px * 0.6)",
+      paddingTop: "calc(224px * 0.6 + 16px)",
 
-      paddingInline: isMobile
-        ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
-        : "12px",
+      // nach unten bis kurz vor den Prompt-Dock ziehen
+      paddingBottom: "calc(var(--dock-h, 60px) + 16px)",
+      maxHeight: "calc(100dvh - var(--dock-h, 60px) - 32px)",
+
+      // Säule darf optisch voll „atmen“ (Glow, Schatten)
+      overflow: "visible",
     }}
   >
+      <SidebarContainer
+      onSystemMessage={systemSay}
+      onClearChat={onClearChat}   // ← der echte Clear-Handler (hard clear + reload)
+      /* canClear={canClear} */   // ← optional, falls du Disable-Logik nutzt
+    />
+  </div>
+)}
 
+
+
+        <div
+          ref={convoRef as any}
+          className="chat-stage"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+
+
+            /* Harte, verlässliche Block-Höhe relativ zum Viewport */
+            flex: "0 1 auto",
+            height: isMobile
+              ? undefined
+              : "calc(100dvh - (224px * 0.6) - var(--dock-h, 60px))",
+
+            minHeight: 0,
+            overflow: "auto",
+            pointerEvents: "auto",
+            touchAction: "pan-y",
+            WebkitOverflowScrolling: "touch",
+            overscrollBehavior: "contain",
+
+            paddingBottom: `${padBottom}px`,
+            scrollPaddingBottom: `${padBottom}px`,
+
+            paddingInline: isMobile
+              ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
+              : "12px",
+          }}
+        >
 
           {/* Chronik wächst im Scroller */}
           <div
@@ -1788,7 +1804,7 @@ return (
           </div>
           {/* === /BOTTOM STACK ========================================= */}
         </div> {/* /Scroller */}
-      </div>
+      </section>   {/* /Grid */}
     </div>     {/* /Bühne */}
 
 
@@ -1886,11 +1902,11 @@ return (
   }
 
   /* Desktop: Cockpit-Breite = Viewport minus Säule */
-    @media (min-width: 769px){
+  @media (min-width: 769px){
 
     /* 🎯 Gemeinsame Bühnenbegrenzung */
     :root {
-      --stage-max: 900px;       /* zentrale Breite für Prompt & Badges */
+      --stage-max: 900px;       /* zentrale Breite für Prompt & Badges & Chat */
       --stage-pad: 48px;        /* Luft rechts/links innerhalb der Bühne */
     }
 
@@ -1912,12 +1928,24 @@ return (
       max-width: var(--stage-max);
     }
 
+    /* 🎯 Chat-Bühne rechts: gleiche Stage wie Prompt */
+    .chat-stage{
+      width: min(
+        var(--stage-max),
+        calc(100vw - var(--saeule-w, 320px) - var(--stage-pad) * 2)
+      );
+      margin-left: auto;
+      margin-right: auto;
+      max-width: var(--stage-max);
+    }
+
     /* 🎯 Grid-Ausfransen verhindern */
     .gold-prompt-wrap{
       grid-template-columns: 1fr max-content;
       max-width: var(--stage-max);
     }
   }
+
 
   .gold-textarea{
     width:100%; min-height:44px;
