@@ -1453,31 +1453,26 @@ const sendingRef = useRef(false);
 return (
   <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
     
-    
-    {/* === HEADER ===================================================== */}
+        {/* === HEADER ===================================================== */}
 <header
   ref={headerRef}
   role="banner"
   style={{
     position: "fixed",
     top: 0,
-    left: 0,
-    right: 0,
+    // Desktop: Header beginnt rechts neben der Säule
+    left: isMobile ? 0 : "var(--saeule-w, 320px)",
+    right: isMobile ? 0 : undefined,
+    width: isMobile ? "100%" : "calc(100vw - var(--saeule-w, 320px))",
     zIndex: 100,
     // ▼ Höhe auf 60 % der bisherigen Werte
     height: isMobile ? "calc(var(--header-h) * 0.6)" : "calc(224px * 0.6)",
     background: bg0,
-    borderBottom: `1px solid ${
-      activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"
-    }`,
-    // ▼ Cockpit-Breite = Viewport minus Säule
-    paddingLeft: isMobile
-      ? 16
-      : "calc(var(--saeule-w, 320px) + 16px)",
-    paddingRight: 16,
+    borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
   }}
 >
 
+    
   <div
     style={{
       width: "100vw",
@@ -1819,255 +1814,264 @@ return (
       </>
     )}
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
+
+
     {/* === Golden Prompt — Styles ==================================== */}
-    <style jsx global>{`
+<style jsx global>{`
   html, body {
-  background:#000;
-  margin:0;
-  padding:0;
-  height:100dvh;       /* Root fixiert */
-  overflow-x:hidden;
-  overflow-y:hidden;   /* Body scrollt NICHT */
-}
-main {
-  height:100dvh;       /* ⬅️ WICHTIG: der direkte Wrapper bekommt feste Höhe */
-  display:grid;
-}
+    background:#000;
+    margin:0;
+    padding:0;
+    min-height:100dvh;       /* Root soll mindestens Viewport-Höhe haben */
+    overflow-x:hidden;       /* kein horizontales Scrollen */
+  }
+  main {
+    min-height:100dvh;       /* Seite darf wachsen, bleibt aber mind. Viewport hoch */
+  }
 
   :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 320px; }
   .mi-plus-btn { display: none !important; }
 
+  /* Dock niemals transformieren (Sticky + Transform = Bug) */
+  #m-input-dock { transform: none !important; }
 
-      /* Dock niemals transformieren (Sticky + Transform = Bug) */
-      #m-input-dock { transform: none !important; }
+  /* Dock Container — robust: immer fixed (Desktop & Mobile) */
+  #m-input-dock {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: var(--safe-bottom, 0px);
+    z-index: 90;
+  }
 
-      /* Dock Container — robust: immer fixed (Desktop & Mobile) */
-      #m-input-dock {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: var(--safe-bottom, 0px);
-        z-index: 90;
-      }
+  /* Desktop: Dock beginnt rechts neben der Säule, wie das Cockpit */
+  @media (min-width: 769px){
+    #m-input-dock {
+      left: var(--saeule-w, 320px);
+      right: 0;
+    }
+  }
+
+  #m-input-dock.m-bottom-stack{
+    background: rgba(8,14,18,0.90);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 0 -4px 18px rgba(0,0,0,.40);
+    padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
+    overscroll-behavior: contain;
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  /* Kinder dürfen animieren */
+  .gold-prompt-wrap,
+  .gold-bar { will-change: transform; }
+
+  /* Prompt Grid */
+  .gold-prompt-wrap{
+    display:grid; grid-template-columns: 1fr max-content;
+    gap:10px; align-items:stretch;
+    width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+    margin:0 auto;
+  }
+
+  /* Desktop: Cockpit-Breite = Viewport minus Säule */
+  @media (min-width: 769px){
+    #m-input-dock.m-bottom-stack{
+      /* links Platz für die Säule lassen */
+      padding-left: calc(var(--saeule-w, 320px) + 10px);
+      padding-right: 10px;
+    }
+
+    .gold-prompt-wrap,
+    .gold-bar{
+      width: min(
+        1100px,
+        calc(100vw - var(--saeule-w, 320px) - 32px)
+      );
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  .gold-textarea{
+    width:100%; min-height:44px; max-height:var(--dock-cap,30vh);
+    resize:none; border-radius:12px; padding:10px 12px; line-height:1.5;
+    border:1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"};
+    background:rgba(255,255,255,0.04); color:${activeTokens.color.text};
+    outline:none; background-clip: padding-box;
+    transition: box-shadow 120ms cubic-bezier(.2,.6,.2,1), border-color 120ms cubic-bezier(.2,.6,.2,1);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
+  }
+  .gold-textarea:is(:hover,:focus,.is-typing){
+    box-shadow: 0 0 0 1px ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"},
+                0 0 18px rgba(34,211,238,0.18);
+    border-color: ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
+  }
+
+  .gold-send{
+    height:44px; min-width:96px; white-space:nowrap;
+    padding:0 16px; border-radius:12px; font-weight:700;
+    border:1px solid ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
+    background:${activeTokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"};
+    color:${activeTokens.color.text}; cursor:pointer; background-clip: padding-box;
+    transition: transform 120ms cubic-bezier(.2,.6,.2,1), box-shadow 120ms cubic-bezier(.2,.6,.2,1);
+    display:inline-flex; align-items:center; justify-content:center;
+  }
+  .gold-send:hover:not(:disabled){ transform: translateY(-1px); }
+  .gold-send:active:not(:disabled){ transform: translateY(0); }
+  .gold-send:disabled{ opacity:.45; cursor:default; }
+
+  /* Icons + Status unter Prompt */
+  .gold-bar{
+    width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+    margin:3px auto 0 auto;
+    display:flex; align-items:center; justify-content:flex-start; gap:12px;
+  }
+  .gold-tools{ display:flex; gap:8px; }
+  .gt-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    height:36px; min-width:36px; padding:0 12px;
+    border-radius:10px; border:1px solid rgba(49,65,86,.7);
+    background:#0b1220; color:#e6f0f3; font-weight:700;
+    transition:transform 120ms cubic-bezier(.2,.6,.2,1);
+  }
+  .gt-btn:active{ transform:scale(.98); }
+
+  /* Statuschips: Mode / Expert */
+  .gold-stats {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-left: 12px;
+    min-width:0;
+  }
+  .gold-stats .stat {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 10px; border-radius: 999px;
+    background: rgba(255, 255, 255, .06);
+    border: 1px solid rgba(255, 255, 255, .10);
+    backdrop-filter: blur(6px);
+    max-width:100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  }
+  .gold-stats .dot { width: 8px; height: 8px; border-radius: 50%; background: #42f6ff; box-shadow: 0 0 8px currentColor; flex: 0 0 8px; }
+  .gold-stats .label { opacity: .75; letter-spacing: .02em; }
+  .gold-stats strong { font-weight: 600; }
+
+  /* Fallback für sichtbares Chat-Ende – neutralisiert, da Fußraum via paddingBottom kommt */
+  .chat-end-spacer{
+    height: 0;
+    pointer-events: none;
+  }
+
+  /* Mobile: Dock edge-to-edge + Safe-Area + Status rechts (übereinander) */
+  @media (max-width: 768px){
+    #m-input-dock.m-bottom-stack{
+      left: max(0px, env(safe-area-inset-left));
+      right: max(0px, env(safe-area-inset-right));
+      bottom: max(0px, env(safe-area-inset-bottom));
+      padding: 8px max(8px, env(safe-area-inset-left))
+               calc(8px + env(safe-area-inset-bottom))
+               max(8px, env(safe-area-inset-right));
+      background: rgba(8,14,18,0.90) !important;
+      border-top: 1px solid rgba(255,255,255,0.10) !important;
+      box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
+      z-index: 90 !important;
+    }
+    .gold-prompt-wrap,
+    .gold-bar{
+      width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
+      margin-left: auto; margin-right: auto;
+    }
+
+    /* Tools links, Mode/Expert rechts übereinander */
+    .gold-bar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      column-gap:10px;
+      flex-wrap:nowrap;
+    }
+    .gold-tools{ flex:0 0 auto; }
+
+    .gold-stats{
+      flex:1 1 auto;
+      display:flex;
+      flex-direction:column;     /* übereinander */
+      align-items:flex-end;      /* rechtsbündig */
+      gap:6px;
+      min-width:160px;
+      max-width:60vw;
+      min-height:0;
+    }
+    .gold-stats .stat{
+      padding:3px 8px; gap:6px;
+      max-width:100%;
+    }
+    .gold-stats .dot{ width:6px; height:6px; flex:0 0 6px; }
+    .gold-stats .label{ font-size:12px; opacity:.8; letter-spacing:.01em; }
+    .gold-stats strong{ font-size:12px; font-weight:600; letter-spacing:.01em; }
+
+    /* Kompaktmodus bei offenem Keyboard / sehr wenig Höhe */
+    .gold-bar[data-compact="1"]{ row-gap:6px; }
+    @media (max-height: 560px){
+      .gold-bar[data-compact="1"] .gold-stats{ display:none; }
       #m-input-dock.m-bottom-stack{
-        background: rgba(8,14,18,0.90);
-        backdrop-filter: blur(8px);
-        border-top: 1px solid rgba(255,255,255,0.10);
-        box-shadow: 0 -4px 18px rgba(0,0,0,.40);
-        padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
-        overscroll-behavior: contain;
-        width: 100%;
-        margin: 0;
-        border-radius: 0;
+        padding: 6px max(8px, env(safe-area-inset-left))
+                 calc(6px + env(safe-area-inset-bottom))
+                 max(8px, env(safe-area-inset-right));
       }
-
-      /* Kinder dürfen animieren */
-      .gold-prompt-wrap,
-      .gold-bar { will-change: transform; }
-
-      /* Prompt Grid */
-      .gold-prompt-wrap{
-        display:grid; grid-template-columns: 1fr max-content;
-        gap:10px; align-items:stretch;
-        width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
-        margin:0 auto;
-      }
-
-        /* Desktop: Cockpit-Breite = Viewport minus Säule */
-      @media (min-width: 769px){
-        #m-input-dock.m-bottom-stack{
-          /* links Platz für die Säule lassen */
-          padding-left: calc(var(--saeule-w, 320px) + 10px);
-          padding-right: 10px;
-        }
-
-        .gold-prompt-wrap,
-        .gold-bar{
-          width: min(
-            1100px,
-            calc(100vw - var(--saeule-w, 320px) - 32px)
-          );
-          margin-left: 0;
-          margin-right: 0;
-        }
-      }
-      .gold-textarea{
-        width:100%; min-height:44px; max-height:var(--dock-cap,30vh);
-        resize:none; border-radius:12px; padding:10px 12px; line-height:1.5;
-        border:1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"};
-        background:rgba(255,255,255,0.04); color:${activeTokens.color.text};
-        outline:none; background-clip: padding-box;
-        transition: box-shadow 120ms cubic-bezier(.2,.6,.2,1), border-color 120ms cubic-bezier(.2,.6,.2,1);
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
-      }
-      .gold-textarea:is(:hover,:focus,.is-typing){
-        box-shadow: 0 0 0 1px ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"},
-                    0 0 18px rgba(34,211,238,0.18);
-        border-color: ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
-      }
-      .gold-send{
-        height:44px; min-width:96px; white-space:nowrap;
-        padding:0 16px; border-radius:12px; font-weight:700;
-        border:1px solid ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
-        background:${activeTokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"};
-        color:${activeTokens.color.text}; cursor:pointer; background-clip: padding-box;
-        transition: transform 120ms cubic-bezier(.2,.6,.2,1), box-shadow 120ms cubic-bezier(.2,.6,.2,1);
-        display:inline-flex; align-items:center; justify-content:center;
-      }
-      .gold-send:hover:not(:disabled){ transform: translateY(-1px); }
-      .gold-send:active:not(:disabled){ transform: translateY(0); }
-      .gold-send:disabled{ opacity:.45; cursor:default; }
-
-      /* Icons + Status unter Prompt */
-      .gold-bar{
-        width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
-        margin:3px auto 0 auto;
-        display:flex; align-items:center; justify-content:flex-start; gap:12px;
-      }
-      .gold-tools{ display:flex; gap:8px; }
-      .gt-btn{
-        display:inline-flex; align-items:center; justify-content:center;
-        height:36px; min-width:36px; padding:0 12px;
-        border-radius:10px; border:1px solid rgba(49,65,86,.7);
-        background:#0b1220; color:#e6f0f3; font-weight:700;
-        transition:transform 120ms cubic-bezier(.2,.6,.2,1);
-      }
-      .gt-btn:active{ transform:scale(.98); }
-
-      /* Statuschips: Mode / Expert */
-      .gold-stats {
-        display: flex;
-        gap: 14px;
-        align-items: center;
-        margin-left: 12px;
-        min-width:0;
-      }
-      .gold-stats .stat {
-        display: flex; align-items: center; gap: 8px;
-        padding: 4px 10px; border-radius: 999px;
-        background: rgba(255, 255, 255, .06);
-        border: 1px solid rgba(255, 255, 255, .10);
-        backdrop-filter: blur(6px);
-        max-width:100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-      }
-      .gold-stats .dot { width: 8px; height: 8px; border-radius: 50%; background: #42f6ff; box-shadow: 0 0 8px currentColor; flex: 0 0 8px; }
-      .gold-stats .label { opacity: .75; letter-spacing: .02em; }
-      .gold-stats strong { font-weight: 600; }
-
-      /* Fallback für sichtbares Chat-Ende – neutralisiert, da Fußraum via paddingBottom kommt */
-.chat-end-spacer{
-  height: 0;
-  pointer-events: none;
-}
-
-
-      /* Mobile: Dock edge-to-edge + Safe-Area + Status rechts (übereinander) */
-      @media (max-width: 768px){
-        #m-input-dock.m-bottom-stack{
-          left: max(0px, env(safe-area-inset-left));
-          right: max(0px, env(safe-area-inset-right));
-          bottom: max(0px, env(safe-area-inset-bottom));
-          padding: 8px max(8px, env(safe-area-inset-left))
-                   calc(8px + env(safe-area-inset-bottom))
-                   max(8px, env(safe-area-inset-right));
-          background: rgba(8,14,18,0.90) !important;
-          border-top: 1px solid rgba(255,255,255,0.10) !important;
-          box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
-          z-index: 90 !important;
-        }
-        .gold-prompt-wrap,
-        .gold-bar{
-          width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
-          margin-left: auto; margin-right: auto;
-        }
-
-        /* Tools links, Mode/Expert rechts übereinander */
-        .gold-bar{
-          display:flex;
-          align-items:center;
-          justify-content:space-between;
-          column-gap:10px;
-          flex-wrap:nowrap;
-        }
-        .gold-tools{ flex:0 0 auto; }
-
-        .gold-stats{
-          flex:1 1 auto;
-          display:flex;
-          flex-direction:column;     /* übereinander */
-          align-items:flex-end;      /* rechtsbündig */
-          gap:6px;
-          min-width:160px;
-          max-width:60vw;
-          min-height:0;
-        }
-        .gold-stats .stat{
-          padding:3px 8px; gap:6px;
-          max-width:100%;
-        }
-        .gold-stats .dot{ width:6px; height:6px; flex:0 0 6px; }
-        .gold-stats .label{ font-size:12px; opacity:.8; letter-spacing:.01em; }
-        .gold-stats strong{ font-size:12px; font-weight:600; letter-spacing:.01em; }
-
-        /* Kompaktmodus bei offenem Keyboard / sehr wenig Höhe */
-        .gold-bar[data-compact="1"]{ row-gap:6px; }
-        @media (max-height: 560px){
-          .gold-bar[data-compact="1"] .gold-stats{ display:none; }
-          #m-input-dock.m-bottom-stack{
-            padding: 6px max(8px, env(safe-area-inset-left))
-                     calc(6px + env(safe-area-inset-bottom))
-                     max(8px, env(safe-area-inset-right));
-          }
-          .gold-prompt-wrap{ grid-template-columns: 1fr max-content; gap:6px; }
-        }
-      }
-
-      /* Ripple / Inertia */
-      .gold-dock.send-ripple{
-        animation: gp-inertia 320ms cubic-bezier(.2,.6,.2,1) 1, gp-ripple 680ms ease-out 1;
-      }
-      @keyframes gp-inertia{ 0%{transform:translateY(0)} 55%{transform:translateY(-3px)} 100%{transform:translateY(0)} }
-      @keyframes gp-ripple{
-        0%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
-        15%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 1000px rgba(34,211,238,0.08); }
-        100%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
-      }
-
-      /* Entkopplung von Legacy input-bar.css */
-      #m-input-dock .gold-prompt-wrap,
-      #m-input-dock .gold-textarea,
-      #m-input-dock .gold-send{
-        position: static !important; float: none !important; inset: auto !important; box-sizing: border-box !important;
-      }
-
-      /* FAB über Dock */
-      .sticky-fab, [data-sticky-fab], button[aria-label="Menü öffnen"]{
-        bottom: calc(var(--dock-h, 60px) + 12px) !important;
-        z-index: var(--fab-z) !important;
-      }
-
-      /* Desktop: Margin-Collapse-Guard am Listenende */
-      @media (min-width: 769px){
-        section[role="log"]{ border-bottom: 0.1px solid transparent; }
-        section[role="log"] > *:last-child{ margin-bottom: 0 !important; }
-      }
-        /* ▼ Mobile-Override: Root & Main nicht starr machen */
-@media (max-width: 768px){
-  html, body{
-    height: auto;         /* Root darf mitschrumpfen */
-    min-height: 100svh;   /* sichtbarer Viewport (iOS-freundlich) */
-    overflow-y: auto;     /* kein globales Freeze */
+      .gold-prompt-wrap{ grid-template-columns: 1fr max-content; gap:6px; }
+    }
   }
-  main{
-    height: auto;         /* Main nicht mehr 100dvh erzwingen */
-    min-height: 100svh;   /* genug Höhe, aber elastisch */
-    overflow: hidden;     /* Scroll bleibt delegiert an rechts */
-  }
-  /* iOS Auto-Zoom vermeiden */
-  #gold-input, .gold-textarea{ font-size:16px; }
-}
 
-    `}</style>
-  </main>
+  /* Ripple / Inertia */
+  .gold-dock.send-ripple{
+    animation: gp-inertia 320ms cubic-bezier(.2,.6,.2,1) 1, gp-ripple 680ms ease-out 1;
+  }
+  @keyframes gp-inertia{ 0%{transform:translateY(0)} 55%{transform:translateY(-3px)} 100%{transform:translateY(0)} }
+  @keyframes gp-ripple{
+    0%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
+    15%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 1000px rgba(34,211,238,0.08); }
+    100%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
+  }
+
+  /* Entkopplung von Legacy input-bar.css */
+  #m-input-dock .gold-prompt-wrap,
+  #m-input-dock .gold-textarea,
+  #m-input-dock .gold-send{
+    position: static !important; float: none !important; inset: auto !important; box-sizing: border-box !important;
+  }
+
+  /* FAB über Dock */
+  .sticky-fab, [data-sticky-fab], button[aria-label="Menü öffnen"]{
+    bottom: calc(var(--dock-h, 60px) + 12px) !important;
+    z-index: var(--fab-z) !important;
+  }
+
+  /* Desktop: Margin-Collapse-Guard am Listenende */
+  @media (min-width: 769px){
+    section[role="log"]{ border-bottom: 0.1px solid transparent; }
+    section[role="log"] > *:last-child{ margin-bottom: 0 !important; }
+  }
+
+  /* ▼ Mobile-Override: Root & Main nicht starr machen */
+  @media (max-width: 768px){
+    html, body{
+      height: auto;         /* Root darf mitschrumpfen */
+      min-height: 100svh;   /* sichtbarer Viewport (iOS-freundlich) */
+      overflow-y: auto;     /* kein globales Freeze */
+    }
+    main{
+      height: auto;         /* Main nicht mehr 100dvh erzwingen */
+      min-height: 100svh;   /* genug Höhe, aber elastisch */
+      overflow: hidden;     /* Scroll bleibt delegiert an rechts */
+    }
+    /* iOS Auto-Zoom vermeiden */
+    #gold-input, .gold-textarea{ font-size:16px; }
+  }
+`}</style>
+</main>
 );
 }
