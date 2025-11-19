@@ -1479,10 +1479,13 @@ return (
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
+
+      // Desktop: Logo-Cockpit beginnt rechts neben der Säule
+      paddingLeft: isMobile ? 0 : 320, // ≈ Säulenbreite
     }}
   >
-    {/* ▼ Logo auf 60 %: 120→72 (mobile), 160→96 (desktop) */}
     <MTheater>
+
   <LogoM size={160} active={loading} variant={M_CURRENT_VARIANT} />
 
   {frameText && (
@@ -1823,8 +1826,9 @@ main {
   display:grid;
 }
 
-  :root { --dock-h: 60px; --fab-z: 90; }
+  :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 320px; }
   .mi-plus-btn { display: none !important; }
+
 
       /* Dock niemals transformieren (Sticky + Transform = Bug) */
       #m-input-dock { transform: none !important; }
@@ -1844,7 +1848,7 @@ main {
         box-shadow: 0 -4px 18px rgba(0,0,0,.40);
         padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
         overscroll-behavior: contain;
-        width: auto;
+        width: 100%;
         margin: 0;
         border-radius: 0;
       }
@@ -1859,6 +1863,25 @@ main {
         gap:10px; align-items:stretch;
         width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
         margin:0 auto;
+      }
+
+        /* Desktop: Cockpit-Breite = Viewport minus Säule */
+      @media (min-width: 769px){
+        #m-input-dock.m-bottom-stack{
+          /* links Platz für die Säule lassen */
+          padding-left: calc(var(--saeule-w, 320px) + 10px);
+          padding-right: 10px;
+        }
+
+        .gold-prompt-wrap,
+        .gold-bar{
+          width: min(
+            1100px,
+            calc(100vw - var(--saeule-w, 320px) - 32px)
+          );
+          margin-left: 0;
+          margin-right: 0;
+        }
       }
       .gold-textarea{
         width:100%; min-height:44px; max-height:var(--dock-cap,30vh);
