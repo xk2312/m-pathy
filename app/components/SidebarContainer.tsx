@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Saeule from "./Saeule";
+import styles from "./Saeule.module.css";
 
 /* ======================================================================
    Props & Hook
@@ -69,14 +70,17 @@ export default function SidebarContainer({
             zIndex: "var(--z-base, 1)",
           }}
         >
-          <Saeule
-            onSystemMessage={onSystemMessage}
-            onClearChat={onClearChat}   // ⬅︎ Leitung zum Clear-Handler
-            canClear={canClear}         // ⬅︎ optional
-          />
+          <div className={styles.geminiFrame}>
+            <Saeule
+              onSystemMessage={onSystemMessage}
+              onClearChat={onClearChat}   // ⬅︎ Leitung zum Clear-Handler
+              canClear={canClear}         // ⬅︎ optional
+            />
+          </div>
         </div>
       ) : (
         /* Mobile: Platzhalter */
+
         <div
           aria-hidden="true"
           data-test="sidebar-mobile-placeholder"
