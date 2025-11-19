@@ -500,16 +500,19 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
   setSendingExpert(null);
 }
 
-  /* UI */
+   /* UI */
   return (
-    <aside className={styles.saeule} aria-label={t("columnAria")} data-test="saeule">
+    <aside
+      className={styles.saeule}
+      aria-label={tr("columnAria", "Column — Controls & Selection")}
+      data-test="saeule"
+    >
       
-     {/* Kopf entfernt → Build-Button oben im Panel */}
-<div className={styles.block} style={{ marginTop: 8 }}>
-  {/* Kopf entfernt → Build-Button oben im Panel */}
-<div className={styles.block} style={{ marginTop: 8 }}>
-  <button
-    type="button"
+      {/* Kopf entfernt → Build-Button oben im Panel */}
+      <div className={styles.block} style={{ marginTop: 8 }}>
+        <button
+          type="button"
+
     aria-label={tr("cta.build", "Jetzt bauen")}         // ← i18n Key
     data-m-event="builder"
     data-m-label={tr("cta.build", "Jetzt bauen")}
@@ -549,8 +552,6 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
   >
     {tr("cta.build", "Jetzt bauen")}                     {/* dynamisches Label */}
   </button>
-</div>
-
 </div>
 
 

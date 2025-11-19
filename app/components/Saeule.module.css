@@ -1,13 +1,14 @@
 /* ─────────────────────────────
-   Säule – sticky + Header-Abstand
+   Säule – Panel innerhalb des sticky-Containers
    ───────────────────────────── */
 .saeule {
-  position: sticky;
-  top: var(--header-offset, 16px);
-  margin-top: var(--header-offset, 16px);
+  position: relative;
+  top: 0;
+  margin-top: 0;
 
   align-self: start;
   height: max-content;
+
   max-height: none;
   overflow: visible;
 
@@ -433,8 +434,4 @@
     height: auto;
     overflow: visible;
   }
-}
-/* Sicherstellen, dass Primär-Button aktiv stark wirkt */
-.buttonPrimary.active {
-  filter: brightness(1.05);
 }
