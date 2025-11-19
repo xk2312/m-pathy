@@ -408,33 +408,31 @@ function Bubble({
 }) {
   const isUser = msg.role === "user";
 
-  const bubbleBase: React.CSSProperties = {
+  // Assistant: komplett transparent, nur Text
+  const assistantStyle: React.CSSProperties = {
     maxWidth: "min(900px, 100%)",
+    lineHeight: 1.6,
+    color: tokens.color.text,
+    background: "transparent",
+    border: "none",
+    boxShadow: "none",
+    padding: "0",             // nur Text, kein Bubble-Rand
+  };
+
+  // User: edle Glow-Bubble wie im Screenshot
+  const userStyle: React.CSSProperties = {
+    maxWidth: "min(620px, 100%)",
     borderRadius: TOKENS.radius.lg,
     padding: "18px 22px",
     lineHeight: 1.6,
-    backdropFilter: "blur(10px)",
-    border: "1px solid",
+    backdropFilter: "blur(14px)",
+    background: "rgba(255,255,255,0.04)",      // zartes Glas
+    border: `1px solid ${tokens.color.slateBorder}`,
+    boxShadow: "0 0 32px rgba(255,255,255,0.06)", // weicher Glow
     color: tokens.color.text,
-    boxShadow: TOKENS.shadow.soft,
-    background: "transparent",      // keine Fläche mehr
-    borderColor: "transparent",      // keine Ränder mehr
   };
 
-  const bubbleStyle: React.CSSProperties = isUser
-    ? {
-        ...bubbleBase,
-        maxWidth: "min(620px, 100%)",
-        marginLeft: "auto",
-        marginRight: 0,
-        textAlign: "right",
-      }
-    : {
-        ...bubbleBase,
-        marginLeft: 0,
-        marginRight: "auto",
-        textAlign: "left",
-      };
+  const bubbleStyle = isUser ? userStyle : assistantStyle;
 
   return (
     <div
@@ -444,7 +442,6 @@ function Bubble({
       style={{
         display: "flex",
         justifyContent: isUser ? "flex-end" : "flex-start",
-        alignItems: "flex-start",
         gap: 10,
         margin: "6px 0",
       }}
