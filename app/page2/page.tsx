@@ -1832,12 +1832,20 @@ return (
     background:#000;
     margin:0;
     padding:0;
-    min-height:100dvh;       /* Root soll mindestens Viewport-Höhe haben */
-    overflow-x:hidden;       /* kein horizontales Scrollen */
+
+    /* Desktop: Seite ist ein fester Viewport, kein Y-Scroll.
+       Der einzige Scrollport bleibt die rechte Chat-Spalte. */
+    height:100dvh;
+    min-height:100dvh;
+    overflow-x:hidden;
+    overflow-y:hidden;
   }
   main {
-    min-height:100dvh;       /* Seite darf wachsen, bleibt aber mind. Viewport hoch */
+    /* Main folgt dem gleichen Schema wie das Root */
+    height:100dvh;
+    min-height:100dvh;
   }
+
 
   :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 320px; }
   .mi-plus-btn { display: none !important; }
