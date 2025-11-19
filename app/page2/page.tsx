@@ -1508,16 +1508,20 @@ const bg0 = color.bg0 ?? "#000000";
 const bg1 = color.bg1 ?? "#0c0f12";
 const textColor = color.text ?? "#E6F0F3";
 
-// Seitenstil (radial + linear)
+// Seitenstil (radial + linear) – neutral, nur Grau/Schwarz
 const pageStyle: React.CSSProperties = {
   minHeight: "100dvh",
   color: textColor,
   background: [
-    "radial-gradient(90rem 60rem at 50% 35%, rgba(34,211,238,0.08), transparent 60%)",
-    "radial-gradient(75rem 55rem at 50% 60%, rgba(148,163,184,0.06), transparent 65%)",
-    `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000 100%)`,
+    // sanfte Vignette oben
+    "radial-gradient(110rem 70rem at 50% 0%, rgba(24, 27, 33, 0.85), transparent 60%)",
+    // sanfte Vignette unten
+    "radial-gradient(110rem 70rem at 50% 100%, rgba(8, 10, 14, 0.95), transparent 65%)",
+    // Grundverlauf: nur bg1 → bg0 → tiefes Schwarz
+    `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000000 100%)`,
   ].join(", "),
 };
+
 
 // Mobile Header State + Viewport Hook
 const [mState, setMState] = useState<"idle" | "shrink" | "typing">("idle");
@@ -1591,7 +1595,7 @@ const sendingRef = useRef(false);
 return (
   <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
     
-        {/* === HEADER ===================================================== */}
+   {/* === HEADER ===================================================== */}
 <header
   ref={headerRef}
   role="banner"
@@ -1605,10 +1609,16 @@ return (
     zIndex: 100,
     // ▼ Höhe auf 60 % der bisherigen Werte
     height: isMobile ? "calc(var(--header-h) * 0.6)" : "calc(224px * 0.6)",
-    background: bg0,
-    borderBottom: `1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.10)"}`,
+    background: [
+      "linear-gradient(180deg, rgba(12, 14, 18, 0.98), rgba(4, 6, 10, 0.98))",
+    ].join(", "),
+    borderBottom: `1px solid ${
+      activeTokens.color.glassBorder ?? "rgba(148, 163, 184, 0.35)"
+    }`,
+    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.75)",
   }}
 >
+
 
     
     <div
