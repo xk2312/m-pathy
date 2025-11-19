@@ -1520,12 +1520,30 @@ return (
       </div>
 </header>
 
-{/* === BÜHNE ====================================================== */}
+     {/* === BÜHNE ====================================================== */}
 <div
   style={{
     flex: 1,
     display: "flex",
-    flexDirection: "row",            // 🔥 NEU: Zwei Spalten ohne Grid
+    flexDirection: "column",
+    // Full-left: Bühne hängt direkt an der Viewport-Wand
+    marginInline: 0,
+    minHeight: 0,
+    maxWidth: "none",
+    alignSelf: "stretch",
+    width: "100%",
+    // ⬇️ Mobile & Desktop beide auf 60 % des ursprünglichen Header-Werts
+    paddingTop: isMobile ? "calc(var(--header-h) * 0.6)" : "calc(224px * 0.6)",
+  }}
+>
+
+
+      {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
+<div
+  style={{
+    flex: 1,
+    display: "flex",
+    flexDirection: isMobile ? "column" : "row",
     marginInline: 0,
     minHeight: 0,
     maxWidth: "none",
@@ -1535,7 +1553,7 @@ return (
   }}
 >
 
-  {/* Säule links (unverändert) */}
+  {/* Säule links */}
   {!isMobile && (
     <div
       style={{
@@ -1557,73 +1575,29 @@ return (
     </div>
   )}
 
-  {/* RECHTE BÜHNE — Chat-Scroller direkt hier */}
+  {/* RECHTE BÜHNE – Chat-Scroller */}
   <div
     ref={convoRef as any}
     style={{
       display: "flex",
       flexDirection: "column",
-      flex: 1,                       // 🔥 nimmt komplette rechte Spalte ein
+      flex: 1,
       minHeight: 0,
       overflow: "auto",
       pointerEvents: "auto",
       touchAction: "pan-y",
       WebkitOverflowScrolling: "touch",
       overscrollBehavior: "contain",
+
       paddingBottom: `${padBottom}px`,
       scrollPaddingBottom: `${padBottom}px`,
+
       paddingInline: isMobile
         ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
         : "12px",
     }}
   >
 
-
-      // nach unten bis kurz vor den Prompt-Dock ziehen
-      paddingBottom: "calc(var(--dock-h, 60px) + 16px)",
-      maxHeight: "calc(100dvh - var(--dock-h, 60px) - 32px)",
-
-      // Säule darf optisch voll „atmen“ (Glow, Schatten)
-      overflow: "visible",
-    }}
-  >
-    <SidebarContainer
-      onSystemMessage={systemSay}
-      onClearChat={onClearChat}   // ← der echte Clear-Handler (hard clear + reload)
-      /* canClear={canClear} */   // ← optional, falls du Disable-Logik nutzt
-    />
-  </div>
-)}
-
-
-
-        <div
-          ref={convoRef as any}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-
-            /* Harte, verlässliche Block-Höhe relativ zum Viewport */
-            flex: "0 1 auto",
-            height: isMobile
-              ? undefined
-              : "calc(100dvh - (224px * 0.6) - var(--dock-h, 60px))",
-
-            minHeight: 0,
-            overflow: "auto",
-            pointerEvents: "auto",
-            touchAction: "pan-y",
-            WebkitOverflowScrolling: "touch",
-            overscrollBehavior: "contain",
-
-            paddingBottom: `${padBottom}px`,
-            scrollPaddingBottom: `${padBottom}px`,
-
-            paddingInline: isMobile
-              ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
-              : "12px",
-          }}
-        >
 
           {/* Chronik wächst im Scroller */}
           <div
@@ -1814,7 +1788,7 @@ return (
           </div>
           {/* === /BOTTOM STACK ========================================= */}
         </div> {/* /Scroller */}
-      </section>   {/* /Grid */}
+      </div>
     </div>     {/* /Bühne */}
 
 
