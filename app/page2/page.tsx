@@ -424,17 +424,43 @@ function Bubble({
     borderColor: tokens.color.cyanBorder,
   };
 
-  // M-Antwort: nur göttlicher Text, keine Fläche, kein Rahmen
-  const assistantText: React.CSSProperties = {
+  /** Sprechblase mit M-Avatar für Assistant */
+function Bubble({
+  msg,
+  tokens,
+}: {
+  msg: ChatMessage;
+  tokens: Tokens;
+}) {
+  const isUser = msg.role === "user";
+
+  const bubbleBase: React.CSSProperties = {
     maxWidth: "min(900px, 100%)",
-    marginLeft: "auto",
-    marginRight: "auto",
-    padding: "4px 2px",
-    lineHeight: 1.7,
+    borderRadius: TOKENS.radius.lg,
+    padding: "18px 22px",
+    lineHeight: 1.6,
+    backdropFilter: "blur(10px)",
+    border: "1px solid",
     color: tokens.color.text,
+    boxShadow: TOKENS.shadow.soft,
+    background: "transparent",      // keine Fläche mehr
+    borderColor: "transparent",      // keine Ränder mehr
   };
 
-  const bubbleStyle: React.CSSProperties = isUser ? userBubble : assistantText;
+  const bubbleStyle: React.CSSProperties = isUser
+    ? {
+        ...bubbleBase,
+        maxWidth: "min(620px, 100%)",
+        marginLeft: "auto",
+        marginRight: 0,
+        textAlign: "right",
+      }
+    : {
+        ...bubbleBase,
+        marginLeft: 0,
+        marginRight: "auto",
+        textAlign: "left",
+      };
 
   return (
     <div
@@ -466,6 +492,12 @@ function Bubble({
   );
 }
 
+      <div style={bubbleStyle}>
+        <MessageBody msg={msg} />
+      </div>
+    </div>
+  );
+}
 
 /** Conversation-Ansicht.
  *  Hinweis: Der EINZIGE Scrollport ist der Eltern-Container (rechte Spalte).
