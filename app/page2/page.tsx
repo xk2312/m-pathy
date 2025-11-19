@@ -1476,21 +1476,22 @@ return (
 >
 
     
-  <div
+    <div
     style={{
-      width: "100vw",
-      maxWidth: "none",
-      margin: 0,
+      width: "100%",
+      maxWidth: "var(--stage-max, 900px)",
+      margin: "0 auto",
       height: "100%",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-
-      // Desktop: Logo-Cockpit beginnt rechts neben der Säule
-      paddingLeft: isMobile ? 0 : 320, // ≈ Säulenbreite
+      // Desktop: Logo-Bühne = gleiche Stage wie Chat/Prompt
+      paddingLeft: isMobile ? "12px" : "var(--stage-pad, 48px)",
+      paddingRight: isMobile ? "12px" : "var(--stage-pad, 48px)",
     }}
   >
     <MTheater>
+
 
   <LogoM size={160} active={loading} variant={M_CURRENT_VARIANT} />
 
@@ -1931,10 +1932,14 @@ return (
       --stage-pad: 48px;        /* Luft rechts/links innerhalb der Bühne */
     }
 
-    #m-input-dock.m-bottom-stack{
-      /* Säule links bleibt bestehen */
-      padding-left: calc(var(--saeule-w, 320px) + 10px);
-      padding-right: var(--stage-pad);
+     #m-input-dock.m-bottom-stack{
+      /* Desktop: Hintergrund-Streifen ausblenden,
+         damit nur der schmale Prompt sichtbar ist */
+      background: transparent;
+      border-top: none;
+      box-shadow: none;
+      padding-left: 0;
+      padding-right: 0;
     }
 
     /* 🎯 Prompt & Gold-Bar: einheitliche, zentrierte Bühne */
