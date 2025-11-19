@@ -5,9 +5,6 @@ import React, { type ReactNode } from 'react';
 // Sie entscheidet pro Nachricht, WIE gerendert wird (plain/markdown/html),
 // ruft die Renderer-Registry auf und kapselt einen sicheren Fallback.
 
-// ⚠️ Diese Imports werden in späteren Schritten angelegt:
-// - ../renderers/registry (liefert renderMessage())
-// - ../config/features (liefert defaultRenderer)
 import { renderMessage } from '../renderers/registry';
 import { defaultRenderer } from '../config/features';
 
@@ -20,15 +17,12 @@ export type MessageFormat = 'plain' | 'markdown' | 'html';
 export type ChatMessage = {
   role: MessageRole;
   content: string;
-  /** Optionales Format: Wenn nicht gesetzt, wird der Default aus features.ts verwendet */
   format?: MessageFormat;
-  /** Optionale Metadaten (z. B. für zukünftige Inline-Widgets) */
   meta?: Record<string, unknown>;
 };
 
 export type MessageBodyProps = {
   msg: ChatMessage;
-  /** Optional: zusätzliche Klassen für Wrapper (z. B. thematische Anpassungen) */
   className?: string;
 };
 
@@ -36,9 +30,16 @@ export type MessageBodyProps = {
    Komponente
    ============================================================ */
 export default function MessageBody({ msg, className }: MessageBodyProps) {
-  // Bevorzugte Reihenfolge: explizites msg.format → Feature-Default → 'plain'
-  const fmt: MessageFormat = (msg.format ?? (defaultRenderer as MessageFormat) ?? 'plain');
+  // Format bestimmen
+  const fmt: MessageFormat =
+    msg.format ?? (defaultRenderer as MessageFormat) ?? 'plain';
 
+  // Flags
+  const isMarkdown = fmt === 'markdown';
+  const isUser = msg.role === 'user';
+  const isAssistant = msg.role === 'assistant';
+
+  // Versuch → renderMessage(), Fallback → Plaintext
   let node: ReactNode;
   try {
     node = renderMessage({
@@ -48,7 +49,6 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
       meta: msg.meta,
     });
   } catch (err) {
-    // Harte Sicherheitsleine: Immer anzeigbar, niemals Crash
     node = (
       <span
         style={{
@@ -60,19 +60,45 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
       </span>
     );
     if (process.env.NODE_ENV !== 'production') {
-      // eslint-disable-next-line no-console
       console.warn('[MessageBody] renderMessage failed → fallback to plain', err);
     }
   }
 
-  // Typografie-Scope: Wird in chat-prose.css gezielt angesprochen (Schritt 5)
-  const scopeClass = fmt === 'markdown' ? 'md-prose' : undefined;
+  // Typo-Klassen nach Format & Rolle
+  const scopeClass = [
+    isMarkdown ? 'md-prose' : undefined,
+    'm-typo',
+    isUser ? 'm-typo-user' : undefined,
+    isAssistant ? 'm-typo-assistant' : undefined,
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  // Basisstil für göttliche Lesbarkeit
+  const baseStyle: React.CSSProperties = {
+    lineHeight: 1.65,
+    fontSize: '1.02rem',
+    letterSpacing: '0.003em',
+    wordBreak: 'break-word',
+    overflowWrap: 'anywhere',
+    textRendering: 'optimizeLegibility',
+    WebkitFontSmoothing: 'antialiased',
+  };
+
+  // Rollenfeinheiten
+  const roleStyle: React.CSSProperties = isUser
+    ? { fontWeight: 500 }
+    : isAssistant
+    ? { fontWeight: 400 }
+    : {};
 
   return (
     <div
-      className={[scopeClass, className].filter(Boolean).join(' ')}
+      className={scopeClass}
       data-format={fmt}
       data-role={msg.role}
+      style={{ ...baseStyle, ...roleStyle }}
     >
       {node}
     </div>
