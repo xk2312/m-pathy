@@ -255,14 +255,18 @@ function Header() {
       }}
       aria-label="Conversation header"
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          padding: "10px 12px",
-        }}
-      >
+        <div
+          className="chat-row"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 10,
+            margin: "14px 0 18px",
+          }}
+        >
+
+
         <Image
           src="/pictures/m.svg"
           alt="M"
@@ -404,30 +408,36 @@ function Bubble({
 }) {
   const isUser = msg.role === "user";
 
-  const bubbleBase: React.CSSProperties = {
-    maxWidth: "90%",
-    borderRadius: 16,
-    padding: "14px 18px",
-    lineHeight: 1.55,
-    backdropFilter: "blur(6px)",
+   const bubbleBase: React.CSSProperties = {
+    maxWidth: "min(900px, 100%)",
+    borderRadius: TOKENS.radius.lg,
+    padding: "18px 22px",
+    lineHeight: 1.6,
+    backdropFilter: "blur(10px)",
     border: "1px solid",
     color: tokens.color.text,
-    boxShadow: "0 1px 0 rgba(255,255,255,0.05) inset",
+    boxShadow: TOKENS.shadow.soft,
   };
 
   const bubbleStyle: React.CSSProperties = isUser
     ? {
+        // einzige echte "Bubble": User rechts
         ...bubbleBase,
+        maxWidth: "min(620px, 100%)",
         marginLeft: "auto",
+        marginRight: 0,
         background: tokens.color.cyanGlass,
         borderColor: tokens.color.cyanBorder,
       }
     : {
+        // offene, zentrierte Antwortfläche (Gemini-Style)
         ...bubbleBase,
+        marginLeft: "auto",
         marginRight: "auto",
-        background: tokens.color.slateGlass,
-        borderColor: tokens.color.slateBorder,
+        background: tokens.color.glass,
+        borderColor: tokens.color.glassBorder,
       };
+
 
       return (
         <div
