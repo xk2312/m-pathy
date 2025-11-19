@@ -1511,21 +1511,23 @@ return (
       </div>
 </header>
 
-    {/* === BÜHNE ====================================================== */}
+     {/* === BÜHNE ====================================================== */}
 <div
   style={{
     flex: 1,
     display: "flex",
     flexDirection: "column",
-    marginInline: isMobile ? 0 : sideMargin,
+    // Full-left: Bühne hängt direkt an der Viewport-Wand
+    marginInline: 0,
     minHeight: 0,
-    maxWidth: isMobile ? "none" : 1280,
-    alignSelf: "center",
+    maxWidth: "none",
+    alignSelf: "stretch",
     width: "100%",
     // ⬇️ Mobile & Desktop beide auf 60 % des ursprünglichen Header-Werts
     paddingTop: isMobile ? "calc(var(--header-h) * 0.6)" : "calc(224px * 0.6)",
   }}
 >
+
 
       {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
       <section
