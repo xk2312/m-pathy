@@ -1548,7 +1548,7 @@ return (
   }}
 >
 
-      {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
+           {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
       <section
         aria-label="Chat layout"
         style={{
@@ -1560,39 +1560,39 @@ return (
           gap: 16,
           minHeight: 0,
           overflow: "visible",
-
-          // 🔒 Breite begrenzen & zentrieren (Desktop)
-          maxWidth:
-            "calc(var(--saeule-w, 320px) + var(--stage-max, 820px) + var(--stage-pad, 48px) * 2)",
-          marginLeft: "auto",
-          marginRight: "auto",
-          paddingInline: isMobile ? "12px" : "24px",
+          width: "100%",     // ⬅️ Bühne nutzt die komplette Breite
+          marginLeft: 0,     // ⬅️ kein seitlicher Offset
+          marginRight: 0,
         }}
       >
 
 
-{/* Säule links */}
-{!isMobile && (
-  <div
-    style={{
-      position: "sticky",
-      top: 16,
-      alignSelf: "stretch",
+        {/* Säule links */}
+        {!isMobile && (
+          <div
+            style={{
+              position: "sticky",
+              top: 16,
+              alignSelf: "stretch",
 
-      // Säule soll komplett von oben bis unten reichen
-      height: "calc(100dvh - 16px)",
+              // Säule soll komplett von oben bis unten reichen
+              height: "calc(100dvh - 16px)",
 
-      // nach oben in den Logo-Bereich ziehen
-      marginTop: "-calc(224px * 0.6)",
-      paddingTop: "calc(224px * 0.6 + 16px)",
+              // nach oben in den Logo-Bereich ziehen
+              marginTop: "-calc(224px * 0.6)",
+              paddingTop: "calc(224px * 0.6 + 16px)",
 
-      // kleiner Fußraum unten
-      paddingBottom: "16px",
+              // kleiner Fußraum unten
+              paddingBottom: "16px",
 
-      // Säule darf optisch voll „atmen“ (Glow, Schatten)
-      overflow: "visible",
-    }}
-  >
+              // Säule darf optisch voll „atmen“ (Glow, Schatten)
+              overflow: "visible",
+
+              // ⬅️ explizit an den linken Rand legen
+              marginLeft: 0,
+            }}
+          >
+
     <SidebarContainer
       onSystemMessage={systemSay}
       onClearChat={onClearChat}
