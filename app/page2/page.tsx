@@ -475,7 +475,7 @@ function Bubble({
 }) {
   const isUser = msg.role === "user";
 
-  // Basis-Bubble nur für den User
+    // Basis-Bubble nur für den User
   const bubbleBase: React.CSSProperties = {
     maxWidth: "min(900px, 100%)",
     borderRadius: TOKENS.radius.lg,
@@ -487,15 +487,17 @@ function Bubble({
     boxShadow: TOKENS.shadow.soft,
   };
 
-  // User rechts: echte Bubble
+  // User rechts: echte Bubble – grau/schwarz + Glow (keine Cyan-DNA mehr)
   const userBubbleStyle: React.CSSProperties = {
     ...bubbleBase,
     maxWidth: "min(620px, 100%)",
     marginLeft: "auto",
     marginRight: 0,
-    background: tokens.color.cyanGlass,
-    borderColor: tokens.color.cyanBorder,
+    background: "var(--chat-user-bg)",
+    borderColor: "var(--chat-user-border)",
+    boxShadow: "var(--chat-user-shadow)",
   };
+
 
   // Assistant links: komplett offen, nur Text – keine Bubble
   const assistantStyle: React.CSSProperties = {

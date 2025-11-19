@@ -13,9 +13,16 @@
   --color-warn: #ffd700;
   --color-shadow: rgba(0,255,255,0.12);
 
+  /* === Chat User Bubble (neutral, grau/schwarz + Glow) === */
+  --chat-user-bg: rgba(12, 15, 20, 0.96);
+  --chat-user-bg-hover: rgba(18, 22, 28, 0.98);
+  --chat-user-border: rgba(148, 163, 184, 0.70);
+  --chat-user-shadow: 0 18px 42px rgba(0, 0, 0, 0.90);
+
   /* === Layout Axis & Rhythm === */
   --page-max: 900px;          /* zentrale Inhaltsbreite (Hero / Council / KPI) */
   --ry: 64px;                 /* vertikaler Grundtakt (z. B. 32 + 32) */
+
 
   /* === Page Center Tokens (NEU) === */
   --page-pad-inline: 10px;    /* Seiteninnenabstand links/rechts (mobile + desktop) */
