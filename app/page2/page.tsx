@@ -408,32 +408,6 @@ function Bubble({
 }) {
   const isUser = msg.role === "user";
 
-  // Basis nur noch für die EINZIGE echte Bubble (User rechts)
-  const userBubble: React.CSSProperties = {
-    maxWidth: "min(620px, 100%)",
-    borderRadius: TOKENS.radius.lg,
-    padding: "18px 22px",
-    lineHeight: 1.6,
-    backdropFilter: "blur(10px)",
-    border: "1px solid",
-    color: tokens.color.text,
-    boxShadow: TOKENS.shadow.soft,
-    marginLeft: "auto",
-    marginRight: 0,
-    background: tokens.color.cyanGlass,
-    borderColor: tokens.color.cyanBorder,
-  };
-
-  /** Sprechblase mit M-Avatar für Assistant */
-function Bubble({
-  msg,
-  tokens,
-}: {
-  msg: ChatMessage;
-  tokens: Tokens;
-}) {
-  const isUser = msg.role === "user";
-
   const bubbleBase: React.CSSProperties = {
     maxWidth: "min(900px, 100%)",
     borderRadius: TOKENS.radius.lg,
@@ -492,12 +466,6 @@ function Bubble({
   );
 }
 
-      <div style={bubbleStyle}>
-        <MessageBody msg={msg} />
-      </div>
-    </div>
-  );
-}
 
 /** Conversation-Ansicht.
  *  Hinweis: Der EINZIGE Scrollport ist der Eltern-Container (rechte Spalte).
