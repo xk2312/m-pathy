@@ -29,6 +29,7 @@ import React, {
   FormEvent,
 } from "react";
 import Image from "next/image";
+import hljs from "highlight.js";
 
 import MTheater from "@/components/MTheater";
 import { M_CURRENT_VARIANT } from "@/config/mLogoConfig";
@@ -283,10 +284,38 @@ function Header() {
   );
 }
 
-/* --- Markdown Mini-Renderer (XSS-safe: erst escapen, dann Muster ersetzen) --- */
+/* --- Markdown Mini-Renderer mit Codeblöcken & Copy-Buttons --- */
 function mdToHtml(src: string): string {
-  // 1) Escapen
-  const esc = String(src)
+  const raw = String(src ?? "");
+
+  // 0) Fenced Code Blocks (```lang\n...\n```) → Platzhalter
+  const codeBlocks: string[] = [];
+  const withTokens = raw.replace(
+    /```(\w+)?\n([\s\S]*?)```/g,
+    (_m, lang, body) => {
+      const language = (lang || "").trim().toLowerCase();
+      const codeEsc = String(body ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+      const cls = language ? ` class="language-${language}"` : "";
+      const idx = codeBlocks.length;
+
+      const html =
+        `<div class="md-code-block" data-code-block="true">` +
+        `<button type="button" class="md-code-copy" data-copy-code="true" aria-label="Copy code">` +
+        `⧉` +
+        `</button>` +
+        `<pre><code${cls}>${codeEsc}</code></pre>` +
+        `</div>`;
+
+      codeBlocks.push(html);
+      return `@@CODE_BLOCK_${idx}@@`;
+    }
+  );
+
+  // 1) Escapen des restlichen Textes
+  const esc = withTokens
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
@@ -318,8 +347,7 @@ function mdToHtml(src: string): string {
     }
   );
 
-  // 5) GitHub-Style Tabellen (Pipe-Syntax) → echte <table>
-  //    Erkennung: Kopfzeile, Separator mit - : |, danach >=1 Datenzeile
+  // 5) GitHub-Style Tabellen → echte <table>
   out = out.replace(
     /(^|\n)(\|[^\n]+\|\s*\n\|[\s:\-\|]+\|\s*\n(?:\|[^\n]+\|\s*\n)+)/g,
     (_m: string, prefix: string, block: string) => {
@@ -329,31 +357,37 @@ function mdToHtml(src: string): string {
         .map((l) => l.trim())
         .filter(Boolean);
 
-      if (lines.length < 3) return block; // sicherheit
+      if (lines.length < 3) return block;
 
       const header = lines[0];
-      const align  = lines[1];
-      const rows   = lines.slice(2);
+      const align = lines[1];
+      const rows = lines.slice(2);
 
       const split = (line: string) =>
         line.replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
 
       const hCells = split(header);
       const aCells = split(align).map((s) => {
-        const left   = /^:\-+/.test(s);
-        const right  = /\-+:$/.test(s);
+        const left = /^:\-+/.test(s);
+        const right = /\-+:$/.test(s);
         return right && left ? "center" : right ? "right" : "left";
       });
 
       const thead = `<thead><tr>${hCells
-        .map((c, i) => `<th scope="col" style="text-align:${aCells[i] ?? "left"}">${c}</th>`)
+        .map(
+          (c, i) =>
+            `<th scope="col" style="text-align:${aCells[i] ?? "left"}">${c}</th>`
+        )
         .join("")}</tr></thead>`;
 
       const tbody = `<tbody>${rows
         .map((r) => {
           const cells = split(r);
           return `<tr>${cells
-            .map((c, i) => `<td style="text-align:${aCells[i] ?? "left"}">${c}</td>`)
+            .map(
+              (c, i) =>
+                `<td style="text-align:${aCells[i] ?? "left"}">${c}</td>`
+            )
             .join("")}</tr>`;
         })
         .join("")}</tbody>`;
@@ -362,16 +396,23 @@ function mdToHtml(src: string): string {
     }
   );
 
-  // 6) Absätze: Nur „nackte“ Textblöcke einpacken
+  // 6) Absätze – Code-Platzhalter wieder einsetzen
   const blocks = out.split(/\n{2,}/);
   const rendered = blocks
     .map((b) => {
       const t = b.trim();
       if (!t) return "";
-      // Block-Elemente NICHT in <p> einwickeln
+
+      const m = /^@@CODE_BLOCK_(\d+)@@$/.exec(t);
+      if (m) {
+        const idx = Number(m[1]);
+        return codeBlocks[idx] ?? "";
+      }
+
       if (
         /^<(h1|h2|h3|ul|ol|pre|blockquote|table|hr)\b/i.test(t) ||
-        t.startsWith('<div class="md-table-wrap"')
+        t.startsWith('<div class="md-table-wrap"') ||
+        t.startsWith('<div class="md-code-block"')
       ) {
         return t;
       }
@@ -383,22 +424,48 @@ function mdToHtml(src: string): string {
 }
 
 
-/** Body einer Nachricht: entscheidet Markdown vs. Plaintext */
+
+/** Body einer Nachricht: entscheidet Markdown vs. Plaintext + Syntax-Highlighting */
 function MessageBody({ msg }: { msg: ChatMessage }) {
   const isMd = (msg as any).format === "markdown";
+  const html = isMd ? mdToHtml(String(msg.content ?? "")) : null;
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+    try {
+      const nodes = containerRef.current.querySelectorAll("pre code");
+      nodes.forEach((el) => {
+        const codeEl = el as HTMLElement;
+        if (!codeEl.dataset.hljs) {
+          hljs.highlightElement(codeEl);
+          codeEl.dataset.hljs = "1";
+        }
+      });
+    } catch {
+      // niemals die App crashen lassen
+    }
+  }, [html]);
+
   if (isMd) {
     return (
       <div
-        className="markdown" // Haken für deine bestehenden CSS-Regeln (.markdown h1, .markdown ul, ...)
-        dangerouslySetInnerHTML={{ __html: mdToHtml(String(msg.content ?? "")) }}
+        ref={containerRef}
+        className="markdown"
+        dangerouslySetInnerHTML={{ __html: html ?? "" }}
         style={{ lineHeight: 1.55 }}
       />
     );
   }
-  return <div style={{ lineHeight: 1.55 }}>{String(msg.content ?? "")}</div>;
+
+  return (
+    <div ref={containerRef} style={{ lineHeight: 1.55 }}>
+      {String(msg.content ?? "")}
+    </div>
+  );
 }
 
-/** Sprechblase mit M-Avatar für Assistant */
+/** Sprechblase mit M-Avatar für Assistant + Copy-Button */
 function Bubble({
   msg,
   tokens,
@@ -408,31 +475,42 @@ function Bubble({
 }) {
   const isUser = msg.role === "user";
 
-  // Assistant: komplett transparent, nur Text
-  const assistantStyle: React.CSSProperties = {
+  const bubbleBase: React.CSSProperties = {
     maxWidth: "min(900px, 100%)",
-    lineHeight: 1.6,
-    color: tokens.color.text,
-    background: "transparent",
-    border: "none",
-    boxShadow: "none",
-    padding: "0",             // nur Text, kein Bubble-Rand
-  };
-
-  // User: edle Glow-Bubble wie im Screenshot
-  const userStyle: React.CSSProperties = {
-    maxWidth: "min(620px, 100%)",
     borderRadius: TOKENS.radius.lg,
     padding: "18px 22px",
     lineHeight: 1.6,
-    backdropFilter: "blur(14px)",
-    background: "rgba(255,255,255,0.04)",      // zartes Glas
-    border: `1px solid ${tokens.color.slateBorder}`,
-    boxShadow: "0 0 32px rgba(255,255,255,0.06)", // weicher Glow
+    backdropFilter: "blur(10px)",
+    border: "1px solid",
     color: tokens.color.text,
+    boxShadow: TOKENS.shadow.soft,
   };
 
-  const bubbleStyle = isUser ? userStyle : assistantStyle;
+  const bubbleStyle: React.CSSProperties = isUser
+    ? {
+        // einzige echte "Bubble": User rechts
+        ...bubbleBase,
+        maxWidth: "min(620px, 100%)",
+        marginLeft: "auto",
+        marginRight: 0,
+        background: tokens.color.cyanGlass,
+        borderColor: tokens.color.cyanBorder,
+      }
+    : {
+        // offene, zentrierte Antwortfläche (Gemini-Style)
+        ...bubbleBase,
+        marginLeft: "auto",
+        marginRight: "auto",
+        background: tokens.color.glass,
+        borderColor: tokens.color.glassBorder,
+      };
+
+  const handleCopyAnswer = () => {
+    const text = String(msg.content ?? "");
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(text).catch(() => {});
+    }
+  };
 
   return (
     <div
@@ -442,6 +520,7 @@ function Bubble({
       style={{
         display: "flex",
         justifyContent: isUser ? "flex-end" : "flex-start",
+        alignItems: "flex-start",
         gap: 10,
         margin: "6px 0",
       }}
@@ -452,16 +531,56 @@ function Bubble({
           alt="M"
           width={22}
           height={22}
-          style={{ marginTop: -5, flex: "0 0 22px" }}
+          style={{ marginTop: 6, flex: "0 0 22px" }}
         />
       )}
 
-      <div style={bubbleStyle}>
-        <MessageBody msg={msg} />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: isUser ? "flex-end" : "stretch",
+          width: "100%",
+        }}
+      >
+        <div style={bubbleStyle}>
+          <MessageBody msg={msg} />
+        </div>
+
+        {!isUser && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: 4,
+            }}
+          >
+            <button
+              type="button"
+              onClick={handleCopyAnswer}
+              aria-label="Copy answer"
+              style={{
+                border: "none",
+                borderRadius: 999,
+                padding: "2px 10px",
+                fontSize: 11,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                background: "rgba(15,23,42,0.85)",
+                color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
+                cursor: "pointer",
+                opacity: 0.85,
+              }}
+            >
+              ⧉ Copy
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 }
+
 
 
 /** Conversation-Ansicht.

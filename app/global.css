@@ -1164,3 +1164,95 @@ div[data-convo="1"] {
   font-size: var(--footer-link-size);
   opacity: 0.6;
 }
+/* ============================================================
+   Chat – Codeblöcke & Copy-Buttons
+   ============================================================ */
+
+.markdown code {
+  padding: 0.12rem 0.32rem;
+  border-radius: 0.45rem;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    "Courier New",
+    monospace;
+  font-size: 0.85em;
+}
+
+/* Block-Code mit eigener Bühne */
+.markdown .md-code-block {
+  position: relative;
+  margin: 1.4rem 0;
+  padding: 0.9rem 0.95rem 0.95rem;
+  border-radius: 0.9rem;
+  background: rgba(15, 23, 42, 0.98);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+
+.markdown .md-code-block pre {
+  margin: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    "Courier New",
+    monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  background: transparent;
+}
+
+.markdown .md-code-block code {
+  background: transparent;
+  padding: 0;
+}
+
+/* Copy-Button direkt am Codeblock */
+.md-code-copy {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.55rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.98),
+    rgba(15, 23, 42, 0.92)
+  );
+  color: #e5f2ff;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0.85;
+  transition:
+    opacity 160ms ease-out,
+    transform 160ms ease-out,
+    border-color 160ms ease-out;
+}
+
+.md-code-copy:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+  border-color: rgba(56, 189, 248, 0.9);
+}
+
+.md-code-copy[data-copied="true"]::after {
+  content: " Copied";
+  margin-left: 0.35rem;
+  opacity: 0.9;
+}
