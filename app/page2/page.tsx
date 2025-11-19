@@ -1546,24 +1546,34 @@ return (
 
 {/* Säule links */}
 {!isMobile && (
-  <aside
-    aria-label={t("controlColumnAria") ?? "M control column"}
+  <div
     style={{
+      // Säule klebt jetzt am Viewport-Rand und spannt zwischen Header und Dock
       position: "sticky",
-      top: "calc(224px * 0.6 + 16px)",
-      alignSelf: "start",
-      height: "fit-content",
-      maxHeight: "calc(100dvh - (224px * 0.6 + 16px))",
-      overflow: "auto",
+      top: 16,
+      alignSelf: "stretch",
+      height: "100%",
+
+      // nach oben in den Logo-Bereich ziehen
+      marginTop: "-calc(224px * 0.6)",
+      paddingTop: "calc(224px * 0.6 + 16px)",
+
+      // nach unten bis kurz vor den Prompt-Dock ziehen
+      paddingBottom: "calc(var(--dock-h, 60px) + 16px)",
+      maxHeight: "calc(100dvh - var(--dock-h, 60px) - 32px)",
+
+      // Säule darf optisch voll „atmen“ (Glow, Schatten)
+      overflow: "visible",
     }}
   >
     <SidebarContainer
       onSystemMessage={systemSay}
       onClearChat={onClearChat}   // ← der echte Clear-Handler (hard clear + reload)
-      /* canClear={canClear} */   // optional
+      /* canClear={canClear} */   // ← optional, falls du Disable-Logik nutzt
     />
-  </aside>
+  </div>
 )}
+
 
 
         <div
