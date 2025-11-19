@@ -5,6 +5,52 @@
 @import "../styles/chat-prose.css";
 /* syntax theme for rehype-highlight */
 @import "highlight.js/styles/github-dark.css";
+/* ============================================================
+   Chat-Typografie – Symbolmagie für MessageBody
+   ============================================================ */
+
+.m-typo {
+  font-feature-settings: "liga" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  color: var(--col-fg-primary, #e6f0f3);
+}
+
+.m-typo p + p {
+  margin-top: 0.55rem;
+}
+
+.m-typo ul,
+.m-typo ol {
+  margin: 0.5rem 0 0.5rem 1.2rem;
+}
+
+.m-typo code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.92em;
+}
+
+/* Rollen-spezifische Nuancen */
+.m-typo-user {
+  text-align: right;
+  letter-spacing: 0.01em;
+}
+
+.m-typo-assistant {
+  text-align: left;
+}
+
+/* sanfte Betonung */
+.m-typo-user strong,
+.m-typo-assistant strong {
+  font-weight: 550;
+}
+
+/* Auswahl-Highlight */
+.m-typo ::selection {
+  background: rgba(34,211,238,0.26);
+  color: #e7f6ff;
+}
 
 /* ── Base Reset ───────────────────────────────────────────── */
 /* GLOBAL RESET – cleaned (preserves Tailwind margins) */
