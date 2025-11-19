@@ -1528,23 +1528,24 @@ return (
 >
 
       {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
-           <div
+      <section
+        aria-label="Chat layout"
         style={{
           display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "320px 1fr",
+          gridTemplateColumns: isMobile
+            ? "minmax(0,1fr)"
+            : "minmax(260px, 320px) minmax(0,1fr)",
           alignItems: "start",
           gap: 16,
-          /* ⬇︎ Lass den Grid-Container frei atmen, sticky braucht das */
-          /* height: "100%",  ← ENTFERNT */
           minHeight: 0,
-          overflow: "visible", // ⬅︎ statt "hidden": klebt stabil, nichts clippt
-          ["--header-offset" as any]: "16px",
+          overflow: "visible",
         }}
       >
 
 {/* Säule links */}
 {!isMobile && (
-  <div
+  <aside
+    aria-label={t("controlColumnAria") ?? "M control column"}
     style={{
       position: "sticky",
       top: "calc(224px * 0.6 + 16px)",
@@ -1557,28 +1558,23 @@ return (
     <SidebarContainer
       onSystemMessage={systemSay}
       onClearChat={onClearChat}   // ← der echte Clear-Handler (hard clear + reload)
-      /* canClear={canClear} */   // ← optional, falls du Disable-Logik nutzt
+      /* canClear={canClear} */   // optional
     />
-  </div>
+  </aside>
 )}
 
 
-                <div
+        <div
           ref={convoRef as any}
           style={{
             display: "flex",
             flexDirection: "column",
 
-            /* ⬇︎ harte, verlässliche Block-Höhe relativ zum Viewport:
-               - var(--header-h) ist dein Top-Offset (mobil dynamisch)
-               - 224px ist dein Desktop-Top-Padding (siehe Bühne)
-               - var(--dock-h) ist der Bottom-Dock
-            */
+            /* Harte, verlässliche Block-Höhe relativ zum Viewport */
             flex: "0 1 auto",
             height: isMobile
-  ? undefined                 // ⬅︎ KEINE feste Viewport-Höhe auf Mobile
+              ? undefined
               : "calc(100dvh - (224px * 0.6) - var(--dock-h, 60px))",
-
 
             minHeight: 0,
             overflow: "auto",
@@ -1587,7 +1583,6 @@ return (
             WebkitOverflowScrolling: "touch",
             overscrollBehavior: "contain",
 
-            // Single-Source Fußraum aus bestehendem State
             paddingBottom: `${padBottom}px`,
             scrollPaddingBottom: `${padBottom}px`,
 
@@ -1599,30 +1594,29 @@ return (
 
           {/* Chronik wächst im Scroller */}
           <div
-  style={{
-    flex: 1,
-    minHeight: 0,
-    // ▼ berücksichtigt mobilen Header (60 %) + bisherigen 8px
-    paddingTop: isMobile ? "calc(var(--header-h) * 0.6 + 8px)" : 8,
-    paddingLeft: isMobile ? 0 : undefined,
-    paddingRight: isMobile ? 0 : undefined,
-    scrollbarGutter: "stable",
-  }}
-  aria-label={t("conversationAria")}
->
+            style={{
+              flex: 1,
+              minHeight: 0,
+              paddingTop: isMobile ? "calc(var(--header-h) * 0.6 + 8px)" : 8,
+              paddingLeft: isMobile ? 0 : undefined,
+              paddingRight: isMobile ? 0 : undefined,
+              scrollbarGutter: "stable",
+            }}
+            aria-label={t("conversationAria")}
+          >
 
- <Conversation
-  messages={messages}
-  tokens={activeTokens}
-  padBottom={`${padBottom}px`}
-  scrollRef={convoRef as any}
-/>
-{/* ⬇︎ unsichtbarer Anker: stabil ans Ende scrollen – v.a. Mobile/iOS */}
-<div ref={endRef} style={{ height: 1 }} aria-hidden="true" />
+            <Conversation
+              messages={messages}
+              tokens={activeTokens}
+              padBottom={`${padBottom}px`}
+              scrollRef={convoRef as any}
+            />
 
-
+            {/* stabiler Endanker */}
+            <div ref={endRef} style={{ height: 1 }} aria-hidden="true" />
           </div>
-          {/* === BOTTOM STACK: Prompt, dann Icons+Status ================= */}
+
+          {/* === BOTTOM STACK: Prompt, dann Icons + Status ================= */}
           <div
             id="m-input-dock"
             ref={dockRef as any}
@@ -1630,7 +1624,7 @@ return (
             role="group"
             aria-label="Chat Eingabe & Status"
           >
-            {/* Prompt … */}
+
             <div className="gold-prompt-wrap">
               <textarea
                 id="gold-input"
@@ -1640,155 +1634,153 @@ return (
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onFocus={() => {
-  // sofortige Messung bei Fokus
-  if (typeof requestAnimationFrame !== "undefined") {
-    requestAnimationFrame(() =>
-      requestAnimationFrame(() => {
-        const h = dockRef.current?.offsetHeight || 0;
-        document.documentElement.style.setProperty("--dock-h", `${h}px`);
-        setPadBottom(h);
-      })
-    );
-  }
-}}
-
+                  if (typeof requestAnimationFrame !== "undefined") {
+                    requestAnimationFrame(() =>
+                      requestAnimationFrame(() => {
+                        const h = dockRef.current?.offsetHeight || 0;
+                        document.documentElement.style.setProperty("--dock-h", `${h}px`);
+                        setPadBottom(h);
+                      })
+                    );
+                  }
+                }}
                 onInput={(e) => {
-  const ta = e.currentTarget;
-  // Autogrow (max 30% Viewport)
-  ta.style.height = "auto";
-  const cap = Math.min(ta.scrollHeight, Math.round((window?.innerHeight || 0) * 0.30));
-  ta.style.height = `${Math.max(44, cap)}px`;
-  ta.classList.add("is-typing");
-  // double-rAF: Dock-Höhe stabil messen
-  if (typeof requestAnimationFrame !== "undefined") {
-    requestAnimationFrame(() =>
-      requestAnimationFrame(() => {
-        const h = dockRef.current?.offsetHeight || 0;
-        document.documentElement.style.setProperty("--dock-h", `${h}px`);
-        setPadBottom(h);
-      })
-    );
-  }
-}}
+                  const ta = e.currentTarget;
+                  ta.style.height = "auto";
+                  const cap = Math.min(
+                    ta.scrollHeight,
+                    Math.round((window?.innerHeight || 0) * 0.30)
+                  );
+                  ta.style.height = `${Math.max(44, cap)}px`;
+                  ta.classList.add("is-typing");
 
+                  if (typeof requestAnimationFrame !== "undefined") {
+                    requestAnimationFrame(() =>
+                      requestAnimationFrame(() => {
+                        const h = dockRef.current?.offsetHeight || 0;
+                        document.documentElement.style.setProperty("--dock-h", `${h}px`);
+                        setPadBottom(h);
+                      })
+                    );
+                  }
+                }}
                 onBlur={(e) => {
-  const ta = e.currentTarget;
-  ta.classList.remove("is-typing");
-  ta.style.height = "44px"; // Reset auf Minimalhöhe
-  const h = dockRef.current?.offsetHeight || 0;
-  document.documentElement.style.setProperty("--dock-h", `${h}px`);
-  setPadBottom(h);
-}}
-
+                  const ta = e.currentTarget;
+                  ta.classList.remove("is-typing");
+                  ta.style.height = "44px";
+                  const h = dockRef.current?.offsetHeight || 0;
+                  document.documentElement.style.setProperty("--dock-h", `${h}px`);
+                  setPadBottom(h);
+                }}
                 onKeyDown={(e) => {
-  const ev: any = e;
-  const isComposing = !!ev.isComposing || !!ev.nativeEvent?.isComposing;
-  if (
-    e.key !== "Enter" ||
-    e.shiftKey ||
-    e.repeat ||
-    isComposing ||
-    loading ||
-    !input.trim()
-  ) return;
+                  const ev: any = e;
+                  const isComposing = !!ev.isComposing || !!ev.nativeEvent?.isComposing;
 
-  e.preventDefault();
+                  if (
+                    e.key !== "Enter" ||
+                    e.shiftKey ||
+                    e.repeat ||
+                    isComposing ||
+                    loading ||
+                    !input.trim()
+                  ) return;
 
-  if (sendingRef.current) return;
-  sendingRef.current = true;
+                  e.preventDefault();
 
-  withGate(() => {
-    const dockEl = document.getElementById("m-input-dock");
-    dockEl?.classList.add("send-ripple");
-    void dockEl?.getBoundingClientRect();
+                  if (sendingRef.current) return;
+                  sendingRef.current = true;
 
-    onSendFromPrompt(input);
-    setInput("");
+                  withGate(() => {
+                    const dockEl = document.getElementById("m-input-dock");
+                    dockEl?.classList.add("send-ripple");
+                    void dockEl?.getBoundingClientRect();
 
-    const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-    if (ta) {
-      ta.style.height = "44px";
-      ta.classList.remove("is-typing");
-    }
-    const h = dockRef.current?.offsetHeight || 0;
-    document.documentElement.style.setProperty("--dock-h", `${h}px`);
-    setPadBottom(h);
-  });
+                    onSendFromPrompt(input);
+                    setInput("");
 
-  setTimeout(() => { sendingRef.current = false; }, 400);
-}}
+                    const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+                    if (ta) {
+                      ta.style.height = "44px";
+                      ta.classList.remove("is-typing");
+                    }
 
+                    const h = dockRef.current?.offsetHeight || 0;
+                    document.documentElement.style.setProperty("--dock-h", `${h}px`);
+                    setPadBottom(h);
+                  });
 
+                  setTimeout(() => { sendingRef.current = false; }, 400);
+                }}
                 rows={1}
                 spellCheck
                 autoCorrect="on"
                 autoCapitalize="sentences"
               />
+
               <button
                 type="button"
                 className="gold-send"
                 aria-label={t("send")}
                 disabled={loading || !input.trim()}
                 onClick={() => {
-  if (loading || !input.trim() || sendingRef.current) return;
-  sendingRef.current = true;
+                  if (loading || !input.trim() || sendingRef.current) return;
+                  sendingRef.current = true;
 
-  withGate(() => {
-    const dockEl = document.getElementById("m-input-dock");
-    dockEl?.classList.add("send-ripple");
-    void dockEl?.getBoundingClientRect();
+                  withGate(() => {
+                    const dockEl = document.getElementById("m-input-dock");
+                    dockEl?.classList.add("send-ripple");
+                    void dockEl?.getBoundingClientRect();
 
-    onSendFromPrompt(input);
-    setInput("");
+                    onSendFromPrompt(input);
+                    setInput("");
 
-    const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-    if (ta) {
-      ta.style.height = "44px";
-      ta.classList.remove("is-typing");
-    }
-    const h = dockRef.current?.offsetHeight || 0;
-    document.documentElement.style.setProperty("--dock-h", `${h}px`);
-    setPadBottom(h);
-  });
+                    const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
+                    if (ta) {
+                      ta.style.height = "44px";
+                      ta.classList.remove("is-typing");
+                    }
 
-  setTimeout(() => { sendingRef.current = false; }, 400);
-}}
+                    const h = dockRef.current?.offsetHeight || 0;
+                    document.documentElement.style.setProperty("--dock-h", `${h}px`);
+                    setPadBottom(h);
+                  });
 
-
+                  setTimeout(() => { sendingRef.current = false; }, 400);
+                }}
               >
                 {t("send")}
               </button>
             </div>
 
-            {/* ⚑ CHANGED: Icons + Status (gold-bar) gehören IN den Dock-Container */}
             <div
               className="gold-bar"
               data-compact={compactStatus ? 1 : 0}
             >
               <div className="gold-tools" aria-label={t('promptTools') ?? 'Prompt tools'}>
-                <button type="button" aria-label={t('comingUpload')}    className="gt-btn">📎</button>
-                  <button type="button" aria-label={t('comingVoice')}     className="gt-btn">🎙️</button>
-                  <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
-                </div>
+                <button type="button" aria-label={t('comingUpload')} className="gt-btn">📎</button>
+                <button type="button" aria-label={t('comingVoice')} className="gt-btn">🎙️</button>
+                <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
+              </div>
 
-                <div className="gold-stats">
-                  <div className="stat">
-                    <span className="dot" />
-                    <span className="label">Mode</span>
-                    <strong>{footerStatus.modeLabel || "—"}</strong>
-                  </div>
-                  <div className="stat">
-                    <span className="dot" />
-                    <span className="label">Expert</span>
-                    <strong>{footerStatus.expertLabel || "—"}</strong>
-                  </div>
+              <div className="gold-stats">
+                <div className="stat">
+                  <span className="dot" />
+                  <span className="label">Mode</span>
+                  <strong>{footerStatus.modeLabel || "—"}</strong>
+                </div>
+                <div className="stat">
+                  <span className="dot" />
+                  <span className="label">Expert</span>
+                  <strong>{footerStatus.expertLabel || "—"}</strong>
                 </div>
               </div>
             </div>
+          </div>
           {/* === /BOTTOM STACK ========================================= */}
         </div> {/* /Scroller */}
-      </div>   {/* /Grid */}
+      </section>   {/* /Grid */}
     </div>     {/* /Bühne */}
+
 
     {/* Mobile Overlay / Onboarding */}
     {isMobile && (
