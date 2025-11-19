@@ -40,6 +40,13 @@
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
+/* Desktop: Saeule im Gemini-Frame ent-boxen */
+.geminiFrame > .saeule {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 8px 10px 10px;
+}
 /* === Elevation tiers (Tokens) === */
 .elev-0 { box-shadow: none; }
 .elev-1 { box-shadow: var(--sh-sm); }
