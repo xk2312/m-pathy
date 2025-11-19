@@ -1520,52 +1520,64 @@ return (
       </div>
 </header>
 
-     {/* === BÜHNE ====================================================== */}
+{/* === BÜHNE ====================================================== */}
 <div
   style={{
     flex: 1,
     display: "flex",
-    flexDirection: "column",
-    // Full-left: Bühne hängt direkt an der Viewport-Wand
+    flexDirection: "row",            // 🔥 NEU: Zwei Spalten ohne Grid
     marginInline: 0,
     minHeight: 0,
     maxWidth: "none",
     alignSelf: "stretch",
     width: "100%",
-    // ⬇️ Mobile & Desktop beide auf 60 % des ursprünglichen Header-Werts
     paddingTop: isMobile ? "calc(var(--header-h) * 0.6)" : "calc(224px * 0.6)",
   }}
 >
 
+  {/* Säule links (unverändert) */}
+  {!isMobile && (
+    <div
+      style={{
+        position: "sticky",
+        top: 16,
+        alignSelf: "stretch",
+        height: "100%",
+        marginTop: "-calc(224px * 0.6)",
+        paddingTop: "calc(224px * 0.6 + 16px)",
+        paddingBottom: "calc(var(--dock-h, 60px) + 16px)",
+        maxHeight: "calc(100dvh - var(--dock-h, 60px) - 32px)",
+        overflow: "visible",
+      }}
+    >
+      <SidebarContainer
+        onSystemMessage={systemSay}
+        onClearChat={onClearChat}
+      />
+    </div>
+  )}
 
-      {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
-      <section
-        aria-label="Chat layout"
-        style={{
-          display: "grid",
-          gridTemplateColumns: isMobile
-            ? "minmax(0,1fr)"
-            : "minmax(260px, 320px) minmax(0,1fr)",
-          alignItems: "start",
-          gap: 16,
-          minHeight: 0,
-          overflow: "visible",
-        }}
-      >
-
-{/* Säule links */}
-{!isMobile && (
+  {/* RECHTE BÜHNE — Chat-Scroller direkt hier */}
   <div
+    ref={convoRef as any}
     style={{
-      // Säule klebt jetzt am Viewport-Rand und spannt zwischen Header und Dock
-      position: "sticky",
-      top: 16,
-      alignSelf: "stretch",
-      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+      flex: 1,                       // 🔥 nimmt komplette rechte Spalte ein
+      minHeight: 0,
+      overflow: "auto",
+      pointerEvents: "auto",
+      touchAction: "pan-y",
+      WebkitOverflowScrolling: "touch",
+      overscrollBehavior: "contain",
+      paddingBottom: `${padBottom}px`,
+      scrollPaddingBottom: `${padBottom}px`,
+      paddingInline: isMobile
+        ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
+        : "12px",
+    }}
+  >
 
-      // nach oben in den Logo-Bereich ziehen
-      marginTop: "-calc(224px * 0.6)",
-      paddingTop: "calc(224px * 0.6 + 16px)",
 
       // nach unten bis kurz vor den Prompt-Dock ziehen
       paddingBottom: "calc(var(--dock-h, 60px) + 16px)",
