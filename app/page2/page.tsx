@@ -475,6 +475,7 @@ function Bubble({
 }) {
   const isUser = msg.role === "user";
 
+  // Basis-Bubble nur für den User
   const bubbleBase: React.CSSProperties = {
     maxWidth: "min(900px, 100%)",
     borderRadius: TOKENS.radius.lg,
@@ -486,24 +487,33 @@ function Bubble({
     boxShadow: TOKENS.shadow.soft,
   };
 
+  // User rechts: echte Bubble
+  const userBubbleStyle: React.CSSProperties = {
+    ...bubbleBase,
+    maxWidth: "min(620px, 100%)",
+    marginLeft: "auto",
+    marginRight: 0,
+    background: tokens.color.cyanGlass,
+    borderColor: tokens.color.cyanBorder,
+  };
+
+  // Assistant links: komplett offen, nur Text – keine Bubble
+  const assistantStyle: React.CSSProperties = {
+    maxWidth: "min(900px, 100%)",
+    lineHeight: 1.6,
+    color: tokens.color.text,
+    background: "transparent",
+    border: "none",
+    boxShadow: "none",
+    padding: 0,
+    marginLeft: "auto",
+    marginRight: "auto",
+  };
+
   const bubbleStyle: React.CSSProperties = isUser
-    ? {
-        // einzige echte "Bubble": User rechts
-        ...bubbleBase,
-        maxWidth: "min(620px, 100%)",
-        marginLeft: "auto",
-        marginRight: 0,
-        background: tokens.color.cyanGlass,
-        borderColor: tokens.color.cyanBorder,
-      }
-    : {
-        // offene, zentrierte Antwortfläche (Gemini-Style)
-        ...bubbleBase,
-        marginLeft: "auto",
-        marginRight: "auto",
-        background: tokens.color.glass,
-        borderColor: tokens.color.glassBorder,
-      };
+    ? userBubbleStyle
+    : assistantStyle;
+
 
   const handleCopyAnswer = () => {
     const text = String(msg.content ?? "");
