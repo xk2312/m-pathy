@@ -452,7 +452,7 @@ function Bubble({
           alt="M"
           width={22}
           height={22}
-          style={{ marginTop: 6, flex: "0 0 22px" }}
+          style={{ marginTop: -5, flex: "0 0 22px" }}
         />
       )}
 
