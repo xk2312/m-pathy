@@ -506,13 +506,14 @@ function Bubble({
     border: "none",
     boxShadow: "none",
     padding: 0,
-    marginLeft: "auto",
-    marginRight: "auto",
+    marginLeft: 0,
+    marginRight: 0,
   };
 
   const bubbleStyle: React.CSSProperties = isUser
     ? userBubbleStyle
     : assistantStyle;
+
 
 
   const handleCopyAnswer = () => {
@@ -545,17 +546,18 @@ function Bubble({
         />
       )}
 
-      <div
+           <div
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: isUser ? "flex-end" : "stretch",
-          width: "100%",
+          alignItems: isUser ? "flex-end" : "flex-start",
+          width: isUser ? "100%" : "auto",
         }}
       >
         <div style={bubbleStyle}>
           <MessageBody msg={msg} />
         </div>
+
 
         {!isUser && (
           <div
