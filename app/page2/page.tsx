@@ -1868,26 +1868,47 @@ return (
     }
   }
 
-  /* Desktop: Flight-Modus – Prompt unten angedockt wie bisher */
-  @media (min-width: 769px){
-    #m-input-dock.gold-dock--flight{
-      left: var(--saeule-w, 320px);
-      right: 0;
-      bottom: var(--safe-bottom, 0px);
-    }
-  }
+ /* Desktop: Flight-Modus – Dock zentriert in der rechten Bühne */
+@media (min-width: 769px){
+  #m-input-dock.gold-dock--flight{
+    left: auto;
+    right: auto;
+    bottom: var(--safe-bottom, 0px);
 
-  #m-input-dock.m-bottom-stack{
-    background: rgba(8,14,18,0.90);
-    backdrop-filter: blur(8px);
-    border-top: 1px solid rgba(255,255,255,0.10);
-    box-shadow: 0 -4px 18px rgba(0,0,0,.40);
-    padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
-    overscroll-behavior: contain;
-    width: 100%;
-    margin: 0;
-    border-radius: 0;
+    width: auto;
+    max-width: calc(
+      var(--stage-max, 900px) + var(--stage-pad, 48px) * 2
+    );
+    margin-left: auto;
+    margin-right: auto;
   }
+}
+
+
+ #m-input-dock.m-bottom-stack{
+  background: rgba(8,14,18,0.90);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 -4px 18px rgba(0,0,0,.40);
+  padding: 10px 10px calc(10px + var(--safe-area-inset-bottom,0px));
+  overscroll-behavior: contain;
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+}
+
+/* 🔒 Desktop: Dock nicht mehr full-width, sondern auf Stage begrenzt */
+@media (min-width: 769px){
+  #m-input-dock.m-bottom-stack{
+    width: auto;
+    max-width: calc(
+      var(--stage-max, 900px) + var(--stage-pad, 48px) * 2
+    );
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 
   /* Kinder dürfen animieren */
   .gold-prompt-wrap,
