@@ -1548,7 +1548,6 @@ return (
   }}
 >
 
-
       {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
       <section
         aria-label="Chat layout"
@@ -1561,8 +1560,16 @@ return (
           gap: 16,
           minHeight: 0,
           overflow: "visible",
+
+          // 🔒 Breite begrenzen & zentrieren (Desktop)
+          maxWidth:
+            "calc(var(--saeule-w, 320px) + var(--stage-max, 820px) + var(--stage-pad, 48px) * 2)",
+          marginLeft: "auto",
+          marginRight: "auto",
+          paddingInline: isMobile ? "12px" : "24px",
         }}
       >
+
 
 {/* Säule links */}
 {!isMobile && (
@@ -1945,11 +1952,14 @@ return (
   /* Desktop: Cockpit-Breite = Viewport minus Säule */
   @media (min-width: 769px){
 
+      @media (min-width: 769px){
+
     /* 🎯 Gemeinsame Bühnenbegrenzung */
     :root {
-      --stage-max: 900px;       /* zentrale Breite für Prompt & Badges & Chat */
+      --stage-max: 820px;       /* etwas kleinere Bühne für Chat & Prompt */
       --stage-pad: 48px;        /* Luft rechts/links innerhalb der Bühne */
     }
+
 
      #m-input-dock.m-bottom-stack{
       /* Desktop: Hintergrund-Streifen ausblenden,
