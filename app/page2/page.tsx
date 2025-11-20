@@ -31,9 +31,7 @@ import React, {
 import Image from "next/image";
 import hljs from "highlight.js";
 
-import MTheater from "@/components/MTheater";
-import { M_CURRENT_VARIANT } from "@/config/mLogoConfig";
-import LogoM from "@/components/LogoM";
+import Navigation from "@/app/components/navigation/navigation";
 import MessageInput from "../components/MessageInput";
 import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
@@ -1528,18 +1526,30 @@ const pageStyle: React.CSSProperties = {
 // Mobile Header State + Viewport Hook
 const [mState, setMState] = useState<"idle" | "shrink" | "typing">("idle");
 useMobileViewport(typeof document !== "undefined" ? document.body : null);
-/* Scroll → Header shrink */
+/* Scroll → Header shrink + Navigation-Override */
 useEffect(() => {
-  if (!isMobile || !convoRef?.current) return;
+  if (!convoRef?.current) return;
   const el = convoRef.current as HTMLElement;
+
   const onScroll = () => {
-    if (mState === "typing") return;
     const y = el.scrollTop || 0;
-    setMState(y > 24 ? "shrink" : "idle");
+
+    // Mobile: alter Typing/Idle-State (falls noch genutzt)
+    if (isMobile && mState !== "typing") {
+      setMState(y > 24 ? "shrink" : "idle");
+    }
+
+    // Bridge zur Navigation: Chat-Scroll steuert Nav-Scroll
+    if (typeof window !== "undefined") {
+      (window as any).__mNavScrollYOverride = y;
+      window.dispatchEvent(new Event("scroll"));
+    }
   };
+
   el.addEventListener("scroll", onScroll, { passive: true });
   return () => el.removeEventListener("scroll", onScroll);
 }, [isMobile, mState, convoRef]);
+
 
 /* Focus im Prompt/Dock → Header typing */
 useEffect(() => {
@@ -1596,94 +1606,29 @@ const withGate = (fn: () => void) => {
 const sendingRef = useRef(false);
 return (
   <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
-    
-   {/* === HEADER ===================================================== */}
-<header
-  ref={headerRef}
-  role="banner"
-  style={{
-    position: "fixed",
-    top: 0,
-    // Desktop: Header beginnt rechts neben der Säule
-    left: isMobile ? 0 : "var(--saeule-w, 320px)",
-    right: isMobile ? 0 : undefined,
-    width: isMobile ? "100%" : "calc(100vw - var(--saeule-w, 320px))",
-    zIndex: 100,
-    // ▼ Höhe auf 60 % der bisherigen Werte
-    height: isMobile ? "calc(var(--header-h) * 0.6)" : "calc(224px * 0.6)",
-    background: [
-      "linear-gradient(180deg, rgba(12, 14, 18, 0.98), rgba(4, 6, 10, 0.98))",
-    ].join(", "),
-    borderBottom: `1px solid ${
-      activeTokens.color.glassBorder ?? "rgba(148, 163, 184, 0.35)"
-    }`,
-    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.75)",
-  }}
->
+    {/* === GLOBAL NAVIGATION (wie Subscription) ======================= */}
+    <div ref={headerRef as any}>
+      <Navigation />
+    </div>
 
-
-    
+    {/* === BÜHNE ====================================================== */}
     <div
-    style={{
-      width: "100%",
-      maxWidth: "var(--stage-max, 900px)",
-      margin: "0 auto",
-      height: "100%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      // Desktop: Logo-Bühne = gleiche Stage wie Chat/Prompt
-      paddingLeft: isMobile ? "12px" : "var(--stage-pad, 48px)",
-      paddingRight: isMobile ? "12px" : "var(--stage-pad, 48px)",
-    }}
-  >
-    <MTheater>
-
-
-  <LogoM size={160} active={loading} variant={M_CURRENT_VARIANT} />
-
-  {frameText && (
-    <div
-      aria-live="polite"
       style={{
-        position: "absolute",
-        inset: 0,
-        display: "grid",
-        placeItems: "center",
-        pointerEvents: "none",
-        fontWeight: 700,
-        letterSpacing: "0.6px",
-        fontSize: 18,
-        color: "#60E6FF",
-        textShadow: "0 0 12px rgba(96,230,255,.45)",
-        opacity: 0.95,
-        transition: "opacity 220ms ease",
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        // Full-left: Bühne hängt direkt an der Viewport-Wand
+        marginInline: 0,
+        minHeight: 0,
+        maxWidth: "none",
+        alignSelf: "stretch",
+        width: "100%",
+        // Bühne startet direkt unter der festen Navigation
+        paddingTop: "var(--nav-safe-top)",
       }}
     >
-      {frameText}
-    </div>
-  )}
-</MTheater>
 
-      </div>
-</header>
 
-     {/* === BÜHNE ====================================================== */}
-<div
-  style={{
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    // Full-left: Bühne hängt direkt an der Viewport-Wand
-    marginInline: 0,
-    minHeight: 0,
-    maxWidth: "none",
-    alignSelf: "stretch",
-    width: "100%",
-    // ⬇️ Mobile & Desktop beide auf 60 % des ursprünglichen Header-Werts
-    paddingTop: isMobile ? "calc(var(--header-h) * 0.6)" : "calc(224px * 0.6)",
-  }}
->
 
            {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
       <section
@@ -1712,12 +1657,14 @@ return (
               top: 16,
               alignSelf: "stretch",
 
-              // Säule soll komplett von oben bis unten reichen
-              height: "calc(100dvh - 16px)",
+            // Säule soll komplett von oben bis unten reichen
+height: "calc(100dvh - 16px)",
 
-              // nach oben in den Logo-Bereich ziehen
-              marginTop: "-calc(224px * 0.6)",
-              paddingTop: "calc(224px * 0.6 + 16px)",
+// nach oben in den Nav-Bereich ziehen
+marginTop: "calc(-1 * var(--nav-safe-top))",
+paddingTop: "calc(var(--nav-safe-top) + 16px)",
+
+
 
               // kleiner Fußraum unten
               paddingBottom: "16px",
@@ -1750,10 +1697,11 @@ return (
 
 
             /* Harte, verlässliche Block-Höhe relativ zum Viewport */
-            flex: "0 1 auto",
-            height: isMobile
-              ? undefined
-              : "calc(100dvh - (224px * 0.6) - var(--dock-h, 60px))",
+flex: "0 1 auto",
+height: isMobile
+  ? undefined
+  : "calc(100dvh - var(--nav-safe-top) - var(--dock-h, 60px))",
+
 
             minHeight: 0,
             overflow: "auto",
@@ -1773,16 +1721,17 @@ return (
 
           {/* Chronik wächst im Scroller */}
           <div
-            style={{
-              flex: 1,
-              minHeight: 0,
-              paddingTop: isMobile ? "calc(var(--header-h) * 0.6 + 8px)" : 8,
-              paddingLeft: isMobile ? 0 : undefined,
-              paddingRight: isMobile ? 0 : undefined,
-              scrollbarGutter: "stable",
-            }}
-            aria-label={t("conversationAria")}
-          >
+  style={{
+    flex: 1,
+    minHeight: 0,
+    paddingTop: 8,
+    paddingLeft: isMobile ? 0 : undefined,
+    paddingRight: isMobile ? 0 : undefined,
+    scrollbarGutter: "stable",
+  }}
+  aria-label={t("conversationAria")}
+>
+
 
             <Conversation
               messages={messages}

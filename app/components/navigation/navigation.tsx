@@ -34,22 +34,22 @@ export default function Navigation() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  // Scroll-Listener für Arrival ↔ Whisper (nur transform/opacity)
+    // Scroll-Listener für Arrival ↔ Whisper (nur transform/opacity)
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Bei Reduced Motion kein Orbit-Shrink, immer Arrival
-    if (reducedMotion) {
-      if (orbitState !== "arrival") {
-        setOrbitState("arrival");
+    const getY = () => {
+      const w = window as any;
+      // Chat-Seite: Override durch internen Scroller
+      if (typeof w.__mNavScrollYOverride === "number") {
+        return w.__mNavScrollYOverride as number;
       }
-      return;
-    }
-
-    let lastY = window.scrollY;
+      // Default: normales Window-Scrolling (Subscription, Landing)
+      return window.scrollY;
+    };
 
     const handleScroll = () => {
-      const y = window.scrollY;
+      const y = getY();
 
       // Hysterese: ab ~160px runter → Whisper, zurück nach oben <110px → Arrival
       if (y > 160 && orbitState !== "whisper") {
@@ -57,13 +57,12 @@ export default function Navigation() {
       } else if (y < 110 && orbitState !== "arrival") {
         setOrbitState("arrival");
       }
-
-      lastY = y;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [orbitState, reducedMotion]);
+
 
   const locale = navDict[lang] ?? navDict.en;
   const links = locale.nav.links;
