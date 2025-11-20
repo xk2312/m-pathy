@@ -1611,7 +1611,7 @@ return (
       <Navigation />
     </div>
 
-    {/* === BÜHNE ====================================================== */}
+        {/* === BÜHNE ====================================================== */}
     <div
       style={{
         flex: 1,
@@ -1623,10 +1623,10 @@ return (
         maxWidth: "none",
         alignSelf: "stretch",
         width: "100%",
-        // Bühne startet direkt unter der festen Navigation
-        paddingTop: "var(--nav-safe-top)",
+        // Navigation-Abstand wird bereits über headerRef/Layout gesteuert
       }}
     >
+
 
 
 
