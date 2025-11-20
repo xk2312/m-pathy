@@ -81,21 +81,38 @@ export default function Navigation() {
     return pathname.startsWith(href);
   };
 
-  return (
-    <header
-      style={{
+  // Chat-Layout: schmale Navi, bündig mit der linken Säule
+  const isChatLayout =
+    pathname?.startsWith("/chat") ||
+    pathname?.startsWith("/page2") ||
+    false;
+
+  const headerStyle: React.CSSProperties = isChatLayout
+    ? {
+        position: "fixed",
+        top: 0,
+        left: "var(--saeule-w, 320px)",
+        right: 0,
+        zIndex: 40,
+      }
+    : {
         position: "fixed",
         top: 0,
         insetInline: 0,
         zIndex: 40,
-      }}
-      aria-label="Main site navigation"
-    >
+      };
+
+  return (
+    <header style={headerStyle} aria-label="Main site navigation">
       <div
         className="mx-auto flex items-center justify-between"
         style={{
-          maxWidth: "var(--page-inner-max)",
-          paddingInline: "var(--page-pad-inline)",
+          // Chat: Navi vollständig an die rechte Bühne koppeln
+          maxWidth: isChatLayout ? "none" : "var(--page-inner-max)",
+          margin: isChatLayout ? "0" : undefined,
+          paddingInline: isChatLayout
+            ? "var(--stage-pad, 48px)"
+            : "var(--page-pad-inline)",
           height: navHeight,
           transform: isWhisper
             ? "translateY(-6px) scale(0.95)"
@@ -106,11 +123,11 @@ export default function Navigation() {
           backdropFilter: "blur(18px)",
           boxShadow: isWhisper ? "var(--nav-orbit-glow)" : "none",
           borderBottom: "1px solid rgba(148,163,184,0.20)",
-          transition: reducedMotion
-            ? "none"
-            : "transform var(--nav-motion-medium), opacity var(--nav-motion-medium), background-color var(--nav-motion-fast), box-shadow var(--nav-motion-medium)",
+          transition:
+            "transform var(--nav-motion-medium), opacity var(--nav-motion-medium), background-color var(--nav-motion-fast), box-shadow var(--nav-motion-medium)",
         }}
       >
+
         {/* LEFT – Mobile Orb + Desktop Logo */}
         <div className="flex items-center gap-3">
           {/* Mobile Orb / Menu Button */}
