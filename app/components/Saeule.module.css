@@ -301,8 +301,74 @@
 }
 
 /* ─────────────────────────────────────────
-   Buttons – Varianten & aktiver Zustand
+   Buttons – OS-Varianten & aktiver Zustand
    ──────────────────────────────────────── */
+
+/* Basis-Button (Export, generisch, Clear-Basis) */
+.button,
+.buttonPrimary,
+.buttonGhostPrimary,
+.buttonSolid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.40);
+  background: rgba(15, 23, 42, 0.96);
+  color: rgba(226, 232, 240, 0.96);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.16s ease,
+    border-color 0.16s ease,
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+/* Primär – Build / ONBOARDING */
+.buttonPrimary {
+  background: #0ea5e9;
+  border-color: #38bdf8;
+  color: #0f172a;
+}
+
+/* Solide – M · Default */
+.buttonSolid {
+  background: rgba(15, 23, 42, 0.98);
+  border-color: rgba(148, 163, 184, 0.55);
+}
+
+/* Ghost Primary – COUNCIL13 (dezente Outline) */
+.buttonGhostPrimary {
+  background: transparent;
+  border-style: dashed;
+  border-color: rgba(148, 163, 184, 0.75);
+  color: rgba(226, 232, 240, 0.96);
+}
+
+/* Hover-Feedback – ohne Glow-Orgie */
+.button:hover,
+.buttonPrimary:hover,
+.buttonGhostPrimary:hover,
+.buttonSolid:hover {
+  background-color: rgba(15, 23, 42, 1);
+  border-color: rgba(148, 163, 184, 0.65);
+}
+
+/* Press-Feedback */
+.button:active,
+.buttonPrimary:active,
+.buttonGhostPrimary:active,
+.buttonSolid:active {
+  transform: translateY(0.5px);
+}
 
 /* Layout-Hilfe für Aktionszeile (Export/Clear) */
 .actions {
@@ -311,12 +377,13 @@
   gap: 8px;
 }
 
-/* aktiver Zustand – wird für das neue OS-Button-Set wiederverwendet */
+/* aktiver Zustand – ohne Gradient, OS-konform */
 .active {
-  box-shadow: 0 0 0 1px rgba(147,197,253,.55), 0 0 0 6px rgba(147,197,253,.22);
-  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-  color: #f8fafc !important; /* sehr hell */
-  border-color: rgba(147,197,253,.55) !important;
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.75),
+              0 0 0 4px rgba(8, 47, 73, 0.85);
+  background: rgba(8, 47, 73, 0.98);
+  color: #f8fafc !important;
+  border-color: rgba(56, 189, 248, 0.85) !important;
 }
 
 /* Fokus sichtbar (A11y) – bleibt für alle Interaktions-Elemente aktiv */
@@ -332,6 +399,7 @@
   outline: none;
   box-shadow: var(--glow), var(--sh-md);
 }
+
 
 
 
