@@ -92,50 +92,58 @@
 .expertBtn {
   display: flex; align-items: center; gap: 10px;
   min-height: 44px;
-  border-radius: var(--rz-lg);
-  background: rgba(12,24,32,0.72);
-  border: 1px solid rgba(0,255,255,0.08);
+  border-radius: 10px;
+  background: rgba(15,23,42,0.94);
+  border: 1px solid rgba(148,163,184,0.40);
   box-shadow: var(--sh-sm);
-  transition: transform var(--t-mid) var(--ease),
-              box-shadow var(--t-mid) var(--ease),
-              background var(--t-mid) var(--ease);
+  transition:
+    background var(--t-mid) var(--ease),
+    border-color var(--t-mid) var(--ease),
+    box-shadow var(--t-mid) var(--ease),
+    transform var(--t-fast) var(--ease);
   cursor: pointer; pointer-events: auto;
 }
 .expertBtn:hover {
-  transform: translateY(-1px) scale(1.01);
+  background: rgba(15,23,42,0.98);
+  border-color: rgba(148,163,184,0.65);
   box-shadow: var(--sh-md);
-  background: rgba(14,32,42,0.80);
+  transform: translateY(-0.5px);
 }
 .expertBtn:active {
-  transform: translateY(0) scale(0.985);
+  transform: translateY(0);
   box-shadow: var(--sh-sm);
-}
-.expertBtn:focus-visible {
-  outline: none;
-  box-shadow: var(--glow), var(--sh-md);
 }
 .expertBtn .icon {
   width: 20px; height: 20px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 20px;
+
   display: inline-flex; align-items: center; justify-content: center;
   flex: 0 0 20px;
 }
 
 /* === Mode Buttons (visuell; inkl. Default-Ring für COUNCIL13) === */
 .modeBtn {
-  border-radius: var(--rz-2xl);
-  background: rgba(10,18,26,0.6);
-  border: 1px solid rgba(0,255,255,0.08);
-  transition: background var(--t-mid) var(--ease), box-shadow var(--t-mid) var(--ease);
+  border-radius: 999px;
+  background: rgba(15,23,42,0.94);
+  border: 1px solid rgba(148,163,184,0.40);
+  transition:
+    background var(--t-mid) var(--ease),
+    border-color var(--t-mid) var(--ease),
+    box-shadow var(--t-mid) var(--ease),
+    transform var(--t-fast) var(--ease);
   cursor: pointer; pointer-events: auto;
 }
 .modeBtn--active {
-  background: linear-gradient(180deg, rgba(14,47,58,0.95), rgba(10,30,38,0.90));
-  box-shadow: var(--glow);
-  border: 1px solid rgba(0,255,255,0.22);
+  background: #00C8FF;
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 1px rgba(56,189,248,0.45);
+  color: #02141d;
 }
 .modeBtn--default { /* Council13 Default Visual */
-  box-shadow: 0 0 0 2px rgba(0,255,255,0.35), 0 0 30px rgba(0,255,255,0.18);
+  box-shadow: 0 0 0 1px rgba(148,163,184,0.80);
 }
+
 /* Optionaler “DEFAULT”-Chip (Positionierung am Buttonrand, rein visuell) */
 .modeDefaultChip {
   position: absolute; top: -6px; right: -6px;
@@ -160,8 +168,8 @@
   cursor: pointer;
 }
 .selectShell:hover { background: rgba(14,32,42,0.80); box-shadow: var(--sh-md); transform: translateY(-1px); }
-.selectShell:focus-visible { outline: none; box-shadow: var(--glow), var(--sh-md); }
 .selectShell .label { opacity: .9; }
+
 .selectShell .chev { width: 16px; height: 16px; opacity: .65; }
 
 
