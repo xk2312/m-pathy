@@ -1650,15 +1650,17 @@ return (
 
 
                 {/* Säule links */}
-        {!isMobile && (
+               {!isMobile && (
           <div
             style={{
               position: "sticky",
               top: 0,
               alignSelf: "stretch",
 
-              // Säule = volle Viewport-Höhe links
+              // Säule = exakt volle Bühne, ohne Safe-Top-Buffer
               height: "100dvh",
+
+              // KEIN nav-safe-top mehr – Rail startet exakt unter der Navi
               marginTop: 0,
               paddingTop: 0,
               paddingBottom: 0,
@@ -1670,10 +1672,10 @@ return (
             <SidebarContainer
               onSystemMessage={systemSay}
               onClearChat={onClearChat}
-              /* canClear={canClear} */
             />
           </div>
         )}
+
 
 
 
