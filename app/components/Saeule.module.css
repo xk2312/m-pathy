@@ -6,26 +6,36 @@
   top: 0;
   margin-top: 0;
 
-  /* Säule soll die gesamte Spur einnehmen */
+  /* Vollsäule: an Rail anliegen und komplett füllen */
   align-self: stretch;
   height: 100%;
   max-height: none;
   overflow: visible;
 
-  /* SMOOTH OPERATOR · Rail */
-  color: rgba(248, 250, 252, 0.96);
+  /* Smooth Operator – Säulen-Hintergrund */
+  color: var(--color-fg);
   background: #1E2024;
-  border: none;              /* Rand weg */
-  border-radius: 0;          /* keine Eckenrundung */
-  padding: 16px;
+
+  /* Karte raus – reine Fläche */
+  border: none;
+  border-radius: 0;
+
+  /* Innenabstände bleiben sanft */
+  padding: 16px 12px 16px;
+
+  /* Inhalt vertikal: Kopf → Body → Aktionen (unten via .actions { margin-top:auto }) */
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
+
+  /* Kein Glass, kein Glow – reine Rail */
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   box-shadow: none;
+
   z-index: var(--z-base);
 }
+
 
 /* ─────────────────────────────
    Sections A–D (Header, Modes, Experts, Utility)

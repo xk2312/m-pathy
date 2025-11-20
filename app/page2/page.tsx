@@ -1650,32 +1650,28 @@ return (
 
 
         {/* Säule links */}
-        {!isMobile && (
+               {!isMobile && (
           <div
             style={{
               position: "sticky",
-              top: 16,
+              top: 0,
               alignSelf: "stretch",
 
-            // Säule soll komplett von oben bis unten reichen
-height: "calc(100dvh - 16px)",
+              // Rail-Höhe: vom unteren Rand der Navi bis zum unteren Viewport
+              height: "calc(100dvh - var(--nav-safe-top))",
 
-// nach oben in den Nav-Bereich ziehen
-marginTop: "calc(-1 * var(--nav-safe-top))",
-paddingTop: "calc(var(--nav-safe-top) + 16px)",
+              // Rail beginnt optisch auf Höhe des M-Logos
+              marginTop: "calc(-1 * var(--nav-safe-top))",
+              paddingTop: "var(--nav-safe-top)",
 
+              // Fußraum übernimmt jetzt die Säule selbst
+              paddingBottom: 0,
 
-
-              // kleiner Fußraum unten
-              paddingBottom: "16px",
-
-              // Säule darf optisch voll „atmen“ (Glow, Schatten)
               overflow: "visible",
-
-              // ⬅️ explizit an den linken Rand legen
               marginLeft: 0,
             }}
           >
+
 
     <SidebarContainer
       onSystemMessage={systemSay}

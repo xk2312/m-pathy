@@ -50,7 +50,7 @@ export default function SidebarContainer({
 }: Props) {
   const isDesktop = useIsDesktop(1024);
 
-  return (
+    return (
     <aside
       aria-label="Sidebar Container"
       data-test="sidebar-container"
@@ -58,15 +58,22 @@ export default function SidebarContainer({
       style={{
         cursor: "pointer",
         pointerEvents: "auto",
+        height: "100%",              // ← Säule darf volle Rail-Höhe einnehmen
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      {isDesktop ? (
+
+       {isDesktop ? (
                 /* Desktop: Sticky kommt vom Parent in page.tsx */
         <div
           style={{
             position: "static",
-            alignSelf: "start",
+            alignSelf: "stretch",
             zIndex: "var(--z-base, 1)",
+            height: "100%",            // ← Wrapper füllt die sticky-Rail
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           <Saeule
@@ -74,6 +81,7 @@ export default function SidebarContainer({
             onClearChat={onClearChat}   // ⬅︎ Leitung zum Clear-Handler
             canClear={canClear}         // ⬅︎ optional
           />
+
         </div>
       ) : (
 
