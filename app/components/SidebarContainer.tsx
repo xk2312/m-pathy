@@ -62,7 +62,7 @@ export default function SidebarContainer({
       }}
     >
       {isDesktop ? (
-        /* Desktop: Sticky kommt vom Parent in page.tsx */
+                /* Desktop: Sticky kommt vom Parent in page.tsx */
         <div
           style={{
             position: "static",
@@ -70,15 +70,14 @@ export default function SidebarContainer({
             zIndex: "var(--z-base, 1)",
           }}
         >
-          <div className={styles.geminiFrame}>
-            <Saeule
-              onSystemMessage={onSystemMessage}
-              onClearChat={onClearChat}   // ⬅︎ Leitung zum Clear-Handler
-              canClear={canClear}         // ⬅︎ optional
-            />
-          </div>
+          <Saeule
+            onSystemMessage={onSystemMessage}
+            onClearChat={onClearChat}   // ⬅︎ Leitung zum Clear-Handler
+            canClear={canClear}         // ⬅︎ optional
+          />
         </div>
       ) : (
+
         /* Mobile: Platzhalter */
 
         <div
