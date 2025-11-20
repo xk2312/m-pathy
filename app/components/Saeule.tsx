@@ -67,21 +67,21 @@ const MODI: { id: ModeId; label: string }[] = [
   { id: "flow", label: "FLOW" },
 ];
 
-/** Icons pro Experte (Label wird lokalisiert) */
-const EXPERTS: { id: ExpertId; icon: string }[] = [
-  { id: "Biologist", icon: "🧬" },
-  { id: "Chemist", icon: "⚗️" },
-  { id: "Physicist", icon: "🪐" },
-  { id: "Computer Scientist", icon: "💻" },
-  { id: "Jurist", icon: "⚖️" },
-  { id: "Architect / Civil Engineer", icon: "🏗️" },
-  { id: "Landscape Designer", icon: "🌿" },
-  { id: "Interior Designer", icon: "🛋️" },
-  { id: "Electrical Engineer", icon: "🔌" },
-  { id: "Mathematician", icon: "🔢" },
-  { id: "Astrologer", icon: "✨" },
-  { id: "Weather Expert", icon: "🌤️" },
-  { id: "Molecular Scientist", icon: "🧪" },
+/** Simba-Slots pro Experte (Icons kommen später aus SIMBA, keine Emojis mehr) */
+const EXPERTS: { id: ExpertId; simbaSlot: string }[] = [
+  { id: "Biologist",              simbaSlot: "simba-expert-biologist" },
+  { id: "Chemist",                simbaSlot: "simba-expert-chemist" },
+  { id: "Physicist",              simbaSlot: "simba-expert-physicist" },
+  { id: "Computer Scientist",     simbaSlot: "simba-expert-computer-scientist" },
+  { id: "Jurist",                 simbaSlot: "simba-expert-jurist" },
+  { id: "Architect / Civil Engineer", simbaSlot: "simba-expert-architect-civil" },
+  { id: "Landscape Designer",     simbaSlot: "simba-expert-landscape" },
+  { id: "Interior Designer",      simbaSlot: "simba-expert-interior" },
+  { id: "Electrical Engineer",    simbaSlot: "simba-expert-electrical" },
+  { id: "Mathematician",          simbaSlot: "simba-expert-mathematician" },
+  { id: "Astrologer",             simbaSlot: "simba-expert-astrologer" },
+  { id: "Weather Expert",         simbaSlot: "simba-expert-weather" },
+  { id: "Molecular Scientist",    simbaSlot: "simba-expert-molecular" },
 ];
 
 /** Sub-KIs (Meta, nicht angezeigt, aber für Logs/Telemetry nützlich) */
@@ -634,15 +634,18 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
               void askExpert(val);
             }}
           >
-            <option value="" disabled hidden>
-              {tr("expert.select", "Experten wählen")}
-            </option>
-            {EXPERTS.map((e) => (
-              <option key={e.id} value={e.id}>
-                {e.icon} {labelForExpert(e.id, lang)}
-              </option>
-            ))}
-          </select>
+             <option value="" disabled hidden>{tr("expert.select", "Experten wählen")}</option>
+  {EXPERTS.map((e) => (
+    <option
+      key={e.id}
+      value={e.id}
+      data-simba-slot={e.simbaSlot}   // Simba bekommt hier seinen Hook
+    >
+      {labelForExpert(e.id, lang)}
+    </option>
+  ))}
+</select>
+
         </div>
       </section>
 
