@@ -500,22 +500,25 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
   setSendingExpert(null);
 }
 
-   /* UI */
+     /* UI */
   return (
     <aside
       className={styles.saeule}
       aria-label={tr("columnAria", "Column — Controls & Selection")}
       data-test="saeule"
     >
-      
-      {/* Kopf entfernt → Build-Button oben im Panel */}
-      <div className={styles.block} style={{ marginTop: 8 }}>
-        <button
-          type="button"
+      <section
+        className={styles.sectionHeader}
+        aria-label={tr("pillar.section.header", "Modes & experts header")}
+      >
+        {/* Kopf entfernt → Build-Button oben im Panel */}
+        <div className={styles.block} style={{ marginTop: 8 }}>
+          <button
+            type="button"
+            aria-label={tr("cta.build", "Jetzt bauen")}         // ← i18n Key
+            data-m-event="builder"
+            data-m-label={tr("cta.build", "Jetzt bauen")}
 
-    aria-label={tr("cta.build", "Jetzt bauen")}         // ← i18n Key
-    data-m-event="builder"
-    data-m-label={tr("cta.build", "Jetzt bauen")}
     onClick={async () => {
       emitStatus({ busy: true });                       // M-Logo sofort in Thinking
 
@@ -553,6 +556,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
     {tr("cta.build", "Jetzt bauen")}                     {/* dynamisches Label */}
   </button>
 </div>
+      </section>
 
 
 
