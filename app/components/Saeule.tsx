@@ -646,85 +646,84 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
         </div>
       </section>
 
-      {/* Council13 */}
-
-<div className={styles.block}>
- <button
-  type="button"
-  aria-pressed={activeMode === "council"}
-  className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
-  onClick={() => switchMode("council")}
-  style={{ width: "100%", cursor: "pointer" }}
->
-  {tr("mode.council", "COUNCIL13")}
-</button>
-
-</div>
-
-
-   
-
-
-{/* Aktionen: Export (links, 50%) + Clear (rechts, 50%) */}
-<div
-  className={styles.actions}
-  style={{ display: "flex", gap: 8, alignItems: "stretch", flexWrap: "nowrap" }}
->
-  {/* Export – links, 50% */}
-  <button
-    className={styles.button}
-    style={{ width: "50%", cursor: "pointer" }}
-    onClick={() => {
-      try {
-        const raw = localStorage.getItem("mpathy:thread:default") || "{}";
-        const blob = new Blob([raw], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url; a.download = "mpathy-thread.json"; a.click();
-        URL.revokeObjectURL(url);
-        logEvent("export_thread", { size: raw.length });
-        say(tr("threadExported", "Thread exported."));
-      } catch {}
-    }}
-    aria-label={tr("exportAria", "Export thread")}
-    title={tr("export", "Export")}
-  >
-    {tr("export", "Export")}
-  </button>
-
-  {/* Clear – rechts, 50% (immer aktiv) */}
-  <button
-    className={styles.button}
-    style={{
-      width: "50%",
-      cursor: "pointer",
-      background: "rgba(220, 38, 38, 0.18)",
-      borderColor: "rgba(248, 113, 113, 0.85)",
-      color: "rgba(255,255,255,0.98)",
-      boxShadow: "inset 0 0 0 1px rgba(248,113,113,0.55)",
-    }}
-    onClick={() => {
-      console.log("[P1] Clear button clicked");
-      console.log("[P2] typeof onClearChat =", typeof onClearChat);
-      try { onClearChat?.(); } catch (e) { console.error("[P2→P4] onClearChat threw:", e); }
-    }}
-    aria-label={tr("clearChatAria", "Clear chat")}
-    title={tr("clearChat", "Clear")}
-    role="button"
-    data-test="btn-clear-chat"
-  >
-    {tr("clearChat", "Clear")}
-  </button>
-</div>
-
-
-
-
-
-      {/* Statusleiste */}
-      <div className={styles.statusBar} aria-live="polite">
-        <span className={styles.statusKey}>{t("statusMode")}</span> {modeLabel}
+           {/* Council13 */}
+      <div className={styles.block}>
+        <button
+          type="button"
+          aria-pressed={activeMode === "council"}
+          className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
+          onClick={() => switchMode("council")}
+          style={{ width: "100%", cursor: "pointer" }}
+        >
+          {tr("mode.council", "COUNCIL13")}
+        </button>
       </div>
+
+      <section
+        className={styles.sectionUtility}
+        aria-label={tr("pillar.section.utility", "Utility & status")}
+      >
+        {/* Aktionen: Export (links, 50%) + Clear (rechts, 50%) */}
+        <div
+          className={styles.actions}
+          style={{ display: "flex", gap: 8, alignItems: "stretch", flexWrap: "nowrap" }}
+        >
+          {/* Export – links, 50% */}
+          <button
+            className={styles.button}
+            style={{ width: "50%", cursor: "pointer" }}
+            onClick={() => {
+              try {
+                const raw = localStorage.getItem("mpathy:thread:default") || "{}";
+                const blob = new Blob([raw], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url; a.download = "mpathy-thread.json"; a.click();
+                URL.revokeObjectURL(url);
+                logEvent("export_thread", { size: raw.length });
+                say(tr("threadExported", "Thread exported."));
+              } catch {}
+            }}
+            aria-label={tr("exportAria", "Export thread")}
+            title={tr("export", "Export")}
+          >
+            {tr("export", "Export")}
+          </button>
+
+          {/* Clear – rechts, 50% (immer aktiv) */}
+          <button
+            className={styles.button}
+            style={{
+              width: "50%",
+              cursor: "pointer",
+              background: "rgba(220, 38, 38, 0.18)",
+              borderColor: "rgba(248, 113, 113, 0.85)",
+              color: "rgba(255,255,255,0.98)",
+              boxShadow: "inset 0 0 0 1px rgba(248,113,113,0.55)",
+            }}
+            onClick={() => {
+              console.log("[P1] Clear button clicked");
+              console.log("[P2] typeof onClearChat =", typeof onClearChat);
+              try {
+                onClearChat?.();
+              } catch (e) {
+                console.error("[P2→P4] onClearChat threw:", e);
+              }
+            }}
+            aria-label={tr("clearChatAria", "Clear chat")}
+            title={tr("clearChat", "Clear")}
+            role="button"
+            data-test="btn-clear-chat"
+          >
+            {tr("clearChat", "Clear")}
+          </button>
+        </div>
+
+        {/* Statusleiste */}
+        <div className={styles.statusBar} aria-live="polite">
+          <span className={styles.statusKey}>{t("statusMode")}</span> {modeLabel}
+        </div>
+      </section>
     </aside>
   );
-    }
+}
