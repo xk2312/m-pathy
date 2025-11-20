@@ -96,8 +96,9 @@ body {
   background-color: #000;
   overscroll-behavior-y: contain; /* optional restriktiver */
   -webkit-tap-highlight-color: transparent;
-  padding-top: var(--nav-safe-top, 0px); /* Platz für die fixierte Navigation */
+  /* Globale Navi-Reserve entfernt – Bühne liegt direkt unter der Navi */
 }
+
 
 
 /* Canvas bleibt block-level */
