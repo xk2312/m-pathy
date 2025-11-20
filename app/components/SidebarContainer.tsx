@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Saeule from "./Saeule";
-import styles from "./Saeule.module.css";
 
 /* ======================================================================
    Props & Hook
