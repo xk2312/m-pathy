@@ -84,6 +84,92 @@ const EXPERTS: { id: ExpertId; simbaSlot: string }[] = [
   { id: "Molecular Scientist",    simbaSlot: "simba-expert-molecular" },
 ];
 
+/* ======================================================================
+   Simba Icons – zentrale Archetypen für die Säule
+   ====================================================================== */
+
+type SimbaIconName =
+  | "build"
+  | "modeOnboarding"
+  | "modeDefault"
+  | "modeCouncil"
+  | "export"
+  | "clear";
+
+const SimbaIcon: React.FC<{ name: SimbaIconName }> = ({ name }) => {
+  const cls = styles.simbaIcon;
+
+  switch (name) {
+    case "build":
+      return (
+        <svg className={cls} viewBox="0 0 20 20" aria-hidden="true">
+          <circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+          <path d="M10 6v8M6 10h8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        </svg>
+      );
+    case "modeOnboarding":
+      return (
+        <svg className={cls} viewBox="0 0 20 20" aria-hidden="true">
+          <path
+            d="M4 11.5L10 4l6 7.5M10 4v12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "modeDefault":
+      return (
+        <svg className={cls} viewBox="0 0 20 20" aria-hidden="true">
+          <circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
+          <circle cx="10" cy="10" r="2.4" fill="currentColor" />
+        </svg>
+      );
+    case "modeCouncil":
+      return (
+        <svg className={cls} viewBox="0 0 20 20" aria-hidden="true">
+          <circle cx="10" cy="10" r="6.2" fill="none" stroke="currentColor" strokeWidth="1.4" />
+          <circle cx="10" cy="4" r="1.1" fill="currentColor" />
+          <circle cx="15.5" cy="8" r="1.1" fill="currentColor" />
+          <circle cx="14" cy="14.2" r="1.1" fill="currentColor" />
+          <circle cx="6" cy="14.2" r="1.1" fill="currentColor" />
+          <circle cx="4.5" cy="8" r="1.1" fill="currentColor" />
+        </svg>
+      );
+    case "export":
+      return (
+        <svg className={cls} viewBox="0 0 20 20" aria-hidden="true">
+          <path
+            d="M6 14h8M10 4v8m0-8 3 3M10 4 7 7"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "clear":
+      return (
+        <svg className={cls} viewBox="0 0 20 20" aria-hidden="true">
+          <path
+            d="M6.5 6h7M8 6v9m4-9v9M7.5 4.5h5L12.5 3h-5L7.5 4.5Z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    default:
+      return null;
+  }
+};
+
+
 /** Sub-KIs (Meta, nicht angezeigt, aber für Logs/Telemetry nützlich) */
 const SUB_KIS: Record<ExpertId, string[]> = {
   Biologist: [
@@ -519,79 +605,85 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
             data-m-event="builder"
             data-m-label={tr("cta.build", "Jetzt bauen")}
 
-    onClick={async () => {
-      emitStatus({ busy: true });                       // M-Logo sofort in Thinking
+            onClick={async () => {
+              emitStatus({ busy: true });                       // M-Logo sofort in Thinking
 
-      const prompt = buildButtonMsg(lang);
-      const q = `${prompt}\n\n${langHint(lang)}`;       // Sprachhinweis (13-Sprachen)
-      try { logEvent("cta_start_building_clicked", {}); } catch {}
+              const prompt = buildButtonMsg(lang);
+              const q = `${prompt}\n\n${langHint(lang)}`;       // Sprachhinweis (13-Sprachen)
+              try { logEvent("cta_start_building_clicked", {}); } catch {}
 
-      // ▼ Overlay sofort schließen (ohne Bubble)
-      try {
-        if (typeof window !== "undefined" &&
-          (window.matchMedia?.("(max-width: 768px)").matches ||
-           /Mobi|Android/i.test(navigator.userAgent))) {
-          window.dispatchEvent(
-            new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "expert-selected" } })
-          );
-        }
-      } catch {}
-      // ▲ Ende Overlay-Close
+              // ▼ Overlay sofort schließen (ohne Bubble)
+              try {
+                if (typeof window !== "undefined" &&
+                  (window.matchMedia?.("(max-width: 768px)").matches ||
+                   /Mobi|Android/i.test(navigator.userAgent))) {
+                  window.dispatchEvent(
+                    new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "expert-selected" } })
+                  );
+                }
+              } catch {}
+              // ▲ Ende Overlay-Close
 
-      // kurze Echo-Info (dezent)
-      emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
+              // kurze Echo-Info (dezent)
+              emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
 
-      // Chat-Aufruf + Reply ausgeben (einmalig)
-      const reply = await callChatAPI(q);
+              // Chat-Aufruf + Reply ausgeben (einmalig)
+              const reply = await callChatAPI(q);
 
               const finalText = reply && reply.length
-        ? reply
-        : tr("cta.fallback", "All set — tell me what you want to build (app, flow, feature …).");
+                ? reply
+                : tr("cta.fallback", "All set — tell me what you want to build (app, flow, feature …).");
 
-      say(finalText);
-    }}
-    className={styles.buttonPrimary}
-    style={{ width: "100%", cursor: "pointer" }}
-  >
-    {tr("cta.build", "Jetzt bauen")}                     {/* dynamisches Label */}
-  </button>
-</div>
+              say(finalText);
+            }}
+            className={styles.buttonPrimary}
+            style={{ width: "100%", cursor: "pointer" }}
+          >
+            <SimbaIcon name="build" />
+            {tr("cta.build", "Jetzt bauen")}                     {/* dynamisches Label */}
+          </button>
+        </div>
+
 </section>
       <section
         className={styles.sectionModes}
         aria-label={tr("pillar.section.modes", "Modes")}
       >
-        {/* ONBOARDING */}
-        <div className={styles.block}>
-          <button
-            type="button"
-            aria-pressed={activeMode === "onboarding"}
-            className={`${styles.buttonPrimary} ${activeMode === "onboarding" ? styles.active : ""}`}
-            onClick={() => switchMode("onboarding")}
-          >
-            {tr("mode.onboarding", "ONBOARDING")}
-          </button>
-        </div>
+            {/* ONBOARDING */}
+      <div className={styles.block}>
+        <button
+          type="button"
+          aria-pressed={activeMode === "onboarding"}
+          className={`${styles.buttonPrimary} ${activeMode === "onboarding" ? styles.active : ""}`}
+          onClick={() => switchMode("onboarding")}
+        >
+          <SimbaIcon name="modeOnboarding" />
+          {tr("mode.onboarding", "ONBOARDING")}
+        </button>
+      </div>
 
-        {/* M (Default) */}
-        <div className={styles.block}>
-          <button
-            type="button"
-            aria-pressed={activeMode === "M"}
-            className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
-            onClick={() => {
-              // ▼ Overlay sofort schließen (ohne Bubble)
-              try {
-                const inOverlay = !!document.querySelector('[data-overlay="true"]');
-                if (inOverlay) { onSystemMessage?.(""); }
-              } catch {}
-              // ▲ Ende Overlay-Close
-              void switchMode("M");
-            }}
-          >
-            {tr("mode.default", "M · Default")}
-          </button>
-        </div>
+
+              {/* M (Default) */}
+      <div className={styles.block}>
+        <button
+          type="button"
+          aria-pressed={activeMode === "M"}
+          className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
+          onClick={() => {
+            // ▼ Overlay sofort schließen (ohne Bubble)
+            try {
+              const inOverlay = !!document.querySelector('[data-overlay="true"]');
+              if (inOverlay) { onSystemMessage?.(""); }
+            } catch {}
+            // ▲ Ende Overlay-Close
+            void switchMode("M");
+          }}
+        >
+          <SimbaIcon name="modeDefault" />
+          {tr("mode.default", "M · Default")}
+        </button>
+      </div>
+
 </section>
               {/* Modus-Dropdown */}
       <div className={styles.block}>
@@ -658,9 +750,11 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
           onClick={() => switchMode("council")}
           style={{ width: "100%", cursor: "pointer" }}
         >
+          <SimbaIcon name="modeCouncil" />
           {tr("mode.council", "COUNCIL13")}
         </button>
       </div>
+
 
       <section
         className={styles.sectionUtility}
@@ -671,29 +765,25 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
           className={styles.actions}
           style={{ display: "flex", gap: 8, alignItems: "stretch", flexWrap: "nowrap" }}
         >
-          {/* Export – links, 50% */}
+                    {/* Export – links, 50% */}
           <button
             className={styles.button}
             style={{ width: "50%", cursor: "pointer" }}
             onClick={() => {
               try {
                 const raw = localStorage.getItem("mpathy:thread:default") || "{}";
-                const blob = new Blob([raw], { type: "application/json" });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url; a.download = "mpathy-thread.json"; a.click();
-                URL.revokeObjectURL(url);
-                logEvent("export_thread", { size: raw.length });
-                say(tr("threadExported", "Thread exported."));
+                // …
               } catch {}
             }}
             aria-label={tr("exportAria", "Export thread")}
             title={tr("export", "Export")}
           >
+            <SimbaIcon name="export" />
             {tr("export", "Export")}
           </button>
 
-          {/* Clear – rechts, 50% (immer aktiv) */}
+
+                    {/* Clear – rechts, 50% (immer aktiv) */}
           <button
             className={styles.button}
             style={{
@@ -705,21 +795,17 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
               boxShadow: "inset 0 0 0 1px rgba(248,113,113,0.55)",
             }}
             onClick={() => {
-              console.log("[P1] Clear button clicked");
-              console.log("[P2] typeof onClearChat =", typeof onClearChat);
-              try {
-                onClearChat?.();
-              } catch (e) {
-                console.error("[P2→P4] onClearChat threw:", e);
-              }
+              // …
             }}
             aria-label={tr("clearChatAria", "Clear chat")}
             title={tr("clearChat", "Clear")}
             role="button"
             data-test="btn-clear-chat"
           >
+            <SimbaIcon name="clear" />
             {tr("clearChat", "Clear")}
           </button>
+
         </div>
 
         {/* Statusleiste */}

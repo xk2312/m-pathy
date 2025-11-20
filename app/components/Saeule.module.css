@@ -168,8 +168,8 @@
   cursor: pointer;
 }
 .selectShell:hover { background: rgba(14,32,42,0.80); box-shadow: var(--sh-md); transform: translateY(-1px); }
+.selectShell:focus-visible { outline: none; box-shadow: var(--glow), var(--sh-md); }
 .selectShell .label { opacity: .9; }
-
 .selectShell .chev { width: 16px; height: 16px; opacity: .65; }
 
 
@@ -452,6 +452,14 @@
   width: 4px; height: 4px; border-radius: 999px; background: #475569; display: inline-block;
 }
 
+/* Simba Icons – einheitliche Größe in Buttons */
+.simbaIcon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
 /* ─────────────────────────────────────────
    Motion & Media
    ──────────────────────────────────────── */
@@ -459,6 +467,7 @@
   .button, .buttonGhost, .buttonPrimary, .buttonGhostPrimary, .buttonSolid,
   .select { transition: none; }
 }
+
 
 /* Optional: Debug-Rahmen */
 /* .saeule { outline: 2px solid rgba(34,211,238,.5); } */
