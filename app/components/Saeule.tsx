@@ -544,7 +544,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
       // Chat-Aufruf + Reply ausgeben (einmalig)
       const reply = await callChatAPI(q);
 
-      const finalText = reply && reply.length
+              const finalText = reply && reply.length
         ? reply
         : tr("cta.fallback", "All set — tell me what you want to build (app, flow, feature …).");
 
@@ -556,69 +556,71 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
     {tr("cta.build", "Jetzt bauen")}                     {/* dynamisches Label */}
   </button>
 </div>
+</section>
+      <section
+        className={styles.sectionModes}
+        aria-label={tr("pillar.section.modes", "Modes")}
+      >
+        {/* ONBOARDING */}
+        <div className={styles.block}>
+          <button
+            type="button"
+            aria-pressed={activeMode === "onboarding"}
+            className={`${styles.buttonPrimary} ${activeMode === "onboarding" ? styles.active : ""}`}
+            onClick={() => switchMode("onboarding")}
+          >
+            {tr("mode.onboarding", "ONBOARDING")}
+          </button>
+        </div>
+
+        {/* M (Default) */}
+        <div className={styles.block}>
+          <button
+            type="button"
+            aria-pressed={activeMode === "M"}
+            className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
+            onClick={() => {
+              // ▼ Overlay sofort schließen (ohne Bubble)
+              try {
+                const inOverlay = !!document.querySelector('[data-overlay="true"]');
+                if (inOverlay) { onSystemMessage?.(""); }
+              } catch {}
+              // ▲ Ende Overlay-Close
+              void switchMode("M");
+            }}
+          >
+            {tr("mode.default", "M · Default")}
+          </button>
+        </div>
+
+        {/* Modus-Dropdown */}
+        <div className={styles.block}>
+          <label className={styles.label} htmlFor="modus-select">
+            {tr("labels.modes", "Modis & Experts")}
+          </label>
+
+          <select
+            id="modus-select"
+            aria-label={tr("mode.select", "Modus wählen")}               // ← Fallback-sicher
+            value={hydrated ? (MODI.some((m) => m.id === activeMode) ? activeMode : "") : ""}
+            onChange={(e) => switchMode(e.target.value as ModeId)}
+            className={styles.select}
+          >
+            <option value="" disabled hidden>
+              {tr("mode.select", "Modus wählen")}
+            </option>
+            {MODI.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </section>
 
-
-
-      {/* ONBOARDING */}
-      <div className={styles.block}>
-        <button
-  type="button"
-  aria-pressed={activeMode === "onboarding"}
-  className={`${styles.buttonPrimary} ${activeMode === "onboarding" ? styles.active : ""}`}
-  onClick={() => switchMode("onboarding")}
->
-  {tr("mode.onboarding", "ONBOARDING")}
-</button>
-
-      </div>
-
-      {/* M (Default) */}
-<div className={styles.block}>
-  <button
-  type="button"
-  aria-pressed={activeMode === "M"}
-  className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
-  onClick={() => {
-    // ▼ Overlay sofort schließen (ohne Bubble)
-    try {
-      const inOverlay = !!document.querySelector('[data-overlay="true"]');
-      if (inOverlay) { onSystemMessage?.(""); }
-    } catch {}
-    // ▲ Ende Overlay-Close
-    void switchMode("M");
-  }}
->
-  {tr("mode.default", "M · Default")}
-</button>
-
-</div>
-
-
-      {/* Modus-Dropdown */}
-      <div className={styles.block}>
-        <label className={styles.label} htmlFor="modus-select">
-  {tr("labels.modes", "Modis & Experts")}
-</label>
-
-<select
-  id="modus-select"
-  aria-label={tr("mode.select", "Modus wählen")}               // ← Fallback-sicher
-  value={hydrated ? (MODI.some((m) => m.id === activeMode) ? activeMode : "") : ""}
-  onChange={(e) => switchMode(e.target.value as ModeId)}
-  className={styles.select}
->
-  <option value="" disabled hidden>{tr("mode.select", "Modus wählen")}</option>
-  {MODI.map((m) => (
-    <option key={m.id} value={m.id}>{m.label}</option>
-  ))}
-</select>
-
-        </div>
-    
-           
            
            {/* Experten (Dropdown) */}
+
 
     <div className={styles.selectWrap}>
   <select
