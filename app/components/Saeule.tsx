@@ -592,61 +592,62 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
             {tr("mode.default", "M · Default")}
           </button>
         </div>
+</section>
+              {/* Modus-Dropdown */}
+      <div className={styles.block}>
+        <label className={styles.label} htmlFor="modus-select">
+          {tr("labels.modes", "Modis & Experts")}
+        </label>
 
-        {/* Modus-Dropdown */}
-        <div className={styles.block}>
-          <label className={styles.label} htmlFor="modus-select">
-            {tr("labels.modes", "Modis & Experts")}
-          </label>
+        <select
+          id="modus-select"
+          aria-label={tr("mode.select", "Modus wählen")}               // ← Fallback-sicher
+          value={hydrated ? (MODI.some((m) => m.id === activeMode) ? activeMode : "") : ""}
+          onChange={(e) => switchMode(e.target.value as ModeId)}
+          className={styles.select}
+        >
+          <option value="" disabled hidden>
+            {tr("mode.select", "Modus wählen")}
+          </option>
+          {MODI.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
+      <section
+        className={styles.sectionExperts}
+        aria-label={tr("pillar.section.experts", "Experts")}
+      >
+        {/* Experten (Dropdown) */}
+        <div className={styles.selectWrap}>
           <select
-            id="modus-select"
-            aria-label={tr("mode.select", "Modus wählen")}               // ← Fallback-sicher
-            value={hydrated ? (MODI.some((m) => m.id === activeMode) ? activeMode : "") : ""}
-            onChange={(e) => switchMode(e.target.value as ModeId)}
+            id="expert-select"
             className={styles.select}
+            aria-label={tr("expert.select", "Experten wählen")}           // ← Fallback-sicher
+            value={hydrated ? (currentExpert ?? "") : ""}
+            onChange={(e) => {
+              const val = e.target.value as ExpertId;
+              setCurrentExpert(val);
+              void askExpert(val);
+            }}
           >
             <option value="" disabled hidden>
-              {tr("mode.select", "Modus wählen")}
+              {tr("expert.select", "Experten wählen")}
             </option>
-            {MODI.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.label}
+            {EXPERTS.map((e) => (
+              <option key={e.id} value={e.id}>
+                {e.icon} {labelForExpert(e.id, lang)}
               </option>
             ))}
           </select>
         </div>
       </section>
 
-           
-           {/* Experten (Dropdown) */}
-
-
-    <div className={styles.selectWrap}>
-  <select
-  id="expert-select"
-  className={styles.select}
-  aria-label={tr("expert.select", "Experten wählen")}           // ← Fallback-sicher
-  value={hydrated ? (currentExpert ?? "") : ""}
-  onChange={(e) => {
-    const val = e.target.value as ExpertId;
-    setCurrentExpert(val);
-    void askExpert(val);
-  }}
->
-  <option value="" disabled hidden>{tr("expert.select", "Experten wählen")}</option>
-  {EXPERTS.map((e) => (
-    <option key={e.id} value={e.id}>
-      {e.icon} {labelForExpert(e.id, lang)}
-    </option>
-  ))}
-</select>
-
-</div>
-
-
-
       {/* Council13 */}
+
 <div className={styles.block}>
  <button
   type="button"
