@@ -1649,37 +1649,32 @@ return (
       >
 
 
-        {/* Säule links */}
-               {!isMobile && (
+                {/* Säule links */}
+        {!isMobile && (
           <div
             style={{
               position: "sticky",
               top: 0,
               alignSelf: "stretch",
 
-              // Rail-Höhe: vom unteren Rand der Navi bis zum unteren Viewport
-              height: "calc(100dvh - var(--nav-safe-top))",
-
-              // Rail beginnt optisch auf Höhe des M-Logos
-              marginTop: "calc(-1 * var(--nav-safe-top))",
-              paddingTop: "var(--nav-safe-top)",
-
-              // Fußraum übernimmt jetzt die Säule selbst
+              // Säule = volle Viewport-Höhe links
+              height: "100dvh",
+              marginTop: 0,
+              paddingTop: 0,
               paddingBottom: 0,
 
               overflow: "visible",
               marginLeft: 0,
             }}
           >
+            <SidebarContainer
+              onSystemMessage={systemSay}
+              onClearChat={onClearChat}
+              /* canClear={canClear} */
+            />
+          </div>
+        )}
 
-
-    <SidebarContainer
-      onSystemMessage={systemSay}
-      onClearChat={onClearChat}
-      /* canClear={canClear} */
-    />
-  </div>
-)}
 
 
 
