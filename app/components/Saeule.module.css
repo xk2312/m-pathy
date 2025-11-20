@@ -6,17 +6,17 @@
   top: 0;
   margin-top: 0;
 
-  align-self: start;
-  height: max-content;
-
+  /* Säule soll die gesamte Spur einnehmen */
+  align-self: stretch;
+  height: 100%;
   max-height: none;
   overflow: visible;
 
-  /* SMOOTH OPERATOR · OS-Panel */
+  /* SMOOTH OPERATOR · Rail */
   color: rgba(248, 250, 252, 0.96);
   background: #1E2024;
-  border: 1px solid rgba(148, 163, 184, 0.32);
-  border-radius: var(--rz-lg);
+  border: none;              /* Rand weg */
+  border-radius: 0;          /* keine Eckenrundung */
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -26,6 +26,7 @@
   box-shadow: none;
   z-index: var(--z-base);
 }
+
 /* ─────────────────────────────
    Sections A–D (Header, Modes, Experts, Utility)
    ───────────────────────────── */
