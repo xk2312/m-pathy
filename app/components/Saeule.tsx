@@ -749,7 +749,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
               {/* Modus-Dropdown */}
               <div className={styles.block}>
                 <label className={styles.label} htmlFor="modus-select">
-                  {tr("labels.modes", "Modis & Experts")}
+                  {tr("labels.modes", "FREQUENCIES")}
                 </label>
 
                 <select
