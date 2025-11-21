@@ -11,6 +11,7 @@
   height: 100%;
   max-height: none;
   overflow: visible;
+  width: var(--saeule-w);              /* 277px – Smooth Operator Canonical */
 
   /* Smooth Operator – Säulen-Hintergrund */
   color: var(--color-fg);
@@ -20,13 +21,13 @@
   border: none;
   border-radius: 0;
 
-  /* Innenabstände bleiben sanft */
-  padding: 16px 12px 16px;
+  /* Innenabstände (Face-Konzept) */
+  padding: 16px 20px 24px;             /* oben 16, Seiten 20, unten 24 */
 
   /* Inhalt vertikal: Kopf → Body → Aktionen (unten via .actions { margin-top:auto }) */
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;                           /* Zonen-Abstand auf 16px (2 × BASE) */
 
   /* Kein Glass, kein Glow – reine Rail */
   backdrop-filter: none;
@@ -35,6 +36,7 @@
 
   z-index: var(--z-base);
 }
+
 
 
 /* ─────────────────────────────
