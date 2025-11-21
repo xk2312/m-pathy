@@ -198,17 +198,19 @@
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
+  margin-top: 4px;
   margin-bottom: 6px;
 }
 
+/* Kategorien – ultraleichte Mini-Badges */
 .modeCategoryBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 2px 8px;
-  min-height: 18px;
+  padding: 1px 6px;
+  min-height: 16px;
   border-radius: 999px;
-  border: 1px solid rgba(148,163,184,0.45);
+  border: 1px solid rgba(148,163,184,0.35);
   background: transparent;
   font-size: 10px;
   font-weight: 500;
@@ -223,19 +225,19 @@
 }
 
 .modeCategoryBadge:hover {
-  background-color: rgba(15,23,42,0.5);
+  background-color: rgba(15,23,42,0.4);
 }
 
 .modeCategoryBadgeActive {
   border-color: #00C8FF;
-  color: rgba(226,232,240,0.96);
+  color: rgba(226,232,240,0.98);
 }
 
 .modeCategoryBadgeLabel {
   white-space: nowrap;
 }
 
-/* Modus-Liste – jede Pille eigene Zeile */
+/* Modus-Liste – eigener Block mit Micro-Header */
 .modeList {
   margin-top: 6px;
   display: flex;
@@ -243,12 +245,22 @@
   gap: 4px;
 }
 
+.modeListHeader {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(148,163,184,0.9);
+  margin-bottom: 4px;
+}
+
+/* Vollwertige Modus-Zeilen */
 .modeListItem {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: 999px;
   border: 1px solid transparent;
   background: transparent;
@@ -279,6 +291,7 @@
   flex: 1 1 auto;
   text-align: left;
 }
+
 
 /* Gemini-Frame: äußerer Rahmen für die Säule */
 .geminiFrame {

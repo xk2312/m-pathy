@@ -813,34 +813,49 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
           })}
         </div>
 
-        {/* Modus-Liste der aktiven Kategorie – volle Zeilen */}
+                {/* Modus-Liste der aktiven Kategorie – volle Zeilen */}
         <div className={styles.modeList}>
-          {MODE_CATEGORIES.find((cat) => cat.id === modeCategory)?.modes.map(
-            (modeId) => {
-              const mode = MODI.find((m) => m.id === modeId);
-              if (!mode) return null;
-              const isActive = activeMode === modeId;
+          {(() => {
+            const activeCategory = MODE_CATEGORIES.find(
+              (cat) => cat.id === modeCategory
+            );
+            if (!activeCategory) return null;
 
-              return (
-                <button
-                  key={modeId}
-                  type="button"
-                  className={
-                    isActive
-                      ? `${styles.modeListItem} ${styles.modeListItemActive}`
-                      : styles.modeListItem
-                  }
-                  onClick={() => switchMode(modeId)}
-                  aria-pressed={isActive}
-                >
-                  <span className={styles.modeListItemLabel}>
-                    {mode.label}
-                  </span>
-                </button>
-              );
-            }
-          )}
+            return (
+              <>
+                {/* Micro-Header: aktive Kategorie über der Liste */}
+                <div className={styles.modeListHeader}>
+                  {activeCategory.label}
+                </div>
+
+                {activeCategory.modes.map((modeId) => {
+                  const mode = MODI.find((m) => m.id === modeId);
+                  if (!mode) return null;
+                  const isActive = activeMode === modeId;
+
+                  return (
+                    <button
+                      key={modeId}
+                      type="button"
+                      className={
+                        isActive
+                          ? `${styles.modeListItem} ${styles.modeListItemActive}`
+                          : styles.modeListItem
+                      }
+                      onClick={() => switchMode(modeId)}
+                      aria-pressed={isActive}
+                    >
+                      <span className={styles.modeListItemLabel}>
+                        {mode.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </>
+            );
+          })()}
         </div>
+
       </div>
 
 
