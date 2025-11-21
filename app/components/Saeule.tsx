@@ -41,12 +41,15 @@ type ExpertId =
   | "Weather Expert"
   | "Molecular Scientist";
 
+type SectionId = "modes" | "experts" | "actions" | "system";
+
 /** Optional: Seite kann Systemmeldungen als Bubble anzeigen */
 type Props = {
   onSystemMessage?: (content: string) => void;
   onClearChat?: () => void;   // ⬅︎ NEU: Clear-Handler (kommt aus page2)
   canClear?: boolean;         // ⬅︎ NEU: Disabled-Logik
 };
+
 
 
 /* ======================================================================
@@ -406,9 +409,12 @@ async function callChatAPI(prompt: string): Promise<string | null> {
   const [sendingExpert, setSendingExpert] = useState<ExpertId | null>(null);
   const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null);
   const [lang, setLang] = useState<string>("en");
-// === i18n Labels (13 Languages compatible) ===
-const labelBuild = tr("cta.build", "Jetzt bauen");
-const labelExport = tr("cta.export", "Export");
+  const [openSection, setOpenSection] = useState<SectionId | null>("modes");
+
+  // === i18n Labels (13 Languages compatible) ===
+  const labelBuild = tr("cta.build", "Jetzt bauen");
+  const labelExport = tr("cta.export", "Export");
+
 const labelClear = tr("cta.clear", "Chat leeren");
 const labelOnboarding = tr("mode.onboarding", "ONBOARDING");
 const labelDefault = tr("mode.default", "M · Default");
@@ -471,9 +477,14 @@ useEffect(() => {
     } catch {}
   }, []);
 
+  const toggleSection = useCallback((section: SectionId) => {
+    setOpenSection((prev) => (prev === section ? null : section));
+  }, []);
+
   const modeLabel = useMemo(() => modeLabelFromId(activeMode), [activeMode]);
   // ▼▼ NEU: Footer-Status ohne Bubble senden ▼▼
-const emitStatus = useCallback((partial: { modeLabel?: string; expertLabel?: string; busy?: boolean }) => {
+  const emitStatus = useCallback((partial: { modeLabel?: string; expertLabel?: string; busy?: boolean }) => {
+
   try {
     window.dispatchEvent(new CustomEvent("mpathy:system-message", {
       detail: { kind: "status", text: "", meta: partial },
