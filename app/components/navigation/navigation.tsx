@@ -53,27 +53,28 @@ export default function Navigation() {
 
  return (
   <header style={headerStyle} aria-label="Main site navigation">
-    <div
-      className="mx-auto flex items-center justify-between"
-      style={{
-        maxWidth: isChatLayout ? "none" : "var(--page-inner-max)",
-        margin: isChatLayout ? "0" : undefined,
-        paddingInline: isChatLayout
-          ? "var(--stage-pad, 48px)"
-          : "var(--page-pad-inline)",
+          <div
+        className="mx-auto flex items-center justify-between"
+        style={{
+          maxWidth: isChatLayout ? "none" : "var(--page-inner-max)",
+          margin: isChatLayout ? "0" : undefined,
+          paddingInline: isChatLayout
+            ? "var(--stage-pad, 48px)"
+            : "var(--page-pad-inline)",
 
-        // *** STATIC MODE ***
-        height: navHeight,
-        transform: "none",
-        opacity: 1,
-        boxShadow: "none",
+          // *** STATIC MODE ***
+          height: navHeight,
+          transform: "none",
+          opacity: 1,
+          boxShadow: "none",
 
-        // *** Hintergrund identisch zum Chat-Bereich (voll deckend) ***
-        background: "var(--chat-bg)",
-        backdropFilter: "none",
+          // *** Hintergrund identisch zum Chat-Bereich (voll deckend) ***
+          background: "rgba(15,16,21,0.98)",
+          backdropFilter: "none",
 
-        // Keine Linie (nahtloser Übergang)
-        borderBottom: "none",
+          // Keine Linie (nahtloser Übergang)
+          borderBottom: "none",
+
 
         // Kein Motion-System mehr
         transition: "none",
