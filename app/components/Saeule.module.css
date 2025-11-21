@@ -194,48 +194,70 @@
 }
 
 /* Kategorien-Strip – winzige Badges */
-.modeCategoryStrip {
+/* Micronavi für Kategorien – reiner Text mit Cyan-Strich oben */
+.modeCategoryNav {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  column-gap: 12px;
+  row-gap: 2px;
   margin-top: 4px;
   margin-bottom: 6px;
 }
 
-/* Kategorien – ultraleichte Mini-Badges */
-.modeCategoryBadge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1px 6px;
-  min-height: 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(148,163,184,0.35);
+.modeCategoryItem {
+  position: relative;
+  padding: 2px 0 1px;
+  border: none;
   background: transparent;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(148,163,184,0.9);
+  color: rgba(148,163,184,0.85);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Cyan-Strich oben – animiert bei Hover/Active */
+.modeCategoryItem::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: transparent;
+  transform: scaleX(0);
+  transform-origin: center;
+  opacity: 0;
   transition:
-    background-color 0.16s ease,
-    border-color 0.16s ease,
-    color 0.16s ease;
+    transform 0.18s ease,
+    opacity 0.18s ease,
+    background-color 0.18s ease;
 }
 
-.modeCategoryBadge:hover {
-  background-color: rgba(15,23,42,0.4);
+.modeCategoryItem:hover::before,
+.modeCategoryItemActive::before {
+  background-color: #00C8FF;
+  transform: scaleX(1);
+  opacity: 0.9;
 }
 
-.modeCategoryBadgeActive {
-  border-color: #00C8FF;
-  color: rgba(226,232,240,0.98);
+.modeCategoryItem:hover {
+  color: rgba(226,232,240,0.96);
 }
 
-.modeCategoryBadgeLabel {
+.modeCategoryItemActive {
+  color: rgba(226,232,240,0.96);
+}
+
+.modeCategoryItemLabel {
   white-space: nowrap;
 }
+
 
 /* Modus-Liste – eigener Block mit Micro-Header */
 .modeList {

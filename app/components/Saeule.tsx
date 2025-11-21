@@ -778,19 +778,19 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                     void switchMode("M");
                   }}
                 >
-                 <SimbaIcon name="modeDefault" />
+          <SimbaIcon name="modeDefault" />
                   {tr("mode.default", "M · Default")}
                 </button>
               </div>
 
-                  {/* Charakter-Modis – Kategorien + Liste */}
+                  {/* Charakter-Modis – Micronavi + Liste */}
       <div className={styles.block}>
         <div className={styles.soGroupTitle}>
           {tr("labels.modes.character", "Charakter Modis")}
         </div>
 
-        {/* Kategorien-Strip: CORE / INTELLECTUAL / CREATOR / HEART / SPIRIT */}
-        <div className={styles.modeCategoryStrip}>
+        {/* Micronavi: CORE / INTELLECTUAL / CREATOR / HEART / SPIRIT */}
+        <div className={styles.modeCategoryNav}>
           {MODE_CATEGORIES.map((cat) => {
             const isActiveCat = modeCategory === cat.id;
             return (
@@ -799,13 +799,13 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                 type="button"
                 className={
                   isActiveCat
-                    ? `${styles.modeCategoryBadge} ${styles.modeCategoryBadgeActive}`
-                    : styles.modeCategoryBadge
+                    ? `${styles.modeCategoryItem} ${styles.modeCategoryItemActive}`
+                    : styles.modeCategoryItem
                 }
                 onClick={() => setModeCategory(cat.id)}
                 aria-pressed={isActiveCat}
               >
-                <span className={styles.modeCategoryBadgeLabel}>
+                <span className={styles.modeCategoryItemLabel}>
                   {cat.label}
                 </span>
               </button>
@@ -813,49 +813,34 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
           })}
         </div>
 
-                {/* Modus-Liste der aktiven Kategorie – volle Zeilen */}
+        {/* Modus-Liste der aktiven Kategorie – volle Zeilen, ohne Header */}
         <div className={styles.modeList}>
-          {(() => {
-            const activeCategory = MODE_CATEGORIES.find(
-              (cat) => cat.id === modeCategory
-            );
-            if (!activeCategory) return null;
+          {MODE_CATEGORIES.find((cat) => cat.id === modeCategory)?.modes.map(
+            (modeId) => {
+              const mode = MODI.find((m) => m.id === modeId);
+              if (!mode) return null;
+              const isActive = activeMode === modeId;
 
-            return (
-              <>
-                {/* Micro-Header: aktive Kategorie über der Liste */}
-                <div className={styles.modeListHeader}>
-                  {activeCategory.label}
-                </div>
-
-                {activeCategory.modes.map((modeId) => {
-                  const mode = MODI.find((m) => m.id === modeId);
-                  if (!mode) return null;
-                  const isActive = activeMode === modeId;
-
-                  return (
-                    <button
-                      key={modeId}
-                      type="button"
-                      className={
-                        isActive
-                          ? `${styles.modeListItem} ${styles.modeListItemActive}`
-                          : styles.modeListItem
-                      }
-                      onClick={() => switchMode(modeId)}
-                      aria-pressed={isActive}
-                    >
-                      <span className={styles.modeListItemLabel}>
-                        {mode.label}
-                      </span>
-                    </button>
-                  );
-                })}
-              </>
-            );
-          })()}
+              return (
+                <button
+                  key={modeId}
+                  type="button"
+                  className={
+                    isActive
+                      ? `${styles.modeListItem} ${styles.modeListItemActive}`
+                      : styles.modeListItem
+                  }
+                  onClick={() => switchMode(modeId)}
+                  aria-pressed={isActive}
+                >
+                  <span className={styles.modeListItemLabel}>
+                    {mode.label}
+                  </span>
+                </button>
+              );
+            }
+          )}
         </div>
-
       </div>
 
 
@@ -863,6 +848,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
             </section>
           </div>
         </div>
+
 
         {/* EXPERTEN */}
         <div className={styles.soSection}>
