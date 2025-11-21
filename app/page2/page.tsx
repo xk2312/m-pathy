@@ -1690,18 +1690,18 @@ return (
 
 
                 <div
-          ref={convoRef as any}
-          className="chat-stage"
-          style={{
-            display: "flex",
-            flexDirection: "column",
+  ref={convoRef as any}
+  className="chat-stage"
+  style={{
+    display: "flex",
+    flexDirection: "column",
 
+    /* Oberer Buffer unter der Navi – SPOTY APPROVED */
+    paddingTop: "var(--h-gap-md)",   // = 210px
 
-            /* Füllt den Raum zwischen Navi und Eingabedock */
-flex: "1 1 auto",
-height: isMobile
-  ? undefined
-  : "calc(100dvh - var(--dock-h, 60px))",
+    flex: "1 1 auto",
+    height: isMobile ? undefined : "calc(100dvh - var(--dock-h, 60px))",
+
 
 
             minHeight: 0,
