@@ -37,8 +37,125 @@
   z-index: var(--z-base);
 }
 
+/* ─────────────────────────────
+   Smooth Operator · Sidebar Accordion Shell
+   Purpose: MODIS / EXPERTEN / ACTIONS / SYSTEM / SESSION
+   ───────────────────────────── */
 
+.soAccordion {
+  display: flex;
+  flex-direction: column;
+}
 
+/* Ein einzelner Akkordeon-Block */
+.soSection {
+  display: flex;
+  flex-direction: column;
+}
+
+/* zarte Linie zwischen Akkordeons */
+.soSection + .soSection {
+  margin-top: var(--so-divider-gap);
+  padding-top: var(--so-divider-gap);
+  border-top: var(--so-divider-height) solid var(--so-divider-color);
+}
+
+/* Kopfzeile eines Akkordeons (H1-Level: MODIS, EXPERTEN, ACTIONS, SYSTEM, SESSION) */
+.soSectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: var(--so-h1-pad-top);
+  padding-bottom: var(--so-h1-pad-bottom);
+  font-size: var(--so-h1-size);
+  font-weight: var(--so-h1-weight);
+  letter-spacing: var(--so-h1-track);
+  text-transform: uppercase;
+  color: var(--so-h1-color);
+  cursor: pointer;
+}
+
+/* Icon-Slot links (Simba-Glyphs) */
+.soSectionHeaderIcon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 18px;
+  opacity: 0.85;
+}
+
+/* Titeltext im Kopf (falls nötig separiert) */
+.soSectionHeaderLabel {
+  flex: 1 1 auto;
+}
+
+/* Body eines Akkordeons – Grundlayout (geöffnet) */
+.soSectionBody {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Collapsed-Variante – wird via Klasse gesteuert */
+.soSectionBodyCollapsed {
+  display: none;
+}
+
+/* Gruppenüberschrift innerhalb eines Akkordeons (H2-Level) */
+.soGroupTitle {
+  padding-top: var(--so-h2-pad-top);
+  padding-bottom: var(--so-h2-pad-bottom);
+  font-size: var(--so-h2-size);
+  font-weight: var(--so-h2-weight);
+  letter-spacing: var(--so-h2-track);
+  color: var(--so-h2-color);
+}
+
+/* Ein Eintrag (Modus, Experte, Action, System-Item) – unsichtbare Pille im Idle */
+.soItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(226,232,240,0.96);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+}
+
+/* Icon links im Item (Simba-Symbol pro Modus/Experte) */
+.soItemIcon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 18px;
+  opacity: 0.85;
+}
+
+/* Hover: graue Pille auf Darkroom */
+.soItem:hover {
+  background-color: #2C2C2C;
+  border-color: #2C2C2C;
+}
+
+/* Active: Deep-Cyan-Pille, einziger starker Farbakzent */
+.soItemActive {
+  background-color: #00C8FF;
+  border-color: #00C8FF;
+  color: #0f172a;
+}
+
+.soItemActive .soItemIcon {
+  opacity: 1;
+}
 
 /* ─────────────────────────────
    Sections A–D (Header, Modes, Experts, Utility)
@@ -46,6 +163,7 @@
 
 .sectionHeader {
   padding-bottom: 12px;
+
   border-bottom: 1px solid rgba(148, 163, 184, 0.20);
 }
 
