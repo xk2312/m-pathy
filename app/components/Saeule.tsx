@@ -37,16 +37,17 @@ type ExpertId =
   | "Interior Designer"
   | "Electrical Engineer"
   | "Mathematician"
-  | "Astrologer"
+    | "Astrologer"
   | "Weather Expert"
   | "Molecular Scientist";
 
-type SectionId = "modes" | "experts" | "actions" | "system";
+type SectionId = "modes" | "experts" | "system" | "actions";
 
 /** Optional: Seite kann Systemmeldungen als Bubble anzeigen */
 type Props = {
   onSystemMessage?: (content: string) => void;
-  onClearChat?: () => void;   // ⬅︎ NEU: Clear-Handler (kommt aus page2)
+  onClearChat?: () => void;   // ⬅︎ NEU: Clear-Hand
+
   canClear?: boolean;         // ⬅︎ NEU: Disabled-Logik
 };
 
@@ -401,7 +402,7 @@ async function callChatAPI(prompt: string): Promise<string | null> {
    Component
    ====================================================================== */
 
- export default function Saeule({ onSystemMessage, onClearChat, canClear }: Props) {
+export default function Saeule({ onSystemMessage, onClearChat, canClear }: Props) {
   const [activeMode, setActiveMode] = useState<ModeId>(() => {
     try { return (localStorage.getItem("mode") as ModeId) || "M"; } catch { return "M"; }
   });
@@ -413,6 +414,7 @@ async function callChatAPI(prompt: string): Promise<string | null> {
 
   // === i18n Labels (13 Languages compatible) ===
   const labelBuild = tr("cta.build", "Jetzt bauen");
+
   const labelExport = tr("cta.export", "Export");
 
 const labelClear = tr("cta.clear", "Chat leeren");
@@ -423,55 +425,64 @@ const labelExpertSelect = tr("expert.select", "Experten wählen");
 
 
 
-useEffect(() => {
-  // initial: bevorzugt <html lang>, dann navigator.language, Fallback getLocale()
-  try {
-    const htmlLang = (document.documentElement?.lang || "").trim().toLowerCase();
-    const navLang = (navigator.language || (navigator as any).userLanguage || "en")
-      .split("-")[0].toLowerCase();
-    const initial = htmlLang || navLang || getLocale() || "en";
-    setLang(initial);
-  } catch {
+  useEffect(() => {
+    // initial: bevorzugt <html lang>, dann navigator.language, Fallback getLocale()
+    try {
+      const htmlLang = (document.documentElement?.lang || "").trim().toLowerCase();
+      const navLang = (navigator.language || (navigator as any).userLanguage || "en")
+        .split("-")[0].toLowerCase();
+      const initial = htmlLang || navLang || getLocale() || "en";
+      setLang(initial);
+    } catch {
+      setLang(getLocale());
+    }
+
+    // Live-Updates aus globalem i18n
+    const onChange = (e: Event) => {
+      const next = (e as CustomEvent).detail?.locale as string | undefined;
+      if (next) setLang(String(next).toLowerCase());
+    };
+    window.addEventListener("mpathy:i18n:change", onChange as EventListener);
+    return () =>
+      window.removeEventListener("mpathy:i18n:change", onChange as EventListener);
+  }, []);
+
+  useEffect(() => {
+    setHydrated(true);
     setLang(getLocale());
-  }
+  }, []);
 
-  // Live-Updates aus globalem i18n
-  const onChange = (e: Event) => {
-    const next = (e as CustomEvent).detail?.locale as string | undefined;
-    if (next) setLang(String(next).toLowerCase());
-  };
-  window.addEventListener("mpathy:i18n:change", onChange as EventListener);
-  return () => window.removeEventListener("mpathy:i18n:change", onChange as EventListener);
-}, []);
+  useEffect(() => {
+    try {
+      const e = localStorage.getItem("expert") as ExpertId | null;
+      if (e) setCurrentExpert(e);
+    } catch {}
+  }, []);
 
+  useEffect(() => {
+    try {
+      if (activeMode) localStorage.setItem("mode", activeMode);
+    } catch {}
+  }, [activeMode]);
 
-
-
- useEffect(() => {
-  setHydrated(true);
-  setLang(getLocale());
-}, []);
-
-useEffect(() => {
-  try {
-    const e = localStorage.getItem("expert") as ExpertId | null;
-    if (e) setCurrentExpert(e);
-  } catch {}
-}, []);
-
-
-  useEffect(() => { try { if (activeMode) localStorage.setItem("mode", activeMode); } catch {} }, [activeMode]);
   useEffect(() => {
     try {
       const m = localStorage.getItem("mode") as ModeId | null;
       if (m) setActiveMode(m);
     } catch {}
   }, []);
+
   useEffect(() => {
     try {
       const url = new URL(window.location.href);
       const m = url.searchParams.get("mode");
-      if (m && (m === "onboarding" || m === "M" || m === "council" || /^C\d{2}$/.test(m))) {
+      if (
+        m &&
+        (m === "onboarding" ||
+          m === "M" ||
+          m === "council" ||
+          /^C\d{2}$/.test(m))
+      ) {
         setActiveMode(m as ModeId);
       }
     } catch {}
@@ -482,15 +493,21 @@ useEffect(() => {
   }, []);
 
   const modeLabel = useMemo(() => modeLabelFromId(activeMode), [activeMode]);
-  // ▼▼ NEU: Footer-Status ohne Bubble senden ▼▼
-  const emitStatus = useCallback((partial: { modeLabel?: string; expertLabel?: string; busy?: boolean }) => {
 
-  try {
-    window.dispatchEvent(new CustomEvent("mpathy:system-message", {
-      detail: { kind: "status", text: "", meta: partial },
-    }));
-  } catch {}
-}, []);
+  // ▼▼ NEU: Footer-Status ohne Bubble senden ▼▼
+  const emitStatus = useCallback(
+    (partial: { modeLabel?: string; expertLabel?: string; busy?: boolean }) => {
+      try {
+        window.dispatchEvent(
+          new CustomEvent("mpathy:system-message", {
+            detail: { kind: "status", text: "", meta: partial },
+          })
+        );
+      } catch {}
+    },
+    []
+  );
+
 
 // ▲▲ ENDE NEU ▲▲
 
@@ -655,175 +672,304 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
           </button>
         </div>
 
-</section>
-      <section
-        className={styles.sectionModes}
-        aria-label={tr("pillar.section.modes", "Modes")}
-      >
-            {/* ONBOARDING */}
-      <div className={styles.block}>
-        <button
-          type="button"
-          aria-pressed={activeMode === "onboarding"}
-          className={`${styles.buttonPrimary} ${activeMode === "onboarding" ? styles.active : ""}`}
-          onClick={() => switchMode("onboarding")}
-        >
-          <SimbaIcon name="modeOnboarding" />
-          {tr("mode.onboarding", "ONBOARDING")}
-        </button>
-      </div>
+      </section>
 
+      {/* Smooth Operator · Akkordeon für MODIS / EXPERTEN / SYSTEM / ACTIONS */}
+      <div className={styles.soAccordion}>
+        {/* MODIS */}
+        <div className={styles.soSection}>
+          <button
+            type="button"
+            className={styles.soSectionHeader}
+            onClick={() => toggleSection("modes")}
+            aria-expanded={openSection === "modes"}
+          >
+            <span className={styles.soSectionHeaderIcon}>
+              <SimbaIcon name="modeDefault" />
+            </span>
+            <span className={styles.soSectionHeaderLabel}>
+              {tr("pillar.section.modesTitle", "MODIS")}
+            </span>
+          </button>
+
+          <div
+            className={
+              openSection === "modes"
+                ? styles.soSectionBody
+                : styles.soSectionBodyCollapsed
+            }
+            aria-label={tr("pillar.section.modes", "Modes")}
+          >
+            <section
+              className={styles.sectionModes}
+              aria-label={tr("pillar.section.modes", "Modes")}
+            >
+              {/* ONBOARDING */}
+              <div className={styles.block}>
+                <button
+                  type="button"
+                  aria-pressed={activeMode === "onboarding"}
+                  className={`${styles.buttonPrimary} ${
+                    activeMode === "onboarding" ? styles.active : ""
+                  }`}
+                  onClick={() => switchMode("onboarding")}
+                >
+                  <SimbaIcon name="modeOnboarding" />
+                  {tr("mode.onboarding", "ONBOARDING")}
+                </button>
+              </div>
 
               {/* M (Default) */}
-      <div className={styles.block}>
-        <button
-          type="button"
-          aria-pressed={activeMode === "M"}
-          className={`${styles.buttonSolid} ${activeMode === "M" ? styles.active : ""}`}
-          onClick={() => {
-            // ▼ Overlay sofort schließen (ohne Bubble)
-            try {
-              const inOverlay = !!document.querySelector('[data-overlay="true"]');
-              if (inOverlay) { onSystemMessage?.(""); }
-            } catch {}
-            // ▲ Ende Overlay-Close
-            void switchMode("M");
-          }}
-        >
-          <SimbaIcon name="modeDefault" />
-          {tr("mode.default", "M · Default")}
-        </button>
-      </div>
+              <div className={styles.block}>
+                <button
+                  type="button"
+                  aria-pressed={activeMode === "M"}
+                  className={`${styles.buttonSolid} ${
+                    activeMode === "M" ? styles.active : ""
+                  }`}
+                  onClick={() => {
+                    // ▼ Overlay sofort schließen (ohne Bubble)
+                    try {
+                      const inOverlay = !!document.querySelector(
+                        '[data-overlay="true"]'
+                      );
+                      if (inOverlay) {
+                        onSystemMessage?.("");
+                      }
+                    } catch {}
+                    // ▲ Ende Overlay-Close
+                    void switchMode("M");
+                  }}
+                >
+                  <SimbaIcon name="modeDefault" />
+                  {tr("mode.default", "M · Default")}
+                </button>
+              </div>
 
-</section>
               {/* Modus-Dropdown */}
-      <div className={styles.block}>
-        <label className={styles.label} htmlFor="modus-select">
-          {tr("labels.modes", "Modis & Experts")}
-        </label>
+              <div className={styles.block}>
+                <label className={styles.label} htmlFor="modus-select">
+                  {tr("labels.modes", "Modis & Experts")}
+                </label>
 
-        <select
-          id="modus-select"
-          aria-label={tr("mode.select", "Modus wählen")}               // ← Fallback-sicher
-          value={hydrated ? (MODI.some((m) => m.id === activeMode) ? activeMode : "") : ""}
-          onChange={(e) => switchMode(e.target.value as ModeId)}
-          className={styles.select}
-        >
-          <option value="" disabled hidden>
-            {tr("mode.select", "Modus wählen")}
-          </option>
-          {MODI.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.label}
-            </option>
-          ))}
-        </select>
-      </div>
+                <select
+                  id="modus-select"
+                  aria-label={tr("mode.select", "Modus wählen")}
+                  value={
+                    hydrated
+                      ? MODI.some((m) => m.id === activeMode)
+                        ? activeMode
+                        : ""
+                      : ""
+                  }
+                  onChange={(e) => switchMode(e.target.value as ModeId)}
+                  className={styles.select}
+                >
+                  <option value="" disabled hidden>
+                    {tr("mode.select", "Modus wählen")}
+                  </option>
+                  {MODI.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-      <section
-        className={styles.sectionExperts}
-        aria-label={tr("pillar.section.experts", "Experts")}
-      >
-        {/* Experten (Dropdown) */}
-        <div className={styles.selectWrap}>
-          <select
-            id="expert-select"
-            className={styles.select}
-            aria-label={tr("expert.select", "Experten wählen")}           // ← Fallback-sicher
-            value={hydrated ? (currentExpert ?? "") : ""}
-            onChange={(e) => {
-              const val = e.target.value as ExpertId;
-              setCurrentExpert(val);
-              void askExpert(val);
-            }}
-          >
-             <option value="" disabled hidden>{tr("expert.select", "Experten wählen")}</option>
-  {EXPERTS.map((e) => (
-    <option
-      key={e.id}
-      value={e.id}
-      data-simba-slot={e.simbaSlot}   // Simba bekommt hier seinen Hook
-    >
-      {labelForExpert(e.id, lang)}
-    </option>
-  ))}
-</select>
-
+              {/* Council13 als Modus */}
+              <div className={styles.block}>
+                <button
+                  type="button"
+                  aria-pressed={activeMode === "council"}
+                  className={`${styles.buttonGhostPrimary} ${
+                    activeMode === "council" ? styles.active : ""
+                  }`}
+                  onClick={() => switchMode("council")}
+                  style={{ width: "100%", cursor: "pointer" }}
+                >
+                  <SimbaIcon name="modeCouncil" />
+                  {tr("mode.council", "COUNCIL13")}
+                </button>
+              </div>
+            </section>
+          </div>
         </div>
-      </section>
 
-           {/* Council13 */}
-      <div className={styles.block}>
-        <button
-          type="button"
-          aria-pressed={activeMode === "council"}
-          className={`${styles.buttonGhostPrimary} ${activeMode === "council" ? styles.active : ""}`}
-          onClick={() => switchMode("council")}
-          style={{ width: "100%", cursor: "pointer" }}
-        >
-          <SimbaIcon name="modeCouncil" />
-          {tr("mode.council", "COUNCIL13")}
-        </button>
-      </div>
-
-
-      <section
-        className={styles.sectionUtility}
-        aria-label={tr("pillar.section.utility", "Utility & status")}
-      >
-        {/* Aktionen: Export (links, 50%) + Clear (rechts, 50%) */}
-        <div
-          className={styles.actions}
-          style={{ display: "flex", gap: 8, alignItems: "stretch", flexWrap: "nowrap" }}
-        >
-                    {/* Export – links, 50% */}
+        {/* EXPERTEN */}
+        <div className={styles.soSection}>
           <button
-            className={styles.button}
-            style={{ width: "50%", cursor: "pointer" }}
-            onClick={() => {
-              try {
-                const raw = localStorage.getItem("mpathy:thread:default") || "{}";
-                // …
-              } catch {}
-            }}
-            aria-label={tr("exportAria", "Export thread")}
-            title={tr("export", "Export")}
+            type="button"
+            className={styles.soSectionHeader}
+            onClick={() => toggleSection("experts")}
+            aria-expanded={openSection === "experts"}
           >
-            <SimbaIcon name="export" />
-            {tr("export", "Export")}
+            <span className={styles.soSectionHeaderIcon}>
+              <SimbaIcon name="modeCouncil" />
+            </span>
+            <span className={styles.soSectionHeaderLabel}>
+              {tr("pillar.section.expertsTitle", "EXPERTEN")}
+            </span>
           </button>
 
-
-                    {/* Clear – rechts, 50% (immer aktiv) */}
-          <button
-            className={styles.button}
-            style={{
-              width: "50%",
-              cursor: "pointer",
-              background: "rgba(220, 38, 38, 0.18)",
-              borderColor: "rgba(248, 113, 113, 0.85)",
-              color: "rgba(255,255,255,0.98)",
-              boxShadow: "inset 0 0 0 1px rgba(248,113,113,0.55)",
-            }}
-            onClick={() => {
-              // …
-            }}
-            aria-label={tr("clearChatAria", "Clear chat")}
-            title={tr("clearChat", "Clear")}
-            role="button"
-            data-test="btn-clear-chat"
+          <div
+            className={
+              openSection === "experts"
+                ? styles.soSectionBody
+                : styles.soSectionBodyCollapsed
+            }
+            aria-label={tr("pillar.section.experts", "Experts")}
           >
-            <SimbaIcon name="clear" />
-            {tr("clearChat", "Clear")}
+            <section
+              className={styles.sectionExperts}
+              aria-label={tr("pillar.section.experts", "Experts")}
+            >
+              {/* Experten (Dropdown) */}
+              <div className={styles.selectWrap}>
+                <select
+                  id="expert-select"
+                  className={styles.select}
+                  aria-label={tr("expert.select", "Experten wählen")}
+                  value={hydrated ? currentExpert ?? "" : ""}
+                  onChange={(e) => {
+                    const val = e.target.value as ExpertId;
+                    setCurrentExpert(val);
+                    void askExpert(val);
+                  }}
+                >
+                  <option value="" disabled hidden>
+                    {tr("expert.select", "Experten wählen")}
+                  </option>
+                  {EXPERTS.map((e) => (
+                    <option
+                      key={e.id}
+                      value={e.id}
+                      data-simba-slot={e.simbaSlot}
+                    >
+                      {labelForExpert(e.id, lang)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        {/* SYSTEM – Statusleiste */}
+        <div className={styles.soSection}>
+          <button
+            type="button"
+            className={styles.soSectionHeader}
+            onClick={() => toggleSection("system")}
+            aria-expanded={openSection === "system"}
+          >
+            <span className={styles.soSectionHeaderIcon}>
+              <SimbaIcon name="modeDefault" />
+            </span>
+            <span className={styles.soSectionHeaderLabel}>
+              {tr("pillar.section.systemTitle", "SYSTEM")}
+            </span>
           </button>
 
+          <div
+            className={
+              openSection === "system"
+                ? styles.soSectionBody
+                : styles.soSectionBodyCollapsed
+            }
+            aria-label={tr("pillar.section.system", "System status")}
+          >
+            <div className={styles.statusBar} aria-live="polite">
+              <span className={styles.statusKey}>{t("statusMode")}</span>{" "}
+              {modeLabel}
+            </div>
+          </div>
         </div>
 
-        {/* Statusleiste */}
-        <div className={styles.statusBar} aria-live="polite">
-          <span className={styles.statusKey}>{t("statusMode")}</span> {modeLabel}
+        {/* ACTIONS – Export + Clear */}
+        <div className={styles.soSection}>
+          <button
+            type="button"
+            className={styles.soSectionHeader}
+            onClick={() => toggleSection("actions")}
+            aria-expanded={openSection === "actions"}
+          >
+            <span className={styles.soSectionHeaderIcon}>
+              <SimbaIcon name="export" />
+            </span>
+            <span className={styles.soSectionHeaderLabel}>
+              {tr("pillar.section.actionsTitle", "ACTIONS")}
+            </span>
+          </button>
+
+          <div
+            className={
+              openSection === "actions"
+                ? styles.soSectionBody
+                : styles.soSectionBodyCollapsed
+            }
+            aria-label={tr("pillar.section.utility", "Actions & export")}
+          >
+            <section
+              className={styles.sectionUtility}
+              aria-label={tr("pillar.section.utility", "Utility & status")}
+            >
+              {/* Aktionen: Export (links, 50%) + Clear (rechts, 50%) */}
+              <div
+                className={styles.actions}
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  alignItems: "stretch",
+                  flexWrap: "nowrap",
+                }}
+              >
+                {/* Export – links, 50% */}
+                <button
+                  className={styles.button}
+                  style={{ width: "50%", cursor: "pointer" }}
+                  onClick={() => {
+                    try {
+                      const raw =
+                        localStorage.getItem("mpathy:thread:default") || "{}";
+                      // …
+                    } catch {}
+                  }}
+                  aria-label={tr("exportAria", "Export thread")}
+                  title={tr("export", "Export")}
+                >
+                  <SimbaIcon name="export" />
+                  {tr("export", "Export")}
+                </button>
+
+                {/* Clear – rechts, 50% (immer aktiv) */}
+                <button
+                  className={styles.button}
+                  style={{
+                    width: "50%",
+                    cursor: "pointer",
+                    background: "rgba(220, 38, 38, 0.18)",
+                    borderColor: "rgba(248, 113, 113, 0.85)",
+                    color: "rgba(255, 255, 255, 0.98)",
+                    boxShadow:
+                      "inset 0 0 0 1px rgba(248,113,113,0.55)",
+                  }}
+                  onClick={() => {
+                    // …
+                  }}
+                  aria-label={tr("clearChatAria", "Clear chat")}
+                  title={tr("clearChat", "Clear")}
+                  role="button"
+                  data-test="btn-clear-chat"
+                >
+                  <SimbaIcon name="clear" />
+                  {tr("clearChat", "Clear")}
+                </button>
+              </div>
+            </section>
+          </div>
         </div>
-      </section>
+      </div>
     </aside>
+
   );
 }
