@@ -326,7 +326,8 @@
    Buttons – OS-Varianten & aktiver Zustand
    ──────────────────────────────────────── */
 
-/* Basis-Button (Export, generisch, Clear-Basis) */
+/* Basis-Button (Export, Onboarding, Council, Clear, etc.) */
+/* Idle: nur Text – keine sichtbare Pille */
 .button,
 .buttonPrimary,
 .buttonGhostPrimary,
@@ -337,10 +338,10 @@
   gap: 8px;
   width: 100%;
   min-height: 40px;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.40);
-  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid transparent;
+  background: transparent;
   color: rgba(226, 232, 240, 0.96);
   font-size: 13px;
   font-weight: 600;
@@ -350,65 +351,38 @@
   transition:
     background-color 0.16s ease,
     border-color 0.16s ease,
-    transform 0.12s ease,
-    box-shadow 0.12s ease;
+    color 0.16s ease,
+    transform 0.12s ease;
 }
 
-/* Primär – Build / ONBOARDING */
-.buttonPrimary {
-  background: #0ea5e9;
-  border-color: #38bdf8;
-  color: #0f172a;
-}
+/* Varianten bleiben als semantische Klassen bestehen – ohne eigene Farben */
+.buttonPrimary { }
+.buttonSolid { }
+.buttonGhostPrimary { }
 
-/* Solide – M · Default */
-.buttonSolid {
-  background: rgba(15, 23, 42, 0.98);
-  border-color: rgba(148, 163, 184, 0.55);
-}
-
-/* Ghost Primary – COUNCIL13 (dezente Outline) */
-.buttonGhostPrimary {
-  background: transparent;
-  border-style: dashed;
-  border-color: rgba(148, 163, 184, 0.75);
-  color: rgba(226, 232, 240, 0.96);
-}
-
-/* Hover-Feedback – ohne Glow-Orgie */
+/* Hover: graue Pille auf #1E2024 */
 .button:hover,
 .buttonPrimary:hover,
 .buttonGhostPrimary:hover,
 .buttonSolid:hover {
-  background-color: rgba(15, 23, 42, 1);
-  border-color: rgba(148, 163, 184, 0.65);
+  background-color: #2C2C2C;
+  border-color: #2C2C2C;
 }
 
-/* Press-Feedback */
-.button:active,
-.buttonPrimary:active,
-.buttonGhostPrimary:active,
-.buttonSolid:active {
-  transform: translateY(0.5px);
-}
-
-/* Layout-Hilfe für Aktionszeile (Export/Clear) */
-.actions {
-  margin-top: auto;
-  display: flex;
-  gap: 8px;
-}
-
-/* aktiver Zustand – ohne Gradient, OS-konform */
+/* Aktiv: einzige echte Farbpille – Deep Cyan */
 .active {
-  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.75),
-              0 0 0 4px rgba(8, 47, 73, 0.85);
-  background: rgba(8, 47, 73, 0.98);
-  color: #f8fafc !important;
-  border-color: rgba(56, 189, 248, 0.85) !important;
+  background-color: #00C8FF;
+  border-color: #00C8FF;
+  color: #0f172a !important;
+  box-shadow: none;
 }
 
-/* Fokus sichtbar (A11y) – bleibt für alle Interaktions-Elemente aktiv */
+.active:hover {
+  background-color: #00C8FF;
+  border-color: #00C8FF;
+}
+
+/* Fokus (A11y) – schlicht, ohne Glow-Orgie */
 .button:focus-visible,
 .buttonGhost:focus-visible,
 .buttonPrimary:focus-visible,
@@ -418,9 +392,11 @@
 .selectShell:focus-visible,
 .modeBtn:focus-visible,
 .expertBtn:focus-visible {
-  outline: none;
-  box-shadow: var(--glow), var(--sh-md);
+  outline: 2px solid rgba(248, 250, 252, 0.8);
+  outline-offset: 2px;
+  box-shadow: none;
 }
+
 
 
 
