@@ -472,6 +472,17 @@
     color 0.16s ease,
     transform 0.12s ease;
 }
+/* Fester Icon-Slot links – sorgt für bündige Icons (Google-Style) */
+.button svg,
+.buttonPrimary svg,
+.buttonGhostPrimary svg,
+.buttonSolid svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  display: inline-flex;
+}
+
 
 /* Varianten bleiben als semantische Klassen bestehen – ohne eigene Farben */
 .buttonPrimary { }
