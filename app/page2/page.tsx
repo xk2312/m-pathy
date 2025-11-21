@@ -1641,7 +1641,7 @@ return (
           display: "grid",
           gridTemplateColumns: isMobile
             ? "minmax(0,1fr)"
-            : "var(--saeule-w, 278px) minmax(0,1fr)", // HIER SÄULENBREITE EINSTELLEN 1/2 Pltzen und (  :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 275px; } )
+            : "var(--saeule-w, 280px) minmax(0,1fr)", // HIER SÄULENBREITE EINSTELLEN 1/2 Pltzen und (  :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 275px; } )
           alignItems: "start",
           gap: 16,
 
@@ -1963,7 +1963,7 @@ return (
 
 
 
-  :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 278px; }
+  :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 280px; }
 
   .mi-plus-btn { display: none !important; }
 
