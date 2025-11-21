@@ -959,8 +959,6 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
         <div className={styles.soSection}>
           <button
             type="button"
-
-
             className={styles.soSectionHeader}
             onClick={() => toggleSection("experts")}
             aria-expanded={openSection === "experts"}
@@ -985,49 +983,96 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
               className={styles.sectionExperts}
               aria-label={tr("pillar.section.experts", "Experts")}
             >
-                {/* EXPERTEN (Dropdown) */}
-              <div className={styles.selectWrap}>
-                <select
-                  id="expert-select"
-                  className={styles.select}
-                  aria-label={tr("expert.select", "Experten wählen")}
-                  value={hydrated ? currentExpert ?? "" : ""}
-                  onChange={(e) => {
-                    const val = e.target.value as ExpertId;
-                    setCurrentExpert(val);
+              {/* EXPERTEN – Micronavi + Liste */}
+              <div className={styles.block}>
+                <div className={styles.soGroupTitle}>
+                  {sectionTitleExperts(lang)}
+                </div>
 
-                    // 🔹 Kategorie sofort an den gewählten Experten anpassen
-                    const owningCategory =
-                      EXPERT_CATEGORIES.find((cat) =>
-                        cat.experts.includes(val)
-                      )?.id;
-                    if (owningCategory) {
-                      setExpertCategory(owningCategory);
-                      setHoverExpertCategory(null);
-                    }
-
-                    // 🔹 Persistenz + API-Call
-                    void askExpert(val);
-                  }}
+                {/* Hover-Zone: Micronavi + Experten-Liste */}
+                <div
+                  className={styles.modeZone}
+                  onMouseLeave={() => setHoverExpertCategory(null)}
                 >
-                  <option value="" disabled hidden>
-                    {tr("expert.select", "Experten wählen")}
-                  </option>
-                  {EXPERTS.map((e) => (
-                    <option
-                      key={e.id}
-                      value={e.id}
-                      data-simba-slot={e.simbaSlot}
-                    >
-                      {labelForExpert(e.id, lang)}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  {/* Experten-Kategorien – Micronavi */}
+                  <div className={styles.modeCategoryNav}>
+                    {EXPERT_CATEGORIES.map((cat) => {
+                      const isActiveCat = expertCategory === cat.id;
+                      return (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          className={
+                            isActiveCat
+                              ? `${styles.modeCategoryItem} ${styles.modeCategoryItemActive}`
+                              : styles.modeCategoryItem
+                          }
+                          onMouseEnter={() => setHoverExpertCategory(cat.id)}
+                          onFocus={() => setHoverExpertCategory(cat.id)}
+                          aria-pressed={isActiveCat}
+                        >
+                          <span className={styles.modeCategoryItemLabel}>
+                            {cat.label}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
 
+                  {/* Experten-Liste – zeigt gehoverte Kategorie, sonst aktive */}
+                  <div className={styles.modeList}>
+                    {(() => {
+                      const currentCategoryId =
+                        hoverExpertCategory ?? expertCategory;
+                      const currentCategory = EXPERT_CATEGORIES.find(
+                        (cat) => cat.id === currentCategoryId
+                      );
+                      if (!currentCategory) return null;
+
+                      return currentCategory.experts.map((expertId) => {
+                        const expert = EXPERTS.find(
+                          (e) => e.id === expertId
+                        );
+                        if (!expert) return null;
+                        const isActive = currentExpert === expertId;
+
+                        return (
+                          <button
+                            key={expertId}
+                            type="button"
+                            className={
+                              isActive
+                                ? `${styles.modeListItem} ${styles.modeListItemActive}`
+                                : styles.modeListItem
+                            }
+                            onClick={() => {
+                              setCurrentExpert(expertId);
+
+                              const owningCategoryId = currentCategoryId;
+                              setExpertCategory(owningCategoryId);
+                              setHoverExpertCategory(null);
+
+                              void askExpert(expertId);
+                            }}
+                            aria-pressed={isActive}
+                            data-simba-slot={expert.simbaSlot}
+                          >
+                            <span className={styles.modeListItemLabel}>
+                              {labelForExpert(expertId, lang)}
+                            </span>
+                          </button>
+                        );
+                      });
+                    })()}
+                  </div>
+                </div>
+              </div>
             </section>
           </div>
         </div>
+
+        {/* SYSTEM – Statusleiste */}
+
 
         {/* SYSTEM – Statusleiste */}
         <div className={styles.soSection}>
