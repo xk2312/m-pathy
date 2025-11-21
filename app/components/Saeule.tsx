@@ -832,32 +832,45 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
 
           {/* Modus-Liste – zeigt gehoverte Kategorie, sonst aktive */}
           <div className={styles.modeList}>
-            {MODE_CATEGORIES.find(
-              (cat) => cat.id === (hoverModeCategory ?? modeCategory)
-            )?.modes.map((modeId) => {
-              const mode = MODI.find((m) => m.id === modeId);
-              if (!mode) return null;
-              const isActive = activeMode === modeId;
-
-              return (
-                <button
-                  key={modeId}
-                  type="button"
-                  className={
-                    isActive
-                      ? `${styles.modeListItem} ${styles.modeListItemActive}`
-                      : styles.modeListItem
-                  }
-                  onClick={() => switchMode(modeId)}
-                  aria-pressed={isActive}
-                >
-                  <span className={styles.modeListItemLabel}>
-                    {mode.label}
-                  </span>
-                </button>
+            {(() => {
+              const currentCategoryId = hoverModeCategory ?? modeCategory;
+              const currentCategory = MODE_CATEGORIES.find(
+                (cat) => cat.id === currentCategoryId
               );
-            })}
+              if (!currentCategory) return null;
+
+              return currentCategory.modes.map((modeId) => {
+                const mode = MODI.find((m) => m.id === modeId);
+                if (!mode) return null;
+                const isActive = activeMode === modeId;
+
+                return (
+                  <button
+                    key={modeId}
+                    type="button"
+                    className={
+                      isActive
+                        ? `${styles.modeListItem} ${styles.modeListItemActive}`
+                        : styles.modeListItem
+                    }
+                    onClick={() => {
+                      // Kategorie persistent auf die gewählte setzen
+                      setModeCategory(currentCategoryId);
+                      // Hover zurücksetzen, damit der graue Marker gilt
+                      setHoverModeCategory(null);
+                      void switchMode(modeId);
+                    }}
+                    aria-pressed={isActive}
+                  >
+                    <span className={styles.modeListItemLabel}>
+                      {mode.label}
+                    </span>
+                  </button>
+                );
+              });
+            })()}
           </div>
+
         </div>
       </div>
 
