@@ -1681,7 +1681,7 @@ return (
 
 
 
-        <div
+                <div
           ref={convoRef as any}
           className="chat-stage"
           style={{
@@ -1689,17 +1689,18 @@ return (
             flexDirection: "column",
 
 
-            /* Harte, verlässliche Block-Höhe relativ zum Viewport */
-flex: "0 1 auto",
+            /* Füllt den Raum zwischen Navi und Eingabedock */
+flex: "1 1 auto",
 height: isMobile
   ? undefined
-  : "calc(100dvh - var(--nav-safe-top) - var(--dock-h, 60px))",
+  : "calc(100dvh - var(--dock-h, 60px))",
 
 
             minHeight: 0,
             overflow: "auto",
             pointerEvents: "auto",
             touchAction: "pan-y",
+
             WebkitOverflowScrolling: "touch",
             overscrollBehavior: "contain",
 
