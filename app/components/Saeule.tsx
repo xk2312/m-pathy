@@ -793,48 +793,49 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                 </button>
               </div>
 
-                  {/* Charakter-Modis – Micronavi + Liste */}
+            {/* Charakter-Modis – Micronavi + Liste */}
       <div className={styles.block}>
         <div className={styles.soGroupTitle}>
           {tr("labels.modes.character", "Charakter Modis")}
         </div>
 
-       {/* Micronavi: CORE / INTELLECTUAL / CREATOR / HEART / SPIRIT */}
-<div
-  className={styles.modeCategoryNav}
-  onMouseLeave={() => setHoverModeCategory(null)}
->
-  {MODE_CATEGORIES.map((cat) => {
-    const isActiveCat = modeCategory === cat.id; // aktive Kategorie = modeCategory
-    return (
-      <button
-        key={cat.id}
-        type="button"
-        className={
-          isActiveCat
-            ? `${styles.modeCategoryItem} ${styles.modeCategoryItemActive}`
-            : styles.modeCategoryItem
-        }
-        onMouseEnter={() => setHoverModeCategory(cat.id)}
-        onFocus={() => setHoverModeCategory(cat.id)}
-        onClick={() => setModeCategory(cat.id)}  // Klick setzt aktive Kategorie
-        aria-pressed={isActiveCat}
-      >
-        <span className={styles.modeCategoryItemLabel}>
-          {cat.label}
-        </span>
-      </button>
-    );
-  })}
-</div>
+        {/* Hover-Zone: Micronavi + Modus-Liste */}
+        <div
+          className={styles.modeZone}
+          onMouseLeave={() => setHoverModeCategory(null)}
+        >
+          {/* Micronavi: CORE / INTELLECTUAL / CREATOR / HEART / SPIRIT */}
+          <div className={styles.modeCategoryNav}>
+            {MODE_CATEGORIES.map((cat) => {
+              const isActiveCat = modeCategory === cat.id; // aktive Kategorie = modeCategory
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  className={
+                    isActiveCat
+                      ? `${styles.modeCategoryItem} ${styles.modeCategoryItemActive}`
+                      : styles.modeCategoryItem
+                  }
+                  onMouseEnter={() => setHoverModeCategory(cat.id)}
+                  onFocus={() => setHoverModeCategory(cat.id)}
+                  onClick={() => setModeCategory(cat.id)} // Klick setzt aktive Kategorie
+                  aria-pressed={isActiveCat}
+                >
+                  <span className={styles.modeCategoryItemLabel}>
+                    {cat.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
 
-
-       {/* Modus-Liste – zeigt gehoverte Kategorie, sonst aktive */}
-<div className={styles.modeList}>
-  {MODE_CATEGORIES.find(
-    (cat) => cat.id === (hoverModeCategory ?? modeCategory)
-  )?.modes.map((modeId) => {
-    const mode = MODI.find((m) => m.id === modeId);
+          {/* Modus-Liste – zeigt gehoverte Kategorie, sonst aktive */}
+          <div className={styles.modeList}>
+            {MODE_CATEGORIES.find(
+              (cat) => cat.id === (hoverModeCategory ?? modeCategory)
+            )?.modes.map((modeId) => {
+              const mode = MODI.find((m) => m.id === modeId);
               if (!mode) return null;
               const isActive = activeMode === modeId;
 
@@ -855,10 +856,11 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                   </span>
                 </button>
               );
-            }
-          )}
+            })}
+          </div>
         </div>
       </div>
+
 
 
               

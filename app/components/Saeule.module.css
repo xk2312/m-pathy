@@ -185,7 +185,7 @@
 */
 .soGroupTitle {
   margin-top: 8px;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -193,26 +193,28 @@
   color: rgba(148,163,184,0.9);
 }
 
+/* Wrapper für Micronavi + Liste – gemeinsame Hover-Zone */
+.modeZone {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
-
-/* Kategorien-Strip – winzige Badges */
-/* Micronavi für Kategorien – reiner Text mit Cyan-Strich oben */
-/* Micronavi – eine Zeile, kleine Schrift */
+/* Micronavi – eine Zeile, sehr kleine Schrift */
 .modeCategoryNav {
   display: flex;
   flex-wrap: nowrap;
-  column-gap: 8px;
-  margin-top: 4px;
-  margin-bottom: 6px;
+  column-gap: 6px;
+  margin-top: 2px;
+  margin-bottom: 4px;
 }
 
 .modeCategoryItem {
-
   position: relative;
-  padding: 1px 0 0;
+  padding: 0 0 0;
   border: none;
   background: transparent;
-  font-size: 10px;              /* kleiner, damit alles in eine Zeile passt */
+  font-size: 9px;               /* 1px kleiner → passt besser in eine Zeile */
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -223,6 +225,7 @@
   justify-content: center;
   outline: none;
 }
+
 
 /* Grundzustand: kein Strich */
 .modeCategoryItem::before {
