@@ -425,14 +425,27 @@ async function callChatAPI(prompt: string): Promise<string | null> {
 
 export default function Saeule({ onSystemMessage, onClearChat, canClear }: Props) {
   const [activeMode, setActiveMode] = useState<ModeId>(() => {
-    try { return (localStorage.getItem("mode") as ModeId) || "M"; } catch { return "M"; }
+    try {
+      return (localStorage.getItem("mode") as ModeId) || "M";
+    } catch {
+      return "M";
+    }
   });
+
+  // 🔹 Aktive Kategorie (grauer Marker) + Hover-Kategorie (Vorschau)
+  const [modeCategory, setModeCategory] = useState<ModeCategoryId>("core");
+  const [hoverModeCategory, setHoverModeCategory] =
+    useState<ModeCategoryId | null>(null);
+
+  // 🔹 Hydration-Flag – verhindert Mismatch & wird im useEffect gesetzt
   const [hydrated, setHydrated] = useState(false);
+
   const [sendingExpert, setSendingExpert] = useState<ExpertId | null>(null);
   const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null);
   const [lang, setLang] = useState<string>("en");
   const [openSection, setOpenSection] = useState<SectionId | null>("modes");
-  const [modeCategory, setModeCategory] = useState<ModeCategoryId>("core");
+
+
 
 
   // === i18n Labels (13 Languages compatible) ===
@@ -789,35 +802,42 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
           {tr("labels.modes.character", "Charakter Modis")}
         </div>
 
-        {/* Micronavi: CORE / INTELLECTUAL / CREATOR / HEART / SPIRIT */}
-        <div className={styles.modeCategoryNav}>
-          {MODE_CATEGORIES.map((cat) => {
-            const isActiveCat = modeCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                className={
-                  isActiveCat
-                    ? `${styles.modeCategoryItem} ${styles.modeCategoryItemActive}`
-                    : styles.modeCategoryItem
-                }
-                onClick={() => setModeCategory(cat.id)}
-                aria-pressed={isActiveCat}
-              >
-                <span className={styles.modeCategoryItemLabel}>
-                  {cat.label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+       {/* Micronavi: CORE / INTELLECTUAL / CREATOR / HEART / SPIRIT */}
+<div
+  className={styles.modeCategoryNav}
+  onMouseLeave={() => setHoverModeCategory(null)}
+>
+  {MODE_CATEGORIES.map((cat) => {
+    const isActiveCat = modeCategory === cat.id; // aktive Kategorie = modeCategory
+    return (
+      <button
+        key={cat.id}
+        type="button"
+        className={
+          isActiveCat
+            ? `${styles.modeCategoryItem} ${styles.modeCategoryItemActive}`
+            : styles.modeCategoryItem
+        }
+        onMouseEnter={() => setHoverModeCategory(cat.id)}
+        onFocus={() => setHoverModeCategory(cat.id)}
+        onClick={() => setModeCategory(cat.id)}  // Klick setzt aktive Kategorie
+        aria-pressed={isActiveCat}
+      >
+        <span className={styles.modeCategoryItemLabel}>
+          {cat.label}
+        </span>
+      </button>
+    );
+  })}
+</div>
 
-        {/* Modus-Liste der aktiven Kategorie – volle Zeilen, ohne Header */}
-        <div className={styles.modeList}>
-          {MODE_CATEGORIES.find((cat) => cat.id === modeCategory)?.modes.map(
-            (modeId) => {
-              const mode = MODI.find((m) => m.id === modeId);
+
+       {/* Modus-Liste – zeigt gehoverte Kategorie, sonst aktive */}
+<div className={styles.modeList}>
+  {MODE_CATEGORIES.find(
+    (cat) => cat.id === (hoverModeCategory ?? modeCategory)
+  )?.modes.map((modeId) => {
+    const mode = MODI.find((m) => m.id === modeId);
               if (!mode) return null;
               const isActive = activeMode === modeId;
 
