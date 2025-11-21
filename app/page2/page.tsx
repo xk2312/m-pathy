@@ -1641,7 +1641,7 @@ return (
           display: "grid",
           gridTemplateColumns: isMobile
             ? "minmax(0,1fr)"
-            : "var(--saeule-w, 250px) minmax(0,1fr)",
+            : "var(--saeule-w, 270px) minmax(0,1fr)",
           alignItems: "start",
           gap: 16,
 
@@ -1963,7 +1963,7 @@ return (
 
 
 
-  :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 250px; }
+  :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 270px; }
 
   .mi-plus-btn { display: none !important; }
 
