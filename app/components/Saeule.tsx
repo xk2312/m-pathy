@@ -25,6 +25,14 @@ type ModeId =
   | "wisdom"
   | "flow";
 
+type ModeCategoryId =
+  | "core"
+  | "intellectual"
+  | "creator"
+  | "heart"
+  | "spirit";
+
+
 /** 13 Expert Domains (GPTM-Galaxy+) */
 type ExpertId =
   | "Biologist"
@@ -70,6 +78,19 @@ const MODI: { id: ModeId; label: string }[] = [
   { id: "wisdom", label: "WISDOM" },
   { id: "flow", label: "FLOW" },
 ];
+
+const MODE_CATEGORIES: {
+  id: ModeCategoryId;
+  label: string;
+  modes: ModeId[];
+}[] = [
+  { id: "core",         label: "CORE",         modes: ["research", "calm", "flow"] },
+  { id: "intellectual", label: "INTELLECTUAL", modes: ["truth", "wisdom"] },
+  { id: "creator",      label: "CREATOR",      modes: ["play", "vision"] },
+  { id: "heart",        label: "HEART",        modes: ["empathy", "love", "joy"] },
+  { id: "spirit",       label: "SPIRIT",       modes: ["oracle"] },
+];
+
 
 /** Simba-Slots pro Experte (Icons kommen später aus SIMBA, keine Emojis mehr) */
 const EXPERTS: { id: ExpertId; simbaSlot: string }[] = [
@@ -411,6 +432,8 @@ export default function Saeule({ onSystemMessage, onClearChat, canClear }: Props
   const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null);
   const [lang, setLang] = useState<string>("en");
   const [openSection, setOpenSection] = useState<SectionId | null>("modes");
+  const [modeCategory, setModeCategory] = useState<ModeCategoryId>("core");
+
 
   // === i18n Labels (13 Languages compatible) ===
   const labelBuild = tr("cta.build", "Jetzt bauen");
@@ -766,26 +789,50 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
           {tr("labels.modes.character", "Charakter Modis")}
         </div>
 
-        <select
-          id="modus-select"
-          aria-label={tr("mode.select", "Modus wählen")}               // ← Fallback-sicher
-          value={
-            hydrated
-              ? (MODI.some((m) => m.id === activeMode) ? activeMode : "")
-              : ""
-          }
-          onChange={(e) => switchMode(e.target.value as ModeId)}
-          className={styles.select}
-        >
-          <option value="" disabled hidden>
-            {tr("mode.select", "Modus wählen")}
-          </option>
-          {MODI.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.label}
-            </option>
+        {/* Kategorien-Strip: CORE / INTELLECTUAL / CREATOR / HEART / SPIRIT */}
+        <div className={styles.modeCategoryStrip}>
+          {MODE_CATEGORIES.map((cat) => (
+            <button
+              key={cat.id}
+              type="button"
+              className={
+                modeCategory === cat.id
+                  ? `${styles.soItem} ${styles.soItemSmall} ${styles.soItemActive}`
+                  : `${styles.soItem} ${styles.soItemSmall}`
+              }
+              onClick={() => setModeCategory(cat.id)}
+            >
+              <span className={styles.soItemLabel}>{cat.label}</span>
+            </button>
           ))}
-        </select>
+        </div>
+
+        {/* Modus-Liste der aktiven Kategorie */}
+        <div className={styles.modeList}>
+          {MODE_CATEGORIES.find((cat) => cat.id === modeCategory)?.modes.map(
+            (modeId) => {
+              const mode = MODI.find((m) => m.id === modeId);
+              if (!mode) return null;
+              const isActive = activeMode === modeId;
+
+              return (
+                <button
+                  key={modeId}
+                  type="button"
+                  className={
+                    isActive
+                      ? `${styles.soItem} ${styles.soItemSmall} ${styles.soItemActive}`
+                      : `${styles.soItem} ${styles.soItemSmall}`
+                  }
+                  onClick={() => switchMode(modeId)}
+                  aria-pressed={isActive}
+                >
+                  <span className={styles.soItemLabel}>{mode.label}</span>
+                </button>
+              );
+            }
+          )}
+        </div>
       </div>
 
 
@@ -798,6 +845,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
         <div className={styles.soSection}>
           <button
             type="button"
+
             className={styles.soSectionHeader}
             onClick={() => toggleSection("experts")}
             aria-expanded={openSection === "experts"}
