@@ -193,9 +193,10 @@
   color: rgba(148,163,184,0.9);
 }
 
+
+
 /* Kategorien-Strip – winzige Badges */
 /* Micronavi für Kategorien – reiner Text mit Cyan-Strich oben */
-.modeCategoryNav {
 /* Micronavi – eine Zeile, kleine Schrift */
 .modeCategoryNav {
   display: flex;
@@ -206,6 +207,7 @@
 }
 
 .modeCategoryItem {
+
   position: relative;
   padding: 1px 0 0;
   border: none;
@@ -709,14 +711,26 @@
    Statusbar (leise, unten)
    ──────────────────────────────────────── */
 .statusBar {
-  display: flex; align-items: center; gap: 8px;
-  color: #9fb3c8; font-size: 12px;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #9fb3c8;
+  font-size: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-top: 8px;
 }
-.statusKey { color: #c7d2fe; font-weight: 600; }
+
+.statusKey {
+  color: #c7d2fe;
+  font-weight: 600;
+}
+
 .statusDot {
-  width: 4px; height: 4px; border-radius: 999px; background: #475569; display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #475569;
+  display: inline-block;
 }
 
 /* Simba Icons – einheitliche Größe in Buttons */
@@ -731,19 +745,25 @@
    Motion & Media
    ──────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .button, .buttonGhost, .buttonPrimary, .buttonGhostPrimary, .buttonSolid,
-  .select { transition: none; }
+  .button,
+  .buttonGhost,
+  .buttonPrimary,
+  .buttonGhostPrimary,
+  .buttonSolid,
+  .select {
+    transition: none;
+  }
 }
 
-
 /* Optional: Debug-Rahmen */
-/* .saeule { outline: 2px solid rgba(34,211,238,.5); } */
+/* .saeule { outline: 2px solid rgba(34, 211, 238, .5); } */
+
 /* ─────────────────────────────────────────
    Mobile Overlay: Säule ist NICHT sticky
    ──────────────────────────────────────── */
 @media (max-width: 768px), (pointer: coarse) {
   [data-overlay="true"] .saeule {
-    position: static;     /* statt sticky */
+    position: static; /* statt sticky */
     top: auto;
     margin-top: 0;
 
@@ -752,5 +772,4 @@
     height: auto;
     overflow: visible;
   }
-}
 }
