@@ -1606,26 +1606,19 @@ const withGate = (fn: () => void) => {
 const sendingRef = useRef(false);
 return (
   <main
-  className="page2-shell"
-  style={{ ...pageStyle, display: "flex", flexDirection: "column" }}
->
+    className="page2-shell"
+    style={{ ...pageStyle, display: "flex", flexDirection: "column" }}
+  >
     {/* === GLOBAL NAVIGATION (wie Subscription) ======================= */}
-    <div
-  ref={headerRef as any}
-  style={{
-    marginTop: 0,         // ← kritischer Fix A: oberen Drift neutralisieren
-    paddingTop: 0,        // ← Fix B: verhindert doppelte nav-safe-top Kaskade
-    width: "100%",        // sauberer Layer
-  }}
->
-  <Navigation />
-</div>
+    <header className="page2-nav-shell" ref={headerRef as any}>
+      <Navigation />
+    </header>
 
-
-        {/* === BÜHNE ====================================================== */}
+    {/* === BÜHNE ====================================================== */}
     <div
       style={{
         flex: 1,
+
         display: "flex",
         flexDirection: "column",
         // Full-left: Bühne hängt direkt an der Viewport-Wand
@@ -1949,13 +1942,25 @@ return (
     min-height:100dvh;
   }
 
-  /* PAGE2 CHAT – NAVIGATION STATIC & CLEAN */
-  .page2-shell .mx-auto.flex.items-center.justify-between {
-    background: transparent !important;                 /* Chat-Hintergrund */
-    box-shadow: none !important;                        /* Glow entfernen */
-    transform: none !important;                         /* Kein Shrink */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12); /* feine Linie */
-  }
+ /* PAGE2 CHAT – NAVIGATION CLEAN & MERGED */
+.page2-shell .mx-auto.flex.items-center.justify-between {
+  background: var(--chat-bg) !important;
+  box-shadow: none !important;
+  transform: none !important;
+  border-bottom: none !important;
+  height: 60px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+  /* PAGE2 – LOGO + NAV FIX: keine Bewegung, volle Deckkraft */
+.page2-shell header .flex.items-center img,
+.page2-shell header .flex.items-center svg {
+  transform: none !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+
 
   :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 320px; }
 
