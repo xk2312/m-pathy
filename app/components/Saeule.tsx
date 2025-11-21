@@ -778,12 +778,12 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                     void switchMode("M");
                   }}
                 >
-                  <SimbaIcon name="modeDefault" />
+                 <SimbaIcon name="modeDefault" />
                   {tr("mode.default", "M · Default")}
                 </button>
               </div>
 
-                  {/* Modus-Dropdown */}
+                  {/* Charakter-Modis – Kategorien + Liste */}
       <div className={styles.block}>
         <div className={styles.soGroupTitle}>
           {tr("labels.modes.character", "Charakter Modis")}
@@ -791,23 +791,29 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
 
         {/* Kategorien-Strip: CORE / INTELLECTUAL / CREATOR / HEART / SPIRIT */}
         <div className={styles.modeCategoryStrip}>
-          {MODE_CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              type="button"
-              className={
-                modeCategory === cat.id
-                  ? `${styles.soItem} ${styles.soItemSmall} ${styles.soItemActive}`
-                  : `${styles.soItem} ${styles.soItemSmall}`
-              }
-              onClick={() => setModeCategory(cat.id)}
-            >
-              <span className={styles.soItemLabel}>{cat.label}</span>
-            </button>
-          ))}
+          {MODE_CATEGORIES.map((cat) => {
+            const isActiveCat = modeCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                className={
+                  isActiveCat
+                    ? `${styles.modeCategoryBadge} ${styles.modeCategoryBadgeActive}`
+                    : styles.modeCategoryBadge
+                }
+                onClick={() => setModeCategory(cat.id)}
+                aria-pressed={isActiveCat}
+              >
+                <span className={styles.modeCategoryBadgeLabel}>
+                  {cat.label}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Modus-Liste der aktiven Kategorie */}
+        {/* Modus-Liste der aktiven Kategorie – volle Zeilen */}
         <div className={styles.modeList}>
           {MODE_CATEGORIES.find((cat) => cat.id === modeCategory)?.modes.map(
             (modeId) => {
@@ -821,13 +827,15 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                   type="button"
                   className={
                     isActive
-                      ? `${styles.soItem} ${styles.soItemSmall} ${styles.soItemActive}`
-                      : `${styles.soItem} ${styles.soItemSmall}`
+                      ? `${styles.modeListItem} ${styles.modeListItemActive}`
+                      : styles.modeListItem
                   }
                   onClick={() => switchMode(modeId)}
                   aria-pressed={isActive}
                 >
-                  <span className={styles.soItemLabel}>{mode.label}</span>
+                  <span className={styles.modeListItemLabel}>
+                    {mode.label}
+                  </span>
                 </button>
               );
             }
@@ -845,6 +853,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
         <div className={styles.soSection}>
           <button
             type="button"
+
 
             className={styles.soSectionHeader}
             onClick={() => toggleSection("experts")}
