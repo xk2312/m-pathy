@@ -1635,15 +1635,16 @@ return (
 
 
            {/* Bühne: Desktop 2 Spalten / Mobile 1 Spalte */}
-      <section
+           <section
         aria-label="Chat layout"
         style={{
           display: "grid",
           gridTemplateColumns: isMobile
             ? "minmax(0,1fr)"
-            : "minmax(260px, 320px) minmax(0,1fr)",
+            : "var(--saeule-w, 250px) minmax(0,1fr)",
           alignItems: "start",
           gap: 16,
+
           minHeight: 0,
           overflow: "visible",
           width: "100%",     // ⬅️ Bühne nutzt die komplette Breite
@@ -1962,7 +1963,7 @@ return (
 
 
 
-  :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 320px; }
+  :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 250px; }
 
   .mi-plus-btn { display: none !important; }
 
