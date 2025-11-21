@@ -816,7 +816,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
           onMouseLeave={() => setHoverModeCategory(null)}
         >
           {/* Micronavi: CORE / INTELLECTUAL / CREATOR / HEART / SPIRIT */}
-          <div className={styles.modeCategoryNav}>
+            <div className={styles.modeCategoryNav}>
             {MODE_CATEGORIES.map((cat) => {
               const isActiveCat = modeCategory === cat.id; // aktive Kategorie = modeCategory
               return (
@@ -830,7 +830,6 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                   }
                   onMouseEnter={() => setHoverModeCategory(cat.id)}
                   onFocus={() => setHoverModeCategory(cat.id)}
-                  onClick={() => setModeCategory(cat.id)} // Klick setzt aktive Kategorie
                   aria-pressed={isActiveCat}
                 >
                   <span className={styles.modeCategoryItemLabel}>
@@ -840,6 +839,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
               );
             })}
           </div>
+
 
           {/* Modus-Liste – zeigt gehoverte Kategorie, sonst aktive */}
           <div className={styles.modeList}>
