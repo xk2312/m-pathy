@@ -45,9 +45,53 @@ type ExpertId =
   | "Interior Designer"
   | "Electrical Engineer"
   | "Mathematician"
-    | "Astrologer"
+  | "Astrologer"
   | "Weather Expert"
   | "Molecular Scientist";
+type ExpertCategoryId = "life" | "tech" | "space" | "ethics" | "universe";
+
+const EXPERT_CATEGORIES: {
+  id: ExpertCategoryId;
+  label: string;
+  experts: ExpertId[];
+}[] = [
+  {
+    id: "life",
+    label: "Leben",
+    experts: ["Biologist", "Chemist", "Molecular Scientist" as ExpertId].filter(
+      Boolean
+    ) as ExpertId[],
+  },
+  {
+    id: "tech",
+    label: "Technik",
+    experts: [
+      "Physicist",
+      "Mathematician",
+      "Electrical Engineer",
+      "Computer Scientist",
+    ],
+  },
+  {
+    id: "space",
+    label: "Raum",
+    experts: [
+      "Architect / Civil Engineer",
+      "Landscape Designer",
+      "Interior Designer",
+    ],
+  },
+  {
+    id: "ethics",
+    label: "Ethik",
+    experts: ["Jurist"],
+  },
+  {
+    id: "universe",
+    label: "Universum",
+    experts: ["Astrologer", "Weather Expert"],
+  },
+];
 
 type SectionId = "modes" | "experts" | "system" | "actions";
 
@@ -452,6 +496,12 @@ useEffect(() => {
   const [modeCategory, setModeCategory] = useState<ModeCategoryId>("core");
   const [hoverModeCategory, setHoverModeCategory] =
     useState<ModeCategoryId | null>(null);
+      // Experten-Kategorien – persistent + Hover-Vorschau (analog zu Modis)
+  const [expertCategory, setExpertCategory] =
+    useState<ExpertCategoryId>("life");
+  const [hoverExpertCategory, setHoverExpertCategory] =
+    useState<ExpertCategoryId | null>(null);
+
 
 
 
@@ -502,6 +552,18 @@ const labelExpertSelect = tr("expert.select", "Experten wählen");
       if (e) setCurrentExpert(e);
     } catch {}
   }, []);
+// 🔄 Nach Reload: Kategorie automatisch aus currentExpert ableiten
+useEffect(() => {
+  if (!currentExpert) return;
+
+  const owningCategory =
+    EXPERT_CATEGORIES.find((cat) => cat.experts.includes(currentExpert))
+      ?.id;
+
+  if (owningCategory && owningCategory !== expertCategory) {
+    setExpertCategory(owningCategory);
+  }
+}, [currentExpert]);
 
   useEffect(() => {
     try {
@@ -923,7 +985,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
               className={styles.sectionExperts}
               aria-label={tr("pillar.section.experts", "Experts")}
             >
-              {/* Experten (Dropdown) */}
+                {/* EXPERTEN (Dropdown) */}
               <div className={styles.selectWrap}>
                 <select
                   id="expert-select"
@@ -933,6 +995,18 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                   onChange={(e) => {
                     const val = e.target.value as ExpertId;
                     setCurrentExpert(val);
+
+                    // 🔹 Kategorie sofort an den gewählten Experten anpassen
+                    const owningCategory =
+                      EXPERT_CATEGORIES.find((cat) =>
+                        cat.experts.includes(val)
+                      )?.id;
+                    if (owningCategory) {
+                      setExpertCategory(owningCategory);
+                      setHoverExpertCategory(null);
+                    }
+
+                    // 🔹 Persistenz + API-Call
                     void askExpert(val);
                   }}
                 >
@@ -950,6 +1024,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                   ))}
                 </select>
               </div>
+
             </section>
           </div>
         </div>
