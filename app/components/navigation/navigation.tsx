@@ -51,37 +51,37 @@ export default function Navigation() {
         zIndex: 40,
       };
 
-  return (
-    <header style={headerStyle} aria-label="Main site navigation">
-      <div
-        className="mx-auto flex items-center justify-between"
-        style={{
-          maxWidth: isChatLayout ? "none" : "var(--page-inner-max)",
-          margin: isChatLayout ? "0" : undefined,
-          paddingInline: isChatLayout
-            ? "var(--stage-pad, 48px)"
-            : "var(--page-pad-inline)",
+ return (
+  <header style={headerStyle} aria-label="Main site navigation">
+    <div
+      className="mx-auto flex items-center justify-between"
+      style={{
+        maxWidth: isChatLayout ? "none" : "var(--page-inner-max)",
+        margin: isChatLayout ? "0" : undefined,
+        paddingInline: isChatLayout
+          ? "var(--stage-pad, 48px)"
+          : "var(--page-pad-inline)",
 
-          // *** STATIC MODE ***
-          height: navHeight,
-          transform: "none",
-          opacity: 1,
-          boxShadow: "none",
+        // *** STATIC MODE ***
+        height: navHeight,
+        transform: "none",
+        opacity: 1,
+        boxShadow: "none",
 
-          // *** Hintergrund identisch zum Chat-Bereich ***
-          background: "rgba(15,16,21,0.92)",
-          backdropFilter: "blur(18px)",
+        // *** Hintergrund identisch zum Chat-Bereich (voll deckend) ***
+        background: "var(--chat-bg)",
+        backdropFilter: "none",
 
-          // Keine Linie (nahtloser Übergang)
-          borderBottom: "none",
+        // Keine Linie (nahtloser Übergang)
+        borderBottom: "none",
 
-          // Kein Motion-System mehr
-          transition: "none",
-        }}
-      >
+        // Kein Motion-System mehr
+        transition: "none",
+      }}
+    >
+      {/* LEFT – Mobile Button & Desktop Logo */}
+      <div className="flex items-center gap-3">
 
-        {/* LEFT – Mobile Button & Desktop Logo */}
-        <div className="flex items-center gap-3">
           {/* Mobile Menu Button */}
           <button
             type="button"
