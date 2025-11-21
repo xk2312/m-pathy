@@ -165,12 +165,25 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
    - gleiche Fläche wie Chat
    - feine Trennlinie nach unten
 */
+/* PAGE2 CHAT – NAVIGATION CLEAN & MERGED */
 .page2-shell .mx-auto.flex.items-center.justify-between {
-  background: transparent !important;                 /* Chat-Gradient scheint durch */
-  box-shadow: none !important;                        /* keine „Glow-Band“-Optik mehr */
-  transform: none !important;                         /* Shrink/Scale deaktivieren */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12); /* feine Linie */
+  /* Navi soll wie Chat aussehen → kein Gradient, kein Shrink, keine Linie */
+  background: var(--chat-bg) !important;       /* gleiche Fläche wie Chat */
+  box-shadow: none !important;
+  transform: none !important;
+  border-bottom: none !important;
+  height: 60px !important;                     /* erzwingt die kleine Variante */
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
+
+.page2-shell header,
+.page2-shell nav {
+  background: var(--chat-bg) !important;
+  box-shadow: none !important;
+  border-bottom: none !important;
+}
+
 
 
 
