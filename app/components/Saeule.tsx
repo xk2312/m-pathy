@@ -427,6 +427,17 @@ export default function Saeule({ onSystemMessage, onClearChat, canClear }: Props
   const [activeMode, setActiveMode] = useState<ModeId>(() => {
     try { return (localStorage.getItem("mode") as ModeId) || "M"; } catch { return "M"; }
   });
+// 🔄 Kategorie nach Reload automatisch an den aktiven Modus anpassen
+useEffect(() => {
+  if (!activeMode) return;
+
+  const owningCategory =
+    MODE_CATEGORIES.find((cat) => cat.modes.includes(activeMode))?.id;
+
+  if (owningCategory && owningCategory !== modeCategory) {
+    setModeCategory(owningCategory);
+  }
+}, [activeMode]);
 
   // Hydration-Flag – verhindert Mismatch (wird im useEffect gesetzt)
   const [hydrated, setHydrated] = useState(false);
