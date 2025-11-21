@@ -425,25 +425,22 @@ async function callChatAPI(prompt: string): Promise<string | null> {
 
 export default function Saeule({ onSystemMessage, onClearChat, canClear }: Props) {
   const [activeMode, setActiveMode] = useState<ModeId>(() => {
-    try {
-      return (localStorage.getItem("mode") as ModeId) || "M";
-    } catch {
-      return "M";
-    }
+    try { return (localStorage.getItem("mode") as ModeId) || "M"; } catch { return "M"; }
   });
 
-  // 🔹 Aktive Kategorie (grauer Marker) + Hover-Kategorie (Vorschau)
-  const [modeCategory, setModeCategory] = useState<ModeCategoryId>("core");
-  const [hoverModeCategory, setHoverModeCategory] =
-    useState<ModeCategoryId | null>(null);
-
-  // 🔹 Hydration-Flag – verhindert Mismatch & wird im useEffect gesetzt
+  // Hydration-Flag – verhindert Mismatch (wird im useEffect gesetzt)
   const [hydrated, setHydrated] = useState(false);
 
+  // Experten- / Sprache- / Abschnitts-State
   const [sendingExpert, setSendingExpert] = useState<ExpertId | null>(null);
   const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null);
   const [lang, setLang] = useState<string>("en");
   const [openSection, setOpenSection] = useState<SectionId | null>("modes");
+
+  // Modus-Kategorien – aktive (graue) Kategorie + Hover-Vorschau
+  const [modeCategory, setModeCategory] = useState<ModeCategoryId>("core");
+  const [hoverModeCategory, setHoverModeCategory] =
+    useState<ModeCategoryId | null>(null);
 
 
 
