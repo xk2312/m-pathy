@@ -718,7 +718,21 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                   {tr("mode.onboarding", "ONBOARDING")}
                 </button>
               </div>
-
+{/* Council13 als Modus */}
+              <div className={styles.block}>
+                <button
+                  type="button"
+                  aria-pressed={activeMode === "council"}
+                  className={`${styles.buttonGhostPrimary} ${
+                    activeMode === "council" ? styles.active : ""
+                  }`}
+                  onClick={() => switchMode("council")}
+                  style={{ width: "100%", cursor: "pointer" }}
+                >
+                  <SimbaIcon name="modeCouncil" />
+                  {tr("mode.council", "COUNCIL13")}
+                </button>
+              </div>
               {/* M (Default) */}
               <div className={styles.block}>
                 <button
@@ -746,51 +760,36 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                 </button>
               </div>
 
-              {/* Modus-Dropdown */}
-              <div className={styles.block}>
-                <label className={styles.label} htmlFor="modus-select">
-                  {tr("labels.modes", "Charakter Modis")}
-                </label>
+                  {/* Modus-Dropdown */}
+      <div className={styles.block}>
+        <div className={styles.soGroupTitle}>
+          {tr("labels.modes.character", "Charakter Modis")}
+        </div>
 
-                <select
-                  id="modus-select"
-                  aria-label={tr("mode.select", "Modus wählen")}
-                  value={
-                    hydrated
-                      ? MODI.some((m) => m.id === activeMode)
-                        ? activeMode
-                        : ""
-                      : ""
-                  }
-                  onChange={(e) => switchMode(e.target.value as ModeId)}
-                  className={styles.select}
-                >
-                  <option value="" disabled hidden>
-                    {tr("mode.select", "Modus wählen")}
-                  </option>
-                  {MODI.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      {m.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+        <select
+          id="modus-select"
+          aria-label={tr("mode.select", "Modus wählen")}               // ← Fallback-sicher
+          value={
+            hydrated
+              ? (MODI.some((m) => m.id === activeMode) ? activeMode : "")
+              : ""
+          }
+          onChange={(e) => switchMode(e.target.value as ModeId)}
+          className={styles.select}
+        >
+          <option value="" disabled hidden>
+            {tr("mode.select", "Modus wählen")}
+          </option>
+          {MODI.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
-              {/* Council13 als Modus */}
-              <div className={styles.block}>
-                <button
-                  type="button"
-                  aria-pressed={activeMode === "council"}
-                  className={`${styles.buttonGhostPrimary} ${
-                    activeMode === "council" ? styles.active : ""
-                  }`}
-                  onClick={() => switchMode("council")}
-                  style={{ width: "100%", cursor: "pointer" }}
-                >
-                  <SimbaIcon name="modeCouncil" />
-                  {tr("mode.council", "COUNCIL13")}
-                </button>
-              </div>
+
+              
             </section>
           </div>
         </div>
