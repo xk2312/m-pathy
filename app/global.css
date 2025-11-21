@@ -160,14 +160,18 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 .no-copy { user-select: none !important; -webkit-user-select: none !important; }
 
 /* z-Layer Konvention (für Overlays/Drawer/FAB) */
-:root {
-  --dock-h: 60px; /* fallback dock height */
-  /* --- Safe-area Desktop Default --- */
-  --safe-bottom: 0px; /* Desktop-Fallback; @supports block aktualisiert diesen Wert */
-
-  /* Navigation layer (zwischen Base und Overlays/Dock) */
-  --z-nav: 40;
+/* Page2 Chat – Navigation entkoppeln & angleichen
+   - kein Shrink
+   - gleiche Fläche wie Chat
+   - feine Trennlinie nach unten
+*/
+.page2-shell .mx-auto.flex.items-center.justify-between {
+  background: transparent !important;                 /* Chat-Gradient scheint durch */
+  box-shadow: none !important;                        /* keine „Glow-Band“-Optik mehr */
+  transform: none !important;                         /* Shrink/Scale deaktivieren */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12); /* feine Linie */
 }
+
 
 
 

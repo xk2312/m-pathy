@@ -1605,7 +1605,10 @@ const withGate = (fn: () => void) => {
 /* ⬇︎ NEU: Laufzeit-Gate gegen Mehrfachsendungen */
 const sendingRef = useRef(false);
 return (
-  <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
+  <main
+  className="page2-shell"
+  style={{ ...pageStyle, display: "flex", flexDirection: "column" }}
+>
     {/* === GLOBAL NAVIGATION (wie Subscription) ======================= */}
     <div
   ref={headerRef as any}
@@ -1683,11 +1686,6 @@ return (
             />
           </div>
         )}
-
-
-
-
-
 
                 <div
   ref={convoRef as any}
@@ -1945,14 +1943,22 @@ return (
     overflow-x:hidden;
     overflow-y:hidden;
   }
-  main {
+    main {
     /* Main folgt dem gleichen Schema wie das Root */
     height:100dvh;
     min-height:100dvh;
   }
 
+  /* PAGE2 CHAT – NAVIGATION STATIC & CLEAN */
+  .page2-shell .mx-auto.flex.items-center.justify-between {
+    background: transparent !important;                 /* Chat-Hintergrund */
+    box-shadow: none !important;                        /* Glow entfernen */
+    transform: none !important;                         /* Kein Shrink */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12); /* feine Linie */
+  }
 
   :root { --dock-h: 60px; --fab-z: 90; --saeule-w: 320px; }
+
   .mi-plus-btn { display: none !important; }
 
   /* Dock niemals transformieren im Flight-Modus (Sticky + Transform = Bug) */
