@@ -1607,9 +1607,17 @@ const sendingRef = useRef(false);
 return (
   <main style={{ ...pageStyle, display: "flex", flexDirection: "column" }}>
     {/* === GLOBAL NAVIGATION (wie Subscription) ======================= */}
-    <div ref={headerRef as any}>
-      <Navigation />
-    </div>
+    <div
+  ref={headerRef as any}
+  style={{
+    marginTop: 0,         // ← kritischer Fix A: oberen Drift neutralisieren
+    paddingTop: 0,        // ← Fix B: verhindert doppelte nav-safe-top Kaskade
+    width: "100%",        // sauberer Layer
+  }}
+>
+  <Navigation />
+</div>
+
 
         {/* === BÜHNE ====================================================== */}
     <div
