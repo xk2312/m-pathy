@@ -56,10 +56,45 @@
   --font-sans: 'Inter', 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'SFMono-Regular', Menlo, Consolas, monospace;
   --font-weight-regular: 400;
-  --font-weight-medium: 500;
+   --font-weight-medium: 500;
   --font-weight-bold: 700;
   --letter-spacing-base: .1px;
   --line-height-base: 1.6;
+
+  /* ============================================================
+     Smooth Operator · Sidebar Headline Tokens (H1 / H2 / H3)
+     Purpose: Akkordeon-Köpfe, Gruppenüberschriften, Mikro-Labels
+     ============================================================ */
+
+  /* H1 – Akkordeon-Köpfe (MODIS, EXPERTEN, ACTIONS, SYSTEM, SESSION) */
+  --so-h1-size: 15px;
+  --so-h1-weight: 600;
+  --so-h1-track: 0.04em;
+  --so-h1-color: rgba(226,232,240,0.64);   /* 60–65% FG */
+  --so-h1-pad-top: 12px;
+  --so-h1-pad-bottom: 12px;
+
+  /* H2 – Gruppenüberschriften (z.B. Herzmodi / Systemmodule) */
+  --so-h2-size: 14px;
+  --so-h2-weight: 600;
+  --so-h2-track: 0.015em;
+  --so-h2-color: rgba(226,232,240,0.90);
+  --so-h2-pad-top: 16px;
+  --so-h2-pad-bottom: 4px;
+
+  /* H3 – Micro-Labels / Inline-Descriptions */
+  --so-h3-size: 12px;
+  --so-h3-weight: 500;
+  --so-h3-track: 0.02em;
+  --so-h3-color: rgba(226,232,240,0.45);
+  --so-h3-pad-top: 8px;
+  --so-h3-pad-bottom: 4px;
+
+  /* Divider – Zarte Linien zwischen Akkordeons */
+  --so-divider-color: rgba(255,255,255,0.04);
+  --so-divider-height: 1px;
+  --so-divider-gap: 10px;
+
 
   /* === Z-Index Layers === */
   --z-base: 1;
