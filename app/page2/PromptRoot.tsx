@@ -54,7 +54,7 @@ export function PromptRoot({
     snapshot.layoutVariant === "desktop" &&
     !hasMessages;
 
-  // Dock-Höhe messen und an CSS / State durchreichen
+  // Dock-Höhe messen und setzen
   const updateDockHeight = useCallback(() => {
     try {
       const h = dockRef.current?.offsetHeight || 0;
@@ -65,7 +65,7 @@ export function PromptRoot({
     }
   }, [dockRef, setPadBottom]);
 
-  // Doppelte rAF-Schicht, um Layout-Settling abzuwarten
+  // Doppel-rAF zum Stabilisieren
   const scheduleDockUpdate = useCallback(() => {
     if (typeof requestAnimationFrame === "undefined") {
       updateDockHeight();
@@ -78,7 +78,7 @@ export function PromptRoot({
     });
   }, [updateDockHeight]);
 
-  // Gemeinsame Sendelogik (Enter + Button)
+  // Nachricht senden
   const sendMessage = useCallback(() => {
     if (loading || !input.trim() || sendingRef.current) return;
     sendingRef.current = true;
@@ -113,7 +113,7 @@ export function PromptRoot({
       data-layout={snapshot.layoutVariant}   // "desktop" | "mobile"
       data-thinking={snapshot.isSendBlocked ? "true" : "false"}
     >
-      {/* Doorman Desktop – Quotes über dem Prompt */}
+      {/* Doorman – Quotes */}
       {isDoormanDesktop && (
         <div className="doorman-quotes" aria-hidden="true">
           <p className="doorman-quote-main">
@@ -125,7 +125,7 @@ export function PromptRoot({
         </div>
       )}
 
-      {/* PromptShell – übernimmt Textarea + Send-Button */}
+      {/* Neue Prompt-Zeile – komplett ohne Legacy */}
       <PromptShell
         value={input}
         onChange={setInput}
@@ -137,52 +137,6 @@ export function PromptRoot({
         autoFocus={!hasMessages}
         onHeightChange={scheduleDockUpdate}
       />
-
-      {/* Icons + Status unter Prompt */}
-      <div
-        className="gold-bar"
-        data-compact={compactStatus ? 1 : 0}
-      >
-        <div
-          className="gold-tools"
-          aria-label={t("promptTools") ?? "Prompt tools"}
-        >
-          <button
-            type="button"
-            aria-label={t("comingUpload")}
-            className="gt-btn"
-          >
-            📎
-          </button>
-          <button
-            type="button"
-            aria-label={t("comingVoice")}
-            className="gt-btn"
-          >
-            🎙️
-          </button>
-          <button
-            type="button"
-            aria-label={t("comingFunctions")}
-            className="gt-btn"
-          >
-            ⚙️
-          </button>
-        </div>
-
-        <div className="gold-stats">
-          <div className="stat">
-            <span className="dot" />
-            <span className="label">Mode</span>
-            <strong>{footerStatus.modeLabel || "—"}</strong>
-          </div>
-          <div className="stat">
-            <span className="dot" />
-            <span className="label">Expert</span>
-            <strong>{footerStatus.expertLabel || "—"}</strong>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

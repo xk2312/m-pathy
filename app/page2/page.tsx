@@ -1986,169 +1986,50 @@ return (
   .gold-send:active:not(:disabled){ transform: translateY(0); }
   .gold-send:disabled{ opacity:.45; cursor:default; }
 
-  /* Icons + Status unter Prompt */
-  .gold-bar{
-    width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
-    margin:6px auto 0 auto;
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-  }
-
-  .gold-tools{
-    display:flex;
-    gap:8px;
-  }
-
-  .gt-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    height:32px;
-    min-width:32px;
-    padding:0 12px;
-    border-radius:999px;
-    border:1px solid ${activeTokens.color.glassBorder ?? "rgba(148,163,184,0.55)"};
-    background:${activeTokens.color.glass ?? "rgba(15,23,42,0.85)"};
-    color:${(activeTokens as any).color?.textSubtle ?? activeTokens.color.text};
-    font-weight:600;
-    font-size:11px;
-    letter-spacing:.04em;
-    text-transform:uppercase;
-    cursor:pointer;
-    box-shadow:${(activeTokens as any).shadow?.soft ?? "0 6px 30px rgba(0,0,0,.45)"};
-    transition:
-      transform 120ms cubic-bezier(.2,.6,.2,1),
-      box-shadow 120ms cubic-bezier(.2,.6,.2,1),
-      border-color 120ms cubic-bezier(.2,.6,.2,1),
-      background-color 120ms cubic-bezier(.2,.6,.2,1);
-  }
-  .gt-btn:hover{
-    transform:translateY(-1px);
-    box-shadow:${(activeTokens as any).shadow?.strong ?? "0 10px 40px rgba(0,0,0,.55)"};
-  }
-  .gt-btn:active{
-    transform:translateY(0);
-    box-shadow:none;
-  }
-  .gt-btn:disabled{
-    opacity:.45;
-    box-shadow:none;
-    cursor:default;
-  }
-
-  /* Statuschips: Mode / Expert */
-  .gold-stats {
-    display:flex;
-    gap: 12px;
-    align-items:center;
-    margin-left:12px;
-    min-width:0;
-  }
-  .gold-stats .stat {
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:4px 10px;
-    border-radius:999px;
-    background:${activeTokens.color.glass ?? "rgba(15,23,42,0.88)"};
-    border:1px solid ${activeTokens.color.glassBorder ?? "rgba(148,163,184,0.55)"};
-    backdrop-filter:blur(6px);
-    max-width:100%;
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-  }
-  .gold-stats .dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:${activeTokens.color.cyan ?? "#22d3ee"};
-    box-shadow:0 0 8px rgba(34,211,238,.9);
-    flex:0 0 8px;
-  }
-  .gold-stats .label{
-    opacity:.8;
-    letter-spacing:.04em;
-    font-size:11px;
-    text-transform:uppercase;
-  }
-  .gold-stats strong{
-    font-weight:600;
-  }
-
-
-  /* Fallback für sichtbares Chat-Ende – neutralisiert, da Fußraum via paddingBottom kommt */
+/* Fallback für sichtbares Chat-Ende – neutralisiert, da Fußraum via paddingBottom kommt */
   .chat-end-spacer{
     height: 0;
     pointer-events: none;
   }
-  /* Mobile: Dock edge-to-edge + Safe-Area + Status rechts (übereinander) */
-  @media (max-width: 768px){
+
+    height: 0;
+    pointer-events: none;
+  }
+  /* Mobile: Dock edge-to-edge + Safe-Area */
+@media (max-width: 768px){
+  #m-input-dock.m-bottom-stack{
+    left: max(0px, env(safe-area-inset-left));
+    right: max(0px, env(safe-area-inset-right));
+    bottom: max(0px, env(safe-area-inset-bottom));
+    padding: 8px max(8px, env(safe-area-inset-left))
+             calc(8px + env(safe-area-inset-bottom))
+             max(8px, env(safe-area-inset-right));
+    background: rgba(8,14,18,0.90) !important;
+    border-top: 1px solid rgba(255,255,255,0.10) !important;
+    box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
+    z-index: 90 !important;
+  }
+
+  .gold-prompt-wrap{
+    width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Kompaktmodus bei offenem Keyboard / sehr wenig Höhe */
+  @media (max-height: 560px){
     #m-input-dock.m-bottom-stack{
-      left: max(0px, env(safe-area-inset-left));
-      right: max(0px, env(safe-area-inset-right));
-      bottom: max(0px, env(safe-area-inset-bottom));
-      padding: 8px max(8px, env(safe-area-inset-left))
-               calc(8px + env(safe-area-inset-bottom))
+      padding: 6px max(8px, env(safe-area-inset-left))
+               calc(6px + env(safe-area-inset-bottom))
                max(8px, env(safe-area-inset-right));
-      background: rgba(8,14,18,0.90) !important;
-      border-top: 1px solid rgba(255,255,255,0.10) !important;
-      box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
-      z-index: 90 !important;
     }
-
-
-    .gold-prompt-wrap,
-    .gold-bar{
-      width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
-      margin-left: auto; margin-right: auto;
-    }
-
-    /* Tools links, Mode/Expert rechts übereinander */
-    .gold-bar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      column-gap:10px;
-      flex-wrap:nowrap;
-    }
-    .gold-tools{ flex:0 0 auto; }
-
-    .gold-stats{
-      flex:1 1 auto;
-      display:flex;
-      flex-direction:column;     /* übereinander */
-      align-items:flex-end;      /* rechtsbündig */
+    .gold-prompt-wrap{
+      grid-template-columns: 1fr max-content;
       gap:6px;
-      min-width:160px;
-      max-width:60vw;
-      min-height:0;
     }
-    .gold-stats .stat{
-      padding:3px 8px; gap:6px;
-      max-width:100%;
-    }
-    .gold-stats .dot{ width:6px; height:6px; flex:0 0 6px; }
-    .gold-stats .label{ font-size:12px; opacity:.8; letter-spacing:.01em; }
-    .gold-stats strong{ font-size:12px; font-weight:600; letter-spacing:.01em; }
+  }
+}
 
-    /* Kompaktmodus bei offenem Keyboard / sehr wenig Höhe */
-    .gold-bar[data-compact="1"]{ row-gap:6px; }
-    @media (max-height: 560px){
-      .gold-bar[data-compact="1"] .gold-stats{ display:none; }
-      #m-input-dock.m-bottom-stack{
-        padding: 6px max(8px, env(safe-area-inset-left))
-                 calc(6px + env(safe-area-inset-bottom))
-                 max(8px, env(safe-area-inset-right));
-      }
-      .gold-prompt-wrap{ grid-template-columns: 1fr max-content; gap:6px; }
-    }
-
-    /* Doorman Mobile – Startzustand, ruhiger, ohne Statusleiste */
-    #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="mobile"]{
-      background: rgba(8,14,18,0.94) !important;
-      border-top: 1px solid rgba(255,255,255,0.14) !important;
-      box-shadow: 0 -3px 20px rgba(0,0,0,.60) !important;
-    }
 
     #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="mobile"] .gold-bar{
       display: none;
