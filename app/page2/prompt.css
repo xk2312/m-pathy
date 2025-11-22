@@ -75,12 +75,17 @@
   align-items: center;
   gap: 4px;
   margin-bottom: 18px;
+
+  /* genau die Breite der Prompt-Shell */
   max-width: min(
     var(--chat-stage-max, 820px),
     calc(100vw - var(--chat-stage-pad-inline, 48px) * 2)
   );
+
+  width: 100%;               /* <— NEU: zwingt echte Zentrierung */
   margin-inline: auto;
   text-align: center;
+
 
   color: rgba(226,232,240,0.9);
 
