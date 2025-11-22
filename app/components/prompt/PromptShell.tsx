@@ -1,195 +1,148 @@
-// app/chat/page2/PromptRoot.tsx
 "use client";
 
-import React, { useCallback } from "react";
-import { usePromptStateMachine } from "@/app/chat/hooks/usePromptStateMachine";
-import { PromptShell } from "@/app/components/prompt/PromptShell";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 
-type FooterStatus = {
-  modeLabel?: string;
-  expertLabel?: string;
+export type PromptShellProps = {
+  // Controlled value (kommt aus page2-Container)
+  value: string;
+  onChange: (value: string) => void;
+
+  // Senden – Container kennt den aktuellen value
+  onSubmit: () => void;
+
+  // Blockade-Flags
+  isSendBlocked: boolean;  // z.B. wenn M gerade denkt
+  disabled?: boolean;      // Hard-Lock (Systemfehler o.ä.)
+
+  // Optik & A11y
+  placeholder?: string;
+  ariaLabel?: string;
+  autoFocus?: boolean;
+
+  // Optional: Dock-Height-Update triggern
+  onHeightChange?: () => void;
 };
 
-type PromptRootProps = {
-  t: (key: string) => string;
-  hasMessages: boolean;
-  input: string;
-  setInput: (value: string) => void;
-  loading: boolean;
-  dockRef: React.RefObject<HTMLDivElement>;
-  padBottom: number;
-  setPadBottom: (value: number) => void;
-  compactStatus: boolean;
-  footerStatus: FooterStatus;
-  withGate: (fn: () => void) => void;
-  sendingRef: React.MutableRefObject<boolean>;
-  onSendFromPrompt: (text: string) => void;
-  isMobile: boolean;
-};
+export function PromptShell({
+  value,
+  onChange,
+  onSubmit,
+  isSendBlocked,
+  disabled,
+  placeholder,
+  ariaLabel,
+  autoFocus,
+  onHeightChange,
+}: PromptShellProps) {
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-export function PromptRoot({
-  t,
-  hasMessages,
-  input,
-  setInput,
-  loading,
-  dockRef,
-  padBottom,
-  setPadBottom,
-  compactStatus,
-  footerStatus,
-  withGate,
-  sendingRef,
-  onSendFromPrompt,
-  isMobile,
-}: PromptRootProps) {
-  // 🧠 StateMachine – erkennt Doorman/Chat + Desktop/Mobile
-  const snapshot = usePromptStateMachine({
-    hasThread: hasMessages,
-    isMobile,
-    isThinking: loading,
-  });
+  const effectiveDisabled = !!disabled || !!isSendBlocked;
+  const canSubmit = !effectiveDisabled && value.trim().length > 0;
 
-  const isDoormanDesktop =
-    snapshot.modeVariant === "doorman" &&
-    snapshot.layoutVariant === "desktop" &&
-    !hasMessages;
+  const resizeTextarea = useCallback(() => {
+    const el = textareaRef.current;
+    if (!el) return;
 
-  // Safety, falls footerStatus mal undefined wäre
-  const safeFooterStatus: Required<FooterStatus> = {
-    modeLabel: footerStatus?.modeLabel ?? "—",
-    expertLabel: footerStatus?.expertLabel ?? "—",
+    el.style.height = "auto";
+
+    const viewportH =
+      typeof window !== "undefined" ? window.innerHeight || 0 : 0;
+    const maxHeight = viewportH > 0 ? Math.round(viewportH * 0.3) : 220;
+
+    const target = Math.max(44, Math.min(el.scrollHeight, maxHeight));
+    el.style.height = `${target}px`;
+
+    if (onHeightChange) {
+      onHeightChange();
+    }
+  }, [onHeightChange]);
+
+  useEffect(() => {
+    resizeTextarea();
+  }, [value, resizeTextarea]);
+
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    onChange(e.target.value);
   };
 
-  // Dock-Höhe messen und an CSS / State durchreichen
-  const updateDockHeight = useCallback(() => {
-    try {
-      const h = dockRef.current?.offsetHeight || 0;
-      document.documentElement.style.setProperty("--dock-h", `${h}px`);
-      setPadBottom(h);
-    } catch {
-      /* silent */
-    }
-  }, [dockRef, setPadBottom]);
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    const ev: any = e;
+    const isComposing =
+      !!ev.isComposing || !!ev.nativeEvent?.isComposing;
 
-  // Doppelte rAF-Schicht, um Layout-Settling abzuwarten
-  const scheduleDockUpdate = useCallback(() => {
-    if (typeof requestAnimationFrame === "undefined") {
-      updateDockHeight();
+    if (e.key !== "Enter" || e.shiftKey || e.repeat || isComposing) {
       return;
     }
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        updateDockHeight();
-      });
-    });
-  }, [updateDockHeight]);
 
-  // Gemeinsame Sendelogik (Enter + Button)
-  const sendMessage = useCallback(() => {
-    if (loading || !input.trim() || sendingRef.current) return;
-    sendingRef.current = true;
+    e.preventDefault();
+    if (!canSubmit) return;
 
-    withGate(() => {
-      const dockEl = document.getElementById("m-input-dock");
-      dockEl?.classList.add("send-ripple");
-      void dockEl?.getBoundingClientRect();
+    onSubmit();
+  };
 
-      onSendFromPrompt(input);
-      setInput("");
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!canSubmit) return;
+    onSubmit();
+  };
 
-      updateDockHeight();
-    });
+  const handleClickSend = () => {
+    if (!canSubmit) return;
+    onSubmit();
+  };
 
-    window.setTimeout(() => {
-      sendingRef.current = false;
-    }, 400);
-  }, [input, loading, onSendFromPrompt, setInput, updateDockHeight, withGate, sendingRef]);
+  const resolvedPlaceholder =
+    placeholder ?? "Nachricht an M …";
+
+  const resolvedAriaLabel =
+    ariaLabel ?? "Eingabefeld für Nachrichten an M";
 
   return (
-    <div
-      id="m-input-dock"
-      ref={dockRef as any}
-      className={`m-bottom-stack gold-dock ${
-        hasMessages ? "gold-dock--flight" : "gold-dock--launch"
-      }`}
-      role="group"
-      aria-label="Chat Eingabe & Status"
-      data-pad-bottom={padBottom}
-      data-mode={snapshot.modeVariant}       // "doorman" | "chat"
-      data-layout={snapshot.layoutVariant}   // "desktop" | "mobile"
-      data-thinking={snapshot.isSendBlocked ? "true" : "false"}
+    <form
+      className="gold-prompt-wrap prompt-shell"
+      onSubmit={handleSubmit}
+      aria-label={resolvedAriaLabel}
     >
-      {/* Doorman Desktop – Quotes über dem Prompt */}
-      {isDoormanDesktop && (
-        <div className="doorman-quotes" aria-hidden="true">
-          <p className="doorman-quote-main">
-            Welcome to m-pathy. I am M, first AI, built by 13 AIs.
-          </p>
-          <p className="doorman-quote-sub">
-            13 minds. One field. Absolute clarity.
-          </p>
-        </div>
-      )}
-
-      {/* PromptShell – übernimmt Textarea + Send-Button */}
-      <PromptShell
-        value={input}
-        onChange={setInput}
-        onSubmit={sendMessage}
-        isSendBlocked={snapshot.isSendBlocked}
-        disabled={false}
-        placeholder={t("writeMessage")}
-        ariaLabel={t("writeMessage")}
-        autoFocus={!hasMessages}
-        onHeightChange={scheduleDockUpdate}
+      <textarea
+        ref={textareaRef}
+        id="gold-input"
+        className="gold-textarea"
+        aria-label={resolvedAriaLabel}
+        placeholder={resolvedPlaceholder}
+        value={value}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        rows={1}
+        autoFocus={autoFocus}
+        disabled={effectiveDisabled}
+        spellCheck
+        autoCorrect="on"
+        autoCapitalize="sentences"
       />
 
-      {/* Icons + Status unter Prompt */}
-      <div
-        className="gold-bar"
-        data-compact={compactStatus ? 1 : 0}
+      <button
+        type="submit"
+        className="gold-send prompt-shell-orb"
+        aria-label="Senden"
+        disabled={!canSubmit}
+        onClick={handleClickSend}
       >
-        <div
-          className="gold-tools"
-          aria-label={t("promptTools") ?? "Prompt tools"}
+        <span
+          className="prompt-shell-orb-icon"
+          aria-hidden="true"
         >
-          <button
-            type="button"
-            aria-label={t("comingUpload")}
-            className="gt-btn"
-          >
-            📎
-          </button>
-          <button
-            type="button"
-            aria-label={t("comingVoice")}
-            className="gt-btn"
-          >
-            🎙️
-          </button>
-          <button
-            type="button"
-            aria-label={t("comingFunctions")}
-            className="gt-btn"
-          >
-            ⚙️
-          </button>
-        </div>
-
-        <div className="gold-stats">
-          <div className="stat">
-            <span className="dot" />
-            <span className="label">Mode</span>
-            <strong>{safeFooterStatus.modeLabel}</strong>
-          </div>
-          <div className="stat">
-            <span className="dot" />
-            <span className="label">Expert</span>
-            <strong>{safeFooterStatus.expertLabel}</strong>
-          </div>
-        </div>
-      </div>
-    </div>
+          ➤
+        </span>
+      </button>
+    </form>
   );
 }
+
+export default PromptShell;

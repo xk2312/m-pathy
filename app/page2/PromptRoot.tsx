@@ -1,3 +1,4 @@
+// app/chat/page2/PromptRoot.tsx
 "use client";
 
 import React, { useCallback } from "react";
@@ -54,7 +55,13 @@ export function PromptRoot({
     snapshot.layoutVariant === "desktop" &&
     !hasMessages;
 
-  // Dock-Höhe messen und setzen
+  // Safety, falls footerStatus mal undefined wäre
+  const safeFooterStatus: Required<FooterStatus> = {
+    modeLabel: footerStatus?.modeLabel ?? "—",
+    expertLabel: footerStatus?.expertLabel ?? "—",
+  };
+
+  // Dock-Höhe messen und an CSS / State durchreichen
   const updateDockHeight = useCallback(() => {
     try {
       const h = dockRef.current?.offsetHeight || 0;
@@ -65,7 +72,7 @@ export function PromptRoot({
     }
   }, [dockRef, setPadBottom]);
 
-  // Doppel-rAF zum Stabilisieren
+  // Doppelte rAF-Schicht, um Layout-Settling abzuwarten
   const scheduleDockUpdate = useCallback(() => {
     if (typeof requestAnimationFrame === "undefined") {
       updateDockHeight();
@@ -78,7 +85,7 @@ export function PromptRoot({
     });
   }, [updateDockHeight]);
 
-  // Nachricht senden
+  // Gemeinsame Sendelogik (Enter + Button)
   const sendMessage = useCallback(() => {
     if (loading || !input.trim() || sendingRef.current) return;
     sendingRef.current = true;
@@ -113,7 +120,7 @@ export function PromptRoot({
       data-layout={snapshot.layoutVariant}   // "desktop" | "mobile"
       data-thinking={snapshot.isSendBlocked ? "true" : "false"}
     >
-      {/* Doorman – Quotes */}
+      {/* Doorman Desktop – Quotes über dem Prompt */}
       {isDoormanDesktop && (
         <div className="doorman-quotes" aria-hidden="true">
           <p className="doorman-quote-main">
@@ -125,7 +132,7 @@ export function PromptRoot({
         </div>
       )}
 
-      {/* Neue Prompt-Zeile – komplett ohne Legacy */}
+      {/* PromptShell – übernimmt Textarea + Send-Button */}
       <PromptShell
         value={input}
         onChange={setInput}
@@ -137,6 +144,52 @@ export function PromptRoot({
         autoFocus={!hasMessages}
         onHeightChange={scheduleDockUpdate}
       />
+
+      {/* Icons + Status unter Prompt */}
+      <div
+        className="gold-bar"
+        data-compact={compactStatus ? 1 : 0}
+      >
+        <div
+          className="gold-tools"
+          aria-label={t("promptTools") ?? "Prompt tools"}
+        >
+          <button
+            type="button"
+            aria-label={t("comingUpload")}
+            className="gt-btn"
+          >
+            📎
+          </button>
+          <button
+            type="button"
+            aria-label={t("comingVoice")}
+            className="gt-btn"
+          >
+            🎙️
+          </button>
+          <button
+            type="button"
+            aria-label={t("comingFunctions")}
+            className="gt-btn"
+          >
+            ⚙️
+          </button>
+        </div>
+
+        <div className="gold-stats">
+          <div className="stat">
+            <span className="dot" />
+            <span className="label">Mode</span>
+            <strong>{safeFooterStatus.modeLabel}</strong>
+          </div>
+          <div className="stat">
+            <span className="dot" />
+            <span className="label">Expert</span>
+            <strong>{safeFooterStatus.expertLabel}</strong>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
