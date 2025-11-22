@@ -226,13 +226,3 @@ LINGUA: Keys = ["chat.cta.send"]
 LINGUA: Risk = Drift risk
 LINGUA: TODO_final = remove navigator.lang, use Provider only
 ```
-
----
-
-Wenn du möchtest, kann ich direkt jetzt noch:
-
-* **SPOTY × LINGUA Vergleichstabelle** erstellen
-* **Integration-Protokoll** bauen (wie die beiden Agents zusammenarbeiten)
-* eine **Checkliste für jeden Redesign-Schritt** erzeugen, die SPOTY + LINGUA gleichzeitig prüft
-
-Sag nur ein Wort. 💛

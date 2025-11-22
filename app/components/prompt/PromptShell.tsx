@@ -41,7 +41,6 @@ export function PromptShell({
     const el = textareaRef.current;
     if (!el) return;
 
-    // Höhe zurücksetzen, dann anhand des Inhalts neu setzen
     el.style.height = "auto";
 
     const viewportH =
@@ -51,9 +50,7 @@ export function PromptShell({
     const target = Math.max(44, Math.min(el.scrollHeight, maxHeight));
     el.style.height = `${target}px`;
 
-    if (onHeightChange) {
-      onHeightChange();
-    }
+    if (onHeightChange) onHeightChange();
   }, [onHeightChange]);
 
   useEffect(() => {
@@ -69,21 +66,16 @@ export function PromptShell({
     const isComposing =
       !!ev.isComposing || !!ev.nativeEvent?.isComposing;
 
-    // Enter ohne Shift, ohne Repeat, nicht während IME
-    if (e.key !== "Enter" || e.shiftKey || e.repeat || isComposing) {
-      return;
-    }
+    if (e.key !== "Enter" || e.shiftKey || e.repeat || isComposing) return;
 
     e.preventDefault();
     if (!canSubmit) return;
-
     onSubmit();
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!canSubmit) return;
-
     onSubmit();
   };
 
@@ -92,11 +84,9 @@ export function PromptShell({
     onSubmit();
   };
 
-  const resolvedPlaceholder =
-    placeholder ?? "Nachricht an M …";
-
-  const resolvedAriaLabel =
-    ariaLabel ?? "Eingabefeld für Nachrichten an M";
+  // MEFL + LINGUA: keine Default-Hardstrings
+  const resolvedPlaceholder = placeholder ?? "";
+  const resolvedAriaLabel = ariaLabel ?? "";
 
   return (
     <form
@@ -123,17 +113,12 @@ export function PromptShell({
 
       <button
         type="submit"
-        className="prompt-orb"
-        aria-label="Senden"
+        className="prompt-send"
+        aria-label={resolvedAriaLabel}
         disabled={!canSubmit}
         onClick={handleClickSend}
       >
-        <span
-          className="prompt-orb-icon"
-          aria-hidden="true"
-        >
-          ➤
-        </span>
+        <span className="prompt-send-icon" aria-hidden="true" />
       </button>
     </form>
   );
