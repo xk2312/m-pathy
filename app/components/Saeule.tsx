@@ -754,9 +754,9 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
       const href = URL.createObjectURL(blob);
       const link = document.createElement("a");
 
-      const date = new Date().toISOString().slice(0, 10);
       link.href = href;
-      link.download = `mpathy-chat-${date}.json`;
+      // Kein download-Attribut: Browser/OS öffnen den Speichern-Dialog,
+      // der User wählt Name und Speicherort selbst.
 
       document.body.appendChild(link);
       link.click();
@@ -766,6 +766,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
       // Export-Fehler bleiben still – der User verliert nichts
     }
   };
+
 
   // "erst exportieren" – nur Export, keine Löschung
   const handleDeleteWithExport = () => {
@@ -1301,7 +1302,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                     >
                       {labelActionsDeleteWarning}
                     </p>
-                    <div
+                           <div
                       style={{
                         display: "flex",
                         gap: 8,
@@ -1310,24 +1311,16 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                     >
                       <button
                         type="button"
-                        className={styles.button}
-                        style={{ flex: 1, whiteSpace: "nowrap" }}
+                        className={`${styles.button} ${styles.actionsInlineButton}`}
+                        style={{ flex: 1 }}
                         onClick={handleDeleteWithExport}
                       >
                         {labelActionsDeleteExportFirst}
                       </button>
                       <button
                         type="button"
-                        className={styles.button}
-                        style={{
-                          flex: 1,
-                          whiteSpace: "nowrap",
-                          background: "rgba(220, 38, 38, 0.18)",
-                          borderColor: "rgba(248, 113, 113, 0.85)",
-                          color: "rgba(255, 255, 255, 0.98)",
-                          boxShadow:
-                            "inset 0 0 0 1px rgba(248,113,113,0.55)",
-                        }}
+                        className={`${styles.button} ${styles.actionsInlineButton} ${styles.actionsInlineButtonDanger}`}
+                        style={{ flex: 1 }}
                         onClick={handleDeleteImmediate}
                         aria-label={tr("clearChatAria", "Clear chat")}
                         title={labelClear}
@@ -1337,6 +1330,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                         {labelActionsDeleteNow}
                       </button>
                     </div>
+
                   </div>
                 )}
               </div>
