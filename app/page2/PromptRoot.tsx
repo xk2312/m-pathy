@@ -2,10 +2,8 @@
 "use client";
 
 import React, { useCallback } from "react";
-import "./prompt.css";
 import { usePromptStateMachine } from "@/app/chat/hooks/usePromptStateMachine";
 import { PromptShell } from "@/app/components/prompt/PromptShell";
-
 
 type FooterStatus = {
   modeLabel?: string;
@@ -106,15 +104,23 @@ export function PromptRoot({
     window.setTimeout(() => {
       sendingRef.current = false;
     }, 400);
-  }, [input, loading, onSendFromPrompt, setInput, updateDockHeight, withGate, sendingRef]);
+  }, [
+    input,
+    loading,
+    onSendFromPrompt,
+    setInput,
+    updateDockHeight,
+    withGate,
+    sendingRef,
+  ]);
 
   return (
     <div
       id="m-input-dock"
       ref={dockRef as any}
-      className={`prompt-root ${
-        hasMessages ? "prompt-root--flight" : "prompt-root--launch"
-      }`}
+      className={
+        hasMessages ? "prompt-root prompt-root--flight" : "prompt-root prompt-root--launch"
+      }
       role="group"
       aria-label="Chat Eingabe & Status"
       data-pad-bottom={padBottom}
@@ -122,9 +128,8 @@ export function PromptRoot({
       data-layout={snapshot.layoutVariant}   // "desktop" | "mobile"
       data-thinking={snapshot.isSendBlocked ? "true" : "false"}
     >
-
       {/* Doorman Desktop – Quotes über dem Prompt */}
-            {isDoormanDesktop && (
+      {isDoormanDesktop && (
         <div className="prompt-quotes" aria-hidden="true">
           <p className="prompt-quote-main">
             Welcome to m-pathy. I am M, first AI, built by 13 AIs.
@@ -134,7 +139,6 @@ export function PromptRoot({
           </p>
         </div>
       )}
-
 
       {/* PromptShell – übernimmt Textarea + Send-Button */}
       <PromptShell
@@ -150,10 +154,7 @@ export function PromptRoot({
       />
 
       {/* Icons + Status unter Prompt */}
-            <div
-        className="prompt-bar"
-        data-compact={compactStatus ? 1 : 0}
-      >
+      <div className="prompt-bar" data-compact={compactStatus ? 1 : 0}>
         <div
           className="prompt-tools"
           aria-label={t("promptTools") ?? "Prompt tools"}
@@ -194,7 +195,8 @@ export function PromptRoot({
           </div>
         </div>
       </div>
-
     </div>
   );
 }
+
+export default PromptRoot;

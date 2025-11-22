@@ -50,6 +50,7 @@ export function PromptShell({
     const el = textareaRef.current;
     if (!el) return;
 
+    // Reset Höhe, dann neu berechnen
     el.style.height = "auto";
 
     const viewportH =
@@ -77,6 +78,7 @@ export function PromptShell({
     const isComposing =
       !!ev.isComposing || !!ev.nativeEvent?.isComposing;
 
+    // Enter ohne Shift, ohne Repeat, nicht während IME-Komposition
     if (e.key !== "Enter" || e.shiftKey || e.repeat || isComposing) {
       return;
     }
@@ -87,9 +89,10 @@ export function PromptShell({
     onSubmit();
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!canSubmit) return;
+
     onSubmit();
   };
 
@@ -104,7 +107,7 @@ export function PromptShell({
   const resolvedAriaLabel =
     ariaLabel ?? "Eingabefeld für Nachrichten an M";
 
-   return (
+  return (
     <form
       className="prompt-shell"
       onSubmit={handleSubmit}
@@ -144,6 +147,5 @@ export function PromptShell({
     </form>
   );
 }
-
 
 export default PromptShell;

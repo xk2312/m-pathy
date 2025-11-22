@@ -1,9 +1,12 @@
 /* =======================================================================
-   PROMPT V3 – Raumschiff / Crystal Pill / Token-Driven
-   Klassen: prompt-root, prompt-shell, prompt-input, prompt-orb,
-            prompt-tools, prompt-stats, prompt-quotes, ...
-   Keine gold-* Namen mehr.
+   PROMPT V3 — Raumschiff / Crystal Pill / Token-Driven
+   Keine gold-* Klassen. Keine Legacy. Nur neue V3-Struktur.
    ======================================================================= */
+
+
+/* =============================================================
+   ROOT DOCK (Wrapper unten im Chat)
+   ============================================================= */
 
 #m-input-dock.prompt-root {
   position: sticky;
@@ -11,14 +14,13 @@
   left: 0;
   right: 0;
 
-  padding: 16px 18px 18px;
+  padding: 16px 18px 20px;
   background: linear-gradient(
-    to top,
-    rgba(2,6,23,0.96),
-    rgba(2,6,23,0.85),
-    transparent
-  );
-
+      to top,
+      rgba(2, 6, 23, 0.96),
+      rgba(2, 6, 23, 0.85),
+      transparent
+    );
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 
@@ -26,38 +28,46 @@
   flex-direction: column;
   gap: 12px;
 
+  /* Motion */
   transform: translateY(0);
   transition:
     transform 200ms cubic-bezier(.25,.8,.25,1),
     opacity 180ms ease-out;
 }
 
+/* LAUNCH (kein Thread → Pille etwas angehoben) */
 .prompt-root--launch {
   transform: translateY(-12px);
 }
 
+/* FLIGHT (Thread vorhanden → Pille sitzt normal) */
 .prompt-root--flight {
   transform: translateY(0);
 }
 
+/* Mobile */
 @media (max-width: 768px) {
   #m-input-dock.prompt-root {
     padding: 12px 10px 14px;
   }
 }
 
-/* Doorman-Quotes über der Pille */
+
+/* =============================================================
+   DOORMAN – Quotes über der Pille
+   ============================================================= */
+
 .prompt-quotes {
   display: flex;
   flex-direction: column;
   gap: 4px;
   margin-bottom: 8px;
-
   max-width: 520px;
   margin-inline: auto;
   text-align: center;
 
   color: rgba(226,232,240,0.9);
+
   opacity: 1;
   transform: translateY(0);
   transition:
@@ -77,15 +87,17 @@
   opacity: 0.78;
 }
 
+/* Quotes verschwinden im Chat-Mode */
 #m-input-dock[data-mode="chat"] .prompt-quotes {
   opacity: 0;
   transform: translateY(-6px);
   pointer-events: none;
 }
 
-/* =======================================================================
-   PromptShell – Raumschiff-Pille
-   ======================================================================= */
+
+/* =============================================================
+   PROMPT SHELL — Die Kristall-Pille
+   ============================================================= */
 
 .prompt-shell {
   display: flex;
@@ -114,7 +126,11 @@
   }
 }
 
-/* Textarea */
+
+/* =============================================================
+   TEXTAREA — Input des Users
+   ============================================================= */
+
 .prompt-input {
   flex: 1 1 auto;
   min-width: 0;
@@ -150,11 +166,15 @@
 }
 
 .prompt-input:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: default;
 }
 
-/* Send-Orb */
+
+/* =============================================================
+   SEND-ORB — Der Sende-Kristall
+   ============================================================= */
+
 .prompt-orb {
   flex: 0 0 auto;
 
@@ -211,9 +231,10 @@
   box-shadow: none;
 }
 
-/* =======================================================================
-   Tools + Status
-   ======================================================================= */
+
+/* =============================================================
+   TOOLS + STATUS (Leiste unter der Pille)
+   ============================================================= */
 
 .prompt-bar {
   display: flex;
@@ -275,6 +296,7 @@
   opacity: 0.8;
 }
 
+
 /* Stats rechts */
 .prompt-stats {
   display: inline-flex;
@@ -325,7 +347,11 @@
   }
 }
 
-/* Send-Ripple auf dem Dock */
+
+/* =============================================================
+   SEND-RIPPLE — Energieschock beim Abschicken
+   ============================================================= */
+
 #m-input-dock.send-ripple::after {
   content: "";
   position: absolute;
