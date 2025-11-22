@@ -116,6 +116,7 @@
    ============================================================= */
 
 .prompt-shell {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -137,6 +138,26 @@
     border-color 160ms cubic-bezier(0.2,0.6,0.2,1),
     box-shadow 160ms cubic-bezier(0.2,0.6,0.2,1),
     background-color 160ms cubic-bezier(0.2,0.6,0.2,1);
+}
+
+/* Starship Floor – horizontale Lichtfläche unter der Pille */
+.prompt-shell::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(148,163,184,0.28),
+    rgba(15,23,42,0) 65%
+  );
+  opacity: 0.55;
+  pointer-events: none;
+  filter: blur(18px);
 }
 
 /* Fokuszustand – das ganze Raumschiff leuchtet */
@@ -170,7 +191,6 @@
   padding: 10px 14px;
   border-radius: 999px;
 
-  /* kein eigener Rahmen, kein eigener Hintergrund */
   border: none;
   background: transparent;
 
@@ -201,7 +221,6 @@
   min-width: 48px;
   padding-inline: 14px;
 
-  /* Kein separater „Knopf-Ballon“ mehr */
   border-radius: 999px;
   border: none;
   background: transparent;
@@ -223,7 +242,7 @@
     opacity 120ms linear;
 }
 
-/* Trennlinie links, damit es wie ein Segment derselben Pille wirkt */
+/* Trennlinie links */
 .prompt-orb::before {
   content: "";
   display: inline-block;
@@ -233,11 +252,6 @@
   border-radius: 999px;
   background: rgba(148,163,184,0.6);
   opacity: 0.9;
-}
-
-.prompt-orb-icon {
-  font-size: 0.9rem;
-  transform: translateX(1px);
 }
 
 .prompt-orb:hover:not(:disabled) {
@@ -267,7 +281,7 @@
 
   background: radial-gradient(
     circle at 50% 100%,
-    var(--chat-ripple-fill, rgba(148,163,184,0.25)),
+    rgba(148,163,184,0.25),
     transparent 60%
   );
 
