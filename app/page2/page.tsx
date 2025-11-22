@@ -1957,7 +1957,7 @@ return (
   }
 
 
-        .gold-textarea{
+  .gold-textarea{
     width:100%;
     min-height:44px;
     max-height:var(--dock-cap,30vh);
@@ -1975,7 +1975,6 @@ return (
       border-color 120ms cubic-bezier(.2,.6,.2,1);
     font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
   }
-
   .gold-textarea:is(:hover,:focus,.is-typing){
     box-shadow:
       0 0 0 1px var(--prompt-input-border-focus),
@@ -2010,90 +2009,183 @@ return (
       border-color 120ms cubic-bezier(.2,.6,.2,1),
       background-color 120ms cubic-bezier(.2,.6,.2,1);
   }
-
   .gold-send:hover:not(:disabled){
     transform: translateY(-1px);
     box-shadow: var(--prompt-send-shadow);
     background: var(--prompt-send-bg-hover);
     border-color: var(--prompt-send-border-hover);
   }
-
   .gold-send:active:not(:disabled){
     transform: translateY(0);
     box-shadow:none;
     background: var(--prompt-send-bg-active);
   }
-
   .gold-send:disabled{
     opacity:.45;
     cursor:default;
     box-shadow:none;
   }
 
+  /* Icons + Status unter Prompt */
+  .gold-bar{
+    width:min(1100px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px));
+    margin:6px auto 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
 
-/* Fallback für sichtbares Chat-Ende – neutralisiert, da Fußraum via paddingBottom kommt */
+  .gold-tools{
+    display:flex;
+    gap:8px;
+  }
+
+  .gt-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    height:32px;
+    min-width:32px;
+    padding:0 12px;
+    border-radius:999px;
+    border:1px solid var(--prompt-tools-border);
+    background: var(--prompt-tools-bg);
+    color: var(--prompt-tools-text);
+    font-weight:600;
+    font-size:11px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    cursor:pointer;
+    box-shadow: var(--prompt-tools-shadow);
+    transition:
+      transform 120ms cubic-bezier(.2,.6,.2,1),
+      box-shadow 120ms cubic-bezier(.2,.6,.2,1),
+      border-color 120ms cubic-bezier(.2,.6,.2,1),
+      background-color 120ms cubic-bezier(.2,.6,.2,1);
+  }
+  .gt-btn:hover{
+    transform:translateY(-1px);
+    box-shadow: var(--prompt-tools-shadow-hover);
+  }
+  .gt-btn:active{
+    transform:translateY(0);
+    box-shadow:none;
+  }
+  .gt-btn:disabled{
+    opacity:.45;
+    box-shadow:none;
+    cursor:default;
+  }
+
+  /* Statuschips: Mode / Expert */
+  .gold-stats {
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-left:12px;
+    min-width:0;
+  }
+  .gold-stats .stat {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:4px 10px;
+    border-radius:999px;
+    background: var(--prompt-status-bg);
+    border:1px solid var(--prompt-status-border);
+    backdrop-filter:blur(6px);
+    max-width:100%;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    color: var(--prompt-status-text);
+  }
+  .gold-stats .dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background: var(--prompt-status-dot);
+    box-shadow: var(--prompt-status-dot-glow);
+    flex:0 0 8px;
+  }
+  .gold-stats .label{
+    opacity:.8;
+    letter-spacing:.04em;
+    font-size:11px;
+    text-transform:uppercase;
+    color: var(--prompt-status-label);
+  }
+  .gold-stats strong{
+    font-weight:600;
+  }
+
+  /* Fallback für sichtbares Chat-Ende – neutralisiert, da Fußraum via paddingBottom kommt */
   .chat-end-spacer{
     height: 0;
     pointer-events: none;
   }
 
-    height: 0;
-    pointer-events: none;
-  }
-  /* Mobile: Dock edge-to-edge + Safe-Area */
-@media (max-width: 768px){
-  #m-input-dock.m-bottom-stack{
-    left: max(0px, env(safe-area-inset-left));
-    right: max(0px, env(safe-area-inset-right));
-    bottom: max(0px, env(safe-area-inset-bottom));
-    padding: 8px max(8px, env(safe-area-inset-left))
-             calc(8px + env(safe-area-inset-bottom))
-             max(8px, env(safe-area-inset-right));
-    background: rgba(8,14,18,0.90) !important;
-    border-top: 1px solid rgba(255,255,255,0.10) !important;
-    box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
-    z-index: 90 !important;
-  }
-
-  .gold-prompt-wrap{
-    width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* Kompaktmodus bei offenem Keyboard / sehr wenig Höhe */
-  @media (max-height: 560px){
+  /* Mobile: Dock edge-to-edge + Safe-Area + Status rechts (übereinander) */
+  @media (max-width: 768px){
     #m-input-dock.m-bottom-stack{
-      padding: 6px max(8px, env(safe-area-inset-left))
-               calc(6px + env(safe-area-inset-bottom))
+      left: max(0px, env(safe-area-inset-left));
+      right: max(0px, env(safe-area-inset-right));
+      bottom: max(0px, env(safe-area-inset-bottom));
+      padding: 8px max(8px, env(safe-area-inset-left))
+               calc(8px + env(safe-area-inset-bottom))
                max(8px, env(safe-area-inset-right));
+      background: rgba(8,14,18,0.90) !important;
+      border-top: 1px solid rgba(255,255,255,0.10) !important;
+      box-shadow: 0 -2px 14px rgba(0,0,0,.55) !important;
+      z-index: 90 !important;
     }
-    .gold-prompt-wrap{
-      grid-template-columns: 1fr max-content;
+    .gold-prompt-wrap,
+    .gold-bar{
+      width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 16px);
+      margin-left: auto; margin-right: auto;
+    }
+
+    /* Tools links, Mode/Expert rechts übereinander */
+    .gold-bar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      column-gap:10px;
+      flex-wrap:nowrap;
+    }
+    .gold-tools{ flex:0 0 auto; }
+
+    .gold-stats{
+      flex:1 1 auto;
+      display:flex;
+      flex-direction:column;     /* übereinander */
+      align-items:flex-end;      /* rechtsbündig */
       gap:6px;
+      min-width:160px;
+      max-width:60vw;
+      min-height:0;
+    }
+    .gold-stats .stat{
+      padding:3px 8px; gap:6px;
+      max-width:100%;
+    }
+    .gold-stats .dot{ width:6px; height:6px; flex:0 0 6px; }
+    .gold-stats .label{ font-size:12px; opacity:.8; letter-spacing:.01em; }
+    .gold-stats strong{ font-size:12px; font-weight:600; letter-spacing:.01em; }
+
+    /* Kompaktmodus bei offenem Keyboard / sehr wenig Höhe */
+    .gold-bar[data-compact="1"]{ row-gap:6px; }
+    @media (max-height: 560px){
+      .gold-bar[data-compact="1"] .gold-stats{ display:none; }
+      #m-input-dock.m-bottom-stack{
+        padding: 6px max(8px, env(safe-area-inset-left))
+                 calc(6px + env(safe-area-inset-bottom))
+                 max(8px, env(safe-area-inset-right));
+      }
+      .gold-prompt-wrap{ grid-template-columns: 1fr max-content; gap:6px; }
     }
   }
-}
-
-
-    #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="mobile"] .gold-bar{
-      display: none;
-    }
-
-    #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="mobile"] .gold-textarea{
-      border-radius: 999px;
-      min-height: 52px;
-      padding-top: 12px;
-      padding-bottom: 12px;
-    }
-
-    #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="mobile"] .gold-send{
-      border-radius: 999px;
-      min-height: 52px;
-      padding-inline: 20px;
-    }
-  }
-
 
   /* Ripple / Inertia */
   .gold-dock.send-ripple{
@@ -2101,9 +2193,21 @@ return (
   }
   @keyframes gp-inertia{ 0%{transform:translateY(0)} 55%{transform:translateY(-3px)} 100%{transform:translateY(0)} }
   @keyframes gp-ripple{
-    0%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
-    15%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 1000px rgba(34,211,238,0.08); }
-    100%{ box-shadow: 0 -4px 18px rgba(0,0,0,.40), inset 0 0 0 0 rgba(34,211,238,0); }
+    0%{
+      box-shadow:
+        0 -4px 18px rgba(0,0,0,.40),
+        inset 0 0 0 0 rgba(148,163,184,0);
+    }
+    15%{
+      box-shadow:
+        0 -4px 18px rgba(0,0,0,.40),
+        inset 0 0 0 1000px var(--prompt-ripple-fill);
+    }
+    100%{
+      box-shadow:
+        0 -4px 18px rgba(0,0,0,.40),
+        inset 0 0 0 0 rgba(148,163,184,0);
+    }
   }
 
   /* Entkopplung von Legacy input-bar.css */
@@ -2137,17 +2241,12 @@ return (
       min-height: 100svh;   /* genug Höhe, aber elastisch */
       overflow: hidden;     /* Scroll bleibt delegiert an rechts */
     }
-     /* iOS Auto-Zoom vermeiden */
+    /* iOS Auto-Zoom vermeiden */
     #gold-input, .gold-textarea{ font-size:16px; }
   }
 
   /* ============================================================
      DOORMAN DESKTOP – Raumschiff-Prompt
-     Nur aktiv wenn:
-       - Launch-State (gold-dock--launch)
-       - Desktop (min-width: 769px)
-       - Mode = doorman
-       - Layout = desktop
      ============================================================ */
   @media (min-width: 769px){
     #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="desktop"]{
@@ -2204,7 +2303,8 @@ return (
       opacity: 1;
     }
   }
-      /* ============================================================
+
+  /* ============================================================
      PromptShell – Orb & Thinking-Motion
      ============================================================ */
 
@@ -2240,7 +2340,7 @@ return (
     }
   }
 
-      /* Doorman-Quotes – zentral über der Pille */
+  /* Doorman-Quotes – zentral über der Pille */
   .doorman-quotes{
     text-align: center;
     margin: 0 auto 18px auto;
@@ -2266,4 +2366,3 @@ return (
 </main>
 );
 }
-
