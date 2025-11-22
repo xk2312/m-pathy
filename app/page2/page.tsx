@@ -37,11 +37,13 @@ import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
 import StickyFab from "../components/StickyFab";
+import { PromptRoot } from "./PromptRoot";
 import { t } from "@/lib/i18n";
-import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher"; // ← NEU
+import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import { useMobileViewport } from "@/lib/useMobileViewport";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
 import { loadChat, saveChat, clearChat,initChatStorage, makeClearHandler, hardClearChat  } from "@/lib/chatStorage";
+
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
 const persist = {
@@ -1738,174 +1740,27 @@ return (
             <div ref={endRef} style={{ height: 1 }} aria-hidden="true" />
           </div>
 
-                    {/* === BOTTOM STACK: Prompt, dann Icons + Status ================= */}
-          <div
-            id="m-input-dock"
-            ref={dockRef as any}
-            className={`m-bottom-stack gold-dock ${
-              hasMessages ? "gold-dock--flight" : "gold-dock--launch"
-            }`}
-            role="group"
-            aria-label="Chat Eingabe & Status"
-          >
-
-
-            <div className="gold-prompt-wrap">
-              <textarea
-                id="gold-input"
-                className="gold-textarea"
-                aria-label={t("writeMessage")}
-                placeholder={t("writeMessage")}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onFocus={() => {
-                  if (typeof requestAnimationFrame !== "undefined") {
-                    requestAnimationFrame(() =>
-                      requestAnimationFrame(() => {
-                        const h = dockRef.current?.offsetHeight || 0;
-                        document.documentElement.style.setProperty("--dock-h", `${h}px`);
-                        setPadBottom(h);
-                      })
-                    );
-                  }
-                }}
-                onInput={(e) => {
-                  const ta = e.currentTarget;
-                  ta.style.height = "auto";
-                  const cap = Math.min(
-                    ta.scrollHeight,
-                    Math.round((window?.innerHeight || 0) * 0.30)
-                  );
-                  ta.style.height = `${Math.max(44, cap)}px`;
-                  ta.classList.add("is-typing");
-
-                  if (typeof requestAnimationFrame !== "undefined") {
-                    requestAnimationFrame(() =>
-                      requestAnimationFrame(() => {
-                        const h = dockRef.current?.offsetHeight || 0;
-                        document.documentElement.style.setProperty("--dock-h", `${h}px`);
-                        setPadBottom(h);
-                      })
-                    );
-                  }
-                }}
-                onBlur={(e) => {
-                  const ta = e.currentTarget;
-                  ta.classList.remove("is-typing");
-                  ta.style.height = "44px";
-                  const h = dockRef.current?.offsetHeight || 0;
-                  document.documentElement.style.setProperty("--dock-h", `${h}px`);
-                  setPadBottom(h);
-                }}
-                onKeyDown={(e) => {
-                  const ev: any = e;
-                  const isComposing = !!ev.isComposing || !!ev.nativeEvent?.isComposing;
-
-                  if (
-                    e.key !== "Enter" ||
-                    e.shiftKey ||
-                    e.repeat ||
-                    isComposing ||
-                    loading ||
-                    !input.trim()
-                  ) return;
-
-                  e.preventDefault();
-
-                  if (sendingRef.current) return;
-                  sendingRef.current = true;
-
-                  withGate(() => {
-                    const dockEl = document.getElementById("m-input-dock");
-                    dockEl?.classList.add("send-ripple");
-                    void dockEl?.getBoundingClientRect();
-
-                    onSendFromPrompt(input);
-                    setInput("");
-
-                    const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-                    if (ta) {
-                      ta.style.height = "44px";
-                      ta.classList.remove("is-typing");
-                    }
-
-                    const h = dockRef.current?.offsetHeight || 0;
-                    document.documentElement.style.setProperty("--dock-h", `${h}px`);
-                    setPadBottom(h);
-                  });
-
-                  setTimeout(() => { sendingRef.current = false; }, 400);
-                }}
-                rows={1}
-                spellCheck
-                autoCorrect="on"
-                autoCapitalize="sentences"
-              />
-
-              <button
-                type="button"
-                className="gold-send"
-                aria-label={t("send")}
-                disabled={loading || !input.trim()}
-                onClick={() => {
-                  if (loading || !input.trim() || sendingRef.current) return;
-                  sendingRef.current = true;
-
-                  withGate(() => {
-                    const dockEl = document.getElementById("m-input-dock");
-                    dockEl?.classList.add("send-ripple");
-                    void dockEl?.getBoundingClientRect();
-
-                    onSendFromPrompt(input);
-                    setInput("");
-
-                    const ta = document.getElementById("gold-input") as HTMLTextAreaElement | null;
-                    if (ta) {
-                      ta.style.height = "44px";
-                      ta.classList.remove("is-typing");
-                    }
-
-                    const h = dockRef.current?.offsetHeight || 0;
-                    document.documentElement.style.setProperty("--dock-h", `${h}px`);
-                    setPadBottom(h);
-                  });
-
-                  setTimeout(() => { sendingRef.current = false; }, 400);
-                }}
-              >
-                {t("send")}
-              </button>
-            </div>
-
-            <div
-              className="gold-bar"
-              data-compact={compactStatus ? 1 : 0}
-            >
-              <div className="gold-tools" aria-label={t('promptTools') ?? 'Prompt tools'}>
-                <button type="button" aria-label={t('comingUpload')} className="gt-btn">📎</button>
-                <button type="button" aria-label={t('comingVoice')} className="gt-btn">🎙️</button>
-                <button type="button" aria-label={t('comingFunctions')} className="gt-btn">⚙️</button>
-              </div>
-
-              <div className="gold-stats">
-                <div className="stat">
-                  <span className="dot" />
-                  <span className="label">Mode</span>
-                  <strong>{footerStatus.modeLabel || "—"}</strong>
-                </div>
-                <div className="stat">
-                  <span className="dot" />
-                  <span className="label">Expert</span>
-                  <strong>{footerStatus.expertLabel || "—"}</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* === /BOTTOM STACK ========================================= */}
+            {/* === BOTTOM STACK: Prompt, dann Icons + Status ================= */}
+            <PromptRoot
+              t={t}
+              hasMessages={hasMessages}
+              input={input}
+              setInput={setInput}
+              loading={loading}
+              dockRef={dockRef}
+              padBottom={padBottom}
+              setPadBottom={setPadBottom}
+              compactStatus={compactStatus}
+              footerStatus={footerStatus}
+              withGate={withGate}
+              sendingRef={sendingRef}
+              onSendFromPrompt={onSendFromPrompt}
+              isMobile={isMobile}          // ⬅️ neu
+            />
+            {/* === /BOTTOM STACK ========================================= */}
         </div> {/* /Scroller */}
       </section>   {/* /Grid */}
     </div>     {/* /Bühne */}
-
 
     {/* Mobile Overlay / Onboarding */}
     {isMobile && (
@@ -2232,7 +2087,32 @@ return (
       }
       .gold-prompt-wrap{ grid-template-columns: 1fr max-content; gap:6px; }
     }
+
+    /* Doorman Mobile – Startzustand, ruhiger, ohne Statusleiste */
+    #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="mobile"]{
+      background: rgba(8,14,18,0.94) !important;
+      border-top: 1px solid rgba(255,255,255,0.14) !important;
+      box-shadow: 0 -3px 20px rgba(0,0,0,.60) !important;
+    }
+
+    #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="mobile"] .gold-bar{
+      display: none;
+    }
+
+    #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="mobile"] .gold-textarea{
+      border-radius: 999px;
+      min-height: 52px;
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
+    #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="mobile"] .gold-send{
+      border-radius: 999px;
+      min-height: 52px;
+      padding-inline: 20px;
+    }
   }
+
 
   /* Ripple / Inertia */
   .gold-dock.send-ripple{
@@ -2276,10 +2156,133 @@ return (
       min-height: 100svh;   /* genug Höhe, aber elastisch */
       overflow: hidden;     /* Scroll bleibt delegiert an rechts */
     }
-    /* iOS Auto-Zoom vermeiden */
+     /* iOS Auto-Zoom vermeiden */
     #gold-input, .gold-textarea{ font-size:16px; }
   }
+
+  /* ============================================================
+     DOORMAN DESKTOP – Raumschiff-Prompt
+     Nur aktiv wenn:
+       - Launch-State (gold-dock--launch)
+       - Desktop (min-width: 769px)
+       - Mode = doorman
+       - Layout = desktop
+     ============================================================ */
+  @media (min-width: 769px){
+    #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="desktop"]{
+      top: 50%;
+      bottom: auto;
+      left: var(--saeule-w, 320px);
+      right: 0;
+      transform: translateY(-50%);
+      background: transparent;
+      border-top: none;
+      box-shadow: none;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    /* Pille zentral im Cockpit, leicht breiter */
+    #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="desktop"] .gold-prompt-wrap{
+      width: min(
+        720px,
+        calc(100vw - var(--saeule-w, 320px) - 64px)
+      );
+      margin-inline: 0;
+      animation: doorman-breath 2200ms ease-in-out infinite alternate;
+    }
+
+    /* Status-Leiste unten im Doorman-Desktop ausblenden */
+    #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="desktop"] .gold-bar{
+      display: none;
+    }
+
+    /* Textarea + Button als Raumschiff-Pille */
+    #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="desktop"] .gold-textarea{
+      border-radius: 999px;
+      min-height: 56px;
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+
+    #m-input-dock.gold-dock--launch[data-mode="doorman"][data-layout="desktop"] .gold-send{
+      border-radius: 999px;
+      min-height: 56px;
+      padding-inline: 24px;
+    }
+  }
+
+  /* Sanfte „Breathing“-Animation für die Doorman-Pille */
+  @keyframes doorman-breath{
+    0%{
+      transform: translateY(0);
+      opacity: 0.98;
+    }
+    100%{
+      transform: translateY(-2px);
+      opacity: 1;
+    }
+  }
+      /* ============================================================
+     PromptShell – Orb & Thinking-Motion
+     ============================================================ */
+
+  /* Basis-Orb: runde Taste, leicht gewichtiger als Text */
+  .prompt-shell-orb{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    min-width: 44px;
+    padding-inline: 16px;
+  }
+
+  .prompt-shell-orb-icon{
+    display: inline-block;
+    font-size: 16px;
+    transform-origin: center;
+    transition: transform 140ms ease-out, opacity 140ms ease-out;
+  }
+
+  /* Thinking: sanftes Rotieren des Icons, nicht des ganzen Buttons */
+  #m-input-dock[data-thinking="true"] .prompt-shell-orb-icon{
+    animation: prompt-orb-spin 820ms linear infinite;
+    opacity: 0.96;
+  }
+
+  @keyframes prompt-orb-spin{
+    0%{
+      transform: rotate(0deg);
+    }
+    100%{
+      transform: rotate(360deg);
+    }
+  }
+
+      /* Doorman-Quotes – zentral über der Pille */
+  .doorman-quotes{
+    text-align: center;
+    margin: 0 auto 18px auto;
+    max-width: 720px;
+    padding-inline: 8px;
+    pointer-events: none;
+  }
+  .doorman-quote-main{
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.96;
+    margin: 0 0 6px 0;
+  }
+  .doorman-quote-sub{
+    font-size: 14px;
+    opacity: 0.82;
+    margin: 0;
+  }
+
 `}</style>
 </main>
 );
 }
+
