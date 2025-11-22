@@ -819,4 +819,50 @@
   --chat-ripple-fill: rgba(148, 163, 184, 0.18);
 }
 
+/* =====================================================================
+   PROMPT V3 – Raumschiff-Pille (Token Driven)
+   Quelle der Wahrheit für Input, Orb, Dock & Motion
+   ===================================================================== */
+:root {
+  /* Pille – Grundform */
+  --prompt-bg: rgba(255,255,255,0.06);
+  --prompt-border: rgba(255,255,255,0.18);
+  --prompt-radius: 999px;
+  --prompt-pad-y: 14px;
+  --prompt-pad-x: 18px;
+
+  /* Text */
+  --prompt-text: #e6f0f3;
+  --prompt-placeholder: rgba(230,240,243,0.45);
+
+  /* Orb (Send Button) */
+  --prompt-orb-size: 36px;
+  --prompt-orb-bg: rgba(15,23,42,0.92);
+  --prompt-orb-bg-hover: rgba(15,23,42,0.98);
+  --prompt-orb-bg-active: rgba(10,16,26,0.96);
+  --prompt-orb-border: rgba(148,163,184,0.60);
+  --prompt-orb-border-hover: rgba(226,232,240,0.95);
+  --prompt-orb-icon: #e6f0f3;
+  --prompt-orb-shadow: 0 8px 32px rgba(0,0,0,0.65);
+
+  /* Tools (📎 / ⚙️ / 🎙️) */
+  --prompt-tools-bg: rgba(15,23,42,0.85);
+  --prompt-tools-border: rgba(148,163,184,0.55);
+  --prompt-tools-icon: rgba(226,232,240,0.88);
+  --prompt-tools-shadow: 0 6px 30px rgba(0,0,0,0.45);
+
+  /* Dock – Launch / Flight Heights */
+  --prompt-dock-bottom-desktop: 48px;
+  --prompt-dock-bottom-mobile: 28px;
+
+  /* Launch/Flight Motion */
+  --prompt-flight-translate-y: -72px;
+  --prompt-launch-translate-y: 0;
+  --prompt-motion: 220ms cubic-bezier(.25,.8,.25,1);
+
+  /* Focus / A11y */
+  --prompt-focus-ring: 0 0 0 2px rgba(226,232,240,0.55);
+}
+
+
 
