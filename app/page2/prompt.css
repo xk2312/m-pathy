@@ -31,10 +31,26 @@
     opacity 180ms ease-out;
 }
 
-/* LAUNCH (kein Thread → Pille leicht angehoben) */
-.prompt-root--launch {
-  transform: translateY(-8px);
+/* Starship Horizon – feine Lichtkante über dem Dock */
+#m-input-dock.prompt-root::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -18px);
+  width: min(960px, 86vw);
+  height: 1px;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle at center,
+    rgba(148,163,184,0.9),
+    rgba(148,163,184,0)
+  );
+  opacity: 0.55;
+  pointer-events: none;
+  filter: blur(4px);
 }
+
 
 /* FLIGHT (Thread vorhanden → Pille sitzt normal) */
 .prompt-root--flight {
