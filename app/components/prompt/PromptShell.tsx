@@ -10,23 +10,14 @@ import React, {
 } from "react";
 
 export type PromptShellProps = {
-  // Controlled value (kommt aus page2-Container)
   value: string;
   onChange: (value: string) => void;
-
-  // Senden – Container kennt den aktuellen value
   onSubmit: () => void;
-
-  // Blockade-Flags
-  isSendBlocked: boolean;  // z.B. wenn M gerade denkt
-  disabled?: boolean;      // Hard-Lock (Systemfehler o.ä.)
-
-  // Optik & A11y
+  isSendBlocked: boolean;
+  disabled?: boolean;
   placeholder?: string;
   ariaLabel?: string;
   autoFocus?: boolean;
-
-  // Optional: Dock-Height-Update triggern
   onHeightChange?: () => void;
 };
 
@@ -50,7 +41,7 @@ export function PromptShell({
     const el = textareaRef.current;
     if (!el) return;
 
-    // Reset Höhe, dann neu berechnen
+    // Höhe zurücksetzen, dann anhand des Inhalts neu setzen
     el.style.height = "auto";
 
     const viewportH =
@@ -78,7 +69,7 @@ export function PromptShell({
     const isComposing =
       !!ev.isComposing || !!ev.nativeEvent?.isComposing;
 
-    // Enter ohne Shift, ohne Repeat, nicht während IME-Komposition
+    // Enter ohne Shift, ohne Repeat, nicht während IME
     if (e.key !== "Enter" || e.shiftKey || e.repeat || isComposing) {
       return;
     }

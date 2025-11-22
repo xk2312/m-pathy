@@ -4,6 +4,7 @@
 import React, { useCallback } from "react";
 import { usePromptStateMachine } from "@/app/chat/hooks/usePromptStateMachine";
 import { PromptShell } from "@/app/components/prompt/PromptShell";
+import "./prompt.css";
 
 type FooterStatus = {
   modeLabel?: string;
@@ -43,7 +44,6 @@ export function PromptRoot({
   onSendFromPrompt,
   isMobile,
 }: PromptRootProps) {
-  // 🧠 StateMachine – erkennt Doorman/Chat + Desktop/Mobile
   const snapshot = usePromptStateMachine({
     hasThread: hasMessages,
     isMobile,
@@ -55,24 +55,21 @@ export function PromptRoot({
     snapshot.layoutVariant === "desktop" &&
     !hasMessages;
 
-  // Safety, falls footerStatus mal undefined wäre
   const safeFooterStatus: Required<FooterStatus> = {
     modeLabel: footerStatus?.modeLabel ?? "—",
     expertLabel: footerStatus?.expertLabel ?? "—",
   };
 
-  // Dock-Höhe messen und an CSS / State durchreichen
   const updateDockHeight = useCallback(() => {
     try {
       const h = dockRef.current?.offsetHeight || 0;
       document.documentElement.style.setProperty("--dock-h", `${h}px`);
       setPadBottom(h);
     } catch {
-      /* silent */
+      /* ignore */
     }
   }, [dockRef, setPadBottom]);
 
-  // Doppelte rAF-Schicht, um Layout-Settling abzuwarten
   const scheduleDockUpdate = useCallback(() => {
     if (typeof requestAnimationFrame === "undefined") {
       updateDockHeight();
@@ -85,7 +82,6 @@ export function PromptRoot({
     });
   }, [updateDockHeight]);
 
-  // Gemeinsame Sendelogik (Enter + Button)
   const sendMessage = useCallback(() => {
     if (loading || !input.trim() || sendingRef.current) return;
     sendingRef.current = true;
@@ -119,16 +115,17 @@ export function PromptRoot({
       id="m-input-dock"
       ref={dockRef as any}
       className={
-        hasMessages ? "prompt-root prompt-root--flight" : "prompt-root prompt-root--launch"
+        hasMessages
+          ? "prompt-root prompt-root--flight"
+          : "prompt-root prompt-root--launch"
       }
       role="group"
       aria-label="Chat Eingabe & Status"
       data-pad-bottom={padBottom}
-      data-mode={snapshot.modeVariant}       // "doorman" | "chat"
-      data-layout={snapshot.layoutVariant}   // "desktop" | "mobile"
+      data-mode={snapshot.modeVariant}
+      data-layout={snapshot.layoutVariant}
       data-thinking={snapshot.isSendBlocked ? "true" : "false"}
     >
-      {/* Doorman Desktop – Quotes über dem Prompt */}
       {isDoormanDesktop && (
         <div className="prompt-quotes" aria-hidden="true">
           <p className="prompt-quote-main">
@@ -140,7 +137,6 @@ export function PromptRoot({
         </div>
       )}
 
-      {/* PromptShell – übernimmt Textarea + Send-Button */}
       <PromptShell
         value={input}
         onChange={setInput}
@@ -153,7 +149,6 @@ export function PromptRoot({
         onHeightChange={scheduleDockUpdate}
       />
 
-      {/* Icons + Status unter Prompt */}
       <div className="prompt-bar" data-compact={compactStatus ? 1 : 0}>
         <div
           className="prompt-tools"
