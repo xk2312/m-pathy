@@ -520,21 +520,21 @@ useEffect(() => {
     "actions.export.help",
     "Speichere deinen Chat als Datei."
   );
+  const labelActionsExportCsv = tr("actions.export.csv", "CSV");
+  const labelActionsExportJson = tr("actions.export.json", "JSON");
+
   const labelActionsDeleteTitle = tr("actions.delete.title", "Chat löschen");
   const labelActionsDeleteWarning = tr(
     "actions.delete.warning",
-    "Alle Nachrichten werden gelöscht."
-  );
-  const labelActionsDeleteExportFirst = tr(
-    "actions.delete.exportFirst",
-    "erst exportieren"
+    "Das löscht den gesamten Chat für immer. CSV oder JSON wählen, um den Chat bei Ihnen zu archivieren."
   );
   const labelActionsDeleteNow = tr(
     "actions.delete.now",
-    "löschen"
+    "LÖSCHEN"
   );
 
   const labelOnboarding = tr("mode.onboarding", "ONBOARDING");
+
   const labelDefault = tr("mode.default", "M · Default");
   const labelModeSelect = tr("mode.select", "Modus wählen");
   const labelExpertSelect = tr("expert.select", "Experten wählen");
@@ -743,20 +743,57 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
   setSendingExpert(null);
 }
 
-  // Exportiert den aktuellen Chat-Thread als JSON (System-Speicherfenster)
-   const exportThread = () => {
+  // Exportiert den aktuellen Chat-Thread als JSON oder CSV
+  const exportThread = (format: "json" | "csv") => {
     try {
       const raw =
         localStorage.getItem("mpathy:thread:default") ||
         "[]";
 
-      const blob = new Blob([raw], { type: "application/json" });
+      let blob: Blob;
+      let extension: "json" | "csv" = format;
+
+      if (format === "csv") {
+        let parsed: unknown;
+        try {
+          parsed = JSON.parse(raw);
+        } catch {
+          parsed = [];
+        }
+
+        const rows: string[] = [];
+        rows.push("index,role,content");
+
+        if (Array.isArray(parsed)) {
+          parsed.forEach((entry, index) => {
+            const anyEntry = entry as any;
+            const role =
+              typeof anyEntry?.role === "string" ? anyEntry.role : "";
+            const contentRaw =
+              typeof anyEntry?.content === "string"
+                ? anyEntry.content
+                : JSON.stringify(anyEntry?.content ?? "");
+            const safeContent = String(contentRaw).replace(/"/g, '""');
+            rows.push(
+              `${index},"${role}","${safeContent}"`
+            );
+          });
+        }
+
+        const csv = rows.join("\n");
+        blob = new Blob([csv], {
+          type: "text/csv;charset=utf-8",
+        });
+      } else {
+        blob = new Blob([raw], { type: "application/json" });
+      }
+
       const href = URL.createObjectURL(blob);
       const link = document.createElement("a");
-
       const date = new Date().toISOString().slice(0, 10);
+
       link.href = href;
-      link.download = `mpathy-chat-${date}.json`;
+      link.download = `mpathy-chat-${date}.${extension}`;
 
       document.body.appendChild(link);
       link.click();
@@ -767,16 +804,11 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
     }
   };
 
-
-  // "erst exportieren" – nur Export, keine Löschung
-  const handleDeleteWithExport = () => {
-    exportThread();
-  };
-
-  // "löschen" – alles zurück auf Flow / neutral
+  // "LÖSCHEN" – alles zurück auf Flow / neutral
   const handleDeleteImmediate = () => {
     try {
       localStorage.removeItem("mpathy:thread:default");
+
     } catch {}
     try {
       localStorage.removeItem("expert");
@@ -1251,23 +1283,44 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                     >
                       {labelActionsExportHelp}
                     </p>
-                    <button
-                      type="button"
-                      className={styles.button}
-                      style={{ width: "100%", cursor: "pointer" }}
-                      onClick={exportThread}
-                      aria-label={tr("exportAria", "Export thread")}
-                      title={labelExport}
-                      data-test="btn-export-thread"
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 8,
+                        alignItems: "stretch",
+                      }}
                     >
-                      <SimbaIcon name="export" />
-                      {labelExport}
-                    </button>
+                      <button
+                        type="button"
+                        className={`${styles.button} ${styles.actionsInlineButton}`}
+                        style={{ flex: 1 }}
+                        onClick={() => exportThread("csv")}
+                        aria-label={tr("exportCsvAria", "Export thread as CSV")}
+                        title={labelActionsExportCsv}
+                        data-test="btn-export-thread-csv"
+                      >
+                        <SimbaIcon name="export" />
+                        {labelActionsExportCsv}
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.button} ${styles.actionsInlineButton}`}
+                        style={{ flex: 1 }}
+                        onClick={() => exportThread("json")}
+                        aria-label={tr("exportJsonAria", "Export thread as JSON")}
+                        title={labelActionsExportJson}
+                        data-test="btn-export-thread-json"
+                      >
+                        <SimbaIcon name="export" />
+                        {labelActionsExportJson}
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
 
-              {/* Chat löschen-Modul */}
+
+                            {/* Chat löschen-Modul */}
               <div className={styles.block}>
                 <button
                   type="button"
@@ -1298,42 +1351,30 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                       style={{
                         fontSize: 12,
                         opacity: 0.9,
-                      }}
-                    >
-                      {labelActionsDeleteWarning}
-                    </p>
-                           <div
-                      style={{
                         display: "flex",
-                        gap: 8,
-                        alignItems: "stretch",
+                        alignItems: "flex-start",
+                        gap: 6,
                       }}
                     >
-                      <button
-                        type="button"
-                        className={`${styles.button} ${styles.actionsInlineButton}`}
-                        style={{ flex: 1 }}
-                        onClick={handleDeleteWithExport}
-                      >
-                        {labelActionsDeleteExportFirst}
-                      </button>
-                      <button
-                        type="button"
-                        className={`${styles.button} ${styles.actionsInlineButton} ${styles.actionsInlineButtonDanger}`}
-                        style={{ flex: 1 }}
-                        onClick={handleDeleteImmediate}
-                        aria-label={tr("clearChatAria", "Clear chat")}
-                        title={labelClear}
-                        role="button"
-                        data-test="btn-clear-chat"
-                      >
-                        {labelActionsDeleteNow}
-                      </button>
-                    </div>
-
+                      <span aria-hidden="true">⚠️</span>
+                      <span>{labelActionsDeleteWarning}</span>
+                    </p>
+                    <button
+                      type="button"
+                      className={`${styles.button} ${styles.actionsInlineButton} ${styles.actionsInlineButtonDanger}`}
+                      style={{ alignSelf: "flex-start" }}
+                      onClick={handleDeleteImmediate}
+                      aria-label={tr("clearChatAria", "Clear chat")}
+                      title={labelActionsDeleteNow}
+                      role="button"
+                      data-test="btn-clear-chat"
+                    >
+                      {labelActionsDeleteNow}
+                    </button>
                   </div>
                 )}
               </div>
+
             </section>
 
           </div>
