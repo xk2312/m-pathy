@@ -1778,7 +1778,7 @@ return (
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
 
 
-    {/* === Golden Prompt — Styles ==================================== */}
+   { /* === Golden Prompt — Styles ==================================== */}
 <style jsx global>{`
   html, body {
     background:#000;
