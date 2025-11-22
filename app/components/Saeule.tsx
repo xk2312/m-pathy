@@ -491,9 +491,12 @@ useEffect(() => {
   const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null);
   const [lang, setLang] = useState<string>("en");
   const [openSection, setOpenSection] = useState<SectionId | null>("modes");
+  const [openExportDetails, setOpenExportDetails] = useState(false);
+  const [openDeleteDetails, setOpenDeleteDetails] = useState(false);
 
   // Modus-Kategorien – aktive (graue) Kategorie + Hover-Vorschau
   const [modeCategory, setModeCategory] = useState<ModeCategoryId>("core");
+
   const [hoverModeCategory, setHoverModeCategory] =
     useState<ModeCategoryId | null>(null);
       // Experten-Kategorien – persistent + Hover-Vorschau (analog zu Modis)
@@ -510,12 +513,32 @@ useEffect(() => {
   const labelBuild = tr("cta.build", "Jetzt bauen");
 
   const labelExport = tr("cta.export", "Export");
+  const labelClear = tr("cta.clear", "Chat leeren");
 
-const labelClear = tr("cta.clear", "Chat leeren");
-const labelOnboarding = tr("mode.onboarding", "ONBOARDING");
-const labelDefault = tr("mode.default", "M · Default");
-const labelModeSelect = tr("mode.select", "Modus wählen");
-const labelExpertSelect = tr("expert.select", "Experten wählen");
+  const labelActionsExportTitle = tr("actions.export.title", "Chat exportieren");
+  const labelActionsExportHelp = tr(
+    "actions.export.help",
+    "Speichere deinen Chat als Datei."
+  );
+  const labelActionsDeleteTitle = tr("actions.delete.title", "Chat löschen");
+  const labelActionsDeleteWarning = tr(
+    "actions.delete.warning",
+    "Alle Nachrichten werden gelöscht."
+  );
+  const labelActionsDeleteExportFirst = tr(
+    "actions.delete.exportFirst",
+    "erst exportieren"
+  );
+  const labelActionsDeleteNow = tr(
+    "actions.delete.now",
+    "sofort löschen"
+  );
+
+  const labelOnboarding = tr("mode.onboarding", "ONBOARDING");
+  const labelDefault = tr("mode.default", "M · Default");
+  const labelModeSelect = tr("mode.select", "Modus wählen");
+  const labelExpertSelect = tr("expert.select", "Experten wählen");
+
 
 
 
@@ -720,10 +743,69 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
   setSendingExpert(null);
 }
 
+  // Exportiert den aktuellen Chat-Thread als JSON (System-Speicherfenster)
+  const exportThread = () => {
+    try {
+      const raw =
+        localStorage.getItem("mpathy:thread:default") ||
+        "[]";
+
+      const blob = new Blob([raw], { type: "application/json" });
+      const href = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      const date = new Date().toISOString().slice(0, 10);
+      link.href = href;
+      link.download = `mpathy-chat-${date}.json`;
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(href);
+    } catch {
+      // Export-Fehler bleiben still – der User verliert nichts
+    }
+  };
+
+  // "erst exportieren" – nur Export, keine Löschung
+  const handleDeleteWithExport = () => {
+    exportThread();
+  };
+
+  // "sofort löschen" – alles zurück auf Flow / neutral
+  const handleDeleteImmediate = () => {
+    try {
+      localStorage.removeItem("mpathy:thread:default");
+    } catch {}
+    try {
+      localStorage.removeItem("expert");
+    } catch {}
+    try {
+      localStorage.setItem("mode", "M");
+    } catch {}
+
+    setCurrentExpert(null);
+    setActiveMode("M");
+
+    try {
+      emitStatus({
+        modeLabel: modeLabelFromId("M"),
+        expertLabel: undefined,
+        busy: false,
+      });
+    } catch {
+      // Status ist "nice to have", aber nicht kritisch
+    }
+
+    onClearChat?.();
+    setOpenDeleteDetails(false);
+  };
+
      /* UI */
   return (
     <aside
       className={styles.saeule}
+
       aria-label={tr("columnAria", "Column — Controls & Selection")}
       data-test="saeule"
     >
@@ -1133,59 +1215,133 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
               className={styles.sectionUtility}
               aria-label={tr("pillar.section.utility", "Utility & status")}
             >
-              {/* Aktionen: Export (links, 50%) + Clear (rechts, 50%) */}
-              <div
-                className={styles.actions}
-                style={{
-                  display: "flex",
-                  gap: 8,
-                  alignItems: "stretch",
-                  flexWrap: "nowrap",
-                }}
-              >
-                {/* Export – links, 50% */}
+              {/* Export-Modul */}
+              <div className={styles.block}>
                 <button
-                  className={styles.button}
-                  style={{ width: "50%", cursor: "pointer" }}
-                  onClick={() => {
-                    try {
-                      const raw =
-                        localStorage.getItem("mpathy:thread:default") || "{}";
-                      // …
-                    } catch {}
-                  }}
-                  aria-label={tr("exportAria", "Export thread")}
-                  title={tr("export", "Export")}
+                  type="button"
+                  className={styles.soItem}
+                  onClick={() =>
+                    setOpenExportDetails((prev) => !prev)
+                  }
+                  aria-expanded={openExportDetails}
                 >
-                  <SimbaIcon name="export" />
-                  {tr("export", "Export")}
+                  <span className={styles.soItemIcon}>
+                    <SimbaIcon name="export" />
+                  </span>
+                  <span className={styles.soItemLabel}>
+                    {labelActionsExportTitle}
+                  </span>
                 </button>
 
-                {/* Clear – rechts, 50% (immer aktiv) */}
+                {openExportDetails && (
+                  <div
+                    style={{
+                      marginTop: 8,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: 12,
+                        opacity: 0.9,
+                      }}
+                    >
+                      {labelActionsExportHelp}
+                    </p>
+                    <button
+                      type="button"
+                      className={styles.button}
+                      style={{ width: "100%", cursor: "pointer" }}
+                      onClick={exportThread}
+                      aria-label={tr("exportAria", "Export thread")}
+                      title={labelExport}
+                      data-test="btn-export-thread"
+                    >
+                      <SimbaIcon name="export" />
+                      {labelExport}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Chat löschen-Modul */}
+              <div className={styles.block}>
                 <button
-                  className={styles.button}
-                  style={{
-                    width: "50%",
-                    cursor: "pointer",
-                    background: "rgba(220, 38, 38, 0.18)",
-                    borderColor: "rgba(248, 113, 113, 0.85)",
-                    color: "rgba(255, 255, 255, 0.98)",
-                    boxShadow:
-                      "inset 0 0 0 1px rgba(248,113,113,0.55)",
-                  }}
-                  onClick={() => {
-                    // …
-                  }}
-                  aria-label={tr("clearChatAria", "Clear chat")}
-                  title={tr("clearChat", "Clear")}
-                  role="button"
-                  data-test="btn-clear-chat"
+                  type="button"
+                  className={styles.soItem}
+                  onClick={() =>
+                    setOpenDeleteDetails((prev) => !prev)
+                  }
+                  aria-expanded={openDeleteDetails}
                 >
-                  <SimbaIcon name="clear" />
-                  {tr("clearChat", "Clear")}
+                  <span className={styles.soItemIcon}>
+                    <SimbaIcon name="clear" />
+                  </span>
+                  <span className={styles.soItemLabel}>
+                    {labelActionsDeleteTitle}
+                  </span>
                 </button>
+
+                {openDeleteDetails && (
+                  <div
+                    style={{
+                      marginTop: 8,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 8,
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: 12,
+                        opacity: 0.9,
+                      }}
+                    >
+                      {labelActionsDeleteWarning}
+                    </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 8,
+                        alignItems: "stretch",
+                      }}
+                    >
+                      <button
+                        type="button"
+                        className={styles.button}
+                        style={{ flex: 1, whiteSpace: "nowrap" }}
+                        onClick={handleDeleteWithExport}
+                      >
+                        {labelActionsDeleteExportFirst}
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.button}
+                        style={{
+                          flex: 1,
+                          whiteSpace: "nowrap",
+                          background: "rgba(220, 38, 38, 0.18)",
+                          borderColor: "rgba(248, 113, 113, 0.85)",
+                          color: "rgba(255, 255, 255, 0.98)",
+                          boxShadow:
+                            "inset 0 0 0 1px rgba(248,113,113,0.55)",
+                        }}
+                        onClick={handleDeleteImmediate}
+                        aria-label={tr("clearChatAria", "Clear chat")}
+                        title={labelClear}
+                        role="button"
+                        data-test="btn-clear-chat"
+                      >
+                        {labelActionsDeleteNow}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </section>
+
           </div>
         </div>
       </div>
