@@ -127,7 +127,7 @@
   );
   margin-inline: auto;
 
-  padding: 4px 6px;
+  padding: 4px 10px;
 
   border-radius: var(--prompt-radius, 999px);
   background: var(--prompt-bg, rgba(15,23,42,0.96));
@@ -184,11 +184,11 @@
   flex: 1 1 auto;
   min-width: 0;
 
-  min-height: 44px;
+  min-height: 52px;
   max-height: 40vh;
   resize: none;
 
-  padding: 10px 14px;
+  padding: 14px 18px;
   border-radius: 999px;
 
   border: none;
@@ -217,9 +217,9 @@
 .prompt-orb {
   flex: 0 0 auto;
 
-  height: 44px;
-  min-width: 48px;
-  padding-inline: 14px;
+  height: 52px;
+  min-width: 56px;
+  padding-inline: 18px;
 
   border-radius: 999px;
   border: none;
