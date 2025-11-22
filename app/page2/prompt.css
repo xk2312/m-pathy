@@ -63,6 +63,7 @@
 
   color: rgba(226,232,240,0.9);
 
+  position: relative;
   opacity: 1;
   transform: translateY(0);
   transition:
@@ -80,6 +81,26 @@
 .prompt-quote-sub {
   font-size: 0.86rem;
   opacity: 0.78;
+}
+
+/* Starship Spine – vertikale Lichtlinie unter dem Doorman */
+.prompt-quotes::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 18px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    rgba(148,163,184,0),
+    rgba(148,163,184,0.9),
+    rgba(148,163,184,0)
+  );
+  opacity: 0.9;
+  pointer-events: none;
 }
 
 /* Quotes verschwinden im Chat-Mode */
