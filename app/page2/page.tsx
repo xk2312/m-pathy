@@ -1957,34 +1957,79 @@ return (
   }
 
 
-  .gold-textarea{
-    width:100%; min-height:44px;
- max-height:var(--dock-cap,30vh);
-    resize:none; border-radius:12px; padding:10px 12px; line-height:1.5;
-    border:1px solid ${activeTokens.color.glassBorder ?? "rgba(255,255,255,0.12)"};
-    background:rgba(255,255,255,0.04); color:${activeTokens.color.text};
-    outline:none; background-clip: padding-box;
-    transition: box-shadow 120ms cubic-bezier(.2,.6,.2,1), border-color 120ms cubic-bezier(.2,.6,.2,1);
+        .gold-textarea{
+    width:100%;
+    min-height:44px;
+    max-height:var(--dock-cap,30vh);
+    resize:none;
+    border-radius:12px;
+    padding:10px 12px;
+    line-height:1.5;
+    border:1px solid var(--prompt-input-border);
+    background: var(--prompt-input-bg);
+    color: var(--color-fg);
+    outline:none;
+    background-clip: padding-box;
+    transition:
+      box-shadow 120ms cubic-bezier(.2,.6,.2,1),
+      border-color 120ms cubic-bezier(.2,.6,.2,1);
     font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
   }
+
   .gold-textarea:is(:hover,:focus,.is-typing){
-    box-shadow: 0 0 0 1px ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"},
-                0 0 18px rgba(34,211,238,0.18);
-    border-color: ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
+    box-shadow:
+      0 0 0 1px var(--prompt-input-border-focus),
+      var(--prompt-input-shadow-focus);
+    border-color: var(--prompt-input-border-focus);
   }
 
-  .gold-send{  .gold-send{
-    height:44px; min-width:96px; white-space:nowrap;
-    padding:0 16px; border-radius:12px; font-weight:700;
-    border:1px solid ${activeTokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"};
-    background:${activeTokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"};
-    color:${activeTokens.color.text}; cursor:pointer; background-clip: padding-box;
-    transition: transform 120ms cubic-bezier(.2,.6,.2,1), box-shadow 120ms cubic-bezier(.2,.6,.2,1);
-    display:inline-flex; align-items:center; justify-content:center;
+  /* Send-Orb – neutral, via Prompt-Tokens */
+  .gold-send{
+    height:44px;
+    min-width:56px;
+    white-space:nowrap;
+    padding:0 18px;
+    border-radius:999px;
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    border:1px solid var(--prompt-send-border);
+    background: var(--prompt-send-bg);
+    color: var(--prompt-send-text);
+    cursor:pointer;
+    background-clip: padding-box;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    box-shadow: var(--prompt-send-shadow);
+    transition:
+      transform 120ms cubic-bezier(.2,.6,.2,1),
+      box-shadow 120ms cubic-bezier(.2,.6,.2,1),
+      border-color 120ms cubic-bezier(.2,.6,.2,1),
+      background-color 120ms cubic-bezier(.2,.6,.2,1);
   }
-  .gold-send:hover:not(:disabled){ transform: translateY(-1px); }
-  .gold-send:active:not(:disabled){ transform: translateY(0); }
-  .gold-send:disabled{ opacity:.45; cursor:default; }
+
+  .gold-send:hover:not(:disabled){
+    transform: translateY(-1px);
+    box-shadow: var(--prompt-send-shadow);
+    background: var(--prompt-send-bg-hover);
+    border-color: var(--prompt-send-border-hover);
+  }
+
+  .gold-send:active:not(:disabled){
+    transform: translateY(0);
+    box-shadow:none;
+    background: var(--prompt-send-bg-active);
+  }
+
+  .gold-send:disabled{
+    opacity:.45;
+    cursor:default;
+    box-shadow:none;
+  }
+
 
 /* Fallback für sichtbares Chat-Ende – neutralisiert, da Fußraum via paddingBottom kommt */
   .chat-end-spacer{

@@ -772,3 +772,51 @@
   --footer-bottom-pad: clamp(40px, 6vw, 80px);
 }
 
+/* ─────────────────────────────────────────────
+   PAGE2 · Chat Dock & Prompt Tokens
+   Quelle der Wahrheit für Dock, Textarea,
+   Send-Orb und Tool-Buttons
+   ───────────────────────────────────────────── */
+:root {
+  /* Dock-Hintergrund (unterer Streifen) */
+  --chat-dock-bg: rgba(8, 14, 18, 0.90);
+  --chat-dock-border: rgba(255, 255, 255, 0.10);
+  --chat-dock-shadow: 0 -4px 18px rgba(0, 0, 0, 0.40);
+
+  /* Prompt-Bühne / Stage */
+  --chat-stage-max: 820px;
+  --chat-stage-pad-inline: 48px;
+
+  /* Textarea */
+  --chat-input-bg: rgba(255, 255, 255, 0.04);
+  --chat-input-border: rgba(148, 163, 184, 0.70);
+  --chat-input-border-focus: rgba(226, 232, 240, 0.95);
+  --chat-input-shadow-focus: 0 0 18px rgba(15, 23, 42, 0.90);
+
+  /* Send-Button (Orb, neutral) */
+  --chat-send-bg: rgba(15, 23, 42, 0.92);
+  --chat-send-bg-hover: rgba(15, 23, 42, 0.98);
+  --chat-send-bg-active: rgba(10, 16, 26, 0.96);
+  --chat-send-border: rgba(148, 163, 184, 0.75);
+  --chat-send-border-hover: rgba(226, 232, 240, 0.95);
+  --chat-send-text: #e6f0f3;
+  --chat-send-shadow: 0 10px 40px rgba(0, 0, 0, 0.65);
+
+  /* Tools (📎, 🎙️, ⚙️) */
+  --chat-tools-bg: rgba(15, 23, 42, 0.85);
+  --chat-tools-border: rgba(148, 163, 184, 0.55);
+  --chat-tools-text: rgba(226, 232, 240, 0.88);
+  --chat-tools-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
+  --chat-tools-shadow-hover: 0 10px 40px rgba(0, 0, 0, 0.55);
+
+  /* Statuschips: Mode / Expert */
+  --chat-status-bg: rgba(12, 15, 20, 0.96);
+  --chat-status-border: rgba(148, 163, 184, 0.70);
+  --chat-status-dot: rgba(148, 163, 184, 0.95);
+  --chat-status-dot-glow: 0 0 8px rgba(148, 163, 184, 0.9);
+
+  /* Ripple-Farbe (kein Cyan mehr) */
+  --chat-ripple-fill: rgba(148, 163, 184, 0.18);
+}
+
+
