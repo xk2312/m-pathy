@@ -2,8 +2,10 @@
 "use client";
 
 import React, { useCallback } from "react";
+import "./prompt.css";
 import { usePromptStateMachine } from "@/app/chat/hooks/usePromptStateMachine";
 import { PromptShell } from "@/app/components/prompt/PromptShell";
+
 
 type FooterStatus = {
   modeLabel?: string;
@@ -110,8 +112,8 @@ export function PromptRoot({
     <div
       id="m-input-dock"
       ref={dockRef as any}
-      className={`m-bottom-stack gold-dock ${
-        hasMessages ? "gold-dock--flight" : "gold-dock--launch"
+      className={`prompt-root ${
+        hasMessages ? "prompt-root--flight" : "prompt-root--launch"
       }`}
       role="group"
       aria-label="Chat Eingabe & Status"
@@ -120,17 +122,19 @@ export function PromptRoot({
       data-layout={snapshot.layoutVariant}   // "desktop" | "mobile"
       data-thinking={snapshot.isSendBlocked ? "true" : "false"}
     >
+
       {/* Doorman Desktop – Quotes über dem Prompt */}
-      {isDoormanDesktop && (
-        <div className="doorman-quotes" aria-hidden="true">
-          <p className="doorman-quote-main">
+            {isDoormanDesktop && (
+        <div className="prompt-quotes" aria-hidden="true">
+          <p className="prompt-quote-main">
             Welcome to m-pathy. I am M, first AI, built by 13 AIs.
           </p>
-          <p className="doorman-quote-sub">
+          <p className="prompt-quote-sub">
             13 minds. One field. Absolute clarity.
           </p>
         </div>
       )}
+
 
       {/* PromptShell – übernimmt Textarea + Send-Button */}
       <PromptShell
@@ -146,50 +150,51 @@ export function PromptRoot({
       />
 
       {/* Icons + Status unter Prompt */}
-      <div
-        className="gold-bar"
+            <div
+        className="prompt-bar"
         data-compact={compactStatus ? 1 : 0}
       >
         <div
-          className="gold-tools"
+          className="prompt-tools"
           aria-label={t("promptTools") ?? "Prompt tools"}
         >
           <button
             type="button"
             aria-label={t("comingUpload")}
-            className="gt-btn"
+            className="prompt-tools-btn"
           >
             📎
           </button>
           <button
             type="button"
             aria-label={t("comingVoice")}
-            className="gt-btn"
+            className="prompt-tools-btn"
           >
             🎙️
           </button>
           <button
             type="button"
             aria-label={t("comingFunctions")}
-            className="gt-btn"
+            className="prompt-tools-btn"
           >
             ⚙️
           </button>
         </div>
 
-        <div className="gold-stats">
-          <div className="stat">
-            <span className="dot" />
-            <span className="label">Mode</span>
+        <div className="prompt-stats">
+          <div className="prompt-stat">
+            <span className="prompt-stat-dot" />
+            <span className="prompt-stat-label">Mode</span>
             <strong>{safeFooterStatus.modeLabel}</strong>
           </div>
-          <div className="stat">
-            <span className="dot" />
-            <span className="label">Expert</span>
+          <div className="prompt-stat">
+            <span className="prompt-stat-dot" />
+            <span className="prompt-stat-label">Expert</span>
             <strong>{safeFooterStatus.expertLabel}</strong>
           </div>
         </div>
       </div>
+
     </div>
   );
 }

@@ -1,0 +1,355 @@
+/* =======================================================================
+   PROMPT V3 – Raumschiff / Crystal Pill / Token-Driven
+   Klassen: prompt-root, prompt-shell, prompt-input, prompt-orb,
+            prompt-tools, prompt-stats, prompt-quotes, ...
+   Keine gold-* Namen mehr.
+   ======================================================================= */
+
+#m-input-dock.prompt-root {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  padding: 16px 18px 18px;
+  background: linear-gradient(
+    to top,
+    rgba(2,6,23,0.96),
+    rgba(2,6,23,0.85),
+    transparent
+  );
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  transform: translateY(0);
+  transition:
+    transform 200ms cubic-bezier(.25,.8,.25,1),
+    opacity 180ms ease-out;
+}
+
+.prompt-root--launch {
+  transform: translateY(-12px);
+}
+
+.prompt-root--flight {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  #m-input-dock.prompt-root {
+    padding: 12px 10px 14px;
+  }
+}
+
+/* Doorman-Quotes über der Pille */
+.prompt-quotes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+
+  max-width: 520px;
+  margin-inline: auto;
+  text-align: center;
+
+  color: rgba(226,232,240,0.9);
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out;
+}
+
+.prompt-quote-main {
+  font-size: 0.94rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.prompt-quote-sub {
+  font-size: 0.86rem;
+  opacity: 0.78;
+}
+
+#m-input-dock[data-mode="chat"] .prompt-quotes {
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
+/* =======================================================================
+   PromptShell – Raumschiff-Pille
+   ======================================================================= */
+
+.prompt-shell {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+
+  max-width: min(
+    var(--chat-stage-max, 820px),
+    calc(100vw - var(--chat-stage-pad-inline, 48px) * 2)
+  );
+  margin-inline: auto;
+
+  padding: 8px 10px;
+
+  border-radius: var(--prompt-radius, 999px);
+  background: var(--prompt-bg, rgba(15,23,42,0.96));
+  border: 1px solid var(--prompt-border, rgba(148,163,184,0.45));
+  box-shadow: var(--prompt-shadow, 0 18px 50px rgba(15,23,42,0.95));
+}
+
+@media (max-width: 768px) {
+  .prompt-shell {
+    max-width: calc(100vw - 16px);
+    padding-inline: 10px;
+    padding-block: 6px;
+  }
+}
+
+/* Textarea */
+.prompt-input {
+  flex: 1 1 auto;
+  min-width: 0;
+
+  min-height: 44px;
+  max-height: 40vh;
+  resize: none;
+
+  padding: 10px 14px;
+  border-radius: 999px;
+
+  border: 1px solid var(--prompt-input-border, rgba(148,163,184,0.45));
+  background: var(--prompt-input-bg, rgba(15,23,42,0.96));
+  color: var(--prompt-text, #e6f0f3);
+  font: inherit;
+
+  outline: none;
+  transition:
+    border-color 140ms cubic-bezier(0.2,0.6,0.2,1),
+    box-shadow 140ms cubic-bezier(0.2,0.6,0.2,1),
+    background-color 140ms cubic-bezier(0.2,0.6,0.2,1);
+}
+
+.prompt-input::placeholder {
+  color: var(--prompt-placeholder, rgba(226,232,240,0.6));
+}
+
+.prompt-input:focus-visible {
+  border-color: var(--prompt-focus-color, rgba(226,232,240,0.9));
+  box-shadow:
+    0 0 0 1px var(--prompt-focus-color, rgba(226,232,240,0.9)),
+    0 0 32px rgba(15,23,42,0.75);
+}
+
+.prompt-input:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* Send-Orb */
+.prompt-orb {
+  flex: 0 0 auto;
+
+  height: 44px;
+  min-width: 52px;
+  padding-inline: 16px;
+
+  border-radius: 999px;
+  border: 1px solid var(--prompt-orb-border, rgba(148,163,184,0.65));
+  background: var(--prompt-orb-bg, rgba(15,23,42,0.98));
+  color: var(--prompt-orb-text, #e6f0f3);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+
+  box-shadow: var(--prompt-orb-shadow, 0 16px 40px rgba(0,0,0,0.7));
+  cursor: pointer;
+
+  transition:
+    transform 140ms cubic-bezier(0.2,0.6,0.2,1),
+    box-shadow 140ms cubic-bezier(0.2,0.6,0.2,1),
+    border-color 140ms cubic-bezier(0.2,0.6,0.2,1),
+    background-color 140ms cubic-bezier(0.2,0.6,0.2,1),
+    opacity 120ms linear;
+}
+
+.prompt-orb-icon {
+  font-size: 0.9rem;
+  transform: translateX(1px);
+}
+
+.prompt-orb:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: var(--prompt-orb-bg-hover, rgba(15,23,42,1));
+  border-color: var(--prompt-orb-border-hover, rgba(226,232,240,0.95));
+}
+
+.prompt-orb:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: none;
+  background: var(--prompt-orb-bg-active, rgba(15,23,42,0.96));
+}
+
+.prompt-orb:disabled {
+  opacity: 0.45;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* =======================================================================
+   Tools + Status
+   ======================================================================= */
+
+.prompt-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  max-width: min(
+    var(--chat-stage-max, 820px),
+    calc(100vw - var(--chat-stage-pad-inline, 48px) * 2)
+  );
+  margin: 4px auto 0;
+  padding: 8px 4px 4px;
+
+  font-size: 0.78rem;
+  color: rgba(226,232,240,0.75);
+}
+
+.prompt-bar[data-compact="1"] {
+  opacity: 0.9;
+}
+
+/* Tools links */
+.prompt-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: var(--prompt-tools-bg, rgba(15,23,42,0.9));
+  border: 1px solid var(--prompt-tools-border, rgba(148,163,184,0.6));
+}
+
+.prompt-tools-btn {
+  border: none;
+  background: transparent;
+  color: rgba(226,232,240,0.88);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 3px 6px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  transition:
+    transform 120ms cubic-bezier(0.2,0.6,0.2,1),
+    opacity 120ms linear;
+}
+
+.prompt-tools-btn:hover {
+  transform: translateY(-1px);
+  opacity: 1;
+}
+
+.prompt-tools-btn:active {
+  transform: translateY(0);
+  opacity: 0.8;
+}
+
+/* Stats rechts */
+.prompt-stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.prompt-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+
+  border-radius: 999px;
+  background: var(--chat-status-bg);
+  border: 1px solid var(--chat-status-border);
+}
+
+.prompt-stat-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--chat-status-dot);
+  box-shadow: var(--chat-status-dot-glow);
+}
+
+.prompt-stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+}
+
+.prompt-stats strong {
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .prompt-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .prompt-stats {
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+/* Send-Ripple auf dem Dock */
+#m-input-dock.send-ripple::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  pointer-events: none;
+
+  background: radial-gradient(
+    circle at 50% 100%,
+    var(--chat-ripple-fill),
+    transparent 60%
+  );
+
+  opacity: 0;
+  animation: prompt-ripple 380ms ease-out forwards;
+}
+
+@keyframes prompt-ripple {
+  0% {
+    opacity: 0.8;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+}

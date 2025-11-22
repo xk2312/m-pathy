@@ -104,16 +104,16 @@ export function PromptShell({
   const resolvedAriaLabel =
     ariaLabel ?? "Eingabefeld für Nachrichten an M";
 
-  return (
+   return (
     <form
-      className="gold-prompt-wrap prompt-shell"
+      className="prompt-shell"
       onSubmit={handleSubmit}
       aria-label={resolvedAriaLabel}
     >
       <textarea
         ref={textareaRef}
-        id="gold-input"
-        className="gold-textarea"
+        id="prompt-input"
+        className="prompt-input"
         aria-label={resolvedAriaLabel}
         placeholder={resolvedPlaceholder}
         value={value}
@@ -129,13 +129,13 @@ export function PromptShell({
 
       <button
         type="submit"
-        className="gold-send prompt-shell-orb"
+        className="prompt-orb"
         aria-label="Senden"
         disabled={!canSubmit}
         onClick={handleClickSend}
       >
         <span
-          className="prompt-shell-orb-icon"
+          className="prompt-orb-icon"
           aria-hidden="true"
         >
           ➤
@@ -144,5 +144,6 @@ export function PromptShell({
     </form>
   );
 }
+
 
 export default PromptShell;
