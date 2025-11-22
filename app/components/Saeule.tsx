@@ -744,7 +744,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
 }
 
   // Exportiert den aktuellen Chat-Thread als JSON (System-Speicherfenster)
-  const exportThread = () => {
+   const exportThread = () => {
     try {
       const raw =
         localStorage.getItem("mpathy:thread:default") ||
@@ -754,9 +754,9 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
       const href = URL.createObjectURL(blob);
       const link = document.createElement("a");
 
+      const date = new Date().toISOString().slice(0, 10);
       link.href = href;
-      // Kein download-Attribut: Browser/OS öffnen den Speichern-Dialog,
-      // der User wählt Name und Speicherort selbst.
+      link.download = `mpathy-chat-${date}.json`;
 
       document.body.appendChild(link);
       link.click();
