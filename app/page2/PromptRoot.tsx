@@ -37,24 +37,28 @@ export function PromptRoot({
   dockRef,
   padBottom,
   setPadBottom,
-  compactStatus: _compactStatus, // aktuell nicht genutzt
-  footerStatus: _footerStatus,   // aktuell nicht genutzt
+  compactStatus: _compactStatus,
+  footerStatus,
   withGate,
   sendingRef,
   onSendFromPrompt,
   isMobile,
 }: PromptRootProps) {
-  // StateMachine – entscheidet Doorman / Chat + Desktop / Mobile
   const snapshot = usePromptStateMachine({
     hasThread: hasMessages,
     isMobile,
     isThinking: loading,
   });
 
-  const isDoormanDesktop =
-    snapshot.modeVariant === "doorman" &&
-    snapshot.layoutVariant === "desktop" &&
-    !hasMessages;
+  const visualState =
+    !hasMessages
+      ? "intro"
+      : snapshot.isSendBlocked
+      ? "thinking"
+      : "ready";
+
+  const hasFooterStatus =
+    !!footerStatus?.modeLabel || !!footerStatus?.expertLabel;
 
   const updateDockHeight = useCallback(() => {
     try {
@@ -83,10 +87,6 @@ export function PromptRoot({
     sendingRef.current = true;
 
     withGate(() => {
-      const dockEl = document.getElementById("m-input-dock");
-      dockEl?.classList.add("send-ripple");
-      void dockEl?.getBoundingClientRect();
-
       onSendFromPrompt(input);
       setInput("");
       updateDockHeight();
@@ -107,33 +107,44 @@ export function PromptRoot({
 
   return (
     <div
-      id="m-input-dock"
+      id="m-dock"
       ref={dockRef as any}
-      className={
-        hasMessages
-          ? "prompt-root prompt-root--flight"
-          : "prompt-root prompt-root--launch"
-      }
+      className="prompt-dock"
       role="group"
-      aria-label="Chat Eingabe"
-      data-pad-bottom={padBottom}
-      data-mode={snapshot.modeVariant}
-      data-layout={snapshot.layoutVariant}
-      data-thinking={snapshot.isSendBlocked ? "true" : "false"}
+      aria-label={t("prompt.ariaLabel")}
+      data-prompt-state={visualState}
     >
-      {/* Doorman Desktop – Quotes über der Pille */}
-      {isDoormanDesktop && (
-        <div className="prompt-quotes" aria-hidden="true">
-          <p className="prompt-quote-main">
-            Welcome to m-pathy. I am M, first AI, built by 13 AIs.
+      {/* Doorman – nur im intro */}
+      {visualState === "intro" && (
+        <div className="prompt-doorman" aria-hidden="true">
+          <p className="prompt-doorman-main">
+            {t("prompt.doorman.main")}
           </p>
-          <p className="prompt-quote-sub">
-            13 minds. One field. Absolute clarity.
+          <p className="prompt-doorman-sub">
+            {t("prompt.doorman.sub")}
           </p>
         </div>
       )}
 
-      {/* Die Kristall-Pille */}
+      {/* ModeLine – nur wenn Status mitkommt */}
+      {hasFooterStatus && (
+        <div className="prompt-mode-line">
+          {footerStatus?.modeLabel && (
+            <span className="prompt-mode-line-mode">
+              {footerStatus.modeLabel}
+            </span>
+          )}
+          {footerStatus?.modeLabel && footerStatus?.expertLabel && (
+            <span className="prompt-mode-line-separator"> • </span>
+          )}
+          {footerStatus?.expertLabel && (
+            <span className="prompt-mode-line-expert">
+              {footerStatus.expertLabel}
+            </span>
+          )}
+        </div>
+      )}
+
       <PromptShell
         value={input}
         onChange={setInput}
