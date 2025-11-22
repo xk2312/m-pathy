@@ -294,6 +294,66 @@
   cursor: default;
 }
 
+/* Simba – runder, stiller Focus-Button im Raumschiff */
+.prompt-simba {
+  flex: 0 0 auto;
+  height: 32px;
+  width: 32px;
+  margin-left: 10px;
+
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.65);
+  background: rgba(15,23,42,0.96);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--prompt-orb-text, #e6f0f3);
+  cursor: pointer;
+
+  transition:
+    transform 140ms cubic-bezier(0.2,0.6,0.2,1),
+    opacity 140ms linear;
+}
+
+.prompt-simba:hover {
+  transform: translateY(-1px);
+}
+
+.prompt-simba:active {
+  transform: translateY(0);
+}
+
+.prompt-simba-glyph {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  opacity: 0.85;
+}
+
+/* ganz leichte „Mähnen“-Andeutung, aber extrem ruhig */
+.prompt-simba-glyph::before {
+  content: "";
+  position: absolute;
+  inset: 3px 2px 2px 2px;
+  border-radius: 999px;
+  border-top: 1px solid currentColor;
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prompt-simba,
+  .prompt-simba:hover,
+  .prompt-simba:active {
+    transition: opacity 140ms linear;
+    transform: none;
+  }
+}
+
+
 
 /* =============================================================
    SEND-RIPPLE — Energieschock beim Abschicken

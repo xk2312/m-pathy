@@ -107,21 +107,39 @@ export function PromptShell({
         autoFocus={autoFocus}
         disabled={effectiveDisabled}
         spellCheck
-        autoCorrect="on"
+                autoCorrect="on"
         autoCapitalize="sentences"
       />
 
+      {/* Simba – ruhiger runder Gate-Button, noch ohne Logik */}
+      <button
+        type="button"
+        className="prompt-simba"
+        aria-label="Simba Portal"
+      >
+        <span
+          className="prompt-simba-glyph"
+          aria-hidden="true"
+        />
+      </button>
+
       <button
         type="submit"
-        className="prompt-send"
-        aria-label={resolvedAriaLabel}
+        className="prompt-orb"
+        aria-label="Senden"
         disabled={!canSubmit}
         onClick={handleClickSend}
       >
-        <span className="prompt-send-icon" aria-hidden="true" />
+        <span
+          className="prompt-orb-icon"
+          aria-hidden="true"
+        >
+          ➤
+        </span>
       </button>
     </form>
   );
 }
 
 export default PromptShell;
+
