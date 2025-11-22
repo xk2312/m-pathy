@@ -37,13 +37,14 @@ export function PromptRoot({
   dockRef,
   padBottom,
   setPadBottom,
-  compactStatus,
-  footerStatus,
+  compactStatus: _compactStatus, // aktuell nicht genutzt
+  footerStatus: _footerStatus,   // aktuell nicht genutzt
   withGate,
   sendingRef,
   onSendFromPrompt,
   isMobile,
 }: PromptRootProps) {
+  // StateMachine – entscheidet Doorman / Chat + Desktop / Mobile
   const snapshot = usePromptStateMachine({
     hasThread: hasMessages,
     isMobile,
@@ -54,11 +55,6 @@ export function PromptRoot({
     snapshot.modeVariant === "doorman" &&
     snapshot.layoutVariant === "desktop" &&
     !hasMessages;
-
-  const safeFooterStatus: Required<FooterStatus> = {
-    modeLabel: footerStatus?.modeLabel ?? "—",
-    expertLabel: footerStatus?.expertLabel ?? "—",
-  };
 
   const updateDockHeight = useCallback(() => {
     try {
@@ -93,7 +89,6 @@ export function PromptRoot({
 
       onSendFromPrompt(input);
       setInput("");
-
       updateDockHeight();
     });
 
@@ -120,12 +115,13 @@ export function PromptRoot({
           : "prompt-root prompt-root--launch"
       }
       role="group"
-      aria-label="Chat Eingabe & Status"
+      aria-label="Chat Eingabe"
       data-pad-bottom={padBottom}
       data-mode={snapshot.modeVariant}
       data-layout={snapshot.layoutVariant}
       data-thinking={snapshot.isSendBlocked ? "true" : "false"}
     >
+      {/* Doorman Desktop – Quotes über der Pille */}
       {isDoormanDesktop && (
         <div className="prompt-quotes" aria-hidden="true">
           <p className="prompt-quote-main">
@@ -137,6 +133,7 @@ export function PromptRoot({
         </div>
       )}
 
+      {/* Die Kristall-Pille */}
       <PromptShell
         value={input}
         onChange={setInput}
@@ -148,48 +145,6 @@ export function PromptRoot({
         autoFocus={!hasMessages}
         onHeightChange={scheduleDockUpdate}
       />
-
-      <div className="prompt-bar" data-compact={compactStatus ? 1 : 0}>
-        <div
-          className="prompt-tools"
-          aria-label={t("promptTools") ?? "Prompt tools"}
-        >
-          <button
-            type="button"
-            aria-label={t("comingUpload")}
-            className="prompt-tools-btn"
-          >
-            📎
-          </button>
-          <button
-            type="button"
-            aria-label={t("comingVoice")}
-            className="prompt-tools-btn"
-          >
-            🎙️
-          </button>
-          <button
-            type="button"
-            aria-label={t("comingFunctions")}
-            className="prompt-tools-btn"
-          >
-            ⚙️
-          </button>
-        </div>
-
-        <div className="prompt-stats">
-          <div className="prompt-stat">
-            <span className="prompt-stat-dot" />
-            <span className="prompt-stat-label">Mode</span>
-            <strong>{safeFooterStatus.modeLabel}</strong>
-          </div>
-          <div className="prompt-stat">
-            <span className="prompt-stat-dot" />
-            <span className="prompt-stat-label">Expert</span>
-            <strong>{safeFooterStatus.expertLabel}</strong>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
