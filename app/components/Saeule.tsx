@@ -531,7 +531,7 @@ useEffect(() => {
   );
   const labelActionsDeleteNow = tr(
     "actions.delete.now",
-    "sofort löschen"
+    "löschen"
   );
 
   const labelOnboarding = tr("mode.onboarding", "ONBOARDING");
@@ -773,7 +773,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
     exportThread();
   };
 
-  // "sofort löschen" – alles zurück auf Flow / neutral
+  // "löschen" – alles zurück auf Flow / neutral
   const handleDeleteImmediate = () => {
     try {
       localStorage.removeItem("mpathy:thread:default");
