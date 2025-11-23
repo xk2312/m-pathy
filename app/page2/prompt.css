@@ -38,16 +38,15 @@
    ============================================================= */
 
 /* State 1 – PreChat Desktop: Prompt näher an den Doorman holen */
-.prompt-root-scene[data-position-state="intro"][data-layout="desktop"]
-  #m-input-dock.prompt-root {
-  bottom: 96px;           /* Prompt vom Rand lösen, nach oben ziehen */
+#m-input-dock.prompt-root[data-layout="desktop"][data-position-state="intro"] {
+  bottom: 96px;
 }
 
 /* State 2 – Chat Desktop: Dock bleibt exakt wie vorher */
-.prompt-root-scene[data-position-state="chat"][data-layout="desktop"]
-  #m-input-dock.prompt-root {
-  bottom: 8px;            /* explizit setzen, falls später geändert wird */
+#m-input-dock.prompt-root[data-layout="desktop"][data-position-state="chat"] {
+  bottom: 8px;
 }
+
 
 
 /* Starship Horizon – feine Lichtkante über dem Dock */

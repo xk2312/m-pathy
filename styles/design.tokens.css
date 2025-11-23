@@ -834,6 +834,9 @@
   --prompt-width-max: 500px;
   --prompt-margin-inline: 10px;
 
+  /* Position – Desktop Intro-State (Doorman) */
+  --prompt-dock-offset-intro: 160px;
+  
   /* Text */
   --prompt-text: #e6f0f3;
 
