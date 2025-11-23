@@ -806,7 +806,7 @@ useEffect(() => {
 // Breakpoints
 // NOTE: Säulenraster & Overlay arbeiten ab 960px aufwärts mit Desktop-Layout.
 // Damit JS-Layout & CSS deckungsgleich bleiben, nehmen wir hier dieselbe Schwelle.
-const { isMobile } = useBreakpoint(960);
+const { isMobile } = useBreakpoint(1024);
 const sideMargin = isMobile ? theme.dock.mobile.side : theme.dock.desktop.side;
 
 

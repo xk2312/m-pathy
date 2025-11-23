@@ -1,7 +1,7 @@
 // app/components/navigation/navigation.tsx
 "use client";
 
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -15,19 +15,17 @@ export default function Navigation() {
   const pathname = usePathname();
 
   const [menuOpen, setMenuOpen] = useState(false);
-
-    const [isDesktop, setIsDesktop] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    // Desktop ab 1024px – kannst du bei Bedarf auf 960 o.ä. ändern
+    // Desktop-Anker: Säule existiert erst ab 1024px
     setIsDesktop(window.innerWidth >= 1024);
   }, []);
 
-
   // *** SMALL VARIANT als Default ***
   const navHeight = "var(--nav-height-sm)"; // fix
-  const logoSize = 40;                     // fix
+  const logoSize = 40; // fix
 
   // Sprache laden
   const locale = navDict[lang] ?? navDict.en;
@@ -45,7 +43,7 @@ export default function Navigation() {
     pathname?.startsWith("/page2") ||
     false;
 
-    const headerStyle: React.CSSProperties = isChatLayout && isDesktop
+  const headerStyle: React.CSSProperties = isChatLayout && isDesktop
     ? {
         position: "fixed",
         top: 0,
@@ -59,7 +57,6 @@ export default function Navigation() {
         insetInline: 0,
         zIndex: 40,
       };
-
 
   return (
     <header style={headerStyle} aria-label="Main site navigation">
@@ -89,7 +86,6 @@ export default function Navigation() {
           transition: "none",
         }}
       >
-
         {/* LEFT – Mobile Button & Desktop Logo */}
         <div className="flex items-center gap-3">
           {/* Mobile Menu Button */}
@@ -145,14 +141,9 @@ export default function Navigation() {
           aria-modal="true"
           aria-label={locale.nav.aria.menu}
         >
-          <div
-            className="flex-1"
-            onClick={() => setMenuOpen(false)}
-          />
+          <div className="flex-1" onClick={() => setMenuOpen(false)} />
 
-          <div
-            className="bg-black/92 backdrop-blur-lg border-t border-white/10 rounded-t-2xl p-4"
-          >
+          <div className="bg-black/92 backdrop-blur-lg border-t border-white/10 rounded-t-2xl p-4">
             <ul className="space-y-1">
               <li>
                 <Link
