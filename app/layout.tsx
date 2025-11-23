@@ -22,11 +22,23 @@ export const viewport: Viewport = {
   interactiveWidget: "resizes-visual",
 };
 
+// ⭐ EINZIGE Theme-Schaltstelle für alle 13 Orb-Designs
+const ORB_THEME = "halo-singular";
+// Alternativen:
+// "breath-of-light", "deep-current-pearl", "chronos-gate",
+// "quantum-drop", "event-horizon-dot", "warm-pulse-orb",
+// "lattice-smoothpoint", "zero-noise-node", "nexus-pearl",
+// "gaia-whisper-dot", "gemini-zero-flux", "silent-sun"
+
 type RootLayoutProps = Readonly<{ children: React.ReactNode }>;
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      data-orb-theme={ORB_THEME}  // 🔥 Token-Aktivierung
+    >
       <head />
       <body
         className={`${inter.className} min-h-dvh antialiased`}

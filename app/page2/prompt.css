@@ -235,15 +235,12 @@
   opacity: 0.55;
   cursor: default;
 }
-
-
 /* =============================================================
-   SEND-ORB — Simba Orb (Token Driven)
+   SIMBA ORB — Minimal, Token Driven, Raumschiff-Perfektion
    ============================================================= */
 
 .prompt-orb {
   flex: 0 0 auto;
-  position: relative;
 
   width: var(--prompt-orb-size);
   height: var(--prompt-orb-size);
@@ -254,11 +251,11 @@
   background: var(--prompt-orb-bg);
   box-shadow: var(--prompt-orb-shadow);
 
-  color: var(--prompt-orb-icon);
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
+  color: var(--prompt-orb-icon);
   cursor: pointer;
 
   transition:
@@ -269,60 +266,10 @@
     opacity 160ms linear;
 }
 
-/* Simba-Ring + Aura im Orb */
-.prompt-orb::before {
-  content: "";
-  position: absolute;
-  inset: 4px;
-  border-radius: 999px;
-  border: 1px solid var(--prompt-orb-border-hover);
-  opacity: 0.92;
-  pointer-events: none;
-}
-
-.prompt-orb::after {
-  content: "";
-  position: absolute;
-  inset: 10px;
-  border-radius: 999px;
-  box-shadow: 0 0 14px rgba(226,232,240,0.55);
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-/* Simba-Symbol – innerer Kreis */
-.prompt-orb-icon {
-  position: relative;
-  width: 14px;
-  height: 14px;
-  font-size: 0; /* Pfeil-Zeichen ausblenden */
-}
-
-.prompt-orb-icon::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
-  border: 1px solid var(--prompt-orb-icon);
-  background: transparent;
-  box-shadow: 0 0 10px rgba(226,232,240,0.75);
-  opacity: 0.95;
-}
-
-.prompt-orb-icon::after {
-  content: "";
-  position: absolute;
-  inset: 4px;
-  border-radius: 999px;
-  background: var(--prompt-orb-icon);
-  opacity: 0.9;
-}
-
-/* States über Tokens */
+/* Hover / Active States — Pur über Tokens */
 .prompt-orb:hover:not(:disabled) {
   background: var(--prompt-orb-bg-hover);
   border-color: var(--prompt-orb-border-hover);
-  box-shadow: var(--prompt-orb-shadow);
   transform: translateY(-1px);
 }
 
@@ -335,81 +282,6 @@
   opacity: 0.4;
   cursor: default;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .prompt-orb {
-    transition:
-      background-color 160ms linear,
-      border-color 160ms linear,
-      opacity 160ms linear;
-  }
-
-  .prompt-orb:hover:not(:disabled),
-  .prompt-orb:active:not(:disabled) {
-    transform: none;
-  }
-}
-
-
-/* Simba – runder, stiller Focus-Button im Raumschiff */
-.prompt-simba {
-  flex: 0 0 auto;
-  height: 32px;
-  width: 32px;
-  margin-left: 10px;
-
-  border-radius: 999px;
-  border: 1px solid rgba(148,163,184,0.65);
-  background: rgba(15,23,42,0.96);
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  color: var(--prompt-orb-text, #e6f0f3);
-  cursor: pointer;
-
-  transition:
-    transform 140ms cubic-bezier(0.2,0.6,0.2,1),
-    opacity 140ms linear;
-}
-
-.prompt-simba:hover {
-  transform: translateY(-1px);
-}
-
-.prompt-simba:active {
-  transform: translateY(0);
-}
-
-.prompt-simba-glyph {
-  position: relative;
-  width: 14px;
-  height: 14px;
-  border-radius: 999px;
-  border: 1px solid currentColor;
-  opacity: 0.85;
-}
-
-/* ganz leichte „Mähnen“-Andeutung, aber extrem ruhig */
-.prompt-simba-glyph::before {
-  content: "";
-  position: absolute;
-  inset: 3px 2px 2px 2px;
-  border-radius: 999px;
-  border-top: 1px solid currentColor;
-  opacity: 0.7;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .prompt-simba,
-  .prompt-simba:hover,
-  .prompt-simba:active {
-    transition: opacity 140ms linear;
-    transform: none;
-  }
-}
-
 
 
 /* =============================================================

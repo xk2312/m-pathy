@@ -114,14 +114,11 @@ export function PromptShell({
       {/* Simba – ruhiger runder Gate-Button, noch ohne Logik */}
       <button
         type="button"
-        className="prompt-simba"
+        className="prompt-orb"
         aria-label="Simba Portal"
-      >
-        <span
-          className="prompt-simba-glyph"
-          aria-hidden="true"
-        />
-      </button>
+        >
+        <span className="prompt-orb-icon" aria-hidden="true" />
+        </button>
 
     
     </form>

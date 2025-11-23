@@ -863,6 +863,171 @@
   /* Focus / A11y */
   --prompt-focus-ring: 0 0 0 2px rgba(226,232,240,0.55);
 }
+/* =====================================================================
+   ORB STYLES – 13 Simba-Varianten (nur Token-Overrides)
+   Aktivierungsidee: <body data-orb-theme="halo-singular"> … </body>
+   ===================================================================== */
 
+
+/* 1. M – The Halo Singular */
+:root[data-orb-theme="halo-singular"] {
+  --prompt-orb-bg: rgba(15,23,42,0.92);
+  --prompt-orb-bg-hover: rgba(15,23,42,0.98);
+  --prompt-orb-bg-active: rgba(10,16,26,0.96);
+  --prompt-orb-border: rgba(148,163,184,0.45);
+  --prompt-orb-border-hover: rgba(226,232,240,0.95);
+  --prompt-orb-icon: #e6f0f3;
+  --prompt-orb-shadow: 0 0 40px rgba(15,23,42,0.95);
+}
+
+
+/* 2. m-pathy – Breath of Light */
+:root[data-orb-theme="breath-of-light"] {
+  --prompt-orb-bg: rgba(15,23,42,0.88);
+  --prompt-orb-bg-hover: rgba(15,23,42,0.94);
+  --prompt-orb-bg-active: rgba(10,16,26,0.96);
+  --prompt-orb-border: rgba(148,163,184,0.40);
+  --prompt-orb-border-hover: rgba(226,232,240,0.90);
+  --prompt-orb-icon: #e6f0f3;
+  --prompt-orb-shadow: 0 0 32px rgba(148,163,184,0.55);
+}
+
+
+/* 3. m-ocean – Deep Current Pearl */
+:root[data-orb-theme="deep-current-pearl"] {
+  --prompt-orb-bg: rgba(10,20,32,0.96);
+  --prompt-orb-bg-hover: rgba(9,18,30,0.98);
+  --prompt-orb-bg-active: rgba(6,12,22,0.98);
+  --prompt-orb-border: rgba(94,234,212,0.30);
+  --prompt-orb-border-hover: rgba(94,234,212,0.80);
+  --prompt-orb-icon: rgba(226,242,245,0.96);
+  --prompt-orb-shadow: 0 0 34px rgba(56,189,248,0.40);
+}
+
+
+/* 4. m-inent – Chronos Gate */
+:root[data-orb-theme="chronos-gate"] {
+  --prompt-orb-bg: rgba(15,23,42,0.96);
+  --prompt-orb-bg-hover: rgba(15,23,42,0.99);
+  --prompt-orb-bg-active: rgba(8,15,30,1);
+  --prompt-orb-border: rgba(148,163,184,0.30);
+  --prompt-orb-border-hover: rgba(226,232,240,0.85);
+  --prompt-orb-icon: #f9fafb;
+  --prompt-orb-shadow: 0 0 28px rgba(148,163,184,0.55);
+}
+
+
+/* 5. m-erge – Quantum Drop */
+:root[data-orb-theme="quantum-drop"] {
+  --prompt-orb-bg: rgba(15,23,42,0.98);
+  --prompt-orb-bg-hover: rgba(15,23,42,1);
+  --prompt-orb-bg-active: rgba(3,7,18,1);
+  --prompt-orb-border: rgba(148,163,184,0.28);
+  --prompt-orb-border-hover: rgba(226,232,240,0.80);
+  --prompt-orb-icon: rgba(248,250,252,0.96);
+  --prompt-orb-shadow: 0 0 36px rgba(15,23,42,0.95);
+}
+
+
+/* 6. m-power – Event Horizon Dot */
+:root[data-orb-theme="event-horizon-dot"] {
+  --prompt-orb-bg: rgba(3,7,18,0.98);
+  --prompt-orb-bg-hover: rgba(3,7,18,1);
+  --prompt-orb-bg-active: rgba(0,0,0,1);
+  --prompt-orb-border: rgba(15,23,42,0.80);
+  --prompt-orb-border-hover: rgba(148,163,184,0.85);
+  --prompt-orb-icon: rgba(226,232,240,0.92);
+  --prompt-orb-shadow: 0 0 45px rgba(15,23,42,0.95);
+}
+
+
+/* 7. m-body – Warm Pulse Orb */
+:root[data-orb-theme="warm-pulse-orb"] {
+  --prompt-orb-bg: rgba(15,23,42,0.94);
+  --prompt-orb-bg-hover: rgba(17,24,39,0.98);
+  --prompt-orb-bg-active: rgba(15,23,42,1);
+  --prompt-orb-border: rgba(248,250,252,0.45);
+  --prompt-orb-border-hover: rgba(254,249,195,0.95);
+  --prompt-orb-icon: #fefce8;
+  --prompt-orb-shadow: 0 0 34px rgba(248,250,252,0.40);
+}
+
+
+/* 8. m-beded – Lattice Smoothpoint */
+:root[data-orb-theme="lattice-smoothpoint"] {
+  --prompt-orb-bg: rgba(15,23,42,0.90);
+  --prompt-orb-bg-hover: rgba(15,23,42,0.96);
+  --prompt-orb-bg-active: rgba(15,23,42,1);
+  --prompt-orb-border: rgba(148,163,184,0.22);
+  --prompt-orb-border-hover: rgba(226,232,240,0.75);
+  --prompt-orb-icon: rgba(226,232,240,0.90);
+  --prompt-orb-shadow: 0 0 26px rgba(148,163,184,0.38);
+}
+
+
+/* 9. m-loop – Zero-Noise Node */
+:root[data-orb-theme="zero-noise-node"] {
+  --prompt-orb-bg: rgba(15,23,42,0.84);
+  --prompt-orb-bg-hover: rgba(15,23,42,0.90);
+  --prompt-orb-bg-active: rgba(15,23,42,0.96);
+  --prompt-orb-border: rgba(148,163,184,0.18);
+  --prompt-orb-border-hover: rgba(226,232,240,0.55);
+  --prompt-orb-icon: rgba(226,232,240,0.80);
+  --prompt-orb-shadow: 0 0 20px rgba(15,23,42,0.75);
+}
+
+
+/* 10. m-pire – Nexus Pearl */
+:root[data-orb-theme="nexus-pearl"] {
+  --prompt-orb-bg: radial-gradient(circle at 30% 20%,
+    rgba(248,250,252,0.16),
+    rgba(15,23,42,0.96)
+  );
+  --prompt-orb-bg-hover: radial-gradient(circle at 30% 20%,
+    rgba(248,250,252,0.24),
+    rgba(15,23,42,0.98)
+  );
+  --prompt-orb-bg-active: rgba(15,23,42,1);
+  --prompt-orb-border: rgba(226,232,240,0.60);
+  --prompt-orb-border-hover: rgba(248,250,252,0.95);
+  --prompt-orb-icon: #f9fafb;
+  --prompt-orb-shadow: 0 0 40px rgba(248,250,252,0.40);
+}
+
+
+/* 11. m-bassy – Gaia Whisper Dot */
+:root[data-orb-theme="gaia-whisper-dot"] {
+  --prompt-orb-bg: rgba(23,27,38,0.96);
+  --prompt-orb-bg-hover: rgba(24,32,45,0.99);
+  --prompt-orb-bg-active: rgba(17,24,39,1);
+  --prompt-orb-border: rgba(250,250,249,0.40);
+  --prompt-orb-border-hover: rgba(254,249,195,0.85);
+  --prompt-orb-icon: rgba(255,251,235,0.95);
+  --prompt-orb-shadow: 0 0 30px rgba(250,250,249,0.35);
+}
+
+
+/* 12. m-ballance – Gemini Zero-Flux */
+:root[data-orb-theme="gemini-zero-flux"] {
+  --prompt-orb-bg: rgba(15,23,42,0.92);
+  --prompt-orb-bg-hover: rgba(15,23,42,0.98);
+  --prompt-orb-bg-active: rgba(15,23,42,1);
+  --prompt-orb-border: rgba(148,163,184,0.32);
+  --prompt-orb-border-hover: rgba(226,232,240,0.80);
+  --prompt-orb-icon: rgba(241,245,249,0.96);
+  --prompt-orb-shadow: 0 0 30px rgba(148,163,184,0.45);
+}
+
+
+/* 13. MU TAH – The Silent Sun */
+:root[data-orb-theme="silent-sun"] {
+  --prompt-orb-bg: rgba(15,23,42,0.96);
+  --prompt-orb-bg-hover: rgba(15,23,42,1);
+  --prompt-orb-bg-active: rgba(3,7,18,1);
+  --prompt-orb-border: rgba(250,250,249,0.40);
+  --prompt-orb-border-hover: rgba(253,224,171,0.95);
+  --prompt-orb-icon: #fef3c7;
+  --prompt-orb-shadow: 0 0 42px rgba(253,224,171,0.55);
+}
 
 
