@@ -1746,30 +1746,36 @@ return (
                 scrollRef={convoRef as any}
               />
 
-              {/* stabiler Endanker */}
+                     {/* stabiler Endanker */}
               <div ref={endRef} style={{ height: 1 }} aria-hidden="true" />
-
             </div>
           </div>
 
           {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
-          <PromptRoot
-            t={t}
-            hasMessages={hasMessages}
-            input={input}
-            setInput={setInput}
-            loading={loading}
-            dockRef={dockRef}
-            padBottom={padBottom}
-            setPadBottom={setPadBottom}
-            compactStatus={compactStatus}
-            footerStatus={footerStatus}
-            withGate={withGate}
-            sendingRef={sendingRef}
-            onSendFromPrompt={onSendFromPrompt}
-            isMobile={isMobile}
-          />
+          <div
+            data-position-state={!hasMessages && !isMobile ? "intro" : "chat"}
+            data-layout={isMobile ? "mobile" : "desktop"}
+            className="prompt-root-scene"
+          >
+            <PromptRoot
+              t={t}
+              hasMessages={hasMessages}
+              input={input}
+              setInput={setInput}
+              loading={loading}
+              dockRef={dockRef}
+              padBottom={padBottom}
+              setPadBottom={setPadBottom}
+              compactStatus={compactStatus}
+              footerStatus={footerStatus}
+              withGate={withGate}
+              sendingRef={sendingRef}
+              onSendFromPrompt={onSendFromPrompt}
+              isMobile={isMobile}
+            />
+          </div>
         </div> {/* /rechte Spalte */}
+
 
       </section>   {/* /Grid */}
     </div>     {/* /Bühne */}
