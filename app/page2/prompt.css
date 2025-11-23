@@ -92,20 +92,17 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  margin-top: 100px;
   margin-bottom: 18px;
 
   /* genau die Breite der Prompt-Shell */
   max-width: min(
     var(--chat-stage-max, 820px),
     calc(100vw - var(--chat-stage-pad-inline, 48px) * 2)
-
   );
 
-  width: 100%;               /* <— NEU: zwingt echte Zentrierung */
+  width: 100%;               /* <— zwingt echte Zentrierung */
   margin-inline: auto;
   text-align: center;
-
 
   color: rgba(226,232,240,0.9);
 
@@ -116,6 +113,21 @@
     opacity 200ms ease-out,
     transform 200ms ease-out;
 }
+
+/* Desktop: Doorman-Szene etwas nach unten versetzen */
+@media (min-width: 768px) {
+  .prompt-quotes {
+    margin-top: 100px;
+  }
+}
+
+.prompt-quote-main {
+  font-size: 0.94rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
 
 
 .prompt-quote-main {
