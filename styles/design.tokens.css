@@ -863,7 +863,7 @@
   --prompt-dock-bottom-mobile: 28px;
 
   /* Launch/Flight Motion */
-  --prompt-flight-translate-y: -382px;  /* FLUGHÖHE+++++++++++++++++++++++++++++++++++++++*/
+  --prompt-flight-translate-y: -377px;  /* FLUGHÖHE+++++++++++++++++++++++++++++++++++++++*/
   --prompt-launch-translate-y: 0;
   --prompt-motion: 220ms cubic-bezier(.25,.8,.25,1);
 
