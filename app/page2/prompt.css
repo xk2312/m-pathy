@@ -38,12 +38,12 @@
    ============================================================= */
 
 /* State 1 – PreChat Desktop: Prompt näher an den Doorman holen */
-#m-input-dock.prompt-root[data-layout="desktop"][data-position-state="intro"] {
+#m-input-dock.prompt-root[data-layout="desktop"][data-mode="doorman"] {
   bottom: 96px;
 }
 
 /* State 2 – Chat Desktop: Dock bleibt exakt wie vorher */
-#m-input-dock.prompt-root[data-layout="desktop"][data-position-state="chat"] {
+#m-input-dock.prompt-root[data-layout="desktop"][data-mode="chat"] {
   bottom: 8px;
 }
 
