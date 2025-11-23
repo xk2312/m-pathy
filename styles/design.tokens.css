@@ -865,6 +865,11 @@
   /* Launch/Flight Motion */
   --prompt-flight-translate-y: -377px;  /* FLUGHÖHE+++++++++++++++++++++++++++++++++++++++*/
   --prompt-launch-translate-y: 0;
+
+  /* NEU: Mobile / Tablet – eigener Flight-Offset */
+  --prompt-flight-translate-y-mobile: -72px;   /* Mobile/Tablet-Intro    */
+  --prompt-launch-translate-y-mobile: 0;       /* Mobile/Tablet-Chat     */
+  
   --prompt-motion: 220ms cubic-bezier(.25,.8,.25,1);
 
   /* Focus / A11y */

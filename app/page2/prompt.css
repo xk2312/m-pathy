@@ -53,18 +53,23 @@
 }
 
 /* =============================================================
-   Position States – Mobile + Tablet (data-layout="mobile")
+   Position States – Mobile + Tablet
    ============================================================= */
 
-/* State 1 – PreChat Mobile/Tablet: Prompt hoch unter den Doorman */
+/* PreChat Mobile/Tablet – Prompt unter den Doorman fliegen lassen */
 #m-input-dock.prompt-root[data-layout="mobile"][data-mode="doorman"] {
-  bottom: 96px;
+  transform: translateY(
+    var(--prompt-flight-translate-y-mobile, var(--prompt-flight-translate-y))
+  );
 }
 
-/* State 2 – Chat Mobile/Tablet: Prompt wieder runter an den Rand */
+/* Chat Mobile/Tablet – Prompt wieder auf Grundstellung */
 #m-input-dock.prompt-root[data-layout="mobile"][data-mode="chat"] {
-  bottom: 8px;
+  transform: translateY(
+    var(--prompt-launch-translate-y-mobile, var(--prompt-launch-translate-y))
+  );
 }
+
 
 
 /* Starship Horizon – feine Lichtkante über dem Dock */
