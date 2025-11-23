@@ -111,12 +111,13 @@ export function PromptShell({
         autoCapitalize="sentences"
       />
 
-          {/* Simba – ruhiger runder Gate-Button, jetzt mit Sendelogik */}
+                {/* Simba – Orb mit Sendelogik + Busy-Animation */}
       <button
         type="submit"
         className="prompt-orb"
         aria-label={resolvedAriaLabel || "Senden"}
         disabled={!canSubmit}
+        data-busy={isSendBlocked ? "true" : undefined}
         onClick={handleClickSend}
       >
         <span
@@ -127,6 +128,7 @@ export function PromptShell({
     </form>
   );
 }
+
 
 
 export default PromptShell;

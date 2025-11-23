@@ -337,3 +337,36 @@
 .prompt-mode-line {
   display: none;
 }
+/* =============================================================
+   Busy-State — leises „Breath“-Pulsieren beim Laden
+   ============================================================= */
+
+.prompt-orb[data-busy="true"] {
+  cursor: default;
+  animation: prompt-orb-breath 900ms ease-in-out infinite;
+}
+
+/* Hover/Active im Busy-State neutralisieren */
+.prompt-orb[data-busy="true"]:hover,
+.prompt-orb[data-busy="true"]:active {
+  transform: none;
+}
+
+/* Motion-Guard */
+@media (prefers-reduced-motion: reduce) {
+  .prompt-orb[data-busy="true"] {
+    animation: none;
+  }
+}
+
+/* Keyframes – nur Transform + Opacity */
+@keyframes prompt-orb-breath {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.96);
+    opacity: 0.85;
+  }
+}
