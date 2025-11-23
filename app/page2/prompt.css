@@ -87,12 +87,24 @@
   transform: translateY(0);
 }
 
-@media (max-width: 768px) {
+/* Viewport ≤ 1024px: Dock erden, keine Vertical-Flights mehr
+   → Desktop (groß) behält seinen Flug, Tablet/Mobile bleiben stabil unten */
+@media (max-width: 1024px) {
   #m-input-dock.prompt-root {
     bottom: var(--prompt-dock-bottom-mobile);
     padding: 16px 10px 20px;
+    transform: translateY(0);
+  }
+
+  #m-input-dock.prompt-root[data-layout="desktop"][data-mode="doorman"],
+  #m-input-dock.prompt-root[data-layout="desktop"][data-mode="chat"],
+  #m-input-dock.prompt-root[data-layout="mobile"][data-mode="doorman"],
+  #m-input-dock.prompt-root[data-layout="mobile"][data-mode="chat"],
+  .prompt-root--flight {
+    transform: translateY(0);
   }
 }
+
 
 
 /* =============================================================
