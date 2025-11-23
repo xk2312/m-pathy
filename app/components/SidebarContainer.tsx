@@ -48,11 +48,14 @@ export default function SidebarContainer({
   onClearChat,
   canClear,
 }: Props) {
-  const isDesktop = useIsDesktop(1024);
+  // Breakpoint an page2/useBreakpoint angleichen:
+  // Desktop = alles, was NICHT isMobile (>= 769px) ist
+  const isDesktop = useIsDesktop(768);
 
     return (
     <aside
       aria-label="Sidebar Container"
+
       data-test="sidebar-container"
       /* KEIN display: contents – Containing-Block bleibt stabil */
       style={{
