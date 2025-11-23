@@ -1657,21 +1657,17 @@ return (
 
 
                 {/* Säule links */}
-               {!isMobile && (
+           {!isMobile && (
           <div
             style={{
               position: "sticky",
               top: 0,
               alignSelf: "stretch",
-
               // Säule = exakt volle Bühne, ohne Safe-Top-Buffer
               height: "100dvh",
-
-              // KEIN nav-safe-top mehr – Rail startet exakt unter der Navi
               marginTop: 0,
               paddingTop: 0,
               paddingBottom: 0,
-
               overflow: "visible",
               marginLeft: 0,
             }}
@@ -1683,82 +1679,86 @@ return (
           </div>
         )}
 
-                <div
-  ref={convoRef as any}
-  className="chat-stage"
-  style={{
-    display: "flex",
-    flexDirection: "column",
-
-    /* Oberer Buffer unter der Navi – SPOTY APPROVED */
-    paddingTop: "var(--h-gap-md)",   // = 210px
-
-    flex: "1 1 auto",
-    height: isMobile ? undefined : "calc(100dvh - var(--dock-h, 60px))",
-
-
-
+        {/* Rechte Spalte: oben Scroll, unten festes Dock */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
             minHeight: 0,
-            overflow: "auto",
-            pointerEvents: "auto",
-            touchAction: "pan-y",
-
-            WebkitOverflowScrolling: "touch",
-            overscrollBehavior: "contain",
-
-            paddingBottom: `${padBottom}px`,
-            scrollPaddingBottom: `${padBottom}px`,
-
-            paddingInline: isMobile
-              ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
-              : "12px",
+            height: isMobile ? undefined : "100dvh",
           }}
         >
-
-          {/* Chronik wächst im Scroller */}
           <div
-  style={{
-    flex: 1,
-    minHeight: 0,
-    paddingTop: 8,
-    paddingLeft: isMobile ? 0 : undefined,
-    paddingRight: isMobile ? 0 : undefined,
-    scrollbarGutter: "stable",
-  }}
-  aria-label={t("conversationAria")}
->
+            ref={convoRef as any}
+            className="chat-stage"
+            style={{
+              display: "flex",
+              flexDirection: "column",
 
+              /* Oberer Buffer unter der Navi – SPOTY APPROVED */
+              paddingTop: "var(--h-gap-md)",   // = 210px
 
-            <Conversation
-              messages={messages}
-              tokens={activeTokens}
-              padBottom={`${padBottom}px`}
-              scrollRef={convoRef as any}
-            />
+              flex: "1 1 auto",
+              minHeight: 0,
+              overflow: "auto",
+              pointerEvents: "auto",
+              touchAction: "pan-y",
 
-            {/* stabiler Endanker */}
-            <div ref={endRef} style={{ height: 1 }} aria-hidden="true" />
+              WebkitOverflowScrolling: "touch",
+              overscrollBehavior: "contain",
+
+              paddingBottom: `${padBottom}px`,
+              scrollPaddingBottom: `${padBottom}px`,
+
+              paddingInline: isMobile
+                ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
+                : "12px",
+            }}
+          >
+            {/* Chronik wächst im Scroller, Breite = Raumschiff */}
+            <div
+              className="chat-stage-inner"
+              style={{
+                flex: 1,
+                minHeight: 0,
+                paddingTop: 8,
+                paddingLeft: isMobile ? 0 : undefined,
+                paddingRight: isMobile ? 0 : undefined,
+                scrollbarGutter: "stable",
+              }}
+              aria-label={t("conversationAria")}
+            >
+              <Conversation
+                messages={messages}
+                tokens={activeTokens}
+                padBottom={`${padBottom}px`}
+                scrollRef={convoRef as any}
+              />
+
+              {/* stabiler Endanker */}
+              <div ref={endRef} style={{ height: 1 }} aria-hidden="true" />
+            </div>
           </div>
 
-            {/* === BOTTOM STACK: Prompt, dann Icons + Status ================= */}
-            <PromptRoot
-              t={t}
-              hasMessages={hasMessages}
-              input={input}
-              setInput={setInput}
-              loading={loading}
-              dockRef={dockRef}
-              padBottom={padBottom}
-              setPadBottom={setPadBottom}
-              compactStatus={compactStatus}
-              footerStatus={footerStatus}
-              withGate={withGate}
-              sendingRef={sendingRef}
-              onSendFromPrompt={onSendFromPrompt}
-              isMobile={isMobile}          // ⬅️ neu
-            />
-            {/* === /BOTTOM STACK ========================================= */}
-        </div> {/* /Scroller */}
+          {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
+          <PromptRoot
+            t={t}
+            hasMessages={hasMessages}
+            input={input}
+            setInput={setInput}
+            loading={loading}
+            dockRef={dockRef}
+            padBottom={padBottom}
+            setPadBottom={setPadBottom}
+            compactStatus={compactStatus}
+            footerStatus={footerStatus}
+            withGate={withGate}
+            sendingRef={sendingRef}
+            onSendFromPrompt={onSendFromPrompt}
+            isMobile={isMobile}
+          />
+        </div> {/* /rechte Spalte */}
+
       </section>   {/* /Grid */}
     </div>     {/* /Bühne */}
 

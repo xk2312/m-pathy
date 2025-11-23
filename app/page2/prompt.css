@@ -166,7 +166,15 @@
     box-shadow 160ms cubic-bezier(0.2,0.6,0.2,1),
     background-color 160ms cubic-bezier(0.2,0.6,0.2,1);
 }
-
+/* Chat-Content auf Raumschiff-Breite begrenzen */
+.chat-stage-inner {
+  max-width: min(
+    var(--chat-stage-max, 820px),
+    calc(100vw - var(--chat-stage-pad-inline, 48px) * 2)
+  );
+  width: 100%;
+  margin-inline: auto;
+}
 /* Starship Floor – horizontale Lichtfläche unter der Pille */
 .prompt-shell::after {
   content: "";
