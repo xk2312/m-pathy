@@ -52,6 +52,15 @@
   transform: translateY(var(--prompt-launch-translate-y));
 }
 
+/* =============================================================
+   Position States – Mobile & Tablet
+   ============================================================= */
+
+/* State – PreChat (kein Thread): Prompt etwas höher setzen */
+#m-input-dock.prompt-root[data-layout="mobile"][data-mode="doorman"],
+#m-input-dock.prompt-root[data-layout="tablet"][data-mode="doorman"] {
+  transform: translateY(var(--prompt-flight-mobile-translate-y, -32px));
+}
 
 
 /* Starship Horizon – feine Lichtkante über dem Dock */

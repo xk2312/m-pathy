@@ -1730,7 +1730,6 @@ return (
               }}
               aria-label={t("conversationAria")}
             >
-              {/* PreChat-Label (Doorman) – auf allen Breakpoints */}
               {!hasMessages && (
                 <div className="prompt-quotes" aria-hidden="true">
                   <p className="prompt-quote-main">
