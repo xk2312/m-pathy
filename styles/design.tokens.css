@@ -830,9 +830,13 @@
   --prompt-radius: 999px;
   --prompt-pad-y: 14px;
   --prompt-pad-x: 18px;
+  --prompt-width-min: 318px;
+  --prompt-width-max: 500px;
+  --prompt-margin-inline: 10px;
 
   /* Text */
   --prompt-text: #e6f0f3;
+
   --prompt-placeholder: rgba(230,240,243,0.45);
 
   /* Orb (Send Button) */

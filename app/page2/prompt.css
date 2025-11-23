@@ -210,10 +210,17 @@
 }
 
 @media (max-width: 768px) {
-  .prompt-shell {
-    max-width: calc(100vw - 20px);
-    padding-inline: 8px;
-  }
+ .prompt-shell {
+  max-width: min(
+    var(--prompt-width-max, 500px),
+    calc(100vw - var(--prompt-margin-inline, 10px) * 2)
+  );
+  min-width: min(
+    var(--prompt-width-min, 318px),
+    calc(100vw - var(--prompt-margin-inline, 10px) * 2)
+  );
+  margin-inline: auto;
+}
 }
 
 
