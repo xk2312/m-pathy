@@ -1716,7 +1716,7 @@ return (
             }}
           >
             {/* Chronik wächst im Scroller, Breite = Raumschiff */}
-            <div
+                       <div
               className="chat-stage-inner"
               style={{
                 flex: 1,
@@ -1728,6 +1728,17 @@ return (
               }}
               aria-label={t("conversationAria")}
             >
+              {!hasMessages && !isMobile && (
+                <div className="prompt-quotes" aria-hidden="true">
+                  <p className="prompt-quote-main">
+                    {t("prompt.doorman.main")}
+                  </p>
+                  <p className="prompt-quote-sub">
+                    {t("prompt.doorman.sub")}
+                  </p>
+                </div>
+              )}
+
               <Conversation
                 messages={messages}
                 tokens={activeTokens}
@@ -1737,6 +1748,7 @@ return (
 
               {/* stabiler Endanker */}
               <div ref={endRef} style={{ height: 1 }} aria-hidden="true" />
+
             </div>
           </div>
 

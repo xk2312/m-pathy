@@ -105,31 +105,29 @@ export function PromptRoot({
     sendingRef,
   ]);
 
+   const modeVariant = snapshot.modeVariant ?? (!hasMessages ? "doorman" : "chat");
+  const layoutVariant = snapshot.layoutVariant ?? (isMobile ? "mobile" : "desktop");
+  const isDoorman = modeVariant === "doorman";
+  const dockClassName = isDoorman
+    ? "prompt-root"
+    : "prompt-root prompt-root--flight";
+
   return (
     <div
-      id="m-dock"
+      id="m-input-dock"
       ref={dockRef as any}
-      className="prompt-dock"
+      className={dockClassName}
       role="group"
       aria-label={t("prompt.ariaLabel")}
+      data-mode={modeVariant}
+      data-layout={layoutVariant}
       data-prompt-state={visualState}
     >
-      {/* Doorman – nur im intro */}
-      {visualState === "intro" && (
-        <div className="prompt-doorman" aria-hidden="true">
-          <p className="prompt-doorman-main">
-            {t("prompt.doorman.main")}
-          </p>
-          <p className="prompt-doorman-sub">
-            {t("prompt.doorman.sub")}
-          </p>
-        </div>
-      )}
-
       {/* ModeLine – nur wenn Status mitkommt */}
       {hasFooterStatus && (
         <div className="prompt-mode-line">
           {footerStatus?.modeLabel && (
+
             <span className="prompt-mode-line-mode">
               {footerStatus.modeLabel}
             </span>
