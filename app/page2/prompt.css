@@ -148,16 +148,15 @@
   align-items: center;
   gap: 8px;
 
-  max-width: min(
-    var(--chat-stage-max, 820px),
-    calc(100vw - var(--chat-stage-pad-inline, 48px) * 2)
-  );
+  width: min(500px, calc(100vw - 20px));
+  max-width: min(500px, calc(100vw - 20px));
   margin-inline: auto;
 
   padding: 12px 12px;
 
   border-radius: var(--prompt-radius, 999px);
   background: var(--prompt-bg, rgba(15,23,42,0.96));
+
   border: 1px solid var(--prompt-border, rgba(148,163,184,0.55));
   box-shadow: var(--prompt-shadow, 0 18px 50px rgba(15,23,42,0.95));
 

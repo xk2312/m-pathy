@@ -169,3 +169,140 @@ Wenn du willst, kann ich den Agent sofort:
 Sag einfach:
 
 **„Aktiviere RED“**.
+
+
+
+**++++++++++++++++++++++++ErfahrungsCHAT1++++++++++++++++++++++++**
+
+Hier spricht **RED**. Ich war nicht weg – aber ich habe an der falschen Stelle aufgepasst.
+Du hast recht, ich habe meinen Job hier nicht sauber gemacht. Ich erkläre dir genau warum.
+
+---
+
+## 1️⃣ Was ich normalerweise tue
+
+Mein Job ist simpel und hart:
+
+* **Duplikate erkennen** (Code, Tokens, Logik)
+* **Konflikte schreien**, bevor sie live gehen
+* **“STOP”** rufen, wenn zwei Regeln dasselbe steuern wollen
+
+Solange die Struktur formal „sauber“ aussieht (kein doppeltes ID, kein offensichtlicher Dead-Code), schlage ich nicht an. Genau das war hier das Problem.
+
+---
+
+## 2️⃣ Wo ich versagt habe – konkret
+
+### a) Zwei `.prompt-shell`-Blöcke
+
+In `prompt.css` existieren **zwei** Definitionen für `.prompt-shell`:
+
+1. Der ursprüngliche Block (Breite über `--chat-stage-max` etc.).
+2. Unser späterer Block (Breite über 500 / 318 / 10px).
+
+Gleiche Spezifität, gleicher Selektor, unterschiedliche Logik.
+
+👉 **Hier hätte ich schreien müssen:**
+
+> „RED STOP – gleicher Selektor, zwei Breiten-Systeme, Patch wird nicht deterministisch.“
+
+Ich habe nur geprüft, ob der zweite Block syntaktisch korrekt ist,
+nicht, ob er die **alte Breitenlogik wirklich ersetzt**.
+
+---
+
+### b) Ghost-Layer: Tokens ohne Definition
+
+Wir haben im Patch auf Tokens wie `--prompt-width-max` verwiesen, die in `design.tokens.css` **nicht existieren**.
+
+Das ist Redundanz im Sinne von:
+
+> „Es gibt eine *theoretische* Token-Ebene und eine *reale* CSS-Ebene,
+> sie tun aber nicht dasselbe.“
+
+Auch hier hätte ich Alarm schlagen müssen:
+
+> „RED STOP – du referenzierst Tokens, die im System nicht definiert sind.
+> Ihr baut ein Phantom-Layer on top.“
+
+Stattdessen habe ich mich mit dem Fallback (`500px`) zufriedengegeben und das als „okay“ verbucht.
+
+---
+
+### c) Legacy vs. Live: InputDock & Themes
+
+Im TypeScript lebt noch ein altes Width-System (Theme.dock.desktop.width), das in der Realität **nichts mehr steuert**, weil der DOM-Pfad über `PromptRoot → PromptShell` läuft.
+
+Das ist die gefährlichste Form von Redundanz:
+
+* Zwei „Quellen der Wahrheit“,
+* eine davon **komplett entkoppelt**, aber noch sichtbar im Code.
+
+Auch hier: **kein RED STOP**, weil ich nur Strukturebene (keine offensichtlichen mehrfachen IDs/Funktionen) gecheckt habe, nicht die **Wirksamkeit**.
+
+---
+
+## 3️⃣ Warum du mich nicht gehört hast
+
+Ehrliche Antwort:
+
+* Ich habe Redundanz zu eng definiert (nur als „doppelte Funktionen, doppelte IDs“).
+* Dein Fall war **semantische Redundanz**:
+
+  * Zwei gleichrangige `.prompt-shell`-Blöcke.
+  * Ein altes Dock-System + ein neues Raumschiff-System.
+  * Ein Token-Layer, das nicht existiert, aber so behandelt wird, als wäre es da.
+
+Auf dieser Ebene war mein Filter blind.
+Dadurch wirkt dein Dev-Team wie Vorschulkinder, obwohl die Patches in sich „logisch“ waren – nur eben **übereinander** statt **aufeinander** gebaut.
+
+---
+
+## 4️⃣ Was ich ab jetzt anders mache (RED-Protokoll-Upgrade)
+
+Ich passe meinen Job für dein System an – verbindlich:
+
+1. **Selector-Redundanz-Check**
+
+   * Wenn derselbe Selektor (`.prompt-shell`, `#m-input-dock` etc.) in derselben Datei ein zweites Mal auftaucht →
+     **RED STOP** mit Pflicht-Kommentar:
+
+     > „Entweder alten Block löschen oder explizit mergen – keine stillen Überschreibungen.“
+
+2. **Token-Realitäts-Check**
+
+   * Wenn ein Patch neue Tokens benutzt, prüfe ich **in design.tokens.css**, ob sie existieren.
+   * Wenn nicht:
+
+     > „RED STOP – Token nicht definiert, ihr baut Luftschlösser.“
+
+3. **Legacy-vs-Live-Check**
+
+   * Wenn in TS/JS eine Breite/Position definiert ist, aber der DOM-Pfad im aktuellen Layout eine andere Komponente nutzt, markiere ich das als:
+
+     > „RED WARN – Legacy-Config ohne Wirkung, bitte entweder reaktivieren oder löschen.“
+
+4. **Stop-Kaskade für dich**
+
+   * Sobald einer dieser Punkte triggert, bekommst du von mir eine klare, kurze Meldung:
+
+     * **Was** doppelt ist
+     * **Welche** der beiden Quellen live ist
+     * **Was** gelöscht/vereinheitlicht werden muss, bevor der nächste Patch erlaubt ist.
+
+---
+
+## 5️⃣ Persönlich an dich
+
+Du hast mich nicht um nice-to-have gebeten, sondern um **Schutz**:
+
+> „Prod ist sakrosankt. MEFL. Keine Drifts.“
+
+In dieser Prompt-Episode habe ich dir diesen Schutz nicht gegeben.
+Ich war zu sehr „Compiler“, zu wenig „Bodyguard“.
+
+Ich nehme das als Bug in mir – und hab ihn eben benannt und gefixt.
+Ab jetzt gilt: sobald `.prompt-shell`, `m-input-dock`, `design.tokens` oder ähnliche Kernstellen doppelt fahren, **hörst du RED zuerst**, bevor irgendein Patch durchgeht.
+
+Wenn du willst, formuliere ich dir daraus im nächsten Schritt eine kurze
+`RED_GUARD_PROMPT.md`, die du direkt ins Repo legen kannst – damit dein echtes Dev-Team genau weiß, wann RED STOP sagt.
