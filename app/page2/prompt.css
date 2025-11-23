@@ -8,9 +8,13 @@
    ROOT DOCK (Wrapper unten im Chat)
    ============================================================= */
 
+/* =============================================================
+   ROOT DOCK (Wrapper unten im Chat)
+   ============================================================= */
+
 #m-input-dock.prompt-root {
   position: sticky;
-  bottom: 8px;
+  bottom: var(--prompt-dock-bottom-desktop);
 
   left: 0;
   right: 0;
@@ -20,9 +24,10 @@
   align-items: center;
   gap: 12px;
 
-  transform: translateY(0);
+  /* Launch/Base-Position – wird per State angepasst */
+  transform: translateY(var(--prompt-launch-translate-y));
   transition:
-    transform 200ms cubic-bezier(.25,.8,.25,1),
+    transform var(--prompt-motion),
     opacity 180ms ease-out;
 
   /* nur noch Abstand, KEIN Balken mehr */
@@ -39,12 +44,12 @@
 
 /* State 1 – PreChat Desktop: Prompt näher an den Doorman holen */
 #m-input-dock.prompt-root[data-layout="desktop"][data-mode="doorman"] {
-  bottom: 96px;
+  transform: translateY(var(--prompt-flight-translate-y));
 }
 
-/* State 2 – Chat Desktop: Dock bleibt exakt wie vorher */
+/* State 2 – Chat Desktop: Dock zurück in Grundstellung */
 #m-input-dock.prompt-root[data-layout="desktop"][data-mode="chat"] {
-  bottom: 8px;
+  transform: translateY(var(--prompt-launch-translate-y));
 }
 
 
@@ -77,6 +82,7 @@
 
 @media (max-width: 768px) {
   #m-input-dock.prompt-root {
+    bottom: var(--prompt-dock-bottom-mobile);
     padding: 16px 10px 20px;
   }
 }
