@@ -105,10 +105,11 @@ export function PromptRoot({
     sendingRef,
   ]);
 
-    // PreChat = "doorman", sonst "chat" – für alle Breakpoints identisch
+  // PreChat = "doorman", sonst "chat"
   const modeVariant = !hasMessages ? "doorman" : "chat";
   const layoutVariant = snapshot.layoutVariant ?? (isMobile ? "mobile" : "desktop");
   const isDoorman = modeVariant === "doorman";
+
   const dockClassName = isDoorman
     ? "prompt-root"
     : "prompt-root prompt-root--flight";
@@ -124,11 +125,10 @@ export function PromptRoot({
       data-layout={layoutVariant}
       data-prompt-state={visualState}
     >
-      {/* ModeLine – nur wenn Status mitkommt */}
+      {/* ModeLine */}
       {hasFooterStatus && (
         <div className="prompt-mode-line">
           {footerStatus?.modeLabel && (
-
             <span className="prompt-mode-line-mode">
               {footerStatus.modeLabel}
             </span>
@@ -144,6 +144,15 @@ export function PromptRoot({
         </div>
       )}
 
+      {/* ⭐ NEW: DOORMAN inside PromptDockCluster */}
+      {!hasMessages && (
+        <div className="prompt-doorman" aria-hidden="true">
+          <p className="prompt-doorman-main">{t("prompt.doorman.main")}</p>
+          <p className="prompt-doorman-sub">{t("prompt.doorman.sub")}</p>
+        </div>
+      )}
+
+      {/* PromptShell */}
       <PromptShell
         value={input}
         onChange={setInput}

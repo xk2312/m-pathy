@@ -1730,26 +1730,16 @@ return (
               }}
               aria-label={t("conversationAria")}
             >
-              {!hasMessages && (
-                <div className="prompt-quotes" aria-hidden="true">
-                  <p className="prompt-quote-main">
-                    {t("prompt.doorman.main")}
-                  </p>
-                  <p className="prompt-quote-sub">
-                    {t("prompt.doorman.sub")}
-                  </p>
-                </div>
-              )}
-
-              <Conversation
+                          <Conversation
                 messages={messages}
                 tokens={activeTokens}
                 padBottom={`${padBottom}px`}
                 scrollRef={convoRef as any}
               />
 
-                     {/* stabiler Endanker */}
+              {/* stabiler Endanker */}
               <div ref={endRef} style={{ height: 1 }} aria-hidden="true" />
+
             </div>
           </div>
 
