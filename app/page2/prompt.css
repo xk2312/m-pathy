@@ -24,11 +24,12 @@
   align-items: center;
   gap: 12px;
 
-  /* Launch/Base-Position – wird per State angepasst */
-  transform: translateY(var(--prompt-launch-translate-y));
+  /* Launch/Base-Position – wir erden den Dock, keine Vertical-Flüge mehr */
+  transform: translateY(0);
   transition:
     transform var(--prompt-motion),
     opacity 180ms ease-out;
+
 
   /* nur noch Abstand, KEIN Balken mehr */
   padding: 24px 18px 28px;
@@ -42,40 +43,22 @@
    Position States – Desktop
    ============================================================= */
 
-/* State 1 – PreChat Desktop: Prompt näher an den Doorman holen */
-#m-input-dock.prompt-root[data-layout="desktop"][data-mode="doorman"] {
-  transform: translateY(var(--prompt-flight-translate-y));
+/* Für Stabilität: Desktop-Dock bleibt geerdet, keine Vertical-Flights */
+#m-input-dock.prompt-root[data-layout="desktop"][data-mode="doorman"],
+#m-input-dock.prompt-root[data-layout="desktop"][data-mode="chat"] {
+  transform: translateY(0);
 }
 
-/* State 2 – Chat Desktop: Dock zurück in Grundstellung */
-#m-input-dock.prompt-root[data-layout="desktop"][data-mode="chat"] {
-  transform: translateY(var(--prompt-launch-translate-y));
-}
 
 /* =============================================================
    Position States – Mobile + Tablet
    ============================================================= */
 
-/* PreChat Mobile – sanfter Flug, immer voll sichtbar */
-#m-input-dock.prompt-root[data-layout="mobile"][data-mode="doorman"] {
-  transform: translateY(var(--prompt-flight-translate-y-mobile));
-}
-
-/* Chat Mobile – immer auf Launch-Grundstellung */
+/* Für Mobile/Tablet: Dock bleibt unten, kein zusätzlicher Versatz */
+#m-input-dock.prompt-root[data-layout="mobile"][data-mode="doorman"],
 #m-input-dock.prompt-root[data-layout="mobile"][data-mode="chat"] {
-  transform: translateY(var(--prompt-launch-translate-y-mobile));
+  transform: translateY(0);
 }
-
-/* Tablet-Breite: Dock bleibt geerdet (kein extremer Flug),
-   damit Doorman/Prompt nicht aus dem Viewport geschoben werden */
-@media (min-width: 769px) and (max-width: 1024px) {
-  #m-input-dock.prompt-root[data-layout="desktop"][data-mode="doorman"],
-  #m-input-dock.prompt-root[data-layout="desktop"][data-mode="chat"] {
-    transform: translateY(0);
-  }
-}
-
-
 
 
 /* Starship Horizon – feine Lichtkante über dem Dock */
