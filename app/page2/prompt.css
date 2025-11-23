@@ -56,19 +56,25 @@
    Position States – Mobile + Tablet
    ============================================================= */
 
-/* PreChat Mobile/Tablet – Prompt unter den Doorman fliegen lassen */
+/* PreChat Mobile – sanfter Flug, immer voll sichtbar */
 #m-input-dock.prompt-root[data-layout="mobile"][data-mode="doorman"] {
-  transform: translateY(
-    var(--prompt-flight-translate-y-mobile, var(--prompt-flight-translate-y))
-  );
+  transform: translateY(var(--prompt-flight-translate-y-mobile));
 }
 
-/* Chat Mobile/Tablet – Prompt wieder auf Grundstellung */
+/* Chat Mobile – immer auf Launch-Grundstellung */
 #m-input-dock.prompt-root[data-layout="mobile"][data-mode="chat"] {
-  transform: translateY(
-    var(--prompt-launch-translate-y-mobile, var(--prompt-launch-translate-y))
-  );
+  transform: translateY(var(--prompt-launch-translate-y-mobile));
 }
+
+/* Tablet-Breite: Dock bleibt geerdet (kein extremer Flug),
+   damit Doorman/Prompt nicht aus dem Viewport geschoben werden */
+@media (min-width: 769px) and (max-width: 1024px) {
+  #m-input-dock.prompt-root[data-layout="desktop"][data-mode="doorman"],
+  #m-input-dock.prompt-root[data-layout="desktop"][data-mode="chat"] {
+    transform: translateY(0);
+  }
+}
+
 
 
 
