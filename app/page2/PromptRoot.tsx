@@ -105,7 +105,8 @@ export function PromptRoot({
     sendingRef,
   ]);
 
-   const modeVariant = snapshot.modeVariant ?? (!hasMessages ? "doorman" : "chat");
+    // PreChat = "doorman", sonst "chat" – für alle Breakpoints identisch
+  const modeVariant = !hasMessages ? "doorman" : "chat";
   const layoutVariant = snapshot.layoutVariant ?? (isMobile ? "mobile" : "desktop");
   const isDoorman = modeVariant === "doorman";
   const dockClassName = isDoorman

@@ -56,13 +56,12 @@
    Position States – Mobile + Tablet (data-layout="mobile")
    ============================================================= */
 
-/* State 1 – PreChat Mobile/Tablet: etwas hochziehen, damit es
-   ähnlich wirkt wie Desktop, aber ohne die Navi zu schneiden. */
+/* State 1 – PreChat Mobile/Tablet: Prompt hoch unter den Doorman */
 #m-input-dock.prompt-root[data-layout="mobile"][data-mode="doorman"] {
-  bottom: 300px; /* bei Bedarf zwischen 48–64px feinjustieren */
+  bottom: 96px;
 }
 
-/* State 2 – Chat Mobile/Tablet: Standard wie bisher */
+/* State 2 – Chat Mobile/Tablet: Prompt wieder runter an den Rand */
 #m-input-dock.prompt-root[data-layout="mobile"][data-mode="chat"] {
   bottom: 8px;
 }
