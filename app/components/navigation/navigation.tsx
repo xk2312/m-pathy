@@ -15,13 +15,25 @@ export default function Navigation() {
   const pathname = usePathname();
 
   const [menuOpen, setMenuOpen] = useState(false);
+
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    // Desktop-Anker: Säule existiert erst ab 1024px
-    setIsDesktop(window.innerWidth >= 1024);
+
+    const handleResize = () => {
+      // Desktop ab 1024px – muss zu page2.tsx passen
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+
+    // einmal direkt beim Mount ausführen
+    handleResize();
+
+    // danach bei jeder Größenänderung
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
+
 
   // *** SMALL VARIANT als Default ***
   const navHeight = "var(--nav-height-sm)"; // fix
