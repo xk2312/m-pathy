@@ -59,7 +59,7 @@
 /* State 1 – PreChat Mobile/Tablet: etwas hochziehen, damit es
    ähnlich wirkt wie Desktop, aber ohne die Navi zu schneiden. */
 #m-input-dock.prompt-root[data-layout="mobile"][data-mode="doorman"] {
-  bottom: 100px; /* bei Bedarf zwischen 48–64px feinjustieren */
+  bottom: 300px; /* bei Bedarf zwischen 48–64px feinjustieren */
 }
 
 /* State 2 – Chat Mobile/Tablet: Standard wie bisher */
