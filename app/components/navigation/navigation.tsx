@@ -1,7 +1,7 @@
 // app/components/navigation/navigation.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -15,6 +15,15 @@ export default function Navigation() {
   const pathname = usePathname();
 
   const [menuOpen, setMenuOpen] = useState(false);
+
+    const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    // Desktop ab 1024px – kannst du bei Bedarf auf 960 o.ä. ändern
+    setIsDesktop(window.innerWidth >= 1024);
+  }, []);
+
 
   // *** SMALL VARIANT als Default ***
   const navHeight = "var(--nav-height-sm)"; // fix
@@ -36,12 +45,20 @@ export default function Navigation() {
     pathname?.startsWith("/page2") ||
     false;
 
-  const headerStyle: React.CSSProperties = {
-  position: "fixed",
-  top: 0,
-  insetInline: 0,
-  zIndex: 40,
-};
+    const headerStyle: React.CSSProperties = isChatLayout && isDesktop
+    ? {
+        position: "fixed",
+        top: 0,
+        left: "var(--saeule-w, 320px)",
+        right: 0,
+        zIndex: 40,
+      }
+    : {
+        position: "fixed",
+        top: 0,
+        insetInline: 0,
+        zIndex: 40,
+      };
 
 
   return (
