@@ -15,12 +15,6 @@
   left: 0;
   right: 0;
 
-  /* nur noch Abstand, KEIN Balken mehr */
-  padding: 24px 18px 28px;
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,7 +24,31 @@
   transition:
     transform 200ms cubic-bezier(.25,.8,.25,1),
     opacity 180ms ease-out;
+
+  /* nur noch Abstand, KEIN Balken mehr */
+  padding: 24px 18px 28px;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
+
+
+/* =============================================================
+   Position States – Desktop
+   ============================================================= */
+
+/* State 1 – PreChat Desktop: Prompt näher an den Doorman holen */
+.prompt-root-scene[data-position-state="intro"][data-layout="desktop"]
+  #m-input-dock.prompt-root {
+  bottom: 96px;           /* Prompt vom Rand lösen, nach oben ziehen */
+}
+
+/* State 2 – Chat Desktop: Dock bleibt exakt wie vorher */
+.prompt-root-scene[data-position-state="chat"][data-layout="desktop"]
+  #m-input-dock.prompt-root {
+  bottom: 8px;            /* explizit setzen, falls später geändert wird */
+}
+
 
 /* Starship Horizon – feine Lichtkante über dem Dock */
 #m-input-dock.prompt-root::before {
@@ -74,12 +92,14 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  margin-top: 100px;
   margin-bottom: 18px;
 
   /* genau die Breite der Prompt-Shell */
   max-width: min(
     var(--chat-stage-max, 820px),
     calc(100vw - var(--chat-stage-pad-inline, 48px) * 2)
+
   );
 
   width: 100%;               /* <— NEU: zwingt echte Zentrierung */
