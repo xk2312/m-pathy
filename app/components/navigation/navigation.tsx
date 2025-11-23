@@ -36,20 +36,13 @@ export default function Navigation() {
     pathname?.startsWith("/page2") ||
     false;
 
-  const headerStyle: React.CSSProperties = isChatLayout
-    ? {
-        position: "fixed",
-        top: 0,
-        left: "var(--saeule-w, 320px)",
-        right: 0,
-        zIndex: 40,
-      }
-    : {
-        position: "fixed",
-        top: 0,
-        insetInline: 0,
-        zIndex: 40,
-      };
+  const headerStyle: React.CSSProperties = {
+  position: "fixed",
+  top: 0,
+  insetInline: 0,
+  zIndex: 40,
+};
+
 
   return (
     <header style={headerStyle} aria-label="Main site navigation">
