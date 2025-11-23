@@ -209,8 +209,7 @@
     0 0 40px rgba(15,23,42,0.9);
 }
 
-@media (max-width: 768px) {
- .prompt-shell {
+.prompt-shell {
   max-width: min(
     var(--prompt-width-max, 500px),
     calc(100vw - var(--prompt-margin-inline, 10px) * 2)
@@ -221,7 +220,7 @@
   );
   margin-inline: auto;
 }
-}
+
 
 
 /* =============================================================
