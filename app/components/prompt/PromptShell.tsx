@@ -111,19 +111,23 @@ export function PromptShell({
         autoCapitalize="sentences"
       />
 
-      {/* Simba – ruhiger runder Gate-Button, noch ohne Logik */}
+          {/* Simba – ruhiger runder Gate-Button, jetzt mit Sendelogik */}
       <button
-        type="button"
+        type="submit"
         className="prompt-orb"
-        aria-label="Simba Portal"
-        >
-        <span className="prompt-orb-icon" aria-hidden="true" />
-        </button>
-
-    
+        aria-label={resolvedAriaLabel || "Senden"}
+        disabled={!canSubmit}
+        onClick={handleClickSend}
+      >
+        <span
+          className="prompt-orb-icon"
+          aria-hidden="true"
+        />
+      </button>
     </form>
   );
 }
+
 
 export default PromptShell;
 
