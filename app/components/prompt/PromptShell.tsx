@@ -123,20 +123,7 @@ export function PromptShell({
         />
       </button>
 
-      <button
-        type="submit"
-        className="prompt-orb"
-        aria-label="Senden"
-        disabled={!canSubmit}
-        onClick={handleClickSend}
-      >
-        <span
-          className="prompt-orb-icon"
-          aria-hidden="true"
-        >
-          ➤
-        </span>
-      </button>
+    
     </form>
   );
 }
