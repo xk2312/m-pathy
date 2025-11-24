@@ -1700,22 +1700,20 @@ return (
             height: isMobile ? undefined : "100dvh",
           }}
         >
-                    <div
+                       <div
             ref={convoRef as any}
             className="chat-stage"
             style={{
               display: "flex",
               flexDirection: "column",
 
-              /* Oberer Buffer unter der Navi – SPOTY APPROVED */
-              paddingTop: "var(--h-gap-md)",   // = 210px
+              /* Oberer Buffer unter der Navi – gesteuert über --chat-safe-top */
+              paddingTop: "var(--chat-safe-top)",
 
               flex: "1 1 auto",
               minHeight: 0,
               overflow: "auto",
-
               pointerEvents: "auto",
-
               touchAction: "pan-y",
 
               WebkitOverflowScrolling: "touch",
@@ -1725,6 +1723,7 @@ return (
               scrollPaddingBottom: `${padBottom}px`,
 
               paddingInline: isMobile
+
                 ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
                 : "12px",
             }}

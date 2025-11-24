@@ -559,14 +559,30 @@
   --nav-padding-block: 6px;
 }
 
+
+:root {
+  /* Vertical layout – shared tokens */
+  --bp-mobile: 768px; /* single source for JS & CSS breakpoints */
+
+  /* Dock + safe areas */
+  --dock-h: 0px; /* will be updated at runtime by page2 dock measurement */
+  --chat-safe-top: var(--nav-safe-top);
+  --chat-safe-bottom-extra: 24px; /* breathing room above the prompt */
+  --chat-safe-bottom: calc(
+    var(--dock-h, 0px)
+    + var(--safe-bottom, 0px)
+    + var(--chat-safe-bottom-extra, 0px)
+  );
+}
+
 /* ─────────────────────────────────────────────
    Subscription · Interstitial Dividers (no text)
    ───────────────────────────────────────────── */
 
-
 :root {
   /* Gemeinsamer vertikaler Abstand */
   --sub-divider-gap-y: clamp(40px, 8vw, 80px);
+
 
   /* Divider 1 – Aurora Line */
   --sub-divider-1-height: 1px;
