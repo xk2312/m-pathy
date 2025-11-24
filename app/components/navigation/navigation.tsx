@@ -18,21 +18,19 @@ export default function Navigation() {
 
   const [isDesktop, setIsDesktop] = useState(false);
 
-  useEffect(() => {
+    useEffect(() => {
     if (typeof window === "undefined") return;
 
     const handleResize = () => {
-      // Desktop ab 1024px – muss zu page2.tsx passen
-      setIsDesktop(window.innerWidth >= 1024);
+      // Desktop ab 768px – einheitliche Layout-Quelle
+      setIsDesktop(window.innerWidth >= 768);
     };
 
-    // einmal direkt beim Mount ausführen
     handleResize();
-
-    // danach bei jeder Größenänderung
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
 
 
   // *** SMALL VARIANT als Default ***
