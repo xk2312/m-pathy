@@ -257,6 +257,13 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
     --header-offset: 16px;             /* Säule-Offset unter Header */
   }
 
+  /* Chat-Stage: immer volle Bühnenhöhe unter dem Header,
+     damit der Prompt auf schmalen Phones (z.B. iPhone 14 / 390px)
+     nicht aus dem initialen Viewport rutscht. */
+  .chat-stage {
+    min-height: calc(100vh - var(--header-h-idle, 96px));
+  }
+
   /* Motion budget mobil (respect RRM) */
   @media (prefers-reduced-motion: no-preference) {
     .mob-transition {
@@ -264,6 +271,7 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
     }
   }
 }
+
 /* === Mobile MessageInput Toolbar Toggle ================================ */
 @media (max-width: 768px), (pointer: coarse) {
   /* Plus-Button mobil zeigen */
