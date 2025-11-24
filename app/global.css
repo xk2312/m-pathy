@@ -67,8 +67,8 @@ body {
 /* Wichtig: Scroll wieder erlauben + Selektieren aktivieren */
 html, body {
   width: 100%;
-  /* ⬇︎ Hart auf Viewport-Höhe + KEIN globales Scrollen */
-  height: 100dvh;            /* statt nur min-height */
+  /* ⬇︎ Viewport-basierte Mindesthöhe, aber Scrollen bleibt erlaubt */
+  min-height: 100dvh;
   color: #fff;
   background:
     radial-gradient(circle at center, #0f0f0f, #000000);
@@ -77,11 +77,8 @@ html, body {
   touch-action: pan-y pinch-zoom;
 }
 
-/* Scroll-Freigabe nur wenn explizit gesetzt */
-html.enable-scroll {
-  overflow-y: auto !important;
-}
-/* ⬇︎ Beim Entsperren auch overscroll wieder erlauben (hebt body:contain auf) */
+
+/* Scroll-Freigabe: nur noch Overscroll-Behavior steuern */
 html.enable-scroll,
 html.enable-scroll body {
   overscroll-behavior-y: auto !important;
@@ -89,8 +86,10 @@ html.enable-scroll body {
 
 html {
   overflow-x: hidden;
-  overflow-y: hidden;        /* ⬅︎ Body/Seite scrollt NICHT */
+  /* Seite darf global scrollen; Haupt-Scrollport liegt weiterhin im Chat */
+  overflow-y: auto;
 }
+
 
 body {
   background-color: #000;
