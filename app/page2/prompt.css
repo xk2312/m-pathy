@@ -9,12 +9,13 @@
    ============================================================= */
 
 #m-input-dock.prompt-root {
-  position: sticky;
+  position: fixed;
   bottom: var(--prompt-dock-bottom-desktop);
 
   left: 0;
   right: 0;
   z-index: var(--z-overlay, 90);
+
 
   display: flex;
   flex-direction: column;
@@ -63,7 +64,7 @@
 /* Viewport ≤ 768px: Dock erden, keine Vertical-Flights mehr */
 @media (max-width: 768px) {
   #m-input-dock.prompt-root {
-    bottom: var(--prompt-dock-bottom-mobile);
+    bottom: calc(var(--prompt-dock-bottom-mobile) + var(--safe-bottom, 0px));
     padding: 16px 10px 20px;
     transform: translateY(0);
   }
