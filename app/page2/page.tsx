@@ -2,22 +2,31 @@
 
 /***
  * =========================================================
- *  M — PAGE2 MASTER (Single-File Design/Behavior - Control)
+ *  M — PAGE2 MASTER (Single-File Design/Behavior – Control)
  * =========================================================
  *
  *  INDEX (Sprunganker):
- *  [ANCHOR:CONFIG]         – Design Tokens, Themes, Personas, System Prompt
- *  [ANCHOR:HOOKS]          – useBreakpoint, useTheme
- *  [ANCHOR:UTILS]          – tiny helpers (cx)
- *  [ANCHOR:COMPONENTS]     – Header, Bubble, Conversation, InputDock
- *  [ANCHOR:BEHAVIOR]       – Chat State + sendMessage (Azure OpenAI)
- *  [ANCHOR:LAYOUT]         – Page Layout mit festen Abständen/Dock-Regeln
+ *  [ANCHOR:CONFIG]       – Design Tokens, Themes, Personas, Dock-Breite/-Bottom
+ *  [ANCHOR:HOOKS]        – useBreakpoint (Layout-Breakpoint), useTheme
+ *  [ANCHOR:UTILS]        – Storage- und Helper-Funktionen (truncate/load/save)
+ *  [ANCHOR:COMPONENTS]   – Header, MessageBody, Bubble, Conversation, InputDock
+ *  [ANCHOR:BEHAVIOR]     – Chat-State, Autosave, System-Events, sendMessage
+ *  [ANCHOR:LAYOUT]       – Bühne (Säule + rechte Spalte), Scroller, PromptDock
+ *
+ *  Relevanz für Prompt & Scroll:
+ *  - CONFIG       → bestimmt Dock-Breite und gewünschte Bottom-Abstände.
+ *  - HOOKS        → legt den globalen Breakpoint für isMobile/isDesktop fest.
+ *  - COMPONENTS   → Conversation + InputDock bilden den sichtbaren Chatkörper.
+ *  - BEHAVIOR     → steuert Scroll-to-bottom, padBottom-Updates, System-Messages.
+ *  - LAYOUT       → EIN Scroll-Container (chat-stage), EIN SafeTop, EIN PromptDock.
  *
  *  Philosophie:
- *  - Eine Datei steuert Form & Verhalten. M kann hier gezielt patchen.
- *  - Keine externen Abhängigkeiten nötig (CSS-in-TSX für dynamische Teile).
- *  - Statischer Bühnenlook (Hintergrund/Bubbles) darf zusätzlich in page2.module.css bleiben.
+ *  - Eine Datei steuert Form & Verhalten der Chat-Bühne (Eltern der Kinder).
+ *  - Layout-Hierarchie folgt: Layout.tsx (Großeltern) → page2 (Eltern) → Komponenten.
+ *  - PromptDock V4 ist Single Source of Truth für Fußraum (padBottom/--dock-h).
+ *  - Navigation ist Kind: liest nur SafeTop/SafeBottom, definiert kein eigenes Layout.
  */
+
 
 import React, {
   useEffect,
@@ -1681,7 +1690,7 @@ return (
           </div>
         )}
 
-        {/* Rechte Spalte: oben Scroll, unten festes Dock */}
+               {/* Rechte Spalte: oben Scroll, unten festes Dock */}
         <div
           style={{
             display: "flex",
@@ -1700,10 +1709,12 @@ return (
               /* Oberer Buffer unter der Navi – SPOTY APPROVED */
               paddingTop: "var(--h-gap-md)",   // = 210px
 
-              flex: "1 1 auto",
+              // Nur wenn ein Thread existiert, füllt der Scroller die Bühne komplett
+              flex: hasMessages ? "1 1 auto" : "0 0 auto",
               minHeight: 0,
               overflow: "auto",
               pointerEvents: "auto",
+
               touchAction: "pan-y",
 
               WebkitOverflowScrolling: "touch",
