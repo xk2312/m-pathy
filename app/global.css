@@ -351,20 +351,6 @@ div[data-convo="1"]::-webkit-scrollbar-track { background: transparent; }
   15%{ box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 1000px rgba(34,211,238,0.08); }
   100%{ box-shadow: 0 -6px 24px rgba(0,0,0,.35), inset 0 0 0 0 rgba(34,211,238,0); }
 }
-/* Reserviere immer Fußraum im rechten Scroll-Container 
-div[data-convo="1"] {
-  padding-bottom: calc(var(--dock-h, 60px) + var(--safe-bottom, 0px) + 24px);
-}
-*/
-/* Dock zuverlässig an den Viewport pinnen (Desktop & Mobile) – Single source */
-#m-input-dock {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: var(--safe-bottom, 0px);
-  z-index: var(--z-overlay, 90);
-}
-
 /* ---------- Markdown scope ---------- */
 .md {
   /* sorgt für angenehme Breite im Bubble-Layout, ohne Seitenlayout zu verändern */
@@ -372,6 +358,8 @@ div[data-convo="1"] {
   overflow-wrap: anywhere;
   line-height: 1.55;
 }
+
+
 
 /* ---------- Tables ---------- */
 /* Apply to BOTH .md and .markdown (alias) */

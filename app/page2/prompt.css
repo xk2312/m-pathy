@@ -8,28 +8,24 @@
    ROOT DOCK (Wrapper unten im Chat)
    ============================================================= */
 
-/* =============================================================
-   ROOT DOCK (Wrapper unten im Chat)
-   ============================================================= */
-
 #m-input-dock.prompt-root {
   position: sticky;
   bottom: var(--prompt-dock-bottom-desktop);
 
   left: 0;
   right: 0;
+  z-index: var(--z-overlay, 90);
 
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
 
-  /* Launch/Base-Position – wir erden den Dock, keine Vertical-Flüge mehr */
+  /* Dock bleibt geerdet, keine Vertical-Flüge mehr */
   transform: translateY(0);
   transition:
     transform var(--prompt-motion),
     opacity 180ms ease-out;
-
 
   /* nur noch Abstand, KEIN Balken mehr */
   padding: 24px 18px 28px;
@@ -39,27 +35,10 @@
 }
 
 
-/* =============================================================
-   Position States – Desktop
-   ============================================================= */
-
-/* Für Stabilität: Desktop-Dock bleibt geerdet, keine Vertical-Flights */
-#m-input-dock.prompt-root[data-layout="desktop"][data-mode="doorman"],
-#m-input-dock.prompt-root[data-layout="desktop"][data-mode="chat"] {
-  transform: translateY(0);
-}
-
 
 /* =============================================================
-   Position States – Mobile + Tablet
+   Position States
    ============================================================= */
-
-/* Für Mobile/Tablet: Dock bleibt unten, kein zusätzlicher Versatz */
-#m-input-dock.prompt-root[data-layout="mobile"][data-mode="doorman"],
-#m-input-dock.prompt-root[data-layout="mobile"][data-mode="chat"] {
-  transform: translateY(0);
-}
-
 
 /* Starship Horizon – feine Lichtkante über dem Dock */
 #m-input-dock.prompt-root::before {
@@ -81,29 +60,16 @@
   filter: blur(4px);
 }
 
-
-/* FLIGHT (Thread vorhanden → Pille sitzt normal) */
-.prompt-root--flight {
-  transform: translateY(0);
-}
-
-/* Viewport ≤ 1024px: Dock erden, keine Vertical-Flights mehr
-   → Desktop (groß) behält seinen Flug, Tablet/Mobile bleiben stabil unten */
-@media (max-width: 1024px) {
+/* Viewport ≤ 768px: Dock erden, keine Vertical-Flights mehr */
+@media (max-width: 768px) {
   #m-input-dock.prompt-root {
     bottom: var(--prompt-dock-bottom-mobile);
     padding: 16px 10px 20px;
     transform: translateY(0);
   }
-
-  #m-input-dock.prompt-root[data-layout="desktop"][data-mode="doorman"],
-  #m-input-dock.prompt-root[data-layout="desktop"][data-mode="chat"],
-  #m-input-dock.prompt-root[data-layout="mobile"][data-mode="doorman"],
-  #m-input-dock.prompt-root[data-layout="mobile"][data-mode="chat"],
-  .prompt-root--flight {
-    transform: translateY(0);
-  }
 }
+
+
 
 
 

@@ -871,12 +871,12 @@
   --prompt-flight-translate-y-mobile: -220px;
   --prompt-launch-translate-y-mobile: 0;
 
-  --prompt-motion: 220ms cubic-bezier(.25,.8,.25,1)
-
+  --prompt-motion: 220ms cubic-bezier(.25,.8,.25,1);
 
   /* Focus / A11y */
   --prompt-focus-ring: 0 0 0 2px rgba(226,232,240,0.55);
 }
+
 /* =====================================================================
    ORB STYLES – 13 Simba-Varianten (nur Token-Overrides)
    Aktivierungsidee: <body data-orb-theme="halo-singular"> … </body>

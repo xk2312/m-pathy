@@ -105,19 +105,17 @@ export function PromptRoot({
     sendingRef,
   ]);
 
-  // PreChat = "doorman", sonst "chat"
+   // PreChat = "doorman", sonst "chat"
   const modeVariant = !hasMessages ? "doorman" : "chat";
   const layoutVariant = snapshot.layoutVariant ?? (isMobile ? "mobile" : "desktop");
-  const isDoorman = modeVariant === "doorman";
 
-  const dockClassName = isDoorman
-    ? "prompt-root"
-    : "prompt-root prompt-root--flight";
+  const dockClassName = "prompt-root";
 
   return (
     <div
       id="m-input-dock"
       ref={dockRef as any}
+
       className={dockClassName}
       role="group"
       aria-label={t("prompt.ariaLabel")}
