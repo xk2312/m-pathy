@@ -814,9 +814,10 @@ useEffect(() => {
 
 // Breakpoints
 // NOTE: Säulenraster & Overlay arbeiten ab 960px aufwärts mit Desktop-Layout.
-// Damit JS-Layout & CSS deckungsgleich bleiben, nehmen wir hier dieselbe Schwelle.
-const { isMobile } = useBreakpoint(1024);
+// Damit JS-Layout & CSS deckungsgleich bleiben, nutzen wir überall 768px.
+const { isMobile } = useBreakpoint(768);
 const sideMargin = isMobile ? theme.dock.mobile.side : theme.dock.desktop.side;
+
 
 
 // Refs & Höhenmessung
@@ -1699,7 +1700,7 @@ return (
             height: isMobile ? undefined : "100dvh",
           }}
         >
-          <div
+                    <div
             ref={convoRef as any}
             className="chat-stage"
             style={{
@@ -1709,10 +1710,10 @@ return (
               /* Oberer Buffer unter der Navi – SPOTY APPROVED */
               paddingTop: "var(--h-gap-md)",   // = 210px
 
-              // Nur wenn ein Thread existiert, füllt der Scroller die Bühne komplett
-              flex: hasMessages ? "1 1 auto" : "0 0 auto",
+              flex: "1 1 auto",
               minHeight: 0,
               overflow: "auto",
+
               pointerEvents: "auto",
 
               touchAction: "pan-y",
