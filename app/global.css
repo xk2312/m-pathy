@@ -478,6 +478,16 @@ div[data-convo="1"]::-webkit-scrollbar-track { background: transparent; }
     white-space: nowrap;         /* prevent ugly multi-line cell breaks */
   }
 }
+/* STOP Mobile viewport scroll – Prompt fixed stability */
+@media (max-width: 768px), (pointer: coarse) {
+  html, body {
+    height: 100dvh;          /* Stabiler Viewport */
+    overflow-y: hidden;      /* Kein vertikales Scrollen mehr */
+    overscroll-behavior: none;
+    touch-action: pan-x;     /* verhindert versehentliches Vertikal-Schieben */
+  }
+}
+
 /* =====================================================================
    ⬇️ GalaxyBuilder Patch · KPI Centering & Row Density (v1.1)
    Purpose: Zentriert Elterncontainer & lockert KPI-Zeilen spacing
