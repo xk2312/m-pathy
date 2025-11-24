@@ -172,10 +172,16 @@ END OF INDEX
   );
   opacity: 0.55;
   pointer-events: none;
-    filter: blur(4px);
+  filter: blur(4px);
 }
 
-/* Viewport ≤ 768px: Dock erden, keine Vertical-Flights mehr */
+/* Desktop PreChat: lift prompt into the golden band */
+.prompt-root-scene[data-position-state="intro"][data-layout="desktop"]
+  #m-input-dock.prompt-root {
+  transform: translateY(var(--prompt-flight-translate-y));
+}
+
+/* Viewport ≤ 768px: Dock erden, PreChat-Goldband mobil */
 @media (max-width: 768px) {
   #m-input-dock.prompt-root {
     bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
@@ -183,13 +189,15 @@ END OF INDEX
     transform: translateY(0);
   }
 
-  /* PreChat-Zustand: Prompt exakt im Goldband (mobile) */
-  .prompt-root-scene[data-position-state="intro"][data-layout="mobile"] #m-input-dock.prompt-root {
+  /* PreChat-Zustand: Prompt ins Goldband schieben (mobile) */
+  .prompt-root-scene[data-position-state="intro"][data-layout="mobile"]
+    #m-input-dock.prompt-root {
     bottom: calc(
       env(safe-area-inset-bottom, 0px) + var(--prechat-bottom-offset-mobile)
     );
   }
 }
+
 
 /* =============================================================
    DOORMAN – Quotes über der Pille
