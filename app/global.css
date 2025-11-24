@@ -534,7 +534,7 @@ div[data-convo="1"]::-webkit-scrollbar-track { background: transparent; }
   }
 
   /* keep cells readable when narrow; you may remove if wrapping is preferred */
-     .md table th, .md table td,
+        .md table th, .md table td,
   .markdown table th, .markdown table td {
     white-space: nowrap;         /* prevent ugly multi-line cell breaks */
   }
@@ -543,9 +543,9 @@ div[data-convo="1"]::-webkit-scrollbar-track { background: transparent; }
 @media (max-width: 768px), (pointer: coarse) {
   html, body {
     height: 100dvh;          /* Stabiler Viewport */
-    overflow-y: hidden;      /* Kein vertikales Scrollen mehr */
+    overflow-y: auto;        /* Vertikales Scrollen im Viewport wieder erlauben */
     overscroll-behavior: none;
-    touch-action: pan-y;     /* erlaubt gezieltes Vertikal-Scrollen im Chat-Viewport */
+    touch-action: pan-y;     /* gezielt vertikal scrollen (Chat-Stage) */
   }
 }
 
