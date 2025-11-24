@@ -60,7 +60,7 @@
 /* Viewport ≤ 768px: Dock erden, keine Vertical-Flights mehr */
 @media (max-width: 768px) {
   #m-input-dock.prompt-root {
-    bottom: calc(var(--prompt-dock-bottom-mobile) + var(--safe-bottom, 0px));
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
     padding: 16px 10px 20px;
     transform: translateY(0);
   }
