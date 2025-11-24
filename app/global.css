@@ -534,7 +534,7 @@ div[data-convo="1"]::-webkit-scrollbar-track { background: transparent; }
   }
 
   /* keep cells readable when narrow; you may remove if wrapping is preferred */
-   .md table th, .md table td,
+     .md table th, .md table td,
   .markdown table th, .markdown table td {
     white-space: nowrap;         /* prevent ugly multi-line cell breaks */
   }
@@ -545,7 +545,7 @@ div[data-convo="1"]::-webkit-scrollbar-track { background: transparent; }
     height: 100dvh;          /* Stabiler Viewport */
     overflow-y: hidden;      /* Kein vertikales Scrollen mehr */
     overscroll-behavior: none;
-    touch-action: pan-x;     /* verhindert versehentliches Vertikal-Schieben */
+    touch-action: pan-y;     /* erlaubt gezieltes Vertikal-Scrollen im Chat-Viewport */
   }
 }
 

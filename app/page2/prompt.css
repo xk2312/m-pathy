@@ -172,7 +172,7 @@ END OF INDEX
   );
   opacity: 0.55;
   pointer-events: none;
-  filter: blur(4px);
+    filter: blur(4px);
 }
 
 /* Viewport ≤ 768px: Dock erden, keine Vertical-Flights mehr */
@@ -182,11 +182,14 @@ END OF INDEX
     padding: 16px 10px 20px;
     transform: translateY(0);
   }
+
+  /* PreChat-Zustand: Prompt exakt im Goldband (mobile) */
+  .prompt-root-scene[data-position-state="intro"][data-layout="mobile"] #m-input-dock.prompt-root {
+    bottom: calc(
+      env(safe-area-inset-bottom, 0px) + var(--prechat-bottom-offset-mobile)
+    );
+  }
 }
-
-
-
-
 
 /* =============================================================
    DOORMAN – Quotes über der Pille
@@ -518,9 +521,8 @@ END OF INDEX
     padding-bottom: 120px; /* angenäherte Prompt-Höhe inkl. Shadow */
   }
 
-  /* Dock: fest an den unteren Rand pinnen, mit Safe-Area-Respekt */
+  /* Dock: am unteren Rand halten, mit Safe-Area-Respekt – Layout-Eltern bleiben Chef */
   #m-input-dock.prompt-root[data-layout="mobile"] {
-    position: fixed;
     left: 0;
     right: 0;
     bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
@@ -534,6 +536,7 @@ END OF INDEX
     animation: none;
   }
 }
+
 
 /* Keyframes – nur Transform + Opacity */
 @keyframes prompt-orb-breath {

@@ -337,10 +337,15 @@
   --page-max: 900px;          /* zentrale Inhaltsbreite (Hero / Council / KPI) */
   --ry: 64px;                 /* vertikaler Grundtakt (z. B. 32 + 32) */
 
+  /* === Prompt PreChat · Golden Offset (per Device) === */
+  --prechat-bottom-offset-desktop: 32px; /* Desktop: Mitte des 24–36px Goldbandes */
+  --prechat-bottom-offset-tablet: 20px;  /* Tablet: Mitte des 16–24px Goldbandes */
+  --prechat-bottom-offset-mobile: 10px;  /* Mobile: 8–10px, nahe am unteren Rand */
 
   /* === Page Center Tokens (NEU) === */
   --page-pad-inline: 10px;    /* Seiteninnenabstand links/rechts (mobile + desktop) */
   --page-inner-max: var(--page-max); /* einheitliche zentrale Breitenquelle */
+
 
   /* === Radii === */
   --rz-sm: 10px;
