@@ -1,7 +1,125 @@
-/* =======================================================================
-   PROMPT V3 — Raumschiff / Crystal Pill / Token-Driven
-   Keine gold-* Klassen. Keine Legacy. Nur neue V3-Struktur.
-   ======================================================================= */
+/***
+=============================
+M — PROMPT.CSS MASTER INDEX
+(Starship Prompt · Dock · Doorman · Orb · Motion)
+=============================
+INDEX (Anchor Navigation)
+--------------------------------------------------------------
+ROOT & DOCK
+--------------------------------------------------------------
+[ANCHOR:ROOT-DOCK]
+– Bottom position, sticky behavior, flex layout
+– Gap, padding, background, transform, transitions
+[ANCHOR:ROOT-DOCK-MOBILE]
+– Safe-area adjustments for ≤768px
+– Bottom recalculation, padding changes
+[ANCHOR:ROOT-DOCK-HORIZON-LINE]
+– ::before radial lightline above dock
+– Blur, opacity, width clamp
+--------------------------------------------------------------
+DOORMAN / QUOTES
+--------------------------------------------------------------
+[ANCHOR:DOORMAN-QUOTES]
+– Layout of message cluster above prompt-shell
+– Width clamp, center alignment, text color
+[ANCHOR:DOORMAN-MOBILE-DESKTOP-OFFSETS]
+– margin-top shift on desktop
+– disappear-on-chat mode (opacity, translate)
+[ANCHOR:DOORMAN-SPINE]
+– ::after vertical lightline below quotes
+– Gradient, opacity, pointer-events: none
+[ANCHOR:DOORMAN-TEXTS]
+– prompt-quote-main typography
+– prompt-quote-sub opacity
+--------------------------------------------------------------
+PROMPT-SHELL (THE STARSHIP)
+--------------------------------------------------------------
+[ANCHOR:PROMPT-SHELL-FRAME]
+– Outer pill geometry, radius, padding
+– Background, border, shadow, transitions
+[ANCHOR:PROMPT-SHELL-PRECHAT-DESKTOP]
+– Increased padding on doorman/desktop state
+[ANCHOR:PROMPT-SHELL-WIDTH]
+– min/max width clamp (500px / viewport calc)
+– margin auto centering
+[ANCHOR:PROMPT-SHELL-FLOOR]
+– ::after radial „floor light“ under pill
+– blur, opacity, elliptical gradient
+[ANCHOR:PROMPT-SHELL-FOCUS]
+– focus-within border & box-shadow glow
+--------------------------------------------------------------
+TEXTAREA (PILL INTERIOR)
+--------------------------------------------------------------
+[ANCHOR:TEXTAREA-BASE]
+– min/max height, padding, radius
+– no border, transparent bg, text colors
+[ANCHOR:TEXTAREA-PLACEHOLDER]
+– placeholder color tokens
+[ANCHOR:TEXTAREA-DISABLED]
+– opacity, cursor override
+--------------------------------------------------------------
+SIMBA ORB (SEND BUTTON)
+--------------------------------------------------------------
+[ANCHOR:ORB-FRAME]
+– Width/height token driven
+– Border radius, background, shadow
+– Centered icon, transitions
+[ANCHOR:ORB-HOVER-ACTIVE]
+– Hover/active transforms
+– Token-based color shifts
+[ANCHOR:ORB-DISABLED]
+– Reduced opacity, cursor default
+[ANCHOR:ORB-BUSY]
+– Breath animation (900ms, ease-in-out)
+– Hover/active neutralized
+--------------------------------------------------------------
+SEND RIPPLE (ENERGY SHOCK)
+--------------------------------------------------------------
+[ANCHOR:SEND-RIPPLE-CONTAINER]
+– ::after radial gradient injection
+– opacity animation via @keyframes
+[ANCHOR:SEND-RIPPLE-ANIMATION]
+– prompt-ripple keyframes (0% →100%)
+--------------------------------------------------------------
+DOORMAN LAYOUT (PromptRoot.tsx Map)
+--------------------------------------------------------------
+[ANCHOR:DOORMAN-LAYOUT]
+– Horizontal/vertical centering
+– Width clamp (640px)
+– margin-bottom spacing to pill
+[ANCHOR:DOORMAN-TEXT]
+– main & sub message styling
+[ANCHOR:DOORMAN-MODE-LINE]
+– Hidden legacy line
+--------------------------------------------------------------
+MOBILE FALLBACK (SMALL HEIGHT DEVICES)
+--------------------------------------------------------------
+[ANCHOR:MOBILE-SMALL-SCENE]
+– prompt-root-scene min-height adjustment
+– padding-bottom for prompt height reserve
+[ANCHOR:MOBILE-SMALL-DOCK]
+– #m-input-dock fixed positioning
+– z-index elevation 60, safe-area respect
+--------------------------------------------------------------
+MOTION GUARD
+--------------------------------------------------------------
+[ANCHOR:MOTION-GUARD]
+– Disables busy animation on reduced-motion
+[ANCHOR:MOTION-KEYFRAMES]
+– prompt-orb-breath (scale + opacity)
+--------------------------------------------------------------
+PHILOSOPHY (Prompt V3)
+--------------------------------------------------------------
+[ANCHOR:PHILOSOPHY]
+– Prompt V3 as Starship / Crystal Pill
+– Token-driven geometry & light
+– Unified pre-chat → chat state transitions
+– Strict separation: dock, shell, orb, quotes
+===============================================================
+END OF INDEX
+===============================================================
+
+***/
 
 
 /* =============================================================

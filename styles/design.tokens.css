@@ -1,3 +1,313 @@
+/***
+ * =========================================================
+ *  M — DESIGN.TOKENS MASTER (Global Style Source of Truth)
+ * =========================================================
+ *
+ *  INDEX (Sprunganker):
+ *
+ *  [ANCHOR:CORE-COLORS]
+ *      – Grundpalette, Hintergrund/Foreground, Warnfarben, Soft-Shadow
+ *
+ *  [ANCHOR:LAYOUT-AXIS]
+ *      – Globale Achsen: page-max, rhythm (--ry), page-padding
+ *
+ *  [ANCHOR:RADIUS]
+ *      – Radien-Skala (sm/md/lg/2xl/round)
+ *
+ *  [ANCHOR:SHADOWS-GLOW]
+ *      – Sh-Skala (sh-sm/md/lg), globaler Glow
+ *
+ *  [ANCHOR:TIMINGS-EASING]
+ *      – t-fast/mid/slow + globale Ease-Kurve
+ *
+ *  [ANCHOR:TYPOGRAPHY]
+ *      – Font-Familien, Weights, letter-spacing, line-height
+ *
+ *  [ANCHOR:SIDE-SAEULE]
+ *      – Smooth Operator Säulenbreite (Face/Sidebar)
+ *
+ *  ---------------------------------------------------------
+ *        MID-LAYER TOKENS (Module Level)
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:CHAT-USER-BUBBLE]
+ *      – User-Bubble BG/Border/Shadow (neutral dark)
+ *
+ *  [ANCHOR:SMOOTH-OPERATOR-HEADLINES]
+ *      – H1/H2/H3 Tokens (Akkordeon, Groups, Micro Labels)
+ *      – Divider (Color, Height, Gap)
+ *
+ *  [ANCHOR:Z-INDEX]
+ *      – base, overlay, fab
+ *
+ *  [ANCHOR:LAYOUT-BUFFERS]
+ *      – buffer-min/max, buffer-fluid (vertical spacing)
+ *
+ *  [ANCHOR:MOTION-SAFEGUARD]
+ *      – Global Disable für Animations/Transitions im RM-Modus
+ *
+ *  [ANCHOR:REFERENCE-PALETTE]
+ *      – Audit-Palette (dark0/1/2, aqua, indigo, warn-gold)
+ *
+ *  ---------------------------------------------------------
+ *           POWERPROMPTS — SPACING & GEOMETRY
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:PP-SPACING]
+ *      – row-pad-x/y, sub-to-tabs, tabs-to-list, row-buffer
+ *
+ *  [ANCHOR:PP-DNA]
+ *      – Cyan DNA (pp-cyan, lines, soft glow)
+ *
+ *  [ANCHOR:PP-ION]
+ *      – Ion Beam Sweep (duration, blur, base-bg/hover-bg)
+ *
+ *  ---------------------------------------------------------
+ *            COUNCIL VISIT-AI BUTTON
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:COUNCIL-AI-BUTTON]
+ *      – Padding, Radius, FS, Colors, Glow, Sweep, A11y
+ *
+ *  ---------------------------------------------------------
+ *               15 MODES — AURA SYSTEM
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:MODES-COLORS]
+ *      – Modus-Farbfamilien (core, intellect, heart, spirit)
+ *
+ *  [ANCHOR:MODES-GEOMETRY]
+ *      – Aura-Radien (inner/middle/outer), blur
+ *
+ *  [ANCHOR:MODES-TIMING]
+ *      – pulse-duration (slow/mid/fast), sequencer-interval
+ *
+ *  [ANCHOR:MODES-FIGURE]
+ *      – Mensch-Figur tokenized (Desktop/Mobile/Glow)
+ *
+ *  [ANCHOR:MODES-PER-MODE]
+ *      – 3 Intensitäten pro Modus (aura-intensity, pulse, halo)
+ *
+ *  ---------------------------------------------------------
+ *          MODES — DROPDOWN / PANEL SYSTEM
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:MODES-PANEL]
+ *      – Panel max-width, radius, gaps, shadows
+ *
+ *  [ANCHOR:MODES-SELECT]
+ *      – Select-Höhen, Padding, Borders, Motion
+ *
+ *  [ANCHOR:MODES-MENU]
+ *      – Menü-BG, Border, Radius, Item-Paddings, Colors
+ *
+ *  [ANCHOR:MODES-LABELS]
+ *      – Text/Desc-Größen & Farben
+ *
+ *  ---------------------------------------------------------
+ *           EXPERTS — PANELS, PILLS, SPACING
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:EXPERTS-PANEL]
+ *      – panel-pad-x/y
+ *
+ *  [ANCHOR:EXPERTS-GEOMETRY]
+ *      – header-gap, dropdown-gap, pill-pad-x/y
+ *
+ *  ---------------------------------------------------------
+ *           SECURITY — SECTION TOKENS
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:SEC-SECTION]
+ *      – gap-kicker-title, title-intro, intro-cards, card-bottom
+ *
+ *  [ANCHOR:SEC-CARD]
+ *      – card-pad-x/y, card-grid-gap, card-max-width
+ *
+ *  [ANCHOR:SEC-ICON]
+ *      – icon size/stroke/opacity + mobile-scale
+ *
+ *  ---------------------------------------------------------
+ *             HEADING SYSTEM — A0–A4
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:HEAD-A-SIZES]
+ *      – a0/a1/a2/a3/a4 sizes, line-heights, weights, letter
+ *
+ *  [ANCHOR:HEAD-A-MAXWIDTH]
+ *      – pro-Section Textbreiten
+ *
+ *  [ANCHOR:HEAD-A-SUBTITLES]
+ *      – pro-Level Subheadline sizes & opacities
+ *
+ *  [ANCHOR:HEAD-A-KICKER]
+ *      – Kickers (size/weight/letter/opacity)
+ *
+ *  [ANCHOR:HEAD-A-RHYTHM]
+ *      – vertical spacing: section spacing, gaps, mobile scaling
+ *
+ *  ---------------------------------------------------------
+ *         NAVIGATION — TOKENS (Logo · Orbit · Tail)
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:NAV-HEIGHTS]
+ *      – nav-height-lg/sm/mobile
+ *
+ *  [ANCHOR:NAV-LOGO]
+ *      – logo sizes
+ *
+ *  [ANCHOR:NAV-TAIL]
+ *      – tail sizes, bg, border
+ *
+ *  [ANCHOR:NAV-MOTION]
+ *      – motion (fast/medium/slow)
+ *
+ *  [ANCHOR:NAV-SAFETOP]
+ *      – nav-safe-top, nav-padding-inline/block
+ *
+ *  ---------------------------------------------------------
+ *              VERTICAL LAYOUT · SAFE AREAS
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:LAYOUT-VERTICAL]
+ *      – bp-mobile, dock-h, chat-safe-top, chat-safe-bottom
+ *
+ *  ---------------------------------------------------------
+ *            SUBSCRIPTION — DIVIDER & CARDS
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:SUB-DIVIDERS]
+ *      – gap-y, heights, fills, glow, dotted belt
+ *
+ *  [ANCHOR:SUB-CARD]
+ *      – card inner padding
+ *
+ *  ---------------------------------------------------------
+ *               SUBSCRIPTION — BUFFER MAGAZIN
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:BUFFERS]
+ *      – h-gap-xxs/xs/sm/md + ultra buffers xl/2xl/3xl
+ *      – mobile scaling
+ *
+ *  ---------------------------------------------------------
+ *                 BUTTON SYSTEM — SIZES
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:BTN-SIZES]
+ *      – heights sm/md/lg, horizontal padding, font sizes
+ *
+ *  [ANCHOR:BTN-MOTION]
+ *      – transition curve
+ *
+ *  [ANCHOR:BTN-VARIANTS]
+ *      – primary/secondary colors, hover states, shadows
+ *
+ *  [ANCHOR:BTN-GLOBAL-MARGIN]
+ *      – vertical button gap tokens
+ *
+ *  ---------------------------------------------------------
+ *                        FOOTER
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:FOOTER-PADDING]
+ *      – pad-y/x clamps
+ *
+ *  [ANCHOR:FOOTER-GRID]
+ *      – col-min, col-gap, row-gap
+ *
+ *  [ANCHOR:FOOTER-TYPO]
+ *      – motto-size/weight, text-size, link-size
+ *
+ *  [ANCHOR:FOOTER-COLORS]
+ *      – muted/strong text, bg, border, bottom-pad
+ *
+ *  ---------------------------------------------------------
+ *          PAGE2 — CHAT DOCK & PROMPT TOKENS
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:CHAT-DOCK]
+ *      – dock-bg, dock-border, dock-shadow
+ *
+ *  [ANCHOR:CHAT-STAGE]
+ *      – stage-max, stage-pad-inline
+ *
+ *  [ANCHOR:CHAT-INPUT]
+ *      – input-bg, border, focus-shadow
+ *
+ *  [ANCHOR:CHAT-SEND-ORB]
+ *      – bg/hover/active, border, icon, shadow
+ *
+ *  [ANCHOR:CHAT-TOOLS]
+ *      – bg/border/icon/shadow für Tools
+ *
+ *  [ANCHOR:CHAT-STATUS]
+ *      – statuschips
+ *
+ *  [ANCHOR:CHAT-RIPPLE]
+ *      – ripple-color (kein Cyan)
+ *
+ *  ---------------------------------------------------------
+ *                       PROMPT V3
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:PROMPT-GEOMETRY]
+ *      – pill bg/border/radius/pads/width-min-max
+ *
+ *  [ANCHOR:PROMPT-POSITION]
+ *      – prompt-dock-bottom-desktop/mobile
+ *      – intro offset, launch/flight translate
+ *
+ *  [ANCHOR:PROMPT-ORB]
+ *      – send orb tokens
+ *
+ *  [ANCHOR:PROMPT-TOOLS]
+ *      – tools tokens für dock
+ *
+ *  [ANCHOR:PROMPT-MOTION]
+ *      – prompt-motion (ease + duration)
+ *
+ *  [ANCHOR:PROMPT-FOCUS]
+ *      – focus-ring
+ *
+ *  ---------------------------------------------------------
+ *                  ORB THEME OVERRIDES (13 themes)
+ *  ---------------------------------------------------------
+ *
+ *  [ANCHOR:THEMES-M]
+ *  [ANCHOR:THEMES-BREATH]
+ *  [ANCHOR:THEMES-OCEAN]
+ *  [ANCHOR:THEMES-CHRONOS]
+ *  [ANCHOR:THEMES-MERGE]
+ *  [ANCHOR:THEMES-POWER]
+ *  [ANCHOR:THEMES-BODY]
+ *  [ANCHOR:THEMES-BEDED]
+ *  [ANCHOR:THEMES-LOOP]
+ *  [ANCHOR:THEMES-PIRE]
+ *  [ANCHOR:THEMES-BASSY]
+ *  [ANCHOR:THEMES-BALLANCE]
+ *  [ANCHOR:THEMES-MUTAH]
+ *
+ *  =========================================================
+ *  PHILOSOPHIE:
+ *    - design.tokens.css ist die QUELLE DER WAHRHEIT für:
+ *        Farben, Radii, Timing, Aura, Layout-baselines,
+ *        Innen-/Außenabstände, Prompt & Dock-Semantik.
+ *
+ *    - Großeltern-Schicht: definiert physikalische Gesetze
+ *      (Farbraum, Vertical Rhythm, Safe-Area-Formeln).
+ *
+ *    - Eltern (page.tsx) interpretieren nur diese Gesetze
+ *      und schaffen die Bühne (Säule/Chat).
+ *
+ *    - Kinder (Prompt/Säule/Components) LEBEN IN diesen
+ *      Gesetzen, aber überschreiben sie niemals.
+ *
+ *    - Dies ist der *Triketon-Versiegelte Style-Kosmos*.
+ *
+ */
+
+
 /* =====================================================================
    GalaxyBuilder · Design Tokens Manifest (v1.1)
    Purpose: zentrale Style-Definitionen für alle Module

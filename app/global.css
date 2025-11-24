@@ -1,3 +1,56 @@
+/***
+ * =========================================================
+ *  M — GLOBAL.CSS MASTER INDEX (Root-Level Stylesheet)
+ * =========================================================
+ *
+ *  INDEX (Sprunganker):
+ *
+ *  [ANCHOR:IMPORTS]
+ *      – Tailwind, Design Tokens, Chat-Prose, Syntax Theme
+ *
+ *  [ANCHOR:TYPOGRAPHY]
+ *      – .m-typo Regeln, Rollen-Nuancen, Auswahl-Highlight
+ *
+ *  [ANCHOR:RESET]
+ *      – Global Reset, body/html Normalisierung, Scroll-Freigabe
+ *
+ *  [ANCHOR:ROOT-LAYOUT]
+ *      – Viewport-Höhen, dvh, Hintergrund, Overscroll, Tap-Highlight
+ *
+ *  [ANCHOR:CANVAS]
+ *      – Canvas block rule, Bloom-Legacy-IDs
+ *
+ *  [ANCHOR:KEYFRAMES]
+ *      – zenithSweep, zenithExit, zenithDust (globale Animationsquellen)
+ *
+ *  [ANCHOR:SAFE-AREA]
+ *      – Root-Safe-Area Handling (env(bottom)) durch layout.tsx (Verknüpfung)
+ *
+ *  [ANCHOR:MOBILE-SCOPE]
+ *      – Mobile Tokens, Header-Heights, Dock-Caps, Mob-Transitions
+ *
+ *  [ANCHOR:MOBILE-TOOLBAR]
+ *      – Input-Bar Mobile: Plus-Button, Toolbar-Toggle, Tool-Tiles
+ *
+ *  [ANCHOR:MARKDOWN-CODE]
+ *      – Code-Blöcke (.md .md-code), Inline-Code, Table-Fallback Mobile
+ *
+ *  =========================================================
+ *  RELEVANZ FÜR PROMPT & DOORMAN:
+ *      – RESET + ROOT-LAYOUT bestimmen VP-Höhe & globales Scrollverhalten.
+ *      – MOBILE-SCOPE liefert Tokens: --vh, --safe-bottom, --dock-cap.
+ *      – SAFE-AREA übergeordnet: Dock-Bottom hängt an diesen globalen Regeln.
+ *      – global.css ist der “Großvater”, page.tsx der “Elternteil”.
+ *
+ *  PHILOSOPHIE:
+ *      – global.css = Planet / Gravitation / Klima.
+ *      – page.tsx = Kontinente / Landschaft / Städte.
+ *      – Komponenten = Architektur / Häuser / Bewohner.
+ *
+ */
+
+
+
 @import "tailwindcss";
 @import "../styles/design.tokens.css";  /* ⬅︎ Urgroßeltern: zentrale Tokens */
 

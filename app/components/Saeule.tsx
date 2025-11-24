@@ -1,3 +1,44 @@
+/***
+ * =========================================================
+ *  M — SÄULE MASTER (Modes · Experts · System · Actions)
+ * =========================================================
+ *
+ *  INDEX (Sprunganker):
+ *
+ *  [ANCHOR:TYPEN]           – Mode/Expert/Section Typen & Kategorien
+ *  [ANCHOR:DATEN]           – MODI, MODE_CATEGORIES, EXPERT_CATEGORIES, EXPERTS, ROLES, SUB_KIS
+ *  [ANCHOR:SIMBA-ICONS]     – SimbaIcon-Komponente, ikonische Archetypen für die Säule
+ *  [ANCHOR:HELPER-I18N]     – t/tr-Wrapper, langHint, Label-Helfer (build, experts, prompts)
+ *  [ANCHOR:HELPER-API]      – callChatAPI (Bridge zu /api/chat), emitSystemMessage
+ *  [ANCHOR:HELPER-MODE]     – modeLabelFromId, Mode-/Kategorie-Mapping
+ *  [ANCHOR:HELPER-EXPERT]   – Experten-Labeling, Kategorie-Zuordnung, Prompts je Expert
+ *  [ANCHOR:STATE]           – React-State für Modus, Experten, Sprache, Sektionen, Overlay-Flags
+ *  [ANCHOR:EFFECTS]         – useEffect-Kaskade: lang-Init, i18n-Events, LocalStorage, URL-Mode
+ *  [ANCHOR:EVENTS-MODE]     – switchMode: Logging, Status-Updates, Overlay-Close, Auto-Prompt
+ *  [ANCHOR:EVENTS-EXPERT]   – askExpert: Auswahl, Persistenz, Status, Overlay-Close, Auto-Prompt
+ *  [ANCHOR:EVENTS-EXPORT]   – exportThread: CSV/JSON-Export aus localStorage
+ *  [ANCHOR:EVENTS-DELETE]   – handleDeleteImmediate: Thread reset, Mode/Expert zurücksetzen, ClearChat
+ *  [ANCHOR:UI-HEADER]       – Head-Section: Build-CTA (Jetzt bauen) mit Simba-Icon
+ *  [ANCHOR:UI-MODES]        – MODIS-Akkordeon: Onboarding, Council13, M·Default + Charakter-Modis-Navi
+ *  [ANCHOR:UI-EXPERTS]      – EXPERTEN-Akkordeon: Kategorien (life/tech/space/ethics/universe) + Liste
+ *  [ANCHOR:UI-SYSTEM]       – SYSTEM-Akkordeon: Statusleiste (statusMode, modeLabel)
+ *  [ANCHOR:UI-ACTIONS]      – ACTIONS-Akkordeon: Export (CSV/JSON) + Chat löschen (Danger-Button)
+ *
+ *  RELEVANZ FÜR CHAT & PROMPT:
+ *    - STATE/EFFECTS      → halten Mode & Expert konsistent über Reloads (LocalStorage + URL-Mode).
+ *    - EVENTS-MODE        → senden system messages & Status-Meta, beeinflussen Prompt-Kontext indirekt.
+ *    - EVENTS-EXPERT      → erzeugen gezielte Startprompts für Experten, die im Chat landen.
+ *    - EVENTS-EXPORT/DEL  → verwalten Thread-Persistenz, aber nicht Layout oder Scroll-Verhalten.
+ *    - UI-*-SEKTIONEN     → reine Interaktionsoberfläche der Säule; Layout-Raum kommt von page/layout.
+ *
+ *  PHILOSOPHIE:
+ *    - Säule = Kontrollturm und Charakter-Wähler, kein Layout-Elternteil.
+ *    - Layout-Hierarchie bleibt: layout.tsx (Großeltern) → page2 (Eltern) → Säule/Prompt/Conversation (Kinder).
+ *    - Säule spricht mit dem System über Events (mpathy:system-message, mpathy:ui:overlay-close),
+ *      nicht über direkte DOM-Manipulation der Bühne.
+ */
+
+
 "use client";
 
 import React, { useEffect, useMemo, useState, useCallback } from "react";
