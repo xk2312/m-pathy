@@ -1701,13 +1701,17 @@ return (
           </div>
         )}
 
-               {/* Rechte Spalte: oben Scroll, unten festes Dock */}
+              {/* Rechte Spalte: oben Scroll, unten festes Dock */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             minHeight: 0,
-            height: isMobile ? undefined : "100dvh",
+  
+            height: isMobile ?
+undefined : "100dvh",
+            position: 'relative', /* NEU: Setzt neuen Stapelkontext für Z-Index und Fixed-Elemente */
+            zIndex: 10,        /* NEU: Z-Index über dem Chat-Stage (5) */
           }}
         >
                        <div
