@@ -519,9 +519,7 @@ END OF INDEX
   transform: none;
 }
 
-/* =============================================================
-   Ultra-Small Mobile Fallback (iPhone 14 / SE etc.)
-   ============================================================= */
+/* === Ultra-Small Mobile Fallback (iPhone 14 / SE etc.) ============ */
 /* Sicherstellen, dass der Prompt auf sehr kleinen Screens NIE
    aus dem Viewport verschwindet – Eltern erzwingen die Ordnung. */
 @media (max-width: 768px) and (max-height: 750px) {
@@ -531,14 +529,16 @@ END OF INDEX
     padding-bottom: 120px; /* angenäherte Prompt-Höhe inkl. Shadow */
   }
 
-  /* Dock: Safe-Area-Respekt – Basis-Layout (sticky) bleibt Chef */
-  #m-input-dock.prompt-root[data-layout="mobile"] {
+  /* Dock: fest an den unteren Rand pinnen, mit Safe-Area-Respekt */
+  .prompt-root-scene[data-layout="mobile"] #m-input-dock.prompt-root {
+    position: fixed;
     left: 0;
     right: 0;
     bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
     z-index: 60; /* über dem Content, unter Overlays */
   }
 }
+
 
 /* Motion-Guard */
 @media (prefers-reduced-motion: reduce) {
