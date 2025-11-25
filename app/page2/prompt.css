@@ -128,7 +128,7 @@ END OF INDEX
 
 #m-input-dock.prompt-root {
   position: sticky;
-  bottom: calc(var(--prompt-dock-bottom-desktop) + env(safe-area-inset-bottom, 0px));
+ bottom: max(16px, calc(var(--prompt-dock-bottom-desktop) + env(safe-area-inset-bottom, 0px)));
   left: 0;
   right: 0;
   display: flex;
@@ -136,14 +136,12 @@ END OF INDEX
 
   align-items: center;
   gap: 12px;
-
-  /* Dock bleibt geerdet, keine Vertical-Flüge mehr */
+/* Dock bleibt geerdet, keine Vertical-Flüge mehr */
   transform: translateY(0);
   transition:
     transform var(--prompt-motion),
     opacity 180ms ease-out;
-
-  /* nur noch Abstand, KEIN Balken mehr */
+/* nur noch Abstand, KEIN Balken mehr */
   padding: 24px 18px 28px;
   background: transparent;
   backdrop-filter: none;

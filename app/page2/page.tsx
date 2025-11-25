@@ -839,9 +839,6 @@ useEffect(() => {
 // --bp-mobile (aktuell 768px, zentral in design.tokens.css definiert).
 const { isMobile } = useBreakpoint();
 const sideMargin = isMobile ? theme.dock.mobile.side : theme.dock.desktop.side;
-
-
-
 // Refs & Höhenmessung
 const headerRef = useRef<HTMLDivElement>(null);
 const convoRef = useRef<HTMLDivElement>(null);
@@ -849,26 +846,19 @@ const dockRef   = useRef<HTMLDivElement>(null);
 const [dockH, setDockH] = useState(0);
 // ▼▼▼ EINZEILER HINZUFÜGEN (bleibt) ▼▼▼
 const endRef  = useRef<HTMLDivElement>(null);
-
 // zentrale Messung + einheitlicher Fußraum
-const [padBottom, setPadBottom] = useState(0);
-
+const [padBottom, setPadBottom] = useState(
+  isMobile ? 120 : 80
+); // Festen, ungefähren Wert als Fallback/Spacer setzen
 const measureDock = useCallback(() => {
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      const h = dockRef.current?.offsetHeight ?? 0;
-      setDockH(h);
-      setPadBottom(h);                           // einzige Fußraum-Quelle
-      document.documentElement.style.setProperty("--dock-h", `${h}px`);
-    });
-  });
+  const h = dockRef.current?.offsetHeight ?? 0;
+  if (h > 0) document.documentElement.style.setProperty("--dock-h", `${h}px`);
+  setDockH(h);
 }, []);
-
 useEffect(() => {
   measureDock();
   const ro = new ResizeObserver(measureDock);
   if (dockRef.current) ro.observe(dockRef.current);
-  if (headerRef.current) ro.observe(headerRef.current);
   const onWinResize = () => measureDock();
   window.addEventListener("resize", onWinResize);
 
@@ -885,8 +875,6 @@ useEffect(() => {
     vv?.removeEventListener("scroll", onVV);
   };
 }, [measureDock]);
-
-
 // ▼▼▼ NEU: Dock-Höhe als CSS-Variable für Styles/Footroom setzen ▼▼▼
 useEffect(() => {
   document.documentElement.style.setProperty("--dock-h", `${dockH}px`);
