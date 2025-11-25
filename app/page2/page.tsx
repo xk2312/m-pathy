@@ -1701,7 +1701,7 @@ return (
           </div>
         )}
 
-              {/* Rechte Spalte: oben Scroll, unten festes Dock */}
+            {/* Rechte Spalte: oben Scroll, unten festes Dock */}
         <div
           style={{
             display: "flex",
@@ -1710,8 +1710,7 @@ return (
   
             height: isMobile ?
 undefined : "100dvh",
-            position: 'relative', /* NEU: Setzt neuen Stapelkontext für Z-Index und Fixed-Elemente */
-            zIndex: 10,        /* NEU: Z-Index über dem Chat-Stage (5) */
+            /* position: relative und zIndex: 10 werden entfernt, da sie den Fixed-Kontext brechen */
           }}
         >
                        <div
@@ -1767,7 +1766,7 @@ undefined : "100dvh",
           </div>
 
           {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
-          <div
+        <div
             data-position-state={!hasMessages && !isMobile ?
 "intro" : "chat"}
             data-layout={isMobile ?
@@ -1778,7 +1777,7 @@ undefined : "100dvh",
               bottom: 0,
               left: isMobile ? 0 : 'var(--saeule-w, 277px)', /* Linke Kante = Säulenbreite */
               right: 0,
-              zIndex: 30,
+              zIndex: 90, /* MAX Z-INDEX, um Navigation (40) und FAB (70) zu überragen */
               display: 'flex',
               justifyContent: 'center', /* Echte Zentrierung innerhalb dieses Scopes */
               width: isMobile ? '100%' : 'auto',
