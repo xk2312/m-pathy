@@ -123,12 +123,13 @@ END OF INDEX
 
 
 /* =============================================================
-   ROOT DOCK (Wrapper unten im Chat)
+   ROOT-DOCK – Starship Prompt (gemeinsame Basis für alle Viewports)
    ============================================================= */
 
 #m-input-dock.prompt-root {
   position: sticky;
   bottom: var(--prompt-dock-bottom-desktop);
+  z-index: 40;
 
   /* bleibt in der Chat-Spalte; Eltern (Grid) bestimmen die Breite */
   display: flex;
@@ -148,6 +149,7 @@ END OF INDEX
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
+
 
 
 
