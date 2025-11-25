@@ -355,9 +355,6 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
   outline-offset: 2px;
 }
 /* (removed duplicate :root --dock-h; now defined in main :root) */
-@media (max-width: 768px){
-  html, body { overflow-x: hidden; }
-}
 
 
 /* gezielt den Chat-Scroller dunkler stylen */

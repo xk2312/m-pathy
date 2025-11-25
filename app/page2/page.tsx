@@ -1763,22 +1763,11 @@ return (
 
           {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
           <div
-            data-position-state={!hasMessages && !isMobile ?
+           data-position-state={!hasMessages && !isMobile ?
 "intro" : "chat"}
             data-layout={isMobile ?
 "mobile" : "desktop"}
             className="prompt-root-scene"
-            style={{
-              position: 'fixed', 
-              bottom: 0, 
-              left: 'var(--saeule-w, 277px)', /* Breite der Säule abziehen */
-              right: 0, 
-              zIndex: 30,
-              // NEU: Zentrierung in der rechten Spalte
-              width: 'auto',
-              maxWidth: '100%',
-              marginInline: 'auto'
-            }}
           >
             <PromptRoot
               t={t}
