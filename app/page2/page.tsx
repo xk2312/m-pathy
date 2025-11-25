@@ -1713,7 +1713,7 @@ undefined : "100dvh",
             /* position: relative und zIndex: 10 werden entfernt, da sie den Fixed-Kontext brechen */
           }}
         >
-                       <div
+           <div
             ref={convoRef as any}
             className="chat-stage"
             style={{
@@ -1727,46 +1727,56 @@ undefined : "100dvh",
               flex: "1 1 auto",
               minHeight: 0,
               overflow: "auto",
+   
               pointerEvents: "auto",
               touchAction: "pan-y",
 
               WebkitOverflowScrolling: "touch",
               overscrollBehavior: "contain",
 
+              paddingBottom: `${padBottom}px`,
+              scrollPaddingBottom: `${padBottom}px`,
+
               paddingInline: isMobile
 
-                ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
+                ?
+"max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
                 : "12px",
             }}
           >
             {/* Chronik wächst im Scroller, Breite = Raumschiff */}
                        <div
               className="chat-stage-inner"
+ 
               style={{
                 flex: 1,
                 minHeight: 0,
                 paddingTop: 8,
-                paddingLeft: isMobile ? 0 : undefined,
-                paddingRight: isMobile ? 0 : undefined,
+                paddingLeft: isMobile ?
+0 : undefined,
+                paddingRight: isMobile ?
+0 : undefined,
                 scrollbarGutter: "stable",
               }}
               aria-label={t("conversationAria")}
             >
                           <Conversation
-                messages={messages}
+               
+              messages={messages}
                 tokens={activeTokens}
                 padBottom={`${padBottom}px`}
                 scrollRef={convoRef as any}
               />
 
               {/* stabiler Endanker */}
-              <div ref={endRef} style={{ height: 1 }} aria-hidden="true" />
+              <div ref={endRef} style={{ height: 
+1 }} aria-hidden="true" />
 
             </div>
           </div>
 
           {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
-        <div
+          <div
             data-position-state={!hasMessages && !isMobile ?
 "intro" : "chat"}
             data-layout={isMobile ?
@@ -1777,7 +1787,7 @@ undefined : "100dvh",
               bottom: 0,
               left: isMobile ? 0 : 'var(--saeule-w, 277px)', /* Linke Kante = Säulenbreite */
               right: 0,
-              zIndex: 90, // <--- AUF 90 ERHÖHT (MAXIMAL)
+              zIndex: 90, // <--- MAX Z-INDEX, um die Sichtbarkeit zu garantieren
               display: 'flex',
               justifyContent: 'center', /* Echte Zentrierung innerhalb dieses Scopes */
               width: isMobile ? '100%' : 'auto',
