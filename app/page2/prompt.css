@@ -127,8 +127,9 @@ END OF INDEX
    ============================================================= */
 
 #m-input-dock.prompt-root {
-  position: sticky;
- bottom: max(16px, calc(var(--prompt-dock-bottom-desktop) + env(safe-area-inset-bottom, 0px)));
+  position: fixed;
+  z-index: var(--z-overlay); /* Setzt Z-Index auf 60  */
+  bottom: max(16px, env(safe-area-inset-bottom, 0px)); /* Vereinfachter Bottom-Offset */
   left: 0;
   right: 0;
   display: flex;
