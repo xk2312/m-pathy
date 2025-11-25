@@ -1563,14 +1563,43 @@ const pageStyle: React.CSSProperties = {
   ].join(", "),
 };
 
-
 // Mobile Header State + Viewport Hook
 const [mState, setMState] = useState<"idle" | "shrink" | "typing">("idle");
 useMobileViewport(typeof document !== "undefined" ? document.body : null);
+
+/* Mobile Viewport → --vh dynamisch (inkl. iPhone SE) */
+useEffect(() => {
+  if (!isMobile) return;
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+
+  const root = document.documentElement;
+
+  const updateVh = () => {
+    const vv = window.visualViewport;
+    const height = vv?.height ?? window.innerHeight;
+    const vh = height / 100;
+    root.style.setProperty("--vh", `${vh}px`);
+  };
+
+  updateVh();
+
+  const vv = window.visualViewport;
+  vv?.addEventListener("resize", updateVh);
+  vv?.addEventListener("scroll", updateVh);
+  window.addEventListener("resize", updateVh);
+
+  return () => {
+    vv?.removeEventListener("resize", updateVh);
+    vv?.removeEventListener("scroll", updateVh);
+    window.removeEventListener("resize", updateVh);
+  };
+}, [isMobile]);
+
 /* Scroll → Header shrink + Navigation-Override */
 useEffect(() => {
   if (!convoRef?.current) return;
   const el = convoRef.current as HTMLElement;
+
 
   const onScroll = () => {
     const y = el.scrollTop || 0;
