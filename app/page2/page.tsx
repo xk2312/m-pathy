@@ -193,14 +193,34 @@ const LABELS: Record<string, Record<MEvent, string>> = {
    [ANCHOR:HOOKS]  — Breakpoint + Theme Resolution
    ======================================================================= */
 
-function useBreakpoint(threshold = 768) {
+function useBreakpoint() {
   const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
-    const fn = () => setIsMobile(window.innerWidth <= threshold);
+    if (typeof window === "undefined") return;
+
+    const cssVarName = "--bp-mobile";
+    let effectiveThreshold = 768;
+
+    try {
+      const root = document.documentElement;
+      const raw = getComputedStyle(root)
+        .getPropertyValue(cssVarName)
+        .trim();
+      const parsed = parseFloat(raw.replace("px", ""));
+      if (!Number.isNaN(parsed) && parsed > 0) {
+        effectiveThreshold = parsed;
+      }
+    } catch {
+      // fallback: keep default threshold
+    }
+
+    const fn = () => setIsMobile(window.innerWidth <= effectiveThreshold);
     fn();
     window.addEventListener("resize", fn);
     return () => window.removeEventListener("resize", fn);
-  }, [threshold]);
+  }, []);
+
   return { isMobile };
 }
 
@@ -208,6 +228,7 @@ function useTheme(persona: keyof typeof PERSONAS = "default") {
   const key = PERSONAS[persona]?.theme ?? "m_default";
   return THEMES[key];
 }
+
 /* =======================================================================
    [ANCHOR:UTILS] — kleine Helfer (keine Exports in page.tsx!)
    ======================================================================= */
@@ -814,8 +835,9 @@ useEffect(() => {
 
 // Breakpoints
 // NOTE: Säulenraster & Overlay arbeiten ab 960px aufwärts mit Desktop-Layout.
-// Damit JS-Layout & CSS deckungsgleich bleiben, nutzen wir überall 768px.
-const { isMobile } = useBreakpoint(768);
+// Damit JS-Layout & CSS deckungsgleich bleiben, nutzen wir überall das Token
+// --bp-mobile (aktuell 768px, zentral in design.tokens.css definiert).
+const { isMobile } = useBreakpoint();
 const sideMargin = isMobile ? theme.dock.mobile.side : theme.dock.desktop.side;
 
 
