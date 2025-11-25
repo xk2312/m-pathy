@@ -887,10 +887,15 @@ useEffect(() => {
 }, [measureDock]);
 
 
-// ▼▼▼ NEU: Dock-Höhe als CSS-Variable für Styles/Footroom setzen ▼▼▼
 useEffect(() => {
-  document.documentElement.style.setProperty("--dock-h", `${dockH}px`);
+  const px = `${dockH}px`;
+  const root = document.documentElement;
+
+  root.style.setProperty("--dock-h", px);
+  root.style.setProperty("--prompt-dock-bottom-mobile", px);
+  root.style.setProperty("--chat-safe-bottom", px);
 }, [dockH]);
+
 //// === EINFÜGEN START: Mobile-Keyboard -> Kompaktmodus ===================
 const [compactStatus, setCompactStatus] = useState(false);
 
@@ -1722,19 +1727,24 @@ return (
             height: isMobile ? undefined : "100dvh",
           }}
         >
-                       <div
-            ref={convoRef as any}
-            className="chat-stage"
-            style={{
-              display: "flex",
-              flexDirection: "column",
+           <div
+  ref={convoRef as any}
+  className="chat-stage"
+  style={{
+    display: "flex",
+    flexDirection: "column",
 
-              /* Oberer Buffer unter der Navi – gesteuert über --chat-safe-top */
-              paddingTop: "var(--chat-safe-top)",
+    paddingTop: "var(--chat-safe-top)",
 
-              flex: "1 1 auto",
-              minHeight: 0,
-              overflow: "auto",
+    flex: "1 1 auto",
+
+    /* === FINAL: Bühnenhöhe per Tokens fest verdrahtet === */
+    minHeight: isMobile
+      ? "calc(var(--vh) * 100 - var(--dock-h))"
+      : 0,
+
+    overflow: "auto",
+
               pointerEvents: "auto",
               touchAction: "pan-y",
 
@@ -1776,11 +1786,19 @@ return (
             </div>
           </div>
 
-          {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
+                   {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
           <div
             data-position-state={!hasMessages && !isMobile ? "intro" : "chat"}
             data-layout={isMobile ? "mobile" : "desktop"}
             className="prompt-root-scene"
+            style={
+              {
+                // PreChat-Lift: Mobile 30 % Viewport, Desktop fixer Wert
+                "--prechat-lift": isMobile
+                  ? "calc(var(--vh) * 0.30)"
+                  : "300px",
+              } as React.CSSProperties
+            }
           >
             <PromptRoot
               t={t}
