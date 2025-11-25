@@ -150,7 +150,11 @@ END OF INDEX
   -webkit-backdrop-filter: none;
 }
 
-
+@media (max-width: 768px), (pointer: coarse) {
+  #m-input-dock.prompt-root {
+    bottom: calc(var(--prompt-dock-bottom-mobile) + env(safe-area-inset-bottom, 0px));
+  }
+}
 
 
 /* =============================================================
