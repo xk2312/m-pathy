@@ -128,7 +128,6 @@ END OF INDEX
 
 #m-input-dock.prompt-root {
   position: fixed;
-  z-index: var(--z-fab); /* Erhöht auf 70, um über Navigation/Content zu liegen */
   bottom: max(16px, env(safe-area-inset-bottom, 0px)); /* Vereinfachter Bottom-Offset */
   left: 0; /* Standard auf 0 lassen, falls Mobile */
   right: 0;
