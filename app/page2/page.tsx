@@ -887,15 +887,10 @@ useEffect(() => {
 }, [measureDock]);
 
 
+// ▼▼▼ NEU: Dock-Höhe als CSS-Variable für Styles/Footroom setzen ▼▼▼
 useEffect(() => {
-  const px = `${dockH}px`;
-  const root = document.documentElement;
-
-  root.style.setProperty("--dock-h", px);
-  root.style.setProperty("--prompt-dock-bottom-mobile", px);
-  root.style.setProperty("--chat-safe-bottom", px);
+  document.documentElement.style.setProperty("--dock-h", `${dockH}px`);
 }, [dockH]);
-
 //// === EINFÜGEN START: Mobile-Keyboard -> Kompaktmodus ===================
 const [compactStatus, setCompactStatus] = useState(false);
 
@@ -1563,43 +1558,14 @@ const pageStyle: React.CSSProperties = {
   ].join(", "),
 };
 
+
 // Mobile Header State + Viewport Hook
 const [mState, setMState] = useState<"idle" | "shrink" | "typing">("idle");
 useMobileViewport(typeof document !== "undefined" ? document.body : null);
-
-/* Mobile Viewport → --vh dynamisch (inkl. iPhone SE) */
-useEffect(() => {
-  if (!isMobile) return;
-  if (typeof window === "undefined" || typeof document === "undefined") return;
-
-  const root = document.documentElement;
-
-  const updateVh = () => {
-    const vv = window.visualViewport;
-    const height = vv?.height ?? window.innerHeight;
-    const vh = height / 100;
-    root.style.setProperty("--vh", `${vh}px`);
-  };
-
-  updateVh();
-
-  const vv = window.visualViewport;
-  vv?.addEventListener("resize", updateVh);
-  vv?.addEventListener("scroll", updateVh);
-  window.addEventListener("resize", updateVh);
-
-  return () => {
-    vv?.removeEventListener("resize", updateVh);
-    vv?.removeEventListener("scroll", updateVh);
-    window.removeEventListener("resize", updateVh);
-  };
-}, [isMobile]);
-
 /* Scroll → Header shrink + Navigation-Override */
 useEffect(() => {
   if (!convoRef?.current) return;
   const el = convoRef.current as HTMLElement;
-
 
   const onScroll = () => {
     const y = el.scrollTop || 0;
@@ -1756,24 +1722,19 @@ return (
             height: isMobile ? undefined : "100dvh",
           }}
         >
-           <div
-  ref={convoRef as any}
-  className="chat-stage"
-  style={{
-    display: "flex",
-    flexDirection: "column",
+                       <div
+            ref={convoRef as any}
+            className="chat-stage"
+            style={{
+              display: "flex",
+              flexDirection: "column",
 
-    paddingTop: "var(--chat-safe-top)",
+              /* Oberer Buffer unter der Navi – gesteuert über --chat-safe-top */
+              paddingTop: "var(--chat-safe-top)",
 
-    flex: "1 1 auto",
-
-    /* === FINAL: Bühnenhöhe per Tokens fest verdrahtet === */
-    minHeight: isMobile
-      ? "calc(var(--vh) * 100 - var(--dock-h))"
-      : 0,
-
-    overflow: "auto",
-
+              flex: "1 1 auto",
+              minHeight: 0,
+              overflow: "auto",
               pointerEvents: "auto",
               touchAction: "pan-y",
 
@@ -1815,19 +1776,11 @@ return (
             </div>
           </div>
 
-                   {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
+          {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
           <div
             data-position-state={!hasMessages && !isMobile ? "intro" : "chat"}
             data-layout={isMobile ? "mobile" : "desktop"}
             className="prompt-root-scene"
-            style={
-              {
-                // PreChat-Lift: Mobile 30 % Viewport, Desktop fixer Wert
-                "--prechat-lift": isMobile
-                  ? "calc(var(--vh) * 0.30)"
-                  : "300px",
-              } as React.CSSProperties
-            }
           >
             <PromptRoot
               t={t}
