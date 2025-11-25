@@ -1777,7 +1777,7 @@ undefined : "100dvh",
               bottom: 0,
               left: isMobile ? 0 : 'var(--saeule-w, 277px)', /* Linke Kante = Säulenbreite */
               right: 0,
-              zIndex: 90, /* MAX Z-INDEX, um Navigation (40) und FAB (70) zu überragen */
+              zIndex: 90, // <--- AUF 90 ERHÖHT (MAXIMAL)
               display: 'flex',
               justifyContent: 'center', /* Echte Zentrierung innerhalb dieses Scopes */
               width: isMobile ? '100%' : 'auto',
