@@ -1729,9 +1729,6 @@ return (
               WebkitOverflowScrolling: "touch",
               overscrollBehavior: "contain",
 
-              paddingBottom: `${padBottom}px`,
-              scrollPaddingBottom: `${padBottom}px`,
-
               paddingInline: isMobile
 
                 ? "max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
@@ -1769,6 +1766,13 @@ return (
             data-position-state={!hasMessages && !isMobile ? "intro" : "chat"}
             data-layout={isMobile ? "mobile" : "desktop"}
             className="prompt-root-scene"
+            style={{
+              position: 'fixed', 
+              bottom: 0, 
+              left: 0, 
+              right: 0, 
+              zIndex: 30 
+            }}
           >
             <PromptRoot
               t={t}
