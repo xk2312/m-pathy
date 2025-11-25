@@ -531,15 +531,19 @@ END OF INDEX
     padding-bottom: 120px; /* angenäherte Prompt-Höhe inkl. Shadow */
   }
 
-  /* Dock: fest an den unteren Rand pinnen, mit Safe-Area-Respekt */
-  .prompt-root-scene[data-layout="mobile"] #m-input-dock.prompt-root {
+  /* Dock: fest an den unteren Rand pinnen – aber gemäß Gesetz (3 % über Boden) */
+  #m-input-dock.prompt-root[data-layout="mobile"] {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+    bottom: calc(
+      var(--prompt-dock-bottom-mobile)
+      + var(--safe-bottom, env(safe-area-inset-bottom, 0px))
+    );
     z-index: 60; /* über dem Content, unter Overlays */
   }
 }
+
 
 
 /* Motion-Guard */

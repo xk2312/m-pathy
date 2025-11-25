@@ -1,3 +1,231 @@
+/***
+
+* =========================================================
+* M — NAVIGATION MASTER (Fixed Header · Chat-Aware Layout)
+* =========================================================
+*
+* INDEX (Sprunganker):
+*
+* [ANCHOR:IMPORTS]
+* ```
+   – React, useState/useEffect, usePathname
+  ```
+* ```
+   – LogoM, LanguageSwitcher, useLang, navDict (i18n.navigation)
+  ```
+*
+* [ANCHOR:STATE-HOOKS]
+* ```
+   – menuOpen (Mobile-Sheet sichtbar/geschlossen)
+  ```
+* ```
+   – isDesktop (Breakpoint-Erkennung via window.innerWidth)
+  ```
+*
+* [ANCHOR:LAYOUT-DETECTOR]
+* ```
+   – useEffect: Resize-Listener, Desktop ab 768px
+  ```
+* ```
+   – Cleanup des Event-Handlers
+  ```
+*
+* [ANCHOR:LOCALE-LINKS]
+* ```
+   – locale aus navDict[lang] mit Fallback en
+  ```
+* ```
+   – links = locale.nav.links (subscription/chat)
+  ```
+* ```
+   – aria-Labels aus locale.nav.aria.menu
+  ```
+*
+* [ANCHOR:ROUTE-ACTIVE-HELPER]
+* ```
+   – isActive(href): Root-/Prefix-Matching je Route
+  ```
+*
+* [ANCHOR:CHAT-LAYOUT-MODE]
+* ```
+   – isChatLayout: true für /chat und /page2
+  ```
+* ```
+   – beeinflusst Header-Breite und Padding
+  ```
+*
+* [ANCHOR:HEADER-STYLE]
+* ```
+   – headerStyle für Chat-Layout (fixed, left = --saeule-w)
+  ```
+* ```
+   – Default-Layout: fixed, insetInline 0
+  ```
+* ```
+   – zIndex 40 für Navi-Ebene
+  ```
+*
+* ---
+* ```
+       MAIN HEADER · STATIC NAV-CONTAINER
+  ```
+* ---
+*
+* [ANCHOR:HEADER-INNER-CONTAINER]
+* ```
+   – zentrales Flex-Layout: mx-auto, justify-between
+  ```
+* ```
+   – maxWidth abhängig von isChatLayout
+  ```
+* ```
+   – paddingInline: stage-pad vs. page-pad-inline
+  ```
+* ```
+   – Höhe, Hintergrund, Blur, kein Border, keine Motion
+  ```
+*
+* [ANCHOR:LEFT-BLOCK]
+* ```
+   – Wrapper für Mobile-Button + Desktop-Logo
+  ```
+*
+* [ANCHOR:MOBILE-MENU-BUTTON]
+* ```
+   – md:hidden, zeigt LogoM klein + „Menu“-Label
+  ```
+* ```
+   – aria-label & aria-expanded = menuOpen
+  ```
+*
+* [ANCHOR:DESKTOP-LOGO]
+* ```
+   – hidden md:flex
+  ```
+* ```
+   – LogoM mit logoSize, variant \"minimal\"
+  ```
+*
+* [ANCHOR:CENTER-DESKTOP-LINKS]
+* ```
+   – <nav> nur ab md sichtbar
+  ```
+* ```
+   – Links: /subscription, /chat
+  ```
+* ```
+   – aria-label = locale.nav.aria.menu
+  ```
+*
+* [ANCHOR:RIGHT-LANGUAGE-SWITCHER]
+* ```
+   – LanguageSwitcher im rechten Align-Container
+  ```
+* ```
+   – min-w Breite für stabilen Abschluss
+  ```
+*
+* ---
+* ```
+        MOBILE BOTTOM SHEET · OVERLAY MENU
+  ```
+* ---
+*
+* [ANCHOR:MOBILE-SHEET-OVERLAY]
+* ```
+   – full-screen fixed, md:hidden
+  ```
+* ```
+   – bg-black/70 + backdrop-blur-sm
+  ```
+*
+* [ANCHOR:MOBILE-SHEET-DISMISS]
+* ```
+   – flex-1 Klickarea zum Schließen (onClick → setMenuOpen(false))
+  ```
+*
+* [ANCHOR:MOBILE-SHEET-PANEL]
+* ```
+   – unterer Panel: bg-black/92, Blur, Border-Top, rounded-t-2xl
+  ```
+* ```
+   – Padding, Ul-Liste mit Links
+  ```
+*
+* [ANCHOR:MOBILE-SHEET-LINKS]
+* ```
+   – zwei Listeneinträge: /subscription und /chat
+  ```
+* ```
+   – Klick schließt Menü, uppercase Labels, hover-bg
+  ```
+*
+* [ANCHOR:MOBILE-SHEET-CLOSE-BUTTON]
+* ```
+   – Vollbreite-Button „Close“, oben abgerundet, leichte Hover-Stufe
+  ```
+*
+* ---
+* ```
+             NAVLINK SUBCOMPONENT
+  ```
+* ---
+*
+* [ANCHOR:NAVLINK-PROPS]
+* ```
+   – href, label, active optional
+  ```
+*
+* [ANCHOR:NAVLINK-LAYOUT]
+* ```
+   – Link als inline-flex, gap-1, horizontale Paddings
+  ```
+* ```
+   – aria-current=\"page\" bei active=true
+  ```
+*
+* [ANCHOR:NAVLINK-LABEL]
+* ```
+   – span mit text-white/70 → hover:text-white
+  ```
+* ```
+   – fontSize 0.78rem, starke Letter-Spacing, uppercase
+  ```
+*
+* [ANCHOR:NAVLINK-ACTIVE-UNDERLINE]
+* ```
+   – absolute Linie unter dem Label (left/right, bottom-Offset)
+  ```
+* ```
+   – linearer Gradient von transparent → Licht → transparent
+  ```
+*
+* ---
+* ```
+                    PHILOSOPHY
+  ```
+* ---
+*
+* [ANCHOR:PHILOSOPHY]
+* ```
+   – Navigation als fixed Orbit über Content
+  ```
+* ```
+   – Chat-Layout: nach rechts versetzte Bühne (Säule wird respektiert)
+  ```
+* ```
+   – Mobile: Orb-Style Bottom Sheet, keine komplexe Motion
+  ```
+* ```
+   – Sprache & Routen kommen aus i18n.navigation (navDict)
+  ```
+*
+* =========================================================
+* END OF INDEX
+* =========================================================
+  */
+
+
 // app/components/navigation/navigation.tsx
 "use client";
 

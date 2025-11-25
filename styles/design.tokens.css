@@ -1186,30 +1186,36 @@
   /* Tools (📎 / ⚙️ / 🎙️) */
   --prompt-tools-bg: rgba(15,23,42,0.85);
   --prompt-tools-border: rgba(148,163,184,0.55);
-  --prompt-tools-icon: rgba(226,232,240,0.88);
+   --prompt-tools-icon: rgba(226,232,240,0.88);
   --prompt-tools-shadow: 0 6px 30px rgba(0,0,0,0.45);
 
-   /* Dock – Launch / Flight Heights */
-  --prompt-dock-bottom-desktop: 48px;
-  --prompt-dock-bottom-mobile: 28px;
+  /* Dock – Gesetz M: Eine Stelle, zwei Zahlen (vh-basiert) */
+  /* PreChat: 30 % über Boden, Chat: 3 % über Boden */
+  --prompt-prechat-offset-vh: 30;  /* Prozent der Viewport-Höhe */
+  --prompt-chat-offset-vh: 3;      /* Prozent der Viewport-Höhe */
 
-  /* Launch/Flight Motion */
-  --prompt-flight-translate-y: -381px;  /* Desktop PreChat lift ≈ 381px */
+  /* Aus diesen zwei Zahlen werden alle Formen gespeist */
+  --prompt-dock-bottom-desktop: calc(var(--vh) * var(--prompt-chat-offset-vh));
+  --prompt-dock-bottom-mobile: calc(var(--vh) * var(--prompt-chat-offset-vh));
+
+  /* Reserve: Flugdistanz = Differenz PreChat → Chat (für spätere Motion nutzbar) */
+  --prompt-flight-translate-y: calc(
+    var(--vh) * (var(--prompt-prechat-offset-vh) - var(--prompt-chat-offset-vh)) * -1
+  );
   --prompt-launch-translate-y: 0;
 
-  /* Mobile/Tablet – weichere Flight-Höhe,
-     damit Prompt/Doorman auf kleineren Viewports nie abgeschnitten werden */
-  --prompt-flight-translate-y-mobile: -190px; /* Mobile PreChat lift ~160–220px */
+  /* Mobile/Tablet – gleiche Gesetzesbasis */
+  --prompt-flight-translate-y-mobile: calc(
+    var(--vh) * (var(--prompt-prechat-offset-vh) - var(--prompt-chat-offset-vh)) * -1
+  );
   --prompt-launch-translate-y-mobile: 0;
-
-  /* Mobile PreChat – Bottom offset in sticky mode (Goldband) */
-  --prechat-bottom-offset-mobile: 180px; /* innerhalb 160–218px Band */
 
   --prompt-motion: 220ms cubic-bezier(.25,.8,.25,1);
 
   /* Focus / A11y */
   --prompt-focus-ring: 0 0 0 2px rgba(226,232,240,0.55);
 }
+
 
 
 
