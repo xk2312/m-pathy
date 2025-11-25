@@ -1715,6 +1715,8 @@ return (
             className="chat-stage"
             style={{
               display: "flex",
+              zIndex: 5, /* Niedriger Z-Index, um unter Fixed-Docks (30) zu bleiben */
+
               flexDirection: "column",
 
               /* Oberer Buffer unter der Navi – gesteuert über --chat-safe-top */
@@ -1763,11 +1765,22 @@ return (
 
           {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
           <div
-           data-position-state={!hasMessages && !isMobile ?
+            data-position-state={!hasMessages && !isMobile ?
 "intro" : "chat"}
             data-layout={isMobile ?
 "mobile" : "desktop"}
             className="prompt-root-scene"
+            style={{
+              position: 'fixed',
+              bottom: 0,
+              left: isMobile ? 0 : 'var(--saeule-w, 277px)', /* Linke Kante = Säulenbreite */
+              right: 0,
+              zIndex: 30,
+              display: 'flex',
+              justifyContent: 'center', /* Echte Zentrierung innerhalb dieses Scopes */
+              width: isMobile ? '100%' : 'auto',
+              marginInline: 0
+            }}
           >
             <PromptRoot
               t={t}
