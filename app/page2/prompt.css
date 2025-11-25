@@ -128,27 +128,36 @@ END OF INDEX
 
 #m-input-dock.prompt-root {
   position: fixed;
-  bottom: max(16px, env(safe-area-inset-bottom, 0px));
-  left: 0;
+  bottom: max(16px, env(safe-area-inset-bottom, 0px)); /* Vereinfachter Bottom-Offset */
+  left: 0;                    /* Basis: mobiler Vollviewport */
   right: 0;
   display: flex;
   flex-direction: column;
+
   align-items: center;
   gap: 12px;
+  /* Dock bleibt geerdet, keine Vertical-Flüge mehr */
   transform: translateY(0);
   transition:
     transform var(--prompt-motion),
     opacity 180ms ease-out;
 
-  /* ✔ Prompt wieder sichtbar, aber ultra-soft */
+  /* sanfte, sichtbare Dock-Fläche + Blur */
+  padding: 24px 18px 28px;
   background: rgba(10, 15, 20, 0.58);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 
-  /* ✔ Prompt sicher ganz oben im Stack */
+  /* Prompt sicher über Chat & Content */
   z-index: var(--z-fab);
-  
-  padding: 24px 18px 28px;
+}
+
+/* Desktop: Säulenbreite (277px) respektieren – Prompt im Chatbereich zentrieren */
+@media (min-width: 1024px) {
+  #m-input-dock.prompt-root {
+    left: var(--saeule-w);  /* 277px aus design.tokens.css */
+    right: 0;
+  }
 }
 
 
