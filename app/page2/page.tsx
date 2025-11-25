@@ -1715,7 +1715,6 @@ return (
             className="chat-stage"
             style={{
               display: "flex",
-              zIndex: 5, /* Niedriger Z-Index, um unter Fixed-Docks (30) zu bleiben */
 
               flexDirection: "column",
 

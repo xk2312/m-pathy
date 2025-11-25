@@ -242,7 +242,7 @@ export default function MessageInput({
                 padding: 8,
                 boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
                 backdropFilter: 'blur(10px)',
-                zIndex: 1000,
+                zIndex: 5,
               }}
             >
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
