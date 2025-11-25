@@ -177,28 +177,16 @@ END OF INDEX
   filter: blur(4px);
 }
 
-/* Desktop PreChat: lift prompt into the golden band */
-.prompt-root-scene[data-position-state="intro"][data-layout="desktop"]
+/* PreChat: lift prompt into the golden band (all layouts) */
+.prompt-root-scene[data-position-state="intro"]
   #m-input-dock.prompt-root {
   transform: translateY(var(--prompt-flight-translate-y));
 }
 
-/* Viewport ≤ 768px: Dock erden, PreChat-Goldband mobil */
-@media (max-width: 768px) {
-  #m-input-dock.prompt-root {
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
-    padding: 16px 10px 20px;
-    transform: translateY(0);
-  }
 
-  /* PreChat-Zustand: Prompt ins Goldband schieben (mobile) */
-  .prompt-root-scene[data-position-state="intro"][data-layout="mobile"]
-    #m-input-dock.prompt-root {
-    bottom: calc(
-      env(safe-area-inset-bottom, 0px) + var(--prechat-bottom-offset-mobile)
-    );
-  }
-}
+/* Viewport ≤ 768px: Dock erden, PreChat-Goldband mobil */
+/* legacy mobile bottom-offset removed – now driven by global PreChat transform */
+
 
 
 /* =============================================================
@@ -229,15 +217,12 @@ END OF INDEX
   transform: translateY(0);
   transition:
     opacity 200ms ease-out,
-    transform 200ms ease-out;
+ form 200ms ease-out;
 }
 
 /* Desktop: Doorman-Szene etwas nach unten versetzen */
-@media (min-width: 768px) {
-  .prompt-quotes {
-    margin-top: 100px;
-  }
-}
+/* duplicate .prompt-quotes media block removed – single source kept above */
+
 
 .prompt-quote-main {
   font-size: 0.94rem;
@@ -525,26 +510,7 @@ END OF INDEX
    MOBILE FALLBACK – Safe Bottom (iPhone SE / Low height)
    ============================================================= */
 
-@media (max-width: 768px) and (max-height: 750px) {
-  /* Bühne: genug Platz unterhalb für den Dock einkalkulieren */
-  .prompt-root-scene[data-layout="mobile"] {
-    min-height: 100vh;
-    padding-bottom: 120px; /* angenäherte Prompt-Höhe inkl. Shadow */
-  }
-
-  /* Dock: fest an den unteren Rand pinnen, mit Safe-Area-Respekt */
-  #m-input-dock.prompt-root[data-layout="mobile"] {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: calc(var(--prompt-dock-bottom-mobile) + env(safe-area-inset-bottom, 0px));
-    z-index: 60; /* über dem Content, unter Overlays */
-  }
-}
-
-
-
-
+/* legacy ultra-small mobile dock block removed – token-based version kept above */
 
 /* Motion-Guard */
 @media (prefers-reduced-motion: reduce) {

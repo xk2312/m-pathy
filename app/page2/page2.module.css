@@ -122,13 +122,6 @@
 }
 .scrimVisible { opacity: 1; pointer-events: auto; }
 
-/* ===== Mobile Tuning für legacy inputContainer ====================== */
-@media (max-width: 768px) {
-  .inputContainer {
-    bottom: 50px;
-    width: calc(100% - 20px);
-  }
-}
 /* === Route-übergreifender Scroll-Unlock NUR auf page2 ================= */
 /* Neutralisiert typische Body/HTML-Locks, falls von vorheriger Seite gesetzt */
 html.no-scroll,

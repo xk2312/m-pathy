@@ -349,10 +349,6 @@ section::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
   }
 }
 
-/* Desktop: Plus-Button ausblenden */
-@media (min-width: 769px) and (pointer: fine) {
-  .mi-plus-btn { display: none !important; }
-}
 /* === A11y Focus Enhancements =========================================== */
 :focus-visible {
   outline: 2px solid rgba(34,211,238,0.55);
@@ -537,15 +533,6 @@ div[data-convo="1"]::-webkit-scrollbar-track { background: transparent; }
         .md table th, .md table td,
   .markdown table th, .markdown table td {
     white-space: nowrap;         /* prevent ugly multi-line cell breaks */
-  }
-}
-/* STOP Mobile viewport scroll – Prompt fixed stability */
-@media (max-width: 768px), (pointer: coarse) {
-  html, body {
-    height: 100dvh;          /* Stabiler Viewport */
-    overflow-y: auto;        /* Vertikales Scrollen im Viewport wieder erlauben */
-    overscroll-behavior: none;
-    touch-action: pan-y;     /* gezielt vertikal scrollen (Chat-Stage) */
   }
 }
 
