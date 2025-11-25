@@ -123,17 +123,17 @@ END OF INDEX
 
 
 /* =============================================================
-   ROOT-DOCK – Starship Prompt (gemeinsame Basis für alle Viewports)
+   ROOT DOCK (Wrapper unten im Chat)
    ============================================================= */
 
 #m-input-dock.prompt-root {
   position: sticky;
-  bottom: var(--prompt-dock-bottom-desktop);
-  z-index: 40;
-
-  /* bleibt in der Chat-Spalte; Eltern (Grid) bestimmen die Breite */
+  bottom: calc(var(--prompt-dock-bottom-desktop) + env(safe-area-inset-bottom, 0px));
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
+
   align-items: center;
   gap: 12px;
 
@@ -521,9 +521,10 @@ END OF INDEX
   transform: none;
 }
 
-/* === Ultra-Small Mobile Fallback (iPhone 14 / SE etc.) ============ */
-/* Sicherstellen, dass der Prompt auf sehr kleinen Screens NIE
-   aus dem Viewport verschwindet – Eltern erzwingen die Ordnung. */
+/* =============================================================
+   MOBILE FALLBACK – Safe Bottom (iPhone SE / Low height)
+   ============================================================= */
+
 @media (max-width: 768px) and (max-height: 750px) {
   /* Bühne: genug Platz unterhalb für den Dock einkalkulieren */
   .prompt-root-scene[data-layout="mobile"] {
@@ -531,18 +532,17 @@ END OF INDEX
     padding-bottom: 120px; /* angenäherte Prompt-Höhe inkl. Shadow */
   }
 
-  /* Dock: fest an den unteren Rand pinnen – aber gemäß Gesetz (3 % über Boden) */
+  /* Dock: fest an den unteren Rand pinnen, mit Safe-Area-Respekt */
   #m-input-dock.prompt-root[data-layout="mobile"] {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: calc(
-      var(--prompt-dock-bottom-mobile)
-      + var(--safe-bottom, env(safe-area-inset-bottom, 0px))
-    );
+    bottom: calc(var(--prompt-dock-bottom-mobile) + env(safe-area-inset-bottom, 0px));
     z-index: 60; /* über dem Content, unter Overlays */
   }
 }
+
+
 
 
 
