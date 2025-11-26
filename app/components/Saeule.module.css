@@ -476,6 +476,18 @@
   }
 }
 
+/* =========================================================
+   OVERRIDE – Universum für große Modus-Buttons
+   (ONBOARDING, COUNCIL13, M·DEFAULT)
+   ========================================================= */
+
+.buttonPrimary.modeListItemActive,
+.buttonGhostPrimary.modeListItemActive,
+.buttonSolid.modeListItemActive {
+  background-color: #020617 !important;        /* tiefes Schwarzblau */
+  border-color: rgba(148,163,184,0.9) !important;
+  color: rgba(248,250,252,0.92) !important;    /* edles Hellgrau */
+}
 
 
 /* Gemini-Frame: äußerer Rahmen für die Säule */
