@@ -575,12 +575,38 @@
     transform var(--t-fast) var(--ease);
   cursor: pointer; pointer-events: auto;
 }
+
+/* =========================================================
+ *  VOIA AURA – gemeinsame Hülle für alle Active-Buttons
+ * ======================================================= */
+
+.modeAuraShell {
+  position: relative;
+  display: block;
+  width: 100%;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.modeAuraLayer {
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.modeAuraContent {
+  position: relative;
+  z-index: 1;
+}
+
 .modeBtn--active {
   background: #00C8FF;
   border-color: #38bdf8;
   box-shadow: 0 0 0 1px rgba(56,189,248,0.45);
   color: #02141d;
 }
+
 .modeBtn--default { /* Council13 Default Visual */
   box-shadow: 0 0 0 1px rgba(148,163,184,0.80);
 }

@@ -128,12 +128,12 @@ export default function VoiaBloom() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none">
-      {/* Canvas */}
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full filter blur-[0.5px] contrast-[110%] opacity-80"
+        className="h-full w-full"
       />
     </div>
   );
 }
+

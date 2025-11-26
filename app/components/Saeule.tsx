@@ -38,13 +38,52 @@
  *      nicht über direkte DOM-Manipulation der Bühne.
  */
 
-
 "use client";
 
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import styles from "./Saeule.module.css";
+import VoiaBloom from "@/components/VoiaBloom";
 import { logEvent } from "../../lib/auditLogger";
 import { t, getLocale } from "@/lib/i18n";
+
+// ModeAura – zentrale Hülle für alle aktiven Buttons
+// --------------------------------------------------
+// Zweck:
+// - Diese Komponente legt eine "Aura-Schicht" (modeAuraLayer) UNTER den Buttoninhalt
+//   und rendert dort den aktiven Effekt (aktuell: <VoiaBloom />).
+// - Alle Buttons, die einen Active-State haben, werden mit <ModeAura active={...}> gewrappt.
+//   So steuerst du den Active-Effekt global an EINER Stelle.
+//
+// Stellschrauben:
+// - Effekt EIN/AUS:   Im JSX-Block {active && (...)} kannst du <VoiaBloom /> entfernen,
+//   ersetzen oder durch eine einfache Hintergrundfläche (z.B. <div style={{background: ...}} />) austauschen.
+// - Effekttyp ändern: Statt <VoiaBloom /> kannst du jede andere Komponente oder jedes andere
+//   Element rendern (z.B. <NebulaGlow />, <Particles />, ein CSS-Gradient).
+// - Intensität/Look:  Dafür zuständig sind entweder die Props/Implementation von <VoiaBloom />
+//   selbst ODER zusätzliche Styles/Wrapper innerhalb modeAuraLayer.
+//
+// Wichtig:
+// - Du musst später NICHT mehr alle Buttons anfassen. Wenn der Active-Look sich ändern soll,
+//   ändere nur hier den Inhalt von modeAuraLayer – alles andere übernimmt automatisch.
+
+type ModeAuraProps = {
+  active: boolean;
+  children: React.ReactNode;
+};
+
+function ModeAura({ active, children }: ModeAuraProps) {
+  return (
+    <div className={styles.modeAuraShell}>
+      {active && (
+        <div className={styles.modeAuraLayer}>
+          <VoiaBloom />
+        </div>
+      )}
+      <div className={styles.modeAuraContent}>{children}</div>
+    </div>
+  );
+}
+
 
 /* ======================================================================
    Typen
@@ -968,65 +1007,68 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
               className={styles.sectionModes}
               aria-label={tr("pillar.section.modes", "Modes")}
             >
-             {/* ONBOARDING */}
+{/* ONBOARDING */}
 <div className={styles.block}>
-  <button
-    type="button"
-    aria-pressed={activeMode === "onboarding"}
-    className={`${styles.buttonPrimary} ${
-      activeMode === "onboarding" ? `${styles.active} ${styles.modeListItemActive}` : ""
-    }`}
-    onClick={() => switchMode("onboarding")}
-  >
-    <SimbaIcon name="modeOnboarding" />
-    {tr("mode.onboarding", "ONBOARDING")}
-  </button>
+  <ModeAura active={activeMode === "onboarding"}>
+    <button
+      type="button"
+      aria-pressed={activeMode === "onboarding"}
+      className={`${styles.buttonPrimary} ${
+        activeMode === "onboarding" ? styles.active : ""
+      }`}
+      onClick={() => switchMode("onboarding")}
+    >
+      <SimbaIcon name="modeOnboarding" />
+      {tr("mode.onboarding", "ONBOARDING")}
+    </button>
+  </ModeAura>
 </div>
 
 {/* Council13 als Modus */}
 <div className={styles.block}>
-  <button
-    type="button"
-    aria-pressed={activeMode === "council"}
-    className={`${styles.buttonGhostPrimary} ${
-      activeMode === "council"
-        ? `${styles.active} ${styles.modeListItemActive}`
-        : ""
-    }`}
-    onClick={() => switchMode("council")}
-    style={{ width: "100%", cursor: "pointer" }}
-  >
-    <SimbaIcon name="modeCouncil" />
-    {tr("mode.council", "COUNCIL13")}
-  </button>
+  <ModeAura active={activeMode === "council"}>
+    <button
+      type="button"
+      aria-pressed={activeMode === "council"}
+      className={`${styles.buttonGhostPrimary} ${
+        activeMode === "council" ? styles.active : ""
+      }`}
+      onClick={() => switchMode("council")}
+      style={{ width: "100%", cursor: "pointer" }}
+    >
+      <SimbaIcon name="modeCouncil" />
+      {tr("mode.council", "COUNCIL13")}
+    </button>
+  </ModeAura>
 </div>
 
-
-              {/* M (Default) */}
+{/* M (Default) */}
 <div className={styles.block}>
-  <button
-    type="button"
-    aria-pressed={activeMode === "M"}
-    className={`${styles.buttonSolid} ${
-      activeMode === "M" ? `${styles.active} ${styles.modeListItemActive}` : ""
-    }`}
-    onClick={() => {
-      // ▼ Overlay sofort schließen (ohne Bubble)
-      try {
-        const inOverlay = !!document.querySelector(
-          '[data-overlay="true"]'
-        );
-        if (inOverlay) {
-          onSystemMessage?.("");
-        }
-      } catch {}
-      // ▲ Ende Overlay-Close
-      void switchMode("M");
-    }}
-  >
-    <SimbaIcon name="modeDefault" />
-    {tr("mode.default", "M · Default")}
-  </button>
+  <ModeAura active={activeMode === "M"}>
+    <button
+      type="button"
+      aria-pressed={activeMode === "M"}
+      className={`${styles.buttonSolid} ${
+        activeMode === "M" ? styles.active : ""
+      }`}
+      onClick={() => {
+        // ▼ Overlay sofort schließen (ohne Bubble)
+        try {
+          const inOverlay = !!document.querySelector(
+            '[data-overlay="true"]'
+          );
+          if (inOverlay) {
+            onSystemMessage?.("");
+          }
+        } catch {}
+        // ▲ Ende Overlay-Close
+        void switchMode("M");
+      }}
+    >
+      <SimbaIcon name="modeDefault" />
+      {tr("mode.default", "M · Default")}
+    </button>
+  </ModeAura>
 </div>
 
 
@@ -1077,34 +1119,30 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
               if (!currentCategory) return null;
 
               return currentCategory.modes.map((modeId) => {
-                const mode = MODI.find((m) => m.id === modeId);
-                if (!mode) return null;
-                const isActive = activeMode === modeId;
+  const mode = MODI.find((m) => m.id === modeId);
+  if (!mode) return null;
+  const isActive = activeMode === modeId;
 
-                return (
-                  <button
-                    key={modeId}
-                    type="button"
-                    className={
-                      isActive
-                        ? `${styles.modeListItem} ${styles.modeListItemActive}`
-                        : styles.modeListItem
-                    }
-                    onClick={() => {
-                      // Kategorie persistent auf die gewählte setzen
-                      setModeCategory(currentCategoryId);
-                      // Hover zurücksetzen, damit der graue Marker gilt
-                      setHoverModeCategory(null);
-                      void switchMode(modeId);
-                    }}
-                    aria-pressed={isActive}
-                  >
-                    <span className={styles.modeListItemLabel}>
-                      {mode.label}
-                    </span>
-                  </button>
-                );
-              });
+  return (
+    <ModeAura key={modeId} active={isActive}>
+      <button
+        type="button"
+        className={
+          isActive
+            ? `${styles.modeListItem} ${styles.modeListItemActive}`
+            : styles.modeListItem
+        }
+        onClick={() => switchMode(modeId)}
+        aria-pressed={isActive}
+      >
+        <span className={styles.modeListItemLabel}>
+          {mode.label}
+        </span>
+      </button>
+    </ModeAura>
+  );
+});
+
             })()}
           </div>
 
@@ -1193,7 +1231,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                       );
                       if (!currentCategory) return null;
 
-                      return currentCategory.experts.map((expertId) => {
+                                            return currentCategory.experts.map((expertId) => {
                         const expert = EXPERTS.find(
                           (e) => e.id === expertId
                         );
@@ -1201,32 +1239,34 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                         const isActive = currentExpert === expertId;
 
                         return (
-                          <button
-                            key={expertId}
-                            type="button"
-                            className={
-                              isActive
-                                ? `${styles.modeListItem} ${styles.modeListItemActive}`
-                                : styles.modeListItem
-                            }
-                            onClick={() => {
-                              setCurrentExpert(expertId);
+                          <ModeAura key={expertId} active={isActive}>
+                            <button
+                              type="button"
+                              className={
+                                isActive
+                                  ? `${styles.modeListItem} ${styles.modeListItemActive}`
+                                  : styles.modeListItem
+                              }
+                              onClick={() => {
+                                setCurrentExpert(expertId);
 
-                              const owningCategoryId = currentCategoryId;
-                              setExpertCategory(owningCategoryId);
-                              setHoverExpertCategory(null);
+                                const owningCategoryId = currentCategoryId;
+                                setExpertCategory(owningCategoryId);
+                                setHoverExpertCategory(null);
 
-                              void askExpert(expertId);
-                            }}
-                            aria-pressed={isActive}
-                            data-simba-slot={expert.simbaSlot}
-                          >
-                            <span className={styles.modeListItemLabel}>
-                              {labelForExpert(expertId, lang)}
-                            </span>
-                          </button>
+                                void askExpert(expertId);
+                              }}
+                              aria-pressed={isActive}
+                              data-simba-slot={expert.simbaSlot}
+                            >
+                              <span className={styles.modeListItemLabel}>
+                                {labelForExpert(expertId, lang)}
+                              </span>
+                            </button>
+                          </ModeAura>
                         );
                       });
+
                     })()}
                   </div>
                 </div>
