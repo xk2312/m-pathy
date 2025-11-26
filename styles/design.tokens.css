@@ -1191,8 +1191,8 @@
 
   /* Dock – Gesetz M: Eine Stelle, zwei Zahlen (vh-basiert) */
   /* PreChat: 30 % über Boden, Chat: 3 % über Boden */
-  --prompt-prechat-offset-vh: 30;  /* Prozent der Viewport-Höhe */
-  --prompt-chat-offset-vh: 3;      /* Prozent der Viewport-Höhe */
+  --prompt-prechat-offset-vh: 50;  /* Prozent der Viewport-Höhe */
+  --prompt-chat-offset-vh: 7;      /* Prozent der Viewport-Höhe */
 
   /* Aus diesen zwei Zahlen werden alle Formen gespeist */
   --prompt-dock-bottom-desktop: calc(var(--vh) * var(--prompt-chat-offset-vh));
