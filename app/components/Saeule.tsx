@@ -938,13 +938,11 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
 
       {/* Smooth Operator · Akkordeon für MODIS / EXPERTEN / SYSTEM / ACTIONS */}
       <div className={styles.soAccordion}>
-      {/* MODIS */}
+    {/* MODIS */}
 <div className={styles.soSection}>
   <button
     type="button"
-    className={`${styles.soSectionHeader} ${
-      openSection === "modes" ? styles.soSectionHeaderUniverse : ""
-    }`}
+    className={styles.soSectionHeader}
     onClick={() => toggleSection("modes")}
     aria-expanded={openSection === "modes"}
   >
@@ -955,6 +953,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
       {tr("pillar.section.modesTitle", "MODIS")}
     </span>
   </button>
+
 
 
           <div
@@ -969,61 +968,64 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
               className={styles.sectionModes}
               aria-label={tr("pillar.section.modes", "Modes")}
             >
-              {/* ONBOARDING */}
-              <div className={styles.block}>
-                <button
-                  type="button"
-                  aria-pressed={activeMode === "onboarding"}
-                  className={`${styles.buttonPrimary} ${
-                    activeMode === "onboarding" ? styles.active : ""
-                  }`}
-                  onClick={() => switchMode("onboarding")}
-                >
-                  <SimbaIcon name="modeOnboarding" />
-                  {tr("mode.onboarding", "ONBOARDING")}
-                </button>
-              </div>
+             {/* ONBOARDING */}
+<div className={styles.block}>
+  <button
+    type="button"
+    aria-pressed={activeMode === "onboarding"}
+    className={`${styles.buttonPrimary} ${
+      activeMode === "onboarding" ? `${styles.active} ${styles.modeListItemActive}` : ""
+    }`}
+    onClick={() => switchMode("onboarding")}
+  >
+    <SimbaIcon name="modeOnboarding" />
+    {tr("mode.onboarding", "ONBOARDING")}
+  </button>
+</div>
+
 {/* Council13 als Modus */}
-              <div className={styles.block}>
-                <button
-                  type="button"
-                  aria-pressed={activeMode === "council"}
-                  className={`${styles.buttonGhostPrimary} ${
-                    activeMode === "council" ? styles.active : ""
-                  }`}
-                  onClick={() => switchMode("council")}
-                  style={{ width: "100%", cursor: "pointer" }}
-                >
-                  <SimbaIcon name="modeCouncil" />
-                  {tr("mode.council", "COUNCIL13")}
-                </button>
-              </div>
+<div className={styles.block}>
+  <button
+    type="button"
+    aria-pressed={activeMode === "council"}
+    className={`${styles.buttonGhostPrimary} ${
+      activeMode === "council" ? styles.active : ""
+    }`}
+    onClick={() => switchMode("council")}
+    style={{ width: "100%", cursor: "pointer" }}
+  >
+    <SimbaIcon name="modeCouncil" />
+    {tr("mode.council", "COUNCIL13")}
+  </button>
+</div>
+
               {/* M (Default) */}
-              <div className={styles.block}>
-                <button
-                  type="button"
-                  aria-pressed={activeMode === "M"}
-                  className={`${styles.buttonSolid} ${
-                    activeMode === "M" ? styles.active : ""
-                  }`}
-                  onClick={() => {
-                    // ▼ Overlay sofort schließen (ohne Bubble)
-                    try {
-                      const inOverlay = !!document.querySelector(
-                        '[data-overlay="true"]'
-                      );
-                      if (inOverlay) {
-                        onSystemMessage?.("");
-                      }
-                    } catch {}
-                    // ▲ Ende Overlay-Close
-                    void switchMode("M");
-                  }}
-                >
-          <SimbaIcon name="modeDefault" />
-                  {tr("mode.default", "M · Default")}
-                </button>
-              </div>
+<div className={styles.block}>
+  <button
+    type="button"
+    aria-pressed={activeMode === "M"}
+    className={`${styles.buttonSolid} ${
+      activeMode === "M" ? `${styles.active} ${styles.modeListItemActive}` : ""
+    }`}
+    onClick={() => {
+      // ▼ Overlay sofort schließen (ohne Bubble)
+      try {
+        const inOverlay = !!document.querySelector(
+          '[data-overlay="true"]'
+        );
+        if (inOverlay) {
+          onSystemMessage?.("");
+        }
+      } catch {}
+      // ▲ Ende Overlay-Close
+      void switchMode("M");
+    }}
+  >
+    <SimbaIcon name="modeDefault" />
+    {tr("mode.default", "M · Default")}
+  </button>
+</div>
+
 
             {/* Charakter-Modis – Micronavi + Liste */}
       <div className={styles.block}>
