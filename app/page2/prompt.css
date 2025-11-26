@@ -128,29 +128,28 @@ END OF INDEX
 
 #m-input-dock.prompt-root {
   position: fixed;
-  bottom: max(16px, env(safe-area-inset-bottom, 0px)); /* Vereinfachter Bottom-Offset */
-  left: 0;                    /* Basis: mobiler Vollviewport */
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  left: 0;
   right: 0;
   display: flex;
   flex-direction: column;
-
   align-items: center;
   gap: 12px;
-  /* Dock bleibt geerdet, keine Vertical-Flüge mehr */
   transform: translateY(0);
   transition:
     transform var(--prompt-motion),
     opacity 180ms ease-out;
-
-  /* sanfte, sichtbare Dock-Fläche + Blur */
   padding: 24px 18px 28px;
-  background: rgba(10, 15, 20, 0.58);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
 
-  /* Prompt sicher über Chat & Content */
+  /* nur hier geändert: echter schwarzer Kasten, kein Blur */
+  background: #050b11;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+
+  /* damit der Kasten sicher über dem Chat liegt */
   z-index: var(--z-fab);
 }
+
 
 /* Desktop: Säulenbreite (277px) respektieren – Prompt im Chatbereich zentrieren */
 @media (min-width: 1024px) {
@@ -186,12 +185,11 @@ END OF INDEX
   filter: blur(4px);
 }
 
-/* PreChat: Dock bleibt fix am Boden – kein Lift mehr */
+/* PreChat: lift prompt into the golden band (all layouts) */
 .prompt-root-scene[data-position-state="intro"]
   #m-input-dock.prompt-root {
-  transform: translateY(0);
+  transform: translateY(var(--prompt-flight-translate-y));
 }
-
 
 
 /* Viewport ≤ 768px: Dock erden, PreChat-Goldband mobil */
