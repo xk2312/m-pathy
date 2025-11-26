@@ -989,7 +989,9 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
     type="button"
     aria-pressed={activeMode === "council"}
     className={`${styles.buttonGhostPrimary} ${
-      activeMode === "council" ? styles.active : ""
+      activeMode === "council"
+        ? `${styles.active} ${styles.modeListItemActive}`
+        : ""
     }`}
     onClick={() => switchMode("council")}
     style={{ width: "100%", cursor: "pointer" }}
@@ -998,6 +1000,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
     {tr("mode.council", "COUNCIL13")}
   </button>
 </div>
+
 
               {/* M (Default) */}
 <div className={styles.block}>
