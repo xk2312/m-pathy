@@ -448,16 +448,111 @@
   border-color: rgba(148,163,184,0.4);
 }
 
+/* Aktiver Modus = gesamtes Universum im Button */
 .modeListItemActive {
-  background-color: #00C8FF;
-  border-color: #00C8FF;
-  color: #020617;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 999px;
+  background-color: #020617;                       /* tiefes, fast schwarzes Blau */
+  border-color: rgba(148,163,184,0.9);             /* feiner, kühler Rand */
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,0.95),
+    0 0 40px rgba(15,23,42,0.95);                  /* subtile Aura nach außen */
+  color: rgba(248,250,252,0.92);                   /* edles helles Grau */
+}
+
+/* dichter, lebendiger Sternenhimmel */
+.modeListItemActive::before {
+  content: "";
+  position: absolute;
+  inset: -80%;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0.95;
+  background:
+    radial-gradient(1px 1px at 8% 18%,  rgba(255,255,255,0.9),  transparent 60%),
+    radial-gradient(1px 1px at 22% 74%, rgba(255,255,255,0.65), transparent 60%),
+    radial-gradient(1.5px 1.5px at 38% 32%, rgba(255,255,255,0.85), transparent 60%),
+    radial-gradient(1px 1px at 55% 12%, rgba(255,255,255,0.7),  transparent 60%),
+    radial-gradient(1px 1px at 68% 68%, rgba(255,255,255,0.8),  transparent 60%),
+    radial-gradient(1px 1px at 82% 40%, rgba(255,255,255,0.75), transparent 60%),
+    radial-gradient(1px 1px at 15% 48%, rgba(255,255,255,0.6),  transparent 60%),
+    radial-gradient(1px 1px at 46% 82%, rgba(255,255,255,0.7),  transparent 60%),
+    radial-gradient(1px 1px at 74% 88%, rgba(255,255,255,0.65), transparent 60%);
+  transform: translate3d(-10%, -6%, 0) scale(1.1);
+  animation: modeStarDrift 26s linear infinite;
+  z-index: -1;
+}
+
+/* seltene, feine Sternschnuppe */
+.modeListItemActive::after {
+  content: "";
+  position: absolute;
+  top: -15%;
+  left: -40%;
+  width: 150%;
+  height: 2px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,1),
+    transparent
+  );
+  opacity: 0;
+  transform: translate3d(-40%, -25%, 0) rotate(-18deg);
+  animation: modeShootingStar 13s cubic-bezier(0.4,0.0,0.2,1) infinite;
+  z-index: -1;
+}
+
+/* sanftes, tiefes Driften des Sternfelds */
+@keyframes modeStarDrift {
+  0% {
+    transform: translate3d(-10%, -6%, 0) scale(1.08);
+  }
+  50% {
+    transform: translate3d(6%, 4%, 0) scale(1.1);
+  }
+  100% {
+    transform: translate3d(-10%, -6%, 0) scale(1.08);
+  }
+}
+
+/* Sternschnuppe – kurz aufblitzen, dann wieder lange Ruhe */
+@keyframes modeShootingStar {
+  0%, 76% {
+    opacity: 0;
+    transform: translate3d(-40%, -25%, 0) rotate(-18deg);
+  }
+  79% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 0;
+    transform: translate3d(40%, 22%, 0) rotate(-18deg);
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .modeListItemLabel {
   flex: 1 1 auto;
   text-align: left;
 }
+
+/* Reduced-Motion: Himmel bleibt, aber ohne Bewegung / Sternschnuppe */
+@media (prefers-reduced-motion: reduce) {
+  .modeListItemActive::before,
+  .modeListItemActive::after {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+    opacity: 0.9;
+  }
+}
+
 
 
 /* Gemini-Frame: äußerer Rahmen für die Säule */
