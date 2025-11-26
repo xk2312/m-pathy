@@ -215,6 +215,9 @@ function useBreakpoint() {
       // fallback: keep default threshold
     }
 
+    // Breakpoint-Sync: niemals größer als 768px → Tablets wie Desktop
+    effectiveThreshold = Math.min(effectiveThreshold, 768);
+
     const fn = () => setIsMobile(window.innerWidth <= effectiveThreshold);
     fn();
     window.addEventListener("resize", fn);
