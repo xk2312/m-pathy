@@ -342,7 +342,7 @@ export default function Navigation() {
                 textTransform: "none",
                 fontWeight: 650,
                 lineHeight: 1,
-                paddingBottom: "1px",     // LIFT 1 px → perfect baseline alignment
+                paddingBottom: "2px",     // LIFT 1 px → perfect baseline alignment
                 whiteSpace: "nowrap",
               }}
             >
