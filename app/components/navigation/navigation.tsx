@@ -322,9 +322,9 @@ export default function Navigation() {
           // Kein Motion-System mehr
           transition: "none",
         }}
-      >
+            >
               {/* LEFT – Brand (m-pathy) + Subscribe */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-5">
           <Link
             href="/"
             aria-label="Home"
@@ -346,6 +346,7 @@ export default function Navigation() {
             </span>
           </Link>
           <NavLink
+
 
             href="/subscription"
             label={links.subscription}
