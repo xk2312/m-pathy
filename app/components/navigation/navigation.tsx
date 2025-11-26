@@ -279,7 +279,11 @@ export default function Navigation() {
     pathname?.startsWith("/page2") ||
     false;
 
-  const headerStyle: React.CSSProperties = isChatLayout && isDesktop
+  // Chat-Speziallayout nur am Desktop (Säule rechts),
+  // Mobile verhält sich wie Subscription.
+  const isChatStageLayout = isChatLayout && isDesktop;
+
+  const headerStyle: React.CSSProperties = isChatStageLayout
     ? {
         position: "fixed",
         top: 0,
@@ -299,11 +303,12 @@ export default function Navigation() {
       <div
         className="mx-auto flex items-center justify-between"
         style={{
-          maxWidth: isChatLayout ? "none" : "var(--page-inner-max)",
-          margin: isChatLayout ? "0" : undefined,
-          paddingInline: isChatLayout
+          maxWidth: isChatStageLayout ? "none" : "var(--page-inner-max)",
+          margin: isChatStageLayout ? "0" : undefined,
+          paddingInline: isChatStageLayout
             ? "var(--stage-pad, 48px)"
             : "var(--page-pad-inline)",
+
           // *** STATIC MODE ***
           height: navHeight,
           transform: "none",
