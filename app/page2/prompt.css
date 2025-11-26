@@ -134,7 +134,7 @@ END OF INDEX
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 0px; /* Test von 12 auf 0 */
   transform: translateY(0);
   transition:
     transform var(--prompt-motion),
