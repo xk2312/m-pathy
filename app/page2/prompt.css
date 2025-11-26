@@ -291,11 +291,12 @@ END OF INDEX
   align-items: center;
   gap: 8px;
 
-  width: min(500px, calc(100vw - 20px));
-  max-width: min(500px, calc(100vw - 20px));
+  width: min(var(--prompt-width-max), calc(100vw - var(--prompt-margin-inline) * 2));
+  max-width: min(var(--prompt-width-max), calc(100vw - var(--prompt-margin-inline) * 2));
   margin-inline: auto;
 
   padding: 12px 12px;
+
 
   border-radius: var(--prompt-radius, 999px);
   background: var(--prompt-bg, rgba(15,23,42,0.96));
