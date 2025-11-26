@@ -1775,15 +1775,15 @@ undefined : "100dvh",
             </div>
           </div>
 
-          {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
+                    {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
           <div
-            data-position-state={!hasMessages && !isMobile ?
-"intro" : "chat"}
+            data-position-state={!hasMessages ? "intro" : "chat"}
             data-layout={isMobile ?
 "mobile" : "desktop"}
             className="prompt-root-scene"
             style={{
               position: 'fixed',
+
               bottom: 0,
               left: isMobile ? 0 : 'var(--saeule-w, 277px)', /* Linke Kante = Säulenbreite */
               right: 0,
