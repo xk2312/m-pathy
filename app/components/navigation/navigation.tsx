@@ -300,7 +300,7 @@ export default function Navigation() {
 
   return (
     <header style={headerStyle} aria-label="Main site navigation">
-            <div
+         <div
         className="mx-auto flex items-center justify-between"
         style={{
           maxWidth: isChatStageLayout ? "none" : "var(--page-inner-max)",
@@ -309,21 +309,23 @@ export default function Navigation() {
             ? "var(--stage-pad, 48px)"
             : "var(--page-pad-inline)",
 
-
           // *** STATIC MODE ***
           height: navHeight,
           transform: "none",
           opacity: 1,
-          boxShadow: "none",
-          // *** Hintergrund identisch zum Chat-Bereich ***
-          background: "rgba(15,16,21,0.92)",
-          backdropFilter: "blur(18px)",
-          // Keine Linie (nahtloser Übergang)
-          borderBottom: "none",
+
+          // Equilibrium Veil – nav shares the chat background,
+          // the only separation is a 1px luminous horizon
+          background: "transparent",
+          backdropFilter: "none",
+          borderBottom: "1px solid rgba(255,255,255,0.04)",
+          boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
+
           // Kein Motion-System mehr
           transition: "none",
-                }}
+        }}
       >
+
         {/* LEFT – Brand (m-pathy) + Subscribe */}
         <div className="flex items-center gap-5" style={{ marginLeft: "-10px" }}>
           <Link
