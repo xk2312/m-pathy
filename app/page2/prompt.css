@@ -295,7 +295,7 @@ END OF INDEX
   max-width: min(var(--prompt-width-max), calc(100vw - var(--prompt-margin-inline) * 2));
   margin-inline: auto;
 
-  padding: 12px 12px;
+  padding: 21.8px 21.8px;
 
 
   border-radius: var(--prompt-radius, 999px);
@@ -312,7 +312,7 @@ END OF INDEX
 
 /* PreChat · Desktop – prompt same “panel size” as before */
 #m-input-dock[data-mode="doorman"][data-layout="desktop"] .prompt-shell {
-  padding: 20px 20px;
+   padding: 21.8px 21.8px;
 }
  /* Chat-Content auf Raumschiff-Breite begrenzen */
 .chat-stage-inner {
