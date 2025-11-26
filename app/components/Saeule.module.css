@@ -104,18 +104,96 @@
     color 0.18s ease,
     transform 0.14s ease;
 }
+/* =========================================================
+   Sternenhimmel – nur für aktiven MODIS-Header
+   ========================================================= */
+.soSectionHeaderUniverse {
+  position: relative;
+  overflow: hidden;                     /* Sterne sauber im Button halten */
+  background-color: #05060a;           /* tiefes Schwarz */
+  color: rgba(248, 250, 252, 0.90);    /* edles Grau für Schrift */
+}
 
-/* edler Hover-Hintergrund + leichter Lift – identisch zu "JETZT BAUEN" */
+/* Leichtes Starfield im Hintergrund */
+.soSectionHeaderUniverse::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0.9;
+  transform: translate3d(0, 0, 0);
+  background:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.9), transparent 55%),
+    radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,0.7), transparent 55%),
+    radial-gradient(1.5px 1.5px at 70% 30%, rgba(255,255,255,0.8), transparent 60%),
+    radial-gradient(1px 1px at 85% 60%, rgba(255,255,255,0.6), transparent 55%),
+    radial-gradient(1px 1px at 45% 45%, rgba(255,255,255,0.7), transparent 55%);
+  animation: soStarfieldDrift 18s linear infinite;
+}
+
+/* Sternenhimmel driftet ganz leicht, nur über transform */
+@keyframes soStarfieldDrift {
+  0% {
+    transform: translate3d(-4%, 0, 0);
+  }
+  50% {
+    transform: translate3d(4%, 2%, 0);
+  }
+  100% {
+    transform: translate3d(-4%, 0, 0);
+  }
+}
+
+/* Seltene Sternschnuppe – fein, nicht disco */
+.soSectionHeaderUniverse::before {
+  content: "";
+  position: absolute;
+  top: 12%;
+  left: -40%;
+  width: 140%;
+  height: 2px;
+  pointer-events: none;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.95),
+    transparent
+  );
+  opacity: 0;
+  transform: translate3d(-40%, -40%, 0) rotate(-18deg);
+  animation: soShootingStar 9s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
+}
+
+@keyframes soShootingStar {
+  0%, 70% {
+    opacity: 0;
+    transform: translate3d(-40%, -40%, 0) rotate(-18deg);
+  }
+  73% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0;
+    transform: translate3d(40%, 40%, 0) rotate(-18deg);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .soSectionHeader:hover {
-  background-color: #2A2C2F;                    /* dunkles, samtiges Grau */
-  color: rgba(255, 255, 255, 0.92);             /* leicht hellerer Text */
+  background-color: #2A2C2F;
+  color: rgba(255, 255, 255, 0.92);
   transform: translateY(-0.5px);
 }
 
-/* Cyan-Akzent komplett entfernt */
+/* Default: kein spezielles ::before mehr */
 .soSectionHeader::before {
-  content: none !important;
+  content: none;
 }
+
 
 /* Icon-Slot links (Simba-Glyphs) */
 .soSectionHeaderIcon {

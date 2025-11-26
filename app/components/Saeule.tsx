@@ -938,21 +938,24 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
 
       {/* Smooth Operator · Akkordeon für MODIS / EXPERTEN / SYSTEM / ACTIONS */}
       <div className={styles.soAccordion}>
-        {/* MODIS */}
-        <div className={styles.soSection}>
-          <button
-            type="button"
-            className={styles.soSectionHeader}
-            onClick={() => toggleSection("modes")}
-            aria-expanded={openSection === "modes"}
-          >
-            <span className={styles.soSectionHeaderIcon}>
-              <SimbaIcon name="modeDefault" />
-            </span>
-            <span className={styles.soSectionHeaderLabel}>
-              {tr("pillar.section.modesTitle", "MODIS")}
-            </span>
-          </button>
+      {/* MODIS */}
+<div className={styles.soSection}>
+  <button
+    type="button"
+    className={`${styles.soSectionHeader} ${
+      openSection === "modes" ? styles.soSectionHeaderUniverse : ""
+    }`}
+    onClick={() => toggleSection("modes")}
+    aria-expanded={openSection === "modes"}
+  >
+    <span className={styles.soSectionHeaderIcon}>
+      <SimbaIcon name="modeDefault" />
+    </span>
+    <span className={styles.soSectionHeaderLabel}>
+      {tr("pillar.section.modesTitle", "MODIS")}
+    </span>
+  </button>
+
 
           <div
             className={
