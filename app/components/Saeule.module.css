@@ -761,18 +761,20 @@
   border-color: #2C2C2C;
 }
 
-/* Aktiv: neutrale Deep-Dark-Pille – Farbe/Glow kommt aus ModeAura/VoiaBloom */
+/* Aktiv: Hintergrund transparent – VoiaBloom zeichnet die Pille,
+   nur Kontur/Glow bleiben aus dem Button-Styling */
 .active {
-  background-color: rgba(15,23,42,0.96);
+  background-color: transparent; /* kein eigener Füllton mehr */
   border-color: rgba(148,163,184,0.9);
   color: rgba(248,250,252,0.92) !important;
-  box-shadow: 0 0 0 1px rgba(15,23,42,0.95);
+  box-shadow: 0 0 0 1px rgba(15,23,42,0.85);
 }
 
 .active:hover {
-  background-color: rgba(15,23,42,0.98);
-  border-color: rgba(148,163,184,1);
+  background-color: transparent;
+  border-color: rgba(248,250,252,0.95);
 }
+
 
 
 /* Fokus (A11y) – schlicht, ohne Glow-Orgie */
