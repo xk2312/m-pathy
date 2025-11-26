@@ -323,25 +323,27 @@ export default function Navigation() {
           transition: "none",
         }}
       >
-        {/* LEFT – Brand (m-pathy) + Subscribe */}
+                {/* LEFT – Brand (m-pathy) + Subscribe */}
         <div className="flex items-center gap-6">
           <Link
             href="/"
-          aria-label="Home"
+            aria-label="Home"
             className="inline-flex items-center"
           >
             <span
-              className="text-white/80 hover:text-white"
+              className="text-white/80 hover:text-white transition-colors"
               style={{
                 fontSize: "0.78rem",
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
+                letterSpacing: "0.14em",
+                textTransform: "none",   // keep exact case: "m-pathy"
                 fontWeight: 600,
+                whiteSpace: "nowrap",    // never break into two lines
               }}
             >
               m-pathy
             </span>
           </Link>
+
 
           <NavLink
             href="/subscription"
@@ -350,17 +352,18 @@ export default function Navigation() {
           />
         </div>
 
-        {/* RIGHT – Language + Login-Placeholder */}
+                {/* RIGHT – Language + Login-Placeholder */}
         <div className="flex items-center justify-end gap-3 min-w-[140px]">
           <LanguageSwitcher />
           <button
             type="button"
             aria-label="Login"
-            className="h-8 w-8 rounded-full border border-white/25 flex items-center justify-center text-[11px] text-white/70 hover:text-white hover:border-white/60"
+            className="h-8 w-8 rounded-full border border-white/25 flex items-center justify-center text-[11px] text-white/70 hover:text-white hover:border-white/60 transition-all focus:outline-none focus:ring-2 focus:ring-cyan-300/60 focus:ring-offset-0"
           >
             ⭑
           </button>
         </div>
+
       </div>
     </header>
   );
