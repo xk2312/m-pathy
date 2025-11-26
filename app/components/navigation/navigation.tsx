@@ -298,7 +298,50 @@ export default function Navigation() {
         zIndex: 40,
       };
 
+  // Living Horizon – Desktop + Chat only
+  useEffect(() => {
+    if (!isChatStageLayout) return;
+    if (typeof window === "undefined") return;
+
+    const root = document.documentElement;
+
+    // Zero-Line Arrival (runs once)
+    root.classList.add("horizon-arrive");
+    setTimeout(() => root.classList.remove("horizon-arrive"), 200);
+
+    let lastTop = true;
+    let breatheTimer: any = null;
+
+    const onScroll = () => {
+      const atTop = window.scrollY <= 0;
+
+      // Tide Shift
+      root.style.setProperty(
+        "--horizon-opacity",
+        atTop ? "0.04" : "0.03"
+      );
+
+      // Horizon Breathe at top only
+      if (atTop && !lastTop) {
+        clearTimeout(breatheTimer);
+        breatheTimer = setTimeout(() => {
+          root.classList.add("horizon-breathe");
+          setTimeout(() => {
+            root.classList.remove("horizon-breathe");
+          }, 300);
+        }, 18000);
+      }
+
+      lastTop = atTop;
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isChatStageLayout]);
+
   return (
+
     <header style={headerStyle} aria-label="Main site navigation">
          <div
         className="mx-auto flex items-center justify-between"
@@ -413,4 +456,53 @@ function NavLink({ href, label, active }: NavLinkProps) {
       )}
     </Link>
   );
+
+  return null as any; // this line does not exist – only for context
 }
+
+<style jsx global>{`
+  /* Living Horizon – global CSS variables */
+  :root {
+    --horizon-opacity: 0.04;
+  }
+
+  /* Apply opacity from JS-controlled variable */
+  header[aria-label="Main site navigation"] > div {
+    border-bottom-color: rgba(255,255,255,var(--horizon-opacity));
+  }
+
+  /* Zero-Line Arrival */
+  .horizon-arrive header[aria-label="Main site navigation"] > div {
+    animation: horizonReveal 160ms cubic-bezier(.25,.1,.25,1);
+  }
+
+  @keyframes horizonReveal {
+    0% {
+      border-bottom-color: rgba(255,255,255,0);
+      box-shadow: 0 1px 0 rgba(0,0,0,0);
+    }
+    100% {
+      border-bottom-color: rgba(255,255,255,var(--horizon-opacity));
+      box-shadow: 0 1px 0 rgba(0,0,0,0.25);
+    }
+  }
+
+  /* Horizon Breathe */
+  .horizon-breathe header[aria-label="Main site navigation"] > div {
+    animation: horizonBreathe 220ms ease-out;
+  }
+
+  @keyframes horizonBreathe {
+    0% { border-bottom-color: rgba(255,255,255,var(--horizon-opacity)); }
+    50% { border-bottom-color: rgba(255,255,255,0.045); }
+    100% { border-bottom-color: rgba(255,255,255,var(--horizon-opacity)); }
+  }
+
+  /* Reduced Motion Safe */
+  @media (prefers-reduced-motion: reduce) {
+    .horizon-arrive header[aria-label="Main site navigation"] > div,
+    .horizon-breathe header[aria-label="Main site navigation"] > div {
+      animation: none !important;
+    }
+  }
+`}</style>
