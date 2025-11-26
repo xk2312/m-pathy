@@ -1163,7 +1163,7 @@
   --prompt-pad-x: 18px;
   --prompt-width-min: 318px;
   --prompt-width-max: 500px;
-  --prompt-margin-inline: 10px;
+  --prompt-margin-inline: 5px;
 
   /* Position – Desktop Intro-State (Doorman) */
   --prompt-dock-offset-intro: 160px;
