@@ -186,17 +186,11 @@ END OF INDEX
   filter: blur(4px);
 }
 
-/* PreChat: Dock bleibt am Boden, nur Szene wird angehoben */
-.prompt-root-scene[data-position-state="intro"] #m-input-dock.prompt-root {
-  transform: translateY(0);
-}
-
-/* Pille + Doorman in das Goldband liften */
-.prompt-root-scene[data-position-state="intro"] #m-input-dock .prompt-shell,
-.prompt-root-scene[data-position-state="intro"] #m-input-dock .prompt-quotes {
+/* PreChat: lift prompt into the golden band (all layouts) */
+.prompt-root-scene[data-position-state="intro"]
+  #m-input-dock.prompt-root {
   transform: translateY(var(--prompt-flight-translate-y));
 }
-
 
 
 /* Viewport ≤ 768px: Dock erden, PreChat-Goldband mobil */
