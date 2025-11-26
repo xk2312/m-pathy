@@ -359,7 +359,7 @@ export default function Navigation() {
 
           // Equilibrium Veil – nav shares the chat background,
           // the only separation is a 1px luminous horizon
-          background: "transparent",
+          background: "radial-gradient(circle at center, #0f0f0f, #000000)",
           backdropFilter: "none",
           borderBottom: "1px solid rgba(255,255,255,0.04)",
           boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
