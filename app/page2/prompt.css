@@ -139,7 +139,7 @@ END OF INDEX
   transition:
     transform var(--prompt-motion),
     opacity 180ms ease-out;
-  padding: 24px 18px 28px;
+  padding: 0px 18px 12px;
 
   /* nur hier geändert: echter schwarzer Kasten, kein Blur */
   background: #050b11;
@@ -225,7 +225,7 @@ END OF INDEX
   transform: translateY(0);
   transition:
     opacity 200ms ease-out,
- form 200ms ease-out;
+ transform 200ms ease-out;
 }
 
 /* Desktop: Doorman-Szene etwas nach unten versetzen */
