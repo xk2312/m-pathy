@@ -323,7 +323,7 @@ export default function Navigation() {
           transition: "none",
         }}
       >
-                {/* LEFT – Brand (m-pathy) + Subscribe */}
+              {/* LEFT – Brand (m-pathy) + Subscribe */}
         <div className="flex items-center gap-6">
           <Link
             href="/"
@@ -333,19 +333,20 @@ export default function Navigation() {
             <span
               className="text-white/80 hover:text-white transition-colors"
               style={{
-                fontSize: "0.78rem",
-                letterSpacing: "0.14em",
-                textTransform: "none",   // keep exact case: "m-pathy"
-                fontWeight: 600,
-                whiteSpace: "nowrap",    // never break into two lines
+                fontSize: "0.84rem",      // slightly larger, more presence
+                letterSpacing: "0.10em",  // a bit tighter, more solid
+                textTransform: "none",    // keep exact case: "m-pathy"
+                fontWeight: 650,          // stronger than 600, not shouting
+                lineHeight: 1,
+                paddingBottom: "1px",     // tiny optical baseline tweak
+                whiteSpace: "nowrap",     // never break into two lines
               }}
             >
               m-pathy
             </span>
           </Link>
-
-
           <NavLink
+
             href="/subscription"
             label={links.subscription}
             active={isActive("/subscription")}
