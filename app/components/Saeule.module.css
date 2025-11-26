@@ -91,7 +91,7 @@
   gap: 10px;
   padding-top: var(--so-h1-pad-top);
   padding-bottom: var(--so-h1-pad-bottom);
-  padding-inline: 8px; /* leichte Innenkante für die Hover-Pille */
+  padding-inline: 8px;
   font-size: var(--so-h1-size);
   font-weight: var(--so-h1-weight);
   letter-spacing: var(--so-h1-track);
@@ -102,41 +102,19 @@
   transition:
     background-color 0.18s ease,
     color 0.18s ease,
-    box-shadow 0.18s ease,
     transform 0.14s ease;
 }
 
-/* edler Hover-Hintergrund + leichter Lift */
+/* edler Hover-Hintergrund + leichter Lift – identisch zu "JETZT BAUEN" */
 .soSectionHeader:hover {
-  background-color: rgba(12, 20, 36, 0.98);            /* dunklere, samtige Pille */
-  color: rgba(226, 232, 240, 0.98);                    /* Text leicht aufgehellt */
-  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.55);     /* feiner Rahmen */
+  background-color: #2A2C2F;                    /* dunkles, samtiges Grau */
+  color: rgba(255, 255, 255, 0.92);             /* leicht hellerer Text */
   transform: translateY(-0.5px);
 }
 
-/* Cyan-Akzent als vertikale Linie links */
+/* Cyan-Akzent komplett entfernt */
 .soSectionHeader::before {
-  content: "";
-  position: absolute;
-  left: 4px;
-  top: 6px;
-  bottom: 6px;
-  width: 2px;
-  border-radius: 999px;
-  background: transparent;
-  opacity: 0;
-  transform: scaleY(0.6);
-  transform-origin: center;
-  transition:
-    opacity 0.18s ease,
-    background-color 0.18s ease,
-    transform 0.18s ease;
-}
-
-.soSectionHeader:hover::before {
-  background-color: #00C8FF;                           /* Smooth Operator Akzent */
-  opacity: 0.95;
-  transform: scaleY(1);
+  content: none !important;
 }
 
 /* Icon-Slot links (Simba-Glyphs) */
@@ -152,14 +130,14 @@
 }
 
 .soSectionHeader:hover .soSectionHeaderIcon {
-  opacity: 1;                                           /* Icon wird klarer im Hover */
+  opacity: 1;
 }
-
 
 /* Titeltext im Kopf (falls nötig separiert) */
 .soSectionHeaderLabel {
   flex: 1 1 auto;
 }
+
 
 /* Body eines Akkordeons – Grundlayout (geöffnet) */
 .soSectionBody {
