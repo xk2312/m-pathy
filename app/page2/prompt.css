@@ -291,11 +291,11 @@ END OF INDEX
   align-items: center;
   gap: 8px;
 
-  width: min(var(--prompt-width-max), calc(100vw - var(--prompt-margin-inline) * 2));
-  max-width: min(var(--prompt-width-max), calc(100vw - var(--prompt-margin-inline) * 2));
+  width: 100%;
+  max-width: var(--prompt-width-max);
   margin-inline: auto;
 
-  padding: 21.8px 21.8px;
+  padding: 21.8px 21.8px; /* Hier wird die Pillengröße im Chat eingestellt */
 
 
   border-radius: var(--prompt-radius, 999px);
@@ -312,7 +312,7 @@ END OF INDEX
 
 /* PreChat · Desktop – prompt same “panel size” as before */
 #m-input-dock[data-mode="doorman"][data-layout="desktop"] .prompt-shell {
-   padding: 21.8px 21.8px;
+   padding: 21.8px 21.8px; /* Hier wird die Pillengröße im Prechat eingestellt */
 }
  /* Chat-Content auf Raumschiff-Breite begrenzen */
 .chat-stage-inner {
@@ -353,16 +353,11 @@ END OF INDEX
 }
 
 .prompt-shell {
-  max-width: min(
-    var(--prompt-width-max, 500px),
-    calc(100vw - var(--prompt-margin-inline, 10px) * 2)
-  );
-  min-width: min(
-    var(--prompt-width-min, 318px),
-    calc(100vw - var(--prompt-margin-inline, 10px) * 2)
-  );
+  max-width: var(--prompt-width-max, 500px);
+  min-width: var(--prompt-width-min, 318px);
   margin-inline: auto;
 }
+
 
 
 
