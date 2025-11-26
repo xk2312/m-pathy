@@ -334,20 +334,21 @@ export default function Navigation() {
             aria-label="Home"
             className="inline-flex items-center"
           >
-                        <span
+                                    <span
               className="text-white/80 hover:text-white transition-colors"
               style={{
-                fontSize: "0.88rem",      // ~1px larger, more presence
-                letterSpacing: "0.10em",  // solid but not too wide
-                textTransform: "none",    // keep exact case: "m-pathy"
-                fontWeight: 650,          // strong but not shouting
+                fontSize: "0.88rem",
+                letterSpacing: "0.10em",
+                textTransform: "none",
+                fontWeight: 650,
                 lineHeight: 1,
-                paddingBottom: "0px",     // lift ~1px upwards
-                whiteSpace: "nowrap",     // never break into two lines
+                paddingBottom: "1px",     // LIFT 1 px → perfect baseline alignment
+                whiteSpace: "nowrap",
               }}
             >
               m-pathy
             </span>
+
 
           </Link>
           <NavLink
