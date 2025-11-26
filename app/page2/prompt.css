@@ -128,8 +128,8 @@ END OF INDEX
 
 #m-input-dock.prompt-root {
   position: fixed;
-  bottom: max(16px, env(safe-area-inset-bottom, 0px));
-  left: 0;
+  bottom: env(safe-area-inset-bottom, 0px); /* Dock sitzt bündig auf, nur Safe-Area bleibt */
+  left: 0; /* Standard auf 0 lassen, falls Mobile */
   right: 0;
   display: flex;
   flex-direction: column;
@@ -139,7 +139,7 @@ END OF INDEX
   transition:
     transform var(--prompt-motion),
     opacity 180ms ease-out;
-  padding: 20px 18px 20px;
+  padding: 24px 18px 28px;
 
   /* nur hier geändert: echter schwarzer Kasten, kein Blur */
   background: #050b11;
