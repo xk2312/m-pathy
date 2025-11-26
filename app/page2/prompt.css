@@ -186,11 +186,12 @@ END OF INDEX
   filter: blur(4px);
 }
 
-/* PreChat: lift prompt into the golden band (all layouts) */
+/* PreChat: Dock bleibt fix am Boden – kein Lift mehr */
 .prompt-root-scene[data-position-state="intro"]
   #m-input-dock.prompt-root {
-  transform: translateY(var(--prompt-flight-translate-y));
+  transform: translateY(0);
 }
+
 
 
 /* Viewport ≤ 768px: Dock erden, PreChat-Goldband mobil */
