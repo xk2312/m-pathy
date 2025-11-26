@@ -300,7 +300,7 @@ export default function Navigation() {
 
   return (
     <header style={headerStyle} aria-label="Main site navigation">
-      <div
+            <div
         className="mx-auto flex items-center justify-between"
         style={{
           maxWidth: isChatStageLayout ? "none" : "var(--page-inner-max)",
@@ -308,6 +308,7 @@ export default function Navigation() {
           paddingInline: isChatStageLayout
             ? "var(--stage-pad, 48px)"
             : "var(--page-pad-inline)",
+
 
           // *** STATIC MODE ***
           height: navHeight,
@@ -321,29 +322,31 @@ export default function Navigation() {
           borderBottom: "none",
           // Kein Motion-System mehr
           transition: "none",
-        }}
-            >
-              {/* LEFT – Brand (m-pathy) + Subscribe */}
-        <div className="flex items-center gap-5">
+                }}
+      >
+        {/* LEFT – Brand (m-pathy) + Subscribe */}
+        <div className="flex items-center gap-5" style={{ marginLeft: "-10px" }}>
           <Link
+
             href="/"
             aria-label="Home"
             className="inline-flex items-center"
           >
-            <span
+                        <span
               className="text-white/80 hover:text-white transition-colors"
               style={{
-                fontSize: "0.84rem",      // slightly larger, more presence
-                letterSpacing: "0.10em",  // a bit tighter, more solid
+                fontSize: "0.88rem",      // ~1px larger, more presence
+                letterSpacing: "0.10em",  // solid but not too wide
                 textTransform: "none",    // keep exact case: "m-pathy"
-                fontWeight: 650,          // stronger than 600, not shouting
+                fontWeight: 650,          // strong but not shouting
                 lineHeight: 1,
-                paddingBottom: "1px",     // tiny optical baseline tweak
+                paddingBottom: "0px",     // lift ~1px upwards
                 whiteSpace: "nowrap",     // never break into two lines
               }}
             >
               m-pathy
             </span>
+
           </Link>
           <NavLink
 
