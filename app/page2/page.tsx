@@ -215,8 +215,11 @@ function useBreakpoint() {
       // fallback: keep default threshold
     }
 
-    // Breakpoint-Sync: niemals größer als 768px → Tablets wie Desktop
-    effectiveThreshold = Math.min(effectiveThreshold, 768);
+    // Tablet-Sync: alle Tablet-Breiten wie Mobile behandeln
+    const TABLET_BREAKPOINT = 1024;
+    if (effectiveThreshold < TABLET_BREAKPOINT) {
+      effectiveThreshold = TABLET_BREAKPOINT;
+    }
 
     const fn = () => setIsMobile(window.innerWidth <= effectiveThreshold);
     fn();
@@ -226,6 +229,7 @@ function useBreakpoint() {
 
   return { isMobile };
 }
+
 
 function useTheme(persona: keyof typeof PERSONAS = "default") {
   const key = PERSONAS[persona]?.theme ?? "m_default";
