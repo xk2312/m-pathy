@@ -371,15 +371,15 @@
   border-color: rgba(148,163,184,0.4);
 }
 
-/* Aktiver Modus – visuelle Betonung, Inhalt bleibt neutral.
-   Der eigentliche Effekt (Glow/VoiaBloom) kommt über ModeAuraLayer. */
+/* Aktiver Modus – Rahmen & Typo, Fläche kommt von VoiaBloom */
 .modeListItemActive {
   border-color: rgba(148,163,184,0.9);
-  background-color: rgba(15,23,42,0.96);
-  box-shadow: 0 0 0 1px rgba(15,23,42,0.95);
+  background-color: transparent; /* kein eigener Füllton mehr */
+  box-shadow: 0 0 0 1px rgba(15,23,42,0.85);
   color: rgba(248,250,252,0.92);
 }
                   /* edles helles Grau */
+
 
 /* =========================================================
    OVERRIDE – große Modus-Buttons nutzen jetzt die Voia-Aura
@@ -442,8 +442,8 @@
   display: flex; align-items: center; gap: 10px;
   min-height: 44px;
   border-radius: 10px;
-  /* halbtransparenter Grund – VoiaBloom kann durchscheinen */
-  background: rgba(15,23,42,0.35);
+  /* aktiv: Fläche kommt von VoiaBloom, Button nur Kontur */
+  background: transparent;
   border: 1px solid rgba(148,163,184,0.40);
   box-shadow: var(--sh-sm);
   transition:
@@ -454,12 +454,12 @@
   cursor: pointer; pointer-events: auto;
 }
 .expertBtn:hover {
-  /* etwas dichter, aber weiterhin transparent */
-  background: rgba(15,23,42,0.55);
+  background: transparent;
   border-color: rgba(148,163,184,0.65);
   box-shadow: var(--sh-md);
   transform: translateY(-0.5px);
 }
+
 .expertBtn:active {
   transform: translateY(0);
   box-shadow: var(--sh-sm);
