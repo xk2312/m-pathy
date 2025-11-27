@@ -45,12 +45,12 @@ export default function StarField() {
     ).matches;
 
     // Stellschrauben
-    const STAR_DENSITY = 0.218; // Partikel pro px² (sehr niedrig gehalten)
-    const MIN_RADIUS = 0.2;
-    const MAX_RADIUS = 0.8;
+    const STAR_DENSITY = 0.382; // Partikel pro px² (sehr niedrig gehalten)
+    const MIN_RADIUS = 0.0618;
+    const MAX_RADIUS = 1.382;
     const MIN_ALPHA = 0.55;
     const MAX_ALPHA = 1.00;
-    const BASE_SPEED = 0.06; // px pro Frame (sehr langsam)
+    const BASE_SPEED = 0.2; // px pro Frame (sehr langsam)
 
     let width = 0;
     let height = 0;
