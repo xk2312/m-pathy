@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 };
 
 // ⭐ EINZIGE Theme-Schaltstelle für alle 13 Orb-Designs
-const ORB_THEME = "gaia-whisper-dot";
+const ORB_THEME = "gemini-zero-flux";
 // Alternativen:
 // "breath-of-light", "deep-current-pearl", "chronos-gate",
 // "quantum-drop", "event-horizon-dot", "warm-pulse-orb-2",
