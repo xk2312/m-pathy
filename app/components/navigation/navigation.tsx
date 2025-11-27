@@ -343,17 +343,20 @@ export default function Navigation() {
   return (
 
     <header style={headerStyle} aria-label="Main site navigation">
-         <div
+      <div
         className="mx-auto flex items-center justify-between"
         style={{
           maxWidth: isChatStageLayout ? "none" : "var(--page-inner-max)",
           margin: isChatStageLayout ? "0" : undefined,
-          paddingInline: isChatStageLayout
+          paddingInline: !isDesktop
+            ? "13px"
+            : isChatStageLayout
             ? "var(--stage-pad, 48px)"
             : "var(--page-pad-inline)",
 
           // *** STATIC MODE ***
           height: navHeight,
+
           transform: "none",
           opacity: 1,
 
