@@ -1168,23 +1168,16 @@
   /* Position – Desktop Intro-State (Doorman) */
   --prompt-dock-offset-intro: 160px;
 
-  /* Text */
-  --prompt-text: #e6f0f3;
-
-  --prompt-placeholder: rgba(230,240,243,0.45);
-
-  /* Orb (Send Button) */
-  --prompt-orb-size: 36px;
-  --prompt-orb-bg: rgba(15,23,42,0.92);
-  --prompt-orb-bg-hover: rgba(15,23,42,0.98);
-  --prompt-orb-bg-active: rgba(10,16,26,0.96);
-  --prompt-orb-border: rgba(148,163,184,0.60);
-  --prompt-orb-border-hover: rgba(226,232,240,0.95);
-  --prompt-orb-icon: #e6f0f3;
-  --prompt-orb-shadow: 0 8px 32px rgba(0,0,0,0.65);
+   /* SIMBA Plus (left, free-floating +) */
+  --prompt-plus-size: 32px;                   /* Klickfläche */
+  --prompt-plus-icon-size: 18px;              /* etwa 2× alter Glyph, aber zart */
+  --prompt-plus-color: var(--prompt-orb-border-hover);
+  --prompt-plus-hover-bg: rgba(15,23,42,0.96);
+  --prompt-plus-hover-ring: var(--prompt-orb-border);
 
   /* Tools (📎 / ⚙️ / 🎙️) */
   --prompt-tools-bg: rgba(15,23,42,0.85);
+
   --prompt-tools-border: rgba(148,163,184,0.55);
    --prompt-tools-icon: rgba(226,232,240,0.88);
   --prompt-tools-shadow: 0 6px 30px rgba(0,0,0,0.45);

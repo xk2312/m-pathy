@@ -412,49 +412,73 @@ END OF INDEX
    SIMBA ORB — Minimal, Token Driven, Raumschiff-Perfektion
    ============================================================= */
 
-.prompt-orb {
+/* SIMBA Plus — freies, zartes + ohne Ring */
+.prompt-plus-orb {
   flex: 0 0 auto;
+  margin-right: 12px;
 
-  width: var(--prompt-orb-size);
-  height: var(--prompt-orb-size);
-  margin-left: 12px;
+  width: var(--prompt-plus-size);
+  height: var(--prompt-plus-size);
 
-  border-radius: 999px;
-  border: 1px solid var(--prompt-orb-border);
-  background: var(--prompt-orb-bg);
-  box-shadow: var(--prompt-orb-shadow);
+  padding: 0;
+  border: none;
+  background: transparent;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  color: var(--prompt-orb-icon);
+  color: var(--prompt-plus-color);
   cursor: pointer;
 
   transition:
     background-color var(--prompt-motion),
-    border-color var(--prompt-motion),
     box-shadow var(--prompt-motion),
     transform var(--prompt-motion),
     opacity 160ms linear;
 }
 
-/* Hover / Active States — Pur über Tokens */
-.prompt-orb:hover:not(:disabled) {
-  background: var(--prompt-orb-bg-hover);
-  border-color: var(--prompt-orb-border-hover);
+/* Das eigentliche + wird als zwei feine Linien gezeichnet */
+.prompt-plus-orb-icon {
+  position: relative;
+  width: var(--prompt-plus-icon-size);
+  height: var(--prompt-plus-icon-size);
+}
+
+.prompt-plus-orb-icon::before,
+.prompt-plus-orb-icon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+/* Horizontaler Strich */
+.prompt-plus-orb-icon::before {
+  width: 100%;
+  height: 1px;
+}
+
+/* Vertikaler Strich */
+.prompt-plus-orb-icon::after {
+  width: 1px;
+  height: 100%;
+}
+
+/* Hover – zarter Teppich, wie der rechte Orb, kein Dauer-Ring */
+.prompt-plus-orb:hover {
+  background: var(--prompt-plus-hover-bg);
+  box-shadow: 0 0 0 1px var(--prompt-plus-hover-ring);
   transform: translateY(-1px);
 }
 
-.prompt-orb:active:not(:disabled) {
-  background: var(--prompt-orb-bg-active);
+.prompt-plus-orb:active {
   transform: translateY(0);
 }
 
-.prompt-orb:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
 
 
 /* =============================================================

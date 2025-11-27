@@ -98,40 +98,21 @@ export function PromptShell({
       onSubmit={handleSubmit}
       aria-label={resolvedAriaLabel}
     >
-      {/* SIMBA – Plus-Orb links, nur wenn Säule steuerbar ist (Mobile/Tablet) */}
+           {/* Left SIMBA Plus-Orb (optional) */}
       {onToggleSaeule && (
         <button
           type="button"
           className="prompt-plus-orb"
           aria-label={resolvedAriaLabel || "Navigation öffnen"}
           onClick={onToggleSaeule}
-          style={{
-            minWidth: 32,
-            minHeight: 32,
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 999,
-            border: "1px solid rgba(0,255,255,0.18)",
-            background: "rgba(5,16,24,0.9)",
-            color: "rgba(230,240,243,0.95)",
-            fontWeight: 700,
-            fontSize: 18,
-            lineHeight: 1,
-            marginRight: 8,
-            transition:
-              "background var(--t-fast) var(--ease), transform var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease)",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(0,255,255,0.14)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "rgba(5,16,24,0.9)";
-          }}
         >
-          +
+          <span
+            className="prompt-plus-orb-icon"
+            aria-hidden="true"
+          />
         </button>
       )}
+
 
       <textarea
         ref={textareaRef}
