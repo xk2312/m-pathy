@@ -3,20 +3,20 @@
 import { useEffect, useRef } from "react";
 
 /**
- * StarField – ruhiger Button-Hintergrund
- * -------------------------------------
+ * StarField – ruhig + Parallax + Breathing
+ * ----------------------------------------
  * Kontext:
- * - Läuft INSIDE eines Buttons (ModeAuraLayer),
- *   nicht mehr als globaler Vollbild-Effekt.
- * - Keine Maus-/Touch-Interaktion, nur sanftes Driften.
- * - Respektiert prefers-reduced-motion:
- *   → dann statisches Sternfeld ohne Animation.
+ * - Läuft inside eines Wrappers (Hero, Button, Säule).
+ * - Kein Input, nur sanftes Driften.
+ * - Respektiert prefers-reduced-motion → statisches Feld.
  *
- * Stellschrauben (später leicht anpassbar):
- * - Dichte    → STAR_DENSITY
- * - Größe     → MIN_RADIUS / MAX_RADIUS
- * - Tempo     → BASE_SPEED
- * - Helligkeit→ MIN_ALPHA / MAX_ALPHA
+ * Stellschrauben:
+ * - STAR_DENSITY     → Menge der Sterne
+ * - MIN/MAX_RADIUS   → Größe der Sterne
+ * - MIN/MAX_ALPHA    → Helligkeit der Sterne
+ * - BASE_SPEED       → Grundtempo des Drifts
+ * - DEPTH_MIN/MAX    → Parallax-Stärke (Layer-Tiefe)
+ * - BREATH_PERIOD_MS → Dauer eines „Atems“ (Helligkeitszyklus)
  */
 export default function StarField() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -29,9 +29,11 @@ export default function StarField() {
     alpha: number;
     driftX: number;
     driftY: number;
+    depth: number; // Parallax-Tiefe (nah/fern)
   };
 
   const particlesRef = useRef<Particle[]>([]);
+  const startTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -44,16 +46,48 @@ export default function StarField() {
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    // Stellschrauben
-    const STAR_DENSITY = 0.218; // Partikel pro px² (sehr niedrig gehalten)
+    // Stellschrauben – golden flavored, aber physikalisch korrekt
+    const STAR_DENSITY = 0.218; // relativ zur Fläche
     const MIN_RADIUS = 0.0618;
     const MAX_RADIUS = 1.382;
     const MIN_ALPHA = 0.218;
-    const MAX_ALPHA = 1.618;
-    const BASE_SPEED = 0.0618; // px pro Frame (sehr langsam)
+    const MAX_ALPHA = 1.0; // Alpha darf max. 1 sein
+    const BASE_SPEED = 0.0618; // px / Frame (sehr ruhig)
+
+    const DEPTH_MIN = 0.6; // ferne Sterne
+    const DEPTH_MAX = 1.4; // nahe Sterne (minimal schneller)
+    const BREATH_PERIOD_MS = 8000; // 8s für einen „Atem“
 
     let width = 0;
     let height = 0;
+
+    const randomBetween = (min: number, max: number) =>
+      min + Math.random() * (max - min);
+
+    const initParticles = () => {
+      const area = width * height;
+      const targetCount = Math.max(
+        8,
+        Math.floor(area * STAR_DENSITY * 0.001) // Normierung für kleine Bereiche
+      );
+
+      const arr: Particle[] = [];
+      for (let i = 0; i < targetCount; i++) {
+        const depth = randomBetween(DEPTH_MIN, DEPTH_MAX);
+        const base = BASE_SPEED * depth;
+
+        arr.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: randomBetween(MIN_RADIUS, MAX_RADIUS) * depth,
+          alpha: randomBetween(MIN_ALPHA, MAX_ALPHA),
+          driftX: randomBetween(-base, base),
+          driftY: randomBetween(-base * 0.3, base * 0.6),
+          depth,
+        });
+      }
+      particlesRef.current = arr;
+    };
 
     const resize = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -72,30 +106,6 @@ export default function StarField() {
       initParticles();
     };
 
-    const randomBetween = (min: number, max: number) =>
-      min + Math.random() * (max - min);
-
-    const initParticles = () => {
-      const area = width * height;
-      const targetCount = Math.max(
-        8,
-        Math.floor(area * STAR_DENSITY * 0.001) // area-Normierung für kleine Buttons
-      );
-
-      const arr: Particle[] = [];
-      for (let i = 0; i < targetCount; i++) {
-        arr.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          r: randomBetween(MIN_RADIUS, MAX_RADIUS),
-          alpha: randomBetween(MIN_ALPHA, MAX_ALPHA),
-          driftX: randomBetween(-BASE_SPEED, BASE_SPEED),
-          driftY: randomBetween(-BASE_SPEED * 0.3, BASE_SPEED * 0.6), // leicht nach unten
-        });
-      }
-      particlesRef.current = arr;
-    };
-
     const stepParticles = () => {
       const arr = particlesRef.current;
       for (const p of arr) {
@@ -111,20 +121,35 @@ export default function StarField() {
     };
 
     const renderFrame = () => {
+      if (startTimeRef.current == null) {
+        startTimeRef.current = performance.now();
+      }
+      const now = performance.now();
+      const t = now - startTimeRef.current;
+
+      // Breath-Faktor: sehr sanfte globale Helligkeitsmodulation
+      const breathPhase = (t % BREATH_PERIOD_MS) / BREATH_PERIOD_MS;
+      const breathing = 0.9 + 0.1 * Math.sin(breathPhase * 2 * Math.PI);
+
       ctx.clearRect(0, 0, width, height);
 
-/* 🌑 Universum-Schwarz Hintergrund */
-ctx.fillStyle = "#04060a";      // deep cosmic black
-ctx.fillRect(0, 0, width, height);
+      /* 🌑 Universum-Schwarz Hintergrund */
+      ctx.fillStyle = "#04060a"; // deep cosmic black
+      ctx.fillRect(0, 0, width, height);
 
-const arr = particlesRef.current;
-for (const p of arr) {
-  ctx.beginPath();
-  ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-  ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
-  ctx.fill();
-}
+      const arr = particlesRef.current;
+      for (const p of arr) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
 
+        const effectiveAlpha = Math.min(
+          1,
+          Math.max(0, p.alpha * breathing)
+        );
+
+        ctx.fillStyle = `rgba(255,255,255,${effectiveAlpha})`;
+        ctx.fill();
+      }
 
       stepParticles();
       rafRef.current = requestAnimationFrame(renderFrame);
@@ -136,8 +161,11 @@ for (const p of arr) {
     if (!prefersReducedMotion) {
       rafRef.current = requestAnimationFrame(renderFrame);
     } else {
-      // Reduced Motion → nur einmal zeichnen, kein Loop
+      // Reduced Motion → einmaliges, statisches Feld
       ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#04060a";
+      ctx.fillRect(0, 0, width, height);
+
       for (const p of particlesRef.current) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
