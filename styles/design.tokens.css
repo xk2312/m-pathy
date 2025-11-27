@@ -1393,4 +1393,12 @@
   --prompt-orb-shadow: 0 0 42px rgba(253,224,171,0.55);
 }
 
+/* =========================================================
+   MOBILE NAV PADDING (≤ 768px)
+   ========================================================= */
+@media (max-width: 767px) {
+  :root {
+    --page-pad-inline: 13px; /* Mobile: 13px links/rechts */
+  }
+}
 
