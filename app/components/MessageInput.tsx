@@ -224,38 +224,17 @@ export default function MessageInput({
       >
         {onToggleSaeule && (
           <>
-            <button
-              type="button"
-              aria-label="Werkzeuge"
-              aria-expanded={toolsOpen}
-              aria-controls="mi-tools-popover"
-              onClick={() => onToggleSaeule()} // SIMBA: Säulen-Overlay öffnen
-              onMouseEnter={() => setIsPlusHovered(true)}
-              onMouseLeave={() => setIsPlusHovered(false)}
-              className="mi-plus-btn"
-              style={{
-                minWidth: 44,
-                minHeight: 44,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 999,          // Klickfläche bleibt rund
-                border: 'none',             // ❌ kein Ring mehr
-                background: isPlusHovered
-                  ? 'rgba(8,16,24,0.95)'    // Hover: sanfter dunkler Kreis
-                  : 'transparent',          // Idle: komplett frei
-                color: isPlusHovered
-                  ? 'rgba(255,255,255,0.98)'
-                  : 'rgba(230,240,243,0.90)',
-                fontWeight: 400,            // zarter
-                fontSize: 28,               // etwa doppelt so groß wie vorher
-                lineHeight: 1,
-                transition:
-                  'background var(--t-fast) var(--ease), color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)',
-              }}
-            >
-              +
-            </button>
+                      <button
+            type="button"
+            aria-label="Werkzeuge"
+            aria-expanded={toolsOpen}
+            aria-controls="mi-tools-popover"
+            onClick={() => setToolsOpen(v => !v)}
+            className="mi-plus-btn"
+          >
+            +
+          </button>
+
 
 
             {toolsOpen && (

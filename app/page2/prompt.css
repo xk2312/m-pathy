@@ -460,16 +460,18 @@ END OF INDEX
   flex: 0 0 auto;
   margin-right: 12px;
 
-  width: var(--prompt-plus-size);
+    width: var(--prompt-plus-size);
   height: var(--prompt-plus-size);
 
   padding: 0;
   border: none;
-  background: transparent;
+  border-radius: 999px;      /* neu: immer rund wie der Orb */
+  background: transparent;   /* idle: komplett frei, kein Ring */
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
 
   color: var(--prompt-plus-color);
   cursor: pointer;
@@ -514,9 +516,10 @@ END OF INDEX
 /* Hover – zarter Teppich, wie der rechte Orb, kein Dauer-Ring */
 .prompt-plus-orb:hover {
   background: var(--prompt-plus-hover-bg);
-  box-shadow: 0 0 0 1px var(--prompt-plus-hover-ring);
+  box-shadow: 0 0 32px var(--prompt-plus-hover-ring);  /* weicher Glow statt Ring */
   transform: translateY(-1px);
 }
+
 
 .prompt-plus-orb:active {
   transform: translateY(0);
