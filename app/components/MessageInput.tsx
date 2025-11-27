@@ -33,8 +33,10 @@ export default function MessageInput({
   const [value, setValue] = useState('');
   const [isComposing, setIsComposing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [isPlusHovered, setIsPlusHovered] = useState(false); // SIMBA-Glow-State
   const taRef = useRef<HTMLTextAreaElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null); // ← Fokus-/Drag-Glow-Layer
+
 
   // A11y: ID für die Shortcuts-/Hinweiszeile (wird per aria-describedby verdrahtet)
   const hintId = useMemo(
@@ -220,90 +222,101 @@ export default function MessageInput({
           marginBottom: 8,
         }}
       >
-        <button
-          type="button"
-          aria-label="Werkzeuge"
-          aria-expanded={toolsOpen}
-          aria-controls="mi-tools-popover"
-          onClick={() => onToggleSaeule?.()} // SIMBA: Säulen-Overlay öffnen
-          className="mi-plus-btn"
-          style={{
-            minWidth: 40,
-            minHeight: 40,
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 12,
-            border: '1px solid rgba(255,255,255,0.12)',
-            background: 'rgba(255,255,255,0.06)',
-            color: 'rgba(230,240,243,0.95)',
-            fontWeight: 800,
-            fontSize: 18,
-            lineHeight: 1,
-          }}
-        >
-          +
-        </button>
-
-        {toolsOpen && (
-          <div
-            id="mi-tools-popover"
-            ref={toolsRef}
-            role="menu"
-            aria-label="Werkzeuge"
-            style={{
-              position: 'absolute',
-              left: 12,
-              bottom: 'calc(100% + 8px)', // über der Inputbar
-              width: 'min(92vw, 360px)',
-              background: 'rgba(12,20,36,0.96)',
-              border: '1px solid rgba(255,255,255,0.14)',
-              borderRadius: 12,
-              padding: 8,
-              boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
-              backdropFilter: 'blur(10px)',
-              zIndex: 5,
-            }}
-          >
-            <div
+        {onToggleSaeule && (
+          <>
+            <button
+              type="button"
+              aria-label="Werkzeuge"
+              aria-expanded={toolsOpen}
+              aria-controls="mi-tools-popover"
+              onClick={() => onToggleSaeule()} // SIMBA: Säulen-Overlay öffnen
+              onMouseEnter={() => setIsPlusHovered(true)}
+              onMouseLeave={() => setIsPlusHovered(false)}
+              className="mi-plus-btn"
               style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr 1fr',
-                gap: 8,
+                minWidth: 40,
+                minHeight: 40,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 999, // reiner Orb
+                border: '1px solid rgba(0,255,255,0.18)', // wie Prompt-Rim, etwas zarter
+                background: isPlusHovered
+                  ? 'rgba(0,255,255,0.12)'          // Hover: sanfter Cyan-Schimmer
+                  : 'rgba(5,16,24,0.85)',           // Ruhig, dunkel – Therapie-Modus
+                color: 'rgba(230,240,243,0.95)',
+                fontWeight: 800,
+                fontSize: 18,
+                lineHeight: 1,
+                transition:
+                  'background var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)',
               }}
             >
-              {/* Platzhalter: nicht fokusierbar */}
-              <button
-                role="menuitem"
-                type="button"
-                className="mi-tool"
-                tabIndex={-1}
-                aria-hidden="true"
+              +
+            </button>
+
+            {toolsOpen && (
+              <div
+                id="mi-tools-popover"
+                ref={toolsRef}
+                role="menu"
+                aria-label="Werkzeuge"
+                style={{
+                  position: 'absolute',
+                  left: 12,
+                  bottom: 'calc(100% + 8px)', // über der Inputbar
+                  width: 'min(92vw, 360px)',
+                  background: 'rgba(12,20,36,0.96)',
+                  border: '1px solid rgba(255,255,255,0.14)',
+                  borderRadius: 12,
+                  padding: 8,
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
+                  backdropFilter: 'blur(10px)',
+                  zIndex: 5,
+                }}
               >
-                📎 {t('comingUpload') ?? 'Upload'}
-              </button>
-              <button
-                role="menuitem"
-                type="button"
-                className="mi-tool"
-                tabIndex={-1}
-                aria-hidden="true"
-              >
-                🎙️ {t('comingVoice') ?? 'Voice'}
-              </button>
-              <button
-                role="menuitem"
-                type="button"
-                className="mi-tool"
-                tabIndex={-1}
-                aria-hidden="true"
-              >
-                ⚙️ {t('comingFunctions') ?? 'Optionen'}
-              </button>
-            </div>
-          </div>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr 1fr',
+                    gap: 8,
+                  }}
+                >
+                  {/* Platzhalter: nicht fokusierbar */}
+                  <button
+                    role="menuitem"
+                    type="button"
+                    className="mi-tool"
+                    tabIndex={-1}
+                    aria-hidden="true"
+                  >
+                    📎 {t('comingUpload') ?? 'Upload'}
+                  </button>
+                  <button
+                    role="menuitem"
+                    type="button"
+                    className="mi-tool"
+                    tabIndex={-1}
+                    aria-hidden="true"
+                  >
+                    🎙️ {t('comingVoice') ?? 'Voice'}
+                  </button>
+                  <button
+                    role="menuitem"
+                    type="button"
+                    className="mi-tool"
+                    tabIndex={-1}
+                    aria-hidden="true"
+                  >
+                    ⚙️ {t('comingFunctions') ?? 'Optionen'}
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
+
 
       <textarea
         ref={taRef}
