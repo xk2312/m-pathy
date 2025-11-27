@@ -45,7 +45,6 @@ import MessageInput from "../components/MessageInput";
 import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
-import StickyFab from "../components/StickyFab";
 import { PromptRoot } from "./PromptRoot";
 import { t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
@@ -1833,18 +1832,15 @@ undefined : "100dvh",
 
     {/* Mobile Overlay / Onboarding */}
     {isMobile && (
-      <>
-        <StickyFab onClick={() => setOverlayOpen(true)} label="Menü öffnen" />
-        <MobileOverlay
-          open={overlayOpen}
-          onClose={() => setOverlayOpen(false)}
-          onSystemMessage={systemSay}
-          onClearChat={onClearChat}       // ← NEU: Clear-Handler durchreichen
-
-          />
-      </>
+      <MobileOverlay
+        open={overlayOpen}
+        onClose={() => setOverlayOpen(false)}
+        onSystemMessage={systemSay}
+        onClearChat={onClearChat}       // ← Clear-Handler durchreichen
+      />
     )}
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
+
 
 </main>
 );
