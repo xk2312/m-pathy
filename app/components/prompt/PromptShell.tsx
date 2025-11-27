@@ -19,7 +19,9 @@ export type PromptShellProps = {
   ariaLabel?: string;
   autoFocus?: boolean;
   onHeightChange?: () => void;
+  onToggleSaeule?: () => void;        // ← NEU: optionaler Trigger für Overlay
 };
+
 
 export function PromptShell({
   value,

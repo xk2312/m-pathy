@@ -26,7 +26,9 @@ type PromptRootProps = {
   sendingRef: React.MutableRefObject<boolean>;
   onSendFromPrompt: (text: string) => void;
   isMobile: boolean;
+  onToggleSaeule?: () => void;                     // ★ NEU
 };
+
 
 export function PromptRoot({
   t,
@@ -43,7 +45,9 @@ export function PromptRoot({
   sendingRef,
   onSendFromPrompt,
   isMobile,
+  onToggleSaeule,               // ← NEU sauber destrukturiert
 }: PromptRootProps) {
+
   const snapshot = usePromptStateMachine({
     hasThread: hasMessages,
     isMobile,
@@ -152,16 +156,18 @@ export function PromptRoot({
 
       {/* PromptShell */}
       <PromptShell
-        value={input}
-        onChange={setInput}
-        onSubmit={sendMessage}
-        isSendBlocked={snapshot.isSendBlocked}
-        disabled={false}
-        placeholder={t("writeMessage")}
-        ariaLabel={t("writeMessage")}
-        autoFocus={!hasMessages}
-        onHeightChange={scheduleDockUpdate}
-      />
+  value={input}
+  onChange={setInput}
+  onSubmit={sendMessage}
+  isSendBlocked={snapshot.isSendBlocked}
+  disabled={false}
+  placeholder={t("writeMessage")}
+  ariaLabel={t("writeMessage")}
+  autoFocus={!hasMessages}
+  onHeightChange={scheduleDockUpdate}
+  onToggleSaeule={onToggleSaeule}                // ★ NEU: Übergabe an Shell
+/>
+
     </div>
   );
 }

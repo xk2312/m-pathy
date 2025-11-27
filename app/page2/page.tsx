@@ -1532,6 +1532,8 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
 
 // Mobile Overlay
 const [overlayOpen, setOverlayOpen] = useState(false);
+const openOverlay = useCallback(() => setOverlayOpen(true), []);
+
 
 // Prompt-Modus: Launch (zentriert) vs. Flight (unten angedockt)
 const hasMessages = (messages?.length ?? 0) > 0;
@@ -1805,21 +1807,23 @@ undefined : "100dvh",
             }}
           >
             <PromptRoot
-              t={t}
-              hasMessages={hasMessages}
-              input={input}
-              setInput={setInput}
-              loading={loading}
-              dockRef={dockRef}
-              padBottom={padBottom}
-              setPadBottom={setPadBottom}
-              compactStatus={compactStatus}
-              footerStatus={footerStatus}
-              withGate={withGate}
-              sendingRef={sendingRef}
-              onSendFromPrompt={onSendFromPrompt}
-              isMobile={isMobile}
-            />
+  t={t}
+  hasMessages={hasMessages}
+  input={input}
+  setInput={setInput}
+  loading={loading}
+  dockRef={dockRef}
+  padBottom={padBottom}
+  setPadBottom={setPadBottom}
+  compactStatus={compactStatus}
+  footerStatus={footerStatus}
+  withGate={withGate}
+  sendingRef={sendingRef}
+  onSendFromPrompt={onSendFromPrompt}
+  isMobile={isMobile}
+  onToggleSaeule={isMobileLike ? openOverlay : undefined}   // ★ NEU: logische Brücke
+/>
+
           </div>
         </div> {/* /rechte Spalte */}
 
