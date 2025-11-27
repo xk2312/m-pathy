@@ -43,6 +43,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import styles from "./Saeule.module.css";
 import VoiaBloom from "@/components/VoiaBloom";
+import StarField from "@/components/StarField";
 import { logEvent } from "../../lib/auditLogger";
 import { t, getLocale } from "@/lib/i18n";
 
@@ -76,7 +77,7 @@ function ModeAura({ active, children }: ModeAuraProps) {
     <div className={styles.modeAuraShell}>
       {active && (
         <div className={styles.modeAuraLayer}>
-          <VoiaBloom />
+          <StarField />  {/* früher: <VoiaBloom /> */}
         </div>
       )}
       <div className={styles.modeAuraContent}>{children}</div>
