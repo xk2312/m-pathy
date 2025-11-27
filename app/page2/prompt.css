@@ -412,6 +412,49 @@ END OF INDEX
    SIMBA ORB — Minimal, Token Driven, Raumschiff-Perfektion
    ============================================================= */
 
+.prompt-orb {
+  flex: 0 0 auto;
+
+  width: var(--prompt-orb-size);
+  height: var(--prompt-orb-size);
+  margin-left: 12px;
+
+  border-radius: 999px;
+  border: 1px solid var(--prompt-orb-border);
+  background: var(--prompt-orb-bg);
+  box-shadow: var(--prompt-orb-shadow);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--prompt-orb-icon);
+  cursor: pointer;
+
+  transition:
+    background-color var(--prompt-motion),
+    border-color var(--prompt-motion),
+    box-shadow var(--prompt-motion),
+    transform var(--prompt-motion),
+    opacity 160ms linear;
+}
+
+/* Hover / Active States — Pur über Tokens */
+.prompt-orb:hover:not(:disabled) {
+  background: var(--prompt-orb-bg-hover);
+  border-color: var(--prompt-orb-border-hover);
+  transform: translateY(-1px);
+}
+
+.prompt-orb:active:not(:disabled) {
+  background: var(--prompt-orb-bg-active);
+  transform: translateY(0);
+}
+
+.prompt-orb:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
 /* SIMBA Plus — freies, zartes + ohne Ring */
 .prompt-plus-orb {
   flex: 0 0 auto;
@@ -478,7 +521,6 @@ END OF INDEX
 .prompt-plus-orb:active {
   transform: translateY(0);
 }
-
 
 
 /* =============================================================
