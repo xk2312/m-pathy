@@ -214,7 +214,7 @@ export default function MessageInput({
       />
 
       {/* Textbereich (mittig, groß & mehrzeilig) */}
-      <div
+          <div
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -234,26 +234,29 @@ export default function MessageInput({
               onMouseLeave={() => setIsPlusHovered(false)}
               className="mi-plus-btn"
               style={{
-                minWidth: 40,
-                minHeight: 40,
+                minWidth: 44,
+                minHeight: 44,
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                borderRadius: 999, // reiner Orb
-                border: '1px solid rgba(0,255,255,0.18)', // wie Prompt-Rim, etwas zarter
+                borderRadius: 999,          // Klickfläche bleibt rund
+                border: 'none',             // ❌ kein Ring mehr
                 background: isPlusHovered
-                  ? 'rgba(0,255,255,0.12)'          // Hover: sanfter Cyan-Schimmer
-                  : 'rgba(5,16,24,0.85)',           // Ruhig, dunkel – Therapie-Modus
-                color: 'rgba(230,240,243,0.95)',
-                fontWeight: 800,
-                fontSize: 18,
+                  ? 'rgba(8,16,24,0.95)'    // Hover: sanfter dunkler Kreis
+                  : 'transparent',          // Idle: komplett frei
+                color: isPlusHovered
+                  ? 'rgba(255,255,255,0.98)'
+                  : 'rgba(230,240,243,0.90)',
+                fontWeight: 400,            // zarter
+                fontSize: 28,               // etwa doppelt so groß wie vorher
                 lineHeight: 1,
                 transition:
-                  'background var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)',
+                  'background var(--t-fast) var(--ease), color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)',
               }}
             >
               +
             </button>
+
 
             {toolsOpen && (
               <div
