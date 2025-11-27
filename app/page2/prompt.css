@@ -373,12 +373,31 @@ END OF INDEX
   margin-inline: auto;
 }
 
+/* Mobile: mehr Platz für Text – Gaps & Padding runter, Icons dichter ran */
+@media (max-width: 768px) {
+  .prompt-shell {
+    padding: 16px 14px;   /* weniger horizontaler Rand */
+    gap: 4px;             /* halbes Gap zwischen Plus / Text / Orb */
+  }
 
+  .prompt-plus-orb {
+    margin-right: 6px;    /* Plus näher an den Text */
+  }
+
+  .prompt-orb {
+    margin-left: 6px;     /* Send-Orb näher an den Text */
+  }
+
+  .prompt-input {
+    padding-inline: 10px; /* etwas schmaler, mehr Netto-Breite */
+  }
+}
 
 
 /* =============================================================
    TEXTAREA — Innenraum der Pille (ohne eigenen Rahmen)
    ============================================================= */
+
 
 .prompt-input {
   flex: 1 1 auto;
