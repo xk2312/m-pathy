@@ -502,14 +502,10 @@
 
 .modeAuraLayer {
   position: absolute;
-  inset: 0;
-  overflow: hidden;
-  border-radius: inherit;
-
-  /* Universum-Schwarz hinter StarField */
-  background: #02040a; /* deep cosmic black */
+  inset: -1px;
+  pointer-events: none;
+  z-index: 0;
 }
-
 
 .modeAuraContent {
   position: relative;

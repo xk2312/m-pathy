@@ -113,13 +113,18 @@ export default function StarField() {
     const renderFrame = () => {
       ctx.clearRect(0, 0, width, height);
 
-      const arr = particlesRef.current;
-      for (const p of arr) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
-        ctx.fill();
-      }
+/* 🌑 Universum-Schwarz Hintergrund */
+ctx.fillStyle = "#04060a";      // deep cosmic black
+ctx.fillRect(0, 0, width, height);
+
+const arr = particlesRef.current;
+for (const p of arr) {
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+  ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+  ctx.fill();
+}
+
 
       stepParticles();
       rafRef.current = requestAnimationFrame(renderFrame);
