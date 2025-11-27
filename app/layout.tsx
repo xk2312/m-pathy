@@ -23,11 +23,11 @@ export const viewport: Viewport = {
 };
 
 // ⭐ EINZIGE Theme-Schaltstelle für alle 13 Orb-Designs
-const ORB_THEME = "nexus-pearl";
+const ORB_THEME = "gaia-whisper-dot";
 // Alternativen:
 // "breath-of-light", "deep-current-pearl", "chronos-gate",
-// "quantum-drop", "event-horizon-dot-2", "warm-pulse-orb-1",
-// "lattice-smoothpoint", "zero-noise-node", "nexus-pearl",
+// "quantum-drop", "event-horizon-dot", "warm-pulse-orb-2",
+// "lattice-smoothpoint", "zero-noise-node", "nexus-pearl-1",
 // "gaia-whisper-dot", "gemini-zero-flux", "silent-sun"
 
 type RootLayoutProps = Readonly<{ children: React.ReactNode }>;
