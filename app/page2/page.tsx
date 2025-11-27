@@ -843,11 +843,14 @@ useEffect(() => {
 // Breakpoints
 // NOTE: Säulenraster & Overlay arbeiten ab 960px aufwärts mit Desktop-Layout.
 // Damit JS-Layout & CSS deckungsgleich bleiben, nutzen wir überall das Token
-// --bp-mobile (aktuell 768px, zentral in design.tokens.css definiert).
 const { isMobile } = useBreakpoint();
-const sideMargin = isMobile ? theme.dock.mobile.side : theme.dock.desktop.side;
+// Single source of truth: alle Breiten ≤ --bp-mobile (min. 1024px) gelten als "mobile-like"
+// Wird für Säulen-Overlay, SIMBA+ und Mobile/Tablet-only UI verwendet.
+const isMobileLike = isMobile;
+const sideMargin = isMobileLike ? theme.dock.mobile.side : theme.dock.desktop.side;
 // Refs & Höhenmessung
 const headerRef = useRef<HTMLDivElement>(null);
+
 const convoRef = useRef<HTMLDivElement>(null);
 const dockRef   = useRef<HTMLDivElement>(null);
 const [dockH, setDockH] = useState(0);
