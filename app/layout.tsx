@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 };
 
 // ⭐ EINZIGE Theme-Schaltstelle für alle 13 Orb-Designs
-const ORB_THEME = "quantum-drop";
+const ORB_THEME = "event-horizon-dot";
 // Alternativen:
 // "breath-of-light", "deep-current-pearl", "chronos-gate",
 // "quantum-drop", "event-horizon-dot", "warm-pulse-orb",
