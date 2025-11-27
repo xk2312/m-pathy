@@ -33,7 +33,9 @@ export function PromptShell({
   ariaLabel,
   autoFocus,
   onHeightChange,
+  onToggleSaeule,                 // ← NEU: SIMBA-Trigger aus Props
 }: PromptShellProps) {
+
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const effectiveDisabled = !!disabled || !!isSendBlocked;
@@ -96,6 +98,41 @@ export function PromptShell({
       onSubmit={handleSubmit}
       aria-label={resolvedAriaLabel}
     >
+      {/* SIMBA – Plus-Orb links, nur wenn Säule steuerbar ist (Mobile/Tablet) */}
+      {onToggleSaeule && (
+        <button
+          type="button"
+          className="prompt-plus-orb"
+          aria-label={resolvedAriaLabel || "Navigation öffnen"}
+          onClick={onToggleSaeule}
+          style={{
+            minWidth: 32,
+            minHeight: 32,
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 999,
+            border: "1px solid rgba(0,255,255,0.18)",
+            background: "rgba(5,16,24,0.9)",
+            color: "rgba(230,240,243,0.95)",
+            fontWeight: 700,
+            fontSize: 18,
+            lineHeight: 1,
+            marginRight: 8,
+            transition:
+              "background var(--t-fast) var(--ease), transform var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "rgba(0,255,255,0.14)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "rgba(5,16,24,0.9)";
+          }}
+        >
+          +
+        </button>
+      )}
+
       <textarea
         ref={textareaRef}
         id="prompt-input"
@@ -109,11 +146,11 @@ export function PromptShell({
         autoFocus={autoFocus}
         disabled={effectiveDisabled}
         spellCheck
-                autoCorrect="on"
+        autoCorrect="on"
         autoCapitalize="sentences"
       />
 
-                {/* Simba – Orb mit Sendelogik + Busy-Animation */}
+      {/* Simba – Orb mit Sendelogik + Busy-Animation */}
       <button
         type="submit"
         className="prompt-orb"
@@ -129,6 +166,7 @@ export function PromptShell({
       </button>
     </form>
   );
+
 }
 
 
