@@ -553,22 +553,20 @@ function Bubble({
 
 
   // User rechts: echte Bubble – dunkler Hintergrund, max. 60% Viewport
-  const userBubbleStyle: React.CSSProperties = {
+   const userBubbleStyle: React.CSSProperties = {
     ...bubbleBase,
-    // max. 60% des Viewports, zusätzlich bei sehr breiten Screens bei 640px gecappt
     maxWidth: "min(60vw, 640px)",
-    // immer rechts ausgerichtet, aber mit Luft zum Rand
     marginLeft: "auto",
     marginRight: 10,
     marginTop: 10,
     marginBottom: 10,
-    // voller Hintergrund, keine sichtbare Border mehr
-    background: "var(--chat-user-bg)",
+    // gleiche Farbe wie die Säule (Smooth Operator)
+    background: "#1E2024",
     border: "none",
-    // leicht „abgeschnittene“ Ecke oben rechts
     borderTopRightRadius: TOKENS.radius.md,
     boxShadow: "var(--chat-user-shadow)",
   };
+
 
 
 
@@ -634,7 +632,8 @@ function Bubble({
           display: "flex",
           flexDirection: "column",
           alignItems: isUser ? "flex-end" : "flex-start",
-          width: isUser ? "100%" : "auto",
+          // User-Bubble darf schmal bleiben – keine 100%-Breite erzwingen
+          width: "auto",
         }}
       >
         <div style={bubbleStyle}>
