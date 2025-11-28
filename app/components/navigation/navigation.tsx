@@ -351,7 +351,7 @@ export default function Navigation() {
           paddingInline: isChatStageLayout
             ? "var(--stage-pad, 48px)"
             : isDesktop
-              ? "13px"
+              ? "18px" /* #### PROMT PADDING EINSTELLUNG MOBILE*/
               : "var(--page-pad-inline)",
 
           // *** STATIC MODE ***
