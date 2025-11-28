@@ -553,13 +553,14 @@ function Bubble({
   // User rechts: echte Bubble – grau/schwarz + Glow (keine Cyan-DNA mehr)
   const userBubbleStyle: React.CSSProperties = {
     ...bubbleBase,
-    maxWidth: "min(620px, 100%)",
+    maxWidth: "min(640px, 100%)",
     marginLeft: "auto",
     marginRight: 0,
     background: "var(--chat-user-bg)",
     borderColor: "var(--chat-user-border)",
     boxShadow: "var(--chat-user-shadow)",
   };
+
 
   // Assistant links: offene Spalte, viewport-gesteuert
   const assistantStyle: React.CSSProperties = {
@@ -1762,7 +1763,7 @@ undefined : "100dvh",
            <div
             ref={convoRef as any}
             className="chat-stage"
-            style={{
+                       style={{
               display: "flex",
 
               flexDirection: "column",
@@ -1783,14 +1784,12 @@ undefined : "100dvh",
               paddingBottom: `${padBottom}px`,
               scrollPaddingBottom: `${padBottom}px`,
 
-              paddingInline: isMobile
-
-                ?
-"max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right))"
-                : "12px",
+              // Mobile: kein zusätzliches Seiten-Padding, Desktop behält 12px
+              paddingInline: isMobile ? 0 : "12px",
             }}
+
           >
-            {/* Chronik wächst im Scroller, Breite = Raumschiff */}
+                     {/* Chronik wächst im Scroller, Breite = Raumschiff */}
                        <div
               className="chat-stage-inner"
  
@@ -1798,14 +1797,17 @@ undefined : "100dvh",
                 flex: 1,
                 minHeight: 0,
                 paddingTop: 8,
-                paddingLeft: isMobile ?
-0 : undefined,
-                paddingRight: isMobile ?
-0 : undefined,
+                // Desktop: Bühne wird mittig auf max. 680px begrenzt
+                maxWidth: 680,
+                margin: "0 auto",
+                // Mobile: keine extra Seiten-Paddings, damit nur der äußere Container wirkt
+                paddingLeft: isMobile ? 0 : undefined,
+                paddingRight: isMobile ? 0 : undefined,
                 scrollbarGutter: "stable",
               }}
               aria-label={t("conversationAria")}
             >
+
                           <Conversation
                
               messages={messages}
