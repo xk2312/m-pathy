@@ -209,17 +209,20 @@ export default function LanguageSwitcher() {
           <span className="leading-none">{active.code}</span>
         </button>
 
-        {openMobile && (
-          <div
-            className="absolute left-1/2 -translate-x-1/2 z-[60] min-w-[12rem] max-w-[80vw] rounded-2xl border bg-black/90 backdrop-blur-lg shadow-lg overflow-hidden"
-            style={{
-              marginTop: "5px", // 5px Abstand unter dem Tail
-              borderColor: "var(--nav-tail-border)",
-              boxShadow: "var(--nav-orbit-glow)",
-            }}
-            role="listbox"
-            aria-label={ariaLabels.dropdown_label}
-          >
+      {openMobile && (
+  <div
+    className="absolute z-[60] min-w-[12rem] max-w-[80vw] rounded-2xl border bg-black/90 backdrop-blur-lg shadow-lg overflow-hidden"
+    style={{
+      left: "calc(50% - 20px)",   // ← 20px nach links
+      marginTop: "5px",
+      borderColor: "var(--nav-tail-border)",
+      boxShadow: "var(--nav-orbit-glow)",
+      transform: "translateX(-50%)",
+    }}
+    role="listbox"
+    aria-label={ariaLabels.dropdown_label}
+  >
+
             <ul className="py-1">
               {options.map((opt) => (
                 <li key={opt.code}>
