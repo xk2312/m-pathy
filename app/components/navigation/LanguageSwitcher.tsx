@@ -201,6 +201,7 @@ export default function LanguageSwitcher() {
             background: "var(--nav-tail-bg)",
             borderColor: "var(--nav-tail-border)",
             paddingInline: "var(--nav-padding-inline)",
+            cursor: "pointer", // 👈 NEU
             transition: reducedMotion
               ? "none"
               : "background-color var(--nav-motion-fast), opacity var(--nav-motion-fast), transform var(--nav-motion-fast)",
