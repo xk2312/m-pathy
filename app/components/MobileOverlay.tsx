@@ -142,7 +142,7 @@ useEffect(() => {
           height: "100dvh",
           width: "100dvw",
           // gleicher Raum wie Chat/Navi
-          background: "var(--chat-bg)",
+          background: "#1E2024",
           // flach: keine harte Kante, kein Card-Schatten
           borderRight: "none",
 
@@ -163,7 +163,7 @@ useEffect(() => {
             alignItems: "center",
             justifyContent: "space-between",
             marginBottom: 8,
-            background: "#111827",
+            background: "#1E2024",
           }}
         >
                    <button
