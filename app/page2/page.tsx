@@ -545,17 +545,19 @@ function Bubble({
     padding: "18px 22px",
     lineHeight: 1.6,
     backdropFilter: "blur(10px)",
-    // Keine sichtbare Border – Bubble lebt über Hintergrund + Shadow
+    // keine sichtbare Border – Bubble über Hintergrund + Shadow
     border: "none",
     color: tokens.color.text,
     boxShadow: TOKENS.shadow.soft,
   };
 
 
-  // User rechts: echte Bubble – dunkler Hintergrund, max. 60% Viewport
-   const userBubbleStyle: React.CSSProperties = {
+  // User rechts: echte Bubble – Säulen-Farbe, max. 60% Viewport
+  const userBubbleStyle: React.CSSProperties = {
     ...bubbleBase,
+    // max. 60% der Viewportbreite, zusätzlich bei sehr breiten Screens bei 640px gecappt
     maxWidth: "min(60vw, 640px)",
+    // immer rechts ausgerichtet, aber mit Luft zum Rand
     marginLeft: "auto",
     marginRight: 10,
     marginTop: 10,
@@ -563,9 +565,11 @@ function Bubble({
     // gleiche Farbe wie die Säule (Smooth Operator)
     background: "#1E2024",
     border: "none",
+    // leicht „abgeschnittene“ Ecke oben rechts
     borderTopRightRadius: TOKENS.radius.md,
-    boxShadow: "var(--chat-user-shadow)",
+    boxShadow: TOKENS.shadow.soft,
   };
+
 
 
 
@@ -626,7 +630,6 @@ function Bubble({
           }}
         />
       )}
-
       <div
         style={{
           display: "flex",
@@ -639,6 +642,7 @@ function Bubble({
         <div style={bubbleStyle}>
           <MessageBody msg={msg} />
         </div>
+
 
 
 
