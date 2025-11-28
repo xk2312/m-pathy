@@ -132,7 +132,7 @@ useEffect(() => {
         }}
       />
 
-                    {/* Drawer */}
+                     {/* Drawer */}
       <div
         ref={drawerRef}
         style={{
@@ -141,10 +141,11 @@ useEffect(() => {
           left: 0,
           height: "100dvh",
           width: "100dvw",
-          // gleicher Ton wie die Säulenfläche
-          background: "#111827",
+          // gleicher Raum wie Chat/Navi
+          background: "var(--chat-bg)",
           // flach: keine harte Kante, kein Card-Schatten
           borderRight: "none",
+
           boxShadow: "none",
           transform: "translateX(0)",
           transition: "transform 180ms ease",
@@ -165,21 +166,24 @@ useEffect(() => {
             background: "#111827",
           }}
         >
-                    <button
-            onClick={onClose}
-            aria-label="Overlay schließen"
-            style={{
-              minHeight: 44,
-              padding: "8px 10px",
-              borderRadius: 10,
-              border: "1px solid #aebdd1ff",
-              background: "#0b1220",
-              color: "#e6f0f3",
-              fontWeight: 700,
-            }}
-            >
-            {t("close")}
-          </button>
+                   <button
+          onClick={onClose}
+          aria-label="Overlay schließen"
+          style={{
+            position: "absolute",
+            top: 16,
+            right: 16,
+            padding: "6px 12px",
+            borderRadius: 999,
+            border: "1px solid rgba(148,163,184,0.6)",
+            background: "transparent",
+            color: "#e6f0f3",
+            fontSize: 12,
+            fontWeight: 600,
+          }}
+        >
+          {t("close")}
+        </button>
 
         </div>
 
