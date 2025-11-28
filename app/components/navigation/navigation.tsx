@@ -340,7 +340,7 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [isChatStageLayout]);
 
-  return (
+    return (
 
     <header style={headerStyle} aria-label="Main site navigation">
          <div
@@ -350,12 +350,15 @@ export default function Navigation() {
           margin: isChatStageLayout ? "0" : undefined,
           paddingInline: isChatStageLayout
             ? "var(--stage-pad, 48px)"
-            : "var(--page-pad-inline)",
+            : isDesktop
+              ? "13px"
+              : "var(--page-pad-inline)",
 
           // *** STATIC MODE ***
           height: navHeight,
           transform: "none",
           opacity: 1,
+
 
 // Equilibrium Veil – nav shares the chat background,
 // the only separation is a 1px luminous horizon
@@ -371,16 +374,20 @@ boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
 
           // Kein Motion-System mehr
           transition: "none",
-        }}
+          }}
       >
 
         {/* LEFT – Brand (m-pathy) + Subscribe */}
-        <div className="flex items-center gap-5" style={{ marginLeft: "-10px" }}>
+        <div
+          className="flex items-center gap-5"
+          style={isChatStageLayout ? { marginLeft: "-10px" } : undefined}
+        >
           <Link
 
             href="/"
             aria-label="Home"
             className="inline-flex items-center"
+
           >
                                     <span
               className="text-white/80 hover:text-white transition-colors"
