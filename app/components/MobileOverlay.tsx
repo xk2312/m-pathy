@@ -132,7 +132,7 @@ useEffect(() => {
         }}
       />
 
-      {/* Drawer */}
+          {/* Drawer */}
       <div
         ref={drawerRef}
         style={{
@@ -140,21 +140,23 @@ useEffect(() => {
           top: 0,
           left: 0,
           height: "100dvh",
-          width: "min(92vw, 420px)",
-          background: "rgba(255,255,255,0.06)",
-          borderRight: "1px solid rgba(255,255,255,0.18)",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
+          width: "100dvw",
+          background: "var(--color-bg, #050814)",
+          // flach: keine harte Kante, kein Card-Schatten
+          borderRight: "none",
+          boxShadow: "none",
           transform: "translateX(0)",
           transition: "transform 180ms ease",
           display: "flex",
           flexDirection: "column",
           padding: 12,
-          backdropFilter: "blur(10px)",
+          backdropFilter: "none",
         }}
       >
         {/* Kopfzeile */}
         <div
           style={{
+
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
