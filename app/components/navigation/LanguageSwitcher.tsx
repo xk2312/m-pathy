@@ -185,14 +185,14 @@ export default function LanguageSwitcher() {
         )}
       </div>
 
-      {/* ─────────────────────────────────────────────
-          MOBILE LANGUAGE SHEET (md:hidden)
+         {/* ─────────────────────────────────────────────
+          MOBILE LANGUAGE DROPDOWN (md:hidden)
           ───────────────────────────────────────────── */}
       <div className="relative md:hidden">
         <button
           type="button"
           onClick={() => setOpenMobile((v) => !v)}
-          aria-haspopup="dialog"
+          aria-haspopup="listbox"
           aria-expanded={openMobile}
           aria-label={ariaLabels.select_label}
           className="flex items-center justify-center rounded-full border px-3 gap-1 text-xs uppercase tracking-wide text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
@@ -201,10 +201,8 @@ export default function LanguageSwitcher() {
             background: "var(--nav-tail-bg)",
             borderColor: "var(--nav-tail-border)",
             paddingInline: "var(--nav-padding-inline)",
-            cursor: "pointer", // 👈 NEU
-            transition: reducedMotion
-              ? "none"
-              : "background-color var(--nav-motion-fast), opacity var(--nav-motion-fast), transform var(--nav-motion-fast)",
+            transition:
+              "background-color var(--nav-motion-fast), opacity var(--nav-motion-fast), transform var(--nav-motion-fast)",
           }}
         >
           <span className="text-base leading-none">{active.flag}</span>
@@ -213,59 +211,36 @@ export default function LanguageSwitcher() {
 
         {openMobile && (
           <div
-            className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex flex-col"
-            role="dialog"
+            className="absolute left-1/2 -translate-x-1/2 z-[60] min-w-[12rem] max-w-[80vw] rounded-2xl border bg-black/90 backdrop-blur-lg shadow-lg overflow-hidden"
+            style={{
+              marginTop: "5px", // 5px Abstand unter dem Tail
+              borderColor: "var(--nav-tail-border)",
+              boxShadow: "var(--nav-orbit-glow)",
+            }}
+            role="listbox"
             aria-label={ariaLabels.dropdown_label}
-            aria-modal="true"
           >
-            {/* Tap-Zone zum Schließen */}
-            <div onClick={() => setOpenMobile(false)} className="flex-1" />
-
-            {/* LANGUAGE SHEET */}
-            <div
-              className="bg-black/90 backdrop-blur-lg border-t border-white/10 rounded-t-2xl p-4"
-              style={{
-                transform: "translateY(0)",
-                transition: reducedMotion
-                  ? "none"
-                  : "opacity var(--nav-motion-medium), transform var(--nav-motion-medium)",
-              }}
-            >
-              <ul className="space-y-1">
-                {options.map((opt) => (
-                  <li key={opt.code}>
-                    <button
-                  type="button"
-                  onClick={() => handleSelect(opt.code)}
-                  className="cursor-pointer flex w-full items-center gap-2 px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-                >
-
-                      <span className="text-lg leading-none">{opt.flag}</span>
-                      <span className="uppercase tracking-wide">
-                        {opt.code}
-                      </span>
-                      <span className="ml-auto text-[11px] opacity-60">
-                        {opt.label}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-
-              {/* Close Button */}
-              <button
-                type="button"
-                onClick={() => setOpenMobile(false)}
-                className="mt-4 w-full text-center py-2 text-sm text-white/70 rounded-xl bg-white/5 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
-                style={{ cursor: "pointer" }}    // 👈 NEU
-
-              >
-                Close
-              </button>
-            </div>
+            <ul className="py-1">
+              {options.map((opt) => (
+                <li key={opt.code}>
+                  <button
+                    type="button"
+                    onClick={() => handleSelect(opt.code)}
+                    className="flex w-full items-center gap-2 px-3 py-1.5 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                  >
+                    <span className="text-lg leading-none">{opt.flag}</span>
+                    <span className="uppercase tracking-wide">{opt.code}</span>
+                    <span className="ml-auto text-[11px] opacity-60">
+                      {opt.label}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </div>
+
     </>
   );
 }
