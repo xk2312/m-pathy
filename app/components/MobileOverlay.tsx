@@ -112,14 +112,14 @@ useEffect(() => {
 
   if (!open) return null;
 
-  return (
+   return (
     <div
-  aria-label={t("mobileOverlayLabel")}
-  role="dialog"
-  aria-modal="true"
-  aria-describedby="mobile-overlay-desc"
-  style={{ position: "fixed", inset: 0, zIndex: 120 }}
->
+      aria-label={t("mobileOverlayLabel")}
+      role="dialog"
+      aria-modal="true"
+      style={{ position: "fixed", inset: 0, zIndex: 120 }}
+    >
+
       {/* Scrim */}
       <div
         onClick={onClose}
@@ -132,7 +132,7 @@ useEffect(() => {
         }}
       />
 
-          {/* Drawer */}
+               {/* Drawer */}
       <div
         ref={drawerRef}
         style={{
@@ -141,8 +141,8 @@ useEffect(() => {
           left: 0,
           height: "100dvh",
           width: "100dvw",
-          background: "var(--color-bg, #050814)",
-          // flach: keine harte Kante, kein Card-Schatten
+          // gleiche Tonalität wie Säulen-Navigation
+          background: "#111827",
           borderRight: "none",
           boxShadow: "none",
           transform: "translateX(0)",
@@ -153,19 +153,16 @@ useEffect(() => {
           backdropFilter: "none",
         }}
       >
-        {/* Kopfzeile */}
+
+             {/* Kopfzeile – vorerst nur Close */}
         <div
           style={{
-
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
             marginBottom: 8,
           }}
         >
-          <div id="mobile-overlay-desc" style={{ fontSize: 12, color: "#9fb3c8" }}>
-            {t("mobileNav")}
-          </div>
           <button
             onClick={onClose}
             aria-label="Overlay schließen"
@@ -178,10 +175,11 @@ useEffect(() => {
               color: "#e6f0f3",
               fontWeight: 700,
             }}
-            >
+          >
             {t("close")}
           </button>
         </div>
+
 
         {/* Inhalt: identische Säulen-Struktur */}
 <div
@@ -192,7 +190,6 @@ useEffect(() => {
     overscrollBehavior: "contain",
     WebkitOverflowScrolling: "touch",
 
-    // Säule als zentriertes Artefakt im Raum
     display: "flex",
     justifyContent: "center",
     paddingInline: 16,
@@ -201,8 +198,9 @@ useEffect(() => {
   {/* WICHTIG: Prop durchreichen → Bubble + Close bei Auswahl */}
   <div
     style={{
-      width: "100%",
       maxWidth: 320,
+      width: "100%",
+      margin: "0 auto",
     }}
   >
     <Saeule
