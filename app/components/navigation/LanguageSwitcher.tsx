@@ -126,14 +126,15 @@ export default function LanguageSwitcher() {
         className="relative hidden md:flex items-center"
         aria-label={ariaLabels.dropdown_label}
       >
-        <button
+               <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-label={ariaLabels.select_label}
-          className="inline-flex items-center justify-center rounded-full border px-3 gap-1 text-xs uppercase tracking-wide text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+          className="inline-flex cursor-pointer items-center justify-center rounded-full border px-3 gap-1 text-xs uppercase tracking-wide text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
           style={{
+
             height: "var(--nav-tail-height)",
             background: "var(--nav-tail-bg)",
             borderColor: "var(--nav-tail-border)",
@@ -148,13 +149,14 @@ export default function LanguageSwitcher() {
           <span className="text-[10px] leading-none opacity-80">▾</span>
         </button>
 
-              {open && (
+                     {open && (
           <div
             className="absolute right-0 top-full mt-2 min-w-[10rem] rounded-2xl border bg-black/80 backdrop-blur-md shadow-lg overflow-hidden"
             style={{
-
+              padding: "5px", // 5px Innenabstand Desktop-Dropdown
               borderColor: "var(--nav-tail-border)",
               boxShadow: "var(--nav-orbit-glow)",
+
               transition: reducedMotion
                 ? "none"
                 : "opacity var(--nav-motion-medium), transform var(--nav-motion-medium)",
@@ -188,15 +190,16 @@ export default function LanguageSwitcher() {
          {/* ─────────────────────────────────────────────
           MOBILE LANGUAGE DROPDOWN (md:hidden)
           ───────────────────────────────────────────── */}
-            <div className="relative md:hidden">
+               <div className="relative md:hidden">
         <button
           type="button"
           onClick={() => setOpenMobile((v) => !v)}
           aria-haspopup="listbox"
           aria-expanded={openMobile}
           aria-label={ariaLabels.select_label}
-          className="flex items-center justify-center rounded-full border px-3 gap-1 text-xs uppercase tracking-wide text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+          className="flex cursor-pointer items-center justify-center rounded-full border px-3 gap-1 text-xs uppercase tracking-wide text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
           style={{
+
             height: "var(--nav-tail-height)",
             background: "var(--nav-tail-bg)",
             borderColor: "var(--nav-tail-border)",
@@ -211,13 +214,13 @@ export default function LanguageSwitcher() {
           <span className="leading-none">{active.code}</span>
         </button>
 
-      {openMobile && (
+         {openMobile && (
   <div
     className="absolute z-[60] min-w-[12rem] max-w-[80vw] rounded-2xl border bg-black/90 backdrop-blur-lg shadow-lg overflow-hidden"
     style={{
-      left: "calc(50% - 20px)",   // ← 20px nach links
+      left: "calc(50% - 20px)",
       marginTop: "5px",
-      padding: "5px",             // ← NEU: 5px Innenabstand
+      padding: "5px",              // 5px Innenabstand Mobile-Dropdown
       borderColor: "var(--nav-tail-border)",
       boxShadow: "var(--nav-orbit-glow)",
       transform: "translateX(-50%)",
@@ -227,14 +230,16 @@ export default function LanguageSwitcher() {
   >
 
 
+
             <ul className="py-1">
               {options.map((opt) => (
                                <li key={opt.code}>
-                  <button
+                                    <button
                     type="button"
                     onClick={() => handleSelect(opt.code)}
-                    className="cursor-pointer flex w-full items-center gap-2 px-3 py-1.5 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                    className="cursor-pointer flex w-full items-center gap-2 px-3 py-1.5 text-sm text-white/80 hover:text:white hover:bg-white/5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                   >
+
                     <span className="text-lg leading-none">{opt.flag}</span>
 
                     <span className="uppercase tracking-wide">{opt.code}</span>
