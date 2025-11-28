@@ -180,6 +180,7 @@ useEffect(() => {
             color: "#e6f0f3",
             fontSize: 12,
             fontWeight: 600,
+            cursor: "pointer",           // 👈 NEU
           }}
         >
           {t("close")}

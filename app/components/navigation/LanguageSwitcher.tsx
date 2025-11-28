@@ -256,6 +256,8 @@ export default function LanguageSwitcher() {
                 type="button"
                 onClick={() => setOpenMobile(false)}
                 className="mt-4 w-full text-center py-2 text-sm text-white/70 rounded-xl bg-white/5 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
+                style={{ cursor: "pointer" }}    // 👈 NEU
+
               >
                 Close
               </button>
