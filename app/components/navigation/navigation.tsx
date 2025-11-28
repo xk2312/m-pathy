@@ -249,7 +249,7 @@ export default function Navigation() {
 
     const handleResize = () => {
       // Desktop ab 768px – einheitliche Layout-Quelle
-      setIsDesktop(window.innerWidth >= 768);
+      setIsDesktop(window.innerWidth >= 1024);
     };
 
     handleResize();
@@ -343,20 +343,17 @@ export default function Navigation() {
   return (
 
     <header style={headerStyle} aria-label="Main site navigation">
-      <div
+         <div
         className="mx-auto flex items-center justify-between"
         style={{
           maxWidth: isChatStageLayout ? "none" : "var(--page-inner-max)",
           margin: isChatStageLayout ? "0" : undefined,
-          paddingInline: !isDesktop
-            ? "13px"
-            : isChatStageLayout
+          paddingInline: isChatStageLayout
             ? "var(--stage-pad, 48px)"
             : "var(--page-pad-inline)",
 
           // *** STATIC MODE ***
           height: navHeight,
-
           transform: "none",
           opacity: 1,
 
