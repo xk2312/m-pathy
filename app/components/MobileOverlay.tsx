@@ -191,13 +191,25 @@ useEffect(() => {
     paddingBottom: "calc(12px + var(--safe-bottom))",
     overscrollBehavior: "contain",
     WebkitOverflowScrolling: "touch",
+
+    // Säule als zentriertes Artefakt im Raum
+    display: "flex",
+    justifyContent: "center",
+    paddingInline: 16,
   }}
 >
   {/* WICHTIG: Prop durchreichen → Bubble + Close bei Auswahl */}
-<Saeule
-  onSystemMessage={forwardSystemMessage}
-  onClearChat={onClearChat}           // ← NEU
-/>
+  <div
+    style={{
+      width: "100%",
+      maxWidth: 320,
+    }}
+  >
+    <Saeule
+      onSystemMessage={forwardSystemMessage}
+      onClearChat={onClearChat}           // ← NEU
+    />
+  </div>
 </div>
 
       </div>
@@ -206,3 +218,4 @@ useEffect(() => {
   );
   
 }
+
