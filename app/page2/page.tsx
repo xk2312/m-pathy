@@ -534,7 +534,7 @@ function Bubble({
   msg: ChatMessage;
   tokens: Tokens;
 }) {
-  const isUser = msg.role === "user";
+    const isUser = msg.role === "user";
   const { isNarrow } = useAssistantLayout();
   const isNarrowAssistant = !isUser && isNarrow;
 
@@ -551,23 +551,17 @@ function Bubble({
     boxShadow: TOKENS.shadow.soft,
   };
 
-
-  // User rechts: echte Bubble – Säulen-Farbe, max. 60% Viewport
+  // User rechts: echte Bubble – Säulen-Farbe, Breite kommt vom Inline-Block-Container
   const userBubbleStyle: React.CSSProperties = {
     ...bubbleBase,
-    // max. 60% der Viewportbreite, zusätzlich bei sehr breiten Screens bei 640px gecappt
-    maxWidth: "min(60vw, 640px)",
-    // immer rechts ausgerichtet, aber mit Luft zum Rand
-    marginLeft: "auto",
-    marginRight: 10,
-    marginTop: 10,
-    marginBottom: 10,
+    // Bubble füllt den Container, der gleich noch auf 60vw/382px begrenzt wird
+    maxWidth: "100%",
     // gleiche Farbe wie die Säule (Smooth Operator)
     background: "#1E2024",
     border: "none",
     // leicht „abgeschnittene“ Ecke oben rechts
     borderTopRightRadius: TOKENS.radius.md,
-    boxShadow: TOKENS.shadow.soft,
+    boxShadow: tokens.color.text ? TOKENS.shadow.soft : TOKENS.shadow.soft,
   };
 
 
@@ -635,16 +629,29 @@ function Bubble({
           display: "flex",
           flexDirection: "column",
           alignItems: isUser ? "flex-end" : "flex-start",
-          // User-Bubble darf schmal bleiben – keine 100%-Breite erzwingen
           width: "auto",
         }}
       >
-        <div style={bubbleStyle}>
-          <MessageBody msg={msg} />
-        </div>
-
-
-
+        {isUser ? (
+          // Inline-Block-Container: begrenzt die User-Bubble auf 60vw / 382px
+          <div
+            style={{
+              display: "inline-block",
+              maxWidth: "min(60vw, 382px)",
+              marginRight: 10,
+              marginTop: 10,
+              marginBottom: 10,
+            }}
+          >
+            <div style={bubbleStyle}>
+              <MessageBody msg={msg} />
+            </div>
+          </div>
+        ) : (
+          <div style={bubbleStyle}>
+            <MessageBody msg={msg} />
+          </div>
+        )}
 
         {!isUser && (
           <div
@@ -654,6 +661,7 @@ function Bubble({
               marginTop: 4,
             }}
           >
+
             <button
               type="button"
               onClick={handleCopyAnswer}
