@@ -368,7 +368,7 @@ END OF INDEX
 }
 
 .prompt-shell {
-  max-width: var(--prompt-width-max, 500px);
+  max-width: var(--prompt-width-max, 640px);
   min-width: var(--prompt-width-min, 318px);
   margin-inline: auto;
 }
