@@ -164,16 +164,18 @@ const LABELS: Record<string, Record<MEvent, string>> = {
     };
   };
   
-  const THEMES: Record<string, Theme> = {
+    const THEMES: Record<string, Theme> = {
     m_default: {
       name: "m_default",
       tokens: TOKENS,
       dock: {
-        desktop: { width: 600, bottom: 300, side: 24 },
+        // Desktop: Chat-/Assistant-Spalte = 640px
+        desktop: { width: 640, bottom: 300, side: 24 },
         mobile: { widthCalc: "calc(100% - 20px)", bottom: 50, side: 10 },
       },
     },
   };
+
   
   const PERSONAS: Record<string, { theme: keyof typeof THEMES }> = {
     default: { theme: "m_default" },
@@ -187,6 +189,29 @@ const LABELS: Record<string, Record<MEvent, string>> = {
     CHEMOMASTER: "START ChemoMaster 2.0 Loop",
     SHADOWMASTER: "TRIGGER_SHADOW_ANALYSIS",
   };  
+
+  // Assistant-Layout: 640px Spalte + 13px Padding bei schmalen Viewports
+  const ASSISTANT_MAX_WIDTH = 640;
+  const ASSISTANT_SIDE_PADDING = 13;
+  const ASSISTANT_NARROW_THRESHOLD =
+    ASSISTANT_MAX_WIDTH + ASSISTANT_SIDE_PADDING * 2;
+
+  function useAssistantLayout() {
+    const [vw, setVw] = React.useState<number | null>(null);
+
+    React.useEffect(() => {
+      if (typeof window === "undefined") return;
+      const update = () => setVw(window.innerWidth);
+      update();
+      window.addEventListener("resize", update);
+      return () => window.removeEventListener("resize", update);
+    }, []);
+
+    const width = vw ?? ASSISTANT_NARROW_THRESHOLD;
+    const isNarrow = width < ASSISTANT_NARROW_THRESHOLD;
+
+    return { isNarrow };
+  }
   
 /* =======================================================================
    [ANCHOR:HOOKS]  — Breakpoint + Theme Resolution
@@ -510,8 +535,10 @@ function Bubble({
   tokens: Tokens;
 }) {
   const isUser = msg.role === "user";
+  const { isNarrow } = useAssistantLayout();
+  const isNarrowAssistant = !isUser && isNarrow;
 
-    // Basis-Bubble nur für den User
+  // Basis-Bubble nur für den User
   const bubbleBase: React.CSSProperties = {
     maxWidth: "min(900px, 100%)",
     borderRadius: TOKENS.radius.lg,
@@ -534,10 +561,11 @@ function Bubble({
     boxShadow: "var(--chat-user-shadow)",
   };
 
-
-  // Assistant links: komplett offen, nur Text – keine Bubble
+  // Assistant links: offene Spalte, viewport-gesteuert
   const assistantStyle: React.CSSProperties = {
-    maxWidth: "min(900px, 100%)",
+    maxWidth: isNarrowAssistant
+      ? "100%"
+      : `min(${ASSISTANT_MAX_WIDTH}px, 100%)`,
     lineHeight: 1.6,
     color: tokens.color.text,
     background: "transparent",
@@ -551,8 +579,6 @@ function Bubble({
   const bubbleStyle: React.CSSProperties = isUser
     ? userBubbleStyle
     : assistantStyle;
-
-
 
   const handleCopyAnswer = () => {
     const text = String(msg.content ?? "");
@@ -568,10 +594,13 @@ function Bubble({
       aria-label={isUser ? t("youSaid") : t("assistantSays")}
       style={{
         display: "flex",
+        flexDirection: isNarrowAssistant ? "column" : "row",
         justifyContent: isUser ? "flex-end" : "flex-start",
-        alignItems: "flex-start",
-        gap: 10,
+        alignItems: isNarrowAssistant ? "stretch" : "flex-start",
+        gap: isNarrowAssistant ? 8 : 10,
         margin: "6px 0",
+        // bei schmalen Viewports rechts/links begrenzen (13px)
+        paddingInline: isNarrowAssistant ? ASSISTANT_SIDE_PADDING : 0,
       }}
     >
       {!isUser && (
@@ -580,11 +609,16 @@ function Bubble({
           alt="M"
           width={22}
           height={22}
-          style={{ marginTop: 6, flex: "0 0 22px" }}
+          style={{
+            marginTop: isNarrowAssistant ? 0 : 6,
+            marginBottom: isNarrowAssistant ? 8 : 0,
+            flex: "0 0 22px",
+            alignSelf: isNarrowAssistant ? "flex-start" : "auto",
+          }}
         />
       )}
 
-           <div
+      <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -595,6 +629,7 @@ function Bubble({
         <div style={bubbleStyle}>
           <MessageBody msg={msg} />
         </div>
+
 
 
         {!isUser && (
