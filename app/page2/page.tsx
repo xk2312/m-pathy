@@ -545,21 +545,31 @@ function Bubble({
     padding: "18px 22px",
     lineHeight: 1.6,
     backdropFilter: "blur(10px)",
-    border: "1px solid",
+    // Keine sichtbare Border – Bubble lebt über Hintergrund + Shadow
+    border: "none",
     color: tokens.color.text,
     boxShadow: TOKENS.shadow.soft,
   };
 
-  // User rechts: echte Bubble – grau/schwarz + Glow (keine Cyan-DNA mehr)
+
+  // User rechts: echte Bubble – dunkler Hintergrund, max. 60% Viewport
   const userBubbleStyle: React.CSSProperties = {
     ...bubbleBase,
-    maxWidth: "min(640px, 100%)",
+    // max. 60% des Viewports, zusätzlich bei sehr breiten Screens bei 640px gecappt
+    maxWidth: "min(60vw, 640px)",
+    // immer rechts ausgerichtet, aber mit Luft zum Rand
     marginLeft: "auto",
-    marginRight: 0,
+    marginRight: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    // voller Hintergrund, keine sichtbare Border mehr
     background: "var(--chat-user-bg)",
-    borderColor: "var(--chat-user-border)",
+    border: "none",
+    // leicht „abgeschnittene“ Ecke oben rechts
+    borderTopRightRadius: TOKENS.radius.md,
     boxShadow: "var(--chat-user-shadow)",
   };
+
 
 
   // Assistant links: offene Spalte, viewport-gesteuert
