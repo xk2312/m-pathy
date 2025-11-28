@@ -1806,7 +1806,7 @@ undefined : "100dvh",
               scrollPaddingBottom: `${padBottom}px`,
 
               // Mobile: kein zusätzliches Seiten-Padding, Desktop behält 12px
-              paddingInline: isMobile ? 0 : "12px",
+              paddingInline: isMobile ? "5px" : "12px",
             }}
 
           >
