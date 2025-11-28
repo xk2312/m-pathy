@@ -375,7 +375,14 @@
   --font-weight-bold: 700;
   --letter-spacing-base: .1px;
   --line-height-base: 1.6;
-
+  
+/* Tablet-Landscape / schmale Desktops:
+   zusätzlicher Innenabstand für Navigation & Page-Container */
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+  :root {
+    --page-pad-inline: 13px;
+  }
+}
   /* ============================================================
      Smooth Operator · Sidebar Headline Tokens (H1 / H2 / H3)
      Purpose: Akkordeon-Köpfe, Gruppenüberschriften, Mikro-Labels
