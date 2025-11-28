@@ -216,7 +216,7 @@ export default function LanguageSwitcher() {
 
          {openMobile && (
   <div
-    className="absolute z-[60] min-w-[12rem] max-w-[80vw] rounded-2xl border bg-black/90 backdrop-blur-lg shadow-lg overflow-hidden"
+  className="absolute z-[60] min-w-[12rem] max-w-[80vw] rounded-2xl border bg-black/90 backdrop-blur-lg shadow-lg overflow-hidden"
     style={{
       left: "calc(50% - 20px)",
       marginTop: "5px",
