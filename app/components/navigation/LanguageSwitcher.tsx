@@ -188,7 +188,7 @@ export default function LanguageSwitcher() {
          {/* ─────────────────────────────────────────────
           MOBILE LANGUAGE DROPDOWN (md:hidden)
           ───────────────────────────────────────────── */}
-      <div className="relative md:hidden">
+            <div className="relative md:hidden">
         <button
           type="button"
           onClick={() => setOpenMobile((v) => !v)}
@@ -201,10 +201,12 @@ export default function LanguageSwitcher() {
             background: "var(--nav-tail-bg)",
             borderColor: "var(--nav-tail-border)",
             paddingInline: "var(--nav-padding-inline)",
+            cursor: "pointer", // ← NEU
             transition:
               "background-color var(--nav-motion-fast), opacity var(--nav-motion-fast), transform var(--nav-motion-fast)",
           }}
         >
+
           <span className="text-base leading-none">{active.flag}</span>
           <span className="leading-none">{active.code}</span>
         </button>
@@ -215,6 +217,7 @@ export default function LanguageSwitcher() {
     style={{
       left: "calc(50% - 20px)",   // ← 20px nach links
       marginTop: "5px",
+      padding: "5px",             // ← NEU: 5px Innenabstand
       borderColor: "var(--nav-tail-border)",
       boxShadow: "var(--nav-orbit-glow)",
       transform: "translateX(-50%)",
@@ -223,15 +226,17 @@ export default function LanguageSwitcher() {
     aria-label={ariaLabels.dropdown_label}
   >
 
+
             <ul className="py-1">
               {options.map((opt) => (
-                <li key={opt.code}>
+                               <li key={opt.code}>
                   <button
                     type="button"
                     onClick={() => handleSelect(opt.code)}
-                    className="flex w-full items-center gap-2 px-3 py-1.5 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                    className="cursor-pointer flex w-full items-center gap-2 px-3 py-1.5 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                   >
                     <span className="text-lg leading-none">{opt.flag}</span>
+
                     <span className="uppercase tracking-wide">{opt.code}</span>
                     <span className="ml-auto text-[11px] opacity-60">
                       {opt.label}
