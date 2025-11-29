@@ -64,13 +64,36 @@ const en = {
   // CTA fallback
   "cta.fallback": "All set — tell me what you want to build (app, flow, feature …).",
 
-  // ARIA / A11y
+   // ARIA / A11y
   conversationAria: "Chat log",
   assistantSays: "Assistant message",
   youSaid: "Your message",
   columnAria: "Column — Controls & Selection",
   mobileOverlayLabel: "Mobile column overlay",
+
+  // Expert categories (pillar – Experts tabs)
+  "experts.category.life": "Life",
+  "experts.category.tech": "Tech",
+  "experts.category.space": "Space",
+  "experts.category.ethics": "Ethics",
+  "experts.category.universe": "Universe",
+
+  // Expert labels (pillar – Experts list)
+  "experts.biologist": "Biologist",
+  "experts.chemist": "Chemist",
+  "experts.physicist": "Physicist",
+  "experts.computer_scientist": "Computer Scientist",
+  "experts.jurist": "Jurist",
+  "experts.architect_civil_engineer": "Architect / Civil Engineer",
+  "experts.landscape_designer": "Landscape Designer",
+  "experts.interior_designer": "Interior Designer",
+  "experts.electrical_engineer": "Electrical Engineer",
+  "experts.mathematician": "Mathematician",
+  "experts.astrologer": "Astrologer",
+  "experts.weather_expert": "Weather Expert",
+  "experts.molecular_scientist": "Molecular Scientist",
 } as const;
+
 
 
 
