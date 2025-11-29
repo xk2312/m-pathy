@@ -12,11 +12,11 @@ const promptDict = {
     "prompts.modeDefault":
       "Reset everything to default and give me a brief status.",
     "prompts.councilIntro":
-      "Please let each of the 13 AIs of Council13 welcome me heartly. Show me the name of each one and who it is feauturing. Answer short please.",
+      "Please let each of the 13 AIs of Council13 welcome me heartly. Show me the name of each one and who it is feauturing. Show me an nice table and answer short please.",
     "prompts.modeGeneric":
       "Mode {label}: What is this {label} mode for and how is it helping me? Answer short please.",
     "prompts.expertAskTemplate":
-      "{expert}, Tell me the 13 fields of deep expertise, and what you can do for me what noone else could do. Answer short please and beginn with - Welcome in the field of (her you paste your field)...",
+      "{expert}, Tell me the 13 fields of deep expertise, and what you can do for me what noone else could do. Show me an nice table and answer short please and beginn with - Welcome in the field of (her you paste your field)...",
   },
 } as const;
 
