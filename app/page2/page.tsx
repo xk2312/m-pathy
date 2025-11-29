@@ -46,7 +46,7 @@ import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
 import { PromptRoot } from "./PromptRoot";
-import { t } from "@/lib/i18n";
+import { t, getLocale } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import { useMobileViewport } from "@/lib/useMobileViewport";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
@@ -1066,7 +1066,7 @@ const persistMessages = saveMessages;
 type MEvent = "builder" | "onboarding" | "expert" | "mode";
 const [frameText, setFrameText] = useState<string | null>(null);
 
-// Browser-Sprache -> "de" | "en" | "fr" | ...
+// "de" | "en" | "fr" | ...
 const locale = getBrowserLang();
 // ▼ Sync globaler i18n-Status mit Browser-Sprache (Client-only)
 useEffect(() => {
@@ -1076,7 +1076,9 @@ useEffect(() => {
     const next = (locale || "en").toLowerCase();
     if (next && prev !== next) {
       root.setAttribute("lang", next);
-      window.dispatchEvent(new CustomEvent("mpathy:i18n:change", { detail: { locale: next } }));
+      window.dispatchEvent(
+        new CustomEvent("mpathy:i18n:change", { detail: { locale: next } })
+      );
     }
   } catch { /* silent */ }
 }, [locale]);
@@ -1085,6 +1087,8 @@ useEffect(() => {
 // Labels (du hast LABELS am [ANCHOR:I18N], wir nutzen es hier nur)
 const getLabel = (evt: MEvent) =>
   (LABELS[locale] && LABELS[locale][evt]) || LABELS.en[evt];
+
+
 
 // --- helpers for labels ---
 const cap = (s: string) =>
