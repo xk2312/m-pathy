@@ -2,13 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
-import { i18n } from "@/lib/i18n";
+import { i18n } from "@/lib/i18n.councilorbit";
 
 type CouncilItem = {
   title: string;
   subtitle: string;
   kpi?: { superpower: string; focus: string; signal: string };
 };
+
 
 const CX = 500,
   CY = 500;
