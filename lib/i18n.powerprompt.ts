@@ -1,10 +1,10 @@
-import { dict } from "./i18n";
 
 // ─────────────────────────────────────────────────────────────
 // PowerPrompts · i18n additions (append-only)
 // Offizielle Projektsprachen: en, de, fr, es, it, pt, nl, ru, zh, ja, ko, ar, hi
 // Struktur: dict.<lang>.pp = { title, hint, groups, ask, e1…u3 }
 // ─────────────────────────────────────────────────────────────
+type DictRoot = Record<string, any>;
 
 export function attachPowerPrompts(dict: any) {
   Object.assign(dict.en ?? {}, {
