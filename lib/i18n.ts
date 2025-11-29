@@ -20,7 +20,6 @@ const en = {
   comingFunctions: "Options",
 
   // Overlay header / buttons (mobile)
-  mobileNav: "Mobile navigation",
   close: "Close",
 
   // Sidebar / Column 
@@ -38,9 +37,9 @@ const en = {
   selectExpert: "Choose expert",
   statusExpert: "Expert:",
   clearChat: "Clear chat",
-  startBuilding: "Start building",
+  startBuilding: "build",
   startBuildingMsg:
-    "What can you build here, and how can I help? I'll answer briefly and with empathy.",
+    "Explain me the build function and the commands I need to know to build efficiently with you. Show a table.",
 
   // Actions / footer
   export: "Export",
@@ -61,8 +60,6 @@ const en = {
   // Experts (used by Saeule.tsx)
   "experts.title": "Experts",
   "experts.choose": "Choose expert",
-  "experts.askTemplate": "{expert}, who are you and what can you do for me?",
-  "experts.askTemplateDefault": "{expert}, who are you and what can you do for me?",
 
   // CTA fallback
   "cta.fallback": "All set — tell me what you want to build (app, flow, feature …).",
