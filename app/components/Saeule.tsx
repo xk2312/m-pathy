@@ -1003,7 +1003,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
       <SimbaIcon name="modeDefault" />
     </span>
     <span className={styles.soSectionHeaderLabel}>
-      {tr("pillar.section.modesTitle", "MODIS")}
+      {tr("pillar.section.modesTitle", "MODES")}
     </span>
   </button>
 
@@ -1089,7 +1089,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
             {/* Charakter-Modis – Micronavi + Liste */}
       <div className={styles.block}>
         <div className={styles.soGroupTitle}>
-          {tr("labels.modes.character", "Charakter Modis")}
+          {tr("labels.modes.character", "Charakter modes")}
         </div>
 
         {/* Hover-Zone: Micronavi + Modus-Liste */}
