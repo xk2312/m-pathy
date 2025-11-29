@@ -603,35 +603,35 @@ useEffect(() => {
 
 
 
-  // === i18n Labels (13 Languages compatible) ===
-  const labelBuild = tr("cta.build", "Jetzt bauen");
+// === i18n Labels (13 Languages compatible) ===
+const labelBuild = tr("cta.build", "Build");
 
-  const labelExport = tr("cta.export", "Export");
-  const labelClear = tr("cta.clear", "Chat leeren");
+const labelExport = tr("cta.export", "Export");
+const labelClear = tr("cta.clear", "Clear chat");
 
-  const labelActionsExportTitle = tr("actions.export.title", "Chat exportieren");
-  const labelActionsExportHelp = tr(
-    "actions.export.help",
-    "Speichere deinen Chat als Datei."
-  );
-  const labelActionsExportCsv = tr("actions.export.csv", "CSV");
-  const labelActionsExportJson = tr("actions.export.json", "JSON");
+const labelActionsExportTitle = tr("actions.export.title", "Export chat");
+const labelActionsExportHelp = tr(
+  "actions.export.help",
+  "Save your chat as a file."
+);
+const labelActionsExportCsv = tr("actions.export.csv", "CSV");
+const labelActionsExportJson = tr("actions.export.json", "JSON");
 
-  const labelActionsDeleteTitle = tr("actions.delete.title", "Chat löschen");
-  const labelActionsDeleteWarning = tr(
-    "actions.delete.warning",
-    "Das löscht den gesamten Chat für immer. CSV oder JSON wählen, um den Chat bei Ihnen zu archivieren."
-  );
-  const labelActionsDeleteNow = tr(
-    "actions.delete.now",
-    "LÖSCHEN"
-  );
+const labelActionsDeleteTitle = tr("actions.delete.title", "Delete chat");
+const labelActionsDeleteWarning = tr(
+  "actions.delete.warning",
+  "This deletes the entire chat forever. Choose CSV or JSON to archive the chat locally."
+);
+const labelActionsDeleteNow = tr(
+  "actions.delete.now",
+  "DELETE"
+);
 
-  const labelOnboarding = tr("mode.onboarding", "ONBOARDING");
+const labelOnboarding = tr("mode.onboarding", "ONBOARDING");
 
-  const labelDefault = tr("mode.default", "M · Default");
-  const labelModeSelect = tr("mode.select", "Modus wählen");
-  const labelExpertSelect = tr("expert.select", "Experten wählen");
+const labelDefault = tr("mode.default", "M · Default");
+const labelModeSelect = tr("mode.select", "Choose mode");
+const labelExpertSelect = tr("experts.choose", "Choose expert");
 
 
 
@@ -943,13 +943,13 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
         {/* Kopf entfernt → Build-Button oben im Panel */}
         <div className={styles.block} style={{ marginTop: 8 }}>
           <button
-            type="button"
-            aria-label={tr("cta.build", "Jetzt bauen")}         // ← i18n Key
-            data-m-event="builder"
-            data-m-label={tr("cta.build", "Jetzt bauen")}
+  type="button"
+  aria-label={labelBuild}
+  data-m-event="builder"
+  data-m-label={labelBuild}
+  onClick={async () => {
+    emitStatus({ busy: true });
 
-            onClick={async () => {
-              emitStatus({ busy: true });                       // M-Logo sofort in Thinking
 
               const prompt = buildButtonMsg(lang);
               const q = `${prompt}\n\n${langHint(lang)}`;       // Sprachhinweis (13-Sprachen)
@@ -983,8 +983,8 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
             style={{ width: "100%", cursor: "pointer" }}
           >
             <SimbaIcon name="build" />
-            {tr("cta.build", "Jetzt bauen")}                     {/* dynamisches Label */}
-          </button>
+  {labelBuild}                                         {/* dynamisches Label */}
+</button>
         </div>
 
       </section>
@@ -1184,7 +1184,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
               <SimbaIcon name="modeCouncil" />
             </span>
             <span className={styles.soSectionHeaderLabel}>
-              {tr("pillar.section.expertsTitle", "EXPERTEN")}
+            {tr("experts.title", "EXPERTS")}
             </span>
           </button>
 
@@ -1194,7 +1194,7 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                 ? styles.soSectionBody
                 : styles.soSectionBodyCollapsed
             }
-            aria-label={tr("pillar.section.experts", "Experts")}
+            aria-label={tr("experts.title", "Experts")}
           >
             <section
               className={styles.sectionExperts}

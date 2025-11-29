@@ -78,6 +78,8 @@ const en = {
   "experts.category.ethics": "Ethics",
   "experts.category.universe": "Universe",
 
+  
+
   // Expert labels (pillar – Experts list)
   "experts.biologist": "Biologist",
   "experts.chemist": "Chemist",
@@ -92,6 +94,7 @@ const en = {
   "experts.astrologer": "Astrologer",
   "experts.weather_expert": "Weather Expert",
   "experts.molecular_scientist": "Molecular Scientist",
+  
 } as const;
 
 
