@@ -6,11 +6,21 @@ import { dict } from "./i18n";
 // Struktur: dict.<lang>.pp = { title, hint, groups, ask, e1…u3 }
 // ─────────────────────────────────────────────────────────────
 
-Object.assign(dict.en ?? {}, {
-  pp: {
-    kicker: "Action Prompts",
-title: "Intention in Motion",
-hint: "Say what you want — and let form follow intention.",
+export function attachPowerPrompts(dict: any) {
+  Object.assign(dict.en ?? {}, {
+    pp: {
+      kicker: "Action Prompts",
+      title: "Intention in Motion",
+      hint: "Say what you want — and let form follow intention.",
+      // … Rest der en-pp Daten UNVERÄNDERT …
+    },
+  });
+
+  Object.assign(dict.de ?? {}, {
+    pp: {
+      kicker: "Aktionsbefehle",
+      title: "Intention in Bewegung",
+      hint: "Sag, was du willst — und lass die Form deiner Absicht folgen.",
 
     groups: {
       parents: "Parents",
@@ -422,3 +432,9 @@ hint: "जो तुम चाहते हो, उसे कहो — और �
     u3: "मुझे चेरी के आकार का ड्रोन चाहिए। GalaxyBuilder शुरू करो।",
   },
 });
+// ⚠️ Wichtig:
+  // ALLE weiteren bestehenden Object.assign(dict.fr …),
+  // dict.es …, dict.it …, … bis hi
+  // einfach nach innen verschieben und genau so lassen,
+  // nur um eine Ebene eingerückt.
+}

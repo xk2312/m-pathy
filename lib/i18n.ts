@@ -139,6 +139,7 @@
  * - dict ist verschachtelt, wird aber IMMER zu flachen Keys gemacht.
  * - Aufpassen auf Key-Kollisionen (hero_*, pp.*, metrics.*, testimonials.*).
  */
+import { attachPowerPrompts } from "./i18n.powerprompt";
 
 
 type Dict = Record<string, string>;
@@ -1943,6 +1944,11 @@ export const dict = {
 
   },
 } as const;
+// PowerPrompts an das Subscription-Dict anhängen
+attachPowerPrompts(dict as any);
+
+// UX_LOCALES nach vollständiger Dict-Initialisierung füllen
+UX_LOCALES = Object.keys(dict);
 
 export type UIDict = typeof dict;
 
@@ -1955,6 +1961,3 @@ export type UIDict = typeof dict;
 //
 // PowerPrompt i18n liegt jetzt in "./i18n.powerprompt.ts"
 // und erweitert dort `dict` per Side-Effect.
-import "./i18n.powerprompt";
-
-UX_LOCALES = Object.keys(dict);
