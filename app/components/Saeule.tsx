@@ -129,23 +129,19 @@ type ExpertId =
   | "Astrologer"
   | "Weather Expert"
   | "Molecular Scientist";
+
 type ExpertCategoryId = "life" | "tech" | "space" | "ethics" | "universe";
 
 const EXPERT_CATEGORIES: {
   id: ExpertCategoryId;
-  label: string;
   experts: ExpertId[];
 }[] = [
   {
     id: "life",
-    label: "Leben",
-    experts: ["Biologist", "Chemist", "Molecular Scientist" as ExpertId].filter(
-      Boolean
-    ) as ExpertId[],
+    experts: ["Biologist", "Chemist", "Molecular Scientist"].filter(Boolean) as ExpertId[],
   },
   {
     id: "tech",
-    label: "Technik",
     experts: [
       "Physicist",
       "Mathematician",
@@ -155,7 +151,6 @@ const EXPERT_CATEGORIES: {
   },
   {
     id: "space",
-    label: "Raum",
     experts: [
       "Architect / Civil Engineer",
       "Landscape Designer",
@@ -164,15 +159,14 @@ const EXPERT_CATEGORIES: {
   },
   {
     id: "ethics",
-    label: "Ethik",
     experts: ["Jurist"],
   },
   {
     id: "universe",
-    label: "Universum",
     experts: ["Astrologer", "Weather Expert"],
   },
 ];
+
 
 type SectionId = "modes" | "experts" | "system" | "actions";
 
@@ -422,10 +416,29 @@ function labelForExpert(id: ExpertId, _lang: string): string {
   return fromT && fromT !== key ? fromT : id; // i18n → sonst neutrale ID
 }
 
+function expertCategoryLabel(id: ExpertCategoryId, _lang: string): string {
+  const key = `experts.category.${id}`;
+  switch (id) {
+    case "life":
+      return tr(key, "Life");
+    case "tech":
+      return tr(key, "Tech");
+    case "space":
+      return tr(key, "Space");
+    case "ethics":
+      return tr(key, "Ethics");
+    case "universe":
+      return tr(key, "Universe");
+    default:
+      return tr(key, id);
+  }
+}
+
 function sectionTitleExperts(_lang: string): string {
   // nutze vorhandenen Key, damit es sicher lokalisiert (de/en)
   return t("selectExpert");
 }
+
 
 function chooseExpertLabel(_lang: string): string {
   // gleicher Key für Label/Aria
@@ -1101,9 +1114,10 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                   onFocus={() => setHoverModeCategory(cat.id)}
                   aria-pressed={isActiveCat}
                 >
-                  <span className={styles.modeCategoryItemLabel}>
-                    {cat.label}
-                  </span>
+                 <span className={styles.modeCategoryItemLabel}>
+        {cat.label}
+      </span>
+
                 </button>
               );
             })}
@@ -1214,9 +1228,10 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                           onFocus={() => setHoverExpertCategory(cat.id)}
                           aria-pressed={isActiveCat}
                         >
-                          <span className={styles.modeCategoryItemLabel}>
-                            {cat.label}
-                          </span>
+                         <span className={styles.modeCategoryItemLabel}>
+  {expertCategoryLabel(cat.id, lang)}
+</span>
+
                         </button>
                       );
                     })}
