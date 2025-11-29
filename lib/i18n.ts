@@ -97,6 +97,93 @@ const en = {
   
 } as const;
 
+const de = {
+  // Input / messaging
+  writeMessage: "Nachricht schreiben…",
+  send: "Senden",
+
+  // Input helpers
+  tools: "Werkzeuge",
+  newline: "Neue Zeile",
+  comingUpload: "Upload",
+  comingVoice: "Sprache",
+  comingFunctions: "Optionen",
+
+  // Overlay header / buttons (mobile)
+  close: "Schließen",
+
+  // Sidebar / Column
+  columnTitle: "Säule",
+  sectionControl: "Steuerung",
+  onboarding: "ONBOARDING",
+  mDefault: "M · Standard",
+  selectMode: "Modus wählen",
+  council13: "COUNCIL13",
+  selectAI: "KI wählen",
+  modules: "Module",
+  coming: "Bald",
+
+  // Sidebar additions (experts & CTA)
+  selectExpert: "Experten wählen",
+  statusExpert: "Experte:",
+  clearChat: "Chat leeren",
+  startBuilding: "bauen",
+  startBuildingMsg:
+    "Erkläre mir die Build-Funktion und die Befehle, die ich kennen muss, um effizient mit dir zu bauen. Zeige eine Tabelle.",
+
+  // Actions / footer
+  export: "Export",
+  levels: "Level",
+  levelsComing: "Level kommen bald",
+  threadExported: "Chat exportiert.",
+
+  // Status bar
+  statusMode: "Modus:",
+  statusAgent: "Agent:",
+
+  // Backward-compat alias
+  statusAI: "Agent:",
+
+  // Status texts
+  "status.modeSet": "Modus gesetzt: {label}.",
+
+  // Experts (used by Saeule.tsx)
+  "experts.title": "Experten",
+  "experts.choose": "Experten wählen",
+
+  // CTA fallback
+  "cta.fallback":
+    "Alles klar — sag mir einfach, was du bauen möchtest (App, Flow, Feature …).",
+
+  // ARIA / A11y
+  conversationAria: "Chat-Verlauf",
+  assistantSays: "Assistenten-Nachricht",
+  youSaid: "Deine Nachricht",
+  columnAria: "Säule — Steuerung & Auswahl",
+  mobileOverlayLabel: "Mobiles Säulen-Overlay",
+
+  // Expert categories (pillar – Experts tabs)
+  "experts.category.life": "Leben",
+  "experts.category.tech": "Technik",
+  "experts.category.space": "Raum",
+  "experts.category.ethics": "Ethik",
+  "experts.category.universe": "Universum",
+
+  // Expert labels (pillar – Experts list)
+  "experts.biologist": "Biologe",
+  "experts.chemist": "Chemiker",
+  "experts.physicist": "Physiker",
+  "experts.computer_scientist": "Informatiker",
+  "experts.jurist": "Jurist",
+  "experts.architect_civil_engineer": "Architekt / Bauingenieur",
+  "experts.landscape_designer": "Landschaftsdesigner",
+  "experts.interior_designer": "Interior Designer",
+  "experts.electrical_engineer": "Elektroingenieur",
+  "experts.mathematician": "Mathematiker",
+  "experts.astrologer": "Astrologe",
+  "experts.weather_expert": "Wetterexperte",
+  "experts.molecular_scientist": "Molekularwissenschaftler",
+} as const;
 
 
 

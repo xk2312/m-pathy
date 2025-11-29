@@ -1,42 +1,70 @@
 /***
- * =========================================================
- *  M — SÄULE MASTER (Modes · Experts · System · Actions)
- * =========================================================
+ * ======================================================================
+ *  M — SÄULE (Chat-Column · Modes · Experts · System · Actions)
+ * ======================================================================
  *
  *  INDEX (Sprunganker):
  *
- *  [ANCHOR:TYPEN]           – Mode/Expert/Section Typen & Kategorien
- *  [ANCHOR:DATEN]           – MODI, MODE_CATEGORIES, EXPERT_CATEGORIES, EXPERTS, ROLES, SUB_KIS
- *  [ANCHOR:SIMBA-ICONS]     – SimbaIcon-Komponente, ikonische Archetypen für die Säule
- *  [ANCHOR:HELPER-I18N]     – t/tr-Wrapper, langHint, Label-Helfer (build, experts, prompts)
- *  [ANCHOR:HELPER-API]      – callChatAPI (Bridge zu /api/chat), emitSystemMessage
- *  [ANCHOR:HELPER-MODE]     – modeLabelFromId, Mode-/Kategorie-Mapping
- *  [ANCHOR:HELPER-EXPERT]   – Experten-Labeling, Kategorie-Zuordnung, Prompts je Expert
- *  [ANCHOR:STATE]           – React-State für Modus, Experten, Sprache, Sektionen, Overlay-Flags
- *  [ANCHOR:EFFECTS]         – useEffect-Kaskade: lang-Init, i18n-Events, LocalStorage, URL-Mode
- *  [ANCHOR:EVENTS-MODE]     – switchMode: Logging, Status-Updates, Overlay-Close, Auto-Prompt
- *  [ANCHOR:EVENTS-EXPERT]   – askExpert: Auswahl, Persistenz, Status, Overlay-Close, Auto-Prompt
- *  [ANCHOR:EVENTS-EXPORT]   – exportThread: CSV/JSON-Export aus localStorage
- *  [ANCHOR:EVENTS-DELETE]   – handleDeleteImmediate: Thread reset, Mode/Expert zurücksetzen, ClearChat
- *  [ANCHOR:UI-HEADER]       – Head-Section: Build-CTA (Jetzt bauen) mit Simba-Icon
- *  [ANCHOR:UI-MODES]        – MODIS-Akkordeon: Onboarding, Council13, M·Default + Charakter-Modis-Navi
- *  [ANCHOR:UI-EXPERTS]      – EXPERTEN-Akkordeon: Kategorien (life/tech/space/ethics/universe) + Liste
- *  [ANCHOR:UI-SYSTEM]       – SYSTEM-Akkordeon: Statusleiste (statusMode, modeLabel)
- *  [ANCHOR:UI-ACTIONS]      – ACTIONS-Akkordeon: Export (CSV/JSON) + Chat löschen (Danger-Button)
+ *  [ANCHOR:TYPEN]           – Grundtypen (ModeId, ModeCategoryId, ExpertId, ExpertCategoryId, SectionId, Props)
+ *  [ANCHOR:DATEN]           – Statische Daten: MODI, MODE_CATEGORIES, EXPERT_CATEGORIES, EXPERTS,
+ *                             SUB_KIS, ROLES (Meta-Infos, keine i18n-Keys)
+ *
+ *  [ANCHOR:SIMBA-ICONS]     – SimbaIcon-Komponente (build / modeOnboarding / modeDefault / modeCouncil / export / clear)
+ *
+ *  🗣 SPRACHE & i18n
+ *  [ANCHOR:HELPER-I18N]     – t()/tr()-Bridge zur Legacy-Chat-i18n:
+ *                             - getLang() + langHint(lang)  → Sprach-Hinweis für die API (13 Sprachen)
+ *                             - labelForExpert()            → benutzt `experts.*`-Keys aus i18n.ts
+ *                             - sectionTitleExperts()       → benutzt `selectExpert`
+ *                             - chooseExpertLabel()         → benutzt `selectExpert`
+ *                             - buildButtonLabel()/Msg()    → benutzt `startBuilding` / `startBuildingMsg`
+ *                             - expertAskPrompt()           → benutzt `prompts.expertAskTemplate` (aus i18n.prompts.ts)
+ *
+ *  [ANCHOR:STATE]           – useState / useEffect:
+ *                             - aktiver Mode, Kategorie, Expert
+ *                             - Persistenz in LocalStorage & URL-Mode
+ *
+ *  [ANCHOR:EVENTS-MODE]     – Mode-Wechsel & Auto-Prompts:
+ *                             - switchMode(next, label, lang)
+ *                             - konstruiert `q` (Auto-Prompt) mit
+ *                               `prompts.onboarding` / `prompts.modeDefault` /
+ *                               `prompts.councilIntro` / `prompts.modeGeneric`
+ *                               → Inhalte kommen aus `i18n.prompts.ts` (attachPrompts),
+ *                                 Fallback-Texte nur als Notfall.
+ *                             - hängt `langHint(lang)` an → API-Antwortsprache
+ *
+ *  [ANCHOR:EVENTS-EXPERTS]  – Expert-Wechsel & Expert-Prompts:
+ *                             - askExpert(expertId) ruft expertAskPrompt() auf
+ *                               → benutzt `prompts.expertAskTemplate` + {expert}
+ *
+ *  [ANCHOR:UI-LAYOUT]       – Grundlayout der Säule (Wrapper, Abschnitte, Abstände)
+ *
+ *  [ANCHOR:UI-HEADER]       – Kopfzeile: Build-Button (SimbaIcon "build"), Label via `cta.build`
+ *
+ *  [ANCHOR:UI-MODES]        – MODES-Akkordeon:
+ *                             - Section-Header-Label über `pillar.section.modesTitle`
+ *                             - Charakter-Modes-Title über `labels.modes.character`
+ *                             - Mode-Buttons nutzen MODI + MODE_CATEGORIES (Labels = EN-Tokens)
+ *
+ *  [ANCHOR:UI-EXPERTS]      – EXPERTS-Akkordeon:
+ *                             - Header-Label über `pillar.section.expertsTitle`
+ *                             - Tabs (life/tech/space/ethics/universe) über `experts.category.*`
+ *                             - Expertennamen über `labelForExpert()` → `experts.<id>`-Keys
+ *
+ *  [ANCHOR:UI-SYSTEM]       – SYSTEM-Akkordeon: Statuszeile (statusMode, modeLabelFromId → tr("mode.*"))
+ *
+ *  [ANCHOR:UI-ACTIONS]      – ACTIONS-Akkordeon:
+ *                             - Export / Clear Chat über `cta.export`, `cta.clear`,
+ *                               `actions.export.*`, `actions.delete.*`
  *
  *  RELEVANZ FÜR CHAT & PROMPT:
- *    - STATE/EFFECTS      → halten Mode & Expert konsistent über Reloads (LocalStorage + URL-Mode).
- *    - EVENTS-MODE        → senden system messages & Status-Meta, beeinflussen Prompt-Kontext indirekt.
- *    - EVENTS-EXPERT      → erzeugen gezielte Startprompts für Experten, die im Chat landen.
- *    - EVENTS-EXPORT/DEL  → verwalten Thread-Persistenz, aber nicht Layout oder Scroll-Verhalten.
- *    - UI-*-SEKTIONEN     → reine Interaktionsoberfläche der Säule; Layout-Raum kommt von page/layout.
+ *    - STATE/EFFECTS   → halten Mode & Expert konsistent (LocalStorage + URL)
+ *    - EVENTS-MODE     → erzeugt Auto-Prompts für die API (q) inkl. Sprach-Hint
+ *    - EVENTS-EXPERTS  → erzeugt Expert-Prompts mit `prompts.expertAskTemplate`
  *
- *  PHILOSOPHIE:
- *    - Säule = Kontrollturm und Charakter-Wähler, kein Layout-Elternteil.
- *    - Layout-Hierarchie bleibt: layout.tsx (Großeltern) → page2 (Eltern) → Säule/Prompt/Conversation (Kinder).
- *    - Säule spricht mit dem System über Events (mpathy:system-message, mpathy:ui:overlay-close),
- *      nicht über direkte DOM-Manipulation der Bühne.
+ * ======================================================================
  */
+
 
 "use client";
 
