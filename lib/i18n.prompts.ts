@@ -16,9 +16,7 @@ const promptDict = {
     "prompts.modeGeneric":
       "Mode {label}: What is this {label} mode for and how is it helping me? Answer short please.",
     "prompts.expertAskTemplate":
-      "{expert}, Tell me the 13 fields of deep expertise, and what you can do for me what noone else could do. Answer short please and beginn with - Welcomem in the field of (her you paste your field)...",
-    "experts.askTemplate":
-      "{expert}, who are you and what can you do for me?",
+      "{expert}, Tell me the 13 fields of deep expertise, and what you can do for me what noone else could do. Answer short please and beginn with - Welcome in the field of (her you paste your field)...",
   },
 } as const;
 
