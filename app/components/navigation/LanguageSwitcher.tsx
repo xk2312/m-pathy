@@ -4,7 +4,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLang, type Lang } from "@/app/providers/LanguageProvider";
 import { dict as navDict } from "@/lib/i18n.navigation";
-import { setLocale } from "@/lib/i18n";
+
 
 // Feste Reihenfolge der Sprachen (Desktop-Dropdown)
 const LANG_ORDER: Lang[] = [
