@@ -19,10 +19,6 @@ const promptDict = {
       "{expert}, Tell me the 13 fields of deep expertise, and what you can do for me what noone else could do. Answer short please and beginn with - Welcomem in the field of (her you paste your field)...",
     "experts.askTemplate":
       "{expert}, who are you and what can you do for me?",
-    "experts.askTemplateDefault":
-      "{expert}, who are you and what can you do for me?",
-    "cta.fallback":
-      "All set — tell me what you want to build (app, flow, feature …).",
   },
 } as const;
 
