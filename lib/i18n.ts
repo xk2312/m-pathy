@@ -78,7 +78,6 @@ const en = {
   "experts.category.ethics": "Ethics",
   "experts.category.universe": "Universe",
 
-  
 
   // Expert labels (pillar – Experts list)
   "experts.biologist": "Biologist",
@@ -97,7 +96,7 @@ const en = {
   
 } as const;
 
-const de = {
+const de: Dict = {
   // Input / messaging
   writeMessage: "Nachricht schreiben…",
   send: "Senden",
@@ -188,7 +187,11 @@ const de = {
 
 
 // ... (oberer Kontext)
-const DICTS = { en: en as Dict } as const; // legacy UI-only (EN-only)
+const DICTS = {
+  en: en as Dict,
+  de: de as Dict,   // ← DAS ist der fehlende Eintrag
+} as const;
+
 
 // Prompt-Templates an Legacy-Dict anhängen (EN-only)
 attachPrompts(DICTS as any);
