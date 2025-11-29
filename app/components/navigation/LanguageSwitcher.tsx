@@ -4,6 +4,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLang, type Lang } from "@/app/providers/LanguageProvider";
 import { dict as navDict } from "@/lib/i18n.navigation";
+import { setLocale } from "@/lib/i18n";
+
 
 
 // Feste Reihenfolge der Sprachen (Desktop-Dropdown)
@@ -94,7 +96,7 @@ export default function LanguageSwitcher() {
   }, []);
 
   // Outside-Click-Handler für Desktop-Dropdown
-  useEffect(() => {
+    useEffect(() => {
     if (!open) return;
     function handleClickOutside(ev: MouseEvent) {
       if (!rootRef.current) return;
@@ -112,12 +114,28 @@ export default function LanguageSwitcher() {
       setOpenMobile(false);
       return;
     }
+
+    // Subscription-Welt (LanguageProvider)
     setLang(next);
+
+    // Chat-/Legacy-Welt (Säule, page2 etc.) – globales Locale synchronisieren
+    setLocale(next);
+
+    // HTML lang-Attribut für A11y & Browser-Hints mitziehen
+    if (typeof document !== "undefined") {
+      try {
+        document.documentElement.lang = next;
+      } catch {
+        // silent – kein Crash wegen lang-Update
+      }
+    }
+
     setOpen(false);
     setOpenMobile(false);
   }
 
   return (
+
     <>
       {/* ─────────────────────────────────────────────
           DESKTOP LANGUAGE TAIL (md:flex)
