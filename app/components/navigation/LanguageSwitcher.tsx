@@ -181,7 +181,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLang, type Lang } from "@/app/providers/LanguageProvider";
 import { dict as navDict } from "@/lib/i18n.navigation";
-import { setLocale } from "@/lib/i18n";
+import { getLocale, setLocale } from "@/lib/i18n";
 
 
 
@@ -226,16 +226,48 @@ type Option = {
 };
 
 export default function LanguageSwitcher() {
-  const { lang, setLang } = useLang();
+  // Context (Subscription / Nav)
+  const { lang: ctxLang, setLang: setCtxLang } = useLang();
+
+  // Effektive Sprache = Single Source (globales Locale)
+  const [lang, setLang] = useState<Lang>((ctxLang ?? "en") as Lang);
 
   // Desktop Dropdown
   const [open, setOpen] = useState(false);
+
 
   // Mobile Sheet
   const [openMobile, setOpenMobile] = useState(false);
 
   // Reduced Motion
   const [reducedMotion, setReducedMotion] = useState(false);
+
+    // Initial aus globalem Locale + Live-Updates via mpathy:i18n:change
+  useEffect(() => {
+    try {
+      const initial = (getLocale() || ctxLang || "en") as Lang;
+      setLang(initial);
+    } catch {
+      setLang("en");
+    }
+
+    const handler = (event: Event) => {
+      const next = (event as CustomEvent).detail?.locale as Lang | undefined;
+      if (next) {
+        setLang(next);
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("mpathy:i18n:change", handler as EventListener);
+      return () =>
+        window.removeEventListener(
+          "mpathy:i18n:change",
+          handler as EventListener
+        );
+    }
+  }, [ctxLang]);
+
 
   const rootRef = useRef<HTMLDivElement | null>(null);
 
@@ -292,13 +324,20 @@ export default function LanguageSwitcher() {
       return;
     }
 
-    // Subscription-Welt (LanguageProvider)
-    setLang(next);
+    // Subscription-Welt (LanguageProvider) – wenn Provider vorhanden
+    try {
+      setCtxLang(next);
+    } catch {
+      // no-op, falls kein Provider im Baum (page2)
+    }
 
-    // Chat-/Legacy-Welt (Säule, page2 etc.) – globales Locale synchronisieren
+    // Chat-/Legacy-Welt (Säule, page2 etc.) – globales Locale
     setLocale(next);
 
-    // HTML lang-Attribut für A11y & Browser-Hints mitziehen
+    // Lokaler UI-State für Tail/Dropdown
+    setLang(next);
+
+    // HTML lang-Attribut für A11y & Browser-Hints
     if (typeof document !== "undefined") {
       try {
         document.documentElement.lang = next;
@@ -310,6 +349,7 @@ export default function LanguageSwitcher() {
     setOpen(false);
     setOpenMobile(false);
   }
+
 
   return (
 
