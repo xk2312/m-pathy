@@ -145,7 +145,7 @@ const en = {
   clearChat: "Clear chat",
   startBuilding: "build",
   startBuildingMsg:
-    "Explain me the build function and the commands I need to know to build efficiently with you. Show a table.",
+"Give me 13 examples for each category that demonstrate your building capabilities. Use the sector of children's toys for kids aged 2–6, for kids aged 6–12, and for men aged 30 and above, and show them in a table.",
 
   // Actions / footer
   export: "Export",
@@ -291,7 +291,7 @@ const de = {
   clearChat: "Chat löschen",
   startBuilding: "Bauen starten",
   startBuildingMsg:
-    "Erkläre mir die Build-Funktion und die Befehle, die ich kennen muss, um effizient mit dir zu entwickeln. Bitte mit Tabelle.",
+  "Gib mir jeweils 13 Beispiele, die deine Baufähigkeiten zeigen. Nimm den Sektor Kinderspielzeug für 2-6 jährige Kinder, für 6-12 jährige Kinder und für Männer ab 30 und zeig mir eine Tabelle.",
 
   // Actions / footer
   export: "Exportieren",
@@ -437,7 +437,7 @@ const fr = {
   clearChat: "Effacer le chat",
   startBuilding: "Commencer",
   startBuildingMsg:
-    "Explique-moi la fonction build et les commandes essentielles pour construire efficacement avec toi. Présente-les sous forme de tableau.",
+"Donne-moi 13 exemples pour chaque catégorie qui montrent tes capacités de construction. Prends le secteur des jouets pour enfants âgés de 2 à 6 ans, de 6 à 12 ans, ainsi que pour les hommes de plus de 30 ans, et présente-les dans un tableau.",
 
   // Actions / footer
   export: "Exporter",
@@ -583,7 +583,7 @@ const es = {
   clearChat: "Borrar chat",
   startBuilding: "Iniciar construcción",
   startBuildingMsg:
-    "Explícame la función build y los comandos esenciales para trabajar contigo de forma eficiente. Muéstralos en una tabla.",
+"Dame 13 ejemplos para cada categoría que demuestren tus capacidades de construcción. Toma el sector de juguetes infantiles para niños de 2 a 6 años, de 6 a 12 años y para hombres mayores de 30, y muéstramelos en una tabla.",
 
   // Actions / footer
   export: "Exportar",
@@ -729,7 +729,7 @@ const it = {
   clearChat: "Cancella chat",
   startBuilding: "Inizia a creare",
   startBuildingMsg:
-    "Spiegami la funzione build e i comandi essenziali per collaborare con efficienza. Mostra una tabella.",
+    "Dammi 13 esempi per ciascuna categoria che mostrino le tue capacità di costruzione. Prendi il settore dei giocattoli per bambini di 2–6 anni, 6–12 anni e per uomini sopra i 30 anni, e mostrali in una tabella.",
 
   // Actions / footer
   export: "Esporta",
@@ -875,7 +875,7 @@ const pt = {
   clearChat: "Limpar chat",
   startBuilding: "Começar a criar",
   startBuildingMsg:
-    "Explique a função build e os comandos essenciais para trabalharmos juntos com eficiência. Mostre em formato de tabela.",
+  "Dá-me 13 exemplos para cada categoria que mostrem as tuas capacidades de construção. Usa o setor de brinquedos infantis para crianças de 2–6 anos, de 6–12 anos e para homens acima de 30 anos, e apresenta tudo numa tabela.",
 
   // Actions / footer
   export: "Exportar",
@@ -1021,7 +1021,7 @@ const nl = {
   clearChat: "Chat wissen",
   startBuilding: "Bouwen starten",
   startBuildingMsg:
-    "Leg de build-functie uit en de belangrijkste commando’s die ik moet kennen om efficiënt met je samen te werken. Toon dit in een tabel.",
+"Geef me voor elke categorie 13 voorbeelden die jouw bouwvaardigheden tonen. Neem de sector kinderspeelgoed voor kinderen van 2–6 jaar, 6–12 jaar en voor mannen boven de 30, en toon het in een tabel.",
 
   // Actions / footer
   export: "Exporteren",
@@ -1168,7 +1168,7 @@ const ru = {
   clearChat: "Очистить чат",
   startBuilding: "Начать создание",
   startBuildingMsg:
-    "Объясни функцию build и основные команды, которые нужно знать для эффективной работы с тобой. Покажи таблицу.",
+"Дай мне по 13 примеров для каждой категории, которые демонстрируют твои строительные способности. Возьми сектор детских игрушек для детей 2–6 лет, 6–12 лет и для мужчин старше 30, и представь это в виде таблицы.",
 
   // Actions / footer
   export: "Экспорт",
@@ -1461,7 +1461,7 @@ const ja = {
   clearChat: "チャットを消去",
   startBuilding: "ビルド開始",
   startBuildingMsg:
-    "ビルド機能と、効率的に協力するために必要な主要コマンドを説明してください。表形式で示してください。",
+"あなたのビルド能力を示す各カテゴリーにつき13の例を提示してください。2〜6歳向け、6〜12歳向け、そして30歳以上の男性向けの子ども用おもちゃの分野を使い、それらを表形式で見せてください。",
 
   // Actions / footer
   export: "エクスポート",
@@ -1607,7 +1607,7 @@ const ko = {
   clearChat: "채팅 지우기",
   startBuilding: "빌드 시작",
   startBuildingMsg:
-    "빌드 기능과 효율적으로 협업하기 위해 필요한 핵심 명령을 설명해주세요. 표로 보여주세요.",
+"당신의 빌드 능력을 보여주는 카테고리별 13가지 예시를 제시해주세요. 2–6세 어린이, 6–12세 어린이, 그리고 30세 이상 남성을 위한 어린이 장난감 분야를 사용하여 표로 보여주세요.",
 
   // Actions / footer
   export: "내보내기",
@@ -1753,7 +1753,7 @@ const ar = {
   clearChat: "مسح الدردشة",
   startBuilding: "ابدأ البناء",
   startBuildingMsg:
-    "اشرح لي وظيفة البناء والأوامر الأساسية اللازمة للعمل معك بكفاءة. اعرضها في جدول.",
+"أعطني 13 مثالًا لكل فئة تُظهر قدراتك في البناء. استخدم قطاع ألعاب الأطفال للفئات العمرية 2–6 سنوات، 6–12 سنة، وللرجال فوق سن 30، واعرض ذلك في جدول.",
 
   // Actions / footer
   export: "تصدير",
@@ -1899,7 +1899,7 @@ const hi = {
   clearChat: "चैट साफ़ करें",
   startBuilding: "निर्माण शुरू करें",
   startBuildingMsg:
-    "कृपया मुझे बिल्ड फ़ंक्शन और वे आवश्यक कमांड समझाएँ जो आपके साथ प्रभावी ढंग से काम करने के लिए ज़रूरी हैं। कृपया इसे तालिका के रूप में दिखाएँ।",
+  "प्रत्येक श्रेणी के लिए 13 उदाहरण दें जो आपकी निर्माण क्षमता दिखाते हों। 2–6 वर्ष, 6–12 वर्ष के बच्चों और 30 वर्ष से ऊपर के पुरुषों के लिए बच्चों के खिलौनों के क्षेत्र का उपयोग करें, और इन्हें तालिका में दिखाएँ।",
 
   // Actions / footer
   export: "निर्यात",
