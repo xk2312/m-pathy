@@ -1,31 +1,95 @@
 "use client";
 
-/***
- * =========================================================
- *  M — PAGE2 MASTER (Single-File Design/Behavior – Control)
- * =========================================================
+/*** =======================================================================
+ *  INVENTUS INDEX — app/page2/page.tsx
+ *  Screening · Struktur · Sprach-Hotspots (Chat-Seite)
+ * ======================================================================= 
  *
- *  INDEX (Sprunganker):
- *  [ANCHOR:CONFIG]       – Design Tokens, Themes, Personas, Dock-Breite/-Bottom
- *  [ANCHOR:HOOKS]        – useBreakpoint (Layout-Breakpoint), useTheme
- *  [ANCHOR:UTILS]        – Storage- und Helper-Funktionen (truncate/load/save)
- *  [ANCHOR:COMPONENTS]   – Header, MessageBody, Bubble, Conversation, InputDock
- *  [ANCHOR:BEHAVIOR]     – Chat-State, Autosave, System-Events, sendMessage
- *  [ANCHOR:LAYOUT]       – Bühne (Säule + rechte Spalte), Scroller, PromptDock
+ *  [ANCHOR:LANG-IMPORTS]
+ *    - Import { t, getLocale } aus "@/lib/i18n"
+ *    - Verknüpfung dieser Datei mit dem globalen i18n-System (Legacy/Chat)
  *
- *  Relevanz für Prompt & Scroll:
- *  - CONFIG       → bestimmt Dock-Breite und gewünschte Bottom-Abstände.
- *  - HOOKS        → legt den globalen Breakpoint für isMobile/isDesktop fest.
- *  - COMPONENTS   → Conversation + InputDock bilden den sichtbaren Chatkörper.
- *  - BEHAVIOR     → steuert Scroll-to-bottom, padBottom-Updates, System-Messages.
- *  - LAYOUT       → EIN Scroll-Container (chat-stage), EIN SafeTop, EIN PromptDock.
+ *  [ANCHOR:I18N-BROWSER]
+ *    - getBrowserLang(): liest navigator.language → "de" | "en" | ...
+ *    - Dient als lokale, Browser-basierte Sprachquelle
+ *    - Potenzieller Drift zur globalen Locale (currentLocale / setLocale)
  *
- *  Philosophie:
- *  - Eine Datei steuert Form & Verhalten der Chat-Bühne (Eltern der Kinder).
- *  - Layout-Hierarchie folgt: Layout.tsx (Großeltern) → page2 (Eltern) → Komponenten.
- *  - PromptDock V4 ist Single Source of Truth für Fußraum (padBottom/--dock-h).
- *  - Navigation ist Kind: liest nur SafeTop/SafeBottom, definiert kein eigenes Layout.
- */
+ *  [ANCHOR:I18N-LABELS]
+ *    - LABELS: Mapping MEvent → Label pro Sprache (en/de/fr/es/it)
+ *    - MODE_LABELS: Mapping Mode-Key → Label pro Sprache
+ *    - LOAD_PREFIX: "Load"/"Lade"/"Charger"/"Cargar"/"Carica" per Sprache
+ *    - tMode(): nutzt MODE_LABELS + slug() + cap() → Modus-Labeling
+ *    - Sprachlogik speziell für M-Flow / Modes (unabhängig vom restlichen UI-i18n)
+ *
+ *  [ANCHOR:I18N-LOCALE-STATE]
+ *    - locale = getBrowserLang()
+ *    - useEffect: setzt <html lang="..."> und feuert 
+ *        window.dispatchEvent(new CustomEvent("mpathy:i18n:change", { detail:{ locale } }))
+ *    - Quelle für M-Flow-Locale (LABELS, MODE_LABELS, LOAD_PREFIX, tMode)
+ *    - Kann vom LanguageSwitcher-Flow abweichen, wenn dieser eigene Quelle nutzt
+ *
+ *  [ANCHOR:I18N-MFLOW]
+ *    - getLabel(evt: MEvent): LABELS[locale] → Text für Buttons/Events
+ *    - runMFlow(evt, labelOverride?): baut Frame-Text mit 
+ *        LOAD_PREFIX[locale] + getLabel(...)
+ *    - useEffect (global click): sucht [data-m-event], ruft runMFlow()
+ *    - useEffect (global change): listbox/select/combobox → runMFlow() mit Label
+ *    - Auto-Tagging-UseEffect: mappt Texte ("jetzt bauen", "onboarding", "expert")
+ *      auf data-m-event (teils deutsch/englisch gemischt)
+ *    - Sprach-Hotspot: M-Flow folgt locale (Browser), nicht notwendigerweise globaler Locale
+ *
+ *  [ANCHOR:I18N-ARIA-UI]
+ *    - Conversation:
+ *        aria-label={t("conversationAria")}
+ *    - Bubble:
+ *        aria-label={t("youSaid")} / t("assistantSays")
+ *    - InputDock:
+ *        aria-label="Type your message" (hart codiert EN)
+ *        placeholder="Talk to M" (hart codiert EN)
+ *        Button-Label "Senden" (hart codiert DE)
+ *    - Copy-Button:
+ *        aria-label="Copy answer" + Text "⧉ Copy" (EN)
+ *    - Mischung aus t()-basierten und hart codierten Strings → inkonsistente i18n-Zone
+ *
+ *  [ANCHOR:I18N-BRIDGE-SAEULE]
+ *    - systemSay(content): fügt assistant/system-Bubbles hinzu (format:"markdown")
+ *    - Saeule/SidebarContainer/Post-Events (mpathy:system-message) liefern Texte
+ *      → keine direkte Übersetzung hier, aber Darstellung abhängig von Sprache
+ *    - Footer-Status (modeLabel/expertLabel) teilweise von Events abhängig 
+ *      (meta.modeLabel etc., evtl. lokalisierte Inhalte aus Säule/Orbit)
+ *
+ *  [ANCHOR:I18N-GLOBAL-SCROLL/NAV]
+ *    - Scroll-Bridge: 
+ *        (window as any).__mNavScrollYOverride = y; window.dispatchEvent(new Event("scroll"));
+ *    - Sprache selbst wird hier nicht verändert, aber die Navigation (mit LanguageSwitcher)
+ *      ist räumlich/strukturell eng gekoppelt → relevant für gesamtes Page2-Verhalten
+ *
+ *  [ANCHOR:I18N-T-USES]
+ *    - t("conversationAria") in Conversation
+ *    - Weitere t()-Verwendungen möglich (über PromptRoot / SidebarContainer),
+ *      jedoch in dieser Datei direkt sichtbar v. a. für ARIA-Labels
+ *    - Diese t()-Aufrufe hängen an currentLocale aus lib/i18n.ts (DICTS)
+ *
+ * =======================================================================
+ *  ERKENNBARER FEHLERZU­SAMMENHANG (Inventur, keine Lösung)
+ *
+ *  1) Chat bleibt auf EN
+ *     - locale in dieser Datei wird aus getBrowserLang() abgeleitet, nicht 
+ *       eindeutig aus dem globalen Locale (setLocale / currentLocale).
+ *     - M-Flow (LABELS, MODE_LABELS, LOAD_PREFIX, tMode) folgt diesem lokalen
+ *       locale-Wert.
+ *     - Wenn globales Locale (LanguageSwitcher) und getBrowserLang() auseinander
+ *       laufen, kann der sichtbare Sprachzustand inkonsistent bleiben.
+ *
+ *  2) Unterschied Chat-UI vs. M-Flow
+ *     - Teile der UI nutzen t() (abhängig von currentLocale in lib/i18n.ts),
+ *       andere Teile (M-Flow, Buttons, Platzhalter) nutzen eigene Tabellen
+ *       und/oder hart codierte EN/DE-Strings.
+ *     - Dadurch kann der Chat optisch auf EN "festhängen", obwohl andere Teile
+ *       des Systems bereits auf eine andere Sprache umgeschaltet sind.
+ *
+ * ======================================================================= */
+
 
 
 import React, {

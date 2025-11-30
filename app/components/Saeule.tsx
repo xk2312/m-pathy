@@ -1,69 +1,231 @@
-/***
- * ======================================================================
- *  M — SÄULE (Chat-Column · Modes · Experts · System · Actions)
- * ======================================================================
+/*** =======================================================================
+ *  INVENTUS INDEX — app/components/Saeule.tsx
+ *  Screening · Struktur · Sprach-Hotspots (Säule · Modes · Experts)
+ * =======================================================================
  *
- *  INDEX (Sprunganker):
+ *  [ANCHOR:TYPEN]
+ *    – ModeId, ModeCategoryId, ExpertId, ExpertCategoryId, SectionId, Props
+ *    – Definieren die logische Struktur (Modes/Experten/Abschnitte), selbst
+ *      noch sprachneutral.
  *
- *  [ANCHOR:TYPEN]           – Grundtypen (ModeId, ModeCategoryId, ExpertId, ExpertCategoryId, SectionId, Props)
- *  [ANCHOR:DATEN]           – Statische Daten: MODI, MODE_CATEGORIES, EXPERT_CATEGORIES, EXPERTS,
- *                             SUB_KIS, ROLES (Meta-Infos, keine i18n-Keys)
+ *  [ANCHOR:DATEN]
+ *    – MODI:   { id, label } (Labels aktuell als EN-Uppercase Tokens, z. B.
+ *                "RESEARCH", "CALM", "JOY" → statische Strings, NICHT via t()).
+ *    – MODE_CATEGORIES: { id, label, modes } (Labels: "CORE", "HEART" …,
+ *                ebenfalls statische EN-Strings).
+ *    – EXPERTS: ExpertId → simbaSlot (nur Mapping, keine i18n).
+ *    – EXPERT_CATEGORIES: ExpertCategoryId → Expertenliste, reine Struktur.
+ *    – SUB_KIS, ROLES: Meta-Beschreibungen / Telemetrie-Strings (EN),
+ *                nicht lokalisiert.
  *
- *  [ANCHOR:SIMBA-ICONS]     – SimbaIcon-Komponente (build / modeOnboarding / modeDefault / modeCouncil / export / clear)
+ *  [ANCHOR:SIMBA-ICONS]
+ *    – SimbaIcon-Komponente:
+ *        name ∈ {"build","modeOnboarding","modeDefault","modeCouncil","export","clear"}
+ *      Rendert reine SVG-Icons, sprachneutral (aria-hidden="true").
  *
- *  🗣 SPRACHE & i18n
- *  [ANCHOR:HELPER-I18N]     – t()/tr()-Bridge zur Legacy-Chat-i18n:
- *                             - getLang() + langHint(lang)  → Sprach-Hinweis für die API (13 Sprachen)
- *                             - labelForExpert()            → benutzt `experts.*`-Keys aus i18n.ts
- *                             - sectionTitleExperts()       → benutzt `selectExpert`
- *                             - chooseExpertLabel()         → benutzt `selectExpert`
- *                             - buildButtonLabel()/Msg()    → benutzt `startBuilding` / `startBuildingMsg`
- *                             - expertAskPrompt()           → benutzt `prompts.expertAskTemplate` (aus i18n.prompts.ts)
+ *  [ANCHOR:HELPER-I18N]
+ *    – getLang():
+ *        · liest document.documentElement.lang
+ *        · sonst navigator.language / userLanguage
+ *        → Liefert Basis-lang ("en","de",…)
+ *        → Unabhängig von lib/i18n.getLocale(), aber in gleicher Domäne
+ *          (<html lang>) unterwegs.
  *
- *  [ANCHOR:STATE]           – useState / useEffect:
- *                             - aktiver Mode, Kategorie, Expert
- *                             - Persistenz in LocalStorage & URL-Mode
+ *    – tr(key, fallback, vars?):
+ *        · ruft t(key) aus "@/lib/i18n"
+ *        · ersetzt {vars} im Text
+ *        · fallback, wenn kein Übersetzungstreffer.
+ *        → Universelle Brücke zur Legacy-Chat-i18n (DICTS + dict-Mischlogik).
  *
- *  [ANCHOR:EVENTS-MODE]     – Mode-Wechsel & Auto-Prompts:
- *                             - switchMode(next, label, lang)
- *                             - konstruiert `q` (Auto-Prompt) mit
- *                               `prompts.onboarding` / `prompts.modeDefault` /
- *                               `prompts.councilIntro` / `prompts.modeGeneric`
- *                               → Inhalte kommen aus `i18n.prompts.ts` (attachPrompts),
- *                                 Fallback-Texte nur als Notfall.
- *                             - hängt `langHint(lang)` an → API-Antwortsprache
+ *    – labelForExpert(id, lang):
+ *        · key = "experts.<id-normalisiert>"
+ *        · t(key) → Name aus i18n.ts, sonst id selbst (EN-Titel).
+ *        → i18n-Quelle: Legacy-Chat-i18n (DICTS).
  *
- *  [ANCHOR:EVENTS-EXPERTS]  – Expert-Wechsel & Expert-Prompts:
- *                             - askExpert(expertId) ruft expertAskPrompt() auf
- *                               → benutzt `prompts.expertAskTemplate` + {expert}
+ *    – expertCategoryLabel(id, lang):
+ *        · keys "experts.category.*"
+ *        · tr(key, "Life"/"Tech"/"Space"/"Ethics"/"Universe")
+ *        → Kategorien stammen aus i18n.ts; Fallbacks EN.
  *
- *  [ANCHOR:UI-LAYOUT]       – Grundlayout der Säule (Wrapper, Abschnitte, Abstände)
+ *    – sectionTitleExperts(lang), chooseExpertLabel(lang):
+ *        · nutzen t("selectExpert") aus i18n.ts.
  *
- *  [ANCHOR:UI-HEADER]       – Kopfzeile: Build-Button (SimbaIcon "build"), Label via `cta.build`
+ *    – buildButtonLabel(lang), buildButtonMsg(lang):
+ *        · tr("startBuilding", "Build")
+ *        · tr("startBuildingMsg", "Let’s get started…")
+ *        → CTA-Labels/Msgs vollständig aus i18n.ts (DICTS).
  *
- *  [ANCHOR:UI-MODES]        – MODES-Akkordeon:
- *                             - Section-Header-Label über `pillar.section.modesTitle`
- *                             - Charakter-Modes-Title über `labels.modes.character`
- *                             - Mode-Buttons nutzen MODI + MODE_CATEGORIES (Labels = EN-Tokens)
+ *    – expertAskPrompt(expertLabel, lang):
+ *        · t("prompts.expertAskTemplate") + {expert}
+ *        → nutzt Prompt-Templates aus i18n.prompts (attachPrompts→DICTS).
  *
- *  [ANCHOR:UI-EXPERTS]      – EXPERTS-Akkordeon:
- *                             - Header-Label über `pillar.section.expertsTitle`
- *                             - Tabs (life/tech/space/ethics/universe) über `experts.category.*`
- *                             - Expertennamen über `labelForExpert()` → `experts.<id>`-Keys
+ *    – langHint(lang):
+ *        · 13-Sprachen-Mapping → "[Bitte antworte auf Deutsch.]" etc.
+ *        · Nur API-Hinweisetring, keine UI-Übersetzung.
  *
- *  [ANCHOR:UI-SYSTEM]       – SYSTEM-Akkordeon: Statuszeile (statusMode, modeLabelFromId → tr("mode.*"))
+ *  [ANCHOR:API-CALL]
+ *    – callChatAPI(prompt):
+ *        · POST /api/chat
+ *        · akzeptiert verschiedene Antwortformen (assistant.content, reply, etc.)
+ *        · Gibt String oder null zurück.
+ *        → Sprachsteuerung via Inhalt von `prompt` inkl. langHint().
  *
- *  [ANCHOR:UI-ACTIONS]      – ACTIONS-Akkordeon:
- *                             - Export / Clear Chat über `cta.export`, `cta.clear`,
- *                               `actions.export.*`, `actions.delete.*`
+ *  [ANCHOR:STATE]
+ *    – React-State:
+ *        · activeMode, modeCategory, hoverModeCategory
+ *        · expertCategory, hoverExpertCategory
+ *        · sendingExpert, currentExpert
+ *        · openSection (modes/experts/system/actions)
+ *        · openExportDetails, openDeleteDetails
+ *        · hydrated, lang
+ *    – Persistenz:
+ *        · localStorage: "mode", "expert", "mpathy:thread:default"
+ *        · URL-Param "mode" (onboarding/M/council/Cxx)
+ *        → funktionale Zustände, i18n-relevant via lang & Mode/Expert-Labels.
  *
- *  RELEVANZ FÜR CHAT & PROMPT:
- *    - STATE/EFFECTS   → halten Mode & Expert konsistent (LocalStorage + URL)
- *    - EVENTS-MODE     → erzeugt Auto-Prompts für die API (q) inkl. Sprach-Hint
- *    - EVENTS-EXPERTS  → erzeugt Expert-Prompts mit `prompts.expertAskTemplate`
+ *  [ANCHOR:I18N-STATE]
+ *    – lang-Handling in useEffect():
+ *        1) initial:
+ *           · liest htmlLang (documentElement.lang)
+ *           · oder navLang (navigator.language)
+ *           · Fallback: getLocale() aus lib/i18n
+ *           → setLang(initial)
+ *        2) Event-Listener:
+ *           · window.addEventListener("mpathy:i18n:change", handler)
+ *           · handler liest (e as CustomEvent).detail.locale
+ *           → setLang(next.toLowerCase())
+ *        3) zweiter useEffect():
+ *           · setHydrated(true)
+ *           · setLang(getLocale())
  *
- * ======================================================================
- */
+ *        Sprach-Hotspots:
+ *        – lang wird aus DREI Quellen gespeist:
+ *          (a) <html lang>, (b) Browser, (c) getLocale()/Events
+ *        – Doppel-Initialisierung (erst initial/Events, dann getLocale())
+ *          kann zu kurzzeitig inkonsistenten Zuständen führen.
+ *        – Säule folgt am Ende getLocale() (Legacy-Chat-i18n), nicht
+ *          zwingend document.lang oder Browser.
+ *
+ *    – modeLabelFromId(id):
+ *        · nutzt tr("mode.*") für onboarding/default/council
+ *        · andere Modes ziehen ihre Labels direkt aus MODI[].label (EN-Token).
+ *        → Mischform: Teilweise i18n, teilweise statische EN-Labels.
+ *
+ *  [ANCHOR:EVENTS-MODES]
+ *    – switchMode(next: ModeId):
+ *        · logEvent("mode_switch", { from, to })
+ *        · setActiveMode(next)
+ *        · label = modeLabelFromId(next)
+ *        · emitSystemMessage({ kind:"mode", text: tr("status.modeSet", ...), meta:{ modeId, label, lang } })
+ *        · emitStatus({ modeLabel: label })
+ *        · optional: Mobile-Overlay schließen (UI)
+ *
+ *        – Auto-Prompt-Build:
+ *          · next === "onboarding"  → tr("prompts.onboarding", …)
+ *          · next === "M"           → tr("prompts.modeDefault", …)
+ *          · next === "council"     → tr("prompts.councilIntro", …)
+ *          · sonst                  → tr("prompts.modeGeneric", …{label})
+ *          · qLang = q + "\n\n" + langHint(lang)
+ *          · callChatAPI(qLang) → Antwort-Bubble via say()
+ *
+ *        Sprach-Hotspots:
+ *        – Prompt-Texte kommen aus Legacy-i18n (prompts.*) + langHint(lang).
+ *        – Sprache der KI-Antwort hängt direkt an lang (Säulen-intern) +
+ *          langHint, unabhängig vom Subscription-Provider.
+ *
+ *  [ANCHOR:EVENTS-EXPERTS]
+ *    – askExpert(expert: ExpertId):
+ *        · sendingExpert-Flag, currentExpert persistiert in localStorage
+ *        · label = labelForExpert(expert, lang) (i18n.experts.*)
+ *        · logEvent("expert_selected", { expert, label, roles: ROLES[expert] })
+ *        · emitStatus({ expertLabel: label, busy: true })
+ *        · Mobile-Overlay schließen (UI-only)
+ *        · userPrompt = expertAskPrompt(label, lang)
+ *        · q = userPrompt + "\n\n" + langHint(lang)
+ *        · callChatAPI(q) → Antwort-Bubble via say()
+ *
+ *        Sprach-Hotspots:
+ *        – Expertennamen & Kategorien werden aus i18n.ts geholt.
+ *        – KI-Antwortsprache via langHint(lang) gesteuert.
+ *
+ *  [ANCHOR:UI-LAYOUT]
+ *    – <aside className={styles.saeule} aria-label={tr("columnAria", "Column — Controls & Selection")}>
+ *    – Enthält Smooth-Operator-Akkordeon:
+ *        · MODES
+ *        · EXPERTS
+ *        · SYSTEM
+ *        · ACTIONS
+ *
+ *  [ANCHOR:UI-MODES]
+ *    – Abschnitt "MODES":
+ *        · Section-Header-Label: tr("pillar.section.modesTitle", "MODES")
+ *        · ONBOARDING-Button: tr("mode.onboarding", "ONBOARDING")
+ *        · COUNCIL13-Button: tr("mode.council", "COUNCIL13")
+ *        · M-Button: tr("mode.default", "M · Default")
+ *        · Character Modes:
+ *            · Überschrift: tr("labels.modes.character", "Charakter modes")
+ *            · Kategorie-Micros: cat.label (statisch EN)
+ *            · Mode-Liste: mode.label aus MODI (statisch EN)
+ *        → Mix aus lokalisierter Systembeschriftung + nicht lokalisierten
+ *          Mode-Namen.
+ *
+ *  [ANCHOR:UI-EXPERTS]
+ *    – Abschnitt "EXPERTS":
+ *        · Header: tr("experts.title", "EXPERTS")
+ *        · section aria-label: tr("pillar.section.experts", "Experts")
+ *        – Überschrift: sectionTitleExperts(lang) → t("selectExpert")
+ *        – Kategorien-Micros:
+ *            · expertCategoryLabel(cat.id, lang) → tr("experts.category.*")
+ *        – Expertennamen:
+ *            · labelForExpert(expertId, lang) → t("experts.<id>") oder Fallback id
+ *
+ *  [ANCHOR:UI-SYSTEM]
+ *    – Abschnitt "SYSTEM":
+ *        · Header: tr("pillar.section.systemTitle", "SYSTEM")
+ *        · aria-label: tr("pillar.section.system", "System status")
+ *        – Statuszeile:
+ *            · Key: t("statusMode") (i18n)
+ *            · Value: modeLabel (siehe modeLabelFromId + MODI/tr)
+ *
+ *  [ANCHOR:UI-ACTIONS]
+ *    – Abschnitt "ACTIONS":
+ *        · Header: tr("pillar.section.actionsTitle", "ACTIONS")
+ *        · Export-Block:
+ *            · Titel: labelActionsExportTitle (tr("actions.export.title", …))
+ *            · Hilfe: labelActionsExportHelp (tr("actions.export.help", …))
+ *            · CSV/JSON Buttons inkl. aria-labels via tr("exportCsvAria"/"exportJsonAria").
+ *        – Delete-Block:
+ *            · Titel: labelActionsDeleteTitle (tr("actions.delete.title", …))
+ *            · Warnung: labelActionsDeleteWarning (tr("actions.delete.warning", …))
+ *            · Button-Label: labelActionsDeleteNow (tr("actions.delete.now", "DELETE"))
+ *            · aria-label: tr("clearChatAria", "Clear chat")
+ *
+ * =======================================================================
+ *  ERKENNBARER FEHLERZU­SAMMENHANG (Inventur, keine Lösung)
+ *
+ *  1) Säulen-Sprache (lang) wird aus mehreren Quellen gemischt:
+ *     – <html lang>, Browser (navigator.language) und getLocale() (lib/i18n)
+ *       initial, plus Events ("mpathy:i18n:change").
+ *     – Zweiter useEffect überschreibt initialen lang-Wert mit getLocale().
+ *     → Säule folgt letztlich dem globalen Chat-Locale, aber der Weg dorthin
+ *       kann sich von Subscription-/Navigation-Pfaden unterscheiden.
+ *
+ *  2) Säule hängt ausschließlich an Legacy-Chat-i18n:
+ *     – Alle tr()/t()-Aufrufe nutzen Keys aus i18n.ts / i18n.prompts.ts.
+ *     – Subscription-dict (LanguageProvider) spielt hier keine Rolle.
+ *     → Wenn setLocale()/currentLocale nicht sauber mit LanguageProvider /
+ *       LanguageSwitcher gekoppelt sind, kann die Säule in einer anderen
+ *       Sprache laufen als Subscription-UI.
+ *
+ *  3) Mischformen in den Labels:
+ *     – Einige Labels (Modes, Kategorien, Meta-Texte) sind hart in EN
+ *       codiert (MODI/MODE_CATEGORIES/ROLES).
+ *     – Andere Labels kommen über tr()/t().
+ *     → Selbst bei korrekt gesetztem Locale bleiben einzelne EN-Tokens
+ *       bestehen (bewusst, aber relevant für konsistente i18n-Wahrnehmung).
+ *
+ * ======================================================================= */
+
 
 
 "use client";

@@ -1,3 +1,109 @@
+/*** =======================================================================
+ *  INVENTUS INDEX — lib/i18n.ts
+ *  Screening · Struktur · Sprach-Hotspots
+ * ======================================================================= 
+ *
+ *  [ANCHOR:0]  IMPORTS  
+ *              – Anbauten (PowerPrompts/Hero/KPI/Testimonials) an i18n
+ *              – Potenzielles Drift-Risiko durch Mischen zweier i18n-Welten
+ *
+ *  [ANCHOR:1]  TYPEN 
+ *              – Dict = Record<string,string>
+ *              – Chat-System arbeitet rein string-basiert (Legacy)
+ *
+ *  [ANCHOR:2]  LEGACY-UI-DICTS (13 Sprachen) 
+ *              – Grundlage des Chat-/Säulen-Systems
+ *              – Subscription nutzt dieses System NICHT
+ *
+ *  [ANCHOR:3]  DICTS (Legacy)  
+ *              – Einziger Sprachspeicher für Chat & Säule
+ *              – Wenn currentLocale nicht passt → Fallback EN
+ *
+ *  [ANCHOR:4]  PROMPT-ATTACH (Legacy)
+ *              – attachPrompts(DICTS)
+ *              – Prompt-Felder werden dynamisch angehängt
+ *
+ *  [ANCHOR:5]  LOCALE-TYPE  
+ *              – Locale = string (ungebunden)
+ *              – Erlaubt Werte außerhalb von DICTS → potenzieller Drift
+ *
+ *  [ANCHOR:6]  STORAGE_KEY  
+ *              – “mpathy:locale”
+ *              – Wenn EXPLICIT im localStorage gesetzt → Chat locked auf EN
+ *
+ *  [ANCHOR:7]  toBase()  
+ *              – Entfernt Regionen wie “de-DE” → “de”
+ *
+ *  [ANCHOR:8]  UX_LOCALES & isSupported()  
+ *              – UX_LOCALES wird erst später gesetzt
+ *              – detectInitialLocale nutzt sie zu früh → EN-Fixierung möglich
+ *
+ *  [ANCHOR:9]  negotiateLocaleFromBrowser()  
+ *              – Browser-Sprachen → Locale
+ *              – Drift möglich zwischen Chat/Subscription
+ *
+ *  [ANCHOR:10] detectInitialLocale()  
+ *              – Erst localStorage, dann Browser, dann EN
+ *              – Subscription ruft das NIE → getrennte Welten
+ *
+ *  [ANCHOR:11] currentLocale (GLOBAL)  
+ *              – Single Source of Truth für Chat-System
+ *              – Subscription hat eigenen LanguageProvider → Drift
+ *
+ *  [ANCHOR:12] getLocale()
+ *              – Gibt CURRENT Chat-Locale zurück
+ *
+ *  [ANCHOR:13] setLocale(locale)
+ *              – Setzt Locale global
+ *              – Speichert in localStorage
+ *              – Feuert Events: mpathy:i18n:change / explicit
+ *              – Subscription reagiert NICHT auf diese Events
+ *
+ *  [ANCHOR:14] t(key)
+ *              – MISCHLOGIK:
+ *                ui = DICTS[currentLocale]
+ *                ux = dict[currentLocale]
+ *                → Chat + Subscription-Keys gemischt
+ *              – Drift-Hotspot Nr. 1
+ *
+ *  [ANCHOR:15] tr(key)
+ *              – fallback + Key-Erweiterung
+ *
+ *  [ANCHOR:16] availableLocales
+ *              – Keys aus DICTS (Legacy)
+ *              – Subscription-Dict wird hier NICHT berücksichtigt
+ *
+ *  [ANCHOR:17] attachLocaleWatchers()
+ *              – Listener auf <html lang> & languagechange
+ *              – Subscription schreibt <html lang> manuell → Drift possible
+ *
+ *  [ANCHOR:18] AUTO-INITIALIZATION (Client)
+ *              – Setzt <html lang> automatisch basierend auf Browser
+ *              – Kann Locale überschreiben, bevor Switcher setzt
+ *
+ *  [ANCHOR:19] SUBSCRIPTION/UX-DICT (dict)
+ *              – Volles zweites i18n-System (13 Sprachen)
+ *              – Hero/KPI/Testimonials/PowerPrompts/Prompts angehängt
+ *              – UX_LOCALES = Object.keys(dict)
+ *              – Subscription nutzt dieses System unabhängig vom Legacy-System
+ *
+ * ======================================================================= 
+ *  ERKENNBARER FEHLERZU­SAMMENHANG (Inventur)
+ * 
+ *  1) Chat bleibt auf EN:
+ *     – Chat hängt ausschließlich an DICTS + currentLocale
+ *     – detectInitialLocale + Browser-negotiation + EXPLICIT-Flag können Locale
+ *       auf EN locken, trotz Switcher → Drift
+ *
+ *  2) Subscription übersetzt nur Navi:
+ *     – Subscription nutzt dict + LanguageProvider
+ *     – Nur Navigation nutzt setLang()
+ *     – Rest der Subscription liest ggf. dict[locale], DE aber getLocale nie
+ *       → zweite Sprachnorm, entkoppelt vom Chat
+ *
+ * ======================================================================= */
+
+
 import { attachPowerPrompts } from "./i18n.powerprompt";
 import { attachHero } from "./i18n.hero";
 import { attachKpi } from "./i18n.kpi";
@@ -1170,7 +1276,6 @@ const DICTS = {
 } as const;
 
 
-
 // Prompt-Templates an Legacy-Dict anhängen (EN-only)
 attachPrompts(DICTS as any);
 
@@ -1179,10 +1284,12 @@ export type Locale = string;
 
 const STORAGE_KEY = "mpathy:locale";
 
+
 // Mappt "de-AT" → "de"
 function toBase(tag: string): string {
   return String(tag || "").toLowerCase().split("-")[0];
 }
+
 
 // Locale-Cache (wird nach dict-Init befüllt; vermeidet TDZ)
 let UX_LOCALES: string[] = ["en"];
@@ -1241,7 +1348,17 @@ export function setLocale(locale: Locale) {
   currentLocale = toBase(locale);
   if (typeof window !== "undefined") {
     window.localStorage.setItem(STORAGE_KEY, currentLocale);
-    window.dispatchEvent(new CustomEvent("mpathy:i18n:change", { detail: { locale: currentLocale } }));
+
+    // Spiegel: <html lang> folgt immer dem zentralen Sprachkern
+    try {
+      document.documentElement.lang = currentLocale;
+    } catch {
+      // kein Hard-Fail, falls document nicht verfügbar ist
+    }
+
+    window.dispatchEvent(
+      new CustomEvent("mpathy:i18n:change", { detail: { locale: currentLocale } }),
+    );
     window.dispatchEvent(new CustomEvent("mpathy:i18n:explicit"));
   }
 }
@@ -1251,6 +1368,7 @@ export function setLocale(locale: Locale) {
  * Keep the type open so unknown keys don't break the build.
  */
 export function t(key: string): string {
+
   // Tipp: DICTS enthält legacy en/de, currentLocale ist string → typisierter Zugriff
   const uiDicts = DICTS as unknown as Record<string, Dict>;
   const ui = uiDicts[currentLocale] ?? en;                     // Legacy-UI

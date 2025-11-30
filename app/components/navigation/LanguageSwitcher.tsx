@@ -1,6 +1,183 @@
 // app/components/navigation/LanguageSwitcher.tsx
 "use client";
 
+
+/*** =======================================================================
+ *  INVENTUS INDEX — app/components/navigation/LanguageSwitcher.tsx
+ *  Screening · Struktur · Sprach-Hotspots (Language Switcher)
+ * ======================================================================= 
+ *
+ *  [ANCHOR:0]  IMPORTS
+ *              – React (useEffect, useMemo, useRef, useState)
+ *              – useLang, Lang aus "@/app/providers/LanguageProvider"
+ *              – navDict aus "@/lib/i18n.navigation"
+ *              – setLocale aus "@/lib/i18n"
+ *
+ *              Sprachrelevanz:
+ *              – useLang/setLang  → Subscription-/Navigation-Welt
+ *              – setLocale        → globales Chat-/Legacy-i18n (DICTS)
+ *              – navDict          → eigenes i18n für Navigationslabels
+ *
+ *              → Diese Datei ist die zentrale KREUZUNG von:
+ *                1) LanguageProvider
+ *                2) Navigation-i18n
+ *                3) globalem Chat-i18n (lib/i18n)
+ *
+ *  [ANCHOR:1]  LANG_ORDER & FLAGS
+ *              – LANG_ORDER: feste Reihenfolge aller 13 Sprachen (en…hi)
+ *              – FLAGS: Zuordnung Lang → Flaggen-Emoji
+ *
+ *              Sprachrelevanz:
+ *              – Definiert, welche Sprachen der Switcher überhaupt anbietet.
+ *              – Muss mit SUP in LanguageProvider & DICTS/dict in lib/i18n
+ *                konsistent bleiben, ist aber hier autark.
+ *
+ *  [ANCHOR:2]  OPTION-TYP
+ *              type Option = { code: Lang; flag: string; label: string }
+ *
+ *              – Nutzt Lang (aus LanguageProvider) als Sprachcode-Typ.
+ *              – label kommt aus navDict[…].nav.language.label.
+ *
+ *  [ANCHOR:3]  LanguageSwitcher() – State & Context
+ *              const { lang, setLang } = useLang();
+ *              const [open, setOpen] = useState(false);
+ *              const [openMobile, setOpenMobile] = useState(false);
+ *              const [reducedMotion, setReducedMotion] = useState(false);
+ *              const rootRef = useRef<HTMLDivElement | null>(null);
+ *
+ *              Sprachrelevanz:
+ *              – lang stammt aus LanguageProvider (Subscription-/Nav-Kontext).
+ *              – NICHT direkt aus lib/i18n.getLocale().
+ *
+ *  [ANCHOR:4]  NAV-DICT (navDict + options)
+ *              const activeLocale = navDict[lang] ?? navDict.en;
+ *              const ariaLabels = activeLocale.nav.language;
+ *
+ *              const options = useMemo(() => {
+ *                return LANG_ORDER.map(code => {
+ *                  const loc = navDict[code] ?? navDict.en;
+ *                  return {
+ *                    code,
+ *                    flag: FLAGS[code],
+ *                    label: loc.nav.language.label,
+ *                  };
+ *                });
+ *              }, []);
+ *
+ *              const active = useMemo(
+ *                () => options.find(o => o.code === lang) ?? options[0],
+ *                [lang, options]
+ *              );
+ *
+ *              Sprachrelevanz:
+ *              – Anzeige (Label/Flaggen/ARIA-Texte) hängt von navDict ab.
+ *              – navDict ist ein eigenes i18n-System (Navigation-spezifisch),
+ *                losgelöst von DICTS (Chat) und dict (Subscription).
+ *              – Wechsel der UI-Sprache in der Navi sichtbar, auch wenn
+ *                der Rest der App nicht synchron mitzieht.
+ *
+ *  [ANCHOR:5]  REDUCED-MOTION-EFFEKT
+ *              – Liest prefers-reduced-motion und setzt reducedMotion.
+ *              – Nur Animationsverhalten, keine Sprachlogik.
+ *
+ *  [ANCHOR:6]  OUTSIDE-CLICK-HANDLER (Desktop)
+ *              – Schließt Desktop-Dropdown bei Klick außerhalb.
+ *              – Keine Sprachrelevanz.
+ *
+ *  [ANCHOR:7]  handleSelect(next: Lang)
+ *              function handleSelect(next: Lang) {
+ *                if (next === lang) {
+ *                  setOpen(false);
+ *                  setOpenMobile(false);
+ *                  return;
+ *                }
+ *
+ *                // Subscription-Welt (LanguageProvider)
+ *                setLang(next);
+ *
+ *                // Chat-/Legacy-Welt (Säule, page2 etc.) – globales Locale synchronisieren
+ *                setLocale(next);
+ *
+ *                // HTML lang-Attribut für A11y & Browser-Hints mitziehen
+ *                if (typeof document !== "undefined") {
+ *                  try {
+ *                    document.documentElement.lang = next;
+ *                  } catch {
+ *                    // silent
+ *                  }
+ *                }
+ *
+ *                setOpen(false);
+ *                setOpenMobile(false);
+ *              }
+ *
+ *              Sprachrelevanz (zentraler Hotspot):
+ *              – setLang(next): 
+ *                  · ändert NUR den LanguageProvider-Context.
+ *                  · beeinflusst Subscription-/Navigation-UI (useLang().t()).
+ *              – setLocale(next):
+ *                  · setzt currentLocale + mpathy:locale in lib/i18n.ts.
+ *                  · feuert Events (mpathy:i18n:change / explicit).
+ *                  · beeinflusst Chat/Säule/Legacy-t().
+ *              – document.documentElement.lang = next:
+ *                  · zweiter Schreiber für <html lang> neben
+ *                    lib/i18n.attachLocaleWatchers() & LanguageProvider.
+ *
+ *              → Diese Funktion versucht aktuell, DREI Systeme gleichzeitig
+ *                zu steuern (LanguageProvider, lib/i18n, DOM-lang).
+ *                → Hoher Drift-Risiko, wenn andere Stellen ebenfalls Locale
+ *                   setzen oder auf eigene Quellen (Browser, Cookies) hören.
+ *
+ *  [ANCHOR:8]  DESKTOP-Tail (md:flex)
+ *              – Button zeigt:
+ *                  · active.flag
+ *                  · active.code
+ *                  · Pfeil ▾
+ *              – Dropdown listet alle Optionen (options), ruft handleSelect.
+ *
+ *              Sprachrelevanz:
+ *              – Sichtbarer Nachweis, dass setLang(next) wirkt:
+ *                · Label/Flagge ändern sich bei Klick.
+ *              – Keine direkte Kopplung zum restlichen UI-i18n in dieser Datei
+ *                – nur Navigationsebene.
+ *
+ *  [ANCHOR:9]  MOBILE-Dropdown (md:hidden)
+ *              – Ähnlich wie Desktop, aber als zentriertes Overlay.
+ *              – ruft ebenfalls handleSelect(opt.code) für jede Option.
+ *
+ *              Sprachrelevanz:
+ *              – Gleiche Sprachlogik wie Desktop, andere Darstellung.
+ *
+ * =======================================================================
+ *  ERKENNBARER FEHLERZU­SAMMENHANG (Inventur, keine Lösung)
+ *
+ *  1) Chat-Seite bleibt EN:
+ *     – handleSelect ruft zwar setLocale(next), aber:
+ *       · Wenn page2/page.tsx seine eigene Sprache aus getBrowserLang()
+ *         oder einem lokalen State bezieht (statt aus getLocale()/Events),
+ *         kann der Chat visuell auf EN hängen bleiben, obwohl hier
+ *         setLocale(next) korrekt aufgerufen wird.
+ *     – useLang() im Chat-Baum funktioniert nur, wenn dort ein
+ *       LanguageProvider aktiv ist – sonst bleibt lang="en" (Default-Context).
+ *
+ *  2) Subscription-Seite übersetzt nur Navigation:
+ *     – Navigation/LanguageSwitcher nutzen setLang(next) + navDict.
+ *       → Navigation-Labels aktualisieren sich korrekt.
+ *     – Subscription-Hauptinhalt (Hero, KPI, Testimonials, etc.) basiert
+ *       auf providerDict + detectLocale(), nicht auf lang und nicht
+ *       direkt auf setLocale().
+ *       → Navigation folgt LanguageSwitcher, Rest der Seite folgt
+ *         einer separaten Locale-Quelle.
+ *
+ *  3) Mehrfachschreiber für <html lang>:
+ *     – LanguageProvider.applyLang() setzt document.documentElement.lang.
+ *     – lib/i18n.attachLocaleWatchers() setzt document.documentElement.lang.
+ *     – LanguageSwitcher.handleSelect() setzt document.documentElement.lang.
+ *     → Drei Stellen schreiben potentiell unterschiedliche Werte,
+ *       abhängig von localStorage, Cookies, Browser-Sprache oder Userklick.
+ *
+ * ======================================================================= */
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLang, type Lang } from "@/app/providers/LanguageProvider";
 import { dict as navDict } from "@/lib/i18n.navigation";

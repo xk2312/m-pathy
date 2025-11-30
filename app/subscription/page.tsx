@@ -1,4 +1,108 @@
 "use client";
+/*** =======================================================================
+ *  INVENTUS INDEX — app/subscription/page.tsx
+ *  Screening · Struktur · Sprach-Hotspots (Subscription-Seite)
+ * ======================================================================= 
+ *
+ *  [ANCHOR:0]  IMPORTS (i18n · Provider · Module)
+ *              – import { dict } from "@/lib/i18n"
+ *              – import { LanguageProvider } from "@/app/providers/LanguageProvider"
+ *              – import modes15 / experts13 (zusätzliche i18n-Module)
+ *              → Subscription arbeitet mit EIGENEM i18n-System (dict),
+ *                unabhängig vom Legacy-Chat-System (DICTS).
+ *
+ *  [ANCHOR:1]  DYNAMIC IMPORT (MPathyKpiBoard)
+ *              – Client-only wegen Recharts
+ *              – Neutral in Bezug auf Sprache
+ *
+ *  [ANCHOR:2]  detectLocale()
+ *              – liest navigator.language → "de", "en", …
+ *              – nutzt NUR dict (Subscription-i18n)
+ *              – verwendet NICHT getLocale() aus lib/i18n
+ *              → **Erste Sprachquelle** (Subscription-spezifisch)
+ *              → **Drift-Hotspot #1**: Chat-Locale und Subscription-Locale
+ *                können hier auseinanderlaufen.
+ *
+ *  [ANCHOR:3]  flattenI18n()
+ *              – wandelt verschachtelte Subscription-i18n-Strukturen
+ *                in flache Key-Maps um.
+ *              – Reine Datenvorbereitung; kein Drift, aber doppelte i18n-Struktur.
+ *
+ *  [ANCHOR:4]  SubscriptionPage() – useEffect (enable-scroll)
+ *              – Kein i18n, nur Layout.
+ *
+ *  [ANCHOR:5]  LOCALE (Subscription)
+ *              const locale = detectLocale()
+ *              – Zentrale Variable der Subscription-Seite
+ *              – Hängt NICHT am LanguageSwitcher
+ *              – Wird NICHT durch setLocale (lib/i18n) beeinflusst
+ *              → **Drift-Hotspot #2**:
+ *                Subscription zeigt nur die Sprache, die DER BROWSER liefert,
+ *                NICHT die Sprache, die der User über den LanguageSwitcher wählt.
+ *
+ *  [ANCHOR:6]  FLATTENED DICTS (Subscription)
+ *              enFlat, enModesFlat, enExpertsFlat
+ *              locFlat, locModesFlat, locExpertsFlat
+ *              – Flaches i18n-System ausschließlich für Subscription
+ *              – Ist UNABHÄNGIG von DICTS (Chat)
+ *
+ *  [ANCHOR:7]  providerDict (useMemo)
+ *              – Baut finale Subscription-i18n-Map:
+ *                base = { en: {...}, [locale]: {...}, all others... }
+ *              – Verwendet ausschließlich dict/modes15/experts13
+ *              – Sprache basiert weiterhin auf detectLocale()
+ *              – KEINE Kopplung zu getLocale() oder globalem Locale
+ *              → **Drift-Hotspot #3**:
+ *                LanguageSwitcher (setLang) ändert NUR Navigation,
+ *                NICHT providerDict (da locale nicht von setLang stammt).
+ *
+ *  [ANCHOR:8]  LanguageProvider dict={providerDict}
+ *              – Bindet Subscription an EIGENES i18n-System
+ *              – Chat-Events (mpathy:i18n:change) oder setLocale()
+ *                erreichen dieses System NICHT.
+ *              → **Drift-Hotspot #4**:
+ *                Subscription-Module (Hero, Testimonial, PowerPrompts usw.)
+ *                folgen NICHT dem LanguageSwitcher.
+ *
+ *  [ANCHOR:9]  Navigation (oberhalb main)
+ *              – Navigation selbst nutzt useLang() → LanguageProvider
+ *              – Reagiert auf setLang() → funktioniert
+ *              – Rest der Seite nutzt dict → Sprache bleibt die vom Browser
+ *              → Erklärung, warum NUR die Navigation korrekt übersetzt.
+ *
+ *  [ANCHOR:10]  HERO / TESTIMONIAL / EXPERTS / MODES / POWERPROMPTS / SUBSCRIBE
+ *              – All diese Komponenten ziehen ihre Texte über useLang().t()
+ *                aus providerDict (Subscription-i18n)
+ *              – Da providerDict → locale (detectLocale) → Browser,
+ *                ändern diese Komponenten NICHT die Sprache,
+ *                wenn der User im LanguageSwitcher klickt.
+ *              → **Drift-Hotspot #5 (größter Fehler)**:
+ *                UI bleibt EN, während Navigation übersetzt.
+ *
+ *  [ANCHOR:11]  FOOTER
+ *              – Ebenfalls via providerDict → folgt detectLocale
+ *              – Kein Einfluss durch setLocale()
+ *
+ * =======================================================================
+ *  ERKENNBARER FEHLERZU­SAMMENHANG (Inventur, ohne Lösung)
+ *
+ *  1) Subscription übersetzt nur die Navigation:
+ *     – Navigation nutzt setLang() → LanguageProvider
+ *     – LanguageProvider nutzt NICHT detectLocale()
+ *     – Rest der Seite nutzt providerDict → basiert auf detectLocale()
+ *     → Zwei verschiedene Sprachquellen:
+ *        (a) Navigation → setLang()
+ *        (b) Subscription-UI → detectLocale()
+ *
+ *  2) Subscription reagiert NICHT auf globales setLocale():
+ *     – global setLocale() (LanguageSwitcher) feuert mpathy:i18n:change
+ *     – Subscription hört NICHT auf dieses Event
+ *     – Subscription liest locale NIE aus getLocale()
+ *
+ *  3) providerDict hängt 100% an detectLocale()
+ *     – Sprache bleibt EN, auch wenn User auf DE/FR/ES/… klickt
+ *
+ * ======================================================================= */
 
 import { useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
