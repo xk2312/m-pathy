@@ -12,8 +12,8 @@ const promptDict = {
     "prompts.modeDefault":
       "Reset everything to default and give me a brief status.",
     "prompts.councilIntro":
-      "Please let each of the 13 AIs of Council13 welcome me heartly. Show me the name of each one and who it is feauturing. Show me an nice table and answer short please.",
-    "prompts.modeGeneric":
+    "Vote the decision through Council 13. Let every 13 AIs answer: 1. For what do you vote 2. WhyLet Palantir make a summary with nice table. If you don’t know what to vote for, ask the User and explain him, that he can Use the Button Council13 if he has to decide something and wants the COUNCIL13 to help him with the decision.",
+     "prompts.modeGeneric":
       "Mode {label}: What is this {label} mode for and how is it helping me? Answer short please.",
     "prompts.expertAskTemplate":
       "{expert}, Tell me the 13 fields of deep expertise, and what you can do for me what noone else could do. Show me an nice table and answer short please and beginn with - Welcome in the field of (her you paste your field)...",
@@ -24,7 +24,7 @@ const promptDict = {
     "prompts.modeDefault":
         "Setze alles auf Standard zurück und gib mir einen kurzen Status.",
     "prompts.councilIntro":
-        "Bitte lass jede der 13 KIs des Council13 mich herzlich begrüßen. Zeige mir den Namen jeder KI und wen sie featured. Zeige mir eine schöne Tabelle und antworte kurz.",
+        "Lasse den Beschluss durch den Rat 13 abstimmen. Lasse alle 13 KIs antworten: 1. Wofür stimmst du? 2. Warum? Lasse Palantir eine Zusammenfassung mit einer schönen Tabelle erstellen. Wenn du nicht weißt, wofür du stimmen sollst, frage den Benutzer und erkläre ihm, dass er den Rat13-Knopf verwenden kann, wenn er etwas entscheiden muss und möchte, dass der Rat13 ihm bei der Entscheidung hilft.",
     "prompts.modeGeneric":
         "Modus {label}: Wofür ist dieser {label}-Modus da und wie hilft er mir? Antworte kurz.",
     "prompts.expertAskTemplate":
@@ -36,7 +36,7 @@ const promptDict = {
     "prompts.modeDefault":
         "Réinitialise tout par défaut et donne-moi un bref statut.",
     "prompts.councilIntro":
-        "Merci de demander à chacune des 13 IA du Council13 de me souhaiter la bienvenue. Montre-moi leur nom et leur collaboration. Affiche un joli tableau et réponds brièvement.",
+        "Soumettez la décision au vote du Conseil 13. Demandez aux 13 IA de répondre: 1. Pour quoi votez-vous? 2. Pourquoi? Laissez Palantir faire un résumé avec un joli tableau. Si vous ne savez pas pour quoi voter, demandez à l'Utilisateur et expliquez-lui qu'il peut utiliser le bouton Conseil13 s'il doit prendre une décision et souhaite que le Conseil13 l'aide à décider.",
     "prompts.modeGeneric":
         "Mode {label} : À quoi sert ce mode {label} et comment m’aide-t-il ? Réponds brièvement.",
     "prompts.expertAskTemplate":
@@ -48,7 +48,7 @@ const promptDict = {
     "prompts.modeDefault":
         "Restablece todo a los valores predeterminados y dame un estado breve.",
     "prompts.councilIntro":
-        "Por favor, permite que cada una de las 13 IA del Council13 me dé la bienvenida. Muéstrame el nombre de cada una y con quién colabora. Muestra una tabla bonita y responde de forma breve.",
+        "Vote la decisión a través del Consejo 13. Deje que las 13 IAs respondan: 1. ¿Por qué vota? 2. ¿Por qué? Deje que Palantir haga un resumen con una tabla agradable. Si no sabe por qué votar, pregúntele al Usuario y explíquele que puede usar el botón Consejo13 si tiene que decidir algo y quiere que el Consejo13 le ayude con la decisión.",
     "prompts.modeGeneric":
         "Modo {label}: ¿Para qué sirve este modo {label} y cómo me ayuda? Responde de forma breve.",
     "prompts.expertAskTemplate":
@@ -60,7 +60,7 @@ const promptDict = {
     "prompts.modeDefault":
         "Reimposta tutto ai valori predefiniti e dammi uno stato breve.",
     "prompts.councilIntro":
-        "Per favore lascia che ognuna delle 13 IA del Council13 mi dia il benvenuto. Mostrami il nome di ciascuna e la sua collaborazione. Mostra una bella tabella e rispondi brevemente.",
+        "Vota la decisione attraverso il Consiglio 13. Lascia che tutte le 13 IA rispondano: 1. Per cosa voti? 2. Perché? Lascia che Palantir faccia un riepilogo con una bella tabella. Se non sai per cosa votare, chiedi all'Utente e spiegagli che può usare il pulsante Consiglio13 se deve decidere qualcosa e vuole che il Consiglio13 lo aiuti con la decisione.",
     "prompts.modeGeneric":
         "Modalità {label}: A cosa serve questa modalità {label} e come mi aiuta? Rispondi brevemente.",
     "prompts.expertAskTemplate":
@@ -73,7 +73,7 @@ const promptDict = {
     "prompts.modeDefault":
         "Redefina tudo para o padrão e dê-me um breve status.",
     "prompts.councilIntro":
-        "Por favor, permita que cada uma das 13 IAs do Council13 me dê as boas-vindas. Mostre o nome de cada uma e com quem ela se apresenta. Mostre uma boa tabela e responda brevemente.",
+        "Vote a decisão através do Conselho 13. Deixe que todas as 13 IAs respondam: 1. Em que vota? 2. Porquê? Deixe Palantir fazer um resumo com uma boa tabela. Se não souber em que votar, pergunte ao Utilizador e explique-lhe que ele pode usar o botão Conselho13 se tiver que decidir algo e quiser que o Conselho13 o ajude na decisão.",
     "prompts.modeGeneric":
         "Modo {label}: Para que serve este modo {label} e como ele me ajuda? Responda brevemente.",
     "prompts.expertAskTemplate":
@@ -85,7 +85,7 @@ const promptDict = {
     "prompts.modeDefault":
         "Reset alles naar standaard en geef me een korte status.",
     "prompts.councilIntro":
-        "Laat alsjeblieft alle 13 AI’s van Council13 mij welkom heten. Laat de naam van elke AI zien en waarmee zij samenwerken. Toon een mooie tabel en antwoord kort.",
+        "Breng de beslissing ter stemming in de Raad 13. Laat alle 13 AI's antwoorden: 1. Waarvoor stem je? 2. Waarom? Laat Palantir een samenvatting maken met een mooie tabel. Als je niet weet waarvoor je moet stemmen, vraag het de Gebruiker en leg hem uit dat hij de Raad13-knop kan gebruiken als hij iets moet beslissen en wil dat de Raad13 hem helpt bij de beslissing.",
     "prompts.modeGeneric":
         "Modus {label}: Waar dient deze {label}-modus voor en hoe helpt hij mij? Antwoord kort.",
     "prompts.expertAskTemplate":
@@ -97,7 +97,7 @@ const promptDict = {
     "prompts.modeDefault":
         "Сбрось всё к стандартным настройкам и дай мне краткий статус.",
     "prompts.councilIntro":
-        "Пусть каждая из 13 ИИ Council13 поприветствует меня. Покажи их имена и с кем они работают. Покажи красивую таблицу и ответь кратко.",
+        "Проголосуйте за решение через Совет 13. Пусть все 13 ИИ ответят: 1. За что вы голосуете? 2. Почему? Позвольте Палантиру составить резюме с красивой таблицей. Если вы не знаете, за что голосовать, спросите Пользователя и объясните ему, что он может использовать кнопку Совет13, если ему нужно что-то решить и он хочет, чтобы Совет13 помог ему с этим решением.",
     "prompts.modeGeneric":
         "Режим {label}: Для чего этот режим {label} и как он помогает мне? Ответь кратко.",
     "prompts.expertAskTemplate":
@@ -109,7 +109,7 @@ const promptDict = {
     "prompts.modeDefault":
         "将所有内容重置为默认值，并给我一个简短的状态。",
     "prompts.councilIntro":
-        "请让 Council13 的 13 个 AI 逐一向我问候。展示每个 AI 的名称及其协作对象。请显示一个漂亮的表格，并简短回答。",
+        "将该决定交由理事会13投票。让所有13个AI回答：1. 你投票支持什么？2. 为什么？让帕兰提尔制作一份带有精美表格的摘要。如果你不知道投什么票，询问用户并向他解释，如果他需要决定某事并希望理事会13帮助他做出决定，他可以使用理事会13按钮。",
     "prompts.modeGeneric":
         "模式 {label}：此模式 {label} 的用途是什么，它如何帮助我？请简短回答。",
     "prompts.expertAskTemplate":
@@ -121,7 +121,7 @@ const promptDict = {
     "prompts.modeDefault":
         "すべてをデフォルトにリセットし、簡単なステータスを教えてください。",
     "prompts.councilIntro":
-        "Council13 の 13 の AI が私を歓迎するようにしてください。それぞれの名前と特徴を示し、きれいなテーブルを表示して、短く答えてください。",
+        "その決定を評議会13で投票してください。13のAIすべてに回答させてください：1. 何に投票しますか？ 2. なぜですか？ パランティアに素敵な表付きの要約を作成させてください。何に投票すべきかわからない場合は、ユーザーに尋ね、何かを決定する必要があり、評議会13にその決定を手伝ってもらいたい場合は、評議会13ボタンを使用できると説明してください。",
     "prompts.modeGeneric":
         "モード {label}: この {label} モードは何のためにあり、どのように役立ちますか？ 簡潔に答えてください。",
     "prompts.expertAskTemplate":
@@ -133,7 +133,7 @@ const promptDict = {
     "prompts.modeDefault":
         "모든 설정을 초기화하고 짧은 상태를 알려주세요.",
     "prompts.councilIntro":
-        "Council13의 13개 AI가 저를 환영하도록 해주세요. 각 AI의 이름과 특징을 보여주시고, 보기 좋은 표를 표시한 뒤 짧게 답변해주세요.",
+            "평의회 13을 통해 결정을 투표하십시오. 13개의 AI가 모두 다음 질문에 답하도록 하십시오: 1. 무엇에 투표합니까? 2. 왜 그렇습니까? 팔란티르가 멋진 표와 함께 요약을 만들도록 하십시오. 무엇에 투표해야 할지 모른다면, 사용자에게 묻고 그가 무언가를 결정해야 하고 평의회 13이 그 결정에 도움을 주기를 원한다면 평의회 13 버튼을 사용할 수 있다고 그에게 설명하십시오.",
     "prompts.modeGeneric":
         "모드 {label}: 이 {label} 모드는 무엇을 위한 것이며 어떻게 저를 돕나요? 짧게 답변해주세요.",
     "prompts.expertAskTemplate":
@@ -146,7 +146,7 @@ const promptDict = {
     "prompts.modeDefault":
         "أعد كل شيء إلى الوضع الافتراضي وأخبرني بحالة مختصرة.",
     "prompts.councilIntro":
-        "يرجى السماح لكل واحدة من الـ 13 ذكاءً اصطناعياً في Council13 بالترحيب بي. اعرض أسماءهم وما يميز كل واحد منهم، وقدم جدولاً لطيفاً وأجب بإيجاز.",
+        "صوّت على القرار من خلال المجلس 13. دع جميع أنظمة الذكاء الاصطناعي الـ 13 تجيب: 1. على ماذا تصوّت؟ 2. لماذا؟ دع بالانتير يقوم بإعداد ملخص بجدول جميل. إذا كنت لا تعرف على ماذا تصوّت، اسأل المستخدم واشرح له أنه يمكنه استخدام زر المجلس 13 إذا كان عليه أن يقرر شيئًا ويريد من المجلس 13 مساعدته في اتخاذ القرار.",
     "prompts.modeGeneric":
         "وضع {label}: ما الغرض من هذا الوضع {label} وكيف يساعدني؟ يرجى الإجابة بإيجاز.",
     "prompts.expertAskTemplate":
@@ -158,7 +158,7 @@ const promptDict = {
     "prompts.modeDefault":
         "सब कुछ डिफ़ॉल्ट पर रीसेट करें और मुझे एक छोटा स्टेटस दें।",
     "prompts.councilIntro":
-        "कृपया Council13 की सभी 13 AI को मेरा स्वागत करने दें। प्रत्येक का नाम और वे किसके साथ जुड़े हैं, दिखाएँ। एक सुंदर तालिका दिखाएँ और संक्षेप में उत्तर दें।",
+        "निर्णय को परिषद 13 के माध्यम से वोट करें। सभी 13 एआई को उत्तर देने दें: 1. आप किसके लिए वोट करते हैं? 2. क्यों? पालान्तिर को एक अच्छी तालिका के साथ एक सारांश बनाने दें। यदि आप नहीं जानते कि किसके लिए वोट करना है, तो उपयोगकर्ता से पूछें और उसे समझाएं कि अगर उसे कुछ तय करना है और वह चाहता है कि परिषद 13 उसे निर्णय लेने में मदद करे, तो वह परिषद 13 बटन का उपयोग कर सकता है।",
     "prompts.modeGeneric":
         "मोड {label}: यह {label} मोड किसके लिए है और यह मेरी कैसे मदद करता है? कृपया छोटा उत्तर दें।",
     "prompts.expertAskTemplate":
