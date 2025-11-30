@@ -227,10 +227,10 @@ export default function SubscriptionPage() {
         <div
   className="subscription-root px-[clamp(10px,4vw,90px)] pb-[clamp(20px,5vw,90px)]"
 >
-    {/* SUPER BUFFER 382px */}
+    {/* SUPER BUFFER 210px */}
   <div
     aria-hidden="true"
-    style={{ height: "var(--h-gap-xl)" }}
+    style={{ height: "var( --h-gap-md)" }}
   />
 
   {/* ─────────────── HERO ─────────────── */}

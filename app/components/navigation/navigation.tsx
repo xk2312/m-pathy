@@ -279,24 +279,39 @@ export default function Navigation() {
     pathname?.startsWith("/page2") ||
     false;
 
-  // Chat-Speziallayout nur am Desktop (Säule rechts),
+  // Chat-Speziallayout nur am Desktop (Säule rechts/links je nach Sprache),
   // Mobile verhält sich wie Subscription.
   const isChatStageLayout = isChatLayout && isDesktop;
 
+  // Einzige RTL-Sprache aktuell: Arabisch
+  const isRTL = lang === "ar";
+
   const headerStyle: React.CSSProperties = isChatStageLayout
-    ? {
-        position: "fixed",
-        top: 0,
-        left: "var(--saeule-w, 320px)",
-        right: 0,
-        zIndex: 40,
-      }
+    ? isRTL
+      ? {
+          // RTL: Säule steht rechts → Navi nimmt die linke Bühne
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: "var(--saeule-w, 320px)",
+          zIndex: 40,
+        }
+      : {
+          // LTR: Säule steht links → Navi nimmt die rechte Bühne
+          position: "fixed",
+          top: 0,
+          left: "var(--saeule-w, 320px)",
+          right: 0,
+          zIndex: 40,
+        }
     : {
+        // Nicht-Chat-Layouts: volle Breite
         position: "fixed",
         top: 0,
         insetInline: 0,
         zIndex: 40,
       };
+
 
   // Living Horizon – Desktop + Chat only
   useEffect(() => {
