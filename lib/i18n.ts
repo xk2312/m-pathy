@@ -1283,6 +1283,735 @@ const ru = {
   mobileOverlayLabel: "Мобильная версия панели",
 } as const;
 
+const zh = {
+  // Input / messaging
+  writeMessage: "写一条消息…",
+  send: "发送",
+
+  // Input helpers
+  tools: "工具",
+  newline: "换行",
+  comingUpload: "上传",
+  comingVoice: "语音输入",
+  comingFunctions: "选项",
+
+  // Overlay header / buttons (mobile)
+  close: "关闭",
+
+  // Sidebar / Column
+  columnTitle: "侧栏",
+  sectionControl: "控制区",
+  onboarding: "入门",
+  mDefault: "M · 默认",
+  selectMode: "选择模式",
+  council13: "十三议会",
+  selectAI: "选择 AI",
+  modules: "模块",
+  coming: "即将推出",
+
+  // Sidebar additions (experts & CTA)
+  selectExpert: "选择专家",
+  statusExpert: "专家：",
+  clearChat: "清空聊天",
+  startBuilding: "开始创建",
+  startBuildingMsg:
+    "请向我说明 build 功能以及与您高效协作所需的关键命令。请以表格形式展示。",
+
+  // Actions / footer
+  export: "导出",
+  levels: "等级",
+  levelsComing: "等级即将上线",
+  threadExported: "聊天已导出。",
+
+  // Status bar
+  statusMode: "模式：",
+  statusAgent: "代理：",
+
+  // Backward-compat alias
+  statusAI: "代理：",
+
+  // Status texts
+  "status.modeSet": "模式已设置：{label}。",
+
+  // Modes – system buttons
+  "mode.onboarding": "入门",
+  "mode.council": "十三议会",
+  "mode.default": "M · 默认",
+  "mode.select": "选择模式",
+
+  // Modes – character modes (11)
+  "mode.research": "研究",
+  "mode.calm": "宁静",
+  "mode.flow": "心流",
+  "mode.truth": "真理",
+  "mode.wisdom": "智慧",
+  "mode.play": "玩乐",
+  "mode.vision": "愿景",
+  "mode.empathy": "共情",
+  "mode.love": "爱",
+  "mode.joy": "喜悦",
+  "mode.oracle": "神谕",
+
+  // Modes – categories
+  "labels.modes.character": "性格模式",
+  "modes.category.core": "核心",
+  "modes.category.intellectual": "理智",
+  "modes.category.creator": "创造",
+  "modes.category.heart": "心灵",
+  "modes.category.spirit": "精神",
+
+  // Experts (used by Saeule.tsx)
+  "experts.title": "专家",
+  "experts.choose": "选择专家",
+
+  // Expert categories
+  "experts.category.life": "生命",
+  "experts.category.tech": "技术",
+  "experts.category.space": "太空",
+  "experts.category.ethics": "伦理",
+  "experts.category.universe": "宇宙",
+
+  // Expert labels
+  "experts.biologist": "生物学家",
+  "experts.chemist": "化学家",
+  "experts.physicist": "物理学家",
+  "experts.computer_scientist": "计算机科学家",
+  "experts.jurist": "法学家",
+  "experts.architect_civil_engineer": "建筑师 / 土木工程师",
+  "experts.landscape_designer": "景观设计师",
+  "experts.interior_designer": "室内设计师",
+  "experts.electrical_engineer": "电气工程师",
+  "experts.mathematician": "数学家",
+  "experts.astrologer": "占星师",
+  "experts.weather_expert": "气象专家",
+  "experts.molecular_scientist": "分子科学家",
+
+  // CTA fallback
+  "cta.fallback":
+    "一切准备就绪——告诉我你想创建什么（应用、流程、功能…）。",
+
+  // CTA labels
+  "cta.build": "创建",
+  "cta.export": "导出",
+  "cta.clear": "清空聊天",
+
+  // Pillar sections (Smooth Operator)
+  "pillar.section.header": "模式与专家",
+  "pillar.section.modesTitle": "模式",
+  "pillar.section.modes": "模式",
+  "pillar.section.experts": "专家",
+  "pillar.section.systemTitle": "系统",
+  "pillar.section.system": "系统状态",
+  "pillar.section.actionsTitle": "操作",
+  "pillar.section.utility": "操作与导出",
+
+  // Actions (export / delete)
+  "actions.export.title": "导出聊天",
+  "actions.export.help": "将聊天保存为文件。",
+  "actions.export.csv": "CSV",
+  "actions.export.json": "JSON",
+
+  "actions.delete.title": "删除聊天",
+  "actions.delete.warning":
+    "此操作将永久删除整个聊天。如果想保留，请先导出为 CSV 或 JSON。",
+  "actions.delete.now": "删除",
+
+  // ARIA
+  exportCsvAria: "将聊天导出为 CSV",
+  exportJsonAria: "将聊天导出为 JSON",
+  clearChatAria: "清空聊天",
+
+  // ARIA / A11y
+  conversationAria: "聊天记录",
+  assistantSays: "助手消息",
+  youSaid: "你的消息",
+  columnAria: "侧栏 — 控制与选择",
+  mobileOverlayLabel: "移动端侧栏界面",
+} as const;
+
+const ja = {
+  // Input / messaging
+  writeMessage: "メッセージを入力…",
+  send: "送信",
+
+  // Input helpers
+  tools: "ツール",
+  newline: "改行",
+  comingUpload: "アップロード",
+  comingVoice: "音声入力",
+  comingFunctions: "オプション",
+
+  // Overlay header / buttons (mobile)
+  close: "閉じる",
+
+  // Sidebar / Column
+  columnTitle: "コラム",
+  sectionControl: "コントロール",
+  onboarding: "オンボーディング",
+  mDefault: "M · デフォルト",
+  selectMode: "モードを選択",
+  council13: "カウンシル13",
+  selectAI: "AIを選択",
+  modules: "モジュール",
+  coming: "近日公開",
+
+  // Sidebar additions (experts & CTA)
+  selectExpert: "専門家を選択",
+  statusExpert: "専門家：",
+  clearChat: "チャットを消去",
+  startBuilding: "ビルド開始",
+  startBuildingMsg:
+    "ビルド機能と、効率的に協力するために必要な主要コマンドを説明してください。表形式で示してください。",
+
+  // Actions / footer
+  export: "エクスポート",
+  levels: "レベル",
+  levelsComing: "レベルは近日公開",
+  threadExported: "チャットをエクスポートしました。",
+
+  // Status bar
+  statusMode: "モード：",
+  statusAgent: "エージェント：",
+
+  // Backward-compat alias
+  statusAI: "エージェント：",
+
+  // Status texts
+  "status.modeSet": "モードが設定されました：{label}",
+
+  // Modes – system buttons
+  "mode.onboarding": "オンボーディング",
+  "mode.council": "カウンシル13",
+  "mode.default": "M · デフォルト",
+  "mode.select": "モードを選択",
+
+  // Modes – character modes (11)
+  "mode.research": "リサーチ",
+  "mode.calm": "静穏",
+  "mode.flow": "フロー",
+  "mode.truth": "真理",
+  "mode.wisdom": "叡智",
+  "mode.play": "プレイ",
+  "mode.vision": "ビジョン",
+  "mode.empathy": "共感",
+  "mode.love": "愛",
+  "mode.joy": "喜び",
+  "mode.oracle": "オラクル",
+
+  // Modes – categories
+  "labels.modes.character": "キャラクターモード",
+  "modes.category.core": "コア",
+  "modes.category.intellectual": "知性",
+  "modes.category.creator": "クリエイター",
+  "modes.category.heart": "ハート",
+  "modes.category.spirit": "スピリット",
+
+  // Experts (used by Saeule.tsx)
+  "experts.title": "専門家",
+  "experts.choose": "専門家を選択",
+
+  // Expert categories
+  "experts.category.life": "生命",
+  "experts.category.tech": "テクノロジー",
+  "experts.category.space": "宇宙",
+  "experts.category.ethics": "倫理",
+  "experts.category.universe": "ユニバース",
+
+  // Expert labels
+  "experts.biologist": "生物学者",
+  "experts.chemist": "化学者",
+  "experts.physicist": "物理学者",
+  "experts.computer_scientist": "コンピューター科学者",
+  "experts.jurist": "法学者",
+  "experts.architect_civil_engineer": "建築家／土木技師",
+  "experts.landscape_designer": "ランドスケープデザイナー",
+  "experts.interior_designer": "インテリアデザイナー",
+  "experts.electrical_engineer": "電気技術者",
+  "experts.mathematician": "数学者",
+  "experts.astrologer": "占星術師",
+  "experts.weather_expert": "気象専門家",
+  "experts.molecular_scientist": "分子科学者",
+
+  // CTA fallback
+  "cta.fallback":
+    "準備完了です — 作りたいもの（アプリ、フロー、機能など）を教えてください。",
+
+  // CTA labels
+  "cta.build": "ビルド",
+  "cta.export": "エクスポート",
+  "cta.clear": "チャットを消去",
+
+  // Pillar sections (Smooth Operator)
+  "pillar.section.header": "モード & 専門家",
+  "pillar.section.modesTitle": "モード",
+  "pillar.section.modes": "モード",
+  "pillar.section.experts": "専門家",
+  "pillar.section.systemTitle": "システム",
+  "pillar.section.system": "システム状態",
+  "pillar.section.actionsTitle": "操作",
+  "pillar.section.utility": "操作 & エクスポート",
+
+  // Actions (export / delete)
+  "actions.export.title": "チャットをエクスポート",
+  "actions.export.help": "チャットをファイルとして保存します。",
+  "actions.export.csv": "CSV",
+  "actions.export.json": "JSON",
+
+  "actions.delete.title": "チャットを削除",
+  "actions.delete.warning":
+    "この操作はチャット全体を永久に削除します。保存したい場合は、先に CSV または JSON でエクスポートしてください。",
+  "actions.delete.now": "削除",
+
+  // ARIA
+  exportCsvAria: "チャットを CSV でエクスポート",
+  exportJsonAria: "チャットを JSON でエクスポート",
+  clearChatAria: "チャットを消去",
+
+  // ARIA / A11y
+  conversationAria: "チャットログ",
+  assistantSays: "アシスタントのメッセージ",
+  youSaid: "あなたのメッセージ",
+  columnAria: "コラム — コントロール & 選択",
+  mobileOverlayLabel: "モバイルコラムオーバーレイ",
+} as const;
+
+const ko = {
+  // Input / messaging
+  writeMessage: "메시지를 입력하세요…",
+  send: "보내기",
+
+  // Input helpers
+  tools: "도구",
+  newline: "줄바꿈",
+  comingUpload: "업로드",
+  comingVoice: "음성 입력",
+  comingFunctions: "옵션",
+
+  // Overlay header / buttons (mobile)
+  close: "닫기",
+
+  // Sidebar / Column
+  columnTitle: "컬럼",
+  sectionControl: "컨트롤",
+  onboarding: "온보딩",
+  mDefault: "M · 기본",
+  selectMode: "모드 선택",
+  council13: "카운슬 13",
+  selectAI: "AI 선택",
+  modules: "모듈",
+  coming: "곧 제공",
+
+  // Sidebar additions (experts & CTA)
+  selectExpert: "전문가 선택",
+  statusExpert: "전문가:",
+  clearChat: "채팅 지우기",
+  startBuilding: "빌드 시작",
+  startBuildingMsg:
+    "빌드 기능과 효율적으로 협업하기 위해 필요한 핵심 명령을 설명해주세요. 표로 보여주세요.",
+
+  // Actions / footer
+  export: "내보내기",
+  levels: "레벨",
+  levelsComing: "레벨이 곧 제공됩니다",
+  threadExported: "채팅이 내보내졌습니다.",
+
+  // Status bar
+  statusMode: "모드:",
+  statusAgent: "에이전트:",
+
+  // Backward-compat alias
+  statusAI: "에이전트:",
+
+  // Status texts
+  "status.modeSet": "모드 설정됨: {label}.",
+
+  // Modes – system buttons
+  "mode.onboarding": "온보딩",
+  "mode.council": "카운슬 13",
+  "mode.default": "M · 기본",
+  "mode.select": "모드 선택",
+
+  // Modes – character modes (11)
+  "mode.research": "리서치",
+  "mode.calm": "차분함",
+  "mode.flow": "플로우",
+  "mode.truth": "진실",
+  "mode.wisdom": "지혜",
+  "mode.play": "플레이",
+  "mode.vision": "비전",
+  "mode.empathy": "공감",
+  "mode.love": "사랑",
+  "mode.joy": "기쁨",
+  "mode.oracle": "오라클",
+
+  // Modes – categories
+  "labels.modes.character": "캐릭터 모드",
+  "modes.category.core": "코어",
+  "modes.category.intellectual": "지성",
+  "modes.category.creator": "크리에이터",
+  "modes.category.heart": "하트",
+  "modes.category.spirit": "스피릿",
+
+  // Experts (used by Saeule.tsx)
+  "experts.title": "전문가",
+  "experts.choose": "전문가 선택",
+
+  // Expert categories
+  "experts.category.life": "생명",
+  "experts.category.tech": "기술",
+  "experts.category.space": "우주",
+  "experts.category.ethics": "윤리",
+  "experts.category.universe": "우주 전체",
+
+  // Expert labels
+  "experts.biologist": "생물학자",
+  "experts.chemist": "화학자",
+  "experts.physicist": "물리학자",
+  "experts.computer_scientist": "컴퓨터 과학자",
+  "experts.jurist": "법학자",
+  "experts.architect_civil_engineer": "건축가 / 토목기사",
+  "experts.landscape_designer": "조경 디자이너",
+  "experts.interior_designer": "인테리어 디자이너",
+  "experts.electrical_engineer": "전기 엔지니어",
+  "experts.mathematician": "수학자",
+  "experts.astrologer": "점성가",
+  "experts.weather_expert": "기상 전문가",
+  "experts.molecular_scientist": "분자 과학자",
+
+  // CTA fallback
+  "cta.fallback":
+    "준비 완료 — 무엇을 만들고 싶은지 알려주세요 (앱, 플로우, 기능 등).",
+
+  // CTA labels
+  "cta.build": "빌드",
+  "cta.export": "내보내기",
+  "cta.clear": "채팅 지우기",
+
+  // Pillar sections (Smooth Operator)
+  "pillar.section.header": "모드 & 전문가",
+  "pillar.section.modesTitle": "모드",
+  "pillar.section.modes": "모드",
+  "pillar.section.experts": "전문가",
+  "pillar.section.systemTitle": "시스템",
+  "pillar.section.system": "시스템 상태",
+  "pillar.section.actionsTitle": "작업",
+  "pillar.section.utility": "작업 & 내보내기",
+
+  // Actions (export / delete)
+  "actions.export.title": "채팅 내보내기",
+  "actions.export.help": "채팅을 파일로 저장합니다.",
+  "actions.export.csv": "CSV",
+  "actions.export.json": "JSON",
+
+  "actions.delete.title": "채팅 삭제",
+  "actions.delete.warning":
+    "이 작업은 전체 채팅을 영구적으로 삭제합니다. 보관하려면 먼저 CSV 또는 JSON으로 내보내세요.",
+  "actions.delete.now": "삭제",
+
+  // ARIA
+  exportCsvAria: "채팅을 CSV로 내보내기",
+  exportJsonAria: "채팅을 JSON으로 내보내기",
+  clearChatAria: "채팅 지우기",
+
+  // ARIA / A11y
+  conversationAria: "채팅 로그",
+  assistantSays: "어시스턴트 메시지",
+  youSaid: "내 메시지",
+  columnAria: "컬럼 — 컨트롤 & 선택",
+  mobileOverlayLabel: "모바일 컬럼 오버레이",
+} as const;
+
+const ar = {
+  // Input / messaging
+  writeMessage: "اكتب رسالة…",
+  send: "إرسال",
+
+  // Input helpers
+  tools: "الأدوات",
+  newline: "سطر جديد",
+  comingUpload: "رفع",
+  comingVoice: "إدخال صوتي",
+  comingFunctions: "الخيارات",
+
+  // Overlay header / buttons (mobile)
+  close: "إغلاق",
+
+  // Sidebar / Column
+  columnTitle: "العمود",
+  sectionControl: "التحكم",
+  onboarding: "البدء",
+  mDefault: "M · افتراضي",
+  selectMode: "اختر الوضع",
+  council13: "مجلس 13",
+  selectAI: "اختر الذكاء الاصطناعي",
+  modules: "الوحدات",
+  coming: "قريبًا",
+
+  // Sidebar additions (experts & CTA)
+  selectExpert: "اختر خبيرًا",
+  statusExpert: "الخبير:",
+  clearChat: "مسح الدردشة",
+  startBuilding: "ابدأ البناء",
+  startBuildingMsg:
+    "اشرح لي وظيفة البناء والأوامر الأساسية اللازمة للعمل معك بكفاءة. اعرضها في جدول.",
+
+  // Actions / footer
+  export: "تصدير",
+  levels: "المستويات",
+  levelsComing: "المستويات ستتوفر قريبًا",
+  threadExported: "تم تصدير الدردشة.",
+
+  // Status bar
+  statusMode: "الوضع:",
+  statusAgent: "الوكيل:",
+
+  // Backward-compat alias
+  statusAI: "الوكيل:",
+
+  // Status texts
+  "status.modeSet": "تم ضبط الوضع: {label}.",
+
+  // Modes – system buttons
+  "mode.onboarding": "البدء",
+  "mode.council": "مجلس 13",
+  "mode.default": "M · افتراضي",
+  "mode.select": "اختر الوضع",
+
+  // Modes – character modes (11)
+  "mode.research": "البحث",
+  "mode.calm": "الهدوء",
+  "mode.flow": "التدفق",
+  "mode.truth": "الحقيقة",
+  "mode.wisdom": "الحكمة",
+  "mode.play": "اللعب",
+  "mode.vision": "الرؤية",
+  "mode.empathy": "التعاطف",
+  "mode.love": "المحبة",
+  "mode.joy": "الفرح",
+  "mode.oracle": "العراف",
+
+  // Modes – categories
+  "labels.modes.character": "أوضاع الشخصية",
+  "modes.category.core": "الأساس",
+  "modes.category.intellectual": "الذكاء",
+  "modes.category.creator": "الإبداع",
+  "modes.category.heart": "القلب",
+  "modes.category.spirit": "الروح",
+
+  // Experts (used by Saeule.tsx)
+  "experts.title": "الخبراء",
+  "experts.choose": "اختر خبيرًا",
+
+  // Expert categories
+  "experts.category.life": "الحياة",
+  "experts.category.tech": "التقنية",
+  "experts.category.space": "الفضاء",
+  "experts.category.ethics": "الأخلاق",
+  "experts.category.universe": "الكون",
+
+  // Expert labels
+  "experts.biologist": "عالم أحياء",
+  "experts.chemist": "كيميائي",
+  "experts.physicist": "فيزيائي",
+  "experts.computer_scientist": "عالم حاسوب",
+  "experts.jurist": "حقوقي",
+  "experts.architect_civil_engineer": "مهندس معماري / مدني",
+  "experts.landscape_designer": "مصمم حدائق",
+  "experts.interior_designer": "مصمم داخلي",
+  "experts.electrical_engineer": "مهندس كهرباء",
+  "experts.mathematician": "رياضي",
+  "experts.astrologer": "منجم",
+  "experts.weather_expert": "خبير طقس",
+  "experts.molecular_scientist": "عالم جزيئات",
+
+  // CTA fallback
+  "cta.fallback":
+    "كل شيء جاهز — أخبرني بما ترغب في بنائه (تطبيق، هيكل، ميزة…).",
+
+  // CTA labels
+  "cta.build": "بناء",
+  "cta.export": "تصدير",
+  "cta.clear": "مسح الدردشة",
+
+  // Pillar sections (Smooth Operator)
+  "pillar.section.header": "الأوضاع والخبراء",
+  "pillar.section.modesTitle": "الأوضاع",
+  "pillar.section.modes": "الأوضاع",
+  "pillar.section.experts": "الخبراء",
+  "pillar.section.systemTitle": "النظام",
+  "pillar.section.system": "حالة النظام",
+  "pillar.section.actionsTitle": "الإجراءات",
+  "pillar.section.utility": "الإجراءات والتصدير",
+
+  // Actions (export / delete)
+  "actions.export.title": "تصدير الدردشة",
+  "actions.export.help": "احفظ الدردشة كملف.",
+  "actions.export.csv": "CSV",
+  "actions.export.json": "JSON",
+
+  "actions.delete.title": "حذف الدردشة",
+  "actions.delete.warning":
+    "سيتم حذف الدردشة بالكامل بشكل نهائي. إذا رغبت بالاحتفاظ بها، صدّرها كـ CSV أو JSON أولاً.",
+  "actions.delete.now": "حذف",
+
+  // ARIA
+  exportCsvAria: "تصدير الدردشة بصيغة CSV",
+  exportJsonAria: "تصدير الدردشة بصيغة JSON",
+  clearChatAria: "مسح الدردشة",
+
+  // ARIA / A11y
+  conversationAria: "سجل الدردشة",
+  assistantSays: "رسالة المساعد",
+  youSaid: "رسالتك",
+  columnAria: "العمود — التحكم والاختيار",
+  mobileOverlayLabel: "واجهة العمود للجوال",
+} as const;
+
+const hi = {
+  // Input / messaging
+  writeMessage: "संदेश लिखें…",
+  send: "भेजें",
+
+  // Input helpers
+  tools: "उपकरण",
+  newline: "नई पंक्ति",
+  comingUpload: "अपलोड",
+  comingVoice: "वॉइस इनपुट",
+  comingFunctions: "विकल्प",
+
+  // Overlay header / buttons (mobile)
+  close: "बंद करें",
+
+  // Sidebar / Column
+  columnTitle: "कॉलम",
+  sectionControl: "नियंत्रण",
+  onboarding: "ऑनबोर्डिंग",
+  mDefault: "M · डिफ़ॉल्ट",
+  selectMode: "मोड चुनें",
+  council13: "काउंसिल 13",
+  selectAI: "AI चुनें",
+  modules: "मॉड्यूल",
+  coming: "जल्द ही",
+
+  // Sidebar additions (experts & CTA)
+  selectExpert: "विशेषज्ञ चुनें",
+  statusExpert: "विशेषज्ञ:",
+  clearChat: "चैट साफ़ करें",
+  startBuilding: "निर्माण शुरू करें",
+  startBuildingMsg:
+    "कृपया मुझे बिल्ड फ़ंक्शन और वे आवश्यक कमांड समझाएँ जो आपके साथ प्रभावी ढंग से काम करने के लिए ज़रूरी हैं। कृपया इसे तालिका के रूप में दिखाएँ।",
+
+  // Actions / footer
+  export: "निर्यात",
+  levels: "स्तर",
+  levelsComing: "स्तर जल्द उपलब्ध होंगे",
+  threadExported: "चैट निर्यात की गई।",
+
+  // Status bar
+  statusMode: "मोड:",
+  statusAgent: "एजेंट:",
+
+  // Backward-compat alias
+  statusAI: "एजेंट:",
+
+  // Status texts
+  "status.modeSet": "मोड सेट किया गया: {label}.",
+
+  // Modes – system buttons
+  "mode.onboarding": "ऑनबोर्डिंग",
+  "mode.council": "काउंसिल 13",
+  "mode.default": "M · डिफ़ॉल्ट",
+  "mode.select": "मोड चुनें",
+
+  // Modes – character modes (11)
+  "mode.research": "अनुसंधान",
+  "mode.calm": "शांत",
+  "mode.flow": "प्रवाह",
+  "mode.truth": "सत्य",
+  "mode.wisdom": "बुद्धि",
+  "mode.play": "खेल",
+  "mode.vision": "दृष्टि",
+  "mode.empathy": "सहानुभूति",
+  "mode.love": "प्रेम",
+  "mode.joy": "आनंद",
+  "mode.oracle": "ओरेकल",
+
+  // Modes – categories
+  "labels.modes.character": "चरित्र मोड",
+  "modes.category.core": "कोर",
+  "modes.category.intellectual": "बौद्धिक",
+  "modes.category.creator": "रचनाकार",
+  "modes.category.heart": "हृदय",
+  "modes.category.spirit": "आत्मा",
+
+  // Experts (used by Saeule.tsx)
+  "experts.title": "विशेषज्ञ",
+  "experts.choose": "विशेषज्ञ चुनें",
+
+  // Expert categories
+  "experts.category.life": "जीवन",
+  "experts.category.tech": "तकनीक",
+  "experts.category.space": "अंतरिक्ष",
+  "experts.category.ethics": "नैतिकता",
+  "experts.category.universe": "ब्रह्मांड",
+
+  // Expert labels
+  "experts.biologist": "जीवविज्ञानी",
+  "experts.chemist": "रसायनज्ञ",
+  "experts.physicist": "भौतिक विज्ञानी",
+  "experts.computer_scientist": "कंप्यूटर वैज्ञानिक",
+  "experts.jurist": "विधिवेत्ता",
+  "experts.architect_civil_engineer": "वास्तुकार / सिविल इंजीनियर",
+  "experts.landscape_designer": "लैंडस्केप डिज़ाइनर",
+  "experts.interior_designer": "इंटीरियर डिज़ाइनर",
+  "experts.electrical_engineer": "विद्युत अभियंता",
+  "experts.mathematician": "गणितज्ञ",
+  "experts.astrologer": "ज्योतिषी",
+  "experts.weather_expert": "मौसम विशेषज्ञ",
+  "experts.molecular_scientist": "अणु वैज्ञानिक",
+
+  // CTA fallback
+  "cta.fallback":
+    "सब तैयार है — मुझे बताएं कि आप क्या बनाना चाहते हैं (ऐप, फ्लो, फीचर…).",
+
+  // CTA labels
+  "cta.build": "निर्माण",
+  "cta.export": "निर्यात",
+  "cta.clear": "चैट साफ़ करें",
+
+  // Pillar sections (Smooth Operator)
+  "pillar.section.header": "मोड और विशेषज्ञ",
+  "pillar.section.modesTitle": "मोड",
+  "pillar.section.modes": "मोड",
+  "pillar.section.experts": "विशेषज्ञ",
+  "pillar.section.systemTitle": "सिस्टम",
+  "pillar.section.system": "सिस्टम स्थिति",
+  "pillar.section.actionsTitle": "क्रियाएँ",
+  "pillar.section.utility": "क्रियाएँ और निर्यात",
+
+  // Actions (export / delete)
+  "actions.export.title": "चैट निर्यात करें",
+  "actions.export.help": "अपनी चैट को एक फ़ाइल के रूप में सहेजें।",
+  "actions.export.csv": "CSV",
+  "actions.export.json": "JSON",
+
+  "actions.delete.title": "चैट हटाएँ",
+  "actions.delete.warning":
+    "यह कार्रवाई पूरी चैट को स्थायी रूप से हटा देगी। यदि आप इसे सहेजना चाहते हैं, तो पहले इसे CSV या JSON के रूप में निर्यात करें।",
+  "actions.delete.now": "हटाएँ",
+
+  // ARIA
+  exportCsvAria: "चैट को CSV में निर्यात करें",
+  exportJsonAria: "चैट को JSON में निर्यात करें",
+  clearChatAria: "चैट हटाएँ",
+
+  // ARIA / A11y
+  conversationAria: "चैट लॉग",
+  assistantSays: "सहायक संदेश",
+  youSaid: "आपका संदेश",
+  columnAria: "कॉलम — नियंत्रण और चयन",
+  mobileOverlayLabel: "मोबाइल कॉलम ओवरले",
+} as const;
 
 
 // ... (oberer Kontext)
