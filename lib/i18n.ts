@@ -268,35 +268,35 @@ const de = {
   tools: "Werkzeuge",
   newline: "Neue Zeile",
   comingUpload: "Upload",
-  comingVoice: "Sprache",
+  comingVoice: "Spracheingabe",
   comingFunctions: "Optionen",
 
   // Overlay header / buttons (mobile)
   close: "Schließen",
 
   // Sidebar / Column
-  columnTitle: "Säule",
+  columnTitle: "Seitenleiste",
   sectionControl: "Steuerung",
-  onboarding: "ONBOARDING",
+  onboarding: "Einstieg",
   mDefault: "M · Standard",
   selectMode: "Modus wählen",
-  council13: "COUNCIL13",
+  council13: "Rat der 13",
   selectAI: "KI wählen",
   modules: "Module",
-  coming: "Bald",
+  coming: "Bald verfügbar",
 
   // Sidebar additions (experts & CTA)
   selectExpert: "Experten wählen",
   statusExpert: "Experte:",
-  clearChat: "Chat leeren",
-  startBuilding: "Bauen",
+  clearChat: "Chat löschen",
+  startBuilding: "Bauen starten",
   startBuildingMsg:
-    "Erkläre mir die Build-Funktion und die Befehle, die ich kennen muss, um effizient mit dir zu bauen. Zeige eine Tabelle.",
+    "Erkläre mir die Build-Funktion und die Befehle, die ich kennen muss, um effizient mit dir zu entwickeln. Bitte mit Tabelle.",
 
   // Actions / footer
   export: "Exportieren",
   levels: "Level",
-  levelsComing: "Level kommen bald",
+  levelsComing: "Level folgen in Kürze",
   threadExported: "Chat exportiert.",
 
   // Status bar
@@ -310,31 +310,31 @@ const de = {
   "status.modeSet": "Modus gesetzt: {label}.",
 
   // Modes – system buttons
-  "mode.onboarding": "ONBOARDING",
-  "mode.council": "COUNCIL13",
+  "mode.onboarding": "Einstieg",
+  "mode.council": "Rat der 13",
   "mode.default": "M · Standard",
   "mode.select": "Modus wählen",
 
   // Modes – character modes (11)
-  "mode.research": "RESEARCH",
-  "mode.calm": "CALM",
-  "mode.flow": "FLOW",
-  "mode.truth": "TRUTH",
-  "mode.wisdom": "WISDOM",
-  "mode.play": "PLAY",
-  "mode.vision": "VISION",
-  "mode.empathy": "EMPATHY",
-  "mode.love": "LOVE",
-  "mode.joy": "JOY",
-  "mode.oracle": "ORACLE",
+  "mode.research": "Forschung",
+  "mode.calm": "Ruhe",
+  "mode.flow": "Flow",
+  "mode.truth": "Wahrheit",
+  "mode.wisdom": "Weisheit",
+  "mode.play": "Spiel",
+  "mode.vision": "Vision",
+  "mode.empathy": "Empathie",
+  "mode.love": "Liebe",
+  "mode.joy": "Freude",
+  "mode.oracle": "Orakel",
 
   // Modes – categories
   "labels.modes.character": "Charakter-Modi",
-  "modes.category.core": "CORE",
-  "modes.category.intellectual": "INTELLEKTUELL",
-  "modes.category.creator": "CREATOR",
-  "modes.category.heart": "HERZ",
-  "modes.category.spirit": "SPIRIT",
+  "modes.category.core": "Kern",
+  "modes.category.intellectual": "Intellekt",
+  "modes.category.creator": "Kreator",
+  "modes.category.heart": "Herz",
+  "modes.category.spirit": "Geist",
 
   // Experts (used by Saeule.tsx)
   "experts.title": "Experten",
@@ -364,21 +364,21 @@ const de = {
 
   // CTA fallback
   "cta.fallback":
-    "Alles bereit — sag mir, was du bauen möchtest (App, Flow, Feature …).",
+    "Alles bereit — sag mir einfach, was du bauen möchtest (App, Flow, Feature …).",
 
-  // CTA labels (Säule header button etc.)
+  // CTA labels
   "cta.build": "Bauen",
   "cta.export": "Exportieren",
-  "cta.clear": "Chat leeren",
+  "cta.clear": "Chat löschen",
 
-  // Pillar sections
-  "pillar.section.header": "Modi- & Experten-Header",
-  "pillar.section.modesTitle": "MODES",
+  // Pillar sections (Smooth Operator)
+  "pillar.section.header": "Modi & Experten",
+  "pillar.section.modesTitle": "Modi",
   "pillar.section.modes": "Modi",
   "pillar.section.experts": "Experten",
-  "pillar.section.systemTitle": "SYSTEM",
+  "pillar.section.systemTitle": "System",
   "pillar.section.system": "Systemstatus",
-  "pillar.section.actionsTitle": "ACTIONS",
+  "pillar.section.actionsTitle": "Aktionen",
   "pillar.section.utility": "Aktionen & Export",
 
   // Actions (export / delete)
@@ -389,20 +389,20 @@ const de = {
 
   "actions.delete.title": "Chat löschen",
   "actions.delete.warning":
-    "Dies löscht den gesamten Chat endgültig. Exportiere ihn vorher als CSV oder JSON, wenn du ihn sichern möchtest.",
-  "actions.delete.now": "LÖSCHEN",
+    "Dieser Vorgang löscht den gesamten Chat dauerhaft. Exportiere vorher CSV oder JSON, wenn du ihn behalten möchtest.",
+  "actions.delete.now": "Löschen",
 
-  // ARIA for actions
-  exportCsvAria: "Thread als CSV exportieren",
-  exportJsonAria: "Thread als JSON exportieren",
-  clearChatAria: "Chat leeren",
+  // ARIA
+  exportCsvAria: "Chat als CSV exportieren",
+  exportJsonAria: "Chat als JSON exportieren",
+  clearChatAria: "Chat löschen",
 
-  // ARIA / A11y (chat + column)
+  // ARIA / A11y
   conversationAria: "Chat-Verlauf",
-  assistantSays: "Assistent-Nachricht",
+  assistantSays: "Nachricht des Assistenten",
   youSaid: "Deine Nachricht",
-  columnAria: "Säule — Steuerung & Auswahl",
-  mobileOverlayLabel: "Mobiles Spalten-Overlay",
+  columnAria: "Seitenleiste — Steuerung & Auswahl",
+  mobileOverlayLabel: "Mobile Seitenleistenansicht",
 } as const;
 
 const fr = {
@@ -413,36 +413,36 @@ const fr = {
   // Input helpers
   tools: "Outils",
   newline: "Nouvelle ligne",
-  comingUpload: "Téléchargement",
-  comingVoice: "Voix",
+  comingUpload: "Téléverser",
+  comingVoice: "Dictée vocale",
   comingFunctions: "Options",
 
   // Overlay header / buttons (mobile)
   close: "Fermer",
 
   // Sidebar / Column
-  columnTitle: "Colonne",
-  sectionControl: "Contrôles",
-  onboarding: "ONBOARDING",
+  columnTitle: "Panneau latéral",
+  sectionControl: "Commandes",
+  onboarding: "Introduction",
   mDefault: "M · Par défaut",
   selectMode: "Choisir un mode",
-  council13: "COUNCIL13",
+  council13: "Conseil des 13",
   selectAI: "Choisir l’IA",
   modules: "Modules",
-  coming: "Bientôt",
+  coming: "Bientôt disponible",
 
   // Sidebar additions (experts & CTA)
   selectExpert: "Choisir un expert",
   statusExpert: "Expert :",
   clearChat: "Effacer le chat",
-  startBuilding: "Construire",
+  startBuilding: "Commencer",
   startBuildingMsg:
-    "Explique-moi la fonction build et les commandes nécessaires pour construire efficacement avec toi. Affiche un tableau.",
+    "Explique-moi la fonction build et les commandes essentielles pour construire efficacement avec toi. Présente-les sous forme de tableau.",
 
   // Actions / footer
   export: "Exporter",
   levels: "Niveaux",
-  levelsComing: "Niveaux bientôt disponibles",
+  levelsComing: "Niveaux à venir",
   threadExported: "Chat exporté.",
 
   // Status bar
@@ -456,31 +456,31 @@ const fr = {
   "status.modeSet": "Mode défini : {label}.",
 
   // Modes – system buttons
-  "mode.onboarding": "ONBOARDING",
-  "mode.council": "COUNCIL13",
+  "mode.onboarding": "Introduction",
+  "mode.council": "Conseil des 13",
   "mode.default": "M · Par défaut",
   "mode.select": "Choisir un mode",
 
   // Modes – character modes (11)
-  "mode.research": "RESEARCH",
-  "mode.calm": "CALM",
-  "mode.flow": "FLOW",
-  "mode.truth": "TRUTH",
-  "mode.wisdom": "WISDOM",
-  "mode.play": "PLAY",
-  "mode.vision": "VISION",
-  "mode.empathy": "EMPATHY",
-  "mode.love": "LOVE",
-  "mode.joy": "JOY",
-  "mode.oracle": "ORACLE",
+  "mode.research": "Recherche",
+  "mode.calm": "Calme",
+  "mode.flow": "Flux",
+  "mode.truth": "Vérité",
+  "mode.wisdom": "Sagesse",
+  "mode.play": "Jeu",
+  "mode.vision": "Vision",
+  "mode.empathy": "Empathie",
+  "mode.love": "Amour",
+  "mode.joy": "Joie",
+  "mode.oracle": "Oracle",
 
   // Modes – categories
   "labels.modes.character": "Modes de caractère",
-  "modes.category.core": "CORE",
-  "modes.category.intellectual": "INTELLECTUEL",
-  "modes.category.creator": "CRÉATEUR",
-  "modes.category.heart": "CŒUR",
-  "modes.category.spirit": "ESPRIT",
+  "modes.category.core": "Cœur",
+  "modes.category.intellectual": "Intellectuel",
+  "modes.category.creator": "Créateur",
+  "modes.category.heart": "Cœur",
+  "modes.category.spirit": "Esprit",
 
   // Experts (used by Saeule.tsx)
   "experts.title": "Experts",
@@ -510,56 +510,56 @@ const fr = {
 
   // CTA fallback
   "cta.fallback":
-    "Tout est prêt — dites-moi ce que vous souhaitez créer (application, flux, fonctionnalité…).",
+    "Tout est prêt — dis-moi ce que tu veux créer (application, flow, fonctionnalité…).",
 
   // CTA labels
   "cta.build": "Construire",
   "cta.export": "Exporter",
   "cta.clear": "Effacer le chat",
 
-  // Pillar sections
-  "pillar.section.header": "En-tête des modes et experts",
-  "pillar.section.modesTitle": "MODES",
+  // Pillar sections (Smooth Operator)
+  "pillar.section.header": "Modes & experts",
+  "pillar.section.modesTitle": "Modes",
   "pillar.section.modes": "Modes",
   "pillar.section.experts": "Experts",
-  "pillar.section.systemTitle": "SYSTEME",
-  "pillar.section.system": "Statut du système",
-  "pillar.section.actionsTitle": "ACTIONS",
-  "pillar.section.utility": "Actions et export",
+  "pillar.section.systemTitle": "Système",
+  "pillar.section.system": "État du système",
+  "pillar.section.actionsTitle": "Actions",
+  "pillar.section.utility": "Actions & export",
 
   // Actions (export / delete)
   "actions.export.title": "Exporter le chat",
-  "actions.export.help": "Enregistrer votre chat en tant que fichier.",
+  "actions.export.help": "Enregistrer votre chat sous forme de fichier.",
   "actions.export.csv": "CSV",
   "actions.export.json": "JSON",
 
   "actions.delete.title": "Supprimer le chat",
   "actions.delete.warning":
-    "Cela supprimera définitivement tout le chat. Exportez-le en CSV ou JSON si vous souhaitez le conserver.",
-  "actions.delete.now": "SUPPRIMER",
+    "Cette action supprime définitivement tout le chat. Exportez-le en CSV ou JSON si vous souhaitez le conserver.",
+  "actions.delete.now": "Supprimer",
 
-  // ARIA
-  exportCsvAria: "Exporter le thread en CSV",
-  exportJsonAria: "Exporter le thread en JSON",
-  clearChatAria: "Effacer le chat",
+  // ARIA for actions
+  exportCsvAria: "Exporter le chat en CSV",
+  exportJsonAria: "Exporter le chat en JSON",
+  clearChatAria: "Supprimer le chat",
 
-  // ARIA / A11y (chat + column)
+  // ARIA / A11y
   conversationAria: "Historique du chat",
   assistantSays: "Message de l’assistant",
   youSaid: "Votre message",
-  columnAria: "Colonne — Contrôles et sélection",
-  mobileOverlayLabel: "Superposition mobile de la colonne",
+  columnAria: "Panneau — Commandes et sélection",
+  mobileOverlayLabel: "Affichage mobile du panneau",
 } as const;
 
 const es = {
   // Input / messaging
-  writeMessage: "Escribir un mensaje…",
+  writeMessage: "Escribe un mensaje…",
   send: "Enviar",
 
   // Input helpers
   tools: "Herramientas",
   newline: "Nueva línea",
-  comingUpload: "Subida",
+  comingUpload: "Subir",
   comingVoice: "Voz",
   comingFunctions: "Opciones",
 
@@ -567,12 +567,12 @@ const es = {
   close: "Cerrar",
 
   // Sidebar / Column
-  columnTitle: "Columna",
+  columnTitle: "Panel lateral",
   sectionControl: "Controles",
-  onboarding: "ONBOARDING",
+  onboarding: "Introducción",
   mDefault: "M · Predeterminado",
   selectMode: "Elegir modo",
-  council13: "COUNCIL13",
+  council13: "Consejo de los 13",
   selectAI: "Elegir IA",
   modules: "Módulos",
   coming: "Próximamente",
@@ -581,9 +581,9 @@ const es = {
   selectExpert: "Elegir experto",
   statusExpert: "Experto:",
   clearChat: "Borrar chat",
-  startBuilding: "Construir",
+  startBuilding: "Iniciar construcción",
   startBuildingMsg:
-    "Explícame la función build y los comandos que necesito para construir contigo de forma eficiente. Muestra una tabla.",
+    "Explícame la función build y los comandos esenciales para trabajar contigo de forma eficiente. Muéstralos en una tabla.",
 
   // Actions / footer
   export: "Exportar",
@@ -602,31 +602,31 @@ const es = {
   "status.modeSet": "Modo establecido: {label}.",
 
   // Modes – system buttons
-  "mode.onboarding": "ONBOARDING",
-  "mode.council": "COUNCIL13",
+  "mode.onboarding": "Introducción",
+  "mode.council": "Consejo de los 13",
   "mode.default": "M · Predeterminado",
   "mode.select": "Elegir modo",
 
   // Modes – character modes (11)
-  "mode.research": "RESEARCH",
-  "mode.calm": "CALM",
-  "mode.flow": "FLOW",
-  "mode.truth": "TRUTH",
-  "mode.wisdom": "WISDOM",
-  "mode.play": "PLAY",
-  "mode.vision": "VISION",
-  "mode.empathy": "EMPATHY",
-  "mode.love": "LOVE",
-  "mode.joy": "JOY",
-  "mode.oracle": "ORACLE",
+  "mode.research": "Investigación",
+  "mode.calm": "Calma",
+  "mode.flow": "Flujo",
+  "mode.truth": "Verdad",
+  "mode.wisdom": "Sabiduría",
+  "mode.play": "Juego",
+  "mode.vision": "Visión",
+  "mode.empathy": "Empatía",
+  "mode.love": "Amor",
+  "mode.joy": "Alegría",
+  "mode.oracle": "Oráculo",
 
   // Modes – categories
   "labels.modes.character": "Modos de carácter",
-  "modes.category.core": "CORE",
-  "modes.category.intellectual": "INTELECTUAL",
-  "modes.category.creator": "CREADOR",
-  "modes.category.heart": "CORAZÓN",
-  "modes.category.spirit": "ESPÍRITU",
+  "modes.category.core": "Núcleo",
+  "modes.category.intellectual": "Intelectual",
+  "modes.category.creator": "Creador",
+  "modes.category.heart": "Corazón",
+  "modes.category.spirit": "Espíritu",
 
   // Experts (used by Saeule.tsx)
   "experts.title": "Expertos",
@@ -651,12 +651,12 @@ const es = {
   "experts.electrical_engineer": "Ingeniero eléctrico",
   "experts.mathematician": "Matemático",
   "experts.astrologer": "Astrólogo",
-  "experts.weather_expert": "Experto meteorológico",
+  "experts.weather_expert": "Meteorólogo",
   "experts.molecular_scientist": "Científico molecular",
 
   // CTA fallback
   "cta.fallback":
-    "Todo listo — dime qué quieres construir (app, flujo, funcionalidad…).",
+    "Todo listo — cuéntame qué quieres construir (app, flujo, funcionalidad…).",
 
   // CTA labels
   "cta.build": "Construir",
@@ -664,13 +664,13 @@ const es = {
   "cta.clear": "Borrar chat",
 
   // Pillar sections
-  "pillar.section.header": "Encabezado de modos y expertos",
-  "pillar.section.modesTitle": "MODES",
+  "pillar.section.header": "Modos y expertos",
+  "pillar.section.modesTitle": "Modos",
   "pillar.section.modes": "Modos",
   "pillar.section.experts": "Expertos",
-  "pillar.section.systemTitle": "SISTEMA",
+  "pillar.section.systemTitle": "Sistema",
   "pillar.section.system": "Estado del sistema",
-  "pillar.section.actionsTitle": "ACCIONES",
+  "pillar.section.actionsTitle": "Acciones",
   "pillar.section.utility": "Acciones y exportación",
 
   // Actions (export / delete)
@@ -679,22 +679,22 @@ const es = {
   "actions.export.csv": "CSV",
   "actions.export.json": "JSON",
 
-  "actions.delete.title": "Eliminar chat",
+  "actions.delete.title": "Borrar chat",
   "actions.delete.warning":
-    "Esto eliminará todo el chat para siempre. Expórtalo como CSV o JSON si deseas conservarlo.",
-  "actions.delete.now": "ELIMINAR",
+    "Esto eliminará el chat completo de manera permanente. Expórtalo en CSV o JSON si deseas conservarlo.",
+  "actions.delete.now": "Borrar",
 
   // ARIA
-  exportCsvAria: "Exportar hilo en CSV",
-  exportJsonAria: "Exportar hilo en JSON",
+  exportCsvAria: "Exportar chat como CSV",
+  exportJsonAria: "Exportar chat como JSON",
   clearChatAria: "Borrar chat",
 
   // ARIA / A11y
   conversationAria: "Historial del chat",
   assistantSays: "Mensaje del asistente",
   youSaid: "Tu mensaje",
-  columnAria: "Columna — Controles y selección",
-  mobileOverlayLabel: "Superposición móvil de la columna",
+  columnAria: "Panel — Controles y selección",
+  mobileOverlayLabel: "Vista móvil del panel",
 } as const;
 
 const it = {
@@ -713,23 +713,23 @@ const it = {
   close: "Chiudi",
 
   // Sidebar / Column
-  columnTitle: "Colonna",
+  columnTitle: "Pannello laterale",
   sectionControl: "Controlli",
-  onboarding: "ONBOARDING",
+  onboarding: "Introduzione",
   mDefault: "M · Predefinito",
   selectMode: "Scegli modalità",
-  council13: "COUNCIL13",
+  council13: "Consiglio dei 13",
   selectAI: "Scegli IA",
   modules: "Moduli",
-  coming: "Prossimamente",
+  coming: "In arrivo",
 
   // Sidebar additions (experts & CTA)
   selectExpert: "Scegli esperto",
   statusExpert: "Esperto:",
   clearChat: "Cancella chat",
-  startBuilding: "Costruire",
+  startBuilding: "Inizia a creare",
   startBuildingMsg:
-    "Spiegami la funzione build e i comandi necessari per costruire in modo efficiente con te. Mostra una tabella.",
+    "Spiegami la funzione build e i comandi essenziali per collaborare con efficienza. Mostra una tabella.",
 
   // Actions / footer
   export: "Esporta",
@@ -748,31 +748,31 @@ const it = {
   "status.modeSet": "Modalità impostata: {label}.",
 
   // Modes – system buttons
-  "mode.onboarding": "ONBOARDING",
-  "mode.council": "COUNCIL13",
+  "mode.onboarding": "Introduzione",
+  "mode.council": "Consiglio dei 13",
   "mode.default": "M · Predefinito",
   "mode.select": "Scegli modalità",
 
   // Modes – character modes (11)
-  "mode.research": "RESEARCH",
-  "mode.calm": "CALM",
-  "mode.flow": "FLOW",
-  "mode.truth": "TRUTH",
-  "mode.wisdom": "WISDOM",
-  "mode.play": "PLAY",
-  "mode.vision": "VISION",
-  "mode.empathy": "EMPATHY",
-  "mode.love": "LOVE",
-  "mode.joy": "JOY",
-  "mode.oracle": "ORACLE",
+  "mode.research": "Ricerca",
+  "mode.calm": "Calma",
+  "mode.flow": "Flusso",
+  "mode.truth": "Verità",
+  "mode.wisdom": "Saggezza",
+  "mode.play": "Gioco",
+  "mode.vision": "Visione",
+  "mode.empathy": "Empatia",
+  "mode.love": "Amore",
+  "mode.joy": "Gioia",
+  "mode.oracle": "Oracolo",
 
   // Modes – categories
   "labels.modes.character": "Modalità caratteriali",
-  "modes.category.core": "CORE",
-  "modes.category.intellectual": "INTELLETTUALE",
-  "modes.category.creator": "CREATOR",
-  "modes.category.heart": "CUORE",
-  "modes.category.spirit": "SPIRITO",
+  "modes.category.core": "Nucleo",
+  "modes.category.intellectual": "Intellettuale",
+  "modes.category.creator": "Creatore",
+  "modes.category.heart": "Cuore",
+  "modes.category.spirit": "Spirito",
 
   // Experts (used by Saeule.tsx)
   "experts.title": "Esperti",
@@ -792,8 +792,8 @@ const it = {
   "experts.computer_scientist": "Informatico",
   "experts.jurist": "Giurista",
   "experts.architect_civil_engineer": "Architetto / Ingegnere civile",
-  "experts.landscape_designer": "Progettista paesaggista",
-  "experts.interior_designer": "Designer d’interni",
+  "experts.landscape_designer": "Paesaggista",
+  "experts.interior_designer": "Interior designer",
   "experts.electrical_engineer": "Ingegnere elettrico",
   "experts.mathematician": "Matematico",
   "experts.astrologer": "Astrologo",
@@ -802,22 +802,22 @@ const it = {
 
   // CTA fallback
   "cta.fallback":
-    "Tutto pronto — dimmi cosa vuoi costruire (app, flusso, funzionalità…).",
+    "Tutto pronto — dimmi cosa desideri creare (app, flusso, funzionalità…).",
 
   // CTA labels
-  "cta.build": "Costruire",
+  "cta.build": "Crea",
   "cta.export": "Esporta",
   "cta.clear": "Cancella chat",
 
-  // Pillar sections
-  "pillar.section.header": "Intestazione modalità ed esperti",
-  "pillar.section.modesTitle": "MODES",
+  // Pillar sections (Smooth Operator)
+  "pillar.section.header": "Modalità ed esperti",
+  "pillar.section.modesTitle": "Modalità",
   "pillar.section.modes": "Modalità",
   "pillar.section.experts": "Esperti",
-  "pillar.section.systemTitle": "SISTEMA",
+  "pillar.section.systemTitle": "Sistema",
   "pillar.section.system": "Stato del sistema",
-  "pillar.section.actionsTitle": "AZIONI",
-  "pillar.section.utility": "Azioni ed esportazione",
+  "pillar.section.actionsTitle": "Azioni",
+  "pillar.section.utility": "Azioni e esportazione",
 
   // Actions (export / delete)
   "actions.export.title": "Esporta chat",
@@ -827,25 +827,25 @@ const it = {
 
   "actions.delete.title": "Cancella chat",
   "actions.delete.warning":
-    "Questo eliminerà definitivamente l’intera chat. Esportala in CSV o JSON se desideri conservarla.",
-  "actions.delete.now": "ELIMINA",
+    "Questa azione eliminerà definitivamente l’intera chat. Esportala in CSV o JSON se desideri conservarla.",
+  "actions.delete.now": "Elimina",
 
   // ARIA
-  exportCsvAria: "Esporta thread in CSV",
-  exportJsonAria: "Esporta thread in JSON",
+  exportCsvAria: "Esporta la chat in formato CSV",
+  exportJsonAria: "Esporta la chat in formato JSON",
   clearChatAria: "Cancella chat",
 
   // ARIA / A11y
-  conversationAria: "Cronologia chat",
+  conversationAria: "Cronologia della chat",
   assistantSays: "Messaggio dell’assistente",
   youSaid: "Il tuo messaggio",
-  columnAria: "Colonna — Controlli e selezione",
-  mobileOverlayLabel: "Overlay mobile della colonna",
+  columnAria: "Pannello — Controlli e selezione",
+  mobileOverlayLabel: "Vista mobile del pannello",
 } as const;
 
 const pt = {
   // Input / messaging
-  writeMessage: "Escrever uma mensagem…",
+  writeMessage: "Escreva uma mensagem…",
   send: "Enviar",
 
   // Input helpers
@@ -859,12 +859,12 @@ const pt = {
   close: "Fechar",
 
   // Sidebar / Column
-  columnTitle: "Coluna",
-  sectionControl: "Controlo",
-  onboarding: "ONBOARDING",
+  columnTitle: "Painel lateral",
+  sectionControl: "Controles",
+  onboarding: "Introdução",
   mDefault: "M · Padrão",
   selectMode: "Escolher modo",
-  council13: "COUNCIL13",
+  council13: "Conselho dos 13",
   selectAI: "Escolher IA",
   modules: "Módulos",
   coming: "Em breve",
@@ -873,9 +873,9 @@ const pt = {
   selectExpert: "Escolher especialista",
   statusExpert: "Especialista:",
   clearChat: "Limpar chat",
-  startBuilding: "Construir",
+  startBuilding: "Começar a criar",
   startBuildingMsg:
-    "Explica-me a função build e os comandos que preciso para construir contigo de forma eficiente. Mostra uma tabela.",
+    "Explique a função build e os comandos essenciais para trabalharmos juntos com eficiência. Mostre em formato de tabela.",
 
   // Actions / footer
   export: "Exportar",
@@ -894,31 +894,31 @@ const pt = {
   "status.modeSet": "Modo definido: {label}.",
 
   // Modes – system buttons
-  "mode.onboarding": "ONBOARDING",
-  "mode.council": "COUNCIL13",
+  "mode.onboarding": "Introdução",
+  "mode.council": "Conselho dos 13",
   "mode.default": "M · Padrão",
   "mode.select": "Escolher modo",
 
   // Modes – character modes (11)
-  "mode.research": "RESEARCH",
-  "mode.calm": "CALM",
-  "mode.flow": "FLOW",
-  "mode.truth": "TRUTH",
-  "mode.wisdom": "WISDOM",
-  "mode.play": "PLAY",
-  "mode.vision": "VISION",
-  "mode.empathy": "EMPATHY",
-  "mode.love": "LOVE",
-  "mode.joy": "JOY",
-  "mode.oracle": "ORACLE",
+  "mode.research": "Pesquisa",
+  "mode.calm": "Calma",
+  "mode.flow": "Fluxo",
+  "mode.truth": "Verdade",
+  "mode.wisdom": "Sabedoria",
+  "mode.play": "Jogo",
+  "mode.vision": "Visão",
+  "mode.empathy": "Empatia",
+  "mode.love": "Amor",
+  "mode.joy": "Alegria",
+  "mode.oracle": "Oráculo",
 
   // Modes – categories
   "labels.modes.character": "Modos de caráter",
-  "modes.category.core": "CORE",
-  "modes.category.intellectual": "INTELECTUAL",
-  "modes.category.creator": "CREATOR",
-  "modes.category.heart": "CORAÇÃO",
-  "modes.category.spirit": "ESPÍRITO",
+  "modes.category.core": "Núcleo",
+  "modes.category.intellectual": "Intelectual",
+  "modes.category.creator": "Criador",
+  "modes.category.heart": "Coração",
+  "modes.category.spirit": "Espírito",
 
   // Experts (used by Saeule.tsx)
   "experts.title": "Especialistas",
@@ -938,55 +938,55 @@ const pt = {
   "experts.computer_scientist": "Cientista da computação",
   "experts.jurist": "Jurista",
   "experts.architect_civil_engineer": "Arquiteto / Engenheiro civil",
-  "experts.landscape_designer": "Designer de paisagem",
+  "experts.landscape_designer": "Paisagista",
   "experts.interior_designer": "Designer de interiores",
   "experts.electrical_engineer": "Engenheiro elétrico",
   "experts.mathematician": "Matemático",
   "experts.astrologer": "Astrólogo",
-  "experts.weather_expert": "Especialista em meteorologia",
+  "experts.weather_expert": "Especialista em clima",
   "experts.molecular_scientist": "Cientista molecular",
 
   // CTA fallback
   "cta.fallback":
-    "Tudo pronto — diga-me o que quer construir (app, fluxo, funcionalidade…).",
+    "Tudo pronto — diga o que você deseja criar (app, fluxo, funcionalidade…).",
 
   // CTA labels
-  "cta.build": "Construir",
+  "cta.build": "Criar",
   "cta.export": "Exportar",
   "cta.clear": "Limpar chat",
 
-  // Pillar sections
-  "pillar.section.header": "Cabeçalho de modos e especialistas",
-  "pillar.section.modesTitle": "MODES",
+  // Pillar sections (Smooth Operator)
+  "pillar.section.header": "Modos e especialistas",
+  "pillar.section.modesTitle": "Modos",
   "pillar.section.modes": "Modos",
   "pillar.section.experts": "Especialistas",
-  "pillar.section.systemTitle": "SISTEMA",
+  "pillar.section.systemTitle": "Sistema",
   "pillar.section.system": "Estado do sistema",
-  "pillar.section.actionsTitle": "AÇÕES",
+  "pillar.section.actionsTitle": "Ações",
   "pillar.section.utility": "Ações e exportação",
 
   // Actions (export / delete)
   "actions.export.title": "Exportar chat",
-  "actions.export.help": "Guarde o seu chat como ficheiro.",
+  "actions.export.help": "Salve seu chat como arquivo.",
   "actions.export.csv": "CSV",
   "actions.export.json": "JSON",
 
-  "actions.delete.title": "Eliminar chat",
+  "actions.delete.title": "Excluir chat",
   "actions.delete.warning":
-    "Isto eliminará todo o chat de forma permanente. Exporte-o em CSV ou JSON se quiser mantê-lo.",
-  "actions.delete.now": "ELIMINAR",
+    "Isso apagará todo o chat permanentemente. Exporte como CSV ou JSON se quiser manter uma cópia.",
+  "actions.delete.now": "Excluir",
 
   // ARIA
-  exportCsvAria: "Exportar thread em CSV",
-  exportJsonAria: "Exportar thread em JSON",
-  clearChatAria: "Limpar chat",
+  exportCsvAria: "Exportar chat como CSV",
+  exportJsonAria: "Exportar chat como JSON",
+  clearChatAria: "Excluir chat",
 
   // ARIA / A11y
   conversationAria: "Histórico do chat",
   assistantSays: "Mensagem do assistente",
-  youSaid: "A sua mensagem",
-  columnAria: "Coluna — Controlo e seleção",
-  mobileOverlayLabel: "Overlay móvel da coluna",
+  youSaid: "Sua mensagem",
+  columnAria: "Painel — Controles e seleção",
+  mobileOverlayLabel: "Visão móvel do painel",
 } as const;
 
 const nl = {
@@ -995,7 +995,7 @@ const nl = {
   send: "Verzenden",
 
   // Input helpers
-  tools: "Hulpmiddelen",
+  tools: "Tools",
   newline: "Nieuwe regel",
   comingUpload: "Upload",
   comingVoice: "Spraak",
@@ -1005,28 +1005,28 @@ const nl = {
   close: "Sluiten",
 
   // Sidebar / Column
-  columnTitle: "Kolom",
-  sectionControl: "Besturing",
-  onboarding: "ONBOARDING",
+  columnTitle: "Zijlijn",
+  sectionControl: "Bediening",
+  onboarding: "Introductie",
   mDefault: "M · Standaard",
   selectMode: "Modus kiezen",
-  council13: "COUNCIL13",
+  council13: "Raad van 13",
   selectAI: "AI kiezen",
   modules: "Modules",
-  coming: "Binnenkort",
+  coming: "Binnenkort beschikbaar",
 
   // Sidebar additions (experts & CTA)
   selectExpert: "Expert kiezen",
   statusExpert: "Expert:",
   clearChat: "Chat wissen",
-  startBuilding: "Bouwen",
+  startBuilding: "Bouwen starten",
   startBuildingMsg:
-    "Leg de build-functie uit en de commando’s die ik moet kennen om efficiënt met je te bouwen. Toon een tabel.",
+    "Leg de build-functie uit en de belangrijkste commando’s die ik moet kennen om efficiënt met je samen te werken. Toon dit in een tabel.",
 
   // Actions / footer
   export: "Exporteren",
   levels: "Niveaus",
-  levelsComing: "Niveaus binnenkort beschikbaar",
+  levelsComing: "Niveaus komen binnenkort",
   threadExported: "Chat geëxporteerd.",
 
   // Status bar
@@ -1040,31 +1040,31 @@ const nl = {
   "status.modeSet": "Modus ingesteld: {label}.",
 
   // Modes – system buttons
-  "mode.onboarding": "ONBOARDING",
-  "mode.council": "COUNCIL13",
+  "mode.onboarding": "Introductie",
+  "mode.council": "Raad van 13",
   "mode.default": "M · Standaard",
   "mode.select": "Modus kiezen",
 
   // Modes – character modes (11)
-  "mode.research": "RESEARCH",
-  "mode.calm": "CALM",
-  "mode.flow": "FLOW",
-  "mode.truth": "TRUTH",
-  "mode.wisdom": "WISDOM",
-  "mode.play": "PLAY",
-  "mode.vision": "VISION",
-  "mode.empathy": "EMPATHY",
-  "mode.love": "LOVE",
-  "mode.joy": "JOY",
-  "mode.oracle": "ORACLE",
+  "mode.research": "Onderzoek",
+  "mode.calm": "Rust",
+  "mode.flow": "Flow",
+  "mode.truth": "Waarheid",
+  "mode.wisdom": "Wijsheid",
+  "mode.play": "Spel",
+  "mode.vision": "Visie",
+  "mode.empathy": "Empathie",
+  "mode.love": "Liefde",
+  "mode.joy": "Vreugde",
+  "mode.oracle": "Orakel",
 
   // Modes – categories
   "labels.modes.character": "Karaktermodi",
-  "modes.category.core": "CORE",
-  "modes.category.intellectual": "INTELLECTUEEL",
-  "modes.category.creator": "CREATOR",
-  "modes.category.heart": "HART",
-  "modes.category.spirit": "SPIRIT",
+  "modes.category.core": "Kern",
+  "modes.category.intellectual": "Intellect",
+  "modes.category.creator": "Maker",
+  "modes.category.heart": "Hart",
+  "modes.category.spirit": "Geest",
 
   // Experts (used by Saeule.tsx)
   "experts.title": "Experts",
@@ -1072,18 +1072,19 @@ const nl = {
 
   // Expert categories
   "experts.category.life": "Leven",
-  "experts.category.tech": "Technologie",
+  "experts.category.tech": "Techniek",
   "experts.category.space": "Ruimte",
   "experts.category.ethics": "Ethiek",
   "experts.category.universe": "Universum",
 
   // Expert labels
   "experts.biologist": "Bioloog",
-  "experts.chemist": "Chemicus",
+  "experts.chemist": "Scheikundige",
   "experts.physicist": "Natuurkundige",
   "experts.computer_scientist": "Computerwetenschapper",
   "experts.jurist": "Jurist",
-  "experts.architect_civil_engineer": "Architect / Civiel ingenieur",
+  "experts.architect_civil_engineer":
+    "Architect / Civiel ingenieur",
   "experts.landscape_designer": "Landschapsontwerper",
   "experts.interior_designer": "Interieurontwerper",
   "experts.electrical_engineer": "Elektrotechnisch ingenieur",
@@ -1094,21 +1095,21 @@ const nl = {
 
   // CTA fallback
   "cta.fallback":
-    "Alles klaar — vertel me wat je wilt bouwen (app, flow, functie…).",
+    "Alles is klaar — vertel me wat je wilt bouwen (app, flow, functie…).",
 
   // CTA labels
   "cta.build": "Bouwen",
   "cta.export": "Exporteren",
   "cta.clear": "Chat wissen",
 
-  // Pillar sections
-  "pillar.section.header": "Hoofding modes en experts",
-  "pillar.section.modesTitle": "MODES",
+  // Pillar sections (Smooth Operator)
+  "pillar.section.header": "Modi & experts",
+  "pillar.section.modesTitle": "Modi",
   "pillar.section.modes": "Modi",
   "pillar.section.experts": "Experts",
-  "pillar.section.systemTitle": "SYSTEEM",
+  "pillar.section.systemTitle": "Systeem",
   "pillar.section.system": "Systeemstatus",
-  "pillar.section.actionsTitle": "ACTIES",
+  "pillar.section.actionsTitle": "Acties",
   "pillar.section.utility": "Acties & export",
 
   // Actions (export / delete)
@@ -1117,22 +1118,22 @@ const nl = {
   "actions.export.csv": "CSV",
   "actions.export.json": "JSON",
 
-  "actions.delete.title": "Chat verwijderen",
+  "actions.delete.title": "Chat wissen",
   "actions.delete.warning":
-    "Dit verwijdert de gehele chat permanent. Exporteer als CSV of JSON als je deze wilt bewaren.",
-  "actions.delete.now": "VERWIJDEREN",
+    "Dit verwijdert de hele chat permanent. Exporteer hem als CSV of JSON als je hem wilt bewaren.",
+  "actions.delete.now": "Verwijderen",
 
   // ARIA
-  exportCsvAria: "Thread als CSV exporteren",
-  exportJsonAria: "Thread als JSON exporteren",
+  exportCsvAria: "Chat exporteren als CSV",
+  exportJsonAria: "Chat exporteren als JSON",
   clearChatAria: "Chat wissen",
 
   // ARIA / A11y
   conversationAria: "Chatgeschiedenis",
   assistantSays: "Bericht van de assistent",
   youSaid: "Jouw bericht",
-  columnAria: "Kolom — Besturing & selectie",
-  mobileOverlayLabel: "Mobiele kolom-overlay",
+  columnAria: "Zijlijn — Bediening & selectie",
+  mobileOverlayLabel: "Mobiele weergave van het paneel",
 } as const;
 
 const ru = {
@@ -1151,12 +1152,12 @@ const ru = {
   close: "Закрыть",
 
   // Sidebar / Column
-  columnTitle: "Колонка",
+  columnTitle: "Боковая панель",
   sectionControl: "Управление",
-  onboarding: "ONBOARDING",
+  onboarding: "Введение",
   mDefault: "M · По умолчанию",
   selectMode: "Выбрать режим",
-  council13: "COUNCIL13",
+  council13: "Совет 13",
   selectAI: "Выбрать ИИ",
   modules: "Модули",
   coming: "Скоро",
@@ -1165,14 +1166,14 @@ const ru = {
   selectExpert: "Выбрать эксперта",
   statusExpert: "Эксперт:",
   clearChat: "Очистить чат",
-  startBuilding: "Создать",
+  startBuilding: "Начать создание",
   startBuildingMsg:
-    "Объясни мне функцию build и команды, которые нужно знать, чтобы эффективно строить вместе с тобой. Покажи таблицу.",
+    "Объясни функцию build и основные команды, которые нужно знать для эффективной работы с тобой. Покажи таблицу.",
 
   // Actions / footer
   export: "Экспорт",
   levels: "Уровни",
-  levelsComing: "Уровни скоро будут доступны",
+  levelsComing: "Уровни скоро появятся",
   threadExported: "Чат экспортирован.",
 
   // Status bar
@@ -1186,31 +1187,31 @@ const ru = {
   "status.modeSet": "Режим установлен: {label}.",
 
   // Modes – system buttons
-  "mode.onboarding": "ONBOARDING",
-  "mode.council": "COUNCIL13",
+  "mode.onboarding": "Введение",
+  "mode.council": "Совет 13",
   "mode.default": "M · По умолчанию",
   "mode.select": "Выбрать режим",
 
   // Modes – character modes (11)
-  "mode.research": "RESEARCH",
-  "mode.calm": "CALM",
-  "mode.flow": "FLOW",
-  "mode.truth": "TRUTH",
-  "mode.wisdom": "WISDOM",
-  "mode.play": "PLAY",
-  "mode.vision": "VISION",
-  "mode.empathy": "EMPATHY",
-  "mode.love": "LOVE",
-  "mode.joy": "JOY",
-  "mode.oracle": "ORACLE",
+  "mode.research": "Исследование",
+  "mode.calm": "Спокойствие",
+  "mode.flow": "Поток",
+  "mode.truth": "Истина",
+  "mode.wisdom": "Мудрость",
+  "mode.play": "Игра",
+  "mode.vision": "Видение",
+  "mode.empathy": "Эмпатия",
+  "mode.love": "Любовь",
+  "mode.joy": "Радость",
+  "mode.oracle": "Оракул",
 
   // Modes – categories
   "labels.modes.character": "Режимы характера",
-  "modes.category.core": "CORE",
-  "modes.category.intellectual": "ИНТЕЛЛЕКТ",
-  "modes.category.creator": "CREATOR",
-  "modes.category.heart": "СЕРДЦЕ",
-  "modes.category.spirit": "ДУХ",
+  "modes.category.core": "Основа",
+  "modes.category.intellectual": "Интеллект",
+  "modes.category.creator": "Созидание",
+  "modes.category.heart": "Сердце",
+  "modes.category.spirit": "Дух",
 
   // Experts (used by Saeule.tsx)
   "experts.title": "Эксперты",
@@ -1229,7 +1230,8 @@ const ru = {
   "experts.physicist": "Физик",
   "experts.computer_scientist": "Специалист по информатике",
   "experts.jurist": "Юрист",
-  "experts.architect_civil_engineer": "Архитектор / Инженер-строитель",
+  "experts.architect_civil_engineer":
+    "Архитектор / Инженер-строитель",
   "experts.landscape_designer": "Ландшафтный дизайнер",
   "experts.interior_designer": "Дизайнер интерьеров",
   "experts.electrical_engineer": "Инженер-электрик",
@@ -1240,776 +1242,47 @@ const ru = {
 
   // CTA fallback
   "cta.fallback":
-    "Всё готово — расскажите, что вы хотите создать (приложение, поток, функцию…).",
+    "Все готово — расскажи, что ты хочешь создать (приложение, поток, функцию…).",
 
   // CTA labels
   "cta.build": "Создать",
-  "cta.export": "Экспортировать",
+  "cta.export": "Экспорт",
   "cta.clear": "Очистить чат",
 
-  // Pillar sections
-  "pillar.section.header": "Заголовок режимов и экспертов",
-  "pillar.section.modesTitle": "MODES",
+  // Pillar sections (Smooth Operator)
+  "pillar.section.header": "Режимы и эксперты",
+  "pillar.section.modesTitle": "Режимы",
   "pillar.section.modes": "Режимы",
   "pillar.section.experts": "Эксперты",
-  "pillar.section.systemTitle": "СИСТЕМА",
+  "pillar.section.systemTitle": "Система",
   "pillar.section.system": "Состояние системы",
-  "pillar.section.actionsTitle": "ДЕЙСТВИЯ",
+  "pillar.section.actionsTitle": "Действия",
   "pillar.section.utility": "Действия и экспорт",
 
   // Actions (export / delete)
   "actions.export.title": "Экспортировать чат",
-  "actions.export.help": "Сохраните чат в виде файла.",
+  "actions.export.help": "Сохраните чат как файл.",
   "actions.export.csv": "CSV",
   "actions.export.json": "JSON",
 
   "actions.delete.title": "Удалить чат",
   "actions.delete.warning":
-    "Это навсегда удалит весь чат. Экспортируйте его в CSV или JSON, если хотите сохранить.",
-  "actions.delete.now": "УДАЛИТЬ",
+    "Это действие навсегда удалит весь чат. Экспортируйте его в CSV или JSON, если хотите сохранить.",
+  "actions.delete.now": "Удалить",
 
   // ARIA
-  exportCsvAria: "Экспортировать тред в CSV",
-  exportJsonAria: "Экспортировать тред в JSON",
+  exportCsvAria: "Экспортировать чат в CSV",
+  exportJsonAria: "Экспортировать чат в JSON",
   clearChatAria: "Очистить чат",
 
   // ARIA / A11y
   conversationAria: "История чата",
   assistantSays: "Сообщение ассистента",
   youSaid: "Ваше сообщение",
-  columnAria: "Колонка — Управление и выбор",
-  mobileOverlayLabel: "Мобильное наложение колонки",
+  columnAria: "Боковая панель — управление и выбор",
+  mobileOverlayLabel: "Мобильная версия панели",
 } as const;
 
-const zh = {
-  // Input / messaging
-  writeMessage: "写一条消息…",
-  send: "发送",
-
-  // Input helpers
-  tools: "工具",
-  newline: "新行",
-  comingUpload: "上传",
-  comingVoice: "语音",
-  comingFunctions: "选项",
-
-  // Overlay header / buttons (mobile)
-  close: "关闭",
-
-  // Sidebar / Column
-  columnTitle: "侧栏",
-  sectionControl: "控制",
-  onboarding: "ONBOARDING",
-  mDefault: "M · 默认",
-  selectMode: "选择模式",
-  council13: "COUNCIL13",
-  selectAI: "选择 AI",
-  modules: "模块",
-  coming: "即将推出",
-
-  // Sidebar additions (experts & CTA)
-  selectExpert: "选择专家",
-  statusExpert: "专家：",
-  clearChat: "清空聊天",
-  startBuilding: "开始构建",
-  startBuildingMsg:
-    "请向我解释 build 功能以及我需要掌握的命令，好能高效地和你一起构建。请显示一张表格。",
-
-  // Actions / footer
-  export: "导出",
-  levels: "级别",
-  levelsComing: "级别即将推出",
-  threadExported: "聊天已导出。",
-
-  // Status bar
-  statusMode: "模式：",
-  statusAgent: "代理：",
-
-  // Backward-compat alias
-  statusAI: "代理：",
-
-  // Status texts
-  "status.modeSet": "模式已设置：{label}。",
-
-  // Modes – system buttons
-  "mode.onboarding": "ONBOARDING",
-  "mode.council": "COUNCIL13",
-  "mode.default": "M · 默认",
-  "mode.select": "选择模式",
-
-  // Modes – character modes (11)
-  "mode.research": "RESEARCH",
-  "mode.calm": "CALM",
-  "mode.flow": "FLOW",
-  "mode.truth": "TRUTH",
-  "mode.wisdom": "WISDOM",
-  "mode.play": "PLAY",
-  "mode.vision": "VISION",
-  "mode.empathy": "EMPATHY",
-  "mode.love": "LOVE",
-  "mode.joy": "JOY",
-  "mode.oracle": "ORACLE",
-
-  // Modes – categories
-  "labels.modes.character": "性格模式",
-  "modes.category.core": "CORE",
-  "modes.category.intellectual": "理性",
-  "modes.category.creator": "CREATOR",
-  "modes.category.heart": "内心",
-  "modes.category.spirit": "精神",
-
-  // Experts (used by Saeule.tsx)
-  "experts.title": "专家",
-  "experts.choose": "选择专家",
-
-  // Expert categories
-  "experts.category.life": "生命",
-  "experts.category.tech": "科技",
-  "experts.category.space": "太空",
-  "experts.category.ethics": "伦理",
-  "experts.category.universe": "宇宙",
-
-  // Expert labels
-  "experts.biologist": "生物学家",
-  "experts.chemist": "化学家",
-  "experts.physicist": "物理学家",
-  "experts.computer_scientist": "计算机科学家",
-  "experts.jurist": "法学家",
-  "experts.architect_civil_engineer": "建筑师 / 土木工程师",
-  "experts.landscape_designer": "景观设计师",
-  "experts.interior_designer": "室内设计师",
-  "experts.electrical_engineer": "电气工程师",
-  "experts.mathematician": "数学家",
-  "experts.astrologer": "占星师",
-  "experts.weather_expert": "天气专家",
-  "experts.molecular_scientist": "分子科学家",
-
-  // CTA fallback
-  "cta.fallback":
-    "一切就绪 —— 告诉我你想构建什么（应用、流程、功能……）。",
-
-  // CTA labels
-  "cta.build": "开始构建",
-  "cta.export": "导出",
-  "cta.clear": "清空聊天",
-
-  // Pillar sections
-  "pillar.section.header": "模式与专家标题",
-  "pillar.section.modesTitle": "MODES",
-  "pillar.section.modes": "模式",
-  "pillar.section.experts": "专家",
-  "pillar.section.systemTitle": "SYSTEM",
-  "pillar.section.system": "系统状态",
-  "pillar.section.actionsTitle": "ACTIONS",
-  "pillar.section.utility": "操作与导出",
-
-  // Actions (export / delete)
-  "actions.export.title": "导出聊天",
-  "actions.export.help": "将聊天保存为文件。",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
-
-  "actions.delete.title": "删除聊天",
-  "actions.delete.warning":
-    "这将永久删除整个聊天。如需保留，请先导出为 CSV 或 JSON。",
-  "actions.delete.now": "删除",
-
-  // ARIA
-  exportCsvAria: "将会话导出为 CSV",
-  exportJsonAria: "将会话导出为 JSON",
-  clearChatAria: "清空聊天",
-
-  // ARIA / A11y
-  conversationAria: "聊天记录",
-  assistantSays: "助手消息",
-  youSaid: "你的消息",
-  columnAria: "侧栏 — 控制与选择",
-  mobileOverlayLabel: "移动端侧栏覆盖层",
-} as const;
-
-const ja = {
-  // Input / messaging
-  writeMessage: "メッセージを入力…",
-  send: "送信",
-
-  // Input helpers
-  tools: "ツール",
-  newline: "改行",
-  comingUpload: "アップロード",
-  comingVoice: "音声",
-  comingFunctions: "オプション",
-
-  // Overlay header / buttons (mobile)
-  close: "閉じる",
-
-  // Sidebar / Column
-  columnTitle: "カラム",
-  sectionControl: "コントロール",
-  onboarding: "ONBOARDING",
-  mDefault: "M · デフォルト",
-  selectMode: "モードを選択",
-  council13: "COUNCIL13",
-  selectAI: "AI を選択",
-  modules: "モジュール",
-  coming: "近日公開",
-
-  // Sidebar additions (experts & CTA)
-  selectExpert: "エキスパートを選択",
-  statusExpert: "エキスパート：",
-  clearChat: "チャットを削除",
-  startBuilding: "ビルド開始",
-  startBuildingMsg:
-    "build 機能と、一緒に効率よく構築するために必要なコマンドを説明してください。表形式で表示してください。",
-
-  // Actions / footer
-  export: "エクスポート",
-  levels: "レベル",
-  levelsComing: "レベルは近日公開予定",
-  threadExported: "チャットをエクスポートしました。",
-
-  // Status bar
-  statusMode: "モード：",
-  statusAgent: "エージェント：",
-
-  // Backward-compat alias
-  statusAI: "エージェント：",
-
-  // Status texts
-  "status.modeSet": "モードを設定しました：{label}。",
-
-  // Modes – system buttons
-  "mode.onboarding": "ONBOARDING",
-  "mode.council": "COUNCIL13",
-  "mode.default": "M · デフォルト",
-  "mode.select": "モードを選択",
-
-  // Modes – character modes (11)
-  "mode.research": "RESEARCH",
-  "mode.calm": "CALM",
-  "mode.flow": "FLOW",
-  "mode.truth": "TRUTH",
-  "mode.wisdom": "WISDOM",
-  "mode.play": "PLAY",
-  "mode.vision": "VISION",
-  "mode.empathy": "EMPATHY",
-  "mode.love": "LOVE",
-  "mode.joy": "JOY",
-  "mode.oracle": "ORACLE",
-
-  // Modes – categories
-  "labels.modes.character": "キャラクターモード",
-  "modes.category.core": "CORE",
-  "modes.category.intellectual": "知性",
-  "modes.category.creator": "CREATOR",
-  "modes.category.heart": "ハート",
-  "modes.category.spirit": "スピリット",
-
-  // Experts (used by Saeule.tsx)
-  "experts.title": "エキスパート",
-  "experts.choose": "エキスパートを選択",
-
-  // Expert categories
-  "experts.category.life": "生命",
-  "experts.category.tech": "テクノロジー",
-  "experts.category.space": "宇宙",
-  "experts.category.ethics": "倫理",
-  "experts.category.universe": "宇宙全体",
-
-  // Expert labels
-  "experts.biologist": "生物学者",
-  "experts.chemist": "化学者",
-  "experts.physicist": "物理学者",
-  "experts.computer_scientist": "コンピューターサイエンティスト",
-  "experts.jurist": "法学者",
-  "experts.architect_civil_engineer": "建築家／土木技師",
-  "experts.landscape_designer": "ランドスケープデザイナー",
-  "experts.interior_designer": "インテリアデザイナー",
-  "experts.electrical_engineer": "電気技術者",
-  "experts.mathematician": "数学者",
-  "experts.astrologer": "占星術師",
-  "experts.weather_expert": "気象エキスパート",
-  "experts.molecular_scientist": "分子科学者",
-
-  // CTA fallback
-  "cta.fallback":
-    "準備完了です —— 何を構築したいか教えてください（アプリ、フロー、機能など）。",
-
-  // CTA labels
-  "cta.build": "ビルド開始",
-  "cta.export": "エクスポート",
-  "cta.clear": "チャットを削除",
-
-  // Pillar sections
-  "pillar.section.header": "モード＆エキスパート見出し",
-  "pillar.section.modesTitle": "MODES",
-  "pillar.section.modes": "モード",
-  "pillar.section.experts": "エキスパート",
-  "pillar.section.systemTitle": "SYSTEM",
-  "pillar.section.system": "システムステータス",
-  "pillar.section.actionsTitle": "ACTIONS",
-  "pillar.section.utility": "アクションとエクスポート",
-
-  // Actions (export / delete)
-  "actions.export.title": "チャットをエクスポート",
-  "actions.export.help": "チャットをファイルとして保存します。",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
-
-  "actions.delete.title": "チャットを削除",
-  "actions.delete.warning":
-    "チャット全体が完全に削除されます。保存したい場合は、事前に CSV か JSON にエクスポートしてください。",
-  "actions.delete.now": "削除",
-
-  // ARIA
-  exportCsvAria: "スレッドを CSV としてエクスポート",
-  exportJsonAria: "スレッドを JSON としてエクスポート",
-  clearChatAria: "チャットを削除",
-
-  // ARIA / A11y
-  conversationAria: "チャット履歴",
-  assistantSays: "アシスタントのメッセージ",
-  youSaid: "あなたのメッセージ",
-  columnAria: "カラム — コントロール＆選択",
-  mobileOverlayLabel: "モバイルカラムのオーバーレイ",
-} as const;
-
-const ko = {
-  // Input / messaging
-  writeMessage: "메시지를 입력하세요…",
-  send: "보내기",
-
-  // Input helpers
-  tools: "도구",
-  newline: "새 줄",
-  comingUpload: "업로드",
-  comingVoice: "음성",
-  comingFunctions: "옵션",
-
-  // Overlay header / buttons (mobile)
-  close: "닫기",
-
-  // Sidebar / Column
-  columnTitle: "컬럼",
-  sectionControl: "컨트롤",
-  onboarding: "ONBOARDING",
-  mDefault: "M · 기본",
-  selectMode: "모드 선택",
-  council13: "COUNCIL13",
-  selectAI: "AI 선택",
-  modules: "모듈",
-  coming: "곧 제공 예정",
-
-  // Sidebar additions (experts & CTA)
-  selectExpert: "전문가 선택",
-  statusExpert: "전문가:",
-  clearChat: "채팅 지우기",
-  startBuilding: "빌드 시작",
-  startBuildingMsg:
-    "build 기능과, 너와 함께 효율적으로 빌드하기 위해 알아야 할 명령어를 설명해 주세요. 표로 보여주세요.",
-
-  // Actions / footer
-  export: "내보내기",
-  levels: "레벨",
-  levelsComing: "레벨은 곧 제공됩니다",
-  threadExported: "채팅이 내보내졌습니다.",
-
-  // Status bar
-  statusMode: "모드:",
-  statusAgent: "에이전트:",
-
-  // Backward-compat alias
-  statusAI: "에이전트:",
-
-  // Status texts
-  "status.modeSet": "모드가 설정되었습니다: {label}.",
-
-  // Modes – system buttons
-  "mode.onboarding": "ONBOARDING",
-  "mode.council": "COUNCIL13",
-  "mode.default": "M · 기본",
-  "mode.select": "모드 선택",
-
-  // Modes – character modes (11)
-  "mode.research": "RESEARCH",
-  "mode.calm": "CALM",
-  "mode.flow": "FLOW",
-  "mode.truth": "TRUTH",
-  "mode.wisdom": "WISDOM",
-  "mode.play": "PLAY",
-  "mode.vision": "VISION",
-  "mode.empathy": "EMPATHY",
-  "mode.love": "LOVE",
-  "mode.joy": "JOY",
-  "mode.oracle": "ORACLE",
-
-  // Modes – categories
-  "labels.modes.character": "캐릭터 모드",
-  "modes.category.core": "CORE",
-  "modes.category.intellectual": "지성",
-  "modes.category.creator": "CREATOR",
-  "modes.category.heart": "하트",
-  "modes.category.spirit": "스피릿",
-
-  // Experts (used by Saeule.tsx)
-  "experts.title": "전문가",
-  "experts.choose": "전문가 선택",
-
-  // Expert categories
-  "experts.category.life": "생명",
-  "experts.category.tech": "기술",
-  "experts.category.space": "우주",
-  "experts.category.ethics": "윤리",
-  "experts.category.universe": "우주 전체",
-
-  // Expert labels
-  "experts.biologist": "생물학자",
-  "experts.chemist": "화학자",
-  "experts.physicist": "물리학자",
-  "experts.computer_scientist": "컴퓨터 과학자",
-  "experts.jurist": "법학자",
-  "experts.architect_civil_engineer": "건축가 / 토목기사",
-  "experts.landscape_designer": "조경 디자이너",
-  "experts.interior_designer": "인테리어 디자이너",
-  "experts.electrical_engineer": "전기 엔지니어",
-  "experts.mathematician": "수학자",
-  "experts.astrologer": "점성가",
-  "experts.weather_expert": "기상 전문가",
-  "experts.molecular_scientist": "분자 과학자",
-
-  // CTA fallback
-  "cta.fallback":
-    "준비가 끝났어요 — 무엇을 만들고 싶은지 알려 주세요 (앱, 플로우, 기능 등).",
-
-  // CTA labels
-  "cta.build": "빌드 시작",
-  "cta.export": "내보내기",
-  "cta.clear": "채팅 지우기",
-
-  // Pillar sections
-  "pillar.section.header": "모드 및 전문가 헤더",
-  "pillar.section.modesTitle": "MODES",
-  "pillar.section.modes": "모드",
-  "pillar.section.experts": "전문가",
-  "pillar.section.systemTitle": "SYSTEM",
-  "pillar.section.system": "시스템 상태",
-  "pillar.section.actionsTitle": "ACTIONS",
-  "pillar.section.utility": "작업 및 내보내기",
-
-  // Actions (export / delete)
-  "actions.export.title": "채팅 내보내기",
-  "actions.export.help": "채팅을 파일로 저장합니다.",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
-
-  "actions.delete.title": "채팅 삭제",
-  "actions.delete.warning":
-    "전체 채팅이 영구적으로 삭제됩니다. 보관하려면 먼저 CSV 또는 JSON으로 내보내세요.",
-  "actions.delete.now": "삭제",
-
-  // ARIA
-  exportCsvAria: "스레드를 CSV로 내보내기",
-  exportJsonAria: "스레드를 JSON으로 내보내기",
-  clearChatAria: "채팅 지우기",
-
-  // ARIA / A11y
-  conversationAria: "채팅 기록",
-  assistantSays: "어시스턴트 메시지",
-  youSaid: "사용자 메시지",
-  columnAria: "컬럼 — 컨트롤 및 선택",
-  mobileOverlayLabel: "모바일 컬럼 오버레이",
-} as const;
-
-const ar = {
-  // Input / messaging
-  writeMessage: "اكتب رسالة…",
-  send: "إرسال",
-
-  // Input helpers
-  tools: "الأدوات",
-  newline: "سطر جديد",
-  comingUpload: "رفع",
-  comingVoice: "صوت",
-  comingFunctions: "خيارات",
-
-  // Overlay header / buttons (mobile)
-  close: "إغلاق",
-
-  // Sidebar / Column
-  columnTitle: "العمود",
-  sectionControl: "التحكم",
-  onboarding: "ONBOARDING",
-  mDefault: "M · الوضع الافتراضي",
-  selectMode: "اختر الوضع",
-  council13: "COUNCIL13",
-  selectAI: "اختر الذكاء الاصطناعي",
-  modules: "الوحدات",
-  coming: "قريبًا",
-
-  // Sidebar additions (experts & CTA)
-  selectExpert: "اختر الخبير",
-  statusExpert: "الخبير:",
-  clearChat: "مسح المحادثة",
-  startBuilding: "ابدأ البناء",
-  startBuildingMsg:
-    "اشرح لي وظيفة build والأوامر التي أحتاج إلى معرفتها للعمل معك بكفاءة. اعرض جدولًا.",
-
-  // Actions / footer
-  export: "تصدير",
-  levels: "المستويات",
-  levelsComing: "المستويات قيد الإضافة",
-  threadExported: "تم تصدير المحادثة.",
-
-  // Status bar
-  statusMode: "الوضع:",
-  statusAgent: "الوكيل:",
-
-  // Backward-compat alias
-  statusAI: "الوكيل:",
-
-  // Status texts
-  "status.modeSet": "تم تعيين الوضع: {label}.",
-
-  // Modes – system buttons
-  "mode.onboarding": "ONBOARDING",
-  "mode.council": "COUNCIL13",
-  "mode.default": "M · الوضع الافتراضي",
-  "mode.select": "اختر الوضع",
-
-  // Modes – character modes (11)
-  "mode.research": "RESEARCH",
-  "mode.calm": "CALM",
-  "mode.flow": "FLOW",
-  "mode.truth": "TRUTH",
-  "mode.wisdom": "WISDOM",
-  "mode.play": "PLAY",
-  "mode.vision": "VISION",
-  "mode.empathy": "EMPATHY",
-  "mode.love": "LOVE",
-  "mode.joy": "JOY",
-  "mode.oracle": "ORACLE",
-
-  // Modes – categories
-  "labels.modes.character": "أوضاع الشخصية",
-  "modes.category.core": "CORE",
-  "modes.category.intellectual": "الفكر",
-  "modes.category.creator": "الإبداع",
-  "modes.category.heart": "القلب",
-  "modes.category.spirit": "الروح",
-
-  // Experts (used by Saeule.tsx)
-  "experts.title": "الخبراء",
-  "experts.choose": "اختر خبيرًا",
-
-  // Expert categories
-  "experts.category.life": "الحياة",
-  "experts.category.tech": "التقنية",
-  "experts.category.space": "الفضاء",
-  "experts.category.ethics": "الأخلاق",
-  "experts.category.universe": "الكون",
-
-  // Expert labels
-  "experts.biologist": "عالِم أحياء",
-  "experts.chemist": "كيميائي",
-  "experts.physicist": "فيزيائي",
-  "experts.computer_scientist": "عالِم حاسوب",
-  "experts.jurist": "قانوني",
-  "experts.architect_civil_engineer": "مهندس معماري / مدني",
-  "experts.landscape_designer": "مصمم مناظر طبيعية",
-  "experts.interior_designer": "مصمم داخلي",
-  "experts.electrical_engineer": "مهندس كهرباء",
-  "experts.mathematician": "رياضياتي",
-  "experts.astrologer": "منجّم",
-  "experts.weather_expert": "خبير طقس",
-  "experts.molecular_scientist": "عالِم جزيئات",
-
-  // CTA fallback
-  "cta.fallback":
-    "كل شيء جاهز — أخبرني بما تريد بناءه (تطبيق، مسار، ميزة…).",
-
-  // CTA labels
-  "cta.build": "ابدأ البناء",
-  "cta.export": "تصدير",
-  "cta.clear": "مسح المحادثة",
-
-  // Pillar sections
-  "pillar.section.header": "رأس الأوضاع والخبراء",
-  "pillar.section.modesTitle": "MODES",
-  "pillar.section.modes": "الأوضاع",
-  "pillar.section.experts": "الخبراء",
-  "pillar.section.systemTitle": "SYSTEM",
-  "pillar.section.system": "حالة النظام",
-  "pillar.section.actionsTitle": "ACTIONS",
-  "pillar.section.utility": "الإجراءات والتصدير",
-
-  // Actions (export / delete)
-  "actions.export.title": "تصدير المحادثة",
-  "actions.export.help": "احفظ المحادثة كملف.",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
-
-  "actions.delete.title": "مسح المحادثة",
-  "actions.delete.warning":
-    "سيتم حذف المحادثة بالكامل بشكل دائم. إذا أردت الاحتفاظ بها، قم بتصديرها أولاً.",
-  "actions.delete.now": "حذف",
-
-  // ARIA
-  exportCsvAria: "تصدير المحادثة بصيغة CSV",
-  exportJsonAria: "تصدير المحادثة بصيغة JSON",
-  clearChatAria: "مسح المحادثة",
-
-  // ARIA / A11y
-  conversationAria: "سجل المحادثة",
-  assistantSays: "رسالة من المساعد",
-  youSaid: "رسالتك",
-  columnAria: "العمود — التحكم والاختيار",
-  mobileOverlayLabel: "غطاء العمود في الهاتف",
-} as const;
-
-const hi = {
-  // Input / messaging
-  writeMessage: "संदेश लिखें…",
-  send: "भेजें",
-
-  // Input helpers
-  tools: "उपकरण",
-  newline: "नई पंक्ति",
-  comingUpload: "अपलोड",
-  comingVoice: "आवाज़",
-  comingFunctions: "विकल्प",
-
-  // Overlay header / buttons (mobile)
-  close: "बंद करें",
-
-  // Sidebar / Column
-  columnTitle: "कॉलम",
-  sectionControl: "नियंत्रण",
-  onboarding: "ONBOARDING",
-  mDefault: "M · डिफ़ॉल्ट",
-  selectMode: "मोड चुनें",
-  council13: "COUNCIL13",
-  selectAI: "AI चुनें",
-  modules: "मॉड्यूल",
-  coming: "जल्द आ रहा है",
-
-  // Sidebar additions (experts & CTA)
-  selectExpert: "विशेषज्ञ चुनें",
-  statusExpert: "विशेषज्ञ:",
-  clearChat: "चैट साफ़ करें",
-  startBuilding: "बिल्ड शुरू करें",
-  startBuildingMsg:
-    "कृपया मुझे build फ़ंक्शन और वे कमांड समझाएँ जिन्हें जानना आवश्यक है ताकि हम साथ में कुशलता से काम कर सकें। एक तालिका दिखाएँ।",
-
-  // Actions / footer
-  export: "निर्यात",
-  levels: "स्तर",
-  levelsComing: "स्तर जल्द उपलब्ध होंगे",
-  threadExported: "चैट निर्यात हो गई।",
-
-  // Status bar
-  statusMode: "मोड:",
-  statusAgent: "एजेंट:",
-
-  // Backward-compat alias
-  statusAI: "एजेंट:",
-
-  // Status texts
-  "status.modeSet": "मोड सेट किया गया: {label}.",
-
-  // Modes – system buttons
-  "mode.onboarding": "ONBOARDING",
-  "mode.council": "COUNCIL13",
-  "mode.default": "M · डिफ़ॉल्ट",
-  "mode.select": "मोड चुनें",
-
-  // Modes – character modes (11)
-  "mode.research": "RESEARCH",
-  "mode.calm": "CALM",
-  "mode.flow": "FLOW",
-  "mode.truth": "TRUTH",
-  "mode.wisdom": "WISDOM",
-  "mode.play": "PLAY",
-  "mode.vision": "VISION",
-  "mode.empathy": "EMPATHY",
-  "mode.love": "LOVE",
-  "mode.joy": "JOY",
-  "mode.oracle": "ORACLE",
-
-  // Modes – categories
-  "labels.modes.character": "चरित्र मोड",
-  "modes.category.core": "CORE",
-  "modes.category.intellectual": "बौद्धिक",
-  "modes.category.creator": "CREATOR",
-  "modes.category.heart": "हृदय",
-  "modes.category.spirit": "आत्मा",
-
-  // Experts (used by Saeule.tsx)
-  "experts.title": "विशेषज्ञ",
-  "experts.choose": "विशेषज्ञ चुनें",
-
-  // Expert categories
-  "experts.category.life": "जीवन",
-  "experts.category.tech": "तकनीक",
-  "experts.category.space": "अंतरिक्ष",
-  "experts.category.ethics": "नैतिकता",
-  "experts.category.universe": "ब्रह्माण्ड",
-
-  // Expert labels
-  "experts.biologist": "जीवविज्ञानी",
-  "experts.chemist": "रसायनज्ञ",
-  "experts.physicist": "भौतिक विज्ञानी",
-  "experts.computer_scientist": "कंप्यूटर वैज्ञानिक",
-  "experts.jurist": "क़ानून विशेषज्ञ",
-  "experts.architect_civil_engineer": "वास्तुकार / सिविल इंजीनियर",
-  "experts.landscape_designer": "लैंडस्केप डिज़ाइनर",
-  "experts.interior_designer": "इंटीरियर डिज़ाइनर",
-  "experts.electrical_engineer": "इलेक्ट्रिकल इंजीनियर",
-  "experts.mathematician": "गणितज्ञ",
-  "experts.astrologer": "ज्योतिषी",
-  "experts.weather_expert": "मौसम विशेषज्ञ",
-  "experts.molecular_scientist": "अणु वैज्ञानिक",
-
-  // CTA fallback
-  "cta.fallback":
-    "सब तैयार है — बताइए आप क्या बनाना चाहते हैं (ऐप, फ्लो, फीचर…).",
-
-  // CTA labels
-  "cta.build": "बिल्ड शुरू करें",
-  "cta.export": "निर्यात",
-  "cta.clear": "चैट साफ़ करें",
-
-  // Pillar sections
-  "pillar.section.header": "मोड और विशेषज्ञ — हेडर",
-  "pillar.section.modesTitle": "MODES",
-  "pillar.section.modes": "मोड",
-  "pillar.section.experts": "विशेषज्ञ",
-  "pillar.section.systemTitle": "SYSTEM",
-  "pillar.section.system": "सिस्टम स्थिति",
-  "pillar.section.actionsTitle": "ACTIONS",
-  "pillar.section.utility": "कार्रवाई और निर्यात",
-
-  // Actions (export / delete)
-  "actions.export.title": "चैट निर्यात करें",
-  "actions.export.help": "चैट को फ़ाइल के रूप में सहेजें।",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
-
-  "actions.delete.title": "चैट हटाएँ",
-  "actions.delete.warning":
-    "यह पूरी चैट को स्थायी रूप से हटा देगा। यदि आप इसे सुरक्षित रखना चाहते हैं, तो पहले CSV या JSON में निर्यात करें।",
-  "actions.delete.now": "हटाएँ",
-
-  // ARIA
-  exportCsvAria: "संवाद को CSV के रूप में निर्यात करें",
-  exportJsonAria: "संवाद को JSON के रूप में निर्यात करें",
-  clearChatAria: "चैट हटाएँ",
-
-  // ARIA / A11y
-  conversationAria: "चैट लॉग",
-  assistantSays: "सहायक का संदेश",
-  youSaid: "आपका संदेश",
-  columnAria: "कॉलम — नियंत्रण और चयन",
-  mobileOverlayLabel: "मोबाइल कॉलम ओवरले",
-} as const;
 
 
 // ... (oberer Kontext)
