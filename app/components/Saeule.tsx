@@ -672,23 +672,21 @@ function modeLabelFromId(id: ModeId): string {
 
   // i18n-Mapping für Charakter-Modes – Fallback bleibt der EN-Token aus MODI
   const MODE_KEYS: Partial<Record<ModeId, string>> = {
-    research: "modes.research",
-    calm: "modes.calm",
-    truth: "modes.truth",
-    play: "modes.play",
-    oracle: "modes.oracle",
-    joy: "modes.joy",
-    vision: "modes.vision",
-    empathy: "modes.empathy",
-    love: "modes.love",
-    wisdom: "modes.wisdom",
-    flow: "modes.flow",
+    research: "mode.research",
+    calm: "mode.calm",
+    truth: "mode.truth",
+    play: "mode.play",
+    oracle: "mode.oracle",
+    joy: "mode.joy",
+    vision: "mode.vision",
+    empathy: "mode.empathy",
+    love: "mode.love",
+    wisdom: "mode.wisdom",
+    flow: "mode.flow",
   };
 
-  const fallback =
-    MODI.find((m) => m.id === id)?.label ?? String(id).toUpperCase();
-
   const key = MODE_KEYS[id];
+  const fallback = MODI.find((m) => m.id === id)?.label ?? id.toUpperCase();
   return key ? tr(key, fallback) : fallback;
 }
 
