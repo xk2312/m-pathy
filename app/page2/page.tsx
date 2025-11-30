@@ -110,7 +110,7 @@ import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
 import { PromptRoot } from "./PromptRoot";
-import { t, getLocale } from "@/lib/i18n"; // t = Übersetzung, getLocale = zentraler Sprachkern
+import { t, getLocale, type Locale } from "@/lib/i18n"; // t = Übersetzung, getLocale = zentraler Sprachkern
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import { useMobileViewport } from "@/lib/useMobileViewport";
 
@@ -130,15 +130,10 @@ const persist = {
 type ColorTokens = { bg0?: string; bg1?: string; text?: string };
 type ThemeTokens = { color?: ColorTokens; [k: string]: any };
 
-// Gibt z. B. "de", "fr", "es", "en" zurück
-function getBrowserLang(): string {
-  if (typeof navigator === "undefined") return "en";
-  const lang = navigator.language || (navigator as any).userLanguage || "en";
-  return lang.split("-")[0].toLowerCase(); // "de-DE" -> "de"
-}
 /* =======================================================================
    [ANCHOR:I18N] — Sprachlabels für Button-Events
    ======================================================================= */
+
 
 // Typdefinition für alle Events, die M ansteuern kann
 type MEvent = "builder" | "onboarding" | "expert" | "mode";
@@ -1259,20 +1254,6 @@ useEffect(() => {
   return () => document.removeEventListener("click", onGlobalClick);
 }, [runMFlow, locale]);
 
-
-  // Globale Click-Delegation: jedes Element mit data-m-event triggert runMFlow
-  useEffect(() => {
-    function onGlobalClick(e: MouseEvent) {
-      const el = (e.target as HTMLElement)?.closest?.("[data-m-event]") as HTMLElement | null;
-      if (!el) return;
-      const evt = el.getAttribute("data-m-event") as MEvent | null;
-      if (!evt) return;
-      runMFlow(evt);
-    }
-    document.addEventListener("click", onGlobalClick);
-    return () => document.removeEventListener("click", onGlobalClick);
-  }, [runMFlow]);
-
   // ▼ Auswahl-Delegation (Dropdowns/Listboxen/Comboboxen → Label an runMFlow)
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -1283,6 +1264,7 @@ useEffect(() => {
 
       // Nur echte Auswahlen mit change-Event
       if (!el.matches("select,[role='listbox'],[role='combobox']")) return;
+
 
       const host = (el.closest("[data-m-event]") as HTMLElement) || (el as any);
       const evt = host.getAttribute("data-m-event") as MEvent | null;

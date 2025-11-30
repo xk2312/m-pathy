@@ -1279,8 +1279,11 @@ const DICTS = {
 // Prompt-Templates an Legacy-Dict anhängen (EN-only)
 attachPrompts(DICTS as any);
 
-// ⚠️ WICHTIG: Für die neue UI akzeptieren wir ALLE Locales, die im `dict` definiert sind.
-export type Locale = string;
+// Kanonische Locale-Liste direkt aus DICTS abgeleitet
+const DICT_KEYS = Object.keys(DICTS) as (keyof typeof DICTS)[];
+
+// Zentraler Locale-Typ – exakt diese 13 Codes
+export type Locale = (typeof DICT_KEYS)[number];
 
 const STORAGE_KEY = "mpathy:locale";
 
@@ -1292,12 +1295,14 @@ function toBase(tag: string): string {
 
 
 // Locale-Cache (wird nach dict-Init befüllt; vermeidet TDZ)
+// (Kann später weiterhin von Subscription-UX genutzt werden, ist hier aber
+// nicht mehr für den Kern-Typ ausschlaggebend.)
 let UX_LOCALES: string[] = ["en"];
 
-// Neu: helper – ist diese Sprache irgendwo unterstützt (dict ODER legacy)?
-function isSupported(tag: string): boolean {
+// Helper – ist diese Sprache im zentralen Kern unterstützt?
+function isSupported(tag: string): tag is Locale {
   const base = toBase(tag);
-  return (base in DICTS) || UX_LOCALES.includes(base);
+  return DICT_KEYS.includes(base as Locale);
 }
 
 
@@ -1323,6 +1328,7 @@ function negotiateLocaleFromBrowser(): string {
 }
 
 
+
 /** SSR-safe locale initialization */
 function detectInitialLocale(): Locale {
   if (typeof window !== "undefined") {
@@ -1344,8 +1350,10 @@ export function getLocale(): Locale {
 
 /** Set current locale (persists on client) — explizites Override */
 export function setLocale(locale: Locale) {
-  if (!isSupported(locale)) return;
-  currentLocale = toBase(locale);
+  const base = toBase(locale);
+  if (!isSupported(base)) return;
+  currentLocale = base as Locale;
+
   if (typeof window !== "undefined") {
     window.localStorage.setItem(STORAGE_KEY, currentLocale);
 
@@ -1362,6 +1370,7 @@ export function setLocale(locale: Locale) {
     window.dispatchEvent(new CustomEvent("mpathy:i18n:explicit"));
   }
 }
+
 
 /**
  * Translate key. Falls back to English, then to the key itself.
