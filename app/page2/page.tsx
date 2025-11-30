@@ -110,7 +110,7 @@ import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
 import { PromptRoot } from "./PromptRoot";
-import { t, getLocale, type Locale } from "@/lib/i18n"; // t = Übersetzung, getLocale = zentraler Sprachkern
+import { getLocale, setLocale, t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import { useMobileViewport } from "@/lib/useMobileViewport";
 
@@ -839,56 +839,55 @@ function InputDock({
     };
   }, [isMobile, tokens, mode]);
 
-  return (
-  <div
-    id="m-input"               // ← eindeutige ID
-    role="group"               // ← A11y statt Form
-    style={dockStyle}
-    aria-label="Message input"
-    data-testid="m-input-form"
-  >
-    <input
-      aria-label="Type your message"
-      style={{
-        flex: 1,
-        height: 44,
-        padding: "0 14px",
-        borderRadius: TOKENS.radius.md,
-        border: `1px solid ${tokens.color.glassBorder}`,
-        background: "rgba(255,255,255,0.04)",
-        color: tokens.color.text,
-        outline: "none",
-      }}
-      placeholder="Talk to M"
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          if (!disabled && value.trim()) {
-            // Form-Submit synthetisch auslösen (ohne echtes <form>)
-            onSubmit?.({ preventDefault() {} } as any);
-          }
-        }
-      }}
-    />
-
-    <button
-      type="button"                                  // ← kein echter Submit
-      disabled={disabled || !value.trim()}
-      onClick={() => {
-        if (!disabled && value.trim()) {
-          onSubmit?.({ preventDefault() {} } as any); // ← triggert deine bestehende Logik
-        }
-      }}
+   return (
+    <div
+      id="m-input"               // ← eindeutige ID
+      role="group"               // ← A11y statt Form
+      style={dockStyle}
+      aria-label={t("writeMessage")}
+      data-testid="m-input-form"
     >
-      Senden
-    </button>
-  </div>
-);
+      <input
+        aria-label={t("writeMessage")}
+        style={{
+          flex: 1,
+          height: 44,
+          padding: "0 14px",
+          borderRadius: TOKENS.radius.md,
+          border: `1px solid ${tokens.color.glassBorder}`,
+          background: "rgba(255,255,255,0.04)",
+          color: tokens.color.text,
+          outline: "none",
+        }}
+        placeholder={t("writeMessage")}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            if (!disabled && value.trim()) {
+              // Form-Submit synthetisch auslösen (ohne echtes <form>)
+              onSubmit?.({ preventDefault() {} } as any);
+            }
+          }
+        }}
+      />
 
-
+      <button
+        type="button"                                  // ← kein echter Submit
+        disabled={disabled || !value.trim()}
+        onClick={() => {
+          if (!disabled && value.trim()) {
+            onSubmit?.({ preventDefault() {} } as any); // ← triggert deine bestehende Logik
+          }
+        }}
+      >
+        {t("send")}
+      </button>
+    </div>
+  );
 }
+
 
 /* =======================================================================
    [ANCHOR:BEHAVIOR] — Chatlogik (Azure OpenAI)
