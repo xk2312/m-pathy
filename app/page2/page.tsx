@@ -110,9 +110,10 @@ import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
 import { PromptRoot } from "./PromptRoot";
-import { t, getLocale } from "@/lib/i18n";
+import { t, getLocale } from "@/lib/i18n"; // t = Übersetzung, getLocale = zentraler Sprachkern
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import { useMobileViewport } from "@/lib/useMobileViewport";
+
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
 import { loadChat, saveChat, clearChat,initChatStorage, makeClearHandler, hardClearChat  } from "@/lib/chatStorage";
 
@@ -1130,23 +1131,32 @@ const persistMessages = saveMessages;
 type MEvent = "builder" | "onboarding" | "expert" | "mode";
 const [frameText, setFrameText] = useState<string | null>(null);
 
-// "de" | "en" | "fr" | ...
-const locale = getBrowserLang();
-// ▼ Sync globaler i18n-Status mit Browser-Sprache (Client-only)
-useEffect(() => {
-  try {
-    const root = document.documentElement;
-    const prev = (root.getAttribute("lang") || "").toLowerCase();
-    const next = (locale || "en").toLowerCase();
-    if (next && prev !== next) {
-      root.setAttribute("lang", next);
-      window.dispatchEvent(
-        new CustomEvent("mpathy:i18n:change", { detail: { locale: next } })
-      );
-    }
-  } catch { /* silent */ }
-}, [locale]);
+// "de" | "en" | "fr" | ... – folgt dem zentralen Sprachkern
+const [locale, setLocaleState] = useState<string>(() => getLocale());
 
+// Reagiere auf mpathy:i18n:change (wird von setLocale() in lib/i18n getriggert)
+useEffect(() => {
+  if (typeof window === "undefined") return;
+
+  const handleChange = (ev: Event) => {
+    try {
+      const detail = (ev as CustomEvent<{ locale?: string }>).detail;
+      const next = (detail?.locale || getLocale() || "en").toLowerCase();
+      if (next && next !== locale) {
+        setLocaleState(next);
+      }
+    } catch {
+      // silent – kein Crash im Fehlerfall
+    }
+  };
+
+  // Initial-Sync (falls Locale schon gesetzt wurde, bevor die Seite gemountet ist)
+  setLocaleState(getLocale() || "en");
+
+  window.addEventListener("mpathy:i18n:change", handleChange);
+  return () => window.removeEventListener("mpathy:i18n:change", handleChange);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
 
 // Labels (du hast LABELS am [ANCHOR:I18N], wir nutzen es hier nur)
 const getLabel = (evt: MEvent) =>
@@ -1157,6 +1167,7 @@ const getLabel = (evt: MEvent) =>
 // --- helpers for labels ---
 const cap = (s: string) =>
   String(s || "").replace(/\s+/g, " ").trim().replace(/^./, c => c.toUpperCase());
+
 
 const slug = (s: string) =>
   String(s || "")

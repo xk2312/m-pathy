@@ -108,7 +108,7 @@ import { useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
-import { dict } from "@/lib/i18n";
+import { dict, getLocale } from "@/lib/i18n";
 import { modes15 } from "@/lib/i18n.modes";
 import { experts13 } from "@/lib/i18n.experts";
 
@@ -137,14 +137,6 @@ const MPathyKpiBoard = dynamic(
 
 type LocaleKey = keyof typeof dict;
 
-const detectLocale = (): LocaleKey => {
-  if (typeof navigator !== "undefined") {
-    const code = (navigator.language || "en").slice(0, 2).toLowerCase() as LocaleKey;
-    if (code in dict) return code;
-  }
-  return "en";
-};
-
 const flattenI18n = (obj: any, prefix = ""): Record<string, string> => {
   const out: Record<string, string> = {};
   for (const k in obj) {
@@ -159,17 +151,19 @@ const flattenI18n = (obj: any, prefix = ""): Record<string, string> => {
   return out;
 };
 
+
 export default function SubscriptionPage() {
-  useEffect(() => {
+    useEffect(() => {
     document.documentElement.classList.add("enable-scroll");
     return () => document.documentElement.classList.remove("enable-scroll");
   }, []);
 
-  // 1) aktive Locale
-  const locale = detectLocale();
+  // 1) aktive Locale – folgt dem zentralen Sprachkern
+  const locale = (getLocale() as LocaleKey) || "en";
 
   // 2) flache Sprach-Maps bilden (Subscription + 15 Modes + 13 Experts)
   const enFlat = useMemo(() => flattenI18n(dict.en), []);
+
   const enModesFlat = useMemo(() => flattenI18n(modes15.en ?? {}), []);
   const enExpertsFlat = useMemo(() => flattenI18n(experts13.en ?? {}), []);
 

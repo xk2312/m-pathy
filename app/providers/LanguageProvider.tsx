@@ -143,6 +143,7 @@
  * ======================================================================= */
 
 
+"use client";
 import React, {
   createContext,
   useContext,
@@ -150,8 +151,10 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { getLocale, setLocale } from "@/lib/i18n";
 
 type Dict = Record<string, Record<string, string>>;
+
 
 export function langHint(lang: string): string {
   const base = (lang || "en").slice(0, 2).toLowerCase();
@@ -211,7 +214,7 @@ export function LanguageProvider({
 }) {
   const [lang, setLangState] = useState<Lang>("en");
 
-  // zentrale Apply-Funktion: State + HTML + Hint + Persistenz
+  // zentrale Apply-Funktion: State + Spiegel (dir/Hints/Cookies)
   const applyLang = (next: string) => {
     const base = (next || "en").slice(0, 2).toLowerCase();
     const safe = (SUP as readonly string[]).includes(base as Lang)
@@ -220,11 +223,10 @@ export function LanguageProvider({
 
     setLangState(safe);
 
-    // HTML-Attribute (A11y + RTL)
-    document.documentElement.lang = safe;
+    // HTML-Attribute (A11y + RTL) – lang selbst kommt aus dem zentralen Kern
     document.documentElement.dir = safe === "ar" ? "rtl" : "ltr";
 
-    // Persistenz: letzte Sprache + Hint + Cookie
+    // Persistenz: letzte Sprache + Hint + Cookie (nur Spiegel, keine Quelle)
     try {
       localStorage.setItem("langLast", safe);
       localStorage.setItem("langHint", langHint(safe));
@@ -235,42 +237,34 @@ export function LanguageProvider({
     document.cookie = `lang=${safe}; path=/; max-age=31536000`;
   };
 
-  // öffentliches setLang (nur typisiert durchreichen)
+
+   // öffentliches setLang – delegiert an den zentralen Sprachkern
   const setLang = (next: Lang) => {
-    applyLang(next);
+    setLocale(next);
   };
 
-  // Initial-Boot: zuerst localStorage, dann Cookie, dann Browser-Sprache
+  // Initial-Boot & Listener: Sprache aus dem zentralen Kern spiegeln
   useEffect(() => {
-    let initial: string | null = null;
+    // 1) Startzustand: aktuelles Kern-Locale
+    const initial = getLocale();
+    applyLang(initial);
 
-    try {
-      const stored = localStorage.getItem("langLast");
-      if (stored) initial = stored;
-    } catch {
-      // ignore
-    }
+    // 2) Auf Änderungen des Kern-Locale reagieren
+    const handler = (ev: Event) => {
+      const detail = (ev as CustomEvent).detail as { locale?: string } | undefined;
+      const next = detail?.locale ?? getLocale();
+      applyLang(next);
+    };
 
-    if (!initial) {
-      const cookie = document.cookie
-        .split("; ")
-        .find((s) => s.startsWith("lang="))
-        ?.split("=")[1];
-      if (cookie) initial = cookie;
-    }
-
-    if (!initial) {
-      const nav = (navigator.language || "en").slice(0, 2).toLowerCase();
-      initial = nav;
-    }
-
-    applyLang(initial || "en");
+    window.addEventListener("mpathy:i18n:change", handler);
+    return () => window.removeEventListener("mpathy:i18n:change", handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const t = useMemo(() => {
     return (k: string) => dict[lang]?.[k] ?? dict.en?.[k] ?? k;
   }, [lang, dict]);
+
 
   const value = useMemo(
     () => ({ lang, t, hint: langHint(lang), setLang }),
