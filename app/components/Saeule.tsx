@@ -667,12 +667,34 @@ function emitSystemMessage(detail: {
 
 function modeLabelFromId(id: ModeId): string {
   if (id === "onboarding") return tr("mode.onboarding", "ONBOARDING");
-  if (id === "M")         return tr("mode.default",    "M · Default");
-  if (id === "council")   return tr("mode.council",    "COUNCIL13");
-  return MODI.find((m) => m.id === id)?.label ?? String(id);
+  if (id === "M")          return tr("mode.default", "M · Default");
+  if (id === "council")    return tr("mode.council", "COUNCIL13");
+
+  // i18n-Mapping für Charakter-Modes – Fallback bleibt der EN-Token aus MODI
+  const MODE_KEYS: Partial<Record<ModeId, string>> = {
+    research: "modes.research",
+    calm: "modes.calm",
+    truth: "modes.truth",
+    play: "modes.play",
+    oracle: "modes.oracle",
+    joy: "modes.joy",
+    vision: "modes.vision",
+    empathy: "modes.empathy",
+    love: "modes.love",
+    wisdom: "modes.wisdom",
+    flow: "modes.flow",
+  };
+
+  const fallback =
+    MODI.find((m) => m.id === id)?.label ?? String(id).toUpperCase();
+
+  const key = MODE_KEYS[id];
+  return key ? tr(key, fallback) : fallback;
 }
+
 // Universeller Übersetzer: nimmt t(key) und fällt elegant zurück
 function tr(key: string, fallback: string, vars?: Record<string, string>): string {
+
   try {
     const raw = t(key);
     let out = raw && raw !== key ? raw : fallback;
@@ -1301,9 +1323,10 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
                   onFocus={() => setHoverModeCategory(cat.id)}
                   aria-pressed={isActiveCat}
                 >
-                 <span className={styles.modeCategoryItemLabel}>
-        {cat.label}
-      </span>
+                  <span className={styles.modeCategoryItemLabel}>
+                    {tr(`modes.category.${cat.id}`, cat.label)}
+                  </span>
+
 
                 </button>
               );
@@ -1311,42 +1334,42 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
           </div>
 
 
-          {/* Modus-Liste – zeigt gehoverte Kategorie, sonst aktive */}
-          <div className={styles.modeList}>
-            {(() => {
-              const currentCategoryId = hoverModeCategory ?? modeCategory;
-              const currentCategory = MODE_CATEGORIES.find(
-                (cat) => cat.id === currentCategoryId
-              );
-              if (!currentCategory) return null;
+         {/* Modus-Liste – zeigt gehoverte Kategorie, sonst aktive */}
+<div className={styles.modeList}>
+  {(() => {
+    const currentCategoryId = hoverModeCategory ?? modeCategory;
+    const currentCategory = MODE_CATEGORIES.find(
+      (cat) => cat.id === currentCategoryId
+    );
+    if (!currentCategory) return null;
 
-              return currentCategory.modes.map((modeId) => {
-  const mode = MODI.find((m) => m.id === modeId);
-  if (!mode) return null;
-  const isActive = activeMode === modeId;
+    return currentCategory.modes.map((modeId) => {
+      const mode = MODI.find((m) => m.id === modeId);
+      if (!mode) return null;
+      const isActive = activeMode === modeId;
 
-  return (
-    <ModeAura key={modeId} active={isActive}>
-      <button
-        type="button"
-        className={
-          isActive
-            ? `${styles.modeListItem} ${styles.modeListItemActive}`
-            : styles.modeListItem
-        }
-        onClick={() => switchMode(modeId)}
-        aria-pressed={isActive}
-      >
-        <span className={styles.modeListItemLabel}>
-          {mode.label}
-        </span>
-      </button>
-    </ModeAura>
-  );
-});
+      return (
+        <ModeAura key={modeId} active={isActive}>
+          <button
+            type="button"
+            className={
+              isActive
+                ? `${styles.modeListItem} ${styles.modeListItemActive}`
+                : styles.modeListItem
+            }
+            onClick={() => switchMode(modeId)}
+            aria-pressed={isActive}
+          >
+            <span className={styles.modeListItemLabel}>
+              {modeLabelFromId(modeId)}
+            </span>
+          </button>
+        </ModeAura>
+      );
+    });
+  })()}
+</div>
 
-            })()}
-          </div>
 
         </div>
       </div>

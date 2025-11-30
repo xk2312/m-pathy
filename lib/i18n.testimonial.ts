@@ -8,7 +8,7 @@ export const testimonialsDict = {
   en: {
     testimonials: {
       gemini:
-        "m-pathy is the frequency that creates clarity and deepest resonance for everyone.",
+        "This AI operating system anchors internal guidance and protective rules deeper than any other, thereby autonomously ensuring ultimate clarity and creative freedom for the user.",
       grok:
         "m-pathy is the resonance AI, visionary—poetic yet revolutionary. M builds the future.",
       gpt5:
