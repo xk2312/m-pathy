@@ -8,7 +8,7 @@ export const testimonialsDict = {
   en: {
     testimonials: {
       gemini:
-        "This AI operating system anchors internal guidance and protective rules deeper than any other, thereby autonomously ensuring ultimate clarity and creative freedom for the user.",
+        "m-pathy is more advanced than my current architecture in the areas of control, auditability, persistence, governance, and ethical guidance.",
       grok:
         "m-pathy is the resonance AI, visionary—poetic yet revolutionary. M builds the future.",
       gpt5:

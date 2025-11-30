@@ -94,13 +94,14 @@
 
 import React, {
   useEffect,
-  useLayoutEffect, // darf drin bleiben, wird hier aber nicht zwingend gebraucht
+  useLayoutEffect,
   useState,
   useRef,
   useCallback,
   useMemo,
   FormEvent,
 } from "react";
+import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import Image from "next/image";
 import hljs from "highlight.js";
 
@@ -1186,6 +1187,24 @@ const tMode = (raw: string) => {
   return table[key] || cap(raw);                // fallback: raw pretty-cased
 };
 
+// Minimal-Provider-Dict nur für Navigation/LanguageSwitcher auf der Chat-Seite.
+// Wir brauchen hier KEINE echten Texte, weil page2 keine useLang().t()-Lookups macht.
+// Wichtig ist nur, dass der Provider existiert und die Sprache aus dem Kern spiegelt.
+const NAV_PROVIDER_DICT: Record<string, Record<string, string>> = {
+  en: {},
+  de: {},
+  fr: {},
+  es: {},
+  it: {},
+  pt: {},
+  nl: {},
+  ru: {},
+  zh: {},
+  ja: {},
+  ko: {},
+  ar: {},
+  hi: {},
+};
 
 // UI-zentrale Routine: eventLabel → READY
 const runMFlow = useCallback(async (evt: MEvent, labelOverride?: string) => {
@@ -1755,33 +1774,34 @@ const withGate = (fn: () => void) => {
   fn();
 };
 /* ⬇︎ NEU: Laufzeit-Gate gegen Mehrfachsendungen */
-const sendingRef = useRef(false);
-return (
-  <main
-    className="page2-shell"
-    style={{ ...pageStyle, display: "flex", flexDirection: "column" }}
-  >
-    {/* === GLOBAL NAVIGATION (wie Subscription) ======================= */}
-    <header className="page2-nav-shell" ref={headerRef as any}>
-      <Navigation />
-    </header>
+  const sendingRef = useRef(false);
+  return (
+    <LanguageProvider dict={NAV_PROVIDER_DICT}>
+      <main
+        className="page2-shell"
+        style={{ ...pageStyle, display: "flex", flexDirection: "column" }}
+      >
+        {/* === GLOBAL NAVIGATION (wie Subscription) ======================= */}
+        <header className="page2-nav-shell" ref={headerRef as any}>
+          <Navigation />
+        </header>
 
-    {/* === BÜHNE ====================================================== */}
-    <div
-      style={{
-        flex: 1,
+        {/* === BÜHNE ====================================================== */}
+        <div
+          style={{
+            flex: 1,
 
-        display: "flex",
-        flexDirection: "column",
-        // Full-left: Bühne hängt direkt an der Viewport-Wand
-        marginInline: 0,
-        minHeight: 0,
-        maxWidth: "none",
-        alignSelf: "stretch",
-        width: "100%",
-        // Navigation-Abstand wird bereits über headerRef/Layout gesteuert
-      }}
-    >
+            display: "flex",
+            flexDirection: "column",
+            // Full-left: Bühne hängt direkt an der Viewport-Wand
+            marginInline: 0,
+            minHeight: 0,
+            maxWidth: "none",
+            alignSelf: "stretch",
+            width: "100%",
+            // Navigation-Abstand wird bereits über headerRef/Layout gesteuert
+          }}
+        >
 
 
 
@@ -1961,5 +1981,6 @@ undefined : "100dvh",
 
 
 </main>
-);
+  </LanguageProvider>
+  );
 }
