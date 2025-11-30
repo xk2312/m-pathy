@@ -685,10 +685,13 @@ function modeLabelFromId(id: ModeId): string {
     flow: "mode.flow",
   };
 
+  const fallback =
+    MODI.find((m) => m.id === id)?.label ?? String(id).toUpperCase();
+
   const key = MODE_KEYS[id];
-  const fallback = MODI.find((m) => m.id === id)?.label ?? id.toUpperCase();
   return key ? tr(key, fallback) : fallback;
 }
+
 
 // Universeller Übersetzer: nimmt t(key) und fällt elegant zurück
 function tr(key: string, fallback: string, vars?: Record<string, string>): string {
