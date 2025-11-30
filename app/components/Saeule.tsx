@@ -827,15 +827,12 @@ const labelExpertSelect = tr("experts.choose", "Choose expert");
 
 
   useEffect(() => {
-    // initial: bevorzugt <html lang>, dann navigator.language, Fallback getLocale()
+    // Single Source of Truth: zentraler Sprachkern (lib/i18n)
     try {
-      const htmlLang = (document.documentElement?.lang || "").trim().toLowerCase();
-      const navLang = (navigator.language || (navigator as any).userLanguage || "en")
-        .split("-")[0].toLowerCase();
-      const initial = htmlLang || navLang || getLocale() || "en";
-      setLang(initial);
+      const initial = getLocale() || "en";
+      setLang(initial.toLowerCase());
     } catch {
-      setLang(getLocale());
+      setLang("en");
     }
 
     // Live-Updates aus globalem i18n
@@ -850,7 +847,6 @@ const labelExpertSelect = tr("experts.choose", "Choose expert");
 
   useEffect(() => {
     setHydrated(true);
-    setLang(getLocale());
   }, []);
 
   useEffect(() => {
@@ -862,6 +858,7 @@ const labelExpertSelect = tr("experts.choose", "Choose expert");
 // 🔄 Nach Reload: Kategorie automatisch aus currentExpert ableiten
 useEffect(() => {
   if (!currentExpert) return;
+
 
   const owningCategory =
     EXPERT_CATEGORIES.find((cat) => cat.experts.includes(currentExpert))
