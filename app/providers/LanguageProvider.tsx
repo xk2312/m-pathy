@@ -142,8 +142,6 @@
  *
  * ======================================================================= */
 
-
-"use client";
 import React, {
   createContext,
   useContext,
@@ -215,7 +213,7 @@ export function LanguageProvider({
   const [lang, setLangState] = useState<Lang>("en");
 
   // zentrale Apply-Funktion: State + Spiegel (dir/Hints/Cookies)
-  const applyLang = (next: string) => {
+   const applyLang = (next: string) => {
     const base = (next || "en").slice(0, 2).toLowerCase();
     const safe = (SUP as readonly string[]).includes(base as Lang)
       ? (base as Lang)
@@ -238,10 +236,14 @@ export function LanguageProvider({
   };
 
 
-   // öffentliches setLang – delegiert an den zentralen Sprachkern
+  // öffentliches setLang – koppelt Kern + Provider + UI
   const setLang = (next: Lang) => {
+    // 1) globaler Kern (mpathy:locale + <html lang> + Events)
     setLocale(next);
+    // 2) lokale Spiegelung im Provider (Context + dir + Hints + Cookie)
+    applyLang(next);
   };
+
 
   // Initial-Boot & Listener: Sprache aus dem zentralen Kern spiegeln
   useEffect(() => {

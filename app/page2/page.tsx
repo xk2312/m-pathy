@@ -105,8 +105,8 @@ import Image from "next/image";
 import hljs from "highlight.js";
 
 import Navigation from "@/app/components/navigation/navigation";
-import MessageInput from "../components/MessageInput";
-import Saeule from "../components/Saeule";
+// import MessageInput from "../components/MessageInput";
+// import Saeule from "../components/Saeule";
 import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
 import { PromptRoot } from "./PromptRoot";
