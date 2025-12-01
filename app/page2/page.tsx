@@ -1773,14 +1773,20 @@ const withGate = (fn: () => void) => {
   clickGateRef.current = now;
   fn();
 };
-/* ⬇︎ NEU: Laufzeit-Gate gegen Mehrfachsendungen */
+  /* ⬇︎ NEU: Laufzeit-Gate gegen Mehrfachsendungen */
   const sendingRef = useRef(false);
+
+  /* * RTL-Erkennung – sauber, minimal, garantiert korrekt */
+  const isRtl = locale === "ar";
+
   return (
     <LanguageProvider dict={NAV_PROVIDER_DICT}>
-      <main
-        className="page2-shell"
-        style={{ ...pageStyle, display: "flex", flexDirection: "column" }}
-      >
+
+    <main
+      className="page2-shell"
+      style={{ ...pageStyle, display: "flex", flexDirection: "column" }}
+    >
+
         {/* === GLOBAL NAVIGATION (wie Subscription) ======================= */}
         <header className="page2-nav-shell" ref={headerRef as any}>
           <Navigation />
@@ -1926,23 +1932,32 @@ undefined : "100dvh",
 
                     {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
           <div
-            data-position-state={!hasMessages ? "intro" : "chat"}
-            data-layout={isMobile ?
-"mobile" : "desktop"}
-            className="prompt-root-scene"
-            style={{
-              position: 'fixed',
+  data-position-state={!hasMessages ? "intro" : "chat"}
+  data-layout={isMobile ? "mobile" : "desktop"}
+  className="prompt-root-scene"
+  style={{
+    position: "fixed",
 
-              bottom: 0,
-              left: isMobile ? 0 : 'var(--saeule-w, 277px)', /* Linke Kante = Säulenbreite */
-              right: 0,
-              zIndex: 90, // <--- MAX Z-INDEX, um die Sichtbarkeit zu garantieren
-              display: 'flex',
-              justifyContent: 'center', /* Echte Zentrierung innerhalb dieses Scopes */
-              width: isMobile ? '100%' : 'auto',
-              marginInline: 0
-            }}
-          >
+    bottom: 0,
+    // Desktop: Freiraum auf der Säulen-Seite, Dock zentriert im Chat-Bereich
+    left: isMobile
+      ? 0
+      : isRtl
+        ? 0
+        : "var(--saeule-w, 277px)",
+    right: isMobile
+      ? 0
+      : isRtl
+        ? "var(--saeule-w, 277px)"
+        : 0,
+    zIndex: 90, // <--- MAX Z-INDEX, um die Sichtbarkeit zu garantieren
+    display: "flex",
+    justifyContent: "center", /* Echte Zentrierung innerhalb dieses Scopes */
+    width: isMobile ? "100%" : "auto",
+    marginInline: 0,
+  }}
+>
+
             <PromptRoot
   t={t}
   hasMessages={hasMessages}
