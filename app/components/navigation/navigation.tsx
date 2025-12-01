@@ -399,7 +399,7 @@ boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
         >
           <Link
 
-            href="/"
+            href="/page2"
             aria-label="Home"
             className="inline-flex items-center"
 
