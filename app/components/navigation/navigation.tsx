@@ -242,10 +242,56 @@ export default function Navigation() {
   const pathname = usePathname();
 
   const [isDesktop, setIsDesktop] = useState(false);
+  const [authState, setAuthState] = useState<"guest" | "verifying" | "logged">(
+    "guest",
+  );
 
+  // Session-Status von Server holen (Cookie-basiert)
+  useEffect(() => {
+    let cancelled = false;
+
+    const checkSession = async () => {
+      try {
+        const res = await fetch("/api/auth/session");
+        if (!res.ok) return;
+        const data = (await res.json()) as {
+          ok?: boolean;
+          authenticated?: boolean;
+        };
+        if (cancelled) return;
+
+        if (data?.ok && data.authenticated) {
+          setAuthState("logged");
+          if (typeof window !== "undefined") {
+            window.localStorage.removeItem("auth_verifying");
+          }
+        } else {
+          setAuthState((prev) => (prev === "logged" ? "guest" : prev));
+        }
+      } catch {
+        // schweigend – fällt auf guest zurück
+      }
+    };
+
+    checkSession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [pathname]);
+
+  // Verifying-Flag aus localStorage lesen (wird später vom Magic-Link-POST gesetzt)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const flag = window.localStorage.getItem("auth_verifying");
+    if (flag === "1") {
+      setAuthState("verifying");
+    }
+  }, []);
 
     useEffect(() => {
     if (typeof window === "undefined") return;
+
 
     const handleResize = () => {
       // Desktop ab 768px – einheitliche Layout-Quelle
@@ -286,7 +332,7 @@ export default function Navigation() {
   // Einzige RTL-Sprache aktuell: Arabisch
   const isRTL = lang === "ar";
 
-  const headerStyle: React.CSSProperties = isChatStageLayout
+    const headerStyle: React.CSSProperties = isChatStageLayout
     ? isRTL
       ? {
           // RTL: Säule steht rechts → Navi nimmt die linke Bühne
@@ -311,6 +357,16 @@ export default function Navigation() {
         insetInline: 0,
         zIndex: 40,
       };
+
+  const loginLabel =
+    authState === "logged"
+      ? "Account"
+      : authState === "verifying"
+        ? "Check mail"
+        : "Login";
+
+  // Living Horizon – Desktop + Chat only
+
 
 
   // Living Horizon – Desktop + Chat only
@@ -430,23 +486,23 @@ boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
           />
         </div>
 
-        {/* RIGHT – Language + Login */}
+            {/* RIGHT – Language + Login */}
         <div className="flex items-center justify-end gap-3 min-w-[180px]">
           <LanguageSwitcher />
-         <button
-  type="button"
-  aria-label="Login"
-  className="inline-flex items-center justify-center rounded-full border border-white/20 h-8 text-[0.78rem] tracking-[0.08em] uppercase text-white/75 hover:text-white hover:border-white/60 hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-300/60 focus:ring-offset-0"
-  style={{
-    paddingInline: "var(--nav-button-pad-inline)",
-    cursor: "pointer",
-  }}
->
-  Login
-</button>
-
-
+          <button
+            type="button"
+            aria-label={authState === "logged" ? "Account" : "Login"}
+            className="inline-flex items-center justify-center rounded-full border border-white/20 h-8 text-[0.78rem] tracking-[0.08em] uppercase text-white/75 hover:text-white hover:border-white/60 hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-300/60 focus:ring-offset-0 disabled:opacity-60"
+            style={{
+              paddingInline: "var(--nav-button-pad-inline)",
+              cursor: "pointer",
+            }}
+            disabled={authState === "verifying"}
+          >
+            {loginLabel}
+          </button>
         </div>
+
 
       </div>
     </header>
