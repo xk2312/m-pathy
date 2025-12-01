@@ -27,8 +27,12 @@ export async function POST(req: Request) {
     ? `${baseUrl}${callbackPath}`
     : callbackPath;
 
-  // TODO: Echten Mailversand via SMTP ergänzen.
+   // TODO: Echten Mailversand via SMTP ergänzen.
   console.log("[magic-link] login link generated", { email, callbackUrl });
 
-  return NextResponse.json({ ok: true });
+  // DEV-Convenience: Magic-Link auch in der Response zurückgeben,
+  // damit er im Network-Tab sichtbar ist. Für echtes Live-Setup
+  // kann das später wieder entfernt oder über ein Flag geschützt werden.
+  return NextResponse.json({ ok: true, magicUrl: callbackUrl });
 }
+
