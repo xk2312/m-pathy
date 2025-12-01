@@ -2,9 +2,11 @@
 "use client";
 
 import React, { useCallback } from "react";
+import { motion } from "framer-motion";
 import { usePromptStateMachine } from "@/app/chat/hooks/usePromptStateMachine";
 import { PromptShell } from "@/app/components/prompt/PromptShell";
 import "./prompt.css";
+
 
 type FooterStatus = {
   modeLabel?: string;
@@ -128,7 +130,7 @@ export function PromptRoot({
       data-prompt-state={visualState}
     >
       {/* ModeLine */}
-      {hasFooterStatus && (
+            {hasFooterStatus && (
         <div className="prompt-mode-line">
           {footerStatus?.modeLabel && (
             <span className="prompt-mode-line-mode">
@@ -148,26 +150,104 @@ export function PromptRoot({
 
       {/* ⭐ NEW: DOORMAN inside PromptDockCluster */}
       {!hasMessages && (
-        <div className="prompt-doorman" aria-hidden="true">
-          <p className="prompt-doorman-main">{t("prompt.doorman.main")}</p>
-          <p className="prompt-doorman-sub">{t("prompt.doorman.sub")}</p>
-        </div>
+        <DoormanIntro
+          main={t("prompt.doorman.main")}
+          sub={t("prompt.doorman.sub")}
+        />
       )}
 
       {/* PromptShell */}
-      <PromptShell
-  value={input}
-  onChange={setInput}
-  onSubmit={sendMessage}
-  isSendBlocked={snapshot.isSendBlocked}
-  disabled={false}
-  placeholder={t("writeMessage")}
-  ariaLabel={t("writeMessage")}
-  autoFocus={!hasMessages}
-  onHeightChange={scheduleDockUpdate}
-  onToggleSaeule={onToggleSaeule}                // ★ NEU: Übergabe an Shell
-/>
+           <PromptShell
+        value={input}
+        onChange={setInput}
+        onSubmit={sendMessage}
+        isSendBlocked={snapshot.isSendBlocked}
+        disabled={false}
+        placeholder={t("writeMessage")}
+        ariaLabel={t("writeMessage")}
+        autoFocus={!hasMessages}
+        onHeightChange={scheduleDockUpdate}
+        onToggleSaeule={onToggleSaeule} // ★ NEU: Übergabe an Shell
+      />
+    </div>
+  );
+}
 
+type DoormanIntroProps = {
+  main: string;
+  sub: string;
+};
+
+function DoormanIntro({ main, sub }: DoormanIntroProps) {
+  const [reduceMotion, setReduceMotion] = React.useState(false);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handleChange = (event: any) => {
+      setReduceMotion(!!event.matches);
+    };
+
+    setReduceMotion(mq.matches);
+    mq.addEventListener?.("change", handleChange);
+
+    return () => {
+      mq.removeEventListener?.("change", handleChange);
+    };
+  }, []);
+
+  // Reduced Motion → statischer Text, kein Effekt
+  if (reduceMotion) {
+    return (
+      <div className="prompt-doorman" aria-hidden="true">
+        <p className="prompt-doorman-main">{main}</p>
+        <p className="prompt-doorman-sub">{sub}</p>
+      </div>
+    );
+  }
+
+  // Normalfall → sanfter Nebel + Blur/Fade-In nach 3s
+  return (
+    <div
+      className="prompt-doorman"
+      aria-hidden="true"
+      style={{ position: "relative" }}
+    >
+      {/* gedimmter Nebel-Hauch, einmalig */}
+      <motion.div
+        aria-hidden="true"
+        initial={{ opacity: 0, scale: 0.96, filter: "blur(18px)" }}
+        animate={{
+          opacity: [0, 0.18, 0.08],
+          scale: [0.96, 1.02, 1],
+          filter: ["blur(18px)", "blur(26px)", "blur(16px)"],
+          transition: { delay: 3, duration: 4.2, ease: "easeInOut" },
+        }}
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          background:
+            "radial-gradient(40% 30% at 50% 60%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.10) 32%, transparent 70%)",
+          mixBlendMode: "screen",
+        }}
+      />
+
+      {/* Text – Cold Blur → klar, nach 3s */}
+      <motion.div
+        initial={{ opacity: 0, y: 10, filter: "blur(10px)" }}
+        animate={{
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          transition: { delay: 3, duration: 0.95, ease: [0.23, 1, 0.32, 1] },
+        }}
+        style={{ willChange: "transform, opacity, filter" }}
+      >
+        <p className="prompt-doorman-main">{main}</p>
+        <p className="prompt-doorman-sub">{sub}</p>
+      </motion.div>
     </div>
   );
 }
