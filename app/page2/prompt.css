@@ -606,26 +606,16 @@ END OF INDEX
   margin: 0 auto;
   padding: 0;
 
-  /* saubere Zeilen ohne „hängende“ Buchstaben */
-  line-height: 1.35;
+  line-height: 1.4;
+  white-space: normal;
 
-  /* verhindert hässliche Umbrüche */
-  overflow-wrap: break-word;
-  word-break: normal;
+  /* verhindert einzelne isolierte Zeilen */
+  word-break: keep-all;
 
-  /* elegante Trennung für lange Fremdsprachenwörter */
+  /* trotzdem elegante Trennung bei langen Wörtern */
   hyphens: auto;
 }
 
-/* hält beide Zeilen optisch zusammen */
-.prompt-doorman {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
 
 /* =============================================================
    Busy-State — leises „Breath“-Pulsieren beim Laden
