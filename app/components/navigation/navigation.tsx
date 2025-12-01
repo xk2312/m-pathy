@@ -486,7 +486,7 @@ boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
           />
         </div>
 
-            {/* RIGHT – Language + Login */}
+        {/* RIGHT – Language + Login */}
         <div className="flex items-center justify-end gap-3 min-w-[180px]">
           <LanguageSwitcher />
           <button
@@ -498,10 +498,49 @@ boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
               cursor: "pointer",
             }}
             disabled={authState === "verifying"}
+            onClick={async () => {
+              if (authState === "logged") {
+                // TODO: Account-View/Dropdown später ergänzen
+                return;
+              }
+
+              if (typeof window === "undefined") return;
+
+              const email = window.prompt("Bitte E-Mail für Magic-Link eingeben:");
+              if (!email) return;
+
+              try {
+                window.localStorage.setItem("auth_verifying", "1");
+                setAuthState("verifying");
+
+                const res = await fetch("/auth/magic-link", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ email }),
+                });
+
+                if (!res.ok) {
+                  // Fehler → zurück auf guest
+                  window.localStorage.removeItem("auth_verifying");
+                  setAuthState("guest");
+                  window.alert("Senden des Magic-Links fehlgeschlagen.");
+                } else {
+                  // Erfolg: Header zeigt "Check mail"
+                  window.alert("Magic-Link wurde erzeugt. Bitte Mail/log prüfen.");
+                }
+              } catch {
+                window.localStorage.removeItem("auth_verifying");
+                setAuthState("guest");
+                window.alert("Unerwarteter Fehler beim Magic-Link.");
+              }
+            }}
           >
             {loginLabel}
           </button>
         </div>
+
 
 
       </div>
