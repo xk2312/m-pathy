@@ -433,14 +433,18 @@ boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
         {/* RIGHT – Language + Login */}
         <div className="flex items-center justify-end gap-3 min-w-[180px]">
           <LanguageSwitcher />
-          <button
+         <button
   type="button"
   aria-label="Login"
   className="inline-flex items-center justify-center rounded-full border border-white/20 h-8 text-[0.78rem] tracking-[0.08em] uppercase text-white/75 hover:text-white hover:border-white/60 hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-300/60 focus:ring-offset-0"
-  style={{ paddingInline: "var(--nav-button-pad-inline)" }}
+  style={{
+    paddingInline: "var(--nav-button-pad-inline)",
+    cursor: "pointer",
+  }}
 >
   Login
 </button>
+
 
         </div>
 
