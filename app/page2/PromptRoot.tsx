@@ -149,37 +149,27 @@ export function PromptRoot({
         </div>
       )}
 
-           {/* ⭐ NEW: DOORMAN + Starfield-Szene */}
-      <div className="prompt-prechat-scene">
-        {!hasMessages && (
-          <>
-            {/* Starfield nur im Pre-Chat/Doorman-State */}
-            <div className="prompt-prechat-starfield" aria-hidden="true">
-              <VoiaBloom />
-            </div>
-
-            <DoormanIntro
-              main={t("prompt.doorman.main")}
-              sub={t("prompt.doorman.sub")}
-            />
-          </>
-        )}
-
-        {/* PromptShell */}
-        <PromptShell
-          value={input}
-          onChange={setInput}
-          onSubmit={sendMessage}
-          isSendBlocked={snapshot.isSendBlocked}
-          disabled={false}
-          placeholder={t("writeMessage")}
-          ariaLabel={t("writeMessage")}
-          autoFocus={!hasMessages}
-          onHeightChange={scheduleDockUpdate}
-          onToggleSaeule={onToggleSaeule} // ★ NEU: Übergabe an Shell
+      {/* ⭐ NEW: DOORMAN inside PromptDockCluster */}
+      {!hasMessages && (
+        <DoormanIntro
+          main={t("prompt.doorman.main")}
+          sub={t("prompt.doorman.sub")}
         />
-      </div>
+      )}
 
+      {/* PromptShell */}
+           <PromptShell
+        value={input}
+        onChange={setInput}
+        onSubmit={sendMessage}
+        isSendBlocked={snapshot.isSendBlocked}
+        disabled={false}
+        placeholder={t("writeMessage")}
+        ariaLabel={t("writeMessage")}
+        autoFocus={!hasMessages}
+        onHeightChange={scheduleDockUpdate}
+        onToggleSaeule={onToggleSaeule} // ★ NEU: Übergabe an Shell
+      />
     </div>
   );
 }

@@ -593,33 +593,10 @@ END OF INDEX
   padding: 0;
   max-width: 640px;         /* gleiche optische Breite wie Pille */
 }
-
-/* === PRE-CHAT STARFIELD WRAPPER (NEW) === */
-
-.prompt-prechat-scene {
-  position: relative;
-  width: 100%;
-}
-
-.prompt-prechat-starfield {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Doorman + PromptShell liegen über dem Starfield */
-.prompt-prechat-scene .prompt-doorman,
-.prompt-prechat-scene .prompt-shell {
-  position: relative;
-  z-index: 1;
-}
-
 /* Legacy mode line vorerst ausblenden */
 .prompt-mode-line {
   display: none;
 }
-
 /* =============================================================
    Busy-State — leises „Breath“-Pulsieren beim Laden
    ============================================================= */
