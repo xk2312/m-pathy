@@ -430,20 +430,21 @@ boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
           />
         </div>
 
-                {/* RIGHT – Language + Login-Placeholder */}
-        <div className="flex items-center justify-end gap-3 min-w-[140px]">
+        {/* RIGHT – Language + Login */}
+        <div className="flex items-center justify-end gap-3 min-w-[180px]">
           <LanguageSwitcher />
           <button
             type="button"
             aria-label="Login"
-            className="h-8 w-8 rounded-full border border-white/25 flex items-center justify-center text-[11px] text-white/70 hover:text-white hover:border-white/60 transition-all focus:outline-none focus:ring-2 focus:ring-cyan-300/60 focus:ring-offset-0"
+            className="inline-flex items-center justify-center rounded-full border border-white/20 px-3 h-8 text-[0.78rem] tracking-[0.08em] uppercase text-white/75 hover:text-white hover:border-white/60 hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-300/60 focus:ring-offset-0"
           >
-            ⭑
+            Login
           </button>
         </div>
 
       </div>
     </header>
+
   );
 }
 
