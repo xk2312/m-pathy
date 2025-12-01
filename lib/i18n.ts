@@ -109,6 +109,7 @@ import { attachHero } from "./i18n.hero";
 import { attachKpi } from "./i18n.kpi";
 import { attachTestimonials } from "./i18n.testimonial";
 import { attachPrompts } from "./i18n.prompts";
+import { attachDoorman } from "./i18n.doorman";
 
 type Dict = Record<string, string>;
 
@@ -2031,12 +2032,15 @@ const DICTS = {
   hi: hi as Dict,
 } as const;
 
-
 // Prompt-Templates an Legacy-Dict anhängen (EN-only)
 attachPrompts(DICTS as any);
 
+// Doorman-Prompts an Legacy-Dict anhängen (13 Sprachen)
+attachDoorman(DICTS as any);
+
 // Kanonische Locale-Liste direkt aus DICTS abgeleitet
 const DICT_KEYS = Object.keys(DICTS) as (keyof typeof DICTS)[];
+
 
 // Zentraler Locale-Typ – exakt diese 13 Codes
 export type Locale = (typeof DICT_KEYS)[number];
