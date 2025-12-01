@@ -214,18 +214,18 @@ function DoormanIntro({ main, sub }: DoormanIntroProps) {
       aria-hidden="true"
       style={{ position: "relative" }}
     >
-      {/* Soft cold fog */}
+      {/* Soft cold fog mit etwas mehr Glow */}
       <motion.div
         aria-hidden="true"
-        initial={{ opacity: 0, scale: 0.96, filter: "blur(18px)" }}
+        initial={{ opacity: 0, scale: 0.97, filter: "blur(16px)" }}
         animate={{
-          opacity: [0, 0.18, 0.08],
-          scale: [0.96, 1.02, 1],
-          filter: ["blur(18px)", "blur(26px)", "blur(16px)"],
+          opacity: [0, 0.2, 0.1],
+          scale: [0.97, 1.03, 1],
+          filter: ["blur(16px)", "blur(24px)", "blur(18px)"],
         }}
         transition={{
           delay: START_DELAY,
-          duration: 4.2,
+          duration: 4.6,
           ease: "easeInOut",
         }}
         style={{
@@ -233,19 +233,20 @@ function DoormanIntro({ main, sub }: DoormanIntroProps) {
           inset: 0,
           pointerEvents: "none",
           background:
-            "radial-gradient(40% 30% at 50% 60%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.10) 32%, transparent 70%)",
+            "radial-gradient(45% 35% at 50% 60%, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.12) 32%, transparent 70%)",
           mixBlendMode: "screen",
         }}
       />
 
-      {/* === Zeile 1 – Typewriter === */}
+      {/* === Zeile 1 – Typewriter, weich & mit Glow === */}
       <motion.p
         className="prompt-doorman-main"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{ opacity: 0, filter: "blur(4px)" }}
+        animate={{ opacity: 1, filter: "blur(0px)" }}
         transition={{
           delay: START_DELAY,
-          duration: 0.3,
+          duration: 0.5,
+          ease: [0.23, 1, 0.32, 1],
         }}
         style={{
           display: "inline-block",
@@ -255,12 +256,17 @@ function DoormanIntro({ main, sub }: DoormanIntroProps) {
         {Array.from(main).map((ch, index) => (
           <motion.span
             key={index}
-            initial={{ opacity: 0, y: 2 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 1, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{
               delay: START_DELAY + index * STAGGER,
-              duration: 0.22,
+              duration: 0.26,
               ease: [0.23, 1, 0.32, 1],
+            }}
+            style={{
+              display: "inline-block",
+              textShadow:
+                "0 0 6px rgba(255,255,255,0.55), 0 0 14px rgba(120,180,255,0.45)",
             }}
           >
             {ch}
@@ -268,15 +274,16 @@ function DoormanIntro({ main, sub }: DoormanIntroProps) {
         ))}
       </motion.p>
 
-      {/* === Zeile 2 – folgt automatisch nach Zeile 1 === */}
+      {/* === Zeile 2 – folgt weich nach Zeile 1 === */}
       <motion.p
         className="prompt-doorman-sub"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{ opacity: 0, filter: "blur(4px)" }}
+        animate={{ opacity: 1, filter: "blur(0px)" }}
         transition={{
           delay:
             START_DELAY + main.length * STAGGER + AFTER_MAIN,
-          duration: 0.3,
+          duration: 0.5,
+          ease: [0.23, 1, 0.32, 1],
         }}
         style={{
           display: "inline-block",
@@ -286,16 +293,21 @@ function DoormanIntro({ main, sub }: DoormanIntroProps) {
         {Array.from(sub).map((ch, index) => (
           <motion.span
             key={index}
-            initial={{ opacity: 0, y: 2 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 1, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{
               delay:
                 START_DELAY +
                 main.length * STAGGER +
                 AFTER_MAIN +
                 index * STAGGER,
-              duration: 0.22,
+              duration: 0.26,
               ease: [0.23, 1, 0.32, 1],
+            }}
+            style={{
+              display: "inline-block",
+              textShadow:
+                "0 0 5px rgba(255,255,255,0.45), 0 0 12px rgba(120,180,255,0.35)",
             }}
           >
             {ch}
@@ -305,6 +317,7 @@ function DoormanIntro({ main, sub }: DoormanIntroProps) {
     </div>
   );
 }
+
 
 
 export default PromptRoot;
