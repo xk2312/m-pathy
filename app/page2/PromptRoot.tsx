@@ -5,6 +5,7 @@ import React, { useCallback } from "react";
 import { motion } from "framer-motion";
 import { usePromptStateMachine } from "@/app/chat/hooks/usePromptStateMachine";
 import { PromptShell } from "@/app/components/prompt/PromptShell";
+import VoiaBloom from "@/app/components/StarField"; // Starfield-Overlay
 import "./prompt.css";
 
 
@@ -148,27 +149,37 @@ export function PromptRoot({
         </div>
       )}
 
-      {/* ⭐ NEW: DOORMAN inside PromptDockCluster */}
-      {!hasMessages && (
-        <DoormanIntro
-          main={t("prompt.doorman.main")}
-          sub={t("prompt.doorman.sub")}
-        />
-      )}
+           {/* ⭐ NEW: DOORMAN + Starfield-Szene */}
+      <div className="prompt-prechat-scene">
+        {!hasMessages && (
+          <>
+            {/* Starfield nur im Pre-Chat/Doorman-State */}
+            <div className="prompt-prechat-starfield" aria-hidden="true">
+              <VoiaBloom />
+            </div>
 
-      {/* PromptShell */}
-           <PromptShell
-        value={input}
-        onChange={setInput}
-        onSubmit={sendMessage}
-        isSendBlocked={snapshot.isSendBlocked}
-        disabled={false}
-        placeholder={t("writeMessage")}
-        ariaLabel={t("writeMessage")}
-        autoFocus={!hasMessages}
-        onHeightChange={scheduleDockUpdate}
-        onToggleSaeule={onToggleSaeule} // ★ NEU: Übergabe an Shell
-      />
+            <DoormanIntro
+              main={t("prompt.doorman.main")}
+              sub={t("prompt.doorman.sub")}
+            />
+          </>
+        )}
+
+        {/* PromptShell */}
+        <PromptShell
+          value={input}
+          onChange={setInput}
+          onSubmit={sendMessage}
+          isSendBlocked={snapshot.isSendBlocked}
+          disabled={false}
+          placeholder={t("writeMessage")}
+          ariaLabel={t("writeMessage")}
+          autoFocus={!hasMessages}
+          onHeightChange={scheduleDockUpdate}
+          onToggleSaeule={onToggleSaeule} // ★ NEU: Übergabe an Shell
+        />
+      </div>
+
     </div>
   );
 }
