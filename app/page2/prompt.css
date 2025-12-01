@@ -597,6 +597,36 @@ END OF INDEX
 .prompt-mode-line {
   display: none;
 }
+/* ==== DOORMAN – Anti-Wrapping & Soft Wrapping ==== */
+
+.prompt-doorman-main,
+.prompt-doorman-sub {
+  display: block;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0;
+
+  /* saubere Zeilen ohne „hängende“ Buchstaben */
+  line-height: 1.35;
+
+  /* verhindert hässliche Umbrüche */
+  overflow-wrap: break-word;
+  word-break: normal;
+
+  /* elegante Trennung für lange Fremdsprachenwörter */
+  hyphens: auto;
+}
+
+/* hält beide Zeilen optisch zusammen */
+.prompt-doorman {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 /* =============================================================
    Busy-State — leises „Breath“-Pulsieren beim Laden
    ============================================================= */
