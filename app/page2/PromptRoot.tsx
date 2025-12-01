@@ -185,19 +185,15 @@ function DoormanIntro({ main, sub }: DoormanIntroProps) {
     if (typeof window === "undefined" || !window.matchMedia) return;
 
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handleChange = (event: any) => {
-      setReduceMotion(!!event.matches);
-    };
+    const handler = (e: any) => setReduceMotion(e.matches);
 
     setReduceMotion(mq.matches);
-    mq.addEventListener?.("change", handleChange);
+    mq.addEventListener?.("change", handler);
 
-    return () => {
-      mq.removeEventListener?.("change", handleChange);
-    };
+    return () => mq.removeEventListener?.("change", handler);
   }, []);
 
-  // Reduced Motion → statischer Text, kein Effekt
+  // --- Reduced motion: statisch ---
   if (reduceMotion) {
     return (
       <div className="prompt-doorman" aria-hidden="true">
@@ -207,14 +203,18 @@ function DoormanIntro({ main, sub }: DoormanIntroProps) {
     );
   }
 
-  // Normalfall → sanfter Nebel + Blur/Fade-In nach 3s
+  // --- Settings ---
+  const START_DELAY = 3;
+  const STAGGER = 0.035;
+  const AFTER_MAIN = 0.25;
+
   return (
     <div
       className="prompt-doorman"
       aria-hidden="true"
       style={{ position: "relative" }}
     >
-      {/* gedimmter Nebel-Hauch, einmalig */}
+      {/* Soft cold fog */}
       <motion.div
         aria-hidden="true"
         initial={{ opacity: 0, scale: 0.96, filter: "blur(18px)" }}
@@ -222,7 +222,11 @@ function DoormanIntro({ main, sub }: DoormanIntroProps) {
           opacity: [0, 0.18, 0.08],
           scale: [0.96, 1.02, 1],
           filter: ["blur(18px)", "blur(26px)", "blur(16px)"],
-          transition: { delay: 3, duration: 4.2, ease: "easeInOut" },
+        }}
+        transition={{
+          delay: START_DELAY,
+          duration: 4.2,
+          ease: "easeInOut",
         }}
         style={{
           position: "absolute",
@@ -234,22 +238,73 @@ function DoormanIntro({ main, sub }: DoormanIntroProps) {
         }}
       />
 
-      {/* Text – Cold Blur → klar, nach 3s */}
-      <motion.div
-        initial={{ opacity: 0, y: 10, filter: "blur(10px)" }}
-        animate={{
-          opacity: 1,
-          y: 0,
-          filter: "blur(0px)",
-          transition: { delay: 3, duration: 0.95, ease: [0.23, 1, 0.32, 1] },
+      {/* === Zeile 1 – Typewriter === */}
+      <motion.p
+        className="prompt-doorman-main"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          delay: START_DELAY,
+          duration: 0.3,
         }}
-        style={{ willChange: "transform, opacity, filter" }}
+        style={{
+          display: "inline-block",
+          whiteSpace: "pre-wrap",
+        }}
       >
-        <p className="prompt-doorman-main">{main}</p>
-        <p className="prompt-doorman-sub">{sub}</p>
-      </motion.div>
+        {Array.from(main).map((ch, index) => (
+          <motion.span
+            key={index}
+            initial={{ opacity: 0, y: 2 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: START_DELAY + index * STAGGER,
+              duration: 0.22,
+              ease: [0.23, 1, 0.32, 1],
+            }}
+          >
+            {ch}
+          </motion.span>
+        ))}
+      </motion.p>
+
+      {/* === Zeile 2 – folgt automatisch nach Zeile 1 === */}
+      <motion.p
+        className="prompt-doorman-sub"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          delay:
+            START_DELAY + main.length * STAGGER + AFTER_MAIN,
+          duration: 0.3,
+        }}
+        style={{
+          display: "inline-block",
+          whiteSpace: "pre-wrap",
+        }}
+      >
+        {Array.from(sub).map((ch, index) => (
+          <motion.span
+            key={index}
+            initial={{ opacity: 0, y: 2 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              delay:
+                START_DELAY +
+                main.length * STAGGER +
+                AFTER_MAIN +
+                index * STAGGER,
+              duration: 0.22,
+              ease: [0.23, 1, 0.32, 1],
+            }}
+          >
+            {ch}
+          </motion.span>
+        ))}
+      </motion.p>
     </div>
   );
 }
+
 
 export default PromptRoot;
