@@ -881,6 +881,9 @@
   --nav-padding-block: 6px;
     /* Login / Switcher Button Horizontal Padding */
   --nav-button-pad-inline: 5px;
+
+    --nav-height-lg: 96px;
+
 }
 
 
