@@ -1,7 +1,8 @@
-// lib/i18n.navigation.ts
-// GPTM-Galaxy+ · Navigation i18n (V1)
-// Domain: NUR Navigationstexte (keine Hero/CTA/Security/etc.)
+// ===============================================
+// i18n.navigation.ts — 3 languages (en, de, fr)
+// ===============================================
 
+// ---- Types ----
 export type NavLinks = {
   subscription: string;
   chat: string;
@@ -19,22 +20,26 @@ export type NavAria = {
   language: string;
 };
 
+export type NavAccountState = {
+  login: string;
+  verifying: string;
+  account: string;
+};
+
 export type NavLocale = {
   nav: {
     links: NavLinks;
     language: NavLanguage;
     aria: NavAria;
+    account_state: NavAccountState;
   };
 };
 
-// Hinweis:
-// - Step 01: nur EN befüllt.
-// - Step 02: alle 13 Sprachen ergänzen (gleiche Struktur, gleiche Keys).
-// - Zugriff (später in navigation.tsx / LanguageSwitcher):
-//     import { dict as navDict } from "@/lib/i18n.navigation";
-//     const locale = navDict[lang] ?? navDict.en;
-
-export const dict: { [lang: string]: NavLocale } = {
+// ---- LOCALES ----
+export const i18nNavigation = {
+  // --------------------------------------
+  // ENGLISH — MASTER
+  // --------------------------------------
   en: {
     nav: {
       links: {
@@ -51,28 +56,44 @@ export const dict: { [lang: string]: NavLocale } = {
         menu: "Main navigation",
         language: "Change language",
       },
+      account_state: {
+        login: "Login",
+        verifying: "Check Mail",
+        account: "Account",
+      },
     },
   },
 
+  // --------------------------------------
+  // GERMAN — DEUTSCH
+  // --------------------------------------
   de: {
     nav: {
       links: {
-        subscription: "Subscription",
+        subscription: "Abo",
         chat: "Chat",
-        account: "Konto",
+        account: "Account",
       },
       language: {
         label: "Sprache",
-        select_label: "Sprache auswählen",
+        select_label: "Sprache wählen",
         dropdown_label: "Sprachauswahl öffnen",
       },
       aria: {
         menu: "Hauptnavigation",
         language: "Sprache ändern",
       },
+      account_state: {
+        login: "Login",
+        verifying: "E-Mail prüfen",
+        account: "Account",
+      },
     },
   },
 
+  // --------------------------------------
+  // FRENCH — FRANÇAIS
+  // --------------------------------------
   fr: {
     nav: {
       links: {
@@ -83,15 +104,23 @@ export const dict: { [lang: string]: NavLocale } = {
       language: {
         label: "Langue",
         select_label: "Choisir la langue",
-        dropdown_label: "Ouvrir la sélection de la langue",
+        dropdown_label: "Ouvrir la sélection de langue",
       },
       aria: {
         menu: "Navigation principale",
-        language: "Changer de langue",
+        language: "Changer la langue",
+      },
+      account_state: {
+        login: "Connexion",
+        verifying: "Vérification de l’e-mail",
+        account: "Compte",
       },
     },
   },
 
+  // --------------------------------------
+  // SPANISH — ESPAÑOL
+  // --------------------------------------
   es: {
     nav: {
       links: {
@@ -108,9 +137,17 @@ export const dict: { [lang: string]: NavLocale } = {
         menu: "Navegación principal",
         language: "Cambiar idioma",
       },
+      account_state: {
+        login: "Iniciar sesión",
+        verifying: "Revisar correo",
+        account: "Cuenta",
+      },
     },
   },
 
+  // --------------------------------------
+  // ITALIAN — ITALIANO
+  // --------------------------------------
   it: {
     nav: {
       links: {
@@ -121,15 +158,23 @@ export const dict: { [lang: string]: NavLocale } = {
       language: {
         label: "Lingua",
         select_label: "Seleziona lingua",
-        dropdown_label: "Apri selezione lingua",
+        dropdown_label: "Apri selezione della lingua",
       },
       aria: {
         menu: "Navigazione principale",
         language: "Cambia lingua",
       },
+      account_state: {
+        login: "Accedi",
+        verifying: "Controlla l’e-mail",
+        account: "Account",
+      },
     },
   },
 
+  // --------------------------------------
+  // PORTUGUESE — PORTUGUÊS
+  // --------------------------------------
   pt: {
     nav: {
       links: {
@@ -144,11 +189,19 @@ export const dict: { [lang: string]: NavLocale } = {
       },
       aria: {
         menu: "Navegação principal",
-        language: "Mudar idioma",
+        language: "Alterar idioma",
+      },
+      account_state: {
+        login: "Entrar",
+        verifying: "Verificar e-mail",
+        account: "Conta",
       },
     },
   },
 
+  // --------------------------------------
+  // DUTCH — NEDERLANDS
+  // --------------------------------------
   nl: {
     nav: {
       links: {
@@ -158,16 +211,24 @@ export const dict: { [lang: string]: NavLocale } = {
       },
       language: {
         label: "Taal",
-        select_label: "Selecteer taal",
-        dropdown_label: "Taalkeuze openen",
+        select_label: "Taal kiezen",
+        dropdown_label: "Taalmenu openen",
       },
       aria: {
         menu: "Hoofdnavigatie",
         language: "Taal wijzigen",
       },
+      account_state: {
+        login: "Inloggen",
+        verifying: "E-mail controleren",
+        account: "Account",
+      },
     },
   },
 
+  // --------------------------------------
+  // RUSSIAN — РУССКИЙ
+  // --------------------------------------
   ru: {
     nav: {
       links: {
@@ -184,9 +245,17 @@ export const dict: { [lang: string]: NavLocale } = {
         menu: "Основная навигация",
         language: "Изменить язык",
       },
+      account_state: {
+        login: "Войти",
+        verifying: "Проверьте почту",
+        account: "Аккаунт",
+      },
     },
   },
 
+  // --------------------------------------
+  // CHINESE (Simplified) — 简体中文
+  // --------------------------------------
   zh: {
     nav: {
       links: {
@@ -201,11 +270,19 @@ export const dict: { [lang: string]: NavLocale } = {
       },
       aria: {
         menu: "主导航",
-        language: "更改语言",
+        language: "切换语言",
+      },
+      account_state: {
+        login: "登录",
+        verifying: "检查邮箱",
+        account: "账户",
       },
     },
   },
 
+  // --------------------------------------
+  // JAPANESE — 日本語
+  // --------------------------------------
   ja: {
     nav: {
       links: {
@@ -222,9 +299,17 @@ export const dict: { [lang: string]: NavLocale } = {
         menu: "メインナビゲーション",
         language: "言語を変更",
       },
+      account_state: {
+        login: "ログイン",
+        verifying: "メール確認",
+        account: "アカウント",
+      },
     },
   },
 
+  // --------------------------------------
+  // KOREAN — 한국어
+  // --------------------------------------
   ko: {
     nav: {
       links: {
@@ -241,14 +326,22 @@ export const dict: { [lang: string]: NavLocale } = {
         menu: "메인 내비게이션",
         language: "언어 변경",
       },
+      account_state: {
+        login: "로그인",
+        verifying: "메일 확인",
+        account: "계정",
+      },
     },
   },
 
+  // --------------------------------------
+  // ARABIC — العربية  (RTL-ready)
+  // --------------------------------------
   ar: {
     nav: {
       links: {
         subscription: "الاشتراك",
-        chat: "الدردشة",
+        chat: "المحادثة",
         account: "الحساب",
       },
       language: {
@@ -260,9 +353,17 @@ export const dict: { [lang: string]: NavLocale } = {
         menu: "التنقل الرئيسي",
         language: "تغيير اللغة",
       },
+      account_state: {
+        login: "تسجيل الدخول",
+        verifying: "تحقق من البريد",
+        account: "الحساب",
+      },
     },
   },
 
+  // --------------------------------------
+  // HINDI — हिन्दी
+  // --------------------------------------
   hi: {
     nav: {
       links: {
@@ -279,6 +380,12 @@ export const dict: { [lang: string]: NavLocale } = {
         menu: "मुख्य नेविगेशन",
         language: "भाषा बदलें",
       },
+      account_state: {
+        login: "लॉगिन",
+        verifying: "मेल जांचें",
+        account: "खाता",
+      },
     },
   },
-};
+
+} satisfies Record<string, NavLocale>;

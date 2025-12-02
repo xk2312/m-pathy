@@ -235,14 +235,14 @@ import { usePathname } from "next/navigation";
 
 import LanguageSwitcher from "@/app/components/navigation/LanguageSwitcher";
 import { useLang } from "@/app/providers/LanguageProvider";
-import { dict as navDict } from "@/lib/i18n.navigation";
+import { i18nNavigation } from "@/lib/i18n.navigation";
 import AccountPanel from "@/app/components/navigation/AccountPanel";
 
 
 export default function Navigation() {
-   const { lang } = useLang();
+  const { lang } = useLang();
   const pathname = usePathname();
-
+  
   const [isDesktop, setIsDesktop] = useState(false);
   const [authState, setAuthState] = useState<"guest" | "verifying" | "logged">(
     "guest",
@@ -355,8 +355,10 @@ export default function Navigation() {
   const logoSize = 40; // fix
 
   // Sprache laden
-  const locale = navDict[lang] ?? navDict.en;
-  const links = locale.nav.links;
+  const navDict = i18nNavigation;
+  const locale = navDict[lang]?.nav ?? navDict["en"].nav;
+
+  const links = locale.links;
 
   const isActive = (href: string) => {
     if (!pathname) return false;
