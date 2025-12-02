@@ -1,5 +1,5 @@
 // ===============================================
-// i18n.navigation.ts — 3 languages (en, de, fr)
+// i18n.navigation.ts — 13 languages
 // ===============================================
 
 // ---- Types ----
@@ -112,7 +112,7 @@ export const i18nNavigation = {
       },
       account_state: {
         login: "Connexion",
-        verifying: "Vérification de l’e-mail",
+        verifying: "Vérifier l’e-mail",
         account: "Compte",
       },
     },
@@ -335,7 +335,7 @@ export const i18nNavigation = {
   },
 
   // --------------------------------------
-  // ARABIC — العربية  (RTL-ready)
+  // ARABIC — العربية  (RTL)
   // --------------------------------------
   ar: {
     nav: {
@@ -389,3 +389,6 @@ export const i18nNavigation = {
   },
 
 } satisfies Record<string, NavLocale>;
+
+// Alias to keep existing imports working
+export const dict = i18nNavigation;
