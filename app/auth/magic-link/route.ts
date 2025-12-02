@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 import { createMagicLinkToken } from "@/lib/auth";
+import { dict as linkmailDict } from "@/lib/i18n.linkmail";
+
+// @ts-ignore – nodemailer wird zur Laufzeit genutzt, Typen sind optional
+import nodemailer from "nodemailer";
 
 // POST /auth/magic-link
 // Erwartet JSON { email: string }
-// Erzeugt Magic-Link-Token und (vorerst) logged den Link nur ins Log.
-// Später: echten SMTP-Versand einbauen.
+// Erzeugt Magic-Link-Token und versendet einen Magic-Link per E-Mail.
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
   const email =
@@ -23,11 +26,31 @@ export async function POST(req: Request) {
     process.env.NEXT_PUBLIC_BASE_URL || process.env.MAGIC_LINK_BASE_URL || "";
   const baseUrl = base.replace(/\/+$/, "");
   const callbackPath = `/auth/callback?token=${encodeURIComponent(token)}`;
-  const callbackUrl = baseUrl
-    ? `${baseUrl}${callbackPath}`
-    : callbackPath;
+  const callbackUrl = baseUrl ? `${baseUrl}${callbackPath}` : callbackPath;
 
-   // TODO: Echten Mailversand via SMTP ergänzen.
+  // Sprache: vorerst immer EN als Master, später können wir hier
+  // Locale aus Cookie/Request einklinken.
+    const locale = linkmailDict.en;
+  const mail = locale.linkmail;
+
+  try {
+    await sendMagicLinkEmail({
+      to: email,
+      subject: mail.subject,
+      headline: mail.headline,
+      bodyMain: mail.body.main,
+      bodyFallback: mail.body.fallback,
+      bodySecurity: mail.body.security,
+      buttonLabel: mail.button.label,
+      footer: mail.footer,
+      callbackUrl,
+    });
+  } catch (error) {
+
+    // E-Mail-Versand darf den Login-Flow nicht hart killen.
+    console.error("[magic-link] failed to send email", error);
+  }
+
   console.log("[magic-link] login link generated", { email, callbackUrl });
 
   // DEV-Convenience: Magic-Link auch in der Response zurückgeben,
@@ -36,3 +59,65 @@ export async function POST(req: Request) {
   return NextResponse.json({ ok: true, magicUrl: callbackUrl });
 }
 
+type SendMagicLinkEmailInput = {
+  to: string;
+  subject: string;
+  headline: string;
+  bodyMain: string;
+  bodyFallback: string;
+  bodySecurity: string;
+  buttonLabel: string;
+  footer: string;
+  callbackUrl: string;
+};
+
+async function sendMagicLinkEmail(input: SendMagicLinkEmailInput) {
+  const {
+    to,
+    subject,
+    headline,
+    bodyMain,
+    bodyFallback,
+    bodySecurity,
+    buttonLabel,
+    footer,
+    callbackUrl,
+  } = input;
+
+  const lines: string[] = [
+    headline,
+    "",
+    bodyMain,
+    "",
+    bodyFallback,
+    callbackUrl,
+    "",
+    bodySecurity,
+    "",
+    `${buttonLabel}: ${callbackUrl}`,
+    "",
+    footer,
+  ];
+
+  const text = lines.join("\n");
+
+  const transport = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT ?? 587),
+    secure: false,
+    auth:
+      process.env.SMTP_USER && process.env.SMTP_PASS
+        ? {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+          }
+        : undefined,
+  });
+
+  await transport.sendMail({
+    from: process.env.SMTP_FROM || "no-reply@mpathy.ai",
+    to,
+    subject,
+    text,
+  });
+}

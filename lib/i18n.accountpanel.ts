@@ -79,7 +79,7 @@ export const i18nAccountPanel = {
   // --------------------------------------
   de: {
     account: {
-      title: "Dein Account",
+      title: "Dein Konto",
       loggedInAs: "Angemeldet als:",
       status: {
         label: "Status",
@@ -100,7 +100,7 @@ export const i18nAccountPanel = {
         unknown: "Unbekannte E-Mail",
       },
       aria: {
-        dialogLabel: "Account",
+        dialogLabel: "Konto",
       },
     },
   },
