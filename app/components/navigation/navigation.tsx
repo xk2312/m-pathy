@@ -236,15 +236,20 @@ import { usePathname } from "next/navigation";
 import LanguageSwitcher from "@/app/components/navigation/LanguageSwitcher";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { dict as navDict } from "@/lib/i18n.navigation";
+import AccountPanel from "@/app/components/navigation/AccountPanel";
+
 
 export default function Navigation() {
-  const { lang } = useLang();
+   const { lang } = useLang();
   const pathname = usePathname();
 
   const [isDesktop, setIsDesktop] = useState(false);
   const [authState, setAuthState] = useState<"guest" | "verifying" | "logged">(
     "guest",
   );
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [authEmail, setAuthEmail] = useState<string | null>(null);
+  const [accountBalance, setAccountBalance] = useState<number | null>(null);
 
   // Session-Status von Server holen (Cookie-basiert)
   useEffect(() => {
@@ -257,16 +262,19 @@ export default function Navigation() {
         const data = (await res.json()) as {
           ok?: boolean;
           authenticated?: boolean;
+          email?: string;
         };
         if (cancelled) return;
 
         if (data?.ok && data.authenticated) {
           setAuthState("logged");
+          setAuthEmail(data.email ?? null);
           if (typeof window !== "undefined") {
             window.localStorage.removeItem("auth_verifying");
           }
         } else {
           setAuthState((prev) => (prev === "logged" ? "guest" : prev));
+          setAuthEmail(null);
         }
       } catch {
         // schweigend – fällt auf guest zurück
@@ -280,6 +288,7 @@ export default function Navigation() {
     };
   }, [pathname]);
 
+
   // Verifying-Flag aus localStorage lesen (wird später vom Magic-Link-POST gesetzt)
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -289,6 +298,41 @@ export default function Navigation() {
     }
   }, []);
 
+  // Balance nur laden, wenn eingeloggt
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (authState !== "logged") {
+      setAccountBalance(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadBalance = async () => {
+      try {
+        const res = await fetch("/api/me/balance");
+        if (!res.ok) return;
+        const data = (await res.json()) as { balance?: number };
+        if (cancelled) return;
+        if (typeof data.balance === "number") {
+          setAccountBalance(data.balance);
+        } else {
+          setAccountBalance(null);
+        }
+      } catch {
+        if (!cancelled) {
+          setAccountBalance(null);
+        }
+      }
+    };
+
+    loadBalance();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [authState]);
+
     useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -297,6 +341,7 @@ export default function Navigation() {
       // Desktop ab 768px – einheitliche Layout-Quelle
       setIsDesktop(window.innerWidth >= 1024);
     };
+
 
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -365,7 +410,30 @@ export default function Navigation() {
         ? "Check mail"
         : "Login";
 
+  const handleLogout = async () => {
+    try {
+      await fetch("/auth/logout", { method: "POST" });
+    } catch {
+      // ignore network errors – wir fallen lokal auf guest zurück
+    }
+
+    setAuthState("guest");
+    setAuthEmail(null);
+    setAccountBalance(null);
+    setAccountOpen(false);
+
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.removeItem("auth_verifying");
+      } catch {
+        // ignorieren
+      }
+      window.location.reload();
+    }
+  };
+
   // Living Horizon – Desktop + Chat only
+
 
 
 
@@ -487,7 +555,7 @@ boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
         </div>
 
         {/* RIGHT – Language + Login */}
-        <div className="flex items-center justify-end gap-3 min-w-[180px]">
+          <div className="flex items-center justify-end gap-3 min-w-[180px]">
           <LanguageSwitcher />
           <button
             type="button"
@@ -500,7 +568,7 @@ boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
             disabled={authState === "verifying"}
             onClick={async () => {
               if (authState === "logged") {
-                // TODO: Account-View/Dropdown später ergänzen
+                setAccountOpen(true);
                 return;
               }
 
@@ -540,10 +608,15 @@ boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
             {loginLabel}
           </button>
         </div>
-
-
-
       </div>
+        <AccountPanel
+        open={authState === "logged" && accountOpen}
+        email={authEmail}
+        balance={accountBalance}
+        onClose={() => setAccountOpen(false)}
+        onLogout={handleLogout}
+        isMobile={!isDesktop}
+      />
     </header>
 
   );

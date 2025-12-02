@@ -875,7 +875,7 @@
   --nav-motion-medium: 240ms cubic-bezier(0.22,0.61,0.36,1);
   --nav-motion-slow: 380ms ease;
 
-  /* Safe-Top & Padding */
+    /* Safe-Top & Padding */
   --nav-safe-top: var(--nav-height-lg);
   --nav-padding-inline: 12px;
   --nav-padding-block: 6px;
@@ -884,6 +884,14 @@
 
     --nav-height-lg: 96px;
 
+  /* Account-Panel Overlay (Login → Account) */
+  --account-panel-w: 380px;
+  --account-panel-bg: #11151c;
+  --account-panel-pad: 24px;
+  --account-title-fg: rgba(255,255,255,0.95);
+  --account-muted-fg: rgba(255,255,255,0.55);
+  --account-border: rgba(255,255,255,0.08);
+  --account-shadow: 0 8px 24px rgba(0,0,0,0.35);
 }
 
 
