@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { useLang } from "@/app/providers/LanguageProvider";
+import { dict as accountDict } from "@/lib/i18n.accountpanel";
 
 type AccountPanelProps = {
   open: boolean;
@@ -15,6 +17,10 @@ export default function AccountPanel(props: AccountPanelProps) {
   const { open, email, balance, onClose, onLogout, isMobile } = props;
 
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const { lang } = useLang();
+  const locale = accountDict[lang] ?? accountDict.en;
+  const tAccount = locale.account;
+
 
   // ESC schließt Overlay
   useEffect(() => {
@@ -42,11 +48,12 @@ export default function AccountPanel(props: AccountPanelProps) {
     return null;
   }
 
-  const emailLabel = email && email.trim().length > 0 ? email : "Unbekannte E-Mail";
+  const emailLabel =
+    email && email.trim().length > 0 ? email : tAccount.email.unknown;
   const balanceLabel =
     typeof balance === "number" && Number.isFinite(balance)
       ? balance.toLocaleString("de-DE")
-      : "… lädt";
+      : tAccount.tokens.loading;
 
   const backdropStyle: React.CSSProperties = {
     position: "fixed",
@@ -95,12 +102,12 @@ export default function AccountPanel(props: AccountPanelProps) {
       onClick={onClose}
       aria-hidden="true"
     >
-      <div
+            <div
         ref={panelRef}
         style={panelStyle}
         role="dialog"
         aria-modal="true"
-        aria-label="Account"
+        aria-label={tAccount.aria.dialogLabel}
         tabIndex={-1}
         onClick={(event) => event.stopPropagation()}
       >
@@ -114,7 +121,7 @@ export default function AccountPanel(props: AccountPanelProps) {
               color: "var(--account-title-fg)",
             }}
           >
-            Dein Account
+            {tAccount.title}
           </h2>
           <p
             style={{
@@ -124,7 +131,7 @@ export default function AccountPanel(props: AccountPanelProps) {
               wordBreak: "break-all",
             }}
           >
-            Angemeldet als: {emailLabel}
+            {tAccount.loggedInAs} {emailLabel}
           </p>
         </header>
 
@@ -142,8 +149,11 @@ export default function AccountPanel(props: AccountPanelProps) {
               marginBottom: 16,
             }}
           >
-            <div style={{ marginBottom: 4 }}>Status</div>
-            <div style={{ color: "var(--account-title-fg)" }}>Eingeloggt</div>
+                        <div style={{ marginBottom: 4 }}>{tAccount.status.label}</div>
+            <div style={{ color: "var(--account-title-fg)" }}>
+              {tAccount.status.loggedIn}
+            </div>
+
           </div>
 
           <div
@@ -153,7 +163,7 @@ export default function AccountPanel(props: AccountPanelProps) {
               marginBottom: 16,
             }}
           >
-            <div style={{ marginBottom: 4 }}>Deine Tokens</div>
+                        <div style={{ marginBottom: 4 }}>{tAccount.tokens.label}</div>
             <div
               style={{
                 fontSize: 22,
@@ -164,11 +174,11 @@ export default function AccountPanel(props: AccountPanelProps) {
             >
               {balanceLabel}
             </div>
+
           </div>
 
-          <p style={{ margin: 0 }}>
-            Du bist eingeloggt und nutzt dein Token-Konto. FreeGate gilt nur für
-            anonyme Nutzer.
+                    <p style={{ margin: 0 }}>
+            {tAccount.info.freegate}
           </p>
         </section>
 
@@ -189,9 +199,10 @@ export default function AccountPanel(props: AccountPanelProps) {
               cursor: "pointer",
             }}
           >
-            Abmelden
+            {tAccount.button.logout}
           </button>
         </footer>
+
       </div>
     </div>
   );
