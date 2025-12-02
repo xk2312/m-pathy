@@ -354,7 +354,7 @@ export default function Navigation() {
   const navHeight = "var(--nav-height-sm)"; // fix
   const logoSize = 40; // fix
 
-  // Sprache laden
+   // Sprache laden
   const locale = navDict[lang] ?? navDict.en;
   const links = locale.nav.links;
 
@@ -363,6 +363,7 @@ export default function Navigation() {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
+
 
   // Chat-Layout bündelt rechts
   const isChatLayout =
@@ -403,12 +404,15 @@ export default function Navigation() {
         zIndex: 40,
       };
 
+  const accountStateDict = locale.nav.account_state;
+
   const loginLabel =
     authState === "logged"
-      ? "Account"
+      ? accountStateDict.account
       : authState === "verifying"
-        ? "Check mail"
-        : "Login";
+        ? accountStateDict.verifying
+        : accountStateDict.login;
+
 
   const handleLogout = async () => {
     try {
@@ -559,13 +563,14 @@ boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
           <LanguageSwitcher />
           <button
             type="button"
-            aria-label={authState === "logged" ? "Account" : "Login"}
+            aria-label={loginLabel}
             className="inline-flex items-center justify-center rounded-full border border-white/20 h-8 text-[0.78rem] tracking-[0.08em] uppercase text-white/75 hover:text-white hover:border-white/60 hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-300/60 focus:ring-offset-0 disabled:opacity-60"
             style={{
               paddingInline: "var(--nav-button-pad-inline)",
               cursor: "pointer",
             }}
             disabled={authState === "verifying"}
+
             onClick={async () => {
               if (authState === "logged") {
                 setAccountOpen(true);
