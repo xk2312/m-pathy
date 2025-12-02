@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import { createMagicLinkToken } from "@/lib/auth";
 import { dict as linkmailDict } from "@/lib/i18n.linkmail";
+import { Resend } from "resend";
 
-// @ts-ignore – nodemailer wird zur Laufzeit genutzt, Typen sind optional
-import nodemailer from "nodemailer";
 
 // POST /auth/magic-link
 // Erwartet JSON { email: string }
@@ -83,6 +82,18 @@ async function sendMagicLinkEmail(input: SendMagicLinkEmailInput) {
     callbackUrl,
   } = input;
 
+  // Fallbacks für Env
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY missing");
+  }
+
+  const fromEmail =
+    process.env.MAGIC_LINK_FROM_EMAIL ||
+    process.env.SMTP_FROM ||
+    "login@m-pathy.ai";
+
+  // Plain-Text-Version (für Clients ohne HTML)
   const lines: string[] = [
     headline,
     "",
@@ -97,26 +108,26 @@ async function sendMagicLinkEmail(input: SendMagicLinkEmailInput) {
     "",
     footer,
   ];
-
   const text = lines.join("\n");
 
-  const transport = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT ?? 587),
-    secure: false,
-    auth:
-      process.env.SMTP_USER && process.env.SMTP_PASS
-        ? {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-          }
-        : undefined,
-  });
+  // Einfache HTML-Version
+  const htmlLines: string[] = [
+    `<p>${headline}</p>`,
+    `<p>${bodyMain}</p>`,
+    `<p>${bodyFallback}</p>`,
+    `<p><a href="${callbackUrl}" target="_blank" rel="noopener noreferrer">${buttonLabel}</a></p>`,
+    `<p>${bodySecurity}</p>`,
+    `<p>${footer}</p>`,
+  ];
+  const html = htmlLines.join("");
 
-  await transport.sendMail({
-    from: process.env.SMTP_FROM || "no-reply@mpathy.ai",
+  const resend = new Resend(apiKey);
+
+  await resend.emails.send({
+    from: `m-pathy.ai Login <${fromEmail}>`,
     to,
     subject,
     text,
+    html,
   });
 }
