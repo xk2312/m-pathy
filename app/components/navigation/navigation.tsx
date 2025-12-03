@@ -506,7 +506,7 @@ export default function Navigation() {
               </span>
             </Link>
             <NavLink
-              href="/subscription"
+              href="/page2"
               label={links.subscription}
               active={isActive("/subscription")}
             />

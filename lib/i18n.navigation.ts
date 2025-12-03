@@ -51,7 +51,7 @@ export const i18nNavigation = {
   en: {
     nav: {
       links: {
-        subscription: "Subscription",
+        subscription: "Chat",
         chat: "Chat",
         account: "Account",
       },
@@ -87,7 +87,7 @@ export const i18nNavigation = {
   de: {
     nav: {
       links: {
-        subscription: "Abo",
+        subscription: "Chat",
         chat: "Chat",
         account: "Account",
       },
@@ -124,7 +124,7 @@ export const i18nNavigation = {
   fr: {
     nav: {
       links: {
-        subscription: "Abonnement",
+        subscription: "Chat",
         chat: "Chat",
         account: "Compte",
       },
@@ -161,7 +161,7 @@ export const i18nNavigation = {
   es: {
     nav: {
       links: {
-        subscription: "Suscripción",
+        subscription: "Chat",
         chat: "Chat",
         account: "Cuenta",
       },
@@ -198,7 +198,7 @@ export const i18nNavigation = {
   it: {
     nav: {
       links: {
-        subscription: "Abbonamento",
+        subscription: "Chat",
         chat: "Chat",
         account: "Account",
       },
@@ -235,7 +235,7 @@ export const i18nNavigation = {
   pt: {
     nav: {
       links: {
-        subscription: "Assinatura",
+        subscription: "Chat",
         chat: "Chat",
         account: "Conta",
       },
@@ -272,7 +272,7 @@ export const i18nNavigation = {
   nl: {
     nav: {
       links: {
-        subscription: "Abonnement",
+        subscription: "Chat",
         chat: "Chat",
         account: "Account",
       },
@@ -309,7 +309,7 @@ export const i18nNavigation = {
   ru: {
     nav: {
       links: {
-        subscription: "Подписка",
+        subscription: "Чат",
         chat: "Чат",
         account: "Аккаунт",
       },
@@ -346,7 +346,7 @@ export const i18nNavigation = {
   zh: {
     nav: {
       links: {
-        subscription: "订阅",
+        subscription: "聊天",
         chat: "聊天",
         account: "账户",
       },
@@ -382,7 +382,7 @@ export const i18nNavigation = {
   ja: {
     nav: {
       links: {
-        subscription: "サブスクリプション",
+        subscription: "チャット",
         chat: "チャット",
         account: "アカウント",
       },
@@ -419,7 +419,7 @@ export const i18nNavigation = {
   ko: {
     nav: {
       links: {
-        subscription: "구독",
+        subscription: "채팅",
         chat: "채팅",
         account: "계정",
       },
@@ -456,7 +456,7 @@ export const i18nNavigation = {
   ar: {
     nav: {
       links: {
-        subscription: "الاشتراك",
+        subscription: "الدردشة",
         chat: "المحادثة",
         account: "الحساب",
       },
@@ -493,7 +493,7 @@ export const i18nNavigation = {
   hi: {
     nav: {
       links: {
-        subscription: "सदस्यता",
+        subscription: "चैट",
         chat: "चैट",
         account: "खाता",
       },
