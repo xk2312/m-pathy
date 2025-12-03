@@ -4,6 +4,7 @@ import { createMagicLinkToken } from "@/lib/auth";
 
 // Optional: Resend nur laden, wenn ein API-Key existiert
 let resend: { emails: { send: (args: any) => Promise<any> } } | null = null;
+console.log("[magic-link] RESEND_API_KEY present?", !!process.env.RESEND_API_KEY);
 
 async function getResendClient() {
   if (resend) return resend;
