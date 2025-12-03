@@ -481,17 +481,18 @@ export default function Navigation() {
           }}
         >
           {/* LEFT – Brand (m-pathy) + Subscribe */}
-          <div
+                   <div
             className="flex items-center gap-5"
             style={isChatStageLayout ? { marginLeft: "-10px" } : undefined}
           >
             <Link
-              href="/page2"
+              href="/"
               aria-label="Home"
               className="inline-flex items-center"
             >
               <span
                 className="text-white/80 hover:text-white transition-colors"
+
                 style={{
                   fontSize: "0.88rem",
                   letterSpacing: "0.10em",
