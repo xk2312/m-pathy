@@ -13,9 +13,9 @@ export async function GET(req: Request) {
 
   const origin = url.origin;
   const successPath =
-    process.env.NEXT_PUBLIC_AUTH_SUCCESS_REDIRECT || "/subscription?auth=ok";
+    process.env.NEXT_PUBLIC_AUTH_SUCCESS_REDIRECT || "/page2?auth=ok";
   const errorPath =
-    process.env.NEXT_PUBLIC_AUTH_ERROR_REDIRECT || "/subscription?auth=error";
+    process.env.NEXT_PUBLIC_AUTH_ERROR_REDIRECT || "/page2?auth=error";
 
   if (!token) {
     return NextResponse.redirect(new URL(errorPath, origin));
