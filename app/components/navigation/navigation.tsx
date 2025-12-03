@@ -437,184 +437,141 @@ export default function Navigation() {
   };
 
   // Living Horizon – Desktop + Chat only
-
-
-
-
-  // Living Horizon – Desktop + Chat only
   useEffect(() => {
     if (!isChatStageLayout) return;
     if (typeof window === "undefined") return;
 
     const root = document.documentElement;
-
-    // Zero-Line Arrival (runs once)
-    root.classList.add("horizon-arrive");
-    setTimeout(() => root.classList.remove("horizon-arrive"), 200);
-
-    let lastTop = true;
-    let breatheTimer: any = null;
-
-    const onScroll = () => {
-      const atTop = window.scrollY <= 0;
-
-      // Tide Shift
-      root.style.setProperty(
-        "--horizon-opacity",
-        atTop ? "0.04" : "0.03"
-      );
-
-      // Horizon Breathe at top only
-      if (atTop && !lastTop) {
-        clearTimeout(breatheTimer);
-        breatheTimer = setTimeout(() => {
-          root.classList.add("horizon-breathe");
-          setTimeout(() => {
-            root.classList.remove("horizon-breathe");
-          }, 300);
-        }, 18000);
-      }
-
-      lastTop = atTop;
-    };
-
-    onScroll();
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    // ...
   }, [isChatStageLayout]);
 
-    return (
-
-    <header style={headerStyle} aria-label="Main site navigation">
-         <div
-        className="mx-auto flex items-center justify-between"
-        style={{
-          maxWidth: isChatStageLayout ? "none" : "var(--page-inner-max)",
-          margin: isChatStageLayout ? "0" : undefined,
-          paddingInline: isChatStageLayout
-            ? "var(--stage-pad, 48px)"
-            : isDesktop
-              ? "18px" /* #### PROMT PADDING EINSTELLUNG MOBILE*/
-              : "var(--page-pad-inline)",
-
-          // *** STATIC MODE ***
-          height: navHeight,
-          transform: "none",
-          opacity: 1,
-
-
-// Equilibrium Veil – nav shares the chat background,
-// the only separation is a 1px luminous horizon
-background: "linear-gradient(180deg, #080C15 0%, #060813 38%, #04050A 100%)",
-backdropFilter: "none",
-borderBottom: "1px solid rgba(255,255,255,0.04)",
-boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
-
-
-
-
-
-
-          // Kein Motion-System mehr
-          transition: "none",
-          }}
-      >
-
-        {/* LEFT – Brand (m-pathy) + Subscribe */}
+  return (
+    <>
+      <header style={headerStyle} aria-label="Main site navigation">
         <div
-          className="flex items-center gap-5"
-          style={isChatStageLayout ? { marginLeft: "-10px" } : undefined}
+          className="mx-auto flex items-center justify-between"
+          style={{
+            maxWidth: isChatStageLayout ? "none" : "var(--page-inner-max)",
+            margin: isChatStageLayout ? "0" : undefined,
+            paddingInline: isChatStageLayout
+              ? "var(--stage-pad, 48px)"
+              : isDesktop
+                ? "18px"
+                : "var(--page-pad-inline)",
+
+            // *** STATIC MODE ***
+            height: navHeight,
+            transform: "none",
+            opacity: 1,
+
+            // Equilibrium Veil – nav shares the chat background,
+            // the only separation is a 1px luminous horizon
+            background:
+              "linear-gradient(180deg, #080C15 0%, #060813 38%, #04050A 100%)",
+            backdropFilter: "none",
+            borderBottom: "1px solid rgba(255,255,255,0.04)",
+            boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
+
+            // Kein Motion-System mehr
+            transition: "none",
+          }}
         >
-          <Link
-
-            href="/page2"
-            aria-label="Home"
-            className="inline-flex items-center"
-
+          {/* LEFT – Brand (m-pathy) + Subscribe */}
+          <div
+            className="flex items-center gap-5"
+            style={isChatStageLayout ? { marginLeft: "-10px" } : undefined}
           >
-                                    <span
-              className="text-white/80 hover:text-white transition-colors"
-              style={{
-                fontSize: "0.88rem",
-                letterSpacing: "0.10em",
-                textTransform: "none",
-                fontWeight: 650,
-                lineHeight: 1,
-                paddingBottom: "2px",     // LIFT 1 px → perfect baseline alignment
-                whiteSpace: "nowrap",
-              }}
+            <Link
+              href="/page2"
+              aria-label="Home"
+              className="inline-flex items-center"
             >
-              m-pathy
-            </span>
+              <span
+                className="text-white/80 hover:text-white transition-colors"
+                style={{
+                  fontSize: "0.88rem",
+                  letterSpacing: "0.10em",
+                  textTransform: "none",
+                  fontWeight: 650,
+                  lineHeight: 1,
+                  paddingBottom: "2px",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                m-pathy
+              </span>
+            </Link>
+            <NavLink
+              href="/subscription"
+              label={links.subscription}
+              active={isActive("/subscription")}
+            />
+          </div>
 
-
-          </Link>
-          <NavLink
-
-
-            href="/subscription"
-            label={links.subscription}
-            active={isActive("/subscription")}
-          />
-        </div>
-
-        {/* RIGHT – Language + Login */}
+          {/* RIGHT – Language + Login */}
           <div className="flex items-center justify-end gap-3 min-w-[180px]">
-          <LanguageSwitcher />
-          <button
-            type="button"
-            aria-label={loginLabel}
-            className="inline-flex items-center justify-center rounded-full border border-white/20 h-8 text-[0.78rem] tracking-[0.08em] uppercase text-white/75 hover:text-white hover:border-white/60 hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-300/60 focus:ring-offset-0 disabled:opacity-60"
-            style={{
-              paddingInline: "var(--nav-button-pad-inline)",
-              cursor: "pointer",
-            }}
-            disabled={authState === "verifying"}
+            <LanguageSwitcher />
+            <button
+              type="button"
+              aria-label={loginLabel}
+              className="inline-flex items-center justify-center rounded-full border border-white/20 h-8 text-[0.78rem] tracking-[0.08em] uppercase text-white/75 hover:text-white hover:border-white/60 hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-300/60 focus:ring-offset-0 disabled:opacity-60"
+              style={{
+                paddingInline: "var(--nav-button-pad-inline)",
+                cursor: "pointer",
+              }}
+              disabled={authState === "verifying"}
+              onClick={async () => {
+                if (authState === "logged") {
+                  setAccountOpen(true);
+                  return;
+                }
 
-            onClick={async () => {
-              if (authState === "logged") {
-                setAccountOpen(true);
-                return;
-              }
+                if (typeof window === "undefined") return;
 
-              if (typeof window === "undefined") return;
+                const email = window.prompt(
+                  "Bitte E-Mail für Magic-Link eingeben:",
+                );
+                if (!email) return;
 
-              const email = window.prompt("Bitte E-Mail für Magic-Link eingeben:");
-              if (!email) return;
+                try {
+                  window.localStorage.setItem("auth_verifying", "1");
+                  setAuthState("verifying");
 
-              try {
-                window.localStorage.setItem("auth_verifying", "1");
-                setAuthState("verifying");
+                  const res = await fetch("/auth/magic-link", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email }),
+                  });
 
-                const res = await fetch("/auth/magic-link", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({ email }),
-                });
-
-                if (!res.ok) {
-                  // Fehler → zurück auf guest
+                  if (!res.ok) {
+                    window.localStorage.removeItem("auth_verifying");
+                    setAuthState("guest");
+                    window.alert(
+                      "Senden des Magic-Links fehlgeschlagen.",
+                    );
+                  } else {
+                    window.alert(
+                      "Magic-Link wurde erzeugt. Bitte Mail/log prüfen.",
+                    );
+                  }
+                } catch {
                   window.localStorage.removeItem("auth_verifying");
                   setAuthState("guest");
-                  window.alert("Senden des Magic-Links fehlgeschlagen.");
-                } else {
-                  // Erfolg: Header zeigt "Check mail"
-                  window.alert("Magic-Link wurde erzeugt. Bitte Mail/log prüfen.");
+                  window.alert(
+                    "Unerwarteter Fehler beim Magic-Link.",
+                  );
                 }
-              } catch {
-                window.localStorage.removeItem("auth_verifying");
-                setAuthState("guest");
-                window.alert("Unerwarteter Fehler beim Magic-Link.");
-              }
-            }}
-          >
-            {loginLabel}
-          </button>
+              }}
+            >
+              {loginLabel}
+            </button>
+          </div>
         </div>
-      </div>
-        <AccountPanel
+      </header>
+
+      <AccountPanel
         open={authState === "logged" && accountOpen}
         email={authEmail}
         balance={accountBalance}
@@ -622,10 +579,10 @@ boxShadow: "0 1px 0 rgba(0,0,0,0.25)",
         onLogout={handleLogout}
         isMobile={!isDesktop}
       />
-    </header>
-
+    </>
   );
 }
+
 
 
 type NavLinkProps = {
