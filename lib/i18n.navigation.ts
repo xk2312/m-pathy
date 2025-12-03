@@ -26,12 +26,20 @@ export type NavAccountState = {
   account: string;
 };
 
+export type NavAuth = {
+  promptEmail: string;
+  sendError: string;
+  sendSuccess: string;
+  unexpectedError: string;
+};
+
 export type NavLocale = {
   nav: {
     links: NavLinks;
     language: NavLanguage;
     aria: NavAria;
     account_state: NavAccountState;
+    auth: NavAuth;
   };
 };
 
@@ -61,6 +69,15 @@ export const i18nNavigation = {
         verifying: "Check Mail",
         account: "Account",
       },
+      auth: {
+        promptEmail:
+          "Please enter your email address for the magic login link:",
+        sendError: "Sending the magic link failed. Please try again.",
+        sendSuccess:
+          "Magic link created. Please check your inbox and spam folder.",
+        unexpectedError:
+          "Unexpected error while sending the magic link.",
+      },
     },
   },
 
@@ -87,6 +104,16 @@ export const i18nNavigation = {
         login: "Login",
         verifying: "E-Mail prüfen",
         account: "Account",
+      },
+      auth: {
+        promptEmail:
+          "Bitte E-Mail-Adresse für den Magic-Login-Link eingeben:",
+        sendError:
+          "Das Senden des Magic-Links ist fehlgeschlagen. Bitte erneut versuchen.",
+        sendSuccess:
+          "Magic-Link wurde erzeugt. Bitte Posteingang und Spam-Ordner prüfen.",
+        unexpectedError:
+          "Unerwarteter Fehler beim Senden des Magic-Links.",
       },
     },
   },
@@ -115,6 +142,16 @@ export const i18nNavigation = {
         verifying: "Vérifier l’e-mail",
         account: "Compte",
       },
+      auth: {
+        promptEmail:
+          "Veuillez saisir votre adresse e-mail pour le lien de connexion magique :",
+        sendError:
+          "L’envoi du lien magique a échoué. Veuillez réessayer.",
+        sendSuccess:
+          "Le lien magique a été créé. Veuillez vérifier votre boîte de réception et le dossier spam.",
+        unexpectedError:
+          "Erreur inattendue lors de l’envoi du lien magique.",
+      },
     },
   },
 
@@ -141,6 +178,16 @@ export const i18nNavigation = {
         login: "Iniciar sesión",
         verifying: "Revisar correo",
         account: "Cuenta",
+      },
+      auth: {
+        promptEmail:
+          "Introduce tu correo electrónico para el enlace de inicio de sesión mágico:",
+        sendError:
+          "Error al enviar el enlace mágico. Vuelve a intentarlo.",
+        sendSuccess:
+          "Enlace mágico creado. Revisa tu bandeja de entrada y la carpeta de spam.",
+        unexpectedError:
+          "Error inesperado al enviar el enlace mágico.",
       },
     },
   },
@@ -169,6 +216,16 @@ export const i18nNavigation = {
         verifying: "Controlla l’e-mail",
         account: "Account",
       },
+      auth: {
+        promptEmail:
+          "Inserisci il tuo indirizzo e-mail per il link di accesso magico:",
+        sendError:
+          "Invio del link magico non riuscito. Riprova.",
+        sendSuccess:
+          "Link magico creato. Controlla la posta in arrivo e la cartella spam.",
+        unexpectedError:
+          "Errore imprevisto durante l’invio del link magico.",
+      },
     },
   },
 
@@ -195,6 +252,16 @@ export const i18nNavigation = {
         login: "Entrar",
         verifying: "Verificar e-mail",
         account: "Conta",
+      },
+      auth: {
+        promptEmail:
+          "Insira seu endereço de e-mail para o link de login mágico:",
+        sendError:
+          "Falha ao enviar o link mágico. Tente novamente.",
+        sendSuccess:
+          "Link mágico criado. Verifique sua caixa de entrada e a pasta de spam.",
+        unexpectedError:
+          "Erro inesperado ao enviar o link mágico.",
       },
     },
   },
@@ -223,6 +290,16 @@ export const i18nNavigation = {
         verifying: "E-mail controleren",
         account: "Account",
       },
+      auth: {
+        promptEmail:
+          "Voer je e-mailadres in voor de magische inloglink:",
+        sendError:
+          "Het verzenden van de magische link is mislukt. Probeer het opnieuw.",
+        sendSuccess:
+          "Magische link aangemaakt. Controleer je inbox en je spammap.",
+        unexpectedError:
+          "Onverwachte fout bij het verzenden van de magische link.",
+      },
     },
   },
 
@@ -249,6 +326,16 @@ export const i18nNavigation = {
         login: "Войти",
         verifying: "Проверьте почту",
         account: "Аккаунт",
+      },
+      auth: {
+        promptEmail:
+          "Введите свой адрес электронной почты для магической ссылки входа:",
+        sendError:
+          "Не удалось отправить магическую ссылку. Попробуйте ещё раз.",
+        sendSuccess:
+          "Магическая ссылка создана. Проверьте входящие и папку «Спам».",
+        unexpectedError:
+          "Непредвиденная ошибка при отправке магической ссылки.",
       },
     },
   },
@@ -277,6 +364,15 @@ export const i18nNavigation = {
         verifying: "检查邮箱",
         account: "账户",
       },
+      auth: {
+        promptEmail:
+          "请输入用于接收魔法登录链接的邮箱地址：",
+        sendError: "发送魔法链接失败，请重试。",
+        sendSuccess:
+          "魔法链接已生成，请检查收件箱和垃圾邮件文件夹。",
+        unexpectedError:
+          "发送魔法链接时发生意外错误。",
+      },
     },
   },
 
@@ -303,6 +399,16 @@ export const i18nNavigation = {
         login: "ログイン",
         verifying: "メール確認",
         account: "アカウント",
+      },
+      auth: {
+        promptEmail:
+          "マジックログインリンクを送るメールアドレスを入力してください。",
+        sendError:
+          "マジックリンクの送信に失敗しました。もう一度お試しください。",
+        sendSuccess:
+          "マジックリンクを作成しました。受信ボックスと迷惑メールフォルダを確認してください。",
+        unexpectedError:
+          "マジックリンク送信中に予期しないエラーが発生しました。",
       },
     },
   },
@@ -331,11 +437,21 @@ export const i18nNavigation = {
         verifying: "메일 확인",
         account: "계정",
       },
+      auth: {
+        promptEmail:
+          "매직 로그인 링크를 받을 이메일 주소를 입력하세요:",
+        sendError:
+          "매직 링크 전송에 실패했습니다. 다시 시도해 주세요.",
+        sendSuccess:
+          "매직 링크가 생성되었습니다. 받은편지함과 스팸함을 확인해 주세요.",
+        unexpectedError:
+          "매직 링크 전송 중 예기치 않은 오류가 발생했습니다.",
+      },
     },
   },
 
   // --------------------------------------
-  // ARABIC — العربية  (RTL)
+  // ARABIC — العربية (RTL)
   // --------------------------------------
   ar: {
     nav: {
@@ -357,6 +473,16 @@ export const i18nNavigation = {
         login: "تسجيل الدخول",
         verifying: "تحقق من البريد",
         account: "الحساب",
+      },
+      auth: {
+        promptEmail:
+          "يرجى إدخال عنوان بريدك الإلكتروني للحصول على رابط تسجيل الدخول السحري:",
+        sendError:
+          "فشل إرسال الرابط السحري. يرجى المحاولة مرة أخرى.",
+        sendSuccess:
+          "تم إنشاء الرابط السحري. يرجى التحقق من صندوق الوارد ومجلد الرسائل غير المرغوب فيها.",
+        unexpectedError:
+          "حدث خطأ غير متوقع أثناء إرسال الرابط السحري.",
       },
     },
   },
@@ -385,9 +511,18 @@ export const i18nNavigation = {
         verifying: "मेल जांचें",
         account: "खाता",
       },
+      auth: {
+        promptEmail:
+          "मैजिक लॉगिन लिंक के लिए कृपया अपना ई-मेल पता दर्ज करें:",
+        sendError:
+          "मैजिक लिंक भेजने में विफलता हुई। कृपया दोबारा प्रयास करें।",
+        sendSuccess:
+          "मैजिक लिंक बना दिया गया है। कृपया इनबॉक्स और स्पैम फ़ोल्डर दोनों जाँचें।",
+        unexpectedError:
+          "मैजिक लिंक भेजते समय एक अप्रत्याशित त्रुटि हुई।",
+      },
     },
   },
-
 } satisfies Record<string, NavLocale>;
 
 // Alias to keep existing imports working

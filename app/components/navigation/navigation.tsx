@@ -240,7 +240,7 @@ import AccountPanel from "@/app/components/navigation/AccountPanel";
 
 
 export default function Navigation() {
-   const { lang } = useLang();
+  const { lang } = useLang();
   const pathname = usePathname();
 
   const [isDesktop, setIsDesktop] = useState(false);
@@ -413,6 +413,10 @@ export default function Navigation() {
         ? accountStateDict.verifying
         : accountStateDict.login;
 
+  // Auth-UI-Texte (Prompt + Alerts) aus i18n.navigation
+  const authText = locale.nav.auth ?? navDict.en.nav.auth;
+
+
 
   const handleLogout = async () => {
     try {
@@ -511,7 +515,7 @@ export default function Navigation() {
           {/* RIGHT – Language + Login */}
           <div className="flex items-center justify-end gap-3 min-w-[180px]">
             <LanguageSwitcher />
-            <button
+              <button
               type="button"
               aria-label={loginLabel}
               className="inline-flex items-center justify-center rounded-full border border-white/20 h-8 text-[0.78rem] tracking-[0.08em] uppercase text-white/75 hover:text-white hover:border-white/60 hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-300/60 focus:ring-offset-0 disabled:opacity-60"
@@ -526,47 +530,43 @@ export default function Navigation() {
                   return;
                 }
 
-                if (typeof window === "undefined") return;
+                           if (typeof window === "undefined") return;
 
-                const email = window.prompt(
-                  "Bitte E-Mail für Magic-Link eingeben:",
-                );
-                if (!email) return;
+              const email = window.prompt(authText.promptEmail);
+              if (!email) return;
 
-                try {
-                  window.localStorage.setItem("auth_verifying", "1");
-                  setAuthState("verifying");
+              try {
+                window.localStorage.setItem("auth_verifying", "1");
+                setAuthState("verifying");
 
-                  const res = await fetch("/auth/magic-link", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ email }),
-                  });
+                const res = await fetch("/auth/magic-link", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ email }),
+                });
 
-                  if (!res.ok) {
-                    window.localStorage.removeItem("auth_verifying");
-                    setAuthState("guest");
-                    window.alert(
-                      "Senden des Magic-Links fehlgeschlagen.",
-                    );
-                  } else {
-                    window.alert(
-                      "Magic-Link wurde erzeugt. Bitte Mail/log prüfen.",
-                    );
-                  }
-                } catch {
+                if (!res.ok) {
+                  // Fehler → zurück auf guest
                   window.localStorage.removeItem("auth_verifying");
                   setAuthState("guest");
-                  window.alert(
-                    "Unerwarteter Fehler beim Magic-Link.",
-                  );
+                  window.alert(authText.sendError);
+                } else {
+                  // Erfolg: Header zeigt "Check mail"
+                  window.alert(authText.sendSuccess);
                 }
+              } catch {
+                window.localStorage.removeItem("auth_verifying");
+                setAuthState("guest");
+                window.alert(authText.unexpectedError);
+              }
+
               }}
             >
               {loginLabel}
             </button>
+
           </div>
         </div>
       </header>
