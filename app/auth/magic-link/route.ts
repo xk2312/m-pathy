@@ -1,6 +1,7 @@
 // app/auth/magic-link/route.ts
 import { NextResponse } from "next/server";
 import { createMagicLinkToken } from "@/lib/auth";
+import { dict as linkmailDict } from "@/lib/i18n.linkmail";
 
 // =======================
 // GLOBAL LOGGING HEADER
@@ -61,7 +62,20 @@ export async function POST(req: Request) {
   const email =
     body && typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
 
+   const langRaw =
+    body && typeof body.lang === "string" ? body.lang.trim().toLowerCase() : "";
+  const langKey = linkmailDict[langRaw as keyof typeof linkmailDict]
+    ? (langRaw as keyof typeof linkmailDict)
+    : "en";
+
+  // ⬇︎ NEU: direkt auf das innere linkmail-Objekt zeigen
+  const mailLocale =
+    linkmailDict[langKey as keyof typeof linkmailDict]?.linkmail ??
+    linkmailDict.en.linkmail;
+
   console.log("[magic-link] Extracted email:", email);
+  console.log("[magic-link] Using mail locale:", langKey);
+
 
   if (!email) {
     console.warn("[magic-link] ERROR: Missing email");
@@ -73,6 +87,7 @@ export async function POST(req: Request) {
 
   const token = createMagicLinkToken(email);
   console.log("[magic-link] Token generated:", token);
+
 
   const base =
     process.env.NEXT_PUBLIC_BASE_URL || process.env.MAGIC_LINK_BASE_URL || "";
@@ -105,24 +120,27 @@ export async function POST(req: Request) {
       const from =
         process.env.RESEND_FROM_EMAIL || "login@mail.m-pathy.ai";
 
-      const subject = "Dein m-pathy Login-Link";
-      const text = `Hallo,
+      const subject = mailLocale.subject;
+      const text = `${mailLocale.headline}
 
-hier ist dein Login-Link für m-pathy:
+${mailLocale.body.main}
 
 ${callbackUrl}
 
-Der Link ist nur für kurze Zeit gültig. Wenn du diese Mail nicht erwartet hast, kannst du sie ignorieren.
+${mailLocale.body.fallback}
 
-Liebe Grüße
-m-pathy`;
+${mailLocale.body.security}
+
+${mailLocale.footer}`;
 
       console.log("[magic-link] Sending mail with payload:", {
         from,
         to: email,
         subject,
-        text_preview: text.slice(0, 50) + "...",
+        text_preview: text.slice(0, 80) + "...",
+        locale: langKey,
       });
+
 
       try {
         resendSendResult = await client.emails.send({
