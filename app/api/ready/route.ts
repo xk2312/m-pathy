@@ -5,7 +5,16 @@ import { NextResponse } from "next/server";
 function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
   return new Promise((resolve, reject) => {
     const t = setTimeout(() => reject(new Error(`${label} timeout after ${ms}ms`)), ms);
-    p.then((v) => { clearTimeout(t); resolve(v); }, (e) => { clearTimeout(t); reject(e); });
+    p.then(
+      (v) => {
+        clearTimeout(t);
+        resolve(v);
+      },
+      (e) => {
+        clearTimeout(t);
+        reject(e);
+      },
+    );
   });
 }
 
@@ -36,42 +45,115 @@ async function checkDB(timeoutMs = 2000) {
   return withTimeout(task, timeoutMs, "db");
 }
 
-// SMTP-Check (lazy import, toleriert fehlende Typen)
-async function checkSMTP(timeoutMs = 2000) {
-  const host = process.env.SMTP_HOST || process.env.EMAIL_HOST || "";
-  if (!host) throw new Error("SMTP_HOST/EMAIL_HOST missing");
+// Stripe-Konfigurations-Check (ENV-basiert, kein Netzwerk-Call)
+async function checkStripeConfig(timeoutMs = 2000) {
+  const task = (async () => {
+    const secret = process.env.STRIPE_SECRET_KEY || "";
+    const priceId = process.env.STRIPE_PRICE_1M || "";
+    const webhook = process.env.STRIPE_WEBHOOK_SECRET || "";
 
-  // @ts-expect-error – nodemailer Typen sind optional
-  const nodemailer = await import("nodemailer");
+    if (!secret) throw new Error("STRIPE_SECRET_KEY missing");
+    if (!priceId) throw new Error("STRIPE_PRICE_1M missing");
+    if (!webhook) throw new Error("STRIPE_WEBHOOK_SECRET missing");
 
-  const transporter = nodemailer.createTransport({
-    host,
-    port: Number(process.env.SMTP_PORT || process.env.EMAIL_PORT || 587),
-    secure: String(process.env.SMTP_SECURE || process.env.EMAIL_SECURE || "false") === "true",
-    auth: (process.env.SMTP_USER || process.env.EMAIL_USER) && (process.env.SMTP_PASS || process.env.EMAIL_PASS)
-      ? { user: process.env.SMTP_USER || process.env.EMAIL_USER, pass: process.env.SMTP_PASS || process.env.EMAIL_PASS }
-      : undefined,
-  });
+    return true;
+  })();
 
-  const task = transporter.verify();
-  await withTimeout(task, timeoutMs, "smtp");
-  return true;
+  return withTimeout(task, timeoutMs, "stripe");
 }
+
+// Resend-Konfigurations-Check (ENV-basiert)
+async function checkResendConfig(timeoutMs = 2000) {
+  const task = (async () => {
+    const apiKey = process.env.RESEND_API_KEY || "";
+    const from =
+      process.env.RESEND_FROM_EMAIL ||
+      process.env.EMAIL_FROM ||
+      "";
+
+    if (!apiKey) throw new Error("RESEND_API_KEY missing");
+    if (!from) throw new Error("RESEND_FROM_EMAIL/EMAIL_FROM missing");
+
+    return true;
+  })();
+
+  return withTimeout(task, timeoutMs, "resend");
+}
+
+// Core-Konfigurations-Check (Magic-Link, BASE_URL, Stripe-Price)
+async function checkCoreConfig() {
+  const missing: string[] = [];
+
+  if (!process.env.MAGIC_LINK_SECRET) missing.push("MAGIC_LINK_SECRET");
+  if (!process.env.NEXT_PUBLIC_BASE_URL) missing.push("NEXT_PUBLIC_BASE_URL");
+  if (!process.env.STRIPE_PRICE_1M) missing.push("STRIPE_PRICE_1M");
+  if (!process.env.NEXT_PUBLIC_STRIPE_PRICE_1M) {
+    missing.push("NEXT_PUBLIC_STRIPE_PRICE_1M");
+  }
+
+  return {
+    ok: missing.length === 0,
+    missing,
+  };
+}
+
+type CheckResult = {
+  ok: boolean;
+  error?: string;
+  missing?: string[];
+};
 
 export async function GET(req: Request) {
   // Timeout aus Query lesen (ms) – robust, vermeidet req.nextUrl Fehler
   const url = new URL(req.url);
   const timeoutMs = Number(url.searchParams.get("timeout_ms") ?? "2000");
 
-  const results: Record<string, { ok: boolean; error?: string }> = {
+  const results: Record<string, CheckResult> = {
     db: { ok: false },
-    smtp: { ok: false },
+    stripe: { ok: false },
+    resend: { ok: false },
+    config: { ok: false },
   };
 
-  try { await checkDB(timeoutMs); results.db.ok = true; } catch (e: any) { results.db = { ok: false, error: e?.message || String(e) }; }
-  try { await checkSMTP(timeoutMs); results.smtp.ok = true; } catch (e: any) { results.smtp = { ok: false, error: e?.message || String(e) }; }
+  try {
+    await checkDB(timeoutMs);
+    results.db.ok = true;
+  } catch (e: any) {
+    results.db = { ok: false, error: e?.message || String(e) };
+  }
 
-  const allOk = results.db.ok && results.smtp.ok;
+  try {
+    await checkStripeConfig(timeoutMs);
+    results.stripe.ok = true;
+  } catch (e: any) {
+    results.stripe = { ok: false, error: e?.message || String(e) };
+  }
+
+  try {
+    await checkResendConfig(timeoutMs);
+    results.resend.ok = true;
+  } catch (e: any) {
+    results.resend = { ok: false, error: e?.message || String(e) };
+  }
+
+  try {
+    const core = await checkCoreConfig();
+    results.config.ok = core.ok;
+    if (!core.ok) {
+      results.config.missing = core.missing;
+    }
+  } catch (e: any) {
+    results.config = { ok: false, error: e?.message || String(e) };
+  }
+
+  const allOk = results.db.ok && results.stripe.ok && results.resend.ok && results.config.ok;
   const status = allOk ? 200 : 503;
-  return NextResponse.json({ ready: allOk, ...results }, { status });
+
+  return NextResponse.json(
+    {
+      ready: allOk,
+      checks: results,
+    },
+    { status },
+  );
 }
