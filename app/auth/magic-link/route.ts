@@ -75,9 +75,10 @@ m-pathy`;
     }
   } catch (err) {
     console.error("[magic-link] Resend send failed", err);
-    // Flow für den User bleibt trotzdem ok – er bekommt den Link im JSON
+    // Flow für den User bleibt trotzdem ok – er bekommt den Link im JSON.
   }
 
   // 3) DEV/Debug: Magic-Link in der Response zurückgeben
   return NextResponse.json({ ok: true, magicUrl: callbackUrl });
 }
+
