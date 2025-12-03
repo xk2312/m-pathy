@@ -53,7 +53,7 @@ export default function Hero() {
         {t("hero_sub")}
       </p>
 
-      {/* CTA – GOLDEN 40 / 46 */}
+           {/* CTA – GOLDEN 40 / 46 */}
       <div
         className="flex w-full justify-center"
         style={{
@@ -61,10 +61,15 @@ export default function Hero() {
           marginBottom: "46px",
         }}
       >
-        <ZenithButton position="inline" aria-label={t("hero_cta")}>
+        <ZenithButton
+          position="inline"
+          aria-label={t("hero_cta")}
+          onNavigate="/page2"
+        >
           {t("hero_cta")}
         </ZenithButton>
       </div>
+
 
       {/* Hinweis wurde entfernt */}
     </div>
