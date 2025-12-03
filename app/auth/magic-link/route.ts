@@ -1,18 +1,28 @@
 // app/auth/magic-link/route.ts
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
-
 import { createMagicLinkToken } from "@/lib/auth";
-import { dict as linkmailDict } from "@/lib/i18n.linkmail";
 
-// Wir lesen den Key nur als String ein – die eigentliche Resend-Instanz
-// wird erst in sendMagicLinkEmail gebaut, damit der Build nicht crasht.
-const RESEND_API_KEY =
-  process.env.RESEND_API_KEY || process.env.RESEND_API_KEY_STAGING || "";
+// Optional: Resend nur laden, wenn ein API-Key existiert
+let resend: { emails: { send: (args: any) => Promise<any> } } | null = null;
+
+async function getResendClient() {
+  if (resend) return resend;
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn(
+      "[magic-link] RESEND_API_KEY fehlt – Magic-Link wird NICHT gemailt, nur geloggt.",
+    );
+    return null;
+  }
+
+  const { Resend } = await import("resend");
+  resend = new Resend(apiKey) as any;
+  return resend;
+}
 
 // POST /auth/magic-link
 // Erwartet JSON { email: string }
-// Erzeugt Magic-Link-Token und versendet einen Magic-Link per E-Mail.
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
   const email =
@@ -33,90 +43,41 @@ export async function POST(req: Request) {
   const callbackPath = `/auth/callback?token=${encodeURIComponent(token)}`;
   const callbackUrl = baseUrl ? `${baseUrl}${callbackPath}` : callbackPath;
 
-  // Sprache: vorerst immer EN als Master, später koppeln wir das an die echte Locale.
-  const locale = linkmailDict.en;
-  const mail = locale.linkmail;
-
-  try {
-    await sendMagicLinkEmail({
-      to: email,
-      subject: mail.subject,
-      headline: mail.headline,
-      bodyMain: mail.body.main,
-      bodyFallback: mail.body.fallback,
-      bodySecurity: mail.body.security,
-      buttonLabel: mail.button.label,
-      footer: mail.footer,
-      callbackUrl,
-    });
-  } catch (error) {
-    // E-Mail-Versand darf den Login-Flow nicht hart killen.
-    console.error("[magic-link] failed to send email", error);
-  }
-
+  // 1) Immer ins Log schreiben (Debug / Fallback)
   console.log("[magic-link] login link generated", { email, callbackUrl });
 
-  // DEV-Convenience: Magic-Link auch in der Response zurückgeben,
-  // damit er im Network-Tab sichtbar ist.
-  return NextResponse.json({ ok: true, magicUrl: callbackUrl });
-}
+  // 2) Versuchen, via Resend zu mailen (falls konfiguriert)
+  try {
+    const client = await getResendClient();
+    if (client) {
+      const from =
+        process.env.RESEND_FROM_EMAIL || "login@mail.m-pathy.ai"; // deine Absender-Adresse
+      const subject = "Dein m-pathy Login-Link";
+      const text = `Hallo,
 
-type SendMagicLinkEmailInput = {
-  to: string;
-  subject: string;
-  headline: string;
-  bodyMain: string;
-  bodyFallback: string;
-  bodySecurity: string;
-  buttonLabel: string;
-  footer: string;
-  callbackUrl: string;
-};
+hier ist dein Login-Link für m-pathy:
 
-async function sendMagicLinkEmail(input: SendMagicLinkEmailInput) {
-  const {
-    to,
-    subject,
-    headline,
-    bodyMain,
-    bodyFallback,
-    bodySecurity,
-    buttonLabel,
-    footer,
-    callbackUrl,
-  } = input;
+${callbackUrl}
 
-  // Gleiche Textstruktur wie vorher bei nodemailer
-  const lines: string[] = [
-    headline,
-    "",
-    bodyMain,
-    "",
-    bodyFallback,
-    callbackUrl,
-    "",
-    bodySecurity,
-    "",
-    `${buttonLabel}: ${callbackUrl}`,
-    "",
-    footer,
-  ];
+Der Link ist nur für kurze Zeit gültig. Wenn du diese Mail nicht erwartet hast, kannst du sie ignorieren.
 
-  const text = lines.join("\n");
+Liebe Grüße
+m-pathy`;
 
-  if (!RESEND_API_KEY) {
-    console.warn(
-      "[magic-link] RESEND_API_KEY missing – skipping email send (login flow continues).",
-    );
-    return;
+      await client.emails.send({
+        from,
+        to: email,
+        subject,
+        text,
+      });
+
+      console.log("[magic-link] email sent via Resend", { to: email });
+    }
+  } catch (err) {
+    console.error("[magic-link] Resend send failed", err);
+    // Flow für den User bleibt trotzdem ok – er bekommt den Link im JSON
   }
 
-  const resend = new Resend(RESEND_API_KEY);
-
-  await resend.emails.send({
-    from: process.env.MAGIC_LINK_FROM || "login@mail.m-pathy.ai",
-    to,
-    subject,
-    text,
-  });
+  // 3) DEV/Debug: Magic-Link in der Response zurückgeben
+  return NextResponse.json({ ok: true, magicUrl: callbackUrl });
 }
