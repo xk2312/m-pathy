@@ -1,28 +1,10 @@
-'use client';
+"use client";
 
-import dynamic from 'next/dynamic';
-import { useEffect } from 'react';
-import '../styles/m-path.css'; // relativer Import, kein Alias
+// Root-Startseite = Subscription Page
+// Wir re-exportieren die Subscription-Page als neue Startseite (/)
 
-// Button optional client-only laden
-const ZenithButton = dynamic(() => import('./components/ZenithButton'), { ssr: false });
+import SubscriptionPage from "./subscription/page";
 
-// Canvas MUSS client-only sein (nutzt requestAnimationFrame)
-const CanvasMeteorAndM = dynamic(() => import('./components/CanvasMeteorAndM'), { ssr: false });
-
-function Page() {
-  useEffect(() => {
-    (window as any).__mFormedFired = false;
-  }, []);
-
-  return (
-    <div className="stage">
-      <CanvasMeteorAndM />
-      {/* ↓ Pfad bleibt wie gehabt */}
-      <ZenithButton position="under" onNavigate="/page2" resetFlagOnMount={false} />
-      </div>
-  );
+export default function RootPage() {
+  return <SubscriptionPage />;
 }
-
-// Ganze Seite client-only rendern (kein SSR/SSG)
-export default dynamic(() => Promise.resolve(Page), { ssr: false });
