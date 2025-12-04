@@ -1102,6 +1102,32 @@ useEffect(() => {
   });
 }, []);
 
+// GC Step 8 – Balance-Polling nach Stripe-Return (?paid=1)
+useEffect(() => {
+  if (typeof window === "undefined") return;
+
+  const sp = new URLSearchParams(window.location.search);
+  const paid = sp.get("paid");
+  if (paid !== "1") return;
+
+  let cancelled = false;
+
+  const timer = window.setTimeout(async () => {
+    if (cancelled) return;
+    try {
+      // Einmalig Balance anstoßen; Navigation/AccountPanel holen den Wert wie gewohnt.
+      await fetch("/api/me/balance", { method: "GET" });
+    } catch {
+      // Silent – Balance wird beim nächsten regulären Call geladen.
+    }
+  }, 1200); // 1–2 Sekunden Verzögerung
+
+  return () => {
+    cancelled = true;
+    window.clearTimeout(timer);
+  };
+}, []);
+
 const [loading, setLoading] = useState(false);
 const [stickToBottom, setStickToBottom] = useState(true);
 
@@ -1113,6 +1139,7 @@ const [mode, setMode] = useState<string>("DEFAULT");
 
 // Preis-ID aus ENV für den Client (nur ID, kein Secret)
 const PRICE_1M = process.env.NEXT_PUBLIC_STRIPE_PRICE_1M as string | undefined;
+
 
 // (entfernt) — lokaler Persistenzblock wurde gestrichen
 // Persistenz läuft zentral über lib/chatStorage.ts  → siehe persist.* oben
