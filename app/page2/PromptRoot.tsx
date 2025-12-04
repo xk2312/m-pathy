@@ -57,6 +57,9 @@ export function PromptRoot({
     isThinking: loading,
   });
 
+  // Lokaler Zähler für gesendete Free-Prompts (nur UI, kein Backend-Touch)
+  const [freePromptsUsed, setFreePromptsUsed] = React.useState(0);
+
   const visualState =
     !hasMessages
       ? "intro"
@@ -93,11 +96,21 @@ export function PromptRoot({
     if (loading || !input.trim() || sendingRef.current) return;
     sendingRef.current = true;
 
+    let didSend = false;
+
     withGate(() => {
+      didSend = true;
+      setFreePromptsUsed((prev) => prev + 1);
       onSendFromPrompt(input);
       setInput("");
       updateDockHeight();
     });
+
+    // Wenn FreeGate blockt (z.B. bei 9/9 → Login), wird die Callback nicht aufgerufen
+    // → Hinweis zurücksetzen, damit bei 9/9 kein Text mehr steht.
+    if (!didSend) {
+      setFreePromptsUsed(0);
+    }
 
     window.setTimeout(() => {
       sendingRef.current = false;
@@ -110,11 +123,13 @@ export function PromptRoot({
     updateDockHeight,
     withGate,
     sendingRef,
+    setFreePromptsUsed,
   ]);
 
    // PreChat = "doorman", sonst "chat"
   const modeVariant = !hasMessages ? "doorman" : "chat";
   const layoutVariant = snapshot.layoutVariant ?? (isMobile ? "mobile" : "desktop");
+
 
   const dockClassName = "prompt-root";
 
@@ -170,9 +185,17 @@ export function PromptRoot({
         onHeightChange={scheduleDockUpdate}
         onToggleSaeule={onToggleSaeule} // ★ NEU: Übergabe an Shell
       />
+
+      {/* GF-01 – FreeGate Hinweis bei 8/9 (nur UI, keine neuen i18n-Keys) */}
+      {freePromptsUsed === 8 && (
+        <p className="prompt-freegate-hint" aria-live="polite">
+          Du hast noch 1 kostenlose Nachricht.
+        </p>
+      )}
     </div>
   );
 }
+
 
 type DoormanIntroProps = {
   main: string;
