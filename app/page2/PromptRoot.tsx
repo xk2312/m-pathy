@@ -65,7 +65,11 @@ export function PromptRoot({
   const [lastLoginEmail, setLastLoginEmail] = React.useState<string | null>(null);
   const loginInputRef = React.useRef<HTMLInputElement | null>(null);
 
+  // GF-04 – Fehlerstatus bei ungültiger E-Mail
+  const [loginError, setLoginError] = React.useState("");
+
   React.useEffect(() => {
+
     if (typeof window === "undefined") return;
     try {
       const stored = window.localStorage.getItem("mpathy:lastLoginEmail");
@@ -88,13 +92,24 @@ export function PromptRoot({
 
   const handleLoginSubmit = React.useCallback(async () => {
     const email = loginEmail.trim().toLowerCase();
-    if (!email) {
-      // GF-04 übernimmt später Validierung & Fehlermeldung
+
+    // GF-04 – simple Validierung
+    const isValid =
+      email.includes("@") &&
+      email.includes(".") &&
+      !email.startsWith("@") &&
+      email.length > 5;
+
+    if (!isValid) {
+      setLoginError("Bitte überprüfe deine Adresse.");
       return;
     }
 
+    setLoginError("");
+
     try {
       await fetch("/auth/magic-link", {
+
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }), // lang-Hook folgt im i18n-Sprint
@@ -249,9 +264,21 @@ export function PromptRoot({
             autoFocus={true}
             ref={loginInputRef}
             value={loginEmail}
-            onChange={(e) => setLoginEmail(e.target.value)}
+            onChange={(e) => {
+              setLoginEmail(e.target.value);
+              setLoginError(""); // Fehler beim Tippen zurücksetzen
+            }}
           />
+
+          {/* GF-04 – Fehlerhinweis */}
+          {loginError && (
+            <p className="prompt-login-error" aria-live="assertive">
+              {loginError}
+            </p>
+          )}
+
           {lastLoginEmail && (
+
             <button
               type="button"
               className="prompt-login-lastemail"
