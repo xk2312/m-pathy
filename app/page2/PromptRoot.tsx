@@ -173,7 +173,7 @@ export function PromptRoot({
       )}
 
       {/* PromptShell */}
-           <PromptShell
+      <PromptShell
         value={input}
         onChange={setInput}
         onSubmit={sendMessage}
@@ -186,12 +186,28 @@ export function PromptRoot({
         onToggleSaeule={onToggleSaeule} // ★ NEU: Übergabe an Shell
       />
 
+      {/* GF-02 – Login Overlay (Pre-Text + Auto-Focus) */}
+      {snapshot.isSendBlocked && (
+        <div className="prompt-login-overlay">
+          <p className="prompt-login-pretext">
+            Sichere dir deinen Chat-Fortschritt – Login ist kostenlos.
+          </p>
+          <input
+            type="email"
+            className="prompt-login-email"
+            placeholder="deine@mail.com"
+            autoFocus={true}
+          />
+        </div>
+      )}
+
       {/* GF-01 – FreeGate Hinweis bei 8/9 (nur UI, keine neuen i18n-Keys) */}
       {freePromptsUsed === 8 && (
         <p className="prompt-freegate-hint" aria-live="polite">
           Du hast noch 1 kostenlose Nachricht.
         </p>
       )}
+
     </div>
   );
 }
