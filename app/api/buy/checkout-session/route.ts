@@ -34,13 +34,19 @@ export async function POST(req: Request) {
     const mode: "payment" = "payment";
 
     const base = env("STAGING_BASE_URL", env("APP_BASE_URL", "https://m-pathy.ai"));
-    const successUrl: string = body?.successUrl ?? `${base}/?checkout=success`;
-    const cancelUrl: string = body?.cancelUrl ?? `${base}/?checkout=cancel`;
+    
+    // === GC Step 6 – Golden Return URLs ======================================
+    // Erfolgreiche Zahlung → Chat mit Flag, sodass GC Step 9 greifen kann.
+    const successUrl: string = `${base}/chat?paid=1`;
+    // Nutzer bricht Kauf ab → zurück in Chat (sanft), optional für spätere UX.
+    const cancelUrl: string = `${base}/chat?cancel=1`;
+    // ==========================================================================
 
     if (!priceId || !priceId.startsWith("price_")) {
       return new Response(JSON.stringify({ error: "priceId required" }), {
         status: 400, headers: { "content-type": "application/json" },
       });
+
     }
     if (!process.env.STRIPE_SECRET_KEY?.startsWith("sk_")) {
       return new Response(JSON.stringify({ error: "Stripe not configured" }), {
