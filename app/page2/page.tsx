@@ -1389,51 +1389,75 @@ useEffect(() => {
   };
 }, []);
 
-
+// GC: Marker für temporäre System-Toasts (Golden Conversion)
+const GC_MARKER = "[[gc-toast]]";
 
 // ===============================================================
 // Systemmeldung (für Säule / Overlay / Onboarding)
 // ===============================================================
-const systemSay = useCallback((content: string) => {
+const systemSay = useCallback((content: string, opts?: { gc?: boolean }) => {
   if (!content) return;
 
+  const isGc = !!opts?.gc;
+  const tagged = isGc ? `${GC_MARKER}${content}` : content;
+
   setMessages((prev) => {
+    const base = Array.isArray(prev) ? prev : [];
     const next = truncateMessages([
-      ...(Array.isArray(prev) ? prev : []),
-      { role: "assistant", content, format: "markdown" },
+      ...base,
+      { role: "assistant", content: tagged, format: "markdown" },
     ]);
     persistMessages(next);
     return next;
   });
 
   // ▼ immer ans Ende scrollen – Desktop sofort, Mobile mit kurzem Settle
-const scrollToBottom = () => {
-  requestAnimationFrame(() => {
+  const scrollToBottom = () => {
     requestAnimationFrame(() => {
-      if (isMobile && endRef.current) {
-        // iOS/Mobile: stabil gegen Keyboard/visualViewport-Jank
-        endRef.current.scrollIntoView({ block: "end" });
-      } else {
-        const el = convoRef.current as HTMLDivElement | null;
-        if (el) el.scrollTop = el.scrollHeight;
-      }
-      setStickToBottom(true);
+      requestAnimationFrame(() => {
+        if (isMobile && endRef.current) {
+          // iOS/Mobile: stabil gegen Keyboard/visualViewport-Jank
+          endRef.current.scrollIntoView({ block: "end" });
+        } else {
+          const el = convoRef.current as HTMLDivElement | null;
+          if (el) el.scrollTop = el.scrollHeight;
+        }
+        setStickToBottom(true);
+      });
     });
-  });
-};
+  };
 
-// Mobile kurz „settlen“ lassen, Desktop sofort
-if (isMobile) {
-  setTimeout(scrollToBottom, 90); // 60–120ms sweet spot
-} else {
-  scrollToBottom();
-}
-
-
+  // Mobile kurz „settlen“ lassen, Desktop sofort
+  if (isMobile) {
+    setTimeout(scrollToBottom, 90); // 60–120ms sweet spot
+  } else {
+    scrollToBottom();
+  }
 
   // ▼ Antwort ist da → Puls beenden (deine bestehende Logik)
   setLoading(false);
   setMode("DEFAULT");
+
+  // GC: temporäre System-Bubble automatisch entfernen (5–6s Fenster)
+  if (isGc) {
+    setTimeout(() => {
+      setMessages((prev) => {
+        if (!Array.isArray(prev)) return prev;
+        let removed = false;
+        const list = prev.filter((m) => {
+          if (!removed && typeof m.content === "string" && m.content.startsWith(GC_MARKER)) {
+            removed = true;
+            return false;
+          }
+          return true;
+        });
+        if (!removed) return prev;
+        const next = truncateMessages(list);
+        persistMessages(next);
+        return next;
+      });
+    }, 5600);
+  }
 }, [persistMessages]);
 
 
@@ -1443,6 +1467,7 @@ const [footerStatus, setFooterStatus] = useState<{ modeLabel: string; expertLabe
   modeLabel: "—",
   expertLabel: "—",
 });
+
 
   // ===============================================================
 // BRIDGE — Saeule → Chat (Event → echte Nachricht)
