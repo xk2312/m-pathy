@@ -226,9 +226,19 @@ const en = {
   "cta.export": "Export",
   "cta.clear": "Clear chat",
 
+  // Golden Conversion (system messages)
+  gc_warning_last_free_message:
+    "You have 1 free message left. After that you will be redirected to checkout.",
+  gc_payment_success_title: "Payment successful!",
+  gc_payment_success_body:
+    "Your tokens have been updated. Enjoy continuing your chat.",
+  gc_payment_success_button: "OK",
+  gc_please_login_to_continue: "Please log in to continue.",
+
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modes & experts header",
   "pillar.section.modesTitle": "MODES",
+
   "pillar.section.modes": "Modes",
   "pillar.section.experts": "Experts",
   "pillar.section.systemTitle": "SYSTEM",
@@ -363,18 +373,28 @@ const de = {
   "experts.weather_expert": "Wetterexperte",
   "experts.molecular_scientist": "Molekularwissenschaftler",
 
-  // CTA fallback
+   // CTA fallback
   "cta.fallback":
-    "Alles bereit — sag mir einfach, was du bauen möchtest (App, Flow, Feature …).",
+    "Alles bereit – sag mir, was du bauen möchtest (App, Flow, Feature …).",
 
   // CTA labels
   "cta.build": "Bauen",
   "cta.export": "Exportieren",
   "cta.clear": "Chat löschen",
 
+  // Golden Conversion (System-Meldungen)
+  gc_warning_last_free_message:
+    "Du hast noch 1 freie Nachricht. Danach wirst du zum Checkout weitergeleitet.",
+  gc_payment_success_title: "Zahlung erfolgreich!",
+  gc_payment_success_body:
+    "Deine Tokens wurden aktualisiert. Viel Freude beim Weiterchatten.",
+  gc_payment_success_button: "OK",
+  gc_please_login_to_continue: "Bitte einloggen, um fortzufahren.",
+
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modi & Experten",
   "pillar.section.modesTitle": "Modi",
+
   "pillar.section.modes": "Modi",
   "pillar.section.experts": "Experten",
   "pillar.section.systemTitle": "System",
@@ -509,7 +529,7 @@ const fr = {
   "experts.weather_expert": "Expert météo",
   "experts.molecular_scientist": "Scientifique moléculaire",
 
-  // CTA fallback
+   // CTA fallback
   "cta.fallback":
     "Tout est prêt — dis-moi ce que tu veux créer (application, flow, fonctionnalité…).",
 
@@ -518,9 +538,19 @@ const fr = {
   "cta.export": "Exporter",
   "cta.clear": "Effacer le chat",
 
+  // Golden Conversion (messages système)
+  gc_warning_last_free_message:
+    "Il te reste 1 message gratuit. Ensuite, tu seras redirigé vers la page de paiement.",
+  gc_payment_success_title: "Paiement réussi !",
+  gc_payment_success_body:
+    "Tes tokens ont été mis à jour. Bon chat !",
+  gc_payment_success_button: "OK",
+  gc_please_login_to_continue: "Connecte-toi pour continuer.",
+
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modes & experts",
   "pillar.section.modesTitle": "Modes",
+
   "pillar.section.modes": "Modes",
   "pillar.section.experts": "Experts",
   "pillar.section.systemTitle": "Système",
@@ -664,9 +694,19 @@ const es = {
   "cta.export": "Exportar",
   "cta.clear": "Borrar chat",
 
+  // Golden Conversion (mensajes del sistema)
+  gc_warning_last_free_message:
+    "Te queda 1 mensaje gratis. Después serás redirigido al pago.",
+  gc_payment_success_title: "Pago realizado con éxito.",
+  gc_payment_success_body:
+    "Tus tokens se han actualizado. Disfruta del chat.",
+  gc_payment_success_button: "OK",
+  gc_please_login_to_continue: "Inicia sesión para continuar.",
+
   // Pillar sections
   "pillar.section.header": "Modos y expertos",
   "pillar.section.modesTitle": "Modos",
+
   "pillar.section.modes": "Modos",
   "pillar.section.experts": "Expertos",
   "pillar.section.systemTitle": "Sistema",
@@ -801,7 +841,7 @@ const it = {
   "experts.weather_expert": "Esperto meteorologico",
   "experts.molecular_scientist": "Scienziato molecolare",
 
-  // CTA fallback
+   // CTA fallback
   "cta.fallback":
     "Tutto pronto — dimmi cosa desideri creare (app, flusso, funzionalità…).",
 
@@ -810,9 +850,19 @@ const it = {
   "cta.export": "Esporta",
   "cta.clear": "Cancella chat",
 
+  // Golden Conversion (messaggi di sistema)
+  gc_warning_last_free_message:
+    "Hai ancora 1 messaggio gratuito. Dopo verrai reindirizzato al checkout.",
+  gc_payment_success_title: "Pagamento riuscito!",
+  gc_payment_success_body:
+    "I tuoi token sono stati aggiornati. Buona continuazione di chat.",
+  gc_payment_success_button: "OK",
+  gc_please_login_to_continue: "Accedi per continuare.",
+
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modalità ed esperti",
   "pillar.section.modesTitle": "Modalità",
+
   "pillar.section.modes": "Modalità",
   "pillar.section.experts": "Esperti",
   "pillar.section.systemTitle": "Sistema",
@@ -949,16 +999,26 @@ const pt = {
 
   // CTA fallback
   "cta.fallback":
-    "Tudo pronto — diga o que você deseja criar (app, fluxo, funcionalidade…).",
+    "Tudo pronto — diz-me o que queres construir (app, fluxo, funcionalidade…).",
 
   // CTA labels
   "cta.build": "Criar",
   "cta.export": "Exportar",
   "cta.clear": "Limpar chat",
 
+  // Golden Conversion (mensagens de sistema)
+  gc_warning_last_free_message:
+    "Ainda tens 1 mensagem gratuita. Depois serás redirecionado para o checkout.",
+  gc_payment_success_title: "Pagamento concluído!",
+  gc_payment_success_body:
+    "Os teus tokens foram atualizados. Boa continuação de chat.",
+  gc_payment_success_button: "OK",
+  gc_please_login_to_continue: "Inicia sessão para continuar.",
+
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modos e especialistas",
   "pillar.section.modesTitle": "Modos",
+
   "pillar.section.modes": "Modos",
   "pillar.section.experts": "Especialistas",
   "pillar.section.systemTitle": "Sistema",
@@ -1103,9 +1163,19 @@ const nl = {
   "cta.export": "Exporteren",
   "cta.clear": "Chat wissen",
 
+  // Golden Conversion (systeemmeldingen)
+  gc_warning_last_free_message:
+    "Je hebt nog 1 gratis bericht. Daarna word je doorgestuurd naar de checkout.",
+  gc_payment_success_title: "Betaling geslaagd!",
+  gc_payment_success_body:
+    "Je tokens zijn bijgewerkt. Veel plezier met verder chatten.",
+  gc_payment_success_button: "OK",
+  gc_please_login_to_continue: "Log in om verder te gaan.",
+
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modi & experts",
   "pillar.section.modesTitle": "Modi",
+
   "pillar.section.modes": "Modi",
   "pillar.section.experts": "Experts",
   "pillar.section.systemTitle": "Systeem",
@@ -1250,9 +1320,19 @@ const ru = {
   "cta.export": "Экспорт",
   "cta.clear": "Очистить чат",
 
+  // Golden Conversion (системные сообщения)
+  gc_warning_last_free_message:
+    "У тебя осталось 1 бесплатное сообщение. После этого ты будешь перенаправлен на страницу оплаты.",
+  gc_payment_success_title: "Оплата успешно выполнена!",
+  gc_payment_success_body:
+    "Твои токены обновлены. Приятного продолжения чата.",
+  gc_payment_success_button: "OK",
+  gc_please_login_to_continue: "Войдите, чтобы продолжить.",
+
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Режимы и эксперты",
   "pillar.section.modesTitle": "Режимы",
+
   "pillar.section.modes": "Режимы",
   "pillar.section.experts": "Эксперты",
   "pillar.section.systemTitle": "Система",
@@ -1396,9 +1476,19 @@ const zh = {
   "cta.export": "导出",
   "cta.clear": "清空聊天",
 
+  // Golden Conversion（系统提示）
+  gc_warning_last_free_message:
+    "你还剩 1 条免费消息。之后你会被跳转到结账页面。",
+  gc_payment_success_title: "支付成功！",
+  gc_payment_success_body:
+    "你的代币已更新，祝你聊天愉快。",
+  gc_payment_success_button: "确定",
+  gc_please_login_to_continue: "请登录以继续。",
+
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "模式与专家",
   "pillar.section.modesTitle": "模式",
+
   "pillar.section.modes": "模式",
   "pillar.section.experts": "专家",
   "pillar.section.systemTitle": "系统",
@@ -1542,9 +1632,19 @@ const ja = {
   "cta.export": "エクスポート",
   "cta.clear": "チャットを消去",
 
+  // Golden Conversion（システムメッセージ）
+  gc_warning_last_free_message:
+    "無料メッセージはあと1通です。その後はチェックアウト画面に移動します。",
+  gc_payment_success_title: "お支払いが完了しました！",
+  gc_payment_success_body:
+    "トークンが更新されました。引き続きチャットをお楽しみください。",
+  gc_payment_success_button: "OK",
+  gc_please_login_to_continue: "続行するにはログインしてください。",
+
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "モード & 専門家",
   "pillar.section.modesTitle": "モード",
+
   "pillar.section.modes": "モード",
   "pillar.section.experts": "専門家",
   "pillar.section.systemTitle": "システム",
@@ -1688,9 +1788,19 @@ const ko = {
   "cta.export": "내보내기",
   "cta.clear": "채팅 지우기",
 
+  // Golden Conversion (시스템 메시지)
+  gc_warning_last_free_message:
+    "무료 메시지가 1개 남았습니다. 이후에는 결제 페이지로 이동합니다.",
+  gc_payment_success_title: "결제가 완료되었습니다!",
+  gc_payment_success_body:
+    "토큰이 업데이트되었습니다. 계속해서 즐겁게 대화해 보세요.",
+  gc_payment_success_button: "OK",
+  gc_please_login_to_continue: "계속하려면 로그인해 주세요.",
+
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "모드 & 전문가",
   "pillar.section.modesTitle": "모드",
+
   "pillar.section.modes": "모드",
   "pillar.section.experts": "전문가",
   "pillar.section.systemTitle": "시스템",
@@ -1827,16 +1937,26 @@ const ar = {
 
   // CTA fallback
   "cta.fallback":
-    "كل شيء جاهز — أخبرني بما ترغب في بنائه (تطبيق، هيكل، ميزة…).",
+"أنت جاهز — أخبرني بما تريد بناءه (تطبيق، تدفق، ميزة…).",
 
   // CTA labels
-  "cta.build": "بناء",
+  "cta.build": "إنشاء",
   "cta.export": "تصدير",
   "cta.clear": "مسح الدردشة",
+
+  // Golden Conversion (رسائل النظام)
+  gc_warning_last_free_message:
+    "تبقّت لديك رسالة مجانية واحدة. بعد ذلك سيتم توجيهك إلى صفحة الدفع.",
+  gc_payment_success_title: "تم الدفع بنجاح!",
+  gc_payment_success_body:
+    "تم تحديث التوكنز الخاصة بك. استمتع بمتابعة الدردشة.",
+  gc_payment_success_button: "حسنًا",
+  gc_please_login_to_continue: "يرجى تسجيل الدخول للمتابعة.",
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "الأوضاع والخبراء",
   "pillar.section.modesTitle": "الأوضاع",
+
   "pillar.section.modes": "الأوضاع",
   "pillar.section.experts": "الخبراء",
   "pillar.section.systemTitle": "النظام",
@@ -1980,9 +2100,19 @@ const hi = {
   "cta.export": "निर्यात",
   "cta.clear": "चैट साफ़ करें",
 
+  // Golden Conversion (सिस्टम संदेश)
+  gc_warning_last_free_message:
+    "आपके पास 1 मुफ्त संदेश शेष है। इसके बाद आपको चेकआउट पर भेज दिया जाएगा।",
+  gc_payment_success_title: "भुगतान सफल रहा!",
+  gc_payment_success_body:
+    "आपके टोकन अपडेट कर दिए गए हैं। आगे चैट का आनंद लें।",
+  gc_payment_success_button: "OK",
+  gc_please_login_to_continue: "जारी रखने के लिए कृपया लॉगिन करें।",
+
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "मोड और विशेषज्ञ",
   "pillar.section.modesTitle": "मोड",
+
   "pillar.section.modes": "मोड",
   "pillar.section.experts": "विशेषज्ञ",
   "pillar.section.systemTitle": "सिस्टम",
