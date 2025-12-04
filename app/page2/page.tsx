@@ -1167,12 +1167,12 @@ const PRICE_1M = process.env.NEXT_PUBLIC_STRIPE_PRICE_1M as string | undefined;
 // Persistenz läuft zentral über lib/chatStorage.ts  → siehe persist.* oben
 // … weiterer Code …
 
+
 // Alias für bestehende Stellen im Code:
-const persistMessages = saveChat;
+const persistMessages = saveMessages;
 
 // ── M-Flow Overlay (1. Frame: eventLabel)
 type MEvent = "builder" | "onboarding" | "expert" | "mode";
-
 const [frameText, setFrameText] = useState<string | null>(null);
 
 // "de" | "en" | "fr" | ... – folgt dem zentralen Sprachkern
