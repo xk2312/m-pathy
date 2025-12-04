@@ -116,7 +116,7 @@ import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import { useMobileViewport } from "@/lib/useMobileViewport";
 
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
-import { loadChat, saveChat, clearChat,initChatStorage, makeClearHandler, hardClearChat  } from "@/lib/chatStorage";
+import { loadChat, saveChat, initChatStorage, hardClearChat } from "@/lib/chatStorage";
 
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
@@ -1054,12 +1054,10 @@ const clearingRef = React.useRef(false);
 // ⬇︎ NEU: vorbereiteter Clear-Handler (ohne UI, noch nicht aufgerufen)
 // Hard-Clear: UI sofort leeren, Autosave pausieren, Storage wipe + Reload
 const onClearChat = React.useCallback(() => {
-  console.log("[P4] onClearChat entered");
   clearingRef.current = true;
   try {
     setMessages([]);                  // UI sofort leer
     hardClearChat({ reload: true });  // Storage wipe (neu+legacy+export) + Reload
-    console.log("[P4] hardClearChat called");
   } catch (e) {
     console.error("[P4] onClearChat error:", e);
   }
@@ -1169,12 +1167,12 @@ const PRICE_1M = process.env.NEXT_PUBLIC_STRIPE_PRICE_1M as string | undefined;
 // Persistenz läuft zentral über lib/chatStorage.ts  → siehe persist.* oben
 // … weiterer Code …
 
-
 // Alias für bestehende Stellen im Code:
-const persistMessages = saveMessages;
+const persistMessages = saveChat;
 
 // ── M-Flow Overlay (1. Frame: eventLabel)
 type MEvent = "builder" | "onboarding" | "expert" | "mode";
+
 const [frameText, setFrameText] = useState<string | null>(null);
 
 // "de" | "en" | "fr" | ... – folgt dem zentralen Sprachkern
