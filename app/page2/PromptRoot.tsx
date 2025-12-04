@@ -60,6 +60,56 @@ export function PromptRoot({
   // Lokaler Zähler für gesendete Free-Prompts (nur UI, kein Backend-Touch)
   const [freePromptsUsed, setFreePromptsUsed] = React.useState(0);
 
+  // GF-03 – Login-Email-State + letzte E-Mail (für "Letzte E-Mail verwenden")
+  const [loginEmail, setLoginEmail] = React.useState("");
+  const [lastLoginEmail, setLastLoginEmail] = React.useState<string | null>(null);
+  const loginInputRef = React.useRef<HTMLInputElement | null>(null);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const stored = window.localStorage.getItem("mpathy:lastLoginEmail");
+      if (stored) {
+        setLastLoginEmail(stored);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const handleUseLastEmail = React.useCallback(() => {
+    if (!lastLoginEmail) return;
+    setLoginEmail(lastLoginEmail);
+    if (loginInputRef.current) {
+      loginInputRef.current.focus();
+      loginInputRef.current.select();
+    }
+  }, [lastLoginEmail]);
+
+  const handleLoginSubmit = React.useCallback(async () => {
+    const email = loginEmail.trim().toLowerCase();
+    if (!email) {
+      // GF-04 übernimmt später Validierung & Fehlermeldung
+      return;
+    }
+
+    try {
+      await fetch("/auth/magic-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }), // lang-Hook folgt im i18n-Sprint
+      });
+
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem("mpathy:lastLoginEmail", email);
+      }
+      setLastLoginEmail(email);
+    } catch (err) {
+      // GF-05/GF-07 können später Fehler-Feedback gestalten
+      console.error("magic-link request failed", err);
+    }
+  }, [loginEmail]);
+
   const visualState =
     !hasMessages
       ? "intro"
@@ -172,7 +222,7 @@ export function PromptRoot({
         />
       )}
 
-      {/* PromptShell */}
+       {/* PromptShell */}
       <PromptShell
         value={input}
         onChange={setInput}
@@ -186,7 +236,7 @@ export function PromptRoot({
         onToggleSaeule={onToggleSaeule} // ★ NEU: Übergabe an Shell
       />
 
-      {/* GF-02 – Login Overlay (Pre-Text + Auto-Focus) */}
+      {/* GF-02 + GF-03 – Login Overlay (Pre-Text, Auto-Focus, Last-Email-Reuse) */}
       {snapshot.isSendBlocked && (
         <div className="prompt-login-overlay">
           <p className="prompt-login-pretext">
@@ -197,7 +247,26 @@ export function PromptRoot({
             className="prompt-login-email"
             placeholder="deine@mail.com"
             autoFocus={true}
+            ref={loginInputRef}
+            value={loginEmail}
+            onChange={(e) => setLoginEmail(e.target.value)}
           />
+          {lastLoginEmail && (
+            <button
+              type="button"
+              className="prompt-login-lastemail"
+              onClick={handleUseLastEmail}
+            >
+              Letzte E-Mail verwenden
+            </button>
+          )}
+          <button
+            type="button"
+            className="prompt-login-submit"
+            onClick={handleLoginSubmit}
+          >
+            Login-Link senden
+          </button>
         </div>
       )}
 
@@ -207,6 +276,7 @@ export function PromptRoot({
           Du hast noch 1 kostenlose Nachricht.
         </p>
       )}
+
 
     </div>
   );
