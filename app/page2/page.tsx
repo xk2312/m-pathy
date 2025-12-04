@@ -1102,9 +1102,29 @@ useEffect(() => {
   });
 }, []);
 
+// GC Step 10 – Autofokus nach erfolgreichem Kauf
+useEffect(() => {
+  if (typeof window === "undefined") return;
+
+  const url = new URL(window.location.href);
+  const paid = url.searchParams.get("paid");
+
+  // Nur einmal: wenn der Success-Toast in Step 9 ausgelöst wurde
+  if (paid === "1") {
+    // Kleiner Delay, damit Toast + Dock-Height-Update abgeschlossen sind
+    const timer = window.setTimeout(() => {
+      const el = document.getElementById("chat-input");
+      if (el) el.focus();
+    }, 1800);
+
+    return () => window.clearTimeout(timer);
+  }
+}, []);
+
 // GC Step 8+9 – Balance-Polling + Success-Toast nach Stripe-Return (?paid=1)
 useEffect(() => {
   if (typeof window === "undefined") return;
+
 
   const sp = new URLSearchParams(window.location.search);
   const paid = sp.get("paid");
