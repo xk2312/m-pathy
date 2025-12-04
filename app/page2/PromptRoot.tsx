@@ -67,6 +67,8 @@ export function PromptRoot({
 
   // GF-04 – Fehlerstatus bei ungültiger E-Mail
   const [loginError, setLoginError] = React.useState("");
+  // GF-05 – Statusmeldungen beim Senden des Login-Links
+  const [loginStatus, setLoginStatus] = React.useState("");
 
   React.useEffect(() => {
 
@@ -106,10 +108,15 @@ export function PromptRoot({
     }
 
     setLoginError("");
+    setLoginStatus("Login wird vorbereitet…");
 
     try {
-      await fetch("/auth/magic-link", {
+      // Zwischenstatus während des Requests
+      window.setTimeout(() => {
+        setLoginStatus("Wir senden dir eine E-Mail…");
+      }, 200);
 
+      await fetch("/auth/magic-link", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }), // lang-Hook folgt im i18n-Sprint
@@ -119,11 +126,14 @@ export function PromptRoot({
         window.localStorage.setItem("mpathy:lastLoginEmail", email);
       }
       setLastLoginEmail(email);
+      setLoginStatus(`E-Mail gesendet an: ${email}`);
     } catch (err) {
-      // GF-05/GF-07 können später Fehler-Feedback gestalten
+      // Fehler kann in späterem Step spezifischer behandelt werden
       console.error("magic-link request failed", err);
+      setLoginStatus("");
     }
   }, [loginEmail]);
+
 
   const visualState =
     !hasMessages
@@ -267,6 +277,7 @@ export function PromptRoot({
             onChange={(e) => {
               setLoginEmail(e.target.value);
               setLoginError(""); // Fehler beim Tippen zurücksetzen
+              setLoginStatus(""); // Status beim Tippen zurücksetzen
             }}
           />
 
@@ -277,7 +288,15 @@ export function PromptRoot({
             </p>
           )}
 
+          {/* GF-05 – Status-Texte beim Senden */}
+          {loginStatus && (
+            <p className="prompt-login-status" aria-live="polite">
+              {loginStatus}
+            </p>
+          )}
+
           {lastLoginEmail && (
+
 
             <button
               type="button"
