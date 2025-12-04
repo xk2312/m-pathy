@@ -1067,7 +1067,7 @@ const onClearChat = React.useCallback(() => {
 
 
 
-// Autosave — pausiert, wenn gerade "Clear" läuft
+// Autosave — pausiert, wenn gerade "Clear" läuft"
 useEffect(() => {
   console.log("[P6] autosave fired", {
     clearing: clearingRef.current,
@@ -1102,7 +1102,7 @@ useEffect(() => {
   });
 }, []);
 
-// GC Step 8 – Balance-Polling nach Stripe-Return (?paid=1)
+// GC Step 8+9 – Balance-Polling + Success-Toast nach Stripe-Return (?paid=1)
 useEffect(() => {
   if (typeof window === "undefined") return;
 
@@ -1114,11 +1114,35 @@ useEffect(() => {
 
   const timer = window.setTimeout(async () => {
     if (cancelled) return;
+
     try {
       // Einmalig Balance anstoßen; Navigation/AccountPanel holen den Wert wie gewohnt.
       await fetch("/api/me/balance", { method: "GET" });
     } catch {
       // Silent – Balance wird beim nächsten regulären Call geladen.
+    }
+
+    if (cancelled) return;
+
+    // GC Step 9 – System-Toast "Zahlung erfolgreich"
+    try {
+      systemSay(
+        `**${t("gc_payment_success_title")}**\n\n${t("gc_payment_success_body")}`,
+        { gc: true },
+      );
+    } catch {
+      // Toast ist nice-to-have, bricht nie den Flow
+    }
+
+    // Query-Param ?paid=1 einmalig entfernen, damit der Toast nicht erneut feuert
+    try {
+      const url = new URL(window.location.href);
+      if (url.searchParams.get("paid") === "1") {
+        url.searchParams.delete("paid");
+        window.history.replaceState(window.history.state, "", url.toString());
+      }
+    } catch {
+      // History-Manipulation ist optional, Fehler werden ignoriert
     }
   }, 1200); // 1–2 Sekunden Verzögerung
 
@@ -1130,6 +1154,7 @@ useEffect(() => {
 
 const [loading, setLoading] = useState(false);
 const [stickToBottom, setStickToBottom] = useState(true);
+
 
 
 // … weiterer Code …
