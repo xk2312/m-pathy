@@ -122,14 +122,19 @@ const { count, blocked, cookie } = verifyAndBumpFreegate({
   secret: FG_SECRET,
 });
 
+// Wie viele freie Requests bleiben (nicht negativ)
+const freeRemaining = Math.max(FREE_LIMIT - count, 0);
+
 // Bei Limit: sofort 402 + Header setzen und beenden
 if (blocked) {
+
   const r = NextResponse.json(
     { status: "free_limit_reached", free_limit: FREE_LIMIT, checkout_url: CHECKOUT_URL },
     { status: 402 }
   );
   r.headers.set("X-Free-Used", String(count));
   r.headers.set("X-Free-Limit", String(FREE_LIMIT));
+  r.headers.set("X-Free-Remaining", String(freeRemaining));
   r.headers.set("X-Tokens-Delta", "0");
   if (cookie) r.headers.set("Set-Cookie", cookie);
   return r;
@@ -176,14 +181,16 @@ assertEnv();
     // Beispiel: Tokens-Verbrauch schätzen (Stub). Später ersetzen wir das durch echte Usage.
     const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, 120);
 
-    const res = NextResponse.json({ role: "assistant", content }, { status: 200 });
+       const res = NextResponse.json({ role: "assistant", content }, { status: 200 });
     res.headers.set("X-Tokens-Delta", String(-TOKENS_USED));
     res.headers.set("X-Free-Used", String(count));
     res.headers.set("X-Free-Limit", String(FREE_LIMIT));
+    res.headers.set("X-Free-Remaining", String(freeRemaining));
     if (cookie) {
       res.headers.set("Set-Cookie", cookie);
     }
     return res;
+
 
   } catch (err: any) {
     console.error("[API Error]", err);
