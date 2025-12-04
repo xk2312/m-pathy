@@ -57,84 +57,6 @@ export function PromptRoot({
     isThinking: loading,
   });
 
-  // Lokaler Zähler für gesendete Free-Prompts (nur UI, kein Backend-Touch)
-  const [freePromptsUsed, setFreePromptsUsed] = React.useState(0);
-
-  // GF-03 – Login-Email-State + letzte E-Mail (für "Letzte E-Mail verwenden")
-  const [loginEmail, setLoginEmail] = React.useState("");
-  const [lastLoginEmail, setLastLoginEmail] = React.useState<string | null>(null);
-  const loginInputRef = React.useRef<HTMLInputElement | null>(null);
-
-  // GF-04 – Fehlerstatus bei ungültiger E-Mail
-  const [loginError, setLoginError] = React.useState("");
-  // GF-05 – Statusmeldungen beim Senden des Login-Links
-  const [loginStatus, setLoginStatus] = React.useState("");
-
-  React.useEffect(() => {
-
-    if (typeof window === "undefined") return;
-    try {
-      const stored = window.localStorage.getItem("mpathy:lastLoginEmail");
-      if (stored) {
-        setLastLoginEmail(stored);
-      }
-    } catch {
-      // ignore
-    }
-  }, []);
-
-  const handleUseLastEmail = React.useCallback(() => {
-    if (!lastLoginEmail) return;
-    setLoginEmail(lastLoginEmail);
-    if (loginInputRef.current) {
-      loginInputRef.current.focus();
-      loginInputRef.current.select();
-    }
-  }, [lastLoginEmail]);
-
-  const handleLoginSubmit = React.useCallback(async () => {
-    const email = loginEmail.trim().toLowerCase();
-
-    // GF-04 – simple Validierung
-    const isValid =
-      email.includes("@") &&
-      email.includes(".") &&
-      !email.startsWith("@") &&
-      email.length > 5;
-
-    if (!isValid) {
-      setLoginError("Bitte überprüfe deine Adresse.");
-      return;
-    }
-
-    setLoginError("");
-    setLoginStatus("Login wird vorbereitet…");
-
-    try {
-      // Zwischenstatus während des Requests
-      window.setTimeout(() => {
-        setLoginStatus("Wir senden dir eine E-Mail…");
-      }, 200);
-
-      await fetch("/auth/magic-link", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }), // lang-Hook folgt im i18n-Sprint
-      });
-
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("mpathy:lastLoginEmail", email);
-      }
-      setLastLoginEmail(email);
-      setLoginStatus(`E-Mail gesendet an: ${email}`);
-    } catch (err) {
-      // Fehler kann in späterem Step spezifischer behandelt werden
-      console.error("magic-link request failed", err);
-      setLoginStatus("");
-    }
-  }, [loginEmail]);
-
-
   const visualState =
     !hasMessages
       ? "intro"
@@ -171,21 +93,11 @@ export function PromptRoot({
     if (loading || !input.trim() || sendingRef.current) return;
     sendingRef.current = true;
 
-    let didSend = false;
-
     withGate(() => {
-      didSend = true;
-      setFreePromptsUsed((prev) => prev + 1);
       onSendFromPrompt(input);
       setInput("");
       updateDockHeight();
     });
-
-    // Wenn FreeGate blockt (z.B. bei 9/9 → Login), wird die Callback nicht aufgerufen
-    // → Hinweis zurücksetzen, damit bei 9/9 kein Text mehr steht.
-    if (!didSend) {
-      setFreePromptsUsed(0);
-    }
 
     window.setTimeout(() => {
       sendingRef.current = false;
@@ -198,13 +110,11 @@ export function PromptRoot({
     updateDockHeight,
     withGate,
     sendingRef,
-    setFreePromptsUsed,
   ]);
 
    // PreChat = "doorman", sonst "chat"
   const modeVariant = !hasMessages ? "doorman" : "chat";
   const layoutVariant = snapshot.layoutVariant ?? (isMobile ? "mobile" : "desktop");
-
 
   const dockClassName = "prompt-root";
 
@@ -247,8 +157,8 @@ export function PromptRoot({
         />
       )}
 
-       {/* PromptShell */}
-      <PromptShell
+      {/* PromptShell */}
+           <PromptShell
         value={input}
         onChange={setInput}
         onSubmit={sendMessage}
@@ -260,74 +170,9 @@ export function PromptRoot({
         onHeightChange={scheduleDockUpdate}
         onToggleSaeule={onToggleSaeule} // ★ NEU: Übergabe an Shell
       />
-
-      {/* GF-02 + GF-03 – Login Overlay (Pre-Text, Auto-Focus, Last-Email-Reuse) */}
-      {snapshot.isSendBlocked && (
-        <div className="prompt-login-overlay">
-          <p className="prompt-login-pretext">
-            Sichere dir deinen Chat-Fortschritt – Login ist kostenlos.
-          </p>
-          <input
-            type="email"
-            className="prompt-login-email"
-            placeholder="deine@mail.com"
-            autoFocus={true}
-            ref={loginInputRef}
-            value={loginEmail}
-            onChange={(e) => {
-              setLoginEmail(e.target.value);
-              setLoginError(""); // Fehler beim Tippen zurücksetzen
-              setLoginStatus(""); // Status beim Tippen zurücksetzen
-            }}
-          />
-
-          {/* GF-04 – Fehlerhinweis */}
-          {loginError && (
-            <p className="prompt-login-error" aria-live="assertive">
-              {loginError}
-            </p>
-          )}
-
-          {/* GF-05 – Status-Texte beim Senden */}
-          {loginStatus && (
-            <p className="prompt-login-status" aria-live="polite">
-              {loginStatus}
-            </p>
-          )}
-
-          {lastLoginEmail && (
-
-
-            <button
-              type="button"
-              className="prompt-login-lastemail"
-              onClick={handleUseLastEmail}
-            >
-              Letzte E-Mail verwenden
-            </button>
-          )}
-          <button
-            type="button"
-            className="prompt-login-submit"
-            onClick={handleLoginSubmit}
-          >
-            Login-Link senden
-          </button>
-        </div>
-      )}
-
-      {/* GF-01 – FreeGate Hinweis bei 8/9 (nur UI, keine neuen i18n-Keys) */}
-      {freePromptsUsed === 8 && (
-        <p className="prompt-freegate-hint" aria-live="polite">
-          Du hast noch 1 kostenlose Nachricht.
-        </p>
-      )}
-
-
     </div>
   );
 }
-
 
 type DoormanIntroProps = {
   main: string;
