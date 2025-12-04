@@ -1592,24 +1592,25 @@ if (busy) {
   }, []);
 
   // ===============================================================
-// Lokale Chat-Sendefunktion (ruft echte API)
-// ===============================================================
-async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
-  const res = await fetch("/api/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "same-origin",
-    body: JSON.stringify({ messages: context }),
-  });
+  // Lokale Chat-Sendefunktion (ruft echte API)
+  // ===============================================================
+  async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ messages: context }),
+    });
 
-  // === FreeGate 402 → Stripe Checkout ===
-  if (res.status === 402) {
-    let checkoutUrl = "";
-    try {
-      const payload = await res.json().catch(() => ({} as any));
-      // Falls Server bereits eine fertige URL liefert, nimm die.
-      checkoutUrl = payload?.checkout_url || "";
-    } catch { /* ignore */ }
+    // === GC Step 5 – FreeGate 402 → Stripe Checkout (Message → 402 → Stripe) ===
+    if (res.status === 402) {
+      let checkoutUrl = "";
+      try {
+        const payload = await res.json().catch(() => ({} as any));
+        // Falls Server bereits eine fertige URL liefert, nimm die.
+        checkoutUrl = payload?.checkout_url || "";
+      } catch { /* ignore */ }
+
 
     // Wenn keine URL mitkam, erzeuge eine Session über unsere eigene Route.
     if (!checkoutUrl) {
