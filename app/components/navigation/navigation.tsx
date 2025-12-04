@@ -507,11 +507,12 @@ export default function Navigation() {
               </span>
             </Link>
             <NavLink
-              href="/page2"
+              href="/subscription"
               label={links.subscription}
               active={isActive("/subscription")}
             />
           </div>
+
 
           {/* RIGHT – Language + Login */}
           <div className="flex items-center justify-end gap-3 min-w-[180px]">
