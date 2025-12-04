@@ -1641,6 +1641,22 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
     return { role: "assistant", content: "Opening checkout …", format: "markdown" } as ChatMessage;
   }
 
+  // === GC: Letzte freie Nachricht → Systemmeldung ======================
+  const freeRemainingHeader = res.headers.get("X-Free-Remaining");
+  if (freeRemainingHeader != null) {
+    const parsed = parseInt(freeRemainingHeader, 10);
+    if (!Number.isNaN(parsed) && parsed === 1) {
+      try {
+        // nutzt das bestehende System-Overlay (gleiche Box wie Mail-Prompts)
+        systemSay(t("gc_warning_last_free_message"));
+      } catch (err) {
+        if (process.env.NODE_ENV !== "production") {
+          console.warn("[GC] Failed to show last-free-message toast", err);
+        }
+      }
+    }
+  }
+
   if (!res.ok) throw new Error("Chat API failed");
   const data = await res.json();
   const assistant = data.assistant ?? data;
@@ -1650,6 +1666,7 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
     format: assistant.format ?? "markdown",
   } as ChatMessage;
 }
+
 
 
   // ===============================================================
