@@ -1069,10 +1069,6 @@ const onClearChat = React.useCallback(() => {
 
 // Autosave — pausiert, wenn gerade "Clear" läuft"
 useEffect(() => {
-  console.log("[P6] autosave fired", {
-    clearing: clearingRef.current,
-    len: Array.isArray(messages) ? messages.length : "n/a",
-  });
   if (clearingRef.current) return;
   if (Array.isArray(messages)) {
     saveChat(messages);
@@ -1102,32 +1098,12 @@ useEffect(() => {
   });
 }, []);
 
-// GC Step 10 – Autofokus nach erfolgreichem Kauf
+// GC Step 12 – Combined paid=1 handler (Balance + Success + URL cleanup + Autofocus)
 useEffect(() => {
   if (typeof window === "undefined") return;
 
   const url = new URL(window.location.href);
   const paid = url.searchParams.get("paid");
-
-  // Nur einmal: wenn der Success-Toast in Step 9 ausgelöst wurde
-  if (paid === "1") {
-    // Kleiner Delay, damit Toast + Dock-Height-Update abgeschlossen sind
-    const timer = window.setTimeout(() => {
-      const el = document.getElementById("chat-input");
-      if (el) el.focus();
-    }, 1800);
-
-    return () => window.clearTimeout(timer);
-  }
-}, []);
-
-// GC Step 8+9 – Balance-Polling + Success-Toast nach Stripe-Return (?paid=1)
-useEffect(() => {
-  if (typeof window === "undefined") return;
-
-
-  const sp = new URLSearchParams(window.location.search);
-  const paid = sp.get("paid");
   if (paid !== "1") return;
 
   let cancelled = false;
@@ -1135,36 +1111,38 @@ useEffect(() => {
   const timer = window.setTimeout(async () => {
     if (cancelled) return;
 
+    // 1) Balance abrufen
     try {
-      // Einmalig Balance anstoßen; Navigation/AccountPanel holen den Wert wie gewohnt.
-      await fetch("/api/me/balance", { method: "GET" });
+      const res = await fetch("/api/me/balance", { method: "GET" });
+      await res.json().catch(() => null);
     } catch {
-      // Silent – Balance wird beim nächsten regulären Call geladen.
+      // Silent – kein Crash, wenn Balance-Fetch fehlschlägt
     }
 
     if (cancelled) return;
 
-    // GC Step 9 – System-Toast "Zahlung erfolgreich"
+    // 2) Erfolgstoast anzeigen
     try {
       systemSay(
         `**${t("gc_payment_success_title")}**\n\n${t("gc_payment_success_body")}`,
         { gc: true },
       );
     } catch {
-      // Toast ist nice-to-have, bricht nie den Flow
+      // Toast ist nice-to-have, darf nie den Flow brechen
     }
 
-    // Query-Param ?paid=1 einmalig entfernen, damit der Toast nicht erneut feuert
+    // 3) URL bereinigen, damit paid=1 nicht hängen bleibt
     try {
-      const url = new URL(window.location.href);
-      if (url.searchParams.get("paid") === "1") {
-        url.searchParams.delete("paid");
-        window.history.replaceState(window.history.state, "", url.toString());
-      }
+      url.searchParams.delete("paid");
+      window.history.replaceState(window.history.state, "", url.toString());
     } catch {
-      // History-Manipulation ist optional, Fehler werden ignoriert
+      // History-Manipulation ist optional
     }
-  }, 1200); // 1–2 Sekunden Verzögerung
+
+    // 4) Fokus zurück ins Eingabefeld
+    const el = document.getElementById("chat-input");
+    if (el) el.focus();
+  }, 1200); // 1–2 Sekunden Verzögerung nach Return
 
   return () => {
     cancelled = true;
@@ -1173,6 +1151,7 @@ useEffect(() => {
 }, []);
 
 const [loading, setLoading] = useState(false);
+
 const [stickToBottom, setStickToBottom] = useState(true);
 
 
