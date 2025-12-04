@@ -55,12 +55,23 @@ export async function POST(req: Request) {
     }
 
     const stripe = getStripe();
-    const session = await stripe.checkout.sessions.create({
-      mode,
-      line_items: [{ price: priceId, quantity }],
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-    });
+   const session = await stripe.checkout.sessions.create({
+  mode,
+  line_items: [{ price: priceId, quantity }],
+
+  // === GC Step 7 – User-Vererbung für Webhook-Credit ======================
+  // Wenn der User eingeloggt ist, muss der Webhook ihn 1:1 zuordnen können.
+  metadata: {
+    user_id: String((req as any)?.user?.id || ""),
+    tokens: "1000000",       // optional, aber unterstützt fallback credit
+    price_id: priceId,       // für webhook price mapping
+  },
+  // ========================================================================
+
+  success_url: successUrl,
+  cancel_url: cancelUrl,
+});
+
 
     return new Response(JSON.stringify({ url: session.url }), {
       status: 200, headers: { "content-type": "application/json" },
