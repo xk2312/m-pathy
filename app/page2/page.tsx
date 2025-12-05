@@ -1778,6 +1778,16 @@ if (busy) {
   if (!res.ok) throw new Error("Chat API failed");
 
   const data = await res.json();
+
+  // FreeGate-Limit: Server meldet free_limit_reached → Login-Hinweis statt leerer Bubble
+  if (data && data.status === "free_limit_reached") {
+    return {
+      role: "assistant",
+      content: t("gc_please_login_to_continue"),
+      format: "markdown",
+    } as ChatMessage;
+  }
+
   const assistant = data.assistant ?? data;
   return {
     role: assistant.role ?? "assistant",
