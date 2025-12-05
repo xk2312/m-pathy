@@ -1779,7 +1779,7 @@ if (busy) {
 
   const data = await res.json();
 
-  // FreeGate-Limit: Server meldet free_limit_reached → Login-Hinweis statt leerer Bubble
+  // FreeGate-Limit: Login erforderlich
   if (data && data.status === "free_limit_reached") {
     return {
       role: "assistant",
@@ -1789,11 +1789,20 @@ if (busy) {
   }
 
   const assistant = data.assistant ?? data;
+  const content = assistant.content ?? "";
+
+  // Falls der Server KEINEN Text liefert → Login-Text erzwingen
+  const safeContent =
+    content.trim().length > 0
+      ? content
+      : t("gc_please_login_to_continue");
+
   return {
     role: assistant.role ?? "assistant",
-    content: assistant.content ?? "",
+    content: safeContent,
     format: assistant.format ?? "markdown",
   } as ChatMessage;
+
 }
 
 
