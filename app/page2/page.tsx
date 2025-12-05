@@ -1642,11 +1642,12 @@ if (busy) {
           systemSay(
             `**${t("gc_freegate_limit_reached")}**\n\n${t("gc_freegate_login_required")}`,
           );
-          return {
-            role: "assistant",
-            content: "",
-            format: "markdown",
-          } as ChatMessage;
+              return {
+        role: "assistant",
+        content: t("gc_please_login_to_continue"),
+        format: "markdown",
+      } as ChatMessage;
+
         }
       } catch {
         // Parsing/Login-Toast-Fehler niemals den Flow crashen lassen
@@ -1804,9 +1805,6 @@ if (busy) {
   } as ChatMessage;
 
 }
-
-
-
 
   // ===============================================================
   // Prompt-Handler – sendet Text aus Eingabefeld
