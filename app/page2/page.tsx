@@ -1729,20 +1729,6 @@ if (busy) {
 
 
   // === GC: Letzte freie Nachricht → Systemmeldung ======================
-  const freeRemainingHeader = res.headers.get("X-Free-Remaining");
-  if (freeRemainingHeader != null) {
-    const parsed = parseInt(freeRemainingHeader, 10);
-    if (!Number.isNaN(parsed) && parsed === 1) {
-      try {
-        // nutzt das bestehende System-Overlay (gleiche Box wie Mail-Prompts)
-        systemSay(t("gc_warning_last_free_message"));
-      } catch (err) {
-        if (process.env.NODE_ENV !== "production") {
-          console.warn("[GC] Failed to show last-free-message toast", err);
-        }
-      }
-    }
-  }
 
   try {
     if (typeof window !== "undefined" && window.localStorage) {
@@ -1873,8 +1859,11 @@ if (busy) {
     setLoading(true);
     setMode("THINKING");
 
-    try {
+     try {
       const assistant = await sendMessageLocal(optimistic);
+      if (assistant.content === t("gc_please_login_to_continue")) {
+        return;
+      }
       setMessages((prev) => {
         const base = Array.isArray(prev) ? prev : [];
         const next = truncateMessages([...base, assistant]);
@@ -1882,6 +1871,7 @@ if (busy) {
         return next;
       });
     } catch {
+
       setMessages((prev) => {
         const base = Array.isArray(prev) ? prev : [];
         const next = truncateMessages([
