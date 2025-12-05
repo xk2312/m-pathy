@@ -1755,8 +1755,27 @@ if (busy) {
         }
       }
 
-      const next = { ...prev, ...payload };
+      const next: any = { ...prev, ...payload };
+
+      const prevRemaining =
+        typeof prev.remaining === "number" ? prev.remaining : null;
+      const nextRemaining =
+        typeof next.remaining === "number" ? next.remaining : null;
+
+      const shouldWarnLastFree =
+        prevRemaining !== 1 &&
+        nextRemaining === 1 &&
+        !next.lastFreeWarningShown;
+
+      if (shouldWarnLastFree) {
+        try {
+          systemSay(t("gc_warning_last_free_message"));
+        } catch {}
+        next.lastFreeWarningShown = true;
+      }
+
       window.localStorage.setItem("mpathy:freegate", JSON.stringify(next));
+
     }
   } catch {}
 
