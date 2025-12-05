@@ -88,7 +88,22 @@ export async function GET() {
       );
     }
 
-    const payload = verifySessionToken(raw);
+    let payload: any;
+    try {
+      payload = verifySessionToken(raw);
+    } catch (err) {
+      console.error("[/api/me/balance] invalid session token", err);
+      return NextResponse.json(
+        {
+          ok: true,
+          authenticated: false,
+          email: null,
+          balance: null,
+        },
+        { status: 200 },
+      );
+    }
+
     if (!payload || !payload.email) {
       return NextResponse.json(
         {
@@ -116,7 +131,8 @@ export async function GET() {
       { status: 200 },
     );
 
-  } catch (error) {
+
+  } catch (error: any) {
     console.error("[/api/me/balance] error", error);
     return NextResponse.json(
       {
@@ -125,8 +141,11 @@ export async function GET() {
         email: null,
         balance: null,
         error: "balance_unavailable",
+        error_message:
+          error instanceof Error ? error.message : String(error),
       },
       { status: 500 },
     );
   }
 }
+
