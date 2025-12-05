@@ -1805,12 +1805,7 @@ if (busy) {
 
     try {
       const assistant = await sendMessageLocal(optimistic);
-      const content = String(assistant.content ?? "").trim();
-
-      const next = content.length === 0
-        ? optimistic
-        : truncateMessages([...(optimistic ?? []), { ...assistant, content }]);
-
+      const next = truncateMessages([...(optimistic ?? []), assistant]);
       setMessages(next);
       persistMessages(next);
     } catch {
@@ -1825,7 +1820,6 @@ if (busy) {
       setMode("DEFAULT");
     }
   }, [messages, persistMessages]);
-
 
 
 
