@@ -1781,10 +1781,13 @@ if (busy) {
   const data = await res.json();
 
   // FreeGate-Limit: Login erforderlich
+  const loginText =
+    t("gc_please_login_to_continue") || "Please log in to continue.";
+
   if (data && data.status === "free_limit_reached") {
     return {
       role: "assistant",
-      content: t("gc_please_login_to_continue"),
+      content: loginText,
       format: "markdown",
     } as ChatMessage;
   }
@@ -1796,7 +1799,7 @@ if (busy) {
   const safeContent =
     content.trim().length > 0
       ? content
-      : t("gc_please_login_to_continue");
+      : loginText;
 
   return {
     role: assistant.role ?? "assistant",
@@ -1805,6 +1808,7 @@ if (busy) {
   } as ChatMessage;
 
 }
+
 
   // ===============================================================
   // Prompt-Handler – sendet Text aus Eingabefeld
