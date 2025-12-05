@@ -1845,20 +1845,31 @@ if (busy) {
 
     try {
       const assistant = await sendMessageLocal(optimistic);
-      const next = truncateMessages([...(optimistic ?? []), assistant]);
-      setMessages(next);
-      persistMessages(next);
+      setMessages((prev) => {
+        const base = Array.isArray(prev) ? prev : [];
+        const next = truncateMessages([...base, assistant]);
+        persistMessages(next);
+        return next;
+      });
     } catch {
-      const next = truncateMessages([
-        ...(optimistic ?? []),
-        { role: "assistant", content: "⚠️ Send failed. Please retry.", format: "markdown" },
-      ]);
-      setMessages(next);
-      persistMessages(next);
+      setMessages((prev) => {
+        const base = Array.isArray(prev) ? prev : [];
+        const next = truncateMessages([
+          ...base,
+          {
+            role: "assistant",
+            content: "⚠️ Send failed. Please retry.",
+            format: "markdown",
+          },
+        ]);
+        persistMessages(next);
+        return next;
+      });
     } finally {
       setLoading(false);
       setMode("DEFAULT");
     }
+
   }, [messages, persistMessages]);
 
 
