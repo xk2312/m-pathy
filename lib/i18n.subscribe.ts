@@ -15,11 +15,11 @@ export const subscribeDict = {
       badge_label: "Launch access",
       badge_value: "One-time only",
 
-      price_main: "17,99 €",
+      price_main: "7,99 €",
       price_period: "for 30 days of access to M",
 
       token_headline: "Token pool for your work",
-      token_value: "Up to 1,000,000 tokens for this month",
+      token_value: "Up to 15,000 tokens for this month",
       token_subline:
         "Enough capacity for deep explorations, long sessions and real builds — without counting every single request.",
 
@@ -73,11 +73,11 @@ export const subscribeDict = {
       badge_label: "Launch-Zugang",
       badge_value: "Einmalig",
 
-      price_main: "17,99 €",
+      price_main: "7,99 €",
       price_period: "für 30 Tage Zugang zu M",
 
       token_headline: "Tokenpool für deine Arbeit",
-      token_value: "Bis zu 1.000.000 Tokens für diesen Monat",
+      token_value: "Bis zu 15.000 Tokens für diesen Monat",
       token_subline:
         "Genug Kapazität für tiefe Erkundungen, lange Sessions und echte Builds – ohne jede einzelne Anfrage mitzuzählen.",
 
@@ -108,7 +108,7 @@ export const subscribeDict = {
       cta_label: "Jetzt M betreten",
       cta_subline: "Ein Monat. Eine Entscheidung. Kein Abo.",
       cta_aria:
-        "Starte einen Monat Zugang zu m-pathy mit bis zu einer Million Tokens für 17,99 Euro.",
+        "Starte einen Monat Zugang zu m-pathy mit bis zu einer Million Tokens für 7,99 Euro.",
 
       // F. Fußnoten
       footnote_1:
@@ -133,11 +133,11 @@ export const subscribeDict = {
       badge_label: "Accès lancement",
       badge_value: "Paiement unique",
 
-      price_main: "17,99 €",
+      price_main: "7,99 €",
       price_period: "pour 30 jours d’accès à M",
 
       token_headline: "Pool de tokens pour votre travail",
-      token_value: "Jusqu’à 1 000 000 de tokens pour ce mois",
+      token_value: "Jusqu’à 15.000 de tokens pour ce mois",
       token_subline:
         "Suffisamment de capacité pour des explorations profondes, de longues sessions et de vraies créations — sans compter chaque requête.",
 
@@ -165,7 +165,7 @@ export const subscribeDict = {
       cta_label: "Entrer chez M maintenant",
       cta_subline: "Un mois. Une décision. Aucun abonnement.",
       cta_aria:
-        "Démarrer un mois d’accès à m-pathy avec jusqu’à un million de tokens pour 17,99 euros.",
+        "Démarrer un mois d’accès à m-pathy avec jusqu’à un million de tokens pour 7,99 euros.",
 
       footnote_1:
         "L’utilisation des tokens dépend du modèle, de la longueur des prompts et des fonctionnalités. Un usage intensif consommera le pool plus rapidement.",
@@ -185,11 +185,11 @@ export const subscribeDict = {
       badge_label: "Acceso de lanzamiento",
       badge_value: "Pago único",
 
-      price_main: "17,99 €",
+      price_main: "7,99 €",
       price_period: "por 30 días de acceso a M",
 
       token_headline: "Pool de tokens para tu trabajo",
-      token_value: "Hasta 1.000.000 de tokens para este mes",
+      token_value: "Hasta 15.000 de tokens para este mes",
       token_subline:
         "Suficiente capacidad para exploraciones profundas, sesiones largas y construcciones reales — sin contar cada solicitud.",
 
@@ -217,7 +217,7 @@ export const subscribeDict = {
       cta_label: "Entrar en M ahora",
       cta_subline: "Un mes. Una decisión. Sin suscripción.",
       cta_aria:
-        "Iniciar un mes de acceso a m-pathy con hasta un millón de tokens por 17,99 euros.",
+        "Iniciar un mes de acceso a m-pathy con hasta un millón de tokens por 7,99 euros.",
 
       footnote_1:
         "El uso de tokens depende del modelo, la longitud de los prompts y las funciones. Un uso intenso consumirá el pool más rápido.",
@@ -237,11 +237,11 @@ export const subscribeDict = {
       badge_label: "Accesso lancio",
       badge_value: "Una sola volta",
 
-      price_main: "17,99 €",
+      price_main: "7,99 €",
       price_period: "per 30 giorni di accesso a M",
 
       token_headline: "Pool di token per il tuo lavoro",
-      token_value: "Fino a 1.000.000 di token per questo mese",
+      token_value: "Fino a 15.000 di token per questo mese",
       token_subline:
         "Capacità sufficiente per esplorazioni profonde, sessioni lunghe e veri sviluppi — senza contare ogni singola richiesta.",
 
@@ -269,7 +269,7 @@ export const subscribeDict = {
       cta_label: "Entra ora in M",
       cta_subline: "Un mese. Una decisione. Nessun abbonamento.",
       cta_aria:
-        "Avvia un mese di accesso a m-pathy con fino a un milione di token per 17,99 euro.",
+        "Avvia un mese di accesso a m-pathy con fino a un milione di token per 7,99 euro.",
 
       footnote_1:
         "L’utilizzo dei token dipende dal modello, dalla lunghezza dei prompt e dalle funzionalità. Un uso intenso consumerà il pool più rapidamente.",
@@ -289,11 +289,11 @@ export const subscribeDict = {
       badge_label: "Acesso de lançamento",
       badge_value: "Pagamento único",
 
-      price_main: "17,99 €",
+      price_main: "7,99 €",
       price_period: "por 30 dias de acesso a M",
 
       token_headline: "Pool de tokens para o seu trabalho",
-      token_value: "Até 1.000.000 de tokens neste mês",
+      token_value: "Até 15.000 de tokens neste mês",
       token_subline:
         "Capacidade suficiente para explorações profundas, sessões longas e construções reais — sem contar cada requisição.",
 
@@ -321,7 +321,7 @@ export const subscribeDict = {
       cta_label: "Entrar em M agora",
       cta_subline: "Um mês. Uma decisão. Sem assinatura.",
       cta_aria:
-        "Comece um mês de acesso ao m-pathy com até um milhão de tokens por 17,99 euros.",
+        "Comece um mês de acesso ao m-pathy com até um milhão de tokens por 7,99 euros.",
 
       footnote_1:
         "O uso de tokens depende do modelo, do tamanho dos prompts e das funcionalidades. Uso intenso consome o pool mais rapidamente.",
@@ -345,11 +345,11 @@ export const subscribeDict = {
       badge_label: "Launch-toegang",
       badge_value: "Eenmalig",
 
-      price_main: "17,99 €",
+      price_main: "7,99 €",
       price_period: "voor 30 dagen toegang tot M",
 
       token_headline: "Tokenpool voor jouw werk",
-      token_value: "Tot 1.000.000 tokens voor deze maand",
+      token_value: "Tot 15.000 tokens voor deze maand",
       token_subline:
         "Voldoende capaciteit voor diepe verkenningen, lange sessies en echte builds — zonder elke aanvraag te moeten tellen.",
 
@@ -377,7 +377,7 @@ export const subscribeDict = {
       cta_label: "Nu M binnenstappen",
       cta_subline: "Eén maand. Eén beslissing. Geen abonnement.",
       cta_aria:
-        "Start een maand toegang tot m-pathy met tot één miljoen tokens voor 17,99 euro.",
+        "Start een maand toegang tot m-pathy met tot één miljoen tokens voor 7,99 euro.",
 
       footnote_1:
         "Het tokenverbruik hangt af van model, promptlengte en functies. Intensief gebruik verbruikt de pool sneller.",
@@ -397,11 +397,11 @@ export const subscribeDict = {
       badge_label: "Стартовый доступ",
       badge_value: "Разовый платеж",
 
-      price_main: "17,99 €",
+      price_main: "7,99 €",
       price_period: "за 30 дней доступа к M",
 
       token_headline: "Пул токенов для вашей работы",
-      token_value: "До 1 000 000 токенов на этот месяц",
+      token_value: "До 15.000 токенов на этот месяц",
       token_subline:
         "Достаточно ресурсов для глубоких исследований, долгих сессий и реальных решений — без подсчёта каждой заявки.",
 
@@ -429,7 +429,7 @@ export const subscribeDict = {
       cta_label: "Войти к M сейчас",
       cta_subline: "Один месяц. Одно решение. Без подписки.",
       cta_aria:
-        "Начните месяц доступа к m-pathy с пулом до одного миллиона токенов за 17,99 евро.",
+        "Начните месяц доступа к m-pathy с пулом до одного миллиона токенов за 7,99 евро.",
 
       footnote_1:
         "Расход токенов зависит от модели, длины запросов и набора функций. Интенсивное использование быстрее расходует пул.",
@@ -449,11 +449,11 @@ export const subscribeDict = {
       badge_label: "启动访问",
       badge_value: "一次性",
 
-      price_main: "17,99 €",
+      price_main: "7,99 €",
       price_period: "享有 30 天 M 的访问权",
 
       token_headline: "为你工作准备的 Token 池",
-      token_value: "本月最多可用 1,000,000 个 Tokens",
+      token_value: "本月最多可用 15,000 个 Tokens",
       token_subline:
         "足够支撑深入探索、长时间会话和真实构建——无需计算每一次请求。",
 
@@ -481,7 +481,7 @@ export const subscribeDict = {
       cta_label: "现在进入 M",
       cta_subline: "一个月。一 个决定。无订阅。",
       cta_aria:
-        "以 17,99 欧元获得一个月的 m-pathy 访问权，包含最多一百万 Tokens。",
+        "以 7,99 欧元获得一个月的 m-pathy 访问权，包含最多一百万 Tokens。",
 
       footnote_1:
         "Token 消耗取决于模型、提示长度和功能。高强度使用会更快耗尽 Token 池。",
@@ -501,11 +501,11 @@ export const subscribeDict = {
       badge_label: "ローンチアクセス",
       badge_value: "一度きりの支払い",
 
-      price_main: "17,99 €",
+      price_main: "7,99 €",
       price_period: "M への 30 日間アクセス",
 
       token_headline: "あなたのためのトークンプール",
-      token_value: "この 1 か月で最大 1,000,000 トークン",
+      token_value: "この 1 か月で最大 15,000 トークン",
       token_subline:
         "深い探求、長いセッション、本格的なビルドに十分な容量 — 1 回ごとのリクエストを数える必要はありません。",
 
@@ -533,7 +533,7 @@ export const subscribeDict = {
       cta_label: "今すぐ M に入る",
       cta_subline: "1 か月。1 つの決断。サブスクリプションなし。",
       cta_aria:
-        "17,99 ユーロで、最大 100 万トークン付きの m-pathy 1 か月アクセスを開始します。",
+        "7,99 ユーロで、最大 100 万トークン付きの m-pathy 1 か月アクセスを開始します。",
 
       footnote_1:
         "トークンの消費は、モデル、プロンプトの長さ、機能によって変わります。集中的な利用ではプールがより早く消費されます。",
@@ -557,11 +557,11 @@ export const subscribeDict = {
       badge_label: "런치 액세스",
       badge_value: "한 번 결제",
 
-      price_main: "17,99 €",
+      price_main: "7,99 €",
       price_period: "M에 30일 동안 접근",
 
       token_headline: "당신의 작업을 위한 토큰 풀",
-      token_value: "이번 달 최대 1,000,000 토큰",
+      token_value: "이번 달 최대 15,000 토큰",
       token_subline:
         "깊은 탐색, 긴 세션, 실제 빌드를 위한 충분한 용량 — 각 요청을 일일이 세지 않아도 됩니다.",
 
@@ -589,7 +589,7 @@ export const subscribeDict = {
       cta_label: "지금 M에 들어가기",
       cta_subline: "한 달. 하나의 결정. 구독 없음.",
       cta_aria:
-        "17,99유로에 최대 백만 개의 토큰이 포함된 m-pathy 한 달 이용을 시작합니다.",
+        "7,99유로에 최대 백만 개의 토큰이 포함된 m-pathy 한 달 이용을 시작합니다.",
 
       footnote_1:
         "토큰 사용량은 모델, 프롬프트 길이 및 기능에 따라 달라집니다. 강도 높은 사용은 토큰 풀을 더 빨리 소모합니다.",
@@ -609,11 +609,11 @@ export const subscribeDict = {
       badge_label: "وصول الإطلاق",
       badge_value: "دفعة واحدة",
 
-      price_main: "17,99 €",
+      price_main: "7,99 €",
       price_period: "لمدة 30 يومًا من الوصول إلى M",
 
       token_headline: "مخزون التوكنات لعملك",
-      token_value: "حتى 1,000,000 توكن لهذا الشهر",
+      token_value: "حتى 15,000 توكن لهذا الشهر",
       token_subline:
         "سعة كافية لاستكشافات عميقة، وجلسات طويلة، وبناء حقيقي — دون الحاجة لعدّ كل طلب.",
 
@@ -641,7 +641,7 @@ export const subscribeDict = {
       cta_label: "ادخل إلى M الآن",
       cta_subline: "شهر واحد. قرار واحد. بلا اشتراك.",
       cta_aria:
-        "ابدأ شهرًا من الوصول إلى m-pathy مع ما يصل إلى مليون توكن مقابل 17,99 يورو.",
+        "ابدأ شهرًا من الوصول إلى m-pathy مع ما يصل إلى مليون توكن مقابل 7,99 يورو.",
 
       footnote_1:
         "استهلاك التوكنات يعتمد على النموذج وطول الطلبات والخصائص المستخدمة. الاستخدام المكثف يستهلك المخزون بشكل أسرع.",
@@ -661,11 +661,11 @@ export const subscribeDict = {
       badge_label: "लॉन्च एक्सेस",
       badge_value: "केवल एक बार भुगतान",
 
-      price_main: "17,99 €",
+      price_main: "7,99 €",
       price_period: "M तक 30 दिनों की पहुँच",
 
       token_headline: "आपके काम के लिए टोकन-पूल",
-      token_value: "इस महीने के लिए अधिकतम 1,000,000 टोकन",
+      token_value: "इस महीने के लिए अधिकतम 15,000 टोकन",
       token_subline:
         "गहरी खोज, लंबी सेशन्स और असली बिल्ड्स के लिए पर्याप्त क्षमता — हर रिक्वेस्ट को अलग-अलग गिनने की ज़रूरत नहीं।",
 
@@ -693,7 +693,7 @@ export const subscribeDict = {
       cta_label: "अभी M में प्रवेश करें",
       cta_subline: "एक महीना। एक निर्णय। कोई सब्सक्रिप्शन नहीं।",
       cta_aria:
-        "17,99 यूरो में अधिकतम दस लाख टोकन के साथ m-pathy के एक महीने के एक्सेस की शुरुआत करें।",
+        "7,99 यूरो में अधिकतम दस लाख टोकन के साथ m-pathy के एक महीने के एक्सेस की शुरुआत करें।",
 
       footnote_1:
         "टोकन उपयोग मॉडल, प्रॉम्प्ट की लंबाई और फीचर्स पर निर्भर करता है। गहन उपयोग से टोकन-पूल ज़्यादा तेज़ी से ख़र्च होगा.",

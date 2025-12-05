@@ -3740,7 +3740,7 @@ if __name__ == "__main__":
 #       "type": "python",
 #       "request": "launch",
 #       "program": "${workspaceFolder}/triketon.py",
-#       "args": ["swap", "1000000", "--baseline-spread-bps", "12"],
+#       "args": ["swap", "15.000", "--baseline-spread-bps", "12"],
 #       "console": "integratedTerminal"
 #     }
 #   ]

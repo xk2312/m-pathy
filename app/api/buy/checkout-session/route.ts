@@ -71,7 +71,7 @@ export async function POST(req: Request) {
   // Wenn der User eingeloggt ist, muss der Webhook ihn 1:1 zuordnen können.
   metadata: {
     user_id: String((req as any)?.user?.id || ""),
-    tokens: "1000000",       // optional, aber unterstützt fallback credit
+    tokens: "15.000",       // optional, aber unterstützt fallback credit
     price_id: priceId,       // für webhook price mapping
   },
   // ========================================================================
