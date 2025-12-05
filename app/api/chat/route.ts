@@ -1,3 +1,86 @@
+/*** =======================================================================
+ *  INVENTUS INDEX — app/api/chat/route.ts
+ *  Chat-Proxy · FreeGate · Azure OpenAI · Token-Header (ohne Ledger-Debit)
+ * =======================================================================
+ *
+ *  [ANCHOR:0] RUNTIME & IMPORTS
+ *    – NodeJS-Runtime, da FS/ENV-Handling (dotenv, fs, path).
+ *    – withGate + retryingFetch für Azure-Ratelimit & Backoff.
+ *    – verifyAndBumpFreegate für FreeGate-Limitierung.
+ *    – AUTH_COOKIE_NAME + verifySessionToken für Session-Erkennung.
+ *
+ *  [ANCHOR:1] ENV-LADUNG & KONFIG
+ *    – Lädt .env.* abhängig von NODE_ENV.
+ *    – Azure-Parameter: ENDPOINT, KEY, DEPLOYMENT, API-VERSION.
+ *    – Modellgrenzen: MODEL_MAX_TOKENS, GPTX_MAX_CHARS.
+ *    – FreeGate-Parameter: FREE_LIMIT (z. B. 9), FREEGATE_SECRET, CHECKOUT_URL.
+ *
+ *  [ANCHOR:2] TYPEN & assertEnv()
+ *    – ChatBody/messages-Struktur.
+ *    – assertEnv(): garantiert vollständige Azure-Konfiguration, sonst Error.
+ *
+ *  [ANCHOR:3] SYSTEMPROMPT & URL-Builder
+ *    – loadSystemPrompt(protocol): liest /srv/m-pathy/${protocol}.txt (Hardcap).
+ *    – buildAzureUrl(): robustes URL-Routing für verschiedene Endpoint-Formate.
+ *
+ *  [ANCHOR:4] REQUEST-PARSING
+ *    – POST-Handler liest JSON-Body, prüft, ob body.messages ein Array ist.
+ *    – Fehlerhafte Eingaben → HTTP 400.
+ *
+ *  [ANCHOR:5] FREEGATE + AUTH (TOKEN-HOTSPOT)
+ *    – Liest Cookie-Header, extrahiert m_auth per AUTH_COOKIE_NAME und
+ *      verifiziert SessionToken → sessionEmail / isAuthenticated.
+ *    – verifyAndBumpFreegate(cookieHeader, userAgent, freeLimit, secret):
+ *        · count: bisherige Requests
+ *        · blocked: ob Limit überschritten
+ *        · cookie: aktualisierter FreeGate-Cookie
+ *    – Berechnet X-Free-Remaining = max(FREE_LIMIT - count, 0).
+ *
+ *  [ANCHOR:6] LIMIT-VERHALTEN
+ *    – Wenn blocked:
+ *        · Gäste → 401, status:"free_limit_reached", needs_login:true.
+ *        · Eingeloggt → 402, status:"free_limit_reached", checkout_url.
+ *    – Setzt Response-Header:
+ *        · X-Free-Used, X-Free-Limit, X-Free-Remaining, X-Tokens-Delta:"0".
+ *
+ *  [ANCHOR:7] AZURE-CALL
+ *    – assertEnv() → Sicherheitscheck.
+ *    – Optionaler Systemprompt (protocol oder "GPTX") + messages-Merge.
+ *    – Request an Azure via withGate(retryingFetch(..., 5)).
+ *    – Fehler direkt als Upstream-Fehler zurückgegeben (Status durchgereicht).
+ *
+ *  [ANCHOR:8] INHALT & TOKEN-HEADER (STUB)
+ *    – content = data.choices[0].message.content, ansonsten 502.
+ *    – TOKENS_USED = Math.min(MODEL_MAX_TOKENS, 120) (Schätz-Stub).
+ *    – Antwort: { role:"assistant", content } mit HTTP 200.
+ *    – Setzt Header:
+ *        · X-Tokens-Delta = -TOKENS_USED (nur Signal, kein Ledger-Debit).
+ *        · X-Free-Used, X-Free-Limit, X-Free-Remaining.
+ *        · X-Tokens-Overdraw = "0".
+ *        · Optional: Set-Cookie mit aktualisiertem FreeGate-Cookie.
+ *
+ *  [ANCHOR:9] ERROR-HANDLING
+ *    – Fängt alle Fehler, loggt sie und antwortet mit HTTP 500 sowie
+ *      error:err.message.
+ *
+ *  TOKEN-RELEVANZ (SUMMARY)
+ *    – Diese Route entscheidet, wann Nutzer von FreeGate in den Kauffluss
+ *      (Stripe) übergehen müssen, und liefert einen geplanten Token-Delta-
+ *      Header (X-Tokens-Delta) als Signal.
+ *    – Sie führt aktuell KEINEN echten Token-Debit im Ledger aus, sondern
+ *      belässt den Ledger-Saldo unverändert.
+ *    – Die Diskrepanz zwischen numerischem Ledger-User (Webhooks) und
+ *      E-Mail-basiertem User in /api/me/balance ist hier sichtbar nur über
+ *      Header/Session-Erkennung, nicht über eine Ledger-Operation.
+ *
+ *  INVENTUS NOTE
+ *    – Reine Inventur: app/api/chat/route.ts ist derzeit ein Gate- & Proxy-
+ *      Layer ohne direkten Zugriff auf das Token-Ledger; jegliche echte
+ *      Token-Abbuchungslogik müsste hier oder in einem nachgelagerten
+ *      Service erst noch mit dem Ledger gekoppelt werden.
+ * ======================================================================= */
+
+
 // app/api/chat/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";

@@ -1,3 +1,62 @@
+/*** =======================================================================
+ *  INVENTUS INDEX — app/components/AccountPanel.tsx
+ *  Account-Overlay · Status / E-Mail / Token-Stand (Read-Only View)
+ * =======================================================================
+ *
+ *  [ANCHOR:0] IMPORTS & BASIS
+ *    – React-Client-Component mit useLang() + i18n.accountpanel.
+ *    – Keine eigenen Fetches; alle Daten kommen via Props vom Parent.
+ *
+ *  [ANCHOR:1] PROPS (AccountPanelProps)
+ *    – open: Sichtbarkeit des Overlays.
+ *    – email: User-E-Mail oder null (Gast/Unknown).
+ *    – balance: numerischer Token-Stand oder null (nicht geladen / Fehler).
+ *    – onClose, onLogout, isMobile: reine UI-/Control-Parameter.
+ *
+ *  [ANCHOR:2] LANGUAGE-BINDING
+ *    – useLang() + accountDict[lang] → tAccount.* Texte.
+ *    – Steuert Labels für Status, Tokens, Loading, FreeGate-Hinweis.
+ *
+ *  [ANCHOR:3] ESC & FOKUS
+ *    – ESC schließt Panel per onClose().
+ *    – Fokus wird beim Öffnen auf das Panel gesetzt (A11y / UX).
+ *
+ *  [ANCHOR:4] LABEL-BILDUNG (TOKEN HOTSPOT)
+ *    – emailLabel: E-Mail oder tAccount.email.unknown, falls leer/null.
+ *    – balanceLabel:
+ *        · Wenn typeof balance === "number" && Number.isFinite(balance):
+ *            → balance.toLocaleString("de-DE").
+ *        · Sonst: tAccount.tokens.loading (z. B. „… lädt“).
+ *    – 0 Tokens sind gültig und werden als "0" angezeigt.
+ *    – Jeder nicht-numerische Zustand (null/NaN/undefined) führt zu
+ *      permanentem Loading-Text – sichtbar bei fehlgeschlagenem Ledger-Read.
+ *
+ *  [ANCHOR:5] CONTENT-BLOCKS
+ *    – Status-Block: tAccount.status.label + tAccount.status.loggedIn.
+ *    – Token-Block: tAccount.tokens.label + balanceLabel.
+ *    – Info-Block: tAccount.info.freegate (statischer FreeGate-Hinweis).
+ *    – Footer: Logout-Button (tAccount.button.logout).
+ *
+ *  [ANCHOR:6] LAYOUT
+ *    – Backdrop (fixed, halbtransparent, zIndex 999).
+ *    – Panel-Layout:
+ *        · Desktop: rechts oben, feste Breite, border/shadow per CSS-Token.
+ *        · Mobile: Bottom-Sheet, 75vh, scrollfähig.
+ *
+ *  TOKEN-RELEVANZ (SUMMARY)
+ *    – AccountPanel.tsx ist reine Anzeige für den Token-Stand.
+ *    – Zeigt Zahlen nur, wenn der Parent eine gültige number für balance
+ *      liefert; andernfalls bleibt der UI-State im Loading-Label.
+ *    – Der aktuell beobachtete „… lädt“-Effekt deutet darauf hin, dass
+ *      /api/me/balance entweder null/NaN zurückliefert oder im Fehlerpfad
+ *      landet, obwohl der Kauf via Stripe/Webhook korrekt durchläuft.
+ *
+ *  INVENTUS NOTE
+ *    – Reine Inventur & Sichtbarmachung: Dieses Component verhält sich
+ *      deterministisch, der Kern-Konflikt liegt im Zusammenspiel von
+ *      User-Identität ↔ Ledger ↔ Balance-API, nicht im Rendering selbst.
+ * ======================================================================= */
+
 "use client";
 
 import React, { useEffect, useRef } from "react";

@@ -1,3 +1,57 @@
+/*** =======================================================================
+ *  INVENTUS INDEX — lib/chatPersistence.ts
+ *  Lokale Chat-History · Browser-Persistenz (ohne Ledger-Bezug)
+ * =======================================================================
+ *
+ *  [ANCHOR:0] TYPDEF & STORAGE-KEYS
+ *    – ChatMessage: { role: "system" | "user" | "assistant"; content; format? }.
+ *    – STORAGE_KEYS: ["m_chat_messages_v1", "m.chat.v1", "messages"] für
+ *      aktuellen und alte Persistenz-Keys (Migration).
+ *
+ *  [ANCHOR:1] safeStorage()
+ *    – Kapselt window.localStorage defensiv.
+ *    – Gibt null zurück bei SSR, fehlendem window oder Zugrifffehlern.
+ *
+ *  [ANCHOR:2] isValid(x)
+ *    – Validiert, dass ein Eintrag eine gültige ChatMessage ist.
+ *    – Schützt vor kaputten/alten Strukturen in localStorage.
+ *
+ *  [ANCHOR:3] truncateMessages(messages, maxMsgs, maxChars)
+ *    – Kürzt History auf maximal maxMsgs (Default: 80) und maxChars
+ *      (Default: 8000) Gesamtzeichenzahl.
+ *    – Entfernt vordere Messages, um die letzten Konversationsteile zu
+ *      behalten und überlange Prompts zu vermeiden.
+ *
+ *  [ANCHOR:4] saveMessages(messages)
+ *    – Schreibt nur validierte Messages in localStorage (STORAGE_KEYS[0]).
+ *    – Normalisiert format auf "markdown" | "plain" | "html" (Default:
+ *      "markdown").
+ *    – Fehler werden geschluckt, um niemals die App zu crashen.
+ *
+ *  [ANCHOR:5] loadMessages()
+ *    – Liest Chat-History aus localStorage.
+ *    – Versucht nacheinander alle STORAGE_KEYS (Migration von Altformaten).
+ *    – Filtert mit isValid() und normalisiert format wie beim Speichern.
+ *    – Gibt bei Fehlern oder leerem Storage ein leeres Array zurück.
+ *
+ *  [ANCHOR:6] clearMessages()
+ *    – Löscht Chat-History für alle bekannten STORAGE_KEYS.
+ *    – Fehler werden ignoriert (Fail-Safe).
+ *
+ *  TOKEN-RELEVANZ (SUMMARY)
+ *    – Dieses Modul verwaltet ausschließlich die lokale Chat-History im
+ *      Browser und hat keinen direkten Bezug zum Token-Ledger, FreeGate
+ *      oder Stripe-Webhook-Flow.
+ *    – Indirekt beeinflusst es nur die Länge der Prompts (Kontextmenge),
+ *      nicht jedoch Salden oder Berechtigungen im Tokensystem.
+ *
+ *  INVENTUS NOTE
+ *    – Reine Komfort- & UX-Schicht: wichtig für Session-Gefühl, aber
+ *      neutral in Bezug auf Kauf, Guthaben und Ledger; für Token-Bugs
+ *      (z. B. „… lädt“ im AccountPanel) ist dieses File nicht ursächlich.
+ * ======================================================================= */
+
+
 // /lib/chatPersistence.ts
 // Keine "use client" nötig; wir guard-en localStorage sauber ab.
 

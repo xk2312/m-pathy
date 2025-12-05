@@ -1,3 +1,77 @@
+/*** =======================================================================
+ *  INVENTUS INDEX — app/api/webhooks/stripe/route.ts
+ *  Stripe-Webhooks · ledger_credit / ledger_debit / webhook_events
+ * =======================================================================
+ *
+ *  [ANCHOR:0] RUNTIME & IMPORTS
+ *    – NodeJS-Runtime, force-dynamic.
+ *    – headers(), NextResponse, Stripe-SDK, getPool() für DB-Zugriff.
+ *
+ *  [ANCHOR:1] STRIPE & ENV
+ *    – getStripe(): Singleton mit STRIPE_SECRET_KEY + fixer API-Version.
+ *    – env(name): harter Guard für STRIPE_WEBHOOK_SECRET u. a.
+ *
+ *  [ANCHOR:2] SIGNATUR-PRÜFUNG
+ *    – liest "stripe-signature" Header + rawBody (req.text()).
+ *    – webhooks.constructEvent(rawBody, sig, whSecret).
+ *    – Ungültige Signatur → 400, ok:false, status:"invalid_signature".
+ *
+ *  [ANCHOR:3] DB-TX & WEBHOOK-EVENTS
+ *    – BEGIN-Transaktion, Insert in webhook_events(event_id, type, payload).
+ *    – Erwartet Unique-Constraint auf event_id (Idempotenz-Gate).
+ *
+ *  [ANCHOR:4] checkout.session.completed · CREDIT (TOKEN HOTSPOT)
+ *    – session = event.data.object as Checkout.Session.
+ *    – userIdStr aus metadata.user_id / userId → userId = parseInt(...,10).
+ *    – Tokenhöhe:
+ *        · bevorzugt metadata.amount_tokens / metadata.tokens,
+ *        · sonst Price-Mapping per priceId === STRIPE_PRICE_1M,
+ *        · Fallback: 1_000_000 Tokens.
+ *    – Ledger-Call: SELECT ledger_credit($1::bigint, $2::bigint).
+ *    – Purchase-Log: INSERT INTO purchases(user_id, amount_tokens, stripe_session_id)
+ *      ON CONFLICT(stripe_session_id) DO NOTHING.
+ *    – Erwartung: user_id ist NUMERISCHER BIGINT-Schlüssel.
+ *
+ *  [ANCHOR:5] invoice.payment_failed
+ *    – Markiert Status "failed", kein Ledger-Eingriff.
+ *
+ *  [ANCHOR:6] charge.refunded / charge.refund.updated · DEBIT (TOKEN HOTSPOT)
+ *    – charge = event.data.object as Charge, meta = charge.metadata.
+ *    – tokensMeta aus amount_tokens_refund / amount_tokens.
+ *    – userId = parseInt(meta.user_id,10) → BIGINT.
+ *    – Ledger-Call: SELECT ledger_debit($1::bigint, $2::bigint).
+ *    – Status "refunded", debited=true, debit_amount=tokensMeta.
+ *
+ *  [ANCHOR:7] SUBSCRIPTIONS & OTHER EVENTS
+ *    – customer.subscription.* → status:"subscription_update", kein Ledger.
+ *    – alle anderen Events → status:"ignored".
+ *
+ *  [ANCHOR:8] COMMIT & RESPONSE
+ *    – COMMIT bei Erfolg.
+ *    – Response: ok:true + status + Flags (credited/debited, amounts, event_id, type).
+ *
+ *  [ANCHOR:9] ERROR- & IDEMPOTENZ-HANDLING
+ *    – duplicate key / 23505 → ROLLBACK, status:"duplicate" (Webhook bereits verbucht).
+ *    – 40001 / "serialization failure" → ROLLBACK, status:"retry".
+ *    – andere Fehler → ROLLBACK, status:"error", HTTP 500.
+ *
+ *  TOKEN-RELEVANZ (SUMMARY)
+ *    – Diese Route ist der Schreibkern des Token-Ledgers: alle Guthaben
+ *      und Rückbuchungen laufen über BIGINT user_id aus Stripe-Metadaten.
+ *    – Systemische Spannung entsteht dort, wo die Lese-Seite (/api/me/balance)
+ *      E-Mail-basierte User-IDs verwendet, während hier ausschließlich
+ *      numerische user_id-Schlüssel im Ledger beschrieben werden.
+ *    – Ergebnis im UI: Ledger ist faktisch korrekt, aber das Account-Overlay
+ *      erhält keinen passenden Balance-Wert für E-Mail-basierte Sessions und
+ *      zeigt daher dauerhaft den Loading-Text.
+ *
+ *  INVENTUS NOTE
+ *    – Reine Inventur & Klarstellung: Webhook-Route ist numerisch-kohärent
+ *      mit dem Ledger (BIGINT), die eigentliche Integrationsaufgabe liegt
+ *      im Abgleich zwischen Session-Identität und diesem numerischen Modell.
+ * ======================================================================= */
+
+
 // app/api/webhooks/stripe/route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

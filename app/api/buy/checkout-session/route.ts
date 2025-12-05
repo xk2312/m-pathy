@@ -1,6 +1,9 @@
 // app/api/buy/checkout-session/route.ts
 import Stripe from "stripe";
 import dotenv from "dotenv";
+import { cookies } from "next/headers";
+import { AUTH_COOKIE_NAME, verifySessionToken } from "@/lib/auth";
+import { ledgerUserIdFromEmail } from "@/lib/ledgerIds";
 
 // ENV laden (Dev: .env.payment, Prod: Deploy-Path)
 if (process.env.NODE_ENV === "production") {
@@ -30,17 +33,31 @@ export async function POST(req: Request) {
     const priceId: string | undefined =
       body?.priceId || process.env.STRIPE_PRICE_1M || process.env.NEXT_PUBLIC_STRIPE_PRICE_1M;
 
-    const userId = (req as any)?.user?.id;
+    const store = cookies();
+    const raw = store.get(AUTH_COOKIE_NAME)?.value || null;
 
-    if (!userId) {
+    if (!raw) {
       return new Response(JSON.stringify({ error: "auth_required", needs_login: true }), {
         status: 401,
         headers: { "content-type": "application/json" },
       });
     }
 
+    const payload = verifySessionToken(raw);
+    const email = payload?.email?.trim().toLowerCase() || "";
+
+    if (!email) {
+      return new Response(JSON.stringify({ error: "auth_required", needs_login: true }), {
+        status: 401,
+        headers: { "content-type": "application/json" },
+      });
+    }
+
+    const ledgerUserId = ledgerUserIdFromEmail(email);
+
     const quantity: number = Number(body?.quantity ?? 1);
     const mode: "payment" = "payment";
+
 
     // === GC Step 6 – Golden Return URLs ======================================
     // Erfolgreiche Zahlung → Chat mit Flag, sodass GC Step 9 greifen kann.
@@ -69,11 +86,12 @@ export async function POST(req: Request) {
 
   // === GC Step 7 – User-Vererbung für Webhook-Credit ======================
   // Wenn der User eingeloggt ist, muss der Webhook ihn 1:1 zuordnen können.
-  metadata: {
-    user_id: String((req as any)?.user?.id || ""),
-    tokens: "50.000",       // optional, aber unterstützt fallback credit
-    price_id: priceId,       // für webhook price mapping
+   metadata: {
+    user_id: ledgerUserId,
+    tokens: "50000",
+    price_id: priceId,
   },
+
   // ========================================================================
 
   success_url: successUrl,
