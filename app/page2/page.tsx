@@ -1,106 +1,136 @@
-"use client";
-
 /*** =======================================================================
- *  INVENTUS INDEX — app/page2/page.tsx
- *  Screening · Struktur · Sprach-Hotspots (Chat-Seite)
- * ======================================================================= 
- *
- *  [ANCHOR:LANG-IMPORTS]
- *    - Import { t, getLocale } aus "@/lib/i18n"
- *    - Verknüpfung dieser Datei mit dem globalen i18n-System (Legacy/Chat)
- *
- *  [ANCHOR:I18N-BROWSER]
- *    - getBrowserLang(): liest navigator.language → "de" | "en" | ...
- *    - Dient als lokale, Browser-basierte Sprachquelle
- *    - Potenzieller Drift zur globalen Locale (currentLocale / setLocale)
- *
- *  [ANCHOR:I18N-LABELS]
- *    - LABELS: Mapping MEvent → Label pro Sprache (en/de/fr/es/it)
- *    - MODE_LABELS: Mapping Mode-Key → Label pro Sprache
- *    - LOAD_PREFIX: "Load"/"Lade"/"Charger"/"Cargar"/"Carica" per Sprache
- *    - tMode(): nutzt MODE_LABELS + slug() + cap() → Modus-Labeling
- *    - Sprachlogik speziell für M-Flow / Modes (unabhängig vom restlichen UI-i18n)
- *
- *  [ANCHOR:I18N-LOCALE-STATE]
- *    - locale = getBrowserLang()
- *    - useEffect: setzt <html lang="..."> und feuert 
- *        window.dispatchEvent(new CustomEvent("mpathy:i18n:change", { detail:{ locale } }))
- *    - Quelle für M-Flow-Locale (LABELS, MODE_LABELS, LOAD_PREFIX, tMode)
- *    - Kann vom LanguageSwitcher-Flow abweichen, wenn dieser eigene Quelle nutzt
- *
- *  [ANCHOR:I18N-MFLOW]
- *    - getLabel(evt: MEvent): LABELS[locale] → Text für Buttons/Events
- *    - runMFlow(evt, labelOverride?): baut Frame-Text mit 
- *        LOAD_PREFIX[locale] + getLabel(...)
- *    - useEffect (global click): sucht [data-m-event], ruft runMFlow()
- *    - useEffect (global change): listbox/select/combobox → runMFlow() mit Label
- *    - Auto-Tagging-UseEffect: mappt Texte ("jetzt bauen", "onboarding", "expert")
- *      auf data-m-event (teils deutsch/englisch gemischt)
- *    - Sprach-Hotspot: M-Flow folgt locale (Browser), nicht notwendigerweise globaler Locale
- *
- *  [ANCHOR:I18N-ARIA-UI]
- *    - Conversation:
- *        aria-label={t("conversationAria")}
- *    - Bubble:
- *        aria-label={t("youSaid")} / t("assistantSays")
- *    - InputDock:
- *        aria-label="Type your message" (hart codiert EN)
- *        placeholder="Talk to M" (hart codiert EN)
- *        Button-Label "Senden" (hart codiert DE)
- *    - Copy-Button:
- *        aria-label="Copy answer" + Text "⧉ Copy" (EN)
- *    - Mischung aus t()-basierten und hart codierten Strings → inkonsistente i18n-Zone
- *
- *  [ANCHOR:I18N-BRIDGE-SAEULE]
- *    - systemSay(content): fügt assistant/system-Bubbles hinzu (format:"markdown")
- *    - Saeule/SidebarContainer/Post-Events (mpathy:system-message) liefern Texte
- *      → keine direkte Übersetzung hier, aber Darstellung abhängig von Sprache
- *    - Footer-Status (modeLabel/expertLabel) teilweise von Events abhängig 
- *      (meta.modeLabel etc., evtl. lokalisierte Inhalte aus Säule/Orbit)
- *
- *  [ANCHOR:I18N-GLOBAL-SCROLL/NAV]
- *    - Scroll-Bridge: 
- *        (window as any).__mNavScrollYOverride = y; window.dispatchEvent(new Event("scroll"));
- *    - Sprache selbst wird hier nicht verändert, aber die Navigation (mit LanguageSwitcher)
- *      ist räumlich/strukturell eng gekoppelt → relevant für gesamtes Page2-Verhalten
- *
- *  [ANCHOR:I18N-T-USES]
- *    - t("conversationAria") in Conversation
- *    - Weitere t()-Verwendungen möglich (über PromptRoot / SidebarContainer),
- *      jedoch in dieser Datei direkt sichtbar v. a. für ARIA-Labels
- *    - Diese t()-Aufrufe hängen an currentLocale aus lib/i18n.ts (DICTS)
- *
+ *  INVENTUS INDEX v2 — app/page2/page.tsx
+ *  Zweck: 100 % Orientierung für Chat-Seite, FreeGate & Payment-Flow
  * =======================================================================
- *  ERKENNBARER FEHLERZU­SAMMENHANG (Inventur, keine Lösung)
  *
- *  1) Chat bleibt auf EN
- *     - locale in dieser Datei wird aus getBrowserLang() abgeleitet, nicht 
- *       eindeutig aus dem globalen Locale (setLocale / currentLocale).
- *     - M-Flow (LABELS, MODE_LABELS, LOAD_PREFIX, tMode) folgt diesem lokalen
- *       locale-Wert.
- *     - Wenn globales Locale (LanguageSwitcher) und getBrowserLang() auseinander
- *       laufen, kann der sichtbare Sprachzustand inkonsistent bleiben.
+ *  [ANCHOR:IMPORTS-CORE]
+ *    - React, Hooks, Image, hljs
+ *    - LanguageProvider, Navigation, SidebarContainer, MobileOverlay,
+ *      PromptRoot, OnboardingWatcher, useMobileViewport
+ *    - i18n-Kern: getLocale, setLocale, t
+ *    - Chat-Persistenz: initChatStorage, loadChat, saveChat, hardClearChat
  *
- *  2) Unterschied Chat-UI vs. M-Flow
- *     - Teile der UI nutzen t() (abhängig von currentLocale in lib/i18n.ts),
- *       andere Teile (M-Flow, Buttons, Platzhalter) nutzen eigene Tabellen
- *       und/oder hart codierte EN/DE-Strings.
- *     - Dadurch kann der Chat optisch auf EN "festhängen", obwohl andere Teile
- *       des Systems bereits auf eine andere Sprache umgeschaltet sind.
+ *  [ANCHOR:THEME-TOKENS]
+ *    - Tokens/THEMES/PERSONAS: Farben, Radien, Schatten, Dock-Geometrie
+ *    - useAssistantLayout(): erkennt schmale Viewports (<640px) für Assistant-Spalte
+ *    - useBreakpoint(): „mobile-like“ (≤ --bp-mobile, min. 1024px) für Layout-Entscheidungen
+ *
+ *  [ANCHOR:CHAT-TYPES-UTILS]
+ *    - Role, ChatMessage (role/content/format)
+ *    - truncateMessages(): Hard-Limit der History (MAX_HISTORY)
+ *    - loadMessages()/saveMessages(): Legacy-LocalStorage (LS_KEY)
+ *
+ *  [ANCHOR:I18N-CORE]
+ *    - LABELS: Button-/Event-Labels (builder/onboarding/expert/mode) pro Sprache
+ *    - MODE_LABELS + cap()/slug() + tMode(): Lokalisierte Modusnamen (Calm, Truth, etc.)
+ *    - locale-State: folgt getLocale() + CustomEvent "mpathy:i18n:change"
+ *    - NAV_PROVIDER_DICT: Minimal-Dict (13 Sprachen) für LanguageProvider dieser Seite
+ *
+ *  [ANCHOR:M-FLOW]
+ *    - MEvent-Typ: "builder" | "onboarding" | "expert" | "mode"
+ *    - runMFlow(): „Load …“-Overlay (Frame-Text + loading-Puls)
+ *    - Globaler Click-Handler: data-m-event + data-m-label → runMFlow()
+ *    - Globaler Change-Handler: select/listbox/combobox → runMFlow()
+ *    - Auto-Tagging: Buttons/Links werden einmalig mit data-m-event versehen
+ *
+ *  [ANCHOR:STORAGE-BRIDGE]
+ *    - persist: Alias für chatStorage (save/load/cut)
+ *    - initChatStorage(): zentraler Startpunkt für neue Persistenz
+ *    - messages-State: Initial-Ladung via loadChat()
+ *    - clearingRef + onClearChat(): Hard-Clear (UI leeren, Storage wipen, Reload)
+ *    - Autosave-Effect: speichert messages, außer während Clear
+ *
+ *  [ANCHOR:COMPONENTS-UI]
+ *    - Header: Sticky-Top mit M-Icon
+ *    - mdToHtml(): Markdown → HTML (Codeblöcke, Tabellen, Listen, Inline-Styles)
+ *    - MessageBody: entscheidet Markdown vs. Plaintext + Syntax-Highlighting (hljs)
+ *    - Bubble: User-/Assistant-Bubbles (User rechts, Säulen-Farbe; Assistant links, offene Spalte)
+ *    - Conversation: rendert Bubble-Liste + End-Spacer, ARIA-log
+ *    - InputDock: zentriertes Dock (flow/fixed), A11y-Label via t("writeMessage")
+ *
+ *  [ANCHOR:SCROLL-LAYOUT]
+ *    - convoRef: einziger Scroll-Container der Chronik
+ *    - dockRef + dockH + padBottom: Höhe des Docks → --dock-h + sichtbarer Fußraum
+ *    - endRef: stabiler Endanker für Scroll-to-Bottom
+ *    - stickToBottom: erkennt „am Ende“ (distance < 80)
+ *    - Initialer Scroll-Nudge (double rAF + Reflow) zur Aktivierung des Scrollports
+ *    - visualViewport-Hooks: kompakter Status bei Mobile-Keyboard (compactStatus)
+ *
+ *  [ANCHOR:SYSTEM-BRIDGES]
+ *    - systemSay(): System-/GC-Bubbles (assistant-role, markdown) + Auto-Scroll
+ *    - Footer-Status: modeLabel/expertLabel für Statusleiste (kein Bubble)
+ *    - mpathy:system-message-Listener:
+ *        kind=status → Footer-Status + optional busy/Loading
+ *        kind=mode → Modus-Wechsel-Bubble, Loading an
+ *        kind=reply/info → Puls aus + optional Antwort-Bubble
+ *    - OnboardingWatcher: reagiert auf mode==="ONBOARDING" + systemSay
+ *
+ *  [ANCHOR:FREEGATE-PAYMENT]
+ *    - sendMessageLocal(context):
+ *        * POST /api/chat mit messages-Array
+ *        * 401 → needs_login: systemSay + Login-Hinweis (gc_*-Texte)
+ *        * 402 → Stripe-Checkout:
+ *              - nimmt checkout_url aus Response oder
+ *              - baut eigene Session via POST /api/buy/checkout-session
+ *              - leitet window.location.href auf Checkout-URL
+ *        * X-Free-Remaining/X-Free-Used/X-Free-Limit:
+ *              - schreibt mpathy:freegate in localStorage
+ *              - lastFreeWarningShown: systemSay(gc_warning_last_free_message)
+ *        * X-Tokens-Overdraw:
+ *              - systemSay(gc_overdraw_title/body)
+ *        * data.status === "free_limit_reached":
+ *              - gibt Login-Text (gc_please_login_to_continue) als Assistant-Bubble zurück
+ *        * Rückgabe: ChatMessage (assistant-role, markdown)
+ *
+ *  [ANCHOR:CHAT-BEHAVIOR]
+ *    - onSendFromPrompt(text):
+ *        * trimmt Input → userMsg (role:user)
+ *        * optimistic: messages + userMsg (truncateMessages)
+ *        * setMessages(optimistic) + persistMessages
+ *        * setLoading(true), setMode("THINKING")
+ *        * Ruft sendMessageLocal(optimistic)
+ *        * Bei Erfolg: assistant-Bubble → setMessages(prev => [...prev, assistant])
+ *        * Bei Fehler: Fehlermeldungs-Bubble („Send failed“)
+ *        * finally: setLoading(false), setMode("DEFAULT")
+ *
+ *  [ANCHOR:LAYOUT-BÜHNE]
+ *    - pageStyle: radial/linear Background (neutral, dunkel)
+ *    - mState ("idle" | "shrink" | "typing") + useMobileViewport:
+ *        * steuert Mobile-Header-Höhe via --header-h
+ *        * Scroll-Bridge: __mNavScrollYOverride → Navigation
+ *    - Grid-Bühne:
+ *        * Desktop: Säule links (var(--saeule-w)) + Chat rechts
+ *        * Mobile: eine Spalte, Säule über MobileOverlay
+ *    - SidebarContainer:
+ *        * sticky links, 100dvh, onSystemMessage/onClearChat-Bridge
+ *    - Rechte Spalte:
+ *        * convoRef-Scroller (safe-top via --chat-safe-top)
+ *        * chat-stage-inner: maxWidth=680, mittig
+ *        * PromptRoot-Szene: fixed bottom, zwischen Säule und rechter Wand zentriert,
+ *          mit RTL-Unterstützung (isRtl)
+ *
+ *  [ANCHOR:PROMPT-ROOT-BRIDGE]
+ *    - PromptRoot:
+ *        * Props: t, hasMessages, input/setInput, loading, dockRef,
+ *          padBottom/setPadBottom, compactStatus, footerStatus,
+ *          withGate(clickGate), sendingRef (Mehrfachsendungs-Gate),
+ *          onSendFromPrompt, isMobile, onToggleSaeule (öffnet MobileOverlay)
+ *
+ *  [ANCHOR:MOBILE-OVERLAY]
+ *    - overlayOpen + MobileOverlay:
+ *        * zeigt Säule/Onboarding auf Mobile
+ *        * nutzt onSystemMessage/systemSay + onClearChat
+ *
+ *  [ANCHOR:A11Y]
+ *    - Conversation: role="log", aria-live="polite", aria-relevant="additions"
+ *    - Bubble: aria-roledescription (user/assistant message), aria-label via t()
+ *    - Header: Screenreader-Name für M
+ *    - InputDock: aria-label + placeholder via t("writeMessage")
  *
  * ======================================================================= */
+"use client";
 
-
-
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useState,
-  useRef,
-  useCallback,
-  useMemo,
-  FormEvent,
-} from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo, FormEvent } from "react";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import Image from "next/image";
 import hljs from "highlight.js";
