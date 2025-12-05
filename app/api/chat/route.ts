@@ -5,6 +5,8 @@ import path from "path";
 import dotenv from "dotenv";
 import { withGate, retryingFetch } from "@/lib/rate";
 import { verifyAndBumpFreegate } from "@/lib/freegate"; // FreeGate
+import { AUTH_COOKIE_NAME, verifySessionToken } from "@/lib/auth";
+
 
 export const runtime = "nodejs"; // wir lesen Dateien ⇒ Node-Runtime
 
@@ -109,11 +111,26 @@ export async function POST(req: NextRequest) {
     }
 
 // — FreeGate (BS13/7: jetzt *mit* 402 + Checkout) —
+
+// Session aus m_auth-Cookie lesen (falls vorhanden)
+const cookieHeader = req.headers.get("cookie") ?? null;
+
+let sessionEmail: string | null = null;
+if (cookieHeader) {
+  const parts = cookieHeader.split(";").map((p) => p.trim());
+  const authPart = parts.find((p) => p.startsWith(`${AUTH_COOKIE_NAME}=`));
+  if (authPart) {
+    const raw = authPart.slice(AUTH_COOKIE_NAME.length + 1);
+    const payload = verifySessionToken(raw);
+    sessionEmail = payload?.email ?? null;
+  }
+}
+const isAuthenticated = !!sessionEmail;
+
 if (!FG_SECRET) {
   return NextResponse.json({ error: "FREEGATE_SECRET missing" }, { status: 500 });
 }
 const ua = req.headers.get("user-agent") || "";
-const cookieHeader = req.headers.get("cookie") ?? null;
 
 const { count, blocked, cookie } = verifyAndBumpFreegate({
   cookieHeader,
@@ -125,13 +142,22 @@ const { count, blocked, cookie } = verifyAndBumpFreegate({
 // Wie viele freie Requests bleiben (nicht negativ)
 const freeRemaining = Math.max(FREE_LIMIT - count, 0);
 
-// Bei Limit: sofort 402 + Header setzen und beenden
+// Bei Limit: Gäste → 401 + needs_login, Eingeloggte → 402 + Checkout
 if (blocked) {
+  const statusCode = isAuthenticated ? 402 : 401;
+  const body = isAuthenticated
+    ? {
+        status: "free_limit_reached",
+        free_limit: FREE_LIMIT,
+        checkout_url: CHECKOUT_URL,
+      }
+    : {
+        status: "free_limit_reached",
+        free_limit: FREE_LIMIT,
+        needs_login: true,
+      };
 
-  const r = NextResponse.json(
-    { status: "free_limit_reached", free_limit: FREE_LIMIT, needs_login: true },
-    { status: 401 }
-  );
+  const r = NextResponse.json(body, { status: statusCode });
   r.headers.set("X-Free-Used", String(count));
   r.headers.set("X-Free-Limit", String(FREE_LIMIT));
   r.headers.set("X-Free-Remaining", String(freeRemaining));
