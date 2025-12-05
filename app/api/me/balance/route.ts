@@ -4,8 +4,7 @@
  * =======================================================================
  *
  *  [ANCHOR:0] IMPORTS & LAYER
- *    – NextResponse, cookies, AUTH_COOKIE_NAME, verifySessionToken,
- *      getBalance, ledgerUserIdFromEmail.
+ *    – NextResponse, cookies, AUTH_COOKIE_NAME, verifySessionToken, getBalance.
  *    – Brücke zwischen HTTP-Request, Auth-System und Ledger.
  *
  *  [ANCHOR:1] SESSION-EXTRACT
@@ -19,48 +18,41 @@
  *
  *  [ANCHOR:3] USER-ID-MAPPING (TOKEN HOTSPOT)
  *    – E-Mail wird normalisiert: email = payload.email.trim().toLowerCase().
- *    – ledgerUserId = ledgerUserIdFromEmail(email) erzeugt eine deterministische,
- *      BIGINT-kompatible numerische Ledger-ID.
- *    – Dieser Wert ist der einzige gültige Schlüssel ins Ledger.
+ *    – userId = String(payload.id) nutzt die echte users.id als Ledger-Key.
+ *    – Diese ID ist durch FK an users.id gebunden.
  *
  *  [ANCHOR:4] LEDGER-READ (TOKEN HOTSPOT)
- *    – getBalance(ledgerUserId) liefert den tatsächlichen Token-Stand.
+ *    – getBalance(userId) liefert den tatsächlichen Token-Stand.
  *    – Single Source of Truth für die sichtbare Balance im AccountPanel.
- *    – Jede Divergenz zwischen Email ↔ Ledger-ID war historisch Ursache für
- *      „keine Tokens sichtbar“.
  *
  *  [ANCHOR:5] SUCCESS-RESPONSE
  *    – Antwort bei erfolgreichem Read:
  *        ok:true,
  *        authenticated:true,
- *        email,               // Original-E-Mail, nicht die Ledger-ID
- *        balance              // number oder null
+ *        email,               // Original-E-Mail
+ *        balance              // number
  *      (Status 200)
- *    – Wird direkt vom Account-Overlay konsumiert.
  *
  *  [ANCHOR:6] ERROR-PATH (TOKEN HOTSPOT)
  *    – Fehler in Cookie-Access, Token-Verify oder getBalance →
  *      ok:false, authenticated:false, email:null, balance:null,
- *      error:"balance_unavailable" (500).
- *    – UI zeigt dies als „Balance nicht geladen“.
+ *      error:"balance_unavailable", error_message:string (500).
  *
  *  TOKEN-RELEVANZ (SUMMARY)
  *    – Offizieller Read-Endpunkt für das Token-Guthaben.
  *    – Kette:
  *        AUTH_COOKIE
  *        → verifySessionToken
- *        → email
- *        → ledgerUserIdFromEmail(email)
- *        → getBalance(ledgerUserId)
+ *        → email + userId (users.id)
+ *        → getBalance(userId)
  *        → JSON
  *        → AccountPanel.
  *    – Alle Schreiboperationen (Stripe-Webhooks, später Chat-Debit)
- *      müssen exakt dieselbe ledgerUserId verwenden.
+ *      müssen dieselbe userId (users.id) verwenden.
  *
  *  INVENTUS NOTE
  *    – Reiner Inventur- und Strukturspiegel für das Dev-Team.
  * ======================================================================= */
-
 
 // app/api/me/balance/route.ts
 import { NextResponse } from "next/server";
@@ -68,12 +60,11 @@ import { cookies } from "next/headers";
 
 import { AUTH_COOKIE_NAME, verifySessionToken } from "@/lib/auth";
 import { getBalance } from "@/lib/ledger";
-import { ledgerUserIdFromEmail } from "@/lib/ledgerIds";
 
 export async function GET() {
   try {
     const store = cookies();
-    const raw = store.get(AUTH_COOKIE_NAME)?.value;
+    const raw = store.get(AUTH_COOKIE_NAME)?.value ?? null;
 
     // Nicht eingeloggt → kein Fehler, nur "anonymous"
     if (!raw) {
@@ -116,8 +107,22 @@ export async function GET() {
       );
     }
 
-    const email = payload.email.trim().toLowerCase();
-    const userId = ledgerUserIdFromEmail(email);
+    const email = String(payload.email).trim().toLowerCase();
+    const userId = payload.id != null ? String(payload.id) : "";
+
+    // Falls aus irgendeinem Grund keine users.id im Token → als 0 Tokens behandeln
+    if (!userId) {
+      console.error("[/api/me/balance] missing user id in session payload", payload);
+      return NextResponse.json(
+        {
+          ok: true,
+          authenticated: true,
+          email,
+          balance: 0,
+        },
+        { status: 200 },
+      );
+    }
 
     const balance = await getBalance(userId);
 
@@ -130,8 +135,6 @@ export async function GET() {
       },
       { status: 200 },
     );
-
-
   } catch (error: any) {
     console.error("[/api/me/balance] error", error);
     return NextResponse.json(
@@ -141,11 +144,9 @@ export async function GET() {
         email: null,
         balance: null,
         error: "balance_unavailable",
-        error_message:
-          error instanceof Error ? error.message : String(error),
+        error_message: error instanceof Error ? error.message : String(error),
       },
       { status: 500 },
     );
   }
 }
-
