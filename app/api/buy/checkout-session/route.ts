@@ -3,7 +3,6 @@ import Stripe from "stripe";
 import dotenv from "dotenv";
 import { cookies } from "next/headers";
 import { AUTH_COOKIE_NAME, verifySessionToken } from "@/lib/auth";
-import { ledgerUserIdFromEmail } from "@/lib/ledgerIds";
 
 // ENV laden (Dev: .env.payment, Prod: Deploy-Path)
 if (process.env.NODE_ENV === "production") {
@@ -43,20 +42,25 @@ export async function POST(req: Request) {
       });
     }
 
-    const payload = verifySessionToken(raw);
-    const email = payload?.email?.trim().toLowerCase() || "";
+  const payload: any = verifySessionToken(raw);
 
-    if (!email) {
-      return new Response(JSON.stringify({ error: "auth_required", needs_login: true }), {
-        status: 401,
-        headers: { "content-type": "application/json" },
-      });
-    }
+const email =
+  (payload?.email as string | undefined)?.trim().toLowerCase() ?? "";
+const userId =
+  payload && payload.id != null ? String(payload.id) : null;
 
-    const ledgerUserId = ledgerUserIdFromEmail(email);
 
-    const quantity: number = Number(body?.quantity ?? 1);
-    const mode: "payment" = "payment";
+// Keine gültige users.id → kein Kauf möglich
+if (!email || !userId) {
+  return new Response(JSON.stringify({ error: "auth_required", needs_login: true }), {
+    status: 401,
+    headers: { "content-type": "application/json" },
+  });
+}
+
+const quantity: number = Number(body?.quantity ?? 1);
+const mode: "payment" = "payment";
+
 
 
     // === GC Step 6 – Golden Return URLs ======================================
@@ -86,11 +90,12 @@ export async function POST(req: Request) {
 
   // === GC Step 7 – User-Vererbung für Webhook-Credit ======================
   // Wenn der User eingeloggt ist, muss der Webhook ihn 1:1 zuordnen können.
-   metadata: {
-    user_id: ledgerUserId,
-    tokens: "50000",
-    price_id: priceId,
-  },
+  metadata: {
+  user_id: userId,   // ← ECHTE users.id aus DB
+  tokens: "50000",
+  price_id: priceId,
+},
+
 
   // ========================================================================
 
