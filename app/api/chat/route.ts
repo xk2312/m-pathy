@@ -129,8 +129,8 @@ const freeRemaining = Math.max(FREE_LIMIT - count, 0);
 if (blocked) {
 
   const r = NextResponse.json(
-    { status: "free_limit_reached", free_limit: FREE_LIMIT, checkout_url: CHECKOUT_URL },
-    { status: 402 }
+    { status: "free_limit_reached", free_limit: FREE_LIMIT, needs_login: true },
+    { status: 401 }
   );
   r.headers.set("X-Free-Used", String(count));
   r.headers.set("X-Free-Limit", String(FREE_LIMIT));
@@ -139,6 +139,7 @@ if (blocked) {
   if (cookie) r.headers.set("Set-Cookie", cookie);
   return r;
 }
+
 
 // — Ab hier: echte Azure-Antwort —
 assertEnv();
