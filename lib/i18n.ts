@@ -227,13 +227,16 @@ const en = {
   "cta.clear": "Clear chat",
 
   // Golden Conversion (system messages)
-  gc_warning_last_free_message:
-    "You have 1 free message left. After that you will be redirected to checkout.",
+  gc_warning_last_free_message: "You have 1 free message left. After that you will be redirected to checkout.",
   gc_payment_success_title: "Payment successful!",
-  gc_payment_success_body:
-    "Your tokens have been updated. Enjoy continuing your chat.",
+  gc_payment_success_body: "Your tokens have been updated. Enjoy continuing your chat.",
   gc_payment_success_button: "OK",
   gc_please_login_to_continue: "Please log in to continue.",
+  gc_overdraw_title: "Your balance is depleted.",
+  gc_overdraw_body: "This message would have pushed your account into the negative. We covered the difference for you as a courtesy. Please top up to continue chatting.",
+  gc_freegate_limit_reached: "You have used all 9 free messages.",
+  gc_freegate_login_required: "Please log in to continue.",
+
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modes & experts header",
@@ -390,6 +393,10 @@ const de = {
     "Deine Tokens wurden aktualisiert. Viel Freude beim Weiterchatten.",
   gc_payment_success_button: "OK",
   gc_please_login_to_continue: "Bitte einloggen, um fortzufahren.",
+  gc_overdraw_title: "Dein Guthaben ist aufgebraucht.",
+  gc_overdraw_body: "Diese Nachricht hätte dein Konto ins Minus gezogen. Wir haben den Betrag aus Kulanz für dich ausgeglichen. Bitte lade dein Guthaben auf, um weiter zu chatten.",
+  gc_freegate_limit_reached: "Du hast alle 9 kostenlosen Nachrichten verbraucht.",
+  gc_freegate_login_required: "Bitte logge dich ein, um fortzufahren.",
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modi & Experten",
@@ -539,13 +546,16 @@ const fr = {
   "cta.clear": "Effacer le chat",
 
   // Golden Conversion (messages système)
-  gc_warning_last_free_message:
-    "Il te reste 1 message gratuit. Ensuite, tu seras redirigé vers la page de paiement.",
+  gc_warning_last_free_message: "Il te reste 1 message gratuit. Ensuite, tu seras redirigé vers la page de paiement.",
   gc_payment_success_title: "Paiement réussi !",
-  gc_payment_success_body:
-    "Tes tokens ont été mis à jour. Bon chat !",
+  gc_payment_success_body: "Tes tokens ont été mis à jour. Bon chat !",
   gc_payment_success_button: "OK",
   gc_please_login_to_continue: "Connecte-toi pour continuer.",
+  gc_overdraw_title: "Ton solde est épuisé.",
+  gc_overdraw_body: "Ce message aurait fait passer ton compte en négatif. Nous avons couvert la différence par courtoisie. Merci de recharger pour continuer à discuter.",
+  gc_freegate_limit_reached: "Tu as utilisé tes 9 messages gratuits.",
+  gc_freegate_login_required: "Connecte-toi pour continuer.",
+
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modes & experts",
@@ -702,6 +712,11 @@ const es = {
     "Tus tokens se han actualizado. Disfruta del chat.",
   gc_payment_success_button: "OK",
   gc_please_login_to_continue: "Inicia sesión para continuar.",
+  gc_overdraw_title: "Tu saldo se ha agotado.",
+  gc_overdraw_body: "Este mensaje habría dejado tu cuenta en negativo. Hemos cubierto la diferencia por cortesía. Por favor, recarga tu saldo para seguir chateando.",
+  gc_freegate_limit_reached: "Has usado tus 9 mensajes gratuitos.",
+  gc_freegate_login_required: "Inicia sesión para continuar.",
+
 
   // Pillar sections
   "pillar.section.header": "Modos y expertos",
@@ -858,6 +873,11 @@ const it = {
     "I tuoi token sono stati aggiornati. Buona continuazione di chat.",
   gc_payment_success_button: "OK",
   gc_please_login_to_continue: "Accedi per continuare.",
+  gc_overdraw_title: "Il tuo saldo è esaurito.",
+  gc_overdraw_body: "Questo messaggio avrebbe portato il tuo conto in negativo. Abbiamo coperto la differenza per cortesia. Ricarica per continuare a chattare.",
+  gc_freegate_limit_reached: "Hai usato i tuoi 9 messaggi gratuiti.",
+  gc_freegate_login_required: "Accedi per continuare.",
+
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modalità ed esperti",
@@ -1014,6 +1034,11 @@ const pt = {
     "Os teus tokens foram atualizados. Boa continuação de chat.",
   gc_payment_success_button: "OK",
   gc_please_login_to_continue: "Inicia sessão para continuar.",
+  gc_overdraw_title: "O teu saldo está esgotado.",
+  gc_overdraw_body: "Esta mensagem teria deixado a tua conta negativa. Cobrimos a diferença por cortesia. Por favor, recarrega para continuares a conversar.",
+  gc_freegate_limit_reached: "Já usaste as 9 mensagens gratuitas.",
+  gc_freegate_login_required: "Inicia sessão para continuar.",
+
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modos e especialistas",
@@ -1171,6 +1196,11 @@ const nl = {
     "Je tokens zijn bijgewerkt. Veel plezier met verder chatten.",
   gc_payment_success_button: "OK",
   gc_please_login_to_continue: "Log in om verder te gaan.",
+  gc_overdraw_title: "Je saldo is opgebruikt.",
+  gc_overdraw_body: "Dit bericht zou je saldo negatief hebben gemaakt. We hebben het verschil uit coulance voor je aangevuld. Laad je saldo op om verder te chatten.",
+  gc_freegate_limit_reached: "Je hebt alle 9 gratis berichten gebruikt.",
+  gc_freegate_login_required: "Log in om door te gaan.",
+
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modi & experts",
@@ -1328,6 +1358,11 @@ const ru = {
     "Твои токены обновлены. Приятного продолжения чата.",
   gc_payment_success_button: "OK",
   gc_please_login_to_continue: "Войдите, чтобы продолжить.",
+  gc_overdraw_title: "Ваш баланс исчерпан.",
+  gc_overdraw_body: "Это сообщение увело бы ваш счёт в минус. Мы компенсировали разницу из вежливости. Пожалуйста, пополните баланс, чтобы продолжить общение.",
+  gc_freegate_limit_reached: "Вы использовали все 9 бесплатных сообщений.",
+  gc_freegate_login_required: "Пожалуйста, войдите, чтобы продолжить.",
+
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Режимы и эксперты",
@@ -1484,6 +1519,11 @@ const zh = {
     "你的代币已更新，祝你聊天愉快。",
   gc_payment_success_button: "确定",
   gc_please_login_to_continue: "请登录以继续。",
+  gc_overdraw_title: "你的余额已用尽。",
+  gc_overdraw_body: "这条消息本会使你的账户进入负值。出于礼貌，我们已为你补足差额。请充值后继续聊天。",
+  gc_freegate_limit_reached: "你已用完 9 条免费消息。",
+  gc_freegate_login_required: "请登录以继续。",
+
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "模式与专家",
@@ -1640,6 +1680,11 @@ const ja = {
     "トークンが更新されました。引き続きチャットをお楽しみください。",
   gc_payment_success_button: "OK",
   gc_please_login_to_continue: "続行するにはログインしてください。",
+  gc_overdraw_title: "残高がなくなりました。",
+  gc_overdraw_body: "このメッセージは残高をマイナスにするところでしたが、こちらで補填しました。続けるにはチャージしてください。",
+  gc_freegate_limit_reached: "無料メッセージ 9 通を使い切りました。",
+  gc_freegate_login_required: "続行するにはログインしてください。",
+
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "モード & 専門家",
@@ -1796,6 +1841,11 @@ const ko = {
     "토큰이 업데이트되었습니다. 계속해서 즐겁게 대화해 보세요.",
   gc_payment_success_button: "OK",
   gc_please_login_to_continue: "계속하려면 로그인해 주세요.",
+  gc_overdraw_title: "잔액이 모두 소진되었습니다.",
+gc_overdraw_body: "이 메시지는 계정을 마이너스로 만들 뻔했습니다. 저희가 예우 차원에서 보전했습니다. 계속 대화하려면 충전해 주세요.",
+gc_freegate_limit_reached: "무료 메시지 9개를 모두 사용했습니다.",
+gc_freegate_login_required: "계속하려면 로그인하세요.",
+
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "모드 & 전문가",
@@ -1952,6 +2002,11 @@ const ar = {
     "تم تحديث التوكنز الخاصة بك. استمتع بمتابعة الدردشة.",
   gc_payment_success_button: "حسنًا",
   gc_please_login_to_continue: "يرجى تسجيل الدخول للمتابعة.",
+  gc_overdraw_title: "رصيدك مستهلك.",
+  gc_overdraw_body: "هذه الرسالة كانت ستجعل رصيدك سلبياً. قمنا بتغطية الفارق كخدمة مجاملة. يرجى إعادة الشحن للمتابعة.",
+  gc_freegate_limit_reached: "لقد استخدمت ٩ رسائل مجانية.",
+  gc_freegate_login_required: "يرجى تسجيل الدخول للمتابعة.",
+
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "الأوضاع والخبراء",
@@ -2108,6 +2163,11 @@ const hi = {
     "आपके टोकन अपडेट कर दिए गए हैं। आगे चैट का आनंद लें।",
   gc_payment_success_button: "OK",
   gc_please_login_to_continue: "जारी रखने के लिए कृपया लॉगिन करें।",
+  gc_overdraw_title: "आपका बैलेंस समाप्त हो गया है।",
+  gc_overdraw_body: "यह संदेश आपके खाते को नकारात्मक में ले जाता। हमने शिष्टाचार स्वरूप अंतर को कवर किया है। आगे चैट जारी रखने के लिए कृपया रिचार्ज करें।",
+  gc_freegate_limit_reached: "आपने सभी 9 मुफ्त संदेशों का उपयोग कर लिया है।",
+  gc_freegate_login_required: "जारी रखने के लिए कृपया लॉगिन करें।",
+
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "मोड और विशेषज्ञ",

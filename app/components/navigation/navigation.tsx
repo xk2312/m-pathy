@@ -481,16 +481,7 @@ export default function Navigation() {
           }}
         >
           {/* LEFT – Brand (m-pathy) + Subscribe */}
-                   <div
-            className="flex items-center gap-5"
-            style={isChatStageLayout ? { marginLeft: "-10px" } : undefined}
-          >
-            <Link
-              href="/"
-              aria-label="Home"
-              className="inline-flex items-center"
-            >          {/* LEFT – Brand (m-pathy) + Chat */}
-                   <div
+            <div
             className="flex items-center gap-5"
             style={isChatStageLayout ? { marginLeft: "-10px" } : undefined}
           >
@@ -501,7 +492,6 @@ export default function Navigation() {
             >
               <span
                 className="text-white/80 hover:text-white transition-colors"
-
                 style={{
                   fontSize: "0.88rem",
                   letterSpacing: "0.10em",
@@ -522,28 +512,6 @@ export default function Navigation() {
             />
           </div>
 
-              <span
-                className="text-white/80 hover:text-white transition-colors"
-
-                style={{
-                  fontSize: "0.88rem",
-                  letterSpacing: "0.10em",
-                  textTransform: "none",
-                  fontWeight: 650,
-                  lineHeight: 1,
-                  paddingBottom: "2px",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                m-pathy
-              </span>
-            </Link>
-            <NavLink
-              href="/page2"
-              label={links.subscription}
-              active={isActive("/subscription")}
-            />
-          </div>
 
           {/* RIGHT – Language + Login */}
           <div className="flex items-center justify-end gap-3 min-w-[180px]">

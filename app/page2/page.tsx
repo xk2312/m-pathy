@@ -1123,8 +1123,9 @@ useEffect(() => {
     try {
       systemSay(
         `**${t("gc_payment_success_title")}**\n\n${t("gc_payment_success_body")}`,
-        { gc: true },
       );
+
+
     } catch {
       // Toast ist nice-to-have, darf nie den Flow brechen
     }
@@ -1487,26 +1488,8 @@ const systemSay = useCallback((content: string, opts?: { gc?: boolean }) => {
   setLoading(false);
   setMode("DEFAULT");
 
-  // GC: temporäre System-Bubble automatisch entfernen (5–6s Fenster)
-  if (isGc) {
-    setTimeout(() => {
-      setMessages((prev) => {
-        if (!Array.isArray(prev)) return prev;
-        let removed = false;
-        const list = prev.filter((m) => {
-          if (!removed && typeof m.content === "string" && m.content.startsWith(GC_MARKER)) {
-            removed = true;
-            return false;
-          }
-          return true;
-        });
-        if (!removed) return prev;
-        const next = truncateMessages(list);
-        persistMessages(next);
-        return next;
-      });
-    }, 5600);
-  }
+  // (Auto-Remove für GC-Nachrichten vollständig deaktiviert – Nachrichten bleiben persistent)
+
 }, [persistMessages]);
 
 
@@ -1651,7 +1634,26 @@ if (busy) {
       body: JSON.stringify({ messages: context }),
     });
 
-    // === GC Step 5 – FreeGate 402 → Stripe Checkout (Message → 402 → Stripe) ===
+    // === GC Step 5 – FreeGate/Balance Gates → Login oder Stripe Checkout ===
+    if (res.status === 401) {
+      try {
+        const payload = await res.json().catch(() => ({} as any));
+        if (payload?.needs_login) {
+          systemSay(
+            `**${t("gc_freegate_limit_reached")}**\n\n${t("gc_freegate_login_required")}`,
+          );
+          return {
+            role: "assistant",
+            content: "",
+            format: "markdown",
+          } as ChatMessage;
+        }
+      } catch {
+        // Parsing/Login-Toast-Fehler niemals den Flow crashen lassen
+      }
+      throw new Error("Auth required");
+    }
+
     if (res.status === 402) {
       let checkoutUrl = "";
       try {
@@ -1660,36 +1662,40 @@ if (busy) {
         checkoutUrl = payload?.checkout_url || "";
       } catch { /* ignore */ }
 
+      // Wenn keine URL mitkam, erzeuge eine Session über unsere eigene Route.
+      if (!checkoutUrl) {
+        const priceId =
+          process.env.NEXT_PUBLIC_STRIPE_PRICE_1M ||
+          (globalThis as any).__NEXT_PUBLIC_STRIPE_PRICE_1M; // Fallback
 
-    // Wenn keine URL mitkam, erzeuge eine Session über unsere eigene Route.
-    if (!checkoutUrl) {
-      const priceId =
-        process.env.NEXT_PUBLIC_STRIPE_PRICE_1M ||
-        (globalThis as any).__NEXT_PUBLIC_STRIPE_PRICE_1M; // Fallback
+        if (!priceId || !String(priceId).startsWith("price_")) {
+          throw new Error("Checkout unavailable (missing NEXT_PUBLIC_STRIPE_PRICE_1M)");
+        }
 
-      if (!priceId || !String(priceId).startsWith("price_")) {
-        throw new Error("Checkout unavailable (missing NEXT_PUBLIC_STRIPE_PRICE_1M)");
+        const mk = await fetch("/api/buy/checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ priceId }),
+        });
+        if (!mk.ok) {
+          const j = await mk.json().catch(() => ({}));
+          throw new Error(j?.error || "Stripe checkout session failed");
+        }
+        const j = await mk.json();
+        checkoutUrl = j?.url || "";
       }
 
-      const mk = await fetch("/api/buy/checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId }),
-      });
-      if (!mk.ok) {
-        const j = await mk.json().catch(() => ({}));
-        throw new Error(j?.error || "Stripe checkout session failed");
-      }
-      const j = await mk.json();
-      checkoutUrl = j?.url || "";
+      if (!checkoutUrl) throw new Error("No checkout URL available");
+      // Sofort zur Kasse
+      window.location.href = checkoutUrl;
+      // Wir geben hier eine neutrale “pending”-Nachricht zurück, falls der Redirect blockiert wurde.
+      return {
+        role: "assistant",
+        content: "Opening checkout …",
+        format: "markdown",
+      } as ChatMessage;
     }
 
-    if (!checkoutUrl) throw new Error("No checkout URL available");
-    // Sofort zur Kasse
-    window.location.href = checkoutUrl;
-    // Wir geben hier eine neutrale “pending”-Nachricht zurück, falls der Redirect blockiert wurde.
-    return { role: "assistant", content: "Opening checkout …", format: "markdown" } as ChatMessage;
-  }
 
   // === GC: Letzte freie Nachricht → Systemmeldung ======================
   const freeRemainingHeader = res.headers.get("X-Free-Remaining");
@@ -1707,7 +1713,70 @@ if (busy) {
     }
   }
 
+  try {
+    if (typeof window !== "undefined" && window.localStorage) {
+      const freeUsedHeader = res.headers.get("X-Free-Used");
+      const freeLimitHeader = res.headers.get("X-Free-Limit");
+      const freeRemainingHeader2 = res.headers.get("X-Free-Remaining");
+      const overdrawHeader = res.headers.get("X-Tokens-Overdraw");
+
+      const payload: any = {};
+
+      if (freeUsedHeader != null) {
+        const v = parseInt(freeUsedHeader, 10);
+        if (!Number.isNaN(v)) payload.used = v;
+      }
+      if (freeLimitHeader != null) {
+        const v = parseInt(freeLimitHeader, 10);
+        if (!Number.isNaN(v)) payload.limit = v;
+      }
+      if (freeRemainingHeader2 != null) {
+        const v = parseInt(freeRemainingHeader2, 10);
+        if (!Number.isNaN(v)) payload.remaining = v;
+      }
+      if (overdrawHeader != null) {
+        const v = parseInt(overdrawHeader, 10);
+        if (!Number.isNaN(v)) {
+          payload.overdraw = v;
+          if (v > 0) {
+            payload.mustTopUp = true;
+          }
+        }
+      }
+
+      const prevRaw = window.localStorage.getItem("mpathy:freegate");
+      let prev: any = {};
+      if (prevRaw) {
+        try {
+          prev = JSON.parse(prevRaw) || {};
+        } catch {
+          prev = {};
+        }
+      }
+
+      const next = { ...prev, ...payload };
+      window.localStorage.setItem("mpathy:freegate", JSON.stringify(next));
+    }
+  } catch {}
+
+  const overdrawHeader = res.headers.get("X-Tokens-Overdraw");
+  if (overdrawHeader != null) {
+    const v = parseInt(overdrawHeader, 10);
+    if (!Number.isNaN(v) && v > 0) {
+      try {
+        systemSay(
+          `**${t("gc_overdraw_title")}**\n\n${t("gc_overdraw_body")}`,
+        );
+      } catch {
+        if (process.env.NODE_ENV !== "production") {
+          console.warn("[GC] Failed to show overdraw notice");
+        }
+      }
+    }
+  }
+
   if (!res.ok) throw new Error("Chat API failed");
+
   const data = await res.json();
   const assistant = data.assistant ?? data;
   return {
@@ -1716,6 +1785,7 @@ if (busy) {
     format: assistant.format ?? "markdown",
   } as ChatMessage;
 }
+
 
 
 

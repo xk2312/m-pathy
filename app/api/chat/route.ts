@@ -181,15 +181,17 @@ assertEnv();
     // Beispiel: Tokens-Verbrauch schätzen (Stub). Später ersetzen wir das durch echte Usage.
     const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, 120);
 
-       const res = NextResponse.json({ role: "assistant", content }, { status: 200 });
+    const res = NextResponse.json({ role: "assistant", content }, { status: 200 });
     res.headers.set("X-Tokens-Delta", String(-TOKENS_USED));
     res.headers.set("X-Free-Used", String(count));
     res.headers.set("X-Free-Limit", String(FREE_LIMIT));
     res.headers.set("X-Free-Remaining", String(freeRemaining));
+    res.headers.set("X-Tokens-Overdraw", "0");
     if (cookie) {
       res.headers.set("Set-Cookie", cookie);
     }
     return res;
+
 
 
   } catch (err: any) {

@@ -30,17 +30,25 @@ export async function POST(req: Request) {
     const priceId: string | undefined =
       body?.priceId || process.env.STRIPE_PRICE_1M || process.env.NEXT_PUBLIC_STRIPE_PRICE_1M;
 
+    const userId = (req as any)?.user?.id;
+
+    if (!userId) {
+      return new Response(JSON.stringify({ error: "auth_required", needs_login: true }), {
+        status: 401,
+        headers: { "content-type": "application/json" },
+      });
+    }
+
     const quantity: number = Number(body?.quantity ?? 1);
     const mode: "payment" = "payment";
 
-    const base = env("STAGING_BASE_URL", env("APP_BASE_URL", "https://m-pathy.ai"));
-    
     // === GC Step 6 – Golden Return URLs ======================================
     // Erfolgreiche Zahlung → Chat mit Flag, sodass GC Step 9 greifen kann.
-    const successUrl: string = `${base}/chat?paid=1`;
+    const successUrl: string = env("NEXT_PUBLIC_STRIPE_SUCCESS_URL");
     // Nutzer bricht Kauf ab → zurück in Chat (sanft), optional für spätere UX.
-    const cancelUrl: string = `${base}/chat?cancel=1`;
+    const cancelUrl: string = env("NEXT_PUBLIC_STRIPE_CANCEL_URL");
     // ==========================================================================
+
 
     if (!priceId || !priceId.startsWith("price_")) {
       return new Response(JSON.stringify({ error: "priceId required" }), {
