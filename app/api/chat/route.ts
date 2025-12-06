@@ -215,32 +215,35 @@ if (!FG_SECRET) {
 }
 const ua = req.headers.get("user-agent") || "";
 
-const { count, blocked, cookie } = verifyAndBumpFreegate({
-  cookieHeader,
-  userAgent: ua,
-  freeLimit: FREE_LIMIT,
-  secret: FG_SECRET,
-});
+let count = 0;
+let blocked = false;
+let cookie: string | null = null;
+
+// FreeGate nur für Gäste anwenden
+if (!isAuthenticated) {
+  const fgResult = verifyAndBumpFreegate({
+    cookieHeader,
+    userAgent: ua,
+    freeLimit: FREE_LIMIT,
+    secret: FG_SECRET,
+  });
+  count = fgResult.count;
+  blocked = fgResult.blocked;
+  cookie = fgResult.cookie ?? null;
+}
 
 // Wie viele freie Requests bleiben (nicht negativ)
 const freeRemaining = Math.max(FREE_LIMIT - count, 0);
 
-// Bei Limit: Gäste → 401 + needs_login, Eingeloggte → 402 + Checkout
-if (blocked) {
-  const statusCode = isAuthenticated ? 402 : 401;
-  const body = isAuthenticated
-    ? {
-        status: "free_limit_reached",
-        free_limit: FREE_LIMIT,
-        checkout_url: CHECKOUT_URL,
-      }
-    : {
-        status: "free_limit_reached",
-        free_limit: FREE_LIMIT,
-        needs_login: true,
-      };
+// Bei Limit: nur Gäste werden geblockt → Login-Aufforderung
+if (!isAuthenticated && blocked) {
+  const body = {
+    status: "free_limit_reached",
+    free_limit: FREE_LIMIT,
+    needs_login: true,
+  };
 
-  const r = NextResponse.json(body, { status: statusCode });
+  const r = NextResponse.json(body, { status: 401 });
   r.headers.set("X-Free-Used", String(count));
   r.headers.set("X-Free-Limit", String(FREE_LIMIT));
   r.headers.set("X-Free-Remaining", String(freeRemaining));
