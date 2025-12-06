@@ -3,6 +3,8 @@ import Stripe from "stripe";
 import dotenv from "dotenv";
 import { cookies } from "next/headers";
 import { AUTH_COOKIE_NAME, verifySessionToken } from "@/lib/auth";
+import { ledgerUserIdFromEmail } from "@/lib/ledgerIds";
+
 
 // ENV laden (Dev: .env.payment, Prod: Deploy-Path)
 if (process.env.NODE_ENV === "production") {
@@ -46,17 +48,16 @@ export async function POST(req: Request) {
 
 const email =
   (payload?.email as string | undefined)?.trim().toLowerCase() ?? "";
-const userId =
-  payload && payload.id != null ? String(payload.id) : null;
 
-
-// Keine gültige users.id → kein Kauf möglich
-if (!email || !userId) {
+if (!email) {
   return new Response(JSON.stringify({ error: "auth_required", needs_login: true }), {
     status: 401,
     headers: { "content-type": "application/json" },
   });
 }
+
+const userId = ledgerUserIdFromEmail(email);
+
 
 const quantity: number = Number(body?.quantity ?? 1);
 const mode: "payment" = "payment";

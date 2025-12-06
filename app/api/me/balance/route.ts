@@ -60,6 +60,7 @@ import { cookies } from "next/headers";
 
 import { AUTH_COOKIE_NAME, verifySessionToken } from "@/lib/auth";
 import { getBalance } from "@/lib/ledger";
+import { ledgerUserIdFromEmail } from "@/lib/ledgerIds";
 
 export async function GET() {
   try {
@@ -108,11 +109,12 @@ export async function GET() {
     }
 
     const email = String(payload.email).trim().toLowerCase();
-    const userId = payload.id != null ? String(payload.id) : "";
 
-    // Falls aus irgendeinem Grund keine users.id im Token → als 0 Tokens behandeln
-    if (!userId) {
-      console.error("[/api/me/balance] missing user id in session payload", payload);
+    let userId: string;
+    try {
+      userId = ledgerUserIdFromEmail(email);
+    } catch (err) {
+      console.error("[/api/me/balance] unable to derive ledger user id from email", err);
       return NextResponse.json(
         {
           ok: true,
