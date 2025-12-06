@@ -275,7 +275,7 @@ assertEnv();
     };
 
     // Concurrency-Gate + Retry-After Backoff
-    const response = await withGate(() => retryingFetch(buildAzureUrl(), init, 5));
+       const response = await withGate(() => retryingFetch(buildAzureUrl(), init, 5));
     const data = await response.json();
 
     if (!response.ok) {
@@ -286,13 +286,21 @@ assertEnv();
       );
     }
 
+    if (process.env.NODE_ENV !== "production") {
+      console.log("[Azure usage]", data?.usage ?? null);
+    }
+
     const content: string | undefined = data?.choices?.[0]?.message?.content;
     if (!content) {
       return NextResponse.json({ error: "No message content" }, { status: 502 });
     }
 
-    // Beispiel: Tokens-Verbrauch schätzen (Stub). Später ersetzen wir das durch echte Usage.
-    const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, 120);
+    let tokensUsed = 120;
+    const usage = data?.usage;
+    if (usage && typeof usage.total_tokens === "number") {
+      tokensUsed = usage.total_tokens;
+    }
+    const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, tokensUsed);
 
     const res = NextResponse.json({ role: "assistant", content }, { status: 200 });
     res.headers.set("X-Tokens-Delta", String(-TOKENS_USED));
@@ -304,6 +312,7 @@ assertEnv();
       res.headers.set("Set-Cookie", cookie);
     }
     return res;
+
 
 
 
