@@ -146,9 +146,12 @@ export async function GET() {
         authenticated: true,
         email,
         balance,
+        debug_version: "me-balance-v3",
+        debug_userId: userId,
       },
       { status: 200 },
     );
+
   } catch (error: any) {
     console.error("[/api/me/balance] error", error);
     return NextResponse.json(
