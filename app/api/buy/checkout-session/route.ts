@@ -64,7 +64,7 @@ const mode: "payment" = "payment";
 
 
     // === GC Step 6 – Golden Return URLs ======================================
-    // Erfolgreiche Zahlung → Chat mit Flag, sodass GC Step 9 greifen kann.
+    // Erfolgreiche Zahlung → Chat mit Flag, sodass GC Step 9 greifen kann. 
     const successUrl: string = env("NEXT_PUBLIC_STRIPE_SUCCESS_URL");
     // Nutzer bricht Kauf ab → zurück in Chat (sanft), optional für spätere UX.
     const cancelUrl: string = env("NEXT_PUBLIC_STRIPE_CANCEL_URL");
