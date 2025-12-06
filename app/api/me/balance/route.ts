@@ -64,44 +64,51 @@ import { ledgerUserIdFromEmail } from "@/lib/ledgerIds";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(req: NextRequest) {
-  // 1. Session-Cookie auslesen
-  const cookieStore = await cookies();
-  const token = cookieStore.get(AUTH_COOKIE_NAME)?.value;
-
-  if (!token) {
-    // Nicht eingeloggt → für das Frontend klarer Status
-    return NextResponse.json(
-      {
-        ok: true,
-        authenticated: false,
-        email: null,
-        balance: null,
-      },
-      { status: 200 },
-    );
-  }
-
+export async function GET() {
   try {
-    // 2. Token prüfen
-    const payload = verifySessionToken(token);
+    const cookieStore = cookies();
+    const raw = cookieStore.get(AUTH_COOKIE_NAME)?.value;
 
-    if (!payload || !payload.email) {
+    // Kein Session-Cookie → Gast, aber kein Fehler
+    if (!raw) {
       return NextResponse.json(
         {
-          ok: false,
+          ok: true,
           authenticated: false,
           email: null,
           balance: null,
-          error: "invalid_session",
         },
-        { status: 401 },
+        { status: 200 },
       );
     }
 
-    // Für Payment v1 nutzen wir eine deterministische numerische Ledger-ID aus der E-Mail
-    const email = payload.email.trim().toLowerCase();
-    const userId = ledgerUserIdFromEmail(email);
+    // Session-Payload aus dem Cookie holen
+    const payload = verifySessionToken(raw) as
+      | { id: number | string; email?: string | null }
+      | null;
+
+    if (!payload || (!payload.id && !payload.email)) {
+      console.log("[/api/me/balance] no usable payload", payload);
+      return NextResponse.json(
+        {
+          ok: true,
+          authenticated: false,
+          email: null,
+          balance: null,
+        },
+        { status: 200 },
+      );
+    }
+
+    const email =
+      (payload.email ?? "")
+        .trim()
+        .toLowerCase() || null;
+
+    // WICHTIG: dieselbe numerische User-ID wie im Checkout/Webhook
+    const userId = String(payload.id);
+
+    console.log("[/api/me/balance] derived userId", { userId, email });
 
     const balance = await getBalance(userId);
 
