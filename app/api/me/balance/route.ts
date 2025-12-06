@@ -55,21 +55,18 @@
  * ======================================================================= */
 
 // app/api/me/balance/route.ts
+import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { NextResponse, type NextRequest } from "next/server";
 
 import { AUTH_COOKIE_NAME, verifySessionToken } from "@/lib/auth";
 import { getBalance } from "@/lib/ledger";
-import { ledgerUserIdFromEmail } from "@/lib/ledgerIds";
-
-export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const cookieStore = cookies();
-    const raw = cookieStore.get(AUTH_COOKIE_NAME)?.value;
+    const store = cookies();
+    const raw = store.get(AUTH_COOKIE_NAME)?.value ?? null;
 
-    // Kein Session-Cookie → Gast, aber kein Fehler
+    // Nicht eingeloggt → kein Fehler, nur "anonymous"
     if (!raw) {
       return NextResponse.json(
         {
@@ -82,13 +79,11 @@ export async function GET() {
       );
     }
 
-    // Session-Payload aus dem Cookie holen
-    const payload = verifySessionToken(raw) as
-      | { id: number | string; email?: string | null }
-      | null;
-
-    if (!payload || (!payload.id && !payload.email)) {
-      console.log("[/api/me/balance] no usable payload", payload);
+    let payload: any;
+    try {
+      payload = verifySessionToken(raw);
+    } catch (err) {
+      console.error("[/api/me/balance] invalid session token", err);
       return NextResponse.json(
         {
           ok: true,
@@ -100,15 +95,34 @@ export async function GET() {
       );
     }
 
-    const email =
-      (payload.email ?? "")
-        .trim()
-        .toLowerCase() || null;
+    if (!payload || !payload.email) {
+      return NextResponse.json(
+        {
+          ok: true,
+          authenticated: false,
+          email: null,
+          balance: null,
+        },
+        { status: 200 },
+      );
+    }
 
-    // WICHTIG: dieselbe numerische User-ID wie im Checkout/Webhook
-    const userId = String(payload.id);
+    const email = String(payload.email).trim().toLowerCase();
+    const userId = payload.id != null ? String(payload.id) : "";
 
-    console.log("[/api/me/balance] derived userId", { userId, email });
+    // Falls aus irgendeinem Grund keine users.id im Token → als 0 Tokens behandeln
+    if (!userId) {
+      console.error("[/api/me/balance] missing user id in session payload", payload);
+      return NextResponse.json(
+        {
+          ok: true,
+          authenticated: true,
+          email,
+          balance: 0,
+        },
+        { status: 200 },
+      );
+    }
 
     const balance = await getBalance(userId);
 
@@ -121,7 +135,7 @@ export async function GET() {
       },
       { status: 200 },
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("[/api/me/balance] error", error);
     return NextResponse.json(
       {
@@ -130,6 +144,7 @@ export async function GET() {
         email: null,
         balance: null,
         error: "balance_unavailable",
+        error_message: error instanceof Error ? error.message : String(error),
       },
       { status: 500 },
     );
