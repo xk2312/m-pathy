@@ -59,7 +59,8 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 import { AUTH_COOKIE_NAME, verifySessionToken } from "@/lib/auth";
-import { getBalance } from "@/lib/ledger";
+import { getBalance, getPool } from "@/lib/ledger";
+
 
 export async function GET() {
   try {
@@ -108,23 +109,36 @@ export async function GET() {
     }
 
     const email = String(payload.email).trim().toLowerCase();
-    const userId = payload.id != null ? String(payload.id) : "";
 
-    // Falls aus irgendeinem Grund keine users.id im Token → als 0 Tokens behandeln
+    // userId zuerst aus dem Token
+    let userId = payload && payload.id != null ? String(payload.id) : "";
+
+    // Fallback: users.id per E-Mail lookup, wenn im Token keine id steckt
     if (!userId) {
-      console.error("[/api/me/balance] missing user id in session payload", payload);
-      return NextResponse.json(
-        {
-          ok: true,
-          authenticated: true,
-          email,
-          balance: 0,
-        },
-        { status: 200 },
+      const pool = await getPool();
+      const result = await pool.query(
+        "SELECT id FROM users WHERE email = $1::citext LIMIT 1",
+        [email],
       );
+
+      if (result.rows.length === 0) {
+        console.error("[/api/me/balance] no users.id for email", email);
+        return NextResponse.json(
+          {
+            ok: true,
+            authenticated: true,
+            email,
+            balance: 0,
+          },
+          { status: 200 },
+        );
+      }
+
+      userId = String(result.rows[0].id);
     }
 
     const balance = await getBalance(userId);
+
 
     return NextResponse.json(
       {
