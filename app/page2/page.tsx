@@ -1846,7 +1846,7 @@ if (busy) {
 
 
   // ===============================================================
-  // Prompt-Handler – sendet Text aus Eingabefeld
+  // Prompt-Handler – sendet Text aus Eingabefeld 
   // ===============================================================
   const onSendFromPrompt = useCallback(async (text: string) => {
     const trimmed = (text ?? "").trim();
