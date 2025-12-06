@@ -5,6 +5,7 @@ import {
   createSessionToken,
   verifyMagicLinkToken,
 } from "@/lib/auth";
+import { getPool } from "@/lib/ledger";
 
 // GET /auth/callback?token=...
 export async function GET(req: Request) {
@@ -43,6 +44,51 @@ export async function GET(req: Request) {
       console.warn("[auth/callback] Invalid token (no payload)");
       return NextResponse.redirect(toUrl(errorPath));
     }
+
+    const email = String(payload.email || "").trim().toLowerCase();
+    if (!email) {
+      console.warn("[auth/callback] Payload without email");
+      return NextResponse.redirect(toUrl(errorPath));
+    }
+
+    // === User-Provisioning: Nutzer + Balance-Eintrag sicherstellen ======
+    try {
+      const pool = await getPool();
+
+      // User suchen oder anlegen (citext-Kolumne)
+      let userId: number;
+      const existingUser = await pool.query(
+        "SELECT id FROM users WHERE email = $1 LIMIT 1",
+        [email]
+      );
+
+      if (existingUser.rows.length > 0) {
+        userId = existingUser.rows[0].id as number;
+      } else {
+        const insertedUser = await pool.query(
+          "INSERT INTO users (email) VALUES ($1::citext) RETURNING id",
+          [email]
+        );
+        userId = insertedUser.rows[0].id as number;
+      }
+
+      // Balance-Record mit 0 Tokens sicherstellen
+      const existingBalance = await pool.query(
+        "SELECT user_id FROM balances WHERE user_id = $1 LIMIT 1",
+        [userId]
+      );
+
+      if (existingBalance.rows.length === 0) {
+        await pool.query(
+          "INSERT INTO balances (user_id, tokens_left) VALUES ($1, 0)",
+          [userId]
+        );
+      }
+    } catch (provisionErr) {
+      console.error("[auth/callback] user provisioning failed:", provisionErr);
+      return NextResponse.redirect(toUrl(errorPath));
+    }
+    // ====================================================================
 
     const sessionToken = createSessionToken(payload.email);
 
