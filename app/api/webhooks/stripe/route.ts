@@ -104,17 +104,43 @@ export async function POST(req: Request) {
   let event: Stripe.Event;
 
   // rohen Body holen, NICHT req.json()
-    const rawBody = await req.text();
+  const rawBody = await req.text();
+
+  // Debug-Prints für Signatur-Analyse (Staging-Screening)
+  console.log(
+    JSON.stringify(
+      {
+        scope: "stripe_webhook_pre_construct",
+        hasSig: Boolean(sig),
+        sigPrefix: sig ? String(sig).slice(0, 50) : null,
+        whLen: whSecret.length,
+        whPrefix: whSecret.slice(0, 6),
+        bodyLen: rawBody.length,
+      },
+      null,
+      2,
+    ),
+  );
 
   try {
     event = getStripe().webhooks.constructEvent(rawBody, sig || "", whSecret);
   } catch (err: any) {
+    console.error(
+      "stripe_webhook_constructEvent_error",
+      {
+        name: err?.name,
+        message: err?.message,
+        hasSig: Boolean(sig),
+        whLen: whSecret.length,
+      },
+    );
     return NextResponse.json(
       { ok: false, status: "invalid_signature", message: String(err?.message || err) },
 
       { status: 400 }
     );
   }
+
 
   // Idempotenzsperre + optional Credit
   const pool = await getPool();
