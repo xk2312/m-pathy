@@ -12,8 +12,9 @@ type TokenKind = "magic" | "session";
 interface BaseTokenPayload {
   kind: TokenKind;
   email: string;
-  iat: number;        // Issued-at (ms seit Epoch)
-  nonce?: string;     // Nur für Magic-Link – schützt gegen Replay
+  iat: number;
+  nonce?: string;
+  id?: number;
 }
 
 export interface MagicLinkPayload extends BaseTokenPayload {
@@ -23,6 +24,7 @@ export interface MagicLinkPayload extends BaseTokenPayload {
 export interface SessionPayload extends BaseTokenPayload {
   kind: "session";
 }
+
 
 // -----------------------------------------------------
 // Intern: Secret, Encoding, Signatur
@@ -136,15 +138,19 @@ export function verifyMagicLinkToken(token: string): MagicLinkPayload | null {
 // Public API – Session-Token (für Cookie m_auth)
 // -----------------------------------------------------
 
-export function createSessionToken(email: string): string {
+export function createSessionToken(email: string, userId?: number): string {
   const now = Date.now();
   const payload: SessionPayload = {
     kind: "session",
     email: email.trim().toLowerCase(),
     iat: now,
   };
+  if (typeof userId === "number") {
+    payload.id = userId;
+  }
   return signToken(payload);
 }
+
 
 export function verifySessionToken(token: string): SessionPayload | null {
   return verifyToken<SessionPayload>(token, "session", SESSION_TTL_MS);

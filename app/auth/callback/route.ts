@@ -51,12 +51,13 @@ export async function GET(req: Request) {
       return NextResponse.redirect(toUrl(errorPath));
     }
 
+    let userId: number | null = null;
+
     // === User-Provisioning: Nutzer + Balance-Eintrag sicherstellen ======
     try {
       const pool = await getPool();
 
       // User suchen oder anlegen (citext-Kolumne)
-      let userId: number;
       const existingUser = await pool.query(
         "SELECT id FROM users WHERE email = $1 LIMIT 1",
         [email]
@@ -71,6 +72,7 @@ export async function GET(req: Request) {
         );
         userId = insertedUser.rows[0].id as number;
       }
+
 
       // Balance-Record mit 0 Tokens sicherstellen
       const existingBalance = await pool.query(
@@ -90,8 +92,10 @@ export async function GET(req: Request) {
     }
     // ====================================================================
 
-    const sessionToken = createSessionToken(payload.email);
-
+const sessionToken = createSessionToken(
+      payload.email,
+      userId ?? undefined
+    );
     const res = NextResponse.redirect(toUrl(successPath));
     res.cookies.set({
       name: AUTH_COOKIE_NAME,
