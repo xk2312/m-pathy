@@ -148,8 +148,16 @@ export function createSessionToken(email: string, userId?: number): string {
   if (typeof userId === "number") {
     payload.id = userId;
   }
+
+  console.log("[auth] createSessionToken", {
+    email: payload.email,
+    userId,
+    payload,
+  });
+
   return signToken(payload);
 }
+
 
 
 export function verifySessionToken(token: string): SessionPayload | null {

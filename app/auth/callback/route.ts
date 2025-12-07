@@ -92,10 +92,18 @@ export async function GET(req: Request) {
     }
     // ====================================================================
 
-const sessionToken = createSessionToken(
+    // ====================================================================
+
+    console.log("[auth/callback] issuing session", {
+      email: payload.email,
+      userId,
+    });
+
+    const sessionToken = createSessionToken(
       payload.email,
       userId ?? undefined
     );
+
     const res = NextResponse.redirect(toUrl(successPath));
     res.cookies.set({
       name: AUTH_COOKIE_NAME,
