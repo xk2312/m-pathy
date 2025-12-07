@@ -138,15 +138,19 @@ export function verifyMagicLinkToken(token: string): MagicLinkPayload | null {
 // Public API – Session-Token (für Cookie m_auth)
 // -----------------------------------------------------
 
-export function createSessionToken(email: string, userId?: number): string {
+export function createSessionToken(email: string, userId?: number | string): string {
   const now = Date.now();
   const payload: SessionPayload = {
     kind: "session",
     email: email.trim().toLowerCase(),
     iat: now,
   };
-  if (typeof userId === "number") {
-    payload.id = userId;
+
+  if (userId != null) {
+    const parsed = typeof userId === "string" ? parseInt(userId, 10) : userId;
+    if (!Number.isNaN(parsed)) {
+      payload.id = parsed;
+    }
   }
 
   console.log("[auth] createSessionToken", {
