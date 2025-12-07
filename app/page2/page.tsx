@@ -364,6 +364,11 @@ type ChatMessage = {
   role: Role;
   content: string;
   format?: "plain" | "markdown" | "html";
+  meta?: {
+    status?: string;
+    balanceAfter?: number | null;
+    tokensUsed?: number | null;
+  };
 };
 
 function truncateMessages(list: ReadonlyArray<ChatMessage>, max = MAX_HISTORY): ChatMessage[] {
@@ -1836,13 +1841,26 @@ if (busy) {
       ? content
       : loginText;
 
+  const status =
+    data && typeof data.status === "string" ? data.status : "ok";
+  const balanceAfter =
+    data && typeof data.balance_after === "number"
+      ? data.balance_after
+      : null;
+  const tokensUsed =
+    data && typeof data.tokens_used === "number"
+      ? data.tokens_used
+      : null;
+
   return {
     role: assistant.role ?? "assistant",
     content: safeContent,
     format: assistant.format ?? "markdown",
+    meta: { status, balanceAfter, tokensUsed },
   } as ChatMessage;
 
 }
+
 
 
   // ===============================================================
@@ -1859,19 +1877,34 @@ if (busy) {
     setLoading(true);
     setMode("THINKING");
 
-     try {
+    try {
       const assistant = await sendMessageLocal(optimistic);
       if (assistant.content === t("gc_please_login_to_continue")) {
         return;
       }
+
       setMessages((prev) => {
         const base = Array.isArray(prev) ? prev : [];
         const next = truncateMessages([...base, assistant]);
         persistMessages(next);
         return next;
       });
-    } catch {
 
+      const meta = (assistant as any).meta as
+        | { status?: string }
+        | undefined;
+      if (meta && meta.status === "depleted_now") {
+        try {
+          systemSay(
+            `**${t("chat.tokens.depleted_title")}**\n\n${t(
+              "chat.tokens.depleted_message",
+            )}`,
+          );
+        } catch {
+          // UX-Hinweis darf niemals den Chat crashen
+        }
+      }
+    } catch {
       setMessages((prev) => {
         const base = Array.isArray(prev) ? prev : [];
         const next = truncateMessages([
@@ -1889,8 +1922,8 @@ if (busy) {
       setLoading(false);
       setMode("DEFAULT");
     }
-
   }, [messages, persistMessages]);
+
 
 
 

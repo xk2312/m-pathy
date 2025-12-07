@@ -89,6 +89,8 @@ import dotenv from "dotenv";
 import { withGate, retryingFetch } from "@/lib/rate";
 import { verifyAndBumpFreegate } from "@/lib/freegate"; // FreeGate
 import { AUTH_COOKIE_NAME, verifySessionToken } from "@/lib/auth";
+import { debit } from "@/lib/ledger";
+import { getBalance } from "@/lib/ledger";
 
 
 export const runtime = "nodejs"; // wir lesen Dateien ⇒ Node-Runtime
@@ -181,8 +183,17 @@ function buildAzureUrl(): string {
   return `${base}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
 }
 
+// === Token-Schätzung für Fallback ===
+function estimateTokensFromText(text: string): number {
+  const normalized = text.replace(/\s+/g, " ").trim();
+  if (!normalized) return 1;
+  const approxTokens = Math.ceil(normalized.length / 4);
+  return approxTokens > 0 ? approxTokens : 1;
+}
+
 // === POST-Handler (mit Gate + Backoff + FreeGate) ===
 export async function POST(req: NextRequest) {
+
   try {
     const body = (await req.json()) as ChatBody;
 
@@ -199,6 +210,7 @@ export async function POST(req: NextRequest) {
 const cookieHeader = req.headers.get("cookie") ?? null;
 
 let sessionEmail: string | null = null;
+let sessionUserId: string | null = null;
 if (cookieHeader) {
   const parts = cookieHeader.split(";").map((p) => p.trim());
   const authPart = parts.find((p) => p.startsWith(`${AUTH_COOKIE_NAME}=`));
@@ -206,6 +218,9 @@ if (cookieHeader) {
     const raw = authPart.slice(AUTH_COOKIE_NAME.length + 1);
     const payload = verifySessionToken(raw);
     sessionEmail = payload?.email ?? null;
+    if (payload && (payload as any).id != null) {
+      sessionUserId = String((payload as any).id);
+    }
   }
 }
 const isAuthenticated = !!sessionEmail;
@@ -293,14 +308,43 @@ assertEnv();
       return NextResponse.json({ error: "No message content" }, { status: 502 });
     }
 
-    let tokensUsed = 120;
+    let tokensUsed: number;
     if (usage && typeof usage.total_tokens === "number") {
       tokensUsed = usage.total_tokens;
+    } else {
+      const promptText = messages.map((m) => m.content).join(" ");
+      const combinedText = `${promptText}\n${content}`;
+      tokensUsed = estimateTokensFromText(combinedText);
     }
     const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, tokensUsed);
 
+
+    let status = "ok";
+    let balanceAfter: number | null = null;
+
+    if (isAuthenticated && sessionUserId) {
+      try {
+        const balanceBefore = await getBalance(sessionUserId);
+        const newBalance = await debit(sessionUserId, TOKENS_USED);
+        balanceAfter = newBalance;
+        if (balanceBefore > 0 && balanceAfter <= 0) {
+          status = "depleted_now";
+        }
+      } catch (err) {
+        console.error("[chat] ledger debit failed", { sessionUserId, TOKENS_USED, err });
+      }
+    }
+
+
     const res = NextResponse.json(
-      { role: "assistant", content, debug_usage: usage },
+      {
+        role: "assistant",
+        content,
+        status,
+        tokens_used: TOKENS_USED,
+        balance_after: balanceAfter,
+        debug_usage: usage,
+      },
       { status: 200 }
     );
     res.headers.set("X-Tokens-Delta", String(-TOKENS_USED));
@@ -312,6 +356,8 @@ assertEnv();
       res.headers.set("Set-Cookie", cookie);
     }
     return res;
+
+
 
   } catch (err: any) {
     console.error("[API Error]", err);
