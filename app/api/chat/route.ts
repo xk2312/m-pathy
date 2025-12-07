@@ -322,17 +322,39 @@ assertEnv();
     let status = "ok";
     let balanceAfter: number | null = null;
 
+    console.log("[chat] ledger gate", {
+      isAuthenticated,
+      sessionEmail,
+      sessionUserId,
+      tokensUsed: TOKENS_USED,
+    });
+
     if (isAuthenticated && sessionUserId) {
       try {
         const balanceBefore = await getBalance(sessionUserId);
         const newBalance = await debit(sessionUserId, TOKENS_USED);
         balanceAfter = newBalance;
+        console.log("[chat] ledger debit ok", {
+          sessionUserId,
+          balanceBefore,
+          balanceAfter,
+          tokensUsed: TOKENS_USED,
+        });
         if (balanceBefore > 0 && balanceAfter <= 0) {
           status = "depleted_now";
         }
       } catch (err) {
-        console.error("[chat] ledger debit failed", { sessionUserId, TOKENS_USED, err });
+        console.error("[chat] ledger debit failed", {
+          sessionUserId,
+          TOKENS_USED,
+          err,
+        });
       }
+    } else {
+      console.log("[chat] ledger skipped", {
+        isAuthenticated,
+        sessionUserId,
+      });
     }
 
 
