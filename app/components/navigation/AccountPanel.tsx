@@ -59,7 +59,7 @@
 
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { dict as accountDict } from "@/lib/i18n.accountpanel";
 
@@ -80,10 +80,36 @@ export default function AccountPanel(props: AccountPanelProps) {
   const locale = accountDict[lang] ?? accountDict.en;
   const tAccount = locale.account;
 
+  const [liveBalance, setLiveBalance] = useState<number | null>(
+    typeof balance === "number" && Number.isFinite(balance) ? balance : null,
+  );
+
+  useEffect(() => {
+    if (typeof balance === "number" && Number.isFinite(balance)) {
+      setLiveBalance((prev) => (prev === balance ? prev : balance));
+    }
+  }, [balance]);
+
+  useEffect(() => {
+    function handleTokenUpdate(event: Event) {
+      const customEvent = event as CustomEvent<{ balance?: unknown }>;
+      const next = customEvent.detail?.balance;
+      if (typeof next === "number" && Number.isFinite(next)) {
+        setLiveBalance((prev) => (prev === next ? prev : next));
+      }
+    }
+
+    window.addEventListener("mpathy:tokens:update", handleTokenUpdate);
+
+    return () => {
+      window.removeEventListener("mpathy:tokens:update", handleTokenUpdate);
+    };
+  }, []);
 
   // ESC schließt Overlay
   useEffect(() => {
     if (!open) return;
+
 
     function handleKeydown(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -110,9 +136,10 @@ export default function AccountPanel(props: AccountPanelProps) {
   const emailLabel =
     email && email.trim().length > 0 ? email : tAccount.email.unknown;
   const balanceLabel =
-    typeof balance === "number" && Number.isFinite(balance)
-      ? balance.toLocaleString("de-DE")
+    typeof liveBalance === "number" && Number.isFinite(liveBalance)
+      ? liveBalance.toLocaleString("de-DE")
       : tAccount.tokens.loading;
+
 
   const backdropStyle: React.CSSProperties = {
     position: "fixed",

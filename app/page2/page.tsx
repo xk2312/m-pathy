@@ -1188,9 +1188,10 @@ const [loading, setLoading] = useState(false);
 
 const [stickToBottom, setStickToBottom] = useState(true);
 
-
+const [balance, setBalance] = useState<number | null>(null);
 
 // … weiterer Code …
+
 
 
 const [mode, setMode] = useState<string>("DEFAULT");
@@ -1891,8 +1892,25 @@ if (busy) {
       });
 
       const meta = (assistant as any).meta as
-        | { status?: string }
+        | { status?: string; balanceAfter?: number | null }
         | undefined;
+
+      if (meta && typeof meta.balanceAfter === "number" && Number.isFinite(meta.balanceAfter)) {
+        setBalance(meta.balanceAfter);
+
+        if (typeof window !== "undefined") {
+          try {
+            window.dispatchEvent(
+              new CustomEvent("mpathy:tokens:update", {
+                detail: { balance: meta.balanceAfter },
+              }),
+            );
+          } catch {
+            // Event-Fehler dürfen den Chat nicht stören
+          }
+        }
+      }
+
       if (meta && meta.status === "depleted_now") {
         try {
           systemSay(
@@ -1904,6 +1922,7 @@ if (busy) {
           // UX-Hinweis darf niemals den Chat crashen
         }
       }
+
     } catch {
       setMessages((prev) => {
         const base = Array.isArray(prev) ? prev : [];
