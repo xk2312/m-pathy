@@ -249,7 +249,7 @@ const en = {
   "pillar.section.experts": "Experts",
   "pillar.section.systemTitle": "SYSTEM",
   "pillar.section.system": "System status",
-  "pillar.section.actionsTitle": "ACTIONS",
+  "pillar.section.actionsTitle": "NEW CHAT",
   "pillar.section.utility": "Actions & export",
 
   // Actions (export / delete)
@@ -412,7 +412,7 @@ const de = {
   "pillar.section.experts": "Experten",
   "pillar.section.systemTitle": "System",
   "pillar.section.system": "Systemstatus",
-  "pillar.section.actionsTitle": "Aktionen",
+  "pillar.section.actionsTitle": "Neuer Chat",
   "pillar.section.utility": "Aktionen & Export",
 
   // Actions (export / delete)
@@ -575,7 +575,7 @@ const fr = {
   "pillar.section.experts": "Experts",
   "pillar.section.systemTitle": "Système",
   "pillar.section.system": "État du système",
-  "pillar.section.actionsTitle": "Actions",
+  "pillar.section.actionsTitle": "Nouveau chat",
   "pillar.section.utility": "Actions & export",
 
   // Actions (export / delete)
@@ -739,7 +739,7 @@ const es = {
   "pillar.section.experts": "Expertos",
   "pillar.section.systemTitle": "Sistema",
   "pillar.section.system": "Estado del sistema",
-  "pillar.section.actionsTitle": "Acciones",
+  "pillar.section.actionsTitle": "Nuevo chat",
   "pillar.section.utility": "Acciones y exportación",
 
   // Actions (export / delete)
@@ -903,7 +903,7 @@ const it = {
   "pillar.section.experts": "Esperti",
   "pillar.section.systemTitle": "Sistema",
   "pillar.section.system": "Stato del sistema",
-  "pillar.section.actionsTitle": "Azioni",
+  "pillar.section.actionsTitle": "Nuova chat",
   "pillar.section.utility": "Azioni e esportazione",
 
   // Actions (export / delete)
@@ -1067,7 +1067,7 @@ const pt = {
   "pillar.section.experts": "Especialistas",
   "pillar.section.systemTitle": "Sistema",
   "pillar.section.system": "Estado do sistema",
-  "pillar.section.actionsTitle": "Ações",
+  "pillar.section.actionsTitle": "Novo chat",
   "pillar.section.utility": "Ações e exportação",
 
   // Actions (export / delete)
@@ -1232,7 +1232,7 @@ const nl = {
   "pillar.section.experts": "Experts",
   "pillar.section.systemTitle": "Systeem",
   "pillar.section.system": "Systeemstatus",
-  "pillar.section.actionsTitle": "Acties",
+  "pillar.section.actionsTitle": "Nieuwe chat",
   "pillar.section.utility": "Acties & export",
 
   // Actions (export / delete)
@@ -1397,7 +1397,7 @@ const ru = {
   "pillar.section.experts": "Эксперты",
   "pillar.section.systemTitle": "Система",
   "pillar.section.system": "Состояние системы",
-  "pillar.section.actionsTitle": "Действия",
+  "pillar.section.actionsTitle": "Новый чат",
   "pillar.section.utility": "Действия и экспорт",
 
   // Actions (export / delete)
@@ -1561,7 +1561,7 @@ const zh = {
   "pillar.section.experts": "专家",
   "pillar.section.systemTitle": "系统",
   "pillar.section.system": "系统状态",
-  "pillar.section.actionsTitle": "操作",
+  "pillar.section.actionsTitle": "新建聊天",
   "pillar.section.utility": "操作与导出",
 
   // Actions (export / delete)
@@ -1725,7 +1725,7 @@ const ja = {
   "pillar.section.experts": "専門家",
   "pillar.section.systemTitle": "システム",
   "pillar.section.system": "システム状態",
-  "pillar.section.actionsTitle": "操作",
+  "pillar.section.actionsTitle": "新しいチャット",
   "pillar.section.utility": "操作 & エクスポート",
 
   // Actions (export / delete)
@@ -1889,7 +1889,7 @@ const ko = {
   "pillar.section.experts": "전문가",
   "pillar.section.systemTitle": "시스템",
   "pillar.section.system": "시스템 상태",
-  "pillar.section.actionsTitle": "작업",
+  "pillar.section.actionsTitle": "새 채팅",
   "pillar.section.utility": "작업 & 내보내기",
 
   // Actions (export / delete)
@@ -2053,7 +2053,7 @@ const ar = {
   "pillar.section.experts": "الخبراء",
   "pillar.section.systemTitle": "النظام",
   "pillar.section.system": "حالة النظام",
-  "pillar.section.actionsTitle": "الإجراءات",
+  "pillar.section.actionsTitle": "دردشة جديدة",
   "pillar.section.utility": "الإجراءات والتصدير",
 
   // Actions (export / delete)
@@ -2217,7 +2217,7 @@ const hi = {
   "pillar.section.experts": "विशेषज्ञ",
   "pillar.section.systemTitle": "सिस्टम",
   "pillar.section.system": "सिस्टम स्थिति",
-  "pillar.section.actionsTitle": "क्रियाएँ",
+  "pillar.section.actionsTitle": "नई चैट",
   "pillar.section.utility": "क्रियाएँ और निर्यात",
 
   // Actions (export / delete)
