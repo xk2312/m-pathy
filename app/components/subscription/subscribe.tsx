@@ -2,10 +2,13 @@
 
 import { useLang } from "@/app/providers/LanguageProvider";
 import { subscribeDict } from "@/lib/i18n.subscribe";
+import { useRouter } from "next/navigation";
 
 export default function Subscribe() {
   const { lang } = useLang();
   const locale = (subscribeDict[lang] ?? subscribeDict.en).subscribe;
+  const router = useRouter();
+
 
   return (
     <section
@@ -105,24 +108,25 @@ export default function Subscribe() {
                   style={{ marginTop: "var(--h-gap-xs)" }} // 70px Abstand zum Tokenblock
                 >
                   <p
-                    className="text-xs text-white/60"
-                    style={{ marginBottom: "var(--h-gap-xxs)" }} // 30px über dem Button
-                  >
-                    {locale.cta_preline}
-                  </p>
-                    <button
-                    type="button"
-                    aria-label={locale.cta_aria}
-                    className="m-btn lg primary w-full"
-                    >
-                    {locale.cta_label}
-                    <span className="arrow ml-2">→</span>
-                    </button>
+  className="text-xs text-white/60"
+  style={{ marginBottom: "var(--h-gap-xxs)" }}
+>
+  {locale.cta_preline}
+</p>
+<button
+  type="button"
+  onClick={() => router.push("/page2")}
+  aria-label={locale.cta_aria}
+  className="m-btn lg primary w-full"
+>
+  {locale.cta_label}
+  <span className="arrow ml-2">→</span>
+</button>
+<p
+  className="text-xs text-white/55"
+  style={{ marginTop: "var(--h-gap-xxs)" }}
+>
 
-                  <p
-                    className="text-xs text-white/55"
-                    style={{ marginTop: "var(--h-gap-xxs)" }} // 30px unter dem Button
-                  >
                     {locale.cta_subline}
                   </p>
                 </div>
