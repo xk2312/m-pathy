@@ -13,7 +13,7 @@
  *    – balance: numerischer Token-Stand oder null (nicht geladen / Fehler).
  *    – onClose, onLogout, isMobile: reine UI-/Control-Parameter.
  *
- *  [ANCHOR:2] LANGUAGE-BINDING
+ *  [ANCHOR:2] LANGUAGE-BINDING 
  *    – useLang() + accountDict[lang] → tAccount.* Texte.
  *    – Steuert Labels für Status, Tokens, Loading, FreeGate-Hinweis.
  *
