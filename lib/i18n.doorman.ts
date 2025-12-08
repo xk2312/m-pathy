@@ -6,83 +6,71 @@ type DictRoot = Record<string, any>;
 
 export const doormanDict = {
   en: {
-    "prompt.doorman.main": "Build something that wasn't there five seconds ago.",
-    "prompt.doorman.sub":
-      "Click the Build button in the top-left column and watch it unfold.",
+    "prompt.doorman.main": "You are the origin.",
+    "prompt.doorman.sub": "Press “+” and “BUILD” and let worlds assemble.",
   },
 
   de: {
-    "prompt.doorman.main": "Bau etwas, das vor fünf Sekunden noch nicht da war.",
-    "prompt.doorman.sub":
-      "Klicke oben links in der Säule auf „Bauen“ und schau zu, wie es entsteht.",
+    "prompt.doorman.main": "Du bist der Ursprung.",
+    "prompt.doorman.sub": "Drücke „+“ und „BUILD“ und lass Welten entstehen.",
   },
 
   fr: {
-    "prompt.doorman.main": "Crée quelque chose qui n’existait pas il y a cinq secondes.",
-    "prompt.doorman.sub":
-      "Clique sur le bouton « Construire » en haut à gauche de la colonne et regarde comment cela prend forme.",
+    "prompt.doorman.main": "Tu es l’origine.",
+    "prompt.doorman.sub": "Appuie sur « + » puis « BUILD » et laisse des mondes se former.",
   },
 
   es: {
-    "prompt.doorman.main": "Construye algo que hace cinco segundos no estaba ahí.",
-    "prompt.doorman.sub":
-      "Haz clic en el botón «Construir» en la columna superior izquierda y mira cómo cobra vida.",
+    "prompt.doorman.main": "Tú eres el origen.",
+    "prompt.doorman.sub": "Pulsa « + » y « BUILD » y deja que los mundos tomen forma.",
   },
 
   it: {
-    "prompt.doorman.main": "Costruisci qualcosa che cinque secondi fa non esisteva ancora.",
-    "prompt.doorman.sub":
-      "Fai clic sul pulsante «Costruire» nella colonna in alto a sinistra e guardalo prendere forma.",
+    "prompt.doorman.main": "Tu sei l'origine.",
+    "prompt.doorman.sub": "Premi « + » e « BUILD » e lascia che i mondi si assemblino.",
   },
 
   pt: {
-    "prompt.doorman.main": "Constrói algo que há cinco segundos ainda não existia.",
-    "prompt.doorman.sub":
-      "Clica no botão «Construir» na coluna superior esquerda e vê como tudo ganha forma.",
+    "prompt.doorman.main": "Você é a origem.",
+    "prompt.doorman.sub": "Pressione « + » e « BUILD » e deixe mundos se formarem.",
   },
 
   nl: {
-    "prompt.doorman.main": "Bouw iets dat vijf seconden geleden nog niet bestond.",
-    "prompt.doorman.sub":
-      "Klik op de knop ‘Bouwen’ linksboven in de kolom en kijk hoe het tot leven komt.",
+    "prompt.doorman.main": "Jij bent de oorsprong.",
+    "prompt.doorman.sub": "Druk op ‘+’ en ‘BUILD’ en laat werelden ontstaan.",
   },
 
   ru: {
-    "prompt.doorman.main": "Создай то, чего пять секунд назад ещё не было.",
-    "prompt.doorman.sub":
-      "Нажми кнопку «Создать» в левом верхнем углу колонки и наблюдай, как это возникает.",
+    "prompt.doorman.main": "Ты — источник.",
+    "prompt.doorman.sub": "Нажми «+» и «BUILD» — и пусть миры складываются.",
   },
 
   zh: {
-    "prompt.doorman.main": "创造一个在五秒前还不存在的东西。",
-    "prompt.doorman.sub":
-      "点击左上方栏中的「构建」按钮，看看它如何逐渐呈现出来。",
+    "prompt.doorman.main": "你就是起源。",
+    "prompt.doorman.sub": "按下「+」与「BUILD」，让世界自行组装。",
   },
 
   ja: {
-    "prompt.doorman.main": "5秒前には存在しなかったものをつくってみよう。",
-    "prompt.doorman.sub":
-      "左上のカラムにある「ビルド」ボタンを押して、その姿が現れる様子を見てください。",
+    "prompt.doorman.main": "あなたが起源です。",
+    "prompt.doorman.sub": "「+」と「BUILD」を押して、世界が組み上がるのを見てください。",
   },
 
   ko: {
-    "prompt.doorman.main": "5초 전에는 없던 것을 만들어 보세요.",
-    "prompt.doorman.sub":
-      "왼쪽 상단 열의 ‘빌드’ 버튼을 눌러 어떻게 형태가 드러나는지 지켜보세요.",
+    "prompt.doorman.main": "당신이 바로 기원입니다。",
+    "prompt.doorman.sub": "‘+’와 ‘BUILD’를 눌러 세계가 조립되는 순간을 보세요。",
   },
 
   ar: {
-    "prompt.doorman.main": "ابنِ شيئًا لم يكن موجودًا قبل خمس ثوانٍ فقط.",
-    "prompt.doorman.sub":
-      "اضغط زر «البناء» في أعلى يسار العمود وشاهد كيف يتشكّل أمامك.",
+    "prompt.doorman.main": "أنت الأصل.",
+    "prompt.doorman.sub": "اضغط «BUILD» ثم «+» ودَع العوالم تتكوّن.",
   },
 
   hi: {
-    "prompt.doorman.main": "कुछ ऐसा बनाओ जो पाँच सेकंड पहले तक मौजूद नहीं था।",
-    "prompt.doorman.sub":
-      "बाएँ-ऊपर वाले कॉलम में «बिल्ड» बटन दबाओ और देखो, यह कैसे आकार लेता है।",
+    "prompt.doorman.main": "तुम ही मूल हो।",
+    "prompt.doorman.sub": "«+» और «BUILD» दबाओ और दुनिया-ओं को बनते देखो।",
   },
 } as const;
+
 
 export function attachDoorman(dict: DictRoot) {
   for (const [locale, values] of Object.entries(doormanDict)) {
