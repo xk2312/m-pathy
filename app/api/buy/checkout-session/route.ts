@@ -84,24 +84,24 @@ const mode: "payment" = "payment";
     }
 
     const stripe = getStripe();
-   const session = await stripe.checkout.sessions.create({
-  mode,
-  line_items: [{ price: priceId, quantity }],
+    const session = await stripe.checkout.sessions.create({
+      mode,
+      line_items: [{ price: priceId, quantity }],
+      customer_email: email,
+      client_reference_id: userId,
 
-  // === GC Step 7 – User-Vererbung für Webhook-Credit ======================
-  // Wenn der User eingeloggt ist, muss der Webhook ihn 1:1 zuordnen können.
-  metadata: {
-  user_id: userId,   // ← ECHTE users.id aus DB
-  tokens: "500000",
-  price_id: priceId,
-},
+      // === GC Step 7 – User-Vererbung für Webhook-Credit ======================
+      // Wenn der User eingeloggt ist, muss der Webhook ihn 1:1 zuordnen können.
+      metadata: {
+        user_id: userId, // ← ECHTE users.id aus DB
+        tokens: "500000",
+        price_id: priceId,
+      },
 
-
-  // ========================================================================
-
-  success_url: successUrl,
-  cancel_url: cancelUrl,
-});
+      // ========================================================================
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+    });
 
 
     return new Response(JSON.stringify({ url: session.url }), {
