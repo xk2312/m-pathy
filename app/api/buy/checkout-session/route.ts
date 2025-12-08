@@ -92,7 +92,7 @@ const mode: "payment" = "payment";
   // Wenn der User eingeloggt ist, muss der Webhook ihn 1:1 zuordnen können.
   metadata: {
   user_id: userId,   // ← ECHTE users.id aus DB
-  tokens: "50000",
+  tokens: "500000",
   price_id: priceId,
 },
 

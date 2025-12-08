@@ -19,7 +19,7 @@ export const subscribeDict = {
       price_period: "for 30 days of access to M",
 
       token_headline: "Token pool for your work",
-      token_value: "Up to 50,000 tokens for this month",
+      token_value: "Up to 500,000 tokens for this month",
       token_subline:
         "Enough capacity for deep explorations, long sessions and real builds — without counting every single request.",
 
@@ -77,7 +77,7 @@ export const subscribeDict = {
       price_period: "für 30 Tage Zugang zu M",
 
       token_headline: "Tokenpool für deine Arbeit",
-      token_value: "Bis zu 50.000 Tokens für diesen Monat",
+      token_value: "Bis zu 500.000 Tokens für diesen Monat",
       token_subline:
         "Genug Kapazität für tiefe Erkundungen, lange Sessions und echte Builds – ohne jede einzelne Anfrage mitzuzählen.",
 
@@ -137,7 +137,7 @@ export const subscribeDict = {
       price_period: "pour 30 jours d’accès à M",
 
       token_headline: "Pool de tokens pour votre travail",
-      token_value: "Jusqu’à 50.000 de tokens pour ce mois",
+      token_value: "Jusqu’à 500.000 de tokens pour ce mois",
       token_subline:
         "Suffisamment de capacité pour des explorations profondes, de longues sessions et de vraies créations — sans compter chaque requête.",
 
@@ -189,7 +189,7 @@ export const subscribeDict = {
       price_period: "por 30 días de acceso a M",
 
       token_headline: "Pool de tokens para tu trabajo",
-      token_value: "Hasta 50.000 de tokens para este mes",
+      token_value: "Hasta 500.000 de tokens para este mes",
       token_subline:
         "Suficiente capacidad para exploraciones profundas, sesiones largas y construcciones reales — sin contar cada solicitud.",
 
@@ -241,7 +241,7 @@ export const subscribeDict = {
       price_period: "per 30 giorni di accesso a M",
 
       token_headline: "Pool di token per il tuo lavoro",
-      token_value: "Fino a 50.000 di token per questo mese",
+      token_value: "Fino a 500.000 di token per questo mese",
       token_subline:
         "Capacità sufficiente per esplorazioni profonde, sessioni lunghe e veri sviluppi — senza contare ogni singola richiesta.",
 
@@ -293,7 +293,7 @@ export const subscribeDict = {
       price_period: "por 30 dias de acesso a M",
 
       token_headline: "Pool de tokens para o seu trabalho",
-      token_value: "Até 50.000 de tokens neste mês",
+      token_value: "Até 500.000 de tokens neste mês",
       token_subline:
         "Capacidade suficiente para explorações profundas, sessões longas e construções reais — sem contar cada requisição.",
 
@@ -349,7 +349,7 @@ export const subscribeDict = {
       price_period: "voor 30 dagen toegang tot M",
 
       token_headline: "Tokenpool voor jouw werk",
-      token_value: "Tot 50.000 tokens voor deze maand",
+      token_value: "Tot 500.000 tokens voor deze maand",
       token_subline:
         "Voldoende capaciteit voor diepe verkenningen, lange sessies en echte builds — zonder elke aanvraag te moeten tellen.",
 
@@ -401,7 +401,7 @@ export const subscribeDict = {
       price_period: "за 30 дней доступа к M",
 
       token_headline: "Пул токенов для вашей работы",
-      token_value: "До 50.000 токенов на этот месяц",
+      token_value: "До 500.000 токенов на этот месяц",
       token_subline:
         "Достаточно ресурсов для глубоких исследований, долгих сессий и реальных решений — без подсчёта каждой заявки.",
 
@@ -453,7 +453,7 @@ export const subscribeDict = {
       price_period: "享有 30 天 M 的访问权",
 
       token_headline: "为你工作准备的 Token 池",
-      token_value: "本月最多可用 50,000 个 Tokens",
+      token_value: "本月最多可用 500,000 个 Tokens",
       token_subline:
         "足够支撑深入探索、长时间会话和真实构建——无需计算每一次请求。",
 
@@ -505,7 +505,7 @@ export const subscribeDict = {
       price_period: "M への 30 日間アクセス",
 
       token_headline: "あなたのためのトークンプール",
-      token_value: "この 1 か月で最大 50,000 トークン",
+      token_value: "この 1 か月で最大 500,000 トークン",
       token_subline:
         "深い探求、長いセッション、本格的なビルドに十分な容量 — 1 回ごとのリクエストを数える必要はありません。",
 
@@ -561,7 +561,7 @@ export const subscribeDict = {
       price_period: "M에 30일 동안 접근",
 
       token_headline: "당신의 작업을 위한 토큰 풀",
-      token_value: "이번 달 최대 50,000 토큰",
+      token_value: "이번 달 최대 500,000 토큰",
       token_subline:
         "깊은 탐색, 긴 세션, 실제 빌드를 위한 충분한 용량 — 각 요청을 일일이 세지 않아도 됩니다.",
 
@@ -613,7 +613,7 @@ export const subscribeDict = {
       price_period: "لمدة 30 يومًا من الوصول إلى M",
 
       token_headline: "مخزون التوكنات لعملك",
-      token_value: "حتى 50,000 توكن لهذا الشهر",
+      token_value: "حتى 500,000 توكن لهذا الشهر",
       token_subline:
         "سعة كافية لاستكشافات عميقة، وجلسات طويلة، وبناء حقيقي — دون الحاجة لعدّ كل طلب.",
 
@@ -665,7 +665,7 @@ export const subscribeDict = {
       price_period: "M तक 30 दिनों की पहुँच",
 
       token_headline: "आपके काम के लिए टोकन-पूल",
-      token_value: "इस महीने के लिए अधिकतम 50,000 टोकन",
+      token_value: "इस महीने के लिए अधिकतम 500,000 टोकन",
       token_subline:
         "गहरी खोज, लंबी सेशन्स और असली बिल्ड्स के लिए पर्याप्त क्षमता — हर रिक्वेस्ट को अलग-अलग गिनने की ज़रूरत नहीं।",
 

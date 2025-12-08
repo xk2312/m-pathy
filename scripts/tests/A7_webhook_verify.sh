@@ -21,7 +21,7 @@ PAYLOAD="$(cat <<'JSON'
       "object": "checkout.session",
       "metadata": {
         "user_id": "1",
-        "amount_tokens": "50.000",
+        "amount_tokens": "500.000",
         "price_id": ""
       }
     }

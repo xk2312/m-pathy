@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "m-pathy — Subscription",
     description:
-      "Access 50.000 tokens for € 9,99 and join the operating system for creation.",
+      "Access 500.000 tokens for € 9,99 and join the operating system for creation.",
     url: "https://m-pathy.ai/subscription",
     siteName: "m-pathy",
     type: "website",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "m-pathy — Subscription",
-    description: "Access 50.000 tokens for € 9,99 and join the operating system for creation.",
+    description: "Access 500.000 tokens for € 9,99 and join the operating system for creation.",
     images: ["/og/subscription.jpg"],
   },
 };
