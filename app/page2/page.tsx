@@ -1695,24 +1695,14 @@ if (busy) {
       let checkoutUrl = "";
       try {
         const payload = await res.json().catch(() => ({} as any));
-        // Falls Server bereits eine fertige URL liefert, nimm die.
         checkoutUrl = payload?.checkout_url || "";
-      } catch { /* ignore */ }
+      } catch {}
 
-      // Wenn keine URL mitkam, erzeuge eine Session über unsere eigene Route.
       if (!checkoutUrl) {
-        const priceId =
-          process.env.NEXT_PUBLIC_STRIPE_PRICE_1M ||
-          (globalThis as any).__NEXT_PUBLIC_STRIPE_PRICE_1M; // Fallback
-
-        if (!priceId || !String(priceId).startsWith("price_")) {
-          throw new Error("Checkout unavailable (missing NEXT_PUBLIC_STRIPE_PRICE_1M)");
-        }
-
         const mk = await fetch("/api/buy/checkout-session", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ priceId }),
+          body: JSON.stringify({}),
         });
         if (!mk.ok) {
           const j = await mk.json().catch(() => ({}));
@@ -1723,15 +1713,14 @@ if (busy) {
       }
 
       if (!checkoutUrl) throw new Error("No checkout URL available");
-      // Sofort zur Kasse
       window.location.href = checkoutUrl;
-      // Wir geben hier eine neutrale “pending”-Nachricht zurück, falls der Redirect blockiert wurde.
       return {
         role: "assistant",
         content: "Opening checkout …",
         format: "markdown",
       } as ChatMessage;
     }
+
 
 
   // === GC: Letzte freie Nachricht → Systemmeldung ======================
