@@ -282,12 +282,11 @@ assertEnv();
           sessionUserId,
           balanceBefore,
         });
-        if (balanceBefore <= 0) {
+if (balanceBefore <= 0) {
           const r = NextResponse.json(
             {
               status: "insufficient_tokens",
               balance_before: balanceBefore,
-              checkout_url: CHECKOUT_URL,
             },
             { status: 402 }
           );
@@ -297,7 +296,8 @@ assertEnv();
           r.headers.set("X-Tokens-Delta", "0");
           r.headers.set("X-Tokens-Overdraw", "1");
           if (cookie) {
-            r.headers.set("Set-Cookie", cookie);
+            r.headers.set(
+"Set-Cookie", cookie);
           }
           console.log("[chat] ledger blocked (insufficient tokens)", {
             sessionUserId,
@@ -305,6 +305,7 @@ assertEnv();
           });
           return r;
         }
+
       } catch (err) {
         console.error("[chat] ledger precheck failed", {
           sessionUserId,
