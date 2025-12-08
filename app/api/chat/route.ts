@@ -271,6 +271,52 @@ if (!isAuthenticated && blocked) {
 // — Ab hier: echte Azure-Antwort —
 assertEnv();
 
+    let status = "ok";
+    let balanceAfter: number | null = null;
+    let balanceBefore: number | null = null;
+
+    if (isAuthenticated && sessionUserId) {
+      try {
+        balanceBefore = await getBalance(sessionUserId);
+        console.log("[chat] ledger precheck", {
+          sessionUserId,
+          balanceBefore,
+        });
+        if (balanceBefore <= 0) {
+          const r = NextResponse.json(
+            {
+              status: "insufficient_tokens",
+              balance_before: balanceBefore,
+              checkout_url: CHECKOUT_URL,
+            },
+            { status: 402 }
+          );
+          r.headers.set("X-Free-Used", String(count));
+          r.headers.set("X-Free-Limit", String(FREE_LIMIT));
+          r.headers.set("X-Free-Remaining", String(freeRemaining));
+          r.headers.set("X-Tokens-Delta", "0");
+          r.headers.set("X-Tokens-Overdraw", "1");
+          if (cookie) {
+            r.headers.set("Set-Cookie", cookie);
+          }
+          console.log("[chat] ledger blocked (insufficient tokens)", {
+            sessionUserId,
+            balanceBefore,
+          });
+          return r;
+        }
+      } catch (err) {
+        console.error("[chat] ledger precheck failed", {
+          sessionUserId,
+          err,
+        });
+      }
+    } else {
+      console.log("[chat] ledger precheck skipped", {
+        isAuthenticated,
+        sessionUserId,
+      });
+    }
 
     const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
     const messages: ChatMessage[] = systemPrompt
@@ -318,10 +364,6 @@ assertEnv();
     }
     const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, tokensUsed);
 
-
-    let status = "ok";
-    let balanceAfter: number | null = null;
-
     console.log("[chat] ledger gate", {
       isAuthenticated,
       sessionEmail,
@@ -331,7 +373,6 @@ assertEnv();
 
     if (isAuthenticated && sessionUserId) {
       try {
-        const balanceBefore = await getBalance(sessionUserId);
         const newBalance = await debit(sessionUserId, TOKENS_USED);
         balanceAfter = newBalance;
         console.log("[chat] ledger debit ok", {
@@ -340,7 +381,7 @@ assertEnv();
           balanceAfter,
           tokensUsed: TOKENS_USED,
         });
-        if (balanceBefore > 0 && balanceAfter <= 0) {
+        if (balanceBefore != null && balanceBefore > 0 && balanceAfter <= 0) {
           status = "depleted_now";
         }
       } catch (err) {
@@ -356,7 +397,6 @@ assertEnv();
         sessionUserId,
       });
     }
-
 
     const res = NextResponse.json(
       {
@@ -378,6 +418,7 @@ assertEnv();
       res.headers.set("Set-Cookie", cookie);
     }
     return res;
+
 
 
 
