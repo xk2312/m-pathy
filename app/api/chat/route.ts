@@ -364,6 +364,7 @@ if (balanceBefore <= 0) {
       tokensUsed = estimateTokensFromText(combinedText);
     }
     const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, tokensUsed);
+    let tokenDelta = TOKENS_USED;
 
     console.log("[chat] ledger gate", {
       isAuthenticated,
@@ -374,13 +375,24 @@ if (balanceBefore <= 0) {
 
     if (isAuthenticated && sessionUserId) {
       try {
-        const newBalance = await debit(sessionUserId, TOKENS_USED);
+        let amountToDebit = TOKENS_USED;
+        if (
+          balanceBefore != null &&
+          balanceBefore > 0 &&
+          balanceBefore < TOKENS_USED
+        ) {
+          amountToDebit = balanceBefore;
+        }
+
+        const newBalance = await debit(sessionUserId, amountToDebit);
         balanceAfter = newBalance;
+        tokenDelta = amountToDebit;
         console.log("[chat] ledger debit ok", {
           sessionUserId,
           balanceBefore,
           balanceAfter,
           tokensUsed: TOKENS_USED,
+          amountToDebit,
         });
         if (balanceBefore != null && balanceBefore > 0 && balanceAfter <= 0) {
           status = "depleted_now";
@@ -410,7 +422,7 @@ if (balanceBefore <= 0) {
       },
       { status: 200 }
     );
-    res.headers.set("X-Tokens-Delta", String(-TOKENS_USED));
+    res.headers.set("X-Tokens-Delta", String(-tokenDelta));
     res.headers.set("X-Free-Used", String(count));
     res.headers.set("X-Free-Limit", String(FREE_LIMIT));
     res.headers.set("X-Free-Remaining", String(freeRemaining));
