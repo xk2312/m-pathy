@@ -12,12 +12,12 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   const token = url.searchParams.get("token") || "";
 
-  // Basis-URL für Redirects (immer Staging-Domain bevorzugen)
-  const base =
-    process.env.NEXT_PUBLIC_BASE_URL ||
-    process.env.MAGIC_LINK_BASE_URL ||
-    process.env.STAGING_BASE_URL ||
-    url.origin;
+ // Basis-URL für Redirects (bevorzugt NEXT_PUBLIC_BASE_URL)
+const base =
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  process.env.MAGIC_LINK_BASE_URL ||
+  url.origin;
+
 
   const successPath =
     process.env.NEXT_PUBLIC_AUTH_SUCCESS_REDIRECT || "/page2?auth=ok";
