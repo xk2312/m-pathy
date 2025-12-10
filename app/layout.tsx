@@ -14,10 +14,9 @@ export const metadata: Metadata = {
   title: "m-pathy – resonant creation",
   description: "Create your reality with M",
   icons: {
-    icon: "/favicon.svg",
+    icon: "/favicon.png",
   },
 };
-
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -41,11 +40,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html
       lang="en"
       suppressHydrationWarning
-      data-orb-theme={ORB_THEME}  // 🔥 Token-Aktivierung
+      data-orb-theme={ORB_THEME} // 🔥 Token-Aktivierung
     >
-            <head />
-
-
       <body
         className={`${inter.className} min-h-dvh antialiased`}
         style={{
