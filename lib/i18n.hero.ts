@@ -12,7 +12,7 @@ export const heroDict = {
   },
 
   de: {
-    hero_title: "Erschaffe in Gedankengeschwindigkeit",
+    hero_title: "Mach aus Gedanken Realität",
     hero_sub: "Dein Geist wird zur Schnittstelle, das System übernimmt den Rest",
     hero_cta: "Denk los",
   },
