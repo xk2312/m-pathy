@@ -682,11 +682,11 @@ const es = {
 
   // Modes – categories
   "labels.modes.character": "Modos de carácter",
-  "modes.category.core": "Núcleo",
-  "modes.category.intellectual": "Intelectual",
-  "modes.category.creator": "Creador",
-  "modes.category.heart": "Corazón",
-  "modes.category.spirit": "Espíritu",
+  "modes.category.core": "BASE",
+  "modes.category.intellectual": "MENTE",
+  "modes.category.creator": "CREAR",
+  "modes.category.heart": "ALMA",
+  "modes.category.spirit": "ESPÍRITU",
 
   // Experts (used by Saeule.tsx)
   "experts.title": "Expertos",
@@ -849,11 +849,11 @@ const it = {
 
   // Modes – categories
   "labels.modes.character": "Modalità caratteriali",
-  "modes.category.core": "Nucleo",
-  "modes.category.intellectual": "Intellettuale",
-  "modes.category.creator": "Creatore",
-  "modes.category.heart": "Cuore",
-  "modes.category.spirit": "Spirito",
+  "modes.category.core": "NUCLEO",
+  "modes.category.intellectual": "MENTE",
+  "modes.category.creator": "CREARE",
+  "modes.category.heart": "CUORE",
+  "modes.category.spirit": "SPIRITO",
 
   // Experts (used by Saeule.tsx)
   "experts.title": "Esperti",
@@ -1016,11 +1016,11 @@ const pt = {
 
   // Modes – categories
   "labels.modes.character": "Modos de caráter",
-  "modes.category.core": "Núcleo",
-  "modes.category.intellectual": "Intelectual",
-  "modes.category.creator": "Criador",
-  "modes.category.heart": "Coração",
-  "modes.category.spirit": "Espírito",
+  "modes.category.core": "BASE",
+  "modes.category.intellectual": "MENTE",
+  "modes.category.creator": "CRIAR",
+  "modes.category.heart": "ALMA",
+  "modes.category.spirit": "ESPÍRITO",
 
   // Experts (used by Saeule.tsx)
   "experts.title": "Especialistas",
@@ -1351,11 +1351,11 @@ const ru = {
 
   // Modes – categories
   "labels.modes.character": "Режимы характера",
-  "modes.category.core": "Основа",
-  "modes.category.intellectual": "Интеллект",
-  "modes.category.creator": "Созидание",
-  "modes.category.heart": "Сердце",
-  "modes.category.spirit": "Дух",
+  "modes.category.core": "ОСНОВА",
+  "modes.category.intellectual": "УМ",
+  "modes.category.creator": "ТВОРИТЬ",
+  "modes.category.heart": "СЕРДЦЕ",
+  "modes.category.spirit": "ДУХ",
 
   // Experts (used by Saeule.tsx)
   "experts.title": "Эксперты",
