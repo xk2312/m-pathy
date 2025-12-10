@@ -1,24 +1,15 @@
-<svg width="144" height="144" viewBox="0 0 144 144" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="M">
-  <defs>
-    <style>
-      .d{ fill:none; stroke:#60e6ff; stroke-width:8; stroke-linecap:round; stroke-linejoin:round; stroke-opacity:.95; stroke-dasharray:0 10; }
-      .g{ filter:url(#g); }
-    </style>
+<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144" role="img" aria-label="M">
+  <!-- schwarzer Hintergrund -->
+  <rect width="144" height="144" fill="#000000" />
 
-    <filter id="g" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="3" result="b"/>
-      <feMerge>
-        <feMergeNode in="b"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
-
-  <rect width="144" height="144" fill="#000"/>
-
-  <g class="g">
-    <path class="d" d="M24 116V34"/>
-    <path class="d" d="M120 116V34"/>
-    <path class="d" d="M24 34l48 58 48-58"/>
-  </g>
+  <!-- M aus Punkten, ohne Filter -->
+  <path
+    d="M24 116 V34 L72 92 L120 34 V116"
+    fill="none"
+    stroke="#60E6FF"
+    stroke-width="8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-dasharray="0 10"
+  />
 </svg>
