@@ -39,7 +39,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
       suppressHydrationWarning
       data-orb-theme={ORB_THEME}  // 🔥 Token-Aktivierung
     >
-      <head />
+      <head>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+
       <body
         className={`${inter.className} min-h-dvh antialiased`}
         style={{

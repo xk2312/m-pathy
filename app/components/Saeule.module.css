@@ -849,6 +849,22 @@
   display: inline-block;
 }
 
+.saeuleBottomNote {
+  margin-top: auto;
+  padding-top: 13px;
+  border-top: 1px solid rgba(148, 163, 184, 0.20);
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: rgba(148, 163, 184, 0.9);
+  opacity: 0.95;
+}
+
+.saeuleBottomNoteLabel {
+  display: block;
+}
+
 /* Simba Icons – einheitliche Größe in Buttons */
 .simbaIcon {
   width: 16px;
