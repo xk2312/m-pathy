@@ -840,11 +840,22 @@ const labelActionsDeleteNow = tr(
   "DELETE"
 );
 
+const labelSupportButton = tr("support.button.label", "Support");
+const labelSupportSubject = tr(
+  "support.mail.subject",
+  'Support request: "please fill in"'
+);
+const labelSupportBody = tr(
+  "support.mail.body",
+  "Please describe your request as clearly and briefly as possible."
+);
+
 const labelOnboarding = tr("mode.onboarding", "ONBOARDING");
 
 const labelDefault = tr("mode.default", "M · Default");
 const labelModeSelect = tr("mode.select", "Choose mode");
 const labelExpertSelect = tr("experts.choose", "Choose expert");
+
 
 
 
@@ -941,8 +952,15 @@ useEffect(() => {
     []
   );
 
+  const supportMailHref = useMemo(() => {
+    const subject = encodeURIComponent(labelSupportSubject);
+    const body = encodeURIComponent(labelSupportBody);
+    return `mailto:support@m-pathy.ai?subject=${subject}&body=${body}`;
+  }, [labelSupportSubject, labelSupportBody]);
+
 
 // ▲▲ ENDE NEU ▲▲
+
 
 
   // ▼▼▼ EINFÜGEN (Helper: immer auch eine Chat-Bubble setzen) ▼▼▼
@@ -1698,6 +1716,15 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
       </div>
 
       <div className={styles.saeuleBottomNote}>
+        <div className={styles.saeuleSupportButtonWrapper}>
+          <a
+            href={supportMailHref}
+            className={styles.saeuleSupportButton}
+            aria-label={labelSupportButton}
+          >
+            {labelSupportButton}
+          </a>
+        </div>
         <span className={styles.saeuleBottomNoteLabel}>
           m-pathy.ai runs on AI OS — GPTM-Galaxy+. 100% privacy. Zero drift. Full autonomy.
         </span>
@@ -1706,3 +1733,4 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
 
   );
 }
+

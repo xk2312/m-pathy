@@ -239,6 +239,9 @@ const en = {
   "chat.tokens.depleted_title": "Your balance is empty.",
   "chat.tokens.depleted_message": "You’ll now be redirected to the payment page to buy new tokens.",
   "chat.tokens.depleted_redirect_label": "Buy tokens now",
+  "support.button.label": "Support",
+  "support.mail.subject": "Support request: \"please fill in\"",
+  "support.mail.body": "Please describe your request as clearly and briefly as possible.",
 
 
   // Pillar sections (Smooth Operator)
@@ -401,8 +404,11 @@ const de = {
   gc_freegate_limit_reached: "Du hast alle 9 kostenlosen Nachrichten verbraucht.",
   gc_freegate_login_required: "Bitte logge dich ein, um fortzufahren.",
   "chat.tokens.depleted_title": "Dein Guthaben ist leer.",
-"chat.tokens.depleted_message": "Du wirst jetzt zur Zahlungsseite weitergeleitet, um neue Tokens zu kaufen.",
-"chat.tokens.depleted_redirect_label": "Jetzt Tokens kaufen",
+  "chat.tokens.depleted_message": "Du wirst jetzt zur Zahlungsseite weitergeleitet, um neue Tokens zu kaufen.",
+  "chat.tokens.depleted_redirect_label": "Jetzt Tokens kaufen",
+  "support.button.label": "Support",
+  "support.mail.subject": "Supportanliegen: \"bitte eintragen\"",
+  "support.mail.body": "Bitte schildern Sie Ihr Anliegen so klar und kurz wie möglich.",
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modi & Experten",
@@ -564,6 +570,9 @@ const fr = {
   "chat.tokens.depleted_title": "Votre solde est épuisé.",
   "chat.tokens.depleted_message": "Vous allez être redirigé vers la page de paiement pour acheter de nouveaux jetons.",
   "chat.tokens.depleted_redirect_label": "Acheter des jetons",
+  "support.button.label": "Support",
+  "support.mail.subject": "Demande d’assistance : « à compléter »",
+  "support.mail.body": "Veuillez décrire votre demande aussi clairement et brièvement que possible.",
 
 
 
@@ -729,6 +738,9 @@ const es = {
   "chat.tokens.depleted_title": "Tu saldo está agotado.",
   "chat.tokens.depleted_message": "Ahora serás redirigido a la página de pago para comprar nuevos tokens.",
   "chat.tokens.depleted_redirect_label": "Comprar tokens",
+  "support.button.label": "Soporte",
+  "support.mail.subject": "Solicitud de soporte: \"rellenar\"",
+  "support.mail.body": "Describa su consulta de la forma más clara y breve posible, por favor.",
 
 
   // Pillar sections
@@ -893,6 +905,9 @@ const it = {
   "chat.tokens.depleted_title": "Il tuo saldo è esaurito.",
   "chat.tokens.depleted_message": "Ora verrai reindirizzato alla pagina di pagamento per acquistare nuovi token.",
   "chat.tokens.depleted_redirect_label": "Acquista token",
+  "support.button.label": "Supporto",
+  "support.mail.subject": "Richiesta di supporto: \"inserire\"",
+  "support.mail.body": "Descrivi la tua richiesta nel modo più chiaro e conciso possibile, per favore.",
 
 
   // Pillar sections (Smooth Operator)
@@ -1057,6 +1072,9 @@ const pt = {
   "chat.tokens.depleted_title": "O seu saldo está esgotado.",
   "chat.tokens.depleted_message": "Agora será redirecionado para a página de pagamento para comprar novos tokens.",
   "chat.tokens.depleted_redirect_label": "Comprar tokens",
+  "support.button.label": "Suporte",
+  "support.mail.subject": "Pedido de suporte: \"preencher\"",
+  "support.mail.body": "Descreva o seu pedido da forma mais clara e breve possível, por favor.",
 
 
   // Pillar sections (Smooth Operator)
@@ -1222,6 +1240,9 @@ const nl = {
   "chat.tokens.depleted_title": "Je saldo is leeg.",
   "chat.tokens.depleted_message": "Je wordt nu doorgestuurd naar de betalingspagina om nieuwe tokens te kopen.",
   "chat.tokens.depleted_redirect_label": "Nu tokens kopen",
+  "support.button.label": "Support",
+  "support.mail.subject": "Supportverzoek: \"invullen\"",
+  "support.mail.body": "Beschrijf uw verzoek zo duidelijk en kort mogelijk, alstublieft.",
 
 
   // Pillar sections (Smooth Operator)
@@ -1387,6 +1408,9 @@ const ru = {
   "chat.tokens.depleted_title": "Ваш баланс исчерпан.",
   "chat.tokens.depleted_message": "Сейчас вы будете перенаправлены на страницу оплаты, чтобы купить новые токены.",
   "chat.tokens.depleted_redirect_label": "Купить токены",
+  "support.button.label": "Поддержка",
+  "support.mail.subject": "Запрос в поддержку: «заполнить»",
+  "support.mail.body": "Пожалуйста, опишите ваш запрос максимально ясно и кратко.",
 
 
   // Pillar sections (Smooth Operator)
@@ -1551,6 +1575,9 @@ const zh = {
   "chat.tokens.depleted_title": "您的余额已用完。",
   "chat.tokens.depleted_message": "系统将把您跳转到支付页面购买新的代币。",
   "chat.tokens.depleted_redirect_label": "立即购买代币",
+  "support.button.label": "支持",
+  "support.mail.subject": "支持请求：\"请填写\"",
+  "support.mail.body": "请尽可能清晰、简洁地描述您的问题或请求。",
 
 
   // Pillar sections (Smooth Operator)
@@ -1715,6 +1742,9 @@ const ja = {
   "chat.tokens.depleted_title": "残高がゼロになりました。",
   "chat.tokens.depleted_message": "これからトークンを購入するための支払いページに移動します。",
   "chat.tokens.depleted_redirect_label": "トークンを購入する",
+  "support.button.label": "支持",
+  "support.mail.subject": "支持请求：\"请填写\"",
+  "support.mail.body": "请尽可能清晰、简洁地描述您的问题或请求。",
 
 
   // Pillar sections (Smooth Operator)
@@ -1879,6 +1909,9 @@ const ko = {
   "chat.tokens.depleted_title": "잔액이 모두 소진되었습니다.",
   "chat.tokens.depleted_message": "지금 토큰을 구매할 수 있는 결제 페이지로 이동합니다.",
   "chat.tokens.depleted_redirect_label": "토큰 구매하기",
+  "support.button.label": "지원",
+  "support.mail.subject": "지원 요청: \"입력해 주세요\"",
+  "support.mail.body": "요청 사항을 가능한 한 명확하고 간단하게 작성해 주세요.",
 
 
   // Pillar sections (Smooth Operator)
@@ -2043,6 +2076,9 @@ const ar = {
   "chat.tokens.depleted_title": "رصيدك فارغ.",
   "chat.tokens.depleted_message": "سيتم الآن تحويلك إلى صفحة الدفع لشراء رموز جديدة.",
   "chat.tokens.depleted_redirect_label": "شراء رموز الآن",
+  "support.button.label": "الدعم",
+  "support.mail.subject": "طلب دعم: \"يرجى الإدخال\"",
+  "support.mail.body": "يرجى وصف طلبك بأكبر قدر ممكن من الوضوح والاختصار.",
 
 
   // Pillar sections (Smooth Operator)
@@ -2207,6 +2243,9 @@ const hi = {
   "chat.tokens.depleted_title": "आपका बैलेंस ख़त्म हो गया है।",
   "chat.tokens.depleted_message": "अब आपको नए टोकन खरीदने के लिए भुगतान पेज पर भेजा जाएगा।",
   "chat.tokens.depleted_redirect_label": "अभी टोकन ख़रीदें",
+  "support.button.label": "सपोर्ट",
+  "support.mail.subject": "सपोर्ट अनुरोध: \"कृपया भरें\"",
+  "support.mail.body": "कृपया अपना अनुरोध जितना हो सके उतना स्पष्ट और संक्षेप में लिखें।",
 
 
   // Pillar sections (Smooth Operator)
