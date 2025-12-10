@@ -319,10 +319,70 @@ if (balanceBefore <= 0) {
       });
     }
 
+       const localeFromCookie = (() => {
+      if (!cookieHeader) return "en";
+      const match = cookieHeader.match(/NEXT_LOCALE=([^;]+)/);
+      if (!match) return "en";
+      const raw = decodeURIComponent(match[1] || "en").toLowerCase();
+      if (raw.startsWith("de")) return "de";
+      if (raw.startsWith("fr")) return "fr";
+      if (raw.startsWith("es")) return "es";
+      if (raw.startsWith("it")) return "it";
+      if (raw.startsWith("pt")) return "pt";
+      if (raw.startsWith("nl")) return "nl";
+      if (raw.startsWith("ru")) return "ru";
+      if (raw.startsWith("zh")) return "zh";
+      if (raw.startsWith("ja")) return "ja";
+      if (raw.startsWith("ko")) return "ko";
+      if (raw.startsWith("ar")) return "ar";
+      if (raw.startsWith("hi")) return "hi";
+      return "en";
+    })();
+
+    const langHint = (() => {
+      const map: Record<string, string> = {
+        en: "Please answer in English.",
+        de: "Bitte antworte auf Deutsch.",
+        fr: "Merci de répondre en français.",
+        es: "Por favor, responde en español.",
+        it: "Per favore, rispondi in italiano.",
+        pt: "Por favor, responda em português.",
+        nl: "Antwoord alsjeblieft in het Nederlands.",
+        ru: "Пожалуйста, отвечайте по-русски.",
+        zh: "请用中文回答。",
+        ja: "日本語で回答してください。",
+        ko: "한국어로 답변해 주세요.",
+        ar: "من فضلك أجب بالعربية.",
+        hi: "कृपया हिन्दी में उत्तर दें।",
+      };
+      const key = map[localeFromCookie] ? localeFromCookie : "en";
+      return `[${map[key]}]`;
+    })();
+
+    const messagesWithHint: ChatMessage[] = (() => {
+      if (!Array.isArray(body.messages) || body.messages.length === 0) {
+        return body.messages;
+      }
+      const [first, ...rest] = body.messages;
+      if (first.role !== "user" || typeof first.content !== "string") {
+        return body.messages;
+      }
+      if (first.content.includes(langHint)) {
+        return body.messages;
+      }
+      return [
+        { ...first, content: `${first.content}\n\n${langHint}` },
+        ...rest,
+      ];
+    })();
+
     const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
     const messages: ChatMessage[] = systemPrompt
-      ? [{ role: "system", content: systemPrompt }, ...body.messages]
-      : body.messages;
+      ? [{ role: "system", content: systemPrompt }, ...messagesWithHint]
+      : messagesWithHint;
+
+    
+
 
     const payload = {
       messages,
