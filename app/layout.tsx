@@ -13,7 +13,11 @@ const inter = Inter({ subsets: ["latin"], display: "swap" });
 export const metadata: Metadata = {
   title: "m-pathy – resonant creation",
   description: "Create your reality with M",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
+
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -39,9 +43,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
       suppressHydrationWarning
       data-orb-theme={ORB_THEME}  // 🔥 Token-Aktivierung
     >
-      <head>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  </head>
+            <head />
+
 
       <body
         className={`${inter.className} min-h-dvh antialiased`}
