@@ -471,55 +471,67 @@ if (balanceBefore <= 0) {
       });
     }
 
+    let triketon: any = null;
+
+    try {
+      const { spawn } = await import("child_process");
+      const { getPool } = await import("@/lib/ledger");
+
+      const seal = await new Promise<any>((resolve, reject) => {
+        const p = spawn(
+          "python3",
+          ["-m", "triketon.triketon2048", "seal", content, "--json"],
+          { stdio: ["ignore", "pipe", "pipe"] }
+        );
+
+        let out = "";
+        let err = "";
+
+        p.stdout.on("data", (d) => (out += d.toString()));
+        p.stderr.on("data", (d) => (err += d.toString()));
+
+        p.on("close", (code) => {
+          if (code !== 0) return reject(new Error(err || "triketon seal failed"));
+          resolve(JSON.parse(out));
+        });
+      });
+
+      if (seal?.public_key && seal?.truth_hash && seal?.timestamp) {
+        const pool = await getPool();
+        await pool.query(
+          `INSERT INTO triketon_anchors
+           (public_key, truth_hash, timestamp, orbit_context)
+           VALUES ($1, $2, $3, 'chat')
+           ON CONFLICT DO NOTHING`,
+          [seal.public_key, seal.truth_hash, seal.timestamp]
+        );
+
+        triketon = {
+          publicKey: seal.public_key,
+          truthHash: seal.truth_hash,
+          timestamp: seal.timestamp,
+          version: seal.version ?? "v1",
+          hashProfile: seal.hash_profile ?? "TRIKETON_HASH_V1",
+          keyProfile: seal.key_profile ?? "TRIKETON_KEY_V1",
+          anchorStatus: "anchored",
+        };
+      }
+    } catch (e) {
+      console.warn("[triketon] auto-anchor skipped", e);
+    }
+
     const res = NextResponse.json(
-  {
-    role: "assistant",
-    content,
-    status,
-    tokens_used: TOKENS_USED,
-    balance_after: balanceAfter,
-    debug_usage: usage,
-  },
-  { status: 200 }
-);
-
-// --- TRIKETON AUTO-ANCHOR (fire & forget) ---
-try {
-  const { spawn } = await import("child_process");
-  const { getPool } = await import("@/lib/ledger");
-
-  const seal = await new Promise<any>((resolve, reject) => {
-    const p = spawn(
-      "python3",
-      ["-m", "triketon.triketon2048", "seal", content, "--json"],
-      { stdio: ["ignore", "pipe", "pipe"] }
+      {
+        role: "assistant",
+        content,
+        status,
+        tokens_used: TOKENS_USED,
+        balance_after: balanceAfter,
+        debug_usage: usage,
+        triketon,
+      },
+      { status: 200 }
     );
-
-    let out = "";
-    let err = "";
-
-    p.stdout.on("data", (d) => (out += d.toString()));
-    p.stderr.on("data", (d) => (err += d.toString()));
-
-    p.on("close", (code) => {
-      if (code !== 0) return reject(new Error(err || "triketon seal failed"));
-      resolve(JSON.parse(out));
-    });
-  });
-
-  if (seal?.public_key && seal?.truth_hash && seal?.timestamp) {
-    const pool = await getPool();
-    await pool.query(
-      `INSERT INTO triketon_anchors
-       (public_key, truth_hash, timestamp, orbit_context)
-       VALUES ($1, $2, $3, 'chat')
-       ON CONFLICT DO NOTHING`,
-      [seal.public_key, seal.truth_hash, seal.timestamp]
-    );
-  }
-} catch (e) {
-  console.warn("[triketon] auto-anchor skipped", e);
-}
 
     res.headers.set("X-Tokens-Delta", String(-tokenDelta));
     res.headers.set("X-Free-Used", String(count));
@@ -530,6 +542,7 @@ try {
       res.headers.set("Set-Cookie", cookie);
     }
     return res;
+
 
 
 
