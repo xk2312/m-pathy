@@ -46,11 +46,10 @@ function isTriketonSeal(x: unknown): x is TriketonSeal {
 
 function normalizeMessage(x: any): ChatMessage | null {
   if (!x || typeof x !== "object") return null;
-  const id = x.id;
   const role = x.role;
   const content = x.content;
+
   if (
-    !isNonEmptyString(id) ||
     (role !== "system" && role !== "user" && role !== "assistant") ||
     !isNonEmptyString(content)
   ) {
@@ -60,7 +59,18 @@ function normalizeMessage(x: any): ChatMessage | null {
   const ts = typeof x.ts === "number" && Number.isFinite(x.ts) ? x.ts : undefined;
   const triketon = isTriketonSeal(x.triketon) ? x.triketon : undefined;
 
+  const rawId = x.id;
+  const id =
+    isNonEmptyString(rawId)
+      ? rawId
+      : typeof ts === "number"
+        ? `${role}_${ts}`
+        : typeof crypto !== "undefined" && typeof (crypto as any).randomUUID === "function"
+          ? (crypto as any).randomUUID()
+          : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+
   return { id, role, content, ts, triketon };
+
 }
 
 function normalizeMessages(arr: unknown): ChatMessage[] {
