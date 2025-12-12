@@ -242,6 +242,58 @@ const en = {
   "support.button.label": "Support",
   "support.mail.subject": "Support request: \"please fill in\"",
   "support.mail.body": "Please describe your request as clearly and briefly as possible.",
+// --- Triketon2048 --------------------------------------------------
+
+"triketon.button.label": "Triketon2048",
+"triketon.button.tooltip": "Verified · Proof of Truth",
+
+"triketon.overlay.title": "Triketon2048 — Verified Response",
+
+"triketon.overlay.intro":
+"This response has been cryptographically sealed. Its authenticity can be verified at any time.",
+
+"triketon.overlay.explainer":
+"We do not store the content of this response on our servers. Only a mathematical proof of its integrity is stored — never the text itself.",
+
+"triketon.overlay.ownership":
+"Your words belong to you. Only you have access to the full content.",
+
+"triketon.overlay.data.title": "Verification Data",
+
+"triketon.overlay.data.public_key": "Public Key",
+"triketon.overlay.data.truth_hash": "Truth Hash",
+"triketon.overlay.data.timestamp": "Timestamp",
+
+"triketon.overlay.footer":
+"Triketon2048 is not a feature. It is a promise.",
+
+"triketon.overlay.usecases.title": "Why this matters",
+
+// --- Use Case: Researcher ------------------------------------------
+
+"triketon.usecase.researcher.title": "For Researchers",
+
+"triketon.usecase.researcher.body":
+"As a researcher, you may need to prove that a hypothesis, insight, or result existed at a specific point in time — without publishing or revealing your work prematurely. Triketon allows you to establish priority and integrity without disclosure.",
+
+// --- Use Case: Inventor -------------------------------------------
+
+"triketon.usecase.inventor.title": "For Inventors",
+
+"triketon.usecase.inventor.body":
+"As an inventor, you may want to prove that an idea originated with you — without exposing it before you are ready. Triketon lets you seal ideas, not hide them, and prove authorship without loss of control.",
+
+// --- Use Case: Creative -------------------------------------------
+
+"triketon.usecase.creative.title": "For Creators",
+
+"triketon.usecase.creative.body":
+"As a creator, you may want certainty that your words are yours — even when shared digitally. Triketon provides proof of authorship without watermarks, platforms, or ownership transfer.",
+
+// --- Universal Closing --------------------------------------------
+
+"triketon.overlay.closing":
+"Proof without possession. Verification without surveillance.",
 
 
   // Pillar sections (Smooth Operator)
@@ -409,6 +461,45 @@ const de = {
   "support.button.label": "Support",
   "support.mail.subject": "Supportanliegen: \"bitte eintragen\"",
   "support.mail.body": "Bitte schildern Sie Ihr Anliegen so klar und kurz wie möglich.",
+"triketon.button.label": "Triketon2048",
+"triketon.button.tooltip": "Verifiziert · Wahrheitsbeweis",
+
+"triketon.overlay.title": "Triketon2048 — Verifizierte Antwort",
+
+"triketon.overlay.intro":
+"Diese Antwort wurde kryptografisch versiegelt. Ihre Echtheit kann jederzeit überprüft werden.",
+
+"triketon.overlay.explainer":
+"Wir speichern den Inhalt dieser Antwort nicht auf unseren Servern. Gespeichert wird ausschließlich ein mathematischer Beweis ihrer Unverändertheit — niemals der Text selbst.",
+
+"triketon.overlay.ownership":
+"Deine Worte gehören dir. Nur du hast Zugriff auf den vollständigen Inhalt.",
+
+"triketon.overlay.data.title": "Verifikationsdaten",
+
+"triketon.overlay.data.public_key": "Public Key",
+"triketon.overlay.data.truth_hash": "Truth Hash",
+"triketon.overlay.data.timestamp": "Zeitstempel",
+
+"triketon.overlay.footer":
+"Triketon2048 ist kein Feature. Es ist ein Versprechen.",
+
+"triketon.overlay.usecases.title": "Warum das wichtig ist",
+
+"triketon.usecase.researcher.title": "Für Forschende",
+"triketon.usecase.researcher.body":
+"Als Forschende möchtest du nachweisen können, dass eine Hypothese, Erkenntnis oder ein Ergebnis zu einem bestimmten Zeitpunkt existierte — ohne deine Arbeit vorzeitig zu veröffentlichen oder offenzulegen. Triketon ermöglicht Prioritätsnachweise ohne Offenlegung.",
+
+"triketon.usecase.inventor.title": "Für Erfinder:innen",
+"triketon.usecase.inventor.body":
+"Als Erfinder:in möchtest du belegen können, dass eine Idee von dir stammt — ohne sie preiszugeben, bevor du dazu bereit bist. Triketon versiegelt Ideen, statt sie zu verstecken, und ermöglicht Urheberschaft ohne Kontrollverlust.",
+
+"triketon.usecase.creative.title": "Für Kreative",
+"triketon.usecase.creative.body":
+"Als Kreative:r möchtest du sicher sein, dass deine Worte dir gehören — auch wenn sie digital geteilt werden. Triketon bietet Urhebernachweis ohne Wasserzeichen, Plattformbindung oder Rechteübertragung.",
+
+"triketon.overlay.closing":
+"Beweis ohne Besitz. Verifikation ohne Überwachung.",
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modi & Experten",
@@ -574,6 +665,45 @@ const fr = {
   "support.mail.subject": "Demande d’assistance : « à compléter »",
   "support.mail.body": "Veuillez décrire votre demande aussi clairement et brièvement que possible.",
 
+"triketon.button.label": "Triketon2048",
+"triketon.button.tooltip": "Vérifié · Preuve de vérité",
+
+"triketon.overlay.title": "Triketon2048 — Réponse vérifiée",
+
+"triketon.overlay.intro":
+"Cette réponse a été scellée cryptographiquement. Son authenticité peut être vérifiée à tout moment.",
+
+"triketon.overlay.explainer":
+"Nous ne stockons pas le contenu de cette réponse sur nos serveurs. Seule une preuve mathématique de son intégrité est conservée — jamais le texte lui-même.",
+
+"triketon.overlay.ownership":
+"Vos mots vous appartiennent. Vous seul avez accès au contenu complet.",
+
+"triketon.overlay.data.title": "Données de vérification",
+
+"triketon.overlay.data.public_key": "Clé publique",
+"triketon.overlay.data.truth_hash": "Empreinte de vérité",
+"triketon.overlay.data.timestamp": "Horodatage",
+
+"triketon.overlay.footer":
+"Triketon2048 n’est pas une fonctionnalité. C’est une promesse.",
+
+"triketon.overlay.usecases.title": "Pourquoi c’est important",
+
+"triketon.usecase.researcher.title": "Pour les chercheurs",
+"triketon.usecase.researcher.body":
+"En tant que chercheur, vous pouvez avoir besoin de prouver qu’une hypothèse, une idée ou un résultat existait à un moment donné — sans publier ni révéler votre travail prématurément. Triketon permet d’établir une antériorité sans divulgation.",
+
+"triketon.usecase.inventor.title": "Pour les inventeurs",
+"triketon.usecase.inventor.body":
+"En tant qu’inventeur, vous pouvez vouloir prouver qu’une idée vient de vous — sans l’exposer avant d’y être prêt. Triketon scelle les idées au lieu de les cacher et prouve l’origine sans perte de contrôle.",
+
+"triketon.usecase.creative.title": "Pour les créateurs",
+"triketon.usecase.creative.body":
+"En tant que créateur, vous pouvez vouloir la certitude que vos mots sont les vôtres — même lorsqu’ils sont partagés numériquement. Triketon fournit une preuve d’auteur sans filigrane, plateforme ou transfert de droits.",
+
+"triketon.overlay.closing":
+"Preuve sans possession. Vérification sans surveillance.",
 
 
   // Pillar sections (Smooth Operator)
@@ -741,6 +871,45 @@ const es = {
   "support.button.label": "Soporte",
   "support.mail.subject": "Solicitud de soporte: \"rellenar\"",
   "support.mail.body": "Describa su consulta de la forma más clara y breve posible, por favor.",
+"triketon.button.label": "Triketon2048",
+"triketon.button.tooltip": "Verificado · Prueba de verdad",
+
+"triketon.overlay.title": "Triketon2048 — Respuesta verificada",
+
+"triketon.overlay.intro":
+"Esta respuesta ha sido sellada criptográficamente. Su autenticidad puede verificarse en cualquier momento.",
+
+"triketon.overlay.explainer":
+"No almacenamos el contenido de esta respuesta en nuestros servidores. Solo se guarda una prueba matemática de su integridad — nunca el texto en sí.",
+
+"triketon.overlay.ownership":
+"Tus palabras te pertenecen. Solo tú tienes acceso al contenido completo.",
+
+"triketon.overlay.data.title": "Datos de verificación",
+
+"triketon.overlay.data.public_key": "Clave pública",
+"triketon.overlay.data.truth_hash": "Hash de verdad",
+"triketon.overlay.data.timestamp": "Marca de tiempo",
+
+"triketon.overlay.footer":
+"Triketon2048 no es una función. Es una promesa.",
+
+"triketon.overlay.usecases.title": "Por qué esto importa",
+
+"triketon.usecase.researcher.title": "Para investigadores",
+"triketon.usecase.researcher.body":
+"Como investigador, puedes necesitar demostrar que una hipótesis, idea o resultado existía en un momento determinado — sin publicar ni revelar tu trabajo antes de tiempo. Triketon permite establecer prioridad sin divulgación.",
+
+"triketon.usecase.inventor.title": "Para inventores",
+"triketon.usecase.inventor.body":
+"Como inventor, puedes querer demostrar que una idea se originó contigo — sin exponerla antes de estar listo. Triketon sella ideas en lugar de ocultarlas y permite probar la autoría sin perder el control.",
+
+"triketon.usecase.creative.title": "Para creadores",
+"triketon.usecase.creative.body":
+"Como creador, puedes querer la certeza de que tus palabras son tuyas — incluso cuando se comparten digitalmente. Triketon ofrece prueba de autoría sin marcas de agua, plataformas ni cesión de derechos.",
+
+"triketon.overlay.closing":
+"Prueba sin posesión. Verificación sin vigilancia.",
 
 
   // Pillar sections
@@ -909,6 +1078,45 @@ const it = {
   "support.mail.subject": "Richiesta di supporto: \"inserire\"",
   "support.mail.body": "Descrivi la tua richiesta nel modo più chiaro e conciso possibile, per favore.",
 
+"triketon.button.label": "Triketon2048",
+"triketon.button.tooltip": "Verificato · Prova di verità",
+
+"triketon.overlay.title": "Triketon2048 — Risposta verificata",
+
+"triketon.overlay.intro":
+"Questa risposta è stata sigillata crittograficamente. La sua autenticità può essere verificata in qualsiasi momento.",
+
+"triketon.overlay.explainer":
+"Non memorizziamo il contenuto di questa risposta sui nostri server. Viene conservata solo una prova matematica della sua integrità — mai il testo stesso.",
+
+"triketon.overlay.ownership":
+"Le tue parole ti appartengono. Solo tu hai accesso al contenuto completo.",
+
+"triketon.overlay.data.title": "Dati di verifica",
+
+"triketon.overlay.data.public_key": "Chiave pubblica",
+"triketon.overlay.data.truth_hash": "Hash di verità",
+"triketon.overlay.data.timestamp": "Timestamp",
+
+"triketon.overlay.footer":
+"Triketon2048 non è una funzionalità. È una promessa.",
+
+"triketon.overlay.usecases.title": "Perché è importante",
+
+"triketon.usecase.researcher.title": "Per i ricercatori",
+"triketon.usecase.researcher.body":
+"Come ricercatore, potresti dover dimostrare che un’ipotesi, un’intuizione o un risultato esistevano in un momento specifico — senza pubblicare o rivelare il tuo lavoro prematuramente. Triketon consente di stabilire la priorità senza divulgazione.",
+
+"triketon.usecase.inventor.title": "Per gli inventori",
+"triketon.usecase.inventor.body":
+"Come inventore, potresti voler dimostrare che un’idea ha avuto origine da te — senza esporla prima di essere pronto. Triketon sigilla le idee invece di nasconderle e permette di provare la paternità senza perdita di controllo.",
+
+"triketon.usecase.creative.title": "Per i creativi",
+"triketon.usecase.creative.body":
+"Come creativo, potresti desiderare la certezza che le tue parole siano tue — anche quando vengono condivise digitalmente. Triketon fornisce prova di paternità senza filigrane, piattaforme o trasferimento di diritti.",
+
+"triketon.overlay.closing":
+"Prova senza possesso. Verifica senza sorveglianza.",
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modalità ed esperti",
@@ -1076,6 +1284,45 @@ const pt = {
   "support.mail.subject": "Pedido de suporte: \"preencher\"",
   "support.mail.body": "Descreva o seu pedido da forma mais clara e breve possível, por favor.",
 
+"triketon.button.label": "Triketon2048",
+"triketon.button.tooltip": "Verificado · Prova de verdade",
+
+"triketon.overlay.title": "Triketon2048 — Resposta verificada",
+
+"triketon.overlay.intro":
+"Esta resposta foi selada criptograficamente. A sua autenticidade pode ser verificada a qualquer momento.",
+
+"triketon.overlay.explainer":
+"Não armazenamos o conteúdo desta resposta em nossos servidores. Apenas uma prova matemática da sua integridade é guardada — nunca o texto em si.",
+
+"triketon.overlay.ownership":
+"As suas palavras pertencem a você. Somente você tem acesso ao conteúdo completo.",
+
+"triketon.overlay.data.title": "Dados de verificação",
+
+"triketon.overlay.data.public_key": "Chave pública",
+"triketon.overlay.data.truth_hash": "Hash de verdade",
+"triketon.overlay.data.timestamp": "Carimbo de data e hora",
+
+"triketon.overlay.footer":
+"Triketon2048 não é um recurso. É uma promessa.",
+
+"triketon.overlay.usecases.title": "Por que isso importa",
+
+"triketon.usecase.researcher.title": "Para pesquisadores",
+"triketon.usecase.researcher.body":
+"Como pesquisador, você pode precisar provar que uma hipótese, ideia ou resultado existia em um determinado momento — sem publicar ou revelar o seu trabalho prematuramente. Triketon permite estabelecer prioridade sem divulgação.",
+
+"triketon.usecase.inventor.title": "Para inventores",
+"triketon.usecase.inventor.body":
+"Como inventor, você pode querer provar que uma ideia se originou com você — sem expô-la antes de estar pronto. Triketon sela ideias em vez de escondê-las e permite comprovar a autoria sem perda de controle.",
+
+"triketon.usecase.creative.title": "Para criadores",
+"triketon.usecase.creative.body":
+"Como criador, você pode querer a certeza de que suas palavras são suas — mesmo quando compartilhadas digitalmente. Triketon oferece prova de autoria sem marcas d’água, plataformas ou transferência de direitos.",
+
+"triketon.overlay.closing":
+"Prova sem posse. Verificação sem vigilância.",
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modos e especialistas",
@@ -1244,6 +1491,45 @@ const nl = {
   "support.mail.subject": "Supportverzoek: \"invullen\"",
   "support.mail.body": "Beschrijf uw verzoek zo duidelijk en kort mogelijk, alstublieft.",
 
+"triketon.button.label": "Triketon2048",
+"triketon.button.tooltip": "Geverifieerd · Bewijs van waarheid",
+
+"triketon.overlay.title": "Triketon2048 — Geverifieerde reactie",
+
+"triketon.overlay.intro":
+"Deze reactie is cryptografisch verzegeld. De echtheid kan op elk moment worden geverifieerd.",
+
+"triketon.overlay.explainer":
+"We slaan de inhoud van deze reactie niet op onze servers op. Alleen een wiskundig bewijs van de integriteit wordt bewaard — nooit de tekst zelf.",
+
+"triketon.overlay.ownership":
+"Jouw woorden zijn van jou. Alleen jij hebt toegang tot de volledige inhoud.",
+
+"triketon.overlay.data.title": "Verificatiegegevens",
+
+"triketon.overlay.data.public_key": "Publieke sleutel",
+"triketon.overlay.data.truth_hash": "Waarheids-hash",
+"triketon.overlay.data.timestamp": "Tijdstempel",
+
+"triketon.overlay.footer":
+"Triketon2048 is geen functie. Het is een belofte.",
+
+"triketon.overlay.usecases.title": "Waarom dit belangrijk is",
+
+"triketon.usecase.researcher.title": "Voor onderzoekers",
+"triketon.usecase.researcher.body":
+"Als onderzoeker wil je mogelijk aantonen dat een hypothese, inzicht of resultaat op een bepaald moment bestond — zonder je werk voortijdig te publiceren of te onthullen. Triketon maakt het mogelijk om prioriteit vast te leggen zonder openbaarmaking.",
+
+"triketon.usecase.inventor.title": "Voor uitvinders",
+"triketon.usecase.inventor.body":
+"Als uitvinder wil je mogelijk bewijzen dat een idee bij jou is ontstaan — zonder het te delen voordat je er klaar voor bent. Triketon verzegelt ideeën in plaats van ze te verbergen en bewijst auteurschap zonder verlies van controle.",
+
+"triketon.usecase.creative.title": "Voor creatieven",
+"triketon.usecase.creative.body":
+"Als creatief wil je zekerheid dat jouw woorden van jou zijn — zelfs wanneer ze digitaal worden gedeeld. Triketon biedt bewijs van auteurschap zonder watermerken, platforms of overdracht van rechten.",
+
+"triketon.overlay.closing":
+"Bewijs zonder bezit. Verificatie zonder toezicht.",
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Modi & experts",
@@ -1412,6 +1698,45 @@ const ru = {
   "support.mail.subject": "Запрос в поддержку: «заполнить»",
   "support.mail.body": "Пожалуйста, опишите ваш запрос максимально ясно и кратко.",
 
+"triketon.button.label": "Triketon2048",
+"triketon.button.tooltip": "Подтверждено · Доказательство истины",
+
+"triketon.overlay.title": "Triketon2048 — Подтверждённый ответ",
+
+"triketon.overlay.intro":
+"Этот ответ был криптографически запечатан. Его подлинность может быть проверена в любое время.",
+
+"triketon.overlay.explainer":
+"Мы не храним содержимое этого ответа на наших серверах. Сохраняется только математическое доказательство его целостности — никогда сам текст.",
+
+"triketon.overlay.ownership":
+"Ваши слова принадлежат вам. Только вы имеете доступ к полному содержимому.",
+
+"triketon.overlay.data.title": "Данные проверки",
+
+"triketon.overlay.data.public_key": "Публичный ключ",
+"triketon.overlay.data.truth_hash": "Хеш истины",
+"triketon.overlay.data.timestamp": "Временная метка",
+
+"triketon.overlay.footer":
+"Triketon2048 — это не функция. Это обещание.",
+
+"triketon.overlay.usecases.title": "Почему это важно",
+
+"triketon.usecase.researcher.title": "Для исследователей",
+"triketon.usecase.researcher.body":
+"Как исследователь, вы можете захотеть доказать, что гипотеза, идея или результат существовали в определённый момент времени — не публикуя и не раскрывая работу преждевременно. Triketon позволяет зафиксировать приоритет без раскрытия.",
+
+"triketon.usecase.inventor.title": "Для изобретателей",
+"triketon.usecase.inventor.body":
+"Как изобретатель, вы можете захотеть доказать, что идея возникла у вас — не раскрывая её до готовности. Triketon запечатывает идеи, а не скрывает их, и позволяет доказать авторство без потери контроля.",
+
+"triketon.usecase.creative.title": "Для творцов",
+"triketon.usecase.creative.body":
+"Как творец, вы можете хотеть уверенности, что ваши слова принадлежат вам — даже при цифровом распространении. Triketon обеспечивает доказательство авторства без водяных знаков, платформ или передачи прав.",
+
+"triketon.overlay.closing":
+"Доказательство без владения. Проверка без наблюдения.",
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "Режимы и эксперты",
@@ -1579,6 +1904,45 @@ const zh = {
   "support.mail.subject": "支持请求：\"请填写\"",
   "support.mail.body": "请尽可能清晰、简洁地描述您的问题或请求。",
 
+"triketon.button.label": "Triketon2048",
+"triketon.button.tooltip": "検証済み · 真実の証明",
+
+"triketon.overlay.title": "Triketon2048 — 検証済みの回答",
+
+"triketon.overlay.intro":
+"この回答は暗号的に封印されています。その真正性はいつでも検証できます。",
+
+"triketon.overlay.explainer":
+"この回答の内容はサーバーに保存されません。保存されるのは完全性を示す数学的証明のみで、テキストそのものは含まれません。",
+
+"triketon.overlay.ownership":
+"あなたの言葉はあなたのものです。完全な内容にアクセスできるのはあなただけです。",
+
+"triketon.overlay.data.title": "検証データ",
+
+"triketon.overlay.data.public_key": "公開鍵",
+"triketon.overlay.data.truth_hash": "真実ハッシュ",
+"triketon.overlay.data.timestamp": "タイムスタンプ",
+
+"triketon.overlay.footer":
+"Triketon2048 は機能ではありません。約束です。",
+
+"triketon.overlay.usecases.title": "なぜ重要なのか",
+
+"triketon.usecase.researcher.title": "研究者のために",
+"triketon.usecase.researcher.body":
+"研究者として、仮説や洞察、結果が特定の時点で存在していたことを証明したい場合があります。Triketon は、内容を公開することなく優先性と完全性を証明できます。",
+
+"triketon.usecase.inventor.title": "発明家のために",
+"triketon.usecase.inventor.body":
+"発明家として、アイデアが自分に由来することを、準備が整う前に公開せずに証明したい場合があります。Triketon はアイデアを隠すのではなく封印し、管理権を失うことなく創作の証明を可能にします。",
+
+"triketon.usecase.creative.title": "クリエイターのために",
+"triketon.usecase.creative.body":
+"クリエイターとして、デジタルで共有されても言葉が自分のものであると確信したいことがあります。Triketon は透かしやプラットフォーム、権利移転なしに著作の証明を提供します。",
+
+"triketon.overlay.closing":
+"所有せずに証明する。監視せずに検証する。",
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "模式与专家",
@@ -1913,6 +2277,45 @@ const ko = {
   "support.mail.subject": "지원 요청: \"입력해 주세요\"",
   "support.mail.body": "요청 사항을 가능한 한 명확하고 간단하게 작성해 주세요.",
 
+"triketon.button.label": "Triketon2048",
+"triketon.button.tooltip": "검증됨 · 진실의 증명",
+
+"triketon.overlay.title": "Triketon2048 — 검증된 응답",
+
+"triketon.overlay.intro":
+"이 응답은 암호학적으로 봉인되었습니다. 그 진위는 언제든지 검증할 수 있습니다.",
+
+"triketon.overlay.explainer":
+"우리는 이 응답의 내용을 서버에 저장하지 않습니다. 무결성을 증명하는 수학적 증명만 저장되며, 텍스트 자체는 저장되지 않습니다.",
+
+"triketon.overlay.ownership":
+"당신의 말은 당신의 것입니다. 전체 내용에 접근할 수 있는 사람은 오직 당신뿐입니다.",
+
+"triketon.overlay.data.title": "검증 데이터",
+
+"triketon.overlay.data.public_key": "공개 키",
+"triketon.overlay.data.truth_hash": "진실 해시",
+"triketon.overlay.data.timestamp": "타임스탬프",
+
+"triketon.overlay.footer":
+"Triketon2048은 기능이 아닙니다. 그것은 약속입니다.",
+
+"triketon.overlay.usecases.title": "왜 이것이 중요한가",
+
+"triketon.usecase.researcher.title": "연구자를 위한",
+"triketon.usecase.researcher.body":
+"연구자로서 가설, 통찰 또는 결과가 특정 시점에 존재했음을 증명해야 할 수 있습니다. Triketon은 작업을 조기에 공개하지 않고도 우선성과 무결성을 증명할 수 있게 해줍니다.",
+
+"triketon.usecase.inventor.title": "발명가를 위한",
+"triketon.usecase.inventor.body":
+"발명가로서 아이디어가 자신에게서 비롯되었음을, 준비되기 전에 공개하지 않고 증명하고 싶을 수 있습니다. Triketon은 아이디어를 숨기지 않고 봉인하여 통제권을 잃지 않은 채 창작의 기원을 증명합니다.",
+
+"triketon.usecase.creative.title": "창작자를 위한",
+"triketon.usecase.creative.body":
+"창작자로서 디지털로 공유되더라도 자신의 말이 자신의 것임을 확신하고 싶을 수 있습니다. Triketon은 워터마크, 플랫폼, 권리 이전 없이 저작권 증명을 제공합니다.",
+
+"triketon.overlay.closing":
+"소유하지 않고 증명하다. 감시 없이 검증하다.",
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "모드 & 전문가",
@@ -2080,6 +2483,45 @@ const ar = {
   "support.mail.subject": "طلب دعم: \"يرجى الإدخال\"",
   "support.mail.body": "يرجى وصف طلبك بأكبر قدر ممكن من الوضوح والاختصار.",
 
+"triketon.button.label": "Triketon2048",
+"triketon.button.tooltip": "موثّق · دليل الحقيقة",
+
+"triketon.overlay.title": "Triketon2048 — رد موثّق",
+
+"triketon.overlay.intro":
+"تم ختم هذا الرد تشفيرياً. يمكن التحقق من صحته في أي وقت.",
+
+"triketon.overlay.explainer":
+"نحن لا نخزن محتوى هذا الرد على خوادمنا. يتم حفظ دليل رياضي على سلامته فقط — وليس النص نفسه أبداً.",
+
+"triketon.overlay.ownership":
+"كلماتك ملك لك. أنت وحدك من يملك حق الوصول إلى المحتوى الكامل.",
+
+"triketon.overlay.data.title": "بيانات التحقق",
+
+"triketon.overlay.data.public_key": "المفتاح العام",
+"triketon.overlay.data.truth_hash": "تجزئة الحقيقة",
+"triketon.overlay.data.timestamp": "الطابع الزمني",
+
+"triketon.overlay.footer":
+"Triketon2048 ليس ميزة. إنه وعد.",
+
+"triketon.overlay.usecases.title": "لماذا هذا مهم",
+
+"triketon.usecase.researcher.title": "للباحثين",
+"triketon.usecase.researcher.body":
+"بصفتك باحثاً، قد تحتاج إلى إثبات أن فرضية أو فكرة أو نتيجة كانت موجودة في وقت معين — دون نشر أو كشف عملك مبكراً. يتيح Triketon إثبات الأولوية دون إفصاح.",
+
+"triketon.usecase.inventor.title": "للمخترعين",
+"triketon.usecase.inventor.body":
+"بصفتك مخترعاً، قد ترغب في إثبات أن فكرة ما نشأت منك — دون كشفها قبل أن تكون مستعداً. يقوم Triketon بختم الأفكار بدلاً من إخفائها ويثبت الملكية دون فقدان السيطرة.",
+
+"triketon.usecase.creative.title": "للمبدعين",
+"triketon.usecase.creative.body":
+"بصفتك مبدعاً، قد ترغب في التأكد من أن كلماتك ملك لك — حتى عند مشاركتها رقمياً. يوفر Triketon دليلاً على التأليف دون علامات مائية أو منصات أو نقل للحقوق.",
+
+"triketon.overlay.closing":
+"إثبات بلا امتلاك. تحقق بلا مراقبة.",
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "الأوضاع والخبراء",
@@ -2247,6 +2689,45 @@ const hi = {
   "support.mail.subject": "सपोर्ट अनुरोध: \"कृपया भरें\"",
   "support.mail.body": "कृपया अपना अनुरोध जितना हो सके उतना स्पष्ट और संक्षेप में लिखें।",
 
+"triketon.button.label": "Triketon2048",
+"triketon.button.tooltip": "सत्यापित · सत्य का प्रमाण",
+
+"triketon.overlay.title": "Triketon2048 — सत्यापित उत्तर",
+
+"triketon.overlay.intro":
+"इस उत्तर को क्रिप्टोग्राफ़िक रूप से सील किया गया है। इसकी प्रामाणिकता किसी भी समय सत्यापित की जा सकती है।",
+
+"triketon.overlay.explainer":
+"हम इस उत्तर की सामग्री को अपने सर्वरों पर संग्रहीत नहीं करते। केवल इसकी अखंडता का गणितीय प्रमाण रखा जाता है — स्वयं पाठ कभी नहीं।",
+
+"triketon.overlay.ownership":
+"आपके शब्द आपके हैं। पूर्ण सामग्री तक पहुँच केवल आपके पास है।",
+
+"triketon.overlay.data.title": "सत्यापन डेटा",
+
+"triketon.overlay.data.public_key": "सार्वजनिक कुंजी",
+"triketon.overlay.data.truth_hash": "सत्य हैश",
+"triketon.overlay.data.timestamp": "समय-मुद्रण",
+
+"triketon.overlay.footer":
+"Triketon2048 कोई सुविधा नहीं है। यह एक वादा है।",
+
+"triketon.overlay.usecases.title": "यह क्यों महत्वपूर्ण है",
+
+"triketon.usecase.researcher.title": "शोधकर्ताओं के लिए",
+"triketon.usecase.researcher.body":
+"एक शोधकर्ता के रूप में, आपको यह सिद्ध करने की आवश्यकता हो सकती है कि कोई परिकल्पना, विचार या परिणाम किसी निश्चित समय पर मौजूद था — बिना अपने कार्य को समय से पहले प्रकाशित या प्रकट किए। Triketon बिना प्रकटीकरण के प्राथमिकता और अखंडता सिद्ध करता है।",
+
+"triketon.usecase.inventor.title": "आविष्कारकों के लिए",
+"triketon.usecase.inventor.body":
+"एक आविष्कारक के रूप में, आप यह सिद्ध करना चाह सकते हैं कि कोई विचार आपसे उत्पन्न हुआ — बिना उसे तैयार होने से पहले उजागर किए। Triketon विचारों को छिपाने के बजाय सील करता है और नियंत्रण खोए बिना रचनात्मक स्वामित्व सिद्ध करता है।",
+
+"triketon.usecase.creative.title": "रचनाकारों के लिए",
+"triketon.usecase.creative.body":
+"एक रचनाकार के रूप में, आप यह सुनिश्चित करना चाह सकते हैं कि आपके शब्द आपके ही हैं — भले ही उन्हें डिजिटल रूप से साझा किया जाए। Triketon बिना वॉटरमार्क, प्लेटफ़ॉर्म या अधिकार हस्तांतरण के लेखकत्व का प्रमाण प्रदान करता है।",
+
+"triketon.overlay.closing":
+"स्वामित्व के बिना प्रमाण। निगरानी के बिना सत्यापन.",
 
   // Pillar sections (Smooth Operator)
   "pillar.section.header": "मोड और विशेषज्ञ",

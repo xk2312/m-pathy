@@ -626,10 +626,13 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
 function Bubble({
   msg,
   tokens,
+  onOpenTriketon,
 }: {
   msg: ChatMessage;
   tokens: Tokens;
+  onOpenTriketon?: (payload: any) => void;
 }) {
+
     const isUser = msg.role === "user";
   const { isNarrow } = useAssistantLayout();
   const isNarrowAssistant = !isUser && isNarrow;
@@ -749,15 +752,15 @@ function Bubble({
           </div>
         )}
 
-        {!isUser && (
+{!isUser && (
           <div
             style={{
               display: "flex",
               justifyContent: "flex-end",
               marginTop: 4,
+              gap: 8,
             }}
           >
-
             <button
               type="button"
               onClick={handleCopyAnswer}
@@ -777,8 +780,61 @@ function Bubble({
             >
               ⧉ Copy
             </button>
+
+              <button
+              type="button"
+              onClick={() => {
+                const hasSeal =
+                  !!(msg as any)?.triketon &&
+                  (msg as any).triketon?.sealed === true &&
+                  typeof (msg as any).triketon?.public_key === "string" &&
+                  typeof (msg as any).triketon?.truth_hash === "string";
+
+                if (!hasSeal) return;
+
+                onOpenTriketon?.({
+                  id: (msg as any)?.id ?? "",
+                  role: (msg as any)?.role ?? "assistant",
+                  meta: (msg as any)?.meta ?? null,
+                  triketon: (msg as any)?.triketon ?? null,
+                });
+              }}
+              aria-label="Triketon2048"
+              disabled={
+                !(
+                  !!(msg as any)?.triketon &&
+                  (msg as any).triketon?.sealed === true &&
+                  typeof (msg as any).triketon?.public_key === "string" &&
+                  typeof (msg as any).triketon?.truth_hash === "string"
+                )
+              }
+              style={{
+                border: "none",
+                borderRadius: 999,
+                padding: "2px 10px",
+                fontSize: 11,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                background: "rgba(15,23,42,0.65)",
+                color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
+                cursor: "pointer",
+                opacity:
+                  !!(msg as any)?.triketon && (msg as any).triketon?.sealed === true
+                    ? 0.9
+                    : 0.35,
+              }}
+              title={
+                !!(msg as any)?.triketon && (msg as any).triketon?.sealed === true
+                  ? "View Triketon seal"
+                  : "No Triketon seal for this message"
+              }
+            >
+              Triketon2048
+            </button>
+
           </div>
         )}
+
       </div>
     </div>
   );
@@ -795,12 +851,15 @@ function Conversation({
   tokens,
   padBottom = "12px",
   scrollRef,
+  onOpenTriketon,
 }: {
   messages: ChatMessage[];
   tokens: Tokens;
   padBottom?: string;
   scrollRef?: React.Ref<HTMLDivElement>;
+  onOpenTriketon?: (payload: any) => void;
 }) {
+
   return (
     <section
   role="log"
@@ -812,8 +871,9 @@ function Conversation({
   /* === EINFÜGEN ENDE ======================================= */
 >
   {messages.map((m, i) => (
-    <Bubble key={i} msg={m} tokens={tokens} />
+    <Bubble key={i} msg={m} tokens={tokens} onOpenTriketon={onOpenTriketon} />
   ))}
+
     <div className="chat-end-spacer" style={{ height: padBottom }} aria-hidden />
 </section>
   );
@@ -1195,6 +1255,19 @@ const [balance, setBalance] = useState<number | null>(null);
 
 
 const [mode, setMode] = useState<string>("DEFAULT");
+
+const [triketonOpen, setTriketonOpen] = useState(false);
+const [triketonPayload, setTriketonPayload] = useState<any>(null);
+
+const openTriketon = useCallback((payload: any) => {
+  setTriketonPayload(payload ?? null);
+  setTriketonOpen(true);
+}, []);
+
+const closeTriketon = useCallback(() => {
+  setTriketonOpen(false);
+  setTriketonPayload(null);
+}, []);
 
 // Preis-ID aus ENV für den Client (nur ID, kein Secret)
 const PRICE_1M = process.env.NEXT_PUBLIC_STRIPE_PRICE_1M as string | undefined;
@@ -2273,7 +2346,9 @@ undefined : "100dvh",
                 tokens={activeTokens}
                 padBottom={`${padBottom}px`}
                 scrollRef={convoRef as any}
+                onOpenTriketon={openTriketon}
               />
+
 
               {/* stabiler Endanker */}
               <div ref={endRef} style={{ height: 
@@ -2346,8 +2421,114 @@ undefined : "100dvh",
     )}
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
 
+    {triketonOpen && (
+      <div
+        role="dialog"
+        aria-modal="true"
+        onClick={closeTriketon}
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 9999,
+          background: "rgba(0,0,0,0.62)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 16,
+        }}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            width: "min(720px, 100%)",
+            borderRadius: TOKENS.radius.lg,
+            background: "rgba(15,23,42,0.92)",
+            border: `1px solid ${TOKENS.color.glassBorder}`,
+            boxShadow: TOKENS.shadow.soft,
+            padding: 20,
+            color: TOKENS.color.text,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12 }}>
+            <div style={{ fontSize: 20, fontWeight: 650, letterSpacing: "-0.02em" }}>
+              {t("triketon.overlay.title")}
+            </div>
+            <button
+              type="button"
+              onClick={closeTriketon}
+              style={{
+                border: "none",
+                borderRadius: 999,
+                padding: "6px 10px",
+                fontSize: 12,
+                background: "rgba(148,163,184,0.12)",
+                color: "rgba(226,232,240,0.9)",
+                cursor: "pointer",
+              }}
+            >
+              Close
+            </button>
+          </div>
+
+          <div style={{ marginTop: 10, fontSize: 13, lineHeight: 1.5, color: TOKENS.color.textMuted }}>
+            {t("triketon.overlay.intro")}
+            <br />
+            {t("triketon.overlay.explainer")}
+            <br />
+            {t("triketon.overlay.ownership")}
+          </div>
+
+          <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
+            <div style={{ padding: 12, borderRadius: TOKENS.radius.md, background: "rgba(2,6,23,0.35)", border: `1px solid ${TOKENS.color.glassBorder}` }}>
+              <div style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.75 }}>
+                {t("triketon.overlay.data.public_key")}
+              </div>
+              <div style={{ marginTop: 6, fontSize: 12, wordBreak: "break-all" }}>
+                {triketonPayload?.triketon?.public_key ?? ""}
+              </div>
+            </div>
+
+            <div style={{ padding: 12, borderRadius: TOKENS.radius.md, background: "rgba(2,6,23,0.35)", border: `1px solid ${TOKENS.color.glassBorder}` }}>
+              <div style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.75 }}>
+                {t("triketon.overlay.data.truth_hash")}
+              </div>
+              <div style={{ marginTop: 6, fontSize: 12, wordBreak: "break-all" }}>
+                {triketonPayload?.triketon?.truth_hash ?? ""}
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <div style={{ padding: 12, borderRadius: TOKENS.radius.md, background: "rgba(2,6,23,0.35)", border: `1px solid ${TOKENS.color.glassBorder}` }}>
+                <div style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.75 }}>
+                  {t("triketon.overlay.data.timestamp")}
+                </div>
+                <div style={{ marginTop: 6, fontSize: 12, wordBreak: "break-all" }}>
+                  {triketonPayload?.triketon?.timestamp ?? ""}
+                </div>
+              </div>
+
+              <div style={{ padding: 12, borderRadius: TOKENS.radius.md, background: "rgba(2,6,23,0.35)", border: `1px solid ${TOKENS.color.glassBorder}` }}>
+                <div style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.75 }}>
+                  Meta
+                </div>
+                <pre style={{ marginTop: 8, fontSize: 12, whiteSpace: "pre-wrap", wordBreak: "break-word", color: "rgba(226,232,240,0.85)" }}>
+{JSON.stringify({ id: triketonPayload?.id ?? "", meta: triketonPayload?.meta ?? null }, null, 2)}
+                </pre>
+              </div>
+            </div>
+
+            <div style={{ marginTop: 6, fontSize: 12, color: TOKENS.color.textMuted }}>
+              {t("triketon.overlay.closing")}
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+
 
 </main>
+
+
   </LanguageProvider>
   );
 }
