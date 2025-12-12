@@ -8,7 +8,7 @@ import socket
 import platform
 import random
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 # ==========================
 # TRIKETON: SEAL (SKELETON)
@@ -58,7 +58,7 @@ def triketon_seal(text: str, *, deterministic: bool = False, seed: int | None = 
 
     truth_hash = compute_truth_hash(normalized, salt=salt)
     public_key = generate_public_key_2048(truth_hash)
-    ts = datetime.utcnow().isoformat(timespec="seconds") + "Z"
+    ts = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
     return TriketonSeal(public_key=public_key, truth_hash=truth_hash, timestamp=ts)
 
@@ -156,7 +156,7 @@ class TRIKETONCore:
         self.nodeB = hashlib.sha256()
         self.nodeC = hashlib.sha256()
         self.salt_matrix = self.generate_salt_matrix()
-        self.timestamp = str(datetime.utcnow().timestamp())
+        self.timestamp = str(datetime.now(timezone.utc).timestamp())
         self.device_id = self.get_device_id()
         self.hash_result = None
 
