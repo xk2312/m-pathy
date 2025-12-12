@@ -1842,13 +1842,45 @@ if (busy) {
       ? data.tokens_used
       : null;
 
+  const rawTriketon = (data as any)?.triketon;
+
+  const triketon =
+    rawTriketon && typeof rawTriketon === "object"
+      ? {
+          sealed: true,
+          public_key:
+            (rawTriketon as any).public_key ??
+            (rawTriketon as any).publicKey ??
+            "",
+          truth_hash:
+            (rawTriketon as any).truth_hash ??
+            (rawTriketon as any).truthHash ??
+            "",
+          timestamp:
+            (rawTriketon as any).timestamp ??
+            (rawTriketon as any).sealed_at ??
+            "",
+          version: "v1",
+          hash_profile: "TRIKETON_HASH_V1",
+          key_profile: "TRIKETON_KEY_V1",
+          orbit_context: "chat",
+        }
+      : undefined;
+
+  const id =
+    typeof crypto !== "undefined" && typeof (crypto as any).randomUUID === "function"
+      ? (crypto as any).randomUUID()
+      : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+
   return {
+    id,
     role: assistant.role ?? "assistant",
     content: safeContent,
     format: assistant.format ?? "markdown",
     meta: { status, balanceAfter, tokensUsed },
-    triketon: (data as any)?.triketon,
-  } as ChatMessage;
+    triketon,
+  } as any as ChatMessage;
+
 
 }
 
