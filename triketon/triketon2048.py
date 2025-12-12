@@ -303,6 +303,16 @@ def parse_args():
     sp.add_argument("--deterministic", action="store_true", help="Deterministic mode (tests)")
     sp.add_argument("--seed", type=int, default=None, help="Seed for deterministic mode")
 
+      # verify (JSON-only)
+    vp = sub.add_parser("verify", help="Verify text against a Triketon seal (JSON only)")
+    vp.add_argument("text", help="Input text to verify")
+    g = vp.add_mutually_exclusive_group(required=True)
+    g.add_argument("--seal-json", help="Seal JSON string to verify against (shell quoting may be tricky)")
+    g.add_argument("--seal-file", help="Path to a seal JSON file (recommended)")
+    vp.add_argument("--deterministic", action="store_true", help="Deterministic mode (tests)")
+    vp.add_argument("--seed", type=int, default=None, help="Seed for deterministic mode")
+
+
     # legacy modes (kept)
     parser.add_argument("-s", "--string", help="Hash a single string")
     parser.add_argument("-f", "--file", help="Batch hash a file with one string per line")
@@ -310,10 +320,11 @@ def parse_args():
     parser.add_argument("-o", "--output", help="Output file for batch mode results")
     return parser.parse_args()
 
+
 def main():
     args = parse_args()
 
-    # --- new seal command ---
+    # --- seal ---
     if getattr(args, "cmd", None) == "seal":
         s = triketon_seal(
             args.text,
@@ -330,6 +341,53 @@ def main():
         }
         print(json.dumps(out, ensure_ascii=False))
         return
+
+    # --- verify ---
+    if getattr(args, "cmd", None) == "verify":
+        try:
+            if getattr(args, "seal_file", None):
+                with open(args.seal_file, "r", encoding="utf-8") as f:
+                    seal_raw = f.read()
+            else:
+                seal_raw = args.seal_json
+
+            seal = json.loads(seal_raw)
+        except FileNotFoundError:
+            print(json.dumps({"ok": False, "reason": "seal_file_not_found"}, ensure_ascii=False))
+            return
+        except Exception:
+            print(json.dumps({"ok": False, "reason": "invalid_seal_json"}, ensure_ascii=False))
+            return
+
+        s = triketon_seal(
+            args.text,
+            deterministic=bool(args.deterministic),
+            seed=args.seed,
+        )
+
+        ok = (
+            seal.get("truth_hash") == s.truth_hash
+            and seal.get("public_key") == s.public_key
+            and seal.get("version") == s.version
+        )
+
+        out = {
+            "ok": bool(ok),
+            "expected": {
+                "truth_hash": s.truth_hash,
+                "public_key": s.public_key,
+                "version": s.version,
+            },
+            "received": {
+                "truth_hash": seal.get("truth_hash"),
+                "public_key": seal.get("public_key"),
+                "version": seal.get("version"),
+            },
+        }
+        print(json.dumps(out, ensure_ascii=False))
+        return
+
+
 
     # --- legacy behavior ---
     if args.interactive:
