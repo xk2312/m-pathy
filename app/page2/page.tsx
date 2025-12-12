@@ -1872,7 +1872,7 @@ if (busy) {
       ? (crypto as any).randomUUID()
       : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
 
-  try {
+    try {
     if (triketon?.public_key && triketon?.truth_hash && triketon?.timestamp) {
       appendTriketonArchiveEntry(
         {
@@ -1881,6 +1881,7 @@ if (busy) {
           timestamp: triketon.timestamp,
           orbit_context: "chat",
           version: "v1",
+          message_id: id,
           ref: { ts: Date.now(), idx: Array.isArray(context) ? context.length : undefined },
           content: safeContent,
         },
@@ -1888,6 +1889,7 @@ if (busy) {
       );
     }
   } catch {}
+
 
 
   return {
