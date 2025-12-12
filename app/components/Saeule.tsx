@@ -1726,8 +1726,9 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
           </a>
         </div>
         <span className={styles.saeuleBottomNoteLabel}>
-          m-pathy.ai runs on AI OS — GPTM-Galaxy+. 100% privacy. Zero drift. Full autonomy.
-        </span>
+Powered by MAIOS.
+TRIKETON-verified integrity.
+100% privacy. Zero drift. Full autonomy.        </span>
       </div>
     </aside>
 

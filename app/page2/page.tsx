@@ -686,6 +686,8 @@ function Bubble({
     ? userBubbleStyle
     : assistantStyle;
 
+  const [triketonHover, setTriketonHover] = useState(false);
+
   const handleCopyAnswer = () => {
     const text = String(msg.content ?? "");
     if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
@@ -781,59 +783,45 @@ function Bubble({
               ⧉ Copy
             </button>
 
-              {(() => {
-                const hasSeal =
-                  !!(msg as any)?.triketon &&
-                  (msg as any).triketon?.sealed === true &&
-                  typeof (msg as any).triketon?.public_key === "string" &&
-                  typeof (msg as any).triketon?.truth_hash === "string";
+              <button
+                type="button"
+                onClick={() => {
+                  const payload = {
+                    id: (msg as any)?.id ?? "",
+                    role: (msg as any)?.role ?? "assistant",
+                    meta: (msg as any)?.meta ?? null,
+                    triketon: (msg as any)?.triketon ?? null,
+                  };
+                  onOpenTriketon?.(payload);
+                }}
+                onMouseEnter={() => setTriketonHover(true)}
+                onMouseLeave={() => setTriketonHover(false)}
+                aria-label="Triketon2048"
+                style={{
+                  border: `1px solid ${
+                    triketonHover
+                      ? tokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"
+                      : tokens.color.glassBorder ?? "rgba(255,255,255,0.12)"
+                  }`,
+                  borderRadius: 999,
+                  padding: "2px 10px",
+                  fontSize: 11,
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  background: triketonHover
+                    ? tokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"
+                    : "rgba(15,23,42,0.65)",
+                  color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
+                  cursor: "pointer",
+                  opacity: 0.92,
+                  pointerEvents: "auto",
+                  transition: "background 180ms ease, border-color 180ms ease, opacity 180ms ease",
+                }}
+                title="Triketon2048"
+              >
+                Triketon2048
+              </button>
 
-                if (!hasSeal) return null;
-                
-                return (
-  <button
-    type="button"
-    onClick={() => {
-      const payload = {
-        id: (msg as any)?.id ?? "",
-        role: (msg as any)?.role ?? "assistant",
-        meta: (msg as any)?.meta ?? null,
-        triketon: (msg as any)?.triketon ?? null,
-      };
-      onOpenTriketon?.(payload);
-    }}
-    onMouseEnter={() => {
-      const payload = {
-        id: (msg as any)?.id ?? "",
-        role: (msg as any)?.role ?? "assistant",
-        meta: (msg as any)?.meta ?? null,
-        triketon: (msg as any)?.triketon ?? null,
-      };
-      onOpenTriketon?.(payload);
-    }}
-    aria-label="Triketon2048"
-    style={{
-      border: "none",
-      borderRadius: 999,
-      padding: "2px 10px",
-      fontSize: 11,
-      letterSpacing: "0.06em",
-      textTransform: "uppercase",
-      background: "rgba(15,23,42,0.65)",
-      color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
-      cursor: "pointer",
-      opacity: 0.9,
-      pointerEvents: "auto",
-    }}
-    title="View Triketon seal"
-  >
-    Triketon2048
-  </button>
-);
-
-
-
-              })()}
 
 
           </div>
