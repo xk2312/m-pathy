@@ -1847,6 +1847,7 @@ if (busy) {
     content: safeContent,
     format: assistant.format ?? "markdown",
     meta: { status, balanceAfter, tokensUsed },
+    triketon: (data as any)?.triketon,
   } as ChatMessage;
 
 }
