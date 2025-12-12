@@ -791,66 +791,74 @@ function Bubble({
                 if (!hasSeal) return null;
 
              return (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const payload = {
-                        id: (msg as any)?.id ?? "",
-                        role: (msg as any)?.role ?? "assistant",
-                        meta: (msg as any)?.meta ?? null,
-                        triketon: (msg as any)?.triketon ?? null,
-                      };
-                      if (onOpenTriketon) {
-                        onOpenTriketon(payload);
-                        return;
-                      }
-                      try {
-                        window.dispatchEvent(
-                          new CustomEvent("mpathy:triketon:open", { detail: payload }),
-                        );
-                      } catch {}
-                    }}
-                    onMouseEnter={() => {
-                      const payload = {
-                        id: (msg as any)?.id ?? "",
-                        role: (msg as any)?.role ?? "assistant",
-                        meta: (msg as any)?.meta ?? null,
-                        triketon: (msg as any)?.triketon ?? null,
-                      };
-                      if (onOpenTriketon) {
-                        onOpenTriketon(payload);
-                        return;
-                      }
-                      try {
-                        window.dispatchEvent(
-                          new CustomEvent("mpathy:triketon:open", { detail: payload }),
-                        );
-                      } catch {}
-                    }}
-                    onMouseLeave={() => {
-                      try {
-                        window.dispatchEvent(new CustomEvent("mpathy:triketon:close"));
-                      } catch {}
-                    }}
-                    aria-label="Triketon2048"
-                    style={{
-                      border: "none",
-                      borderRadius: 999,
-                      padding: "2px 10px",
-                      fontSize: 11,
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      background: "rgba(15,23,42,0.65)",
-                      color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
-                      cursor: "pointer",
-                      opacity: 0.9,
-                      pointerEvents: "auto",
-                    }}
-                    title="View Triketon seal"
-                  >
-                    Triketon2048
-                  </button>
-                );
+  <button
+    type="button"
+    onClick={() => {
+      const payload = {
+        id: (msg as any)?.id ?? "",
+        role: (msg as any)?.role ?? "assistant",
+        meta: (msg as any)?.meta ?? null,
+        triketon: (msg as any)?.triketon ?? null,
+        __pin: true,
+      };
+      if (onOpenTriketon) {
+        onOpenTriketon(payload);
+        return;
+      }
+      try {
+        window.dispatchEvent(
+          new CustomEvent("mpathy:triketon:open", { detail: payload }),
+        );
+      } catch {}
+    }}
+    onMouseEnter={() => {
+      const payload = {
+        id: (msg as any)?.id ?? "",
+        role: (msg as any)?.role ?? "assistant",
+        meta: (msg as any)?.meta ?? null,
+        triketon: (msg as any)?.triketon ?? null,
+      };
+      if (onOpenTriketon) {
+        onOpenTriketon(payload);
+        return;
+      }
+      try {
+        window.dispatchEvent(
+          new CustomEvent("mpathy:triketon:open", { detail: payload }),
+        );
+      } catch {}
+    }}
+    onMouseLeave={() => {
+      if (onOpenTriketon) {
+        try {
+          (window as any).__mpathy_triketon_schedule_close?.();
+        } catch {}
+        return;
+      }
+      try {
+        window.dispatchEvent(new CustomEvent("mpathy:triketon:close"));
+      } catch {}
+    }}
+    aria-label="Triketon2048"
+    style={{
+      border: "none",
+      borderRadius: 999,
+      padding: "2px 10px",
+      fontSize: 11,
+      letterSpacing: "0.06em",
+      textTransform: "uppercase",
+      background: "rgba(15,23,42,0.65)",
+      color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
+      cursor: "pointer",
+      opacity: 0.9,
+      pointerEvents: "auto",
+    }}
+    title="View Triketon seal"
+  >
+    Triketon2048
+  </button>
+);
+
 
               })()}
 
@@ -1281,16 +1289,39 @@ const [mode, setMode] = useState<string>("DEFAULT");
 
 const [triketonOpen, setTriketonOpen] = useState(false);
 const [triketonPayload, setTriketonPayload] = useState<any>(null);
+const [triketonPinned, setTriketonPinned] = useState(false);
+const triketonCloseTimerRef = useRef<number | null>(null);
 
 const openTriketon = useCallback((payload: any) => {
+  if (triketonCloseTimerRef.current != null) {
+    window.clearTimeout(triketonCloseTimerRef.current);
+    triketonCloseTimerRef.current = null;
+  }
   setTriketonPayload(payload ?? null);
   setTriketonOpen(true);
 }, []);
 
 const closeTriketon = useCallback(() => {
+  if (triketonCloseTimerRef.current != null) {
+    window.clearTimeout(triketonCloseTimerRef.current);
+    triketonCloseTimerRef.current = null;
+  }
   setTriketonOpen(false);
   setTriketonPayload(null);
+  setTriketonPinned(false);
 }, []);
+
+const scheduleCloseTriketon = useCallback(() => {
+  if (triketonPinned) return;
+  if (triketonCloseTimerRef.current != null) {
+    window.clearTimeout(triketonCloseTimerRef.current);
+  }
+  triketonCloseTimerRef.current = window.setTimeout(() => {
+    setTriketonOpen(false);
+    setTriketonPayload(null);
+  }, 120);
+}, [triketonPinned]);
+
 
 useEffect(() => {
   const onOpen = (e: Event) => {
@@ -1298,6 +1329,7 @@ useEffect(() => {
       const detail = (e as CustomEvent).detail ?? null;
       setTriketonPayload(detail);
       setTriketonOpen(true);
+      if (detail && (detail as any).__pin) setTriketonPinned(true);
     } catch {}
   };
 
@@ -1305,17 +1337,25 @@ useEffect(() => {
     try {
       setTriketonOpen(false);
       setTriketonPayload(null);
+      setTriketonPinned(false);
     } catch {}
   };
 
   window.addEventListener("mpathy:triketon:open" as any, onOpen as any);
   window.addEventListener("mpathy:triketon:close" as any, onClose as any);
 
+  (window as any).__mpathy_triketon_schedule_close = () => {
+    scheduleCloseTriketon();
+  };
+
   return () => {
     window.removeEventListener("mpathy:triketon:open" as any, onOpen as any);
     window.removeEventListener("mpathy:triketon:close" as any, onClose as any);
+    try {
+      delete (window as any).__mpathy_triketon_schedule_close;
+    } catch {}
   };
-}, []);
+}, [scheduleCloseTriketon]);
 
 
 // Preis-ID aus ENV für den Client (nur ID, kein Secret)
