@@ -294,6 +294,16 @@ def cli_batch_mode():
 def parse_args():
     import argparse
     parser = argparse.ArgumentParser(description="TRIKETON-2048 Phase 1 :: Secure Hashing Engine")
+    sub = parser.add_subparsers(dest="cmd")
+
+    # seal (JSON-only)
+    sp = sub.add_parser("seal", help="Create a Triketon seal and print JSON only")
+    sp.add_argument("text", help="Input text to seal")
+    sp.add_argument("--json", action="store_true", help="Print JSON (default)")
+    sp.add_argument("--deterministic", action="store_true", help="Deterministic mode (tests)")
+    sp.add_argument("--seed", type=int, default=None, help="Seed for deterministic mode")
+
+    # legacy modes (kept)
     parser.add_argument("-s", "--string", help="Hash a single string")
     parser.add_argument("-f", "--file", help="Batch hash a file with one string per line")
     parser.add_argument("-i", "--interactive", action="store_true", help="Start in interactive mode")
@@ -303,6 +313,25 @@ def parse_args():
 def main():
     args = parse_args()
 
+    # --- new seal command ---
+    if getattr(args, "cmd", None) == "seal":
+        s = triketon_seal(
+            args.text,
+            deterministic=bool(args.deterministic),
+            seed=args.seed,
+        )
+        out = {
+            "version": s.version,
+            "hash_profile": s.hash_profile,
+            "key_profile": s.key_profile,
+            "timestamp": s.timestamp,
+            "truth_hash": s.truth_hash,
+            "public_key": s.public_key,
+        }
+        print(json.dumps(out, ensure_ascii=False))
+        return
+
+    # --- legacy behavior ---
     if args.interactive:
         interactive_mode()
         return
@@ -328,6 +357,7 @@ def main():
     else:
         print_intro()
         print("⚠️ No mode selected. Use -i for interactive or -h for help.")
+
 
 # ========================
 # EXECUTE MAIN
