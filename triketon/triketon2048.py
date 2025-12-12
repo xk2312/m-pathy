@@ -82,8 +82,30 @@ def normalize_for_truth_hash(text: str) -> str:
     return t
 
 # ==========================
+# TRIKETON: TRUTH HASH
+# ==========================
+
+def compute_truth_hash(normalized_text: str, *, salt: bytes) -> str:
+    """
+    TruthHash Law v1
+    - input MUST be normalized text (see normalize_for_truth_hash)
+    - hash = SHA256( salt || normalized_text )
+    - output: 64-char hex string
+    """
+    if not isinstance(normalized_text, str):
+        normalized_text = str(normalized_text)
+    if not isinstance(salt, (bytes, bytearray)):
+        raise TypeError("salt must be bytes")
+
+    h = hashlib.sha256()
+    h.update(salt)
+    h.update(normalized_text.encode("utf-8"))
+    return h.hexdigest()
+
+# ==========================
 # TRIKETON: PHASE 1 - CORE
 # ==========================
+
 
 
 
