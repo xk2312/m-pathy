@@ -1,17 +1,81 @@
 // lib/chatStorage.ts
 // Eine Quelle der Wahrheit für Chat-Persistenz (localStorage)
 
+export type TriketonSeal = {
+  sealed: true;
+  public_key: string;
+  truth_hash: string;
+  timestamp: string; // sealed_at (UTC ISO)
+  version: "v1";
+  hash_profile: "TRIKETON_HASH_V1";
+  key_profile: "TRIKETON_KEY_V1";
+  orbit_context: "chat" | "manual-smoke";
+};
+
 export type ChatMessage = {
   id: string;
   role: "system" | "user" | "assistant";
   content: string;
   ts?: number;
+  triketon?: TriketonSeal;
 };
 
 /** Versionierter Hauptschlüssel */
 const CHAT_STORAGE_KEY = "mpathy:chat:v1";
 /** Ältere/alternative Schlüssel, die ggf. migriert werden sollen */
 const LEGACY_KEYS = ["mpage2_messages_v1"];
+
+function isNonEmptyString(x: unknown): x is string {
+  return typeof x === "string" && x.trim().length > 0;
+}
+
+function isTriketonSeal(x: unknown): x is TriketonSeal {
+  if (!x || typeof x !== "object") return false;
+  const o = x as any;
+  return (
+    o.sealed === true &&
+    isNonEmptyString(o.public_key) &&
+    isNonEmptyString(o.truth_hash) &&
+    isNonEmptyString(o.timestamp) &&
+    o.version === "v1" &&
+    o.hash_profile === "TRIKETON_HASH_V1" &&
+    o.key_profile === "TRIKETON_KEY_V1" &&
+    (o.orbit_context === "chat" || o.orbit_context === "manual-smoke")
+  );
+}
+
+function normalizeMessage(x: any): ChatMessage | null {
+  if (!x || typeof x !== "object") return null;
+  const id = x.id;
+  const role = x.role;
+  const content = x.content;
+  if (
+    !isNonEmptyString(id) ||
+    (role !== "system" && role !== "user" && role !== "assistant") ||
+    !isNonEmptyString(content)
+  ) {
+    return null;
+  }
+
+  const ts = typeof x.ts === "number" && Number.isFinite(x.ts) ? x.ts : undefined;
+  const triketon = isTriketonSeal(x.triketon) ? x.triketon : undefined;
+
+  return { id, role, content, ts, triketon };
+}
+
+function normalizeMessages(arr: unknown): ChatMessage[] {
+  try {
+    if (!Array.isArray(arr)) return [];
+    const out: ChatMessage[] = [];
+    for (const item of arr) {
+      const m = normalizeMessage(item);
+      if (m) out.push(m);
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
 
 /** Anzahl der gespeicherten Nachrichten begrenzen (Default 120) */
 export function truncateChat(arr: ChatMessage[], max = 120): ChatMessage[] {
@@ -35,9 +99,8 @@ export function initChatStorage(): void {
       try {
         const data = JSON.parse(raw);
         if (Array.isArray(data)) {
-          ls.setItem(CHAT_STORAGE_KEY, JSON.stringify(truncateChat(data)));
-          // Legacy optional aufräumen:
-          // ls.removeItem(k);
+          const normalized = normalizeMessages(data);
+          ls.setItem(CHAT_STORAGE_KEY, JSON.stringify(truncateChat(normalized)));
           break;
         }
       } catch { /* ignore parse error */ }
@@ -52,7 +115,10 @@ export function loadChat(): ChatMessage[] | null {
     const raw = window.localStorage.getItem(CHAT_STORAGE_KEY);
     if (!raw) return null;
     const data = JSON.parse(raw);
-    return Array.isArray(data) ? (data as ChatMessage[]) : null;
+    if (!Array.isArray(data)) return null;
+
+    const normalized = normalizeMessages(data);
+    return normalized.length ? normalized : [];
   } catch {
     return null;
   }
@@ -62,9 +128,10 @@ export function loadChat(): ChatMessage[] | null {
 export function saveChat(messages: ChatMessage[], max = 120): void {
   try {
     if (typeof window === "undefined") return;
+    const normalized = normalizeMessages(messages as unknown);
     window.localStorage.setItem(
       CHAT_STORAGE_KEY,
-      JSON.stringify(truncateChat(messages, max))
+      JSON.stringify(truncateChat(normalized, max))
     );
   } catch { /* ignore quota/availability */ }
 }
@@ -111,8 +178,6 @@ export function hardClearChat(opts: { reload?: boolean } = { reload: true }): vo
   }
 }
 
-
-
 export function getChatStorageKey(): string {
   return CHAT_STORAGE_KEY;
 }
@@ -124,4 +189,3 @@ export function makeClearHandler(setMessages: (m: ChatMessage[]) => void) {
     setMessages([]);
   };
 }
-
