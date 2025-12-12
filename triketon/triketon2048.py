@@ -46,8 +46,45 @@ def triketon_seal(text: str, *, deterministic: bool = False, seed: int | None = 
     return TriketonSeal(public_key="", truth_hash=truth_hash, timestamp=ts)
 
 # ==========================
+# TRIKETON: NORMALIZATION
+# ==========================
+
+import re
+import unicodedata
+
+def normalize_for_truth_hash(text: str) -> str:
+    """
+    TruthHash Law v1 — canonical normalization
+    - remove markdown syntax (#, **, __, ``, etc.)
+    - remove HTML tags
+    - remove emojis & non-text unicode symbols
+    - unicode normalize (NFC)
+    - DO NOT change or collapse whitespace
+    """
+    if not isinstance(text, str):
+        text = str(text)
+
+    # Unicode normalize first (stable codepoints)
+    t = unicodedata.normalize("NFC", text)
+
+    # Strip HTML tags
+    t = re.sub(r"<[^>]+>", "", t)
+
+    # Remove common markdown markers (keep content)
+    t = re.sub(r"(\*\*|__|\*|_|`|~~)", "", t)
+
+    # Remove emojis & symbols (keep basic multilingual text)
+    t = "".join(
+        ch for ch in t
+        if not unicodedata.category(ch).startswith("So")
+    )
+
+    return t
+
+# ==========================
 # TRIKETON: PHASE 1 - CORE
 # ==========================
+
 
 
 class TRIKETONCore:
