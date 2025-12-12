@@ -146,7 +146,7 @@ import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import { useMobileViewport } from "@/lib/useMobileViewport";
 
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
-import { loadChat, saveChat, initChatStorage, hardClearChat } from "@/lib/chatStorage";
+import { loadChat, saveChat, initChatStorage, hardClearChat, appendTriketonArchiveEntry } from "@/lib/chatStorage";
 
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
@@ -1872,6 +1872,22 @@ if (busy) {
       ? (crypto as any).randomUUID()
       : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
 
+  try {
+    if (triketon?.public_key && triketon?.truth_hash && triketon?.timestamp) {
+      appendTriketonArchiveEntry(
+        {
+          public_key: triketon.public_key,
+          truth_hash: triketon.truth_hash,
+          timestamp: triketon.timestamp,
+          orbit_context: "chat",
+          version: "v1",
+          ref: { ts: Date.now(), idx: Array.isArray(context) ? context.length : undefined },
+        },
+        500
+      );
+    }
+  } catch {}
+
   return {
     id,
     role: assistant.role ?? "assistant",
@@ -1883,6 +1899,7 @@ if (busy) {
 
 
 }
+
 
 
 

@@ -12,6 +12,16 @@ export type TriketonSeal = {
   orbit_context: "chat" | "manual-smoke";
 };
 
+export type TriketonArchiveEntry = {
+  public_key: string;
+  truth_hash: string;
+  timestamp: string; // UTC ISO
+  orbit_context: "chat";
+  version: "v1";
+  ref: { ts?: number; idx?: number };
+};
+
+
 export type ChatMessage = {
   id: string;
   role: "system" | "user" | "assistant";
@@ -22,8 +32,11 @@ export type ChatMessage = {
 
 /** Versionierter Hauptschlüssel */
 const CHAT_STORAGE_KEY = "mpathy:chat:v1";
+/** Triketon-Archiv (separat, entkoppelt vom Chat) */
+const TRIKETON_STORAGE_KEY = "mpathy:triketon:v1";
 /** Ältere/alternative Schlüssel, die ggf. migriert werden sollen */
 const LEGACY_KEYS = ["mpage2_messages_v1"];
+
 
 function isNonEmptyString(x: unknown): x is string {
   return typeof x === "string" && x.trim().length > 0;
@@ -190,6 +203,42 @@ export function hardClearChat(opts: { reload?: boolean } = { reload: true }): vo
 
 export function getChatStorageKey(): string {
   return CHAT_STORAGE_KEY;
+}
+
+export function getTriketonStorageKey(): string {
+  return TRIKETON_STORAGE_KEY;
+}
+
+function isArchiveEntry(x: unknown): x is TriketonArchiveEntry {
+  if (!x || typeof x !== "object") return false;
+  const o = x as any;
+  return (
+    isNonEmptyString(o.public_key) &&
+    isNonEmptyString(o.truth_hash) &&
+    isNonEmptyString(o.timestamp) &&
+    o.orbit_context === "chat" &&
+    o.version === "v1" &&
+    (o.ref == null || typeof o.ref === "object")
+  );
+}
+
+export function appendTriketonArchiveEntry(entry: TriketonArchiveEntry, max = 500): void {
+  try {
+    if (typeof window === "undefined") return;
+    const ls = window.localStorage;
+
+    const raw = ls.getItem(TRIKETON_STORAGE_KEY);
+    let arr: any[] = [];
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) arr = parsed;
+      } catch {}
+    }
+
+    const next = [...arr, entry].filter(isArchiveEntry).slice(-max);
+    ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(next));
+  } catch {}
 }
 
 /** Clear handler factory (no bubble, prepares for hard clear) */
