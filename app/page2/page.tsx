@@ -1893,7 +1893,31 @@ if (busy) {
     const trimmed = (text ?? "").trim();
     if (!trimmed) return;
 
+    // Debug ohne Console: /debug storage zeigt Key-Existenz + Länge (ohne Inhalte)
+    if (trimmed === "/debug storage") {
+      try {
+        const kChatV1 = "mpathy:chat:v1";
+        const kThread = "mpathy:thread:default";
+        const kLegacy = "mpage2_messages_v1";
+
+        const vChat = window.localStorage.getItem(kChatV1);
+        const vThread = window.localStorage.getItem(kThread);
+        const vLegacy = window.localStorage.getItem(kLegacy);
+
+        systemSay(
+          `**Storage Debug**\n\n` +
+            `- ${kChatV1}: ${vChat ? vChat.length : 0}\n` +
+            `- ${kThread}: ${vThread ? vThread.length : 0}\n` +
+            `- ${kLegacy}: ${vLegacy ? vLegacy.length : 0}`,
+        );
+      } catch {
+        systemSay("**Storage Debug**\n\nFailed to read localStorage.");
+      }
+      return;
+    }
+
     const userMsg: ChatMessage = { role: "user", content: trimmed, format: "markdown" };
+
     const optimistic = truncateMessages([...(messages ?? []), userMsg]);
     setMessages(optimistic);
     persistMessages(optimistic);
