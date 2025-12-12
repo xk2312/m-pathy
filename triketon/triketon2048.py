@@ -103,11 +103,35 @@ def compute_truth_hash(normalized_text: str, *, salt: bytes) -> str:
     return h.hexdigest()
 
 # ==========================
-# TRIKETON: PHASE 1 - CORE
+# TRIKETON: PUBLIC KEY (2048)
 # ==========================
 
+import base64
 
+def generate_public_key_2048(truth_hash_hex: str) -> str:
+    """
+    PublicKey Law v1
+    - input: 64-char hex truth hash
+    - derive 2048-bit (256 bytes) key material by iterative SHA-256 expansion
+    - output: base64url-encoded string
+    """
+    if not isinstance(truth_hash_hex, str) or len(truth_hash_hex) != 64:
+        raise ValueError("truth_hash_hex must be a 64-char hex string")
 
+    seed = bytes.fromhex(truth_hash_hex)
+    material = bytearray()
+    cur = seed
+
+    while len(material) < 256:
+        cur = hashlib.sha256(cur).digest()
+        material.extend(cur)
+
+    key_bytes = bytes(material[:256])
+    return base64.urlsafe_b64encode(key_bytes).decode("ascii")
+
+# ==========================
+# TRIKETON: PHASE 1 - CORE
+# ==========================
 
 class TRIKETONCore:
     def __init__(self):
