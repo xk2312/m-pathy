@@ -1882,11 +1882,13 @@ if (busy) {
           orbit_context: "chat",
           version: "v1",
           ref: { ts: Date.now(), idx: Array.isArray(context) ? context.length : undefined },
+          content: safeContent,
         },
         500
       );
     }
   } catch {}
+
 
   return {
     id,

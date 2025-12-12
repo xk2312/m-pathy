@@ -19,7 +19,9 @@ export type TriketonArchiveEntry = {
   orbit_context: "chat";
   version: "v1";
   ref: { ts?: number; idx?: number };
+  content: string; // Klartext-Antwort (nur im User-LS, nicht auf Server)
 };
+
 
 
 export type ChatMessage = {
@@ -216,11 +218,13 @@ function isArchiveEntry(x: unknown): x is TriketonArchiveEntry {
     isNonEmptyString(o.public_key) &&
     isNonEmptyString(o.truth_hash) &&
     isNonEmptyString(o.timestamp) &&
+    isNonEmptyString(o.content) &&
     o.orbit_context === "chat" &&
     o.version === "v1" &&
     (o.ref == null || typeof o.ref === "object")
   );
 }
+
 
 export function appendTriketonArchiveEntry(entry: TriketonArchiveEntry, max = 500): void {
   try {
