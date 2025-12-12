@@ -789,8 +789,8 @@ function Bubble({
                   typeof (msg as any).triketon?.truth_hash === "string";
 
                 if (!hasSeal) return null;
-
-             return (
+                
+                return (
   <button
     type="button"
     onClick={() => {
@@ -799,17 +799,8 @@ function Bubble({
         role: (msg as any)?.role ?? "assistant",
         meta: (msg as any)?.meta ?? null,
         triketon: (msg as any)?.triketon ?? null,
-        __pin: true,
       };
-      if (onOpenTriketon) {
-        onOpenTriketon(payload);
-        return;
-      }
-      try {
-        window.dispatchEvent(
-          new CustomEvent("mpathy:triketon:open", { detail: payload }),
-        );
-      } catch {}
+      onOpenTriketon?.(payload);
     }}
     onMouseEnter={() => {
       const payload = {
@@ -818,26 +809,7 @@ function Bubble({
         meta: (msg as any)?.meta ?? null,
         triketon: (msg as any)?.triketon ?? null,
       };
-      if (onOpenTriketon) {
-        onOpenTriketon(payload);
-        return;
-      }
-      try {
-        window.dispatchEvent(
-          new CustomEvent("mpathy:triketon:open", { detail: payload }),
-        );
-      } catch {}
-    }}
-    onMouseLeave={() => {
-      if (onOpenTriketon) {
-        try {
-          (window as any).__mpathy_triketon_schedule_close?.();
-        } catch {}
-        return;
-      }
-      try {
-        window.dispatchEvent(new CustomEvent("mpathy:triketon:close"));
-      } catch {}
+      onOpenTriketon?.(payload);
     }}
     aria-label="Triketon2048"
     style={{
@@ -858,6 +830,7 @@ function Bubble({
     Triketon2048
   </button>
 );
+
 
 
               })()}
@@ -1324,38 +1297,8 @@ const scheduleCloseTriketon = useCallback(() => {
 
 
 useEffect(() => {
-  const onOpen = (e: Event) => {
-    try {
-      const detail = (e as CustomEvent).detail ?? null;
-      setTriketonPayload(detail);
-      setTriketonOpen(true);
-      if (detail && (detail as any).__pin) setTriketonPinned(true);
-    } catch {}
-  };
-
-  const onClose = () => {
-    try {
-      setTriketonOpen(false);
-      setTriketonPayload(null);
-      setTriketonPinned(false);
-    } catch {}
-  };
-
-  window.addEventListener("mpathy:triketon:open" as any, onOpen as any);
-  window.addEventListener("mpathy:triketon:close" as any, onClose as any);
-
-  (window as any).__mpathy_triketon_schedule_close = () => {
-    scheduleCloseTriketon();
-  };
-
-  return () => {
-    window.removeEventListener("mpathy:triketon:open" as any, onOpen as any);
-    window.removeEventListener("mpathy:triketon:close" as any, onClose as any);
-    try {
-      delete (window as any).__mpathy_triketon_schedule_close;
-    } catch {}
-  };
-}, [scheduleCloseTriketon]);
+  return () => {};
+}, []);
 
 
 // Preis-ID aus ENV für den Client (nur ID, kein Secret)
