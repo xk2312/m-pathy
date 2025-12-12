@@ -781,56 +781,46 @@ function Bubble({
               ⧉ Copy
             </button>
 
-              <button
-              type="button"
-              onClick={() => {
+              {(() => {
                 const hasSeal =
                   !!(msg as any)?.triketon &&
                   (msg as any).triketon?.sealed === true &&
                   typeof (msg as any).triketon?.public_key === "string" &&
                   typeof (msg as any).triketon?.truth_hash === "string";
 
-                if (!hasSeal) return;
+                if (!hasSeal) return null;
 
-                onOpenTriketon?.({
-                  id: (msg as any)?.id ?? "",
-                  role: (msg as any)?.role ?? "assistant",
-                  meta: (msg as any)?.meta ?? null,
-                  triketon: (msg as any)?.triketon ?? null,
-                });
-              }}
-              aria-label="Triketon2048"
-              disabled={
-                !(
-                  !!(msg as any)?.triketon &&
-                  (msg as any).triketon?.sealed === true &&
-                  typeof (msg as any).triketon?.public_key === "string" &&
-                  typeof (msg as any).triketon?.truth_hash === "string"
-                )
-              }
-              style={{
-                border: "none",
-                borderRadius: 999,
-                padding: "2px 10px",
-                fontSize: 11,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                background: "rgba(15,23,42,0.65)",
-                color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
-                cursor: "pointer",
-                opacity:
-                  !!(msg as any)?.triketon && (msg as any).triketon?.sealed === true
-                    ? 0.9
-                    : 0.35,
-              }}
-              title={
-                !!(msg as any)?.triketon && (msg as any).triketon?.sealed === true
-                  ? "View Triketon seal"
-                  : "No Triketon seal for this message"
-              }
-            >
-              Triketon2048
-            </button>
+                return (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onOpenTriketon?.({
+                        id: (msg as any)?.id ?? "",
+                        role: (msg as any)?.role ?? "assistant",
+                        meta: (msg as any)?.meta ?? null,
+                        triketon: (msg as any)?.triketon ?? null,
+                      });
+                    }}
+                    aria-label="Triketon2048"
+                    style={{
+                      border: "none",
+                      borderRadius: 999,
+                      padding: "2px 10px",
+                      fontSize: 11,
+                      letterSpacing: "0.06em",
+                      textTransform: "uppercase",
+                      background: "rgba(15,23,42,0.65)",
+                      color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
+                      cursor: "pointer",
+                      opacity: 0.9,
+                    }}
+                    title="View Triketon seal"
+                  >
+                    Triketon2048
+                  </button>
+                );
+              })()}
+
 
           </div>
         )}
