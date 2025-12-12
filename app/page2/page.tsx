@@ -790,16 +790,47 @@ function Bubble({
 
                 if (!hasSeal) return null;
 
-                return (
+             return (
                   <button
                     type="button"
                     onClick={() => {
-                      onOpenTriketon?.({
+                      const payload = {
                         id: (msg as any)?.id ?? "",
                         role: (msg as any)?.role ?? "assistant",
                         meta: (msg as any)?.meta ?? null,
                         triketon: (msg as any)?.triketon ?? null,
-                      });
+                      };
+                      if (onOpenTriketon) {
+                        onOpenTriketon(payload);
+                        return;
+                      }
+                      try {
+                        window.dispatchEvent(
+                          new CustomEvent("mpathy:triketon:open", { detail: payload }),
+                        );
+                      } catch {}
+                    }}
+                    onMouseEnter={() => {
+                      const payload = {
+                        id: (msg as any)?.id ?? "",
+                        role: (msg as any)?.role ?? "assistant",
+                        meta: (msg as any)?.meta ?? null,
+                        triketon: (msg as any)?.triketon ?? null,
+                      };
+                      if (onOpenTriketon) {
+                        onOpenTriketon(payload);
+                        return;
+                      }
+                      try {
+                        window.dispatchEvent(
+                          new CustomEvent("mpathy:triketon:open", { detail: payload }),
+                        );
+                      } catch {}
+                    }}
+                    onMouseLeave={() => {
+                      try {
+                        window.dispatchEvent(new CustomEvent("mpathy:triketon:close"));
+                      } catch {}
                     }}
                     aria-label="Triketon2048"
                     style={{
@@ -813,12 +844,14 @@ function Bubble({
                       color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
                       cursor: "pointer",
                       opacity: 0.9,
+                      pointerEvents: "auto",
                     }}
                     title="View Triketon seal"
                   >
                     Triketon2048
                   </button>
                 );
+
               })()}
 
 
@@ -1258,6 +1291,32 @@ const closeTriketon = useCallback(() => {
   setTriketonOpen(false);
   setTriketonPayload(null);
 }, []);
+
+useEffect(() => {
+  const onOpen = (e: Event) => {
+    try {
+      const detail = (e as CustomEvent).detail ?? null;
+      setTriketonPayload(detail);
+      setTriketonOpen(true);
+    } catch {}
+  };
+
+  const onClose = () => {
+    try {
+      setTriketonOpen(false);
+      setTriketonPayload(null);
+    } catch {}
+  };
+
+  window.addEventListener("mpathy:triketon:open" as any, onOpen as any);
+  window.addEventListener("mpathy:triketon:close" as any, onClose as any);
+
+  return () => {
+    window.removeEventListener("mpathy:triketon:open" as any, onOpen as any);
+    window.removeEventListener("mpathy:triketon:close" as any, onClose as any);
+  };
+}, []);
+
 
 // Preis-ID aus ENV für den Client (nur ID, kein Secret)
 const PRICE_1M = process.env.NEXT_PUBLIC_STRIPE_PRICE_1M as string | undefined;
