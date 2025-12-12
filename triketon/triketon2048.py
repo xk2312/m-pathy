@@ -35,15 +35,32 @@ class TriketonSeal:
 
 def triketon_seal(text: str, *, deterministic: bool = False, seed: int | None = None) -> TriketonSeal:
     """
-    STEP 01 skeleton:
-    - Signature is fixed (deterministic/seed reserved for later steps)
-    - Uses existing Phase-1 engine for a provisional truth_hash
-    - public_key is reserved (filled in Step 04)
+    STEP 05: end-to-end seal (v1)
+    - normalize_for_truth_hash(text)
+    - truth_hash = compute_truth_hash(normalized, salt)
+    - public_key = generate_public_key_2048(truth_hash)
+    - timestamp ISO-8601 (UTC)
+    Rules:
+    - salts/seeds are NEVER returned
+    - deterministic mode derives a test-salt from seed (no env needed)
+    - non-deterministic mode requires TRIKETON_HASH_SALT_V1 from env
     """
-    core = TRIKETONCore()
-    truth_hash = core.run_cycle(text)
-    ts = datetime.utcnow().isoformat() + "Z"
-    return TriketonSeal(public_key="", truth_hash=truth_hash, timestamp=ts)
+    normalized = normalize_for_truth_hash(text)
+
+    if deterministic:
+        use_seed = 13130 if seed is None else int(seed)
+        salt = hashlib.sha256(f"TRIKETON_DET_SALT_V1|{use_seed}".encode("utf-8")).digest()
+    else:
+        env_salt = os.getenv("TRIKETON_HASH_SALT_V1")
+        if not env_salt:
+            raise RuntimeError("Missing env TRIKETON_HASH_SALT_V1 (required for non-deterministic sealing)")
+        salt = env_salt.encode("utf-8")
+
+    truth_hash = compute_truth_hash(normalized, salt=salt)
+    public_key = generate_public_key_2048(truth_hash)
+    ts = datetime.utcnow().isoformat(timespec="seconds") + "Z"
+
+    return TriketonSeal(public_key=public_key, truth_hash=truth_hash, timestamp=ts)
 
 # ==========================
 # TRIKETON: NORMALIZATION
