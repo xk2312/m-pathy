@@ -442,8 +442,13 @@ div[data-convo="1"] { scrollbar-color: rgba(255,255,255,0.25) transparent;
   line-height: 1.6;
   tab-size: 2;
   white-space: pre;
-  color: inherit; /* Syntax-Theme färbt Tokens; Grundfarbe bleibt vom Bubble-Kontext */
 }
+
+/* wenn Highlight.js aktiv ist, gewinnt das Theme */
+.md .md-code > code.hljs {
+  color: unset;
+}
+
 
 /* ---------- Code: inline ---------- */
 .md .md-inline {
