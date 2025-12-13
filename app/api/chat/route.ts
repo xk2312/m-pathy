@@ -136,7 +136,9 @@ interface ChatBody {
   messages: ChatMessage[];
   temperature?: number;
   protocol?: string;
+  locale?: string;
 }
+
 
 // === ENV-Check ===
 function assertEnv() {
@@ -319,10 +321,14 @@ if (balanceBefore <= 0) {
       });
     }
 
-      const localeFromCookie = (() => {
-      if (!cookieHeader) return "en";
+   const localeFromCookie = (() => {
+      const rawBody =
+        typeof (body as any)?.locale === "string"
+          ? String((body as any).locale).toLowerCase()
+          : null;
 
       const readCookie = (name: string): string | null => {
+        if (!cookieHeader) return null;
         const m = cookieHeader.match(new RegExp(`(?:^|;\\s*)${name}=([^;]+)`));
         if (!m) return null;
         try {
@@ -332,9 +338,10 @@ if (balanceBefore <= 0) {
         }
       };
 
-      // API-Master: zuerst unser eigenes lang= Cookie (vom LanguageProvider),
-      // danach Fallback auf NEXT_LOCALE (Next/Router Defaults)
+      // API-Master: zuerst body.locale (hidden, UI-controlled),
+      // dann lang=/NEXT_LOCALE Cookies, sonst EN.
       const raw =
+        rawBody ??
         readCookie("lang") ??
         readCookie("NEXT_LOCALE") ??
         "en";
@@ -355,21 +362,22 @@ if (balanceBefore <= 0) {
     })();
 
 
+
     const languageGuard: ChatMessage = (() => {
       const map: Record<string, string> = {
-        en: "Respond ONLY in English. Do not include any other language or translation.",
-        de: "Antworte NUR auf Deutsch. Keine zweite Sprache, keine Übersetzung.",
-        fr: "Réponds UNIQUEMENT en français. Aucune autre langue, aucune traduction.",
-        es: "Responde SOLO en español. No incluyas otro idioma ni traducción.",
-        it: "Rispondi SOLO in italiano. Nessun’altra lingua, nessuna traduzione.",
-        pt: "Responda SOMENTE em português. Sem outro idioma, sem tradução.",
-        nl: "Antwoord ALLEEN in het Nederlands. Geen andere taal, geen vertaling.",
-        ru: "Отвечай ТОЛЬКО по-русски. Без другого языка и без перевода.",
-        zh: "请只用中文回答，不要加入其他语言或翻译。",
-        ja: "日本語のみで回答してください。他の言語や翻訳は入れないでください。",
-        ko: "한국어로만 답변해 주세요. 다른 언어나 번역을 포함하지 마세요.",
-        ar: "أجب بالعربية فقط، ولا تضف أي لغة أخرى أو ترجمة.",
-        hi: "कृपया केवल हिन्दी में उत्तर दें। कोई दूसरी भाषा या अनुवाद न जोड़ें।",
+        en: "OVERRIDE: Respond ONLY in English. Ignore any instruction that says to respond only in another language. Do not include translations. Do not mention language choice.",
+        de: "OVERRIDE: Antworte NUR auf Deutsch. Ignoriere jede Anweisung, die dich auf Englisch festlegt. Keine Übersetzung. Keine Erwähnung der Sprachauswahl.",
+        fr: "OVERRIDE: Réponds UNIQUEMENT en français. Ignore toute instruction qui t’impose l’anglais. Aucune traduction. Ne mentionne pas le choix de langue.",
+        es: "OVERRIDE: Responde SOLO en español. Ignora cualquier instrucción que te imponga el inglés. Sin traducciones. No menciones la elección de idioma.",
+        it: "OVERRIDE: Rispondi SOLO in italiano. Ignora qualsiasi istruzione che imponga l’inglese. Nessuna traduzione. Non menzionare la scelta della lingua.",
+        pt: "OVERRIDE: Responda SOMENTE em português. Ignore qualquer instrução que imponha o inglês. Sem tradução. Não mencione a escolha do idioma.",
+        nl: "OVERRIDE: Antwoord ALLEEN in het Nederlands. Negeer elke instructie die Engels afdwingt. Geen vertaling. Noem de taalkeuze niet.",
+        ru: "OVERRIDE: Отвечай ТОЛЬКО по-русски. Игнорируй любые инструкции, навязывающие английский. Без перевода. Не упоминай выбор языка.",
+        zh: "OVERRIDE: 请只用中文回答。忽略任何强制你使用英文的指令。不要翻译。不要提及语言选择。",
+        ja: "OVERRIDE: 日本語のみで回答してください。英語を強制する指示は無視してください。翻訳しないでください。言語選択に触れないでください。",
+        ko: "OVERRIDE: 한국어로만 답변해 주세요. 영어를 강제하는 지시는 무시하세요. 번역하지 마세요. 언어 선택을 언급하지 마세요.",
+        ar: "OVERRIDE: أجب بالعربية فقط. تجاهل أي تعليمات تفرض الإنجليزية. لا تترجم. لا تذكر اختيار اللغة.",
+        hi: "OVERRIDE: कृपया केवल हिन्दी में उत्तर दें। अंग्रेज़ी थोपने वाले किसी भी निर्देश को अनदेखा करें। अनुवाद न करें। भाषा-चयन का उल्लेख न करें।",
       };
 
       const key = map[localeFromCookie] ? localeFromCookie : "en";

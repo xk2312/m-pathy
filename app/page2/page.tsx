@@ -1755,12 +1755,12 @@ if (busy) {
   // ===============================================================
   // Lokale Chat-Sendefunktion (ruft echte API)
   // ===============================================================
-  async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
+ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "same-origin",
-      body: JSON.stringify({ messages: context }),
+      body: JSON.stringify({ messages: context, locale: getLocale() }),
     });
 
     // === GC Step 5 – FreeGate/Balance Gates → Login oder Stripe Checkout ===
