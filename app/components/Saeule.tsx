@@ -1103,9 +1103,11 @@ const reply = await callChatAPI(userPrompt);
         }
 
         const csv = rows.join("\n");
-        blob = new Blob([csv], {
-          type: "text/csv;charset=utf-8",
-        });
+const utf8BOM = "\uFEFF"; // Byte Order Mark for Excel/Numbers compatibility
+blob = new Blob([utf8BOM + csv], {
+  type: "text/csv;charset=utf-8",
+});
+
       } else {
         blob = new Blob([raw], { type: "application/json" });
       }
