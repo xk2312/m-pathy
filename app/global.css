@@ -1258,11 +1258,19 @@ div[data-convo="1"] { scrollbar-color: rgba(255,255,255,0.25) transparent;
   border-color: rgba(56, 189, 248, 0.9);
 }
 
+/* Copy-Button direkt am Codeblock */
 .md-code-copy[data-copied="true"]::after {
   content: " Copied";
   margin-left: 0.35rem;
   opacity: 0.9;
 }
+
+/* === Restore highlight.js syntax colors (forensic fix) === */
+.markdown pre code.hljs,
+.markdown pre code.hljs * {
+  color: unset !important;
+}
+
 
 /* ============================================================
    Highlight.js Theme (Tokenized, minimal hues, dark-ready)
