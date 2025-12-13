@@ -1,6 +1,6 @@
 'use client';
 
-import React, { type ReactNode } from 'react';
+import React, { type ReactNode, useCallback } from 'react';
 // NOTE: Diese Datei ist der Orchestrator (Controller) für die Nachrichten-Inhaltsdarstellung.
 // Sie entscheidet pro Nachricht, WIE gerendert wird (plain/markdown/html),
 // ruft die Renderer-Registry auf und kapselt einen sicheren Fallback.
@@ -93,14 +93,58 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
     ? { fontWeight: 400 }
     : {};
 
+  const onRootClick = useCallback(async (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement | null;
+    const btn = target?.closest?.('[data-copy-code="true"]') as HTMLElement | null;
+    if (!btn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const block =
+      (btn.closest?.('.md-code-block') as HTMLElement | null) ??
+      (btn.closest?.('.md-code') as HTMLElement | null);
+
+    const codeEl = block?.querySelector?.('pre code') as HTMLElement | null;
+    const text = (codeEl?.textContent ?? '').trimEnd();
+    if (!text) return;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      btn.setAttribute('data-copied', 'true');
+      window.setTimeout(() => {
+        try { btn.removeAttribute('data-copied'); } catch {}
+      }, 900);
+    } catch {
+      // fallback (older browsers / permission edge)
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.style.top = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try { document.execCommand('copy'); } catch {}
+      document.body.removeChild(ta);
+
+      btn.setAttribute('data-copied', 'true');
+      window.setTimeout(() => {
+        try { btn.removeAttribute('data-copied'); } catch {}
+      }, 900);
+    }
+  }, []);
+
   return (
     <div
       className={scopeClass}
       data-format={fmt}
       data-role={msg.role}
       style={{ ...baseStyle, ...roleStyle }}
+      onClick={onRootClick}
     >
       {node}
     </div>
   );
+
 }
