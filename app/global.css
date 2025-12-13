@@ -1263,3 +1263,77 @@ div[data-convo="1"] { scrollbar-color: rgba(255,255,255,0.25) transparent;
   margin-left: 0.35rem;
   opacity: 0.9;
 }
+
+/* ============================================================
+   Highlight.js Theme (Tokenized, minimal hues, dark-ready)
+   Uses design.tokens.css variables when present.
+   ============================================================ */
+
+:root {
+  --hl-fg: var(--color-fg, #e6f7ff);
+  --hl-muted: rgba(230, 247, 255, 0.55);
+  --hl-accent: var(--color-accent, #00ffff);
+  --hl-warn: var(--color-warn, #ffd700);
+}
+
+.markdown pre code.hljs {
+  color: var(--hl-fg);
+  text-shadow: 0 0 18px rgba(0, 255, 255, 0.07);
+}
+
+.markdown pre code.hljs::selection,
+.markdown pre code.hljs *::selection {
+  background: rgba(0, 255, 255, 0.18);
+}
+
+.markdown pre code.hljs .hljs-comment,
+.markdown pre code.hljs .hljs-quote {
+  color: var(--hl-muted);
+  font-style: italic;
+}
+
+.markdown pre code.hljs .hljs-keyword,
+.markdown pre code.hljs .hljs-selector-tag,
+.markdown pre code.hljs .hljs-doctag,
+.markdown pre code.hljs .hljs-meta,
+.markdown pre code.hljs .hljs-built_in {
+  color: var(--hl-accent);
+}
+
+.markdown pre code.hljs .hljs-string,
+.markdown pre code.hljs .hljs-regexp,
+.markdown pre code.hljs .hljs-template-tag,
+.markdown pre code.hljs .hljs-template-variable {
+  color: rgba(0, 255, 255, 0.82);
+}
+
+.markdown pre code.hljs .hljs-number,
+.markdown pre code.hljs .hljs-literal,
+.markdown pre code.hljs .hljs-symbol,
+.markdown pre code.hljs .hljs-bullet {
+  color: var(--hl-warn);
+}
+
+.markdown pre code.hljs .hljs-title,
+.markdown pre code.hljs .hljs-section,
+.markdown pre code.hljs .hljs-function,
+.markdown pre code.hljs .hljs-class {
+  color: rgba(230, 247, 255, 0.92);
+}
+
+.markdown pre code.hljs .hljs-attr,
+.markdown pre code.hljs .hljs-attribute,
+.markdown pre code.hljs .hljs-property,
+.markdown pre code.hljs .hljs-variable,
+.markdown pre code.hljs .hljs-params,
+.markdown pre code.hljs .hljs-type {
+  color: rgba(230, 247, 255, 0.78);
+}
+
+.markdown pre code.hljs .hljs-emphasis {
+  font-style: italic;
+}
+
+.markdown pre code.hljs .hljs-strong {
+  font-weight: 700;
+}
