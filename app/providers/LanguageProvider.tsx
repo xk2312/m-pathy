@@ -149,7 +149,8 @@ export function LanguageProvider({
       // ignore storage errors (SSR/Safari private mode etc.)
     }
 
-    document.cookie = `lang=${safe}; path=/; max-age=31536000`;
+document.cookie = `lang=${safe}; path=/; max-age=31536000`;
+document.cookie = `NEXT_LOCALE=${safe}; path=/; max-age=31536000; SameSite=Lax`;
   };
 
 
