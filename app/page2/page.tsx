@@ -642,13 +642,29 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
     if (!containerRef.current) return;
     try {
       const nodes = containerRef.current.querySelectorAll("pre code");
-      nodes.forEach((el) => {
+     nodes.forEach((el) => {
         const codeEl = el as HTMLElement;
-        if (!codeEl.dataset.hljs) {
-          hljs.highlightElement(codeEl);
-          codeEl.dataset.hljs = "1";
+        if (codeEl.dataset.hljs) return;
+
+        const cls = codeEl.className || "";
+        const m = cls.match(/\blanguage-([a-z0-9_-]+)\b/i);
+        const lang = m ? m[1].toLowerCase() : "";
+        const raw = codeEl.textContent ?? "";
+
+        try {
+          if (lang && hljs.getLanguage(lang)) {
+            codeEl.innerHTML = hljs.highlight(raw, { language: lang, ignoreIllegals: true }).value;
+          } else {
+            codeEl.innerHTML = hljs.highlightAuto(raw).value;
+          }
+          codeEl.classList.add("hljs");
+        } catch {
+          try { hljs.highlightElement(codeEl); } catch {}
         }
+
+        codeEl.dataset.hljs = "1";
       });
+
     } catch {
       // niemals die App crashen lassen
     }
