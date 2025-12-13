@@ -714,22 +714,23 @@ function tr(key: string, fallback: string, vars?: Record<string, string>): strin
 function langHint(lang: string): string {
   const base = (lang || "en").slice(0, 2).toLowerCase();
   const map: Record<string, string> = {
-    en: "Please answer in English.",
-    de: "Bitte antworte auf Deutsch.",
-    fr: "Veuillez répondre en français.",
-    es: "Por favor, responde en español.",
-    it: "Per favore rispondi in italiano.",
-    pt: "Por favor, responda em português.",
-    nl: "Antwoord alstublieft in het Nederlands.",
-    ru: "Пожалуйста, ответьте по-русски.",
-    zh: "请用中文回答。",
-    ja: "日本語で答えてください。",
-    ko: "한국어로 대답해 주세요.",
-    ar: "من فضلك أجب بالعربية.",
-    hi: "कृपया हिंदी में उत्तर दें।",
+    en: "Please answer ONLY in English. Do not include any other language or translation.",
+    de: "Bitte antworte NUR auf Deutsch. Keine zweite Sprache, keine Übersetzung.",
+    fr: "Veuillez répondre UNIQUEMENT en français. Aucune autre langue, aucune traduction.",
+    es: "Responde SOLO en español. No incluyas otro idioma ni traducción.",
+    it: "Rispondi SOLO in italiano. Nessun’altra lingua, nessuna traduzione.",
+    pt: "Responda SOMENTE em português. Sem outro idioma, sem tradução.",
+    nl: "Antwoord ALLEEN in het Nederlands. Geen andere taal, geen vertaling.",
+    ru: "Отвечайте ТОЛЬКО по-русски. Без другого языка и без перевода.",
+    zh: "请只用中文回答，不要加入其他语言或翻译。",
+    ja: "日本語のみで回答してください。他の言語や翻訳は入れないでください。",
+    ko: "한국어로만 답변해 주세요. 다른 언어나 번역을 포함하지 마세요.",
+    ar: "من فضلك أجب بالعربية فقط، ولا تضف أي لغة أخرى أو ترجمة.",
+    hi: "कृपया केवल हिन्दी में उत्तर दें। कोई दूसरी भाषा या अनुवाद न जोड़ें।",
   };
   return `[${map[base] ?? map.en}]`;
 }
+
 /* ▲▲ Ende Sprach-Hint ▲▲ */
 
 // Saeule.tsx — REPLACE the whole function
