@@ -7,6 +7,7 @@ import React, { type ReactNode, useCallback } from 'react';
 
 import { renderMessage } from '../renderers/registry';
 import { defaultRenderer } from '../config/features';
+import hljs from 'highlight.js';
 
 /* ============================================================
    Typdefinitionen
@@ -135,6 +136,33 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
     }
   }, []);
 
+  // Highlight.js nach Render anwenden (nur wenn markdown)
+  React.useEffect(() => {
+    if (!isMarkdown) return;
+    try {
+      const root = document.querySelectorAll('.md-prose pre code');
+      root.forEach((el) => {
+        const codeEl = el as HTMLElement;
+        if (codeEl.dataset.hljs) return;
+
+        const cls = codeEl.className || '';
+        const m = cls.match(/\blanguage-([a-z0-9_-]+)\b/i);
+        const lang = m ? m[1].toLowerCase() : '';
+        const raw = codeEl.textContent ?? '';
+
+        try {
+          if (lang && hljs?.getLanguage(lang)) {
+            codeEl.innerHTML = hljs.highlight(raw, { language: lang }).value;
+          } else {
+            codeEl.innerHTML = hljs.highlightAuto(raw).value;
+          }
+          codeEl.classList.add('hljs');
+          codeEl.dataset.hljs = '1';
+        } catch {}
+      });
+    } catch {}
+  }, [fmt, msg.content]);
+
   return (
     <div
       className={scopeClass}
@@ -146,5 +174,4 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
       {node}
     </div>
   );
-
 }
