@@ -1265,6 +1265,17 @@ div[data-convo="1"] { scrollbar-color: rgba(255,255,255,0.25) transparent;
   opacity: 0.9;
 }
 
+/* === Step 07 – Council 13 Highlight Scope Fix === */
+:root:not([data-hljs="active"]) code {
+  color: #fff;
+}
+
+[data-hljs="active"] .hljs,
+[data-hljs="active"] .hljs * {
+  color: inherit !important;
+}
+
+
 /* === Restore highlight.js syntax colors (forensic fix) === */
 .markdown pre code.hljs,
 .markdown pre code.hljs * {

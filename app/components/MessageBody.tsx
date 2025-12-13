@@ -141,9 +141,11 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
     if (!isMarkdown) return;
     try {
       const root = document.querySelectorAll('.md-prose pre code');
-      root.forEach((el) => {
+        root.forEach((el) => {
         const codeEl = el as HTMLElement;
         if (codeEl.dataset.hljs) return;
+        document.body.dataset.hljs = "active"; // Council13: enable syntax scope
+
 
         const cls = codeEl.className || '';
         const m = cls.match(/\blanguage-([a-z0-9_-]+)\b/i);
