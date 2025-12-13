@@ -588,6 +588,56 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
   const html = isMd ? mdToHtml(String(msg.content ?? "")) : null;
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
+  const onRootClick = React.useCallback(
+    async (e: React.MouseEvent<HTMLDivElement>) => {
+      const target = e.target as HTMLElement | null;
+      const btn = target?.closest?.('[data-copy-code="true"]') as HTMLElement | null;
+      if (!btn) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      const block =
+        (btn.closest?.(".md-code-block") as HTMLElement | null) ??
+        (btn.closest?.(".md-code") as HTMLElement | null);
+
+      const codeEl = block?.querySelector?.("pre code") as HTMLElement | null;
+      const text = (codeEl?.textContent ?? "").trimEnd();
+      if (!text) return;
+
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.setAttribute("data-copied", "true");
+        window.setTimeout(() => {
+          try {
+            btn.removeAttribute("data-copied");
+          } catch {}
+        }, 900);
+      } catch {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        ta.style.top = "0";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try {
+          document.execCommand("copy");
+        } catch {}
+        document.body.removeChild(ta);
+
+        btn.setAttribute("data-copied", "true");
+        window.setTimeout(() => {
+          try {
+            btn.removeAttribute("data-copied");
+          } catch {}
+        }, 900);
+      }
+    },
+    []
+  );
+
   React.useEffect(() => {
     if (!containerRef.current) return;
     try {
@@ -611,16 +661,18 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
         className="markdown"
         dangerouslySetInnerHTML={{ __html: html ?? "" }}
         style={{ lineHeight: 1.55 }}
+        onClick={onRootClick}
       />
     );
   }
 
   return (
-    <div ref={containerRef} style={{ lineHeight: 1.55 }}>
+    <div ref={containerRef} style={{ lineHeight: 1.55 }} onClick={onRootClick}>
       {String(msg.content ?? "")}
     </div>
   );
 }
+
 
 /** Sprechblase mit M-Avatar für Assistant + Copy-Button */
 function Bubble({
