@@ -1020,8 +1020,8 @@ const q =
 
     : tr("prompts.modeGeneric", "Mode {label}: What are you and where will you help me best?", { label });
 
-const qLang = `${q}\n\n${langHint(lang)}`;          // ← NEU
-const reply = await callChatAPI(qLang);             // ← Variable geändert
+const reply = await callChatAPI(q);
+
 
   if (reply && reply.trim().length > 0) {
     say(reply);
@@ -1055,9 +1055,8 @@ if (typeof window !== "undefined" &&
 
 // Prompt an API – keine festen Fallbacks
 const userPrompt = expertAskPrompt(label, lang);
-const q = `${userPrompt}\n\n${langHint(lang)}`;     // ← NEU
+const reply = await callChatAPI(userPrompt);
 
-const reply = await callChatAPI(q);                 // ← Variable geändert
 
   if (reply && reply.trim().length > 0) {
     say(reply); // genau eine Antwort-Bubble
@@ -1181,7 +1180,8 @@ const reply = await callChatAPI(q);                 // ← Variable geändert
 
 
               const prompt = buildButtonMsg(lang);
-              const q = `${prompt}\n\n${langHint(lang)}`;       // Sprachhinweis (13-Sprachen)
+              const q = prompt;
+
               try { logEvent("cta_start_building_clicked", {}); } catch {}
 
               // ▼ Overlay sofort schließen (ohne Bubble)

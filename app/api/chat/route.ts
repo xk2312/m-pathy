@@ -319,11 +319,26 @@ if (balanceBefore <= 0) {
       });
     }
 
-       const localeFromCookie = (() => {
+      const localeFromCookie = (() => {
       if (!cookieHeader) return "en";
-      const match = cookieHeader.match(/NEXT_LOCALE=([^;]+)/);
-      if (!match) return "en";
-      const raw = decodeURIComponent(match[1] || "en").toLowerCase();
+
+      const readCookie = (name: string): string | null => {
+        const m = cookieHeader.match(new RegExp(`(?:^|;\\s*)${name}=([^;]+)`));
+        if (!m) return null;
+        try {
+          return decodeURIComponent(m[1] || "").toLowerCase();
+        } catch {
+          return (m[1] || "").toLowerCase();
+        }
+      };
+
+      // API-Master: zuerst unser eigenes lang= Cookie (vom LanguageProvider),
+      // danach Fallback auf NEXT_LOCALE (Next/Router Defaults)
+      const raw =
+        readCookie("lang") ??
+        readCookie("NEXT_LOCALE") ??
+        "en";
+
       if (raw.startsWith("de")) return "de";
       if (raw.startsWith("fr")) return "fr";
       if (raw.startsWith("es")) return "es";
@@ -338,6 +353,7 @@ if (balanceBefore <= 0) {
       if (raw.startsWith("hi")) return "hi";
       return "en";
     })();
+
 
     const langHint = (() => {
       const map: Record<string, string> = {
