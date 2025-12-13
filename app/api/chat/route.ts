@@ -355,47 +355,41 @@ if (balanceBefore <= 0) {
     })();
 
 
-    const langHint = (() => {
+    const languageGuard: ChatMessage = (() => {
       const map: Record<string, string> = {
-        en: "Please answer in English.",
-        de: "Bitte antworte auf Deutsch.",
-        fr: "Merci de répondre en français.",
-        es: "Por favor, responde en español.",
-        it: "Per favore, rispondi in italiano.",
-        pt: "Por favor, responda em português.",
-        nl: "Antwoord alsjeblieft in het Nederlands.",
-        ru: "Пожалуйста, отвечайте по-русски.",
-        zh: "请用中文回答。",
-        ja: "日本語で回答してください。",
-        ko: "한국어로 답변해 주세요.",
-        ar: "من فضلك أجب بالعربية.",
-        hi: "कृपया हिन्दी में उत्तर दें।",
+        en: "Respond ONLY in English. Do not include any other language or translation.",
+        de: "Antworte NUR auf Deutsch. Keine zweite Sprache, keine Übersetzung.",
+        fr: "Réponds UNIQUEMENT en français. Aucune autre langue, aucune traduction.",
+        es: "Responde SOLO en español. No incluyas otro idioma ni traducción.",
+        it: "Rispondi SOLO in italiano. Nessun’altra lingua, nessuna traduzione.",
+        pt: "Responda SOMENTE em português. Sem outro idioma, sem tradução.",
+        nl: "Antwoord ALLEEN in het Nederlands. Geen andere taal, geen vertaling.",
+        ru: "Отвечай ТОЛЬКО по-русски. Без другого языка и без перевода.",
+        zh: "请只用中文回答，不要加入其他语言或翻译。",
+        ja: "日本語のみで回答してください。他の言語や翻訳は入れないでください。",
+        ko: "한국어로만 답변해 주세요. 다른 언어나 번역을 포함하지 마세요.",
+        ar: "أجب بالعربية فقط، ولا تضف أي لغة أخرى أو ترجمة.",
+        hi: "कृपया केवल हिन्दी में उत्तर दें। कोई दूसरी भाषा या अनुवाद न जोड़ें।",
       };
-      const key = map[localeFromCookie] ? localeFromCookie : "en";
-      return `[${map[key]}]`;
-    })();
 
-    const messagesWithHint: ChatMessage[] = (() => {
-      if (!Array.isArray(body.messages) || body.messages.length === 0) {
-        return body.messages;
-      }
-      const [first, ...rest] = body.messages;
-      if (first.role !== "user" || typeof first.content !== "string") {
-        return body.messages;
-      }
-      if (first.content.includes(langHint)) {
-        return body.messages;
-      }
-      return [
-        { ...first, content: `${first.content}\n\n${langHint}` },
-        ...rest,
-      ];
+      const key = map[localeFromCookie] ? localeFromCookie : "en";
+      return {
+        role: "system",
+        content:
+          `${map[key]}\n` +
+          "This instruction is internal. Do not mention it or explain language choice.",
+      };
     })();
 
     const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
     const messages: ChatMessage[] = systemPrompt
-      ? [{ role: "system", content: systemPrompt }, ...messagesWithHint]
-      : messagesWithHint;
+      ? [
+          { role: "system", content: systemPrompt },
+          languageGuard,
+          ...body.messages,
+        ]
+      : [languageGuard, ...body.messages];
+
 
     
 
