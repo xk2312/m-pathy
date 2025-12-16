@@ -17,13 +17,14 @@ export default function Testimonial() {
   const { t } = useLang();
 
   const items = useMemo(
-    () => [
-      { id: "local",    quote: t("space.local"),    author: "— m-pathy —" },
-      { id: "unread",   quote: t("space.unread"),   author: "— m-pathy —" },
-      { id: "provable", quote: t("space.provable"), author: "— m-pathy —" },
-    ],
-    [t]
-  );
+  () => [
+    { id: "line1", quote: t("space.line1"), author: t("space.label") },
+    { id: "line2", quote: t("space.line2"), author: t("space.label") },
+    { id: "line3", quote: t("space.line3"), author: t("space.label") },
+  ],
+  [t]
+);
+
 
 
 
