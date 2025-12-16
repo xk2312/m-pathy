@@ -1,86 +1,86 @@
 // lib/i18n.hero.ts
 // Hero-Copy für Subscription/Landing – EN als Master.
-// Wird in lib/i18n.ts via attachHero(dict) an das UX-Dict angehängt.
+// Neuer Anker: ruhig, klar, nicht performativ.
 
 type DictRoot = Record<string, any>;
 
 export const heroDict = {
   en: {
-    hero_title: "Create at the Speed of Thought",
-    hero_sub: "Your mind becomes the interface, the system does the rest",
-    hero_cta: "Start thinking",
+    hero_title: "Verified by design. Gentle by nature.",
+    hero_sub: "Trust is built in — not asked for.",
+    hero_cta: "Begin here",
   },
 
   de: {
-    hero_title: "Mach aus Gedanken Realität",
-    hero_sub: "Dein Geist wird zur Schnittstelle, das System übernimmt den Rest",
-    hero_cta: "Denk los",
+    hero_title: "Geprüft im Design. Sanft im Wesen.",
+    hero_sub: "Vertrauen ist eingebaut — nicht eingefordert.",
+    hero_cta: "Hier beginnen",
   },
 
   fr: {
-    hero_title: "Crée à la vitesse de la pensée",
-    hero_sub: "Ton esprit devient l’interface, le système fait le reste",
-    hero_cta: "Commence à penser",
+    hero_title: "Vérifié par conception. Doux par nature.",
+    hero_sub: "La confiance est intégrée — pas exigée.",
+    hero_cta: "Commencer ici",
   },
 
   es: {
-    hero_title: "Crea a la velocidad del pensamiento",
-    hero_sub: "Tu mente se convierte en la interfaz y el sistema hace el resto",
-    hero_cta: "Empieza a pensar",
+    hero_title: "Verificado por diseño. Suave por naturaleza.",
+    hero_sub: "La confianza está integrada — no se exige.",
+    hero_cta: "Empezar aquí",
   },
 
   it: {
-    hero_title: "Crea alla velocità del pensiero",
-    hero_sub: "La tua mente diventa l’interfaccia e il sistema fa il resto",
-    hero_cta: "Inizia a pensare",
+    hero_title: "Verificato nel design. Gentile per natura.",
+    hero_sub: "La fiducia è integrata — non richiesta.",
+    hero_cta: "Inizia qui",
   },
 
   pt: {
-    hero_title: "Crie na velocidade do pensamento",
-    hero_sub: "Sua mente se torna a interface e o sistema faz o resto",
-    hero_cta: "Comece a pensar",
+    hero_title: "Verificado por design. Gentil por natureza.",
+    hero_sub: "A confiança é integrada — não exigida.",
+    hero_cta: "Começar aqui",
   },
 
   nl: {
-    hero_title: "Creëer met de snelheid van gedachten",
-    hero_sub: "Je geest wordt de interface, het systeem doet de rest",
-    hero_cta: "Begin met denken",
+    hero_title: "Ontworpen met verificatie. Zacht van aard.",
+    hero_sub: "Vertrouwen is ingebouwd — niet gevraagd.",
+    hero_cta: "Hier beginnen",
   },
 
   ru: {
-    hero_title: "Создавайте со скоростью мысли",
-    hero_sub: "Ваш разум становится интерфейсом, а система делает остальное",
-    hero_cta: "Начните думать",
+    hero_title: "Проверено по замыслу. Мягко по своей природе.",
+    hero_sub: "Доверие заложено — его не требуют.",
+    hero_cta: "Начать здесь",
   },
 
   zh: {
-    hero_title: "以思维的速度创造",
-    hero_sub: "你的大脑成为界面，系统完成其余的一切",
-    hero_cta: "开始思考",
+    hero_title: "以验证为设计。以温和为本质。",
+    hero_sub: "信任已内建——无需索取。",
+    hero_cta: "从这里开始",
   },
 
   ja: {
-    hero_title: "思考の速さで創造する",
-    hero_sub: "あなたの心がインターフェースとなり、あとはシステムが担います",
-    hero_cta: "考えることから始める",
+    hero_title: "検証を前提に設計。やさしさを本質に。",
+    hero_sub: "信頼は組み込まれている——求められるものではありません。",
+    hero_cta: "ここから始める",
   },
 
   ko: {
-    hero_title: "생각의 속도로 창조하세요",
-    hero_sub: "당신의 마음이 인터페이스가 되고, 나머지는 시스템이 맡습니다",
-    hero_cta: "생각을 시작하기",
+    hero_title: "검증을 바탕으로 설계. 본질은 부드러움.",
+    hero_sub: "신뢰는 이미 내재되어 있습니다 — 요구하지 않습니다.",
+    hero_cta: "여기서 시작하기",
   },
 
   ar: {
-    hero_title: "اخلق بسرعة الفكر",
-    hero_sub: "عقلك يصبح الواجهة، والنظام يتولى الباقي",
-    hero_cta: "ابدأ التفكير",
+    hero_title: "مُتحقَّق منه في التصميم. لطيف في جوهره.",
+    hero_sub: "الثقة مدمجة — لا يُطلب إثباتها.",
+    hero_cta: "ابدأ من هنا",
   },
 
   hi: {
-    hero_title: "सोच की गति से निर्माण करें",
-    hero_sub: "आपका मन इंटरफ़ेस बन जाता है, और सिस्टम बाकी सब कर देता है",
-    hero_cta: "सोचना शुरू करें",
+    hero_title: "डिज़ाइन में सत्यापित। स्वभाव में सौम्य।",
+    hero_sub: "विश्वास अंतर्निहित है — माँगा नहीं जाता।",
+    hero_cta: "यहीं से शुरू करें",
   },
 } as const;
 

@@ -18,12 +18,13 @@ export default function Testimonial() {
 
   const items = useMemo(
     () => [
-      { id: "gemini", quote: t("testimonials.gemini"), author: "— Gemini Apex —" },
-      { id: "grok",   quote: t("testimonials.grok"),   author: "— Grok —" },
-      { id: "gpt5",   quote: t("testimonials.gpt5"),   author: "— GPT-5 —" },
+      { id: "arrive", quote: t("space.arrive"), author: "— arrive —" },
+      { id: "stay",   quote: t("space.stay"),   author: "— stay —" },
+      { id: "anchor", quote: t("space.anchor"), author: "— anchor —" },
     ],
     [t]
   );
+
 
   const [idx, setIdx] = useState(0);
 

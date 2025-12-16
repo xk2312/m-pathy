@@ -1,76 +1,75 @@
 // lib/i18n.doorman.ts
 // Doorman-Copy – EN als Master, alle 13 Sprachen konsistent.
-// Wird in lib/i18n.ts via attachDoorman(DICTS) ans Legacy-Chat-Dict angehängt.
+// Ziel: ruhig, erlaubend, kein Leistungsimpuls.
 
 type DictRoot = Record<string, any>;
 
 export const doormanDict = {
   en: {
-    "prompt.doorman.main": "You are the origin.",
-    "prompt.doorman.sub": "Press + and BUILD and let worlds assemble.",
+    "prompt.doorman.main": "You can start.",
+    "prompt.doorman.sub": "Wherever you are.",
   },
 
   de: {
-    "prompt.doorman.main": "Du bist der Ursprung.",
-    "prompt.doorman.sub": "Drücke + und BAUEN und lass Welten entstehen.",
+    "prompt.doorman.main": "Du kannst beginnen.",
+    "prompt.doorman.sub": "Wo auch immer du gerade bist.",
   },
 
   fr: {
-    "prompt.doorman.main": "Tu es l’origine.",
-    "prompt.doorman.sub": "Appuie sur + puis CONSTRUIRE et laisse des mondes se former.",
+    "prompt.doorman.main": "Tu peux commencer.",
+    "prompt.doorman.sub": "Là où tu en es.",
   },
 
   es: {
-    "prompt.doorman.main": "Tú eres el origen.",
-    "prompt.doorman.sub": "Pulsa + y CONSTRUIR y deja que los mundos tomen forma.",
+    "prompt.doorman.main": "Puedes empezar.",
+    "prompt.doorman.sub": "Dondequiera que estés.",
   },
 
   it: {
-    "prompt.doorman.main": "Tu sei l'origine.",
-    "prompt.doorman.sub": "Premi + e CREA e lascia che i mondi si assemblino.",
+    "prompt.doorman.main": "Puoi iniziare.",
+    "prompt.doorman.sub": "Da dove sei.",
   },
 
   pt: {
-    "prompt.doorman.main": "Você é a origem.",
-    "prompt.doorman.sub": "Pressione + e CRIAR e deixe mundos se formarem.",
+    "prompt.doorman.main": "Você pode começar.",
+    "prompt.doorman.sub": "De onde você estiver.",
   },
 
   nl: {
-    "prompt.doorman.main": "Jij bent de oorsprong.",
-    "prompt.doorman.sub": "Druk op + en BOUWEN en laat werelden ontstaan.",
+    "prompt.doorman.main": "Je kunt beginnen.",
+    "prompt.doorman.sub": "Waar je ook bent.",
   },
 
   ru: {
-    "prompt.doorman.main": "Ты — источник.",
-    "prompt.doorman.sub": "Нажми + и СОЗДАТЬ — и пусть миры складываются.",
+    "prompt.doorman.main": "Ты можешь начать.",
+    "prompt.doorman.sub": "С того места, где ты сейчас.",
   },
 
   zh: {
-    "prompt.doorman.main": "你就是起源。",
-    "prompt.doorman.sub": "按下 + 与 创建，让世界自行组装。",
+    "prompt.doorman.main": "你可以开始。",
+    "prompt.doorman.sub": "就在你所在的地方。",
   },
 
   ja: {
-    "prompt.doorman.main": "あなたが起源です。",
-    "prompt.doorman.sub": "+ と ビルド を押して、世界が組み上がるのを見てください。",
+    "prompt.doorman.main": "ここから始められます。",
+    "prompt.doorman.sub": "今のあなたの場所から。",
   },
 
   ko: {
-    "prompt.doorman.main": "당신이 바로 기원입니다.",
-    "prompt.doorman.sub": "+ 와 빌드를 눌러 세계가 조립되는 순간을 보세요.",
+    "prompt.doorman.main": "지금 시작해도 됩니다.",
+    "prompt.doorman.sub": "당신이 있는 바로 그 자리에서.",
   },
 
   ar: {
-    "prompt.doorman.main": "أنت الأصل.",
-    "prompt.doorman.sub": "اضغط إنشاء ثم + ودَع العوالم تتكوّن.",
+    "prompt.doorman.main": "يمكنك أن تبدأ.",
+    "prompt.doorman.sub": "من حيث أنت الآن.",
   },
 
   hi: {
-    "prompt.doorman.main": "तुम ही मूल हो।",
-    "prompt.doorman.sub": "+ और निर्माण दबाओ और दुनिया-ओं को बनते देखो।",
+    "prompt.doorman.main": "तुम शुरू कर सकते हो।",
+    "prompt.doorman.sub": "जहाँ तुम अभी हो।",
   },
 } as const;
-
 
 export function attachDoorman(dict: DictRoot) {
   for (const [locale, values] of Object.entries(doormanDict)) {
