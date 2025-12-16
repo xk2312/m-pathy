@@ -1,111 +1,124 @@
 // lib/i18n.testimonials.ts
-// Raum-States (keine Social Proof Testimonials mehr)
-// EN als Master. 13 Sprachen, zustandsbasiert, ruhig.
+// Bottom-USP Raum (keine Social Proof Testimonials)
+// EN als Master. 13 Sprachen, einzeilig, ruhig, besitz- & vertrauensbasiert.
 
 type DictRoot = Record<string, any>;
 
 export const testimonialsDict = {
   en: {
     space: {
-      arrive: "I can come as I am",
-      stay: "I can pause",
-      anchor: "I trust the ground beneath my thoughts.",
+      line1: "Your thoughts stay with you.",
+      line2: "Unread by anyone.",
+      line3: "Provable as yours — even years later.",
+      label: "— m-pathy —",
     },
   },
 
   de: {
     space: {
-      arrive: "Ich kann so kommen, wie ich bin",
-      stay: "Ich kann innehalten",
-      anchor: "Ich vertraue dem Boden unter meinen Gedanken.",
+      line1: "Deine Gedanken bleiben bei dir.",
+      line2: "Von niemandem gelesen.",
+      line3: "Als deine belegbar — selbst nach Jahren.",
+      label: "— m-pathy —",
     },
   },
 
   fr: {
     space: {
-      arrive: "Je peux venir tel que je suis",
-      stay: "Je peux faire une pause",
-      anchor: "Je fais confiance au sol sous mes pensées.",
+      line1: "Tes pensées restent avec toi.",
+      line2: "Lues par personne.",
+      line3: "Attribuables à toi — même des années plus tard.",
+      label: "— m-pathy —",
     },
   },
 
   es: {
     space: {
-      arrive: "Puedo venir tal como soy",
-      stay: "Puedo pausar",
-      anchor: "Confío en el suelo bajo mis pensamientos.",
+      line1: "Tus pensamientos permanecen contigo.",
+      line2: "No leídos por nadie.",
+      line3: "Demostrables como tuyos — incluso años después.",
+      label: "— m-pathy —",
     },
   },
 
   it: {
     space: {
-      arrive: "Posso arrivare così come sono",
-      stay: "Posso fermarmi un momento",
-      anchor: "Mi fido del terreno sotto i miei pensieri.",
+      line1: "I tuoi pensieri restano con te.",
+      line2: "Non letti da nessuno.",
+      line3: "Dimostrabili come tuoi — anche dopo anni.",
+      label: "— m-pathy —",
     },
   },
 
   pt: {
     space: {
-      arrive: "Posso chegar como eu sou",
-      stay: "Posso pausar",
-      anchor: "Confio no chão sob meus pensamentos.",
+      line1: "Seus pensamentos ficam com você.",
+      line2: "Não lidos por ninguém.",
+      line3: "Comprováveis como seus — mesmo anos depois.",
+      label: "— m-pathy —",
     },
   },
 
   nl: {
     space: {
-      arrive: "Ik kan komen zoals ik ben",
-      stay: "Ik kan pauzeren",
-      anchor: "Ik vertrouw op de grond onder mijn gedachten.",
+      line1: "Je gedachten blijven bij jou.",
+      line2: "Door niemand gelezen.",
+      line3: "Als van jou te bewijzen — zelfs jaren later.",
+      label: "— m-pathy —",
     },
   },
 
   ru: {
     space: {
-      arrive: "Я могу прийти таким, какой я есть",
-      stay: "Я могу сделать паузу",
-      anchor: "Я доверяю опоре под своими мыслями.",
+      line1: "Твои мысли остаются с тобой.",
+      line2: "Никем не прочитаны.",
+      line3: "Доказуемо принадлежат тебе — даже спустя годы.",
+      label: "— m-pathy —",
     },
   },
 
   zh: {
     space: {
-      arrive: "我可以如我所是地到来",
-      stay: "我可以停一停",
-      anchor: "我信任承载我思绪的根基。",
+      line1: "你的思绪始终属于你。",
+      line2: "无人读取。",
+      line3: "多年之后，仍可证明归你所有。",
+      label: "— m-pathy —",
     },
   },
 
   ja: {
     space: {
-      arrive: "ありのままの自分で来ていい",
-      stay: "立ち止まってもいい",
-      anchor: "思考の下にある確かな土台を信頼できる。",
+      line1: "あなたの思考は、あなたと共にあります。",
+      line2: "誰にも読まれません。",
+      line3: "何年後でも、あなたのものだと証明できます。",
+      label: "— m-pathy —",
     },
   },
 
   ko: {
     space: {
-      arrive: "있는 그대로 올 수 있어요",
-      stay: "잠시 멈춰도 됩니다",
-      anchor: "내 생각 아래의 토대를 신뢰합니다.",
+      line1: "당신의 생각은 당신과 함께 남아 있습니다.",
+      line2: "그 누구도 읽지 않습니다.",
+      line3: "수년이 지나도 당신의 것임을 증명할 수 있습니다.",
+      label: "— m-pathy —",
     },
   },
 
   ar: {
     space: {
-      arrive: "يمكنني أن آتي كما أنا",
-      stay: "يمكنني أن أتوقف قليلاً",
-      anchor: "أثق بالأرض التي تحمل أفكاري.",
+      line1: "أفكارك تبقى معك.",
+      line2: "لا يقرأها أحد.",
+      line3: "يمكن إثبات أنها لك — حتى بعد سنوات.",
+      label: "— m-pathy —",
     },
   },
 
   hi: {
     space: {
-      arrive: "मैं जैसा हूँ वैसा आ सकता हूँ",
-      stay: "मैं रुक सकता हूँ",
-      anchor: "मैं अपने विचारों के नीचे की ज़मीन पर भरोसा करता हूँ।",
+      line1: "आपके विचार आपके साथ ही रहते हैं।",
+      line2: "किसी द्वारा पढ़े नहीं जाते।",
+      line3: "सालों बाद भी, आपके होने का प्रमाण दिया जा सकता है।",
+      label: "— m-pathy —",
     },
   },
 } as const;

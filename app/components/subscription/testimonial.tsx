@@ -18,12 +18,13 @@ export default function Testimonial() {
 
   const items = useMemo(
     () => [
-      { id: "arrive", quote: t("space.arrive"), author: "— arrive —" },
-      { id: "stay",   quote: t("space.stay"),   author: "— stay —" },
-      { id: "anchor", quote: t("space.anchor"), author: "— anchor —" },
+      { id: "local",    quote: t("space.local"),    author: "— m-pathy —" },
+      { id: "unread",   quote: t("space.unread"),   author: "— m-pathy —" },
+      { id: "provable", quote: t("space.provable"), author: "— m-pathy —" },
     ],
     [t]
   );
+
 
 
   const [idx, setIdx] = useState(0);
