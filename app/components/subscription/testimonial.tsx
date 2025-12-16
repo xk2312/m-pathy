@@ -85,18 +85,12 @@ export default function Testimonial() {
             className="relative mx-auto max-w-[min(90%,900px)] px-[clamp(20px,6vw,180px)]"
           >
             {/* Quote */}
-                     <p
-              className="text-[clamp(20px,3vw,34px)] leading-snug font-light text-white/92 frost-bloom frost-cyan whitespace-nowrap overflow-hidden text-ellipsis"
-              style={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                wordBreak: "keep-all",
-                overflowWrap: "normal",
-              }}
+            <p
+              className="text-[clamp(20px,3vw,34px)] leading-snug font-light text-white/92 frost-bloom frost-cyan"
+              style={{ whiteSpace: "normal", wordBreak: "keep-all", overflowWrap: "normal" }}
             >
               {tokens.map((tok, i) => {
-                if (tok.type === "br") return null;
+                if (tok.type === "br") return <br key={`br-${i}`} />;
                 if (tok.type === "space") return <span key={`sp-${i}`}>{" "}</span>;
 
                 return (
@@ -114,7 +108,6 @@ export default function Testimonial() {
                 );
               })}
             </p>
-
 
             {/* Author */}
             <motion.figcaption
