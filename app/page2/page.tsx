@@ -144,9 +144,10 @@ import { PromptRoot } from "./PromptRoot";
 import { getLocale, setLocale, t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import { useMobileViewport } from "@/lib/useMobileViewport";
-
+import { v4 as uuidv4 } from "uuid";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
 import { loadChat, saveChat, initChatStorage, hardClearChat, appendTriketonArchiveEntry } from "@/lib/chatStorage";
+
 
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
@@ -1367,8 +1368,19 @@ const PRICE_1M = process.env.NEXT_PUBLIC_STRIPE_PRICE_1M as string | undefined;
 
 
 // Alias für bestehende Stellen im Code:
-const persistMessages = saveMessages;
-
+const persistMessages = (arr: any[]) => {
+  if (!Array.isArray(arr)) return;
+  const normalized = arr.map((m) => ({
+    id:
+      typeof m.id === "string" && m.id.length
+        ? m.id
+        : (typeof crypto !== "undefined" && (crypto as any).randomUUID)
+          ? (crypto as any).randomUUID()
+          : uuidv4(),
+    ...m,
+  }));
+  saveChat(normalized);
+};
 // ── M-Flow Overlay (1. Frame: eventLabel)
 type MEvent = "builder" | "onboarding" | "expert" | "mode";
 const [frameText, setFrameText] = useState<string | null>(null);
