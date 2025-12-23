@@ -143,12 +143,17 @@ export function loadChat(): ChatMessage[] | null {
     const data = JSON.parse(raw);
     if (!Array.isArray(data)) return null;
 
-    const normalized = normalizeMessages(data);
+    const normalized = normalizeMessages(data).map((m) => ({
+      ...m,
+      // Falls Format fehlt: Markdown als Standard
+      format: (m as any).format ?? "markdown",
+    }));
     return normalized.length ? normalized : [];
   } catch {
     return null;
   }
 }
+
 
 /** Speichern: immer getrimmt, atomar unter dem neuen Key */
 export function saveChat(messages: ChatMessage[], max = 120): void {
