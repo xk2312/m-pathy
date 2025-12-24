@@ -2161,47 +2161,15 @@ setMessages((prev) => {
 
 // 2) Inhalt schrittweise aufbauen
 const fullText = assistant.content ?? "";
-
-// Basis-Speed
 const CHUNK_SIZE = 2;
-const BASE_TICK_MS = 16;
-
-// Mikro-Pausen nach Satzzeichen
-const EXTRA_DELAY: Record<string, number> = {
-  ".": 80,
-  ",": 40,
-  "?": 90,
-  "!": 90,
-  "\n": 120,
-};
-
-// ICE-Glow Dauer
-const GLOW_MS = 140;
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-const wrapGlow = (text: string) =>
-  `<span style="
-    text-shadow: 0 0 12px rgba(120,220,255,0.75),
-                 0 0 24px rgba(120,220,255,0.35);
-    transition: text-shadow ${GLOW_MS}ms ease-out;
-  ">${text}</span>`;
-
-const stripGlow = (text: string) =>
-  text.replace(/<span[^>]*>|<\/span>/g, "");
+const TICK_MS = 16;
 
 (async () => {
   for (let i = 0; i < fullText.length; i += CHUNK_SIZE) {
-    const rawChunk = fullText.slice(i, i + CHUNK_SIZE);
+    await new Promise((r) => setTimeout(r, TICK_MS));
 
-    await sleep(BASE_TICK_MS);
+    const chunk = fullText.slice(i, i + CHUNK_SIZE);
 
-    const lastChar = rawChunk.slice(-1);
-    if (EXTRA_DELAY[lastChar]) {
-      await sleep(EXTRA_DELAY[lastChar]);
-    }
-
-    // 1) Chunk mit Glow anhängen
     setMessages((prev) => {
       const base = Array.isArray(prev) ? prev : [];
       const last = base[base.length - 1];
@@ -2209,26 +2177,7 @@ const stripGlow = (text: string) =>
 
       const next = truncateMessages([
         ...base.slice(0, -1),
-        { ...last, content: last.content + wrapGlow(rawChunk) },
-      ]);
-
-      persistMessages(next);
-      return next;
-    });
-
-    // 2) Glow nach kurzer Zeit entfernen (Text bleibt)
-    await sleep(GLOW_MS);
-
-    setMessages((prev) => {
-      const base = Array.isArray(prev) ? prev : [];
-      const last = base[base.length - 1];
-      if (!last || last.role !== "assistant") return prev;
-
-      const cleaned = stripGlow(last.content);
-
-      const next = truncateMessages([
-        ...base.slice(0, -1),
-        { ...last, content: cleaned },
+        { ...last, content: last.content + chunk },
       ]);
 
       persistMessages(next);
@@ -2236,8 +2185,6 @@ const stripGlow = (text: string) =>
     });
   }
 })();
-
-
 
 
       const meta = (assistant as any).meta as
