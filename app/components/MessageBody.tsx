@@ -14,7 +14,7 @@ import hljs from 'highlight.js';
    Typdefinitionen
    ============================================================ */
 export type MessageRole = 'user' | 'assistant' | 'system';
-export type MessageFormat = 'plain' | 'markdown' | 'html';
+export type MessageFormat = 'plain' | 'markdown' | 'html' | 'auto';
 
 export type ChatMessage = {
   role: MessageRole;
@@ -36,15 +36,17 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
   const fmt: MessageFormat =
     msg.format ?? (defaultRenderer as MessageFormat) ?? 'plain';
 
+  const effectiveFmt: Exclude<MessageFormat, 'auto'> = fmt === 'auto' ? 'plain' : fmt;
+
   // Flags
-  const isMarkdown = fmt === 'markdown';
+  const isMarkdown = effectiveFmt === 'markdown';
   const isUser = msg.role === 'user';
   const isAssistant = msg.role === 'assistant';
 
   // Versuch → renderMessage(), Fallback → Plaintext
   let node: ReactNode;
   try {
-    if (isAssistant && (fmt === 'plain' || fmt === 'auto')) {
+    if (isAssistant && effectiveFmt === 'plain') {
       node = (
         <span
           style={{
@@ -52,20 +54,18 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
             wordBreak: 'break-word',
           }}
         >
-          <ColdReveal
-            key={msg.content.length}
-            text={msg.content}
-          />
+          <ColdReveal key={msg.content.length} text={msg.content} />
         </span>
       );
     } else {
       node = renderMessage({
         role: msg.role,
         content: msg.content,
-        format: fmt,
+        format: effectiveFmt,
         meta: msg.meta,
       });
     }
+
   } catch (err) {
 
     node = (
