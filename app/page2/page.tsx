@@ -2161,15 +2161,79 @@ setMessages((prev) => {
 
 // 2) Inhalt schrittweise aufbauen
 const fullText = assistant.content ?? "";
+
+// Chunk-Größe
 const CHUNK_SIZE = 2;
-const TICK_MS = 16;
+
+// Adaptive Speed-Curve (ms)
+const SPEED = {
+  start: 28, // ruhiger Einstieg
+  mid: 14,   // flüssiger Mittelteil
+  end: 22,   // sanftes Ausklingen
+};
+
+// Mikro-Pausen nach Satzzeichen
+const EXTRA_DELAY: Record<string, number> = {
+  ".": 90,
+  ",": 45,
+  "?": 100,
+  "!": 100,
+  "\n": 140,
+};
+
+// ICE-Glow Dauer
+const GLOW_MS = 140;
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+// Linear interpolation
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+// Geschwindigkeit abhängig vom Fortschritt (0..1)
+const tickForProgress = (p: number) => {
+  if (p < 0.15) {
+    return Math.round(lerp(SPEED.start, SPEED.mid, p / 0.15));
+  }
+  if (p > 0.85) {
+    return Math.round(lerp(SPEED.mid, SPEED.end, (p - 0.85) / 0.15));
+  }
+  return SPEED.mid;
+};
+
+
+const wrapGlow = (text: string) =>
+  `<span style="
+    display: inline-block;
+    transform: translateY(2px);
+    opacity: 0.92;
+
+    text-shadow:
+      0 0 12px rgba(120,220,255,0.75),
+      0 0 24px rgba(120,220,255,0.35);
+
+    transition:
+      text-shadow ${GLOW_MS}ms ease-out,
+      transform ${GLOW_MS}ms ease-out,
+      opacity ${GLOW_MS}ms ease-out;
+  ">${text}</span>`;
+
+
+const stripGlow = (text: string) =>
+  text.replace(/<span[^>]*>|<\/span>/g, "");
 
 (async () => {
   for (let i = 0; i < fullText.length; i += CHUNK_SIZE) {
-    await new Promise((r) => setTimeout(r, TICK_MS));
+    const rawChunk = fullText.slice(i, i + CHUNK_SIZE);
 
-    const chunk = fullText.slice(i, i + CHUNK_SIZE);
+const progress = i / Math.max(1, fullText.length - 1);
+await sleep(tickForProgress(progress));
 
+    const lastChar = rawChunk.slice(-1);
+    if (EXTRA_DELAY[lastChar]) {
+      await sleep(EXTRA_DELAY[lastChar]);
+    }
+
+    // 1) Chunk mit Glow anhängen
     setMessages((prev) => {
       const base = Array.isArray(prev) ? prev : [];
       const last = base[base.length - 1];
@@ -2177,7 +2241,26 @@ const TICK_MS = 16;
 
       const next = truncateMessages([
         ...base.slice(0, -1),
-        { ...last, content: last.content + chunk },
+        { ...last, content: last.content + wrapGlow(rawChunk) },
+      ]);
+
+      persistMessages(next);
+      return next;
+    });
+
+    // 2) Glow nach kurzer Zeit entfernen (Text bleibt)
+    await sleep(GLOW_MS);
+
+    setMessages((prev) => {
+      const base = Array.isArray(prev) ? prev : [];
+      const last = base[base.length - 1];
+      if (!last || last.role !== "assistant") return prev;
+
+const cleaned = stripGlow(last.content);
+
+      const next = truncateMessages([
+        ...base.slice(0, -1),
+        { ...last, content: cleaned },
       ]);
 
       persistMessages(next);
@@ -2185,6 +2268,8 @@ const TICK_MS = 16;
     });
   }
 })();
+
+
 
 
       const meta = (assistant as any).meta as
