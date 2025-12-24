@@ -8,9 +8,11 @@ import Saeule from "./Saeule";
    ====================================================================== */
 type Props = {
   onSystemMessage?: (content: string) => void;
-  onClearChat?: () => void;   // ⬅︎ neu – wird an Saeule weitergereicht
-  canClear?: boolean;         // ⬅︎ optional – falls benötigt
+  onClearChat?: () => void;
+  canClear?: boolean;
+  messages: any[]; // ⬅︎ NEU: wird nur durchgereicht
 };
+
 
 /** Reagiert auf Desktop/Mobile — reagiert sanft mit MatchMedia */
 function useIsDesktop(minWidth = 1024) {
@@ -47,7 +49,9 @@ export default function SidebarContainer({
   onSystemMessage,
   onClearChat,
   canClear,
+  messages,
 }: Props) {
+
   // Breakpoint an page2/useBreakpoint angleichen:
   // Desktop = alles, was NICHT isMobile (>= 769px) ist
   const isDesktop = useIsDesktop(768);
@@ -80,10 +84,12 @@ export default function SidebarContainer({
           }}
         >
           <Saeule
-            onSystemMessage={onSystemMessage}
-            onClearChat={onClearChat}   // ⬅︎ Leitung zum Clear-Handler
-            canClear={canClear}         // ⬅︎ optional
-          />
+  onSystemMessage={onSystemMessage}
+  onClearChat={onClearChat}
+  canClear={canClear}
+  messages={messages}
+/>
+
 
         </div>
       ) : (

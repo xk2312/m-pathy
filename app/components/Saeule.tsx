@@ -236,6 +236,8 @@ import VoiaBloom from "@/components/VoiaBloom";
 import StarField from "@/components/StarField";
 import { logEvent } from "../../lib/auditLogger";
 import { t, getLocale } from "@/lib/i18n";
+import { buildChatExport, chatExportToCSV } from "@/lib/exportChat";
+
 
 // ModeAura – zentrale Hülle für alle aktiven Buttons
 // --------------------------------------------------
@@ -363,10 +365,11 @@ type SectionId = "modes" | "experts" | "system" | "actions";
 /** Optional: Seite kann Systemmeldungen als Bubble anzeigen */
 type Props = {
   onSystemMessage?: (content: string) => void;
-  onClearChat?: () => void;   // ⬅︎ NEU: Clear-Hand
-
-  canClear?: boolean;         // ⬅︎ NEU: Disabled-Logik
+  onClearChat?: () => void;
+  canClear?: boolean;
+  messages: any[]; // ⬅️ NEU: explizite Datenwahrheit
 };
+
 
 
 
@@ -775,7 +778,13 @@ async function callChatAPI(prompt: string): Promise<string | null> {
    Component
    ====================================================================== */
 
-export default function Saeule({ onSystemMessage, onClearChat, canClear }: Props) {
+export default function Saeule({
+  onSystemMessage,
+  onClearChat,
+  canClear,
+  messages,
+}: Props) {
+
   const [activeMode, setActiveMode] = useState<ModeId>(() => {
     try { return (localStorage.getItem("mode") as ModeId) || "M"; } catch { return "M"; }
   });
@@ -1065,68 +1074,43 @@ const reply = await callChatAPI(userPrompt);
   setSendingExpert(null);
 }
 
-  // Exportiert den aktuellen Chat-Thread als JSON oder CSV
-  const exportThread = (format: "json" | "csv") => {
-    try {
-      const raw =
-        localStorage.getItem("mpathy:thread:default") ||
-        "[]";
+// Exportiert den aktuellen Chat-Thread als JSON oder CSV
+const exportThread = (format: "json" | "csv", messages: any[]) => {
+  try {
+    const exportObj = buildChatExport(messages);
 
-      let blob: Blob;
-      let extension: "json" | "csv" = format;
+    let blob: Blob;
+    let extension: "json" | "csv" = format;
 
-      if (format === "csv") {
-        let parsed: unknown;
-        try {
-          parsed = JSON.parse(raw);
-        } catch {
-          parsed = [];
-        }
-
-        const rows: string[] = [];
-        rows.push("index,role,content");
-
-        if (Array.isArray(parsed)) {
-          parsed.forEach((entry, index) => {
-            const anyEntry = entry as any;
-            const role =
-              typeof anyEntry?.role === "string" ? anyEntry.role : "";
-            const contentRaw =
-              typeof anyEntry?.content === "string"
-                ? anyEntry.content
-                : JSON.stringify(anyEntry?.content ?? "");
-            const safeContent = String(contentRaw).replace(/"/g, '""');
-            rows.push(
-              `${index},"${role}","${safeContent}"`
-            );
-          });
-        }
-
-        const csv = rows.join("\n");
-const utf8BOM = "\uFEFF"; // Byte Order Mark for Excel/Numbers compatibility
-blob = new Blob([utf8BOM + csv], {
-  type: "text/csv;charset=utf-8",
-});
-
-      } else {
-        blob = new Blob([raw], { type: "application/json" });
-      }
-
-      const href = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      const date = new Date().toISOString().slice(0, 10);
-
-      link.href = href;
-      link.download = `mpathy-chat-${date}.${extension}`;
-
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(href);
-    } catch {
-      // Export-Fehler bleiben still – der User verliert nichts
+    if (format === "csv") {
+      const csv = chatExportToCSV(exportObj);
+      const utf8BOM = "\uFEFF"; // Excel/Numbers safe
+      blob = new Blob([utf8BOM + csv], {
+        type: "text/csv;charset=utf-8",
+      });
+    } else {
+      const pretty = JSON.stringify(exportObj, null, 2);
+      blob = new Blob([pretty], {
+        type: "application/json",
+      });
     }
-  };
+
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const date = new Date().toISOString().slice(0, 10);
+
+    link.href = href;
+    link.download = `mpathy-chat-${date}.${extension}`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(href);
+  } catch {
+    // Export-Fehler bleiben still – der User verliert nichts
+  }
+};
+
 
   // "LÖSCHEN" – alles zurück auf Flow / neutral
   const handleDeleteImmediate = () => {
@@ -1631,7 +1615,7 @@ blob = new Blob([utf8BOM + csv], {
                         type="button"
                         className={`${styles.button} ${styles.actionsInlineButton}`}
                         style={{ flex: 1 }}
-                        onClick={() => exportThread("csv")}
+onClick={() => exportThread("csv", messages)}
                         aria-label={tr("exportCsvAria", "Export thread as CSV")}
                         title={labelActionsExportCsv}
                         data-test="btn-export-thread-csv"
@@ -1643,7 +1627,7 @@ blob = new Blob([utf8BOM + csv], {
                         type="button"
                         className={`${styles.button} ${styles.actionsInlineButton}`}
                         style={{ flex: 1 }}
-                        onClick={() => exportThread("json")}
+onClick={() => exportThread("json", messages)}
                         aria-label={tr("exportJsonAria", "Export thread as JSON")}
                         title={labelActionsExportJson}
                         data-test="btn-export-thread-json"

@@ -2376,9 +2376,12 @@ const withGate = (fn: () => void) => {
             }}
           >
             <SidebarContainer
-              onSystemMessage={systemSay}
-              onClearChat={onClearChat}
-            />
+  onSystemMessage={systemSay}
+  onClearChat={onClearChat}
+  messages={messages}
+/>
+
+
           </div>
         )}
 
