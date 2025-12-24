@@ -2148,12 +2148,44 @@ if (busy) {
         return;
       }
 
-      setMessages((prev) => {
-        const base = Array.isArray(prev) ? prev : [];
-        const next = truncateMessages([...base, assistant]);
-        persistMessages(next);
-        return next;
-      });
+      // 1) Leere Assistant-Bubble anhängen
+setMessages((prev) => {
+  const base = Array.isArray(prev) ? prev : [];
+  const next = truncateMessages([
+    ...base,
+    { ...assistant, content: "" },
+  ]);
+  persistMessages(next);
+  return next;
+});
+
+// 2) Inhalt schrittweise aufbauen
+const fullText = assistant.content ?? "";
+const CHUNK_SIZE = 2;
+const TICK_MS = 16;
+
+(async () => {
+  for (let i = 0; i < fullText.length; i += CHUNK_SIZE) {
+    await new Promise((r) => setTimeout(r, TICK_MS));
+
+    const chunk = fullText.slice(i, i + CHUNK_SIZE);
+
+    setMessages((prev) => {
+      const base = Array.isArray(prev) ? prev : [];
+      const last = base[base.length - 1];
+      if (!last || last.role !== "assistant") return prev;
+
+      const next = truncateMessages([
+        ...base.slice(0, -1),
+        { ...last, content: last.content + chunk },
+      ]);
+
+      persistMessages(next);
+      return next;
+    });
+  }
+})();
+
 
       const meta = (assistant as any).meta as
         | { status?: string; balanceAfter?: number | null }
