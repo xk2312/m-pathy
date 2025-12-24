@@ -1,6 +1,7 @@
 'use client';
 
 import React, { type ReactNode, useCallback } from 'react';
+import ColdReveal from './ColdReveal';
 // NOTE: Diese Datei ist der Orchestrator (Controller) für die Nachrichten-Inhaltsdarstellung.
 // Sie entscheidet pro Nachricht, WIE gerendert wird (plain/markdown/html),
 // ruft die Renderer-Registry auf und kapselt einen sicheren Fallback.
@@ -43,12 +44,25 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
   // Versuch → renderMessage(), Fallback → Plaintext
   let node: ReactNode;
   try {
-    node = renderMessage({
-      role: msg.role,
-      content: msg.content,
-      format: fmt,
-      meta: msg.meta,
-    });
+    if (isAssistant && fmt === 'plain') {
+      node = (
+        <span
+          style={{
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          }}
+        >
+          <ColdReveal text={msg.content} />
+        </span>
+      );
+    } else {
+      node = renderMessage({
+        role: msg.role,
+        content: msg.content,
+        format: fmt,
+        meta: msg.meta,
+      });
+    }
   } catch (err) {
     node = (
       <span
@@ -64,6 +78,7 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
       console.warn('[MessageBody] renderMessage failed → fallback to plain', err);
     }
   }
+
 
   // Typo-Klassen nach Format & Rolle
   const scopeClass = [
