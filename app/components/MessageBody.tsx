@@ -65,9 +65,7 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
         meta: msg.meta,
       });
     }
-
   } catch (err) {
-
     node = (
       <span
         style={{
@@ -82,6 +80,7 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
       console.warn('[MessageBody] renderMessage failed → fallback to plain', err);
     }
   }
+
 
 
   // Typo-Klassen nach Format & Rolle
