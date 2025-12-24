@@ -832,25 +832,47 @@ function Bubble({
               gap: 8,
             }}
           >
-            <button
-              type="button"
-              onClick={handleCopyAnswer}
-              aria-label="Copy answer"
-              style={{
-                border: "none",
-                borderRadius: 999,
-                padding: "2px 10px",
-                fontSize: 11,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                background: "rgba(15,23,42,0.85)",
-                color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
-                cursor: "pointer",
-                opacity: 0.85,
-              }}
-            >
-              ⧉ Copy
-            </button>
+            {(() => {
+  const [copied, setCopied] = useState(false);
+
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        handleCopyAnswer();
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 5000);
+      }}
+      aria-label="Copy answer"
+      style={{
+        border: "none",
+        borderRadius: 999,
+        padding: "2px 10px",
+        fontSize: 11,
+        letterSpacing: "0.06em",
+        textTransform: "uppercase",
+        background: copied
+          ? "rgba(34,211,238,0.18)"
+          : "rgba(15,23,42,0.85)",
+        color: copied
+          ? tokens.color.cyan ?? "#22d3ee"
+          : tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
+        cursor: "pointer",
+        opacity: 0.9,
+        transition: "background 160ms ease, color 160ms ease, opacity 160ms ease",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.opacity = "1";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.opacity = copied ? "0.9" : "0.85";
+      }}
+    >
+      ⧉ {copied ? "Copied" : "Copy"}
+    </button>
+  );
+})()}
+
 
               <button
                 type="button"
