@@ -2159,7 +2159,7 @@ setMessages((prev) => {
   return next;
 });
 
-// 2) Inhalt schrittweise aufbauen
+// 2) Inhalt schrittweise aufbauen 
 const fullText = assistant.content ?? "";
 const CHUNK_SIZE = 2;
 const TICK_MS = 16;
