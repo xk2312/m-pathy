@@ -9,16 +9,20 @@ type Props = {
   onClose: () => void;
   initialFocusId?: string;
   onSystemMessage?: (content: string) => void;
-  onClearChat?: () => void;          // ← NEU
+  onClearChat?: () => void;
+  messages: any[];                    // ← NEU (required)
 };
+
 
 export default function MobileOverlay({
   open,
   onClose,
   initialFocusId,
   onSystemMessage,
-  onClearChat,                         // ← NEU
+  onClearChat,
+  messages,                           // ← NEU
 }: Props) {
+
 
   const drawerRef = useRef<HTMLDivElement>(null);
 
@@ -212,9 +216,11 @@ useEffect(() => {
     }}
   >
     <Saeule
-      onSystemMessage={forwardSystemMessage}
-      onClearChat={onClearChat}           // ← NEU
-    />
+  onSystemMessage={forwardSystemMessage}
+  onClearChat={onClearChat}
+  messages={messages}                 // ← FIX
+/>
+
   </div>
 </div>
 

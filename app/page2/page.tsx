@@ -2517,13 +2517,15 @@ undefined : "100dvh",
 
     {/* Mobile Overlay / Onboarding */}
     {isMobile && (
-      <MobileOverlay
-        open={overlayOpen}
-        onClose={() => setOverlayOpen(false)}
-        onSystemMessage={systemSay}
-        onClearChat={onClearChat}       // ← Clear-Handler durchreichen
-      />
-    )}
+  <MobileOverlay
+    open={overlayOpen}
+    onClose={() => setOverlayOpen(false)}
+    onSystemMessage={systemSay}
+    onClearChat={onClearChat}
+    messages={messages}
+  />
+)}
+
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
 
     {triketonOpen && (
