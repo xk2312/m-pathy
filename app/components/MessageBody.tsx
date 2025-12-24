@@ -44,7 +44,7 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
   // Versuch → renderMessage(), Fallback → Plaintext
   let node: ReactNode;
   try {
-    if (isAssistant && fmt === 'plain') {
+    if (isAssistant && (fmt === 'plain' || fmt === 'auto')) {
       node = (
         <span
           style={{
@@ -52,7 +52,10 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
             wordBreak: 'break-word',
           }}
         >
-          <ColdReveal text={msg.content} />
+          <ColdReveal
+            key={msg.content.length}
+            text={msg.content}
+          />
         </span>
       );
     } else {
@@ -64,6 +67,7 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
       });
     }
   } catch (err) {
+
     node = (
       <span
         style={{
