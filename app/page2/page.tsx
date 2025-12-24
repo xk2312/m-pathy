@@ -2182,20 +2182,10 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const wrapGlow = (text: string) =>
   `<span style="
-    display: inline-block;
-    transform: translateY(2px);
-    opacity: 0.92;
-
-    text-shadow:
-      0 0 12px rgba(120,220,255,0.75),
-      0 0 24px rgba(120,220,255,0.35);
-
-    transition:
-      text-shadow ${GLOW_MS}ms ease-out,
-      transform ${GLOW_MS}ms ease-out,
-      opacity ${GLOW_MS}ms ease-out;
+    text-shadow: 0 0 12px rgba(120,220,255,0.75),
+                 0 0 24px rgba(120,220,255,0.35);
+    transition: text-shadow ${GLOW_MS}ms ease-out;
   ">${text}</span>`;
-
 
 const stripGlow = (text: string) =>
   text.replace(/<span[^>]*>|<\/span>/g, "");
@@ -2234,7 +2224,7 @@ const stripGlow = (text: string) =>
       const last = base[base.length - 1];
       if (!last || last.role !== "assistant") return prev;
 
-const cleaned = stripGlow(last.content);
+      const cleaned = stripGlow(last.content);
 
       const next = truncateMessages([
         ...base.slice(0, -1),
