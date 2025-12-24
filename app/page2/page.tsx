@@ -2162,44 +2162,23 @@ setMessages((prev) => {
 // 2) Inhalt schrittweise aufbauen
 const fullText = assistant.content ?? "";
 
-// Chunk-Größe
+// Basis-Speed
 const CHUNK_SIZE = 2;
-
-// Adaptive Speed-Curve (ms)
-const SPEED = {
-  start: 28, // ruhiger Einstieg
-  mid: 14,   // flüssiger Mittelteil
-  end: 22,   // sanftes Ausklingen
-};
+const BASE_TICK_MS = 16;
 
 // Mikro-Pausen nach Satzzeichen
 const EXTRA_DELAY: Record<string, number> = {
-  ".": 90,
-  ",": 45,
-  "?": 100,
-  "!": 100,
-  "\n": 140,
+  ".": 80,
+  ",": 40,
+  "?": 90,
+  "!": 90,
+  "\n": 120,
 };
 
 // ICE-Glow Dauer
 const GLOW_MS = 140;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-// Linear interpolation
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-
-// Geschwindigkeit abhängig vom Fortschritt (0..1)
-const tickForProgress = (p: number) => {
-  if (p < 0.15) {
-    return Math.round(lerp(SPEED.start, SPEED.mid, p / 0.15));
-  }
-  if (p > 0.85) {
-    return Math.round(lerp(SPEED.mid, SPEED.end, (p - 0.85) / 0.15));
-  }
-  return SPEED.mid;
-};
-
 
 const wrapGlow = (text: string) =>
   `<span style="
@@ -2225,8 +2204,7 @@ const stripGlow = (text: string) =>
   for (let i = 0; i < fullText.length; i += CHUNK_SIZE) {
     const rawChunk = fullText.slice(i, i + CHUNK_SIZE);
 
-const progress = i / Math.max(1, fullText.length - 1);
-await sleep(tickForProgress(progress));
+    await sleep(BASE_TICK_MS);
 
     const lastChar = rawChunk.slice(-1);
     if (EXTRA_DELAY[lastChar]) {
