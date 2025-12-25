@@ -319,10 +319,59 @@ export function verifyLocalTriketonLedger(): boolean {
       }
     }
 
-    console.debug(`[TriketonLedger] verified ${parsed.length} entries`);
+   console.debug(`[TriketonLedger] verified ${parsed.length} entries`);
+return true;
+} catch (err) {
+  console.error("[TriketonLedger] verification failed:", err);
+  return false;
+}
+}
+
+// ---------------------------------------------------------------------------
+// Step L6 – Chain Integrity Verification (Genesis Reset)
+// ---------------------------------------------------------------------------
+
+import { computeTruthHash, normalizeForTruthHash } from "@/lib/triketonVerify";
+
+export function verifyOrResetTriketonLedger(): boolean {
+  try {
+    if (typeof window === "undefined") return false;
+
+    const key = "mpathy:triketon:v1";
+    const raw = window.localStorage.getItem(key);
+    if (!raw) {
+      console.info("[TriketonLedger] no ledger found → new genesis");
+      window.localStorage.setItem(key, JSON.stringify([]));
+      return true;
+    }
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed) || !parsed.length) {
+      console.info("[TriketonLedger] empty ledger → new genesis");
+      window.localStorage.setItem(key, JSON.stringify([]));
+      return true;
+    }
+
+    // sanity: every entry must have a valid hash
+    const invalid = parsed.some(
+      (e) =>
+        !e.truth_hash ||
+        typeof e.truth_hash !== "string" ||
+        e.truth_hash.startsWith("local_") ||
+        e.truth_hash.length < 20
+    );
+
+    if (invalid) {
+      console.warn("[TriketonLedger] drift detected → full reset");
+      window.localStorage.removeItem(key);
+      window.localStorage.setItem(key, JSON.stringify([]));
+      return false;
+    }
+
+    console.debug(`[TriketonLedger] chain integrity OK (${parsed.length})`);
     return true;
   } catch (err) {
-    console.error("[TriketonLedger] verification failed:", err);
+    console.error("[TriketonLedger] verifyOrReset failed:", err);
     return false;
   }
 }
