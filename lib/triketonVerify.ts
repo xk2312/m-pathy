@@ -93,22 +93,34 @@ export function verifyAll(entries: TArchiveEntry[]): {
  * Simuliert einen deterministischen Geräte-Public-Key (2048-Bit Äquivalent, Base64-String)
  * Rein lokal, kein Kryptoschlüssel – dient als stabile Geräte-ID.
  */
-export function generatePublicKey2048(): string {
+export async function generatePublicKey2048(truthHashHex: string): Promise<string> {
   try {
-    if (typeof window === "undefined") return "unknown_device";
-    // Wenn bereits ein Key existiert, wiederverwenden
-    const existing = window.localStorage.getItem("mpathy:triketon:device_public_key");
-    if (existing && existing.trim().length > 0) return existing;
+    if (!truthHashHex || truthHashHex.length !== 64) {
+      console.warn("[Triketon] invalid truth hash, cannot derive key");
+      return "invalid_key";
+    }
 
-    // Fallback: pseudo-Zufall auf Basis von Zeit + Math.random
-    const array = new Uint8Array(256);
-    crypto.getRandomValues(array);
-    const base64 = btoa(String.fromCharCode(...array));
-    const key = `PK2048_${base64.slice(0, 256)}`;
-    window.localStorage.setItem("mpathy:triketon:device_public_key", key);
-    return key;
-  } catch {
-    // Server- oder Node-Umgebung → Fallback
-    return `PK2048_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+    const seed = new Uint8Array(truthHashHex.match(/.{2}/g)!.map((b) => parseInt(b, 16)));
+    const material: number[] = [];
+    let current = seed;
+
+    // iterative SHA-256 expansion (~2048 bit)
+    while (material.length < 256) {
+      const digest = await crypto.subtle.digest("SHA-256", current);
+      const bytes = Array.from(new Uint8Array(digest));
+      material.push(...bytes);
+      current = new Uint8Array(bytes);
+    }
+
+    const keyBytes = new Uint8Array(material.slice(0, 256));
+    const base64 = btoa(String.fromCharCode(...keyBytes))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    return base64;
+  } catch (err) {
+    console.error("[Triketon] generatePublicKey2048 failed:", err);
+    return "error_key";
   }
 }
