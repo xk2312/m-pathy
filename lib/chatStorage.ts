@@ -252,29 +252,47 @@ export function appendTriketonLedgerEntry(
   entry: TriketonLedgerEntryV1
 ): void {
   try {
-    if (typeof window === "undefined") return
-    const ls = window.localStorage
-    const raw = ls.getItem(TRIKETON_STORAGE_KEY)
-    let arr: TriketonLedgerEntryV1[] = []
+    if (typeof window === "undefined") return;
+    const ls = window.localStorage;
+    const raw = ls.getItem(TRIKETON_STORAGE_KEY);
+    let arr: TriketonLedgerEntryV1[] = [];
 
     if (raw) {
       try {
-        const parsed = JSON.parse(raw)
-        if (Array.isArray(parsed)) arr = parsed
-      } catch {}
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) arr = parsed;
+      } catch (err) {
+        console.warn("[TriketonLedger] parse error – resetting ledger:", err);
+        arr = [];
+      }
     }
 
-    // immutable append-only ledger
-    const last = arr[arr.length - 1]
-    const next = {
+    // keine Duplikate (TruthHash + PublicKey)
+    const exists = arr.some(
+      (x) =>
+        x.truth_hash === entry.truth_hash &&
+        x.public_key === entry.public_key
+    );
+    if (exists) {
+      console.info("[TriketonLedger] duplicate entry skipped:", entry.truth_hash);
+      return;
+    }
+
+    // append-only, deterministische Reihenfolge
+    const last = arr[arr.length - 1];
+    const next: TriketonLedgerEntryV1 = {
       ...entry,
       chain_prev: last?.truth_hash ?? undefined,
-    }
+    };
 
-    arr.push(next)
-    ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(arr))
-  } catch {}
+    arr.push(next);
+    ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(arr));
+    console.debug("[TriketonLedger] appended:", entry.truth_hash);
+  } catch (err) {
+    console.error("[TriketonLedger] write failed:", err);
+  }
 }
+
 
 
 /** Clear handler factory (no bubble, prepares for hard clear) */
