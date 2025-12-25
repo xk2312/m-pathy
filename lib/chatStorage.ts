@@ -234,24 +234,48 @@ function isArchiveEntry(x: unknown): x is TriketonArchiveEntry {
 
 
 
-export function appendTriketonArchiveEntry(entry: TriketonArchiveEntry, max = 500): void {
-  try {
-    if (typeof window === "undefined") return;
-    const ls = window.localStorage;
+// Expanded Ledger: every message (user + assistant) is permanently appended
+export type TriketonLedgerEntryV1 = {
+  id: string
+  role: "user" | "assistant" | "system"
+  content: string
+  truth_hash: string
+  public_key: string
+  timestamp: string
+  version: "v1"
+  orbit_context: "chat"
+  chain_id: string
+  chain_prev?: string
+}
 
-    const raw = ls.getItem(TRIKETON_STORAGE_KEY);
-    let arr: any[] = [];
+export function appendTriketonLedgerEntry(
+  entry: TriketonLedgerEntryV1
+): void {
+  try {
+    if (typeof window === "undefined") return
+    const ls = window.localStorage
+    const raw = ls.getItem(TRIKETON_STORAGE_KEY)
+    let arr: TriketonLedgerEntryV1[] = []
+
     if (raw) {
       try {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) arr = parsed;
+        const parsed = JSON.parse(raw)
+        if (Array.isArray(parsed)) arr = parsed
       } catch {}
     }
 
-    const next = [...arr, entry].filter(isArchiveEntry).slice(-max);
-    ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(next));
+    // immutable append-only ledger
+    const last = arr[arr.length - 1]
+    const next = {
+      ...entry,
+      chain_prev: last?.truth_hash ?? undefined,
+    }
+
+    arr.push(next)
+    ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(arr))
   } catch {}
 }
+
 
 /** Clear handler factory (no bubble, prepares for hard clear) */
 export function makeClearHandler(setMessages: (m: ChatMessage[]) => void) {
