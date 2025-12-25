@@ -306,6 +306,8 @@ const en = {
   "pillar.section.system": "System status",
   "pillar.section.actionsTitle": "NEW CHAT",
   "pillar.section.utility": "Actions & export",
+  "pillar.section.archiveTitle": "ARCHIVE",
+
 
   // Actions (export / delete)
   "actions.export.title": "Export chat",
@@ -511,6 +513,8 @@ const de = {
   "pillar.section.system": "Systemstatus",
   "pillar.section.actionsTitle": "Neuer Chat",
   "pillar.section.utility": "Aktionen & Export",
+  "pillar.section.archiveTitle": "ARCHIV",
+
 
   // Actions (export / delete)
   "actions.export.title": "Chat exportieren",
@@ -716,6 +720,7 @@ const fr = {
   "pillar.section.system": "État du système",
   "pillar.section.actionsTitle": "Nouveau chat",
   "pillar.section.utility": "Actions & export",
+  "pillar.section.archiveTitle": "ARCHIVES",
 
   // Actions (export / delete)
   "actions.export.title": "Exporter le chat",
@@ -922,6 +927,7 @@ const es = {
   "pillar.section.system": "Estado del sistema",
   "pillar.section.actionsTitle": "Nuevo chat",
   "pillar.section.utility": "Acciones y exportación",
+  "pillar.section.archiveTitle": "ARCHIVO",
 
   // Actions (export / delete)
   "actions.export.title": "Exportar chat",
@@ -1128,6 +1134,7 @@ const it = {
   "pillar.section.system": "Stato del sistema",
   "pillar.section.actionsTitle": "Nuova chat",
   "pillar.section.utility": "Azioni e esportazione",
+  "pillar.section.archiveTitle": "ARCHIVIO",
 
   // Actions (export / delete)
   "actions.export.title": "Esporta chat",
@@ -1334,6 +1341,7 @@ const pt = {
   "pillar.section.system": "Estado do sistema",
   "pillar.section.actionsTitle": "Novo chat",
   "pillar.section.utility": "Ações e exportação",
+  "pillar.section.archiveTitle": "ARQUIVO",
 
   // Actions (export / delete)
   "actions.export.title": "Exportar chat",
@@ -1541,6 +1549,7 @@ const nl = {
   "pillar.section.system": "Systeemstatus",
   "pillar.section.actionsTitle": "Nieuwe chat",
   "pillar.section.utility": "Acties & export",
+  "pillar.section.archiveTitle": "ARCHIEF",
 
   // Actions (export / delete)
   "actions.export.title": "Chat exporteren",
@@ -1748,6 +1757,7 @@ const ru = {
   "pillar.section.system": "Состояние системы",
   "pillar.section.actionsTitle": "Новый чат",
   "pillar.section.utility": "Действия и экспорт",
+  "pillar.section.archiveTitle": "АРХИВ",
 
   // Actions (export / delete)
   "actions.export.title": "Экспортировать чат",
@@ -1954,6 +1964,7 @@ const zh = {
   "pillar.section.system": "系统状态",
   "pillar.section.actionsTitle": "新建聊天",
   "pillar.section.utility": "操作与导出",
+  "pillar.section.archiveTitle": "存档",
 
   // Actions (export / delete)
   "actions.export.title": "导出聊天",
@@ -2121,6 +2132,7 @@ const ja = {
   "pillar.section.system": "システム状態",
   "pillar.section.actionsTitle": "新しいチャット",
   "pillar.section.utility": "操作 & エクスポート",
+  "pillar.section.archiveTitle": "アーカイブ",
 
   // Actions (export / delete)
   "actions.export.title": "チャットをエクスポート",
@@ -2327,6 +2339,7 @@ const ko = {
   "pillar.section.system": "시스템 상태",
   "pillar.section.actionsTitle": "새 채팅",
   "pillar.section.utility": "작업 & 내보내기",
+  "pillar.section.archiveTitle": "아카이브",
 
   // Actions (export / delete)
   "actions.export.title": "채팅 내보내기",
@@ -2533,6 +2546,7 @@ const ar = {
   "pillar.section.system": "حالة النظام",
   "pillar.section.actionsTitle": "دردشة جديدة",
   "pillar.section.utility": "الإجراءات والتصدير",
+  "pillar.section.archiveTitle": "الأرشيف",
 
   // Actions (export / delete)
   "actions.export.title": "تصدير الدردشة",
@@ -2739,6 +2753,7 @@ const hi = {
   "pillar.section.system": "सिस्टम स्थिति",
   "pillar.section.actionsTitle": "नई चैट",
   "pillar.section.utility": "क्रियाएँ और निर्यात",
+  "pillar.section.archiveTitle": "संग्रह",
 
   // Actions (export / delete)
   "actions.export.title": "चैट निर्यात करें",

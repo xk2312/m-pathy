@@ -1510,39 +1510,28 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
           </div>
         </div>
 
-        {/* SYSTEM – Statusleiste */}
 
+       {/* ARCHIVE */}
+<div className={styles.soSection}>
+  <button
+    type="button"
+    className={styles.soSectionHeader}
+    onClick={() => {
+      window.dispatchEvent(
+        new CustomEvent("mpathy:archive:open")
+      );
+    }}
+    aria-label={tr("pillar.section.archiveTitle", "ARCHIVE")}
+  >
+    <span className={styles.soSectionHeaderIcon}>
+      <SimbaIcon name="clear" />
+    </span>
+    <span className={styles.soSectionHeaderLabel}>
+      {tr("pillar.section.archiveTitle", "ARCHIVE")}
+    </span>
+  </button>
+</div>
 
-        {/* SYSTEM – Statusleiste */}
-        <div className={styles.soSection}>
-          <button
-            type="button"
-            className={styles.soSectionHeader}
-            onClick={() => toggleSection("system")}
-            aria-expanded={openSection === "system"}
-          >
-            <span className={styles.soSectionHeaderIcon}>
-              <SimbaIcon name="modeDefault" />
-            </span>
-            <span className={styles.soSectionHeaderLabel}>
-              {tr("pillar.section.systemTitle", "SYSTEM")}
-            </span>
-          </button>
-
-          <div
-            className={
-              openSection === "system"
-                ? styles.soSectionBody
-                : styles.soSectionBodyCollapsed
-            }
-            aria-label={tr("pillar.section.system", "System status")}
-          >
-            <div className={styles.statusBar} aria-live="polite">
-              <span className={styles.statusKey}>{t("statusMode")}</span>{" "}
-              {modeLabel}
-            </div>
-          </div>
-        </div>
 
         {/* ACTIONS – Export + Clear */}
         <div className={styles.soSection}>
@@ -1704,27 +1693,6 @@ onClick={() => exportThread("json", messages)}
           </div>
                 </div>
       </div>
-
-      {/* ARCHIVE */}
-<div className={styles.block}>
-  <button
-    type="button"
-    className={styles.soItem}
-    onClick={() => {
-      const ev = new CustomEvent("mpathy:archive:open");
-      window.dispatchEvent(ev);
-    }}
-    aria-label={labelArchive}
-  >
-    <span className={styles.soItemIcon}>
-      <SimbaIcon name="clear" />
-    </span>
-    <span className={styles.soItemLabel}>
-      {labelArchive}
-    </span>
-  </button>
-</div>
-
 
       <div className={styles.saeuleBottomNote}>
         <div className={styles.saeuleSupportButtonWrapper}>
