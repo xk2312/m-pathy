@@ -302,6 +302,21 @@ const next: TriketonLedgerEntryV1 = {
     arr.push(next);
     ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(arr));
     console.debug("[TriketonLedger] appended:", entry.truth_hash);
+
+    // -----------------------------------------------------------------------
+    // Step L7 – Post-Write Verification + Drift Guard
+    // -----------------------------------------------------------------------
+    try {
+      const ok = verifyLocalTriketonLedger();
+      const stable = verifyOrResetTriketonLedger();
+      if (ok && stable) {
+        console.debug(`[TriketonLedger] chain OK (len=${arr.length}, drift=0)`);
+      } else {
+        console.warn("[TriketonLedger] drift detected → local reset executed");
+      }
+    } catch (err) {
+      console.error("[TriketonLedger] post-write verify failed:", err);
+    }
   } catch (err) {
     console.error("[TriketonLedger] write failed:", err);
   }
