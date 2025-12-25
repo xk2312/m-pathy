@@ -1517,9 +1517,10 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
     type="button"
     className={styles.soSectionHeader}
     onClick={() => {
-      window.dispatchEvent(
-        new CustomEvent("mpathy:archive:open")
-      );
+      setOpenSection(null)
+      setOpenExportDetails(false)
+      setOpenDeleteDetails(false)
+      window.dispatchEvent(new CustomEvent("mpathy:archive:open"))
     }}
     aria-label={tr("pillar.section.archiveTitle", "ARCHIVE")}
   >
@@ -1530,6 +1531,7 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
       {tr("pillar.section.archiveTitle", "ARCHIVE")}
     </span>
   </button>
+
 </div>
 
 
