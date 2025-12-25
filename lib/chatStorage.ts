@@ -288,14 +288,30 @@ export async function appendTriketonLedgerEntry(
       .replace(/^T/, "")
       .padStart(64, "0");
 
-    // Step L7.2 – persistent device-bound key integration
-    let deviceKey = "unknown_key";
-    try {
-      deviceKey = await getOrCreateDevicePublicKey2048(truthHashHex);
-    } catch (err) {
-      console.warn("[TriketonLedger] key generation failed → fallback:", err);
-      deviceKey = "fallback_key";
-    }
+// Step L7.2 – persistent device-bound key integration (Council13 fix)
+let deviceKey = "unknown_key";
+
+try {
+  const ls = window.localStorage;
+  const DEVICE_KEY_2048 = "mpathy:triketon:device_public_key_2048";
+
+  // 1️⃣ zuerst prüfen, ob Schlüssel schon existiert
+  const storedKey = ls.getItem(DEVICE_KEY_2048);
+  if (storedKey && storedKey.trim().length > 0) {
+    deviceKey = storedKey;
+  } else {
+    // 2️⃣ falls nicht, deterministisch neu erzeugen
+    deviceKey = await getOrCreateDevicePublicKey2048(truthHashHex);
+    // 3️⃣ und sofort persistieren
+    ls.setItem(DEVICE_KEY_2048, deviceKey);
+  }
+
+  console.debug("[TriketonLedger] deviceKey bound:", deviceKey.slice(0, 32), "…");
+} catch (err) {
+  console.warn("[TriketonLedger] deviceKey load failed → fallback:", err);
+  deviceKey = "fallback_key";
+}
+
 
 
 const next: TriketonLedgerEntryV1 = {
