@@ -146,7 +146,8 @@ import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import { useMobileViewport } from "@/lib/useMobileViewport";
 import { v4 as uuidv4 } from "uuid";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
-import { loadChat, saveChat, initChatStorage, hardClearChat, appendTriketonArchiveEntry } from "@/lib/chatStorage";
+import { loadChat, saveChat, initChatStorage, hardClearChat,appendTriketonLedgerEntry } from '@/lib/chatStorage'
+
 
 
 
@@ -2022,70 +2023,65 @@ if (busy) {
 
   // Falls der Server KEINEN Text liefert → Login-Text erzwingen
   const safeContent =
-    content.trim().length > 0
-      ? content
-      : loginText;
+  content.trim().length > 0 ? content : loginText
 
-  const status =
-    data && typeof data.status === "string" ? data.status : "ok";
-  const balanceAfter =
-    data && typeof data.balance_after === "number"
-      ? data.balance_after
-      : null;
-  const tokensUsed =
-    data && typeof data.tokens_used === "number"
-      ? data.tokens_used
-      : null;
+const status =
+  data && typeof data.status === 'string' ? data.status : 'ok'
 
-  const rawTriketon = (data as any)?.triketon;
+const balanceAfter =
+  data && typeof data.balance_after === 'number' ? data.balance_after : null
 
-  const triketon =
-    rawTriketon && typeof rawTriketon === "object"
-      ? {
-          sealed: true,
-          public_key:
-            (rawTriketon as any).public_key ??
-            (rawTriketon as any).publicKey ??
-            "",
-          truth_hash:
-            (rawTriketon as any).truth_hash ??
-            (rawTriketon as any).truthHash ??
-            "",
-          timestamp:
-            (rawTriketon as any).timestamp ??
-            (rawTriketon as any).sealed_at ??
-            "",
-          version: "v1",
-          hash_profile: "TRIKETON_HASH_V1",
-          key_profile: "TRIKETON_KEY_V1",
-          orbit_context: "chat",
-        }
-      : undefined;
+const tokensUsed =
+  data && typeof data.tokens_used === 'number' ? data.tokens_used : null
 
-  const id =
-    typeof crypto !== "undefined" && typeof (crypto as any).randomUUID === "function"
-      ? (crypto as any).randomUUID()
-      : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+const rawTriketon = (data as any)?.triketon
 
-    try {
-    if (triketon?.public_key && triketon?.truth_hash && triketon?.timestamp) {
-      appendTriketonArchiveEntry(
-        {
-          public_key: triketon.public_key,
-          truth_hash: triketon.truth_hash,
-          timestamp: triketon.timestamp,
-          orbit_context: "chat",
-          version: "v1",
-          message_id: id,
-          ref: { ts: Date.now(), idx: Array.isArray(context) ? context.length : undefined },
-          content: safeContent,
-        },
-        500
-      );
-    }
-  } catch {}
+const triketon =
+  rawTriketon && typeof rawTriketon === 'object'
+    ? {
+        sealed: true,
+        public_key:
+          (rawTriketon as any).public_key ??
+          (rawTriketon as any).publicKey ??
+          '',
+        truth_hash:
+          (rawTriketon as any).truth_hash ??
+          (rawTriketon as any).truthHash ??
+          '',
+        timestamp:
+          (rawTriketon as any).timestamp ??
+          (rawTriketon as any).sealed_at ??
+          '',
+        version: 'v1',
+        hash_profile: 'TRIKETON_HASH_V1',
+        key_profile: 'TRIKETON_KEY_V1',
+        orbit_context: 'chat',
+      }
+    : undefined
 
+const id =
+  typeof crypto !== 'undefined' &&
+  typeof (crypto as any).randomUUID === 'function'
+    ? (crypto as any).randomUUID()
+    : `${Date.now()}_${Math.random().toString(16).slice(2)}`
 
+try {
+  if (triketon?.public_key && triketon?.truth_hash && triketon?.timestamp) {
+    appendTriketonLedgerEntry({
+      id,
+      role: "assistant",
+      content: safeContent,
+      truth_hash: triketon.truth_hash,
+      public_key: triketon.public_key,
+      timestamp: triketon.timestamp,
+      version: "v1", // literal fix
+      orbit_context: "chat", // literal fix
+      chain_id: "local",
+    })
+  }
+} catch (err) {
+  console.warn("[TriketonLedger] Append failed:", err)
+}
 
   return {
     id,
@@ -2094,12 +2090,14 @@ if (busy) {
     format: assistant.format ?? "markdown",
     meta: { status, balanceAfter, tokensUsed },
     triketon,
-  } as any as ChatMessage;
-
-
-
-
+  } as any as ChatMessage
 }
+
+// ⬆️ Diese schließende Klammer beendet die Message-Builder-Funktion sauber.
+// Danach folgt dein React-Code mit useEffect() und return (<LanguageProvider> …)
+
+
+
 
 
 
@@ -2691,5 +2689,5 @@ undefined : "100dvh",
 
 
   </LanguageProvider>
-  );
+)
 }
