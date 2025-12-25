@@ -201,3 +201,7 @@ document.cookie = `NEXT_LOCALE=${safe}; path=/; max-age=31536000; SameSite=Lax`;
 export function useLang() {
   return useContext(LanguageCtx);
 }
+
+// 🆕 Kompatibilität für Archive-System und zukünftige Hooks
+export const useLanguage = useLang;
+
