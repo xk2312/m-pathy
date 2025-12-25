@@ -2134,11 +2134,33 @@ try {
 
     const userMsg: ChatMessage = { role: "user", content: trimmed, format: "markdown" };
 
-    const optimistic = truncateMessages([...(messages ?? []), userMsg]);
+       const optimistic = truncateMessages([...(messages ?? []), userMsg]);
     setMessages(optimistic);
     persistMessages(optimistic);
+
+    // ---------------------------------------------------------------------------
+    // Step L3 – Ledger Recovery & Dual Append (v1)
+    // ---------------------------------------------------------------------------
+    try {
+      appendTriketonLedgerEntry({
+        id: crypto.randomUUID(),
+        role: "user",
+        content: userMsg.content,
+        truth_hash: "local_" + Date.now().toString(16),
+        public_key: "local_user",
+        timestamp: new Date().toISOString(),
+        version: "v1",
+        orbit_context: "chat",
+        chain_id: "local",
+      });
+      console.debug("[TriketonLedger] user entry appended:", userMsg.content.slice(0, 30));
+    } catch (err) {
+      console.warn("[TriketonLedger] user append failed:", err);
+    }
+
     setLoading(true);
     setMode("THINKING");
+
 
     try {
       const assistant = await sendMessageLocal(optimistic);
