@@ -11,6 +11,7 @@ import { useLanguage } from '@/app/providers/LanguageProvider'
 import { i18nArchive } from '@/lib/i18n.archive'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
+import ReportStatus from './ReportStatus'
 
 export default function ReportList() {
   const { lang } = useLanguage()
@@ -63,6 +64,11 @@ export default function ReportList() {
             <pre className="text-xs bg-surface2 p-3 rounded-md max-h-64 overflow-y-auto">
               {JSON.stringify(selectedReport, null, 2)}
             </pre>
+            <ReportStatus
+  text={JSON.stringify(selectedReport)}
+  truthHash={selectedReport.truthHash}
+/>
+
             <div className="flex justify-end gap-3 mt-4">
               <Button onClick={() => handleDownload(selectedReport.truthHash)}>{t.view}</Button>
              <Button variant="solid" onClick={() => handleDelete(selectedReport.truthHash)}>
