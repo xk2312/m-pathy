@@ -2,7 +2,9 @@
 // GPTM-Galaxy+ · m-pathy Archive + Verification System v5
 // Triketon-Verification Layer — deterministic TRUE / FALSE checks
 
-import { TArchiveEntry } from './types'
+import { TArchiveEntry } from "./types";
+
+const DEVICE_KEY = "mpathy:triketon:device_public_key";
 
 /**
  * normalizeForTruthHash()
@@ -11,11 +13,11 @@ import { TArchiveEntry } from './types'
  */
 export function normalizeForTruthHash(text: string): string {
   return text
-    .normalize('NFKC')
-    .replace(/\r?\n|\r/g, ' ')
-    .replace(/\s+/g, ' ')
+    .normalize("NFKC")
+    .replace(/\r?\n|\r/g, " ")
+    .replace(/\s+/g, " ")
     .trim()
-    .toLowerCase()
+    .toLowerCase();
 }
 
 /**
@@ -23,13 +25,13 @@ export function normalizeForTruthHash(text: string): string {
  * Deterministischer 32-Bit-Hash (kein Kryptohash, rein funktional).
  */
 export function computeTruthHash(text: string): string {
-  let h = 0
-  const src = normalizeForTruthHash(text)
+  let h = 0;
+  const src = normalizeForTruthHash(text);
   for (let i = 0; i < src.length; i++) {
-    h = (h << 5) - h + src.charCodeAt(i)
-    h |= 0
+    h = (h << 5) - h + src.charCodeAt(i);
+    h |= 0;
   }
-  return `T${Math.abs(h)}`
+  return `T${Math.abs(h)}`;
 }
 
 /**
@@ -37,9 +39,9 @@ export function computeTruthHash(text: string): string {
  * Prüft eine einzelne Nachricht anhand gespeicherten truth_hash-Werts.
  */
 export function verifyEntry(entry: TArchiveEntry): boolean {
-  if (!entry.truth_hash || !entry.content) return false
-  const hash = computeTruthHash(entry.content)
-  return hash === entry.truth_hash
+  if (!entry.truth_hash || !entry.content) return false;
+  const hash = computeTruthHash(entry.content);
+  return hash === entry.truth_hash;
 }
 
 /**
@@ -52,9 +54,9 @@ export function verifyPair(
 ): boolean {
   const combined = `${normalizeForTruthHash(question.content)}${normalizeForTruthHash(
     answer.content,
-  )}`
-  const pairHash = computeTruthHash(combined)
-  return pairHash.startsWith('T')
+  )}`;
+  const pairHash = computeTruthHash(combined);
+  return pairHash.startsWith("T");
 }
 
 /**
@@ -62,13 +64,13 @@ export function verifyPair(
  * Prüft vollständigen Chat: alle Nachrichten, fortlaufende Chain-Signatur.
  */
 export function verifyChat(entries: TArchiveEntry[]): boolean {
-  if (!entries || entries.length === 0) return false
-  let chain = ''
+  if (!entries || entries.length === 0) return false;
+  let chain = "";
   for (const e of entries) {
-    chain += normalizeForTruthHash(e.content)
+    chain += normalizeForTruthHash(e.content);
   }
-  const chainHash = computeTruthHash(chain)
-  return chainHash.startsWith('T')
+  const chainHash = computeTruthHash(chain);
+  return chainHash.startsWith("T");
 }
 
 /**
@@ -76,24 +78,27 @@ export function verifyChat(entries: TArchiveEntry[]): boolean {
  * Gesamt-Pipeline (Message → Pair → Chat).
  */
 export function verifyAll(entries: TArchiveEntry[]): {
-  messageLevel: boolean[]
-  pairLevel: boolean[]
-  chatLevel: boolean
+  messageLevel: boolean[];
+  pairLevel: boolean[];
+  chatLevel: boolean;
 } {
-  const messageLevel = entries.map((e) => verifyEntry(e))
-  const pairLevel: boolean[] = []
+  const messageLevel = entries.map((e) => verifyEntry(e));
+  const pairLevel: boolean[] = [];
   for (let i = 0; i < entries.length - 1; i++) {
-    pairLevel.push(verifyPair(entries[i], entries[i + 1]))
+    pairLevel.push(verifyPair(entries[i], entries[i + 1]));
   }
-  const chatLevel = verifyChat(entries)
-  return { messageLevel, pairLevel, chatLevel }
+  const chatLevel = verifyChat(entries);
+  return { messageLevel, pairLevel, chatLevel };
 }
+
 /**
  * generatePublicKey2048()
  * Simuliert einen deterministischen Geräte-Public-Key (2048-Bit Äquivalent, Base64-String)
  * Rein lokal, kein Kryptoschlüssel – dient als stabile Geräte-ID.
  */
-export async function generatePublicKey2048(truthHashHex: string): Promise<string> {
+export async function generatePublicKey2048(
+  truthHashHex: string,
+): Promise<string> {
   try {
     if (!truthHashHex || truthHashHex.length !== 64) {
       console.warn("[Triketon] invalid truth hash, cannot derive key");
@@ -121,6 +126,34 @@ export async function generatePublicKey2048(truthHashHex: string): Promise<strin
     return base64;
   } catch (err) {
     console.error("[Triketon] generatePublicKey2048 failed:", err);
+    return "error_key";
+  }
+}
+
+/**
+ * getOrCreateDevicePublicKey2048()
+ * Gibt einen persistenten Geräte-Public-Key zurück oder erstellt ihn einmalig.
+ * Wird in LocalStorage unter mpathy:triketon:device_public_key gespeichert.
+ */
+export async function getOrCreateDevicePublicKey2048(
+  truthHashHex?: string,
+): Promise<string> {
+  try {
+    if (typeof window === "undefined") return "server_mode";
+    const ls = window.localStorage;
+    const existing = ls.getItem(DEVICE_KEY);
+    if (existing && existing.trim().length > 0) {
+      return existing; // ✅ reuse persistent key
+    }
+
+    const newKey = await generatePublicKey2048(
+      truthHashHex ?? "0000000000000000000000000000000000000000000000000000000000000000",
+    );
+    ls.setItem(DEVICE_KEY, newKey);
+    console.debug("[Triketon] new device-bound key generated");
+    return newKey;
+  } catch (err) {
+    console.error("[Triketon] device key init failed:", err);
     return "error_key";
   }
 }
