@@ -1,4 +1,4 @@
-import { generatePublicKey2048 } from "@/lib/triketonVerify";
+import { generatePublicKey2048, computeTruthHash } from "@/lib/triketonVerify";
 // lib/chatStorage.ts
 // Eine Quelle der Wahrheit für Chat-Persistenz (localStorage)
 // lib/chatStorage.ts
@@ -159,15 +159,35 @@ export function loadChat(): ChatMessage[] | null {
 
 
 /** Speichern: immer getrimmt, atomar unter dem neuen Key */
-export function saveChat(messages: ChatMessage[], max = 120): void {
+export async function saveChat(messages: ChatMessage[], max = 120): Promise<void> {
   try {
     if (typeof window === "undefined") return;
+
     const normalized = normalizeMessages(messages as unknown);
-    window.localStorage.setItem(
-      CHAT_STORAGE_KEY,
-      JSON.stringify(truncateChat(normalized, max))
-    );
-  } catch { /* ignore quota/availability */ }
+    const trimmed = truncateChat(normalized, max);
+
+    // 1️⃣ Persist chat messages
+    window.localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(trimmed));
+
+    // 2️⃣ Ledger-append for last message (deterministisch)
+    const last = trimmed[trimmed.length - 1];
+    if (last && isNonEmptyString(last.content)) {
+      await appendTriketonLedgerEntry({
+        id: last.id,
+        role: last.role as "user" | "assistant" | "system",
+        content: last.content,
+        truth_hash: last.triketon?.truth_hash ?? computeTruthHash(last.content),
+        public_key: "", // wird durch Append-Funktion ersetzt
+        timestamp: new Date().toISOString(),
+        version: "v1",
+        orbit_context: "chat",
+        chain_id: "local",
+      });
+    }
+
+  } catch (err) {
+    console.error("[ChatStorage] saveChat failed:", err);
+  }
 }
 
 /** Leeren (für späteren Button) */
