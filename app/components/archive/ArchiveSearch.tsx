@@ -13,6 +13,8 @@ import { useLanguage } from '@/app/providers/LanguageProvider'
 import { i18nArchive } from '@/lib/i18n.archive'
 import { Input } from '@/components/ui/Input'
 import { Card, CardContent } from '@/components/ui/Card'
+import { throttle, limitNodes } from '@/lib/performance'
+
 
 export default function ArchiveSearch() {
   const { lang } = useLanguage()
@@ -29,17 +31,19 @@ export default function ArchiveSearch() {
   }, [lang])
 
   useEffect(() => {
-    if (query.length < 3) {
-      setResults([])
-      return
-    }
-    const archive = readLS<TArchiveEntry[]>('mpathy:archive:v1') || []
-    const q = query.toLowerCase()
-    const matches = archive
-      .filter((m) => m.content.toLowerCase().includes(q))
-      .slice(0, 100)
-    setResults(matches)
+    const runSearch = throttle(() => {
+      if (query.length < 3) {
+        setResults([])
+        return
+      }
+      const archive = readLS<TArchiveEntry[]>('mpathy:archive:v1') || []
+      const q = query.toLowerCase()
+      const matches = archive.filter((m) => m.content.toLowerCase().includes(q))
+      setResults(limitNodes(matches, 100))
+    }, 50)
+    runSearch()
   }, [query])
+
 
   const visibleDefault = query.length < 3
   const visibleResults = !visibleDefault && results.length > 0
