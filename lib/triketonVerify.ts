@@ -124,11 +124,20 @@ export async function generatePublicKey2048(
       .replace(/=+$/, "");
 
     return base64;
-  } catch (err) {
-    console.error("[Triketon] generatePublicKey2048 failed:", err);
+  } catch (err: any) {
+    if (err instanceof DOMException) {
+      console.error("[Triketon] WebCrypto digest failed:", err.message);
+      return "crypto_error";
+    }
+    if (err && err.message?.includes("subtle")) {
+      console.error("[Triketon] SubtleCrypto unavailable → fallback key");
+      return `PK2048_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+    }
+    console.error("[Triketon] generatePublicKey2048 failed (generic):", err);
     return "error_key";
   }
 }
+
 
 /**
  * getOrCreateDevicePublicKey2048()

@@ -1,4 +1,6 @@
-import { generatePublicKey2048 } from "@/lib/triketonVerify";
+import { generatePublicKey2048, getOrCreateDevicePublicKey2048 } from "@/lib/triketonVerify";
+// lib/chatStorage.ts
+// Eine Quelle der Wahrheit für Chat-Persistenz (localStorage)
 // lib/chatStorage.ts
 // Eine Quelle der Wahrheit für Chat-Persistenz (localStorage)
 
@@ -282,15 +284,19 @@ export async function appendTriketonLedgerEntry(
 
     // append-only, deterministische Reihenfolge
     const last = arr[arr.length - 1];
-    // device-bound key (TrialKit bridge)
-const truthHashHex = (entry.truth_hash || "").replace(/^T/, "").padStart(64, "0");
-let deviceKey = "unknown_key";
-try {
-  deviceKey = await generatePublicKey2048(truthHashHex);
-} catch (err) {
-  console.warn("[TriketonLedger] fallback to cached key:", err);
-  deviceKey = getOrCreateDevicePublicKey();
-}
+    const truthHashHex = (entry.truth_hash || "")
+      .replace(/^T/, "")
+      .padStart(64, "0");
+
+    // Step L7.2 – persistent device-bound key integration
+    let deviceKey = "unknown_key";
+    try {
+      deviceKey = await getOrCreateDevicePublicKey2048(truthHashHex);
+    } catch (err) {
+      console.warn("[TriketonLedger] key generation failed → fallback:", err);
+      deviceKey = "fallback_key";
+    }
+
 
 const next: TriketonLedgerEntryV1 = {
   ...entry,
