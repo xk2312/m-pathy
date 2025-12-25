@@ -147,6 +147,7 @@ import { useMobileViewport } from "@/lib/useMobileViewport";
 import { v4 as uuidv4 } from "uuid";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
 import { loadChat, saveChat, initChatStorage, hardClearChat,appendTriketonLedgerEntry } from '@/lib/chatStorage'
+import { computeTruthHash, normalizeForTruthHash } from "@/lib/triketonVerify";
 
 
 
@@ -2142,20 +2143,53 @@ try {
     // Step L3 – Ledger Recovery & Dual Append (v1)
     // ---------------------------------------------------------------------------
     try {
-      appendTriketonLedgerEntry({
-        id: crypto.randomUUID(),
-        role: "user",
-        content: userMsg.content,
-        truth_hash: "local_" + Date.now().toString(16),
-        public_key: "local_user",
-        timestamp: new Date().toISOString(),
-        version: "v1",
-        orbit_context: "chat",
-        chain_id: "local",
-      });
+      // ------------------------------------------------------------
+// Step L5 – Real TruthHash Injection (v1)
+// ------------------------------------------------------------
+
+appendTriketonLedgerEntry({
+  id: crypto.randomUUID(),
+  role: "user",
+  content: userMsg.content,
+  truth_hash: computeTruthHash(normalizeForTruthHash(userMsg.content)),
+  public_key: "local_user",
+  timestamp: new Date().toISOString(),
+  version: "v1",
+  orbit_context: "chat",
+  chain_id: "local",
+});
+
       console.debug("[TriketonLedger] user entry appended:", userMsg.content.slice(0, 30));
     } catch (err) {
       console.warn("[TriketonLedger] user append failed:", err);
+    }
+
+    // ---------------------------------------------------------------------------
+    // Step L4 – Chain Serialization & Recovery (v1)
+    // ---------------------------------------------------------------------------
+    try {
+      const ledgerRaw = window.localStorage.getItem("mpathy:triketon:v1");
+      const ledger: any[] = ledgerRaw ? JSON.parse(ledgerRaw) : [];
+
+      const chatSerial = 1; // v1 = Single-Thread (später Multi-Chat-fähig)
+      const msgNumber = ledger.length + 1;
+
+    const last = ledger.at(-1) as any;
+if (last && (last as any).id === (userMsg as any).id) return; // Duplicate-Guard
+
+
+      const enriched = {
+        ...ledger[ledger.length - 1],
+        chat_serial: chatSerial,
+        msg_number: msgNumber,
+      };
+
+      ledger[ledger.length - 1] = enriched;
+      window.localStorage.setItem("mpathy:triketon:v1", JSON.stringify(ledger));
+
+      console.debug(`[TriketonLedger] numbered #${msgNumber} (chat ${chatSerial})`);
+    } catch (err) {
+      console.warn("[TriketonLedger] numbering failed:", err);
     }
 
     setLoading(true);
