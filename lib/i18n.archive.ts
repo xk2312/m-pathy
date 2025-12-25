@@ -12,8 +12,20 @@ export const i18nArchive = {
       startChat: "New chat",
       verify: "Verify",
       chatNumber: "Chat {{chatNumber}}",
-      totalMessages: "{{count}} msgs"
+      totalMessages: "{{count}} msgs",
+      keywords: "Keywords",
+    summarize: "Summarize",
+    loadSelection: "Load selection",
+    clearSelection: "Clear",
+    defaultHeader: "Recent chats"
     },
+    operators: {
+  and: "AND",
+  or: "OR",
+  not: "NOT",
+  phrase: "Phrase"
+},
+
     overlay: {
       header: "Chat {{chatNumber}}",
       verifyChat: "Verify chat",
@@ -54,7 +66,211 @@ export const i18nArchive = {
     },
     tapToOpen: "Tap to open"
   },
-  it: {
+
+  de: {
+    archive: {
+      title: "Archiv",
+      searchPlaceholder: "Archiv durchsuchen…",
+      noResults: "Keine Treffer.",
+      empty: "Noch keine gespeicherten Chats.",
+      loading: "Archiv wird geladen…",
+      viewMessage: "Nachricht öffnen",
+      viewChat: "Chat öffnen",
+      add: "Hinzufügen",
+      startChat: "Neuer Chat",
+      verify: "Prüfen",
+      chatNumber: "Chat {{chatNumber}}",
+      totalMessages: "{{count}} Nachrichten",
+      keywords: "Schlüsselwörter",
+      summarize: "Zusammenfassen",
+      loadSelection: "Auswahl laden",
+      clearSelection: "Leeren",
+      defaultHeader: "Letzte Chats"
+    },
+    operators: {
+      and: "UND",
+      or: "ODER",
+      not: "NICHT",
+      phrase: "Phrase"
+    },
+    overlay: {
+      header: "Chat {{chatNumber}}",
+      verifyChat: "Chat prüfen",
+      downloadReport: "Bericht herunterladen",
+      uploadReport: "Bericht hochladen",
+      preparing: "Bericht wird vorbereitet…",
+      success: "Verifiziert ✓",
+      fail: "Fehler ✗",
+      cancelled: "Überprüfung abgebrochen.",
+      loading: "Überprüfung läuft…",
+      close: "Schließen"
+    },
+    intro: {
+      header: "Kontext geladen",
+      subtext: "Aus Archiv:",
+      continue: "Weiter"
+    },
+    report: {
+      title: "Berichte",
+      subtitle: "Lokal verifizierte Berichte.",
+      upload: "Hochladen",
+      uploadSuccess: "Bericht hochgeladen ✓",
+      view: "Öffnen",
+      verifySignature: "Signatur prüfen.",
+      reverify: "Erneut prüfen",
+      missingSignature: "Keine Signatur gefunden.",
+      noReports: "Keine Berichte.",
+      valid: "✅ Gültig",
+      invalid: "⚠️ Ungültig"
+    },
+    system: {
+      errorGeneric: "Fehler.",
+      errorLoad: "Archiv konnte nicht geladen werden.",
+      errorSave: "Änderungen konnten nicht gespeichert werden.",
+      successSave: "Gespeichert ✓",
+      loading: "Lädt…",
+      empty: "Noch nichts hier."
+    },
+    tapToOpen: "Tippen zum Öffnen"
+  },
+
+  fr: {
+    archive: {
+      title: "Archive",
+      searchPlaceholder: "Rechercher dans l’archive…",
+      noResults: "Aucun résultat.",
+      empty: "Aucune discussion enregistrée.",
+      loading: "Chargement de l’archive…",
+      viewMessage: "Ouvrir le message",
+      viewChat: "Ouvrir la discussion",
+      add: "Ajouter",
+      startChat: "Nouveau chat",
+      verify: "Vérifier",
+      chatNumber: "Chat {{chatNumber}}",
+      totalMessages: "{{count}} messages",
+      keywords: "Mots-clés",
+      summarize: "Résumer",
+      loadSelection: "Charger la sélection",
+      clearSelection: "Effacer",
+      defaultHeader: "Chats récents"
+    },
+    operators: {
+      and: "ET",
+      or: "OU",
+      not: "NON",
+      phrase: "Phrase"
+    },
+    overlay: {
+      header: "Chat {{chatNumber}}",
+      verifyChat: "Vérifier le chat",
+      downloadReport: "Télécharger le rapport",
+      uploadReport: "Téléverser le rapport",
+      preparing: "Préparation du rapport…",
+      success: "Vérifié ✓",
+      fail: "Erreur ✗",
+      cancelled: "Vérification annulée.",
+      loading: "Vérification…",
+      close: "Fermer"
+    },
+    intro: {
+      header: "Contexte chargé",
+      subtext: "Depuis l’archive :",
+      continue: "Continuer"
+    },
+    report: {
+      title: "Rapports",
+      subtitle: "Rapports vérifiés localement.",
+      upload: "Téléverser",
+      uploadSuccess: "Rapport téléversé ✓",
+      view: "Ouvrir",
+      verifySignature: "Vérifier la signature.",
+      reverify: "Revérifier",
+      missingSignature: "Aucune signature trouvée.",
+      noReports: "Aucun rapport.",
+      valid: "✅ Valide",
+      invalid: "⚠️ Invalide"
+    },
+    system: {
+      errorGeneric: "Erreur.",
+      errorLoad: "Impossible de charger l’archive.",
+      errorSave: "Impossible d’enregistrer les modifications.",
+      successSave: "Enregistré ✓",
+      loading: "Chargement…",
+      empty: "Rien ici pour l’instant."
+    },
+    tapToOpen: "Appuyer pour ouvrir"
+  },
+
+  es: {
+    archive: {
+      title: "Archivo",
+      searchPlaceholder: "Buscar en el archivo…",
+      noResults: "Sin coincidencias.",
+      empty: "No hay chats guardados.",
+      loading: "Cargando archivo…",
+      viewMessage: "Abrir mensaje",
+      viewChat: "Abrir chat",
+      add: "Añadir",
+      startChat: "Nuevo chat",
+      verify: "Verificar",
+      chatNumber: "Chat {{chatNumber}}",
+      totalMessages: "{{count}} mensajes",
+      keywords: "Palabras clave",
+      summarize: "Resumir",
+      loadSelection: "Cargar selección",
+      clearSelection: "Borrar",
+      defaultHeader: "Chats recientes"
+    },
+    operators: {
+      and: "Y",
+      or: "O",
+      not: "NO",
+      phrase: "Frase"
+    },
+    overlay: {
+      header: "Chat {{chatNumber}}",
+      verifyChat: "Verificar chat",
+      downloadReport: "Descargar informe",
+      uploadReport: "Subir informe",
+      preparing: "Preparando informe…",
+      success: "Verificado ✓",
+      fail: "Error ✗",
+      cancelled: "Verificación cancelada.",
+      loading: "Verificando…",
+      close: "Cerrar"
+    },
+    intro: {
+      header: "Contexto cargado",
+      subtext: "Desde archivo:",
+      continue: "Continuar"
+    },
+    report: {
+      title: "Informes",
+      subtitle: "Informes verificados localmente.",
+      upload: "Subir",
+      uploadSuccess: "Informe subido ✓",
+      view: "Abrir",
+      verifySignature: "Verificar firma.",
+      reverify: "Reverificar",
+      missingSignature: "No se encontró firma.",
+      noReports: "Sin informes.",
+      valid: "✅ Válido",
+      invalid: "⚠️ Inválido"
+    },
+    system: {
+      errorGeneric: "Error.",
+      errorLoad: "No se pudo cargar el archivo.",
+      errorSave: "No se pudieron guardar los cambios.",
+      successSave: "Guardado ✓",
+      loading: "Cargando…",
+      empty: "Nada aquí todavía."
+    },
+    tapToOpen: "Tocar para abrir"
+  },
+
+
+
+    it: {
     archive: {
       title: "Archivio",
       searchPlaceholder: "Cerca nell'archivio…",
@@ -67,7 +283,18 @@ export const i18nArchive = {
       startChat: "Nuova chat",
       verify: "Verifica",
       chatNumber: "Chat {{chatNumber}}",
-      totalMessages: "{{count}} messaggi"
+      totalMessages: "{{count}} messaggi",
+      keywords: "Parole chiave",
+      summarize: "Riassumi",
+      loadSelection: "Carica selezione",
+      clearSelection: "Pulisci",
+      defaultHeader: "Chat recenti"
+    },
+    operators: {
+      and: "E",
+      or: "O",
+      not: "NON",
+      phrase: "Frase"
     },
     overlay: {
       header: "Chat {{chatNumber}}",
@@ -105,10 +332,11 @@ export const i18nArchive = {
       errorSave: "Impossibile salvare le modifiche.",
       successSave: "Salvato ✓",
       loading: "Caricamento…",
-      empty: "Niente qui."
+      empty: "Niente qui ancora."
     },
     tapToOpen: "Tocca per aprire"
   },
+
   pt: {
     archive: {
       title: "Arquivo",
@@ -122,7 +350,18 @@ export const i18nArchive = {
       startChat: "Novo chat",
       verify: "Verificar",
       chatNumber: "Chat {{chatNumber}}",
-      totalMessages: "{{count}} mensagens"
+      totalMessages: "{{count}} mensagens",
+      keywords: "Palavras-chave",
+      summarize: "Resumir",
+      loadSelection: "Carregar seleção",
+      clearSelection: "Limpar",
+      defaultHeader: "Chats recentes"
+    },
+    operators: {
+      and: "E",
+      or: "OU",
+      not: "NÃO",
+      phrase: "Frase"
     },
     overlay: {
       header: "Chat {{chatNumber}}",
@@ -156,7 +395,7 @@ export const i18nArchive = {
     },
     system: {
       errorGeneric: "Erro.",
-      errorLoad: "Falha ao carregar arquivo.",
+      errorLoad: "Falha ao carregar o arquivo.",
       errorSave: "Falha ao salvar alterações.",
       successSave: "Salvo ✓",
       loading: "Carregando…",
@@ -164,6 +403,7 @@ export const i18nArchive = {
     },
     tapToOpen: "Toque para abrir"
   },
+
   nl: {
     archive: {
       title: "Archief",
@@ -177,7 +417,18 @@ export const i18nArchive = {
       startChat: "Nieuwe chat",
       verify: "Verifiëren",
       chatNumber: "Chat {{chatNumber}}",
-      totalMessages: "{{count}} berichten"
+      totalMessages: "{{count}} berichten",
+      keywords: "Trefwoorden",
+      summarize: "Samenvatten",
+      loadSelection: "Selectie laden",
+      clearSelection: "Wissen",
+      defaultHeader: "Recente chats"
+    },
+    operators: {
+      and: "EN",
+      or: "OF",
+      not: "NIET",
+      phrase: "Frase"
     },
     overlay: {
       header: "Chat {{chatNumber}}",
@@ -219,7 +470,8 @@ export const i18nArchive = {
     },
     tapToOpen: "Tik om te openen"
   },
-    ru: {
+
+  ru: {
     archive: {
       title: "Архив",
       searchPlaceholder: "Поиск в архиве…",
@@ -232,7 +484,18 @@ export const i18nArchive = {
       startChat: "Новый чат",
       verify: "Проверить",
       chatNumber: "Чат {{chatNumber}}",
-      totalMessages: "{{count}} сообщений"
+      totalMessages: "{{count}} сообщений",
+      keywords: "Ключевые слова",
+      summarize: "Суммировать",
+      loadSelection: "Загрузить выбор",
+      clearSelection: "Очистить",
+      defaultHeader: "Недавние чаты"
+    },
+    operators: {
+      and: "И",
+      or: "ИЛИ",
+      not: "НЕТ",
+      phrase: "Фраза"
     },
     overlay: {
       header: "Чат {{chatNumber}}",
@@ -274,6 +537,7 @@ export const i18nArchive = {
     },
     tapToOpen: "Нажмите, чтобы открыть"
   },
+
   zh: {
     archive: {
       title: "存档",
@@ -287,7 +551,18 @@ export const i18nArchive = {
       startChat: "新聊天",
       verify: "验证",
       chatNumber: "聊天 {{chatNumber}}",
-      totalMessages: "{{count}} 条消息"
+      totalMessages: "{{count}} 条消息",
+      keywords: "关键词",
+      summarize: "总结",
+      loadSelection: "加载选择",
+      clearSelection: "清除",
+      defaultHeader: "最近的聊天"
+    },
+    operators: {
+      and: "与",
+      or: "或",
+      not: "非",
+      phrase: "短语"
     },
     overlay: {
       header: "聊天 {{chatNumber}}",
@@ -296,7 +571,7 @@ export const i18nArchive = {
       uploadReport: "上传报告",
       preparing: "准备报告…",
       success: "已验证 ✓",
-      fail: "验证失败 ✗",
+      fail: "失败 ✗",
       cancelled: "验证已取消。",
       loading: "验证中…",
       close: "关闭"
@@ -308,14 +583,14 @@ export const i18nArchive = {
     },
     report: {
       title: "报告",
-      subtitle: "本地验证报告。",
+      subtitle: "本地验证的报告。",
       upload: "上传",
       uploadSuccess: "报告已上传 ✓",
       view: "打开",
       verifySignature: "验证签名。",
       reverify: "重新验证",
       missingSignature: "未找到签名。",
-      noReports: "暂无报告。",
+      noReports: "无报告。",
       valid: "✅ 有效",
       invalid: "⚠️ 无效"
     },
@@ -329,6 +604,7 @@ export const i18nArchive = {
     },
     tapToOpen: "点击打开"
   },
+
   ja: {
     archive: {
       title: "アーカイブ",
@@ -342,7 +618,18 @@ export const i18nArchive = {
       startChat: "新しいチャット",
       verify: "検証",
       chatNumber: "チャット {{chatNumber}}",
-      totalMessages: "{{count}} 件のメッセージ"
+      totalMessages: "{{count}} 件のメッセージ",
+      keywords: "キーワード",
+      summarize: "要約",
+      loadSelection: "選択を読み込む",
+      clearSelection: "クリア",
+      defaultHeader: "最近のチャット"
+    },
+    operators: {
+      and: "かつ",
+      or: "または",
+      not: "ではない",
+      phrase: "フレーズ"
     },
     overlay: {
       header: "チャット {{chatNumber}}",
@@ -384,6 +671,7 @@ export const i18nArchive = {
     },
     tapToOpen: "タップして開く"
   },
+
   ko: {
     archive: {
       title: "보관함",
@@ -397,7 +685,18 @@ export const i18nArchive = {
       startChat: "새 채팅",
       verify: "검증",
       chatNumber: "채팅 {{chatNumber}}",
-      totalMessages: "{{count}}개의 메시지"
+      totalMessages: "{{count}}개의 메시지",
+      keywords: "키워드",
+      summarize: "요약",
+      loadSelection: "선택 불러오기",
+      clearSelection: "지우기",
+      defaultHeader: "최근 채팅"
+    },
+    operators: {
+      and: "그리고",
+      or: "또는",
+      not: "아니오",
+      phrase: "구문"
     },
     overlay: {
       header: "채팅 {{chatNumber}}",
@@ -452,7 +751,18 @@ export const i18nArchive = {
       startChat: "دردشة جديدة",
       verify: "تحقق",
       chatNumber: "دردشة {{chatNumber}}",
-      totalMessages: "{{count}} رسالة"
+      totalMessages: "{{count}} رسالة",
+      keywords: "كلمات مفتاحية",
+      summarize: "تلخيص",
+      loadSelection: "تحميل التحديد",
+      clearSelection: "مسح",
+      defaultHeader: "الدردشات الأخيرة"
+    },
+    operators: {
+      and: "و",
+      or: "أو",
+      not: "ليس",
+      phrase: "عبارة"
     },
     overlay: {
       header: "دردشة {{chatNumber}}",
@@ -507,7 +817,18 @@ export const i18nArchive = {
       startChat: "नई चैट",
       verify: "सत्यापित करें",
       chatNumber: "चैट {{chatNumber}}",
-      totalMessages: "{{count}} संदेश"
+      totalMessages: "{{count}} संदेश",
+      keywords: "कीवर्ड",
+      summarize: "सारांश बनाएं",
+      loadSelection: "चयन लोड करें",
+      clearSelection: "साफ करें",
+      defaultHeader: "हाल की चैट"
+    },
+    operators: {
+      and: "और",
+      or: "या",
+      not: "नहीं",
+      phrase: "वाक्यांश"
     },
     overlay: {
       header: "चैट {{chatNumber}}",
@@ -518,7 +839,7 @@ export const i18nArchive = {
       success: "सत्यापित ✓",
       fail: "त्रुटि ✗",
       cancelled: "सत्यापन रद्द किया गया।",
-      loading: "सत्यापित हो रहा है…",
+      loading: "सत्यापन हो रहा है…",
       close: "बंद करें"
     },
     intro: {
@@ -542,11 +863,12 @@ export const i18nArchive = {
     system: {
       errorGeneric: "त्रुटि।",
       errorLoad: "संग्रह लोड नहीं किया जा सका।",
-      errorSave: "परिवर्तनों को सहेजा नहीं जा सका।",
+      errorSave: "परिवर्तन सहेजे नहीं जा सके।",
       successSave: "सहेजा गया ✓",
       loading: "लोड हो रहा है…",
       empty: "यहां अभी कुछ नहीं है।"
     },
     tapToOpen: "खोलने के लिए टैप करें"
-  }
-};
+  },
+
+}
