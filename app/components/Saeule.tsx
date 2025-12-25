@@ -852,6 +852,8 @@ const labelActionsDeleteNow = tr(
 );
 
 const labelSupportButton = tr("support.button.label", "Support");
+const labelArchive = tr("archive.title", "Archive");
+
 const labelSupportSubject = tr(
   "support.mail.subject",
   'Support request: "please fill in"'
@@ -1704,24 +1706,25 @@ onClick={() => exportThread("json", messages)}
       </div>
 
       {/* ARCHIVE */}
-      <div className={styles.block}>
-        <button
-          type="button"
-          className={styles.soItem}
-          onClick={() => {
-            const ev = new CustomEvent("mpathy:archive:open");
-            window.dispatchEvent(ev);
-          }}
-          aria-label="Archive"
-        >
-          <span className={styles.soItemIcon}>
-            <SimbaIcon name="clear" />
-          </span>
-          <span className={styles.soItemLabel}>
-            Archive
-          </span>
-        </button>
-      </div>
+<div className={styles.block}>
+  <button
+    type="button"
+    className={styles.soItem}
+    onClick={() => {
+      const ev = new CustomEvent("mpathy:archive:open");
+      window.dispatchEvent(ev);
+    }}
+    aria-label={labelArchive}
+  >
+    <span className={styles.soItemIcon}>
+      <SimbaIcon name="clear" />
+    </span>
+    <span className={styles.soItemLabel}>
+      {labelArchive}
+    </span>
+  </button>
+</div>
+
 
       <div className={styles.saeuleBottomNote}>
         <div className={styles.saeuleSupportButtonWrapper}>
