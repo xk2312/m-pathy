@@ -295,26 +295,36 @@ export function appendTriketonLedgerEntry(entry: TriketonLedgerEntryV1): void {
 }
 
 // ---------------------------------------------------------------------------
-// Step L6 – Device-Bound Public Key (stabil, Council13-approved)
+// Step L6 – Device-Bound Public Key (stabil, Council13-approved, persistent)
 // ---------------------------------------------------------------------------
 
 const DEVICE_KEY = "mpathy:triketon:device_public_key";
 
-/** returns or creates a persistent device public key */
+/** returns or creates a persistent, device-bound public key */
 export function getOrCreateDevicePublicKey(): string {
   try {
     if (typeof window === "undefined") return "unknown";
+
     const ls = window.localStorage;
     const existing = ls.getItem(DEVICE_KEY);
-    if (existing && existing.trim().length > 0) return existing;
 
-    const newKey = crypto.randomUUID();
+    // ✅ persistenter Schlüssel: nur erzeugen, wenn keiner existiert
+    if (existing && existing.trim().length > 0) {
+      return existing;
+    }
+
+    // stable prefix + UUID (visuell unterscheidbar)
+    const newKey = `mpathy-device-${crypto.randomUUID()}`;
     ls.setItem(DEVICE_KEY, newKey);
+
+    console.debug("[Triketon] new device key created:", newKey);
     return newKey;
-  } catch {
+  } catch (err) {
+    console.error("[Triketon] device key error:", err);
     return "unknown";
   }
 }
+
 
 // ---------------------------------------------------------------------------
 // Step L2 – Local Read-Back Verification (Consistency Check)
@@ -354,7 +364,6 @@ export function verifyLocalTriketonLedger(): boolean {
 // Step L6 – Chain Integrity Verification (Genesis Reset)
 // ---------------------------------------------------------------------------
 
-import { computeTruthHash, normalizeForTruthHash } from "@/lib/triketonVerify";
 
 export function verifyOrResetTriketonLedger(): boolean {
   try {
