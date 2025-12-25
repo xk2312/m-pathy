@@ -327,7 +327,6 @@ const next: TriketonLedgerEntryV1 = {
     console.error("[TriketonLedger] write failed:", err);
   }
 }
-
 // ---------------------------------------------------------------------------
 // Step L6 – Device-Bound Public Key (stabil, Council13-approved, persistent)
 // ---------------------------------------------------------------------------
@@ -351,7 +350,7 @@ export function getOrCreateDevicePublicKey(): string {
     const newKey = `mpathy-device-${crypto.randomUUID()}`;
     ls.setItem(DEVICE_KEY, newKey);
 
-        console.debug("[Triketon] new device key created:", newKey);
+    console.debug("[Triketon] new device key created:", newKey);
     return newKey;
   } catch (err) {
     console.error("[Triketon] device key error:", err);
@@ -360,7 +359,9 @@ export function getOrCreateDevicePublicKey(): string {
 }
 
 /** persistent 2048-bit key generator (once per device) */
-export async function getOrCreateDevicePublicKey2048(truthHashHex: string): Promise<string> {
+export async function getOrCreateDevicePublicKey2048(
+  truthHashHex: string
+): Promise<string> {
   try {
     if (typeof window === "undefined") return "unknown";
     const ls = window.localStorage;
@@ -374,12 +375,10 @@ export async function getOrCreateDevicePublicKey2048(truthHashHex: string): Prom
     console.debug("[Triketon] persistent 2048-bit key created:", newKey);
     return newKey;
   } catch (err) {
-    console.error("[Triketon] getOrCreateDevicePublicKey2048 failed:", err);
+    console.error("[TriketonLedger] verification failed:", err);
     return "error_key";
   }
 }
-
-
 
 // ---------------------------------------------------------------------------
 // Step L2 – Local Read-Back Verification (Consistency Check)
@@ -415,10 +414,53 @@ export function verifyLocalTriketonLedger(): boolean {
   }
 }
 
+/**
+ * Step L8.0 – Auto-Recovery & First-Write Handshake
+ * Prüft bei jedem Start oder erster Nachricht:
+ *  - Ledger existiert und ist Array
+ *  - wenn leer oder invalid → Genesis-Reset
+ *  - sichert Append-Funktion gegen First-Run
+ */
+export function ensureTriketonLedgerReady(): boolean {
+  try {
+    if (typeof window === "undefined") return false;
+    const key = "mpathy:triketon:v1";
+    const ls = window.localStorage;
+    const raw = ls.getItem(key);
+
+    if (!raw) {
+      console.info("[TriketonLedger] no ledger found → genesis initialized");
+      ls.setItem(key, JSON.stringify([]));
+      return true;
+    }
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      console.warn("[TriketonLedger] corrupted ledger → reinit");
+      ls.setItem(key, JSON.stringify([]));
+      return true;
+    }
+
+    const valid = parsed.every(
+      (e) => e.truth_hash && e.public_key && e.version === "v1"
+    );
+    if (!valid) {
+      console.warn("[TriketonLedger] invalid entries → full reset");
+      ls.setItem(key, JSON.stringify([]));
+      return true;
+    }
+
+    console.debug("[TriketonLedger] ledger verified:", parsed.length, "entries");
+    return true;
+  } catch (err) {
+    console.error("[TriketonLedger] ensureTriketonLedgerReady failed:", err);
+    return false;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Step L6 – Chain Integrity Verification (Genesis Reset)
 // ---------------------------------------------------------------------------
-
 
 export function verifyOrResetTriketonLedger(): boolean {
   try {
