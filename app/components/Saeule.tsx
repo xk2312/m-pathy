@@ -237,6 +237,7 @@ import StarField from "@/components/StarField";
 import { logEvent } from "../../lib/auditLogger";
 import { t, getLocale } from "@/lib/i18n";
 import { buildChatExport, chatExportToCSV } from "@/lib/exportChat";
+import ArchiveTrigger from "@/components/archive/ArchiveTrigger"
 
 
 // ModeAura – zentrale Hülle für alle aktiven Buttons
@@ -1640,7 +1641,7 @@ onClick={() => exportThread("json", messages)}
                 )}
               </div>
 
-
+ a
                             {/* Chat löschen-Modul */}
               <div className={styles.block}>
                 <button
@@ -1696,10 +1697,30 @@ onClick={() => exportThread("json", messages)}
                 )}
               </div>
 
-            </section>
+                        </section>
 
           </div>
                 </div>
+      </div>
+
+      {/* ARCHIVE */}
+      <div className={styles.block}>
+        <button
+          type="button"
+          className={styles.soItem}
+          onClick={() => {
+            const ev = new CustomEvent("mpathy:archive:open");
+            window.dispatchEvent(ev);
+          }}
+          aria-label="Archive"
+        >
+          <span className={styles.soItemIcon}>
+            <SimbaIcon name="clear" />
+          </span>
+          <span className={styles.soItemLabel}>
+            Archive
+          </span>
+        </button>
       </div>
 
       <div className={styles.saeuleBottomNote}>
@@ -1713,10 +1734,12 @@ onClick={() => exportThread("json", messages)}
           </a>
         </div>
         <span className={styles.saeuleBottomNoteLabel}>
-Powered by MAIOS.
-TRIKETON-verified integrity.
-100% privacy. Zero drift. Full autonomy.        </span>
+          Powered by MAIOS.
+          TRIKETON-verified integrity.
+          100% privacy. Zero drift. Full autonomy.
+        </span>
       </div>
+
     </aside>
 
   );
