@@ -249,7 +249,10 @@ export type TriketonLedgerEntryV1 = {
   chain_prev?: string;
 };
 
-export function appendTriketonLedgerEntry(entry: TriketonLedgerEntryV1): void {
+export async function appendTriketonLedgerEntry(
+  entry: TriketonLedgerEntryV1
+): Promise<void> {
+
   try {
     if (typeof window === "undefined") return;
     const ls = window.localStorage;
@@ -279,12 +282,22 @@ export function appendTriketonLedgerEntry(entry: TriketonLedgerEntryV1): void {
 
     // append-only, deterministische Reihenfolge
     const last = arr[arr.length - 1];
-    const deviceKey = getOrCreateDevicePublicKey();
-    const next: TriketonLedgerEntryV1 = {
-      ...entry,
-      public_key: deviceKey, // enforce device-bound key
-      chain_prev: last?.truth_hash ?? undefined,
-    };
+    // device-bound key (TrialKit bridge)
+const truthHashHex = (entry.truth_hash || "").replace(/^T/, "").padStart(64, "0");
+let deviceKey = "unknown_key";
+try {
+  deviceKey = await generatePublicKey2048(truthHashHex);
+} catch (err) {
+  console.warn("[TriketonLedger] fallback to cached key:", err);
+  deviceKey = getOrCreateDevicePublicKey();
+}
+
+const next: TriketonLedgerEntryV1 = {
+  ...entry,
+  public_key: deviceKey,            // now truly 2048-bit derived
+  chain_prev: last?.truth_hash ?? undefined,
+};
+
 
     arr.push(next);
     ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(arr));
