@@ -1,3 +1,4 @@
+import { generatePublicKey2048 } from "@/lib/triketonVerify";
 // lib/chatStorage.ts
 // Eine Quelle der Wahrheit für Chat-Persistenz (localStorage)
 
@@ -236,21 +237,19 @@ function isArchiveEntry(x: unknown): x is TriketonArchiveEntry {
 
 // Expanded Ledger: every message (user + assistant) is permanently appended
 export type TriketonLedgerEntryV1 = {
-  id: string
-  role: "user" | "assistant" | "system"
-  content: string
-  truth_hash: string
-  public_key: string
-  timestamp: string
-  version: "v1"
-  orbit_context: "chat"
-  chain_id: string
-  chain_prev?: string
-}
+  id: string;
+  role: "user" | "assistant" | "system";
+  content: string;
+  truth_hash: string;
+  public_key: string;
+  timestamp: string;
+  version: "v1";
+  orbit_context: "chat";
+  chain_id: string;
+  chain_prev?: string;
+};
 
-export function appendTriketonLedgerEntry(
-  entry: TriketonLedgerEntryV1
-): void {
+export function appendTriketonLedgerEntry(entry: TriketonLedgerEntryV1): void {
   try {
     if (typeof window === "undefined") return;
     const ls = window.localStorage;
@@ -280,16 +279,40 @@ export function appendTriketonLedgerEntry(
 
     // append-only, deterministische Reihenfolge
     const last = arr[arr.length - 1];
+    const deviceKey = getOrCreateDevicePublicKey();
     const next: TriketonLedgerEntryV1 = {
       ...entry,
+      public_key: deviceKey, // enforce device-bound key
       chain_prev: last?.truth_hash ?? undefined,
     };
 
     arr.push(next);
     ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(arr));
-console.debug("[TriketonLedger] appended:", entry.truth_hash);
+    console.debug("[TriketonLedger] appended:", entry.truth_hash);
   } catch (err) {
     console.error("[TriketonLedger] write failed:", err);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Step L6 – Device-Bound Public Key (stabil, Council13-approved)
+// ---------------------------------------------------------------------------
+
+const DEVICE_KEY = "mpathy:triketon:device_public_key";
+
+/** returns or creates a persistent device public key */
+export function getOrCreateDevicePublicKey(): string {
+  try {
+    if (typeof window === "undefined") return "unknown";
+    const ls = window.localStorage;
+    const existing = ls.getItem(DEVICE_KEY);
+    if (existing && existing.trim().length > 0) return existing;
+
+    const newKey = crypto.randomUUID();
+    ls.setItem(DEVICE_KEY, newKey);
+    return newKey;
+  } catch {
+    return "unknown";
   }
 }
 
@@ -319,12 +342,12 @@ export function verifyLocalTriketonLedger(): boolean {
       }
     }
 
-   console.debug(`[TriketonLedger] verified ${parsed.length} entries`);
-return true;
-} catch (err) {
-  console.error("[TriketonLedger] verification failed:", err);
-  return false;
-}
+    console.debug(`[TriketonLedger] verified ${parsed.length} entries`);
+    return true;
+  } catch (err) {
+    console.error("[TriketonLedger] verification failed:", err);
+    return false;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -375,9 +398,6 @@ export function verifyOrResetTriketonLedger(): boolean {
     return false;
   }
 }
-
-
-
 
 /** Clear handler factory (no bubble, prepares for hard clear) */
 export function makeClearHandler(setMessages: (m: ChatMessage[]) => void) {
