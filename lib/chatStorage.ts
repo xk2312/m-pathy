@@ -271,16 +271,13 @@ export async function appendTriketonLedgerEntry(
       }
     }
 
-    // keine Duplikate (TruthHash + PublicKey)
-    const exists = arr.some(
-      (x) =>
-        x.truth_hash === entry.truth_hash &&
-        x.public_key === entry.public_key
-    );
-    if (exists) {
-      console.info("[TriketonLedger] duplicate entry skipped:", entry.truth_hash);
-      return;
-    }
+   // keine Duplikate (nur TruthHash, da PublicKey erst nach Bindung gesetzt wird)
+const exists = arr.some((x) => x.truth_hash === entry.truth_hash);
+if (exists) {
+  console.info("[TriketonLedger] duplicate truth-hash skipped:", entry.truth_hash);
+  return;
+}
+
 
     // append-only, deterministische Reihenfolge
     const last = arr[arr.length - 1];
