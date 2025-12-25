@@ -1,4 +1,4 @@
-import { generatePublicKey2048, getOrCreateDevicePublicKey2048 } from "@/lib/triketonVerify";
+import { generatePublicKey2048 } from "@/lib/triketonVerify";
 // lib/chatStorage.ts
 // Eine Quelle der Wahrheit für Chat-Persistenz (localStorage)
 // lib/chatStorage.ts
@@ -351,13 +351,34 @@ export function getOrCreateDevicePublicKey(): string {
     const newKey = `mpathy-device-${crypto.randomUUID()}`;
     ls.setItem(DEVICE_KEY, newKey);
 
-    console.debug("[Triketon] new device key created:", newKey);
+        console.debug("[Triketon] new device key created:", newKey);
     return newKey;
   } catch (err) {
     console.error("[Triketon] device key error:", err);
     return "unknown";
   }
 }
+
+/** persistent 2048-bit key generator (once per device) */
+export async function getOrCreateDevicePublicKey2048(truthHashHex: string): Promise<string> {
+  try {
+    if (typeof window === "undefined") return "unknown";
+    const ls = window.localStorage;
+    const DEVICE_KEY_2048 = "mpathy:triketon:device_public_key_2048";
+
+    const existing = ls.getItem(DEVICE_KEY_2048);
+    if (existing && existing.trim().length > 0) return existing;
+
+    const newKey = await generatePublicKey2048(truthHashHex);
+    ls.setItem(DEVICE_KEY_2048, newKey);
+    console.debug("[Triketon] persistent 2048-bit key created:", newKey);
+    return newKey;
+  } catch (err) {
+    console.error("[Triketon] getOrCreateDevicePublicKey2048 failed:", err);
+    return "error_key";
+  }
+}
+
 
 
 // ---------------------------------------------------------------------------
