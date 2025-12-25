@@ -1,25 +1,25 @@
 // components/archive/ArchiveTrigger.tsx
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import ArchiveUIFinish from './ArchiveUIFinish'
 
 export default function ArchiveTrigger() {
   const [open, setOpen] = useState(false)
 
+  useEffect(() => {
+    const openHandler = () => setOpen(true)
+    window.addEventListener('mpathy:archive:open', openHandler)
+    return () => {
+      window.removeEventListener('mpathy:archive:open', openHandler)
+    }
+  }, [])
+
   if (typeof document === 'undefined') return null
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="saeuleSupportButton"
-        aria-label="Open Archive"
-      >
-        Archive
-      </button>
-
       {open &&
         createPortal(
           <div className="fixed inset-0 z-50 bg-black/60">
