@@ -287,11 +287,46 @@ export function appendTriketonLedgerEntry(
 
     arr.push(next);
     ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(arr));
-    console.debug("[TriketonLedger] appended:", entry.truth_hash);
+console.debug("[TriketonLedger] appended:", entry.truth_hash);
   } catch (err) {
     console.error("[TriketonLedger] write failed:", err);
   }
 }
+
+// ---------------------------------------------------------------------------
+// Step L2 – Local Read-Back Verification (Consistency Check)
+// ---------------------------------------------------------------------------
+
+export function verifyLocalTriketonLedger(): boolean {
+  try {
+    if (typeof window === "undefined") return false;
+    const raw = window.localStorage.getItem(TRIKETON_STORAGE_KEY);
+    if (!raw) return false;
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return false;
+
+    for (const e of parsed) {
+      if (
+        !e.truth_hash ||
+        !e.public_key ||
+        !e.timestamp ||
+        e.version !== "v1" ||
+        e.orbit_context !== "chat"
+      ) {
+        console.warn("[TriketonLedger] invalid entry:", e);
+        return false;
+      }
+    }
+
+    console.debug(`[TriketonLedger] verified ${parsed.length} entries`);
+    return true;
+  } catch (err) {
+    console.error("[TriketonLedger] verification failed:", err);
+    return false;
+  }
+}
+
 
 
 
