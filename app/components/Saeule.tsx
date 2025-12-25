@@ -231,6 +231,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState, useCallback } from "react";
+import ArchiveOverlay from '@/components/archive/ArchiveOverlay'
 import styles from "./Saeule.module.css";
 import VoiaBloom from "@/components/VoiaBloom";
 import StarField from "@/components/StarField";
@@ -238,6 +239,8 @@ import { logEvent } from "../../lib/auditLogger";
 import { t, getLocale } from "@/lib/i18n";
 import { buildChatExport, chatExportToCSV } from "@/lib/exportChat";
 import ArchiveUIFinish from '@/components/archive/ArchiveUIFinish'
+
+
 
 // ModeAura – zentrale Hülle für alle aktiven Buttons
 // --------------------------------------------------
@@ -784,7 +787,7 @@ export default function Saeule({
   canClear,
   messages,
 }: Props) {
-
+  const [showArchive, setShowArchive] = useState(false)
   const [activeMode, setActiveMode] = useState<ModeId>(() => {
     try { return (localStorage.getItem("mode") as ModeId) || "M"; } catch { return "M"; }
   });
@@ -1702,39 +1705,62 @@ onClick={() => exportThread("json", messages)}
                 </div>
       </div>
 
-      <div className={styles.saeuleBottomNote}>
-        <div className={styles.saeuleSupportButtonWrapper}>
-          <a
-            href={supportMailHref}
-            className={styles.saeuleSupportButton}
-            aria-label={labelSupportButton}
-          >
-            {labelSupportButton}
-          </a>
-        </div>
-        <span className={styles.saeuleBottomNoteLabel}>
-Powered by MAIOS.
-TRIKETON-verified integrity.
-100 % privacy. Zero drift. Full autonomy.
-        </span>
-      </div>
+           {/* === Archiv-Icon + Overlay-Trigger (Point Zero Hotfix A – Rev 1) === */}
+<div className={styles.saeuleArchiveButtonWrapper}>
+  <button
+    type="button"
+    onClick={() => setShowArchive(true)}
+    className={styles.saeuleSupportButton}
+    aria-label={t('archive.title')}
+  >
+    {t('archive.title')}
+  </button>
+</div>
 
-      {/* === Archive & Verification (Integrated Block) === */}
-      <div
-        id="archive-section"
-        className="mt-6 border-t border-border-soft pt-4"
-        aria-label={t('archive.title')}
-      >
-        <h3 className="text-base font-medium mb-2 text-secondary">
-          {t('archive.title')}
-        </h3>
-        <div className="rounded-lg bg-surface1 p-3">
-          {/* Direkt eingebundene Archive-Komponente */}
-          <ArchiveUIFinish />
-        </div>
-      </div>
-    </aside>
-  );
+{showArchive && (
+  <div className={styles.saeuleOverlayWrapper}>
+    <ArchiveOverlay />
+    <button
+      type="button"
+      onClick={() => setShowArchive(false)}
+      className={styles.saeuleOverlayClose}
+      aria-label="Close Archive"
+    >
+      ✕
+    </button>
+  </div>
+)}
+
+<div className={styles.saeuleSupportButtonWrapper}>
+  <a
+    href={supportMailHref}
+    className={styles.saeuleSupportButton}
+    aria-label={labelSupportButton}
+  >
+    {labelSupportButton}
+  </a>
+</div>
+
+<span className={styles.saeuleBottomNoteLabel}>
+  Powered by MAIOS. 
+  TRIKETON-verified integrity. 
+  100 % privacy. Zero drift. Full autonomy.
+</span>
+
+{/* === Archive & Verification (Integrated Block) === */}
+<div
+  id="archive-section"
+  className="mt-6 border-t border-border-soft pt-4"
+  aria-label={t('archive.title')}
+>
+  <h3 className="text-base font-medium mb-2 text-secondary">
+    {t('archive.title')}
+  </h3>
+  <div className="rounded-lg bg-surface1 p-3">
+    {/* Direkt eingebundene Archive-Komponente */}
+    <ArchiveUIFinish />
+  </div>
+</div>
+</aside>
+);
 }
-
-
