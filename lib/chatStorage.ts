@@ -166,17 +166,18 @@ export async function saveChat(messages: ChatMessage[], max = 120): Promise<void
     const normalized = normalizeMessages(messages as unknown);
     const trimmed = truncateChat(normalized, max);
 
-    // 1️⃣ Persist chat messages
-    window.localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(trimmed));
+// 1️⃣ Persist chat messages
+window.localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(trimmed));
 
-    // 2️⃣ Ledger-append for last message (deterministisch)
-    const last = trimmed[trimmed.length - 1];
-    if (last && isNonEmptyString(last.content)) {
-      await appendTriketonLedgerEntry({
-        id: last.id,
-        role: last.role as "user" | "assistant" | "system",
-        content: last.content,
-        truth_hash: last.triketon?.truth_hash ?? computeTruthHash(last.content),
+// 2️⃣ Ledger-append (volle Nachricht, kein Trim-Cut)
+const last = messages[messages.length - 1];
+if (last && isNonEmptyString(last.content)) {
+  await appendTriketonLedgerEntry({
+    id: last.id,
+    role: last.role as "user" | "assistant" | "system",
+    content: last.content, // ungekürzt
+    truth_hash: last.triketon?.truth_hash ?? computeTruthHash(last.content),
+
         public_key: "", // wird durch Append-Funktion ersetzt
         timestamp: new Date().toISOString(),
         version: "v1",
@@ -279,17 +280,21 @@ export async function appendTriketonLedgerEntry(
     if (typeof window === "undefined") return;
     const ls = window.localStorage;
     const raw = ls.getItem(TRIKETON_STORAGE_KEY);
-    let arr: TriketonLedgerEntryV1[] = [];
+   let arr: TriketonLedgerEntryV1[] = [];
 
-    if (raw) {
-      try {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) arr = parsed;
-      } catch (err) {
-        console.warn("[TriketonLedger] parse error – resetting ledger:", err);
-        arr = [];
-      }
-    }
+if (raw) {
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) arr = parsed;
+  } catch (err) {
+    console.warn("[TriketonLedger] parse error – resetting ledger:", err);
+    arr = [];
+  }
+}
+
+// ✅ Sicherstellen, dass bestehende Einträge erhalten bleiben
+arr = Array.isArray(arr) ? [...arr] : [];
+
 
    // keine Duplikate (nur TruthHash, da PublicKey erst nach Bindung gesetzt wird)
 const exists = arr.some((x) => x.truth_hash === entry.truth_hash);
