@@ -146,7 +146,7 @@ import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import { useMobileViewport } from "@/lib/useMobileViewport";
 import { v4 as uuidv4 } from "uuid";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
-import { loadChat, saveChat, initChatStorage, hardClearChat,appendTriketonLedgerEntry } from '@/lib/chatStorage'
+import { loadChat, saveChat, initChatStorage, hardClearChat, appendTriketonLedgerEntry, ensureTriketonLedgerReady, verifyOrResetTriketonLedger, } from '@/lib/chatStorage'
 import { computeTruthHash, normalizeForTruthHash } from "@/lib/triketonVerify";
 
 
@@ -1224,6 +1224,17 @@ useEffect(() => {
 // Chat State
 const [messages, setMessages] = React.useState<any[]>(() => {
   initChatStorage();
+
+// 🪶 L11 – Ledger AutoInit & Verify
+try {
+  if (typeof window !== "undefined") {
+    ensureTriketonLedgerReady();        // Ledger Genesis, falls leer
+    verifyOrResetTriketonLedger();      // Drift-Check nach Mount
+  }
+} catch (err) {
+  console.warn("[L11] Ledger auto-verify failed:", err);
+}
+
   const restored = loadChat();
   return restored ?? [];
 });
