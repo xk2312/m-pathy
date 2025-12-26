@@ -353,24 +353,32 @@ arr = Array.isArray(arr) ? [...arr] : [];
     console.error("[TriketonLedger] append failed:", err);
   }
 
-    // -----------------------------------------------------------------------
-    // Step L7 – Post-Write Verification + Drift Guard
-    // -----------------------------------------------------------------------
-    try {
-      const ok = verifyLocalTriketonLedger();
-      const stable = verifyOrResetTriketonLedger();
-      if (ok && stable) {
-        console.debug(`[TriketonLedger] chain OK (len=${arr.length}, drift=0)`);
-      } else {
-        console.warn("[TriketonLedger] drift detected → local reset executed");
-      }
-    } catch (err) {
-      console.error("[TriketonLedger] post-write verify failed:", err);
-    }
-  } catch (err) {
-    console.error("[TriketonLedger] write failed:", err);
+// -----------------------------------------------------------------------
+// Step L7 – Post-Write Verification + Drift Guard
+// -----------------------------------------------------------------------
+try {
+  const ok = verifyLocalTriketonLedger();
+  const stable = verifyOrResetTriketonLedger();
+
+  // 🧩 Drift-Guard: Ledger darf sich nicht selbst schreiben
+  if ((entry as any)?.orbit_context === "ledger") {
+    console.warn("[TriketonLedger] self-append prevented");
+    return;
   }
+
+  if (ok && stable) {
+    console.debug(`[TriketonLedger] chain OK (len=${arr.length}, drift=0)`);
+  } else {
+    console.warn("[TriketonLedger] drift detected → local reset executed");
+  }
+} catch (err) {
+  console.error("[TriketonLedger] post-write verify failed:", err);
 }
+} catch (err) {
+  console.error("[TriketonLedger] write failed:", err);
+}
+}
+
 // ---------------------------------------------------------------------------
 // Step L6 – Device-Bound Public Key (stabil, Council13-approved, persistent)
 // ---------------------------------------------------------------------------
@@ -460,10 +468,6 @@ export function verifyLocalTriketonLedger(): boolean {
 
 /**
  * Step L8.0 – Auto-Recovery & First-Write Handshake
- * Prüft bei jedem Start oder erster Nachricht:
- *  - Ledger existiert und ist Array
- *  - wenn leer oder invalid → Genesis-Reset
- *  - sichert Append-Funktion gegen First-Run
  */
 export function ensureTriketonLedgerReady(): boolean {
   try {
@@ -525,7 +529,6 @@ export function verifyOrResetTriketonLedger(): boolean {
       return true;
     }
 
-    // sanity: every entry must have a valid hash
     const invalid = parsed.some(
       (e) =>
         !e.truth_hash ||
@@ -556,3 +559,4 @@ export function makeClearHandler(setMessages: (m: ChatMessage[]) => void) {
     setMessages([]);
   };
 }
+
