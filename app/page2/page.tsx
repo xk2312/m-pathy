@@ -1,133 +1,95 @@
-/*** =======================================================================
- *  INVENTUS INDEX v2 — app/page2/page.tsx
- *  Zweck: 100 % Orientierung für Chat-Seite, FreeGate & Payment-Flow
- * =======================================================================
- *
- *  [ANCHOR:IMPORTS-CORE]
- *    - React, Hooks, Image, hljs
- *    - LanguageProvider, Navigation, SidebarContainer, MobileOverlay,
- *      PromptRoot, OnboardingWatcher, useMobileViewport
- *    - i18n-Kern: getLocale, setLocale, t
- *    - Chat-Persistenz: initChatStorage, loadChat, saveChat, hardClearChat
- *
- *  [ANCHOR:THEME-TOKENS]
- *    - Tokens/THEMES/PERSONAS: Farben, Radien, Schatten, Dock-Geometrie
- *    - useAssistantLayout(): erkennt schmale Viewports (<640px) für Assistant-Spalte
- *    - useBreakpoint(): „mobile-like“ (≤ --bp-mobile, min. 1024px) für Layout-Entscheidungen
- *
- *  [ANCHOR:CHAT-TYPES-UTILS]
- *    - Role, ChatMessage (role/content/format)
- *    - truncateMessages(): Hard-Limit der History (MAX_HISTORY)
- *    - loadMessages()/saveMessages(): Legacy-LocalStorage (LS_KEY)
- *
- *  [ANCHOR:I18N-CORE]
- *    - LABELS: Button-/Event-Labels (builder/onboarding/expert/mode) pro Sprache
- *    - MODE_LABELS + cap()/slug() + tMode(): Lokalisierte Modusnamen (Calm, Truth, etc.)
- *    - locale-State: folgt getLocale() + CustomEvent "mpathy:i18n:change"
- *    - NAV_PROVIDER_DICT: Minimal-Dict (13 Sprachen) für LanguageProvider dieser Seite
- *
- *  [ANCHOR:M-FLOW]
- *    - MEvent-Typ: "builder" | "onboarding" | "expert" | "mode"
- *    - runMFlow(): „Load …“-Overlay (Frame-Text + loading-Puls)
- *    - Globaler Click-Handler: data-m-event + data-m-label → runMFlow()
- *    - Globaler Change-Handler: select/listbox/combobox → runMFlow()
- *    - Auto-Tagging: Buttons/Links werden einmalig mit data-m-event versehen
- *
- *  [ANCHOR:STORAGE-BRIDGE]
- *    - persist: Alias für chatStorage (save/load/cut)
- *    - initChatStorage(): zentraler Startpunkt für neue Persistenz
- *    - messages-State: Initial-Ladung via loadChat()
- *    - clearingRef + onClearChat(): Hard-Clear (UI leeren, Storage wipen, Reload)
- *    - Autosave-Effect: speichert messages, außer während Clear
- *
- *  [ANCHOR:COMPONENTS-UI]
- *    - Header: Sticky-Top mit M-Icon
- *    - mdToHtml(): Markdown → HTML (Codeblöcke, Tabellen, Listen, Inline-Styles)
- *    - MessageBody: entscheidet Markdown vs. Plaintext + Syntax-Highlighting (hljs)
- *    - Bubble: User-/Assistant-Bubbles (User rechts, Säulen-Farbe; Assistant links, offene Spalte)
- *    - Conversation: rendert Bubble-Liste + End-Spacer, ARIA-log
- *    - InputDock: zentriertes Dock (flow/fixed), A11y-Label via t("writeMessage")
- *
- *  [ANCHOR:SCROLL-LAYOUT]
- *    - convoRef: einziger Scroll-Container der Chronik
- *    - dockRef + dockH + padBottom: Höhe des Docks → --dock-h + sichtbarer Fußraum
- *    - endRef: stabiler Endanker für Scroll-to-Bottom
- *    - stickToBottom: erkennt „am Ende“ (distance < 80)
- *    - Initialer Scroll-Nudge (double rAF + Reflow) zur Aktivierung des Scrollports
- *    - visualViewport-Hooks: kompakter Status bei Mobile-Keyboard (compactStatus)
- *
- *  [ANCHOR:SYSTEM-BRIDGES]
- *    - systemSay(): System-/GC-Bubbles (assistant-role, markdown) + Auto-Scroll
- *    - Footer-Status: modeLabel/expertLabel für Statusleiste (kein Bubble)
- *    - mpathy:system-message-Listener:
- *        kind=status → Footer-Status + optional busy/Loading
- *        kind=mode → Modus-Wechsel-Bubble, Loading an
- *        kind=reply/info → Puls aus + optional Antwort-Bubble
- *    - OnboardingWatcher: reagiert auf mode==="ONBOARDING" + systemSay
- *
- *  [ANCHOR:FREEGATE-PAYMENT]
- *    - sendMessageLocal(context):
- *        * POST /api/chat mit messages-Array
- *        * 401 → needs_login: systemSay + Login-Hinweis (gc_*-Texte)
- *        * 402 → Stripe-Checkout:
- *              - nimmt checkout_url aus Response oder
- *              - baut eigene Session via POST /api/buy/checkout-session
- *              - leitet window.location.href auf Checkout-URL
- *        * X-Free-Remaining/X-Free-Used/X-Free-Limit:
- *              - schreibt mpathy:freegate in localStorage
- *              - lastFreeWarningShown: systemSay(gc_warning_last_free_message)
- *        * X-Tokens-Overdraw:
- *              - systemSay(gc_overdraw_title/body)
- *        * data.status === "free_limit_reached":
- *              - gibt Login-Text (gc_please_login_to_continue) als Assistant-Bubble zurück
- *        * Rückgabe: ChatMessage (assistant-role, markdown)
- *
- *  [ANCHOR:CHAT-BEHAVIOR]
- *    - onSendFromPrompt(text):
- *        * trimmt Input → userMsg (role:user)
- *        * optimistic: messages + userMsg (truncateMessages)
- *        * setMessages(optimistic) + persistMessages
- *        * setLoading(true), setMode("THINKING")
- *        * Ruft sendMessageLocal(optimistic)
- *        * Bei Erfolg: assistant-Bubble → setMessages(prev => [...prev, assistant])
- *        * Bei Fehler: Fehlermeldungs-Bubble („Send failed“)
- *        * finally: setLoading(false), setMode("DEFAULT")
- *
- *  [ANCHOR:LAYOUT-BÜHNE]
- *    - pageStyle: radial/linear Background (neutral, dunkel)
- *    - mState ("idle" | "shrink" | "typing") + useMobileViewport:
- *        * steuert Mobile-Header-Höhe via --header-h
- *        * Scroll-Bridge: __mNavScrollYOverride → Navigation
- *    - Grid-Bühne:
- *        * Desktop: Säule links (var(--saeule-w)) + Chat rechts
- *        * Mobile: eine Spalte, Säule über MobileOverlay
- *    - SidebarContainer:
- *        * sticky links, 100dvh, onSystemMessage/onClearChat-Bridge
- *    - Rechte Spalte:
- *        * convoRef-Scroller (safe-top via --chat-safe-top)
- *        * chat-stage-inner: maxWidth=680, mittig
- *        * PromptRoot-Szene: fixed bottom, zwischen Säule und rechter Wand zentriert,
- *          mit RTL-Unterstützung (isRtl)
- *
- *  [ANCHOR:PROMPT-ROOT-BRIDGE]
- *    - PromptRoot:
- *        * Props: t, hasMessages, input/setInput, loading, dockRef,
- *          padBottom/setPadBottom, compactStatus, footerStatus,
- *          withGate(clickGate), sendingRef (Mehrfachsendungs-Gate),
- *          onSendFromPrompt, isMobile, onToggleSaeule (öffnet MobileOverlay)
- *
- *  [ANCHOR:MOBILE-OVERLAY]
- *    - overlayOpen + MobileOverlay:
- *        * zeigt Säule/Onboarding auf Mobile
- *        * nutzt onSystemMessage/systemSay + onClearChat
- *
- *  [ANCHOR:A11Y]
- *    - Conversation: role="log", aria-live="polite", aria-relevant="additions"
- *    - Bubble: aria-roledescription (user/assistant message), aria-label via t()
- *    - Header: Screenreader-Name für M
- *    - InputDock: aria-label + placeholder via t("writeMessage")
- *
- * ======================================================================= */
+// ============================================================================
+// 📘 INDEX — app/page2/page.tsx (Chat Interface / Payment / Triketon Bridge)
+// ----------------------------------------------------------------------------
+// PURPOSE
+//   Core chat frontend for m-pathy.ai. Handles UI rendering, message flow,
+//   persistence, payment gates (FreeGate / Stripe), and Triketon ledger linking.
+//
+// STRUCTURE OVERVIEW
+//   • Imports — React, hooks, UI components, i18n, chatStorage, triketonVerify.
+//   • UI Theme — Tokens, Themes, Personas for visual consistency.
+//   • Hooks — useBreakpoint(), useAssistantLayout(), useTheme() for layout logic.
+//   • Utilities — truncateMessages(), loadMessages(), saveMessages() for LS ops.
+//   • Components:
+//       Header(), MessageBody(), Bubble(), Conversation(), InputDock()
+//       → Form the visual chat experience.
+//   • Core React Component: Page2() — orchestrates all subsystems.
+//
+// CORE RESPONSIBILITIES
+//   ▪ Manage chat lifecycle: init, load, save, append, clear (localStorage).
+//   ▪ Integrate Triketon ledger: appendTriketonLedgerEntry() per message.
+//   ▪ Handle FreeGate and payment flow (401/402/overdraw headers).
+//   ▪ Animate assistant typing via chunked content rendering.
+//   ▪ Maintain accessibility (ARIA roles, keyboard focus).
+//
+// STATE FLOW (Page2 component)
+//   messages[]        → all user/assistant messages
+//   input             → user’s message text
+//   loading, mode     → UX state (thinking, idle, depleted)
+//   padBottom, dockH  → dynamic layout spacing (Dock height)
+//   overlayOpen       → Mobile Onboarding/Sidebar visibility
+//   triketonOpen/payload → modal overlay showing cryptographic seal
+//
+// MAIN FUNCTIONS
+//   ──────────────────────────────────────────────────────────────────────────
+//   ▪ sendMessageLocal()
+//       - POSTs messages to /api/chat
+//       - interprets FreeGate & Stripe signals (401→login, 402→checkout)
+//       - parses Triketon payload, appends to local ledger
+//       - returns assistant ChatMessage with meta (balance/tokens)
+//   ▪ onSendFromPrompt()
+//       - User input handler; updates state, persists, appends to ledger
+//       - Handles animated assistant response streaming (2-char chunks)
+//   ▪ systemSay()
+//       - Injects assistant/system bubbles (for onboarding, GC events)
+//   ▪ verifyLocalTriketonLedger() / verifyOrResetTriketonLedger()
+//       - Sanity checks for stored ledger integrity.
+//   ▪ onClearChat()
+//       - Hard-reset: clears UI + localStorage + triggers reload.
+//
+// COMPONENTS (UI)
+//   ──────────────────────────────────────────────────────────────────────────
+//   ▪ Header — sticky top bar with M-icon.
+//   ▪ Bubble — user vs assistant message bubbles (dark UI, responsive).
+//   ▪ MessageBody — Markdown renderer + syntax highlight + code copy buttons.
+//   ▪ Conversation — scrollable chat log (ARIA role="log").
+//   ▪ InputDock — send input field, fixed/flow modes, Enter key handling.
+//
+// BRIDGES
+//   ▪ LanguageProvider → maintains global i18n sync.
+//   ▪ Navigation + SidebarContainer → integrate with broader app shell.
+//   ▪ OnboardingWatcher / MobileOverlay → support onboarding on mobile.
+//   ▪ Triketon Overlay → shows seal details (public_key, truth_hash, timestamp).
+//
+// DATA PERSISTENCE
+//   ▪ loadChat(), saveChat(), hardClearChat() via lib/chatStorage.ts
+//   ▪ appendTriketonLedgerEntry() adds deterministic ledger entries.
+//   ▪ LocalStorage keys:
+//       "mpathy:chat:v1", "mpathy:triketon:v1", "mpathy:freegate", "mpathy:thread:default"
+//
+// FREEGATE / PAYMENT LOGIC
+//   ▪ 401 Unauthorized → system prompt: “Please log in to continue.”
+//   ▪ 402 Payment Required → redirect to Stripe checkout session.
+//   ▪ X-Free-Remaining / X-Free-Limit headers → local counter & last-free warning.
+//   ▪ X-Tokens-Overdraw → in-chat “Top-up required” message.
+//
+// TRIKETON LOGIC
+//   ▪ Assistant replies include Triketon payload {truth_hash, public_key, timestamp}.
+//   ▪ Each message triggers appendTriketonLedgerEntry() (role-aware).
+//   ▪ Ledger entries include device-bound key via getOrCreateDevicePublicKey2048().
+//
+// ACCESSIBILITY / A11Y
+//   ▪ Conversation role="log", aria-live="polite".
+//   ▪ InputDock labeled via i18n key t("writeMessage").
+//   ▪ Buttons: Copy, Triketon overlay, Close, all have ARIA labels.
+//
+// VERSIONING / GOVERNANCE
+//   ▪ governed by Council13 — Triketon Archive Contract v2
+//   ▪ compliant with MEFL + PrimeFocus guidelines (no drift, single truth path)
+//   ▪ page2/page.tsx acts as Chat-Layer controller atop chatStorage & Triketon.
+//
+// ============================================================================
+
 "use client";
 
 import React, { useEffect, useState, useRef, useCallback, useMemo, FormEvent } from "react";

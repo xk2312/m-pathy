@@ -1,4 +1,76 @@
-#!/usr/bin/env python3
+# ============================================================================
+# 📘 INDEX — triketon2048.py (GPTM-Galaxy+ · Triketon Phase-1 Engine)
+# ----------------------------------------------------------------------------
+# PURPOSE
+#   Implements the full Triketon-2048 seal and verification engine.
+#   Provides normalization, hashing, public key generation, and a CLI
+#   interface for sealing and verifying text integrity.
+#
+# CORE CLASSES
+#   • TriketonSeal
+#       Represents a single cryptographic seal with:
+#         public_key, truth_hash, timestamp, version, profiles.
+#
+#   • TRIKETONCore
+#       Stateful hashing engine producing 2048-bit results via
+#       salted SHA-256 cycles and XOR mixing.
+#       Handles salt matrix creation, device fingerprinting,
+#       iterative hashing, and metadata export.
+#
+# CORE FUNCTIONS
+#   • triketon_seal(text, deterministic=False, seed=None)
+#       End-to-end sealing pipeline:
+#         normalize → compute_truth_hash → generate_public_key_2048 → timestamp.
+#       deterministic → uses internal fixed seed.
+#       non-deterministic → requires TRIKETON_HASH_SALT_V1 env var.
+#
+#   • normalize_for_truth_hash(text)
+#       Canonical text normalization:
+#         removes HTML, markdown, emojis, symbols; normalizes Unicode (NFC).
+#
+#   • compute_truth_hash(normalized_text, salt)
+#       SHA-256(salt || text) → 64-char hex digest.
+#
+#   • generate_public_key_2048(truth_hash_hex)
+#       Expands 64-byte truth hash into 2048-bit Base64URL key via
+#       iterative SHA-256 expansion (PublicKey Law v1).
+#
+#   • TRIKETONCore.run_cycle(input_data)
+#       Executes salted hashing phases:
+#         Phase 1 → SHA-256 with salts,
+#         Phase 2 → XOR combination,
+#         Phase 3 → bit-shift + final digest.
+#
+#   • TRIKETONCore.export_metadata()
+#       Returns device ID, timestamp, salts, and hash result.
+#
+# CLI INTERFACE
+#   • interactive_mode() – manual hashing loop.
+#   • cli_batch_mode()   – batch hashing from file.
+#   • main() – argument parser supporting:
+#       seal / verify / string / file / interactive.
+#
+# FILE I/O
+#   • save_results(results, filename)
+#       Writes batch results to JSON.
+#
+# ENVIRONMENT VARIABLES
+#   TRIKETON_HASH_SALT_V1 – required for non-deterministic mode.
+#
+# DESIGN PRINCIPLES
+#   • Deterministic reproducibility (seeded mode).
+#   • No salt or seed leakage.
+#   • Portable, offline, cryptographically stable.
+#   • CLI and library interoperability.
+#
+# VERSIONING
+#   Law set: TRIKETON_HASH_V1 / TRIKETON_KEY_V1
+#   Phase-1 verified by Council13 :: Triketon-Archive-Contract v2.
+#
+# ENTRY POINT
+#   if __name__ == "__main__": main()
+#
+# ============================================================================
 
 import hashlib
 import os

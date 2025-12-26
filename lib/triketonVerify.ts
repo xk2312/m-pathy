@@ -1,6 +1,66 @@
-// lib/triketonVerify.ts
-// GPTM-Galaxy+ · m-pathy Archive + Verification System v5
-// Triketon-Verification Layer — deterministic TRUE / FALSE checks
+// ============================================================================
+// 📘 INDEX — lib/triketonVerify.ts (Triketon Verification & Key Generator v5)
+// ----------------------------------------------------------------------------
+// PURPOSE
+//   Core deterministic verification layer for m-pathy’s Triketon Archive System.
+//   Validates integrity of messages, pairs, and full chats, and produces stable
+//   device-bound public keys for ledger signing.
+//
+// CORE FUNCTIONS
+//   ──────────────────────────────────────────────────────────────────────────
+//   ▪ normalizeForTruthHash(text)
+//       Normalizes text: removes whitespace variance, lowercases, strips
+//       line breaks → ensures hash consistency across platforms.
+//
+//   ▪ computeTruthHash(text)
+//       Produces deterministic 32-bit integer hash (T-prefixed) from normalized
+//       text. Not cryptographically secure — used for verification & drift checks.
+//
+//   ▪ verifyEntry(entry)
+//       Compares stored truth_hash with recomputed one → TRUE if consistent.
+//
+//   ▪ verifyPair(question, answer)
+//       Computes a combined hash of Q+A content → ensures pair linkage validity.
+//
+//   ▪ verifyChat(entries)
+//       Sequentially concatenates normalized message content and verifies chain
+//       integrity (all T-prefixed hashes consistent).
+//
+//   ▪ verifyAll(entries)
+//       Full pipeline → returns granular validation object:
+//         { messageLevel[], pairLevel[], chatLevel }
+//
+//   ▪ generatePublicKey2048(truthHashHex)
+//       Expands 64-byte truth hash seed via iterative SHA-256 digesting (~2048-bit).
+//       Produces a Base64-encoded device identifier (no cryptographic keypair).
+//
+//   ▪ getOrCreateDevicePublicKey2048(truthHashHex?)
+//       Retrieves or creates persistent device key under
+//       "mpathy:triketon:device_public_key" in localStorage.
+//       Uses generatePublicKey2048() when missing.
+//       Ensures deterministic reuse per device/browser.
+//
+// STORAGE & CONSTANTS
+//   ──────────────────────────────────────────────────────────────────────────
+//   DEVICE_KEY = "mpathy:triketon:device_public_key"
+//     → Persistent localStorage key for device identity.
+//
+// DATA TYPES
+//   TArchiveEntry (from ./types)
+//     { content: string, truth_hash: string, ... }
+//
+// BEHAVIOUR NOTES
+//   • All operations are local-only (no network).
+//   • Hash results are deterministic across devices.
+//   • Public key generation is synchronous to browser crypto.subtle API.
+//   • Errors log to console with Triketon-prefixed messages.
+//
+// VERSIONING
+//   Part of GPTM-Galaxy+ · m-pathy Archive + Verification System v5.
+//   Governed by Council13 Triketon-Archive-Contract v2.
+//
+// ============================================================================
+
 
 import { TArchiveEntry } from "./types";
 
