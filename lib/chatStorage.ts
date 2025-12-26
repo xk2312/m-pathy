@@ -295,57 +295,53 @@ if (raw) {
 // ✅ Sicherstellen, dass bestehende Einträge erhalten bleiben
 arr = Array.isArray(arr) ? [...arr] : [];
 
-
-   // keine Duplikate (nur TruthHash, da PublicKey erst nach Bindung gesetzt wird)
-const exists = arr.some((x) => x.truth_hash === entry.truth_hash);
-if (exists) {
-  console.info("[TriketonLedger] duplicate truth-hash skipped:", entry.truth_hash);
-  return;
-}
-
-
-    // append-only, deterministische Reihenfolge
-    const last = arr[arr.length - 1];
-    const truthHashHex = (entry.truth_hash || "")
-      .replace(/^T/, "")
-      .padStart(64, "0");
-
-// Step L7.2 – persistent device-bound key integration (Council13 fix)
-let deviceKey = "unknown_key";
-
-try {
-  const ls = window.localStorage;
-  const DEVICE_KEY_2048 = "mpathy:triketon:device_public_key_2048";
-
-  // 1️⃣ zuerst prüfen, ob Schlüssel schon existiert
-  const storedKey = ls.getItem(DEVICE_KEY_2048);
-  if (storedKey && storedKey.trim().length > 0) {
-    deviceKey = storedKey;
-  } else {
-    // 2️⃣ falls nicht, deterministisch neu erzeugen
-    deviceKey = await getOrCreateDevicePublicKey2048(truthHashHex);
-    // 3️⃣ und sofort persistieren
-    ls.setItem(DEVICE_KEY_2048, deviceKey);
+    // keine Duplikate (TruthHash + PublicKey)
+  const exists = arr.some(
+    (x) => x.truth_hash === entry.truth_hash && x.public_key === entry.public_key,
+  );
+  if (exists) {
+    console.info("[TriketonLedger] duplicate entry skipped:", entry.truth_hash);
+    return;
   }
 
-  console.debug("[TriketonLedger] deviceKey bound:", deviceKey.slice(0, 32), "…");
-} catch (err) {
-  console.warn("[TriketonLedger] deviceKey load failed → fallback:", err);
-  deviceKey = "fallback_key";
-}
+  // append-only, deterministische Reihenfolge
+  const last = arr[arr.length - 1];
+  const truthHashHex = (entry.truth_hash || "").replace(/^T/, "").padStart(64, "0");
 
+  // ✅ L13 – Persistent Append Fix
+  try {
+    const raw = ls.getItem(TRIKETON_STORAGE_KEY);
+    let current: TriketonLedgerEntryV1[] = [];
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) current = parsed;
+      } catch {
+        console.warn("[TriketonLedger] parse fail → new array initialized");
+      }
+    }
 
+    // Step L7.2 – persistent device-bound key integration
+    let deviceKey = "unknown_key";
+    try {
+      deviceKey = await getOrCreateDevicePublicKey2048(truthHashHex);
+    } catch (err) {
+      console.warn("[TriketonLedger] key generation failed → fallback:", err);
+      deviceKey = "fallback_key";
+    }
 
-const next: TriketonLedgerEntryV1 = {
-  ...entry,
-  public_key: deviceKey,            // now truly 2048-bit derived
-  chain_prev: last?.truth_hash ?? undefined,
-};
+    const next: TriketonLedgerEntryV1 = {
+      ...entry,
+      public_key: deviceKey,
+      chain_prev: current[current.length - 1]?.truth_hash ?? undefined,
+    };
 
-
-    arr.push(next);
-    ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(arr));
-    console.debug("[TriketonLedger] appended:", entry.truth_hash);
+    current.push(next);
+    ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(current));
+    console.debug("[TriketonLedger] entry appended:", entry.truth_hash);
+  } catch (err) {
+    console.error("[TriketonLedger] append failed:", err);
+  }
 
     // -----------------------------------------------------------------------
     // Step L7 – Post-Write Verification + Drift Guard
