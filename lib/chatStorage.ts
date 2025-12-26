@@ -163,28 +163,34 @@ export async function saveChat(messages: ChatMessage[], max = 120): Promise<void
   try {
     if (typeof window === "undefined") return;
 
-    const normalized = normalizeMessages(messages as unknown);
+       const normalized = normalizeMessages(messages as unknown);
     const trimmed = truncateChat(normalized, max);
 
-// 1️⃣ Persist chat messages
-window.localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(trimmed));
+    // 1️⃣ Persist chat messages
+    window.localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(trimmed));
 
-// 2️⃣ Ledger-append (volle Nachricht, kein Trim-Cut)
-const last = messages[messages.length - 1];
-if (last && isNonEmptyString(last.content)) {
-  await appendTriketonLedgerEntry({
-    id: last.id,
-    role: last.role as "user" | "assistant" | "system",
-    content: last.content, // ungekürzt
-    truth_hash: last.triketon?.truth_hash ?? computeTruthHash(last.content),
+    // 2️⃣ Ledger-append: genau **eine vollständige Nachricht**
+    const lastMessage =
+      Array.isArray(trimmed) && trimmed.length > 0
+        ? trimmed[trimmed.length - 1]
+        : null;
 
-        public_key: "", // wird durch Append-Funktion ersetzt
+    if (lastMessage && isNonEmptyString(lastMessage.content)) {
+      await appendTriketonLedgerEntry({
+        id: lastMessage.id,
+        role: lastMessage.role as "user" | "assistant" | "system",
+        content: lastMessage.content,
+        truth_hash:
+          lastMessage.triketon?.truth_hash ??
+          computeTruthHash(lastMessage.content),
+        public_key: "",
         timestamp: new Date().toISOString(),
         version: "v1",
         orbit_context: "chat",
         chain_id: "local",
       });
     }
+
 
   } catch (err) {
     console.error("[ChatStorage] saveChat failed:", err);
@@ -295,6 +301,7 @@ if (raw) {
 // ✅ Sicherstellen, dass bestehende Einträge erhalten bleiben
 arr = Array.isArray(arr) ? [...arr] : [];
 
+
     // keine Duplikate (TruthHash + PublicKey)
   const exists = arr.some(
     (x) => x.truth_hash === entry.truth_hash && x.public_key === entry.public_key,
@@ -337,6 +344,9 @@ arr = Array.isArray(arr) ? [...arr] : [];
     };
 
     current.push(next);
+    ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(current));
+    console.debug("[TriketonLedger] entry appended:", entry.truth_hash);
+      current.push(next);
     ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(current));
     console.debug("[TriketonLedger] entry appended:", entry.truth_hash);
   } catch (err) {
