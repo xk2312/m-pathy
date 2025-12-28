@@ -254,20 +254,28 @@ export async function saveChat(messages: ChatMessage[], max = 120): Promise<void
         : null;
 
     if (lastMessage && isNonEmptyString(lastMessage.content)) {
-      await appendTriketonLedgerEntry({
-        id: lastMessage.id,
-        role: lastMessage.role as "user" | "assistant" | "system",
-        content: lastMessage.content,
-        truth_hash:
-          lastMessage.triketon?.truth_hash ??
-          computeTruthHash(lastMessage.content),
-        public_key: "",
-        timestamp: new Date().toISOString(),
-        version: "v1",
-        orbit_context: "chat",
-        chain_id: "local",
-      });
-    }
+  const sealKey = "mpathy:triketon:last_sealed_message_id";
+  const lastSealedId = window.localStorage.getItem(sealKey);
+
+  if (lastSealedId !== lastMessage.id) {
+    await appendTriketonLedgerEntry({
+      id: lastMessage.id,
+      role: lastMessage.role as "user" | "assistant" | "system",
+      content: lastMessage.content,
+      truth_hash:
+        lastMessage.triketon?.truth_hash ??
+        computeTruthHash(lastMessage.content),
+      public_key: "",
+      timestamp: new Date().toISOString(),
+      version: "v1",
+      orbit_context: "chat",
+      chain_id: "local",
+    });
+
+    window.localStorage.setItem(sealKey, lastMessage.id);
+  }
+}
+
 
 
   } catch (err) {
