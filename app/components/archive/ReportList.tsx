@@ -64,10 +64,14 @@ export default function ReportList() {
             <pre className="text-xs bg-surface2 p-3 rounded-md max-h-64 overflow-y-auto">
               {JSON.stringify(selectedReport, null, 2)}
             </pre>
-            <ReportStatus
-  text={JSON.stringify(selectedReport)}
-  truthHash={selectedReport.truthHash}
-/>
+            {selectedReport.pair && (
+  <ReportStatus
+    userText={selectedReport.pair.user.content}
+    assistantText={selectedReport.pair.assistant.content}
+    truthHash={selectedReport.truthHash}
+  />
+)}
+
 
             <div className="flex justify-end gap-3 mt-4">
               <Button onClick={() => handleDownload(selectedReport.truthHash)}>{t.view}</Button>
