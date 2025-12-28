@@ -16,7 +16,18 @@ export interface VerificationReport {
   chatLevel: boolean
   truthHash: string
   entriesCount: number
+
+  // 🔒 NEU — lokal, nicht serverseitig
+  pair?: {
+    user: {
+      content: string
+    }
+    assistant: {
+      content: string
+    }
+  }
 }
+
 
 /**
  * Erzeugt einen signierten, deterministischen JSON-Report
