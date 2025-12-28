@@ -253,34 +253,14 @@ export async function saveChat(messages: ChatMessage[], max = 120): Promise<void
         ? trimmed[trimmed.length - 1]
         : null;
 
-    if (lastMessage && isNonEmptyString(lastMessage.content)) {
-  const sealKey = "mpathy:triketon:last_sealed_message_id";
-  const lastSealedId = window.localStorage.getItem(sealKey);
+   // Intentionally empty.
+// Ledger writes are handled exclusively by the Intent-Layer (UI submit).
 
-  if (lastSealedId !== lastMessage.id) {
-    await appendTriketonLedgerEntry({
-      id: lastMessage.id,
-      role: lastMessage.role as "user" | "assistant" | "system",
-      content: lastMessage.content,
-      truth_hash:
-        lastMessage.triketon?.truth_hash ??
-        computeTruthHash(lastMessage.content),
-      public_key: "",
-      timestamp: new Date().toISOString(),
-      version: "v1",
-      orbit_context: "chat",
-      chain_id: "local",
-    });
 
-    window.localStorage.setItem(sealKey, lastMessage.id);
-  }
+   } catch (err) {
+  console.error("[ChatStorage] saveChat failed:", err);
 }
 
-
-
-  } catch (err) {
-    console.error("[ChatStorage] saveChat failed:", err);
-  }
 }
 
 /** Leeren (für späteren Button) */
