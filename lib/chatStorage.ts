@@ -190,22 +190,30 @@ export function initChatStorage(): void {
   try {
     if (typeof window === "undefined") return;
     const ls = window.localStorage;
-    if (ls.getItem(CHAT_STORAGE_KEY)) return; // schon da
 
-    for (const k of LEGACY_KEYS) {
-      const raw = ls.getItem(k);
-      if (!raw) continue;
-      try {
-        const data = JSON.parse(raw);
-        if (Array.isArray(data)) {
-          const normalized = normalizeMessages(data);
-          ls.setItem(CHAT_STORAGE_KEY, JSON.stringify(truncateChat(normalized)));
-          break;
-        }
-      } catch { /* ignore parse error */ }
+    // --- Chat Storage ---
+    if (!ls.getItem(CHAT_STORAGE_KEY)) {
+      for (const k of LEGACY_KEYS) {
+        const raw = ls.getItem(k);
+        if (!raw) continue;
+        try {
+          const data = JSON.parse(raw);
+          if (Array.isArray(data)) {
+            const normalized = normalizeMessages(data);
+            ls.setItem(CHAT_STORAGE_KEY, JSON.stringify(truncateChat(normalized)));
+            break;
+          }
+        } catch {}
+      }
     }
-  } catch { /* ignore */ }
+
+    // --- Triketon Ledger (Genesis) ---
+    if (!ls.getItem(TRIKETON_STORAGE_KEY)) {
+      ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify([]));
+    }
+  } catch {}
 }
+
 
 /** Laden: Array oder null (wenn nichts sinnvolles vorliegt) */
 export function loadChat(): ChatMessage[] | null {
