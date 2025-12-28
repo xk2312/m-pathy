@@ -359,102 +359,50 @@ export type TriketonLedgerEntryV1 = {
 export async function appendTriketonLedgerEntry(
   entry: TriketonLedgerEntryV1
 ): Promise<void> {
-
   try {
     if (typeof window === "undefined") return;
     const ls = window.localStorage;
+
+    // 1️⃣ READ (once)
     const raw = ls.getItem(TRIKETON_STORAGE_KEY);
-   let arr: TriketonLedgerEntryV1[] = [];
+    let ledger: TriketonLedgerEntryV1[] = [];
 
-if (raw) {
-  try {
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) arr = parsed;
-  } catch (err) {
-    console.warn("[TriketonLedger] parse error – resetting ledger:", err);
-    arr = [];
-  }
-}
-
-// ✅ Sicherstellen, dass bestehende Einträge erhalten bleiben
-arr = Array.isArray(arr) ? [...arr] : [];
-
-
-    // keine Duplikate (TruthHash + PublicKey)
-  const exists = arr.some(
-    (x) => x.truth_hash === entry.truth_hash && x.public_key === entry.public_key,
-  );
-  if (exists) {
-    console.info("[TriketonLedger] duplicate entry skipped:", entry.truth_hash);
-    return;
-  }
-
-  // append-only, deterministische Reihenfolge
-  const last = arr[arr.length - 1];
-  const truthHashHex = (entry.truth_hash || "").replace(/^T/, "").padStart(64, "0");
-
-  // ✅ L13 – Persistent Append Fix
-  try {
-    const raw = ls.getItem(TRIKETON_STORAGE_KEY);
-    let current: TriketonLedgerEntryV1[] = [];
     if (raw) {
       try {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) current = parsed;
+        if (Array.isArray(parsed)) ledger = parsed;
       } catch {
-        console.warn("[TriketonLedger] parse fail → new array initialized");
+        ledger = [];
       }
     }
 
-    // Step L7.2 – persistent device-bound key integration
-    let deviceKey = "unknown_key";
-    try {
-      deviceKey = await getOrCreateDevicePublicKey2048(truthHashHex);
-    } catch (err) {
-      console.warn("[TriketonLedger] key generation failed → fallback:", err);
-      deviceKey = "fallback_key";
-    }
+    // 2️⃣ DUPLICATE GUARD (pure)
+    const exists = ledger.some(
+      (x) => x.truth_hash === entry.truth_hash && x.id === entry.id
+    );
+    if (exists) return;
+
+    // 3️⃣ BUILD ENTRY (complete before append)
+    const truthHashHex = (entry.truth_hash || "")
+      .replace(/^T/, "")
+      .padStart(64, "0");
+
+    const deviceKey = await getOrCreateDevicePublicKey2048(truthHashHex);
 
     const next: TriketonLedgerEntryV1 = {
       ...entry,
       public_key: deviceKey,
-      chain_prev: current[current.length - 1]?.truth_hash ?? undefined,
+      chain_prev: ledger[ledger.length - 1]?.truth_hash,
     };
 
-    current.push(next);
-    ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(current));
-    console.debug("[TriketonLedger] entry appended:", entry.truth_hash);
-      current.push(next);
-    ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(current));
-    console.debug("[TriketonLedger] entry appended:", entry.truth_hash);
+    // 4️⃣ APPEND (once)
+    const nextLedger = [...ledger, next];
+
+    // 5️⃣ WRITE (once)
+    ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(nextLedger));
   } catch (err) {
-    console.error("[TriketonLedger] append failed:", err);
+    console.error("[TriketonLedger] atomic append failed:", err);
   }
-
-// -----------------------------------------------------------------------
-// Step L7 – Post-Write Verification + Drift Guard
-// -----------------------------------------------------------------------
-try {
-  const ok = verifyLocalTriketonLedger();
-  const stable = verifyOrResetTriketonLedger();
-
-  // 🧩 Drift-Guard: Ledger darf sich nicht selbst schreiben
-  if ((entry as any)?.orbit_context === "ledger") {
-    console.warn("[TriketonLedger] self-append prevented");
-    return;
-  }
-
-  if (ok && stable) {
-    console.debug(`[TriketonLedger] chain OK (len=${arr.length}, drift=0)`);
-  } else {
-    console.warn("[TriketonLedger] drift detected → local reset executed");
-  }
-} catch (err) {
-  console.error("[TriketonLedger] post-write verify failed:", err);
-}
-} catch (err) {
-  console.error("[TriketonLedger] write failed:", err);
-}
 }
 
 // ---------------------------------------------------------------------------
