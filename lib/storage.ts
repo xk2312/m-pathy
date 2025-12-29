@@ -7,6 +7,10 @@ export type MpathyNamespace =
   | 'mpathy:archive:v1'
   | 'mpathy:context:upload'
   | 'mpathy:verification:v1'
+  | 'mpathy:triketon:v1'
+  | 'mpathy:triketon:device_public_key'
+  | 'mpathy:triketon:device_public_key_2048'
+
 
 /**
  * Prüft, ob LocalStorage verfügbar ist.
@@ -58,11 +62,13 @@ export function clearLS(key: MpathyNamespace): void {
  */
 export function clearAllLS(): void {
   if (!hasLocalStorage()) return
-  const keys: MpathyNamespace[] = [
-    'mpathy:chat:v1',
-    'mpathy:archive:v1',
-    'mpathy:context:upload',
-    'mpathy:verification:v1',
-  ]
+ const keys: MpathyNamespace[] = [
+  'mpathy:chat:v1',
+  'mpathy:archive:v1',
+  'mpathy:context:upload',
+  'mpathy:verification:v1',
+  // ⚠️ Triketon bewusst NICHT hier
+]
+
   keys.forEach((k) => window.localStorage.removeItem(k))
 }
