@@ -43,11 +43,22 @@ export function readLS<T>(key: MpathyNamespace): T | null {
 
 /**
  * Schreibt einen Wert in den Namespace.
+ * ⚠️ Triketon-Ledger ist append-only und darf NICHT überschrieben werden.
  */
 export function writeLS<T>(key: MpathyNamespace, value: T): void {
   if (!hasLocalStorage()) return
+
+  // 🔒 Triketon-Invariante: niemals überschreiben
+  if (key === 'mpathy:triketon:v1') {
+    const existing = window.localStorage.getItem(key)
+    if (existing !== null) {
+      return
+    }
+  }
+
   window.localStorage.setItem(key, JSON.stringify(value))
 }
+
 
 /**
  * Entfernt einen Namespace-Eintrag.
