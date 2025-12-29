@@ -2158,7 +2158,6 @@ if (last && (last as any).id === (userMsg as any).id) return; // Duplicate-Guard
       };
 
       ledger[ledger.length - 1] = enriched;
-      window.localStorage.setItem("mpathy:triketon:v1", JSON.stringify(ledger));
 
       console.debug(`[TriketonLedger] numbered #${msgNumber} (chat ${chatSerial})`);
     } catch (err) {
