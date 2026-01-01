@@ -552,9 +552,7 @@ export function verifyOrResetTriketonLedger(): boolean {
     );
 
     if (invalid) {
-      console.warn("[TriketonLedger] drift detected → full reset");
-      window.localStorage.removeItem(key);
-      window.localStorage.setItem(key, JSON.stringify([]));
+      console.warn("[TriketonLedger] drift detected → NO RESET (ledger preserved)");
       return false;
     }
 
@@ -565,6 +563,7 @@ export function verifyOrResetTriketonLedger(): boolean {
     return false;
   }
 }
+
 
 /** Clear handler factory (no bubble, prepares for hard clear) */
 export function makeClearHandler(setMessages: (m: ChatMessage[]) => void) {
