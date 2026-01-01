@@ -6,7 +6,6 @@ import { readLS } from './storage'
 import { extractTopKeywords } from './keywordExtract'
 import type { TArchiveEntry } from './types'
 
-
 interface ChatMessage {
   id: string
   chain_id: string
@@ -65,18 +64,17 @@ export function buildRecentChatPreviews(): RecentChatPreview[] {
         new Date(b.timestamp).getTime()
     )
 
-    // 🔒 MEFL-konforme Projektion NUR für Keyword-Extraktion
-    const keywordEntries: TArchiveEntry[] = sorted.map((m, idx) => ({
-  id: m.id,
-  origin_chat: Number(chatId), // 🔑 WICHTIG: number, nicht string
-  role: 'user',
-  content: m.content,
-  timestamp: m.timestamp,
-  truth_hash: '',
-  public_key: '',
-  verified: true,
-}))
-
+    // 🔒 MEFL-konformeUID-konforme Projektion NUR für Keyword-Extraktion
+    const keywordEntries: TArchiveEntry[] = sorted.map((m) => ({
+      id: m.id,
+      origin_chat: Number(chatId), // 🔑 number, nicht string
+      role: 'user',
+      content: m.content,
+      timestamp: m.timestamp,
+      truth_hash: '',
+      public_key: '',
+      verified: true,
+    }))
 
     const keywords = extractTopKeywords(keywordEntries).slice(0, 7)
 
