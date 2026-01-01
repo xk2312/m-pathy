@@ -1,28 +1,17 @@
 // lib/archiveProjection.ts
 // GPTM-Galaxy+ · Archive Projection v1
-// Build read-only previews for Recent Chats (MEFL compliant)
+// Read-only archive projection derived exclusively from Triketon Ledger
+// MEFL compliant · No write paths · No Chat dependency
 
 import { readLS } from './storage'
 import { extractTopKeywords } from './keywordExtract'
 import type { TArchiveEntry } from './types'
 
-interface ChatMessage {
-  id: string
-  chain_id: string
-  content: string
-  timestamp: string
-}
-
-interface ArchiveEntry {
-  id: string
-  origin_chat: string
-  role: 'user' | 'assistant'
-  content: string
-  timestamp: string
-  truth_hash: string
-  public_key: string
-  verified: boolean
-}
+/**
+ * Triketon Ledger Key
+ * SINGLE SOURCE OF TRUTH
+ */
+const LEDGER_KEY = 'mpathy:triketon:v1'
 
 export interface RecentChatPreview {
   chatId: string
@@ -33,69 +22,85 @@ export interface RecentChatPreview {
   verified: boolean
 }
 
-const MESSAGE_KEY = 'mpathy:chat:v1'
-const ANCHOR_KEY = 'mpathy:triketon:v1'
+type TriketonAnchor = {
+  id: string
+  chain_id: string | number
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: string
+  truth_hash: string
+  public_key: string
+}
 
 /**
- * Build Recent Chat previews from LocalStorage
+ * Read Triketon ledger (append-only, persistent)
  */
-export function buildRecentChatPreviews(): RecentChatPreview[] {
-  const messages =
-    readLS<ChatMessage[]>(MESSAGE_KEY) || []
+function readLedger(): TriketonAnchor[] {
+  return (readLS<TriketonAnchor[]>(LEDGER_KEY) || []) as TriketonAnchor[]
+}
 
-  const anchors =
-    (readLS<any>(ANCHOR_KEY as any) || []) as { chain_id: string }[]
+/**
+ * Project ledger → archive entries (in-memory only)
+ */
+export function projectArchiveFromTriketon(): TArchiveEntry[] {
+  const ledger = readLedger()
+  if (ledger.length === 0) return []
 
-  const grouped = new Map<string, ChatMessage[]>()
+  return ledger.map((a) => ({
+    id: a.id,
+    origin_chat: Number(a.chain_id),
+    role: a.role,
+    content: a.content,
+    timestamp: a.timestamp,
+    truth_hash: a.truth_hash,
+    public_key: a.public_key,
+    verified: true, // comes from ledger → implicitly verified
+  }))
+}
 
-  for (const msg of messages) {
-    if (!grouped.has(msg.chain_id)) {
-      grouped.set(msg.chain_id, [])
+/**
+ * Build Recent Chat previews (pure projection)
+ */
+export function buildRecentChatPreviews(
+  lang: string = 'en',
+  limit: number = 13,
+): RecentChatPreview[] {
+  const entries = projectArchiveFromTriketon()
+  if (entries.length === 0) return []
+
+  const grouped = new Map<number, TArchiveEntry[]>()
+
+  for (const e of entries) {
+    if (!grouped.has(e.origin_chat)) {
+      grouped.set(e.origin_chat, [])
     }
-    grouped.get(msg.chain_id)!.push(msg)
+    grouped.get(e.origin_chat)!.push(e)
   }
 
   const previews: RecentChatPreview[] = []
 
   for (const [chatId, msgs] of grouped.entries()) {
-    const sorted = msgs.sort(
-      (a, b) =>
-        new Date(a.timestamp).getTime() -
-        new Date(b.timestamp).getTime()
+    const ordered = msgs.sort(
+      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
     )
 
-    // 🔒 MEFL-konformeUID-konforme Projektion NUR für Keyword-Extraktion
-    const keywordEntries: TArchiveEntry[] = sorted.map((m) => ({
-      id: m.id,
-      origin_chat: Number(chatId), // 🔑 number, nicht string
-      role: 'user',
-      content: m.content,
-      timestamp: m.timestamp,
-      truth_hash: '',
-      public_key: '',
-      verified: true,
-    }))
-
-    const keywords = extractTopKeywords(keywordEntries).slice(0, 7)
-
-    const verified = anchors.some(
-      (a) => a.chain_id === chatId
-    )
+    const keywords = extractTopKeywords(ordered, 7, lang)
 
     previews.push({
-      chatId,
+      chatId: String(chatId),
       keywords,
-      entriesCount: sorted.length,
-      firstTimestamp: sorted[0].timestamp,
-      lastTimestamp: sorted[sorted.length - 1].timestamp,
-      verified,
+      entriesCount: ordered.length,
+      firstTimestamp: ordered[0].timestamp,
+      lastTimestamp: ordered[ordered.length - 1].timestamp,
+      verified: true, // ledger-backed
     })
   }
 
-  // newest chats first
-  return previews.sort(
-    (a, b) =>
-      new Date(b.lastTimestamp).getTime() -
-      new Date(a.lastTimestamp).getTime()
-  )
+  return previews
+    .sort(
+      (a, b) =>
+        new Date(b.lastTimestamp).getTime() -
+        new Date(a.lastTimestamp).getTime(),
+    )
+    .slice(0, limit)
 }

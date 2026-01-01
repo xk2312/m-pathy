@@ -4,11 +4,13 @@
 
 import { TArchiveEntry } from './types'
 import { readLS } from './storage'
+import { ensureArchiveProjection } from './archiveProjection'
 
 /**
  * Holt das gesamte Archiv aus LocalStorage.
  */
 function getArchive(): TArchiveEntry[] {
+  ensureArchiveProjection()
   return readLS<TArchiveEntry[]>('mpathy:archive:v1') || []
 }
 
@@ -38,19 +40,19 @@ export function getRecentChats(limit = 13): {
   const grouped = groupByChat(archive)
   const chats = Object.keys(grouped).map((serial) => {
     const msgs = grouped[Number(serial)]
-    const first = msgs[0]?.timestamp ?? ''
-    const last = msgs[msgs.length - 1]?.timestamp ?? ''
+    const ordered = msgs.sort(
+      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+    )
+    const first = ordered[0]?.timestamp ?? ''
+    const last = ordered[ordered.length - 1]?.timestamp ?? ''
     return {
       chat_serial: Number(serial),
       first_timestamp: first,
       last_timestamp: last,
-      messages: msgs.sort(
-        (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
-      ),
+      messages: ordered,
     }
   })
 
-  // nach letztem Timestamp sortieren → neueste zuerst
   const sorted = chats.sort(
     (a, b) => new Date(b.last_timestamp).getTime() - new Date(a.last_timestamp).getTime(),
   )
