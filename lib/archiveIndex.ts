@@ -1,17 +1,17 @@
 // lib/archiveIndex.ts
 // GPTM-Galaxy+ · m-pathy Archive + Verification System v5
 // Archive Index & Retrieval – MEFL conform
+// READ-ONLY · derived exclusively from Triketon projection
 
 import { TArchiveEntry } from './types'
-import { readLS } from './storage'
-import { ensureArchiveProjection } from './archiveProjection'
+import { projectArchiveFromTriketon } from './archiveProjection'
 
 /**
- * Holt das gesamte Archiv aus LocalStorage.
+ * Holt das gesamte Archiv
+ * (pure in-memory projection from Triketon ledger)
  */
 function getArchive(): TArchiveEntry[] {
-  ensureArchiveProjection()
-  return readLS<TArchiveEntry[]>('mpathy:archive:v1') || []
+  return projectArchiveFromTriketon()
 }
 
 /**
@@ -26,7 +26,7 @@ function groupByChat(entries: TArchiveEntry[]): Record<number, TArchiveEntry[]> 
 }
 
 /**
- * Erzeugt einen zeitbasierten Index der letzten 13 Chats.
+ * Erzeugt einen zeitbasierten Index der letzten Chats.
  */
 export function getRecentChats(limit = 13): {
   chat_serial: number
@@ -38,24 +38,28 @@ export function getRecentChats(limit = 13): {
   if (archive.length === 0) return []
 
   const grouped = groupByChat(archive)
+
   const chats = Object.keys(grouped).map((serial) => {
     const msgs = grouped[Number(serial)]
     const ordered = msgs.sort(
-      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+      (a, b) =>
+        new Date(a.timestamp).getTime() -
+        new Date(b.timestamp).getTime(),
     )
-    const first = ordered[0]?.timestamp ?? ''
-    const last = ordered[ordered.length - 1]?.timestamp ?? ''
+
     return {
       chat_serial: Number(serial),
-      first_timestamp: first,
-      last_timestamp: last,
+      first_timestamp: ordered[0]?.timestamp ?? '',
+      last_timestamp: ordered[ordered.length - 1]?.timestamp ?? '',
       messages: ordered,
     }
   })
 
-  const sorted = chats.sort(
-    (a, b) => new Date(b.last_timestamp).getTime() - new Date(a.last_timestamp).getTime(),
-  )
-
-  return sorted.slice(0, limit)
+  return chats
+    .sort(
+      (a, b) =>
+        new Date(b.last_timestamp).getTime() -
+        new Date(a.last_timestamp).getTime(),
+    )
+    .slice(0, limit)
 }
