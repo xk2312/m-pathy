@@ -7,7 +7,7 @@ import { extractTopKeywords } from './keywordExtract'
 import type { TArchiveEntry } from './types'
 
 export interface ArchivChat {
-  chat_id: string
+  chat_id: number
   entries: TArchiveEntry[]
   first_timestamp: string
   last_timestamp: string
@@ -34,18 +34,18 @@ export function buildArchivChatsFromTriketon(): ArchivChat[] {
     liveMessages.length > 0 ? liveMessages[liveMessages.length - 1]?.chain_id : null
 
   // Anchors nach chain_id gruppieren
-  const grouped = new Map<string, TArchiveEntry[]>()
+ const grouped = new Map<number, TArchiveEntry[]>()
 
-  for (const a of anchors) {
-    if (!a.origin_chat) continue
-    const chainId = String(a.origin_chat)
+for (const a of anchors) {
+  if (typeof a.origin_chat !== 'number') continue
+  const chainId = a.origin_chat
 
-    // aktiven Chat bewusst ausschließen
-    if (activeChainId && String(activeChainId) === chainId) continue
+  if (activeChainId && Number(activeChainId) === chainId) continue
 
-    if (!grouped.has(chainId)) grouped.set(chainId, [])
-    grouped.get(chainId)!.push(a)
-  }
+  if (!grouped.has(chainId)) grouped.set(chainId, [])
+  grouped.get(chainId)!.push(a)
+}
+
 
   const chats: ArchivChat[] = []
 
