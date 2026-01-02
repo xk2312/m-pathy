@@ -1,16 +1,15 @@
-// app/layout.tsx  — neutral, ohne Theme/Prose
-import "./global.css";
+// app/layout.tsx — neutral, ohne Theme/Prose
+import "./global.css"
 // ❌ keine globalen Prose-Styles hier importieren
 
-import React from "react";
-import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
-import Providers from "./providers";
-import LangAttrUpdater from "./components/LangAttrUpdater";
-import ArchiveTrigger from "./components/archive/ArchiveTrigger";
+import React from "react"
+import type { Metadata, Viewport } from "next"
+import { Inter } from "next/font/google"
+import Providers from "./providers"
+import LangAttrUpdater from "./components/LangAttrUpdater"
+import ArchiveInit from "./components/system/ArchiveInit"
 
-
-const inter = Inter({ subsets: ["latin"], display: "swap" });
+const inter = Inter({ subsets: ["latin"], display: "swap" })
 
 export const metadata: Metadata = {
   title: "m-pathy – resonant creation",
@@ -18,24 +17,24 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.png",
   },
-};
+}
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
   interactiveWidget: "resizes-visual",
-};
+}
 
 // ⭐ EINZIGE Theme-Schaltstelle für alle 13 Orb-Designs
-const ORB_THEME = "nexus-pearl";
+const ORB_THEME = "nexus-pearl"
 // Alternativen:
 // "breath-of-light", "deep-current-pearl", "chronos-gate",
 // "quantum-drop", "event-horizon-dot", "warm-pulse-orb",
 // "lattice-smoothpoint", "zero-noise-node", "nexus-pearl",
 // "gaia-whisper-dot", "gemini-zero-flux", "silent-sun"
 
-type RootLayoutProps = Readonly<{ children: React.ReactNode }>;
+type RootLayoutProps = Readonly<{ children: React.ReactNode }>
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
@@ -53,12 +52,19 @@ export default function RootLayout({ children }: RootLayoutProps) {
           padding: 0,
         }}
       >
+        {/* 🌍 Sprache & Attribute */}
         <LangAttrUpdater />
-        <Providers>{children}</Providers>
-        <ArchiveTrigger />
 
+        {/* 🔒 SYSTEMINIT: Triketon → Archive (deterministisch, immer) */}
+        <ArchiveInit />
+
+        {/* 🧠 App-Kontext */}
+        <Providers>{children}</Providers>
+
+        {/* 🪟 Overlays */}
         <div id="overlay-root" />
 
+        {/* 📱 Safe-Area */}
         <div
           aria-hidden="true"
           style={{
@@ -71,5 +77,5 @@ export default function RootLayout({ children }: RootLayoutProps) {
         />
       </body>
     </html>
-  );
+  )
 }
