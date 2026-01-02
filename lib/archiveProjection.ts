@@ -20,7 +20,7 @@ export interface ArchivChat {
 
 type TriketonAnchor = {
   id: string
-  role: 'user' | 'assistant'
+  role: 'user' | 'assistant' | 'system'
   content: string
   timestamp: string
   truth_hash: string
@@ -31,6 +31,11 @@ type TriketonAnchor = {
 
 const TRIKETON_KEY = 'mpathy:triketon:v1'
 const ARCHIVE_KEY = 'mpathy:archive:v1'
+
+function getCurrentLang(): string {
+  if (typeof window === 'undefined') return 'en'
+  return window.localStorage.getItem('langLast') || 'en'
+}
 
 function hashChainIdToNumber(input: string): number {
   let h = 2166136261
@@ -44,8 +49,7 @@ function hashChainIdToNumber(input: string): number {
 function deriveOriginChat(a: TriketonAnchor): number {
   if (typeof a.origin_chat === 'number' && Number.isFinite(a.origin_chat)) return a.origin_chat
   if (typeof a.chain_id === 'number' && Number.isFinite(a.chain_id)) return a.chain_id
-  if (typeof a.chain_id === 'string' && a.chain_id.length > 0)
-    return hashChainIdToNumber(a.chain_id)
+  if (typeof a.chain_id === 'string' && a.chain_id.length > 0) return hashChainIdToNumber(a.chain_id)
   return 0
 }
 
@@ -74,9 +78,7 @@ function anchorsToArchiveEntries(anchors: TriketonAnchor[]): TArchiveEntry[] {
     })
   }
 
-  return entries.sort(
-    (x, y) => new Date(x.timestamp).getTime() - new Date(y.timestamp).getTime(),
-  )
+  return entries.sort((x, y) => new Date(x.timestamp).getTime() - new Date(y.timestamp).getTime())
 }
 
 /**
@@ -84,6 +86,8 @@ function anchorsToArchiveEntries(anchors: TriketonAnchor[]): TArchiveEntry[] {
  * mpathy:archive:v1 = Chat-Level Anzeige-Vorlage
  */
 export function syncArchiveFromTriketon(): ArchivChat[] {
+  const lang = getCurrentLang()
+
   const raw = readLS<unknown>(TRIKETON_KEY)
   const anchors: TriketonAnchor[] = Array.isArray(raw) ? (raw as TriketonAnchor[]) : []
 
@@ -102,24 +106,22 @@ export function syncArchiveFromTriketon(): ArchivChat[] {
   const chats: ArchivChat[] = []
 
   for (const [chatId, entries] of grouped.entries()) {
-    const ordered = entries.sort(
-      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
-    )
+    const ordered = entries
+      .filter((e) => e.role === 'user' || e.role === 'assistant')
+      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+
     if (ordered.length === 0) continue
 
     chats.push({
       chat_id: chatId,
       first_timestamp: ordered[0].timestamp,
       last_timestamp: ordered[ordered.length - 1].timestamp,
-      keywords: extractTopKeywords(ordered).slice(0, 7),
-      entries: ordered
-  .filter((e) => e.role === 'user' || e.role === 'assistant')
-  .map((e) => ({
-    id: e.id,
-    role: e.role as 'user' | 'assistant',
-    timestamp: e.timestamp,
-  }))
-,
+      keywords: extractTopKeywords(ordered, 7, lang),
+      entries: ordered.map((e) => ({
+        id: e.id,
+        role: e.role as 'user' | 'assistant',
+        timestamp: e.timestamp,
+      })),
     })
   }
 
@@ -133,7 +135,6 @@ export function syncArchiveFromTriketon(): ArchivChat[] {
 
 /**
  * Backward-compatible read helper
- * (used by Step 08.1 adapter)
  */
 export function buildArchivChatsFromTriketon(): ArchivChat[] {
   return readLS<ArchivChat[]>(ARCHIVE_KEY) || []
