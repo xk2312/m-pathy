@@ -1,4 +1,3 @@
-// AFTER
 // lib/archiveProjection.ts
 // GPTM-Galaxy+ · Archive Projection v1
 // Deterministic, persistent archive sync from Triketon ledger (MEFL compliant)
@@ -42,7 +41,8 @@ function hashChainIdToNumber(input: string): number {
 function deriveOriginChat(a: TriketonAnchor): number {
   if (typeof a.origin_chat === 'number' && Number.isFinite(a.origin_chat)) return a.origin_chat
   if (typeof a.chain_id === 'number' && Number.isFinite(a.chain_id)) return a.chain_id
-  if (typeof a.chain_id === 'string' && a.chain_id.length > 0) return hashChainIdToNumber(a.chain_id)
+  if (typeof a.chain_id === 'string' && a.chain_id.length > 0)
+    return hashChainIdToNumber(a.chain_id)
   return 0
 }
 
@@ -56,9 +56,12 @@ function anchorsToArchiveEntries(anchors: TriketonAnchor[]): TArchiveEntry[] {
     if (typeof a.timestamp !== 'string') continue
     if (typeof a.truth_hash !== 'string') continue
 
+    const origin_chat = deriveOriginChat(a)
+    if (!Number.isFinite(origin_chat) || origin_chat === 0) continue
+
     entries.push({
       id: a.id,
-      origin_chat: deriveOriginChat(a),
+      origin_chat,
       role: a.role,
       content: a.content,
       timestamp: a.timestamp,
@@ -68,26 +71,32 @@ function anchorsToArchiveEntries(anchors: TriketonAnchor[]): TArchiveEntry[] {
     })
   }
 
-  return entries.sort((x, y) => new Date(x.timestamp).getTime() - new Date(y.timestamp).getTime())
+  return entries.sort(
+    (x, y) => new Date(x.timestamp).getTime() - new Date(y.timestamp).getTime(),
+  )
 }
 
 /**
- * Persistenter Spiegel: mpathy:archive:v1 = deterministische Projektion aus Triketon.
- * Format: TArchiveEntry[] (damit Search/Selection/Index stabil arbeiten können)
+ * Persistenter Spiegel:
+ * mpathy:archive:v1 = deterministische Projektion aus Triketon
+ * Format: TArchiveEntry[]
  */
 export function syncArchiveFromTriketon(): TArchiveEntry[] {
-  const anchors = (readLS<unknown>(TRIKETON_KEY) as TriketonAnchor[] | null) || []
-  const projected = anchorsToArchiveEntries(Array.isArray(anchors) ? anchors : [])
+  const raw = readLS<unknown>(TRIKETON_KEY)
+  const anchors: TriketonAnchor[] = Array.isArray(raw) ? (raw as TriketonAnchor[]) : []
+
+  const projected = anchorsToArchiveEntries(anchors)
 
   writeLS(ARCHIVE_KEY, projected)
   return projected
 }
 
 /**
- * Read-only Chat-Projektion (UI): aus dem persistierten Archiv gebaut.
+ * Read-only Chat-Projektion (UI):
+ * wird IMMER aus dem persistierten Archiv gebaut
  */
 export function buildArchivChatsFromTriketon(): ArchivChat[] {
-  const archive = syncArchiveFromTriketon()
+  const archive = readLS<TArchiveEntry[]>(ARCHIVE_KEY) || []
   if (archive.length === 0) return []
 
   const grouped = new Map<number, TArchiveEntry[]>()
@@ -97,6 +106,7 @@ export function buildArchivChatsFromTriketon(): ArchivChat[] {
   }
 
   const chats: ArchivChat[] = []
+
   for (const [chatId, entries] of grouped.entries()) {
     const ordered = entries.sort(
       (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
