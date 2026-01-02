@@ -188,8 +188,30 @@ export function extractTopKeywords(
   const courtesy = COURTESY_BY_LANG[lang] || COURTESY_BY_LANG.en
   const requests = REQUEST_TOKENS_BY_LANG[lang] || REQUEST_TOKENS_BY_LANG.en
   const decorative = DECORATIVE_ADJ_BY_LANG[lang] || DECORATIVE_ADJ_BY_LANG.en
+function isNaturalContent(text: string): boolean {
+  if (!text) return false
 
-  const text = normalize(entries.map(e => e.content).join(' '))
+  const t = text.toLowerCase()
+
+  // harte System-/Rollen-Indikatoren
+  if (t.includes('role user')) return false
+  if (t.includes('role assistant')) return false
+  if (t.includes('role system')) return false
+  if (t.startsWith('role')) return false
+
+  // strukturierte Meta-/Debug-Formate
+  if (/^\s*\{.*\}\s*$/.test(t)) return false
+  if (/^\s*\[.*\]\s*$/.test(t)) return false
+
+  return true
+}
+
+const text = normalize(
+  entries
+    .map(e => e.content)
+    .filter(isNaturalContent)
+    .join(' ')
+)
   const tokens = text.split(' ').filter(Boolean)
 
   const freq = new Map<string, number>()
