@@ -1,6 +1,6 @@
 // lib/keywordExtract.ts
 // GPTM-Galaxy+ · m-pathy Archive + Verification System
-// Keyword Extraction — Final Gate Pipeline (13 languages, deterministic, drift-free)
+// Keyword Extraction — Final Gate Pipeline (13 languages, deterministic)
 
 import { TArchiveEntry } from './types'
 
@@ -25,7 +25,7 @@ const STOPWORDS_BY_LANG: Record<string, Set<string>> = {
 }
 
 /* ============================================================
- * PRONOUNS
+ * PRONOUNS (strict)
  * ============================================================
  */
 const PRONOUNS_BY_LANG: Record<string, Set<string>> = {
@@ -45,7 +45,7 @@ const PRONOUNS_BY_LANG: Record<string, Set<string>> = {
 }
 
 /* ============================================================
- * ROLE / SYSTEM TOKENS
+ * ROLE / SYSTEM TOKENS (13 languages)
  * ============================================================
  */
 const ROLE_TOKENS_BY_LANG: Record<string, Set<string>> = {
@@ -65,7 +65,7 @@ const ROLE_TOKENS_BY_LANG: Record<string, Set<string>> = {
 }
 
 /* ============================================================
- * COURTESY / SMALLTALK TOKENS
+ * COURTESY / SMALLTALK (13 languages)
  * ============================================================
  */
 const COURTESY_BY_LANG: Record<string, Set<string>> = {
@@ -85,6 +85,47 @@ const COURTESY_BY_LANG: Record<string, Set<string>> = {
 }
 
 /* ============================================================
+ * REQUEST / INTENT TOKENS (13 languages)
+ * (filters “gib mir”, “antworte”, “zeige”, etc.)
+ * ============================================================
+ */
+const REQUEST_TOKENS_BY_LANG: Record<string, Set<string>> = {
+  en: new Set(['give','tell','make','list','table','show','answer']),
+  de: new Set(['gib','sag','mach','liste','tabelle','zeige','antworte','antwort']),
+  fr: new Set(['donne','dis','fais','liste','tableau','montre','réponds','répondre','reponds','repondre']),
+  es: new Set(['da','dime','haz','lista','tabla','muestra','responde','responder']),
+  it: new Set(['dai','dimmi','fai','lista','tabella','mostra','rispondi','rispondere']),
+  pt: new Set(['dê','da','diga','faça','faca','lista','tabela','mostre','responda','responder']),
+  nl: new Set(['geef','zeg','maak','lijst','tabel','toon','antwoord','beantwoord']),
+  ru: new Set(['дай','скажи','сделай','список','таблица','покажи','ответ','ответь']),
+  zh: new Set(['给','告诉','做','列表','表格','显示','回答']),
+  ja: new Set(['ください','言って','作って','リスト','表','表示','答え','答えて']),
+  ko: new Set(['줘','말해','만들어','목록','표','보여','답','답해']),
+  ar: new Set(['اعط','أعط','قل','اصنع','قائمة','جدول','اعرض','أعرض','اجب','أجب']),
+  hi: new Set(['दो','बताओ','बनाओ','सूची','तालिका','दिखाओ','जवाब','उत्तर']),
+}
+
+/* ============================================================
+ * DECORATIVE ADJECTIVES
+ * ============================================================
+ */
+const DECORATIVE_ADJ_BY_LANG: Record<string, Set<string>> = {
+  en: new Set(['important','good','bad','real','true','big','small','great','nice','many','most']),
+  de: new Set(['wichtig','gut','schlecht','echt','wahr','groß','klein','viele','meiste']),
+  fr: new Set(['important','bon','mauvais','vrai','grand','petit','beaucoup']),
+  es: new Set(['importante','bueno','malo','real','verdadero','grande','muchos']),
+  it: new Set(['importante','buono','cattivo','vero','grande','molti']),
+  pt: new Set(['importante','bom','mau','verdadeiro','grande','muitos']),
+  nl: new Set(['belangrijk','goed','slecht','echt','waar','groot','veel']),
+  ru: new Set(['важный','хороший','плохой','настоящий','большой','много']),
+  zh: new Set(['重要','真正','伟大','许多']),
+  ja: new Set(['重要','本当','大きい','多く']),
+  ko: new Set(['중요한','진짜','큰','많은']),
+  ar: new Set(['مهم','جيد','سيئ','حقيقي','كبير','كثير']),
+  hi: new Set(['महत्वपूर्ण','अच्छा','बुरा','सच्चा','बड़ा','बहुत']),
+}
+
+/* ============================================================
  * GENERIC PLACEHOLDERS
  * ============================================================
  */
@@ -99,7 +140,7 @@ const GENERIC_GLOBALS = new Set([
 ])
 
 /* ============================================================
- * META PHRASES
+ * META / UI FILTERS
  * ============================================================
  */
 const META_PHRASES = [
@@ -145,6 +186,8 @@ export function extractTopKeywords(
   const pronouns = PRONOUNS_BY_LANG[lang] || PRONOUNS_BY_LANG.en
   const roles = ROLE_TOKENS_BY_LANG[lang] || ROLE_TOKENS_BY_LANG.en
   const courtesy = COURTESY_BY_LANG[lang] || COURTESY_BY_LANG.en
+  const requests = REQUEST_TOKENS_BY_LANG[lang] || REQUEST_TOKENS_BY_LANG.en
+  const decorative = DECORATIVE_ADJ_BY_LANG[lang] || DECORATIVE_ADJ_BY_LANG.en
 
   const text = normalize(entries.map(e => e.content).join(' '))
   const tokens = text.split(' ').filter(Boolean)
@@ -156,23 +199,25 @@ export function extractTopKeywords(
     const next = tokens[i + 1] ? singularize(tokens[i + 1]) : null
     const phrase = next ? `${w} ${next}` : w
 
-    // Gate 1: meta / system / role
-    if (roles.has(w) || roles.has(next || '')) continue
+    // Gate 1: hard block roles/system (token + phrase)
+    if (roles.has(w) || (next && roles.has(next)) || roles.has(phrase)) continue
+
+    // Gate 2: meta / ids / timestamps
     if (isMeta(phrase)) continue
 
-    // Gate 2: courtesy / smalltalk (token + phrase)
-    if (
-      courtesy.has(w) ||
-      courtesy.has(next || '') ||
-      courtesy.has(phrase)
-    ) continue
+    // Gate 3: courtesy/smalltalk (token + phrase)
+    if (courtesy.has(w) || (next && courtesy.has(next)) || courtesy.has(phrase)) continue
 
-    // Gate 3: pronoun-start phrase
+    // Gate 4: request/intent (token + phrase) — removes “gib mir”, “antworte”, “zeige”, etc.
+    if (requests.has(w) || (next && requests.has(next)) || requests.has(phrase)) continue
+
+    // Gate 5: pronoun-leading (phrase start)
     if (pronouns.has(w)) continue
 
-    // Existing semantic gates
+    // Gate 6: stopwords / generics / decorative
     if (stopwords.has(w)) continue
     if (GENERIC_GLOBALS.has(w)) continue
+    if (decorative.has(w)) continue
 
     freq.set(phrase, (freq.get(phrase) || 0) + 1)
   }
