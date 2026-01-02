@@ -1,65 +1,28 @@
 // lib/archiveIndex.ts
 // GPTM-Galaxy+ · m-pathy Archive + Verification System v5
-// Archive Index & Retrieval – MEFL conform
-// READ-ONLY · derived exclusively from Triketon projection
+// Archive Index & Retrieval – Projection-only, MEFL conform
 
-import { TArchiveEntry } from './types'
-import { projectArchiveFromTriketon } from './archiveProjection'
-
-/**
- * Holt das gesamte Archiv
- * (pure in-memory projection from Triketon ledger)
- */
-function getArchive(): TArchiveEntry[] {
-  return projectArchiveFromTriketon()
-}
+import type { TArchiveEntry } from './types'
+import { buildArchivChatsFromTriketon } from './archiveProjection'
 
 /**
- * Gruppiert Archiv-Einträge nach Chat-Serial.
- */
-function groupByChat(entries: TArchiveEntry[]): Record<number, TArchiveEntry[]> {
-  return entries.reduce((acc, e) => {
-    if (!acc[e.origin_chat]) acc[e.origin_chat] = []
-    acc[e.origin_chat].push(e)
-    return acc
-  }, {} as Record<number, TArchiveEntry[]>)
-}
-
-/**
- * Erzeugt einen zeitbasierten Index der letzten Chats.
+ * Liefert die letzten archivierten Chats (read-only).
  */
 export function getRecentChats(limit = 13): {
-  chat_serial: number
+  chat_serial: string
   first_timestamp: string
   last_timestamp: string
   messages: TArchiveEntry[]
+  keywords: string[]
 }[] {
-  const archive = getArchive()
-  if (archive.length === 0) return []
+  const chats = buildArchivChatsFromTriketon()
+  if (chats.length === 0) return []
 
-  const grouped = groupByChat(archive)
-
-  const chats = Object.keys(grouped).map((serial) => {
-    const msgs = grouped[Number(serial)]
-    const ordered = msgs.sort(
-      (a, b) =>
-        new Date(a.timestamp).getTime() -
-        new Date(b.timestamp).getTime(),
-    )
-
-    return {
-      chat_serial: Number(serial),
-      first_timestamp: ordered[0]?.timestamp ?? '',
-      last_timestamp: ordered[ordered.length - 1]?.timestamp ?? '',
-      messages: ordered,
-    }
-  })
-
-  return chats
-    .sort(
-      (a, b) =>
-        new Date(b.last_timestamp).getTime() -
-        new Date(a.last_timestamp).getTime(),
-    )
-    .slice(0, limit)
+  return chats.slice(0, limit).map((c) => ({
+    chat_serial: c.chat_id,
+    first_timestamp: c.first_timestamp,
+    last_timestamp: c.last_timestamp,
+    messages: c.entries,
+    keywords: c.keywords,
+  }))
 }
