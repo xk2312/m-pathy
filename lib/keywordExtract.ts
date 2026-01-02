@@ -1,29 +1,16 @@
 // lib/keywordExtract.ts
 // GPTM-Galaxy+ · m-pathy Archive + Verification System
-// Keyword Extraction — Gate Pipeline v1.2 (13 languages, fully harmonized)
+// Keyword Extraction — Final Gate Pipeline (13 languages, deterministic)
 
 import { TArchiveEntry } from './types'
 
 /* ============================================================
- * STOPWORDS (harte Funktionswörter, vollständig je Sprache)
+ * STOPWORDS
  * ============================================================
  */
 const STOPWORDS_BY_LANG: Record<string, Set<string>> = {
-  en: new Set([
-    'i','you','he','she','it','we','they','me','him','her','us','them',
-    'a','an','the','this','that','these','those',
-    'and','or','but','for','to','of','in','on','with','by','from','as','at','into','about',
-    'is','are','was','were','be','been','being','have','has','had','do','does','did',
-    'can','could','should','would','may','might','must','will','shall',
-    'who','what','where','when','why','how',
-  ]),
-  de: new Set([
-    'ich','du','er','sie','es','wir','ihr','mich','dich','ihn','uns','euch',
-    'der','die','das','den','dem','des','ein','eine','einen','einem','eines',
-    'und','oder','aber','für','zu','von','mit','auf','in','an','bei','über',
-    'ist','sind','war','waren','sein','bin','bist',
-    'wer','was','wann','warum','wie','wo',
-  ]),
+  en: new Set(['i','you','he','she','it','we','they','me','him','her','us','them','a','an','the','this','that','these','those','and','or','but','for','to','of','in','on','with','by','from','as','at','into','about','is','are','was','were','be','been','being','have','has','had','do','does','did','can','could','should','would','may','might','must','will','shall','who','what','where','when','why','how']),
+  de: new Set(['ich','du','er','sie','es','wir','ihr','mich','dich','ihn','uns','euch','der','die','das','den','dem','des','ein','eine','einen','einem','eines','und','oder','aber','für','zu','von','mit','auf','in','an','bei','über','ist','sind','war','waren','sein','bin','bist','wer','was','wann','warum','wie','wo']),
   fr: new Set(['je','tu','il','elle','nous','vous','ils','elles','le','la','les','un','une','des','et','ou','pour','de','dans','avec','est','être','qui','quoi','quand','comment']),
   es: new Set(['yo','tú','el','ella','nosotros','vosotros','ellos','ellas','el','la','los','las','un','una','y','o','para','de','con','es','ser','quién','qué','cómo']),
   it: new Set(['io','tu','lui','lei','noi','voi','loro','il','la','lo','i','gli','le','un','una','e','o','per','di','con','è','essere','chi','cosa']),
@@ -38,7 +25,7 @@ const STOPWORDS_BY_LANG: Record<string, Set<string>> = {
 }
 
 /* ============================================================
- * DECORATIVE / AUSTAUSCHBARE ADJEKTIVE (vollständig je Sprache)
+ * DECORATIVE ADJECTIVES
  * ============================================================
  */
 const DECORATIVE_ADJ_BY_LANG: Record<string, Set<string>> = {
@@ -58,26 +45,32 @@ const DECORATIVE_ADJ_BY_LANG: Record<string, Set<string>> = {
 }
 
 /* ============================================================
- * GENERISCHE PLATZHALTER-NOMEN (sprachübergreifend)
+ * GENERIC PLACEHOLDERS
  * ============================================================
  */
 const GENERIC_GLOBALS = new Set([
-  // EN
   'people','person','thing','things','world','life','everything','everyone','someone','something',
-  // DE
   'menschen','mensch','ding','dinge','welt','leben','alles',
-  // FR / ES / IT / PT
   'personne','personas','persona','persone','coisa','cosas','cosa','chose','choses',
-  // RU
   'люди','человек','вещь','вещи','мир','жизнь',
-  // ZH / JA / KO
   '人','东西','世界','生活',
-  // AR
   'الناس','شخص','شيء','أشياء','العالم','الحياة',
-  // HI
   'लोग','व्यक्ति','चीज','दुनिया','जीवन',
 ])
 
+/* ============================================================
+ * META / UI FILTERS
+ * ============================================================
+ */
+const META_PHRASES = [
+  'timestamp','version','truth hash','public key','orbit context','context chat'
+]
+
+const REQUEST_TOKENS = new Set([
+  'gib','sag','mach','liste','tabelle','zeige','antworte',
+  'give','tell','make','list','table','show','answer',
+  'please','bitte'
+])
 
 /* ============================================================
  * Utilities
@@ -87,10 +80,7 @@ function normalize(text: string): string {
   return text
     .normalize('NFKC')
     .toLowerCase()
-    .replace(
-      /[^a-z\u00C0-\u024F\u0400-\u04FF\u0600-\u06FF\u0900-\u097F\u4E00-\u9FFFぁ-んァ-ン一-龥0-9\s-]/gi,
-      ' ',
-    )
+    .replace(/[^a-z\u00C0-\u024F\u0400-\u04FF\u0600-\u06FF\u0900-\u097F\u4E00-\u9FFFぁ-んァ-ン一-龥0-9\s-]/gi, ' ')
     .replace(/\s+/g, ' ')
     .trim()
 }
@@ -101,29 +91,11 @@ function singularize(token: string): string {
   return token
 }
 
-function isNumeric(token: string): boolean {
-  return /^\d+$/.test(token)
-}
-
-/* ============================================================
- * Gate checks
- * ============================================================
- */
-function passesPhraseGates(
-  phrase: string,
-  stopwords: Set<string>,
-  decorative: Set<string>,
-): boolean {
-  const parts = phrase.split(' ')
-  if (parts.some((p) => stopwords.has(p))) return false
-  if (parts.some(isNumeric)) return false
-  if (decorative.has(parts[0])) return false
-  return true
-}
-
-function passesSingleTokenGates(token: string): boolean {
-  if (GENERIC_GLOBALS.has(token)) return false
-  return true
+function isMeta(candidate: string): boolean {
+  if (META_PHRASES.some(p => candidate.includes(p))) return true
+  if (/\d{4}-\d{2}-\d{2}/.test(candidate)) return true
+  if (/[a-f0-9]{16,}/.test(candidate)) return true
+  return false
 }
 
 /* ============================================================
@@ -138,56 +110,38 @@ export function extractTopKeywords(
   const stopwords = STOPWORDS_BY_LANG[lang] || STOPWORDS_BY_LANG.en
   const decorative = DECORATIVE_ADJ_BY_LANG[lang] || DECORATIVE_ADJ_BY_LANG.en
 
-  const text = normalize(entries.map((e) => e.content).join(' '))
+  const text = normalize(entries.map(e => e.content).join(' '))
   const tokens = text.split(' ').filter(Boolean)
 
-  const candidates: string[] = []
+  const freq = new Map<string, number>()
 
   for (let i = 0; i < tokens.length; i++) {
     const w = singularize(tokens[i])
     if (stopwords.has(w)) continue
-    if (isNumeric(w)) continue
+    if (REQUEST_TOKENS.has(w)) continue
+    if (GENERIC_GLOBALS.has(w)) continue
 
-    const next = tokens[i + 1]
-    if (next) {
-      const n = singularize(next)
-      const phrase = `${w} ${n}`
-      if (passesPhraseGates(phrase, stopwords, decorative)) {
-        candidates.push(phrase)
-      }
-    }
+    const phrase = tokens[i + 1]
+      ? `${w} ${singularize(tokens[i + 1])}`
+      : w
 
-    if (passesSingleTokenGates(w)) {
-      candidates.push(w)
-    }
-  }
+    if (isMeta(phrase)) continue
+    if (decorative.has(w)) continue
 
-  const freq = new Map<string, number>()
-  for (const c of candidates) {
-    freq.set(c, (freq.get(c) || 0) + 1)
+    freq.set(phrase, (freq.get(phrase) || 0) + 1)
   }
 
   return [...freq.entries()]
-    .sort((a, b) => {
-      const lp = b[0].split(' ').length - a[0].split(' ').length
-      if (lp !== 0) return lp
-      const lf = b[1] - a[1]
-      if (lf !== 0) return lf
-      return a[0].localeCompare(b[0])
-    })
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
     .slice(0, topN)
     .map(([k]) => k)
 }
 
-/* ============================================================
- * Chat-level helper
- * ============================================================
- */
 export function getChatKeywordClusters(
   groupedChats: { chat_serial: number; messages: TArchiveEntry[] }[],
   lang = 'en',
-): { chat_serial: number; keywords: string[] }[] {
-  return groupedChats.map((chat) => ({
+) {
+  return groupedChats.map(chat => ({
     chat_serial: chat.chat_serial,
     keywords: extractTopKeywords(chat.messages, 7, lang),
   }))
