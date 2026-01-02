@@ -4,10 +4,51 @@
 
 import type { TArchiveEntry } from './types'
 import type { ArchivChat } from './archiveProjection'
-import { syncArchiveFromTriketon } from './archiveProjection'
+import {
+  buildArchivChatsFromTriketon,
+  syncArchiveFromTriketon,
+} from './archiveProjection'
 import { readLS } from './storage'
 
 const ARCHIVE_KEY = 'mpathy:archive:v1'
+
+function isArchivChat(x: any): x is ArchivChat {
+  return (
+    x &&
+    typeof x === 'object' &&
+    typeof x.chat_id === 'number' &&
+    Array.isArray(x.entries) &&
+    typeof x.first_timestamp === 'string' &&
+    typeof x.last_timestamp === 'string' &&
+    Array.isArray(x.keywords)
+  )
+}
+
+function isArchiveEntry(x: any): x is TArchiveEntry {
+  return (
+    x &&
+    typeof x === 'object' &&
+    typeof x.id === 'string' &&
+    typeof x.origin_chat === 'number' &&
+    typeof x.role === 'string' &&
+    typeof x.content === 'string' &&
+    typeof x.timestamp === 'string'
+  )
+}
+
+function readArchiveChats(): ArchivChat[] {
+  const raw = readLS<unknown>(ARCHIVE_KEY)
+
+  if (Array.isArray(raw) && raw.length > 0 && isArchivChat(raw[0])) {
+    return raw as ArchivChat[]
+  }
+
+  if (Array.isArray(raw) && raw.length > 0 && isArchiveEntry(raw[0])) {
+    return buildArchivChatsFromTriketon()
+  }
+
+  return []
+}
 
 /**
  * Liefert die letzten archivierten Chats (read-only).
@@ -19,10 +60,9 @@ export function getRecentChats(limit = 13): {
   messages: TArchiveEntry[]
   keywords: string[]
 }[] {
-  // 🔒 sicherstellen, dass Archiv aus Triketon existiert
   syncArchiveFromTriketon()
 
-  const chats = readLS<ArchivChat[]>(ARCHIVE_KEY) || []
+  const chats = readArchiveChats()
   if (chats.length === 0) return []
 
   return chats.slice(0, limit).map((c: ArchivChat) => ({
@@ -33,3 +73,4 @@ export function getRecentChats(limit = 13): {
     keywords: c.keywords,
   }))
 }
+
