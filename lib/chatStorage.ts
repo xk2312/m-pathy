@@ -383,12 +383,17 @@ const chainId =
     ? entry.chain_id
     : `chat_${entry.id.split("-")[0]}`;
 
+const lastInSameChain = [...ledger]
+  .reverse()
+  .find((e) => e.chain_id === chainId);
+
 const next: TriketonLedgerEntryV1 = {
   ...entry,
   chain_id: chainId,
   public_key: deviceKey,
-  chain_prev: ledger[ledger.length - 1]?.truth_hash,
+  chain_prev: lastInSameChain?.truth_hash,
 };
+
 
 
     // 4️⃣ APPEND (once)
