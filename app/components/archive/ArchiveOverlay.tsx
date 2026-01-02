@@ -23,16 +23,15 @@ export default function ArchiveOverlay() {
 
   useEffect(() => {
     const base = getRecentChats(13)
-    const clusters = getChatKeywordClusters(base, lang).map((c) => {
-      const meta = base.find((b) => b.chat_serial === c.chat_serial)
-      return {
-        chat_serial: c.chat_serial,
-        first_timestamp: meta?.first_timestamp ?? '',
-        last_timestamp: meta?.last_timestamp ?? '',
-        keywords: c.keywords,
-      }
-    })
-    setChats(clusters)
+setChats(
+  base.map((c) => ({
+    chat_serial: c.chat_serial,
+    first_timestamp: c.first_timestamp,
+    last_timestamp: c.last_timestamp,
+    keywords: c.keywords,
+  })),
+)
+
   }, [lang])
 
   return (

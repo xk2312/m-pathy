@@ -6,13 +6,18 @@
 
 import React, { useEffect, useState } from 'react'
 import { getRecentChats } from '@/lib/archiveIndex'
-import { getChatKeywordClusters } from '@/lib/keywordExtract'
-import type { TArchiveEntry } from '@/lib/types'
 import { useLanguage } from '@/app/providers/LanguageProvider'
 import { i18nArchive } from '@/lib/i18n.archive'
 import { Input } from '@/components/ui/Input'
 import { Card, CardContent } from '@/components/ui/Card'
 import { throttle, limitNodes } from '@/lib/performance'
+
+type MessageRef = {
+  id: string
+  role: 'user' | 'assistant'
+  timestamp: string
+  chat_serial: number
+}
 
 export default function ArchiveSearch() {
   const { lang } = useLanguage()
@@ -21,18 +26,23 @@ export default function ArchiveSearch() {
     i18nArchive.en.archive
 
   const [query, setQuery] = useState('')
-  const [results, setResults] = useState<TArchiveEntry[]>([])
+  const [results, setResults] = useState<MessageRef[]>([])
   const [defaultView, setDefaultView] = useState<
     { chat_serial: number; keywords: string[] }[]
   >([])
 
-  // Default view: keyword clusters from recent chats
+  // Default view: recent chats with persisted keywords
   useEffect(() => {
     const base = getRecentChats(13)
-    setDefaultView(getChatKeywordClusters(base, lang))
+    setDefaultView(
+      base.map((c) => ({
+        chat_serial: c.chat_serial,
+        keywords: c.keywords,
+      })),
+    )
   }, [lang])
 
-  // Search view: filter messages from Triketon-projected chats
+  // Search view: filter message references (no content access)
   useEffect(() => {
     const runSearch = throttle(() => {
       if (query.length < 3) {
@@ -44,9 +54,14 @@ export default function ArchiveSearch() {
       const q = query.toLowerCase()
 
       const matches = chats.flatMap((chat) =>
-        chat.messages.filter((m) =>
-          m.content.toLowerCase().includes(q),
-        ),
+        (chat.messages ?? [])
+          .filter((m) => m.id.toLowerCase().includes(q))
+          .map((m) => ({
+            id: m.id,
+            role: m.role,
+            timestamp: m.timestamp,
+            chat_serial: chat.chat_serial,
+          })),
       )
 
       setResults(limitNodes(matches, 100))
@@ -109,10 +124,12 @@ export default function ArchiveSearch() {
             <Card key={m.id} className="bg-surface1 border-border-soft">
               <CardContent className="p-3 flex flex-col gap-1">
                 <div className="text-xs text-secondary">
-                  Chat {m.origin_chat} ·{' '}
+                  Chat {m.chat_serial} ·{' '}
                   {new Date(m.timestamp).toLocaleString()}
                 </div>
-                <div className="text-sm">{m.content}</div>
+                <div className="text-sm text-muted">
+                  {t.messageReference}
+                </div>
               </CardContent>
             </Card>
           ))}

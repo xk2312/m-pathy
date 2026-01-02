@@ -1,107 +1,144 @@
-// components/archive/ArchiveSelection.tsx
+// components/archive/ArchiveSearch.tsx
 // GPTM-Galaxy+ · m-pathy Archive + Verification System v5
-// Checkbox-Selection – Chat + Message Level
+// Search & Toggle – projection-only, read-only (MEFL)
 
 'use client'
 
 import React, { useEffect, useState } from 'react'
 import { getRecentChats } from '@/lib/archiveIndex'
-import { getChatKeywordClusters } from '@/lib/keywordExtract'
 import { useLanguage } from '@/app/providers/LanguageProvider'
 import { i18nArchive } from '@/lib/i18n.archive'
+import { Input } from '@/components/ui/Input'
 import { Card, CardContent } from '@/components/ui/Card'
+import { throttle, limitNodes } from '@/lib/performance'
 
-type ChatItem = {
+type MessageRef = {
+  id: string
+  role: 'user' | 'assistant'
+  timestamp: string
   chat_serial: number
-  first_timestamp: string
-  last_timestamp: string
-  keywords: string[]
-  messages?: { id: string; role: string; content: string; timestamp: string }[]
 }
 
-export default function ArchiveSelection() {
+export default function ArchiveSearch() {
   const { lang } = useLanguage()
-  const t = i18nArchive[lang as keyof typeof i18nArchive]?.archive || i18nArchive.en.archive
+  const t =
+    i18nArchive[lang as keyof typeof i18nArchive]?.archive ||
+    i18nArchive.en.archive
 
-  const [chats, setChats] = useState<ChatItem[]>([])
-  const [selectedChats, setSelectedChats] = useState<number[]>([])
-  const [selectedMessages, setSelectedMessages] = useState<string[]>([])
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState<MessageRef[]>([])
+  const [defaultView, setDefaultView] = useState<
+    { chat_serial: number; keywords: string[] }[]
+  >([])
 
+  // Default view: recent chats with persisted keywords
   useEffect(() => {
     const base = getRecentChats(13)
-    const clusters = getChatKeywordClusters(base, lang).map((c) => {
-      const meta = base.find((b) => b.chat_serial === c.chat_serial)
-      return {
+    setDefaultView(
+      base.map((c) => ({
         chat_serial: c.chat_serial,
-        first_timestamp: meta?.first_timestamp ?? '',
-        last_timestamp: meta?.last_timestamp ?? '',
         keywords: c.keywords,
-      }
-    })
-    setChats(clusters)
+      })),
+    )
   }, [lang])
 
-  // Handler für Chat-Checkbox
-  const toggleChat = (serial: number) => {
-    setSelectedChats((prev) =>
-      prev.includes(serial) ? prev.filter((id) => id !== serial) : [...prev, serial],
-    )
-  }
+  // Search view: filter message refs (no content access)
+  useEffect(() => {
+    const runSearch = throttle(() => {
+      if (query.length < 3) {
+        setResults([])
+        return
+      }
 
-  // Handler für Message-Checkbox
-  const toggleMessage = (msgId: string) => {
-    setSelectedMessages((prev) =>
-      prev.includes(msgId) ? prev.filter((id) => id !== msgId) : [...prev, msgId],
-    )
-  }
+      const chats = getRecentChats(50)
+      const q = query.toLowerCase()
+
+      const matches = chats.flatMap((chat) =>
+        (chat.messages ?? [])
+          .filter((m) => m.id.toLowerCase().includes(q))
+          .map((m) => ({
+            id: m.id,
+            role: m.role,
+            timestamp: m.timestamp,
+            chat_serial: chat.chat_serial,
+          })),
+      )
+
+      setResults(limitNodes(matches, 100))
+    }, 50)
+
+    runSearch()
+  }, [query])
+
+  const visibleDefault = query.length < 3
+  const visibleResults = !visibleDefault && results.length > 0
+  const visibleNone = !visibleDefault && results.length === 0
 
   return (
-    <div className="p-4 flex flex-col gap-3 w-full h-full text-primary">
-      <h2 className="text-lg font-medium">{t.defaultHeader}</h2>
-      <div className="flex flex-col gap-2 overflow-y-auto">
-        {chats.map((chat) => {
-          const checked = selectedChats.includes(chat.chat_serial)
-          return (
-            <Card
-              key={chat.chat_serial}
-              className={`bg-surface1 border-border-soft transition-all ${
-                checked ? 'border-cyan-400' : ''
-              }`}
-            >
-              <CardContent className="p-3 flex flex-col gap-1">
-                <label className="flex items-center gap-2 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={() => toggleChat(chat.chat_serial)}
-                    className="accent-cyan-400 w-4 h-4"
-                  />
-                  <span className="text-sm text-secondary">
-                    {t.chatNumber.replace('{{chatNumber}}', String(chat.chat_serial))}
-                  </span>
-                </label>
+    <div className="p-4 flex flex-col gap-4 w-full h-full text-primary">
+      <Input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={t.searchPlaceholder}
+        className="w-full rounded-md bg-surface2 border border-border-soft text-base"
+      />
 
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {chat.keywords.map((k) => (
-                    <span
-                      key={k}
-                      className="text-xs px-2 py-1 bg-surface2 rounded-full border border-border-soft"
-                    >
-                      {k}
-                    </span>
-                  ))}
+      {visibleDefault && (
+        <div className="flex flex-col gap-3 overflow-y-auto">
+          <h2 className="text-lg font-medium">{t.defaultHeader}</h2>
+
+          {defaultView.map((c) => (
+            <Card
+              key={c.chat_serial}
+              className="bg-surface1 border-border-soft"
+            >
+              <CardContent className="p-3 flex flex-wrap gap-1">
+                <span className="text-sm text-secondary">
+                  {t.chatNumber.replace(
+                    '{{chatNumber}}',
+                    String(c.chat_serial),
+                  )}
+                </span>
+
+                {c.keywords.map((k) => (
+                  <span
+                    key={k}
+                    className="text-xs px-2 py-1 bg-surface2 rounded-full border border-border-soft"
+                  >
+                    {k}
+                  </span>
+                ))}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {visibleResults && (
+        <div className="flex flex-col gap-3 overflow-y-auto">
+          <h2 className="text-lg font-medium">
+            {results.length} results
+          </h2>
+
+          {results.map((m) => (
+            <Card key={m.id} className="bg-surface1 border-border-soft">
+              <CardContent className="p-3 flex flex-col gap-1">
+                <div className="text-xs text-secondary">
+                  Chat {m.chat_serial} ·{' '}
+                  {new Date(m.timestamp).toLocaleString()}
+                </div>
+                <div className="text-sm text-muted">
+                  {t.messageReference}
                 </div>
               </CardContent>
             </Card>
-          )
-        })}
-      </div>
+          ))}
+        </div>
+      )}
 
-      <div className="mt-4 text-sm text-secondary">
-        {selectedChats.length > 0
-          ? `${selectedChats.length} ${selectedChats.length === 1 ? 'chat' : 'chats'} selected`
-          : '—'}
-      </div>
+      {visibleNone && (
+        <div className="text-sm text-muted">{t.noResults}</div>
+      )}
     </div>
   )
 }

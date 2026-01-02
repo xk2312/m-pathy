@@ -57,9 +57,14 @@ export function getRecentChats(limit = 13): {
   chat_serial: number
   first_timestamp: string
   last_timestamp: string
-  messages: TArchiveEntry[]
+  messages: {
+    id: string
+    role: 'user' | 'assistant'
+    timestamp: string
+  }[]
   keywords: string[]
 }[] {
+
   syncArchiveFromTriketon()
 
   const chats = readArchiveChats()

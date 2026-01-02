@@ -1,6 +1,6 @@
 // lib/archiveProjection.ts
-// GPTM-Galaxy+ · Archive Projection v1
-// Deterministic, persistent archive sync from Triketon ledger (MEFL compliant)
+// GPTM-Galaxy+ · Archive Projection v2
+// Deterministic, persistent chat-level archive from Triketon ledger (MEFL compliant)
 
 import { readLS, writeLS } from './storage'
 import { extractTopKeywords } from './keywordExtract'
@@ -8,11 +8,14 @@ import type { TArchiveEntry } from './types'
 
 export interface ArchivChat {
   chat_id: number
-  entries: TArchiveEntry[]
   first_timestamp: string
   last_timestamp: string
   keywords: string[]
-  verified: true
+  entries: {
+    id: string
+    role: 'user' | 'assistant'
+    timestamp: string
+  }[]
 }
 
 type TriketonAnchor = {
@@ -78,29 +81,20 @@ function anchorsToArchiveEntries(anchors: TriketonAnchor[]): TArchiveEntry[] {
 
 /**
  * Persistenter Spiegel:
- * mpathy:archive:v1 = deterministische Projektion aus Triketon
- * Format: TArchiveEntry[]
+ * mpathy:archive:v1 = Chat-Level Anzeige-Vorlage
  */
-export function syncArchiveFromTriketon(): TArchiveEntry[] {
+export function syncArchiveFromTriketon(): ArchivChat[] {
   const raw = readLS<unknown>(TRIKETON_KEY)
   const anchors: TriketonAnchor[] = Array.isArray(raw) ? (raw as TriketonAnchor[]) : []
 
-  const projected = anchorsToArchiveEntries(anchors)
-
-  writeLS(ARCHIVE_KEY, projected)
-  return projected
-}
-
-/**
- * Read-only Chat-Projektion (UI):
- * wird IMMER aus dem persistierten Archiv gebaut
- */
-export function buildArchivChatsFromTriketon(): ArchivChat[] {
-  const archive = readLS<TArchiveEntry[]>(ARCHIVE_KEY) || []
-  if (archive.length === 0) return []
+  const flat = anchorsToArchiveEntries(anchors)
+  if (flat.length === 0) {
+    writeLS(ARCHIVE_KEY, [])
+    return []
+  }
 
   const grouped = new Map<number, TArchiveEntry[]>()
-  for (const e of archive) {
+  for (const e of flat) {
     if (!grouped.has(e.origin_chat)) grouped.set(e.origin_chat, [])
     grouped.get(e.origin_chat)!.push(e)
   }
@@ -115,15 +109,32 @@ export function buildArchivChatsFromTriketon(): ArchivChat[] {
 
     chats.push({
       chat_id: chatId,
-      entries: ordered,
       first_timestamp: ordered[0].timestamp,
       last_timestamp: ordered[ordered.length - 1].timestamp,
       keywords: extractTopKeywords(ordered).slice(0, 7),
-      verified: true,
+      entries: ordered
+  .filter((e) => e.role === 'user' || e.role === 'assistant')
+  .map((e) => ({
+    id: e.id,
+    role: e.role as 'user' | 'assistant',
+    timestamp: e.timestamp,
+  }))
+,
     })
   }
 
-  return chats.sort(
+  const orderedChats = chats.sort(
     (a, b) => new Date(b.last_timestamp).getTime() - new Date(a.last_timestamp).getTime(),
   )
+
+  writeLS(ARCHIVE_KEY, orderedChats)
+  return orderedChats
+}
+
+/**
+ * Backward-compatible read helper
+ * (used by Step 08.1 adapter)
+ */
+export function buildArchivChatsFromTriketon(): ArchivChat[] {
+  return readLS<ArchivChat[]>(ARCHIVE_KEY) || []
 }
