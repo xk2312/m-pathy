@@ -1,8 +1,8 @@
 // lib/archiveProjection.ts
 // GPTM-Galaxy+ · Archive Projection v1
-// Read-only projection from Triketon ledger (MEFL compliant)
+// Deterministic, persistent projection from Triketon ledger (MEFL compliant)
 
-import { readLS } from './storage'
+import { readLS, writeLS } from './storage'
 import { extractTopKeywords } from './keywordExtract'
 import type { TArchiveEntry } from './types'
 
@@ -16,36 +16,33 @@ export interface ArchivChat {
 }
 
 const TRIKETON_KEY = 'mpathy:triketon:v1'
-const CHAT_KEY = 'mpathy:chat:v1'
+const ARCHIVE_KEY = 'mpathy:archive:v1'
 
 /**
- * Builds archive chats purely from Triketon ledger.
- * – No writes
- * – No side effects
- * – Active chat is excluded
+ * Builds AND persists archive chats purely from Triketon ledger.
+ * – Deterministic
+ * – Idempotent
+ * – Includes active chat
+ * – No dependency on mpathy:chat:v1
  */
-export function buildArchivChatsFromTriketon(): ArchivChat[] {
+export function syncArchiveFromTriketon(): ArchivChat[] {
   const anchors = readLS<TArchiveEntry[]>(TRIKETON_KEY) || []
-  if (anchors.length === 0) return []
 
-  // aktive chain_id (laufender Chat) ermitteln
-  const liveMessages = readLS<any[]>(CHAT_KEY) || []
-  const activeChainId =
-    liveMessages.length > 0 ? liveMessages[liveMessages.length - 1]?.chain_id : null
+  if (anchors.length === 0) {
+    writeLS(ARCHIVE_KEY, [])
+    return []
+  }
 
-  // Anchors nach chain_id gruppieren
- const grouped = new Map<number, TArchiveEntry[]>()
+  const grouped = new Map<number, TArchiveEntry[]>()
 
-for (const a of anchors) {
-  if (typeof a.origin_chat !== 'number') continue
-  const chainId = a.origin_chat
+  for (const a of anchors) {
+    if (typeof a.origin_chat !== 'number') continue
 
-  if (activeChainId && Number(activeChainId) === chainId) continue
-
-  if (!grouped.has(chainId)) grouped.set(chainId, [])
-  grouped.get(chainId)!.push(a)
-}
-
+    if (!grouped.has(a.origin_chat)) {
+      grouped.set(a.origin_chat, [])
+    }
+    grouped.get(a.origin_chat)!.push(a)
+  }
 
   const chats: ArchivChat[] = []
 
@@ -56,22 +53,24 @@ for (const a of anchors) {
       (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
     )
 
-    const keywords = extractTopKeywords(ordered).slice(0, 7)
-
     chats.push({
       chat_id: chatId,
       entries: ordered,
       first_timestamp: ordered[0].timestamp,
       last_timestamp: ordered[ordered.length - 1].timestamp,
-      keywords,
+      keywords: extractTopKeywords(ordered).slice(0, 7),
       verified: true, // Ledger-implizit
     })
   }
 
-  // neueste Chats zuerst
-  return chats.sort(
+  const sorted = chats.sort(
     (a, b) =>
       new Date(b.last_timestamp).getTime() -
       new Date(a.last_timestamp).getTime(),
   )
+
+  // 🔒 Persistenter Debug- & UI-Spiegel
+  writeLS(ARCHIVE_KEY, sorted)
+
+  return sorted
 }
