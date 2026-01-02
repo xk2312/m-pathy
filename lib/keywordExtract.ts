@@ -1,6 +1,6 @@
 // lib/keywordExtract.ts
 // GPTM-Galaxy+ · m-pathy Archive + Verification System
-// Keyword Extraction — Final Gate Pipeline (13 languages, deterministic)
+// Keyword Extraction — Final Gate Pipeline (13 languages, deterministic, drift-free)
 
 import { TArchiveEntry } from './types'
 
@@ -25,23 +25,63 @@ const STOPWORDS_BY_LANG: Record<string, Set<string>> = {
 }
 
 /* ============================================================
- * DECORATIVE ADJECTIVES
+ * PRONOUNS
  * ============================================================
  */
-const DECORATIVE_ADJ_BY_LANG: Record<string, Set<string>> = {
-  en: new Set(['important','good','bad','real','true','big','small','great','nice','many','most']),
-  de: new Set(['wichtig','gut','schlecht','echt','wahr','groß','klein','viele','meiste']),
-  fr: new Set(['important','bon','mauvais','vrai','grand','petit','beaucoup']),
-  es: new Set(['importante','bueno','malo','real','verdadero','grande','muchos']),
-  it: new Set(['importante','buono','cattivo','vero','grande','molti']),
-  pt: new Set(['importante','bom','mau','verdadeiro','grande','muitos']),
-  nl: new Set(['belangrijk','goed','slecht','echt','waar','groot','veel']),
-  ru: new Set(['важный','хороший','плохой','настоящий','большой','много']),
-  zh: new Set(['重要','真正','伟大','许多']),
-  ja: new Set(['重要','本当','大きい','多く']),
-  ko: new Set(['중요한','진짜','큰','많은']),
-  ar: new Set(['مهم','جيد','سيئ','حقيقي','كبير','كثير']),
-  hi: new Set(['महत्वपूर्ण','अच्छा','बुरा','सच्चा','बड़ा','बहुत']),
+const PRONOUNS_BY_LANG: Record<string, Set<string>> = {
+  en: new Set(['i','you','he','she','we','they','me','him','her','us','them']),
+  de: new Set(['ich','du','er','sie','wir','ihr','mich','dich','ihn','uns','euch']),
+  fr: new Set(['je','tu','il','elle','nous','vous','ils','elles']),
+  es: new Set(['yo','tú','él','ella','nosotros','vosotros','ellos','ellas']),
+  it: new Set(['io','tu','lui','lei','noi','voi','loro']),
+  pt: new Set(['eu','tu','ele','ela','nós','vocês','eles','elas']),
+  nl: new Set(['ik','jij','hij','zij','wij','jullie']),
+  ru: new Set(['я','ты','он','она','мы','вы','они']),
+  zh: new Set(['我','你','他','她','它','我们','你们','他们']),
+  ja: new Set(['私','僕','俺','あなた','彼','彼女']),
+  ko: new Set(['나','너','그','그녀','우리']),
+  ar: new Set(['أنا','أنت','هو','هي','نحن','هم']),
+  hi: new Set(['मैं','तुम','वह','हम','वे']),
+}
+
+/* ============================================================
+ * ROLE / SYSTEM TOKENS
+ * ============================================================
+ */
+const ROLE_TOKENS_BY_LANG: Record<string, Set<string>> = {
+  en: new Set(['role','user','assistant','system']),
+  de: new Set(['rolle','benutzer','assistent','system']),
+  fr: new Set(['rôle','utilisateur','assistant','système']),
+  es: new Set(['rol','usuario','asistente','sistema']),
+  it: new Set(['ruolo','utente','assistente','sistema']),
+  pt: new Set(['papel','usuário','assistente','sistema']),
+  nl: new Set(['rol','gebruiker','assistent','systeem']),
+  ru: new Set(['роль','пользователь','ассистент','система']),
+  zh: new Set(['角色','用户','助手','系统']),
+  ja: new Set(['役割','ユーザー','アシスタント','システム']),
+  ko: new Set(['역할','사용자','어시스턴트','시스템']),
+  ar: new Set(['دور','مستخدم','مساعد','نظام']),
+  hi: new Set(['भूमिका','उपयोगकर्ता','सहायक','प्रणाली']),
+}
+
+/* ============================================================
+ * COURTESY / SMALLTALK TOKENS
+ * ============================================================
+ */
+const COURTESY_BY_LANG: Record<string, Set<string>> = {
+  en: new Set(['hey','hi','hello','please','thanks','thank']),
+  de: new Set(['hey','hallo','hi','bitte','danke']),
+  fr: new Set(['salut','bonjour','merci','svp']),
+  es: new Set(['hola','gracias','por favor']),
+  it: new Set(['ciao','grazie','per favore']),
+  pt: new Set(['olá','obrigado','por favor']),
+  nl: new Set(['hoi','hallo','dank','alsjeblieft']),
+  ru: new Set(['привет','спасибо','пожалуйста']),
+  zh: new Set(['你好','谢谢','请']),
+  ja: new Set(['こんにちは','ありがとう','お願いします']),
+  ko: new Set(['안녕','감사','주세요']),
+  ar: new Set(['مرحبا','شكرا','من فضلك']),
+  hi: new Set(['नमस्ते','धन्यवाद','कृपया']),
 }
 
 /* ============================================================
@@ -59,18 +99,12 @@ const GENERIC_GLOBALS = new Set([
 ])
 
 /* ============================================================
- * META / UI FILTERS
+ * META PHRASES
  * ============================================================
  */
 const META_PHRASES = [
   'timestamp','version','truth hash','public key','orbit context','context chat'
 ]
-
-const REQUEST_TOKENS = new Set([
-  'gib','sag','mach','liste','tabelle','zeige','antworte',
-  'give','tell','make','list','table','show','answer',
-  'please','bitte'
-])
 
 /* ============================================================
  * Utilities
@@ -108,7 +142,9 @@ export function extractTopKeywords(
   lang = 'en',
 ): string[] {
   const stopwords = STOPWORDS_BY_LANG[lang] || STOPWORDS_BY_LANG.en
-  const decorative = DECORATIVE_ADJ_BY_LANG[lang] || DECORATIVE_ADJ_BY_LANG.en
+  const pronouns = PRONOUNS_BY_LANG[lang] || PRONOUNS_BY_LANG.en
+  const roles = ROLE_TOKENS_BY_LANG[lang] || ROLE_TOKENS_BY_LANG.en
+  const courtesy = COURTESY_BY_LANG[lang] || COURTESY_BY_LANG.en
 
   const text = normalize(entries.map(e => e.content).join(' '))
   const tokens = text.split(' ').filter(Boolean)
@@ -117,16 +153,26 @@ export function extractTopKeywords(
 
   for (let i = 0; i < tokens.length; i++) {
     const w = singularize(tokens[i])
-    if (stopwords.has(w)) continue
-    if (REQUEST_TOKENS.has(w)) continue
-    if (GENERIC_GLOBALS.has(w)) continue
+    const next = tokens[i + 1] ? singularize(tokens[i + 1]) : null
+    const phrase = next ? `${w} ${next}` : w
 
-    const phrase = tokens[i + 1]
-      ? `${w} ${singularize(tokens[i + 1])}`
-      : w
-
+    // Gate 1: meta / system / role
+    if (roles.has(w) || roles.has(next || '')) continue
     if (isMeta(phrase)) continue
-    if (decorative.has(w)) continue
+
+    // Gate 2: courtesy / smalltalk (token + phrase)
+    if (
+      courtesy.has(w) ||
+      courtesy.has(next || '') ||
+      courtesy.has(phrase)
+    ) continue
+
+    // Gate 3: pronoun-start phrase
+    if (pronouns.has(w)) continue
+
+    // Existing semantic gates
+    if (stopwords.has(w)) continue
+    if (GENERIC_GLOBALS.has(w)) continue
 
     freq.set(phrase, (freq.get(phrase) || 0) + 1)
   }
