@@ -69,6 +69,7 @@
 // ============================================================================
 
 import { generatePublicKey2048, computeTruthHash } from "@/lib/triketonVerify";
+import { syncArchiveFromTriketon } from "@/lib/archiveProjection";
 // lib/chatStorage.ts
 // Eine Quelle der Wahrheit für Chat-Persistenz (localStorage)
 // lib/chatStorage.ts
@@ -387,7 +388,6 @@ if (!chainId) {
   sessionStorage.setItem(SESSION_CHAT_KEY, chainId);
 }
 
-
 const lastInSameChain = [...ledger]
   .reverse()
   .find((e) => e.chain_id === chainId);
@@ -398,6 +398,11 @@ const next: TriketonLedgerEntryV1 = {
   public_key: deviceKey,
   chain_prev: lastInSameChain?.truth_hash,
 };
+
+// 🔽 Phase 1: keep archive in sync with Triketon
+
+syncArchiveFromTriketon();
+
 
 
 
