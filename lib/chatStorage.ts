@@ -377,11 +377,16 @@ export async function appendTriketonLedgerEntry(
 
     const deviceKey = await getOrCreateDevicePublicKey2048(truthHashHex);
 
-  // derive stable chain_id (one per chat)
-const chainId =
-  entry.chain_id && entry.chain_id !== "local"
-    ? entry.chain_id
-    : `chat_${entry.id.split("-")[0]}`;
+// derive stable chain_id (one per chat, session-persistent)
+const SESSION_CHAT_KEY = "mpathy:chat:session_id";
+
+let chainId = sessionStorage.getItem(SESSION_CHAT_KEY);
+
+if (!chainId) {
+  chainId = `chat_${crypto.randomUUID()}`;
+  sessionStorage.setItem(SESSION_CHAT_KEY, chainId);
+}
+
 
 const lastInSameChain = [...ledger]
   .reverse()
