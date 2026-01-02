@@ -1,6 +1,7 @@
+// AFTER
 // lib/archiveProjection.ts
 // GPTM-Galaxy+ · Archive Projection v1
-// Deterministic, persistent projection from Triketon ledger (MEFL compliant)
+// Deterministic, persistent archive sync from Triketon ledger (MEFL compliant)
 
 import { readLS, writeLS } from './storage'
 import { extractTopKeywords } from './keywordExtract'
@@ -15,43 +16,92 @@ export interface ArchivChat {
   verified: true
 }
 
+type TriketonAnchor = {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: string
+  truth_hash: string
+  public_key?: string
+  chain_id?: string | number
+  origin_chat?: number
+}
+
 const TRIKETON_KEY = 'mpathy:triketon:v1'
 const ARCHIVE_KEY = 'mpathy:archive:v1'
 
-/**
- * Builds AND persists archive chats purely from Triketon ledger.
- * – Deterministic
- * – Idempotent
- * – Includes active chat
- * – No dependency on mpathy:chat:v1
- */
-export function syncArchiveFromTriketon(): ArchivChat[] {
-  const anchors = readLS<TArchiveEntry[]>(TRIKETON_KEY) || []
-
-  if (anchors.length === 0) {
-    writeLS(ARCHIVE_KEY, [])
-    return []
+function hashChainIdToNumber(input: string): number {
+  let h = 2166136261
+  for (let i = 0; i < input.length; i++) {
+    h ^= input.charCodeAt(i)
+    h = Math.imul(h, 16777619)
   }
+  return (h >>> 0) % 1000000000
+}
 
-  const grouped = new Map<number, TArchiveEntry[]>()
+function deriveOriginChat(a: TriketonAnchor): number {
+  if (typeof a.origin_chat === 'number' && Number.isFinite(a.origin_chat)) return a.origin_chat
+  if (typeof a.chain_id === 'number' && Number.isFinite(a.chain_id)) return a.chain_id
+  if (typeof a.chain_id === 'string' && a.chain_id.length > 0) return hashChainIdToNumber(a.chain_id)
+  return 0
+}
+
+function anchorsToArchiveEntries(anchors: TriketonAnchor[]): TArchiveEntry[] {
+  const entries: TArchiveEntry[] = []
 
   for (const a of anchors) {
-    if (typeof a.origin_chat !== 'number') continue
+    if (!a || typeof a.id !== 'string') continue
+    if (a.role !== 'user' && a.role !== 'assistant') continue
+    if (typeof a.content !== 'string') continue
+    if (typeof a.timestamp !== 'string') continue
+    if (typeof a.truth_hash !== 'string') continue
 
-    if (!grouped.has(a.origin_chat)) {
-      grouped.set(a.origin_chat, [])
-    }
-    grouped.get(a.origin_chat)!.push(a)
+    entries.push({
+      id: a.id,
+      origin_chat: deriveOriginChat(a),
+      role: a.role,
+      content: a.content,
+      timestamp: a.timestamp,
+      truth_hash: a.truth_hash,
+      public_key: typeof a.public_key === 'string' ? a.public_key : '',
+      verified: true,
+    })
+  }
+
+  return entries.sort((x, y) => new Date(x.timestamp).getTime() - new Date(y.timestamp).getTime())
+}
+
+/**
+ * Persistenter Spiegel: mpathy:archive:v1 = deterministische Projektion aus Triketon.
+ * Format: TArchiveEntry[] (damit Search/Selection/Index stabil arbeiten können)
+ */
+export function syncArchiveFromTriketon(): TArchiveEntry[] {
+  const anchors = (readLS<unknown>(TRIKETON_KEY) as TriketonAnchor[] | null) || []
+  const projected = anchorsToArchiveEntries(Array.isArray(anchors) ? anchors : [])
+
+  writeLS(ARCHIVE_KEY, projected)
+  return projected
+}
+
+/**
+ * Read-only Chat-Projektion (UI): aus dem persistierten Archiv gebaut.
+ */
+export function buildArchivChatsFromTriketon(): ArchivChat[] {
+  const archive = syncArchiveFromTriketon()
+  if (archive.length === 0) return []
+
+  const grouped = new Map<number, TArchiveEntry[]>()
+  for (const e of archive) {
+    if (!grouped.has(e.origin_chat)) grouped.set(e.origin_chat, [])
+    grouped.get(e.origin_chat)!.push(e)
   }
 
   const chats: ArchivChat[] = []
-
   for (const [chatId, entries] of grouped.entries()) {
-    if (entries.length === 0) continue
-
     const ordered = entries.sort(
       (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
     )
+    if (ordered.length === 0) continue
 
     chats.push({
       chat_id: chatId,
@@ -59,18 +109,11 @@ export function syncArchiveFromTriketon(): ArchivChat[] {
       first_timestamp: ordered[0].timestamp,
       last_timestamp: ordered[ordered.length - 1].timestamp,
       keywords: extractTopKeywords(ordered).slice(0, 7),
-      verified: true, // Ledger-implizit
+      verified: true,
     })
   }
 
-  const sorted = chats.sort(
-    (a, b) =>
-      new Date(b.last_timestamp).getTime() -
-      new Date(a.last_timestamp).getTime(),
+  return chats.sort(
+    (a, b) => new Date(b.last_timestamp).getTime() - new Date(a.last_timestamp).getTime(),
   )
-
-  // 🔒 Persistenter Debug- & UI-Spiegel
-  writeLS(ARCHIVE_KEY, sorted)
-
-  return sorted
 }
