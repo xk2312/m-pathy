@@ -377,11 +377,19 @@ export async function appendTriketonLedgerEntry(
 
     const deviceKey = await getOrCreateDevicePublicKey2048(truthHashHex);
 
-    const next: TriketonLedgerEntryV1 = {
-      ...entry,
-      public_key: deviceKey,
-      chain_prev: ledger[ledger.length - 1]?.truth_hash,
-    };
+  // derive stable chain_id (one per chat)
+const chainId =
+  entry.chain_id && entry.chain_id !== "local"
+    ? entry.chain_id
+    : `chat_${entry.id.split("-")[0]}`;
+
+const next: TriketonLedgerEntryV1 = {
+  ...entry,
+  chain_id: chainId,
+  public_key: deviceKey,
+  chain_prev: ledger[ledger.length - 1]?.truth_hash,
+};
+
 
     // 4️⃣ APPEND (once)
     const nextLedger = [...ledger, next];
