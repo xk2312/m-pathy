@@ -1184,22 +1184,28 @@ useEffect(() => {
 
 
 // Chat State
+// Chat State
 const [messages, setMessages] = React.useState<any[]>(() => {
   initChatStorage();
 
-// 🪶 L11 – Ledger AutoInit & Verify
-try {
-  if (typeof window !== "undefined") {
-    ensureTriketonLedgerReady();        // Ledger Genesis, falls leer
-    verifyOrResetTriketonLedger();      // Drift-Check nach Mount
+  // 🪐 L11 – Ledger AutoInit & Verify
+  try {
+    if (typeof window !== "undefined") {
+      ensureTriketonLedgerReady();
+      verifyOrResetTriketonLedger();
+    }
+  } catch (err) {
+    console.warn("[L11] Ledger auto-verify failed:", err);
   }
-} catch (err) {
-  console.warn("[L11] Ledger auto-verify failed:", err);
-}
 
   const restored = loadChat();
   return restored ?? [];
 });
+
+// 🔑 Kanonische Triketon-Referenz (UI-only, kein Storage)
+const [activeTriketonMessageId, setActiveTriketonMessageId] =
+  React.useState<string | null>(null);
+
 
 // ⬇︎ Guard-Ref: blockiert Autosave während "Clear"
 const clearingRef = React.useRef(false);
@@ -2177,13 +2183,26 @@ if (last && (last as any).id === (userMsg as any).id) return; // Duplicate-Guard
       // 1) Leere Assistant-Bubble anhängen
 setMessages((prev) => {
   const base = Array.isArray(prev) ? prev : [];
+
+  const assistantMsg = {
+    ...assistant,
+    id: crypto.randomUUID(),
+    content: "",
+  };
+
   const next = truncateMessages([
     ...base,
-    { ...assistant, content: "" },
+    assistantMsg,
   ]);
+
   persistMessages(next);
+
+  // 🔑 KANONISCHE REFERENZ
+  setActiveTriketonMessageId(assistantMsg.id);
+
   return next;
 });
+
 
 // 2) Inhalt schrittweise aufbauen 
 const fullText = assistant.content ?? "";
