@@ -1,63 +1,36 @@
-// lib/archiveWrite.ts
-// GPTM-Galaxy+ · m-pathy Archive + Verification System v5
-// Write Path – automatic archival of chats & messages
-
-import { TChatMessage, TArchiveEntry } from './types'
-import { readLS, writeLS } from './storage'
-
-/**
- * Liest das bestehende Archiv (mpathy:archive:v1)
+/* ============================================================
+ * lib/archiveWrite.ts
+ * GPTM-Galaxy+ · Archive Write Helpers
+ * ============================================================
  */
-function getArchive(): TArchiveEntry[] {
-  return readLS<TArchiveEntry[]>('mpathy:archive:v1') || []
-}
 
-/**
- * Schreibt das Archiv vollständig zurück
- */
-function saveArchive(entries: TArchiveEntry[]): void {
-  writeLS('mpathy:archive:v1', entries)
-}
+import { writeLS } from './storage'
+import type { ArchivChat } from './archiveProjection'
 
-/**
- * Fügt eine neue Nachricht dem Archiv hinzu
- * – erzeugt aus ChatMessage ein unveränderliches ArchiveEntry
- */
-export function archiveMessage(msg: TChatMessage, publicKey: string): void {
-  const archive = getArchive()
-  const entry: TArchiveEntry = {
-    id: msg.id,
-    origin_chat: msg.chat_serial,
-    role: msg.role,
-    content: msg.content,
-    timestamp: msg.timestamp,
-    truth_hash: msg.truth_hash || '',
-    public_key: publicKey,
-    verified: !!msg.verified,
+const ARCHIVE_KEY = 'mpathy:archive:v1'
+const ARCHIVE_PAIRS_KEY = 'mpathy:archive:pairs:v1'
+
+export type ArchivePairEntry = {
+  pair_id: string
+  chat_id: number
+  chain_id: string
+  user: {
+    id: string
+    content: string
+    timestamp: string
   }
-
-  // kein Duplikat: prüfen nach ID
-  const exists = archive.some((e) => e.id === entry.id)
-  if (!exists) {
-    archive.push(entry)
-    // chronologische Sortierung nach timestamp
-    archive.sort(
-      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
-    )
-    saveArchive(archive)
+  assistant: {
+    id: string
+    content: string
+    timestamp: string
   }
+  keywords: string[]
 }
 
-/**
- * Fügt einen ganzen Chat (Array von Messages) hinzu
- */
-export function archiveChat(messages: TChatMessage[], publicKey: string): void {
-  messages.forEach((m) => archiveMessage(m, publicKey))
+export function writeArchive(chats: ArchivChat[]): void {
+  writeLS(ARCHIVE_KEY, chats)
 }
 
-/**
- * Gibt das vollständige Archiv zurück
- */
-export function getAllArchiveEntries(): TArchiveEntry[] {
-  return getArchive()
+export function writeArchivePairs(pairs: ArchivePairEntry[]): void {
+  writeLS(ARCHIVE_PAIRS_KEY, pairs)
 }

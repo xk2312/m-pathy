@@ -7,11 +7,13 @@ export type MpathyNamespace =
   | 'mpathy:archive:v1'
   | 'mpathy:archive:chat_map'
   | 'mpathy:archive:chat_counter'
+  | 'mpathy:archive:pairs:v1'
   | 'mpathy:context:upload'
   | 'mpathy:verification:v1'
   | 'mpathy:triketon:v1'
   | 'mpathy:triketon:device_public_key'
   | 'mpathy:triketon:device_public_key_2048'
+
 
 
 
