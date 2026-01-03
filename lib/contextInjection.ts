@@ -17,28 +17,40 @@ export function getPendingContext():
 
 /**
  * Lädt deterministische Zusammenfassung in neuen Chat
+ * (keine Limitierung – Summary ist bereits verdichtet)
  */
 export function injectSummaryContext(entries: TArchiveEntry[]): void {
   const summary = createDeterministicSummary(entries)
+
   const payload = {
     type: 'summary',
     data: summary,
     count: entries.length,
     timestamp: new Date().toISOString(),
   }
+
   writeLS('mpathy:context:upload', payload)
 }
 
 /**
  * Lädt Roh-Auswahl (Nachrichten + Chats) in neuen Chat
+ * Limitierung gilt AUSSCHLIESSLICH hier
  */
+const MAX_CONTEXT_PAIRS = 6
+const MAX_CONTEXT_ENTRIES = MAX_CONTEXT_PAIRS * 2
+
 export function injectRawContext(entries: TArchiveEntry[]): void {
+  const limited = Array.isArray(entries)
+    ? entries.slice(-MAX_CONTEXT_ENTRIES)
+    : []
+
   const payload = {
     type: 'raw',
-    data: entries,
-    count: entries.length,
+    data: limited,
+    count: limited.length,
     timestamp: new Date().toISOString(),
   }
+
   writeLS('mpathy:context:upload', payload)
 }
 
