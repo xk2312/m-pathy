@@ -405,12 +405,6 @@ const nextLedger = [...ledger, next];
 // 5️⃣ WRITE (once)
 ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(nextLedger));
 
-// 🔽 Phase 2: GUARANTEED archive sync AFTER write (next tick)
-queueMicrotask(() => {
-  syncArchiveFromTriketon();
-});
-
-
   } catch (err) {
     console.error("[TriketonLedger] atomic append failed:", err);
   }
