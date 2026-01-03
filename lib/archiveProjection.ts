@@ -43,8 +43,10 @@ function hashChainIdToNumber(input: string): number {
     h ^= input.charCodeAt(i)
     h = Math.imul(h, 16777619)
   }
-  return (h >>> 0) % 1000000000
+  const n = (h >>> 0) % 1000000000
+  return n === 0 ? 1 : n
 }
+
 
 function deriveOriginChat(a: TriketonAnchor): number {
   if (typeof a.origin_chat === 'number' && Number.isFinite(a.origin_chat)) return a.origin_chat
