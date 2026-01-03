@@ -4,6 +4,7 @@
 // Purpose: Searchable atomic units (NOT UI rendering)
 
 import { readLS, writeLS } from './storage'
+import { extractTopKeywords } from './keywordExtract'
 
 /**
  * Triketon anchor (ledger entry)
@@ -35,6 +36,7 @@ export interface ArchivePair {
     timestamp: string
     truth_hash: string
   }
+  keywords: string[]
 }
 
 /**
@@ -54,7 +56,9 @@ const PAIRS_KEY = 'mpathy:archive:pairs:v1'
  */
 export function syncArchivePairsFromTriketon(): ArchivePair[] {
   const raw = readLS<unknown>(TRIKETON_KEY)
-  const anchors: TriketonAnchor[] = Array.isArray(raw) ? (raw as TriketonAnchor[]) : []
+  const anchors: TriketonAnchor[] = Array.isArray(raw)
+    ? (raw as TriketonAnchor[])
+    : []
 
   // group by chain_id
   const byChain = new Map<string, TriketonAnchor[]>()
@@ -83,6 +87,25 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
       if (current.role !== 'user') continue
       if (next.role !== 'assistant') continue
 
+      const keywordEntries = [
+        {
+          id: current.id,
+          role: 'user',
+          content: current.content,
+          timestamp: current.timestamp,
+          truth_hash: current.truth_hash,
+        },
+        {
+          id: next.id,
+          role: 'assistant',
+          content: next.content,
+          timestamp: next.timestamp,
+          truth_hash: next.truth_hash,
+        },
+      ] as Parameters<typeof extractTopKeywords>[0]
+
+      const keywords = extractTopKeywords(keywordEntries, 7)
+
       pairs.push({
         pair_id: `${current.truth_hash}→${next.truth_hash}`,
         chain_id,
@@ -98,6 +121,7 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
           timestamp: next.timestamp,
           truth_hash: next.truth_hash,
         },
+        keywords,
       })
     }
   }
