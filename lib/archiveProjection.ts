@@ -113,10 +113,17 @@ function anchorsToArchiveEntries(anchors: TriketonAnchor[]): TArchiveEntry[] {
 export function syncArchiveFromTriketon(): ArchivChat[] {
   const lang = getCurrentLang()
 
-  const raw = readLS<unknown>(TRIKETON_KEY)
-  const anchors: TriketonAnchor[] = Array.isArray(raw) ? (raw as TriketonAnchor[]) : []
+const raw = (() => {
+  try {
+    const r = window.localStorage.getItem(TRIKETON_KEY)
+    return r ? JSON.parse(r) : []
+  } catch {
+    return []
+  }
+})();  
 
-  const byChain = new Map<string, TriketonAnchor[]>()
+const anchors: TriketonAnchor[] = Array.isArray(raw) ? (raw as TriketonAnchor[]) : []
+const byChain = new Map<string, TriketonAnchor[]>()
 
   for (const a of anchors) {
     if (typeof a.chain_id !== 'string' || a.chain_id.length === 0) continue
