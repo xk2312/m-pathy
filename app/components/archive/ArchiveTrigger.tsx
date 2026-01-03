@@ -8,13 +8,19 @@ import ArchiveUIFinish from './ArchiveUIFinish'
 export default function ArchiveTrigger() {
   const [open, setOpen] = useState(false)
 
-  useEffect(() => {
-    const openHandler = () => setOpen(true)
-    window.addEventListener('mpathy:archive:open', openHandler)
-    return () => {
-      window.removeEventListener('mpathy:archive:open', openHandler)
-    }
-  }, [])
+  // AFTER
+useEffect(() => {
+  const openHandler = () => setOpen(true)
+
+  window.addEventListener('mpathy:archive:open', openHandler)
+  document.addEventListener('mpathy:archive:open', openHandler)
+
+  return () => {
+    window.removeEventListener('mpathy:archive:open', openHandler)
+    document.removeEventListener('mpathy:archive:open', openHandler)
+  }
+}, [])
+
 
   if (typeof document === 'undefined') return null
 
