@@ -412,62 +412,6 @@ const nextLedger = [...ledger, next];
 // 5️⃣ WRITE (once)
 ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(nextLedger));
 
-/* ============================================================
- * Archive Pair Derivation (User → Assistant)
- * ============================================================
- */
-
-if (next.role === "assistant") {
-  try {
-    const PAIRS_KEY = "mpathy:archive:pairs:v1";
-
-    const existingRaw = ls.getItem(PAIRS_KEY);
-    const existingPairs = existingRaw ? JSON.parse(existingRaw) : [];
-
-    if (Array.isArray(existingPairs)) {
-      const lastUser = [...ledger]
-        .reverse()
-        .find(
-          (e) =>
-            e.chain_id === next.chain_id &&
-            e.role === "user"
-        );
-
-      if (lastUser) {
-        const pair_id = `${lastUser.id}__${next.id}`;
-
-        const exists = existingPairs.some(
-          (p: any) => p.pair_id === pair_id
-        );
-
-        if (!exists) {
-          existingPairs.push({
-            pair_id,
-            chat_id: null, // resolved later via archive projection
-            chain_id: next.chain_id,
-            user: {
-              id: lastUser.id,
-              content: lastUser.content,
-              timestamp: lastUser.timestamp,
-            },
-            assistant: {
-              id: next.id,
-              content: next.content,
-              timestamp: next.timestamp,
-            },
-            keywords: [],
-          });
-
-          ls.setItem(PAIRS_KEY, JSON.stringify(existingPairs));
-        }
-      }
-    }
-  } catch (e) {
-    console.error("[ArchivePairs] write failed:", e);
-  }
-}
-
-
   } catch (err) {
     console.error("[TriketonLedger] atomic append failed:", err);
   }
