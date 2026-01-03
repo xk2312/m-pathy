@@ -399,18 +399,15 @@ const next: TriketonLedgerEntryV1 = {
   chain_prev: lastInSameChain?.truth_hash,
 };
 
-// 🔽 Phase 1: keep archive in sync with Triketon
+// 4️⃣ APPEND (once)
+const nextLedger = [...ledger, next];
 
+// 5️⃣ WRITE (once)
+ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(nextLedger));
+
+// 🔽 Phase 1: keep archive in sync with Triketon (AFTER write)
 syncArchiveFromTriketon();
 
-
-
-
-    // 4️⃣ APPEND (once)
-    const nextLedger = [...ledger, next];
-
-    // 5️⃣ WRITE (once)
-    ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(nextLedger));
   } catch (err) {
     console.error("[TriketonLedger] atomic append failed:", err);
   }
