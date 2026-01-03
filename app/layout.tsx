@@ -8,6 +8,8 @@ import { Inter } from "next/font/google"
 import Providers from "./providers"
 import LangAttrUpdater from "./components/LangAttrUpdater"
 import ArchiveInit from "./components/system/ArchiveInit"
+import ArchiveTrigger from "@/components/archive/ArchiveTrigger"
+
 
 const inter = Inter({ subsets: ["latin"], display: "swap" })
 
@@ -57,6 +59,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
         {/* 🔒 SYSTEMINIT: Triketon → Archive (deterministisch, immer) */}
         <ArchiveInit />
+        <ArchiveTrigger />
+
 
         {/* 🧠 App-Kontext */}
         <Providers>{children}</Providers>
