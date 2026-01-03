@@ -48,11 +48,34 @@ function hashChainIdToNumber(input: string): number {
 }
 
 
+const CHAT_COUNTER_KEY = 'mpathy:archive:chat_counter'
+const CHAT_MAP_KEY = 'mpathy:archive:chat_map'
+
 function deriveOriginChat(a: TriketonAnchor): number {
-  if (typeof a.origin_chat === 'number' && Number.isFinite(a.origin_chat)) return a.origin_chat
-  if (typeof a.chain_id === 'number' && Number.isFinite(a.chain_id)) return a.chain_id
-  if (typeof a.chain_id === 'string' && a.chain_id.length > 0) return hashChainIdToNumber(a.chain_id)
-  return 0
+  if (typeof window === 'undefined') return 0
+  if (typeof a.chain_id !== 'string' || a.chain_id.length === 0) return 0
+
+  const ls = window.localStorage
+
+  // load or init map
+  const rawMap = ls.getItem(CHAT_MAP_KEY)
+  const chatMap: Record<string, number> = rawMap ? JSON.parse(rawMap) : {}
+
+  // existing mapping
+  if (chatMap[a.chain_id]) {
+    return chatMap[a.chain_id]
+  }
+
+  // new chain_id → next chat number
+  const rawCounter = ls.getItem(CHAT_COUNTER_KEY)
+  const next = rawCounter ? parseInt(rawCounter, 10) + 1 : 1
+
+  chatMap[a.chain_id] = next
+
+  ls.setItem(CHAT_COUNTER_KEY, String(next))
+  ls.setItem(CHAT_MAP_KEY, JSON.stringify(chatMap))
+
+  return next
 }
 
 function anchorsToArchiveEntries(anchors: TriketonAnchor[]): TArchiveEntry[] {
