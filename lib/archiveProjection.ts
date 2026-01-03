@@ -120,10 +120,12 @@ export function syncArchiveFromTriketon(): ArchivChat[] {
       last_timestamp: ordered[ordered.length - 1].timestamp,
       keywords: extractTopKeywords([...ordered], 7, lang),
       entries: ordered.map((e) => ({
-        id: e.id,
-        role: e.role as 'user' | 'assistant',
-        timestamp: e.timestamp,
-      })),
+  id: e.id,
+  role: e.role as 'user' | 'assistant',
+  content: e.content,
+  timestamp: e.timestamp,
+})),
+
     })
 
   }
