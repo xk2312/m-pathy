@@ -116,50 +116,64 @@ export function syncArchiveFromTriketon(): ArchivChat[] {
   const raw = readLS<unknown>(TRIKETON_KEY)
   const anchors: TriketonAnchor[] = Array.isArray(raw) ? (raw as TriketonAnchor[]) : []
 
-  const flat = anchorsToArchiveEntries(anchors)
-  if (flat.length === 0) {
-    writeLS(ARCHIVE_KEY, [])
-    return []
+  const byChain = new Map<string, TriketonAnchor[]>()
+
+  for (const a of anchors) {
+    if (typeof a.chain_id !== 'string' || a.chain_id.length === 0) continue
+    if (!byChain.has(a.chain_id)) byChain.set(a.chain_id, [])
+    byChain.get(a.chain_id)!.push(a)
   }
 
-  const grouped = new Map<number, TArchiveEntry[]>()
-  for (const e of flat) {
-    if (!grouped.has(e.origin_chat)) grouped.set(e.origin_chat, [])
-    grouped.get(e.origin_chat)!.push(e)
-  }
+  const chains = Array.from(byChain.entries()).sort(
+    (a, b) =>
+      new Date(a[1][0].timestamp).getTime() -
+      new Date(b[1][0].timestamp).getTime(),
+  )
 
+  const chatMap: Record<string, number> = {}
   const chats: ArchivChat[] = []
 
-  for (const [chatId, entries] of grouped.entries()) {
-    const ordered = entries
-      .filter((e) => e.role === 'user' || e.role === 'assistant')
+  let counter = 0
+
+  for (const [chainId, messages] of chains) {
+    counter += 1
+    chatMap[chainId] = counter
+
+    const ordered = messages
+      .filter((m) => m.role === 'user' || m.role === 'assistant')
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
 
     if (ordered.length === 0) continue
 
-       chats.push({
-      chat_id: chatId,
+    chats.push({
+      chat_id: counter,
       first_timestamp: ordered[0].timestamp,
       last_timestamp: ordered[ordered.length - 1].timestamp,
-      keywords: extractTopKeywords([...ordered], 7, lang),
-      entries: ordered.map((e) => ({
-  id: e.id,
-  role: e.role as 'user' | 'assistant',
-  content: e.content,
-  timestamp: e.timestamp,
-})),
+      keywords: extractTopKeywords(
+  ordered.map((m) => ({
+    content: m.content,
+    verified: true,
+  })) as any,
+  7,
+  lang,
+),
 
+      entries: ordered.map((m) => ({
+        id: m.id,
+        role: m.role as 'user' | 'assistant',
+        content: m.content,
+        timestamp: m.timestamp,
+      })),
     })
-
   }
 
-  const orderedChats = chats.sort(
-    (a, b) => new Date(b.last_timestamp).getTime() - new Date(a.last_timestamp).getTime(),
-  )
+  writeLS(CHAT_MAP_KEY, chatMap)
+  writeLS(CHAT_COUNTER_KEY, counter)
+  writeLS(ARCHIVE_KEY, chats)
 
-  writeLS(ARCHIVE_KEY, orderedChats)
-  return orderedChats
+  return chats
 }
+
 
 /**
  * Backward-compatible read helper

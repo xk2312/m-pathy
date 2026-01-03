@@ -5,11 +5,14 @@
 export type MpathyNamespace =
   | 'mpathy:chat:v1'
   | 'mpathy:archive:v1'
+  | 'mpathy:archive:chat_map'
+  | 'mpathy:archive:chat_counter'
   | 'mpathy:context:upload'
   | 'mpathy:verification:v1'
   | 'mpathy:triketon:v1'
   | 'mpathy:triketon:device_public_key'
   | 'mpathy:triketon:device_public_key_2048'
+
 
 
 /**
