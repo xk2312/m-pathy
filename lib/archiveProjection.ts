@@ -114,17 +114,18 @@ export function syncArchiveFromTriketon(): ArchivChat[] {
 
     if (ordered.length === 0) continue
 
-    chats.push({
+       chats.push({
       chat_id: chatId,
       first_timestamp: ordered[0].timestamp,
       last_timestamp: ordered[ordered.length - 1].timestamp,
-      keywords: extractTopKeywords(ordered, 7, lang),
+      keywords: extractTopKeywords([...ordered], 7, lang),
       entries: ordered.map((e) => ({
         id: e.id,
         role: e.role as 'user' | 'assistant',
         timestamp: e.timestamp,
       })),
     })
+
   }
 
   const orderedChats = chats.sort(
