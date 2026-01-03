@@ -1,10 +1,9 @@
 // lib/archivePairProjection.ts
-// GPTM-Galaxy+ · Archive Pair Projection v1
+// GPTM-Galaxy+ · Archive Pair Projection v1.1
 // Deterministic question–answer projection from Triketon ledger
 // Purpose: Searchable atomic units (NOT UI rendering)
 
-import { readLS, writeLS } from './storage'
-import { extractTopKeywords } from './keywordExtract'
+import { writeLS } from './storage'
 
 /**
  * Triketon anchor (ledger entry)
@@ -46,6 +45,62 @@ const TRIKETON_KEY = 'mpathy:triketon:v1'
 const PAIRS_KEY = 'mpathy:archive:pairs:v1'
 
 /**
+ * IMPORTANT:
+ * We intentionally bypass readLS(TRIKETON_KEY) here.
+ * Reason: storage-layer may apply performance trimming for Triketon reads,
+ * which would incorrectly cap pair projection (e.g. 6 pairs).
+ * For projections we must read the FULL ledger.
+ */
+function readFullTriketonLedger(): TriketonAnchor[] {
+  try {
+    if (typeof window === 'undefined') return []
+    const raw = window.localStorage.getItem(TRIKETON_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? (parsed as TriketonAnchor[]) : []
+  } catch {
+    return []
+  }
+}
+
+function extractTopKeywordsFromText(input: string, limit = 7): string[] {
+  try {
+    const text = (input || '')
+      .toLowerCase()
+      .replace(/[\u2019’]/g, "'")
+      .replace(/[^a-z0-9äöüß\u0600-\u06FF\u0400-\u04FF\u4e00-\u9fff\s-]/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+
+    if (!text) return []
+
+    const stop = new Set([
+      'and','or','the','a','an','to','of','in','on','for','with','as','at','by','from','is','are','was','were','be','been','being',
+      'ich','du','er','sie','es','wir','ihr','sie','und','oder','der','die','das','ein','eine','einer','eines','einem','einen','zu',
+      'von','mit','für','auf','im','in','am','an','ist','sind','war','waren','sein','bin','bist','seid','nicht','ja','nein','bitte',
+    ])
+
+    const freq = new Map<string, number>()
+    const parts = text.split(' ')
+
+    for (const p of parts) {
+      const w = p.trim()
+      if (!w) continue
+      if (w.length < 3) continue
+      if (stop.has(w)) continue
+      freq.set(w, (freq.get(w) || 0) + 1)
+    }
+
+    return Array.from(freq.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, limit)
+      .map(([w]) => w)
+  } catch {
+    return []
+  }
+}
+
+/**
  * Build deterministic Q→A pairs from Triketon ledger
  *
  * Rules:
@@ -55,10 +110,7 @@ const PAIRS_KEY = 'mpathy:archive:pairs:v1'
  * - Order strictly by timestamp
  */
 export function syncArchivePairsFromTriketon(): ArchivePair[] {
-  const raw = readLS<unknown>(TRIKETON_KEY)
-  const anchors: TriketonAnchor[] = Array.isArray(raw)
-    ? (raw as TriketonAnchor[])
-    : []
+  const anchors = readFullTriketonLedger()
 
   // group by chain_id
   const byChain = new Map<string, TriketonAnchor[]>()
@@ -74,11 +126,7 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
   for (const [chain_id, messages] of byChain.entries()) {
     const ordered = messages
       .filter((m) => m.role === 'user' || m.role === 'assistant')
-      .sort(
-        (a, b) =>
-          new Date(a.timestamp).getTime() -
-          new Date(b.timestamp).getTime(),
-      )
+      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
 
     for (let i = 0; i < ordered.length - 1; i++) {
       const current = ordered[i]
@@ -87,24 +135,8 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
       if (current.role !== 'user') continue
       if (next.role !== 'assistant') continue
 
-      const keywordEntries = [
-        {
-          id: current.id,
-          role: 'user',
-          content: current.content,
-          timestamp: current.timestamp,
-          truth_hash: current.truth_hash,
-        },
-        {
-          id: next.id,
-          role: 'assistant',
-          content: next.content,
-          timestamp: next.timestamp,
-          truth_hash: next.truth_hash,
-        },
-      ] as Parameters<typeof extractTopKeywords>[0]
-
-      const keywords = extractTopKeywords(keywordEntries, 7)
+      const combinedText = `${current.content}\n${next.content}`
+      const keywords = extractTopKeywordsFromText(combinedText, 7)
 
       pairs.push({
         pair_id: `${current.truth_hash}→${next.truth_hash}`,
@@ -131,8 +163,16 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
 }
 
 /**
- * Backward-compatible read helper
+ * Backward-compatible read helper (pairs are already materialized)
  */
 export function readArchivePairs(): ArchivePair[] {
-  return readLS<ArchivePair[]>(PAIRS_KEY) || []
+  try {
+    if (typeof window === 'undefined') return []
+    const raw = window.localStorage.getItem(PAIRS_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? (parsed as ArchivePair[]) : []
+  } catch {
+    return []
+  }
 }

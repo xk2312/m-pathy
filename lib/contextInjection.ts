@@ -1,31 +1,38 @@
 // lib/contextInjection.ts
 // GPTM-Galaxy+ · m-pathy Archive + Verification System v5
 // Context Injection – deterministic transfer into new chat context
+//
+// IMPORTANT SEPARATION LAW:
+// - This module may LIMIT injected context (for UX + safety).
+// - This module must NEVER affect archive projections.
+// - Archive projections must always read full Triketon ledger.
 
 import { readLS, writeLS } from './storage'
-import { TArchiveEntry } from './types'
+import type { TArchiveEntry } from './types'
 import { createDeterministicSummary } from './summaryEngine'
+
+type PendingContext =
+  | { type: 'summary'; data: string; count: number; timestamp: string }
+  | { type: 'raw'; data: TArchiveEntry[]; count: number; timestamp: string }
 
 /**
  * Liest gespeicherte Auswahl (summary | raw) aus LocalStorage
  */
-export function getPendingContext():
-  | { type: 'summary' | 'raw'; data: string | TArchiveEntry[]; count?: number }
-  | null {
-  return readLS('mpathy:context:upload') || null
+export function getPendingContext(): PendingContext | null {
+  return (readLS<PendingContext>('mpathy:context:upload') as PendingContext) || null
 }
 
 /**
  * Lädt deterministische Zusammenfassung in neuen Chat
- * (keine Limitierung – Summary ist bereits verdichtet)
  */
 export function injectSummaryContext(entries: TArchiveEntry[]): void {
-  const summary = createDeterministicSummary(entries)
+  const safe = Array.isArray(entries) ? entries : []
+  const summary = createDeterministicSummary(safe)
 
-  const payload = {
+  const payload: PendingContext = {
     type: 'summary',
     data: summary,
-    count: entries.length,
+    count: safe.length,
     timestamp: new Date().toISOString(),
   }
 
@@ -34,17 +41,18 @@ export function injectSummaryContext(entries: TArchiveEntry[]): void {
 
 /**
  * Lädt Roh-Auswahl (Nachrichten + Chats) in neuen Chat
- * Limitierung gilt AUSSCHLIESSLICH hier
+ *
+ * Hard Limit (UX contract): max 6 Q/A pairs = 12 entries.
+ * This is ONLY for context injection and must not leak into projections.
  */
 const MAX_CONTEXT_PAIRS = 6
 const MAX_CONTEXT_ENTRIES = MAX_CONTEXT_PAIRS * 2
 
 export function injectRawContext(entries: TArchiveEntry[]): void {
-  const limited = Array.isArray(entries)
-    ? entries.slice(-MAX_CONTEXT_ENTRIES)
-    : []
+  const safe = Array.isArray(entries) ? entries : []
+  const limited = safe.slice(-MAX_CONTEXT_ENTRIES)
 
-  const payload = {
+  const payload: PendingContext = {
     type: 'raw',
     data: limited,
     count: limited.length,
