@@ -4,11 +4,21 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import ArchiveUIFinish from './ArchiveUIFinish'
+import { syncArchiveFromTriketon } from '@/lib/archiveProjection'
+import { syncArchivePairsFromTriketon } from '@/lib/archivePairProjection'
+
 
 export default function ArchiveTrigger() {
   const [open, setOpen] = useState(false)
 
   // AFTER
+// 🔒 SYSTEM PROJECTION INIT (runs once, deterministic)
+useEffect(() => {
+  syncArchiveFromTriketon()
+  syncArchivePairsFromTriketon()
+}, [])
+
+
 useEffect(() => {
   const openHandler = () => setOpen(true)
 
@@ -20,6 +30,7 @@ useEffect(() => {
     document.removeEventListener('mpathy:archive:open', openHandler)
   }
 }, [])
+
 
 
   if (typeof document === 'undefined') return null
