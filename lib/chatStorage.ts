@@ -268,9 +268,12 @@ export async function saveChat(messages: ChatMessage[], max = 120): Promise<void
 export function clearChat(): void {
   try {
     if (typeof window === "undefined") return;
-    window.localStorage.removeItem(CHAT_STORAGE_KEY);
+    const ls = window.localStorage;
+    ls.removeItem(CHAT_STORAGE_KEY);
+    ls.removeItem("mpathy:chat:chain_id");
   } catch { /* ignore */ }
 }
+
 
 export const THREAD_EXPORT_KEY = "mpathy:thread:default";
 
@@ -287,9 +290,13 @@ export function hardClearChat(opts: { reload?: boolean } = { reload: true }): vo
     });
 
     ls.removeItem(CHAT_STORAGE_KEY);
+    ls.removeItem("mpathy:chat:chain_id");
     for (const k of LEGACY_KEYS) {
       ls.removeItem(k);
     }
+
+    // ... (rest unverändert)
+
     ls.removeItem(THREAD_EXPORT_KEY);
 
     console.log("[P5] hardClearChat AFTER", {
@@ -378,14 +385,14 @@ export async function appendTriketonLedgerEntry(
 
     const deviceKey = await getOrCreateDevicePublicKey2048(truthHashHex);
 
-// derive stable chain_id (one per chat, session-persistent)
-const SESSION_CHAT_KEY = "mpathy:chat:session_id";
+// derive stable chain_id (one per chat, reset on clearChat/hardClearChat)
+const CHAT_CHAIN_KEY = "mpathy:chat:chain_id";
 
-let chainId = sessionStorage.getItem(SESSION_CHAT_KEY);
+let chainId = ls.getItem(CHAT_CHAIN_KEY);
 
 if (!chainId) {
   chainId = `chat_${crypto.randomUUID()}`;
-  sessionStorage.setItem(SESSION_CHAT_KEY, chainId);
+  ls.setItem(CHAT_CHAIN_KEY, chainId);
 }
 
 const lastInSameChain = [...ledger]
