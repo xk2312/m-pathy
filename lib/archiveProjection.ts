@@ -184,8 +184,14 @@ const byChain = new Map<string, TriketonAnchor[]>()
   writeLS(CHAT_COUNTER_KEY, counter)
   writeLS(ARCHIVE_KEY, chats)
 
+  // 🔔 notify UI that archive projection changed
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('mpathy:archive:updated'))
+  }
+
   return chats
 }
+
 
 
 /**

@@ -159,8 +159,15 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
   }
 
   writeLS(PAIRS_KEY, pairs)
+
+  // 🔔 notify UI that archive pairs changed
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('mpathy:archive:updated'))
+  }
+
   return pairs
 }
+
 
 /**
  * Backward-compatible read helper (pairs are already materialized)
