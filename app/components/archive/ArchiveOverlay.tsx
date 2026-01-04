@@ -7,21 +7,17 @@ import { MessageSquare } from 'lucide-react'
 
 /**
  * ============================================================
- * ARCHIVE OVERLAY
+ * ARCHIVE OVERLAY — COUNCIL FIX
  * ============================================================
  *
- * This component defines the ARCHIVE AS A SPACE.
- * It is intentionally:
- * - opaque
- * - calm
- * - readable
- * - DAU-friendly
+ * Goals:
+ * - full-height sovereign archive space
+ * - clear vertical zoning (Header / Search / Content)
+ * - object-level hover (not CTA-only)
+ * - DAU-friendly interaction
  *
- * All visible strings are temporary EN placeholders.
- * TODO i18n bindings are marked explicitly.
- *
- * NO verify / add actions live here yet.
- * This is a READ + ORIENTATION layer.
+ * All strings = EN placeholders
+ * TODO i18n bindings marked explicitly
  * ============================================================
  */
 
@@ -72,11 +68,10 @@ export default function ArchiveOverlay() {
         h-full
         bg-bg-0
         text-text-primary
-        overflow-hidden
       "
     >
       {/* ========================================================= */}
-      {/* Centered archive column                                  */}
+      {/* CENTER COLUMN                                             */}
       {/* ========================================================= */}
       <div
         className="
@@ -90,21 +85,21 @@ export default function ArchiveOverlay() {
       >
 
         {/* ===================================================== */}
-        {/* Header / Title Zone                                   */}
+        {/* HEADER ZONE (Orientation)                              */}
         {/* ===================================================== */}
         <header
           className="
-            pt-16
-            pb-10
+            pt-20
+            pb-14
             flex
             flex-col
-            gap-3
+            gap-4
           "
         >
           {/* TODO i18n: archive.title */}
           <h1
             className="
-              text-xl
+              text-2xl
               font-medium
               text-text-primary
               tracking-tight
@@ -112,24 +107,14 @@ export default function ArchiveOverlay() {
           >
             Archive
           </h1>
-
-          {/* Optional subtitle hook (future) */}
-          {/*
-          <div className="text-sm text-text-muted">
-            Browse your past conversations
-          </div>
-          */}
         </header>
 
         {/* ===================================================== */}
-        {/* Search – Primary Entry Point                          */}
+        {/* SEARCH ZONE (Primary Action)                           */}
         {/* ===================================================== */}
         <section
           className="
-            pb-14
-            flex
-            flex-col
-            gap-6
+            pb-20
           "
         >
           <Input
@@ -143,8 +128,8 @@ export default function ArchiveOverlay() {
               border
               border-border-soft
               rounded-pill
-              px-6
-              py-5
+              px-7
+              py-6
               text-base
               text-text-primary
               placeholder:text-text-muted
@@ -155,7 +140,7 @@ export default function ArchiveOverlay() {
         </section>
 
         {/* ===================================================== */}
-        {/* Archive Body                                          */}
+        {/* CONTENT ZONE (Scrollable)                              */}
         {/* ===================================================== */}
         <main
           className="
@@ -165,40 +150,39 @@ export default function ArchiveOverlay() {
           "
         >
 
-          {/* ---------------- Default (no search) --------------- */}
+          {/* ---------------- Default state ---------------- */}
           {query.length < 3 && (
             <section
               className="
                 flex
                 flex-col
-                gap-10
+                gap-12
               "
             >
-
               {/* TODO i18n: archive.defaultHeader */}
               <div className="text-xs text-text-muted">
                 Recent chats
               </div>
 
-              {/* ================= Chat List ================= */}
+              {/* ================= Chat list ================= */}
               {chats.map((chat) => (
                 <article
                   key={chat.chat_serial}
                   className="
                     group
-                    rounded-m
-                    px-5
-                    py-4
-                    -mx-5
-                    transition
+                    rounded-l
+                    px-6
+                    py-5
+                    -mx-6
                     cursor-pointer
+                    transition
+                    bg-transparent
                     hover:bg-surface-2
-                    hover:shadow-soft
                   "
                 >
-                  <div className="flex gap-4">
+                  <div className="flex gap-5">
 
-                    {/* ---------------- Icon ---------------- */}
+                    {/* Icon */}
                     <div
                       className="
                         pt-1
@@ -207,33 +191,32 @@ export default function ArchiveOverlay() {
                         transition
                       "
                     >
-                      <MessageSquare size={16} />
+                      <MessageSquare size={18} />
                     </div>
 
-                    {/* ---------------- Content ------------- */}
+                    {/* Content */}
                     <div
                       className="
                         flex
                         flex-col
-                        gap-3
+                        gap-4
                         flex-1
                       "
                     >
-
                       {/* Title + Meta + CTA */}
                       <div
                         className="
                           flex
                           items-baseline
                           justify-between
-                          gap-4
+                          gap-6
                         "
                       >
                         <div
                           className="
                             flex
                             items-baseline
-                            gap-3
+                            gap-4
                             flex-wrap
                           "
                         >
@@ -251,19 +234,17 @@ export default function ArchiveOverlay() {
                           >
                             [
                             {chat.messageCount} msgs ·{' '}
-                            {new Date(
-                              chat.lastTimestamp
-                            ).toLocaleDateString()}
+                            {new Date(chat.lastTimestamp).toLocaleDateString()}
                             ]
                           </div>
                         </div>
 
-                        {/* CTA */}
+                        {/* CTA (part of object) */}
                         <div
                           className="
                             text-xs
                             text-text-muted
-                            opacity-60
+                            opacity-0
                             group-hover:opacity-100
                             transition
                           "
@@ -273,15 +254,9 @@ export default function ArchiveOverlay() {
                         </div>
                       </div>
 
-                      {/* ---------------- Keywords ----------- */}
+                      {/* Keywords */}
                       {chat.keywords.length > 0 && (
-                        <div
-                          className="
-                            flex
-                            flex-col
-                            gap-1.5
-                          "
-                        >
+                        <div className="flex flex-col gap-2">
                           {/* TODO i18n: archive.keywords */}
                           <div
                             className="
@@ -298,9 +273,8 @@ export default function ArchiveOverlay() {
                             className="
                               flex
                               flex-wrap
-                              gap-x-3
-                              gap-y-1
-                              pl-0.5
+                              gap-x-4
+                              gap-y-1.5
                             "
                           >
                             {chat.keywords.map((keyword) => (
@@ -325,9 +299,9 @@ export default function ArchiveOverlay() {
             </section>
           )}
 
-          {/* ---------------- Search State ---------------- */}
+          {/* ---------------- Search state ---------------- */}
           {query.length >= 3 && (
-            <section className="pt-10">
+            <section className="pt-16">
               {/* TODO i18n: archive.noResults */}
               <div className="text-sm text-text-muted">
                 No matches.
