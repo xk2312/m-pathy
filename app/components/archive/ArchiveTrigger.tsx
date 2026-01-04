@@ -12,10 +12,11 @@ export default function ArchiveTrigger() {
 
   // 🔒 SYSTEM PROJECTION INIT (runs once, deterministic)
   useEffect(() => {
-    // Guard against double execution (React StrictMode / Dev)
-    if ((window as any).__mpathy_archive_init_done__) return
-    ;(window as any).__mpathy_archive_init_done__ = true
+  if ((window as any).__mpathy_archive_init_done__) return
+  ;(window as any).__mpathy_archive_init_done__ = true
 
+  // defer projection to avoid React render-phase conflicts
+  setTimeout(() => {
     try {
       syncArchiveFromTriketon()
       syncArchivePairsFromTriketon()
@@ -23,7 +24,9 @@ export default function ArchiveTrigger() {
     } catch (e) {
       console.error('[ArchiveTrigger] projection failed', e)
     }
-  }, [])
+  }, 0)
+}, [])
+
 
   useEffect(() => {
     const openHandler = () => setOpen(true)
