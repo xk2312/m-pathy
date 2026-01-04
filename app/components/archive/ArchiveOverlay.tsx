@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { getRecentChats } from '@/lib/archiveIndex'
 import { Input } from '@/components/ui/Input'
 import { MessageSquare } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 /**
  * ============================================================
@@ -38,6 +39,8 @@ type ChatDisplay = {
 export default function ArchiveOverlay() {
   const [query, setQuery] = useState('')
   const [chats, setChats] = useState<ChatDisplay[]>([])
+  const router = useRouter()
+
 
   /* -------------------------------------------------------------- */
   /* Bootstrap                                                      */
@@ -114,19 +117,20 @@ export default function ArchiveOverlay() {
 >
   {/* Close Overlay */}
   <button
-    aria-label="Close archive"
-    className="
-      absolute
-      top-8
-      right-8
-      text-text-muted
-      hover:text-text-primary
-      transition
-    "
-    onClick={() => window.history.back()}
-  >
-    ✕
-  </button>
+  aria-label="Close archive"
+  className="
+    absolute
+    top-8
+    right-8
+    text-text-muted
+    hover:text-text-primary
+    transition
+  "
+  onClick={() => router.push('/page2')}
+>
+  ✕
+</button>
+
 
             {/* TODO i18n: archive.title */}
             <h1
