@@ -64,14 +64,19 @@ export default function ArchiveOverlay() {
     /* ============================================================ */
     /* SYSTEM SPACE — FULL TAKEOVER                                  */
     /* ============================================================ */
-    <div
-      className="
-        fixed inset-0 z-[9999]
-        bg-bg-0
-        text-text-primary
-        overflow-hidden
-      "
-    >
+  <div
+  className="
+    fixed inset-0 z-[2147483647]
+    bg-gradient-to-b
+    from-[#121418]
+    via-[#0C0C0C]
+    to-[#080808]
+    text-text-primary
+    overflow-hidden
+  "
+>
+
+
       {/* ========================================================== */}
       {/* CONTENT FRAME — FULL BLEED                                 */}
       {/* ========================================================== */}
