@@ -126,10 +126,16 @@ const anchors: TriketonAnchor[] = Array.isArray(raw) ? (raw as TriketonAnchor[])
 const byChain = new Map<string, TriketonAnchor[]>()
 
   for (const a of anchors) {
-    if (typeof a.chain_id !== 'string' || a.chain_id.length === 0) continue
-    if (!byChain.has(a.chain_id)) byChain.set(a.chain_id, [])
-    byChain.get(a.chain_id)!.push(a)
-  }
+  // fallback-chain für alte / chain-lose Ledger-Einträge
+  const chainId =
+    typeof a.chain_id === 'string' && a.chain_id.length > 0
+      ? a.chain_id
+      : `legacy:${a.origin_chat ?? 'unknown'}`
+
+  if (!byChain.has(chainId)) byChain.set(chainId, [])
+  byChain.get(chainId)!.push(a)
+}
+
 
   const chains = Array.from(byChain.entries()).sort(
     (a, b) =>
