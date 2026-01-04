@@ -1,15 +1,17 @@
+"use client"
+
 // app/layout.tsx — neutral, ohne Theme/Prose
 import "./global.css"
-// ❌ keine globalen Prose-Styles hier importieren
 
 import React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
+import { usePathname } from "next/navigation"
+
 import Providers from "./providers"
 import LangAttrUpdater from "./components/LangAttrUpdater"
 import ArchiveInit from "./components/system/ArchiveInit"
 import ArchiveTrigger from "@/components/archive/ArchiveTrigger"
-
 
 const inter = Inter({ subsets: ["latin"], display: "swap" })
 
@@ -28,22 +30,19 @@ export const viewport: Viewport = {
   interactiveWidget: "resizes-visual",
 }
 
-// ⭐ EINZIGE Theme-Schaltstelle für alle 13 Orb-Designs
 const ORB_THEME = "nexus-pearl"
-// Alternativen:
-// "breath-of-light", "deep-current-pearl", "chronos-gate",
-// "quantum-drop", "event-horizon-dot", "warm-pulse-orb",
-// "lattice-smoothpoint", "zero-noise-node", "nexus-pearl",
-// "gaia-whisper-dot", "gemini-zero-flux", "silent-sun"
 
 type RootLayoutProps = Readonly<{ children: React.ReactNode }>
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const pathname = usePathname()
+  const isArchive = pathname.startsWith("/archive")
+
   return (
     <html
       lang="en"
       suppressHydrationWarning
-      data-orb-theme={ORB_THEME} // 🔥 Token-Aktivierung
+      data-orb-theme={ORB_THEME}
     >
       <body
         className={`${inter.className} min-h-dvh antialiased`}
@@ -54,21 +53,18 @@ export default function RootLayout({ children }: RootLayoutProps) {
           padding: 0,
         }}
       >
-        {/* 🌍 Sprache & Attribute */}
         <LangAttrUpdater />
-
-        {/* 🔒 SYSTEMINIT: Triketon → Archive (deterministisch, immer) */}
         <ArchiveInit />
         <ArchiveTrigger />
 
+        {/* 🧠 App-Kontext — im Archiv AUS */}
+        {!isArchive && (
+          <Providers>{children}</Providers>
+        )}
 
-        {/* 🧠 App-Kontext */}
-        <Providers>{children}</Providers>
-
-        {/* 🪟 Overlays */}
+        {/* 🪟 Overlays (Archiv lebt hier weiter) */}
         <div id="overlay-root" />
 
-        {/* 📱 Safe-Area */}
         <div
           aria-hidden="true"
           style={{
