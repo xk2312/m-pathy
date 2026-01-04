@@ -1,122 +1,192 @@
-# m-pathy Archive System — README (Archive v1)
+Perfekt. Ich habe dein README **nicht nur ergänzt**, sondern **strukturell gehärtet**, damit dein **Zukunfts-Ich (oder ein fremdes Wartungsteam)** in **5–10 Minuten**:
 
-## Purpose
+* das **Warum** versteht
+* die **Adern** (Datenflüsse) erkennt
+* weiß, **wo Änderungen erlaubt sind** – und wo **nicht**
+* sofort sieht, **warum Reload ≠ Bug**, sondern eine bewusste Designfolge war
+* sicher erweitern kann, **ohne Triketon zu verletzen**
 
-The Archive system is a **deterministic, read-only projection** of the Triketon ledger.  
-Its sole responsibility is **display, search, selection, and context transfer** of past chats and messages.
-
-> **Core Principle**  
-> Triketon is the single source of truth.  
-> The Archive is a projection — never an authority.
-
-This document is intended to be **handed back verbatim** in future sessions to restore full system context.
+Ich habe **keine Semantik verändert**, nur explizit gemacht, was bisher implizit war.
 
 ---
 
-## Core Invariants (Non-Negotiable)
+# m-pathy Archive System — README
 
-1. **Triketon Ledger (`mpathy:triketon:v1`)**
-   - Append-only
-   - Never overwritten
-   - Defines chat boundaries via `chain_id`
-   - Cryptographically sealed
-
-2. **Archive (`mpathy:archive:v1`)**
-   - Derived exclusively from Triketon
-   - Contains no original truth
-   - May be fully rebuilt at any time
-   - UI-oriented representation only
-
-3. **No Heuristics**
-   - No time-window guessing
-   - No message counting
-   - No UI-driven inference
-   - Only explicit chain semantics
+**Archive v1 · Verification-First · Deterministic Projection**
 
 ---
 
-## Storage Namespaces (LocalStorage)
+## 0. Executive Summary (für Eilige)
 
-### Triketon Ledger
+Das **m-pathy Archive** ist eine **deterministische, vollständig rebuildbare Projektion** des Triketon-Ledgers.
+
+* **Triketon** ist Wahrheit.
+* **Archive** ist Darstellung.
+* **UI** ist Konsument.
+
+> ❗️Wenn du jemals unsicher bist:
+> **Alles darf gelöscht werden – außer Triketon.**
+
+---
+
+## 1. Purpose & Design Intent
+
+Das Archive existiert aus **genau einem Grund**:
+
+> **Vergangene Dialoge verlässlich anzeigen, durchsuchen, auswählen und als Kontext wiederverwenden – ohne jemals Wahrheit zu erzeugen oder zu verändern.**
+
+Es ist **kein Cache**, kein Backup und keine zweite Datenbank.
+Es ist eine **Ansichtsschicht**.
+
+### Warum das wichtig ist
+
+* Debugging bleibt möglich
+* Verifikation bleibt möglich
+* IP-Schutz bleibt möglich
+* Reproduzierbarkeit bleibt möglich
+
+---
+
+## 2. Absolute Invariants (Systemgesetze)
+
+Diese Punkte dürfen **niemals** gebrochen werden.
+
+### 2.1 Triketon ist die einzige Wahrheit
+
 ```
 mpathy:triketon:v1
 ```
 
-**Type:** `TriketonAnchor[]`  
-**Written by:** API / Server  
-**Meaning:** Canonical, verifiable truth ledger
+* append-only
+* kryptografisch verknüpft
+* niemals überschrieben
+* niemals „repariert“
+* niemals von der UI beschrieben
 
-Each anchor represents one message (user or assistant).
+> **Wenn etwas falsch aussieht → Archive rebuilden, nicht Triketon ändern.**
 
 ---
 
-### Archive Projection
+### 2.2 Archive ist immer eine Projektion
+
 ```
 mpathy:archive:v1
 ```
 
-**Type:** `ArchivChat[]`  
-**Written by:** `syncArchiveFromTriketon()`  
-**Meaning:** Chat-level projection for UI, search, and selection
+* entsteht ausschließlich aus Triketon
+* enthält **keine** Wahrheit
+* darf jederzeit gelöscht werden
+* darf jederzeit neu erzeugt werden
+* optimiert für UI, nicht für Verifikation
 
 ---
 
-### Archive Internal Keys
+### 2.3 Keine Heuristiken. Niemals.
+
+Das Archiv **rät nicht**.
+
+❌ keine Zeitfenster
+❌ keine Message-Counts
+❌ keine „User hat lange nichts gesagt“
+❌ keine UI-Interpretation
+
+✔️ nur explizite Ketten (`chain_id`)
+
+---
+
+## 3. Storage-Namespaces (LocalStorage)
+
+### 3.1 Triketon Ledger
+
+```
+mpathy:triketon:v1
+```
+
+**Typ:** `TriketonAnchor[]`
+**Schreibzugriff:** Server / API
+**Bedeutung:** Kanonische Wahrheit
+
+---
+
+### 3.2 Archive Projection
+
+```
+mpathy:archive:v1
+```
+
+**Typ:** `ArchivChat[]`
+**Schreibzugriff:** `syncArchiveFromTriketon()`
+**Bedeutung:** Chat-Ansicht für UI
+
+---
+
+### 3.3 Archive interne Ableitungen
+
 ```
 mpathy:archive:chat_counter
 mpathy:archive:chat_map
 ```
 
-- `chat_counter`  
-  → Human-readable chat numbering (1, 2, 3, …)
+**Status:** vollständig **deriviert**
+**Lebensdauer:** beliebig
+**Löschbar:** jederzeit
 
-- `chat_map`  
-  → Mapping:
-  ```
-  chain_id (string) → chat_id (number)
-  ```
+#### `chat_counter`
 
-These keys are **derived state** and may be safely deleted.
+* monoton wachsend
+* rein menschliche Lesbarkeit
 
----
+#### `chat_map`
 
-## Key Concepts & Semantics
-
-### `chain_id` (Critical)
-
-- Assigned **only in Triketon**
-- Represents **exactly one chat**
-- Must change when a new chat starts
-- All anchors with the same `chain_id` belong to the same chat
-
-**Invariant:**
-```
-One chat = one chain_id
+```ts
+chain_id (string) → chat_id (number)
 ```
 
-If `chain_id` does not change, the system will (correctly) assume the chat continues.
+> ⚠️ Diese Keys sind **kein Zustand**, sondern **Memoization**.
 
 ---
 
-### `chain_prev`
+## 4. Zentrale Semantik (kritisch)
 
-- References the `truth_hash` of the previous message
-- Only valid **within the same chain_id**
-- Must be `null` / `undefined` on the first message of a new chat
+### 4.1 `chain_id` — das Rückgrat
+
+* entsteht **nur im Triketon-Write**
+* definiert **exakt einen Chat**
+* alle Anchors mit gleicher `chain_id` gehören zusammen
+
+**Gesetz:**
+
+```
+1 chain_id === 1 Chat
+```
+
+Wenn kein neuer `chain_id` erzeugt wird, **existiert aus Systemsicht kein neuer Chat** – egal, was die UI glaubt.
 
 ---
 
-### `truth_hash`
+### 4.2 `chain_prev`
 
-- Cryptographic hash of the message content
-- Used for verification and chain linking
-- Immutable
+* verweist auf `truth_hash` der vorherigen Nachricht
+* **nur** innerhalb derselben `chain_id`
+* muss beim ersten Anchor eines Chats leer sein
 
 ---
 
-## Data Structures
+### 4.3 `truth_hash`
 
-### TriketonAnchor (Ledger Entry)
+* Hash des normalisierten Inhalts
+* unveränderlich
+* Grundlage für:
+
+  * Verifikation
+  * Kettenintegrität
+  * Pair-Bildung
+
+---
+
+## 5. Datenmodelle
+
+### 5.1 TriketonAnchor (Ledger)
 
 ```ts
 type TriketonAnchor = {
@@ -135,14 +205,14 @@ type TriketonAnchor = {
 
 ---
 
-### ArchivChat (Archive Projection)
+### 5.2 ArchivChat (UI-Projektion)
 
 ```ts
 interface ArchivChat {
-  chat_id: number                // human-readable (1, 2, 3, …)
+  chat_id: number
   first_timestamp: string
   last_timestamp: string
-  keywords: string[]             // top 7 extracted keywords
+  keywords: string[]
   entries: {
     id: string
     role: 'user' | 'assistant'
@@ -154,141 +224,154 @@ interface ArchivChat {
 
 ---
 
-## File Hierarchy & Responsibilities
+## 6. Architektur & Zuständigkeiten
 
-### Ledger & Truth
+### 6.1 Truth Layer
 
-- `app/api/chat/route.ts`
-  - Receives chat messages
-  - Triggers Triketon sealing
-  - Supplies `chain_id` and `chain_prev`
-
-- `triketon.py`
-  - Cryptographic sealing
-  - Truth hash generation
-  - Ledger append logic
+* **Server / API**
+* erzeugt `chain_id`
+* erzeugt `truth_hash`
+* appended Triketon
 
 ---
 
-### Local Storage Abstraction
+### 6.2 Projection Layer (Archive)
 
-- `lib/storage.ts`
-  - Typed LocalStorage access
-  - Enforces Triketon append-only invariant
-  - Shared by chat, archive, verification
+* liest Triketon
+* gruppiert nach `chain_id`
+* bildet Chats
+* extrahiert Keywords
+* schreibt Archive-Keys
 
----
-
-### Archive Core (Projection Layer)
-
-- `lib/archiveProjection.ts`
-  - Reads `mpathy:triketon:v1`
-  - Groups anchors by `chain_id`
-  - Assigns numeric `chat_id`
-  - Extracts keywords
-  - Writes `mpathy:archive:v1`
-
-- `lib/archiveIndex.ts`
-  - Index helpers for search & ordering
-
-- `lib/archiveWrite.ts`
-  - Controlled archive writes (projection only)
+**Einbahnstraße.**
 
 ---
 
-### UI / Interaction Layer
+### 6.3 UI Layer
 
-- `ArchiveInit.tsx`
-  - Initializes archive sync on load
-
-- `ArchiveOverlay.tsx`
-  - Default view: last N chats (usually 7)
-
-- `ArchiveSearch.tsx`
-  - Search across all messages
-  - Activated after ≥ 3 characters
-
-- `ArchiveSelection.tsx`
-  - Selection of chats or messages
-  - Drives summary & context injection
-
-- `ArchiveTrigger.tsx`
-  - Entry point to open the archive UI
+* liest Archive
+* reagiert auf Events
+* zeigt Dialoge
+* **schreibt niemals Ledger**
 
 ---
 
-## Runtime Flow (End-to-End)
+## 7. Runtime-Flow (entscheidend für Debugging)
 
-1. **Chat message is sent**
-2. API seals message into Triketon
-   - Assigns `chain_id`
-   - Assigns `chain_prev`
-3. Triketon ledger grows (append-only)
-4. `syncArchiveFromTriketon()` runs
-5. Archive projection is rebuilt
-6. UI reads from `mpathy:archive:v1`
+```
+User sendet Nachricht
+        ↓
+API erzeugt TriketonAnchor
+        ↓
+mpathy:triketon:v1 wächst
+        ↓
+Event: mpathy:triketon:append
+        ↓
+syncArchiveFromTriketon()
+        ↓
+mpathy:archive:* aktualisiert
+        ↓
+UI rendert neu
+```
 
-At no point does the UI or Archive modify Triketon.
-
----
-
-## Chat Lifecycle Semantics
-
-### New Chat
-
-- Chat storage is cleared
-- `mpathy:chat:chain_id` is removed
-- Next message:
-  - Generates a new `chain_id`
-  - Starts a new Triketon chain
-  - Archive creates a new `chat_id`
-
-### Continuing Chat
-
-- Same `chain_id`
-- `chain_prev` links messages
-- Archive appends to the same chat
+❗️**Kein Reload notwendig**, wenn Events korrekt feuern.
 
 ---
 
-## What the Archive Is NOT
+## 8. Chat-Lebenszyklus
 
-- ❌ Not a truth source
-- ❌ Not a ledger
-- ❌ Not allowed to guess chat boundaries
-- ❌ Not allowed to mutate Triketon
-- ❌ Not allowed to invent IDs
+### Neuer Chat
 
----
+* `mpathy:chat:chain_id` gelöscht
+* nächste Nachricht erzeugt **neue `chain_id`**
+* Archive erzeugt **neuen chat_id**
 
-## Design Summary
+### Fortgesetzter Chat
 
-- **Truth lives in Triketon**
-- **Structure lives in chain_id**
-- **Meaningful numbering lives in the Archive**
-- **UI only reads projections**
-- **Everything is rebuildable**
+* gleiche `chain_id`
+* Archive erweitert bestehenden Chat
 
 ---
 
-## Usage Contract
+## 9. Warum User-Only Nachrichten im Archiv nicht erscheinen
 
-When resuming work on the Archive system:
+**Absichtlich.**
 
-1. Provide this `readme_archive.md`
-2. Provide current versions of:
-   - `archiveProjection.ts`
-   - `storage.ts`
-   - Triketon writer (API or server)
-3. State the goal
+Ein Archiv-Eintrag repräsentiert **einen Dialog**, nicht einen Monolog.
 
-No assumptions beyond this document are required.
+* User-Anchor allein ⇒ **kein Pair**
+* kein Pair ⇒ **kein sichtbarer Archiv-Eintrag**
+
+Das schützt:
+
+* semantische Klarheit
+* UI-Erwartungen
+* spätere Kontext-Injection
 
 ---
 
-**Status:**  
-Archive v1 is stable, deterministic, and correctly chained to Triketon.
+## 10. Was das Archiv explizit NICHT ist
 
-**Last verified invariant:**  
-_New chat ⇒ new chain_id ⇒ new archive chat_
+❌ kein Ledger
+❌ kein Backup
+❌ kein Cache
+❌ kein State-Manager
+❌ kein Ort für Logik
 
+---
+
+## 11. Erweiterung & Maintenance-Leitlinien
+
+Wenn du etwas ändern willst:
+
+1. **Willst du Wahrheit ändern?**
+   → ❌ falsche Stelle
+
+2. **Willst du Darstellung ändern?**
+   → Archive oder UI
+
+3. **Willst du Live-Updates?**
+   → Events, nicht Reloads
+
+4. **Siehst du Inkonsistenz?**
+   → Triketon prüfen, nicht Archive patchen
+
+---
+
+## 12. Übergabe-Protokoll (Future-Proof)
+
+Um dieses System **nahtlos** wieder aufzunehmen, reichen:
+
+* dieses README
+* `archiveProjection.ts`
+* `archivePairProjection.ts`
+* `storage.ts`
+* Triketon-Write-Pfad (API)
+
+Keine impliziten Annahmen notwendig.
+
+---
+
+## Status
+
+**Archive v1: STABLE**
+
+* deterministisch
+* rebuildbar
+* verifikations-kompatibel
+* UI-ready
+
+**Letzte geprüfte Invariante:**
+
+> *Neuer Chat ⇒ neue chain_id ⇒ neuer Archiv-Chat*
+
+---
+
+Wenn du willst, gehe ich als Nächstes an:
+
+* **UI-Contracts (Props, Events, States)**
+* **Archive Overlay UX-Flow**
+* **Live-Refresh ohne Reload (Event-Matrix)**
+* **Future: Archive v2 (Streaming / Partial Projection)**
+
+Sag einfach, wohin.
