@@ -44,17 +44,26 @@ export default function ArchiveOverlay() {
   /* -------------------------------------------------------------- */
 
   useEffect(() => {
-    const base = getRecentChats(13)
+  const base = getRecentChats(13)
 
-    const mapped = base.map((chat) => ({
-      chat_serial: chat.chat_serial,
-      keywords: chat.keywords ?? [],
-      messageCount: chat.messages?.length ?? 0,
-      lastTimestamp: chat.last_timestamp,
-    }))
+  const mapped = base.map((chat) => ({
+    chat_serial: chat.chat_serial,
+    keywords: chat.keywords ?? [],
+    messageCount: chat.messages?.length ?? 0,
+    lastTimestamp: chat.last_timestamp,
+  }))
 
-    setChats(mapped)
-  }, [])
+  setChats(mapped)
+
+  // 🔒 hard block background (prompt, chat, scroll)
+  const originalOverflow = document.body.style.overflow
+  document.body.style.overflow = 'hidden'
+
+  return () => {
+    document.body.style.overflow = originalOverflow
+  }
+}, [])
+
 
   /* -------------------------------------------------------------- */
   /* Render                                                         */
@@ -93,15 +102,32 @@ export default function ArchiveOverlay() {
           {/* ====================================================== */}
           {/* HEADER — ORIENTATION                                   */}
           {/* ====================================================== */}
-          <header
-            className="
-              pt-28
-              pb-18
-              flex
-              flex-col
-              gap-6
-            "
-          >
+         <header
+  className="
+    pt-28
+    pb-18
+    flex
+    flex-col
+    gap-6
+    relative
+  "
+>
+  {/* Close Overlay */}
+  <button
+    aria-label="Close archive"
+    className="
+      absolute
+      top-8
+      right-8
+      text-text-muted
+      hover:text-text-primary
+      transition
+    "
+    onClick={() => window.history.back()}
+  >
+    ✕
+  </button>
+
             {/* TODO i18n: archive.title */}
             <h1
               className="
