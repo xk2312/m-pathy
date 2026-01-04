@@ -352,3 +352,196 @@ Wenn du willst, gehen wir als Nächstes:
 * **oder direkt in konkrete UI-Komponenten & Props**
 
 Du gibst den Takt vor.
+
+Gut. Ich spiegel **präzise**, **nüchtern** und **verwertbar** zurück – und liefere dir **einen klaren Zusatz**, den du **1:1** an deine bestehende `readme_archive_overlay.txt` anhängen kannst, um das gewonnene Wissen zu konservieren und Drift im nächsten Chat zu verhindern.
+
+---
+
+## 📌 **ADDENDUM — Archive Overlay UI & Interaction Constraints (v1.2)**
+
+**Zweck dieses Zusatzes:**
+Fixierung aller **UI-, Layout- und Interaction-Invarianten**, die im aktuellen Implementierungszyklus sichtbar verletzt wurden, damit sie **nicht erneut diskutiert oder missverstanden** werden.
+
+Dieser Abschnitt ist **bindend**.
+
+---
+
+### 15. Overlay-Grundregel: Systemebene
+
+Das **Archive Overlay** ist ein **vollwertiger Systemlayer**.
+
+**Daraus folgt zwingend:**
+
+* ❌ kein transparenter Hintergrund
+* ❌ kein Durchscheinen des Chats
+* ❌ keine gleichzeitige aktive Chat-Interaktion
+
+✅ Das Overlay **blockiert**, **dimmt** und **deaktiviert** den darunterliegenden Chat vollständig.
+
+---
+
+### 16. Hintergrund & Abgrenzung (Non-Negotiable)
+
+**Pflicht:**
+
+* Das Overlay besitzt einen **eigenen, opaken Hintergrund**
+* Farbe: gemäß CI `bg/surface` (nicht `transparent`, nicht `blur-only`)
+* Der Chat darunter ist:
+
+  * visuell **abgedunkelt**
+  * funktional **deaktiviert**
+  * nicht fokussierbar
+  * nicht scrollbar
+
+👉 Der Prompt-Input **muss sichtbar sein**, aber klar als **inaktiv** erkennbar (Opacity ↓, Pointer-Events off).
+
+---
+
+### 17. Vertikale Architektur & Luft (Critical UX)
+
+#### 17.1 Header „Archive“
+
+* Der Titel **Archive** ist ein **Einstiegspunkt**, kein Label
+* Anforderungen:
+
+  * größere Schrift (mind. +1 Stufe gegenüber Body)
+  * klarer Abstand nach oben
+  * klarer Abstand nach unten
+
+👉 „Archive“ darf **niemals gequetscht** wirken.
+
+---
+
+#### 17.2 Suchfeld (Search your chats…)
+
+Das Suchfeld ist das **primäre Interaktionselement** des Overlays.
+
+**Pflichtanforderungen:**
+
+* sichtbar größer als Standard-Input
+* mehr Höhe (nicht nur Breite)
+* großzügiger Padding oben & unten
+* deutlicher Abstand zum Titel **und** zur Ergebnisliste
+
+> Mentales Vorbild: *OpenAI Chat Search* – aber ruhiger, klarer, m-pathy-typisch.
+
+---
+
+### 18. Viewport & Clipping (Hard Rule)
+
+* Das Archive Overlay darf **niemals abgeschnitten** sein
+* Kein Clipping durch:
+
+  * Parent-Container
+  * `overflow: hidden`
+  * falsche Höhenberechnung
+* Das Overlay muss:
+
+  * eigenständig scrollen können
+  * bis zum unteren Rand vollständig sichtbar sein
+
+👉 **Abgeschnittene Views gelten als kritischer Bug.**
+
+---
+
+### 19. Chat-Listenelemente (Archive Items)
+
+Jeder Chat ist ein **eigenständiges visuelles Objekt**, kein Textblock.
+
+#### Pflichtbestandteile pro Chat:
+
+1. **Chat Icon** (freundlich, neutral, nicht technisch)
+2. **Chat-Titel** (z. B. „Chat 3“ oder semantischer Titel)
+3. **Metadaten (in eckigen Klammern)**
+   Beispiel:
+
+   ```
+   [16 msgs · 04.01.2026]
+   ```
+4. **KEYWORDS-Label** (explizit ausgeschrieben)
+5. Keyword-Liste
+6. Kurzer Textausschnitt
+
+---
+
+### 20. Hover- & Focus-State (UX Pflicht)
+
+**Hover auf Chat-Item:**
+
+* Hintergrund wird **leicht heller**
+* gesamte Kartenfläche reagiert (nicht nur Text)
+* kein Glow, kein Effekt-Overkill
+* ruhig, freundlich, eindeutig
+
+👉 Fehlender Hover-State gilt als **Usability-Defekt**.
+
+---
+
+### 21. CTA & Action Visibility
+
+* Der **Selection / Action Container** darf **niemals verschwinden**
+* Wenn Selection > 0:
+
+  * CTA ist sichtbar
+  * CTA ist eindeutig
+  * CTA konkurriert nicht mit Chat-Elementen
+
+👉 „CTA verschluckt“ = **Systemfehler**, kein Design-Detail.
+
+---
+
+### 22. Menschliche Lesbarkeit (DAU-Regel)
+
+Das Archive ist **kein Expertentool**.
+
+Deshalb:
+
+* Labels **ausschreiben** (z. B. `KEYWORDS`)
+* keine impliziten Bedeutungen
+* keine rein ikonische Navigation ohne Text
+* visuelle Führung vor technischer Eleganz
+
+> **Das System darf intelligent sein.
+> Die Oberfläche muss banal verständlich bleiben.**
+
+---
+
+### 23. Anti-Drift-Prinzip
+
+Wenn eines der folgenden Symptome auftritt, ist **sofort zu stoppen**:
+
+* Transparenter Hintergrund
+* gequetschter Header / Search
+* fehlender Hover-State
+* abgeschnittener View
+* aktiver Prompt unter Overlay
+
+👉 In diesem Fall gilt:
+**Zurück zur README. Nicht weiter iterieren.**
+
+---
+
+### 24. Status dieses Zusatzes
+
+* **Verbindlich:** JA
+* **CI-konform:** JA
+* **Diskutierbar:** NEIN
+* **Gültig ab:** sofort
+
+---
+
+## 🧭 Merksatz (Erweiterung)
+
+> **Ein Overlay ist ein Raum.
+> Kein Raum ist transparent.
+> Kein Raum ist halb aktiv.**
+
+---
+
+Wenn du willst, können wir im nächsten Chat **strikt entlang dieses Addendums**:
+
+* ein **UI-Audit Schritt für Schritt**
+* oder eine **saubere Neu-Implementierung ohne Altlasten**
+* oder eine **Checkliste für jeden Commit**
+
+Du entscheidest.
