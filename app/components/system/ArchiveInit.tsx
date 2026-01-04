@@ -1,19 +1,24 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { syncArchiveFromTriketon } from '@/lib/archiveProjection'
-
-let initialized = false
+import { syncArchivePairsFromTriketon } from '@/lib/archivePairProjection'
 
 export default function ArchiveInit() {
+  const didInit = useRef(false)
+
   useEffect(() => {
-    if (!initialized) {
-      initialized = true
+    // 🔒 Initiale, einmalige Projektion
+    if (!didInit.current) {
+      didInit.current = true
       syncArchiveFromTriketon()
+      syncArchivePairsFromTriketon()
     }
 
+    // 🔁 Re-Projektion bei Ledger-Append
     const onAppend = () => {
       syncArchiveFromTriketon()
+      syncArchivePairsFromTriketon()
     }
 
     window.addEventListener('mpathy:triketon:append', onAppend)

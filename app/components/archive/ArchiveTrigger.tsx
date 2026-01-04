@@ -4,29 +4,9 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import ArchiveUIFinish from './ArchiveUIFinish'
-import { syncArchiveFromTriketon } from '@/lib/archiveProjection'
-import { syncArchivePairsFromTriketon } from '@/lib/archivePairProjection'
 
 export default function ArchiveTrigger() {
   const [open, setOpen] = useState(false)
-
-  // 🔒 SYSTEM PROJECTION INIT (runs once, deterministic)
-  useEffect(() => {
-  if ((window as any).__mpathy_archive_init_done__) return
-  ;(window as any).__mpathy_archive_init_done__ = true
-
-  // defer projection to avoid React render-phase conflicts
-  setTimeout(() => {
-    try {
-      syncArchiveFromTriketon()
-      syncArchivePairsFromTriketon()
-      console.debug('[ArchiveTrigger] archive + pair projection synced')
-    } catch (e) {
-      console.error('[ArchiveTrigger] projection failed', e)
-    }
-  }, 0)
-}, [])
-
 
   useEffect(() => {
     const openHandler = () => setOpen(true)
