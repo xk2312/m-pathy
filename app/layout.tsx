@@ -1,26 +1,22 @@
-"use client"
-
-// app/layout.tsx — neutral, ohne Theme/Prose
+// app/layout.tsx — SERVER COMPONENT (FIXED)
 import "./global.css"
 
 import React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
-import { usePathname } from "next/navigation"
 
 import Providers from "./providers"
 import LangAttrUpdater from "./components/LangAttrUpdater"
 import ArchiveInit from "./components/system/ArchiveInit"
 import ArchiveTrigger from "@/components/archive/ArchiveTrigger"
+import AppGate from "./components/system/AppGate" // 👈 NEU
 
 const inter = Inter({ subsets: ["latin"], display: "swap" })
 
 export const metadata: Metadata = {
   title: "m-pathy – resonant creation",
   description: "Create your reality with M",
-  icons: {
-    icon: "/favicon.png",
-  },
+  icons: { icon: "/favicon.png" },
 }
 
 export const viewport: Viewport = {
@@ -35,9 +31,6 @@ const ORB_THEME = "nexus-pearl"
 type RootLayoutProps = Readonly<{ children: React.ReactNode }>
 
 export default function RootLayout({ children }: RootLayoutProps) {
-  const pathname = usePathname()
-  const isArchive = pathname.startsWith("/archive")
-
   return (
     <html
       lang="en"
@@ -57,12 +50,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <ArchiveInit />
         <ArchiveTrigger />
 
-        {/* 🧠 App-Kontext — im Archiv AUS */}
-        {!isArchive && (
-          <Providers>{children}</Providers>
-        )}
+        {/* 🧠 App-Gate entscheidet clientseitig */}
+        <Providers>
+          <AppGate>{children}</AppGate>
+        </Providers>
 
-        {/* 🪟 Overlays (Archiv lebt hier weiter) */}
+        {/* 🪟 Overlays */}
         <div id="overlay-root" />
 
         <div
