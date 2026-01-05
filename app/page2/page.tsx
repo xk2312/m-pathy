@@ -2562,52 +2562,52 @@ undefined : "100dvh",
           </div>
 
                     {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
-          <div
-  data-position-state={!hasMessages ? "intro" : "chat"}
-  data-layout={isMobile ? "mobile" : "desktop"}
-  className="prompt-root-scene"
-  style={{
-    position: "fixed",
-
-    bottom: 0,
-    // Desktop: Freiraum auf der Säulen-Seite, Dock zentriert im Chat-Bereich
-    left: isMobile
-      ? 0
-      : isRtl
+         {/* Prompt nur rendern, wenn KEIN Overlay aktiv ist */}
+{!overlayOpen && (
+  <div
+    data-position-state={!hasMessages ? "intro" : "chat"}
+    data-layout={isMobile ? "mobile" : "desktop"}
+    className="prompt-root-scene"
+    style={{
+      position: "fixed",
+      bottom: 0,
+      left: isMobile
         ? 0
-        : "var(--saeule-w, 277px)",
-    right: isMobile
-      ? 0
-      : isRtl
-        ? "var(--saeule-w, 277px)"
-        : 0,
-    zIndex: 90, // <--- MAX Z-INDEX, um die Sichtbarkeit zu garantieren
-    display: "flex",
-    justifyContent: "center", /* Echte Zentrierung innerhalb dieses Scopes */
-    width: isMobile ? "100%" : "auto",
-    marginInline: 0,
-  }}
->
+        : isRtl
+          ? 0
+          : "var(--saeule-w, 277px)",
+      right: isMobile
+        ? 0
+        : isRtl
+          ? "var(--saeule-w, 277px)"
+          : 0,
+      zIndex: 90,
+      display: "flex",
+      justifyContent: "center",
+      width: isMobile ? "100%" : "auto",
+      marginInline: 0,
+    }}
+  >
+    <PromptRoot
+      t={t}
+      hasMessages={hasMessages}
+      input={input}
+      setInput={setInput}
+      loading={loading}
+      dockRef={dockRef}
+      padBottom={padBottom}
+      setPadBottom={setPadBottom}
+      compactStatus={compactStatus}
+      footerStatus={footerStatus}
+      withGate={withGate}
+      sendingRef={sendingRef}
+      onSendFromPrompt={onSendFromPrompt}
+      isMobile={isMobile}
+      onToggleSaeule={isMobileLike ? openOverlay : undefined}
+    />
+  </div>
+)}
 
-            <PromptRoot
-  t={t}
-  hasMessages={hasMessages}
-  input={input}
-  setInput={setInput}
-  loading={loading}
-  dockRef={dockRef}
-  padBottom={padBottom}
-  setPadBottom={setPadBottom}
-  compactStatus={compactStatus}
-  footerStatus={footerStatus}
-  withGate={withGate}
-  sendingRef={sendingRef}
-  onSendFromPrompt={onSendFromPrompt}
-  isMobile={isMobile}
-  onToggleSaeule={isMobileLike ? openOverlay : undefined}   // ★ NEU: logische Brücke
-/>
-
-          </div>
         </div> {/* /rechte Spalte */}
 
 
