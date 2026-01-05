@@ -56,21 +56,18 @@ export default function ChatDetailView({ chain_id, onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black">
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+    <section className="flex flex-col gap-10">
+      <div className="flex items-center justify-between">
         <div className="text-lg font-medium">Chat</div>
         <button
           onClick={onClose}
-          className="text-white/60 hover:text-white transition"
-          aria-label="Close"
+          className="text-sm text-text-muted hover:text-text-primary transition"
         >
-          ✕
+          Close
         </button>
       </div>
 
-      {/* Body */}
-      <div className="px-6 py-6 space-y-6 overflow-y-auto h-[calc(100vh-64px)]">
+      <div className="space-y-6">
         {pairs.map((pair) => (
           <div
             key={pair.pair_id}
@@ -90,6 +87,6 @@ export default function ChatDetailView({ chain_id, onClose }: Props) {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   )
 }
