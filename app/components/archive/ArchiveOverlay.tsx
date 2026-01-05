@@ -221,18 +221,19 @@ export default function ArchiveOverlay() {
       {/* CONTENT FRAME — FULL BLEED                                 */}
       {/* ========================================================== */}
         <div className="w-full h-full flex flex-col">
-        <div
+       <div
   className="
     w-full
     max-w-[920px]
-    min-w-[320px]
+    min-w-[360px]
     mx-auto
-    px-12
+    px-0
     flex
     flex-col
     h-full
   "
 >
+
 
           {/* ====================================================== */}
           {/* HEADER — ORIENTATION                                   */}
@@ -242,8 +243,8 @@ export default function ArchiveOverlay() {
     sticky
     top-0
     z-20
-    pt-20
-    pb-6
+    pt-8
+    pb-4
     flex
     flex-col
     gap-4
@@ -302,11 +303,13 @@ export default function ArchiveOverlay() {
 <section
   className="
     sticky
-    top-[160px]
+    top-[120px]
     z-10
     pb-6
+    bg-[#0C0C0C]
   "
 >
+
   <div
     className="
       bg-[#0C0C0C]
