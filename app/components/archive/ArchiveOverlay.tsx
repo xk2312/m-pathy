@@ -237,43 +237,80 @@ export default function ArchiveOverlay() {
     flex-col
   "
 >
-  {/* ================= HEADER SLOT ================= */}
-  <div
+{/* ================= HEADER SLOT ================= */}
+<div className="shrink-0 pt-[var(--h-gap-xl)]">
+  <header
     className="
-      shrink-0
-      pt-[var(--h-gap-xl)]
+      pb-4
+      flex
+      flex-col
+      gap-4
+      relative
     "
   >
-    <header
+    <button
+      aria-label="Close archive"
       className="
-        pb-4
-        flex
-        flex-col
-        gap-4
-        relative
+        absolute
+        top-8
+        right-8
+        text-text-muted
+        hover:text-text-primary
+        transition
       "
+      onClick={() => router.push('/page2')}
     >
-      ...
-    </header>
+      ✕
+    </button>
 
-    <section
+    <h1 className="text-3xl font-medium tracking-tight">
+      Archive
+    </h1>
+
+    <p className="text-sm text-text-secondary max-w-[560px]">
+      Browse, review, and select past conversations.
+    </p>
+  </header>
+
+  <section
+    className="
+      w-full
+      bg-[#0C0C0C]
+      rounded-xl
+      px-6
+      py-4
+    "
+  >
+    <Input
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      placeholder="Search your chats…"
       className="
         w-full
-        bg-[#0C0C0C]
-        opacity-100
-        rounded-xl
-        px-6
-        py-4
+        bg-[#121418]
+        border
+        border-border-soft
+        rounded-pill
+        px-8
+        py-7
+        text-base
+        placeholder:text-text-muted
+        focus-visible:ring-2
+        focus-visible:ring-cyan-500
       "
-    >
-      ...
-    </section>
-  </div>
+    />
+  </section>
+</div>
 
-  {/* ================= BODY SLOT ================= */}
-  <div className="flex-1 overflow-y-auto mt-[15px]">
-    ...
-  </div>
+{/* ================= BODY SLOT ================= */}
+<div className="flex-1 overflow-y-auto mt-[15px]">
+  {query.length < 3 ? (
+    <RecentChatsView />
+  ) : (
+    <SearchResultsView results={runArchiveSearch(query)} />
+  )}
+</div>
+
 
   {/* ================= FOOTER SLOT ================= */}
   <footer
