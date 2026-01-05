@@ -346,7 +346,14 @@ export default function ArchiveOverlay() {
 {/* ====================================================== */}
 {/* CONTENT — CHAT LIST                                    */}
 {/* ====================================================== */}
-<div className="flex-1 overflow-y-auto pb-32">
+<div
+  className="
+    flex-1
+    overflow-y-auto
+    pb-32
+    p-[30px]
+  "
+>
 
   {(() => {
     type ArchiveView = 'recent' | 'search' | 'detail' | 'empty'
