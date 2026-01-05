@@ -225,18 +225,22 @@ export default function ArchiveOverlay() {
       {/* ========================================================== */}
       {/* CONTENT FRAME — FULL BLEED                                 */}
       {/* ========================================================== */}
-        <div className="w-full h-full flex flex-col">
-       
-<div
-  className="
-    w-full
-    max-w-[920px]
-    mx-auto
-    h-full
-    flex
-    flex-col
-  "
->
+       <div className="w-full h-full flex flex-col">
+
+  {/* ===== TOP STAGE GAP (REAL SPACE) ===== */}
+  <div className="shrink-0 h-[var(--h-gap-xl)]" />
+
+  <div
+    className="
+      w-full
+      max-w-[920px]
+      mx-auto
+      flex
+      flex-col
+    "
+  >
+
+
 {/* ================= HEADER SLOT ================= */}
 <div className="shrink-0 pt-[var(--h-gap-xl)]">
   <header
