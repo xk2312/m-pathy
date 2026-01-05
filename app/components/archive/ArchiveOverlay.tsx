@@ -240,7 +240,7 @@ export default function ArchiveOverlay() {
           {/* ====================================================== */}
 <header
   className="
-    pt-8
+    pt-[62px]
     pb-4
     flex
     flex-col
@@ -248,6 +248,7 @@ export default function ArchiveOverlay() {
     relative
   "
 >
+
   <button
     aria-label="Close archive"
     className="
