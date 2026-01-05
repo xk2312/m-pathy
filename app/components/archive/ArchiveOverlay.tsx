@@ -283,29 +283,10 @@ export default function ArchiveOverlay() {
   </p>
 </header>
 
-<button
-  type="button"
-  aria-label="Close Archive"
-  onClick={(e) => {
-    e.stopPropagation()
-    window.dispatchEvent(new CustomEvent('mpathy:archive:close'))
-  }}
-  className="
-    absolute
-    top-4
-    -right-[30px]
-    z-50
-    cursor-pointer
-    pointer-events-auto
-    text-sm
-    text-secondary
-    hover:text-text-primary
-    transition
-  "
->
-  ✕
-</button>
 
+
+<div className="relative max-w-[920px] mx-auto">
+  {/* Search Input liegt hier */}
 
 
 <section
@@ -337,6 +318,30 @@ export default function ArchiveOverlay() {
     "
   />
 </section>
+<button
+  type="button"
+  aria-label="Close Archive"
+  onClick={(e) => {
+    e.stopPropagation()
+    window.dispatchEvent(new CustomEvent('mpathy:archive:close'))
+  }}
+  className="
+    absolute
+    top-4
+    -right-[30px]
+    z-50
+    cursor-pointer
+    pointer-events-auto
+    text-sm
+    text-secondary
+    hover:text-text-primary
+    transition
+  "
+>
+  ✕
+</button>
+</div>
+
 
 <div className="flex-1 overflow-y-auto mt-[15px]">
   {(() => {
