@@ -282,6 +282,7 @@ export default function ArchiveOverlay() {
     Browse, review, and select past conversations.
   </p>
 </header>
+
 <button
   type="button"
   aria-label="Close Archive"
@@ -292,7 +293,7 @@ export default function ArchiveOverlay() {
   className="
     absolute
     top-4
-    right-8
+    right-[200px]
     z-50
     cursor-pointer
     pointer-events-auto
@@ -304,6 +305,7 @@ export default function ArchiveOverlay() {
 >
   ✕
 </button>
+
 
 <section
   className="
