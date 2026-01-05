@@ -119,7 +119,9 @@ import { useRouter } from 'next/navigation'
 import SearchResultsView from './views/SearchResultsView'
 import RecentChatsView from './views/RecentChatsView'
 import EmptyStateView from './views/EmptyStateView'
+import ChatDetailView from './views/ChatDetailView'
 import { runArchiveSearch } from './ArchiveSearch'
+
 
 
 
@@ -157,7 +159,9 @@ type ChatDisplay = {
 export default function ArchiveOverlay() {
   const [query, setQuery] = useState('')
   const [chats, setChats] = useState<ChatDisplay[]>([])
+  const [openChainId, setOpenChainId] = useState<string | null>(null)
   const router = useRouter()
+
 
 
   /* -------------------------------------------------------------- */
@@ -340,26 +344,56 @@ export default function ArchiveOverlay() {
       {(() => {
         type ArchiveView = 'recent' | 'search' | 'detail' | 'empty'
 
-        let view: ArchiveView
+let view: ArchiveView
 
-        if (query.length < 3) {
-          view = 'recent'
-        } else {
-          view = 'search'
-        }
+if (openChainId) {
+  view = 'detail'
+} else if (query.length < 3) {
+  view = 'recent'
+} else {
+  view = 'search'
+}
+
 
         switch (view) {
-          case 'recent':
-            return <RecentChatsView />
+  case 'recent':
+    return (
+      <RecentChatsView
+        onOpenChat={(chainId: string) => {
+          setOpenChainId(chainId)
+        }}
+      />
+    )
 
-          case 'search': {
-            const results = runArchiveSearch(query)
-            return <SearchResultsView results={results} />
-          }
+  case 'search': {
+    const results = runArchiveSearch(query)
+    return (
+      <SearchResultsView
+        results={results}
+        onOpenChat={(chainId: string) => {
+          setOpenChainId(chainId)
+        }}
+      />
+    )
+  }
 
-          default:
-            return null
-        }
+  case 'detail':
+  if (!openChainId) return null
+
+  return (
+    <ChatDetailView
+      chain_id={openChainId}
+      onClose={() => {
+        setOpenChainId(null)
+      }}
+    />
+  )
+
+
+  default:
+    return null
+}
+
       })()}
     </div>
 

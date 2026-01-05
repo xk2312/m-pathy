@@ -11,7 +11,11 @@ type ChatDisplay = {
   lastTimestamp: string
 }
 
-export default function RecentChatsView() {
+type Props = {
+  onOpenChat?: (chainId: string) => void
+}
+
+export default function RecentChatsView({ onOpenChat }: Props) {
   const [chats, setChats] = useState<ChatDisplay[]>([])
 
   useEffect(() => {

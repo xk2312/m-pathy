@@ -4,6 +4,7 @@ import type { SearchResult } from '@/components/archive/ArchiveSearch'
 
 type Props = {
   results: SearchResult[]
+  onOpenChat?: (chainId: string) => void
 }
 
 export default function SearchResultsView({ results }: Props) {
