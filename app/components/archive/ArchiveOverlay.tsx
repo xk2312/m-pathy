@@ -216,7 +216,7 @@ export default function ArchiveOverlay() {
       {/* ========================================================== */}
       {/* CONTENT FRAME — FULL BLEED                                 */}
       {/* ========================================================== */}
-      <div className="w-full h-full overflow-y-auto">
+        <div className="w-full h-full flex flex-col">
         <div
           className="
             max-w-[920px]
@@ -224,21 +224,31 @@ export default function ArchiveOverlay() {
             px-12
             flex
             flex-col
+            h-full
           "
         >
+
           {/* ====================================================== */}
           {/* HEADER — ORIENTATION                                   */}
           {/* ====================================================== */}
-         <header
+  <header
   className="
+    sticky
+    top-0
+    z-20
     pt-28
-    pb-18
+    pb-12
     flex
     flex-col
     gap-6
     relative
+    bg-gradient-to-b
+    from-[#121418]
+    via-[#0C0C0C]
+    to-transparent
   "
 >
+
   {/* Close Overlay */}
   <button
   aria-label="Close archive"
@@ -282,7 +292,15 @@ export default function ArchiveOverlay() {
           {/* ====================================================== */}
           {/* SEARCH — PRIMARY ACTION                                 */}
           {/* ====================================================== */}
-          <section className="pb-24">
+<section
+  className="
+    sticky
+    top-[196px]
+    z-10
+    pb-12
+    bg-[#0C0C0C]
+  "
+>
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -307,33 +325,33 @@ export default function ArchiveOverlay() {
           {/* ====================================================== */}
           {/* CONTENT — CHAT LIST                                    */}
           {/* ====================================================== */}
-        {(() => {
-  type ArchiveView = 'recent' | 'search' | 'detail' | 'empty'
+<div className="flex-1 overflow-y-auto pb-32">
+  {(() => {
+    type ArchiveView = 'recent' | 'search' | 'detail' | 'empty'
 
-  let view: ArchiveView
+    let view: ArchiveView
 
-if (query.length < 3) {
-  view = 'recent'
-} else {
-  view = 'search'
-}
+    if (query.length < 3) {
+      view = 'recent'
+    } else {
+      view = 'search'
+    }
 
+    switch (view) {
+      case 'recent':
+        return <RecentChatsView />
 
-  switch (view) {
-    case 'recent':
-      return <RecentChatsView />
+      case 'search': {
+        const results = runArchiveSearch(query)
+        return <SearchResultsView results={results} />
+      }
 
-   case 'search': {
-  const results = runArchiveSearch(query)
-  return <SearchResultsView results={results} />
-}
+      default:
+        return null
+    }
+  })()}
+</div>
 
-
-
-    // detail & empty werden in Phase 3/4 aktiviert
-
-  }
-})()}
 
 
         </div>
