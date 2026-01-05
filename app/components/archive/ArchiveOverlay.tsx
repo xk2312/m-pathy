@@ -221,18 +221,19 @@ export default function ArchiveOverlay() {
       {/* CONTENT FRAME — FULL BLEED                                 */}
       {/* ========================================================== */}
         <div className="w-full h-full flex flex-col">
-       <div
+       
+  <div
   className="
     w-full
     max-w-[920px]
-    min-w-[360px]
     mx-auto
-    px-0
     flex
     flex-col
     h-full
+    pt-[30px]
   "
 >
+
 
 
           {/* ====================================================== */}
