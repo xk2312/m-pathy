@@ -37,21 +37,25 @@ export default function RecentChatsView({ onOpenChat }: Props) {
         Recent chats
       </div>
 
-      {chats.map((chat) => (
-        <article
-          key={chat.chat_serial}
-          className="
-            group
-            rounded-xl
-            px-8
-            py-7
-            -mx-4
-            cursor-pointer
-            transition
-            bg-surface-1
-            hover:bg-surface-2
-          "
-        >
+    {chats.map((chat) => (
+  <article
+    key={chat.chat_serial}
+    className="
+      group
+      rounded-xl
+      px-8
+      py-7
+      -mx-4
+      cursor-pointer
+      transition
+      bg-surface-1
+      hover:bg-surface-2
+    "
+    onClick={() => {
+      onOpenChat?.(String(chat.chat_serial))
+    }}
+  >
+
           <div className="flex gap-6">
             <div className="pt-1 text-text-muted group-hover:text-text-secondary transition">
               <MessageSquare size={18} />
@@ -70,9 +74,17 @@ export default function RecentChatsView({ onOpenChat }: Props) {
                   </div>
                 </div>
 
-                <div className="text-xs text-text-muted opacity-0 group-hover:opacity-100 transition">
-                  View →
-                </div>
+                <button
+  type="button"
+  className="text-xs text-text-muted opacity-0 group-hover:opacity-100 transition"
+  onClick={(e) => {
+    e.stopPropagation()
+    onOpenChat?.(String(chat.chat_serial))
+  }}
+>
+  View →
+</button>
+
               </div>
 
               {chat.keywords.length > 0 && (
