@@ -243,28 +243,7 @@ export default function ArchiveOverlay() {
 
 
 
-<button
-  type="button"
-  aria-label="Close Archive"
-  onClick={(e) => {
-    e.stopPropagation()
-    window.dispatchEvent(new CustomEvent('mpathy:archive:close'))
-  }}
-  className="
-    absolute
-    top-3
-    right-3
-    z-50
-    cursor-pointer
-    pointer-events-auto
-    text-sm
-    text-secondary
-    hover:text-text-primary
-    transition
-  "
->
-  ✕
-</button>
+
 
           {/* ====================================================== */}
           {/* HEADER — ORIENTATION                                   */}
@@ -303,7 +282,28 @@ export default function ArchiveOverlay() {
     Browse, review, and select past conversations.
   </p>
 </header>
-
+<button
+  type="button"
+  aria-label="Close Archive"
+  onClick={(e) => {
+    e.stopPropagation()
+    window.dispatchEvent(new CustomEvent('mpathy:archive:close'))
+  }}
+  className="
+    absolute
+    top-3
+    right-3
+    z-50
+    cursor-pointer
+    pointer-events-auto
+    text-sm
+    text-secondary
+    hover:text-text-primary
+    transition
+  "
+>
+  ✕
+</button>
 <section
   className="
     w-full
