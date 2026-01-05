@@ -340,12 +340,16 @@ export default function ArchiveOverlay() {
               "
             />
               </div>
-          </section>
+        </section>
 
-          {/* ====================================================== */}
-          {/* CONTENT — CHAT LIST                                    */}
-          {/* ====================================================== */}
+{/* SEARCH → BODY SPACER (MEFL) */}
+<div className="h-[15px]" />
+
+{/* ====================================================== */}
+{/* CONTENT — CHAT LIST                                    */}
+{/* ====================================================== */}
 <div className="flex-1 overflow-y-auto pb-32">
+
   {(() => {
     type ArchiveView = 'recent' | 'search' | 'detail' | 'empty'
 
