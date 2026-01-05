@@ -293,7 +293,7 @@ export default function ArchiveOverlay() {
   className="
     absolute
     top-4
-    right-[200px]
+    -right-[30px]
     z-50
     cursor-pointer
     pointer-events-auto
@@ -305,6 +305,7 @@ export default function ArchiveOverlay() {
 >
   ✕
 </button>
+
 
 
 <section
