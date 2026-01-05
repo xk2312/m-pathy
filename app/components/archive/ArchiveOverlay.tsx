@@ -1,3 +1,114 @@
+/**
+ * =========================================================
+ *  ARCHIVE OVERLAY — SYSTEM STAGE (Canonical)
+ * =========================================================
+ *
+ *  ROLE
+ *  ----
+ *  Owns the Archive as a SYSTEM SPACE.
+ *  Orchestrates structure, not content.
+ *
+ *  This file is allowed to be LARGE.
+ *  This file is NOT allowed to render domain logic.
+ *
+ *  =========================================================
+ *  INDEX (Jump Anchors)
+ *  =========================================================
+ *
+ *  [ANCHOR:INTENT]
+ *    - File responsibility & non-responsibility
+ *    - What this file MUST do
+ *    - What this file MUST NEVER do
+ *
+ *  [ANCHOR:SPACE]
+ *    - Overlay as system room
+ *    - Chat blocking & ownership
+ *    - Scroll & background contract
+ *
+ *  [ANCHOR:STATE]
+ *    - Archive view state (Recent | Search | Detail | Empty)
+ *    - Search threshold rules (0–2 | ≥3)
+ *    - No business logic, only switching
+ *
+ *  [ANCHOR:LAYOUT]
+ *    - Structural composition
+ *    - Header / Search / Body / Footer
+ *    - Z-order & stacking context
+ *
+ *  [ANCHOR:HEADER]
+ *    - ArchiveHeader integration
+ *    - Title invariance ("Archive")
+ *    - Context label switching (view descriptor only)
+ *
+ *  [ANCHOR:SEARCH]
+ *    - ArchiveSearch wiring
+ *    - Input → Body decision flow
+ *    - No filtering logic here
+ *
+ *  [ANCHOR:BODY]
+ *    - Body as the ONLY dynamic region
+ *    - View switch:
+ *        • RecentChatsView
+ *        • SearchResultsView
+ *        • ChatDetailView
+ *        • EmptyStateView
+ *
+ *  [ANCHOR:SELECTION]
+ *    - Global Selection container ownership
+ *    - Selection visibility rules (0 | 1–5 | 6)
+ *    - No intent binding here
+ *
+ *  [ANCHOR:ACTIONS]
+ *    - ArchiveActions integration
+ *    - Intent dispatch (verify | add)
+ *    - Post-action cleanup responsibility
+ *
+ *  [ANCHOR:FOOTER]
+ *    - ArchiveUIFinish integration
+ *    - Branding & trust closure
+ *    - No primary actions allowed
+ *
+ *  [ANCHOR:REPORTS]
+ *    - Explicit NON-OWNERSHIP of reports
+ *    - Archive may link, never render
+ *
+ *  [ANCHOR:EXTENSION]
+ *    - How to add new Archive views
+ *    - Rules for future overlays
+ *
+ *  [ANCHOR:ANTI-DRIFT]
+ *    - Forbidden patterns
+ *    - Stop conditions
+ *
+ * =========================================================
+ *  ANTI-DRIFT GUARANTEE
+ * =========================================================
+ *
+ *  If any of the following appears in this file,
+ *  the implementation is INVALID:
+ *
+ *  - Rendering of message pairs
+ *  - Search filtering or scoring logic
+ *  - Report rendering
+ *  - Business rules beyond view switching
+ *  - CSS-based prompt suppression
+ *
+ * =========================================================
+ *  CANONICAL MENTAL MODEL
+ * =========================================================
+ *
+ *  Header  → Identity
+ *  Search  → Decision
+ *  Body    → Truth
+ *  Footer  → Closure
+ *
+ *  Overlay = Stage
+ *  Views   = Scenes
+ *  Logic   = Orchestra Pit
+ *
+ * =========================================================
+ */
+
 'use client'
 
 import React, { useEffect, useState } from 'react'
@@ -5,6 +116,12 @@ import { getRecentChats } from '@/lib/archiveIndex'
 import { Input } from '@/components/ui/Input'
 import { MessageSquare } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import SearchResultsView from './views/SearchResultsView'
+import RecentChatsView from './views/RecentChatsView'
+import EmptyStateView from './views/EmptyStateView'
+import { runArchiveSearch } from './ArchiveSearch'
+
+
 
 /**
  * ============================================================
@@ -190,143 +307,35 @@ export default function ArchiveOverlay() {
           {/* ====================================================== */}
           {/* CONTENT — CHAT LIST                                    */}
           {/* ====================================================== */}
-          <main className="pb-40">
-            {/* ================= DEFAULT STATE ================= */}
-            {query.length < 3 && (
-              <section
-                className="
-                  flex
-                  flex-col
-                  gap-16
-                "
-              >
-                {/* TODO i18n: archive.recent */}
-                <div className="text-xs text-text-muted tracking-wide">
-                  Recent chats
-                </div>
+        {(() => {
+  type ArchiveView = 'recent' | 'search' | 'detail' | 'empty'
 
-                {/* ================= CHAT OBJECTS ================= */}
-                {chats.map((chat) => (
-                  <article
-                    key={chat.chat_serial}
-                    className="
-                      group
-                      rounded-xl
-                      px-8
-                      py-7
-                      -mx-4
-                      cursor-pointer
-                      transition
-                      bg-surface-1
-                      hover:bg-surface-2
-                    "
-                  >
-                    <div className="flex gap-6">
-                      {/* Icon */}
-                      <div
-                        className="
-                          pt-1
-                          text-text-muted
-                          group-hover:text-text-secondary
-                          transition
-                        "
-                      >
-                        <MessageSquare size={18} />
-                      </div>
+  let view: ArchiveView
 
-                      {/* Content */}
-                      <div className="flex flex-col gap-5 flex-1">
-                        {/* Title / Meta / VIEW */}
-                        <div
-                          className="
-                            flex
-                            items-baseline
-                            justify-between
-                            gap-6
-                          "
-                        >
-                          <div className="flex items-baseline gap-4 flex-wrap">
-                            {/* TODO i18n: archive.chatLabel */}
-                            <div className="text-sm text-text-primary">
-                              Chat {chat.chat_serial}
-                            </div>
+if (query.length < 3) {
+  view = 'recent'
+} else {
+  view = 'search'
+}
 
-                            <div
-                              className="
-                                text-xs
-                                text-text-muted
-                                tracking-wide
-                              "
-                            >
-                              [
-                              {chat.messageCount} msgs ·{' '}
-                              {new Date(chat.lastTimestamp).toLocaleDateString()}
-                              ]
-                            </div>
-                          </div>
 
-                          {/* VIEW affordance */}
-                          <div
-                            className="
-                              text-xs
-                              text-text-muted
-                              opacity-0
-                              group-hover:opacity-100
-                              transition
-                            "
-                          >
-                            View →
-                          </div>
-                        </div>
+  switch (view) {
+    case 'recent':
+      return <RecentChatsView />
 
-                        {/* Keywords */}
-                        {chat.keywords.length > 0 && (
-                          <div className="flex flex-col gap-2">
-                            {/* TODO i18n: archive.keywords */}
-                            <div
-                              className="
-                                text-[10px]
-                                uppercase
-                                tracking-wider
-                                text-text-muted
-                              "
-                            >
-                              Keywords
-                            </div>
+   case 'search': {
+  const results = runArchiveSearch(query)
+  return <SearchResultsView results={results} />
+}
 
-                            <div className="flex flex-wrap gap-x-4 gap-y-2">
-                              {chat.keywords.map((keyword) => (
-                                <span
-                                  key={keyword}
-                                  className="
-                                    text-xs
-                                    text-text-secondary
-                                    select-none
-                                  "
-                                >
-                                  {keyword}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </section>
-            )}
 
-            {/* ================= SEARCH STATE ================= */}
-            {query.length >= 3 && (
-              <section className="pt-20">
-                {/* TODO i18n: archive.noResults */}
-                <div className="text-sm text-text-muted">
-                  No matches.
-                </div>
-              </section>
-            )}
-          </main>
+
+    // detail & empty werden in Phase 3/4 aktiviert
+
+  }
+})()}
+
+
         </div>
       </div>
     </div>

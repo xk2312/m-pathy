@@ -536,12 +536,173 @@ Wenn eines der folgenden Symptome auftritt, ist **sofort zu stoppen**:
 > Kein Raum ist transparent.
 > Kein Raum ist halb aktiv.**
 
+
 ---
 
-Wenn du willst, können wir im nächsten Chat **strikt entlang dieses Addendums**:
+# 📄 **README-ADDENDUM — Prompt Gating & Overlay Ownership (v1.3)**
 
-* ein **UI-Audit Schritt für Schritt**
-* oder eine **saubere Neu-Implementierung ohne Altlasten**
-* oder eine **Checkliste für jeden Commit**
+> **Dieses Addendum ist verpflichtend.**
+> Es beschreibt das Wissen, das wir gerade schmerzhaft gelernt haben – und verhindert, dass genau dieser Fehler je wieder passiert.
 
-Du entscheidest.
+---
+
+## 25. Prompt-Ownership (kritische Systemregel)
+
+Der **Prompt (PromptRoot)** gehört **immer genau einem Raum**.
+
+> **Standardzustand:**
+> Der Prompt ist Teil des **Chat-Raums**.
+
+Sobald ein **Overlay** geöffnet wird, gilt:
+
+* Der Prompt **darf nicht mehr sichtbar oder aktiv sein**
+* Der Prompt **darf nicht global gerendert werden**
+* Der Prompt **darf nicht über Z-Index oder Opacity „kaschiert“ werden**
+
+👉 **Prompt-Sichtbarkeit ist keine Styling-Frage, sondern eine Raum-Entscheidung.**
+
+---
+
+## 26. Richtige Lösung (kanonisch)
+
+### ❌ Falsche Ansätze (verboten)
+
+* CSS (`opacity`, `pointer-events`, `z-index`)
+* Layout-Manipulation (`position: fixed`, Überlagerung)
+* Eingriffe in `layout.tsx`
+* globale Gates (`AppGate`, Providers, etc.)
+
+Diese Ansätze führen zu:
+
+* instabilem Verhalten
+* Build-Fehlern
+* Seiteneffekten bei zukünftigen Overlays
+
+---
+
+### ✅ Richtiger Ansatz (best practice)
+
+**Der Prompt wird dort gated, wo er entsteht.**
+
+Konkret:
+
+* **Datei:** `page.tsx` / `page2.tsx`
+* **Ebene:** Parent des `PromptRoot`
+* **Mechanismus:** explizite Overlay-Abfrage
+
+Beispiel (kanonisches Muster):
+
+```tsx
+{!isArchiveOverlayOpen && (
+  <div className="prompt-root-scene">
+    <PromptRoot {...props} />
+  </div>
+)}
+```
+
+👉 **Kein globaler Zustand.
+Kein Layout-Hack.
+Kein CSS-Trick.**
+
+---
+
+## 27. Overlay-Spezifität (entscheidender Lernpunkt)
+
+Nicht jedes Overlay ist gleich.
+
+Deshalb gilt zwingend:
+
+* **Jedes Overlay benennt explizit**, ob es:
+
+  * den Prompt erlaubt **oder**
+  * den Prompt unterdrückt
+
+Beispiel:
+
+| Overlay         | Prompt sichtbar |
+| --------------- | --------------- |
+| Archive Overlay | ❌ Nein          |
+| Mobile Overlay  | ❌ Nein          |
+| Onboarding      | ❌ Nein          |
+| Chat (Default)  | ✅ Ja            |
+
+👉 **Der Prompt verschwindet nicht „wegen Overlay“,
+sondern wegen *diesem* Overlay.**
+
+---
+
+## 28. Referenz: Mobile Overlay (bewährtes Muster)
+
+Das bestehende Mobile-Overlay ist **architektonisch korrekt**:
+
+```tsx
+{isMobile && (
+  <MobileOverlay
+    open={overlayOpen}
+    onClose={() => setOverlayOpen(false)}
+    ...
+  />
+)}
+```
+
+Das bedeutet implizit:
+
+* Overlay **besitzt den Raum**
+* Chat-Interaktion ruht
+* Prompt gehört nicht mehr zur aktiven Szene
+
+👉 **Dieses Muster ist auf alle zukünftigen Overlays zu übertragen.**
+
+---
+
+## 29. Overlay-Skalierung (Zukunftssicherheit)
+
+Für kommende Overlays gilt:
+
+* **Kein Overlay greift global ein**
+* **Kein Overlay manipuliert den Prompt direkt**
+* **Jeder Raum entscheidet lokal über seine Kinder**
+
+Empfohlenes mentales Modell:
+
+```
+Chat-Raum
+ ├─ PromptRoot
+ └─ Messages
+
+Archive-Raum
+ └─ ArchiveOverlay   (Prompt existiert hier nicht)
+```
+
+---
+
+## 30. Anti-Drift-Check (Pflicht vor jedem Overlay-Commit)
+
+Vor jedem Commit mit Overlay-Änderungen **muss** geprüft werden:
+
+1. Wird der Prompt **lokal** gegated?
+2. Ist der Gate-Name **overlay-spezifisch**?
+3. Gibt es **keinen** Eingriff in `layout.tsx`?
+4. Würde ein **zweites Overlay** denselben Mechanismus nutzen können?
+
+Wenn eine Antwort **Nein** ist → **STOP**.
+
+---
+
+## 31. Status
+
+* **Erkenntnis:** FINAL
+* **Umsetzung:** BESTÄTIGT (funktioniert)
+* **Gültig ab:** sofort
+* **Drift-Toleranz:** 0
+
+---
+
+### 🧭 Merksatz (neu)
+
+> **Der Prompt gehört nicht zur App.
+> Er gehört zum Raum.
+> Und Räume entscheiden selbst.**
+
+---
+
