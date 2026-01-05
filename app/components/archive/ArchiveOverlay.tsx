@@ -220,22 +220,30 @@ export default function ArchiveOverlay() {
 
 <button
   aria-label="Close archive"
-  type="button"
   className="
-    absolute
-    top-8
-    right-8
-    z-10
+    fixed
+    top-6
+    right-6
+    z-[2147483648]
     cursor-pointer
     pointer-events-auto
     text-text-muted
     hover:text-text-primary
     transition
   "
-  onClick={() => router.push('/page2')}
+  onClick={() => {
+    window.dispatchEvent(
+      new CustomEvent("mpathy:ui:overlay-close", {
+        detail: { reason: "archive-close" }
+      })
+    )
+  }}
 >
-  ✕
+  ×
 </button>
+
+
+
 
 
 
