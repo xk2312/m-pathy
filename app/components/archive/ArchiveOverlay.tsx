@@ -240,121 +240,81 @@ export default function ArchiveOverlay() {
           {/* ====================================================== */}
 <header
   className="
-    sticky
-    top-0
-    z-20
     pt-8
     pb-4
     flex
     flex-col
     gap-4
     relative
-    bg-gradient-to-b
-    from-[#121418]
-    via-[#0C0C0C]
-    to-transparent
   "
 >
-
-
-  {/* Close Overlay */}
   <button
-  aria-label="Close archive"
-  className="
-    absolute
-    top-8
-    right-8
-    text-text-muted
-    hover:text-text-primary
-    transition
-  "
-  onClick={() => router.push('/page2')}
->
-  ✕
-</button>
-
-
-            {/* TODO i18n: archive.title */}
-            <h1
-              className="
-                text-3xl
-                font-medium
-                tracking-tight
-              "
-            >
-              Archive
-            </h1>
-
-            {/* TODO i18n: archive.subtitle */}
-            <p
-              className="
-                text-sm
-                text-text-secondary
-                max-w-[560px]
-              "
-            >
-              Browse, review, and select past conversations.
-            </p>
-          </header>
-
-          {/* ====================================================== */}
-          {/* SEARCH — PRIMARY ACTION                                 */}
-          {/* ====================================================== */}
-<section
-  className="
-    pb-6
-    bg-[#0C0C0C]
-  "
->
-
-
-  <div
+    aria-label="Close archive"
     className="
-      bg-[#0C0C0C]
-      opacity-100
-      rounded-xl
-      px-6
-      py-4
+      absolute
+      top-8
+      right-8
+      text-text-muted
+      hover:text-text-primary
+      transition
+    "
+    onClick={() => router.push('/page2')}
+  >
+    ✕
+  </button>
+
+  <h1
+    className="
+      text-3xl
+      font-medium
+      tracking-tight
     "
   >
+    Archive
+  </h1>
 
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              // TODO i18n: archive.searchPlaceholder
-              placeholder="Search your chats…"
-              className="
-                w-full
-                bg-surface-1
-                border
-                border-border-soft
-                rounded-pill
-                px-8
-                py-7
-                text-base
-                placeholder:text-text-muted
-                focus-visible:ring-2
-                focus-visible:ring-cyan-500
-              "
-            />
-              </div>
-        </section>
+  <p
+    className="
+      text-sm
+      text-text-secondary
+      max-w-[560px]
+    "
+  >
+    Browse, review, and select past conversations.
+  </p>
+</header>
 
-{/* Search and body are now linearly ordered */}
-
-
-{/* ====================================================== */}
-{/* CONTENT — CHAT LIST                                    */}
-{/* ====================================================== */}
-<div
+<section
   className="
-    flex-1
-    overflow-y-auto
-    pb-32
-    p-[30px]
+    w-full
+    bg-[#0C0C0C]
+    opacity-100
+    rounded-xl
+    px-6
+    py-4
   "
 >
+  <Input
+    value={query}
+    onChange={(e) => setQuery(e.target.value)}
+    placeholder="Search your chats…"
+    className="
+      w-full
+      bg-[#121418]
+      border
+      border-border-soft
+      rounded-pill
+      px-8
+      py-7
+      text-base
+      placeholder:text-text-muted
+      focus-visible:ring-2
+      focus-visible:ring-cyan-500
+    "
+  />
+</section>
 
+<div className="flex-1 overflow-y-auto mt-[15px]">
   {(() => {
     type ArchiveView = 'recent' | 'search' | 'detail' | 'empty'
 
@@ -381,17 +341,17 @@ export default function ArchiveOverlay() {
   })()}
 </div>
 
-{/* FOOTER (sticky) ← HIER */}
-      <footer
+<footer
   className="
     h-16
-    mt-4
+    mt-6
     bg-gradient-to-t
     from-[#080808]
     to-transparent
     pointer-events-none
   "
 />
+
 
 
         </div>
