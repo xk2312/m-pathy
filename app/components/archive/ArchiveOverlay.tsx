@@ -234,7 +234,6 @@ export default function ArchiveOverlay() {
     mx-auto
     flex
     flex-col
-    h-full
   "
 >
 
