@@ -245,7 +245,7 @@ export default function ArchiveOverlay() {
           {/* ====================================================== */}
 <header
   className="
-    pt-0
+    pt-[var(--h-gap-xxs)]
     pb-4
     flex
     flex-col

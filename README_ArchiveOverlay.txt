@@ -706,3 +706,64 @@ Wenn eine Antwort **Nein** ist → **STOP**.
 
 ---
 
+@Inventus — Erweiterung für readme.archive.txt
+
+Zweck: Lückenlose Dokumentation dessen, was in diesem Chat real passiert ist (nicht was intendiert war)
+
+Abschnitt: Archive Overlay – Spacing & Parent Analysis (Session Log)
+
+Kontext
+In dieser Session wurde das Archive Overlay hinsichtlich Spacing, Scroll-Verhalten und Parent-Einfluss analysiert. Ziel war ein sauberer Abstand des Archiv-Headers („Archive“) zum Viewport sowie eine stabile vertikale Ordnung von Header → Search → Body → Footer.
+
+Durchgeführte Schritte (chronologisch, faktenbasiert)
+
+Sticky-Ansatz (verworfen)
+
+Header und Search wurden initial als sticky behandelt.
+
+Ergebnis: Überlagerungen, Content lief hinter Search/Header.
+
+Entscheidung: Sticky-Ansatz vollständig verworfen.
+
+Lineare Ordnung hergestellt
+
+Header, Search, Body, Footer wurden in normalen Dokumentfluss überführt.
+
+Search nicht sticky, Footer nicht sticky.
+
+Ergebnis: Überlagerungen beseitigt, aber Abstandsprobleme blieben.
+
+Body-Padding eingeführt (30px)
+
+Padding im scrollenden Body (p-[30px]).
+
+Ergebnis: Seitliche Luft vorhanden, oberer Abstand zum Viewport weiterhin nicht korrekt.
+
+Elternanalyse durchgeführt (Analyse-Step 1–3)
+
+Identifiziert: Overlay lebt in position: fixed; inset: 0.
+
+Erkenntnis: Padding auf Header/Body kann keinen Viewport-Abstand erzeugen.
+
+Korrekte Ebene für systemischen Abstand ist der Overlay-Root.
+
+Mehrere Fehlversuche bei Umsetzung
+
+Abstand auf falschen Ebenen gesetzt (Header, Content-Frame).
+
+Gleichzeitige konkurrierende Abstände (Root + Frame + Header).
+
+Resultat: visuelle Inkonsistenz, fehlende Deterministik.
+
+Zentrale Erkenntnis (kanonisch)
+
+Systemischer Abstand zum Viewport darf nur an einer Stelle existieren:
+am Overlay-Root, nicht in Header, Search oder Body.
+
+Status am Ende der Session
+
+Ziel (sauberer, deterministischer Top-Abstand) nicht erreicht
+
+Architekturproblem korrekt identifiziert
+
+Umsetzung mehrfach fehlerhaft
