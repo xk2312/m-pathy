@@ -200,7 +200,7 @@ export default function ArchiveOverlay() {
     /* ============================================================ */
     /* SYSTEM SPACE — FULL TAKEOVER                                  */
     /* ============================================================ */
- <div
+<div
   className="
     fixed
     inset-0
@@ -211,9 +211,13 @@ export default function ArchiveOverlay() {
     to-[#080808]
     text-text-primary
     overflow-hidden
-    p-[30px]
+    pt-[60px]
+    pr-[30px]
+    pb-[30px]
+    pl-[30px]
   "
 >
+
 
 
 
@@ -222,7 +226,7 @@ export default function ArchiveOverlay() {
       {/* ========================================================== */}
         <div className="w-full h-full flex flex-col">
        
-  <div
+<div
   className="
     w-full
     max-w-[920px]
@@ -230,9 +234,9 @@ export default function ArchiveOverlay() {
     flex
     flex-col
     h-full
-    pt-[30px]
   "
 >
+
 
 
 
@@ -241,7 +245,7 @@ export default function ArchiveOverlay() {
           {/* ====================================================== */}
 <header
   className="
-    pt-[62px]
+    pt-0
     pb-4
     flex
     flex-col
