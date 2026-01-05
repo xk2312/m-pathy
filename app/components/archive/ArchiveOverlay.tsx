@@ -120,7 +120,6 @@ import SearchResultsView from './views/SearchResultsView'
 import RecentChatsView from './views/RecentChatsView'
 import EmptyStateView from './views/EmptyStateView'
 import { runArchiveSearch } from './ArchiveSearch'
-import '../../styles/design.token.css'
 
 
 
