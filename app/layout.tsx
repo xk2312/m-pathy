@@ -8,7 +8,7 @@ import LangAttrUpdater from "./components/LangAttrUpdater"
 import ArchiveInit from "./components/system/ArchiveInit"
 import ArchiveTrigger from "@/components/archive/ArchiveTrigger"
 import AppGate from "./components/system/AppGate" // 👈 NEU
-import './styles/design.token.css'
+import './styles/design.tokens.css'
 
 
 const inter = Inter({ subsets: ["latin"], display: "swap" })
