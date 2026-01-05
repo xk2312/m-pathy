@@ -200,10 +200,10 @@ export default function ArchiveOverlay() {
     /* ============================================================ */
     /* SYSTEM SPACE — FULL TAKEOVER                                  */
     /* ============================================================ */
-
 <div
   className="
     fixed
+    inset-0
     z-[2147483647]
     bg-gradient-to-b
     from-[#121418]
@@ -211,18 +211,12 @@ export default function ArchiveOverlay() {
     to-[#080808]
     text-text-primary
     overflow-hidden
-
-    /* 🔒 systemischer Top-Buffer */
-    top-[var(--h-gap-xxs)]
-    left-0
-    right-0
-    bottom-0
-
-    px-[30px]
+    pt-[var(--h-gap-xxs)]
+    pr-[30px]
     pb-[30px]
+    pl-[30px]
   "
 >
-
 
 
 
@@ -251,7 +245,6 @@ export default function ArchiveOverlay() {
           {/* ====================================================== */}
 <header
   className="
-    pt-[var(--h-gap-xxs)]
     pb-4
     flex
     flex-col
@@ -259,6 +252,7 @@ export default function ArchiveOverlay() {
     relative
   "
 >
+
 
   <button
     aria-label="Close archive"
