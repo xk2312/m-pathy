@@ -113,6 +113,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { getRecentChats } from '@/lib/archiveIndex'
+import { readLS } from '@/lib/storage'
 import { Input } from '@/components/ui/Input'
 import { MessageSquare } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -121,6 +122,7 @@ import RecentChatsView from './views/RecentChatsView'
 import EmptyStateView from './views/EmptyStateView'
 import ChatDetailView from './views/ChatDetailView'
 import { runArchiveSearch } from './ArchiveSearch'
+
 
 
 
@@ -161,6 +163,26 @@ export default function ArchiveOverlay() {
   const [chats, setChats] = useState<ChatDisplay[]>([])
   const [openChainId, setOpenChainId] = useState<string | null>(null)
   const router = useRouter()
+  const resolveChainIdFromChatSerial = (chatSerial: string) => {
+  const chat = getRecentChats(13).find(
+    (c) => String(c.chat_serial) === chatSerial
+  )
+
+  if (!chat) return null
+
+  const anchors =
+    readLS<{ timestamp: string; chain_id: string }[]>('mpathy:triketon:v1') ?? []
+
+  const start = Date.parse(chat.first_timestamp)
+  const end = Date.parse(chat.last_timestamp)
+
+  const hit = anchors.find((a) => {
+    const t = Date.parse(a.timestamp)
+    return t >= start && t <= end
+  })
+
+  return hit?.chain_id ?? null
+}
 
 
 
@@ -358,22 +380,30 @@ if (openChainId) {
         switch (view) {
   case 'recent':
     return (
-      <RecentChatsView
-        onOpenChat={(chainId: string) => {
-          setOpenChainId(chainId)
-        }}
-      />
+     <RecentChatsView
+  onOpenChat={(chatSerial: string) => {
+    const chainId = resolveChainIdFromChatSerial(chatSerial)
+    if (chainId) {
+      setOpenChainId(chainId)
+    }
+  }}
+/>
+
     )
 
   case 'search': {
     const results = runArchiveSearch(query)
     return (
       <SearchResultsView
-        results={results}
-        onOpenChat={(chainId: string) => {
-          setOpenChainId(chainId)
-        }}
-      />
+  results={results}
+  onOpenChat={(chatSerial: string) => {
+    const chainId = resolveChainIdFromChatSerial(chatSerial)
+    if (chainId) {
+      setOpenChainId(chainId)
+    }
+  }}
+/>
+
     )
   }
 
