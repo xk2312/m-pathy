@@ -2562,15 +2562,19 @@ undefined : "100dvh",
           </div>
 
                     {/* Dock sitzt stabil unter der Bühne, nutzt weiter padBottom/--dock-h */}
-         {/* Prompt nur rendern, wenn KEIN Overlay aktiv ist */}
-{!overlayOpen && (
+         {!(
+  typeof document !== "undefined" &&
+  document.documentElement.hasAttribute("data-archive-open")
+) && (
   <div
     data-position-state={!hasMessages ? "intro" : "chat"}
     data-layout={isMobile ? "mobile" : "desktop"}
     className="prompt-root-scene"
     style={{
       position: "fixed",
+
       bottom: 0,
+      // Desktop: Freiraum auf der Säulen-Seite, Dock zentriert im Chat-Bereich
       left: isMobile
         ? 0
         : isRtl
