@@ -232,136 +232,63 @@ export default function ArchiveOverlay() {
     w-full
     max-w-[920px]
     mx-auto
-    flex
-    flex-col
     h-full
-  "
->
-
-
-
-
-          {/* ====================================================== */}
-          {/* HEADER — ORIENTATION                                   */}
-          {/* ====================================================== */}
-<header
-  className="
-    pb-4
     flex
     flex-col
-    gap-4
-    relative
   "
 >
-
-
-  <button
-    aria-label="Close archive"
+  {/* ================= HEADER SLOT ================= */}
+  <div
     className="
-      absolute
-      top-8
-      right-8
-      text-text-muted
-      hover:text-text-primary
-      transition
-    "
-    onClick={() => router.push('/page2')}
-  >
-    ✕
-  </button>
-
-  <h1
-    className="
-      text-3xl
-      font-medium
-      tracking-tight
+      shrink-0
+      pt-[var(--h-gap-xl)]
     "
   >
-    Archive
-  </h1>
+    <header
+      className="
+        pb-4
+        flex
+        flex-col
+        gap-4
+        relative
+      "
+    >
+      ...
+    </header>
 
-  <p
-    className="
-      text-sm
-      text-text-secondary
-      max-w-[560px]
-    "
-  >
-    Browse, review, and select past conversations.
-  </p>
-</header>
+    <section
+      className="
+        w-full
+        bg-[#0C0C0C]
+        opacity-100
+        rounded-xl
+        px-6
+        py-4
+      "
+    >
+      ...
+    </section>
+  </div>
 
-<section
-  className="
-    w-full
-    bg-[#0C0C0C]
-    opacity-100
-    rounded-xl
-    px-6
-    py-4
-  "
->
-  <Input
-    value={query}
-    onChange={(e) => setQuery(e.target.value)}
-    placeholder="Search your chats…"
+  {/* ================= BODY SLOT ================= */}
+  <div className="flex-1 overflow-y-auto mt-[15px]">
+    ...
+  </div>
+
+  {/* ================= FOOTER SLOT ================= */}
+  <footer
     className="
-      w-full
-      bg-[#121418]
-      border
-      border-border-soft
-      rounded-pill
-      px-8
-      py-7
-      text-base
-      placeholder:text-text-muted
-      focus-visible:ring-2
-      focus-visible:ring-cyan-500
+      shrink-0
+      h-16
+      mt-6
+      bg-gradient-to-t
+      from-[#080808]
+      to-transparent
+      pointer-events-none
     "
   />
-</section>
-
-<div className="flex-1 overflow-y-auto mt-[15px]">
-  {(() => {
-    type ArchiveView = 'recent' | 'search' | 'detail' | 'empty'
-
-    let view: ArchiveView
-
-    if (query.length < 3) {
-      view = 'recent'
-    } else {
-      view = 'search'
-    }
-
-    switch (view) {
-      case 'recent':
-        return <RecentChatsView />
-
-      case 'search': {
-        const results = runArchiveSearch(query)
-        return <SearchResultsView results={results} />
-      }
-
-      default:
-        return null
-    }
-  })()}
 </div>
 
-<footer
-  className="
-    h-16
-    mt-6
-    bg-gradient-to-t
-    from-[#080808]
-    to-transparent
-    pointer-events-none
-  "
-/>
-
-
-
-        </div>
       </div>
     </div>
   )
