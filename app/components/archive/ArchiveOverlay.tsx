@@ -194,144 +194,133 @@ export default function ArchiveOverlay() {
 
 
   /* -------------------------------------------------------------- */
-  /* Render                                                         */
-  /* -------------------------------------------------------------- */
+/* Render                                                         */
+/* -------------------------------------------------------------- */
 
-  return (
-    /* ============================================================ */
-    /* SYSTEM SPACE — FULL TAKEOVER                                  */
-    /* ============================================================ */
-<div
-  className="
-    fixed
-    inset-0
-    z-[2147483647]
-    bg-gradient-to-b
-    from-[#121418]
-    via-[#0C0C0C]
-    to-[#080808]
-    text-text-primary
-    overflow-hidden
-    pr-[30px]
-    pb-[30px]
-    pl-[30px]
-  "
->
-
-
-
-
-
-      {/* ========================================================== */}
-      {/* CONTENT FRAME — FULL BLEED                                 */}
-      {/* ========================================================== */}
-       <div className="w-full h-full flex flex-col">
-
-  {/* ===== TOP STAGE GAP (REAL SPACE) ===== */}
-  <div className="shrink-0 h-[var(--h-gap-xl)]" />
-
+return (
+  /* ============================================================ */
+  /* SYSTEM SPACE — FULL TAKEOVER                                  */
+  /* ============================================================ */
   <div
     className="
-      w-full
-      max-w-[920px]
-      mx-auto
-      flex
-      flex-col
+      fixed
+      inset-x-0
+      top-[var(--h-gap-xl)]
+      bottom-0
+      z-[2147483647]
+      bg-gradient-to-b
+      from-[#121418]
+      via-[#0C0C0C]
+      to-[#080808]
+      text-text-primary
+      overflow-hidden
+      pr-[30px]
+      pb-[30px]
+      pl-[30px]
     "
   >
+    {/* ========================================================== */}
+    {/* CONTENT FRAME — FULL BLEED                                 */}
+    {/* ========================================================== */}
+    <div className="w-full h-full flex flex-col">
+      <div
+        className="
+          w-full
+          max-w-[920px]
+          mx-auto
+          flex
+          flex-col
+          h-full
+        "
+      >
+        {/* ================= HEADER SLOT ================= */}
+        <div className="shrink-0">
+          <header
+            className="
+              pb-4
+              flex
+              flex-col
+              gap-4
+              relative
+            "
+          >
+            <button
+              aria-label="Close archive"
+              className="
+                absolute
+                top-0
+                right-0
+                text-text-muted
+                hover:text-text-primary
+                transition
+              "
+              onClick={() => router.push('/page2')}
+            >
+              ✕
+            </button>
 
+            <h1 className="text-3xl font-medium tracking-tight">
+              Archive
+            </h1>
 
-{/* ================= HEADER SLOT ================= */}
-<div className="shrink-0 pt-[var(--h-gap-xl)]">
-  <header
-    className="
-      pb-4
-      flex
-      flex-col
-      gap-4
-      relative
-    "
-  >
-    <button
-      aria-label="Close archive"
-      className="
-        absolute
-        top-8
-        right-8
-        text-text-muted
-        hover:text-text-primary
-        transition
-      "
-      onClick={() => router.push('/page2')}
-    >
-      ✕
-    </button>
+            <p className="text-sm text-text-secondary max-w-[560px]">
+              Browse, review, and select past conversations.
+            </p>
+          </header>
 
-    <h1 className="text-3xl font-medium tracking-tight">
-      Archive
-    </h1>
+          <section
+            className="
+              w-full
+              bg-[#0C0C0C]
+              rounded-xl
+              px-6
+              py-4
+            "
+          >
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search your chats…"
+              className="
+                w-full
+                bg-[#121418]
+                border
+                border-border-soft
+                rounded-pill
+                px-8
+                py-7
+                text-base
+                placeholder:text-text-muted
+                focus-visible:ring-2
+                focus-visible:ring-cyan-500
+              "
+            />
+          </section>
+        </div>
 
-    <p className="text-sm text-text-secondary max-w-[560px]">
-      Browse, review, and select past conversations.
-    </p>
-  </header>
+        {/* ================= BODY SLOT ================= */}
+        <div className="flex-1 overflow-y-auto mt-[15px]">
+          {query.length < 3 ? (
+            <RecentChatsView />
+          ) : (
+            <SearchResultsView results={runArchiveSearch(query)} />
+          )}
+        </div>
 
-  <section
-    className="
-      w-full
-      bg-[#0C0C0C]
-      rounded-xl
-      px-6
-      py-4
-    "
-  >
-    <Input
-      value={query}
-      onChange={(e) => setQuery(e.target.value)}
-      placeholder="Search your chats…"
-      className="
-        w-full
-        bg-[#121418]
-        border
-        border-border-soft
-        rounded-pill
-        px-8
-        py-7
-        text-base
-        placeholder:text-text-muted
-        focus-visible:ring-2
-        focus-visible:ring-cyan-500
-      "
-    />
-  </section>
-</div>
-
-{/* ================= BODY SLOT ================= */}
-<div className="flex-1 overflow-y-auto mt-[15px]">
-  {query.length < 3 ? (
-    <RecentChatsView />
-  ) : (
-    <SearchResultsView results={runArchiveSearch(query)} />
-  )}
-</div>
-
-
-  {/* ================= FOOTER SLOT ================= */}
-  <footer
-    className="
-      shrink-0
-      h-16
-      mt-6
-      bg-gradient-to-t
-      from-[#080808]
-      to-transparent
-      pointer-events-none
-    "
-  />
-</div>
-
+        {/* ================= FOOTER SLOT ================= */}
+        <footer
+          className="
+            shrink-0
+            h-16
+            mt-6
+            bg-gradient-to-t
+            from-[#080808]
+            to-transparent
+            pointer-events-none
+          "
+        />
       </div>
     </div>
-  )
+  </div>
+)
 }
-
