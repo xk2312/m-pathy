@@ -218,7 +218,24 @@ export default function ArchiveOverlay() {
   "
 >
 
-
+<button
+  aria-label="Close archive"
+  type="button"
+  className="
+    absolute
+    top-8
+    right-8
+    z-10
+    cursor-pointer
+    pointer-events-auto
+    text-text-muted
+    hover:text-text-primary
+    transition
+  "
+  onClick={() => router.push('/page2')}
+>
+  ✕
+</button>
 
 
 
@@ -255,24 +272,7 @@ export default function ArchiveOverlay() {
 >
 
 
-  <button
-  aria-label="Close archive"
-  type="button"
-  className="
-    absolute
-    top-8
-    right-8
-    z-10
-    cursor-pointer
-    pointer-events-auto
-    text-text-muted
-    hover:text-text-primary
-    transition
-  "
-  onClick={() => router.push('/page2')}
->
-  ✕
-</button>
+  
 
 
   <h1
