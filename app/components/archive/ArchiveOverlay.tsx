@@ -302,13 +302,11 @@ export default function ArchiveOverlay() {
           {/* ====================================================== */}
 <section
   className="
-    sticky
-    top-[120px]
-    z-10
     pb-6
     bg-[#0C0C0C]
   "
 >
+
 
   <div
     className="
@@ -342,8 +340,8 @@ export default function ArchiveOverlay() {
               </div>
         </section>
 
-{/* SEARCH → BODY SPACER (MEFL) */}
-<div className="h-[15px]" />
+{/* Search and body are now linearly ordered */}
+
 
 {/* ====================================================== */}
 {/* CONTENT — CHAT LIST                                    */}
@@ -378,18 +376,16 @@ export default function ArchiveOverlay() {
 
 {/* FOOTER (sticky) ← HIER */}
       <footer
-        className="
-          sticky
-          bottom-0
-          z-10
-          h-16
-          mt-4
-          bg-gradient-to-t
-          from-[#080808]
-          to-transparent
-          pointer-events-none
-        "
-      />
+  className="
+    h-16
+    mt-4
+    bg-gradient-to-t
+    from-[#080808]
+    to-transparent
+    pointer-events-none
+  "
+/>
+
 
         </div>
       </div>
