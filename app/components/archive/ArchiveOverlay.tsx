@@ -46,7 +46,7 @@ export default function ArchiveOverlay() {
   /* Bootstrap                                                      */
   /* -------------------------------------------------------------- */
 
-  useEffect(() => {
+ useEffect(() => {
   const base = getRecentChats(13)
 
   const mapped = base.map((chat) => ({
@@ -62,10 +62,17 @@ export default function ArchiveOverlay() {
   const originalOverflow = document.body.style.overflow
   document.body.style.overflow = 'hidden'
 
+  // ✅ hard-hide prompt while archive is mounted (no routing assumptions)
+  const promptEl = document.querySelector('.prompt-root-scene') as HTMLElement | null
+  const originalPromptDisplay = promptEl?.style.display
+  if (promptEl) promptEl.style.display = 'none'
+
   return () => {
     document.body.style.overflow = originalOverflow
+    if (promptEl) promptEl.style.display = originalPromptDisplay ?? ''
   }
 }, [])
+
 
 
   /* -------------------------------------------------------------- */
