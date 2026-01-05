@@ -212,12 +212,12 @@ export default function ArchiveOverlay() {
     to-[#080808]
     text-text-primary
     overflow-hidden
-    pt-[var(--h-gap-xxs)]
     pr-[30px]
     pb-[30px]
     pl-[30px]
   "
 >
+
 
 
 
