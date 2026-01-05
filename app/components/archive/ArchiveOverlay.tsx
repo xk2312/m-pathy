@@ -200,10 +200,10 @@ export default function ArchiveOverlay() {
     /* ============================================================ */
     /* SYSTEM SPACE — FULL TAKEOVER                                  */
     /* ============================================================ */
+
 <div
   className="
     fixed
-    inset-0
     z-[2147483647]
     bg-gradient-to-b
     from-[#121418]
@@ -211,12 +211,18 @@ export default function ArchiveOverlay() {
     to-[#080808]
     text-text-primary
     overflow-hidden
-    pt-[60px]
-    pr-[30px]
+
+    /* 🔒 systemischer Top-Buffer */
+    top-[var(--h-gap-xxs)]
+    left-0
+    right-0
+    bottom-0
+
+    px-[30px]
     pb-[30px]
-    pl-[30px]
   "
 >
+
 
 
 
