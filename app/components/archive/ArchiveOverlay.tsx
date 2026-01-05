@@ -200,17 +200,21 @@ export default function ArchiveOverlay() {
     /* ============================================================ */
     /* SYSTEM SPACE — FULL TAKEOVER                                  */
     /* ============================================================ */
-  <div
+ <div
   className="
-    fixed inset-0 z-[2147483647]
+    fixed
+    inset-0
+    z-[2147483647]
     bg-gradient-to-b
     from-[#121418]
     via-[#0C0C0C]
     to-[#080808]
     text-text-primary
     overflow-hidden
+    p-[30px]
   "
 >
+
 
 
       {/* ========================================================== */}
@@ -218,29 +222,31 @@ export default function ArchiveOverlay() {
       {/* ========================================================== */}
         <div className="w-full h-full flex flex-col">
         <div
-          className="
-            max-w-[920px]
-            mx-auto
-            px-12
-            flex
-            flex-col
-            h-full
-          "
-        >
+  className="
+    w-full
+    max-w-[920px]
+    min-w-[320px]
+    mx-auto
+    px-12
+    flex
+    flex-col
+    h-full
+  "
+>
 
           {/* ====================================================== */}
           {/* HEADER — ORIENTATION                                   */}
           {/* ====================================================== */}
-  <header
+<header
   className="
     sticky
     top-0
     z-20
-    pt-28
-    pb-12
+    pt-20
+    pb-6
     flex
     flex-col
-    gap-6
+    gap-4
     relative
     bg-gradient-to-b
     from-[#121418]
@@ -248,6 +254,7 @@ export default function ArchiveOverlay() {
     to-transparent
   "
 >
+
 
   {/* Close Overlay */}
   <button
@@ -295,12 +302,21 @@ export default function ArchiveOverlay() {
 <section
   className="
     sticky
-    top-[196px]
+    top-[160px]
     z-10
-    pb-12
-    bg-[#0C0C0C]
+    pb-6
   "
 >
+  <div
+    className="
+      bg-[#0C0C0C]
+      opacity-100
+      rounded-xl
+      px-6
+      py-4
+    "
+  >
+
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -320,6 +336,7 @@ export default function ArchiveOverlay() {
                 focus-visible:ring-cyan-500
               "
             />
+              </div>
           </section>
 
           {/* ====================================================== */}
@@ -352,10 +369,24 @@ export default function ArchiveOverlay() {
   })()}
 </div>
 
-
+{/* FOOTER (sticky) ← HIER */}
+      <footer
+        className="
+          sticky
+          bottom-0
+          z-10
+          h-16
+          mt-4
+          bg-gradient-to-t
+          from-[#080808]
+          to-transparent
+          pointer-events-none
+        "
+      />
 
         </div>
       </div>
     </div>
   )
 }
+
