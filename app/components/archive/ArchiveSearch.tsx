@@ -72,3 +72,38 @@ export function runArchiveSearch(query: string): SearchResult[] {
 
   return limitNodes(results, 100)
 }
+
+export function getArchiveSearchPreview(query: string): string[] {
+  if (query.length < 3) return []
+
+  const q = query.toLowerCase()
+  const results = runArchiveSearch(query)
+
+  const out: string[] = []
+  const seen = new Set<string>()
+
+  const pushWord = (w: string) => {
+    const key = w.toLowerCase()
+    if (!key.startsWith(q)) return
+    if (seen.has(key)) return
+    seen.add(key)
+    out.push(w)
+  }
+
+  for (const r of results) {
+    const texts = [r.user.preview, r.assistant.preview]
+
+    for (const t of texts) {
+      const words = t.split(/[^0-9A-Za-zÀ-ÿ_'-]+/g).filter(Boolean)
+      for (const w of words) {
+        pushWord(w)
+        if (out.length >= 13) return out
+      }
+    }
+
+    if (out.length >= 13) return out
+  }
+
+  return out
+}
+

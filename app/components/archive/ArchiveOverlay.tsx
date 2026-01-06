@@ -121,7 +121,7 @@ import SearchResultsView from './views/SearchResultsView'
 import RecentChatsView from './views/RecentChatsView'
 import EmptyStateView from './views/EmptyStateView'
 import ChatDetailView from './views/ChatDetailView'
-import { runArchiveSearch } from './ArchiveSearch'
+import { runArchiveSearch, getArchiveSearchPreview } from './ArchiveSearch'
 
 
 
@@ -183,8 +183,6 @@ export default function ArchiveOverlay() {
 
   return hit?.chain_id ?? null
 }
-
-
 
   /* -------------------------------------------------------------- */
   /* Bootstrap                                                      */
@@ -304,33 +302,59 @@ export default function ArchiveOverlay() {
     {/* SEARCH + CLOSE                                         */}
     {/* ====================================================== */}
     <section
+  className="
+    w-full
+    bg-[#0C0C0C]
+    rounded-xl
+    px-6
+    py-4
+    relative
+  "
+>
+  <Input
+    value={query}
+    onChange={(e) => setQuery(e.target.value)}
+    placeholder="Search your chats…"
+    className="
+      w-full
+      bg-[#121418]
+      border
+      border-border-soft
+      rounded-pill
+      px-8
+      py-7
+      text-base
+      placeholder:text-text-muted
+      focus-visible:ring-2
+      focus-visible:ring-cyan-500
+    "
+  />
+
+    {query.length >= 3 && !openChainId && (() => {
+  const preview = getArchiveSearchPreview(query)
+
+  if (preview.length === 0) return null
+
+  return (
+    <div
       className="
-        w-full
-        bg-[#0C0C0C]
-        rounded-xl
-        px-6
-        py-4
-        relative
+        mt-4
+        flex
+        flex-wrap
+        gap-x-4
+        gap-y-2
+        text-xs
+        text-text-muted
       "
     >
-      <Input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search your chats…"
-        className="
-          w-full
-          bg-[#121418]
-          border
-          border-border-soft
-          rounded-pill
-          px-8
-          py-7
-          text-base
-          placeholder:text-text-muted
-          focus-visible:ring-2
-          focus-visible:ring-cyan-500
-        "
-      />
+      {preview.map((p, i) => (
+        <span key={i} className="select-none">
+          {p}
+        </span>
+      ))}
+    </div>
+  )
+})()}
 
       <button
         type="button"
