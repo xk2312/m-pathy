@@ -330,10 +330,13 @@ export default function ArchiveOverlay() {
     "
   />
 
-    {query.length >= 3 && !openChainId && (() => {
+   {query.length >= 3 && !openChainId && (() => {
   const preview = getArchiveSearchPreview(query)
 
   if (preview.length === 0) return null
+
+  const q = query.trim()
+  const qLower = q.toLowerCase()
 
   return (
     <div
@@ -341,20 +344,46 @@ export default function ArchiveOverlay() {
         mt-4
         flex
         flex-wrap
-        gap-x-4
-        gap-y-2
+        gap-2
         text-xs
-        text-text-muted
       "
     >
-      {preview.map((p, i) => (
-        <span key={i} className="select-none">
-          {p}
-        </span>
-      ))}
+      {preview.map((p, i) => {
+        const pLower = p.toLowerCase()
+        const idx = qLower.length > 0 ? pLower.indexOf(qLower) : -1
+
+        const before = idx >= 0 ? p.slice(0, idx) : ''
+        const hit = idx >= 0 ? p.slice(idx, idx + q.length) : p
+        const after = idx >= 0 ? p.slice(idx + q.length) : ''
+
+        return (
+          <span
+            key={i}
+            className="
+              select-none
+              p-[5px]
+              rounded-md
+              bg-cyan-500/10
+              border
+              border-cyan-500/20
+            "
+          >
+            {idx >= 0 ? (
+              <>
+                <span className="text-text-secondary">{before}</span>
+                <span className="text-cyan-400">{hit}</span>
+                <span className="text-text-secondary">{after}</span>
+              </>
+            ) : (
+              <span className="text-cyan-400">{hit}</span>
+            )}
+          </span>
+        )
+      })}
     </div>
   )
 })()}
+
 
       <button
         type="button"

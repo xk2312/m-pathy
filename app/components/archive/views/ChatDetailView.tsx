@@ -21,13 +21,31 @@ type MessagePair = {
     content: string
   }
 }
+function highlightText(text: string, term?: string) {
+  if (!term || term.length < 3) return text
+
+  const parts = text.split(new RegExp(`(${term})`, 'gi'))
+
+  return parts.map((p, i) =>
+    p.toLowerCase() === term.toLowerCase() ? (
+      <span key={i} className="text-cyan-400">
+        {p}
+      </span>
+    ) : (
+      p
+    )
+  )
+}
 
 type Props = {
   chain_id: string
   onClose: () => void
+  highlight?: string
 }
 
-export default function ChatDetailView({ chain_id, onClose }: Props) {
+
+export default function ChatDetailView({ chain_id, onClose, highlight }: Props) {
+
   const anchors =
     readLS<TriketonAnchor[]>('mpathy:triketon:v1') ?? []
 
@@ -76,14 +94,16 @@ export default function ChatDetailView({ chain_id, onClose }: Props) {
             <div className="text-xs text-white/50">
               {new Date(pair.timestamp_start).toLocaleString()}
             </div>
+            
 
             <div className="text-sm">
-              {pair.user.content}
-            </div>
+  {highlightText(pair.user.content, highlight)}
+</div>
 
-            <div className="text-sm text-white/80">
-              {pair.assistant.content}
-            </div>
+<div className="text-sm text-white/80">
+  {highlightText(pair.assistant.content, highlight)}
+</div>
+
           </div>
         ))}
       </div>
