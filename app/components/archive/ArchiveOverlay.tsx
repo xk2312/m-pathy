@@ -463,14 +463,16 @@ if (openChainId) {
   case 'detail':
   if (!openChainId) return null
 
-  return (
+   return (
     <ChatDetailView
       chain_id={openChainId}
+      highlight={query}
       onClose={() => {
         setOpenChainId(null)
       }}
     />
   )
+
 
 
   default:

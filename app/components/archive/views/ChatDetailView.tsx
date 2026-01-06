@@ -28,9 +28,19 @@ function highlightText(text: string, term?: string) {
 
   return parts.map((p, i) =>
     p.toLowerCase() === term.toLowerCase() ? (
-      <span key={i} className="text-cyan-400">
-        {p}
-      </span>
+      <span
+  key={i}
+  className="
+    text-cyan-400
+    font-medium
+    bg-cyan-400/10
+    rounded-sm
+    px-[5px]
+  "
+>
+  {p}
+</span>
+
     ) : (
       p
     )
@@ -96,13 +106,15 @@ export default function ChatDetailView({ chain_id, onClose, highlight }: Props) 
             </div>
             
 
-            <div className="text-sm">
+         <div className="text-sm">
   {highlightText(pair.user.content, highlight)}
 </div>
 
 <div className="text-sm text-white/80">
   {highlightText(pair.assistant.content, highlight)}
 </div>
+
+
 
           </div>
         ))}
