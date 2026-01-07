@@ -296,34 +296,47 @@ function clearSelection() {
     {/* ====================================================== */}
     {/* HEADER — ORIENTATION                                   */}
     {/* ====================================================== */}
-    <header
+   <header
+  className="
+    pb-4
+    flex
+    flex-col
+    gap-4
+  "
+>
+  <h1
+    className="
+      text-3xl
+      font-medium
+      tracking-tight
+    "
+  >
+    Archive
+  </h1>
+
+  <p
+    className="
+      text-sm
+      text-text-secondary
+      max-w-[560px]
+    "
+  >
+    Browse, review, and select past conversations.
+  </p>
+
+  {selection.length > 0 && (
+    <div
       className="
-        pb-4
-        flex
-        flex-col
-        gap-4
+        mt-2
+        text-sm
+        text-text-secondary
       "
     >
-      <h1
-        className="
-          text-3xl
-          font-medium
-          tracking-tight
-        "
-      >
-        Archive
-      </h1>
+      {selection.length} message pairs selected
+    </div>
+  )}
+</header>
 
-      <p
-        className="
-          text-sm
-          text-text-secondary
-          max-w-[560px]
-        "
-      >
-        Browse, review, and select past conversations.
-      </p>
-    </header>
 
     {/* ====================================================== */}
     {/* SEARCH + CLOSE                                         */}
