@@ -15,6 +15,7 @@
     "clean": "rm -rf .next mpathy_local_diag_*"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
     "dotenv": "^17.2.1",
     "framer-motion": "^12.23.24",
     "highlight.js": "^11.9.0",
