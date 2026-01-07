@@ -324,17 +324,48 @@ function clearSelection() {
     Browse, review, and select past conversations.
   </p>
 
-  {selection.length > 0 && (
+ {selection.length > 0 && (
+  <div
+    className="
+      mt-2
+      flex
+      items-center
+      gap-4
+    "
+  >
     <div
       className="
-        mt-2
         text-sm
         text-text-secondary
       "
     >
       {selection.length} message pairs selected
     </div>
-  )}
+
+    <button
+      type="button"
+      onClick={() => {
+        window.dispatchEvent(
+          new CustomEvent('mpathy:archive:verify', {
+            detail: {
+              pairs: selection,
+            },
+          })
+        )
+      }}
+      className="
+        text-sm
+        font-medium
+        text-cyan-400
+        hover:text-cyan-300
+        transition
+      "
+    >
+      Verify {selection.length}
+    </button>
+  </div>
+)}
+
 </header>
 
 
