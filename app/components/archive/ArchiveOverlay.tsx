@@ -154,6 +154,11 @@ type ChatDisplay = {
   lastTimestamp: string
 }
 
+type SelectedPair = {
+  pair_id: string
+}
+
+
 /* ------------------------------------------------------------------ */
 /* Component                                                          */
 /* ------------------------------------------------------------------ */
@@ -162,7 +167,29 @@ export default function ArchiveOverlay() {
   const [query, setQuery] = useState('')
   const [chats, setChats] = useState<ChatDisplay[]>([])
   const [openChainId, setOpenChainId] = useState<string | null>(null)
-  const router = useRouter()
+
+  const [selection, setSelection] = useState<SelectedPair[]>([])
+
+const router = useRouter()
+
+function addPair(pair: SelectedPair) {
+  setSelection(prev =>
+    prev.some(p => p.pair_id === pair.pair_id)
+      ? prev
+      : [...prev, pair]
+  )
+}
+
+function removePair(pair_id: string) {
+  setSelection(prev =>
+    prev.filter(p => p.pair_id !== pair_id)
+  )
+}
+
+function clearSelection() {
+  setSelection([])
+}
+
   const resolveChainIdFromChatSerial = (chatSerial: string) => {
   const chat = getRecentChats(13).find(
     (c) => String(c.chat_serial) === chatSerial
