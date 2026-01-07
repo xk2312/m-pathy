@@ -7,6 +7,26 @@ type Props = {
   onOpenChat?: (chainId: string) => void
 }
 
+function highlightText(text: string, keywords: string[]) {
+  if (!keywords.length) return text
+
+  const escaped = keywords.map(k =>
+    k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  )
+
+  const regex = new RegExp(`(${escaped.join('|')})`, 'gi')
+
+  return text.split(regex).map((part, i) =>
+    regex.test(part) ? (
+      <span key={i} className="text-cyan-400">
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  )
+}
+
 export default function SearchResultsView({ results }: Props) {
   if (!results.length) return null
 
@@ -22,11 +42,11 @@ export default function SearchResultsView({ results }: Props) {
           </div>
 
           <div className="text-sm">
-            {pair.user.preview}
+            {highlightText(pair.user.preview, pair.user.matched_keywords)}
           </div>
 
           <div className="text-sm text-white/80">
-            {pair.assistant.preview}
+            {highlightText(pair.assistant.preview, pair.assistant.matched_keywords)}
           </div>
         </div>
       ))}
