@@ -67,6 +67,9 @@ export default function ChatDetailView({
   removePair,
 }: Props) {
 
+  const isSelected = (pair_id: string) =>
+    selection.some(p => p.pair_id === pair_id)
+
   const anchors =
     readLS<TriketonAnchor[]>('mpathy:triketon:v1') ?? []
 
@@ -107,28 +110,61 @@ export default function ChatDetailView({
       </div>
 
       <div className="space-y-6">
-        {pairs.map((pair) => (
-          <div
-            key={pair.pair_id}
-            className="rounded-lg border border-white/10 p-4 space-y-3"
-          >
-            <div className="text-xs text-white/50">
-              {new Date(pair.timestamp_start).toLocaleString()}
-            </div>
-            
+        {pairs.map((pair) => {
+  const selected = isSelected(pair.pair_id)
 
-         <div className="text-sm">
-  {highlightText(pair.user.content, highlight)}
-</div>
+  return (
+    <div
+      key={pair.pair_id}
+      className="rounded-lg border border-white/10 p-4 space-y-3 relative"
+    >
+      <button
+        type="button"
+        onClick={() =>
+          selected
+            ? removePair(pair.pair_id)
+            : addPair({ pair_id: pair.pair_id })
+        }
+        className="
+          absolute
+          top-3
+          right-3
+          w-7
+          h-7
+          rounded-full
+          flex
+          items-center
+          justify-center
+          text-sm
+          font-medium
+          border
+          transition
+          cursor-pointer
+          bg-[#121418]
+          border-border-soft
+          hover:border-cyan-500
+          hover:text-cyan-400
+        "
+        aria-label={selected ? 'Remove from selection' : 'Add to selection'}
+      >
+        {selected ? '−' : '+'}
+      </button>
 
-<div className="text-sm text-white/80">
-  {highlightText(pair.assistant.content, highlight)}
-</div>
+      <div className="text-xs text-white/50">
+        {new Date(pair.timestamp_start).toLocaleString()}
+      </div>
 
+      <div className="text-sm">
+        {highlightText(pair.user.content, highlight)}
+      </div>
 
+      <div className="text-sm text-white/80">
+        {highlightText(pair.assistant.content, highlight)}
+      </div>
+    </div>
+  )
+})}
 
-          </div>
-        ))}
       </div>
     </section>
   )
