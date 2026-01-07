@@ -51,10 +51,21 @@ type Props = {
   chain_id: string
   onClose: () => void
   highlight?: string
+  selection: { pair_id: string }[]
+  addPair: (pair: { pair_id: string }) => void
+  removePair: (pair_id: string) => void
 }
 
 
-export default function ChatDetailView({ chain_id, onClose, highlight }: Props) {
+
+export default function ChatDetailView({
+  chain_id,
+  onClose,
+  highlight,
+  selection,
+  addPair,
+  removePair,
+}: Props) {
 
   const anchors =
     readLS<TriketonAnchor[]>('mpathy:triketon:v1') ?? []

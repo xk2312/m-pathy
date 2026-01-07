@@ -4,8 +4,13 @@ import type { SearchResult } from '@/components/archive/ArchiveSearch'
 
 type Props = {
   results: SearchResult[]
+  selection: { pair_id: string }[]
+  addPair: (pair: { pair_id: string }) => void
+  removePair: (pair_id: string) => void
   onOpenChat?: (chainId: string) => void
 }
+
+
 
 function highlightText(text: string, keywords: string[]) {
   if (!keywords.length) return text
@@ -27,7 +32,12 @@ function highlightText(text: string, keywords: string[]) {
   )
 }
 
-export default function SearchResultsView({ results }: Props) {
+export default function SearchResultsView({
+  results,
+  selection,
+  addPair,
+  removePair,
+}: Props) {
   if (!results.length) return null
 
   return (

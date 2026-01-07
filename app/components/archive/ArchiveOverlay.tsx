@@ -474,8 +474,11 @@ if (openChainId) {
   case 'search': {
     const results = runArchiveSearch(query)
     return (
-      <SearchResultsView
+  <SearchResultsView
   results={results}
+  selection={selection}
+  addPair={addPair}
+  removePair={removePair}
   onOpenChat={(chatSerial: string) => {
     const chainId = resolveChainIdFromChatSerial(chatSerial)
     if (chainId) {
@@ -483,6 +486,7 @@ if (openChainId) {
     }
   }}
 />
+
 
     )
   }
@@ -492,12 +496,16 @@ if (openChainId) {
 
    return (
     <ChatDetailView
-      chain_id={openChainId}
-      highlight={query}
-      onClose={() => {
-        setOpenChainId(null)
-      }}
-    />
+  chain_id={openChainId}
+  highlight={query}
+  selection={selection}
+  addPair={addPair}
+  removePair={removePair}
+  onClose={() => {
+    setOpenChainId(null)
+  }}
+/>
+
   )
 
 
