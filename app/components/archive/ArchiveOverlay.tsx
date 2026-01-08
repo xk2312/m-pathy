@@ -122,7 +122,7 @@ import RecentChatsView from './views/RecentChatsView'
 import EmptyStateView from './views/EmptyStateView'
 import ChatDetailView from './views/ChatDetailView'
 import { runArchiveSearch, getArchiveSearchPreview } from './ArchiveSearch'
-
+import { initArchiveVerifyListener } from '@/lib/archiveVerifyListener'
 
 
 
@@ -211,11 +211,14 @@ function clearSelection() {
   return hit?.chain_id ?? null
 }
 
-  /* -------------------------------------------------------------- */
-  /* Bootstrap                                                      */
-  /* -------------------------------------------------------------- */
+ /* -------------------------------------------------------------- */
+/* Bootstrap                                                      */
+/* -------------------------------------------------------------- */
 
- useEffect(() => {
+useEffect(() => {
+  // 🔌 init bulk verify listener (EPIC 4 / T-09)
+  initArchiveVerifyListener()
+
   const base = getRecentChats(13)
 
   const mapped = base.map((chat) => ({
