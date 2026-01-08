@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { runTriketonSync } from '@/lib/triketonSync'
 import { useLanguage } from '@/app/providers/LanguageProvider'
 import { i18nArchive } from '@/lib/i18n.archive'
 
@@ -9,6 +8,15 @@ interface ReportStatusProps {
   userText: string
   assistantText: string
   truthHash: string
+}
+
+type TriketonAnchor = {
+  truth_hash?: unknown
+  public_key?: unknown
+}
+
+type VerifyResponse = {
+  result?: 'TRUE' | 'FALSE'
 }
 
 export default function ReportStatus({
@@ -27,11 +35,42 @@ export default function ReportStatus({
     let cancelled = false
 
     async function verify() {
-      const pairText =
-        userText + '\n\n---\n\n' + assistantText
+      try {
+        const pairText = userText + '\n\n---\n\n' + assistantText
 
-      const ok = await runTriketonSync(pairText)
-      if (!cancelled) setVerified(ok)
+        const raw = window.localStorage.getItem('mpathy:triketon:v1')
+        const anchors: TriketonAnchor[] = raw ? JSON.parse(raw) : []
+
+        const hit = anchors.find(
+          (a) => typeof a?.truth_hash === 'string' && a.truth_hash === truthHash,
+        )
+
+        const publicKey =
+          hit && typeof hit.public_key === 'string'
+            ? hit.public_key
+            : null
+
+        if (!publicKey) {
+          if (!cancelled) setVerified(false)
+          return
+        }
+
+        const res = await fetch('/api/triketon/verify', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            publicKey,
+            truthHash,
+            text: pairText,
+          }),
+        })
+
+        const data = (await res.json()) as VerifyResponse
+        const ok = res.ok && data?.result === 'TRUE'
+        if (!cancelled) setVerified(ok)
+      } catch {
+        if (!cancelled) setVerified(false)
+      }
     }
 
     verify()
@@ -52,7 +91,7 @@ export default function ReportStatus({
       )}
       {verified === false && (
         <span className="text-secondary font-medium">
-          ⚪︎ {t.fail} (Local only)
+          ⚪︎ {t.fail}
         </span>
       )}
     </div>
