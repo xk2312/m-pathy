@@ -105,18 +105,20 @@ class TriketonSeal:
         self.key_profile = key_profile
 
 
-def triketon_seal(text: str, *, deterministic: bool = False, seed: int | None = None) -> TriketonSeal:
+def triketon_seal(
+    text: str,
+    *,
+    public_key: str,
+    deterministic: bool = False,
+    seed: int | None = None,
+) -> TriketonSeal:
     """
     STEP 05: end-to-end seal (v1)
-    - normalize_for_truth_hash(text)
-    - truth_hash = compute_truth_hash(normalized, salt)
-    - public_key = generate_public_key_2048(truth_hash)
-    - timestamp ISO-8601 (UTC)
-    Rules:
-    - salts/seeds are NEVER returned
-    - deterministic mode derives a test-salt from seed (no env needed)
-    - non-deterministic mode requires TRIKETON_HASH_SALT_V1 from env
+    - public_key MUST be provided externally (DeviceKey)
     """
+    if not isinstance(public_key, str) or not public_key.strip():
+        raise ValueError("public_key must be provided (device key)")
+
     normalized = normalize_for_truth_hash(text)
 
     if deterministic:
@@ -129,10 +131,13 @@ def triketon_seal(text: str, *, deterministic: bool = False, seed: int | None = 
         salt = env_salt.encode("utf-8")
 
     truth_hash = compute_truth_hash(normalized, salt=salt)
-    public_key = generate_public_key_2048(truth_hash)
     ts = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
-    return TriketonSeal(public_key=public_key, truth_hash=truth_hash, timestamp=ts)
+    return TriketonSeal(
+        public_key=public_key,
+        truth_hash=truth_hash,
+        timestamp=ts,
+    )
 
 # ==========================
 # TRIKETON: NORMALIZATION
