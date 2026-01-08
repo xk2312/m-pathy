@@ -324,13 +324,13 @@ function clearSelection() {
     Browse, review, and select past conversations.
   </p>
 
- {selection.length > 0 && (
+{selection.length > 0 && (
   <div
     className="
       mt-2
       flex
       items-center
-      gap-4
+      gap-6
     "
   >
     <div
@@ -363,8 +363,39 @@ function clearSelection() {
     >
       Verify {selection.length}
     </button>
+
+    <button
+      type="button"
+      disabled={selection.length > 6}
+      onClick={() => {
+        if (selection.length <= 6) {
+          window.dispatchEvent(
+            new CustomEvent('mpathy:archive:add', {
+              detail: {
+                pairs: selection,
+              },
+            })
+          )
+        }
+      }}
+      className={`
+        text-sm
+        font-medium
+        transition
+        ${
+          selection.length > 6
+            ? 'text-text-muted cursor-not-allowed'
+            : 'text-cyan-400 hover:text-cyan-300'
+        }
+      `}
+    >
+      {selection.length > 6
+        ? 'Too many to add'
+        : `Add ${selection.length}/6 to new chat`}
+    </button>
   </div>
 )}
+
 
 </header>
 
