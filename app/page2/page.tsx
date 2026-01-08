@@ -2180,7 +2180,7 @@ if (last && (last as any).id === (userMsg as any).id) return; // Duplicate-Guard
         return;
       }
 
-      // 1) Leere Assistant-Bubble anhängen
+// 1) Leere Assistant-Bubble anhängen
 setMessages((prev) => {
   const base = Array.isArray(prev) ? prev : [];
 
@@ -2195,11 +2195,7 @@ setMessages((prev) => {
     assistantMsg,
   ]);
 
-  persistMessages(next);
-
-  // 🔑 KANONISCHE REFERENZ
-  setActiveTriketonMessageId(assistantMsg.id);
-
+  // ⚠️ KEINE Persistenz hier (Placeholder)
   return next;
 });
 
@@ -2278,10 +2274,23 @@ const TICK_MS = 16;
         persistMessages(next);
         return next;
       });
-    } finally {
-      setLoading(false);
-      setMode("DEFAULT");
-    }
+   } finally {
+  setMessages((prev) => {
+    if (!Array.isArray(prev) || prev.length === 0) return prev;
+
+    const last = prev[prev.length - 1];
+    if (last?.role !== "assistant") return prev;
+    if (!last.content || !last.content.trim()) return prev;
+
+    // ✅ finale, explizite Persistenz
+    persistMessages(prev);
+    return prev;
+  });
+
+  setLoading(false);
+  setMode("DEFAULT");
+}
+
   }, [messages, persistMessages]);
 
 

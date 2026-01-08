@@ -538,18 +538,19 @@ if (balanceBefore <= 0) {
       console.warn("[triketon] auto-anchor skipped", e);
     }
 
-    const res = NextResponse.json(
-      {
-        role: "assistant",
-        content,
-        status,
-        tokens_used: TOKENS_USED,
-        balance_after: balanceAfter,
-        debug_usage: usage,
-        triketon,
-      },
-      { status: 200 }
-    );
+  const res = NextResponse.json(
+  {
+    role: "assistant",
+    content,
+    status,
+    tokens_used: TOKENS_USED,
+    balance_after: balanceAfter,
+    debug_usage: usage,
+    triketon: triketon ?? null,
+  },
+  { status: 200 }
+);
+
 
     res.headers.set("X-Tokens-Delta", String(-tokenDelta));
     res.headers.set("X-Free-Used", String(count));
