@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { spawn } from "child_process";
 import { findTriketonAnchor } from "@/lib/triketonDb";
+import { createHash } from "crypto";
+
 
 type VerifyRequest = {
   publicKey: string;
@@ -17,30 +18,14 @@ function isNonEmptyString(x: unknown): x is string {
   return typeof x === "string" && x.trim().length > 0;
 }
 
-async function sealWithTriketon(text: string): Promise<{ truth_hash: string; public_key?: string }> {
-  return await new Promise((resolve, reject) => {
-    const proc = spawn("python3", ["-m", "triketon.triketon2048", "seal", text, "--json"], {
-      stdio: ["ignore", "pipe", "pipe"],
-    });
-
-    let out = "";
-    let err = "";
-
-    proc.stdout.on("data", (c) => (out += c.toString("utf-8")));
-    proc.stderr.on("data", (c) => (err += c.toString("utf-8")));
-
-    proc.on("close", (code) => {
-      if (code !== 0) return reject(new Error(err || "triketon seal failed"));
-      try {
-        const parsed = JSON.parse(out) as { truth_hash?: unknown; public_key?: unknown };
-        if (!isNonEmptyString(parsed.truth_hash)) return reject(new Error("triketon: truth_hash missing"));
-        resolve({ truth_hash: parsed.truth_hash, public_key: isNonEmptyString(parsed.public_key) ? parsed.public_key : undefined });
-      } catch (e) {
-        reject(e);
-      }
-    });
-  });
+// 🔒 VERIFY NORMALIZATION (must match DB pipeline exactly)
+function normalizeForVerify(input: string): string {
+  return input
+    .normalize("NFKC")
+    .replace(/\s+/g, " ")
+    .trim();
 }
+
 
 export async function POST(req: Request) {
   try {
@@ -65,14 +50,17 @@ export async function POST(req: Request) {
       );
     }
 
-    // 1) TruthHash serverseitig neu rechnen (via Python Core)
-    const recomputed = await sealWithTriketon(text);
-    const hashMatches = recomputed.truth_hash === truthHash;
+    // 1) Server-TruthHash neu berechnen (identisch zur DB-Logik)
+    const normalized = normalizeForVerify(text);
+    const serverTruthHash = createHash("sha256")
+      .update(normalized, "utf8")
+      .digest("hex");
 
-    // 2) Anchor in DB muss existieren
-    const anchorExists = await findTriketonAnchor(publicKey, truthHash);
+    // 2) Anchor muss exakt existieren (PublicKey-scoped)
+    const anchorExists = await findTriketonAnchor(publicKey, serverTruthHash);
 
-    const ok = hashMatches && anchorExists;
+    const ok = anchorExists;
+
 
     const resp: VerifyResponse = ok
       ? { result: "TRUE", message: "Your content is authentic and unmodified." }
