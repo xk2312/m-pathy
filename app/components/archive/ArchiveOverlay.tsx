@@ -168,27 +168,53 @@ export default function ArchiveOverlay() {
   const [chats, setChats] = useState<ChatDisplay[]>([])
   const [openChainId, setOpenChainId] = useState<string | null>(null)
 
-  const [selection, setSelection] = useState<SelectedPair[]>([])
+  const SELECTION_STORAGE_KEY = 'mpathy:archive:selection:v1'
+
+  const [selection, setSelection] = useState<SelectedPair[]>(() => {
+    if (typeof window === 'undefined') return []
+    try {
+      const raw = sessionStorage.getItem(SELECTION_STORAGE_KEY)
+      const parsed = raw ? JSON.parse(raw) : []
+      return Array.isArray(parsed) ? parsed : []
+    } catch {
+      return []
+    }
+  })
 
 const router = useRouter()
 
+function persistSelection(next: SelectedPair[]) {
+  try {
+    sessionStorage.setItem(
+      SELECTION_STORAGE_KEY,
+      JSON.stringify(next)
+    )
+  } catch {}
+}
+
 function addPair(pair: SelectedPair) {
-  setSelection(prev =>
-    prev.some(p => p.pair_id === pair.pair_id)
+  setSelection(prev => {
+    const next = prev.some(p => p.pair_id === pair.pair_id)
       ? prev
       : [...prev, pair]
-  )
+    persistSelection(next)
+    return next
+  })
 }
 
 function removePair(pair_id: string) {
-  setSelection(prev =>
-    prev.filter(p => p.pair_id !== pair_id)
-  )
+  setSelection(prev => {
+    const next = prev.filter(p => p.pair_id !== pair_id)
+    persistSelection(next)
+    return next
+  })
 }
 
 function clearSelection() {
+  persistSelection([])
   setSelection([])
 }
+
 
   const resolveChainIdFromChatSerial = (chatSerial: string) => {
   const chat = getRecentChats(13).find(
@@ -355,7 +381,9 @@ useEffect(() => {
             },
           })
         )
+        clearSelection()
       }}
+
       className="
         text-sm
         font-medium
@@ -367,7 +395,7 @@ useEffect(() => {
       Verify {selection.length}
     </button>
 
-    <button
+     <button
       type="button"
       disabled={selection.length > 6}
       onClick={() => {
@@ -379,8 +407,10 @@ useEffect(() => {
               },
             })
           )
+          clearSelection()
         }
       }}
+
       className={`
         text-sm
         font-medium
