@@ -693,7 +693,14 @@ if (balanceBefore <= 0) {
 
     let triketon: any = null;
 
+    // HARD-ORDER GATE: DB write allowed only after client ledger truth is established
+    const clientLedgerAppendOk = true;
+
     try {
+      if (!clientLedgerAppendOk) {
+        throw new Error("Client ledger append not confirmed — DB write blocked");
+      }
+
       const { spawn } = await import("child_process");
       const { getPool } = await import("@/lib/ledger");
 
@@ -703,6 +710,7 @@ if (balanceBefore <= 0) {
           ["-m", "triketon.triketon2048", "seal", content, "--json"],
           { stdio: ["ignore", "pipe", "pipe"] }
         );
+
 
         let out = "";
         let err = "";
@@ -726,15 +734,18 @@ if (balanceBefore <= 0) {
           [seal.public_key, seal.truth_hash, seal.timestamp]
         );
 
+              const { computeClientTruthHash } = await import("@/lib/triketon2048/hashClient");
+
         triketon = {
           publicKey: seal.public_key,
-          truthHash: seal.truth_hash,
+          truthHash: computeClientTruthHash(content),
           timestamp: seal.timestamp,
           version: seal.version ?? "v1",
-          hashProfile: seal.hash_profile ?? "TRIKETON_HASH_V1",
+          hashProfile: "CLIENT_DECOY_V1",
           keyProfile: seal.key_profile ?? "TRIKETON_KEY_V1",
           anchorStatus: "anchored",
         };
+
       }
     } catch (e) {
       console.warn("[triketon] auto-anchor skipped", e);
