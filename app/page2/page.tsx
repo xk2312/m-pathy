@@ -1,94 +1,111 @@
-// ============================================================================
-// 📘 INDEX — app/page2/page.tsx (Chat Interface / Payment / Triketon Bridge)
-// ----------------------------------------------------------------------------
-// PURPOSE
-//   Core chat frontend for m-pathy.ai. Handles UI rendering, message flow,
-//   persistence, payment gates (FreeGate / Stripe), and Triketon ledger linking.
-//
-// STRUCTURE OVERVIEW
-//   • Imports — React, hooks, UI components, i18n, chatStorage, triketonVerify.
-//   • UI Theme — Tokens, Themes, Personas for visual consistency.
-//   • Hooks — useBreakpoint(), useAssistantLayout(), useTheme() for layout logic.
-//   • Utilities — truncateMessages(), loadMessages(), saveMessages() for LS ops.
-//   • Components:
-//       Header(), MessageBody(), Bubble(), Conversation(), InputDock()
-//       → Form the visual chat experience.
-//   • Core React Component: Page2() — orchestrates all subsystems.
-//
-// CORE RESPONSIBILITIES
-//   ▪ Manage chat lifecycle: init, load, save, append, clear (localStorage).
-//   ▪ Integrate Triketon ledger: appendTriketonLedgerEntry() per message.
-//   ▪ Handle FreeGate and payment flow (401/402/overdraw headers).
-//   ▪ Animate assistant typing via chunked content rendering.
-//   ▪ Maintain accessibility (ARIA roles, keyboard focus).
-//
-// STATE FLOW (Page2 component)
-//   messages[]        → all user/assistant messages
-//   input             → user’s message text
-//   loading, mode     → UX state (thinking, idle, depleted)
-//   padBottom, dockH  → dynamic layout spacing (Dock height)
-//   overlayOpen       → Mobile Onboarding/Sidebar visibility
-//   triketonOpen/payload → modal overlay showing cryptographic seal
-//
-// MAIN FUNCTIONS
-//   ──────────────────────────────────────────────────────────────────────────
-//   ▪ sendMessageLocal()
-//       - POSTs messages to /api/chat
-//       - interprets FreeGate & Stripe signals (401→login, 402→checkout)
-//       - parses Triketon payload, appends to local ledger
-//       - returns assistant ChatMessage with meta (balance/tokens)
-//   ▪ onSendFromPrompt()
-//       - User input handler; updates state, persists, appends to ledger
-//       - Handles animated assistant response streaming (2-char chunks)
-//   ▪ systemSay()
-//       - Injects assistant/system bubbles (for onboarding, GC events)
-//   ▪ verifyLocalTriketonLedger() / verifyOrResetTriketonLedger()
-//       - Sanity checks for stored ledger integrity.
-//   ▪ onClearChat()
-//       - Hard-reset: clears UI + localStorage + triggers reload.
-//
-// COMPONENTS (UI)
-//   ──────────────────────────────────────────────────────────────────────────
-//   ▪ Header — sticky top bar with M-icon.
-//   ▪ Bubble — user vs assistant message bubbles (dark UI, responsive).
-//   ▪ MessageBody — Markdown renderer + syntax highlight + code copy buttons.
-//   ▪ Conversation — scrollable chat log (ARIA role="log").
-//   ▪ InputDock — send input field, fixed/flow modes, Enter key handling.
-//
-// BRIDGES
-//   ▪ LanguageProvider → maintains global i18n sync.
-//   ▪ Navigation + SidebarContainer → integrate with broader app shell.
-//   ▪ OnboardingWatcher / MobileOverlay → support onboarding on mobile.
-//   ▪ Triketon Overlay → shows seal details (public_key, truth_hash, timestamp).
-//
-// DATA PERSISTENCE
-//   ▪ loadChat(), saveChat(), hardClearChat() via lib/chatStorage.ts
-//   ▪ appendTriketonLedgerEntry() adds deterministic ledger entries.
-//   ▪ LocalStorage keys:
-//       "mpathy:chat:v1", "mpathy:triketon:v1", "mpathy:freegate", "mpathy:thread:default"
-//
-// FREEGATE / PAYMENT LOGIC
-//   ▪ 401 Unauthorized → system prompt: “Please log in to continue.”
-//   ▪ 402 Payment Required → redirect to Stripe checkout session.
-//   ▪ X-Free-Remaining / X-Free-Limit headers → local counter & last-free warning.
-//   ▪ X-Tokens-Overdraw → in-chat “Top-up required” message.
-//
-// TRIKETON LOGIC
-//   ▪ Assistant replies include Triketon payload {truth_hash, public_key, timestamp}.
-//   ▪ Each message triggers appendTriketonLedgerEntry() (role-aware).
-//   ▪ Ledger entries include device-bound key via getOrCreateDevicePublicKey2048().
-//
-// ACCESSIBILITY / A11Y
-//   ▪ Conversation role="log", aria-live="polite".
-//   ▪ InputDock labeled via i18n key t("writeMessage").
-//   ▪ Buttons: Copy, Triketon overlay, Close, all have ARIA labels.
-//
-// VERSIONING / GOVERNANCE
-//   ▪ governed by Council13 — Triketon Archive Contract v2
-//   ▪ compliant with MEFL + PrimeFocus guidelines (no drift, single truth path)
-//   ▪ page2/page.tsx acts as Chat-Layer controller atop chatStorage & Triketon.
-//
-// ============================================================================
+/***
+ * =====================================================================
+ *  M — PAGE2 MASTER (Single-File Chat UI/Behavior – Control Surface)
+ * =====================================================================
+ *
+ *  FILE
+ *  - app/page2/page.tsx
+ *
+ *  PURPOSE
+ *  - Single-file control surface for Chat UI + streaming + local persistence
+ *  - Bridges UI state → localStorage → (Triketon ledger append) → server chat API
+ *  - Hosts Dock + Stage + Saeule bridge + Triketon overlay (UI-only)
+ *
+ *  CONTEXT (aus Übergangsprotokoll „fix legacy Triketon & LS“)
+ *  - ✅ mpathy:chat:v1 funktioniert (User + Assistant erscheinen im Chat-State)
+ *  - ❌ mpathy:archive:pairs:v1 wird nicht mehr aktualisiert
+ *  - ❌ mpathy:triketon:v1 enthält NUR User-Einträge (Assistant fehlt/inkonsistent)
+ *  - ⚠️ Ursache ist typischerweise kein einzelner Bug, sondern ein gebrochener
+ *    Datenfluss / falscher Persistenzzeitpunkt während/ nach Streaming.
+ *
+ *  CURRENT PRIMARY PROBLEM — RELEVANZ-MARKER
+ *  - 🔴 ZENTRAL: Streaming erzeugt Placeholder-Assistant + chunk updates,
+ *    aber es fehlt ein singulärer, deterministischer “STREAM ENDED” Moment,
+ *    an dem (A) final persistiert und (B) Assistant-Triketon einmalig appended wird.
+ *
+ *  READ FIRST (Hotspots)
+ *  - [ANCHOR:SEND-PIPELINE]   onSendFromPrompt(...)  ← kritisch (Streaming + Persistenz)
+ *  - [ANCHOR:SENDMESSAGELOCAL] sendMessageLocal(...) ← Servercall + Triketon-Payload-Mapping
+ *  - [ANCHOR:CHAT-STATE]      messages init + autosave gating
+ *  - [ANCHOR:TRIKETON-LEDGER] ensure/verify + append (User vs Assistant)
+ *
+ *  INDEX (Sprunganker)
+ *  ---------------------------------------------------------------------
+ *  [ANCHOR:BOOT]                – "use client" + Imports + globale Setup-Objekte
+ *  [ANCHOR:I18N]                – LABELS / MEvent Labels (UI-only)
+ *  [ANCHOR:CONFIG]              – TOKENS / THEMES / PERSONAS / Layout Constants
+ *  [ANCHOR:HOOKS]               – useBreakpoint / useTheme / useAssistantLayout
+ *  [ANCHOR:UTILS]               – Types (ChatMessage) + truncate + legacy LS helpers
+ *  [ANCHOR:COMPONENTS]          – Header / MessageBody / Bubble / Conversation / InputDock
+ *  [ANCHOR:MD-RENDER]           – mdToHtml + codeblocks + copy + hljs highlight
+ *  [ANCHOR:CONVO-RENDER]        – Conversation() scrollport rules + padBottom spacer
+ *  [ANCHOR:PAGE2-ROOT]          – export default Page2() entry
+ *
+ *  [ANCHOR:SCROLL-STABILITY]    – scroll unlock / double rAF nudges / dock measurement
+ *  [ANCHOR:BREAKPOINTS]         – isMobile + isMobileLike + sideMargin
+ *  [ANCHOR:REFS]                – headerRef / convoRef / dockRef / endRef + dockH
+ *  [ANCHOR:PADBOTTOM]           – padBottom state + measureDock + CSS var --dock-h
+ *  [ANCHOR:MOBILE-KEYBOARD]     – visualViewport heuristic → compactStatus
+ *
+ *  [ANCHOR:CHAT-STATE]          – messages init: initChatStorage + ensure/verify ledger + loadChat
+ *  [ANCHOR:CLEAR-GATE]          – clearingRef + onClearChat() + hardClearChat(reload:true)
+ *  [ANCHOR:AUTOSAVE]            – useEffect(messages) → saveChat (paused during clear)
+ *  [ANCHOR:PERSIST-ALIAS]        – persistMessages() normalization (id injection) + saveChat
+ *
+ *  [ANCHOR:I18N-STATE]          – locale state + mpathy:i18n:change listener
+ *  [ANCHOR:M-FLOW]              – runMFlow() + click/change delegation + auto-tagging
+ *
+ *  [ANCHOR:SYSTEMSAY]           – systemSay() (assistant system toasts) + scroll-to-bottom behavior
+ *  [ANCHOR:FOOTER-STATUS]       – footerStatus (mode/expert labels) state
+ *  [ANCHOR:SAEULE-BRIDGE]       – window "mpathy:system-message" listener → bubbles + loading gates
+ *
+ *  [ANCHOR:SCROLL-BOTTOM]       – stickToBottom state + scroll listener + auto-scroll effect
+ *
+ *  [ANCHOR:SENDMESSAGELOCAL]    – fetch("/api/chat") + 401/402/FreeGate headers + response parse
+ *  [ANCHOR:GC-FREEGATE]         – X-Free-* headers → localStorage("mpathy:freegate") + warnings
+ *  [ANCHOR:TRIKETON-PAYLOAD]    – server triketons → normalized object (public_key/truth_hash/timestamp)
+ *  [ANCHOR:TRIKETON-APPEND-A]   – appendTriketonLedgerEntry(assistant) inside sendMessageLocal
+ *
+ *  [ANCHOR:SEND-PIPELINE]       – onSendFromPrompt(text) main orchestration
+ *    [ANCHOR:SEND-USER]         – optimistic add user + persistMessages + USER ledger append (truth hash)
+ *    [ANCHOR:SEND-NUMBERING]    – (legacy) numbering attempt via reading mpathy:triketon:v1 (note: does not write back)
+ *    [ANCHOR:SEND-REQUEST]      – setLoading(true) + sendMessageLocal(optimistic)
+ *    [ANCHOR:SEND-PLACEHOLDER]  – insert empty assistant bubble (NO persist)
+ *    [ANCHOR:SEND-STREAM]       – chunk loop updates last assistant + persistMessages(next) per chunk
+ *    [ANCHOR:SEND-META]         – meta.balanceAfter → setBalance + CustomEvent("mpathy:tokens:update")
+ *    [ANCHOR:SEND-FINALLY]      – finally block persists + resets loading/mode
+ *
+ *  [ANCHOR:LAYOUT]              – main layout tree (Navigation + grid + scroller + fixed PromptRoot)
+ *  [ANCHOR:STAGE]               – convoRef scroll container (.chat-stage) overflow/overscroll rules
+ *  [ANCHOR:STAGE-INNER]         – maxWidth 680 + inner padding rules
+ *  [ANCHOR:DOCK-FIXED]          – prompt-root-scene position:fixed + left/right with saeule width + zIndex 90
+ *  [ANCHOR:PROMPTROOT-PROPS]    – PromptRoot inputs: padBottom, compactStatus, footerStatus, sendingRef, withGate...
+ *  [ANCHOR:MOBILE-OVERLAY]      – MobileOverlay open/close + passes messages + onClearChat
+ *  [ANCHOR:ONBOARDING]          – OnboardingWatcher active gate
+ *  [ANCHOR:TRIKETON-OVERLAY]    – modal dialog + payload view (UI-only)
+ *
+ *  PROBLEM-RELEVANCE MAP (präzise)
+ *  ---------------------------------------------------------------------
+ *  ✅ User-Triketon:        [ANCHOR:SEND-USER] (computeTruthHash(normalizeForTruthHash(...)))
+ *  ⚠️ Assistant-Triketon:   [ANCHOR:TRIKETON-APPEND-A] (exists, but may not match final text state)
+ *  🔴 Persistenzzeitpunkt:  [ANCHOR:SEND-STREAM] + [ANCHOR:SEND-FINALLY]
+ *     - Streaming persistiert chunkweise, aber ohne singulären finalization hook.
+ *     - Genau hier entstehen: Assistant fehlt im Ledger / Paare brechen / Verify wirkt „tot“.
+ *  ⚠️ Device/PublicKey Drift: [ANCHOR:TRIKETON-PAYLOAD] + server integration (nicht in diesem File fixbar)
+ *  🔴 ArchivePairs-Folgeschaden: entsteht upstream (wenn Assistant-final + ledger fehlen)
+ *
+ *  “DO NOT TOUCH” WARNINGS (stabilitätskritisch)
+ *  ---------------------------------------------------------------------
+ *  - Scrollport-Regel: EINZIGER Scrollport ist convoRef (.chat-stage). Keine extra overflow in children.
+ *  - Fixed Dock: prompt-root-scene ist position:fixed; zIndex bewusst hoch (90).
+ *  - Mobile visualViewport hooks: nur defensiv ändern; sonst Keyboard-Jank.
+ *
+ *  QUICK DEBUG HOOKS (already in file)
+ *  ---------------------------------------------------------------------
+ *  - /debug storage (in onSendFromPrompt): shows length of storage keys
+ *
+ * =====================================================================
+ */
 
 "use client";
 
@@ -2200,12 +2217,12 @@ setMessages((prev) => {
 });
 
 
-// 2) Inhalt schrittweise aufbauen 
+// 2) Inhalt schrittweise aufbauen (deterministisch awaited)
 const fullText = assistant.content ?? "";
 const CHUNK_SIZE = 2;
 const TICK_MS = 16;
 
-(async () => {
+const streamAssistant = async () => {
   for (let i = 0; i < fullText.length; i += CHUNK_SIZE) {
     await new Promise((r) => setTimeout(r, TICK_MS));
 
@@ -2225,7 +2242,11 @@ const TICK_MS = 16;
       return next;
     });
   }
-})();
+};
+
+// ⬇️ WICHTIG: await statt fire-and-forget
+await streamAssistant();
+
 
 
       const meta = (assistant as any).meta as

@@ -1,87 +1,289 @@
-/*** =======================================================================
- *  INVENTUS INDEX — app/api/chat/route.ts
- *  Chat-Proxy · FreeGate · Azure OpenAI · Token-Header (ohne Ledger-Debit)
- * =======================================================================
+/***
+ * =====================================================================
+ *  M — CHAT API ROUTE (Azure · FreeGate · Ledger · Triketon)
+ * =====================================================================
  *
- *  [ANCHOR:0] RUNTIME & IMPORTS
- *    – NodeJS-Runtime, da FS/ENV-Handling (dotenv, fs, path).
- *    – withGate + retryingFetch für Azure-Ratelimit & Backoff.
- *    – verifyAndBumpFreegate für FreeGate-Limitierung.
- *    – AUTH_COOKIE_NAME + verifySessionToken für Session-Erkennung.
+ *  FILE
+ *  - app/api/chat/route.ts
  *
- *  [ANCHOR:1] ENV-LADUNG & KONFIG
- *    – Lädt .env.* abhängig von NODE_ENV.
- *    – Azure-Parameter: ENDPOINT, KEY, DEPLOYMENT, API-VERSION.
- *    – Modellgrenzen: MODEL_MAX_TOKENS, GPTX_MAX_CHARS.
- *    – FreeGate-Parameter: FREE_LIMIT (z. B. 9), FREEGATE_SECRET, CHECKOUT_URL.
+ *  STATUS
+ *  - Route ist funktionsfähig (Azure-Proxy, FreeGate, Ledger-Debit)
+ *  - Trägt AKTIV zu den aktuellen Problemen bei (Triketon / Archive / Verify)
  *
- *  [ANCHOR:2] TYPEN & assertEnv()
- *    – ChatBody/messages-Struktur.
- *    – assertEnv(): garantiert vollständige Azure-Konfiguration, sonst Error.
+ *  ZIEL DIESES INDEX
+ *  - bestehenden Inventus-Index präzisieren und erweitern
+ *  - explizit markieren, WO diese Route unsere aktuellen Fehler verursacht
+ *  - klare Trennung: Gate/Proxy vs. Truth-/Ledger-Ebene
  *
- *  [ANCHOR:3] SYSTEMPROMPT & URL-Builder
- *    – loadSystemPrompt(protocol): liest /srv/m-pathy/${protocol}.txt (Hardcap).
- *    – buildAzureUrl(): robustes URL-Routing für verschiedene Endpoint-Formate.
+ * =====================================================================
  *
- *  [ANCHOR:4] REQUEST-PARSING
- *    – POST-Handler liest JSON-Body, prüft, ob body.messages ein Array ist.
- *    – Fehlerhafte Eingaben → HTTP 400.
+ *  INDEX (Sprunganker – erweitert & korrigiert)
+ *  ---------------------------------------------------------------------
+ *  [ANCHOR:0]   RUNTIME & IMPORTS
+ *  [ANCHOR:1]   ENV-LOADING & KONFIGURATION
+ *  [ANCHOR:2]   TYPEN & ENV-ASSERT
+ *  [ANCHOR:3]   SYSTEMPROMPT & LANGUAGE-GUARD
+ *  [ANCHOR:4]   REQUEST-PARSING
+ *  [ANCHOR:5]   AUTH & FREEGATE (ACCESS-GATE)
+ *  [ANCHOR:6]   FREEGATE-BLOCKING & RESPONSE-HEADERS
+ *  [ANCHOR:7]   LEDGER-PRECHECK (BALANCE READ)
+ *  [ANCHOR:8]   LOCALE-DETERMINATION
+ *  [ANCHOR:9]   AZURE-PAYLOAD-BUILD
+ *  [ANCHOR:10]  AZURE-CALL (withGate + retryingFetch)
+ *  [ANCHOR:11]  AZURE-RESPONSE-PARSING
+ *  [ANCHOR:12]  TOKEN-ESTIMATION & LEDGER-DEBIT
+ *  [ANCHOR:13]  TRIKETON-SEAL & DB-ANCHORING   ← 🔴 KRITISCH
+ *  [ANCHOR:14]  RESPONSE-BUILD (assistant payload)
+ *  [ANCHOR:15]  ERROR-HANDLING
  *
- *  [ANCHOR:5] FREEGATE + AUTH (TOKEN-HOTSPOT)
- *    – Liest Cookie-Header, extrahiert m_auth per AUTH_COOKIE_NAME und
- *      verifiziert SessionToken → sessionEmail / isAuthenticated.
- *    – verifyAndBumpFreegate(cookieHeader, userAgent, freeLimit, secret):
- *        · count: bisherige Requests
- *        · blocked: ob Limit überschritten
- *        · cookie: aktualisierter FreeGate-Cookie
- *    – Berechnet X-Free-Remaining = max(FREE_LIMIT - count, 0).
+ *  PROBLEM-RELEVANCE MAP (ABSOLUT WICHTIG)
+ *  ---------------------------------------------------------------------
+ *  🔴 Triketon-Public-Key Drift        → [ANCHOR:13]
+ *  🔴 Assistant-Triketon nicht deterministisch → [ANCHOR:13]
+ *  🔴 Verify-Mismatch (Client vs Server) → [ANCHOR:13] + Client
+ *  🔴 Archive-Pair-Ausfall (Folgeschaden) → indirekt [ANCHOR:13]
  *
- *  [ANCHOR:6] LIMIT-VERHALTEN
- *    – Wenn blocked:
- *        · Gäste → 401, status:"free_limit_reached", needs_login:true.
- *        · Eingeloggt → 402, status:"free_limit_reached", checkout_url.
- *    – Setzt Response-Header:
- *        · X-Free-Used, X-Free-Limit, X-Free-Remaining, X-Tokens-Delta:"0".
- *
- *  [ANCHOR:7] AZURE-CALL
- *    – assertEnv() → Sicherheitscheck.
- *    – Optionaler Systemprompt (protocol oder "GPTX") + messages-Merge.
- *    – Request an Azure via withGate(retryingFetch(..., 5)).
- *    – Fehler direkt als Upstream-Fehler zurückgegeben (Status durchgereicht).
- *
- *  [ANCHOR:8] INHALT & TOKEN-HEADER (STUB)
- *    – content = data.choices[0].message.content, ansonsten 502.
- *    – TOKENS_USED = Math.min(MODEL_MAX_TOKENS, 120) (Schätz-Stub).
- *    – Antwort: { role:"assistant", content } mit HTTP 200.
- *    – Setzt Header:
- *        · X-Tokens-Delta = -TOKENS_USED (nur Signal, kein Ledger-Debit).
- *        · X-Free-Used, X-Free-Limit, X-Free-Remaining.
- *        · X-Tokens-Overdraw = "0".
- *        · Optional: Set-Cookie mit aktualisiertem FreeGate-Cookie.
- *
- *  [ANCHOR:9] ERROR-HANDLING
- *    – Fängt alle Fehler, loggt sie und antwortet mit HTTP 500 sowie
- *      error:err.message.
- *
- *  TOKEN-RELEVANZ (SUMMARY)
- *    – Diese Route entscheidet, wann Nutzer von FreeGate in den Kauffluss
- *      (Stripe) übergehen müssen, und liefert einen geplanten Token-Delta-
- *      Header (X-Tokens-Delta) als Signal.
- *    – Sie führt aktuell KEINEN echten Token-Debit im Ledger aus, sondern
- *      belässt den Ledger-Saldo unverändert.
- *    – Die Diskrepanz zwischen numerischem Ledger-User (Webhooks) und
- *      E-Mail-basiertem User in /api/me/balance ist hier sichtbar nur über
- *      Header/Session-Erkennung, nicht über eine Ledger-Operation.
- *
- *  INVENTUS NOTE
- *    – Reine Inventur: app/api/chat/route.ts ist derzeit ein Gate- & Proxy-
- *      Layer ohne direkten Zugriff auf das Token-Ledger; jegliche echte
- *      Token-Abbuchungslogik müsste hier oder in einem nachgelagerten
- *      Service erst noch mit dem Ledger gekoppelt werden.
- * ======================================================================= */
+ * =====================================================================
+ */
 
 
-// app/api/chat/route.ts
+/* =====================================================================
+ * [ANCHOR:0] RUNTIME & IMPORTS
+ * =====================================================================
+ *
+ * - runtime = "nodejs" (korrekt, da FS + ChildProcess genutzt wird)
+ * - Route ist SERVER-ONLY, keine Client-Abhängigkeit
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine direkte
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:1] ENV-LOADING & KONFIGURATION
+ * =====================================================================
+ *
+ * - .env.production vs .env.local / .env.payment
+ * - Azure-Parameter + Limits
+ * - FREE_LIMIT, FREEGATE_SECRET, CHECKOUT_URL
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine direkte
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:2] TYPEN & ENV-ASSERT
+ * =====================================================================
+ *
+ * - ChatMessage / ChatBody
+ * - assertEnv(): verhindert leisen Azure-Fehler
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine direkte
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:3] SYSTEMPROMPT & LANGUAGE-GUARD
+ * =====================================================================
+ *
+ * - loadSystemPrompt(protocol)
+ * - languageGuard (system role, locale enforced)
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine direkte
+ * ⚠️ erzeugt zusätzliche system messages, die clientseitig ignoriert werden
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:4] REQUEST-PARSING
+ * =====================================================================
+ *
+ * - POST(req)
+ * - Validiert body.messages
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:5] AUTH & FREEGATE (ACCESS-GATE)
+ * =====================================================================
+ *
+ * - Cookie parsing (AUTH_COOKIE_NAME)
+ * - verifySessionToken()
+ * - verifyAndBumpFreegate()
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine bzgl. Archive/Triketon
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:6] FREEGATE-BLOCKING & RESPONSE-HEADERS
+ * =====================================================================
+ *
+ * - 401 / 402 handling
+ * - X-Free-* Header
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:7] LEDGER-PRECHECK (BALANCE READ)
+ * =====================================================================
+ *
+ * - getBalance(sessionUserId)
+ * - ggf. 402 insufficient_tokens
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine bzgl. Triketon
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:8] LOCALE-DETERMINATION
+ * =====================================================================
+ *
+ * - body.locale > cookie lang > NEXT_LOCALE > "en"
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:9] AZURE-PAYLOAD-BUILD
+ * =====================================================================
+ *
+ * - messages = [systemPrompt?, languageGuard, ...body.messages]
+ * - temperature, max_tokens
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:10] AZURE-CALL
+ * =====================================================================
+ *
+ * - withGate(retryingFetch(...))
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:11] AZURE-RESPONSE-PARSING
+ * =====================================================================
+ *
+ * - data.choices[0].message.content
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:12] TOKEN-ESTIMATION & LEDGER-DEBIT
+ * =====================================================================
+ *
+ * - estimateTokensFromText()
+ * - debit(sessionUserId, amount)
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine bzgl. Archive
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:13] TRIKETON-SEAL & DB-ANCHORING   🔴
+ * =====================================================================
+ *
+ * CODE:
+ * - spawn("python3", ["-m", "triketon.triketon2048", "seal", content, "--json"])
+ * - INSERT INTO triketon_anchors (public_key, truth_hash, timestamp, orbit_context)
+ *
+ * 🔴 KRITISCHE BEFUNDE:
+ *
+ * 1. Public-Key wird SERVERSEITIG generiert
+ *    → Client kennt diesen Key NICHT
+ *
+ * 2. Client verwendet eigenen Device/Public-Key
+ *    → Verify(public_key + truth_hash) schlägt fehl
+ *
+ * 3. Assistant-Triketon wird HIER erzeugt,
+ *    aber Client persistiert Assistant ggf. an anderem Zeitpunkt
+ *
+ * 4. chain_id wird NICHT gesetzt
+ *    → ArchivePairProjection kann Assistant NICHT korrekt zuordnen
+ *
+ * FOLGEN (Systemweit):
+ * ❌ Verify liefert FALSE
+ * ❌ mpathy:archive:pairs:v1 bleibt leer
+ * ❌ Assistant existiert visuell, aber nicht in Wahrheitsschicht
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:14] RESPONSE-BUILD (assistant payload)
+ * =====================================================================
+ *
+ * - Response enthält:
+ *     role, content, status, tokens_used, balance_after, triketon
+ *
+ * PROBLEMRELEVANZ:
+ * ⚠️ triketon-Objekt wird an Client zurückgegeben,
+ *    ist aber NICHT konsistent mit Client-Ledger-Keys
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:15] ERROR-HANDLING
+ * =====================================================================
+ *
+ * - try/catch → 500
+ *
+ * PROBLEMRELEVANZ:
+ * ❌ keine
+ */
+
+
+/* =====================================================================
+ * SYSTEMISCHE ZUSAMMENFASSUNG (WAHRHEIT)
+ * =====================================================================
+ *
+ * ❌ Diese Route ist KEIN reiner Proxy mehr.
+ * ❌ Sie mischt Gate-, Ledger- und Truth-Logik.
+ *
+ * 🔴 HAUPTBEITRAG ZUM AKTUELLEN PROBLEM:
+ * - Server generiert eigene Triketon-Public-Keys
+ * - Kein chain_id im Anchor
+ * - Keine deterministische Kopplung Client ↔ Server
+ *
+ * RESULTAT:
+ * - Triketon existiert doppelt (Client vs Server)
+ * - Archive-Pairs können nicht entstehen
+ * - Verify wirkt „kaputt“, ist aber logisch korrekt
+ *
+ * FIX-LAGE (nur zur Einordnung, kein Patch):
+ * - Entweder:
+ *   A) Client liefert PublicKey + chain_id an Server
+ *   B) Server ist einzige Triketon-Wahrheit
+ *
+ * Aktuell: HYBRID → inkonsistent.
+ *
+ * =====================================================================
+ */
+
+
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";

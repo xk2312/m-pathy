@@ -1,59 +1,219 @@
-/*** =======================================================================
- *  INVENTUS INDEX — lib/chatPersistence.ts
- *  Lokale Chat-History · Browser-Persistenz (ohne Ledger-Bezug)
- * =======================================================================
+/***
+ * =====================================================================
+ *  M — CHAT PERSISTENCE (Local UI History · Non-Truth Layer)
+ * =====================================================================
  *
- *  [ANCHOR:0] TYPDEF & STORAGE-KEYS
- *    – ChatMessage: { role: "system" | "user" | "assistant"; content; format? }.
- *    – STORAGE_KEYS: ["m_chat_messages_v1", "m.chat.v1", "messages"] für
- *      aktuellen und alte Persistenz-Keys (Migration).
+ *  FILE
+ *  - lib/chatPersistence.ts
  *
- *  [ANCHOR:1] safeStorage()
- *    – Kapselt window.localStorage defensiv.
- *    – Gibt null zurück bei SSR, fehlendem window oder Zugrifffehlern.
+ *  ROLE IM SYSTEM
+ *  - Verwaltet **ausschließlich** die lokale Chat-History im Browser
+ *  - Dient UX, Session-Gefühl und Prompt-Kontext
+ *  - ❌ KEIN Bestandteil der Wahrheits- oder Verifikationsschicht
  *
- *  [ANCHOR:2] isValid(x)
- *    – Validiert, dass ein Eintrag eine gültige ChatMessage ist.
- *    – Schützt vor kaputten/alten Strukturen in localStorage.
+ *  WICHTIGER KONTEXT (aus Übergangsprotokoll)
+ *  - chatPersistence ist **nicht kaputt**
+ *  - trägt aber **indirekt** zu den aktuellen Problemen bei,
+ *    weil Persistenzzeitpunkte hier genutzt werden,
+ *    die später für Triketon & Archive fälschlich als „final“ interpretiert werden
  *
- *  [ANCHOR:3] truncateMessages(messages, maxMsgs, maxChars)
- *    – Kürzt History auf maximal maxMsgs (Default: 80) und maxChars
- *      (Default: 8000) Gesamtzeichenzahl.
- *    – Entfernt vordere Messages, um die letzten Konversationsteile zu
- *      behalten und überlange Prompts zu vermeiden.
+ * =====================================================================
  *
- *  [ANCHOR:4] saveMessages(messages)
- *    – Schreibt nur validierte Messages in localStorage (STORAGE_KEYS[0]).
- *    – Normalisiert format auf "markdown" | "plain" | "html" (Default:
- *      "markdown").
- *    – Fehler werden geschluckt, um niemals die App zu crashen.
+ *  INDEX (Sprunganker)
+ *  ---------------------------------------------------------------------
+ *  [ANCHOR:OVERVIEW]          – Rolle im Gesamtsystem
+ *  [ANCHOR:TYPES]             – ChatMessage Typ
+ *  [ANCHOR:STORAGE-KEYS]      – lokale Storage Keys + Migration
+ *  [ANCHOR:SAFE-STORAGE]      – SSR-sichere LocalStorage-Kapsel
+ *  [ANCHOR:VALIDATION]        – Message-Gültigkeitsprüfung
+ *  [ANCHOR:TRUNCATION]        – truncateMessages()
+ *  [ANCHOR:SAVE]              – saveMessages()
+ *  [ANCHOR:LOAD]              – loadMessages()
+ *  [ANCHOR:CLEAR]             – clearMessages()
  *
- *  [ANCHOR:5] loadMessages()
- *    – Liest Chat-History aus localStorage.
- *    – Versucht nacheinander alle STORAGE_KEYS (Migration von Altformaten).
- *    – Filtert mit isValid() und normalisiert format wie beim Speichern.
- *    – Gibt bei Fehlern oder leerem Storage ein leeres Array zurück.
+ *  PROBLEM-RELEVANCE MAP
+ *  ---------------------------------------------------------------------
+ *  🔴 Indirekter Einfluss:
+ *     - chunkweises Persistieren während Streaming
+ *     - fehlende Unterscheidung zwischen „Zwischenzustand“ und „final“
  *
- *  [ANCHOR:6] clearMessages()
- *    – Löscht Chat-History für alle bekannten STORAGE_KEYS.
- *    – Fehler werden ignoriert (Fail-Safe).
+ *  ❌ Keine Ursache:
+ *     - kein Ledger
+ *     - kein Triketon
+ *     - kein Archive Pairing
  *
- *  TOKEN-RELEVANZ (SUMMARY)
- *    – Dieses Modul verwaltet ausschließlich die lokale Chat-History im
- *      Browser und hat keinen direkten Bezug zum Token-Ledger, FreeGate
- *      oder Stripe-Webhook-Flow.
- *    – Indirekt beeinflusst es nur die Länge der Prompts (Kontextmenge),
- *      nicht jedoch Salden oder Berechtigungen im Tokensystem.
- *
- *  INVENTUS NOTE
- *    – Reine Komfort- & UX-Schicht: wichtig für Session-Gefühl, aber
- *      neutral in Bezug auf Kauf, Guthaben und Ledger; für Token-Bugs
- *      (z. B. „… lädt“ im AccountPanel) ist dieses File nicht ursächlich.
- * ======================================================================= */
+ * =====================================================================
+ */
 
 
-// /lib/chatPersistence.ts
-// Keine "use client" nötig; wir guard-en localStorage sauber ab.
+/* =====================================================================
+ * [ANCHOR:OVERVIEW]
+ * =====================================================================
+ *
+ * Dieses Modul speichert den Chat-Zustand lokal.
+ *
+ * Es hat bewusst:
+ *  - KEINE Kenntnis von chain_id
+ *  - KEINE Kenntnis von truth_hash
+ *  - KEINE Kenntnis von Triketon
+ *
+ * Es ist damit:
+ *  - robust
+ *  - simpel
+ *  - aber zeitlich blind
+ *
+ * 🔴 Diese zeitliche Blindheit ist relevant für das aktuelle Problem.
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:TYPES]
+ * =====================================================================
+ *
+ * ChatMessage
+ *  - role: "system" | "user" | "assistant"
+ *  - content: string
+ *  - format?: "plain" | "markdown" | "html"
+ *
+ * PROBLEM-RELEVANZ:
+ * - Keine IDs
+ * - Keine timestamps
+ * - Keine Unterscheidung „partial vs final“
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:STORAGE-KEYS]
+ * =====================================================================
+ *
+ * STORAGE_KEYS:
+ *  - "m_chat_messages_v1"   (aktuell)
+ *  - "m.chat.v1"            (legacy)
+ *  - "messages"             (legacy)
+ *
+ * PROBLEM-RELEVANZ:
+ * ❌ keine
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:SAFE-STORAGE]
+ * =====================================================================
+ *
+ * safeStorage()
+ *  - kapselt window.localStorage
+ *  - verhindert SSR-Crashes
+ *
+ * PROBLEM-RELEVANZ:
+ * ❌ keine
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:VALIDATION]
+ * =====================================================================
+ *
+ * isValid(x)
+ *  - prüft Struktur der ChatMessage
+ *
+ * PROBLEM-RELEVANZ:
+ * ❌ keine
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:TRUNCATION]
+ * =====================================================================
+ *
+ * truncateMessages(messages, maxMsgs, maxChars)
+ *
+ * Funktion:
+ *  - kappt Konversationshistorie
+ *  - schützt vor zu großen Prompts
+ *
+ * 🔴 PROBLEM-RELEVANZ (INDIREKT):
+ *  - kann Zwischenstände entfernen
+ *  - kann Kontext kürzen, bevor Assistant „final“ markiert wurde
+ *
+ * (nicht der Bug, aber Verstärker)
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:SAVE]
+ * =====================================================================
+ *
+ * saveMessages(messages)
+ *
+ * Funktion:
+ *  - schreibt JEDE Änderung sofort nach localStorage
+ *  - kennt keinen „final“-Zustand
+ *
+ * 🔴 HOCH RELEVANT (INDIREKT):
+ *  - wird während Streaming aufgerufen
+ *  - persistiert leere Assistant-Bubbles + Chunk-Zwischenstände
+ *  - nachgelagerte Systeme können diese Persistenz fälschlich
+ *    als abgeschlossene Wahrheit interpretieren
+ *
+ * WICHTIG:
+ *  - korrekt implementiert
+ *  - aber semantisch zu früh genutzt
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:LOAD]
+ * =====================================================================
+ *
+ * loadMessages()
+ *
+ * Funktion:
+ *  - lädt Chat-History
+ *  - migriert Legacy-Keys
+ *
+ * PROBLEM-RELEVANZ:
+ * ❌ keine
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:CLEAR]
+ * =====================================================================
+ *
+ * clearMessages()
+ *
+ * Funktion:
+ *  - löscht lokale Chat-History
+ *
+ * PROBLEM-RELEVANZ:
+ * ❌ keine
+ */
+
+
+/* =====================================================================
+ * SYSTEMISCHE ZUSAMMENFASSUNG
+ * =====================================================================
+ *
+ * chatPersistence.ts ist:
+ *  - stabil
+ *  - korrekt
+ *  - bewusst simpel
+ *
+ * 🔴 Es wird problematisch durch seinen KONTEXT:
+ *  - saveMessages() wird während Streaming benutzt
+ *  - es gibt kein Finalisierungs-Signal
+ *
+ * DAS HEISST:
+ *  - Dieses File ist NICHT zu patchen
+ *  - Aber seine Nutzung MUSS korrekt eingerahmt werden
+ *
+ * RELEVANTER FIX-ORT:
+ *  - app/page2/page.tsx
+ *    [ANCHOR:SEND-PIPELINE] → definierter FINAL-Schritt
+ *
+ * =====================================================================
+ */
+
 
 export type ChatMessage = {
   role: "system" | "user" | "assistant";

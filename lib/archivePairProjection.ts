@@ -1,7 +1,258 @@
-// lib/archivePairProjection.ts
-// GPTM-Galaxy+ · Archive Pair Projection v1.1
-// Deterministic question–answer projection from Triketon ledger
-// Purpose: Searchable atomic units (NOT UI rendering)
+/***
+ * =====================================================================
+ *  M — ARCHIVE PAIR PROJECTION (Deterministic Q→A Index)
+ * =====================================================================
+ *
+ *  FILE
+ *  - lib/archivePairProjection.ts
+ *
+ *  PURPOSE
+ *  - Deterministic projection of Triketon ledger entries into
+ *    atomic, searchable Question→Answer pairs.
+ *  - Produces the storage layer:
+ *      mpathy:archive:pairs:v1
+ *  - This file is PURE DATA LOGIC:
+ *    ❌ no UI
+ *    ❌ no rendering
+ *    ❌ no side effects beyond LocalStorage + event dispatch
+ *
+ *  CONTEXT (aus Übergangsprotokoll + Page2-Index)
+ *  - ❌ archive pairs are currently NOT updating
+ *  - ❌ root cause is NOT primarily inside this file
+ *  - 🔴 this module is a *downstream consumer* of Triketon integrity
+ *
+ *  If this file produces ZERO or STALE pairs,
+ *  the upstream truth layer (Triketon) is already broken.
+ *
+ * =====================================================================
+ *
+ *  INDEX (Sprunganker)
+ *  ---------------------------------------------------------------------
+ *  [ANCHOR:OVERVIEW]            – High-level role in the system
+ *  [ANCHOR:TYPES]               – TriketonAnchor / ArchivePair
+ *  [ANCHOR:STORAGE-KEYS]        – LocalStorage keys used
+ *  [ANCHOR:TRIKETON-READ]       – readFullTriketonLedger()
+ *  [ANCHOR:KEYWORD-EXTRACT]     – extractTopKeywordsFromText()
+ *  [ANCHOR:PAIR-RULES]          – Deterministic pairing rules
+ *  [ANCHOR:PAIR-BUILD]          – syncArchivePairsFromTriketon()
+ *  [ANCHOR:WRITE-PAIRS]         – writeLS + archive update event
+ *  [ANCHOR:READ-PAIRS]          – readArchivePairs()
+ *
+ *  PROBLEM-RELEVANCE MAP
+ *  ---------------------------------------------------------------------
+ *  🔴 CRITICAL DEPENDENCY:
+ *     - This file REQUIRES:
+ *         • assistant Triketon entries
+ *         • correct chain_id
+ *         • monotonic timestamps
+ *
+ *  ❌ This file CANNOT:
+ *     - invent assistant messages
+ *     - repair missing Triketon entries
+ *     - guess pairs if assistant is absent
+ *
+ * =====================================================================
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:OVERVIEW]
+ * =====================================================================
+ *
+ * This module materializes Q→A pairs from the Triketon ledger.
+ *
+ * Conceptually:
+ *
+ *   Triketon Ledger (append-only, full truth)
+ *        ↓
+ *   archivePairProjection.ts
+ *        ↓
+ *   mpathy:archive:pairs:v1   (derived, replaceable)
+ *
+ * Any failure here means the ledger is incomplete or malformed.
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:TYPES]
+ * =====================================================================
+ *
+ * TriketonAnchor
+ * - Minimal ledger entry required for pairing
+ * - MUST contain:
+ *     id
+ *     role ('user' | 'assistant')
+ *     content
+ *     timestamp
+ *     truth_hash
+ *     chain_id
+ *
+ * ArchivePair
+ * - Atomic searchable unit
+ * - Built ONLY from:
+ *     user → assistant (direct succession)
+ * - pair_id = `${user.truth_hash}→${assistant.truth_hash}`
+ *
+ * PROBLEM NOTE:
+ * - If assistant entries are missing from Triketon,
+ *   ArchivePair can NEVER be constructed.
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:STORAGE-KEYS]
+ * =====================================================================
+ *
+ * TRIKETON_KEY = "mpathy:triketon:v1"
+ * PAIRS_KEY    = "mpathy:archive:pairs:v1"
+ *
+ * IMPORTANT DESIGN DECISION:
+ * - We intentionally DO NOT use readLS(TRIKETON_KEY)
+ * - We read raw localStorage to avoid any trimming/capping.
+ *
+ * This explicitly disproves the idea that "only 6 pairs" are a bug here.
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:TRIKETON-READ]
+ * =====================================================================
+ *
+ * readFullTriketonLedger()
+ *
+ * - Reads the FULL Triketon ledger from localStorage
+ * - No filters
+ * - No limits
+ * - No pagination
+ *
+ * FAILURE MODES (observed system-wide):
+ * - Ledger contains ONLY user entries
+ * - Ledger contains mixed chain_id values
+ * - Ledger order is valid, but assistant rows are absent
+ *
+ * If ledger is incomplete, downstream pairing halts silently.
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:KEYWORD-EXTRACT]
+ * =====================================================================
+ *
+ * extractTopKeywordsFromText(input, limit=7)
+ *
+ * - Language-agnostic
+ * - Stopword-filtered
+ * - Deterministic frequency-based
+ *
+ * NOT RELEVANT for current bug:
+ * - Even if keywords fail, pairs should still exist.
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:PAIR-RULES]
+ * =====================================================================
+ *
+ * Pair construction rules (STRICT):
+ *
+ * 1. Only roles: 'user' → 'assistant'
+ * 2. Assistant must IMMEDIATELY follow the user
+ *    (system messages are ignored earlier)
+ * 3. Same chain_id REQUIRED
+ * 4. Ordered strictly by timestamp
+ *
+ * CONSEQUENCE:
+ * - If assistant entry is delayed, missing, or chained differently,
+ *   NO pair is produced.
+ *
+ * 🔴 THIS IS WHERE UPSTREAM ERRORS MANIFEST.
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:PAIR-BUILD]
+ * =====================================================================
+ *
+ * syncArchivePairsFromTriketon()
+ *
+ * Steps:
+ * 1. Read full Triketon ledger
+ * 2. Group anchors by chain_id
+ * 3. Filter to user/assistant only
+ * 4. Sort by timestamp
+ * 5. Walk sequentially and build pairs
+ *
+ * CRITICAL OBSERVATION:
+ * - This function NEVER throws on logical absence.
+ * - It simply produces ZERO pairs if conditions are unmet.
+ *
+ * This explains:
+ * - "Archive looks frozen"
+ * - "Verify UI shows nothing"
+ *
+ * The failure is silent but deterministic.
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:WRITE-PAIRS]
+ * =====================================================================
+ *
+ * writeLS(PAIRS_KEY, pairs)
+ * window.dispatchEvent("mpathy:archive:updated")
+ *
+ * NOTE:
+ * - This write ALWAYS happens, even if pairs = []
+ * - UI reacting to update event will still re-render,
+ *   but with empty data.
+ *
+ * This is a SYMPTOM amplifier, not a cause.
+ */
+
+
+/* =====================================================================
+ * [ANCHOR:READ-PAIRS]
+ * =====================================================================
+ *
+ * readArchivePairs()
+ *
+ * - Simple backward-compatible accessor
+ * - No logic
+ * - No recomputation
+ *
+ * If this returns empty:
+ * - Projection already failed earlier.
+ */
+
+
+/* =====================================================================
+ * PROBLEM-RELEVANCE SUMMARY (ABSOLUTE)
+ * =====================================================================
+ *
+ * ❌ archivePairProjection.ts is NOT broken.
+ * ❌ No logic error in pairing rules.
+ * ❌ No storage trimming issue here.
+ *
+ * 🔴 The file EXPOSES upstream breakage:
+ *
+ *   - Missing assistant Triketon entries
+ *   - Wrong timing of assistant persistence
+ *   - Inconsistent chain_id
+ *
+ * FIX LOCATION IS UPSTREAM:
+ * - app/page2/page.tsx
+ *   [ANCHOR:SEND-PIPELINE] → [ANCHOR:SEND-FINALLY]
+ *
+ * Once assistant entries are:
+ *   ✓ final
+ *   ✓ persisted
+ *   ✓ triketoned
+ *
+ * This module will immediately recover WITHOUT CHANGES.
+ *
+ * =====================================================================
+ */
+
 
 import { writeLS } from './storage'
 
