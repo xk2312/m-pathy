@@ -2062,23 +2062,7 @@ const id =
     ? (crypto as any).randomUUID()
     : `${Date.now()}_${Math.random().toString(16).slice(2)}`
 
-try {
-  if (triketon?.public_key && triketon?.truth_hash && triketon?.timestamp) {
-    appendTriketonLedgerEntry({
-      id,
-      role: "assistant",
-      content: safeContent,
-      truth_hash: triketon.truth_hash,
-      public_key: triketon.public_key,
-      timestamp: triketon.timestamp,
-      version: "v1", // literal fix
-      orbit_context: "chat", // literal fix
-      chain_id: "local",
-    })
-  }
-} catch (err) {
-  console.warn("[TriketonLedger] Append failed:", err)
-}
+void 0;
 
   return {
     id,
@@ -2246,6 +2230,47 @@ const streamAssistant = async () => {
 
 // ⬇️ WICHTIG: await statt fire-and-forget
 await streamAssistant();
+
+setMessages((prev) => {
+  if (!Array.isArray(prev) || prev.length === 0) return prev;
+
+  const last = prev[prev.length - 1] as any;
+  if (!last || last.role !== "assistant") return prev;
+
+  const finalText = String(last.content ?? "");
+  if (!finalText.trim()) return prev;
+
+  const id =
+    typeof last.id === "string" && last.id.length
+      ? last.id
+      : (typeof crypto !== "undefined" && typeof (crypto as any).randomUUID === "function")
+        ? (crypto as any).randomUUID()
+        : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+
+  const publicKey =
+    (assistant as any)?.triketon?.public_key ||
+    (assistant as any)?.triketon?.publicKey ||
+    "local_assistant";
+
+  try {
+    appendTriketonLedgerEntry({
+      id,
+      role: "assistant",
+      content: finalText,
+      truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
+      public_key: String(publicKey),
+      timestamp: new Date().toISOString(),
+      version: "v1",
+      orbit_context: "chat",
+      chain_id: "local",
+    });
+  } catch (err) {
+    console.warn("[TriketonLedger] assistant append failed:", err);
+  }
+
+  return prev;
+});
+
 
 
 
