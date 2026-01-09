@@ -724,27 +724,39 @@ if (balanceBefore <= 0) {
         });
       });
 
-      if (seal?.public_key && seal?.truth_hash && seal?.timestamp) {
+      if (seal?.public_key && seal?.timestamp) {
         const pool = await getPool();
+        const { createHash } = await import("crypto");
+
+        const normalized = content
+          .normalize("NFKC")
+          .replace(/\s+/g, " ")
+          .trim();
+
+        const dbTruthHash = createHash("sha256")
+          .update(normalized, "utf8")
+          .digest("hex");
+
         await pool.query(
           `INSERT INTO triketon_anchors
            (public_key, truth_hash, timestamp, orbit_context)
            VALUES ($1, $2, $3, 'chat')
-           ON CONFLICT DO NOTHING`,
-          [seal.public_key, seal.truth_hash, seal.timestamp]
+           ON CONFLICT (public_key, truth_hash) DO NOTHING`,
+          [seal.public_key, dbTruthHash, seal.timestamp]
         );
 
-              const { computeClientTruthHash } = await import("@/lib/triketon2048/hashClient");
+        const { computeClientTruthHash } = await import("@/lib/triketon2048/hashClient");
 
         triketon = {
           publicKey: seal.public_key,
-          truthHash: computeClientTruthHash(content),
+          truthHash: computeClientTruthHash(content), // CLIENT DECOY
           timestamp: seal.timestamp,
           version: seal.version ?? "v1",
           hashProfile: "CLIENT_DECOY_V1",
           keyProfile: seal.key_profile ?? "TRIKETON_KEY_V1",
           anchorStatus: "anchored",
         };
+
 
       }
     } catch (e) {
