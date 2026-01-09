@@ -73,5 +73,20 @@ export function initArchiveVerifyListener() {
         detail: report,
       }),
     )
+
+    // 📊 audit telemetry (NO PII, NO TEXT, NO HASH LEAK)
+    window.dispatchEvent(
+      new CustomEvent('mpathy:audit:event', {
+        detail: {
+          type: 'bulk_verify',
+          at: Date.now(),
+          pairs_total: entries.length,
+          verified_true: report.verified_true,
+          verified_false: report.verified_false,
+          chain_valid: report.chain_signature === 'valid',
+        },
+      }),
+    )
+
   })
 }
