@@ -412,10 +412,18 @@ const nextLedger = [...ledger, next];
 // 5️⃣ WRITE (once)
 ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(nextLedger));
 
+// 🔔 EMIT: Triketon ledger updated (Archive live projection trigger)
+if (typeof window !== "undefined") {
+  window.dispatchEvent(
+    new CustomEvent("mpathy:triketon:updated")
+  );
+}
+
   } catch (err) {
     console.error("[TriketonLedger] atomic append failed:", err);
   }
 }
+
 
 // ---------------------------------------------------------------------------
 // Step L6 – Device-Bound Public Key (stabil, Council13-approved, persistent)
