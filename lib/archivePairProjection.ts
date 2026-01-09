@@ -296,6 +296,33 @@ const TRIKETON_KEY = 'mpathy:triketon:v1'
 const PAIRS_KEY = 'mpathy:archive:pairs:v1'
 
 /**
+ * Live projection trigger
+ * - Event-driven rebuild when Triketon ledger changes
+ * - No DB coupling
+ * - Fully rebuildable
+ */
+const TRIKETON_UPDATED_EVENT = 'mpathy:triketon:updated'
+
+let liveProjectionInstalled = false
+
+export function ensureLiveArchivePairProjection(): void {
+  if (typeof window === 'undefined') return
+  if (liveProjectionInstalled) return
+  liveProjectionInstalled = true
+
+  // Custom event (same-tab deterministic trigger)
+  window.addEventListener(TRIKETON_UPDATED_EVENT, () => {
+    syncArchivePairsFromTriketon()
+  })
+
+  // Cross-tab trigger (LocalStorage write)
+  window.addEventListener('storage', (e) => {
+    if (e.key !== TRIKETON_KEY) return
+    syncArchivePairsFromTriketon()
+  })
+}
+
+/**
  * IMPORTANT:
  * We intentionally bypass readLS(TRIKETON_KEY) here.
  * Reason: storage-layer may apply performance trimming for Triketon reads,
