@@ -32,15 +32,16 @@ const legalProviderDict = (() => {
     const base = flatten((dict as any)[lang] ?? dict.en);
     const legalLocale = legalDict[lang] ?? legalDict.en;
 
-    // Legal-Keys unter "legal.<page>.*"
     const legalFlat: Record<string, string> = {};
     for (const pageKey of Object.keys(legalLocale) as LegalPageKey[]) {
       const page = legalLocale[pageKey];
+
       legalFlat[`legal.${pageKey}.title`] = page.title;
-      legalFlat[`legal.${pageKey}.intro`] = page.intro;
-      legalFlat[`legal.${pageKey}.last_updated`] = page.last_updated;
-      legalFlat[`legal.${pageKey}.disclaimer`] = page.disclaimer;
-      page.sections.forEach((section) => {
+      legalFlat[`legal.${pageKey}.intro`] = page.intro ?? "";
+      legalFlat[`legal.${pageKey}.last_updated`] = page.last_updated ?? "";
+      legalFlat[`legal.${pageKey}.disclaimer`] = page.disclaimer ?? "";
+
+      page.sections?.forEach((section) => {
         legalFlat[`legal.${pageKey}.sections.${section.id}.heading`] =
           section.heading;
         legalFlat[`legal.${pageKey}.sections.${section.id}.body`] =
@@ -62,12 +63,12 @@ function LegalContent({ pageKey }: { pageKey: LegalPageKey }) {
   const locale = legalDict[lang] ?? legalDict.en;
   const page = locale[pageKey];
 
-  const sections = page.sections;
+  const sections = page.sections ?? [];
 
   return (
     <main className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20">
       <div className="page-center px-[clamp(10px,4vw,90px)] pb-[clamp(40px,6vw,90px)]">
-        {/* SUPER BUFFER – 382px über Buffer-Magazin */}
+        {/* SUPER BUFFER */}
         <div aria-hidden style={{ height: "var(--h-gap-xl)" }} />
 
         {/* Titelblock */}
@@ -75,13 +76,20 @@ function LegalContent({ pageKey }: { pageKey: LegalPageKey }) {
           <p className="text-sm font-medium uppercase tracking-[0.22em] text-white/55">
             {t("nav.links.legal") || "Legal"}
           </p>
+
           <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">
             {page.title}
           </h1>
-          <p className="text-sm text-white/60 max-w-2xl whitespace-pre-line">
-            {page.intro}
-          </p>
-          <p className="text-xs text-white/45">{page.last_updated}</p>
+
+          {page.intro && (
+            <p className="text-sm text-white/60 max-w-2xl whitespace-pre-line">
+              {page.intro}
+            </p>
+          )}
+
+          {page.last_updated && (
+            <p className="text-xs text-white/45">{page.last_updated}</p>
+          )}
         </header>
 
         {/* Inhalt */}
@@ -95,9 +103,11 @@ function LegalContent({ pageKey }: { pageKey: LegalPageKey }) {
             </section>
           ))}
 
-          <section className="mt-6 border-t border-white/10 pt-4 text-xs text-white/50">
-            {page.disclaimer}
-          </section>
+          {page.disclaimer && (
+            <section className="mt-6 border-t border-white/10 pt-4 text-xs text-white/50">
+              {page.disclaimer}
+            </section>
+          )}
         </div>
       </div>
     </main>
@@ -111,7 +121,6 @@ function LegalContent({ pageKey }: { pageKey: LegalPageKey }) {
  * - aktiviert enable-scroll, damit die Seite scrollen kann
  */
 export function LegalPageShell({ pageKey }: { pageKey: LegalPageKey }) {
-  // Scroll-Lock aufheben (wie bei /subscription)
   useEffect(() => {
     document.documentElement.classList.add("enable-scroll");
     return () => {

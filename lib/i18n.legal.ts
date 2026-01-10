@@ -34,7 +34,7 @@ export const legalDict: Record<string, LegalLocale> = {
       title: "Imprint",
       intro:
         "This imprint contains the provider information that is required for m-pathy under German and partly European law.",
-      last_updated: "Last updated: 18 November 2025",
+      last_updated: "Last updated: 11 January 2026",
       sections: [
         {
           id: "provider",
@@ -55,14 +55,12 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "register",
           heading: "3. Commercial register entry",
           body:
-            "NAAL UG (limited liability) is entered in the commercial register. " +
-            "The register court and registration number will be added as soon as they are finally available.",
+            "NAAL UG (limited liability) is entered in the commercial register of the Amtsgericht München under HRB 288710.",
         },
         {
           id: "vat",
           heading: "4. VAT ID",
-          body:
-            "If a VAT identification number is issued, it will be added here.",
+          body: "xe",
         },
         {
           id: "contact",
@@ -82,7 +80,7 @@ export const legalDict: Record<string, LegalLocale> = {
       title: "Privacy Policy",
       intro:
         "This Privacy Policy explains in simple terms how we handle personal data when you use m-pathy.",
-      last_updated: "Last updated: 18 November 2025",
+      last_updated: "Last updated: 11 January 2026",
       sections: [
         {
           id: "controller",
@@ -95,61 +93,81 @@ export const legalDict: Record<string, LegalLocale> = {
             "E-mail: support@m-pathy.ai",
         },
         {
+          id: "principles",
+          heading: "2. Privacy by design",
+          body:
+            "m-pathy follows privacy by design and by default.\n\n" +
+            "• Data is processed only when necessary\n" +
+            "• Processing scope and duration are minimised\n" +
+            "• No implicit user profiles are created\n\n" +
+            "Privacy is enforced architecturally, not situationally.",
+        },
+        {
           id: "data_categories",
-          heading: "2. Categories of data",
+          heading: "3. Categories of data",
           body:
-            "We process, as far as necessary, the following categories of data:\n" +
-            "• Usage data and log data of the website\n" +
-            "• Account and contact data that you actively provide\n" +
-            "• Content of your prompts and responses that you actively send to the system\n" +
-            "• Technical metadata such as time, browser type and basic device information",
+            "Depending on usage, the following categories of data may be involved:\n" +
+            "• account and contact data (if actively provided),\n" +
+            "• technical usage data (security and stability only),\n" +
+            "• payment data (processed by external providers),\n" +
+            "• user prompts and responses (technical processing only).\n\n" +
+            "Prompt content is not used for profiling, advertising, behavioural analysis, or training.",
         },
         {
-          id: "purposes",
-          heading: "3. Purposes and legal bases",
+          id: "local_processing",
+          heading: "4. Local processing and storage",
           body:
-            "We use your data in particular\n" +
-            "• to provide and operate m-pathy,\n" +
-            "• to secure and technically maintain the service,\n" +
-            "• to answer support requests and\n" +
-            "• to comply with statutory retention and documentation duties.\n\n" +
-            "If and to the extent that the GDPR applies, the legal bases are in particular Art. 6(1)(b) GDPR (contract), " +
-            "Art. 6(1)(c) GDPR (legal obligation) and Art. 6(1)(f) GDPR (legitimate interests in secure and efficient operation).",
+            "Prompt content is processed locally or transiently and is not permanently stored on " +
+            "servers in identifiable or reconstructable form.",
         },
         {
-          id: "processors",
-          heading: "4. Processors and recipients",
+          id: "archive",
+          heading: "5. Local archive and context injection",
           body:
-            "We use carefully selected service providers for hosting, infrastructure, analytics without personal profiles " +
-            "and payment processing (for example Stripe). These processors are contractually bound to process data " +
-            "only according to our instructions and in line with applicable data protection law.",
+            "m-pathy allows users to store selected content locally in an archive.\n\n" +
+            "Users may explicitly select archived items and inject them into a new chat.\n\n" +
+            "• operates exclusively on local storage,\n" +
+            "• requires deliberate user action,\n" +
+            "• injected context is fully visible,\n" +
+            "• no automatic or implicit memory exists.",
         },
         {
-          id: "retention",
-          heading: "5. Storage period",
+          id: "verification",
+          heading: "6. Verification and Triketon",
           body:
-            "We store personal data only for as long as it is necessary for the purposes described or as required by law. " +
-            "Log data are usually kept for a short technical period only. Contract-relevant data may be stored for longer " +
-            "in order to comply with commercial and tax retention obligations.",
+            "When users verify content (e.g. news articles), m-pathy uses Triketon.\n\n" +
+            "• content is transmitted to the server solely for verification,\n" +
+            "• a cryptographic truth hash is computed,\n" +
+            "• a public verification key is generated or associated,\n" +
+            "• the original content is not stored,\n" +
+            "• only hash, public key, and minimal technical metadata are retained.\n\n" +
+            "Stored data does not allow reconstruction of the original content.",
         },
         {
-          id: "rights",
-          heading: "6. Your rights",
+          id: "prompt_integrity",
+          heading: "7. Prompt normalisation and drift prevention",
           body:
-            "Where the GDPR applies, you have in particular the right of access, rectification, erasure, restriction of processing, " +
-            "data portability and the right to object to certain processing. You also have the right to lodge a complaint with a data protection authority.",
+            "Before execution, MAIOS 2.0 analyses prompts.\n\n" +
+            "If a prompt is structurally ambiguous, inconsistent, or drift-prone, " +
+            "the system may restructure the phrasing.\n\n" +
+            "• user intent is preserved,\n" +
+            "• only structure and safety clarity are adjusted,\n" +
+            "• no prompt is stored,\n" +
+            "• no learning or profiling occurs.",
         },
         {
-          id: "ai",
-          heading: "7. Use of AI services",
+          id: "devices",
+          heading: "8. Local storage and devices",
           body:
-            "m-pathy uses AI models that process the prompts you send. We pay attention to technical and organizational measures " +
-            "to protect your data, but no system can be perfectly secure. Please do not enter highly sensitive content that you would never " +
-            "want to leave your device.",
+            "All user-generated content is stored exclusively in local storage on the user’s device.\n\n" +
+            "• local storage is persistent until deleted by the user,\n" +
+            "• deleting local storage results in irreversible data loss,\n" +
+            "• no server-side backups exist.\n\n" +
+            "Each device receives a distinct public key. Data is isolated per device.",
         },
       ],
       disclaimer:
-        "This Privacy Policy is a simplified summary and does not replace a full legal review for your individual case.",
+        "This Privacy Policy is provided for transparency and does not replace individual legal advice.",
     },
 
     // --------------------------- TERMS ---------------------------
@@ -158,54 +176,36 @@ export const legalDict: Record<string, LegalLocale> = {
       title: "Terms of Use",
       intro:
         "These Terms govern how you may use m-pathy. By using the service, you agree to them.",
-      last_updated: "Last updated: 18 November 2025",
+      last_updated: "Last updated: 11 January 2026",
       sections: [
         {
           id: "scope",
           heading: "1. Scope of the service",
           body:
-            "m-pathy is an experimental AI-based assistant. It is not a human therapist, lawyer, doctor or financial advisor. " +
-            "The service is provided for creative work, reflection and technical assistance only.",
+            "m-pathy is an experimental AI-based assistant. It is not a human therapist, lawyer, doctor or financial advisor.",
         },
         {
           id: "no_advice",
           heading: "2. No professional advice",
           body:
-            "Content generated by m-pathy must never be used as the sole basis for medical, legal, financial or other decisions " +
-            "with serious consequences. Always consult qualified professionals for such questions.",
+            "Content generated by m-pathy must never be used as the sole basis for medical, legal, financial or other decisions.",
         },
         {
-          id: "account",
-          heading: "3. Account and tokens",
+          id: "modes",
+          heading: "3. Mode-based system governance",
           body:
-            "Access may be granted for a limited period and/or with a defined token pool. You are responsible for keeping your " +
-            "access credentials confidential and for all activity under your account.",
-        },
-        {
-          id: "acceptable_use",
-          heading: "4. Acceptable use",
-          body:
-            "You may not use m-pathy to violate applicable law, to harm others, to generate unlawful content or to attack systems. " +
-            "We may block or restrict accounts that misuse the service.",
-        },
-        {
-          id: "changes",
-          heading: "5. Changes and availability",
-          body:
-            "We may adapt, extend or discontinue individual features of m-pathy at any time, as long as this is reasonable for users. " +
-            "We strive for high availability but cannot guarantee uninterrupted operation.",
+            "m-pathy operates with a defined set of internal system modes.\n\n" +
+            "Mode switching is session-bound, deterministic and does not constitute user profiling.",
         },
         {
           id: "liability",
-          heading: "6. Limitation of liability",
+          heading: "4. Limitation of liability",
           body:
-            "We are liable for intent and gross negligence according to applicable law. For slight negligence we are only liable " +
-            "for breach of essential contractual duties and limited to the typical, foreseeable damage. Mandatory liability, " +
-            "for example under product liability law, remains unaffected.",
+            "Liability is governed by applicable law. Mandatory liability remains unaffected.",
         },
       ],
       disclaimer:
-        "These Terms are a simplified summary to structure the contractual relationship and do not replace individual legal advice.",
+        "These Terms structure the contractual relationship and do not replace legal advice.",
     },
 
     // -------------------------- REFUND ---------------------------
@@ -213,39 +213,30 @@ export const legalDict: Record<string, LegalLocale> = {
       slug: "refund",
       title: "Refund Policy",
       intro:
-        "m-pathy currently offers a clear, one-time purchase model. This Refund Policy explains how we handle payments and refunds.",
-      last_updated: "Last updated: 18 November 2025",
+        "This Refund Policy explains how payments and refunds are handled.",
+      last_updated: "Last updated: 11 January 2026",
       sections: [
         {
           id: "model",
           heading: "1. Purchase model",
           body:
-            "At the moment, access to m-pathy is granted as a one-time purchase for a defined period and/or a defined token pool. " +
-            "There is no automatic subscription renewal.",
-        },
-        {
-          id: "payment",
-          heading: "2. Payment processing",
-          body:
-            "Payments are processed via Stripe or comparable payment providers. The terms and security measures of the payment provider apply in addition.",
+            "Access is granted as a one-time purchase for a defined period and/or token pool.",
         },
         {
           id: "withdrawal",
-          heading: "3. Right of withdrawal",
+          heading: "2. Right of withdrawal",
           body:
-            "If you are a consumer in the European Union, you may have a statutory right of withdrawal for digital services. " +
-            "You are informed about this right during the checkout process, if applicable.",
+            "Statutory rights of withdrawal for digital services apply where required by law.",
         },
         {
           id: "refunds",
-          heading: "4. Refunds in practice",
+          heading: "3. Refunds",
           body:
-            "We generally do not offer refunds once access has been granted and tokens can be used, unless there is a legal obligation " +
-            "or we expressly promise a refund in individual cases.",
+            "Refunds are granted only where legally required or explicitly promised.",
         },
       ],
       disclaimer:
-        "This Refund Policy summarises our current practice and does not limit mandatory statutory rights.",
+        "This policy does not limit mandatory statutory rights.",
     },
 
     // --------------------------- LEGAL ---------------------------
@@ -253,37 +244,24 @@ export const legalDict: Record<string, LegalLocale> = {
       slug: "legal",
       title: "Legal Information",
       intro:
-        "This page brings together key legal information about m-pathy in one place.",
-      last_updated: "Last updated: 18 November 2025",
+        "This page provides an overview of the legal framework governing m-pathy.",
+      last_updated: "Last updated: 11 January 2026",
       sections: [
         {
-          id: "overview",
-          heading: "1. Overview",
-          body:
-            "m-pathy is operated by NAAL UG (limited liability), based in Munich, Germany. " +
-            "The service combines advanced AI models with a strong focus on privacy, clarity and user control.",
-        },
-        {
           id: "jurisdiction",
-          heading: "2. Applicable law and jurisdiction",
+          heading: "1. Applicable law and jurisdiction",
           body:
             "Unless mandatory consumer protection law provides otherwise, German law applies. " +
-            "If you are a merchant under German law, the exclusive place of jurisdiction is Munich.",
-        },
-        {
-          id: "online_dispute",
-          heading: "3. Online dispute resolution",
-          body:
-            "The European Commission provides a platform for online dispute resolution (ODR). We are neither obliged nor in principle willing " +
-            "to participate in such dispute resolution procedures before a consumer arbitration board.",
+            "For merchants, the exclusive place of jurisdiction is Munich.",
         },
       ],
       disclaimer:
-        "This page is intended to provide a transparent overview. In case of conflict, the German version may prevail where required by law.",
+        "This page is provided for transparency. In case of conflict, mandatory law prevails.",
     },
   },
 
-  // ================================================================
+
+   // ================================================================
   // DEUTSCH
   // ================================================================
   de: {
@@ -292,8 +270,8 @@ export const legalDict: Record<string, LegalLocale> = {
       slug: "imprint",
       title: "Impressum",
       intro:
-        "Dieses Impressum enthält die Angaben, die für m-pathy nach deutschem und teilweise europäischem Recht erforderlich sind.",
-      last_updated: "Zuletzt aktualisiert: 18. November 2025",
+        "Dieses Impressum enthält die gesetzlich vorgeschriebenen Anbieterinformationen für m-pathy nach deutschem und teilweise europäischem Recht.",
+      last_updated: "Zuletzt aktualisiert: 11. Januar 2026",
       sections: [
         {
           id: "provider",
@@ -307,32 +285,30 @@ export const legalDict: Record<string, LegalLocale> = {
         },
         {
           id: "representative",
-          heading: "2. Vertretungsberechtigte Person",
+          heading: "2. Geschäftsführung",
           body: "Geschäftsführer: Alexander Khayat.",
         },
         {
           id: "register",
-          heading: "3. Registereintrag",
+          heading: "3. Handelsregistereintrag",
           body:
-            "Die Gesellschaft ist im Handelsregister eingetragen. " +
-            "Registergericht und Registernummer werden nachgetragen, sobald sie offiziell vorliegen.",
+            "NAAL UG (haftungsbeschränkt) ist im Handelsregister des Amtsgerichts München unter HRB 288710 eingetragen.",
         },
         {
           id: "vat",
           heading: "4. Umsatzsteuer-ID",
-          body:
-            "Sofern eine Umsatzsteuer-Identifikationsnummer vergeben wird, wird sie hier ergänzt.",
+          body: "xe",
         },
         {
           id: "contact",
           heading: "5. Kontakt",
           body:
-            "Der derzeit schnellste Weg, uns zu m-pathy zu erreichen, ist per E-Mail an support@m-pathy.ai. " +
-            "Bitte übermitteln Sie per E-Mail keine besonders sensiblen Gesundheits- oder Zahlungsdaten.",
+            "Der schnellste Weg, m-pathy zu kontaktieren, ist derzeit per E-Mail an support@m-pathy.ai. " +
+            "Bitte senden Sie keine sensiblen Gesundheits- oder Zahlungsdaten per E-Mail.",
         },
       ],
       disclaimer:
-        "Dieses Impressum dient der Transparenz und ersetzt keine individuelle rechtliche Beratung.",
+        "Dieses Impressum dient der Transparenz und ersetzt keine individuelle Rechtsberatung.",
     },
 
     // ------------------------- DATENSCHUTZ ------------------------
@@ -340,8 +316,8 @@ export const legalDict: Record<string, LegalLocale> = {
       slug: "privacy",
       title: "Datenschutzerklärung",
       intro:
-        "Diese Datenschutzerklärung beschreibt in einfacher Form, wie wir personenbezogene Daten bei der Nutzung von m-pathy verarbeiten.",
-      last_updated: "Zuletzt aktualisiert: 18. November 2025",
+        "Diese Datenschutzerklärung erläutert in verständlicher Form, wie wir personenbezogene Daten bei der Nutzung von m-pathy verarbeiten.",
+      last_updated: "Zuletzt aktualisiert: 11. Januar 2026",
       sections: [
         {
           id: "controller",
@@ -350,209 +326,189 @@ export const legalDict: Record<string, LegalLocale> = {
             "Verantwortlich für die Datenverarbeitung im Zusammenhang mit m-pathy ist:\n\n" +
             "NAAL UG (haftungsbeschränkt)\n" +
             "Maria-Theresia-Str. 11\n" +
-            "81675 München, Deutschland\n" +
+            "81675 München\n" +
+            "Deutschland\n" +
             "E-Mail: support@m-pathy.ai",
         },
         {
+          id: "principles",
+          heading: "2. Datenschutz durch Technikgestaltung",
+          body:
+            "m-pathy folgt dem Prinzip Privacy by Design und Privacy by Default.\n\n" +
+            "• Daten werden nur verarbeitet, wenn dies erforderlich ist\n" +
+            "• Umfang und Dauer der Verarbeitung werden minimiert\n" +
+            "• Es werden keine impliziten Nutzerprofile erstellt\n\n" +
+            "Datenschutz ist architektonisch verankert und nicht situationsabhängig.",
+        },
+        {
           id: "data_categories",
-          heading: "2. Kategorien von Daten",
+          heading: "3. Datenkategorien",
           body:
-            "Wir verarbeiten – soweit erforderlich – insbesondere folgende Datenkategorien:\n" +
-            "• Nutzungs- und Protokolldaten der Website\n" +
-            "• Konto- und Kontaktdaten, die Sie aktiv bereitstellen\n" +
-            "• Inhalte Ihrer Prompts und Antworten, die Sie aktiv an das System senden\n" +
-            "• Technische Metadaten wie Zeitpunkt, Browsertyp und grundlegende Geräteinformationen",
+            "Je nach Nutzung können folgende Datenkategorien verarbeitet werden:\n" +
+            "• Account- und Kontaktdaten (sofern aktiv angegeben),\n" +
+            "• technische Nutzungsdaten (Sicherheit und Stabilität),\n" +
+            "• Zahlungsdaten (über externe Zahlungsdienstleister),\n" +
+            "• Inhalte von Prompts und Antworten (rein technisch verarbeitet).\n\n" +
+            "Prompt-Inhalte werden nicht zu Profiling-, Werbe- oder Trainingszwecken verwendet.",
         },
         {
-          id: "purposes",
-          heading: "3. Zwecke und Rechtsgrundlagen",
+          id: "local_processing",
+          heading: "4. Lokale Verarbeitung",
           body:
-            "Wir nutzen Ihre Daten insbesondere\n" +
-            "• zur Bereitstellung und zum Betrieb von m-pathy,\n" +
-            "• zur Sicherheit und technischen Wartung des Dienstes,\n" +
-            "• zur Beantwortung von Supportanfragen sowie\n" +
-            "• zur Erfüllung gesetzlicher Aufbewahrungs- und Dokumentationspflichten.\n\n" +
-            "Soweit die DSGVO Anwendung findet, stützen wir die Verarbeitung insbesondere auf Art. 6 Abs. 1 lit. b DSGVO (Vertrag), " +
-            "Art. 6 Abs. 1 lit. c DSGVO (rechtliche Verpflichtung) und Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem sicheren und effizienten Betrieb).",
+            "Prompt-Inhalte werden lokal oder nur kurzfristig verarbeitet und nicht dauerhaft " +
+            "in identifizierbarer oder rekonstruierbarer Form auf Servern gespeichert.",
         },
         {
-          id: "processors",
-          heading: "4. Auftragsverarbeiter und Empfänger",
+          id: "archive",
+          heading: "5. Lokales Archiv und Kontextübernahme",
           body:
-            "Wir setzen sorgfältig ausgewählte Dienstleister für Hosting, Infrastruktur, nicht-profilbasiertes Analytics " +
-            "und Zahlungsabwicklung (z. B. Stripe) ein. Diese sind vertraglich verpflichtet, Daten nur nach unserer Weisung " +
-            "und im Einklang mit dem geltenden Datenschutzrecht zu verarbeiten.",
+            "m-pathy ermöglicht es Nutzern, ausgewählte Inhalte lokal in einem Archiv zu speichern.\n\n" +
+            "Archivierte Inhalte können bewusst ausgewählt und in einen neuen Chat eingebracht werden.\n\n" +
+            "• ausschließlich lokale Speicherung,\n" +
+            "• erfordert aktive Nutzerentscheidung,\n" +
+            "• übernommener Kontext ist vollständig sichtbar,\n" +
+            "• keine automatische oder implizite Erinnerung.",
         },
         {
-          id: "retention",
-          heading: "5. Speicherdauer",
+          id: "verification",
+          heading: "6. Verifikation und Triketon",
           body:
-            "Personenbezogene Daten werden nur so lange gespeichert, wie dies für die genannten Zwecke erforderlich ist " +
-            "oder wie wir rechtlich dazu verpflichtet sind. Protokolldaten werden in der Regel nur für einen kurzen technischen Zeitraum vorgehalten. " +
-            "Vertragsrelevante Daten können aufgrund handels- und steuerrechtlicher Vorgaben länger gespeichert werden.",
+            "Bei der Verifikation von Inhalten (z. B. Nachrichtenartikeln) nutzt m-pathy Triketon.\n\n" +
+            "• Inhalte werden ausschließlich zur Verifikation an den Server übertragen,\n" +
+            "• ein kryptografischer Truth-Hash wird berechnet,\n" +
+            "• ein öffentlicher Verifikationsschlüssel wird erzeugt oder zugeordnet,\n" +
+            "• der ursprüngliche Inhalt wird nicht gespeichert,\n" +
+            "• gespeichert werden nur Hash, Public Key und minimale technische Metadaten.\n\n" +
+            "Eine Rekonstruktion der Originalinhalte ist nicht möglich.",
         },
         {
-          id: "rights",
-          heading: "6. Ihre Rechte",
+          id: "prompt_integrity",
+          heading: "7. Prompt-Normalisierung und Drift-Prävention",
           body:
-            "Soweit die DSGVO Anwendung findet, haben Sie insbesondere das Recht auf Auskunft, Berichtigung, Löschung, " +
-            "Einschränkung der Verarbeitung, Datenübertragbarkeit sowie das Recht, bestimmten Verarbeitungen zu widersprechen. " +
-            "Zudem haben Sie das Recht auf Beschwerde bei einer Datenschutzaufsichtsbehörde.",
+            "Vor der Ausführung analysiert MAIOS 2.0 Prompts strukturell.\n\n" +
+            "Sind Prompts mehrdeutig, inkonsistent oder driftanfällig, kann die Formulierung angepasst werden.\n\n" +
+            "• Die Nutzerintention bleibt erhalten,\n" +
+            "• angepasst werden nur Struktur und Sicherheitsklarheit,\n" +
+            "• Prompts werden nicht gespeichert,\n" +
+            "• es findet kein Lernen oder Profiling statt.",
         },
         {
-          id: "ai",
-          heading: "7. Einsatz von KI-Diensten",
+          id: "devices",
+          heading: "8. Lokaler Speicher und Geräte",
           body:
-            "m-pathy nutzt KI-Modelle, die die von Ihnen gesendeten Prompts verarbeiten. Wir achten auf technische und organisatorische Maßnahmen " +
-            "zum Schutz Ihrer Daten, dennoch kann kein System absolut sicher sein. Geben Sie daher nach Möglichkeit keine hochsensiblen Inhalte ein, " +
-            "die Ihr Gerät niemals verlassen sollten.",
+            "Alle nutzergenerierten Inhalte werden ausschließlich im lokalen Speicher des jeweiligen Geräts abgelegt.\n\n" +
+            "• Lokaler Speicher bleibt bestehen, bis er vom Nutzer gelöscht wird,\n" +
+            "• eine Löschung führt zu unwiederbringlichem Datenverlust,\n" +
+            "• es existieren keine serverseitigen Backups.\n\n" +
+            "Jedes Gerät erhält einen eigenen Public Key. Daten sind strikt gerätegebunden.",
         },
       ],
       disclaimer:
-        "Diese Datenschutzerklärung ist eine vereinfachte Zusammenfassung und ersetzt keine vollständige rechtliche Prüfung Ihres Einzelfalls.",
+        "Diese Datenschutzerklärung dient der Transparenz und ersetzt keine individuelle Rechtsberatung.",
     },
 
-    // --------------------------- NUTZUNGSBEDINGUNGEN --------------
+    // --------------------------- NUTZUNGSBEDINGUNGEN ----------------
     terms: {
       slug: "terms",
       title: "Nutzungsbedingungen",
       intro:
-        "Diese Nutzungsbedingungen regeln, wie Sie m-pathy verwenden dürfen. Mit der Nutzung stimmen Sie ihnen zu.",
-      last_updated: "Zuletzt aktualisiert: 18. November 2025",
+        "Diese Nutzungsbedingungen regeln die Verwendung von m-pathy. Mit der Nutzung stimmen Sie ihnen zu.",
+      last_updated: "Zuletzt aktualisiert: 11. Januar 2026",
       sections: [
         {
           id: "scope",
           heading: "1. Leistungsumfang",
           body:
-            "m-pathy ist ein experimenteller, KI-basierter Assistent. Er ist kein menschlicher Therapeut, Anwalt, Arzt oder Finanzberater. " +
-            "Der Dienst dient der kreativen Arbeit, Reflexion und technischen Unterstützung.",
+            "m-pathy ist ein experimenteller KI-gestützter Assistent und kein menschlicher Therapeut, Anwalt, Arzt oder Finanzberater.",
         },
         {
           id: "no_advice",
           heading: "2. Keine professionelle Beratung",
           body:
-            "Von m-pathy generierte Inhalte dürfen nicht als alleinige Grundlage für medizinische, rechtliche, finanzielle oder andere " +
-            "Entscheidungen mit gravierenden Folgen verwendet werden. Holen Sie in solchen Fällen immer qualifizierten fachlichen Rat ein.",
+            "Von m-pathy erzeugte Inhalte dürfen nicht als alleinige Entscheidungsgrundlage für medizinische, rechtliche, finanzielle oder andere folgenschwere Entscheidungen genutzt werden.",
         },
         {
-          id: "account",
-          heading: "3. Zugang und Tokens",
+          id: "modes",
+          heading: "3. Modusbasierte Systemsteuerung",
           body:
-            "Der Zugang kann zeitlich und/oder durch einen bestimmten Token-Pool begrenzt sein. Sie sind dafür verantwortlich, Ihre Zugangsdaten " +
-            "vertraulich zu behandeln und für alle Aktivitäten unter Ihrem Zugang.",
-        },
-        {
-          id: "acceptable_use",
-          heading: "4. Zulässige Nutzung",
-          body:
-            "Sie dürfen m-pathy nicht nutzen, um geltendes Recht zu verletzen, anderen zu schaden, rechtswidrige Inhalte zu erzeugen " +
-            "oder Systeme anzugreifen. Wir können Zugänge sperren oder beschränken, wenn der Dienst missbräuchlich verwendet wird.",
-        },
-        {
-          id: "changes",
-          heading: "5. Änderungen und Verfügbarkeit",
-          body:
-            "Wir können Funktionsumfang und Darstellung von m-pathy jederzeit anpassen, erweitern oder einschränken, sofern dies für Nutzer zumutbar ist. " +
-            "Wir bemühen uns um hohe Verfügbarkeit, können aber keinen unterbrechungsfreien Betrieb garantieren.",
+            "m-pathy nutzt interne Systemmodi zur Selbststeuerung.\n\n" +
+            "Moduswechsel sind sitzungsgebunden, deterministisch und stellen kein Nutzerprofiling dar.",
         },
         {
           id: "liability",
-          heading: "6. Haftungsbeschränkung",
+          heading: "4. Haftungsbeschränkung",
           body:
-            "Wir haften nach den gesetzlichen Vorschriften für Vorsatz und grobe Fahrlässigkeit. Bei leichter Fahrlässigkeit haften wir nur " +
-            "für die Verletzung wesentlicher Vertragspflichten und begrenzt auf den typischerweise vorhersehbaren Schaden. " +
-            "Zwingende Haftung, etwa nach dem Produkthaftungsgesetz, bleibt unberührt.",
+            "Die Haftung richtet sich nach den gesetzlichen Bestimmungen. Zwingende Haftungstatbestände bleiben unberührt.",
         },
       ],
       disclaimer:
-        "Diese Nutzungsbedingungen strukturieren das Vertragsverhältnis in vereinfachter Form und ersetzen keine individuelle Rechtsberatung.",
+        "Diese Nutzungsbedingungen strukturieren das Vertragsverhältnis und ersetzen keine Rechtsberatung.",
     },
 
-    // --------------------------- RÜCKERSTATTUNG -------------------
+    // -------------------------- RÜCKERSTATTUNG ---------------------
     refund: {
       slug: "refund",
       title: "Rückerstattungsrichtlinie",
       intro:
-        "m-pathy bietet derzeit ein klares Modell mit einmaligem Erwerb von Zugang. Diese Richtlinie erklärt den Umgang mit Zahlungen und Rückerstattungen.",
-      last_updated: "Zuletzt aktualisiert: 18. November 2025",
+        "Diese Richtlinie erläutert, wie Zahlungen und Rückerstattungen bei m-pathy gehandhabt werden.",
+      last_updated: "Zuletzt aktualisiert: 11. Januar 2026",
       sections: [
         {
           id: "model",
           heading: "1. Kaufmodell",
           body:
-            "Der Zugang zu m-pathy erfolgt derzeit als einmaliger Kauf für einen definierten Zeitraum und/oder einen definierten Token-Pool. " +
-            "Es gibt keine automatische Verlängerung als Abonnement.",
-        },
-        {
-          id: "payment",
-          heading: "2. Zahlungsabwicklung",
-          body:
-            "Zahlungen werden über Stripe oder vergleichbare Zahlungsdienstleister abgewickelt. Deren Bedingungen und Sicherheitsmaßnahmen gelten ergänzend.",
+            "Der Zugang erfolgt als einmaliger Kauf für einen definierten Zeitraum und/oder ein definiertes Token-Kontingent.",
         },
         {
           id: "withdrawal",
-          heading: "3. Widerrufsrecht",
+          heading: "2. Widerrufsrecht",
           body:
-            "Sind Sie Verbraucherin oder Verbraucher in der Europäischen Union, kann Ihnen bei digitalen Diensten ein gesetzliches Widerrufsrecht zustehen. " +
-            "Über dieses Recht werden Sie – soweit einschlägig – im Bestellprozess informiert.",
+            "Gesetzliche Widerrufsrechte für digitale Dienstleistungen gelten, sofern gesetzlich vorgeschrieben.",
         },
         {
           id: "refunds",
-          heading: "4. Rückerstattungen in der Praxis",
+          heading: "3. Rückerstattungen",
           body:
-            "In der Regel gewähren wir keine Rückerstattungen, sobald der Zugang freigeschaltet ist und Tokens genutzt werden können, " +
-            "sofern keine gesetzliche Verpflichtung besteht oder wir im Einzelfall ausdrücklich eine Rückerstattung zusagen.",
+            "Rückerstattungen erfolgen nur, wenn eine gesetzliche Verpflichtung besteht oder ausdrücklich zugesagt wurde.",
         },
       ],
       disclaimer:
-        "Diese Rückerstattungsrichtlinie beschreibt unsere aktuelle Praxis und beschränkt keine zwingenden gesetzlichen Rechte.",
+        "Diese Richtlinie schränkt zwingende gesetzliche Rechte nicht ein.",
     },
 
-    // --------------------------- RECHTLICHE HINWEISE --------------
+    // --------------------------- RECHTLICHES -----------------------
     legal: {
       slug: "legal",
       title: "Rechtliche Hinweise",
       intro:
-        "Auf dieser Seite bündeln wir zentrale rechtliche Informationen zu m-pathy.",
-      last_updated: "Zuletzt aktualisiert: 18. November 2025",
+        "Diese Seite gibt einen Überblick über den rechtlichen Rahmen von m-pathy.",
+      last_updated: "Zuletzt aktualisiert: 11. Januar 2026",
       sections: [
         {
-          id: "overview",
-          heading: "1. Überblick",
-          body:
-            "m-pathy wird von der NAAL UG (haftungsbeschränkt) mit Sitz in München betrieben. " +
-            "Der Dienst verbindet fortgeschrittene KI-Modelle mit einem starken Fokus auf Datenschutz, Klarheit und Nutzerkontrolle.",
-        },
-        {
           id: "jurisdiction",
-          heading: "2. Anwendbares Recht und Gerichtsstand",
+          heading: "1. Anwendbares Recht und Gerichtsstand",
           body:
-            "Es gilt deutsches Recht, soweit nicht zwingende Verbraucherschutzvorschriften eines anderen Staates etwas anderes vorsehen. " +
-            "Sind Sie Kaufmann im Sinne des deutschen Rechts, ist ausschließlicher Gerichtsstand München.",
-        },
-        {
-          id: "online_dispute",
-          heading: "3. Online-Streitbeilegung",
-          body:
-            "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS-Plattform) bereit. " +
-            "Wir sind weder verpflichtet noch grundsätzlich bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
+            "Sofern zwingende Verbraucherschutzvorschriften nichts anderes vorsehen, gilt deutsches Recht. " +
+            "Für Kaufleute ist München ausschließlicher Gerichtsstand.",
         },
       ],
       disclaimer:
-        "Diese Seite dient einer transparenten Übersicht. Im Konfliktfall kann die deutschsprachige Fassung maßgeblich sein, soweit dies gesetzlich vorgesehen ist.",
+        "Diese Angaben dienen der Transparenz. Zwingendes Recht hat Vorrang.",
     },
+
   },
 
-  // ================================================================
+   // ================================================================
   // FRANÇAIS
   // ================================================================
   fr: {
+    // ------------------------- MENTIONS LÉGALES -------------------
     imprint: {
       slug: "imprint",
       title: "Mentions légales",
       intro:
-        "Ces mentions légales contiennent les informations requises pour le fournisseur de m-pathy en vertu du droit allemand et, en partie, du droit européen.",
-      last_updated: "Dernière mise à jour : 18 novembre 2025",
+        "Ces mentions légales contiennent les informations relatives au fournisseur de m-pathy, conformément au droit allemand et, le cas échéant, au droit européen.",
+      last_updated: "Dernière mise à jour : 11 janvier 2026",
       sections: [
         {
           id: "provider",
@@ -566,40 +522,39 @@ export const legalDict: Record<string, LegalLocale> = {
         },
         {
           id: "representative",
-          heading: "2. Représentant légal",
+          heading: "2. Direction",
           body: "Gérant : Alexander Khayat.",
         },
         {
           id: "register",
-          heading: "3. Registre du commerce",
+          heading: "3. Inscription au registre du commerce",
           body:
-            "La société est immatriculée au registre du commerce. Le tribunal compétent et le numéro d’immatriculation " +
-            "seront ajoutés dès qu’ils seront définitivement disponibles.",
+            "NAAL UG (responsabilité limitée) est inscrite au registre du commerce du tribunal d’instance de Munich sous le numéro HRB 288710.",
         },
         {
           id: "vat",
           heading: "4. Numéro de TVA",
-          body:
-            "Si un numéro d’identification TVA est attribué, il sera indiqué ici.",
+          body: "xe",
         },
         {
           id: "contact",
           heading: "5. Contact",
           body:
-            "Le moyen le plus rapide pour nous contacter au sujet de m-pathy est actuellement l’e-mail à support@m-pathy.ai. " +
-            "Veuillez ne pas envoyer de données de santé ou de paiement particulièrement sensibles par e-mail.",
+            "Le moyen le plus rapide de contacter m-pathy est actuellement par e-mail à support@m-pathy.ai. " +
+            "Veuillez ne pas transmettre de données sensibles, notamment de santé ou de paiement, par e-mail.",
         },
       ],
       disclaimer:
-        "Ces mentions légales visent la transparence et ne remplacent pas un conseil juridique individuel.",
+        "Ces mentions légales sont fournies à titre d’information et ne remplacent pas un conseil juridique individuel.",
     },
 
+    // ------------------------- CONFIDENTIALITÉ --------------------
     privacy: {
       slug: "privacy",
       title: "Politique de confidentialité",
       intro:
-        "La présente politique de confidentialité explique, de manière simplifiée, comment nous traitons les données personnelles lorsque vous utilisez m-pathy.",
-      last_updated: "Dernière mise à jour : 18 novembre 2025",
+        "Cette politique de confidentialité explique de manière claire comment les données personnelles sont traitées lors de l’utilisation de m-pathy.",
+      last_updated: "Dernière mise à jour : 11 janvier 2026",
       sections: [
         {
           id: "controller",
@@ -608,207 +563,188 @@ export const legalDict: Record<string, LegalLocale> = {
             "Le responsable du traitement des données en lien avec m-pathy est :\n\n" +
             "NAAL UG (responsabilité limitée)\n" +
             "Maria-Theresia-Str. 11\n" +
-            "81675 Munich, Allemagne\n" +
+            "81675 Munich\n" +
+            "Allemagne\n" +
             "E-mail : support@m-pathy.ai",
         },
         {
+          id: "principles",
+          heading: "2. Protection des données dès la conception",
+          body:
+            "m-pathy applique les principes de Privacy by Design et Privacy by Default.\n\n" +
+            "• Les données sont traitées uniquement lorsque cela est nécessaire\n" +
+            "• L’étendue et la durée du traitement sont minimisées\n" +
+            "• Aucun profil utilisateur implicite n’est créé\n\n" +
+            "La protection des données est intégrée à l’architecture du système.",
+        },
+        {
           id: "data_categories",
-          heading: "2. Catégories de données",
+          heading: "3. Catégories de données",
           body:
-            "Nous traitons, dans la mesure nécessaire, notamment les catégories de données suivantes :\n" +
-            "• Données d’utilisation et journaux du site Web\n" +
-            "• Données de compte et de contact que vous fournissez activement\n" +
-            "• Contenu de vos prompts et réponses envoyés au système\n" +
-            "• Métadonnées techniques telles que l’heure, le type de navigateur et des informations de base sur l’appareil",
+            "Selon l’utilisation, les catégories de données suivantes peuvent être concernées :\n" +
+            "• données de compte et de contact (si fournies volontairement),\n" +
+            "• données techniques d’utilisation (sécurité et stabilité),\n" +
+            "• données de paiement (via des prestataires externes),\n" +
+            "• contenus des prompts et réponses (traitement purement technique).\n\n" +
+            "Les contenus des prompts ne sont pas utilisés à des fins de profilage, de publicité ou d’entraînement.",
         },
         {
-          id: "purposes",
-          heading: "3. Finalités et bases juridiques",
+          id: "local_processing",
+          heading: "4. Traitement local",
           body:
-            "Nous utilisons vos données notamment :\n" +
-            "• pour fournir et exploiter m-pathy,\n" +
-            "• pour sécuriser et maintenir techniquement le service,\n" +
-            "• pour répondre aux demandes de support,\n" +
-            "• pour respecter nos obligations légales d’archivage et de documentation.\n\n" +
-            "Lorsque le RGPD s’applique, les bases juridiques sont en particulier l’article 6, paragraphe 1, point b) (contrat), " +
-            "l’article 6, paragraphe 1, point c) (obligation légale) et l’article 6, paragraphe 1, point f) RGPD (intérêt légitime " +
-            "à un fonctionnement sûr et efficace).",
+            "Les contenus des prompts sont traités localement ou de manière transitoire et ne sont pas stockés " +
+            "de façon permanente sur des serveurs sous une forme identifiable ou reconstructible.",
         },
         {
-          id: "processors",
-          heading: "4. Sous-traitants et destinataires",
+          id: "archive",
+          heading: "5. Archivage local et injection de contexte",
           body:
-            "Nous faisons appel à des prestataires soigneusement sélectionnés pour l’hébergement, l’infrastructure, certaines analyses " +
-            "sans profilage individuel et le traitement des paiements (par exemple Stripe). Ces prestataires sont contractuellement tenus " +
-            "de traiter les données uniquement selon nos instructions et conformément au droit applicable.",
+            "m-pathy permet aux utilisateurs de conserver certains contenus localement dans une archive.\n\n" +
+            "Les éléments archivés peuvent être sélectionnés volontairement et réinjectés dans une nouvelle conversation.\n\n" +
+            "• stockage exclusivement local,\n" +
+            "• action volontaire de l’utilisateur,\n" +
+            "• contexte injecté entièrement visible,\n" +
+            "• aucune mémoire automatique ou implicite.",
         },
         {
-          id: "retention",
-          heading: "5. Durée de conservation",
+          id: "verification",
+          heading: "6. Vérification et Triketon",
           body:
-            "Les données personnelles sont conservées uniquement aussi longtemps que nécessaire aux finalités décrites " +
-            "ou tant que la loi l’exige. Les journaux techniques sont en général conservés pour une courte période. " +
-            "Les données contractuelles peuvent être conservées plus longtemps pour respecter les obligations commerciales et fiscales.",
+            "Lors de la vérification de contenus (par exemple des articles de presse), m-pathy utilise Triketon.\n\n" +
+            "• les contenus sont transmis au serveur uniquement à des fins de vérification,\n" +
+            "• un hash cryptographique de vérité est calculé,\n" +
+            "• une clé publique de vérification est générée ou associée,\n" +
+            "• le contenu original n’est pas stocké,\n" +
+            "• seuls le hash, la clé publique et des métadonnées techniques minimales sont conservés.\n\n" +
+            "Aucune reconstitution du contenu original n’est possible.",
         },
         {
-          id: "rights",
-          heading: "6. Vos droits",
+          id: "prompt_integrity",
+          heading: "7. Normalisation des prompts et prévention du drift",
           body:
-            "Lorsque le RGPD s’applique, vous disposez notamment d’un droit d’accès, de rectification, d’effacement, de limitation du traitement, " +
-            "d’un droit à la portabilité des données ainsi que d’un droit d’opposition à certains traitements. " +
-            "Vous avez également le droit d’introduire une réclamation auprès d’une autorité de contrôle.",
+            "Avant l’exécution, MAIOS 2.0 analyse la structure des prompts.\n\n" +
+            "Si un prompt est ambigu, incohérent ou sujet au drift, sa formulation peut être ajustée.\n\n" +
+            "• l’intention de l’utilisateur est préservée,\n" +
+            "• seules la structure et la clarté de sécurité sont adaptées,\n" +
+            "• aucun prompt n’est stocké,\n" +
+            "• aucun apprentissage ni profilage n’a lieu.",
         },
         {
-          id: "ai",
-          heading: "7. Utilisation de services d’IA",
+          id: "devices",
+          heading: "8. Stockage local et appareils",
           body:
-            "m-pathy utilise des modèles d’intelligence artificielle qui traitent les prompts que vous envoyez. " +
-            "Nous mettons en œuvre des mesures techniques et organisationnelles pour protéger vos données, " +
-            "mais aucun système ne peut être totalement sécurisé. Évitez donc, si possible, de saisir des contenus hautement sensibles " +
-            "que vous ne souhaiteriez jamais voir quitter votre appareil.",
+            "Tous les contenus générés par l’utilisateur sont stockés exclusivement dans le stockage local de l’appareil utilisé.\n\n" +
+            "• le stockage local persiste jusqu’à suppression par l’utilisateur,\n" +
+            "• la suppression entraîne une perte définitive des données,\n" +
+            "• aucune sauvegarde côté serveur n’existe.\n\n" +
+            "Chaque appareil reçoit une clé publique distincte. Les données sont strictement liées à l’appareil.",
         },
       ],
       disclaimer:
-        "Cette politique de confidentialité est un résumé simplifié et ne remplace pas un examen juridique complet de votre situation spécifique.",
+        "Cette politique de confidentialité est fournie à titre informatif et ne remplace pas un avis juridique individuel.",
     },
 
+    // ------------------------- CONDITIONS -------------------------
     terms: {
       slug: "terms",
       title: "Conditions d’utilisation",
       intro:
-        "Les présentes conditions définissent la manière dont vous pouvez utiliser m-pathy. En utilisant le service, vous les acceptez.",
-      last_updated: "Dernière mise à jour : 18 novembre 2025",
+        "Ces conditions d’utilisation régissent l’accès et l’utilisation de m-pathy. En utilisant le service, vous les acceptez.",
+      last_updated: "Dernière mise à jour : 11 janvier 2026",
       sections: [
         {
           id: "scope",
-          heading: "1. Champ d’application du service",
+          heading: "1. Champ d’application",
           body:
-            "m-pathy est un assistant expérimental basé sur l’IA. Ce n’est pas un thérapeute, un avocat, un médecin ou un conseiller financier humain. " +
-            "Le service est destiné au travail créatif, à la réflexion et à l’assistance technique.",
+            "m-pathy est un assistant expérimental basé sur l’IA et ne remplace pas un thérapeute, un avocat, un médecin ou un conseiller financier humain.",
         },
         {
           id: "no_advice",
           heading: "2. Absence de conseil professionnel",
           body:
-            "Les contenus générés par m-pathy ne doivent jamais être utilisés comme seule base pour des décisions médicales, juridiques, financières " +
-            "ou autres ayant des conséquences importantes. Demandez toujours conseil à des professionnels qualifiés.",
+            "Les contenus générés par m-pathy ne doivent pas être utilisés comme seule base pour des décisions médicales, juridiques, financières ou autres ayant des conséquences importantes.",
         },
         {
-          id: "account",
-          heading: "3. Compte et jetons",
+          id: "modes",
+          heading: "3. Gouvernance par modes système",
           body:
-            "L’accès peut être limité dans le temps et/ou par un certain nombre de jetons. Vous êtes responsable de la confidentialité " +
-            "de vos identifiants et de toutes les activités réalisées via votre compte.",
-        },
-        {
-          id: "acceptable_use",
-          heading: "4. Utilisation acceptable",
-          body:
-            "Vous ne pouvez pas utiliser m-pathy pour enfreindre la loi, nuire à autrui, générer des contenus illicites " +
-            "ou attaquer des systèmes. Nous pouvons bloquer ou limiter les comptes en cas d’utilisation abusive.",
-        },
-        {
-          id: "changes",
-          heading: "5. Modifications et disponibilité",
-          body:
-            "Nous pouvons adapter, étendre ou restreindre les fonctionnalités de m-pathy à tout moment, dans la mesure où cela reste raisonnable pour les utilisateurs. " +
-            "Nous visons une haute disponibilité, sans pouvoir garantir un fonctionnement ininterrompu.",
+            "m-pathy utilise des modes internes pour l’auto-gouvernance du système.\n\n" +
+            "Les changements de mode sont limités à la session, déterministes et ne constituent pas un profilage de l’utilisateur.",
         },
         {
           id: "liability",
-          heading: "6. Limitation de responsabilité",
+          heading: "4. Limitation de responsabilité",
           body:
-            "Nous sommes responsables conformément au droit applicable en cas de faute intentionnelle ou de négligence grave. " +
-            "En cas de négligence légère, notre responsabilité est limitée aux obligations contractuelles essentielles " +
-            "et au dommage typique prévisible. Les responsabilités obligatoires, par exemple en vertu du droit de la responsabilité du fait des produits, demeurent inchangées.",
+            "La responsabilité est régie par les dispositions légales applicables. Les régimes de responsabilité obligatoires demeurent inchangés.",
         },
       ],
       disclaimer:
-        "Ces conditions d’utilisation constituent un résumé structuré et ne remplacent pas un conseil juridique individuel.",
+        "Ces conditions visent à structurer la relation contractuelle et ne remplacent pas un conseil juridique.",
     },
 
+    // ------------------------- REMBOURSEMENT ----------------------
     refund: {
       slug: "refund",
       title: "Politique de remboursement",
       intro:
-        "m-pathy propose actuellement un modèle d’accès unique clair. Cette politique explique comment nous gérons les paiements et les remboursements.",
-      last_updated: "Dernière mise à jour : 18 novembre 2025",
+        "Cette politique décrit la manière dont les paiements et les remboursements sont traités pour m-pathy.",
+      last_updated: "Dernière mise à jour : 11 janvier 2026",
       sections: [
         {
           id: "model",
           heading: "1. Modèle d’achat",
           body:
-            "L’accès à m-pathy est actuellement accordé sous forme d’achat unique pour une période définie et/ou un certain volume de jetons. " +
-            "Il n’y a pas de renouvellement automatique d’abonnement.",
-        },
-        {
-          id: "payment",
-          heading: "2. Traitement des paiements",
-          body:
-            "Les paiements sont traités via Stripe ou d’autres prestataires similaires. Leurs conditions générales et mesures de sécurité s’appliquent en complément.",
+            "L’accès à m-pathy est accordé via un achat unique pour une durée déterminée et/ou un contingent de tokens défini.",
         },
         {
           id: "withdrawal",
-          heading: "3. Droit de rétractation",
+          heading: "2. Droit de rétractation",
           body:
-            "Si vous êtes consommateur ou consommatrice dans l’Union européenne, vous pouvez bénéficier d’un droit légal de rétractation pour les services numériques. " +
-            "Lorsque ce droit s’applique, vous en êtes informé(e) lors du processus de commande.",
+            "Les droits légaux de rétractation applicables aux services numériques s’appliquent lorsque la loi l’exige.",
         },
         {
           id: "refunds",
-          heading: "4. Remboursements en pratique",
+          heading: "3. Remboursements",
           body:
-            "En règle générale, nous ne procédons pas à des remboursements une fois que l’accès a été accordé et que les jetons peuvent être utilisés, " +
-            "sauf obligation légale ou engagement exprès de notre part dans un cas particulier.",
+            "Les remboursements ne sont accordés que lorsqu’une obligation légale existe ou lorsqu’ils ont été expressément promis.",
         },
       ],
       disclaimer:
-        "Cette politique de remboursement décrit notre pratique actuelle et ne limite pas les droits légaux impératifs.",
+        "Cette politique n’affecte pas les droits légaux impératifs.",
     },
 
+    // ------------------------- JURIDIQUE --------------------------
     legal: {
       slug: "legal",
-      title: "Informations légales",
+      title: "Informations juridiques",
       intro:
-        "Cette page regroupe les principales informations juridiques relatives à m-pathy.",
-      last_updated: "Dernière mise à jour : 18 novembre 2025",
+        "Cette section fournit une vue d’ensemble du cadre juridique applicable à m-pathy.",
+      last_updated: "Dernière mise à jour : 11 janvier 2026",
       sections: [
         {
-          id: "overview",
-          heading: "1. Vue d’ensemble",
-          body:
-            "m-pathy est exploité par NAAL UG (responsabilité limitée), basée à Munich (Allemagne). " +
-            "Le service associe des modèles d’IA avancés à une forte exigence de confidentialité, de clarté et de contrôle par l’utilisateur.",
-        },
-        {
           id: "jurisdiction",
-          heading: "2. Droit applicable et juridiction",
+          heading: "1. Droit applicable et juridiction compétente",
           body:
-            "Sauf dispositions impératives plus favorables de protection des consommateurs, le droit allemand s’applique. " +
-            "Si vous agissez en tant que commerçant au sens du droit allemand, le tribunal compétent exclusif est Munich.",
-        },
-        {
-          id: "online_dispute",
-          heading: "3. Règlement en ligne des litiges",
-          body:
-            "La Commission européenne met à disposition une plateforme de règlement en ligne des litiges (plateforme RLL). " +
-            "Nous ne sommes ni tenus ni, en principe, disposés à participer à une procédure de règlement des litiges devant un organisme de médiation pour les consommateurs.",
+            "Sauf dispositions impératives contraires en matière de protection des consommateurs, le droit allemand s’applique. " +
+            "Pour les professionnels, le tribunal compétent est celui de Munich.",
         },
       ],
       disclaimer:
-        "Cette page vise à offrir une vue d’ensemble transparente. En cas de divergence, la version allemande peut prévaloir lorsque la loi l’exige.",
+        "Ces informations sont fournies à titre de transparence. Le droit impératif prévaut.",
     },
+
   },
-    // ================================================================
+  // ================================================================
   // ESPAÑOL
   // ================================================================
   es: {
+    // ------------------------- AVISO LEGAL ------------------------
     imprint: {
       slug: "imprint",
       title: "Aviso legal",
       intro:
-        "Este aviso legal contiene la información del proveedor que se exige para m-pathy según el derecho alemán y, en parte, europeo.",
-      last_updated: "Última actualización: 18 de noviembre de 2025",
+        "Este aviso legal contiene la información del proveedor requerida para m-pathy conforme al derecho alemán y, en su caso, al derecho europeo.",
+      last_updated: "Última actualización: 11 de enero de 2026",
       sections: [
         {
           id: "provider",
@@ -822,255 +758,236 @@ export const legalDict: Record<string, LegalLocale> = {
         },
         {
           id: "representative",
-          heading: "2. Representante autorizado",
-          body: "Administrador: Alexander Khayat.",
+          heading: "2. Dirección",
+          body: "Director gerente: Alexander Khayat.",
         },
         {
           id: "register",
           heading: "3. Inscripción en el registro mercantil",
           body:
-            "La sociedad está inscrita en el registro mercantil. " +
-            "El juzgado competente y el número de inscripción se añadirán en cuanto estén disponibles de forma definitiva.",
+            "NAAL UG (responsabilidad limitada) está inscrita en el registro mercantil del Juzgado de Múnich bajo el número HRB 288710.",
         },
         {
           id: "vat",
           heading: "4. Número de IVA",
-          body:
-            "Si se asigna un número de identificación a efectos de IVA, se indicará aquí.",
+          body: "xe",
         },
         {
           id: "contact",
           heading: "5. Contacto",
           body:
-            "La forma más rápida de contactar con nosotros sobre m-pathy es actualmente por correo electrónico a support@m-pathy.ai. " +
-            "Por favor, no envíe por correo electrónico datos especialmente sensibles de salud o de pago.",
+            "La forma más rápida de contactar con m-pathy es actualmente por correo electrónico a support@m-pathy.ai. " +
+            "Por favor, no envíe datos sensibles, en particular datos de salud o de pago, por correo electrónico.",
         },
       ],
       disclaimer:
-        "Este aviso legal tiene fines de transparencia y no sustituye al asesoramiento jurídico individual.",
+        "Este aviso legal se proporciona a efectos informativos y no sustituye el asesoramiento jurídico individual.",
     },
 
+    // ------------------------- PRIVACIDAD -------------------------
     privacy: {
       slug: "privacy",
       title: "Política de privacidad",
       intro:
-        "Esta política de privacidad explica de forma sencilla cómo tratamos los datos personales cuando utilizas m-pathy.",
-      last_updated: "Última actualización: 18 de noviembre de 2025",
+        "Esta política de privacidad explica de forma clara cómo se tratan los datos personales al utilizar m-pathy.",
+      last_updated: "Última actualización: 11 de enero de 2026",
       sections: [
         {
           id: "controller",
           heading: "1. Responsable del tratamiento",
           body:
-            "El responsable del tratamiento de datos en relación con m-pathy es:\n\n" +
+            "El responsable del tratamiento de los datos en relación con m-pathy es:\n\n" +
             "NAAL UG (responsabilidad limitada)\n" +
             "Maria-Theresia-Str. 11\n" +
-            "81675 Múnich, Alemania\n" +
+            "81675 Múnich\n" +
+            "Alemania\n" +
             "Correo electrónico: support@m-pathy.ai",
         },
         {
+          id: "principles",
+          heading: "2. Protección de datos desde el diseño",
+          body:
+            "m-pathy aplica los principios de privacidad desde el diseño y por defecto.\n\n" +
+            "• Los datos se tratan únicamente cuando es necesario\n" +
+            "• El alcance y la duración del tratamiento se minimizan\n" +
+            "• No se crean perfiles implícitos de usuarios\n\n" +
+            "La protección de datos está integrada en la arquitectura del sistema.",
+        },
+        {
           id: "data_categories",
-          heading: "2. Categorías de datos",
+          heading: "3. Categorías de datos",
           body:
-            "Tratamos, en la medida en que sea necesario, en particular las siguientes categorías de datos:\n" +
-            "• Datos de uso y registros del sitio web\n" +
-            "• Datos de cuenta y de contacto que proporcionas activamente\n" +
-            "• Contenido de tus prompts y respuestas enviados al sistema\n" +
-            "• Metadatos técnicos como hora, tipo de navegador e información básica del dispositivo",
+            "Según el uso, pueden tratarse las siguientes categorías de datos:\n" +
+            "• datos de cuenta y contacto (si se facilitan voluntariamente),\n" +
+            "• datos técnicos de uso (seguridad y estabilidad),\n" +
+            "• datos de pago (a través de proveedores externos),\n" +
+            "• contenidos de los prompts y respuestas (tratamiento puramente técnico).\n\n" +
+            "Los contenidos de los prompts no se utilizan para fines de perfilado, publicidad ni entrenamiento.",
         },
         {
-          id: "purposes",
-          heading: "3. Finalidades y bases jurídicas",
+          id: "local_processing",
+          heading: "4. Tratamiento local",
           body:
-            "Utilizamos tus datos, en particular, para:\n" +
-            "• proporcionar y operar m-pathy,\n" +
-            "• garantizar la seguridad y el mantenimiento técnico del servicio,\n" +
-            "• responder a solicitudes de soporte,\n" +
-            "• cumplir obligaciones legales de conservación y documentación.\n\n" +
-            "Cuando se aplica el RGPD, las bases jurídicas son en especial el art. 6.1.b (contrato), 6.1.c (obligación legal) " +
-            "y 6.1.f RGPD (interés legítimo en un funcionamiento seguro y eficiente).",
+            "Los contenidos de los prompts se tratan de forma local o transitoria y no se almacenan " +
+            "de manera permanente en servidores en forma identificable o reconstruible.",
         },
         {
-          id: "processors",
-          heading: "4. Encargados del tratamiento y destinatarios",
+          id: "archive",
+          heading: "5. Archivo local e inyección de contexto",
           body:
-            "Utilizamos proveedores de servicios cuidadosamente seleccionados para alojamiento, infraestructura, análisis sin perfiles " +
-            "y procesamiento de pagos (por ejemplo, Stripe). Estos proveedores están obligados contractualmente a tratar los datos " +
-            "únicamente según nuestras instrucciones y de conformidad con la legislación aplicable.",
+            "m-pathy permite a los usuarios almacenar determinados contenidos de forma local en un archivo.\n\n" +
+            "Los elementos archivados pueden seleccionarse de forma consciente e introducirse en una nueva conversación.\n\n" +
+            "• almacenamiento exclusivamente local,\n" +
+            "• acción deliberada del usuario,\n" +
+            "• contexto introducido completamente visible,\n" +
+            "• sin memoria automática ni implícita.",
         },
         {
-          id: "retention",
-          heading: "5. Plazo de conservación",
+          id: "verification",
+          heading: "6. Verificación y Triketon",
           body:
-            "Conservamos los datos personales sólo durante el tiempo necesario para las finalidades descritas o mientras la ley lo exija. " +
-            "Los datos de registro se conservan normalmente sólo durante un corto período técnico. " +
-            "Los datos contractuales pueden conservarse más tiempo para cumplir obligaciones mercantiles y fiscales.",
+            "Al verificar contenidos (por ejemplo, artículos de prensa), m-pathy utiliza Triketon.\n\n" +
+            "• los contenidos se transmiten al servidor únicamente con fines de verificación,\n" +
+            "• se calcula un hash criptográfico de verdad,\n" +
+            "• se genera o asocia una clave pública de verificación,\n" +
+            "• el contenido original no se almacena,\n" +
+            "• solo se conservan el hash, la clave pública y metadatos técnicos mínimos.\n\n" +
+            "No es posible reconstruir el contenido original.",
         },
         {
-          id: "rights",
-          heading: "6. Tus derechos",
+          id: "prompt_integrity",
+          heading: "7. Normalización de prompts y prevención de deriva",
           body:
-            "Cuando se aplica el RGPD, tienes en particular derecho de acceso, rectificación, supresión, limitación del tratamiento, " +
-            "portabilidad de los datos y derecho a oponerte a determinados tratamientos. También tienes derecho a presentar una reclamación " +
-            "ante una autoridad de control.",
+            "Antes de la ejecución, MAIOS 2.0 analiza estructuralmente los prompts.\n\n" +
+            "Si un prompt es ambiguo, incoherente o propenso a la deriva, su formulación puede ajustarse.\n\n" +
+            "• se conserva la intención del usuario,\n" +
+            "• solo se ajustan la estructura y la claridad de seguridad,\n" +
+            "• no se almacenan prompts,\n" +
+            "• no tiene lugar ningún aprendizaje ni perfilado.",
         },
         {
-          id: "ai",
-          heading: "7. Uso de servicios de IA",
+          id: "devices",
+          heading: "8. Almacenamiento local y dispositivos",
           body:
-            "m-pathy utiliza modelos de inteligencia artificial que procesan los prompts que envías. " +
-            "Aplicamos medidas técnicas y organizativas para proteger tus datos, pero ningún sistema puede ser totalmente seguro. " +
-            "Por ello, si es posible, evita introducir contenido altamente sensible que nunca quisieras que saliera de tu dispositivo.",
+            "Todos los contenidos generados por el usuario se almacenan exclusivamente en el almacenamiento local del dispositivo utilizado.\n\n" +
+            "• el almacenamiento local persiste hasta que el usuario lo elimina,\n" +
+            "• la eliminación implica la pérdida irreversible de los datos,\n" +
+            "• no existen copias de seguridad en el servidor.\n\n" +
+            "Cada dispositivo recibe una clave pública distinta. Los datos están estrictamente vinculados al dispositivo.",
         },
       ],
       disclaimer:
-        "Esta política de privacidad es un resumen simplificado y no sustituye un análisis jurídico completo de tu caso concreto.",
+        "Esta política de privacidad se proporciona a efectos informativos y no sustituye el asesoramiento jurídico individual.",
     },
 
+    // ------------------------- CONDICIONES ------------------------
     terms: {
       slug: "terms",
       title: "Condiciones de uso",
       intro:
-        "Estas condiciones regulan cómo puedes utilizar m-pathy. Al utilizar el servicio, aceptas estas condiciones.",
-      last_updated: "Última actualización: 18 de noviembre de 2025",
+        "Estas condiciones de uso regulan el acceso y la utilización de m-pathy. Al utilizar el servicio, usted las acepta.",
+      last_updated: "Última actualización: 11 de enero de 2026",
       sections: [
         {
           id: "scope",
-          heading: "1. Alcance del servicio",
+          heading: "1. Ámbito del servicio",
           body:
-            "m-pathy es un asistente experimental basado en IA. No es un terapeuta, abogado, médico ni asesor financiero humano. " +
-            "El servicio está pensado para trabajo creativo, reflexión y asistencia técnica.",
+            "m-pathy es un asistente experimental basado en IA y no sustituye a un terapeuta, abogado, médico o asesor financiero humano.",
         },
         {
           id: "no_advice",
-          heading: "2. Sin asesoramiento profesional",
+          heading: "2. Ausencia de asesoramiento profesional",
           body:
-            "El contenido generado por m-pathy no debe utilizarse nunca como única base para decisiones médicas, jurídicas, financieras " +
-            "u otras decisiones con consecuencias graves. Para estas cuestiones, consulta siempre a profesionales cualificados.",
+            "Los contenidos generados por m-pathy no deben utilizarse como única base para decisiones médicas, jurídicas, financieras u otras con consecuencias significativas.",
         },
         {
-          id: "account",
-          heading: "3. Cuenta y tokens",
+          id: "modes",
+          heading: "3. Gobernanza mediante modos del sistema",
           body:
-            "El acceso puede estar limitado en el tiempo y/o por un determinado pool de tokens. Eres responsable de mantener en secreto tus credenciales " +
-            "y de toda actividad que tenga lugar con tu cuenta.",
-        },
-        {
-          id: "acceptable_use",
-          heading: "4. Uso aceptable",
-          body:
-            "No puedes utilizar m-pathy para infringir la ley, dañar a otras personas, generar contenidos ilícitos ni atacar sistemas. " +
-            "Podemos bloquear o restringir cuentas que hagan un uso indebido del servicio.",
-        },
-        {
-          id: "changes",
-          heading: "5. Cambios y disponibilidad",
-          body:
-            "Podemos adaptar, ampliar o limitar las funciones de m-pathy en cualquier momento, siempre que sea razonable para los usuarios. " +
-            "Nos esforzamos por ofrecer una alta disponibilidad, pero no podemos garantizar un funcionamiento ininterrumpido.",
+            "m-pathy utiliza modos internos para la autogobernanza del sistema.\n\n" +
+            "Los cambios de modo están limitados a la sesión, son deterministas y no constituyen perfilado del usuario.",
         },
         {
           id: "liability",
-          heading: "6. Limitación de responsabilidad",
+          heading: "4. Limitación de responsabilidad",
           body:
-            "Respondemos según la legislación aplicable en caso de dolo y negligencia grave. En caso de simple negligencia, " +
-            "sólo somos responsables por el incumplimiento de obligaciones contractuales esenciales y limitado al daño típico previsible. " +
-            "La responsabilidad obligatoria, por ejemplo en virtud de la normativa sobre responsabilidad por productos, permanece intacta.",
+            "La responsabilidad se rige por la legislación aplicable. Los regímenes de responsabilidad obligatorios permanecen inalterados.",
         },
       ],
       disclaimer:
-        "Estas condiciones de uso estructuran de forma resumida la relación contractual y no sustituyen al asesoramiento jurídico individual.",
+        "Estas condiciones estructuran la relación contractual y no sustituyen el asesoramiento jurídico.",
     },
 
+    // ------------------------- REEMBOLSOS -------------------------
     refund: {
       slug: "refund",
-      title: "Política de reembolso",
+      title: "Política de reembolsos",
       intro:
-        "m-pathy ofrece actualmente un modelo claro de compra única de acceso. Esta política explica cómo tratamos pagos y reembolsos.",
-      last_updated: "Última actualización: 18 de noviembre de 2025",
+        "Esta política describe cómo se gestionan los pagos y los reembolsos en m-pathy.",
+      last_updated: "Última actualización: 11 de enero de 2026",
       sections: [
         {
           id: "model",
           heading: "1. Modelo de compra",
           body:
-            "El acceso a m-pathy se concede actualmente como una compra única para un período definido y/o un pool de tokens definido. " +
-            "No existe renovación automática de suscripción.",
-        },
-        {
-          id: "payment",
-          heading: "2. Procesamiento de pagos",
-          body:
-            "Los pagos se procesan a través de Stripe u otros proveedores similares. Se aplican además sus condiciones y medidas de seguridad.",
+            "El acceso a m-pathy se concede mediante una compra única por un período definido y/o un conjunto de tokens determinado.",
         },
         {
           id: "withdrawal",
-          heading: "3. Derecho de desistimiento",
+          heading: "2. Derecho de desistimiento",
           body:
-            "Si eres consumidor en la Unión Europea, puedes tener un derecho legal de desistimiento para servicios digitales. " +
-            "Se te informa sobre este derecho durante el proceso de compra, cuando resulte aplicable.",
+            "Los derechos legales de desistimiento aplicables a los servicios digitales se aplican cuando la ley así lo exija.",
         },
         {
           id: "refunds",
-          heading: "4. Reembolsos en la práctica",
+          heading: "3. Reembolsos",
           body:
-            "En general, no ofrecemos reembolsos una vez que el acceso se ha activado y los tokens pueden utilizarse, " +
-            "salvo que exista una obligación legal o prometamos expresamente un reembolso en un caso concreto.",
+            "Los reembolsos solo se conceden cuando existe una obligación legal o cuando se han prometido expresamente.",
         },
       ],
       disclaimer:
-        "Esta política de reembolso describe nuestra práctica actual y no limita los derechos legales obligatorios.",
+        "Esta política no limita los derechos legales imperativos.",
     },
 
+    // ------------------------- JURÍDICO ---------------------------
     legal: {
       slug: "legal",
       title: "Información legal",
       intro:
-        "En esta página reunimos la información jurídica más importante sobre m-pathy.",
-      last_updated: "Última actualización: 18 de noviembre de 2025",
+        "Esta sección ofrece una visión general del marco jurídico aplicable a m-pathy.",
+      last_updated: "Última actualización: 11 de enero de 2026",
       sections: [
         {
-          id: "overview",
-          heading: "1. Panorama general",
-          body:
-            "m-pathy es operado por NAAL UG (responsabilidad limitada), con sede en Múnich (Alemania). " +
-            "El servicio combina modelos avanzados de IA con un fuerte enfoque en privacidad, claridad y control por parte del usuario.",
-        },
-        {
           id: "jurisdiction",
-          heading: "2. Derecho aplicable y fuero",
+          heading: "1. Derecho aplicable y jurisdicción",
           body:
-            "Salvo que el derecho imperativo de protección de los consumidores disponga otra cosa, se aplica el derecho alemán. " +
-            "Si actúas como comerciante según el derecho alemán, el fuero exclusivo es Múnich.",
-        },
-        {
-          id: "online_dispute",
-          heading: "3. Resolución de litigios en línea",
-          body:
-            "La Comisión Europea ofrece una plataforma para la resolución de litigios en línea. " +
-            "No estamos obligados ni, en principio, dispuestos a participar en procedimientos de resolución de litigios " +
-            "ante organismos de arbitraje para consumidores.",
+            "Salvo disposición imperativa en materia de protección de los consumidores, se aplica el derecho alemán. " +
+            "Para los profesionales, el fuero competente es Múnich.",
         },
       ],
       disclaimer:
-        "Esta página pretende ofrecer una visión transparente. En caso de conflicto, la versión alemana puede prevalecer cuando la ley así lo exija.",
+        "Esta información se facilita a efectos de transparencia. El derecho imperativo prevalece.",
     },
+
   },
 
-  // ================================================================
+    // ================================================================
   // ITALIANO
   // ================================================================
   it: {
+    // ------------------------- NOTE LEGALI ------------------------
     imprint: {
       slug: "imprint",
-      title: "Informazioni legali",
+      title: "Note legali",
       intro:
-        "Queste informazioni legali contengono i dati del fornitore richiesti per m-pathy dal diritto tedesco e in parte da quello europeo.",
-      last_updated: "Ultimo aggiornamento: 18 novembre 2025",
+        "Le presenti note legali contengono le informazioni sul fornitore richieste per m-pathy ai sensi del diritto tedesco e, ove applicabile, del diritto europeo.",
+      last_updated: "Ultimo aggiornamento: 11 gennaio 2026",
       sections: [
         {
           id: "provider",
           heading: "1. Fornitore",
           body:
-            "NAAL UG (a responsabilità limitata)\n" +
+            "NAAL UG (responsabilità limitata)\n" +
             "Maria-Theresia-Str. 11\n" +
             "81675 Monaco di Baviera\n" +
             "Germania\n\n" +
@@ -1078,248 +995,230 @@ export const legalDict: Record<string, LegalLocale> = {
         },
         {
           id: "representative",
-          heading: "2. Rappresentante legale",
-          body: "Amministratore unico: Alexander Khayat.",
+          heading: "2. Direzione",
+          body: "Amministratore: Alexander Khayat.",
         },
         {
           id: "register",
           heading: "3. Iscrizione al registro delle imprese",
           body:
-            "La società è iscritta nel registro delle imprese. Il tribunale competente e il numero di iscrizione " +
-            "saranno indicati non appena saranno definitivamente disponibili.",
+            "NAAL UG (responsabilità limitata) è iscritta al registro delle imprese presso il Tribunale di Monaco di Baviera con il numero HRB 288710.",
         },
         {
           id: "vat",
           heading: "4. Partita IVA",
-          body:
-            "Qualora venga assegnato un numero di identificazione IVA, esso verrà indicato qui.",
+          body: "xe",
         },
         {
           id: "contact",
-          heading: "5. Contatti",
+          heading: "5. Contatto",
           body:
-            "Il modo più rapido per contattarci in merito a m-pathy è al momento l’e-mail a support@m-pathy.ai. " +
-            "Ti preghiamo di non inviare tramite e-mail dati particolarmente sensibili relativi alla salute o ai pagamenti.",
+            "Il modo più rapido per contattare m-pathy è attualmente tramite e-mail all’indirizzo support@m-pathy.ai. " +
+            "Si prega di non inviare dati sensibili, in particolare dati sanitari o di pagamento, tramite e-mail.",
         },
       ],
       disclaimer:
-        "Queste informazioni legali servono alla trasparenza e non sostituiscono una consulenza legale individuale.",
+        "Le presenti note legali sono fornite a scopo informativo e non sostituiscono una consulenza legale individuale.",
     },
 
+    // ------------------------- PRIVACY ----------------------------
     privacy: {
       slug: "privacy",
       title: "Informativa sulla privacy",
       intro:
-        "La presente informativa descrive in modo semplice come trattiamo i dati personali quando utilizzi m-pathy.",
-      last_updated: "Ultimo aggiornamento: 18 novembre 2025",
+        "La presente informativa sulla privacy spiega in modo chiaro come vengono trattati i dati personali durante l’utilizzo di m-pathy.",
+      last_updated: "Ultimo aggiornamento: 11 gennaio 2026",
       sections: [
         {
           id: "controller",
           heading: "1. Titolare del trattamento",
           body:
             "Il titolare del trattamento dei dati in relazione a m-pathy è:\n\n" +
-            "NAAL UG (a responsabilità limitata)\n" +
+            "NAAL UG (responsabilità limitata)\n" +
             "Maria-Theresia-Str. 11\n" +
-            "81675 Monaco di Baviera, Germania\n" +
+            "81675 Monaco di Baviera\n" +
+            "Germania\n" +
             "E-mail: support@m-pathy.ai",
         },
         {
+          id: "principles",
+          heading: "2. Protezione dei dati fin dalla progettazione",
+          body:
+            "m-pathy applica i principi di Privacy by Design e Privacy by Default.\n\n" +
+            "• I dati sono trattati solo quando necessario\n" +
+            "• L’estensione e la durata del trattamento sono ridotte al minimo\n" +
+            "• Non vengono creati profili utente impliciti\n\n" +
+            "La protezione dei dati è integrata nell’architettura del sistema.",
+        },
+        {
           id: "data_categories",
-          heading: "2. Categorie di dati",
+          heading: "3. Categorie di dati",
           body:
-            "Trattiamo, nella misura necessaria, in particolare le seguenti categorie di dati:\n" +
-            "• Dati di utilizzo e log del sito web\n" +
-            "• Dati di account e di contatto forniti attivamente\n" +
-            "• Contenuti dei prompt e delle risposte inviati al sistema\n" +
-            "• Metadati tecnici come ora, tipo di browser e informazioni di base sul dispositivo",
+            "A seconda dell’utilizzo, possono essere trattate le seguenti categorie di dati:\n" +
+            "• dati dell’account e di contatto (se forniti volontariamente),\n" +
+            "• dati tecnici di utilizzo (sicurezza e stabilità),\n" +
+            "• dati di pagamento (tramite fornitori esterni),\n" +
+            "• contenuti di prompt e risposte (trattamento esclusivamente tecnico).\n\n" +
+            "I contenuti dei prompt non sono utilizzati per finalità di profilazione, pubblicità o addestramento.",
         },
         {
-          id: "purposes",
-          heading: "3. Finalità e basi giuridiche",
+          id: "local_processing",
+          heading: "4. Trattamento locale",
           body:
-            "Utilizziamo i tuoi dati in particolare per:\n" +
-            "• fornire e gestire m-pathy,\n" +
-            "• garantire la sicurezza e la manutenzione tecnica del servizio,\n" +
-            "• rispondere alle richieste di supporto,\n" +
-            "• adempiere agli obblighi legali di conservazione e documentazione.\n\n" +
-            "Quando si applica il GDPR, le basi giuridiche sono in particolare l’art. 6, par. 1, lett. b) (contratto), lett. c) (obbligo legale) " +
-            "e lett. f) GDPR (interesse legittimo a un funzionamento sicuro ed efficiente).",
+            "I contenuti dei prompt sono trattati localmente o in modo transitorio e non vengono archiviati " +
+            "in modo permanente su server in forma identificabile o ricostruibile.",
         },
         {
-          id: "processors",
-          heading: "4. Responsabili del trattamento e destinatari",
+          id: "archive",
+          heading: "5. Archivio locale e iniezione del contesto",
           body:
-            "Utilizziamo fornitori di servizi selezionati con cura per hosting, infrastruttura, analisi senza profilazione " +
-            "e gestione dei pagamenti (ad es. Stripe). Tali fornitori sono contrattualmente vincolati a trattare i dati " +
-            "solo secondo le nostre istruzioni e nel rispetto della normativa applicabile.",
+            "m-pathy consente agli utenti di salvare localmente determinati contenuti in un archivio.\n\n" +
+            "Gli elementi archiviati possono essere selezionati consapevolmente e inseriti in una nuova conversazione.\n\n" +
+            "• archiviazione esclusivamente locale,\n" +
+            "• azione volontaria dell’utente,\n" +
+            "• contesto inserito completamente visibile,\n" +
+            "• nessuna memoria automatica o implicita.",
         },
         {
-          id: "retention",
-          heading: "5. Periodo di conservazione",
+          id: "verification",
+          heading: "6. Verifica e Triketon",
           body:
-            "Conserviamo i dati personali solo per il tempo necessario alle finalità descritte o richiesto dalla legge. " +
-            "I dati di log vengono in genere conservati per un breve periodo tecnico. I dati rilevanti ai fini contrattuali " +
-            "possono essere conservati più a lungo per adempiere agli obblighi di conservazione commerciali e fiscali.",
+            "Durante la verifica dei contenuti (ad esempio articoli di stampa), m-pathy utilizza Triketon.\n\n" +
+            "• i contenuti sono trasmessi al server esclusivamente ai fini della verifica,\n" +
+            "• viene calcolato un hash crittografico di verità,\n" +
+            "• viene generata o associata una chiave pubblica di verifica,\n" +
+            "• il contenuto originale non viene memorizzato,\n" +
+            "• sono conservati solo l’hash, la chiave pubblica e metadati tecnici minimi.\n\n" +
+            "Non è possibile ricostruire il contenuto originale.",
         },
         {
-          id: "rights",
-          heading: "6. I tuoi diritti",
+          id: "prompt_integrity",
+          heading: "7. Normalizzazione dei prompt e prevenzione del drift",
           body:
-            "Quando si applica il GDPR, hai in particolare il diritto di accesso, rettifica, cancellazione, limitazione del trattamento, " +
-            "portabilità dei dati e il diritto di opporti ad alcuni trattamenti. Hai inoltre il diritto di proporre reclamo " +
-            "a un’autorità di controllo.",
+            "Prima dell’esecuzione, MAIOS 2.0 analizza strutturalmente i prompt.\n\n" +
+            "Se un prompt è ambiguo, incoerente o soggetto a drift, la formulazione può essere adattata.\n\n" +
+            "• l’intenzione dell’utente è preservata,\n" +
+            "• vengono adattate solo la struttura e la chiarezza di sicurezza,\n" +
+            "• nessun prompt viene memorizzato,\n" +
+            "• non avviene alcun apprendimento né profilazione.",
         },
         {
-          id: "ai",
-          heading: "7. Utilizzo di servizi di IA",
+          id: "devices",
+          heading: "8. Archiviazione locale e dispositivi",
           body:
-            "m-pathy utilizza modelli di intelligenza artificiale che elaborano i prompt da te inviati. " +
-            "Adottiamo misure tecniche e organizzative per proteggere i tuoi dati, ma nessun sistema può essere totalmente sicuro. " +
-            "Se possibile, evita di inserire contenuti altamente sensibili che non vorresti mai lasciare il tuo dispositivo.",
+            "Tutti i contenuti generati dall’utente sono archiviati esclusivamente nella memoria locale del dispositivo utilizzato.\n\n" +
+            "• la memoria locale persiste fino alla cancellazione da parte dell’utente,\n" +
+            "• la cancellazione comporta la perdita irreversibile dei dati,\n" +
+            "• non esistono backup lato server.\n\n" +
+            "Ogni dispositivo riceve una chiave pubblica distinta. I dati sono strettamente legati al dispositivo.",
         },
       ],
       disclaimer:
-        "La presente informativa è un riepilogo semplificato e non sostituisce una verifica legale completa del tuo caso specifico.",
+        "La presente informativa sulla privacy è fornita a scopo informativo e non sostituisce una consulenza legale individuale.",
     },
 
+    // ------------------------- CONDIZIONI -------------------------
     terms: {
       slug: "terms",
       title: "Condizioni d’uso",
       intro:
-        "Le presenti condizioni disciplinano le modalità di utilizzo di m-pathy. Utilizzando il servizio, le accetti.",
-      last_updated: "Ultimo aggiornamento: 18 novembre 2025",
+        "Le presenti condizioni d’uso disciplinano l’accesso e l’utilizzo di m-pathy. Utilizzando il servizio, l’utente le accetta.",
+      last_updated: "Ultimo aggiornamento: 11 gennaio 2026",
       sections: [
         {
           id: "scope",
           heading: "1. Ambito del servizio",
           body:
-            "m-pathy è un assistente sperimentale basato sull’IA. Non è un terapeuta, avvocato, medico o consulente finanziario umano. " +
-            "Il servizio è pensato per il lavoro creativo, la riflessione e il supporto tecnico.",
+            "m-pathy è un assistente sperimentale basato su IA e non sostituisce un terapeuta, un avvocato, un medico o un consulente finanziario umano.",
         },
         {
           id: "no_advice",
-          heading: "2. Nessuna consulenza professionale",
+          heading: "2. Assenza di consulenza professionale",
           body:
-            "I contenuti generati da m-pathy non devono mai essere utilizzati come unica base per decisioni mediche, legali, finanziarie " +
-            "o altre decisioni con gravi conseguenze. In tali casi, rivolgiti sempre a professionisti qualificati.",
+            "I contenuti generati da m-pathy non devono essere utilizzati come unica base per decisioni mediche, legali, finanziarie o altre decisioni con conseguenze rilevanti.",
         },
         {
-          id: "account",
-          heading: "3. Account e token",
+          id: "modes",
+          heading: "3. Governance tramite modalità di sistema",
           body:
-            "L’accesso può essere limitato nel tempo e/o da un determinato pool di token. Sei responsabile della riservatezza delle tue credenziali " +
-            "e di tutte le attività svolte tramite il tuo account.",
-        },
-        {
-          id: "acceptable_use",
-          heading: "4. Uso consentito",
-          body:
-            "Non puoi utilizzare m-pathy per violare la legge, danneggiare terzi, generare contenuti illeciti o attaccare sistemi. " +
-            "Possiamo bloccare o limitare gli account che fanno un uso improprio del servizio.",
-        },
-        {
-          id: "changes",
-          heading: "5. Modifiche e disponibilità",
-          body:
-            "Possiamo modificare, ampliare o limitare le funzionalità di m-pathy in qualsiasi momento, purché ciò sia ragionevole per gli utenti. " +
-            "Miriamo a un’elevata disponibilità, ma non possiamo garantire un funzionamento ininterrotto.",
+            "m-pathy utilizza modalità interne per l’autogovernance del sistema.\n\n" +
+            "I cambi di modalità sono limitati alla sessione, deterministici e non costituiscono profilazione dell’utente.",
         },
         {
           id: "liability",
-          heading: "6. Limitazione di responsabilità",
+          heading: "4. Limitazione di responsabilità",
           body:
-            "Siamo responsabili ai sensi della legge applicabile in caso di dolo o colpa grave. In caso di colpa lieve, " +
-            "rispondiamo solo per la violazione di obblighi contrattuali essenziali e limitatamente al danno tipico prevedibile. " +
-            "Le responsabilità inderogabili, ad esempio ai sensi della normativa sulla responsabilità per danno da prodotti, restano impregiudicate.",
+            "La responsabilità è disciplinata dalle disposizioni di legge applicabili. I regimi di responsabilità obbligatori restano invariati.",
         },
       ],
       disclaimer:
-        "Queste condizioni d’uso riassumono in forma strutturata il rapporto contrattuale e non sostituiscono una consulenza legale individuale.",
+        "Le presenti condizioni strutturano il rapporto contrattuale e non sostituiscono una consulenza legale.",
     },
 
+    // ------------------------- RIMBORSI ---------------------------
     refund: {
       slug: "refund",
       title: "Politica di rimborso",
       intro:
-        "m-pathy offre attualmente un modello chiaro di accesso con acquisto unico. Questa politica spiega come gestiamo pagamenti e rimborsi.",
-      last_updated: "Ultimo aggiornamento: 18 novembre 2025",
+        "La presente politica descrive le modalità di gestione dei pagamenti e dei rimborsi per m-pathy.",
+      last_updated: "Ultimo aggiornamento: 11 gennaio 2026",
       sections: [
         {
           id: "model",
           heading: "1. Modello di acquisto",
           body:
-            "L’accesso a m-pathy è attualmente concesso come acquisto unico per un periodo definito e/o un determinato pool di token. " +
-            "Non vi è alcun rinnovo automatico dell’abbonamento.",
-        },
-        {
-          id: "payment",
-          heading: "2. Elaborazione dei pagamenti",
-          body:
-            "I pagamenti vengono elaborati tramite Stripe o altri fornitori simili. Si applicano inoltre le loro condizioni e misure di sicurezza.",
+            "L’accesso a m-pathy è concesso tramite un acquisto una tantum per un periodo definito e/o un contingente di token prestabilito.",
         },
         {
           id: "withdrawal",
-          heading: "3. Diritto di recesso",
+          heading: "2. Diritto di recesso",
           body:
-            "Se sei un consumatore nell’Unione europea, potresti avere un diritto legale di recesso per i servizi digitali. " +
-            "Quando applicabile, riceverai le informazioni su tale diritto durante il processo di acquisto.",
+            "I diritti legali di recesso applicabili ai servizi digitali si applicano ove previsto dalla legge.",
         },
         {
           id: "refunds",
-          heading: "4. Rimborsi nella pratica",
+          heading: "3. Rimborsi",
           body:
-            "Di norma non effettuiamo rimborsi una volta che l’accesso è stato attivato e i token possono essere utilizzati, " +
-            "salvo obbligo legale o promessa espressa di rimborso in singoli casi.",
+            "I rimborsi sono concessi solo in presenza di un obbligo legale o se espressamente promessi.",
         },
       ],
       disclaimer:
-        "Questa politica di rimborso descrive la nostra prassi attuale e non limita i diritti legali inderogabili.",
+        "La presente politica non limita i diritti legali inderogabili.",
     },
 
+    // ------------------------- GIURIDICO --------------------------
     legal: {
       slug: "legal",
       title: "Informazioni legali",
       intro:
-        "In questa pagina raccogliamo le principali informazioni giuridiche su m-pathy.",
-      last_updated: "Ultimo aggiornamento: 18 novembre 2025",
+        "Questa sezione fornisce una panoramica del quadro giuridico applicabile a m-pathy.",
+      last_updated: "Ultimo aggiornamento: 11 gennaio 2026",
       sections: [
         {
-          id: "overview",
-          heading: "1. Panoramica",
-          body:
-            "m-pathy è gestito da NAAL UG (a responsabilità limitata), con sede a Monaco di Baviera, Germania. " +
-            "Il servizio combina modelli di IA avanzati con un forte focus su privacy, chiarezza e controllo da parte dell’utente.",
-        },
-        {
           id: "jurisdiction",
-          heading: "2. Legge applicabile e foro competente",
+          heading: "1. Legge applicabile e foro competente",
           body:
-            "Salvo quanto previsto da norme imperative più favorevoli di tutela dei consumatori, si applica il diritto tedesco. " +
-            "Se agisci come imprenditore ai sensi del diritto tedesco, il foro esclusivamente competente è Monaco di Baviera.",
-        },
-        {
-          id: "online_dispute",
-          heading: "3. Risoluzione delle controversie online",
-          body:
-            "La Commissione europea mette a disposizione una piattaforma per la risoluzione online delle controversie. " +
-            "Non siamo tenuti né, in linea di principio, disponibili a partecipare a procedimenti di risoluzione dinanzi a organismi di mediazione per i consumatori.",
+            "Salvo disposizioni inderogabili in materia di tutela dei consumatori, si applica il diritto tedesco. " +
+            "Per i professionisti, il foro competente è Monaco di Baviera.",
         },
       ],
       disclaimer:
-        "Questa pagina ha lo scopo di fornire una panoramica trasparente. In caso di conflitto, la versione tedesca può prevalere quando richiesto dalla legge.",
+        "Le presenti informazioni sono fornite a fini di trasparenza. Il diritto inderogabile prevale.",
     },
+
   },
 
   // ================================================================
   // PORTUGUÊS
   // ================================================================
   pt: {
+    // ------------------------- AVISO LEGAL ------------------------
     imprint: {
       slug: "imprint",
-      title: "Informações legais",
+      title: "Aviso legal",
       intro:
-        "Estas informações legais contêm os dados do fornecedor exigidos para o m-pathy pelo direito alemão e, em parte, pelo direito europeu.",
-      last_updated: "Última atualização: 18 de novembro de 2025",
+        "Este aviso legal contém as informações do fornecedor exigidas para o m-pathy de acordo com o direito alemão e, quando aplicável, o direito europeu.",
+      last_updated: "Última atualização: 11 de janeiro de 2026",
       sections: [
         {
           id: "provider",
@@ -1333,250 +1232,230 @@ export const legalDict: Record<string, LegalLocale> = {
         },
         {
           id: "representative",
-          heading: "2. Representante legal",
+          heading: "2. Direção",
           body: "Diretor-gerente: Alexander Khayat.",
         },
         {
           id: "register",
-          heading: "3. Registro comercial",
+          heading: "3. Registo comercial",
           body:
-            "A empresa está inscrita no registro comercial. O tribunal competente e o número de registro " +
-            "serão adicionados assim que estiverem disponíveis de forma definitiva.",
+            "A NAAL UG (responsabilidade limitada) encontra-se registada no registo comercial do Tribunal de Munique sob o número HRB 288710.",
         },
         {
           id: "vat",
-          heading: "4. NIF/IVA",
-          body:
-            "Se for atribuído um número de identificação de IVA, ele será indicado aqui.",
+          heading: "4. Número de IVA",
+          body: "xe",
         },
         {
           id: "contact",
           heading: "5. Contacto",
           body:
-            "A forma mais rápida de nos contactar sobre o m-pathy é atualmente através do e-mail support@m-pathy.ai. " +
-            "Por favor, não envie por e-mail dados de saúde ou de pagamento particularmente sensíveis.",
+            "A forma mais rápida de contactar o m-pathy é atualmente por e-mail para support@m-pathy.ai. " +
+            "Por favor, não envie dados sensíveis, em especial dados de saúde ou de pagamento, por e-mail.",
         },
       ],
       disclaimer:
-        "Estas informações legais servem apenas para transparência e não substituem aconselhamento jurídico individual.",
+        "Este aviso legal é fornecido para fins informativos e não substitui aconselhamento jurídico individual.",
     },
 
+    // ------------------------- PRIVACIDADE ------------------------
     privacy: {
       slug: "privacy",
       title: "Política de privacidade",
       intro:
-        "Esta política de privacidade explica de forma simples como tratamos dados pessoais quando utiliza o m-pathy.",
-      last_updated: "Última atualização: 18 de novembro de 2025",
+        "Esta política de privacidade explica de forma clara como os dados pessoais são tratados ao utilizar o m-pathy.",
+      last_updated: "Última atualização: 11 de janeiro de 2026",
       sections: [
         {
           id: "controller",
           heading: "1. Responsável pelo tratamento",
           body:
-            "O responsável pelo tratamento de dados em ligação com o m-pathy é:\n\n" +
+            "O responsável pelo tratamento de dados em relação ao m-pathy é:\n\n" +
             "NAAL UG (responsabilidade limitada)\n" +
             "Maria-Theresia-Str. 11\n" +
-            "81675 Munique, Alemanha\n" +
+            "81675 Munique\n" +
+            "Alemanha\n" +
             "E-mail: support@m-pathy.ai",
         },
         {
+          id: "principles",
+          heading: "2. Proteção de dados desde a conceção",
+          body:
+            "O m-pathy aplica os princípios de Privacy by Design e Privacy by Default.\n\n" +
+            "• Os dados são tratados apenas quando necessário\n" +
+            "• O âmbito e a duração do tratamento são minimizados\n" +
+            "• Não são criados perfis implícitos de utilizadores\n\n" +
+            "A proteção de dados está integrada na arquitetura do sistema.",
+        },
+        {
           id: "data_categories",
-          heading: "2. Categorias de dados",
+          heading: "3. Categorias de dados",
           body:
-            "Tratamos, na medida do necessário, em especial as seguintes categorias de dados:\n" +
-            "• Dados de utilização e registos do site\n" +
-            "• Dados de conta e de contacto fornecidos ativamente\n" +
-            "• Conteúdo dos seus prompts e respostas enviados ao sistema\n" +
-            "• Metadados técnicos como hora, tipo de navegador e informações básicas do dispositivo",
+            "Dependendo da utilização, podem ser tratadas as seguintes categorias de dados:\n" +
+            "• dados de conta e contacto (quando fornecidos voluntariamente),\n" +
+            "• dados técnicos de utilização (segurança e estabilidade),\n" +
+            "• dados de pagamento (através de prestadores externos),\n" +
+            "• conteúdos de prompts e respostas (tratamento exclusivamente técnico).\n\n" +
+            "Os conteúdos dos prompts não são utilizados para fins de perfilização, publicidade ou treino.",
         },
         {
-          id: "purposes",
-          heading: "3. Finalidades e fundamentos jurídicos",
+          id: "local_processing",
+          heading: "4. Tratamento local",
           body:
-            "Utilizamos os seus dados, em especial, para:\n" +
-            "• fornecer e operar o m-pathy,\n" +
-            "• garantir a segurança e manutenção técnica do serviço,\n" +
-            "• responder a pedidos de suporte,\n" +
-            "• cumprir obrigações legais de conservação e documentação.\n\n" +
-            "Quando o RGPD é aplicável, as bases jurídicas são, em particular, o artigo 6.º, n.º 1, alíneas b) (contrato), c) (obrigação legal) " +
-            "e f) RGPD (interesse legítimo num funcionamento seguro e eficiente).",
+            "Os conteúdos dos prompts são tratados localmente ou de forma transitória e não são armazenados " +
+            "de forma permanente em servidores de forma identificável ou reconstruível.",
         },
         {
-          id: "processors",
-          heading: "4. Subcontratantes e destinatários",
+          id: "archive",
+          heading: "5. Arquivo local e injeção de contexto",
           body:
-            "Utilizamos prestadores de serviços cuidadosamente selecionados para alojamento, infraestrutura, análises sem perfis " +
-            "e processamento de pagamentos (por exemplo, Stripe). Estes prestadores estão contratualmente obrigados a tratar os dados " +
-            "apenas de acordo com as nossas instruções e em conformidade com a legislação aplicável.",
+            "O m-pathy permite aos utilizadores armazenar determinados conteúdos localmente num arquivo.\n\n" +
+            "Os elementos arquivados podem ser selecionados conscientemente e inseridos numa nova conversa.\n\n" +
+            "• armazenamento exclusivamente local,\n" +
+            "• ação deliberada do utilizador,\n" +
+            "• contexto inserido totalmente visível,\n" +
+            "• sem memória automática ou implícita.",
         },
         {
-          id: "retention",
-          heading: "5. Prazo de conservação",
+          id: "verification",
+          heading: "6. Verificação e Triketon",
           body:
-            "Conservamos dados pessoais apenas durante o tempo necessário para as finalidades descritas ou exigido por lei. " +
-            "Os registos técnicos são normalmente conservados apenas por um curto período. " +
-            "Os dados relevantes para o contrato podem ser conservados por mais tempo para cumprir obrigações comerciais e fiscais.",
+            "Ao verificar conteúdos (por exemplo, artigos de notícias), o m-pathy utiliza o Triketon.\n\n" +
+            "• os conteúdos são transmitidos ao servidor exclusivamente para fins de verificação,\n" +
+            "• é calculado um hash criptográfico de verdade,\n" +
+            "• é gerada ou associada uma chave pública de verificação,\n" +
+            "• o conteúdo original não é armazenado,\n" +
+            "• apenas o hash, a chave pública e metadados técnicos mínimos são conservados.\n\n" +
+            "Não é possível reconstruir o conteúdo original.",
         },
         {
-          id: "rights",
-          heading: "6. Os seus direitos",
+          id: "prompt_integrity",
+          heading: "7. Normalização de prompts e prevenção de drift",
           body:
-            "Quando o RGPD é aplicável, tem, em especial, o direito de acesso, retificação, apagamento, limitação do tratamento, " +
-            "portabilidade dos dados e o direito de se opor a determinados tratamentos. Tem também o direito de apresentar reclamação " +
-            "a uma autoridade de controlo.",
+            "Antes da execução, o MAIOS 2.0 analisa estruturalmente os prompts.\n\n" +
+            "Se um prompt for ambíguo, incoerente ou suscetível a drift, a formulação pode ser ajustada.\n\n" +
+            "• a intenção do utilizador é preservada,\n" +
+            "• apenas a estrutura e a clareza de segurança são ajustadas,\n" +
+            "• nenhum prompt é armazenado,\n" +
+            "• não ocorre qualquer aprendizagem ou perfilização.",
         },
         {
-          id: "ai",
-          heading: "7. Utilização de serviços de IA",
+          id: "devices",
+          heading: "8. Armazenamento local e dispositivos",
           body:
-            "O m-pathy utiliza modelos de inteligência artificial que processam os prompts que envia. " +
-            "Adotamos medidas técnicas e organizativas para proteger os seus dados, mas nenhum sistema pode ser totalmente seguro. " +
-            "Sempre que possível, evite inserir conteúdos altamente sensíveis que não gostaria que deixassem o seu dispositivo.",
+            "Todos os conteúdos gerados pelo utilizador são armazenados exclusivamente no armazenamento local do dispositivo utilizado.\n\n" +
+            "• o armazenamento local persiste até ser eliminado pelo utilizador,\n" +
+            "• a eliminação implica a perda irreversível dos dados,\n" +
+            "• não existem cópias de segurança no servidor.\n\n" +
+            "Cada dispositivo recebe uma chave pública distinta. Os dados estão estritamente associados ao dispositivo.",
         },
       ],
       disclaimer:
-        "Esta política de privacidade é um resumo simplificado e não substitui uma análise jurídica completa do seu caso específico.",
+        "Esta política de privacidade é fornecida para fins de transparência e não substitui aconselhamento jurídico individual.",
     },
 
+    // ------------------------- CONDIÇÕES --------------------------
     terms: {
       slug: "terms",
       title: "Termos de utilização",
       intro:
-        "Estes termos regulam a forma como pode utilizar o m-pathy. Ao utilizar o serviço, aceita estes termos.",
-      last_updated: "Última atualização: 18 de novembro de 2025",
+        "Estes termos de utilização regulam o acesso e a utilização do m-pathy. Ao utilizar o serviço, o utilizador concorda com os mesmos.",
+      last_updated: "Última atualização: 11 de janeiro de 2026",
       sections: [
         {
           id: "scope",
           heading: "1. Âmbito do serviço",
           body:
-            "O m-pathy é um assistente experimental baseado em IA. Não é um terapeuta, advogado, médico ou consultor financeiro humano. " +
-            "O serviço destina-se ao trabalho criativo, reflexão e apoio técnico.",
+            "O m-pathy é um assistente experimental baseado em IA e não substitui um terapeuta, advogado, médico ou consultor financeiro humano.",
         },
         {
           id: "no_advice",
-          heading: "2. Sem aconselhamento profissional",
+          heading: "2. Ausência de aconselhamento profissional",
           body:
-            "O conteúdo gerado pelo m-pathy nunca deve ser utilizado como única base para decisões médicas, jurídicas, financeiras " +
-            "ou outras com consequências graves. Em tais casos, consulte sempre profissionais qualificados.",
+            "Os conteúdos gerados pelo m-pathy não devem ser utilizados como única base para decisões médicas, jurídicas, financeiras ou outras com consequências significativas.",
         },
         {
-          id: "account",
-          heading: "3. Conta e tokens",
+          id: "modes",
+          heading: "3. Governação por modos do sistema",
           body:
-            "O acesso pode ser limitado no tempo e/ou por um determinado conjunto de tokens. É responsável por manter as suas credenciais " +
-            "em segurança e por toda a atividade realizada através da sua conta.",
-        },
-        {
-          id: "acceptable_use",
-          heading: "4. Utilização aceitável",
-          body:
-            "Não pode utilizar o m-pathy para violar a lei, prejudicar terceiros, gerar conteúdos ilícitos ou atacar sistemas. " +
-            "Podemos bloquear ou restringir contas que utilizem o serviço de forma abusiva.",
-        },
-        {
-          id: "changes",
-          heading: "5. Alterações e disponibilidade",
-          body:
-            "Podemos adaptar, ampliar ou limitar as funcionalidades do m-pathy a qualquer momento, desde que isso seja razoável para os utilizadores. " +
-            "Procuramos assegurar uma elevada disponibilidade, mas não podemos garantir um funcionamento ininterrupto.",
+            "O m-pathy utiliza modos internos para a autogovernação do sistema.\n\n" +
+            "As mudanças de modo são limitadas à sessão, determinísticas e não constituem perfilização do utilizador.",
         },
         {
           id: "liability",
-          heading: "6. Limitação de responsabilidade",
+          heading: "4. Limitação de responsabilidade",
           body:
-            "Somos responsáveis, de acordo com a legislação aplicável, em caso de dolo ou negligência grave. Em caso de negligência simples, " +
-            "só somos responsáveis pela violação de obrigações contratuais essenciais e limitados ao dano típico previsível. " +
-            "As responsabilidades obrigatórias, por exemplo ao abrigo da legislação de responsabilidade por produtos, mantêm-se inalteradas.",
+            "A responsabilidade é regida pela legislação aplicável. Os regimes de responsabilidade obrigatórios permanecem inalterados.",
         },
       ],
       disclaimer:
-        "Estes termos de utilização estruturam a relação contratual de forma resumida e não substituem aconselhamento jurídico individual.",
+        "Estes termos estruturam a relação contratual e não substituem aconselhamento jurídico.",
     },
 
+    // ------------------------- REEMBOLSOS --------------------------
     refund: {
       slug: "refund",
-      title: "Política de reembolso",
+      title: "Política de reembolsos",
       intro:
-        "O m-pathy oferece atualmente um modelo claro de acesso com compra única. Esta política explica como tratamos pagamentos e reembolsos.",
-      last_updated: "Última atualização: 18 de novembro de 2025",
+        "Esta política descreve como os pagamentos e os reembolsos são tratados no m-pathy.",
+      last_updated: "Última atualização: 11 de janeiro de 2026",
       sections: [
         {
           id: "model",
           heading: "1. Modelo de compra",
           body:
-            "O acesso ao m-pathy é atualmente concedido como compra única por um período definido e/ou um determinado conjunto de tokens. " +
-            "Não existe renovação automática de subscrição.",
-        },
-        {
-          id: "payment",
-          heading: "2. Processamento de pagamentos",
-          body:
-            "Os pagamentos são processados através do Stripe ou de outros prestadores semelhantes. " +
-            "Aplicam-se ainda as respetivas condições e medidas de segurança.",
+            "O acesso ao m-pathy é concedido através de uma compra única por um período definido e/ou um conjunto de tokens determinado.",
         },
         {
           id: "withdrawal",
-          heading: "3. Direito de resolução",
+          heading: "2. Direito de livre resolução",
           body:
-            "Se for consumidor na União Europeia, pode ter um direito legal de resolução para serviços digitais. " +
-            "Quando aplicável, será informado desse direito durante o processo de compra.",
+            "Os direitos legais de livre resolução aplicáveis aos serviços digitais aplicam-se quando exigido por lei.",
         },
         {
           id: "refunds",
-          heading: "4. Reembolsos na prática",
+          heading: "3. Reembolsos",
           body:
-            "Regra geral, não efetuamos reembolsos depois de o acesso ter sido concedido e os tokens poderem ser utilizados, " +
-            "salvo obrigação legal ou promessa expressa de reembolso em casos individuais.",
+            "Os reembolsos são concedidos apenas quando existe uma obrigação legal ou quando foram expressamente prometidos.",
         },
       ],
       disclaimer:
-        "Esta política de reembolso descreve a nossa prática atual e não limita direitos legais inderrogáveis.",
+        "Esta política não limita direitos legais imperativos.",
     },
 
+    // ------------------------- JURÍDICO ---------------------------
     legal: {
       slug: "legal",
       title: "Informações legais",
       intro:
-        "Nesta página reunimos as principais informações jurídicas sobre o m-pathy.",
-      last_updated: "Última atualização: 18 de novembro de 2025",
+        "Esta secção fornece uma visão geral do enquadramento jurídico aplicável ao m-pathy.",
+      last_updated: "Última atualização: 11 de janeiro de 2026",
       sections: [
         {
-          id: "overview",
-          heading: "1. Visão geral",
-          body:
-            "O m-pathy é operado pela NAAL UG (responsabilidade limitada), sediada em Munique, Alemanha. " +
-            "O serviço combina modelos avançados de IA com um forte foco em privacidade, clareza e controlo por parte do utilizador.",
-        },
-        {
           id: "jurisdiction",
-          heading: "2. Direito aplicável e foro competente",
+          heading: "1. Direito aplicável e foro competente",
           body:
-            "Exceto quando normas imperativas de proteção do consumidor prevejam outra coisa, aplica-se o direito alemão. " +
-            "Se atuar como empresário ao abrigo do direito alemão, o foro exclusivo é Munique.",
-        },
-        {
-          id: "online_dispute",
-          heading: "3. Resolução de litígios em linha",
-          body:
-            "A Comissão Europeia disponibiliza uma plataforma para resolução de litígios em linha. " +
-            "Não estamos obrigados nem, em princípio, dispostos a participar em procedimentos de resolução de litígios " +
-            "perante entidades de arbitragem de consumo.",
+            "Salvo disposições imperativas em matéria de proteção dos consumidores, aplica-se o direito alemão. " +
+            "Para profissionais, o foro competente é Munique.",
         },
       ],
       disclaimer:
-        "Esta página pretende oferecer uma visão transparente. Em caso de conflito, a versão em alemão pode prevalecer quando exigido por lei.",
+        "Estas informações são fornecidas para fins de transparência. O direito imperativo prevalece.",
     },
+
   },
 
-  // ================================================================
+    // ================================================================
   // NEDERLANDS
   // ================================================================
   nl: {
+    // ------------------------- COLOFON ----------------------------
     imprint: {
       slug: "imprint",
-      title: "Juridische informatie",
+      title: "Colofon",
       intro:
-        "Deze juridische informatie bevat de gegevens van de aanbieder die voor m-pathy vereist zijn volgens het Duitse en deels Europese recht.",
-      last_updated: "Laatst bijgewerkt: 18 november 2025",
+        "Deze colofon bevat de wettelijk vereiste informatie over de aanbieder van m-pathy volgens het Duitse en, voor zover van toepassing, het Europese recht.",
+      last_updated: "Laatst bijgewerkt: 11 januari 2026",
       sections: [
         {
           id: "provider",
@@ -1590,1626 +1469,1632 @@ export const legalDict: Record<string, LegalLocale> = {
         },
         {
           id: "representative",
-          heading: "2. Wettelijk vertegenwoordiger",
-          body: "Bestuurder: Alexander Khayat.",
+          heading: "2. Directie",
+          body: "Directeur: Alexander Khayat.",
         },
         {
           id: "register",
           heading: "3. Handelsregister",
           body:
-            "De vennootschap is ingeschreven in het handelsregister. De bevoegde rechtbank en het registratienummer " +
-            "worden toegevoegd zodra deze definitief beschikbaar zijn.",
+            "NAAL UG (beperkte aansprakelijkheid) is ingeschreven in het handelsregister bij het Amtsgericht München onder nummer HRB 288710.",
         },
         {
           id: "vat",
-          heading: "4. Btw-nummer",
-          body:
-            "Indien een btw-identificatienummer wordt toegekend, wordt dit hier vermeld.",
+          heading: "4. BTW-nummer",
+          body: "xe",
         },
         {
           id: "contact",
           heading: "5. Contact",
           body:
-            "De snelste manier om contact met ons op te nemen over m-pathy is momenteel per e-mail via support@m-pathy.ai. " +
-            "Stuur bij voorkeur geen bijzonder gevoelige gezondheids- of betalingsgegevens per e-mail.",
+            "De snelste manier om contact op te nemen met m-pathy is momenteel per e-mail via support@m-pathy.ai. " +
+            "Stuur geen gevoelige gegevens, met name gezondheids- of betalingsgegevens, per e-mail.",
         },
       ],
       disclaimer:
-        "Deze juridische informatie dient de transparantie en vervangt geen individueel juridisch advies.",
+        "Deze colofon is bedoeld ter informatie en vervangt geen individueel juridisch advies.",
     },
 
+    // ------------------------- PRIVACY ----------------------------
     privacy: {
       slug: "privacy",
       title: "Privacyverklaring",
       intro:
-        "Deze privacyverklaring legt in eenvoudige bewoordingen uit hoe wij persoonsgegevens verwerken wanneer je m-pathy gebruikt.",
-      last_updated: "Laatst bijgewerkt: 18 november 2025",
+        "Deze privacyverklaring legt op duidelijke wijze uit hoe persoonsgegevens worden verwerkt bij het gebruik van m-pathy.",
+      last_updated: "Laatst bijgewerkt: 11 januari 2026",
       sections: [
         {
           id: "controller",
-          heading: "1. Verantwoordelijke",
+          heading: "1. Verwerkingsverantwoordelijke",
           body:
-            "De verantwoordelijke voor de gegevensverwerking in verband met m-pathy is:\n\n" +
+            "De verwerkingsverantwoordelijke voor de gegevensverwerking in verband met m-pathy is:\n\n" +
             "NAAL UG (beperkte aansprakelijkheid)\n" +
             "Maria-Theresia-Str. 11\n" +
-            "81675 München, Duitsland\n" +
+            "81675 München\n" +
+            "Duitsland\n" +
             "E-mail: support@m-pathy.ai",
         },
         {
+          id: "principles",
+          heading: "2. Privacy by Design en by Default",
+          body:
+            "m-pathy past de beginselen van Privacy by Design en Privacy by Default toe.\n\n" +
+            "• Gegevens worden alleen verwerkt wanneer dat noodzakelijk is\n" +
+            "• Omvang en duur van de verwerking worden geminimaliseerd\n" +
+            "• Er worden geen impliciete gebruikersprofielen aangemaakt\n\n" +
+            "Gegevensbescherming is structureel ingebouwd in de systeemarchitectuur.",
+        },
+        {
           id: "data_categories",
-          heading: "2. Categorieën van gegevens",
+          heading: "3. Categorieën van gegevens",
           body:
-            "Wij verwerken, voor zover nodig, met name de volgende categorieën gegevens:\n" +
-            "• Gebruiks- en loggegevens van de website\n" +
-            "• Account- en contactgegevens die je actief verstrekt\n" +
-            "• Inhoud van prompts en antwoorden die je naar het systeem stuurt\n" +
-            "• Technische metadata zoals tijdstip, browsertype en basisapparaatinformatie",
+            "Afhankelijk van het gebruik kunnen de volgende categorieën gegevens worden verwerkt:\n" +
+            "• account- en contactgegevens (indien vrijwillig verstrekt),\n" +
+            "• technische gebruiksgegevens (uitsluitend voor veiligheid en stabiliteit),\n" +
+            "• betalingsgegevens (via externe dienstverleners),\n" +
+            "• inhoud van prompts en antwoorden (uitsluitend technische verwerking).\n\n" +
+            "Promptinhoud wordt niet gebruikt voor profilering, reclame of training.",
         },
         {
-          id: "purposes",
-          heading: "3. Doeleinden en rechtsgrondslag",
+          id: "local_processing",
+          heading: "4. Lokale verwerking",
           body:
-            "Wij gebruiken je gegevens met name om:\n" +
-            "• m-pathy aan te bieden en te exploiteren,\n" +
-            "• de veiligheid en het technisch onderhoud van de dienst te waarborgen,\n" +
-            "• supportverzoeken te beantwoorden,\n" +
-            "• wettelijke bewaarplichten en documentatieplichten na te komen.\n\n" +
-            "Wanneer de AVG van toepassing is, baseren wij de verwerking met name op art. 6 lid 1 onder b (overeenkomst), " +
-            "art. 6 lid 1 onder c (wettelijke verplichting) en art. 6 lid 1 onder f AVG (gerechtvaardigd belang bij een veilige en efficiënte werking).",
+            "De inhoud van prompts wordt lokaal of tijdelijk verwerkt en niet permanent " +
+            "op servers opgeslagen in identificeerbare of reconstrueerbare vorm.",
         },
         {
-          id: "processors",
-          heading: "4. Verwerkers en ontvangers",
+          id: "archive",
+          heading: "5. Lokaal archief en contextinjectie",
           body:
-            "Wij maken gebruik van zorgvuldig geselecteerde dienstverleners voor hosting, infrastructuur, analyse zonder persoonsprofielen " +
-            "en betalingsverwerking (bijvoorbeeld Stripe). Deze dienstverleners zijn contractueel verplicht gegevens " +
-            "alleen volgens onze instructies en in overeenstemming met het toepasselijke recht te verwerken.",
+            "m-pathy stelt gebruikers in staat geselecteerde inhoud lokaal in een archief op te slaan.\n\n" +
+            "Gearchiveerde items kunnen bewust door de gebruiker worden geselecteerd en in een nieuwe chat worden ingevoegd.\n\n" +
+            "• uitsluitend lokale opslag,\n" +
+            "• expliciete handeling door de gebruiker,\n" +
+            "• volledig zichtbare ingevoegde context,\n" +
+            "• geen automatische of impliciete geheugenfunctie.",
         },
         {
-          id: "retention",
-          heading: "5. Bewaartermijn",
+          id: "verification",
+          heading: "6. Verificatie en Triketon",
           body:
-            "Persoonsgegevens worden slechts bewaard zolang dit nodig is voor de beschreven doeleinden of zolang wij hiertoe wettelijk verplicht zijn. " +
-            "Loggegevens worden doorgaans slechts gedurende een korte technische periode bewaard. " +
-            "Contractrelevante gegevens kunnen langer worden opgeslagen om aan handels- en fiscale bewaarplichten te voldoen.",
+            "Bij het verifiëren van inhoud (bijvoorbeeld nieuwsartikelen) maakt m-pathy gebruik van Triketon.\n\n" +
+            "• inhoud wordt uitsluitend voor verificatiedoeleinden naar de server verzonden,\n" +
+            "• er wordt een cryptografische waarheidshash berekend,\n" +
+            "• er wordt een publieke verificatiesleutel gegenereerd of gekoppeld,\n" +
+            "• de oorspronkelijke inhoud wordt niet opgeslagen,\n" +
+            "• alleen de hash, de publieke sleutel en minimale technische metadata worden bewaard.\n\n" +
+            "De oorspronkelijke inhoud kan niet worden gereconstrueerd.",
         },
         {
-          id: "rights",
-          heading: "6. Jouw rechten",
+          id: "prompt_integrity",
+          heading: "7. Prompt-normalisatie en driftpreventie",
           body:
-            "Wanneer de AVG van toepassing is, heb je met name recht op inzage, rectificatie, verwijdering, beperking van de verwerking, " +
-            "gegevensoverdraagbaarheid en het recht bezwaar te maken tegen bepaalde verwerkingen. " +
-            "Daarnaast heb je het recht een klacht in te dienen bij een toezichthoudende autoriteit.",
+            "Voor uitvoering analyseert MAIOS 2.0 prompts op structureel niveau.\n\n" +
+            "Indien een prompt ambigu, inconsistent of driftgevoelig is, kan de formulering worden aangepast.\n\n" +
+            "• de intentie van de gebruiker blijft behouden,\n" +
+            "• alleen structuur en veiligheidsduidelijkheid worden aangepast,\n" +
+            "• geen prompts worden opgeslagen,\n" +
+            "• er vindt geen leren of profilering plaats.",
         },
         {
-          id: "ai",
-          heading: "7. Gebruik van AI-diensten",
+          id: "devices",
+          heading: "8. Lokale opslag en apparaten",
           body:
-            "m-pathy maakt gebruik van AI-modellen die de prompts verwerken die je verstuurt. Wij treffen technische en organisatorische maatregelen " +
-            "om je gegevens te beschermen, maar geen enkel systeem kan volledig veilig zijn. Voer daarom bij voorkeur geen zeer gevoelige inhoud in " +
-            "die je apparaat nooit zou mogen verlaten.",
+            "Alle door de gebruiker gegenereerde inhoud wordt uitsluitend opgeslagen in de lokale opslag van het gebruikte apparaat.\n\n" +
+            "• lokale opslag blijft bestaan totdat deze door de gebruiker wordt verwijderd,\n" +
+            "• verwijdering leidt tot onomkeerbaar verlies van gegevens,\n" +
+            "• er bestaan geen server-side back-ups.\n\n" +
+            "Elk apparaat ontvangt een eigen publieke sleutel. Gegevens zijn strikt apparaatspecifiek.",
         },
       ],
       disclaimer:
-        "Deze privacyverklaring is een vereenvoudigde samenvatting en vervangt geen volledige juridische beoordeling van je individuele situatie.",
+        "Deze privacyverklaring is bedoeld ter transparantie en vervangt geen individueel juridisch advies.",
     },
 
+    // ------------------------- VOORWAARDEN ------------------------
     terms: {
       slug: "terms",
       title: "Gebruiksvoorwaarden",
       intro:
-        "Deze gebruiksvoorwaarden bepalen hoe je m-pathy mag gebruiken. Door de dienst te gebruiken ga je hiermee akkoord.",
-      last_updated: "Laatst bijgewerkt: 18 november 2025",
+        "Deze gebruiksvoorwaarden regelen de toegang tot en het gebruik van m-pathy. Door het gebruik van de dienst gaat u hiermee akkoord.",
+      last_updated: "Laatst bijgewerkt: 11 januari 2026",
       sections: [
         {
           id: "scope",
           heading: "1. Omvang van de dienst",
           body:
-            "m-pathy is een experimentele, AI-gestuurde assistent. Het is geen menselijke therapeut, advocaat, arts of financieel adviseur. " +
-            "De dienst is bedoeld voor creatief werk, reflectie en technische ondersteuning.",
+            "m-pathy is een experimentele AI-gebaseerde assistent en vervangt geen menselijke therapeut, advocaat, arts of financieel adviseur.",
         },
         {
           id: "no_advice",
           heading: "2. Geen professioneel advies",
           body:
-            "De door m-pathy gegenereerde inhoud mag nooit als enige basis dienen voor medische, juridische, financiële " +
-            "of andere beslissingen met ernstige gevolgen. Raadpleeg voor dergelijke vragen altijd gekwalificeerde professionals.",
+            "Inhoud die door m-pathy wordt gegenereerd mag niet worden gebruikt als enige basis voor medische, juridische, financiële of andere beslissingen met aanzienlijke gevolgen.",
         },
         {
-          id: "account",
-          heading: "3. Account en tokens",
+          id: "modes",
+          heading: "3. Systeemgestuurde modi",
           body:
-            "Toegang kan in de tijd en/of door een bepaald token-tegoed worden beperkt. Je bent verantwoordelijk " +
-            "voor de vertrouwelijke behandeling van je inloggegevens en voor alle activiteiten onder je account.",
-        },
-        {
-          id: "acceptable_use",
-          heading: "4. Toegestaan gebruik",
-          body:
-            "Je mag m-pathy niet gebruiken om wetgeving te overtreden, anderen te schaden, onrechtmatige inhoud te genereren " +
-            "of systemen aan te vallen. Wij kunnen accounts blokkeren of beperken die de dienst misbruiken.",
-        },
-        {
-          id: "changes",
-          heading: "5. Wijzigingen en beschikbaarheid",
-          body:
-            "Wij kunnen de functionaliteit van m-pathy op ieder moment aanpassen, uitbreiden of beperken, voor zover dit voor gebruikers redelijk is. " +
-            "Wij streven naar een hoge beschikbaarheid, maar kunnen geen ononderbroken werking garanderen.",
+            "m-pathy maakt gebruik van interne systeemmodi voor zelfbesturing.\n\n" +
+            "Moduswisselingen zijn sessiegebonden, deterministisch en vormen geen gebruikersprofilering.",
         },
         {
           id: "liability",
-          heading: "6. Aansprakelijkheidsbeperking",
+          heading: "4. Aansprakelijkheidsbeperking",
           body:
-            "Wij zijn aansprakelijk volgens de toepasselijke wetgeving bij opzet en grove nalatigheid. Bij lichte nalatigheid " +
-            "zijn wij alleen aansprakelijk voor schending van essentiële contractuele verplichtingen en beperkt tot de typische, voorzienbare schade. " +
-            "Verplichte aansprakelijkheid, bijvoorbeeld op grond van productaansprakelijkheid, blijft onverlet.",
+            "Aansprakelijkheid is geregeld volgens de toepasselijke wetgeving. Dwingende aansprakelijkheidsregelingen blijven onverkort van kracht.",
         },
       ],
       disclaimer:
-        "Deze gebruiksvoorwaarden structureren de contractuele relatie in vereenvoudigde vorm en vervangen geen individueel juridisch advies.",
+        "Deze voorwaarden structureren de contractuele relatie en vervangen geen juridisch advies.",
     },
 
+    // ------------------------- TERUGBETALING ----------------------
     refund: {
       slug: "refund",
       title: "Restitutiebeleid",
       intro:
-        "m-pathy biedt momenteel een duidelijk model met eenmalige aankoop van toegang. Dit beleid legt uit hoe wij met betalingen en restituties omgaan.",
-      last_updated: "Laatst bijgewerkt: 18 november 2025",
+        "Dit beleid beschrijft hoe betalingen en restituties binnen m-pathy worden afgehandeld.",
+      last_updated: "Laatst bijgewerkt: 11 januari 2026",
       sections: [
         {
           id: "model",
           heading: "1. Aankoopmodel",
           body:
-            "Toegang tot m-pathy wordt momenteel verleend als eenmalige aankoop voor een bepaalde periode en/of een bepaald token-tegoed. " +
-            "Er is geen automatische verlenging als abonnement.",
-        },
-        {
-          id: "payment",
-          heading: "2. Betalingsverwerking",
-          body:
-            "Betalingen worden verwerkt via Stripe of vergelijkbare betaalproviders. Hun voorwaarden en veiligheidsmaatregelen zijn aanvullend van toepassing.",
+            "Toegang tot m-pathy wordt verleend via een eenmalige aankoop voor een bepaalde periode en/of een vast tokenaantal.",
         },
         {
           id: "withdrawal",
-          heading: "3. Herroepingsrecht",
+          heading: "2. Herroepingsrecht",
           body:
-            "Als consument in de Europese Unie kun je een wettelijk herroepingsrecht hebben voor digitale diensten. " +
-            "Wanneer dit van toepassing is, word je hierover tijdens het bestelproces geïnformeerd.",
+            "Wettelijke herroepingsrechten voor digitale diensten zijn van toepassing indien wettelijk vereist.",
         },
         {
           id: "refunds",
-          heading: "4. Restituties in de praktijk",
+          heading: "3. Restituties",
           body:
-            "In de regel verstrekken wij geen restituties nadat de toegang is vrijgegeven en tokens kunnen worden gebruikt, " +
-            "tenzij er een wettelijke verplichting bestaat of wij in een individueel geval uitdrukkelijk een restitutie toezeggen.",
+            "Restituties worden uitsluitend verleend indien er een wettelijke verplichting bestaat of indien dit uitdrukkelijk is toegezegd.",
         },
       ],
       disclaimer:
-        "Dit restitutiebeleid beschrijft onze huidige praktijk en beperkt geen dwingende wettelijke rechten.",
+        "Dit beleid beperkt geen dwingende wettelijke rechten.",
     },
 
+    // ------------------------- JURIDISCH --------------------------
     legal: {
       slug: "legal",
       title: "Juridische informatie",
       intro:
-        "Op deze pagina bundelen wij de belangrijkste juridische informatie over m-pathy.",
-      last_updated: "Laatst bijgewerkt: 18 november 2025",
+        "Deze sectie geeft een overzicht van het juridische kader dat van toepassing is op m-pathy.",
+      last_updated: "Laatst bijgewerkt: 11 januari 2026",
       sections: [
         {
-          id: "overview",
-          heading: "1. Overzicht",
-          body:
-            "m-pathy wordt geëxploiteerd door NAAL UG (beperkte aansprakelijkheid), gevestigd in München, Duitsland. " +
-            "De dienst combineert geavanceerde AI-modellen met een sterke focus op privacy, duidelijkheid en controle door de gebruiker.",
-        },
-        {
           id: "jurisdiction",
-          heading: "2. Toepasselijk recht en bevoegde rechtbank",
+          heading: "1. Toepasselijk recht en bevoegde rechter",
           body:
-            "Tenzij dwingend consumentenrecht anders bepaalt, is het Duitse recht van toepassing. " +
-            "Indien je handelt als ondernemer in de zin van het Duitse recht, is München de exclusief bevoegde rechtbank.",
-        },
-        {
-          id: "online_dispute",
-          heading: "3. Onlinegeschillenbeslechting",
-          body:
-            "De Europese Commissie stelt een platform voor onlinegeschillenbeslechting beschikbaar. " +
-            "Wij zijn niet verplicht en in de regel ook niet bereid deel te nemen aan geschillenbeslechtingsprocedures " +
-            "voor een consumentenarbitragecommissie.",
+            "Tenzij dwingende consumentenbeschermingsbepalingen anders voorschrijven, is Duits recht van toepassing. " +
+            "Voor handelaren is München de exclusief bevoegde rechtbank.",
         },
       ],
       disclaimer:
-        "Deze pagina is bedoeld om een transparant overzicht te bieden. In geval van tegenstrijdigheid kan de Duitstalige versie doorslaggevend zijn als de wet dat vereist.",
+        "Deze informatie wordt verstrekt ter transparantie. Dwingend recht heeft voorrang.",
     },
+
   },
 
-  // ================================================================
+    // ================================================================
   // РУССКИЙ
   // ================================================================
   ru: {
+    // ------------------------- ИМПРЕССУМ --------------------------
     imprint: {
       slug: "imprint",
-      title: "Юридическая информация",
+      title: "Выходные данные",
       intro:
-        "В этом разделе приведены сведения об операторе m-pathy, которые требуются согласно немецкому и частично европейскому праву.",
-      last_updated: "Последнее обновление: 18 ноября 2025 г.",
+        "Настоящие выходные данные содержат сведения о поставщике m-pathy, требуемые в соответствии с законодательством Германии и, при необходимости, Европейского союза.",
+      last_updated: "Последнее обновление: 11 января 2026 г.",
       sections: [
         {
           id: "provider",
-          heading: "1. Оператор",
+          heading: "1. Поставщик",
           body:
-            "NAAL UG (с ограниченной ответственностью)\n" +
+            "NAAL UG (общество с ограниченной ответственностью)\n" +
             "Maria-Theresia-Str. 11\n" +
             "81675 Мюнхен\n" +
             "Германия\n\n" +
-            "Эл. почта: support@m-pathy.ai",
+            "E-mail: support@m-pathy.ai",
         },
         {
           id: "representative",
-          heading: "2. Представитель",
+          heading: "2. Руководство",
           body: "Управляющий директор: Alexander Khayat.",
         },
         {
           id: "register",
-          heading: "3. Запись в торговом реестре",
+          heading: "3. Торговый реестр",
           body:
-            "Компания внесена в торговый реестр. Наименование суда и регистрационный номер " +
-            "будут добавлены, как только станут официально доступны.",
+            "Компания NAAL UG (общество с ограниченной ответственностью) зарегистрирована в торговом реестре при Amtsgericht München под номером HRB 288710.",
         },
         {
           id: "vat",
-          heading: "4. Номер НДС",
-          body:
-            "Если компании будет присвоен идентификационный номер плательщика НДС, он будет указан здесь.",
+          heading: "4. Идентификационный номер НДС",
+          body: "xe",
         },
         {
           id: "contact",
-          heading: "5. Контакты",
+          heading: "5. Контактная информация",
           body:
-            "На данный момент самый быстрый способ связаться с нами по поводу m-pathy — написать на адрес support@m-pathy.ai. " +
-            "Пожалуйста, не отправляйте по электронной почте особо конфиденциальные медицинские или платёжные данные.",
+            "Наиболее быстрый способ связаться с m-pathy в настоящее время — по электронной почте support@m-pathy.ai. " +
+            "Пожалуйста, не направляйте по электронной почте конфиденциальные данные, в частности медицинские или платежные данные.",
         },
       ],
       disclaimer:
-        "Эта юридическая информация предоставляется для прозрачности и не заменяет индивидуальную юридическую консультацию.",
+        "Настоящие выходные данные предоставлены исключительно в информационных целях и не заменяют индивидуальную юридическую консультацию.",
     },
 
+    // ------------------------- КОНФИДЕНЦИАЛЬНОСТЬ -----------------
     privacy: {
       slug: "privacy",
       title: "Политика конфиденциальности",
       intro:
-        "В этой политике конфиденциальности в простой форме объясняется, как мы обрабатываем персональные данные при использовании m-pathy.",
-      last_updated: "Последнее обновление: 18 ноября 2025 г.",
+        "Настоящая политика конфиденциальности в доступной форме разъясняет, каким образом обрабатываются персональные данные при использовании m-pathy.",
+      last_updated: "Последнее обновление: 11 января 2026 г.",
       sections: [
         {
           id: "controller",
-          heading: "1. Ответственный оператор",
+          heading: "1. Ответственный за обработку данных",
           body:
-            "За обработку данных в связи с m-pathy отвечает:\n\n" +
-            "NAAL UG (с ограниченной ответственностью)\n" +
+            "Лицом, ответственным за обработку персональных данных в связи с m-pathy, является:\n\n" +
+            "NAAL UG (общество с ограниченной ответственностью)\n" +
             "Maria-Theresia-Str. 11\n" +
-            "81675 Мюнхен, Германия\n" +
-            "Эл. почта: support@m-pathy.ai",
+            "81675 Мюнхен\n" +
+            "Германия\n" +
+            "E-mail: support@m-pathy.ai",
+        },
+        {
+          id: "principles",
+          heading: "2. Защита данных по замыслу и по умолчанию",
+          body:
+            "m-pathy реализует принципы Privacy by Design и Privacy by Default.\n\n" +
+            "• данные обрабатываются только при наличии необходимости,\n" +
+            "• объем и продолжительность обработки минимизируются,\n" +
+            "• скрытые пользовательские профили не создаются.\n\n" +
+            "Защита данных является неотъемлемой частью архитектуры системы.",
         },
         {
           id: "data_categories",
-          heading: "2. Категории данных",
+          heading: "3. Категории данных",
           body:
-            "Мы обрабатываем, насколько это необходимо, в частности следующие категории данных:\n" +
-            "• данные об использовании и журналы сайта,\n" +
-            "• учётные и контактные данные, которые вы предоставляете активно,\n" +
-            "• содержимое ваших запросов и ответов, отправляемых системе,\n" +
-            "• технические метаданные, такие как время, тип браузера и базовая информация об устройстве.",
+            "В зависимости от использования могут обрабатываться следующие категории данных:\n" +
+            "• данные учетной записи и контактные данные (если предоставлены добровольно),\n" +
+            "• технические данные использования (исключительно для обеспечения безопасности и стабильности),\n" +
+            "• платежные данные (через внешних поставщиков услуг),\n" +
+            "• содержание запросов и ответов (исключительно для технической обработки).\n\n" +
+            "Содержание запросов не используется для профилирования, рекламы или обучения.",
         },
         {
-          id: "purposes",
-          heading: "3. Цели и правовые основания",
+          id: "local_processing",
+          heading: "4. Локальная обработка",
           body:
-            "Мы используем ваши данные, в частности, для того чтобы:\n" +
-            "• предоставлять и поддерживать работу m-pathy,\n" +
-            "• обеспечивать безопасность и техническое обслуживание сервиса,\n" +
-            "• отвечать на запросы в поддержку,\n" +
-            "• выполнять законодательно установленные требования по хранению и документированию.\n\n" +
-            "Если применяется GDPR, правовыми основаниями являются, в частности, ст. 6 (1) (b) (договор), (c) (правовое обязательство) " +
-            "и (f) GDPR (законный интерес в безопасной и эффективной работе сервиса).",
+            "Содержание запросов обрабатывается локально либо временно и не сохраняется " +
+            "на серверах в идентифицируемой или восстанавливаемой форме.",
         },
         {
-          id: "processors",
-          heading: "4. Обработчики и получатели",
+          id: "archive",
+          heading: "5. Локальный архив и внедрение контекста",
           body:
-            "Мы используем тщательно отобранных поставщиков услуг для хостинга, инфраструктуры, аналитики без персональных профилей " +
-            "и обработки платежей (например, Stripe). Они связаны договорными обязательствами обрабатывать данные " +
-            "только по нашим инструкциям и в соответствии с действующим законодательством.",
+            "m-pathy позволяет пользователям сохранять выбранный контент локально в архиве.\n\n" +
+            "Заархивированные элементы могут быть сознательно выбраны пользователем и добавлены в новый диалог.\n\n" +
+            "• исключительно локальное хранение,\n" +
+            "• осознанное действие пользователя,\n" +
+            "• полностью видимый внедряемый контекст,\n" +
+            "• отсутствие автоматической или скрытой памяти.",
         },
         {
-          id: "retention",
-          heading: "5. Срок хранения",
+          id: "verification",
+          heading: "6. Проверка и Triketon",
           body:
-            "Мы храним персональные данные только столько, сколько это необходимо для указанных целей или требуется законом. " +
-            "Журналы, как правило, хранятся лишь короткое техническое время. Данные, относящиеся к договору, " +
-            "могут сохраняться дольше для выполнения коммерческих и налоговых обязанностей по хранению.",
+            "При проверке контента (например, новостных материалов) m-pathy использует Triketon.\n\n" +
+            "• контент передается на сервер исключительно для целей проверки,\n" +
+            "• вычисляется криптографический хэш достоверности,\n" +
+            "• генерируется или связывается публичный ключ проверки,\n" +
+            "• исходный контент не сохраняется,\n" +
+            "• сохраняются только хэш, публичный ключ и минимальные технические метаданные.\n\n" +
+            "Восстановление исходного контента невозможно.",
         },
         {
-          id: "rights",
-          heading: "6. Ваши права",
+          id: "prompt_integrity",
+          heading: "7. Нормализация запросов и предотвращение дрейфа",
           body:
-            "При применении GDPR вы имеете, в частности, право на доступ к данным, их исправление, удаление, " +
-            "ограничение обработки, переносимость данных, а также право возражать против определённых видов обработки. " +
-            "Вы также имеете право подать жалобу в надзорный орган по защите данных.",
+            "Перед выполнением MAIOS 2.0 анализирует запросы на структурном уровне.\n\n" +
+            "Если запрос является неоднозначным, несогласованным или подверженным дрейфу, формулировка может быть скорректирована.\n\n" +
+            "• намерение пользователя сохраняется,\n" +
+            "• изменяются только структура и ясность с точки зрения безопасности,\n" +
+            "• запросы не сохраняются,\n" +
+            "• обучение или профилирование не осуществляется.",
         },
         {
-          id: "ai",
-          heading: "7. Использование сервисов ИИ",
+          id: "devices",
+          heading: "8. Локальное хранилище и устройства",
           body:
-            "m-pathy использует модели искусственного интеллекта, которые обрабатывают отправляемые вами запросы. " +
-            "Мы принимаем технические и организационные меры для защиты ваших данных, однако ни одна система не может быть абсолютно безопасной. " +
-            "По возможности избегайте ввода особо конфиденциальной информации, которую вы не хотели бы выводить за пределы своего устройства.",
+            "Весь контент, созданный пользователем, хранится исключительно в локальном хранилище используемого устройства.\n\n" +
+            "• локальное хранилище сохраняется до его удаления пользователем,\n" +
+            "• удаление приводит к безвозвратной потере данных,\n" +
+            "• серверные резервные копии отсутствуют.\n\n" +
+            "Каждому устройству присваивается отдельный публичный ключ. Данные строго изолированы по устройствам.",
         },
       ],
       disclaimer:
-        "Настоящая политика конфиденциальности является упрощённым резюме и не заменяет полноценную юридическую оценку вашей конкретной ситуации.",
+        "Настоящая политика конфиденциальности предоставлена в целях прозрачности и не заменяет индивидуальную юридическую консультацию.",
     },
 
+    // ------------------------- УСЛОВИЯ ----------------------------
     terms: {
       slug: "terms",
       title: "Условия использования",
       intro:
-        "Настоящие условия регулируют порядок использования сервиса m-pathy. Используя сервис, вы соглашаетесь с ними.",
-      last_updated: "Последнее обновление: 18 ноября 2025 г.",
+        "Настоящие условия использования регулируют доступ к m-pathy и его использование. Используя сервис, пользователь соглашается с ними.",
+      last_updated: "Последнее обновление: 11 января 2026 г.",
       sections: [
         {
           id: "scope",
-          heading: "1. Объём сервиса",
+          heading: "1. Область применения сервиса",
           body:
-            "m-pathy — это экспериментальный ассистент на базе искусственного интеллекта. Это не человек-терапевт, " +
-            "не адвокат, не врач и не финансовый консультант. Сервис предназначен для творческой работы, рефлексии " +
-            "и технической поддержки.",
+            "m-pathy является экспериментальным ассистентом на базе ИИ и не заменяет консультации врача, юриста, терапевта или финансового консультанта.",
         },
         {
           id: "no_advice",
-          heading: "2. Отсутствие профессиональных консультаций",
+          heading: "2. Отсутствие профессиональных рекомендаций",
           body:
-            "Сгенерированный m-pathy контент нельзя использовать в качестве единственной основы для принятия медицинских, юридических, финансовых " +
-            "или иных решений с серьёзными последствиями. Во всех таких случаях обращайтесь к квалифицированным специалистам.",
+            "Контент, создаваемый m-pathy, не должен использоваться как единственная основа для медицинских, юридических, финансовых или иных решений с существенными последствиями.",
         },
         {
-          id: "account",
-          heading: "3. Аккаунт и токены",
+          id: "modes",
+          heading: "3. Управление посредством системных режимов",
           body:
-            "Доступ может ограничиваться по времени и/или по количеству доступных токенов. Вы несёте ответственность " +
-            "за конфиденциальность своих учётных данных и за все действия, совершаемые через ваш аккаунт.",
-        },
-        {
-          id: "acceptable_use",
-          heading: "4. Допустимое использование",
-          body:
-            "Запрещается использовать m-pathy для нарушения законодательства, причинения вреда другим лицам, " +
-            "создания противоправного контента или атак на системы. Мы вправе блокировать или ограничивать аккаунты, " +
-            "которые используют сервис ненадлежащим образом.",
-        },
-        {
-          id: "changes",
-          heading: "5. Изменения и доступность",
-          body:
-            "Мы можем в любое время адаптировать, расширять или ограничивать функциональность m-pathy, если это разумно для пользователей. " +
-            "Мы стремимся обеспечить высокую доступность сервиса, но не можем гарантировать его бесперебойную работу.",
+            "m-pathy использует внутренние системные режимы для самоуправления.\n\n" +
+            "Переключение режимов ограничено рамками сессии, является детерминированным и не представляет собой профилирование пользователя.",
         },
         {
           id: "liability",
-          heading: "6. Ограничение ответственности",
+          heading: "4. Ограничение ответственности",
           body:
-            "Мы несем ответственность в соответствии с применимым законодательством при умысле и грубой неосторожности. " +
-            "При лёгкой неосторожности наша ответственность ограничивается нарушением существенных договорных обязательств " +
-            "и типичным предсказуемым ущербом. Обязательная ответственность, например по закону о ответственности за качество продукции, остаётся в силе.",
+            "Ответственность регулируется применимым законодательством. Обязательные режимы ответственности остаются неизменными.",
         },
       ],
       disclaimer:
-        "Настоящие условия использования в упрощённой форме структурируют договорные отношения и не заменяют индивидуальную юридическую консультацию.",
+        "Настоящие условия структурируют договорные отношения и не заменяют юридическую консультацию.",
     },
 
+    // ------------------------- ВОЗВРАТ СРЕДСТВ --------------------
     refund: {
       slug: "refund",
       title: "Политика возврата средств",
       intro:
-        "В настоящее время m-pathy предлагает понятную модель разовой покупки доступа. Здесь объясняется, как мы относимся к платежам и возвратам.",
-      last_updated: "Последнее обновление: 18 ноября 2025 г.",
+        "Настоящая политика описывает порядок обработки платежей и возвратов в рамках m-pathy.",
+      last_updated: "Последнее обновление: 11 января 2026 г.",
       sections: [
         {
           id: "model",
-          heading: "1. Модель покупки",
+          heading: "1. Модель приобретения",
           body:
-            "На данный момент доступ к m-pathy предоставляется как разовая покупка на определённый период и/или с определённым пулом токенов. " +
-            "Автоматического продления подписки нет.",
-        },
-        {
-          id: "payment",
-          heading: "2. Обработка платежей",
-          body:
-            "Платежи обрабатываются посредством Stripe или аналогичных платёжных провайдеров. Дополнительно применяются их условия и меры безопасности.",
+            "Доступ к m-pathy предоставляется посредством разовой покупки на определенный период и/или с установленным объемом токенов.",
         },
         {
           id: "withdrawal",
-          heading: "3. Право на отзыв (отказ)",
+          heading: "2. Право на отказ",
           body:
-            "Если вы являетесь потребителем в Европейском союзе, у вас может быть установленное законом право на отзыв для цифровых услуг. " +
-            "При необходимости информация об этом праве предоставляется вам в процессе оформления заказа.",
+            "Применимые законные права на отказ от цифровых услуг действуют в случаях, предусмотренных законом.",
         },
         {
           id: "refunds",
-          heading: "4. Возвраты на практике",
+          heading: "3. Возвраты",
           body:
-            "Как правило, мы не осуществляем возврат средств после того, как доступ предоставлен и токены могут быть использованы, " +
-            "если только на это нет юридической обязанности или мы явно не пообещали возврат в конкретном случае.",
+            "Возврат средств осуществляется только при наличии законного обязательства либо при прямом обещании возврата.",
         },
       ],
       disclaimer:
-        "Данная политика возврата описывает нашу текущую практику и не ограничивает установленные законом права.",
+        "Настоящая политика не ограничивает императивные законные права.",
     },
 
+    // ------------------------- ЮРИДИЧЕСКАЯ ИНФОРМАЦИЯ -------------
     legal: {
       slug: "legal",
-      title: "Правовая информация",
+      title: "Юридическая информация",
       intro:
-        "На этой странице собрана основная правовая информация о сервисе m-pathy.",
-      last_updated: "Последнее обновление: 18 ноября 2025 г.",
+        "В данном разделе представлен обзор правовой базы, применимой к m-pathy.",
+      last_updated: "Последнее обновление: 11 января 2026 г.",
       sections: [
         {
-          id: "overview",
-          heading: "1. Обзор",
-          body:
-            "m-pathy управляется компанией NAAL UG (с ограниченной ответственностью), расположенной в Мюнхене, Германия. " +
-            "Сервис сочетает в себе современные модели ИИ с серьёзным вниманием к конфиденциальности, ясности и контролю со стороны пользователя.",
-        },
-        {
           id: "jurisdiction",
-          heading: "2. Применимое право и подсудность",
+          heading: "1. Применимое право и подсудность",
           body:
-            "Если иное не предусмотрено императивными нормами о защите прав потребителей, применяется немецкое право. " +
-            "Если вы выступаете в качестве предпринимателя по немецкому праву, исключительной подсудностью является Мюнхен.",
-        },
-        {
-          id: "online_dispute",
-          heading: "3. Внесудебное разрешение споров онлайн",
-          body:
-            "Европейская комиссия предоставляет платформу для онлайн-разрешения споров. " +
-            "Мы не обязаны и, как правило, не намерены участвовать в процедурах разрешения споров " +
-            "в органах по урегулированию потребительских споров.",
+            "Если иное не предусмотрено обязательными нормами защиты прав потребителей, применяется право Германии. " +
+            "Для коммерческих пользователей исключительной подсудностью является город Мюнхен.",
         },
       ],
       disclaimer:
-        "Эта страница предназначена для прозрачного обзора. В случае расхождений при необходимости приоритет может иметь немецкая версия.",
+        "Настоящая информация предоставлена в целях прозрачности. Императивные нормы права имеют приоритет.",
     },
   },
-zh: {
-  imprint: {
-    slug: "imprint",
-    title: "法律声明",
-    intro:
-      "本法律声明包含根据德国及部分欧洲法律对 m-pathy 所要求的提供者信息。",
-    last_updated: "最后更新：2025 年 11 月 18 日",
-    sections: [
-      {
-        id: "provider",
-        heading: "1. 提供者",
-        body:
-          "NAAL UG（有限责任公司）\n" +
-          "Maria-Theresia-Str. 11\n" +
-          "81675 Munich\n" +
-          "德国\n\n" +
-          "电子邮箱：support@m-pathy.ai",
-      },
-      {
-        id: "representative",
-        heading: "2. 法定代表人",
-        body: "管理董事：Alexander Khayat.",
-      },
-      {
-        id: "register",
-        heading: "3. 商业登记",
-        body:
-          "公司已在商业登记册中注册。登记法院和注册号将在最终提供后添加。",
-      },
-      {
-        id: "vat",
-        heading: "4. 增值税号",
-        body: "如分配增值税识别号，将在此处补充。",
-      },
-      {
-        id: "contact",
-        heading: "5. 联系方式",
-        body:
-          "目前联系 m-pathy 的最快方式是发送电子邮件至 support@m-pathy.ai。请勿通过电子邮件发送高度敏感的健康或支付数据。",
-      },
-    ],
-    disclaimer:
-      "本法律声明仅用于透明度目的，不构成个别法律建议。",
-  },
 
-  privacy: {
-    slug: "privacy",
-    title: "隐私政策",
-    intro:
-      "本隐私政策以简明方式说明我们在您使用 m-pathy 时如何处理个人数据。",
-    last_updated: "最后更新：2025 年 11 月 18 日",
-    sections: [
-      {
-        id: "controller",
-        heading: "1. 数据控制者",
-        body:
-          "与 m-pathy 相关的数据处理由以下主体负责：\n\n" +
-          "NAAL UG（有限责任公司）\n" +
-          "Maria-Theresia-Str. 11\n" +
-          "81675 Munich, Germany\n" +
-          "电子邮箱：support@m-pathy.ai",
-      },
-      {
-        id: "data_categories",
-        heading: "2. 数据类别",
-        body:
-          "我们在必要范围内处理以下数据类别：\n" +
-          "• 网站使用数据与日志数据\n" +
-          "• 您主动提供的账户和联系信息\n" +
-          "• 您发送给系统的提示与回答内容\n" +
-          "• 技术元数据，如时间、浏览器类型、设备基础信息",
-      },
-      {
-        id: "purposes",
-        heading: "3. 目的与法律依据",
-        body:
-          "我们使用您的数据主要用于：\n" +
-          "• 提供和运营 m-pathy，\n" +
-          "• 确保服务安全及技术维护，\n" +
-          "• 回答支持请求，\n" +
-          "• 遵守法律规定的保存与记录义务。\n\n" +
-          "在 GDPR 适用范围内，法律依据包括第 6 条第 1 款 (b)（合同）、(c)（法律义务）和 (f)（合法利益）。",
-      },
-      {
-        id: "processors",
-        heading: "4. 处理者与接收方",
-        body:
-          "我们使用经过严格筛选的服务提供商进行托管、基础设施、无用户画像的分析以及支付处理（例如 Stripe）。这些提供商均受合同约束，仅按我们的指示并遵守适用法律处理数据。",
-      },
-      {
-        id: "retention",
-        heading: "5. 保存期限",
-        body:
-          "我们仅在实现上述目的或法律要求的期限内保存个人数据。日志数据通常仅保存很短的技术时间。合同相关数据可能因商业和税务要求保存更久。",
-      },
-      {
-        id: "rights",
-        heading: "6. 您的权利",
-        body:
-          "在 GDPR 适用范围内，您享有访问、更正、删除、限制处理、数据可携带性及反对特定处理的权利。您亦可向数据保护监管机构提出投诉。",
-      },
-      {
-        id: "ai",
-        heading: "7. 人工智能服务的使用",
-        body:
-          "m-pathy 使用处理您提示的人工智能模型。我们采取技术和组织措施保护您的数据，但任何系统都无法绝对安全。请避免输入您不希望离开设备的高度敏感内容。",
-      },
-    ],
-    disclaimer:
-      "本隐私政策为简化摘要，不替代对您具体情况的完整法律审查。",
-  },
+  // ================================================================
+  // 中文（简体）
+  // ================================================================
+  zh: {
+    // ------------------------- 法律声明 ---------------------------
+    imprint: {
+      slug: "imprint",
+      title: "法律声明",
+      intro:
+        "本法律声明包含根据德国法律及在适用情况下根据欧洲法律对 m-pathy 所要求披露的提供方信息。",
+      last_updated: "最后更新：2026年1月11日",
+      sections: [
+        {
+          id: "provider",
+          heading: "1. 提供方",
+          body:
+            "NAAL UG（有限责任公司）\n" +
+            "Maria-Theresia-Str. 11\n" +
+            "81675 慕尼黑\n" +
+            "德国\n\n" +
+            "电子邮件：support@m-pathy.ai",
+        },
+        {
+          id: "representative",
+          heading: "2. 管理层",
+          body: "执行董事：Alexander Khayat。",
+        },
+        {
+          id: "register",
+          heading: "3. 商业登记",
+          body:
+            "NAAL UG（有限责任公司）已在慕尼黑地方法院（Amtsgericht München）商业登记册中注册，注册号为 HRB 288710。",
+        },
+        {
+          id: "vat",
+          heading: "4. 增值税识别号",
+          body: "xe",
+        },
+        {
+          id: "contact",
+          heading: "5. 联系方式",
+          body:
+            "目前联系 m-pathy 的最快方式是通过电子邮件 support@m-pathy.ai。 " +
+            "请勿通过电子邮件发送敏感信息，尤其是健康数据或支付数据。",
+        },
+      ],
+      disclaimer:
+        "本法律声明仅用于信息披露，不构成或替代个别法律咨询。",
+    },
 
-  terms: {
-    slug: "terms",
-    title: "使用条款",
-    intro:
-      "本使用条款规定您如何使用 m-pathy。使用本服务即表示您接受这些条款。",
-    last_updated: "最后更新：2025 年 11 月 18 日",
-    sections: [
-      {
-        id: "scope",
-        heading: "1. 服务范围",
-        body:
-          "m-pathy 是一个基于 AI 的实验性助手。它不是人类治疗师、律师、医生或财务顾问。该服务用于创意工作、反思和技术协助。",
-      },
-      {
-        id: "no_advice",
-        heading: "2. 无专业建议",
-        body:
-          "m-pathy 生成的内容不得作为医学、法律、财务或其他重大决策的唯一依据。请始终咨询专业人士。",
-      },
-      {
-        id: "account",
-        heading: "3. 账户与 Token",
-        body:
-          "访问可能受期限或 Token 数量限制。您需负责保护自己的账户凭证及账户内的所有活动。",
-      },
-      {
-        id: "acceptable_use",
-        heading: "4. 可接受使用",
-        body:
-          "禁止使用 m-pathy 违反法律、伤害他人、生成违法内容或攻击系统。我们可限制或封禁滥用账户。",
-      },
-      {
-        id: "changes",
-        heading: "5. 变更与可用性",
-        body:
-          "我们可随时调整服务的功能，只要对用户合理。我们努力保持高可用性，但不保证不间断运行。",
-      },
-      {
-        id: "liability",
-        heading: "6. 责任限制",
-        body:
-          "我们对故意或重大过失承担责任。轻微过失仅在违反核心义务时承担，并限于典型可预见损害。强制性责任（如产品责任）不受影响。",
-      },
-    ],
-    disclaimer:
-      "本使用条款为结构化摘要，不替代个别法律建议。",
-  },
+    // ------------------------- 隐私政策 ---------------------------
+    privacy: {
+      slug: "privacy",
+      title: "隐私政策",
+      intro:
+        "本隐私政策以清晰易懂的方式说明在使用 m-pathy 过程中个人数据如何被处理。",
+      last_updated: "最后更新：2026年1月11日",
+      sections: [
+        {
+          id: "controller",
+          heading: "1. 数据处理负责人",
+          body:
+            "与 m-pathy 相关的数据处理负责人为：\n\n" +
+            "NAAL UG（有限责任公司）\n" +
+            "Maria-Theresia-Str. 11\n" +
+            "81675 慕尼黑\n" +
+            "德国\n" +
+            "电子邮件：support@m-pathy.ai",
+        },
+        {
+          id: "principles",
+          heading: "2. 隐私设计与默认保护",
+          body:
+            "m-pathy 贯彻“隐私设计（Privacy by Design）”和“隐私默认（Privacy by Default）”原则。\n\n" +
+            "• 仅在必要时处理数据\n" +
+            "• 将处理范围和持续时间降至最低\n" +
+            "• 不创建隐含的用户画像\n\n" +
+            "隐私保护作为系统架构的组成部分被强制执行。",
+        },
+        {
+          id: "data_categories",
+          heading: "3. 数据类别",
+          body:
+            "根据使用情况，可能涉及以下数据类别：\n" +
+            "• 账户和联系方式数据（仅在用户主动提供时），\n" +
+            "• 技术使用数据（仅用于安全与稳定性），\n" +
+            "• 支付数据（通过外部服务提供商处理），\n" +
+            "• 提示词与回复内容（仅用于技术处理）。\n\n" +
+            "提示词内容不用于用户画像、广告或模型训练。",
+        },
+        {
+          id: "local_processing",
+          heading: "4. 本地处理",
+          body:
+            "提示词内容在本地或短暂处理过程中使用，不会以可识别或可重建的形式永久存储在服务器上。",
+        },
+        {
+          id: "archive",
+          heading: "5. 本地归档与上下文注入",
+          body:
+            "m-pathy 允许用户将选定内容本地存储于归档中。\n\n" +
+            "归档内容仅在用户明确选择的情况下，才可被注入到新的对话中。\n\n" +
+            "• 仅限本地存储，\n" +
+            "• 需用户主动操作，\n" +
+            "• 注入内容完全可见，\n" +
+            "• 不存在自动或隐式记忆。",
+        },
+        {
+          id: "verification",
+          heading: "6. 验证与 Triketon",
+          body:
+            "在验证内容（例如新闻文章）时，m-pathy 使用 Triketon 机制。\n\n" +
+            "• 内容仅为验证目的传输至服务器，\n" +
+            "• 计算加密的真实性哈希值，\n" +
+            "• 生成或关联一个公共验证密钥，\n" +
+            "• 原始内容不会被存储，\n" +
+            "• 仅保留哈希值、公钥及最少的技术元数据。\n\n" +
+            "无法通过所存储的数据还原原始内容。",
+        },
+        {
+          id: "prompt_integrity",
+          heading: "7. 提示词规范化与漂移防护",
+          body:
+            "在执行前，MAIOS 2.0 会对提示词进行结构性分析。\n\n" +
+            "若提示词存在歧义、不一致或潜在漂移风险，系统可能对其表达进行重构。\n\n" +
+            "• 用户意图保持不变，\n" +
+            "• 仅调整结构与安全清晰度，\n" +
+            "• 不存储提示词，\n" +
+            "• 不进行学习或用户画像。",
+        },
+        {
+          id: "devices",
+          heading: "8. 本地存储与设备隔离",
+          body:
+            "所有用户生成内容仅存储于所使用设备的本地存储中。\n\n" +
+            "• 本地存储在用户未删除前持续存在，\n" +
+            "• 删除将导致数据不可恢复，\n" +
+            "• 不存在服务器端备份。\n\n" +
+            "每个设备都会获得一个独立的公钥，数据严格按设备隔离。",
+        },
+      ],
+      disclaimer:
+        "本隐私政策用于信息透明披露，不构成或替代个别法律咨询。",
+    },
 
-  refund: {
-    slug: "refund",
-    title: "退款政策",
-    intro:
-      "m-pathy 目前提供一次性购买的访问模式。本政策说明我们如何处理付款与退款。",
-    last_updated: "最后更新：2025 年 11 月 18 日",
-    sections: [
-      {
-        id: "model",
-        heading: "1. 购买模式",
-        body:
-          "当前 m-pathy 的访问权限以一次性购买形式授予，包含特定期限和/或 Token 配额。无自动订阅续期。",
-      },
-      {
-        id: "payment",
-        heading: "2. 支付处理",
-        body:
-          "支付通过 Stripe 或类似提供商处理，其条款与安全措施同时适用。",
-      },
-      {
-        id: "withdrawal",
-        heading: "3. 撤销权",
-        body:
-          "若您是欧盟消费者，可能享有数字服务的法定撤销权。在结账过程中将向您提示相关信息。",
-      },
-      {
-        id: "refunds",
-        heading: "4. 实际退款",
-        body:
-          "除法律义务或特殊承诺外，一旦访问权限启用且可使用 Token，我们通常不提供退款。",
-      },
-    ],
-    disclaimer:
-      "本退款政策为当前实践总结，不限制强制性法定权利。",
-  },
+    // ------------------------- 使用条款 ---------------------------
+    terms: {
+      slug: "terms",
+      title: "使用条款",
+      intro:
+        "本使用条款规范对 m-pathy 的访问和使用。使用本服务即表示您同意这些条款。",
+      last_updated: "最后更新：2026年1月11日",
+      sections: [
+        {
+          id: "scope",
+          heading: "1. 服务范围",
+          body:
+            "m-pathy 是一款实验性人工智能助手，并不替代人类治疗师、律师、医生或财务顾问。",
+        },
+        {
+          id: "no_advice",
+          heading: "2. 非专业建议",
+          body:
+            "m-pathy 生成的内容不得作为医疗、法律、财务或其他具有重大后果决策的唯一依据。",
+        },
+        {
+          id: "modes",
+          heading: "3. 系统模式治理",
+          body:
+            "m-pathy 使用内部系统模式进行自我治理。\n\n" +
+            "模式切换仅限于当前会话，具有确定性，不构成用户画像。",
+        },
+        {
+          id: "liability",
+          heading: "4. 责任限制",
+          body:
+            "责任范围依据适用法律确定。强制性责任规定不受影响。",
+        },
+      ],
+      disclaimer:
+        "本条款用于规范合同关系，不替代法律咨询。",
+    },
 
-  legal: {
-    slug: "legal",
-    title: "法律信息",
-    intro:
-      "此页面汇总 m-pathy 的主要法律信息。",
-    last_updated: "最后更新：2025 年 11 月 18 日",
-    sections: [
-      {
-        id: "overview",
-        heading: "1. 概览",
-        body:
-          "m-pathy 由位于德国慕尼黑的 NAAL UG 运营。服务结合先进 AI 模型，重视隐私、透明度和用户控制。",
-      },
-      {
-        id: "jurisdiction",
-        heading: "2. 适用法律与管辖地",
-        body:
-          "除消费者保护的强制规定外，适用德国法律。如您为德国法意义上的商人，专属管辖地为慕尼黑。",
-      },
-      {
-        id: "online_dispute",
-        heading: "3. 在线争议解决",
-        body:
-          "欧洲委员会提供在线争议解决平台。我们通常不参与其流程。",
-      },
-    ],
-    disclaimer:
-      "本页面仅提供透明概览，如有冲突，法律要求时以德文版为准。",
-  },
+    // ------------------------- 退款政策 ---------------------------
+    refund: {
+      slug: "refund",
+      title: "退款政策",
+      intro:
+        "本政策说明 m-pathy 中付款和退款的处理方式。",
+      last_updated: "最后更新：2026年1月11日",
+      sections: [
+        {
+          id: "model",
+          heading: "1. 购买模式",
+          body:
+            "m-pathy 的访问权限通过一次性购买获得，适用于限定期限和/或固定数量的代币。",
+        },
+        {
+          id: "withdrawal",
+          heading: "2. 撤销权",
+          body:
+            "如法律要求，适用于数字服务的法定撤销权将得到保障。",
+        },
+        {
+          id: "refunds",
+          heading: "3. 退款",
+          body:
+            "仅在存在法律义务或明确承诺的情况下提供退款。",
+        },
+      ],
+      disclaimer:
+        "本政策不限制任何强制性的法定权利。",
+    },
+
+    // ------------------------- 法律信息 ---------------------------
+    legal: {
+      slug: "legal",
+      title: "法律信息",
+      intro:
+        "本部分概述适用于 m-pathy 的法律框架。",
+      last_updated: "最后更新：2026年1月11日",
+      sections: [
+        {
+          id: "jurisdiction",
+          heading: "1. 适用法律与管辖权",
+          body:
+            "除非消费者保护的强制性规定另有要求，否则适用德国法律。 " +
+            "对于商业用户，慕尼黑为专属管辖地。",
+        },
+      ],
+      disclaimer:
+        "本信息用于透明披露。强制性法律优先适用。",
+    },
+
 },
 
-ja: {
-  imprint: {
-    slug: "imprint",
-    title: "法律情報",
-    intro:
-      "本ページには、ドイツ法および一部の欧州法に基づき m-pathy に必要とされる提供者情報が記載されています。",
-    last_updated: "最終更新日：2025年11月18日",
-    sections: [
-      {
-        id: "provider",
-        heading: "1. 提供者",
-        body:
-          "NAAL UG（有限責任会社）\n" +
-          "Maria-Theresia-Str. 11\n" +
-          "81675 Munich\n" +
-          "ドイツ\n\n" +
-          "E-mail：support@m-pathy.ai",
-      },
-      {
-        id: "representative",
-        heading: "2. 法定代理人",
-        body: "代表取締役：Alexander Khayat.",
-      },
-      {
-        id: "register",
-        heading: "3. 商業登記",
-        body:
-          "当社は商業登記簿に登録されています。登記裁判所および登録番号は、正式に利用可能になり次第追記されます。",
-      },
-      {
-        id: "vat",
-        heading: "4. VAT番号",
-        body: "VAT（付加価値税）識別番号が付与された場合、ここに記載されます。",
-      },
-      {
-        id: "contact",
-        heading: "5. お問い合わせ",
-        body:
-          "現在、m-pathy に関するお問い合わせは support@m-pathy.ai へのメールが最も迅速です。高度な機微情報（健康・支払い等）はメールで送信しないでください。",
-      },
-    ],
-    disclaimer:
-      "本法律情報は透明性のためのものであり、個別の法的助言に代わるものではありません。",
-  },
+  // ================================================================
+  // 日本語
+  // ================================================================
+  ja: {
+    // ------------------------- 法的表示 ---------------------------
+    imprint: {
+      slug: "imprint",
+      title: "法的表示",
+      intro:
+        "本法的表示は、ドイツ法および適用される場合には欧州法に基づき、m-pathy に求められる提供者情報を記載しています。",
+      last_updated: "最終更新日：2026年1月11日",
+      sections: [
+        {
+          id: "provider",
+          heading: "1. 提供者",
+          body:
+            "NAAL UG（有限責任会社）\n" +
+            "Maria-Theresia-Str. 11\n" +
+            "81675 ミュンヘン\n" +
+            "ドイツ\n\n" +
+            "Eメール：support@m-pathy.ai",
+        },
+        {
+          id: "representative",
+          heading: "2. 代表者",
+          body: "代表取締役：Alexander Khayat。",
+        },
+        {
+          id: "register",
+          heading: "3. 商業登記",
+          body:
+            "NAAL UG（有限責任会社）は、ミュンヘン地方裁判所（Amtsgericht München）の商業登記簿に HRB 288710 として登録されています。",
+        },
+        {
+          id: "vat",
+          heading: "4. 付加価値税識別番号",
+          body: "xe",
+        },
+        {
+          id: "contact",
+          heading: "5. 連絡先",
+          body:
+            "現在、m-pathy への最も迅速な連絡方法は support@m-pathy.ai 宛のEメールです。 " +
+            "健康情報や支払情報などの機微なデータは、Eメールで送信しないでください。",
+        },
+      ],
+      disclaimer:
+        "本法的表示は情報提供を目的とするものであり、個別の法的助言に代わるものではありません。",
+    },
 
-  privacy: {
-    slug: "privacy",
-    title: "プライバシーポリシー",
-    intro:
-      "本プライバシーポリシーでは、m-pathy 利用時の個人データの取り扱いについて、分かりやすく説明します。",
-    last_updated: "最終更新日：2025年11月18日",
-    sections: [
-      {
-        id: "controller",
-        heading: "1. データ管理者",
-        body:
-          "m-pathy に関連するデータ処理の管理者は以下の通りです：\n\n" +
-          "NAAL UG（有限責任会社）\n" +
-          "Maria-Theresia-Str. 11\n" +
-          "81675 Munich, Germany\n" +
-          "E-mail：support@m-pathy.ai",
-      },
-      {
-        id: "data_categories",
-        heading: "2. データの種類",
-        body:
-          "当社が必要に応じて処理する主なデータカテゴリ：\n" +
-          "• ウェブサイトの利用データおよびログデータ\n" +
-          "• ユーザーが自ら提供するアカウント・連絡先情報\n" +
-          "• システムへ送信されるプロンプトおよび回答内容\n" +
-          "• 時刻、ブラウザ種類、基本デバイス情報などの技術メタデータ",
-      },
-      {
-        id: "purposes",
-        heading: "3. 目的と法的根拠",
-        body:
-          "当社は以下の目的でデータを使用します：\n" +
-          "• m-pathy の提供・運用\n" +
-          "• サービスの安全性確保および技術的維持\n" +
-          "• サポートリクエストへの対応\n" +
-          "• 法的に求められる保存・記録義務の遵守\n\n" +
-          "GDPR が適用される場合、主な法的根拠は Art.6(1)(b)（契約）、(c)（法的義務）、(f)（正当な利益）です。",
-      },
-      {
-        id: "processors",
-        heading: "4. 処理者および受領者",
-        body:
-          "当社は、ホスティング、インフラ、プロファイル非作成型アナリティクス、決済処理（例：Stripe）のために慎重に選定したサービスプロバイダを利用します。これらのプロバイダは契約上、当社の指示および適用法に従ってのみデータを処理します。",
-      },
-      {
-        id: "retention",
-        heading: "5. 保管期間",
-        body:
-          "個人データは、上記目的のために必要な期間または法的に要求される期間のみ保管します。ログデータは通常、短期間の技術的保存に限られます。契約関連データは、商取引・税務上の理由でより長く保管されることがあります。",
-      },
-      {
-        id: "rights",
-        heading: "6. 利用者の権利",
-        body:
-          "GDPR が適用される場合、利用者はアクセス権、訂正権、削除権、処理制限、データ可搬性、特定処理への異議申立て権などを有します。また、監督機関へ苦情を申し立てる権利もあります。",
-      },
-      {
-        id: "ai",
-        heading: "7. AI サービスの利用",
-        body:
-          "m-pathy は、利用者が送信したプロンプトを処理する AI モデルを使用します。当社はデータ保護のための技術的・組織的措置を講じますが、完全な安全性を保証できるシステムは存在しません。デバイスから出したくない機微情報の入力は避けてください。",
-      },
-    ],
-    disclaimer:
-      "本プライバシーポリシーは簡易的な概要であり、個別事情に対する法的検討を代替するものではありません。",
-  },
+    // ------------------------- プライバシー -----------------------
+    privacy: {
+      slug: "privacy",
+      title: "プライバシーポリシー",
+      intro:
+        "本プライバシーポリシーは、m-pathy の利用に際して個人データがどのように取り扱われるかを分かりやすく説明します。",
+      last_updated: "最終更新日：2026年1月11日",
+      sections: [
+        {
+          id: "controller",
+          heading: "1. データ管理者",
+          body:
+            "m-pathy に関連するデータ処理の管理者は以下のとおりです。\n\n" +
+            "NAAL UG（有限責任会社）\n" +
+            "Maria-Theresia-Str. 11\n" +
+            "81675 ミュンヘン\n" +
+            "ドイツ\n" +
+            "Eメール：support@m-pathy.ai",
+        },
+        {
+          id: "principles",
+          heading: "2. プライバシー・バイ・デザインおよびデフォルト",
+          body:
+            "m-pathy は Privacy by Design および Privacy by Default の原則を採用しています。\n\n" +
+            "• 必要な場合にのみデータを処理します\n" +
+            "• 処理範囲および期間を最小限に抑えます\n" +
+            "• 暗黙的なユーザープロファイルは作成しません\n\n" +
+            "プライバシー保護はシステム設計に組み込まれています。",
+        },
+        {
+          id: "data_categories",
+          heading: "3. データの種類",
+          body:
+            "利用状況に応じて、以下のデータが関与する場合があります。\n" +
+            "• アカウントおよび連絡先情報（ユーザーが自主的に提供した場合）\n" +
+            "• 技術的利用データ（安全性および安定性のためのみ）\n" +
+            "• 支払データ（外部決済事業者を通じて処理）\n" +
+            "• プロンプトおよび応答内容（技術的処理のみ）\n\n" +
+            "プロンプト内容は、プロファイリング、広告、学習目的には使用されません。",
+        },
+        {
+          id: "local_processing",
+          heading: "4. ローカル処理",
+          body:
+            "プロンプト内容はローカルまたは一時的に処理され、識別可能または再構築可能な形でサーバーに恒久的に保存されることはありません。",
+        },
+        {
+          id: "archive",
+          heading: "5. ローカルアーカイブとコンテキスト注入",
+          body:
+            "m-pathy は、選択したコンテンツをローカルにアーカイブとして保存することを可能にします。\n\n" +
+            "アーカイブされた項目は、ユーザーが明示的に選択した場合にのみ、新しいチャットへ注入されます。\n\n" +
+            "• 完全にローカル保存\n" +
+            "• ユーザーによる明示的操作\n" +
+            "• 注入されたコンテキストは完全に可視\n" +
+            "• 自動的または暗黙的なメモリは存在しません。",
+        },
+        {
+          id: "verification",
+          heading: "6. 検証および Triketon",
+          body:
+            "ニュース記事などのコンテンツを検証する際、m-pathy は Triketon を使用します。\n\n" +
+            "• 検証目的のみにコンテンツがサーバーへ送信されます\n" +
+            "• 暗号学的な真実性ハッシュが計算されます\n" +
+            "• 公開検証キーが生成または関連付けられます\n" +
+            "• 元のコンテンツは保存されません\n" +
+            "• ハッシュ、公開キー、最小限の技術的メタデータのみが保持されます\n\n" +
+            "保存された情報から元の内容を復元することはできません。",
+        },
+        {
+          id: "prompt_integrity",
+          heading: "7. プロンプト正規化とドリフト防止",
+          body:
+            "実行前に、MAIOS 2.0 はプロンプトを構造的に分析します。\n\n" +
+            "曖昧、不整合、またはドリフトの恐れがある場合、表現が再構成されることがあります。\n\n" +
+            "• ユーザーの意図は保持されます\n" +
+            "• 構造と安全性の明確化のみが調整されます\n" +
+            "• プロンプトは保存されません\n" +
+            "• 学習やプロファイリングは行われません。",
+        },
+        {
+          id: "devices",
+          heading: "8. ローカル保存とデバイス",
+          body:
+            "ユーザーが生成したすべてのコンテンツは、使用中のデバイスのローカルストレージにのみ保存されます。\n\n" +
+            "• ローカルストレージはユーザーが削除するまで保持されます\n" +
+            "• 削除するとデータは復元できません\n" +
+            "• サーバー側のバックアップは存在しません\n\n" +
+            "各デバイスには固有の公開キーが割り当てられ、データはデバイス単位で厳密に分離されます。",
+        },
+      ],
+      disclaimer:
+        "本プライバシーポリシーは透明性確保を目的とするものであり、個別の法的助言に代わるものではありません。",
+    },
 
-  terms: {
-    slug: "terms",
-    title: "利用規約",
-    intro:
-      "本利用規約は、m-pathy の使用方法を定めるものです。本サービスの利用により、利用規約に同意したものとみなします。",
-    last_updated: "最終更新日：2025年11月18日",
-    sections: [
-      {
-        id: "scope",
-        heading: "1. サービス範囲",
-        body:
-          "m-pathy は AI ベースの実験的アシスタントです。人間の治療者、弁護士、医師、金融アドバイザーではありません。サービスは創造的作業、内省、技術的支援を目的としています。",
-      },
-      {
-        id: "no_advice",
-        heading: "2. 専門的助言ではありません",
-        body:
-          "m-pathy が生成する内容を、重大な影響を持つ医療・法律・金融その他の意思決定の唯一の根拠として使用してはいけません。専門家に相談してください。",
-      },
-      {
-        id: "account",
-        heading: "3. アカウントとトークン",
-        body:
-          "アクセスは期間やトークン数により制限される場合があります。利用者は自身の認証情報およびアカウント内の全活動に責任を負います。",
-      },
-      {
-        id: "acceptable_use",
-        heading: "4. 許容される利用",
-        body:
-          "m-pathy を違法行為、他者への害、違法コンテンツ生成、システム攻撃に利用することは禁止されています。乱用があればアカウントの制限や停止が行われます。",
-      },
-      {
-        id: "changes",
-        heading: "5. 変更と可用性",
-        body:
-          "当社は、ユーザーにとって合理的な範囲で、m-pathy の機能を随時変更・拡張・制限する場合があります。高い可用性を目指しますが、無停止運用を保証するものではありません。",
-      },
-      {
-        id: "liability",
-        heading: "6. 責任の制限",
-        body:
-          "当社は、故意または重大な過失に対して法に従って責任を負います。軽過失の場合、重要な契約義務違反に限り、典型的かつ予見可能な損害に対して責任を負います。強制的な責任（例：製造物責任法）は影響を受けません。",
-      },
-    ],
-    disclaimer:
-      "本利用規約は契約関係を簡易に構造化したものであり、個別の法的助言に代わるものではありません。",
-  },
+    // ------------------------- 利用規約 ---------------------------
+    terms: {
+      slug: "terms",
+      title: "利用規約",
+      intro:
+        "本利用規約は、m-pathy へのアクセスおよび利用条件を定めるものです。本サービスを利用することで、これらの条件に同意したものとみなされます。",
+      last_updated: "最終更新日：2026年1月11日",
+      sections: [
+        {
+          id: "scope",
+          heading: "1. サービスの範囲",
+          body:
+            "m-pathy は実験的なAIアシスタントであり、人間の治療者、弁護士、医師、または金融アドバイザーに代わるものではありません。",
+        },
+        {
+          id: "no_advice",
+          heading: "2. 専門的助言ではありません",
+          body:
+            "m-pathy が生成する内容は、医療、法律、金融、その他重大な結果を伴う判断の唯一の根拠として使用してはなりません。",
+        },
+        {
+          id: "modes",
+          heading: "3. システムモードによるガバナンス",
+          body:
+            "m-pathy は自己制御のために内部システムモードを使用します。\n\n" +
+            "モードの切り替えはセッション内に限定され、決定論的であり、ユーザープロファイリングには該当しません。",
+        },
+        {
+          id: "liability",
+          heading: "4. 責任の制限",
+          body:
+            "責任は適用法令に基づいて定められます。強行規定による責任は影響を受けません。",
+        },
+      ],
+      disclaimer:
+        "本規約は契約関係を整理するためのものであり、法的助言に代わるものではありません。",
+    },
 
-  refund: {
-    slug: "refund",
-    title: "返金ポリシー",
-    intro:
-      "m-pathy は現在、明確な単回購入モデルを採用しています。本ポリシーでは支払いおよび返金の取扱いを説明します。",
-    last_updated: "最終更新日：2025年11月18日",
-    sections: [
-      {
-        id: "model",
-        heading: "1. 購入モデル",
-        body:
-          "現在、m-pathy のアクセス権は特定期間および/またはトークン枠を含む単回購入として付与されます。自動更新サブスクリプションはありません。",
-      },
-      {
-        id: "payment",
-        heading: "2. 支払い処理",
-        body:
-          "支払いは Stripe などの決済サービスを通じて行われます。追加で各サービスの条件と安全対策が適用されます。",
-      },
-      {
-        id: "withdrawal",
-        heading: "3. 撤回権",
-        body:
-          "EU の消費者にはデジタルサービスに関する法的撤回権が認められる場合があります。該当する場合、購入手続き中に説明が行われます。",
-      },
-      {
-        id: "refunds",
-        heading: "4. 実際の返金",
-        body:
-          "アクセス権が付与されトークンが利用可能となった後は、法律上の義務や個別の明示的約束がある場合を除き、返金は原則行いません。",
-      },
-    ],
-    disclaimer:
-      "本返金ポリシーは現在の運用の概要であり、強行法による権利を制限するものではありません。",
-  },
+    // ------------------------- 返金 -------------------------------
+    refund: {
+      slug: "refund",
+      title: "返金ポリシー",
+      intro:
+        "本ポリシーは、m-pathy における支払いおよび返金の取り扱いについて説明します。",
+      last_updated: "最終更新日：2026年1月11日",
+      sections: [
+        {
+          id: "model",
+          heading: "1. 購入モデル",
+          body:
+            "m-pathy へのアクセスは、一定期間および／または定められたトークン数に対する一回限りの購入により提供されます。",
+        },
+        {
+          id: "withdrawal",
+          heading: "2. 取消権",
+          body:
+            "デジタルサービスに関する法定の取消権は、法律で要求される場合に適用されます。",
+        },
+        {
+          id: "refunds",
+          heading: "3. 返金",
+          body:
+            "返金は、法的義務がある場合、または明示的に約束された場合にのみ行われます。",
+        },
+      ],
+      disclaimer:
+        "本ポリシーはいかなる強行的な法的権利も制限するものではありません。",
+    },
 
-  legal: {
-    slug: "legal",
-    title: "法的情報",
-    intro:
-      "本ページでは m-pathy に関する主要な法的情報をまとめています。",
-    last_updated: "最終更新日：2025年11月18日",
-    sections: [
-      {
-        id: "overview",
-        heading: "1. 概要",
-        body:
-          "m-pathy は、ドイツ・ミュンヘンに所在する NAAL UG（有限責任会社）により運営されています。サービスは高度な AI モデルと、プライバシー・透明性・利用者のコントロールを重視した設計を組み合わせています。",
-      },
-      {
-        id: "jurisdiction",
-        heading: "2. 適用法および管轄",
-        body:
-          "消費者保護法により別段の定めがある場合を除き、適用法はドイツ法となります。ドイツ法上の商業者として行動する場合、専属管轄はミュンヘンです。",
-      },
-      {
-        id: "online_dispute",
-        heading: "3. オンライン紛争解決",
-        body:
-          "欧州委員会はオンライン紛争解決プラットフォームを提供しています。当社はこの手続きに通常参加しません。",
-      },
-    ],
-    disclaimer:
-      "本ページは透明性のための概要です。法的要件により必要な場合は、ドイツ語版が優先されることがあります。",
-  },
+    // ------------------------- 法律情報 ---------------------------
+    legal: {
+      slug: "legal",
+      title: "法律情報",
+      intro:
+        "本セクションは、m-pathy に適用される法的枠組みの概要を示します。",
+      last_updated: "最終更新日：2026年1月11日",
+      sections: [
+        {
+          id: "jurisdiction",
+          heading: "1. 準拠法および管轄",
+          body:
+            "消費者保護に関する強行規定が別途定める場合を除き、ドイツ法が適用されます。 " +
+            "事業者に対しては、ミュンヘンが専属管轄となります。",
+        },
+      ],
+      disclaimer:
+        "本情報は透明性確保のために提供されます。強行法規が優先されます。",
+    },
 },
-ko: {
-  imprint: {
-    slug: "imprint",
-    title: "법적 고지",
-    intro:
-      "본 법적 고지에는 독일 및 일부 유럽 법률에 따라 m-pathy에 요구되는 제공자 정보가 포함되어 있습니다.",
-    last_updated: "최종 업데이트: 2025년 11월 18일",
-    sections: [
-      {
-        id: "provider",
-        heading: "1. 제공자",
-        body:
-          "NAAL UG (유한책임회사)\n" +
-          "Maria-Theresia-Str. 11\n" +
-          "81675 Munich\n" +
-          "독일\n\n" +
-          "E-mail: support@m-pathy.ai",
-      },
-      {
-        id: "representative",
-        heading: "2. 법적 대표자",
-        body: "관리이사: Alexander Khayat.",
-      },
-      {
-        id: "register",
-        heading: "3. 상업 등기",
-        body:
-          "이 회사는 상업 등기부에 등록되어 있습니다. 관할 법원과 등기 번호는 공식적으로 제공되는 즉시 추가됩니다.",
-      },
-      {
-        id: "vat",
-        heading: "4. VAT 번호",
-        body: "VAT 식별 번호가 발급되는 경우, 여기에 기재됩니다.",
-      },
-      {
-        id: "contact",
-        heading: "5. 문의",
-        body:
-          "현재 m-pathy 관련 문의는 support@m-pathy.ai 로 이메일을 보내는 것이 가장 빠릅니다. 건강 또는 결제 관련의 민감한 정보는 이메일로 보내지 마십시오.",
-      },
-    ],
-    disclaimer:
-      "본 법적 고지는 투명성을 위한 것이며 개별 법률 자문을 대체하지 않습니다.",
-  },
 
-  privacy: {
-    slug: "privacy",
-    title: "개인정보 처리방침",
-    intro:
-      "본 개인정보 처리방침은 m-pathy 사용 시 개인 데이터가 어떻게 처리되는지 간단히 설명합니다.",
-    last_updated: "최종 업데이트: 2025년 11월 18일",
-    sections: [
-      {
-        id: "controller",
-        heading: "1. 데이터 관리자",
-        body:
-          "m-pathy 관련 데이터 처리는 다음 기관이 책임집니다:\n\n" +
-          "NAAL UG (유한책임회사)\n" +
-          "Maria-Theresia-Str. 11\n" +
-          "81675 Munich, Germany\n" +
-          "E-mail: support@m-pathy.ai",
-      },
-      {
-        id: "data_categories",
-        heading: "2. 데이터 종류",
-        body:
-          "필요한 경우 다음 데이터를 처리합니다:\n" +
-          "• 웹사이트 사용 데이터 및 로그 데이터\n" +
-          "• 사용자가 직접 제공한 계정 및 연락처 정보\n" +
-          "• 사용자가 시스템에 전송하는 프롬프트 및 응답 내용\n" +
-          "• 시간, 브라우저 유형, 기초적인 기기 정보 등의 기술적 메타데이터",
-      },
-      {
-        id: "purposes",
-        heading: "3. 목적 및 법적 근거",
-        body:
-          "데이터는 다음 목적을 위해 사용됩니다:\n" +
-          "• m-pathy 제공 및 운영\n" +
-          "• 서비스의 보안 및 기술 유지\n" +
-          "• 지원 요청 응답\n" +
-          "• 법적 보관 및 문서 의무 준수\n\n" +
-          "GDPR이 적용되는 경우, 법적 근거는 Art.6(1)(b)(계약), (c)(법적 의무), (f)(정당한 이익)입니다.",
-      },
-      {
-        id: "processors",
-        heading: "4. 처리자 및 수신자",
-        body:
-          "당사는 호스팅, 인프라, 비프로파일 분석, 결제 처리(예: Stripe)를 위해 신중히 선정된 서비스 제공업체를 사용합니다. 해당 업체들은 계약에 따라 당사의 지침 및 관련 법률 준수 하에 데이터를 처리합니다.",
-      },
-      {
-        id: "retention",
-        heading: "5. 보관 기간",
-        body:
-          "개인 데이터는 상기 목적을 위해 필요한 기간 또는 법이 요구하는 기간 동안 보관됩니다. 로그 데이터는 일반적으로 짧은 기술적 기간만 저장됩니다. 계약 관련 데이터는 상업 및 세무 목적을 위해 더 오래 보관될 수 있습니다.",
-      },
-      {
-        id: "rights",
-        heading: "6. 이용자의 권리",
-        body:
-          "GDPR이 적용되는 경우, 이용자는 데이터 열람, 정정, 삭제, 처리 제한, 데이터 이동권, 특정 처리에 대한 이의 제기 등의 권리를 갖습니다. 또한 감독 기관에 불만을 제기할 권리도 있습니다.",
-      },
-      {
-        id: "ai",
-        heading: "7. AI 서비스 사용",
-        body:
-          "m-pathy는 사용자가 전송한 프롬프트를 처리하는 AI 모델을 사용합니다. 당사는 개인 데이터 보호를 위해 기술적·조직적 조치를 취하지만 절대적으로 안전한 시스템은 없습니다. 장치에서 유출되기를 원치 않는 민감한 정보는 입력하지 마십시오.",
-      },
-    ],
-    disclaimer:
-      "본 개인정보 처리방침은 요약이며, 개별 사례에 대한 전체 법적 검토를 대체하지 않습니다.",
-  },
+  // ================================================================
+  // 한국어
+  // ================================================================
+  ko: {
+    // ------------------------- 법적 고지 --------------------------
+    imprint: {
+      slug: "imprint",
+      title: "법적 고지",
+      intro:
+        "본 법적 고지는 독일 법률 및 적용되는 경우 유럽 법률에 따라 m-pathy에 요구되는 제공자 정보를 포함합니다.",
+      last_updated: "최종 업데이트: 2026년 1월 11일",
+      sections: [
+        {
+          id: "provider",
+          heading: "1. 제공자",
+          body:
+            "NAAL UG (유한책임회사)\n" +
+            "Maria-Theresia-Str. 11\n" +
+            "81675 뮌헨\n" +
+            "독일\n\n" +
+            "이메일: support@m-pathy.ai",
+        },
+        {
+          id: "representative",
+          heading: "2. 경영진",
+          body: "대표이사: Alexander Khayat.",
+        },
+        {
+          id: "register",
+          heading: "3. 상업 등기",
+          body:
+            "NAAL UG(유한책임회사)는 뮌헨 지방법원(Amtsgericht München) 상업등기부에 HRB 288710 번호로 등록되어 있습니다.",
+        },
+        {
+          id: "vat",
+          heading: "4. 부가가치세 식별번호",
+          body: "xe",
+        },
+        {
+          id: "contact",
+          heading: "5. 연락처",
+          body:
+            "현재 m-pathy에 가장 빠르게 연락하는 방법은 support@m-pathy.ai 로 이메일을 보내는 것입니다. " +
+            "건강 정보나 결제 정보 등 민감한 데이터는 이메일로 보내지 마시기 바랍니다.",
+        },
+      ],
+      disclaimer:
+        "본 법적 고지는 정보 제공을 목적으로 하며, 개별적인 법률 자문을 대체하지 않습니다.",
+    },
 
-  terms: {
-    slug: "terms",
-    title: "이용 약관",
-    intro:
-      "본 이용 약관은 m-pathy 서비스 사용 방식에 대해 규정합니다. 서비스를 이용하면 본 약관에 동의한 것으로 간주됩니다.",
-    last_updated: "최종 업데이트: 2025년 11월 18일",
-    sections: [
-      {
-        id: "scope",
-        heading: "1. 서비스 범위",
-        body:
-          "m-pathy는 AI 기반 실험적 보조 도구입니다. 인간 치료사, 변호사, 의사 또는 금융 상담사가 아닙니다. 서비스는 창의적 작업, 성찰 및 기술 지원을 목적으로 합니다.",
-      },
-      {
-        id: "no_advice",
-        heading: "2. 전문적 조언 아님",
-        body:
-          "m-pathy가 생성한 콘텐츠는 의료, 법률, 금융 또는 기타 심각한 결정을 위한 유일한 근거로 사용해서는 안 됩니다. 전문 자문을 구하십시오.",
-      },
-      {
-        id: "account",
-        heading: "3. 계정 및 토큰",
-        body:
-          "접근 권한은 기간 또는 토큰 수에 의해 제한될 수 있습니다. 사용자는 자신의 인증 정보 및 계정 내 모든 활동에 대한 책임을 집니다.",
-      },
-      {
-        id: "acceptable_use",
-        heading: "4. 허용되는 이용",
-        body:
-          "m-pathy를 법률 위반, 타인 피해, 불법 콘텐츠 생성, 시스템 공격 등에 사용해서는 안 됩니다. 남용이 발생할 경우 계정이 제한 또는 차단될 수 있습니다.",
-      },
-      {
-        id: "changes",
-        heading: "5. 변경 및 가용성",
-        body:
-          "당사는 사용자에게 합리적인 범위 내에서 m-pathy 기능을 변경·확장·제한할 수 있습니다. 높은 가용성을 목표로 하지만 무중단 운영을 보장할 수는 없습니다.",
-      },
-      {
-        id: "liability",
-        heading: "6. 책임 제한",
-        body:
-          "당사는 고의 또는 중대한 과실에 대해 법률에 따라 책임을 집니다. 경미한 과실의 경우, 중요한 계약 의무 위반에 한해 전형적이고 예측 가능한 손해범위에서 책임을 집니다. 강제 책임(예: 제조물 책임법)은 영향을 받지 않습니다.",
-      },
-    ],
-    disclaimer:
-      "본 이용 약관은 계약 관계를 단순화하여 구조화한 것이며 개별 법률 자문을 대체하지 않습니다.",
-  },
+    // ------------------------- 개인정보 보호 ----------------------
+    privacy: {
+      slug: "privacy",
+      title: "개인정보 처리방침",
+      intro:
+        "본 개인정보 처리방침은 m-pathy 이용 시 개인정보가 어떻게 처리되는지를 명확하게 설명합니다.",
+      last_updated: "최종 업데이트: 2026년 1월 11일",
+      sections: [
+        {
+          id: "controller",
+          heading: "1. 개인정보 처리 책임자",
+          body:
+            "m-pathy와 관련된 개인정보 처리 책임자는 다음과 같습니다.\n\n" +
+            "NAAL UG (유한책임회사)\n" +
+            "Maria-Theresia-Str. 11\n" +
+            "81675 뮌헨\n" +
+            "독일\n" +
+            "이메일: support@m-pathy.ai",
+        },
+        {
+          id: "principles",
+          heading: "2. 설계 단계부터의 개인정보 보호",
+          body:
+            "m-pathy는 Privacy by Design 및 Privacy by Default 원칙을 적용합니다.\n\n" +
+            "• 필요한 경우에만 데이터를 처리합니다\n" +
+            "• 처리 범위와 기간을 최소화합니다\n" +
+            "• 암묵적인 사용자 프로파일을 생성하지 않습니다\n\n" +
+            "개인정보 보호는 시스템 아키텍처에 구조적으로 통합되어 있습니다.",
+        },
+        {
+          id: "data_categories",
+          heading: "3. 데이터 범주",
+          body:
+            "이용 방식에 따라 다음과 같은 데이터 범주가 처리될 수 있습니다.\n" +
+            "• 계정 및 연락처 데이터(사용자가 자발적으로 제공한 경우)\n" +
+            "• 기술적 이용 데이터(보안 및 안정성 목적에 한함)\n" +
+            "• 결제 데이터(외부 결제 서비스 제공자를 통해 처리)\n" +
+            "• 프롬프트 및 응답 내용(기술적 처리 목적에 한함)\n\n" +
+            "프롬프트 내용은 프로파일링, 광고 또는 학습에 사용되지 않습니다.",
+        },
+        {
+          id: "local_processing",
+          heading: "4. 로컬 처리",
+          body:
+            "프롬프트 내용은 로컬 또는 일시적으로 처리되며, 식별 가능하거나 재구성 가능한 형태로 서버에 영구 저장되지 않습니다.",
+        },
+        {
+          id: "archive",
+          heading: "5. 로컬 아카이브 및 컨텍스트 주입",
+          body:
+            "m-pathy는 사용자가 선택한 콘텐츠를 로컬 아카이브에 저장할 수 있도록 합니다.\n\n" +
+            "아카이브된 항목은 사용자가 명시적으로 선택한 경우에만 새로운 대화에 주입됩니다.\n\n" +
+            "• 전적으로 로컬 저장\n" +
+            "• 사용자에 의한 명확한 행위\n" +
+            "• 주입된 컨텍스트는 완전히 표시됨\n" +
+            "• 자동적이거나 암묵적인 메모리는 존재하지 않음",
+        },
+        {
+          id: "verification",
+          heading: "6. 검증 및 Triketon",
+          body:
+            "뉴스 기사 등의 콘텐츠를 검증할 때 m-pathy는 Triketon을 사용합니다.\n\n" +
+            "• 검증 목적에 한해 콘텐츠가 서버로 전송됩니다\n" +
+            "• 암호학적 진실 해시가 계산됩니다\n" +
+            "• 공개 검증 키가 생성되거나 연결됩니다\n" +
+            "• 원본 콘텐츠는 저장되지 않습니다\n" +
+            "• 해시, 공개 키 및 최소한의 기술적 메타데이터만 보관됩니다\n\n" +
+            "저장된 정보로부터 원본 콘텐츠를 복원할 수 없습니다.",
+        },
+        {
+          id: "prompt_integrity",
+          heading: "7. 프롬프트 정규화 및 드리프트 방지",
+          body:
+            "실행 전에 MAIOS 2.0은 프롬프트를 구조적으로 분석합니다.\n\n" +
+            "프롬프트가 모호하거나 일관성이 없거나 드리프트 위험이 있는 경우, 표현이 재구성될 수 있습니다.\n\n" +
+            "• 사용자의 의도는 유지됩니다\n" +
+            "• 구조 및 안전 명확성만 조정됩니다\n" +
+            "• 프롬프트는 저장되지 않습니다\n" +
+            "• 학습 또는 프로파일링은 이루어지지 않습니다",
+        },
+        {
+          id: "devices",
+          heading: "8. 로컬 저장소 및 기기",
+          body:
+            "사용자가 생성한 모든 콘텐츠는 사용 중인 기기의 로컬 저장소에만 저장됩니다.\n\n" +
+            "• 로컬 저장소는 사용자가 삭제할 때까지 유지됩니다\n" +
+            "• 삭제 시 데이터는 복구할 수 없습니다\n" +
+            "• 서버 측 백업은 존재하지 않습니다\n\n" +
+            "각 기기에는 고유한 공개 키가 부여되며, 데이터는 기기 단위로 엄격히 분리됩니다.",
+        },
+      ],
+      disclaimer:
+        "본 개인정보 처리방침은 투명성을 위한 것이며, 개별적인 법률 자문을 대체하지 않습니다.",
+    },
 
-  refund: {
-    slug: "refund",
-    title: "환불 정책",
-    intro:
-      "m-pathy는 현재 명확한 일회성 구매 모델을 제공합니다. 본 정책은 결제 및 환불 처리 방식을 설명합니다.",
-    last_updated: "최종 업데이트: 2025년 11월 18일",
-    sections: [
-      {
-        id: "model",
-        heading: "1. 구매 모델",
-        body:
-          "m-pathy 접근 권한은 특정 기간 및/또는 토큰 할당량을 포함한 일회성 구매로 제공됩니다. 자동 구독 갱신은 없습니다.",
-      },
-      {
-        id: "payment",
-        heading: "2. 결제 처리",
-        body:
-          "결제는 Stripe 등 유사한 결제 제공업체를 통해 처리됩니다. 해당 제공업체의 조건 및 보안 조치가 추가로 적용됩니다.",
-      },
-      {
-        id: "withdrawal",
-        heading: "3. 철회권",
-        body:
-          "EU 소비자는 디지털 서비스에 대한 법적 철회권을 가질 수 있습니다. 적용되는 경우 결제 과정에서 안내됩니다。",
-      },
-      {
-        id: "refunds",
-        heading: "4. 실제 환불",
-        body:
-          "접근 권한이 활성화되고 토큰 사용이 가능해진 이후에는, 법적 의무 또는 당사의 명시적 약속이 있는 경우를 제외하고 환불이 제공되지 않습니다.",
-      },
-    ],
-    disclaimer:
-      "본 환불 정책은 현재 운영 방식을 요약한 것이며, 강행 법규에 따른 권리를 제한하지 않습니다.",
-  },
+    // ------------------------- 이용약관 ---------------------------
+    terms: {
+      slug: "terms",
+      title: "이용약관",
+      intro:
+        "본 이용약관은 m-pathy의 접근 및 이용 조건을 규정합니다. 서비스를 이용함으로써 귀하는 본 약관에 동의하게 됩니다.",
+      last_updated: "최종 업데이트: 2026년 1월 11일",
+      sections: [
+        {
+          id: "scope",
+          heading: "1. 서비스 범위",
+          body:
+            "m-pathy는 실험적인 AI 기반 보조 도구로, 인간 치료사, 변호사, 의사 또는 재무 상담사를 대체하지 않습니다.",
+        },
+        {
+          id: "no_advice",
+          heading: "2. 전문적 조언 아님",
+          body:
+            "m-pathy가 생성한 콘텐츠는 의료, 법률, 재정 또는 기타 중대한 결과를 수반하는 결정의 유일한 근거로 사용되어서는 안 됩니다.",
+        },
+        {
+          id: "modes",
+          heading: "3. 시스템 모드 기반 거버넌스",
+          body:
+            "m-pathy는 시스템 자율 제어를 위해 내부 시스템 모드를 사용합니다.\n\n" +
+            "모드 전환은 세션 단위로 제한되며, 결정론적이고 사용자 프로파일링에 해당하지 않습니다.",
+        },
+        {
+          id: "liability",
+          heading: "4. 책임의 제한",
+          body:
+            "책임은 적용 법률에 따라 규율됩니다. 강행 규정에 따른 책임은 영향을 받지 않습니다.",
+        },
+      ],
+      disclaimer:
+        "본 약관은 계약 관계를 정리하기 위한 것이며 법률 자문을 대체하지 않습니다.",
+    },
 
-  legal: {
-    slug: "legal",
-    title: "법적 정보",
-    intro:
-      "본 페이지에는 m-pathy에 관한 주요 법적 정보가 요약되어 있습니다.",
-    last_updated: "최종 업데이트: 2025년 11월 18일",
-    sections: [
-      {
-        id: "overview",
-        heading: "1. 개요",
-        body:
-          "m-pathy는 독일 뮌헨에 소재한 NAAL UG(유한책임회사)가 운영합니다. 서비스는 고급 AI 모델과 프라이버시·명확성·사용자 통제에 대한 강한 중점을 결합합니다.",
-      },
-      {
-        id: "jurisdiction",
-        heading: "2. 준거법 및 관할",
-        body:
-          "강행적 소비자 보호 규정이 달리 정하지 않는 한, 준거법은 독일법입니다. 독일 법상 사업자로 활동하는 경우, 전속 관할은 뮌헨입니다.",
-      },
-      {
-        id: "online_dispute",
-        heading: "3. 온라인 분쟁 해결",
-        body:
-          "유럽위원회는 온라인 분쟁 해결 플랫폼을 제공합니다. 당사는 일반적으로 이 절차에 참여하지 않습니다.",
-      },
-    ],
-    disclaimer:
-      "본 페이지는 투명성을 위한 개요이며, 법적으로 필요한 경우 독일어 버전이 우선할 수 있습니다.",
-  },
+    // ------------------------- 환불 -------------------------------
+    refund: {
+      slug: "refund",
+      title: "환불 정책",
+      intro:
+        "본 정책은 m-pathy에서의 결제 및 환불 처리 방식을 설명합니다.",
+      last_updated: "최종 업데이트: 2026년 1월 11일",
+      sections: [
+        {
+          id: "model",
+          heading: "1. 구매 모델",
+          body:
+            "m-pathy에 대한 접근은 정해진 기간 및/또는 정해진 토큰 수량에 대한 일회성 구매를 통해 제공됩니다.",
+        },
+        {
+          id: "withdrawal",
+          heading: "2. 철회권",
+          body:
+            "디지털 서비스에 대한 법정 철회권은 법률에서 요구되는 경우 적용됩니다.",
+        },
+        {
+          id: "refunds",
+          heading: "3. 환불",
+          body:
+            "환불은 법적 의무가 있거나 명시적으로 약속된 경우에만 제공됩니다.",
+        },
+      ],
+      disclaimer:
+        "본 정책은 어떠한 강행적인 법적 권리도 제한하지 않습니다.",
+    },
+
+    // ------------------------- 법률 정보 --------------------------
+    legal: {
+      slug: "legal",
+      title: "법률 정보",
+      intro:
+        "본 섹션은 m-pathy에 적용되는 법적 프레임워크를 개괄합니다.",
+      last_updated: "최종 업데이트: 2026년 1월 11일",
+      sections: [
+        {
+          id: "jurisdiction",
+          heading: "1. 준거법 및 관할",
+          body:
+            "소비자 보호에 관한 강행 규정이 달리 정하는 경우를 제외하고, 독일 법이 적용됩니다. " +
+            "사업자에 대해서는 뮌헨이 전속 관할입니다.",
+        },
+      ],
+      disclaimer:
+        "본 정보는 투명성을 위해 제공됩니다. 강행법이 우선 적용됩니다.",
+    },
 },
-ar: {
-  imprint: {
-    slug: "imprint",
-    title: "المعلومات القانونية",
-    intro:
-      "تتضمن هذه الصفحة المعلومات المطلوبة لمزوّد خدمة m-pathy بموجب القانون الألماني وبعض القوانين الأوروبية.",
-    last_updated: "آخر تحديث: 18 نوفمبر 2025",
-    sections: [
-      {
-        id: "provider",
-        heading: "1. المزوّد",
-        body:
-          "NAAL UG (ذات مسؤولية محدودة)\n" +
-          "Maria-Theresia-Str. 11\n" +
-          "81675 Munich\n" +
-          "ألمانيا\n\n" +
-          "البريد الإلكتروني: support@m-pathy.ai",
-      },
-      {
-        id: "representative",
-        heading: "2. الممثل القانوني",
-        body: "المدير العام: Alexander Khayat.",
-      },
-      {
-        id: "register",
-        heading: "3. السجل التجاري",
-        body:
-          "الشركة مسجّلة في السجل التجاري. سيتم إضافة رقم التسجيل والمحكمة المختصة فور توفرها بشكل نهائي.",
-      },
-      {
-        id: "vat",
-        heading: "4. رقم ضريبة القيمة المضافة",
-        body: "في حال تخصيص رقم ضريبة قيمة مضافة، سيتم إدراجه هنا.",
-      },
-      {
-        id: "contact",
-        heading: "5. الاتصال",
-        body:
-          "أسرع طريقة للتواصل معنا بشأن m-pathy حالياً هي عبر البريد الإلكتروني support@m-pathy.ai. يُرجى عدم إرسال بيانات صحية أو مالية حساسة عبر البريد الإلكتروني.",
-      },
-    ],
-    disclaimer:
-      "هذه المعلومات القانونية مخصّصة للشفافية ولا تُعد بديلاً عن استشارة قانونية فردية.",
-  },
 
-  privacy: {
-    slug: "privacy",
-    title: "سياسة الخصوصية",
-    intro:
-      "توضح سياسة الخصوصية هذه بشكل مبسّط كيفية معالجة بياناتك الشخصية عند استخدامك m-pathy.",
-    last_updated: "آخر تحديث: 18 نوفمبر 2025",
-    sections: [
-      {
-        id: "controller",
-        heading: "1. المسؤول عن المعالجة",
-        body:
-          "المسؤول عن معالجة البيانات المرتبطة بخدمة m-pathy هو:\n\n" +
-          "NAAL UG (ذات مسؤولية محدودة)\n" +
-          "Maria-Theresia-Str. 11\n" +
-          "81675 Munich, Germany\n" +
-          "البريد الإلكتروني: support@m-pathy.ai",
-      },
-      {
-        id: "data_categories",
-        heading: "2. فئات البيانات",
-        body:
-          "نعالج، عند الضرورة، الفئات التالية من البيانات:\n" +
-          "• بيانات الاستخدام وسجلات الموقع\n" +
-          "• بيانات الحساب وبيانات التواصل التي تقدمها بنفسك\n" +
-          "• محتوى الطلبات (prompts) والإجابات التي ترسلها للنظام\n" +
-          "• البيانات التقنية مثل الوقت، نوع المتصفح، معلومات الجهاز الأساسية",
-      },
-      {
-        id: "purposes",
-        heading: "3. الأغراض والأسس القانونية",
-        body:
-          "نستخدم بياناتك للأغراض التالية:\n" +
-          "• توفير وتشغيل خدمة m-pathy\n" +
-          "• ضمان الصيانة التقنية وأمن الخدمة\n" +
-          "• الرد على طلبات الدعم\n" +
-          "• الوفاء بمتطلبات التخزين والتوثيق القانونية\n\n" +
-          "في حال تطبيق اللائحة العامة لحماية البيانات (GDPR)، فإن الأسس القانونية تشمل المادة 6(1)(b) (عقد)، المادة 6(1)(c) (التزام قانوني)، والمادة 6(1)(f) (مصلحة مشروعة).",
-      },
-      {
-        id: "processors",
-        heading: "4. المعالِجون والمستلمون",
-        body:
-          "نستخدم مزوّدي خدمات مختارين بعناية لاستضافة الخدمة، البنية التحتية، التحليلات غير القائمة على التتبع الشخصي، ومعالجة الدفعات (مثل Stripe). هؤلاء المزوّدون ملتزمون تعاقدياً بمعالجة البيانات حصراً وفق تعليماتنا ووفق القانون.",
-      },
-      {
-        id: "retention",
-        heading: "5. مدة الاحتفاظ بالبيانات",
-        body:
-          "نحتفظ بالبيانات الشخصية فقط للمدة اللازمة للأغراض محددة أعلاه أو كما يطلب القانون. عادةً ما تُحتفظ سجلات النظام لفترة تقنية قصيرة. ويمكن الاحتفاظ ببيانات العقود لفترات أطول لأسباب تجارية أو ضريبية.",
-      },
-      {
-        id: "rights",
-        heading: "6. حقوقك",
-        body:
-          "عند تطبيق GDPR، يكون لك الحق في الوصول إلى بياناتك، وتصحيحها، وحذفها، وتقييد معالجتها، ونقلها، بالإضافة إلى الحق في الاعتراض على بعض أنواع المعالجة. كما يمكنك تقديم شكوى إلى سلطة حماية البيانات.",
-      },
-      {
-        id: "ai",
-        heading: "7. استخدام خدمات الذكاء الاصطناعي",
-        body:
-          "يستخدم m-pathy نماذج ذكاء اصطناعي لمعالجة الطلبات التي ترسلها. نتخذ إجراءات تقنية وتنظيمية لحماية بياناتك، لكن لا يوجد نظام آمن تماماً. لذلك يُنصح بتجنب إدخال محتوى شديد الحساسية لا ترغب بخروجه من جهازك.",
-      },
-    ],
-    disclaimer:
-      "هذه السياسة ملخص مبسّط ولا تُعد بديلاً عن مراجعة قانونية كاملة لحالتك الشخصية.",
-  },
+  // ================================================================
+  // العربية
+  // ================================================================
+  ar: {
+    // ------------------------- البيانات القانونية -----------------
+    imprint: {
+      slug: "imprint",
+      title: "البيانات القانونية",
+      intro:
+        "تتضمن هذه البيانات القانونية معلومات مزوّد الخدمة المطلوبة لمنصة m-pathy وفقًا للقانون الألماني، وعند الاقتضاء، القانون الأوروبي.",
+      last_updated: "آخر تحديث: 11 يناير 2026",
+      sections: [
+        {
+          id: "provider",
+          heading: "1. مزوّد الخدمة",
+          body:
+            "NAAL UG (شركة ذات مسؤولية محدودة)\n" +
+            "Maria-Theresia-Str. 11\n" +
+            "81675 ميونخ\n" +
+            "ألمانيا\n\n" +
+            "البريد الإلكتروني: support@m-pathy.ai",
+        },
+        {
+          id: "representative",
+          heading: "2. الإدارة",
+          body: "المدير التنفيذي: Alexander Khayat.",
+        },
+        {
+          id: "register",
+          heading: "3. السجل التجاري",
+          body:
+            "شركة NAAL UG (شركة ذات مسؤولية محدودة) مسجلة في السجل التجاري لدى محكمة ميونخ المحلية (Amtsgericht München) تحت الرقم HRB 288710.",
+        },
+        {
+          id: "vat",
+          heading: "4. رقم التعريف الضريبي (VAT)",
+          body: "xe",
+        },
+        {
+          id: "contact",
+          heading: "5. معلومات الاتصال",
+          body:
+            "حاليًا، أسرع طريقة للتواصل مع m-pathy هي عبر البريد الإلكتروني support@m-pathy.ai. " +
+            "يرجى عدم إرسال أي بيانات حساسة، ولا سيما البيانات الصحية أو بيانات الدفع، عبر البريد الإلكتروني.",
+        },
+      ],
+      disclaimer:
+        "يتم تقديم هذه البيانات القانونية لأغراض الشفافية فقط ولا تُعد بديلاً عن استشارة قانونية فردية.",
+    },
 
-  terms: {
-    slug: "terms",
-    title: "شروط الاستخدام",
-    intro:
-      "تحدد هذه الشروط كيفية استخدامك لخدمة m-pathy. باستخدام الخدمة، فإنك توافق على هذه الشروط.",
-    last_updated: "آخر تحديث: 18 نوفمبر 2025",
-    sections: [
-      {
-        id: "scope",
-        heading: "1. نطاق الخدمة",
-        body:
-          "m-pathy مساعد تجريبي قائم على الذكاء الاصطناعي. ليس طبيبًا أو محاميًا أو مستشارًا ماليًا بشريًا. تم تصميم الخدمة للعمل الإبداعي، والتفكير، والدعم التقني.",
-      },
-      {
-        id: "no_advice",
-        heading: "2. عدم تقديم نصائح مهنية",
-        body:
-          "لا يجب استخدام المحتوى الذي يولّده m-pathy كأساس وحيد لقرارات طبية أو قانونية أو مالية أو قرارات خطيرة أخرى. عليك دائمًا استشارة متخصصين.",
-      },
-      {
-        id: "account",
-        heading: "3. الحساب والرموز",
-        body:
-          "يمكن أن يكون الوصول محدودًا زمنيًا و/أو بعدد من الرموز. أنت مسؤول عن الحفاظ على سرية بيانات الدخول وجميع الأنشطة تحت حسابك.",
-      },
-      {
-        id: "acceptable_use",
-        heading: "4. الاستخدام المقبول",
-        body:
-          "يُمنع استخدام m-pathy لانتهاك القانون أو الإضرار بالآخرين أو إنتاج محتوى غير قانوني أو مهاجمة الأنظمة. يمكن أن نقيد أو نعلّق الحسابات المسيئة.",
-      },
-      {
-        id: "changes",
-        heading: "5. التغييرات والتوافر",
-        body:
-          "قد نجري تغييرات أو نوسع أو نقيّد الوظائف في أي وقت طالما كان ذلك معقولاً للمستخدمين. نسعى لتوفير توافر عالٍ، لكن لا يمكننا ضمان تشغيل دون انقطاع.",
-      },
-      {
-        id: "liability",
-        heading: "6. حدود المسؤولية",
-        body:
-          "نحن مسؤولون قانونيًا عن الأضرار الناتجة عن الإهمال الجسيم أو العمد. أما في حالات الإهمال البسيط، فنحن مسؤولون فقط عن خرق الالتزامات الأساسية وبحدود الضرر المتوقع. لا تتأثر المسؤولية الإجبارية (مثل مسؤولية المنتجات).",
-      },
-    ],
-    disclaimer:
-      "هذا الملخص لا يحل محل استشارة قانونية فردية.",
-  },
+    // ------------------------- الخصوصية ----------------------------
+    privacy: {
+      slug: "privacy",
+      title: "سياسة الخصوصية",
+      intro:
+        "توضح سياسة الخصوصية هذه بطريقة واضحة كيفية معالجة البيانات الشخصية عند استخدام m-pathy.",
+      last_updated: "آخر تحديث: 11 يناير 2026",
+      sections: [
+        {
+          id: "controller",
+          heading: "1. المسؤول عن معالجة البيانات",
+          body:
+            "المسؤول عن معالجة البيانات فيما يتعلق بـ m-pathy هو:\n\n" +
+            "NAAL UG (شركة ذات مسؤولية محدودة)\n" +
+            "Maria-Theresia-Str. 11\n" +
+            "81675 ميونخ\n" +
+            "ألمانيا\n" +
+            "البريد الإلكتروني: support@m-pathy.ai",
+        },
+        {
+          id: "principles",
+          heading: "2. حماية البيانات حسب التصميم والإعداد الافتراضي",
+          body:
+            "تطبق m-pathy مبادئ حماية البيانات حسب التصميم (Privacy by Design) وحماية البيانات حسب الإعداد الافتراضي (Privacy by Default).\n\n" +
+            "• تتم معالجة البيانات فقط عند الضرورة\n" +
+            "• يتم تقليل نطاق ومدة المعالجة إلى الحد الأدنى\n" +
+            "• لا يتم إنشاء ملفات تعريف مستخدم ضمنية\n\n" +
+            "حماية البيانات مدمجة هيكليًا في بنية النظام.",
+        },
+        {
+          id: "data_categories",
+          heading: "3. فئات البيانات",
+          body:
+            "اعتمادًا على طريقة الاستخدام، قد تتم معالجة الفئات التالية من البيانات:\n" +
+            "• بيانات الحساب وبيانات الاتصال (إذا تم تقديمها طوعًا)،\n" +
+            "• بيانات الاستخدام التقنية (لأغراض الأمان والاستقرار فقط)،\n" +
+            "• بيانات الدفع (تُعالج عبر مزودي خدمات خارجيين)،\n" +
+            "• محتوى الأوامر (prompts) والاستجابات (للمعالجة التقنية فقط).\n\n" +
+            "لا يتم استخدام محتوى الأوامر لأغراض التوصيف أو الإعلان أو التدريب.",
+        },
+        {
+          id: "local_processing",
+          heading: "4. المعالجة المحلية",
+          body:
+            "تتم معالجة محتوى الأوامر محليًا أو بشكل مؤقت ولا يتم تخزينه بشكل دائم على الخوادم " +
+            "بصيغة قابلة للتعريف أو إعادة البناء.",
+        },
+        {
+          id: "archive",
+          heading: "5. الأرشيف المحلي وحقن السياق",
+          body:
+            "تتيح m-pathy للمستخدمين حفظ محتوى محدد محليًا في أرشيف.\n\n" +
+            "يمكن إدخال العناصر المؤرشفة في محادثة جديدة فقط عند اختيارها صراحة من قبل المستخدم.\n\n" +
+            "• تخزين محلي حصريًا،\n" +
+            "• إجراء صريح من المستخدم،\n" +
+            "• السياق المُدخل مرئي بالكامل،\n" +
+            "• لا توجد ذاكرة تلقائية أو ضمنية.",
+        },
+        {
+          id: "verification",
+          heading: "6. التحقق و Triketon",
+          body:
+            "عند التحقق من المحتوى (مثل المقالات الإخبارية)، تستخدم m-pathy آلية Triketon.\n\n" +
+            "• يتم إرسال المحتوى إلى الخادم لغرض التحقق فقط،\n" +
+            "• يتم حساب تجزئة (هاش) مشفرة للحقيقة،\n" +
+            "• يتم إنشاء أو ربط مفتاح تحقق عام،\n" +
+            "• لا يتم تخزين المحتوى الأصلي،\n" +
+            "• يتم الاحتفاظ فقط بالتجزئة والمفتاح العام والحد الأدنى من البيانات التقنية.\n\n" +
+            "لا يمكن إعادة بناء المحتوى الأصلي من البيانات المخزنة.",
+        },
+        {
+          id: "prompt_integrity",
+          heading: "7. توحيد الأوامر ومنع الانحراف",
+          body:
+            "قبل التنفيذ، يقوم MAIOS 2.0 بتحليل الأوامر هيكليًا.\n\n" +
+            "إذا كان الأمر غامضًا أو غير متسق أو عرضة للانحراف، فقد تتم إعادة صياغته.\n\n" +
+            "• يتم الحفاظ على نية المستخدم،\n" +
+            "• يتم تعديل البنية ووضوح الأمان فقط،\n" +
+            "• لا يتم تخزين الأوامر،\n" +
+            "• لا يحدث تعلم أو توصيف للمستخدم.",
+        },
+        {
+          id: "devices",
+          heading: "8. التخزين المحلي والأجهزة",
+          body:
+            "يتم تخزين جميع المحتويات التي ينشئها المستخدم حصريًا في التخزين المحلي للجهاز المستخدم.\n\n" +
+            "• يستمر التخزين المحلي حتى يقوم المستخدم بحذفه،\n" +
+            "• يؤدي الحذف إلى فقدان البيانات بشكل غير قابل للاسترجاع،\n" +
+            "• لا توجد نسخ احتياطية على الخادم.\n\n" +
+            "يتم تخصيص مفتاح عام فريد لكل جهاز، وتكون البيانات معزولة حسب الجهاز.",
+        },
+      ],
+      disclaimer:
+        "يتم تقديم سياسة الخصوصية هذه لأغراض الشفافية ولا تُعد بديلاً عن استشارة قانونية فردية.",
+    },
 
-  refund: {
-    slug: "refund",
-    title: "سياسة الاسترجاع",
-    intro:
-      "يوفر m-pathy حاليًا نموذج شراء لمرة واحدة يمنح حق الوصول. توضح هذه السياسة كيفية التعامل مع المدفوعات والاسترجاعات.",
-    last_updated: "آخر تحديث: 18 نوفمبر 2025",
-    sections: [
-      {
-        id: "model",
-        heading: "1. نموذج الشراء",
-        body:
-          "يتم منح الوصول إلى m-pathy كعملية شراء لمرة واحدة لفترة محددة و/أو حصة رموز. لا يوجد تجديد تلقائي للاشتراك.",
-      },
-      {
-        id: "payment",
-        heading: "2. معالجة الدفع",
-        body:
-          "تتم معالجة المدفوعات عبر Stripe أو مزودين مشابهين. تنطبق شروط وإجراءات الأمان الخاصة بهم أيضًا.",
-      },
-      {
-        id: "withdrawal",
-        heading: "3. حق التراجع",
-        body:
-          "قد يكون لدى المستهلكين في الاتحاد الأوروبي حق قانوني في التراجع عن الخدمات الرقمية. يتم إعلامك بهذا الحق أثناء عملية الدفع عند الاقتضاء.",
-      },
-      {
-        id: "refunds",
-        heading: "4. الاسترجاعات عمليًا",
-        body:
-          "عادةً لا نقدم استرجاعات بعد تفعيل الوصول وإمكانية استخدام الرموز، إلا إذا كان هناك التزام قانوني أو وعد صريح باسترجاع.",
-      },
-    ],
-    disclaimer:
-      "هذا الملخص لا يحد من الحقوق القانونية الإجبارية.",
-  },
+    // ------------------------- شروط الاستخدام ---------------------
+    terms: {
+      slug: "terms",
+      title: "شروط الاستخدام",
+      intro:
+        "تنظم شروط الاستخدام هذه الوصول إلى m-pathy واستخدامه. باستخدام الخدمة، يوافق المستخدم على هذه الشروط.",
+      last_updated: "آخر تحديث: 11 يناير 2026",
+      sections: [
+        {
+          id: "scope",
+          heading: "1. نطاق الخدمة",
+          body:
+            "m-pathy هو مساعد تجريبي قائم على الذكاء الاصطناعي ولا يُعد بديلاً عن معالج أو محامٍ أو طبيب أو مستشار مالي بشري.",
+        },
+        {
+          id: "no_advice",
+          heading: "2. عدم تقديم استشارة مهنية",
+          body:
+            "لا يجوز استخدام المحتوى الذي يولده m-pathy كأساس وحيد لاتخاذ قرارات طبية أو قانونية أو مالية أو غيرها من القرارات ذات العواقب الجسيمة.",
+        },
+        {
+          id: "modes",
+          heading: "3. الحوكمة عبر أوضاع النظام",
+          body:
+            "تستخدم m-pathy أوضاع نظام داخلية للتحكم الذاتي.\n\n" +
+            "تكون تغييرات الأوضاع مقيدة بالجلسة، وحتمية، ولا تشكل توصيفًا للمستخدم.",
+        },
+        {
+          id: "liability",
+          heading: "4. تحديد المسؤولية",
+          body:
+            "تخضع المسؤولية لأحكام القانون المعمول به. ولا تتأثر أحكام المسؤولية الإلزامية.",
+        },
+      ],
+      disclaimer:
+        "تهدف هذه الشروط إلى تنظيم العلاقة التعاقدية ولا تحل محل الاستشارة القانونية.",
+    },
 
-  legal: {
-    slug: "legal",
-    title: "المعلومات القانونية",
-    intro:
-      "تجمع هذه الصفحة أهم المعلومات القانونية المتعلقة بـ m-pathy.",
-    last_updated: "آخر تحديث: 18 نوفمبر 2025",
-    sections: [
-      {
-        id: "overview",
-        heading: "1. نظرة عامة",
-        body:
-          "يتم تشغيل m-pathy بواسطة NAAL UG (ذات مسؤولية محدودة)، ومقرها ميونيخ، ألمانيا. تجمع الخدمة بين نماذج ذكاء اصطناعي متقدمة وتركيز قوي على الخصوصية والوضوح وسيطرة المستخدم.",
-      },
-      {
-        id: "jurisdiction",
-        heading: "2. القانون والاختصاص",
-        body:
-          "ما لم تنص قوانين حماية المستهلك الإلزامية على خلاف ذلك، يُطبق القانون الألماني. إذا كنت تمارس نشاطًا كتاجر بموجب القانون الألماني، فإن الاختصاص القضائي الحصري هو ميونيخ.",
-      },
-      {
-        id: "online_dispute",
-        heading: "3. حل النزاعات عبر الإنترنت",
-        body:
-          "تقدم المفوضية الأوروبية منصة لحل النزاعات عبر الإنترنت. نحن غير ملزمين ولا نشارك عادةً في هذه الإجراءات.",
-      },
-    ],
-    disclaimer:
-      "تهدف هذه الصفحة إلى تقديم نظرة عامة واضحة، وفي حال وجود تعارض، قد تكون النسخة الألمانية هي المرجحة وفق القانون.",
-  },
+    // ------------------------- سياسة الاسترداد -------------------
+    refund: {
+      slug: "refund",
+      title: "سياسة الاسترداد",
+      intro:
+        "توضح هذه السياسة كيفية التعامل مع المدفوعات وعمليات الاسترداد في m-pathy.",
+      last_updated: "آخر تحديث: 11 يناير 2026",
+      sections: [
+        {
+          id: "model",
+          heading: "1. نموذج الشراء",
+          body:
+            "يتم منح الوصول إلى m-pathy من خلال عملية شراء لمرة واحدة لفترة محددة و/أو عدد محدد من الرموز.",
+        },
+        {
+          id: "withdrawal",
+          heading: "2. حق العدول",
+          body:
+            "تُطبق حقوق العدول القانونية الخاصة بالخدمات الرقمية عندما يفرضها القانون.",
+        },
+        {
+          id: "refunds",
+          heading: "3. الاسترداد",
+          body:
+            "يتم تقديم الاسترداد فقط في حال وجود التزام قانوني أو وعد صريح بذلك.",
+        },
+      ],
+      disclaimer:
+        "لا تحد هذه السياسة من أي حقوق قانونية إلزامية.",
+    },
+
+    // ------------------------- معلومات قانونية -------------------
+    legal: {
+      slug: "legal",
+      title: "معلومات قانونية",
+      intro:
+        "يوفر هذا القسم نظرة عامة على الإطار القانوني المطبق على m-pathy.",
+      last_updated: "آخر تحديث: 11 يناير 2026",
+      sections: [
+        {
+          id: "jurisdiction",
+          heading: "1. القانون الواجب التطبيق والاختصاص القضائي",
+          body:
+            "ما لم تنص قواعد حماية المستهلك الإلزامية على خلاف ذلك، يخضع هذا النظام للقانون الألماني. " +
+            "وبالنسبة للمستخدمين التجاريين، يكون الاختصاص القضائي الحصري في مدينة ميونخ.",
+        },
+      ],
+      disclaimer:
+        "يتم تقديم هذه المعلومات لأغراض الشفافية. وتعلو القواعد القانونية الإلزامية.",
+    },
+
 },
-hi: {
-  imprint: {
-    slug: "imprint",
-    title: "कानूनी सूचना",
-    intro:
-      "यह कानूनी सूचना m-pathy के लिए जर्मन और आंशिक रूप से यूरोपीय कानून के तहत आवश्यक प्रदाता जानकारी प्रदान करती है।",
-    last_updated: "अंतिम अपडेट: 18 नवंबर 2025",
-    sections: [
-      {
-        id: "provider",
-        heading: "1. प्रदाता",
-        body:
-          "NAAL UG (सीमित देयता)\n" +
-          "Maria-Theresia-Str. 11\n" +
-          "81675 Munich\n" +
-          "जर्मनी\n\n" +
-          "ई-मेल: support@m-pathy.ai",
-      },
-      {
-        id: "representative",
-        heading: "2. अधिकृत प्रतिनिधि",
-        body: "प्रबंध निदेशक: Alexander Khayat.",
-      },
-      {
-        id: "register",
-        heading: "3. वाणिज्यिक रजिस्टर",
-        body:
-          "कंपनी वाणिज्यिक रजिस्टर में पंजीकृत है। न्यायालय और पंजीकरण संख्या उपलब्ध होने पर जोड़ी जाएगी।",
-      },
-      {
-        id: "vat",
-        heading: "4. VAT संख्या",
-        body: "यदि VAT पहचान संख्या प्रदान की जाती है, तो यहाँ जोड़ी जाएगी।",
-      },
-      {
-        id: "contact",
-        heading: "5. संपर्क",
-        body:
-          "m-pathy के बारे में हमसे संपर्क करने का सबसे तेज़ तरीका support@m-pathy.ai पर ई-मेल है। कृपया अत्यंत संवेदनशील स्वास्थ्य या भुगतान डेटा ई-मेल से न भेजें।",
-      },
-    ],
-    disclaimer:
-      "यह कानूनी सूचना केवल पारदर्शिता प्रदान करती है और व्यक्तिगत कानूनी सलाह का विकल्प नहीं है।",
-  },
+  // ================================================================
+  // हिन्दी
+  // ================================================================
+  hi: {
+    // ------------------------- कानूनी सूचना -----------------------
+    imprint: {
+      slug: "imprint",
+      title: "कानूनी सूचना",
+      intro:
+        "यह कानूनी सूचना m-pathy के लिए जर्मन क़ानून तथा जहाँ लागू हो वहाँ यूरोपीय क़ानून के अंतर्गत आवश्यक प्रदाता जानकारी प्रदान करती है।",
+      last_updated: "अंतिम अद्यतन: 11 जनवरी 2026",
+      sections: [
+        {
+          id: "provider",
+          heading: "1. प्रदाता",
+          body:
+            "NAAL UG (सीमित दायित्व कंपनी)\n" +
+            "Maria-Theresia-Str. 11\n" +
+            "81675 म्यूनिख\n" +
+            "जर्मनी\n\n" +
+            "ई-मेल: support@m-pathy.ai",
+        },
+        {
+          id: "representative",
+          heading: "2. प्रबंधन",
+          body: "प्रबंध निदेशक: Alexander Khayat।",
+        },
+        {
+          id: "register",
+          heading: "3. वाणिज्यिक पंजीकरण",
+          body:
+            "NAAL UG (सीमित दायित्व कंपनी) म्यूनिख की स्थानीय अदालत (Amtsgericht München) के वाणिज्यिक रजिस्टर में HRB 288710 के अंतर्गत पंजीकृत है।",
+        },
+        {
+          id: "vat",
+          heading: "4. वैट पहचान संख्या",
+          body: "xe",
+        },
+        {
+          id: "contact",
+          heading: "5. संपर्क",
+          body:
+            "वर्तमान में m-pathy से संपर्क करने का सबसे तेज़ तरीका ई-मेल support@m-pathy.ai है। " +
+            "कृपया ई-मेल के माध्यम से कोई भी संवेदनशील डेटा, विशेष रूप से स्वास्थ्य या भुगतान संबंधी जानकारी, न भेजें।",
+        },
+      ],
+      disclaimer:
+        "यह कानूनी सूचना केवल जानकारी के उद्देश्य से प्रदान की गई है और व्यक्तिगत कानूनी परामर्श का स्थान नहीं लेती।",
+    },
 
-  privacy: {
-    slug: "privacy",
-    title: "गोपनीयता नीति",
-    intro:
-      "यह गोपनीयता नीति सरल रूप में बताती है कि m-pathy का उपयोग करते समय हम व्यक्तिगत डेटा को कैसे संसाधित करते हैं।",
-    last_updated: "अंतिम अपडेट: 18 नवंबर 2025",
-    sections: [
-      {
-        id: "controller",
-        heading: "1. डेटा नियंत्रक",
-        body:
-          "m-pathy से संबंधित डेटा प्रसंस्करण के लिए जिम्मेदार इकाई:\n\n" +
-          "NAAL UG (सीमित देयता)\n" +
-          "Maria-Theresia-Str. 11\n" +
-          "81675 Munich, Germany\n" +
-          "ई-मेल: support@m-pathy.ai",
-      },
-      {
-        id: "data_categories",
-        heading: "2. डेटा श्रेणियाँ",
-        body:
-          "हम आवश्यकतानुसार विशेष रूप से निम्नलिखित डेटा श्रेणियों को संसाधित करते हैं:\n" +
-          "• वेबसाइट उपयोग और लॉग डेटा\n" +
-          "• आपके द्वारा प्रदान किया गया खाता और संपर्क डेटा\n" +
-          "• आपके प्रॉम्प्ट और प्रतिक्रियाएँ\n" +
-          "• तकनीकी मेटाडेटा (समय, ब्राउज़र प्रकार, डिवाइस जानकारी)",
-      },
-      {
-        id: "purposes",
-        heading: "3. उद्देश्य और कानूनी आधार",
-        body:
-          "हम आपके डेटा का उपयोग विशेष रूप से:\n" +
-          "• m-pathy प्रदान और संचालित करने के लिए,\n" +
-          "• सेवा की सुरक्षा और तकनीकी रखरखाव के लिए,\n" +
-          "• सहायता अनुरोधों के उत्तर देने के लिए,\n" +
-          "• कानूनी भंडारण दायित्वों को पूरा करने के लिए करते हैं।\n\n" +
-          "GDPR लागू होने पर कानूनी आधार Art.6(1)(b), (c), (f) हैं।",
-      },
-      {
-        id: "processors",
-        heading: "4. प्रोसेसर और प्राप्तकर्ता",
-        body:
-          "हम होस्टिंग, इंफ्रास्ट्रक्चर, गैर-प्रोफाइलिंग विश्लेषण और भुगतान प्रसंस्करण (जैसे Stripe) के लिए सावधानीपूर्वक चयनित प्रदाताओं का उपयोग करते हैं। ये केवल हमारे निर्देशों और कानून के अनुसार डेटा संसाधित करते हैं।",
-      },
-      {
-        id: "retention",
-        heading: "5. भंडारण अवधि",
-        body:
-          "व्यक्तिगत डेटा केवल आवश्यक समय या कानून के अनुरूप अवधि तक ही रखा जाता है। लॉग डेटा सामान्यतः केवल थोड़े समय के लिए रखा जाता है। अनुबंध-संबंधित डेटा अधिक समय तक रखा जा सकता है।",
-      },
-      {
-        id: "rights",
-        heading: "6. आपके अधिकार",
-        body:
-          "GDPR लागू होने पर आपके पास एक्सेस, सुधार, हटाने, प्रसंस्करण प्रतिबंध, डेटा पोर्टेबिलिटी और आपत्ति का अधिकार है। आप डेटा संरक्षण प्राधिकरण में शिकायत भी दर्ज कर सकते हैं।",
-      },
-      {
-        id: "ai",
-        heading: "7. AI सेवाओं का उपयोग",
-        body:
-          "m-pathy आपके प्रॉम्प्ट को संसाधित करने के लिए AI मॉडल का उपयोग करता है। हम डेटा सुरक्षा के उपाय अपनाते हैं लेकिन कोई भी सिस्टम पूर्ण सुरक्षा की गारंटी नहीं दे सकता। अत्यंत संवेदनशील जानकारी दर्ज करने से बचें।",
-      },
-    ],
-    disclaimer:
-      "यह नीति एक सरल सारांश है और पूर्ण कानूनी समीक्षा का विकल्प नहीं है।",
-  },
+    // ------------------------- गोपनीयता ---------------------------
+    privacy: {
+      slug: "privacy",
+      title: "गोपनीयता नीति",
+      intro:
+        "यह गोपनीयता नीति स्पष्ट रूप से बताती है कि m-pathy का उपयोग करते समय व्यक्तिगत डेटा कैसे संसाधित किया जाता है।",
+      last_updated: "अंतिम अद्यतन: 11 जनवरी 2026",
+      sections: [
+        {
+          id: "controller",
+          heading: "1. डेटा नियंत्रक",
+          body:
+            "m-pathy से संबंधित डेटा प्रसंस्करण के लिए उत्तरदायी संस्था है:\n\n" +
+            "NAAL UG (सीमित दायित्व कंपनी)\n" +
+            "Maria-Theresia-Str. 11\n" +
+            "81675 म्यूनिख\n" +
+            "जर्मनी\n" +
+            "ई-मेल: support@m-pathy.ai",
+        },
+        {
+          id: "principles",
+          heading: "2. डिज़ाइन और डिफ़ॉल्ट द्वारा गोपनीयता",
+          body:
+            "m-pathy Privacy by Design और Privacy by Default के सिद्धांतों का पालन करता है।\n\n" +
+            "• डेटा केवल आवश्यकता होने पर ही संसाधित किया जाता है\n" +
+            "• प्रसंस्करण का दायरा और अवधि न्यूनतम रखी जाती है\n" +
+            "• कोई निहित उपयोगकर्ता प्रोफ़ाइल नहीं बनाई जाती\n\n" +
+            "गोपनीयता सुरक्षा सिस्टम की संरचना में अंतर्निहित है।",
+        },
+        {
+          id: "data_categories",
+          heading: "3. डेटा की श्रेणियाँ",
+          body:
+            "उपयोग के आधार पर निम्नलिखित डेटा श्रेणियाँ शामिल हो सकती हैं:\n" +
+            "• खाता और संपर्क डेटा (यदि स्वेच्छा से प्रदान किया गया हो),\n" +
+            "• तकनीकी उपयोग डेटा (केवल सुरक्षा और स्थिरता के लिए),\n" +
+            "• भुगतान डेटा (बाहरी सेवा प्रदाताओं के माध्यम से),\n" +
+            "• प्रॉम्प्ट और उत्तर की सामग्री (केवल तकनीकी प्रसंस्करण के लिए)।\n\n" +
+            "प्रॉम्प्ट की सामग्री का उपयोग प्रोफाइलिंग, विज्ञापन या प्रशिक्षण के लिए नहीं किया जाता।",
+        },
+        {
+          id: "local_processing",
+          heading: "4. स्थानीय प्रसंस्करण",
+          body:
+            "प्रॉम्प्ट की सामग्री को स्थानीय रूप से या अस्थायी रूप से संसाधित किया जाता है और " +
+            "इसे पहचान योग्य या पुनर्निर्माण योग्य रूप में सर्वरों पर स्थायी रूप से संग्रहीत नहीं किया जाता।",
+        },
+        {
+          id: "archive",
+          heading: "5. स्थानीय अभिलेख और संदर्भ इंजेक्शन",
+          body:
+            "m-pathy उपयोगकर्ताओं को चयनित सामग्री को स्थानीय रूप से एक अभिलेख में संग्रहीत करने की अनुमति देता है।\n\n" +
+            "अभिलेखित सामग्री को केवल उपयोगकर्ता की स्पष्ट सहमति से ही नए चैट में जोड़ा जा सकता है।\n\n" +
+            "• केवल स्थानीय संग्रहण,\n" +
+            "• उपयोगकर्ता की स्पष्ट कार्रवाई,\n" +
+            "• जोड़ा गया संदर्भ पूरी तरह दृश्य,\n" +
+            "• कोई स्वचालित या निहित मेमोरी नहीं।",
+        },
+        {
+          id: "verification",
+          heading: "6. सत्यापन और Triketon",
+          body:
+            "सामग्री (जैसे समाचार लेख) के सत्यापन के लिए m-pathy Triketon का उपयोग करता है।\n\n" +
+            "• सामग्री केवल सत्यापन के उद्देश्य से सर्वर पर भेजी जाती है,\n" +
+            "• एक क्रिप्टोग्राफ़िक सत्य हैश की गणना की जाती है,\n" +
+            "• एक सार्वजनिक सत्यापन कुंजी उत्पन्न या संबद्ध की जाती है,\n" +
+            "• मूल सामग्री संग्रहीत नहीं की जाती,\n" +
+            "• केवल हैश, सार्वजनिक कुंजी और न्यूनतम तकनीकी मेटाडेटा रखा जाता है।\n\n" +
+            "संग्रहीत डेटा से मूल सामग्री को पुनर्निर्मित नहीं किया जा सकता।",
+        },
+        {
+          id: "prompt_integrity",
+          heading: "7. प्रॉम्प्ट सामान्यीकरण और ड्रिफ्ट रोकथाम",
+          body:
+            "निष्पादन से पहले, MAIOS 2.0 प्रॉम्प्ट का संरचनात्मक विश्लेषण करता है।\n\n" +
+            "यदि कोई प्रॉम्प्ट अस्पष्ट, असंगत या ड्रिफ्ट-संभावित है, तो उसकी अभिव्यक्ति को पुनर्गठित किया जा सकता है।\n\n" +
+            "• उपयोगकर्ता की मंशा सुरक्षित रहती है,\n" +
+            "• केवल संरचना और सुरक्षा स्पष्टता समायोजित की जाती है,\n" +
+            "• कोई प्रॉम्प्ट संग्रहीत नहीं होता,\n" +
+            "• कोई सीखने या प्रोफाइलिंग नहीं होती।",
+        },
+        {
+          id: "devices",
+          heading: "8. स्थानीय संग्रहण और डिवाइस",
+          body:
+            "उपयोगकर्ता द्वारा बनाई गई सभी सामग्री केवल उपयोग किए गए डिवाइस के स्थानीय संग्रहण में रखी जाती है।\n\n" +
+            "• स्थानीय संग्रहण तब तक रहता है जब तक उपयोगकर्ता इसे हटाता नहीं,\n" +
+            "• हटाने पर डेटा स्थायी रूप से नष्ट हो जाता है,\n" +
+            "• सर्वर-साइड बैकअप उपलब्ध नहीं हैं।\n\n" +
+            "प्रत्येक डिवाइस को एक विशिष्ट सार्वजनिक कुंजी दी जाती है और डेटा डिवाइस-स्तर पर अलग रहता है।",
+        },
+      ],
+      disclaimer:
+        "यह गोपनीयता नीति पारदर्शिता के लिए प्रदान की गई है और व्यक्तिगत कानूनी सलाह का स्थान नहीं लेती।",
+    },
 
-  terms: {
-    slug: "terms",
-    title: "उपयोग की शर्तें",
-    intro:
-      "ये शर्तें बताती हैं कि आप m-pathy का उपयोग कैसे कर सकते हैं। सेवा का उपयोग करने से आप इनसे सहमत माने जाते हैं।",
-    last_updated: "अंतिम अपडेट: 18 नवंबर 2025",
-    sections: [
-      {
-        id: "scope",
-        heading: "1. सेवा का दायरा",
-        body:
-          "m-pathy एक AI-आधारित प्रयोगात्मक सहायक है। यह चिकित्सक, वकील, डॉक्टर या वित्तीय सलाहकार नहीं है। इसका उद्देश्य रचनात्मक कार्य, आत्म-चिंतन और तकनीकी सहायता है।",
-      },
-      {
-        id: "no_advice",
-        heading: "2. पेशेवर सलाह नहीं",
-        body:
-          "m-pathy द्वारा जनरेट सामग्री का उपयोग कभी भी चिकित्सा, कानूनी या वित्तीय निर्णयों के लिए एकमात्र आधार के रूप में नहीं किया जाना चाहिए।",
-      },
-      {
-        id: "account",
-        heading: "3. खाता और टोकन",
-        body:
-          "पहुँच समय या टोकन पूल द्वारा सीमित हो सकती है। अपने लॉगिन विवरण और खाते की सभी गतिविधियों के लिए आप जिम्मेदार हैं।",
-      },
-      {
-        id: "acceptable_use",
-        heading: "4. स्वीकार्य उपयोग",
-        body:
-          "आप m-pathy का उपयोग कानून का उल्लंघन करने, दूसरों को नुकसान पहुँचाने, अवैध सामग्री उत्पन्न करने या सिस्टम पर हमला करने के लिए नहीं कर सकते।",
-      },
-      {
-        id: "changes",
-        heading: "5. बदलाव और उपलब्धता",
-        body:
-          "हम उपयोगकर्ता के लिए उचित सीमा के भीतर कभी भी m-pathy की सुविधाएँ बदल सकते हैं। उच्च उपलब्धता का प्रयास किया जाता है, लेकिन निरंतर संचालन की गारंटी नहीं है।",
-      },
-      {
-        id: "liability",
-        heading: "6. दायित्व की सीमा",
-        body:
-          "हम जानबूझकर और गंभीर लापरवाही के लिए कानून के अनुसार जिम्मेदार हैं। हल्की लापरवाही के मामलों में, हम केवल महत्वपूर्ण अनुबंधात्मक दायित्वों के उल्लंघन और सामान्य अनुमानित क्षति तक सीमित हैं। अनिवार्य दायित्व अप्रभावित रहते हैं।",
-      },
-    ],
-    disclaimer:
-      "यह सारांश अनुबंध संबंध को सरल रूप में प्रस्तुत करता है और कानूनी सलाह का विकल्प नहीं है।",
-  },
+    // ------------------------- उपयोग की शर्तें --------------------
+    terms: {
+      slug: "terms",
+      title: "उपयोग की शर्तें",
+      intro:
+        "ये उपयोग की शर्तें m-pathy तक पहुँच और उसके उपयोग को नियंत्रित करती हैं। सेवा का उपयोग करके आप इन शर्तों से सहमत होते हैं।",
+      last_updated: "अंतिम अद्यतन: 11 जनवरी 2026",
+      sections: [
+        {
+          id: "scope",
+          heading: "1. सेवा का दायरा",
+          body:
+            "m-pathy एक प्रायोगिक AI-आधारित सहायक है और किसी मानव चिकित्सक, वकील, डॉक्टर या वित्तीय सलाहकार का विकल्प नहीं है।",
+        },
+        {
+          id: "no_advice",
+          heading: "2. पेशेवर सलाह नहीं",
+          body:
+            "m-pathy द्वारा उत्पन्न सामग्री का उपयोग चिकित्सा, कानूनी, वित्तीय या अन्य गंभीर परिणाम वाले निर्णयों के लिए एकमात्र आधार के रूप में नहीं किया जाना चाहिए।",
+        },
+        {
+          id: "modes",
+          heading: "3. सिस्टम मोड द्वारा शासन",
+          body:
+            "m-pathy स्व-नियंत्रण के लिए आंतरिक सिस्टम मोड का उपयोग करता है।\n\n" +
+            "मोड परिवर्तन सत्र-सीमित, निर्धारक हैं और उपयोगकर्ता प्रोफाइलिंग का गठन नहीं करते।",
+        },
+        {
+          id: "liability",
+          heading: "4. दायित्व की सीमा",
+          body:
+            "दायित्व लागू क़ानून के अनुसार निर्धारित किया जाता है। अनिवार्य दायित्व प्रावधान अप्रभावित रहते हैं।",
+        },
+      ],
+      disclaimer:
+        "ये शर्तें संविदात्मक संबंध को संरचित करती हैं और कानूनी परामर्श का स्थान नहीं लेतीं।",
+    },
 
-  refund: {
-    slug: "refund",
-    title: "रिफंड नीति",
-    intro:
-      "m-pathy वर्तमान में एक स्पष्ट, एक-बार की खरीद मॉडल प्रदान करता है। यह नीति बताती है कि भुगतान और रिफंड कैसे संभाले जाते हैं।",
-    last_updated: "अंतिम अपडेट: 18 नवंबर 2025",
-    sections: [
-      {
-        id: "model",
-        heading: "1. खरीद मॉडल",
-        body:
-          "m-pathy तक पहुँच एक निर्धारित अवधि और/या टोकन पूल के लिए एक बार की खरीद के रूप में दी जाती है। कोई स्वचालित सदस्यता नवीनीकरण नहीं है।",
-      },
-      {
-        id: "payment",
-        heading: "2. भुगतान प्रसंस्करण",
-        body:
-          "भुगतान Stripe या समान प्रदाताओं के माध्यम से संसाधित किए जाते हैं। उनके नियम और सुरक्षा उपाय भी लागू होते हैं।",
-      },
-      {
-        id: "withdrawal",
-        heading: "3. वापसी का अधिकार",
-        body:
-          "EU उपभोक्ताओं के लिए कुछ परिस्थितियों में डिजिटल सेवाओं के लिए वैधानिक वापसी अधिकार हो सकता है।",
-      },
-      {
-        id: "refunds",
-        heading: "4. वास्तविक रिफंड",
-        body:
-          "एक्सेस सक्रिय होने और टोकन उपलब्ध होने के बाद, रिफंड सामान्यतः प्रदान नहीं किए जाते—जब तक कि कोई कानूनी दायित्व या स्पष्ट वादा न हो।",
-      },
-    ],
-    disclaimer:
-      "यह सारांश कानूनी अनिवार्य अधिकारों को सीमित नहीं करता।",
-  },
+    // ------------------------- धनवापसी ----------------------------
+    refund: {
+      slug: "refund",
+      title: "धनवापसी नीति",
+      intro:
+        "यह नीति m-pathy में भुगतान और धनवापसी की प्रक्रिया का वर्णन करती है।",
+      last_updated: "अंतिम अद्यतन: 11 जनवरी 2026",
+      sections: [
+        {
+          id: "model",
+          heading: "1. खरीद मॉडल",
+          body:
+            "m-pathy तक पहुँच एक बार की खरीद के माध्यम से दी जाती है, जो निर्धारित अवधि और/या निर्धारित टोकन मात्रा के लिए होती है।",
+        },
+        {
+          id: "withdrawal",
+          heading: "2. वापसी का अधिकार",
+          body:
+            "डिजिटल सेवाओं के लिए लागू वैधानिक वापसी अधिकार क़ानून द्वारा आवश्यक होने पर लागू होते हैं।",
+        },
+        {
+          id: "refunds",
+          heading: "3. धनवापसी",
+          body:
+            "धनवापसी केवल तभी दी जाती है जब कोई कानूनी दायित्व हो या स्पष्ट रूप से वादा किया गया हो।",
+        },
+      ],
+      disclaimer:
+        "यह नीति किसी भी अनिवार्य वैधानिक अधिकार को सीमित नहीं करती।",
+    },
 
-  legal: {
-    slug: "legal",
-    title: "कानूनी जानकारी",
-    intro:
-      "यह पेज m-pathy के बारे में प्रमुख कानूनी जानकारी को एकत्रित करता है।",
-    last_updated: "अंतिम अपडेट: 18 नवंबर 2025",
-    sections: [
-      {
-        id: "overview",
-        heading: "1. अवलोकन",
-        body:
-          "m-pathy का संचालन NAAL UG द्वारा किया जाता है, जिसका मुख्यालय म्यूनिख, जर्मनी में है। सेवा में उन्नत AI मॉडल का उपयोग किया जाता है और यह गोपनीयता, स्पष्टता और उपयोगकर्ता नियंत्रण पर जोर देती है।",
-      },
-      {
-        id: "jurisdiction",
-        heading: "2. लागू कानून और क्षेत्राधिकार",
-        body:
-          "जब तक उपभोक्ता सुरक्षा के अनिवार्य कानून अन्यथा न कहें, जर्मन कानून लागू होता है। यदि आप जर्मन कानून के तहत व्यापारी के रूप में कार्य करते हैं, तो विशिष्ट क्षेत्राधिकार म्यूनिख है।",
-      },
-      {
-        id: "online_dispute",
-        heading: "3. ऑनलाइन विवाद समाधान",
-        body:
-          "यूरोपीय आयोग ऑनलाइन विवाद समाधान प्लेटफ़ॉर्म प्रदान करता है। हम सामान्यतः इन प्रक्रियाओं में भाग नहीं लेते।",
-      },
-    ],
-    disclaimer:
-      "यह पृष्ठ एक पारदर्शी अवलोकन प्रदान करता है। कानून द्वारा आवश्यक होने पर जर्मन संस्करण को प्राथमिकता दी जा सकती है।",
-  },
+    // ------------------------- कानूनी -----------------------------
+    legal: {
+      slug: "legal",
+      title: "कानूनी जानकारी",
+      intro:
+        "यह अनुभाग m-pathy पर लागू कानूनी ढाँचे का संक्षिप्त विवरण प्रदान करता है।",
+      last_updated: "अंतिम अद्यतन: 11 जनवरी 2026",
+      sections: [
+        {
+          id: "jurisdiction",
+          heading: "1. लागू क़ानून और क्षेत्राधिकार",
+          body:
+            "जब तक उपभोक्ता संरक्षण से संबंधित अनिवार्य प्रावधान अन्यथा न हों, जर्मन क़ानून लागू होगा। " +
+            "व्यावसायिक उपयोगकर्ताओं के लिए म्यूनिख अनन्य क्षेत्राधिकार है।",
+        },
+      ],
+      disclaimer:
+        "यह जानकारी पारदर्शिता के उद्देश्य से प्रदान की गई है। अनिवार्य क़ानून को प्राथमिकता प्राप्त है।",
+    },
+
 },
 
 
