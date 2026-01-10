@@ -19,6 +19,26 @@ export type MpathyNamespace =
 export type MpathySessionNamespace =
   | 'mpathy:archive:selection:v1'
 
+export type ArchivePair = {
+  pair_id: string
+  user: {
+    id: string
+    content: string
+    timestamp: string
+  }
+  assistant: {
+    id: string
+    content: string
+    timestamp: string
+  }
+  chain_id: string
+}
+
+export type ArchiveSelection = {
+  pairs: ArchivePair[]
+}
+
+
 function hasLocalStorage(): boolean {
   try {
     const testKey = '__mpathy_test__'
@@ -91,12 +111,44 @@ export function readSS<T>(key: MpathySessionNamespace): T | null {
   }
 }
 
+export function readArchiveSelection(): ArchiveSelection {
+  const sel = readSS<ArchiveSelection>('mpathy:archive:selection:v1')
+  if (!sel || !Array.isArray(sel.pairs)) {
+    return { pairs: [] }
+  }
+  return sel
+}
+
+
 export function writeSS<T>(key: MpathySessionNamespace, value: T): void {
   if (!hasSessionStorage()) return
   window.sessionStorage.setItem(key, JSON.stringify(value))
 }
 
+export function writeArchiveSelection(selection: ArchiveSelection): void {
+  if (!hasSessionStorage()) return
+
+  const unique = new Map<string, ArchivePair>()
+  selection.pairs.forEach((p) => {
+    unique.set(p.pair_id, p)
+  })
+
+  const ordered = Array.from(unique.values()).sort((a, b) =>
+    a.pair_id.localeCompare(b.pair_id)
+  )
+
+  writeSS<ArchiveSelection>('mpathy:archive:selection:v1', {
+    pairs: ordered,
+  })
+}
+
+
 export function clearSS(key: MpathySessionNamespace): void {
   if (!hasSessionStorage()) return
   window.sessionStorage.removeItem(key)
 }
+
+export function clearArchiveSelection(): void {
+  clearSS('mpathy:archive:selection:v1')
+}
+
