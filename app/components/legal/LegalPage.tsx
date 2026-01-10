@@ -66,7 +66,7 @@ function LegalContent({ pageKey }: { pageKey: LegalPageKey }) {
   const sections = page.sections ?? [];
 
   return (
-    <main className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20">
+    <main className="relative isolate z-10 min-h-dvh overflow-y-auto bg-transparent text-white antialiased selection:bg-white/20">
       <div className="page-center px-[clamp(10px,4vw,90px)] pb-[clamp(40px,6vw,90px)]">
         {/* SUPER BUFFER */}
         <div aria-hidden style={{ height: "var(--h-gap-xl)" }} />
