@@ -226,3 +226,18 @@ export async function getOrCreateDevicePublicKey2048(
     return "error_key";
   }
 }
+
+/**
+ * prepareSealPayload()
+ * Canonical handoff object for server-side Seal step.
+ * READ-ONLY derivation from verified archive entries.
+ */
+export function prepareSealPayload(entries: TArchiveEntry[]) {
+  return {
+    protocol_version: "v1",
+    prepared_at: new Date().toISOString(),
+    entry_count: entries.length,
+    truth_hashes: entries.map((e) => e.truth_hash),
+  };
+}
+
