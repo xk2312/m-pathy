@@ -225,6 +225,25 @@ function clearSelection() {
   setSelectionState(EMPTY_SELECTION)
 }
 
+useEffect(() => {
+  function onSelectionClear() {
+    clearSelection()
+  }
+
+  window.addEventListener(
+    'mpathy:archive:selection:clear',
+    onSelectionClear
+  )
+
+  return () => {
+    window.removeEventListener(
+      'mpathy:archive:selection:clear',
+      onSelectionClear
+    )
+  }
+}, [])
+
+
 
   const resolveChainIdFromChatSerial = (chatSerial: string) => {
   const chat = getRecentChats(13).find(
@@ -387,11 +406,11 @@ useEffect(() => {
         window.dispatchEvent(
           new CustomEvent('mpathy:archive:verify', {
             detail: {
+              intent: 'verify',
               pairs: selection,
             },
           })
         )
-        clearSelection()
       }}
 
       className="
@@ -404,6 +423,7 @@ useEffect(() => {
     >
       Verify {selection.length}
     </button>
+
 
      <button
       type="button"
@@ -418,7 +438,7 @@ useEffect(() => {
     },
   }),
 )
-clearSelection()
+
 
         }
       }}

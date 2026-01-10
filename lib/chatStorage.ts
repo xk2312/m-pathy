@@ -70,6 +70,8 @@
 
 import { generatePublicKey2048, computeTruthHash } from "@/lib/triketonVerify";
 import { syncArchiveFromTriketon } from "@/lib/archiveProjection";
+import { initArchiveVerifyListener } from "@/lib/archiveVerifyListener";
+
 // lib/chatStorage.ts
 // Eine Quelle der Wahrheit für Chat-Persistenz (localStorage)
 // lib/chatStorage.ts
@@ -212,6 +214,10 @@ export function initChatStorage(): void {
     if (!ls.getItem(TRIKETON_STORAGE_KEY)) {
       ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify([]));
     }
+
+    // --- Archive Verify Listener (Phase 2: Verify = Seal + Report) ---
+    initArchiveVerifyListener();
+
   } catch {}
 }
 

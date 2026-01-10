@@ -105,6 +105,12 @@ window.dispatchEvent(
   }),
 )
 
+// 4. signal selection clear (post-commit)
+window.dispatchEvent(
+  new CustomEvent('mpathy:archive:selection:clear')
+)
+
+
 
     // 📊 audit telemetry (NO PII, NO TEXT, NO HASH LEAK)
     window.dispatchEvent(
