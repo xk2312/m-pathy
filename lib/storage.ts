@@ -1,6 +1,6 @@
 // lib/storage.ts
 // GPTM-Galaxy+ · m-pathy Archive + Verification System v5
-// LocalStorage Layer – MEFL conform
+// LocalStorage + SessionStorage Layer – MEFL conform
 
 export type MpathyNamespace =
   | 'mpathy:chat:v1'
@@ -14,12 +14,9 @@ export type MpathyNamespace =
   | 'mpathy:triketon:device_public_key'
   | 'mpathy:triketon:device_public_key_2048'
 
+export type MpathySessionNamespace =
+  | 'mpathy:archive:selection:v1'
 
-
-
-/**
- * Prüft, ob LocalStorage verfügbar ist.
- */
 function hasLocalStorage(): boolean {
   try {
     const testKey = '__mpathy_test__'
@@ -31,9 +28,17 @@ function hasLocalStorage(): boolean {
   }
 }
 
-/**
- * Liest einen Wert aus dem angegebenen Namespace.
- */
+function hasSessionStorage(): boolean {
+  try {
+    const testKey = '__mpathy_session_test__'
+    window.sessionStorage.setItem(testKey, '1')
+    window.sessionStorage.removeItem(testKey)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export function readLS<T>(key: MpathyNamespace): T | null {
   if (!hasLocalStorage()) return null
   const raw = window.localStorage.getItem(key)
@@ -41,50 +46,52 @@ export function readLS<T>(key: MpathyNamespace): T | null {
   try {
     return JSON.parse(raw) as T
   } catch {
-    console.warn(`[mpathy] Invalid JSON in ${key}`)
     return null
   }
 }
 
-/**
- * Schreibt einen Wert in den Namespace.
- * ⚠️ Triketon-Ledger ist append-only und darf NICHT überschrieben werden.
- */
 export function writeLS<T>(key: MpathyNamespace, value: T): void {
   if (!hasLocalStorage()) return
-
-  // 🔒 Triketon-Invariante: niemals überschreiben
   if (key === 'mpathy:triketon:v1') {
     const existing = window.localStorage.getItem(key)
-    if (existing !== null) {
-      return
-    }
+    if (existing !== null) return
   }
-
   window.localStorage.setItem(key, JSON.stringify(value))
 }
 
-
-/**
- * Entfernt einen Namespace-Eintrag.
- */
 export function clearLS(key: MpathyNamespace): void {
   if (!hasLocalStorage()) return
   window.localStorage.removeItem(key)
 }
 
-/**
- * Löscht alle m-pathy Namespaces (z. B. bei Reset).
- */
 export function clearAllLS(): void {
   if (!hasLocalStorage()) return
- const keys: MpathyNamespace[] = [
-  'mpathy:chat:v1',
-  'mpathy:archive:v1',
-  'mpathy:context:upload',
-  'mpathy:verification:v1',
-  // ⚠️ Triketon bewusst NICHT hier
-]
-
+  const keys: MpathyNamespace[] = [
+    'mpathy:chat:v1',
+    'mpathy:archive:v1',
+    'mpathy:context:upload',
+    'mpathy:verification:v1',
+  ]
   keys.forEach((k) => window.localStorage.removeItem(k))
+}
+
+export function readSS<T>(key: MpathySessionNamespace): T | null {
+  if (!hasSessionStorage()) return null
+  const raw = window.sessionStorage.getItem(key)
+  if (!raw) return null
+  try {
+    return JSON.parse(raw) as T
+  } catch {
+    return null
+  }
+}
+
+export function writeSS<T>(key: MpathySessionNamespace, value: T): void {
+  if (!hasSessionStorage()) return
+  window.sessionStorage.setItem(key, JSON.stringify(value))
+}
+
+export function clearSS(key: MpathySessionNamespace): void {
+  if (!hasSessionStorage()) return
+  window.sessionStorage.removeItem(key)
 }
