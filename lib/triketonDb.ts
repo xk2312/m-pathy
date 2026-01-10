@@ -11,3 +11,17 @@ export async function findTriketonAnchor(publicKey: string, truthHash: string): 
   );
   return r.rowCount === 1;
 }
+
+export async function insertTriketonAnchor(
+  publicKey: string,
+  truthHash: string,
+): Promise<boolean> {
+  const pool = await getPool();
+  const r = await pool.query(
+    `insert into triketon_anchors (public_key, truth_hash)
+     values ($1, $2)
+     on conflict do nothing`,
+    [publicKey, truthHash],
+  );
+  return r.rowCount === 1;
+}
