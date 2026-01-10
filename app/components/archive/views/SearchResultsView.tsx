@@ -2,13 +2,18 @@
 
 import type { SearchResult } from '@/components/archive/ArchiveSearch'
 
+type SelectedPair = {
+  pair_id: string
+}
+
 type Props = {
   results: SearchResult[]
-  selection: { pair_id: string }[]
-  addPair: (pair: { pair_id: string }) => void
+  selection: SelectedPair[]
+  addPair: (pair: SelectedPair) => void
   removePair: (pair_id: string) => void
   onOpenChat?: (chainId: string) => void
 }
+
 
 
 
