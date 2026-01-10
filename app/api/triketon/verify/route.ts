@@ -4,10 +4,12 @@ import { createHash } from "crypto";
 
 
 type VerifyRequest = {
+  intent: "verify";
   publicKey: string;
   truthHash: string;
   text: string;
 };
+
 
 type VerifyResponse = {
   result: "TRUE" | "FALSE";
@@ -31,9 +33,17 @@ export async function POST(req: Request) {
   try {
     const body = (await req.json()) as Partial<VerifyRequest>;
 
+    const intent = body.intent;
     const publicKey = body.publicKey;
     const truthHash = body.truthHash;
     const text = body.text;
+
+    if (intent !== "verify") {
+      return NextResponse.json(
+        { result: "FALSE", message: "Invalid intent." } satisfies VerifyResponse,
+        { status: 400 }
+      );
+    }
 
     if (!isNonEmptyString(publicKey) || !isNonEmptyString(truthHash) || !isNonEmptyString(text)) {
       return NextResponse.json(
@@ -41,6 +51,7 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
 
     // Guard: kein riesiger Payload (kein Text speichern, nicht loggen)
     if (text.length > 200_000) {
