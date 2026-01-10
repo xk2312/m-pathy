@@ -113,7 +113,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { getRecentChats } from '@/lib/archiveIndex'
-import { readLS } from '@/lib/storage'
+import { readLS, readSS, writeSS } from '@/lib/storage'
 import { Input } from '@/components/ui/Input'
 import { MessageSquare } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -158,6 +158,16 @@ type SelectedPair = {
   pair_id: string
 }
 
+type SelectionState = {
+  pairs: SelectedPair[]
+  updated_at: string
+}
+
+const EMPTY_SELECTION: SelectionState = {
+  pairs: [],
+  updated_at: new Date().toISOString(),
+}
+
 
 /* ------------------------------------------------------------------ */
 /* Component                                                          */
@@ -168,51 +178,51 @@ export default function ArchiveOverlay() {
   const [chats, setChats] = useState<ChatDisplay[]>([])
   const [openChainId, setOpenChainId] = useState<string | null>(null)
 
-  const SELECTION_STORAGE_KEY = 'mpathy:archive:selection:v1'
-
-  const [selection, setSelection] = useState<SelectedPair[]>(() => {
-    if (typeof window === 'undefined') return []
-    try {
-      const raw = sessionStorage.getItem(SELECTION_STORAGE_KEY)
-      const parsed = raw ? JSON.parse(raw) : []
-      return Array.isArray(parsed) ? parsed : []
-    } catch {
-      return []
-    }
+  const [selectionState, setSelectionState] = useState<SelectionState>(() => {
+    if (typeof window === 'undefined') return EMPTY_SELECTION
+    return (
+      readSS<SelectionState>('mpathy:archive:selection:v1') ??
+      EMPTY_SELECTION
+    )
   })
+
+  const selection = selectionState.pairs
+
 
 const router = useRouter()
 
 function persistSelection(next: SelectedPair[]) {
-  try {
-    sessionStorage.setItem(
-      SELECTION_STORAGE_KEY,
-      JSON.stringify(next)
-    )
-  } catch {}
+  const nextState: SelectionState = {
+    pairs: next,
+    updated_at: new Date().toISOString(),
+  }
+  writeSS('mpathy:archive:selection:v1', nextState)
 }
+
 
 function addPair(pair: SelectedPair) {
-  setSelection(prev => {
-    const next = prev.some(p => p.pair_id === pair.pair_id)
-      ? prev
-      : [...prev, pair]
+  setSelectionState(prev => {
+    const next = prev.pairs.some(p => p.pair_id === pair.pair_id)
+      ? prev.pairs
+      : [...prev.pairs, pair]
     persistSelection(next)
-    return next
+    return { ...prev, pairs: next }
   })
 }
 
+
 function removePair(pair_id: string) {
-  setSelection(prev => {
-    const next = prev.filter(p => p.pair_id !== pair_id)
+  setSelectionState(prev => {
+    const next = prev.pairs.filter(p => p.pair_id !== pair_id)
     persistSelection(next)
-    return next
+    return { ...prev, pairs: next }
   })
 }
+
 
 function clearSelection() {
   persistSelection([])
-  setSelection([])
+  setSelectionState(EMPTY_SELECTION)
 }
 
 
