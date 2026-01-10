@@ -21,7 +21,9 @@ const EVENT_NAME = 'mpathy:archive:verify'
 
 type VerifyEventDetail = {
   pairs: { pair_id: string }[]
+  intent: 'verify'
 }
+
 
 let isInitialized = false
 
@@ -32,8 +34,11 @@ export function initArchiveVerifyListener() {
   window.addEventListener(EVENT_NAME, async (event: Event) => {
     const custom = event as CustomEvent<VerifyEventDetail>
     const pairs = custom.detail?.pairs ?? []
+    const intent = custom.detail?.intent
 
+    if (intent !== 'verify') return
     if (pairs.length === 0) return
+
 
     // read-only source of truth
     const archive =
