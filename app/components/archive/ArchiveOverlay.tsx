@@ -411,13 +411,15 @@ useEffect(() => {
       onClick={() => {
         if (selection.length <= 6) {
           window.dispatchEvent(
-            new CustomEvent('mpathy:archive:add', {
-              detail: {
-                pairs: selection,
-              },
-            })
-          )
-          clearSelection()
+  new CustomEvent('mpathy:archive:verify', {
+    detail: {
+      intent: 'verify',
+      pairs: selection,
+    },
+  }),
+)
+clearSelection()
+
         }
       }}
 

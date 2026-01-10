@@ -13,7 +13,7 @@
 // - Trigger injection
 // - Write to archive or ledger
 
-import { readLS } from '@/lib/storage'
+import { readLS, writeLS } from '@/lib/storage'
 import { verifyAll } from '@/lib/triketonVerify'
 import type { TArchiveEntry, TVerificationReport } from '@/lib/types'
 
@@ -24,24 +24,25 @@ type VerifyEventDetail = {
   intent: 'verify'
 }
 
-// optional seal side-effect (isolated, non-blocking)
+// deterministic seal (part of initial verify commit)
 async function triggerSeal(publicKey: string, truthHashes: string[]) {
-  try {
-    for (const truthHash of truthHashes) {
-      await fetch('/api/triketon/seal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          intent: 'seal',
-          publicKey,
-          truthHash,
-        }),
-      })
-    }
-  } catch {
-    // intentionally silent:
-    // verify must never fail or block due to seal errors
+  for (const truthHash of truthHashes) {
+    await fetch('/api/triketon/seal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        intent: 'seal',
+        publicKey,
+        truthHash,
+      }),
+    })
   }
+}
+function persistReport(report: TVerificationReport) {
+  const key = 'mpathy:verification:reports:v1'
+  const existing =
+    readLS<TVerificationReport[]>(key) ?? []
+  writeLS(key, [...existing, report])
 }
 
 let isInitialized = false
@@ -90,18 +91,20 @@ export function initArchiveVerifyListener() {
       verified_false: result.messageLevel.filter((v) => !v).length,
     }
 
-    // emit report (read-only handoff)
-    window.dispatchEvent(
-      new CustomEvent('mpathy:archive:verify:report', {
-        detail: report,
-      }),
-    )
+// 1. persist report (local truth object)
+persistReport(report)
 
-    // optional seal trigger (only if verification succeeded)
-    if (report.chain_signature === 'valid' && report.public_key) {
-      const truthHashes = entries.map((e) => e.truth_hash)
-      triggerSeal(report.public_key, truthHashes)
-    }
+// 2. deterministic seal (initial commit)
+const truthHashes = entries.map((e) => e.truth_hash)
+await triggerSeal(report.public_key, truthHashes)
+
+// 3. emit report for UI
+window.dispatchEvent(
+  new CustomEvent('mpathy:archive:verify:report', {
+    detail: report,
+  }),
+)
+
 
     // 📊 audit telemetry (NO PII, NO TEXT, NO HASH LEAK)
     window.dispatchEvent(

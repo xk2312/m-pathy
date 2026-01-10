@@ -10,9 +10,11 @@ export type MpathyNamespace =
   | 'mpathy:archive:pairs:v1'
   | 'mpathy:context:upload'
   | 'mpathy:verification:v1'
+  | 'mpathy:verification:reports:v1'
   | 'mpathy:triketon:v1'
   | 'mpathy:triketon:device_public_key'
   | 'mpathy:triketon:device_public_key_2048'
+
 
 export type MpathySessionNamespace =
   | 'mpathy:archive:selection:v1'
@@ -67,11 +69,14 @@ export function clearLS(key: MpathyNamespace): void {
 export function clearAllLS(): void {
   if (!hasLocalStorage()) return
   const keys: MpathyNamespace[] = [
-    'mpathy:chat:v1',
-    'mpathy:archive:v1',
-    'mpathy:context:upload',
-    'mpathy:verification:v1',
-  ]
+  'mpathy:chat:v1',
+  'mpathy:archive:v1',
+  'mpathy:context:upload',
+  'mpathy:verification:v1',
+  'mpathy:verification:reports:v1',
+  // ⚠️ Triketon bewusst NICHT hier
+]
+
   keys.forEach((k) => window.localStorage.removeItem(k))
 }
 
