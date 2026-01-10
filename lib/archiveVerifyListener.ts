@@ -24,6 +24,25 @@ type VerifyEventDetail = {
   intent: 'verify'
 }
 
+// optional seal side-effect (isolated, non-blocking)
+async function triggerSeal(publicKey: string, truthHashes: string[]) {
+  try {
+    for (const truthHash of truthHashes) {
+      await fetch('/api/triketon/seal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          intent: 'seal',
+          publicKey,
+          truthHash,
+        }),
+      })
+    }
+  } catch {
+    // intentionally silent:
+    // verify must never fail or block due to seal errors
+  }
+}
 
 let isInitialized = false
 
@@ -38,7 +57,6 @@ export function initArchiveVerifyListener() {
 
     if (intent !== 'verify') return
     if (pairs.length === 0) return
-
 
     // read-only source of truth
     const archive =
@@ -79,6 +97,12 @@ export function initArchiveVerifyListener() {
       }),
     )
 
+    // optional seal trigger (only if verification succeeded)
+    if (report.chain_signature === 'valid' && report.public_key) {
+      const truthHashes = entries.map((e) => e.truth_hash)
+      triggerSeal(report.public_key, truthHashes)
+    }
+
     // 📊 audit telemetry (NO PII, NO TEXT, NO HASH LEAK)
     window.dispatchEvent(
       new CustomEvent('mpathy:audit:event', {
@@ -92,6 +116,5 @@ export function initArchiveVerifyListener() {
         },
       }),
     )
-
   })
 }
