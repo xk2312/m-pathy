@@ -47,14 +47,19 @@ function highlightText(text: string, term?: string) {
   )
 }
 
+type SelectedPair = {
+  pair_id: string
+}
+
 type Props = {
   chain_id: string
   onClose: () => void
   highlight?: string
-  selection: { pair_id: string }[]
-  addPair: (pair: { pair_id: string }) => void
+  selection: SelectedPair[]
+  addPair: (pair: SelectedPair) => void
   removePair: (pair_id: string) => void
 }
+
 
 
 
