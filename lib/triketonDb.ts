@@ -26,8 +26,8 @@ export async function insertTriketonAnchor(
 ): Promise<boolean> {
   const pool = await getPool();
 
-  // 🔒 server-side defaults (authoritative)
-  const protocol_version = meta.protocol_version ?? "v1";
+  // 🔒 server-side authoritative values
+  const version = meta.protocol_version ?? "v1";
   const hash_profile = meta.hash_profile ?? "TRIKETON_HASH_V1";
   const key_profile = meta.key_profile ?? "TRIKETON_KEY_V1";
   const orbit_context = meta.orbit_context ?? "archive";
@@ -36,17 +36,19 @@ export async function insertTriketonAnchor(
     `insert into triketon_anchors (
        public_key,
        truth_hash,
-       protocol_version,
+       version,
        hash_profile,
        key_profile,
-       orbit_context
+       orbit_context,
+       timestamp,
+       created_at
      )
-     values ($1, $2, $3, $4, $5, $6)
+     values ($1, $2, $3, $4, $5, $6, now(), now())
      on conflict do nothing`,
     [
       publicKey,
       truthHash,
-      protocol_version,
+      version,
       hash_profile,
       key_profile,
       orbit_context,
@@ -55,4 +57,5 @@ export async function insertTriketonAnchor(
 
   return r.rowCount === 1;
 }
+
 
