@@ -12,7 +12,6 @@ export type MpathyNamespace =
   | 'mpathy:verification:v1'
   | 'mpathy:verification:reports:v1'
   | 'mpathy:triketon:v1'
-  | 'mpathy:triketon:device_public_key'
   | 'mpathy:triketon:device_public_key_2048'
 
 
@@ -147,8 +146,3 @@ export function clearSS(key: MpathySessionNamespace): void {
   if (!hasSessionStorage()) return
   window.sessionStorage.removeItem(key)
 }
-
-export function clearArchiveSelection(): void {
-  clearSS('mpathy:archive:selection:v1')
-}
-

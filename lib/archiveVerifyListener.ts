@@ -239,20 +239,17 @@ export function initArchiveVerifyListener() {
       return
     }
 
-    const publicKey =
-      readLS<string>('mpathy:triketon:device_public_key_2048')
-    if (!publicKey) {
-      window.dispatchEvent(
-        new CustomEvent('mpathy:archive:verify:error', {
-          detail: {
-            code: 'NO_DEVICE_PUBLIC_KEY',
-            message:
-              'Device public key missing. Open Chat once (ledger init) and try again.',
-          },
-        }),
-      )
-      return
-    }
+   const publicKey = localStorage.getItem(
+  'mpathy:triketon:device_public_key_2048',
+)
+
+if (!publicKey || typeof publicKey !== 'string') {
+  console.error(
+    '[ArchiveVerify] Device public key missing or invalid',
+  )
+  return
+}
+
 
 
     // 4. Send WRITE / SEAL request to server
