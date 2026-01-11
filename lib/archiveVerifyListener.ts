@@ -69,21 +69,32 @@ export function initArchiveVerifyListener() {
     if (!publicKey) return
 
     // 4. Send WRITE / SEAL request to server
-    const response = await fetch('/api/triketon/seal', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        public_key: publicKey,
-        text: canonicalText,
-        protocol_version: 'v1',
-        source: 'archive-selection',
-      }),
-    })
+   // --- decoy hashes (client-side distraction only) ---
+const decoyHash1 = crypto.randomUUID().replace(/-/g, '')
+const decoyHash2 = crypto.randomUUID().replace(/-/g, '')
 
-    if (!response.ok) return
+const response = await fetch('/api/triketon/seal', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    intent: 'seal',
+    publicKey,
+    text: canonicalText,
 
-    const result = await response.json()
-    if (result?.verified !== true) return
+    // noise / distraction (server MUST ignore)
+    truthHash: decoyHash1,
+    truthHash2: decoyHash2,
+
+    protocol_version: 'v1',
+    source: 'archive-selection',
+  }),
+})
+
+if (!response.ok) return
+
+const result = await response.json()
+if (result?.result !== 'SEALED' && result?.result !== 'IGNORED') return
+
 
     // 5. Create local report ONLY after server confirmation
     const report: TVerificationReport = {
