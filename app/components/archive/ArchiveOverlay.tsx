@@ -154,14 +154,13 @@ type ChatDisplay = {
   lastTimestamp: string
 }
 
-type SelectedPair = {
-  pair_id: string
-}
+import type { ArchivePair } from '@/lib/storage'
 
 type SelectionState = {
-  pairs: SelectedPair[]
+  pairs: ArchivePair[]
   updated_at: string
 }
+
 
 const EMPTY_SELECTION: SelectionState = {
   pairs: [],
@@ -191,7 +190,7 @@ export default function ArchiveOverlay() {
 
 const router = useRouter()
 
-function persistSelection(next: SelectedPair[]) {
+function persistSelection(next: ArchivePair[]) {
   const nextState: SelectionState = {
     pairs: next,
     updated_at: new Date().toISOString(),
@@ -200,7 +199,8 @@ function persistSelection(next: SelectedPair[]) {
 }
 
 
-function addPair(pair: SelectedPair) {
+
+function addPair(pair: ArchivePair) {
   setSelectionState(prev => {
     const next = prev.pairs.some(p => p.pair_id === pair.pair_id)
       ? prev.pairs
