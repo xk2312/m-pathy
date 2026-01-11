@@ -328,9 +328,19 @@ useEffect(() => {
     clearSelection()
   }
 
+  function onVerifyError(event: Event) {
+    const custom = event as CustomEvent<{ message?: string }>
+    const msg = custom.detail?.message ?? 'Verify failed.'
+    window.alert(msg)
+  }
+
   window.addEventListener(
     'mpathy:archive:selection:clear',
     onSelectionClear
+  )
+  window.addEventListener(
+    'mpathy:archive:verify:error',
+    onVerifyError
   )
 
   return () => {
@@ -338,8 +348,13 @@ useEffect(() => {
       'mpathy:archive:selection:clear',
       onSelectionClear
     )
+    window.removeEventListener(
+      'mpathy:archive:verify:error',
+      onVerifyError
+    )
   }
 }, [])
+
 
 
 

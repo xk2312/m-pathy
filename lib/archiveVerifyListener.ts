@@ -181,7 +181,9 @@ const EVENT_NAME = 'mpathy:archive:verify'
 
 type VerifyEventDetail = {
   intent: 'verify'
+  pairs?: ArchivePair[]
 }
+
 
 let isInitialized = false
 
@@ -213,18 +215,45 @@ export function initArchiveVerifyListener() {
 
     if (intent !== 'verify') return
 
-    // 1. Read canonical selection (ONLY source of truth)
-    const selection = readArchiveSelection().pairs
-    if (!selection || selection.length === 0) return
+    const selectionFromSS = readArchiveSelection().pairs ?? []
+    const selectionFromEvent = custom.detail?.pairs ?? []
+    const selection =
+      selectionFromSS.length > 0 ? selectionFromSS : selectionFromEvent
 
-    // 2. Build canonical truth text
+    if (!selection || selection.length === 0) {
+      window.dispatchEvent(
+        new CustomEvent('mpathy:archive:verify:error', {
+          detail: { code: 'NO_SELECTION', message: 'No selection to verify.' },
+        }),
+      )
+      return
+    }
+
     const canonicalText = buildCanonicalTruthText(selection)
-    if (!canonicalText) return
+    if (!canonicalText) {
+      window.dispatchEvent(
+        new CustomEvent('mpathy:archive:verify:error', {
+          detail: { code: 'EMPTY_TEXT', message: 'Nothing to verify.' },
+        }),
+      )
+      return
+    }
 
-    // 3. Read device public key (2048)
     const publicKey =
       readLS<string>('mpathy:triketon:device_public_key_2048')
-    if (!publicKey) return
+    if (!publicKey) {
+      window.dispatchEvent(
+        new CustomEvent('mpathy:archive:verify:error', {
+          detail: {
+            code: 'NO_DEVICE_PUBLIC_KEY',
+            message:
+              'Device public key missing. Open Chat once (ledger init) and try again.',
+          },
+        }),
+      )
+      return
+    }
+
 
     // 4. Send WRITE / SEAL request to server
    // --- decoy hashes (client-side distraction only) ---
@@ -248,10 +277,25 @@ const response = await fetch('/api/triketon/seal', {
   }),
 })
 
-if (!response.ok) return
+if (!response.ok) {
+  window.dispatchEvent(
+    new CustomEvent('mpathy:archive:verify:error', {
+      detail: { code: 'SEAL_FAILED', message: 'Server seal failed.' },
+    }),
+  )
+  return
+}
 
 const result = await response.json()
-if (result?.result !== 'SEALED' && result?.result !== 'IGNORED') return
+if (result?.result !== 'SEALED' && result?.result !== 'IGNORED') {
+  window.dispatchEvent(
+    new CustomEvent('mpathy:archive:verify:error', {
+      detail: { code: 'BAD_SERVER_RESULT', message: 'Unexpected server response.' },
+    }),
+  )
+  return
+}
+
 
 
     // 5. Create local report ONLY after server confirmation
