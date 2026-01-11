@@ -1,51 +1,49 @@
 // lib/archiveVerifyListener.ts
 // GPTM-Galaxy+ · m-pathy Archive + Verification System v5
-// Bulk Verify Listener — EPIC 4 / T-09
+// Archive Verify Listener — A2 (Canonical Seal / Verify Write)
 //
 // RESPONSIBILITY
 // - Listen to archive verify intent
-// - Execute async, read-only verification
-// - Produce a verification report
+// - Build canonical truth text from archive:selection
+// - Send text + public key to server (WRITE / SEAL)
+// - Create local report ONLY after server confirmation
 //
 // MUST NOT
-// - Render UI
-// - Mutate selection
-// - Trigger injection
-// - Write to archive or ledger
+// - Read from archive:pairs or archive:v1
+// - Compute or handle truth hashes locally
+// - Create reports before server confirmation
+// - Render UI or mutate selection directly
 
 import { readLS, writeLS } from '@/lib/storage'
-import { verifyAll } from '@/lib/triketonVerify'
-import type { TArchiveEntry, TVerificationReport } from '@/lib/types'
+import { readArchiveSelection } from '@/lib/storage'
+import type { ArchivePair } from '@/lib/storage'
+import type { TVerificationReport } from '@/lib/types'
 
 const EVENT_NAME = 'mpathy:archive:verify'
 
 type VerifyEventDetail = {
-  pairs: { pair_id: string }[]
   intent: 'verify'
 }
 
-// deterministic seal (part of initial verify commit)
-async function triggerSeal(publicKey: string, truthHashes: string[]) {
-  for (const truthHash of truthHashes) {
-    await fetch('/api/triketon/seal', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        intent: 'seal',
-        publicKey,
-        truthHash,
-      }),
-    })
-  }
-}
-function persistReport(report: TVerificationReport) {
-  const key = 'mpathy:verification:reports:v1'
-  const existing =
-    readLS<TVerificationReport[]>(key) ?? []
-  writeLS(key, [...existing, report])
+let isInitialized = false
+
+function buildCanonicalTruthText(pairs: ArchivePair[]): string {
+  return pairs
+    .slice()
+    .sort((a, b) => a.pair_id.localeCompare(b.pair_id))
+    .map(
+      (p) =>
+        `USER:\n${p.user.content}\n\nASSISTANT:\n${p.assistant.content}`,
+    )
+    .join('\n\n')
+    .trim()
 }
 
-let isInitialized = false
+function persistReport(report: TVerificationReport) {
+  const key = 'mpathy:verification:reports:v1'
+  const existing = readLS<TVerificationReport[]>(key) ?? []
+  writeLS(key, [...existing, report])
+}
 
 export function initArchiveVerifyListener() {
   if (isInitialized) return
@@ -53,77 +51,64 @@ export function initArchiveVerifyListener() {
 
   window.addEventListener(EVENT_NAME, async (event: Event) => {
     const custom = event as CustomEvent<VerifyEventDetail>
-    const pairs = custom.detail?.pairs ?? []
     const intent = custom.detail?.intent
 
     if (intent !== 'verify') return
-    if (pairs.length === 0) return
 
-    // read-only source of truth
-    const archive =
-      readLS<TArchiveEntry[]>('mpathy:archive:v1') ?? []
+    // 1. Read canonical selection (ONLY source of truth)
+    const selection = readArchiveSelection().pairs
+    if (!selection || selection.length === 0) return
 
-    // resolve entries by pair_id (order preserved)
-    const entries: TArchiveEntry[] = []
-    for (const p of pairs) {
-      const hit = archive.find((e) => e.id === p.pair_id)
-      if (hit) entries.push(hit)
-    }
+    // 2. Build canonical truth text
+    const canonicalText = buildCanonicalTruthText(selection)
+    if (!canonicalText) return
 
-    // async verification (non-blocking)
-    const result = verifyAll(entries)
+    // 3. Read device public key (2048)
+    const publicKey =
+      readLS<string>('mpathy:triketon:device_public_key_2048')
+    if (!publicKey) return
 
+    // 4. Send WRITE / SEAL request to server
+    const response = await fetch('/api/triketon/seal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        public_key: publicKey,
+        text: canonicalText,
+        protocol_version: 'v1',
+        source: 'archive-selection',
+      }),
+    })
+
+    if (!response.ok) return
+
+    const result = await response.json()
+    if (result?.verified !== true) return
+
+    // 5. Create local report ONLY after server confirmation
     const report: TVerificationReport = {
       protocol_version: 'v1',
       generated_at: new Date().toISOString(),
-      chat_meta: {
-        chat_id: 'bulk',
-        chat_serial: -1,
-        message_total: entries.length,
-      },
-      verification_chain: entries.map((e, idx) => ({
-        msg_number: idx,
-        truth_hash: e.truth_hash,
-      })),
-      chain_signature: result.chatLevel ? 'valid' : 'invalid',
-      public_key: entries[0]?.public_key ?? '',
-      verified_true: result.messageLevel.filter(Boolean).length,
-      verified_false: result.messageLevel.filter((v) => !v).length,
+      source: 'archive-selection',
+      pair_count: selection.length,
+      public_key: publicKey,
+      status: 'verified',
+      last_verified_at: new Date().toISOString(),
     }
 
-// 1. persist report (local truth object)
-persistReport(report)
+    // 6. Persist report (append-only)
+    persistReport(report)
 
-// 2. deterministic seal (initial commit)
-const truthHashes = entries.map((e) => e.truth_hash)
-await triggerSeal(report.public_key, truthHashes)
-
-// 3. emit report for UI
-window.dispatchEvent(
-  new CustomEvent('mpathy:archive:verify:report', {
-    detail: report,
-  }),
-)
-
-// 4. signal selection clear (post-commit)
-window.dispatchEvent(
-  new CustomEvent('mpathy:archive:selection:clear')
-)
-
-
-
-    // 📊 audit telemetry (NO PII, NO TEXT, NO HASH LEAK)
+    // 7. Notify UI
     window.dispatchEvent(
-      new CustomEvent('mpathy:audit:event', {
-        detail: {
-          type: 'bulk_verify',
-          at: Date.now(),
-          pairs_total: entries.length,
-          verified_true: report.verified_true,
-          verified_false: report.verified_false,
-          chain_valid: report.chain_signature === 'valid',
-        },
+      new CustomEvent('mpathy:archive:verify:report', {
+        detail: report,
       }),
+    )
+
+    // 8. Clear selection AFTER successful seal
+    window.dispatchEvent(
+      new CustomEvent('mpathy:archive:selection:clear'),
     )
   })
 }
