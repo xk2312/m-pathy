@@ -1,113 +1,211 @@
 /**
- * =========================================================
- *  ARCHIVE OVERLAY — SYSTEM STAGE (Canonical)
- * =========================================================
+ * ============================================================================
+ * INVENTUS INDEX — ArchiveOverlay.tsx
+ * ============================================================================
  *
- *  ROLE
- *  ----
- *  Owns the Archive as a SYSTEM SPACE.
- *  Orchestrates structure, not content.
+ * ZWECK
+ * -----
+ * Vollständiger UI-Orchestrator für das Archiv-System.
+ * Diese Datei ist die zentrale Steuerinstanz für:
+ *   - Anzeige vergangener Chats
+ *   - Suche & Preview
+ *   - Auswahl einzelner Message-Paare
+ *   - Übergabe der Selection an Verify / Add-to-Chat
+ *   - Initialisierung systemweiter Listener (Verify)
  *
- *  This file is allowed to be LARGE.
- *  This file is NOT allowed to render domain logic.
+ * KEINE Business-Logik.
+ * KEINE Kryptographie.
+ * KEINE Server-Logik.
  *
- *  =========================================================
- *  INDEX (Jump Anchors)
- *  =========================================================
  *
- *  [ANCHOR:INTENT]
- *    - File responsibility & non-responsibility
- *    - What this file MUST do
- *    - What this file MUST NEVER do
+ * ============================================================================
+ * HAUPTVERANTWORTUNG
+ * ============================================================================
  *
- *  [ANCHOR:SPACE]
- *    - Overlay as system room
- *    - Chat blocking & ownership
- *    - Scroll & background contract
+ * - UI-State (Query, View, Selection, Open Chat)
+ * - Event-Dispatching (Verify, Close, Selection-Clear)
+ * - Persistenz der Selection (SessionStorage)
+ * - Reine Weitergabe von Daten an Subviews
  *
- *  [ANCHOR:STATE]
- *    - Archive view state (Recent | Search | Detail | Empty)
- *    - Search threshold rules (0–2 | ≥3)
- *    - No business logic, only switching
  *
- *  [ANCHOR:LAYOUT]
- *    - Structural composition
- *    - Header / Search / Body / Footer
- *    - Z-order & stacking context
+ * ============================================================================
+ * EXTERNE ABHÄNGIGKEITEN (KRITISCH)
+ * ============================================================================
  *
- *  [ANCHOR:HEADER]
- *    - ArchiveHeader integration
- *    - Title invariance ("Archive")
- *    - Context label switching (view descriptor only)
+ * Storage:
+ *   - readSS / writeSS
+ *     Key: 'mpathy:archive:selection:v1'
  *
- *  [ANCHOR:SEARCH]
- *    - ArchiveSearch wiring
- *    - Input → Body decision flow
- *    - No filtering logic here
+ * Listener:
+ *   - initArchiveVerifyListener()
+ *     → MUSS exakt EINMAL beim Mount ausgeführt werden
  *
- *  [ANCHOR:BODY]
- *    - Body as the ONLY dynamic region
- *    - View switch:
- *        • RecentChatsView
- *        • SearchResultsView
- *        • ChatDetailView
- *        • EmptyStateView
+ * Archive-Daten:
+ *   - getRecentChats()
+ *   - runArchiveSearch()
+ *   - getArchiveSearchPreview()
  *
- *  [ANCHOR:SELECTION]
- *    - Global Selection container ownership
- *    - Selection visibility rules (0 | 1–5 | 6)
- *    - No intent binding here
  *
- *  [ANCHOR:ACTIONS]
- *    - ArchiveActions integration
- *    - Intent dispatch (verify | add)
- *    - Post-action cleanup responsibility
+ * ============================================================================
+ * ZENTRALER UI-STATE
+ * ============================================================================
  *
- *  [ANCHOR:FOOTER]
- *    - ArchiveUIFinish integration
- *    - Branding & trust closure
- *    - No primary actions allowed
+ * query:
+ *   - aktueller Suchstring
  *
- *  [ANCHOR:REPORTS]
- *    - Explicit NON-OWNERSHIP of reports
- *    - Archive may link, never render
+ * chats:
+ *   - reduzierte Metadaten der letzten Chats
  *
- *  [ANCHOR:EXTENSION]
- *    - How to add new Archive views
- *    - Rules for future overlays
+ * openChainId:
+ *   - wenn gesetzt → Detail-View aktiv
  *
- *  [ANCHOR:ANTI-DRIFT]
- *    - Forbidden patterns
- *    - Stop conditions
+ * selectionState:
+ *   {
+ *     pairs: ArchivePair[],
+ *     updated_at: ISOString
+ *   }
  *
- * =========================================================
- *  ANTI-DRIFT GUARANTEE
- * =========================================================
+ * selection:
+ *   - Alias auf selectionState.pairs
  *
- *  If any of the following appears in this file,
- *  the implementation is INVALID:
  *
- *  - Rendering of message pairs
- *  - Search filtering or scoring logic
- *  - Report rendering
- *  - Business rules beyond view switching
- *  - CSS-based prompt suppression
+ * ============================================================================
+ * SELECTION-LIFECYCLE (ABSOLUT KRITISCH)
+ * ============================================================================
  *
- * =========================================================
- *  CANONICAL MENTAL MODEL
- * =========================================================
+ * Initialisierung:
+ *   - aus SessionStorage ('mpathy:archive:selection:v1')
  *
- *  Header  → Identity
- *  Search  → Decision
- *  Body    → Truth
- *  Footer  → Closure
+ * addPair(pair):
+ *   - prüft auf Duplicate (pair_id)
+ *   - updated State + persistiert
  *
- *  Overlay = Stage
- *  Views   = Scenes
- *  Logic   = Orchestra Pit
+ * removePair(pair_id):
+ *   - filtert Pair
+ *   - updated State + persistiert
  *
- * =========================================================
+ * clearSelection():
+ *   - leert State
+ *   - überschreibt SessionStorage
+ *
+ * Externer Clear:
+ *   - hört auf Event 'mpathy:archive:selection:clear'
+ *   - wird NUR vom Verify-Listener ausgelöst
+ *
+ *
+ * ============================================================================
+ * VERIFY-FLOW (NUR DISPATCH, KEINE LOGIK)
+ * ============================================================================
+ *
+ * Button: "Verify N"
+ *
+ * onClick:
+ *   window.dispatchEvent(
+ *     new CustomEvent('mpathy:archive:verify', {
+ *       detail: {
+ *         intent: 'verify',
+ *         pairs: selection
+ *       }
+ *     })
+ *   )
+ *
+ * WICHTIG:
+ *   - ArchiveOverlay erwartet KEINE Rückgabe
+ *   - KEIN await
+ *   - KEINE Server-Kommunikation hier
+ *
+ *
+ * ============================================================================
+ * ADD-TO-CHAT (AKTUELL GLEICHER DISPATCH)
+ * ============================================================================
+ *
+ * Button: "Add N/6 to new chat"
+ *
+ * - nutzt aktuell denselben Event-Namen
+ * - Semantische Trennung erfolgt im Listener
+ * - Maximal 6 Paare erlaubt
+ *
+ *
+ * ============================================================================
+ * VIEW-LOGIK (DETERMINISTISCH)
+ * ============================================================================
+ *
+ * view =
+ *   - 'detail' → openChainId !== null
+ *   - 'recent' → query.length < 3
+ *   - 'search' → query.length >= 3
+ *
+ * Subviews:
+ *   - RecentChatsView
+ *   - SearchResultsView
+ *   - ChatDetailView
+ *
+ *
+ * ============================================================================
+ * CHAIN-ID-RESOLUTION
+ * ============================================================================
+ *
+ * resolveChainIdFromChatSerial(chatSerial):
+ *   - mappt ChatSerial → Time-Range
+ *   - matched gegen Triketon Anchors (LS: 'mpathy:triketon:v1')
+ *   - liefert chain_id oder null
+ *
+ *
+ * ============================================================================
+ * BOOTSTRAP-EFFEKT (useEffect, EINMAL)
+ * ============================================================================
+ *
+ * - initArchiveVerifyListener()
+ * - Laden der letzten Chats
+ * - Blockieren des Body-Scrolls
+ * - Hard-Hide des Prompt-Roots
+ *
+ * Cleanup:
+ *   - Restore Body Overflow
+ *   - Restore Prompt Display
+ *
+ *
+ * ============================================================================
+ * EVENT-VERTRÄGE (AUS SICHT DIESER DATEI)
+ * ============================================================================
+ *
+ * Dispatcht:
+ *   - 'mpathy:archive:verify'
+ *   - 'mpathy:archive:close'
+ *
+ * Hört:
+ *   - 'mpathy:archive:selection:clear'
+ *
+ *
+ * ============================================================================
+ * BEKANNTE FEHLERQUELLEN
+ * ============================================================================
+ *
+ * - Verify klickt → nichts passiert:
+ *     → Ursache liegt IMMER im archiveVerifyListener
+ *     → Diese Datei dispatcht korrekt
+ *
+ * - Selection inkonsistent:
+ *     → SessionStorage überschrieben / nicht gelesen
+ *
+ * - Reports öffnen sich nicht:
+ *     → Listener dispatcht kein 'verify:report'
+ *
+ *
+ * ============================================================================
+ * NICHT VERHANDELBAR
+ * ============================================================================
+ *
+ * - Keine Server-Logik hier
+ * - Keine Hash-Berechnung
+ * - Keine Report-Erstellung
+ * - Keine Verify-Entscheidung
+ *
+ * ArchiveOverlay ist reiner ORCHESTRATOR.
+ *
+ * ============================================================================
  */
+
 
 'use client'
 

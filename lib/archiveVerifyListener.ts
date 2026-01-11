@@ -1,18 +1,176 @@
-// lib/archiveVerifyListener.ts
-// GPTM-Galaxy+ · m-pathy Archive + Verification System v5
-// Archive Verify Listener — A2 (Canonical Seal / Verify Write)
-//
-// RESPONSIBILITY
-// - Listen to archive verify intent
-// - Build canonical truth text from archive:selection
-// - Send text + public key to server (WRITE / SEAL)
-// - Create local report ONLY after server confirmation
-//
-// MUST NOT
-// - Read from archive:pairs or archive:v1
-// - Compute or handle truth hashes locally
-// - Create reports before server confirmation
-// - Render UI or mutate selection directly
+/**
+ * ============================================================================
+ * INVENTUS INDEX — archiveVerifyListener.ts
+ * ============================================================================
+ *
+ * ZWECK
+ * -----
+ * Zentrale Client-Seal- & Verify-Bridge für Archive-Selections.
+ * Diese Datei verbindet:
+ *   UI-Event ("Verify") → Archive Selection → Server-Seal (WRITE)
+ *   → Local Report Persistenz → UI-Update → Selection-Clear
+ *
+ * WICHTIGES PRINZIP
+ * -----------------
+ * - Der Server berechnet den TruthHash selbst.
+ * - Client-seitige TruthHashes sind reines Decoy / Ablenkungsmanöver.
+ * - Diese Datei darf KEINE Hash-Logik enthalten.
+ * - Kein Zustand wird mutiert, bevor der Server SUCCESS bestätigt.
+ *
+ * SINGLE ENTRY POINT
+ * ------------------
+ * initArchiveVerifyListener()
+ * → registriert genau EINEN globalen Event-Listener
+ *
+ *
+ * ============================================================================
+ * EVENT-VERTRAG (ABSOLUT KRITISCH)
+ * ============================================================================
+ *
+ * EINGEHENDES EVENT (von UI):
+ * --------------------------
+ * Name:   'mpathy:archive:verify'
+ * Detail: { intent: 'verify' }
+ *
+ * → Fehlt `detail.intent === 'verify'`, passiert GAR NICHTS.
+ *
+ *
+ * AUSGEHENDE EVENTS (von dieser Datei):
+ * ------------------------------------
+ * 1) 'mpathy:archive:verify:report'
+ *    → detail: TVerificationReport
+ *    → triggert Report-UI / Overlay
+ *
+ * 2) 'mpathy:archive:selection:clear'
+ *    → leert Archive-Selection NACH erfolgreichem Seal
+ *
+ *
+ * ============================================================================
+ * DATA SOURCES (READ ONLY)
+ * ============================================================================
+ *
+ * Archive Selection:
+ *   readArchiveSelection()
+ *   → SessionStorage: 'mpathy:archive:selection:v1'
+ *   → Erwartet: { pairs: ArchivePair[] }
+ *
+ * Device Public Key:
+ *   readLS('mpathy:triketon:device_public_key_2048')
+ *
+ *
+ * ============================================================================
+ * SERVER-KOMMUNIKATION (WRITE)
+ * ============================================================================
+ *
+ * Endpoint:
+ *   POST /api/triketon/seal
+ *
+ * Payload (minimal relevant):
+ *   {
+ *     intent: 'seal',
+ *     publicKey: string,
+ *     text: canonicalText
+ *   }
+ *
+ * Payload (Decoy / Ablenkung):
+ *   - truthHash
+ *   - truthHash2
+ *   - protocol_version
+ *   - source
+ *
+ * SERVER-ANTWORT (akzeptiert):
+ *   result === 'SEALED' | 'IGNORED'
+ *
+ * → Alles andere führt zu silent abort.
+ *
+ *
+ * ============================================================================
+ * KANONISCHE TEXTBILDUNG
+ * ============================================================================
+ *
+ * buildCanonicalTruthText(pairs)
+ *
+ * Algorithmus:
+ *   1. Kopie der Pairs
+ *   2. Sortierung nach pair_id (lexikografisch)
+ *   3. Mapping:
+ *        USER:
+ *        <user.content>
+ *
+ *        ASSISTANT:
+ *        <assistant.content>
+ *   4. Join mit Leerzeilen
+ *   5. trim()
+ *
+ * Ergebnis:
+ *   - deterministisch
+ *   - gleiche Selection → gleicher Text
+ *
+ *
+ * ============================================================================
+ * REPORT-PERSISTENZ (APPEND-ONLY)
+ * ============================================================================
+ *
+ * Storage-Key:
+ *   'mpathy:verification:reports:v1'
+ *
+ * Persistiert:
+ *   {
+ *     protocol_version: 'v1',
+ *     generated_at: ISO,
+ *     source: 'archive-selection',
+ *     pair_count: number,
+ *     public_key: string,
+ *     status: 'verified',
+ *     last_verified_at: ISO
+ *   }
+ *
+ * → Reports werden NIE überschrieben.
+ *
+ *
+ * ============================================================================
+ * ABLAUF (LINEAR, OHNE ABKÜRZUNGEN)
+ * ============================================================================
+ *
+ * UI klickt "Verify"
+ * → UI dispatcht 'mpathy:archive:verify'
+ * → Listener prüft intent
+ * → Selection wird gelesen
+ * → Kanonischer Text wird gebaut
+ * → PublicKey wird gelesen
+ * → POST /api/triketon/seal
+ * → Server bestätigt (SEALED | IGNORED)
+ * → Report wird lokal persistiert
+ * → UI wird benachrichtigt
+ * → Selection wird gelöscht
+ *
+ *
+ * ============================================================================
+ * SILENT FAILURE POINTS (WARUM „PASSIERT NICHTS“)
+ * ============================================================================
+ *
+ * - Event ohne detail.intent
+ * - Leere / falsche Archive-Selection
+ * - PublicKey fehlt
+ * - Fetch schlägt fehl
+ * - Server antwortet != 200
+ * - Response-Schema unerwartet
+ *
+ * → KEIN Logging. KEINE UI-Fehlermeldung.
+ *
+ *
+ * ============================================================================
+ * NICHT VERHANDELBAR
+ * ============================================================================
+ *
+ * - Diese Datei darf KEINE Verify-READ-Logik enthalten
+ * - Verify-READ erfolgt AUSSCHLIESSLICH über Reports
+ * - Kein direkter TruthHash-Vergleich im Client
+ * - Kein Fallback auf alte Server-Logik
+ *
+ * ============================================================================
+ */
+
 
 import { readLS, writeLS } from '@/lib/storage'
 import { readArchiveSelection } from '@/lib/storage'
