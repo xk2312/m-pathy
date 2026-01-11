@@ -1,15 +1,17 @@
 'use client'
 
 import type { SearchResult } from '@/components/archive/ArchiveSearch'
+import type { ArchivePair } from '@/lib/storage'
 
 type SelectedPair = {
   pair_id: string
 }
 
+
 type Props = {
   results: SearchResult[]
-  selection: SelectedPair[]
-  addPair: (pair: SelectedPair) => void
+  selection: ArchivePair[]
+  addPair: (pair: ArchivePair) => void
   removePair: (pair_id: string) => void
   onOpenChat?: (chainId: string) => void
 }
@@ -61,11 +63,30 @@ export default function SearchResultsView({
     >
       <button
         type="button"
-        onClick={() =>
-          selected
-            ? removePair(pair.pair_id)
-            : addPair({ pair_id: pair.pair_id })
-        }
+        onClick={() => {
+  if (selected) {
+    removePair(pair.pair_id)
+    return
+  }
+
+  const archivePair: ArchivePair = {
+    pair_id: pair.pair_id,
+    chain_id: pair.chain_id,
+    user: {
+      id: `${pair.pair_id}:user`,
+      content: pair.user.preview,
+      timestamp: pair.timestamp_start,
+    },
+    assistant: {
+      id: `${pair.pair_id}:assistant`,
+      content: pair.assistant.preview,
+      timestamp: pair.timestamp_end,
+    },
+  }
+
+  addPair(archivePair)
+}}
+
         className="
           absolute
           top-3
