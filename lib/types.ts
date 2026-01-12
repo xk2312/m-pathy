@@ -4,13 +4,17 @@
 
 export type Role = 'user' | 'assistant' | 'system'
 
+/* ──────────────────────────────────────────────
+   Core
+────────────────────────────────────────────── */
+
 export interface ChatMessage {
   id: string
   chat_serial: number
   msg_number: number
   role: Role
   content: string
-  timestamp: string // ISO-8601
+  timestamp: string
   truth_hash?: string
   verified?: boolean
 }
@@ -42,45 +46,80 @@ export interface ContextUpload {
   verified: boolean
 }
 
+/* ──────────────────────────────────────────────
+   Verification
+────────────────────────────────────────────── */
+
 export interface VerificationItem {
   msg_number: number
   truth_hash: string
 }
 
-export interface VerificationReport {
-  protocol_version: string
-  generated_at: string
+/**
+ * Legacy / camelCase report shape (older UI/export code)
+ * (kept for parsing + download/export adapters)
+ */
+export interface VerificationReportLegacy {
+  version?: 'v1'
+  generatedAt?: string
+  truthHash?: string
 
+  entriesCount?: number
+  lastVerifiedAt?: string
+  publicKey?: string
+
+  status?: 'verified' | 'unverified'
   source?: 'archive-selection'
 
-  // ── Summary (human & mail friendly)
-  pair_count?: number
-  status?: 'verified' | 'unverified'
-  last_verified_at?: string
-  public_key: string
-
-  // ── Proof (authoritative, server-related)
-  truth_hash?: string
-  hash_profile?: string
-  key_profile?: string
-  seal_timestamp?: string
-
-  // ── Content snapshot (reproducible)
   content?: {
-    canonical_text: string
-    pairs: {
+    canonical_text?: string
+    pairs?: {
       pair_id: string
       user: { content: string; timestamp: string }
       assistant: { content: string; timestamp: string }
     }[]
   }
 
-  // legacy / extended (kept, untouched)
+  verification_chain?: VerificationItem[]
+  chain_signature?: string
+
+  [key: string]: any
+}
+
+/**
+ * Base / IO-compatible shape
+ * (used for LocalStorage IO, parsing, migration)
+ */
+export interface VerificationReportBase {
+  protocol_version?: 'v1'
+  generated_at?: string
+
+  source?: 'archive-selection'
+  pair_count?: number
+  status?: 'verified' | 'unverified'
+  last_verified_at?: string
+  public_key?: string
+
+  truth_hash?: string
+  hash_profile?: string
+  key_profile?: string
+  seal_timestamp?: string
+
+  content?: {
+    canonical_text?: string
+    pairs?: {
+      pair_id: string
+      user: { content: string; timestamp: string }
+      assistant: { content: string; timestamp: string }
+    }[]
+  }
+
   chat_meta?: {
     chat_id: string
     chat_serial: number
     message_total: number
   }
+
   verification_chain?: VerificationItem[]
   chain_signature?: string
 
@@ -88,13 +127,45 @@ export interface VerificationReport {
   verified_false?: number
 }
 
+/**
+ * Canonical v5 Verification Report
+ * GUARANTEED after normalizeReport()
+ */
+export interface VerificationReport {
+  protocol_version: 'v1'
+  generated_at: string
 
+  source: 'archive-selection'
+  pair_count: number
+  status: 'verified' | 'unverified'
+  public_key: string
+  last_verified_at?: string
 
-// central export block
+  truth_hash: string
+  hash_profile?: string
+  key_profile?: string
+  seal_timestamp?: string
+
+  content?: VerificationReportBase['content']
+
+  chat_meta?: VerificationReportBase['chat_meta']
+  verification_chain?: VerificationItem[]
+  chain_signature?: string
+
+  verified_true?: number
+  verified_false?: number
+}
+
+/* ──────────────────────────────────────────────
+   Central exports
+────────────────────────────────────────────── */
+
 export type {
   ChatMessage as TChatMessage,
   ArchiveEntry as TArchiveEntry,
   ArchiveSelection as TArchiveSelection,
   ContextUpload as TContextUpload,
   VerificationReport as TVerificationReport,
+  VerificationReportBase as TVerificationReportBase,
+  VerificationReportLegacy as TVerificationReportLegacy,
 }

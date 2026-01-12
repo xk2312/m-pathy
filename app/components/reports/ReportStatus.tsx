@@ -1,13 +1,12 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import type { VerificationReport } from '@/lib/types'
 import { useLanguage } from '@/app/providers/LanguageProvider'
 import { i18nArchive } from '@/lib/i18n.archive'
 
 interface ReportStatusProps {
-  userText: string
-  assistantText: string
-  truthHash: string
+  report: VerificationReport
 }
 
 type TriketonAnchor = {
@@ -19,11 +18,23 @@ type VerifyResponse = {
   result?: 'TRUE' | 'FALSE'
 }
 
-export default function ReportStatus({
-  userText,
-  assistantText,
-  truthHash,
-}: ReportStatusProps) {
+function buildVerifyText(report: VerificationReport): string {
+  const canonical = report.content?.canonical_text
+  if (typeof canonical === 'string' && canonical.trim().length > 0) return canonical
+
+  const pairs = report.content?.pairs
+  if (!Array.isArray(pairs) || pairs.length === 0) return ''
+
+  return pairs
+    .map((p) => {
+      const u = p?.user?.content ?? ''
+      const a = p?.assistant?.content ?? ''
+      return u + '\n\n---\n\n' + a
+    })
+    .join('\n\n====\n\n')
+}
+
+export default function ReportStatus({ report }: ReportStatusProps) {
   const { lang } = useLanguage()
   const t =
     i18nArchive[lang as keyof typeof i18nArchive]?.overlay ||
@@ -36,21 +47,26 @@ export default function ReportStatus({
 
     async function verify() {
       try {
-        const pairText = userText + '\n\n---\n\n' + assistantText
+        const truthHash = report.truth_hash
+        const pairText = buildVerifyText(report)
 
-        const raw = window.localStorage.getItem('mpathy:triketon:v1')
-        const anchors: TriketonAnchor[] = raw ? JSON.parse(raw) : []
-
-        const hit = anchors.find(
-          (a) => typeof a?.truth_hash === 'string' && a.truth_hash === truthHash,
-        )
-
-        const publicKey =
-          hit && typeof hit.public_key === 'string'
-            ? hit.public_key
+        // Prefer report.public_key (canonical), fallback to ledger lookup
+        let publicKey: string | null =
+          typeof report.public_key === 'string' && report.public_key.length > 0
+            ? report.public_key
             : null
 
         if (!publicKey) {
+          const raw = window.localStorage.getItem('mpathy:triketon:v1')
+          const anchors: TriketonAnchor[] = raw ? JSON.parse(raw) : []
+          const hit = anchors.find(
+            (a) => typeof a?.truth_hash === 'string' && a.truth_hash === truthHash,
+          )
+          publicKey =
+            hit && typeof hit.public_key === 'string' ? hit.public_key : null
+        }
+
+        if (!publicKey || !pairText) {
           if (!cancelled) setVerified(false)
           return
         }
@@ -77,7 +93,7 @@ export default function ReportStatus({
     return () => {
       cancelled = true
     }
-  }, [userText, assistantText, truthHash])
+  }, [report])
 
   return (
     <div className="flex items-center gap-2 text-sm mt-2">
@@ -90,9 +106,7 @@ export default function ReportStatus({
         </span>
       )}
       {verified === false && (
-        <span className="text-secondary font-medium">
-          ⚪︎ {t.fail}
-        </span>
+        <span className="text-secondary font-medium">⚪︎ {t.fail}</span>
       )}
     </div>
   )
