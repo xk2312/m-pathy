@@ -221,6 +221,7 @@ import EmptyStateView from './views/EmptyStateView'
 import ChatDetailView from './views/ChatDetailView'
 import { runArchiveSearch, getArchiveSearchPreview } from './ArchiveSearch'
 import { initArchiveVerifyListener } from '@/lib/archiveVerifyListener'
+import ReportList from '@/components/reports/ReportList'
 
 
 
@@ -510,15 +511,10 @@ useEffect(() => {
     gap-4
   "
 >
-  <h1
-    className="
-      text-3xl
-      font-medium
-      tracking-tight
-    "
-  >
-    {mode === 'reports' ? 'Report' : 'Archive'}
-  </h1>
+  <h1 className="text-3xl font-medium tracking-tight">
+  Archive
+</h1>
+
 
   {mode !== 'reports' && (
     <p
@@ -733,83 +729,80 @@ useEffect(() => {
 
     </section>
 
-    {/* ====================================================== */}
-    {/* BODY                                                   */}
-    {/* ====================================================== */}
-    <div className="flex-1 overflow-y-auto mt-[15px]">
-      {(() => {
-        type ArchiveView = 'recent' | 'search' | 'detail' | 'empty'
+   {/* ====================================================== */}
+{/* BODY                                                   */}
+{/* ====================================================== */}
+<div className="flex-1 overflow-y-auto mt-[15px]">
+  {mode === 'reports' ? (
+    <ReportList />
+  ) : (
+    (() => {
+      type ArchiveView = 'recent' | 'search' | 'detail' | 'empty'
 
-let view: ArchiveView
+      let view: ArchiveView
 
-if (openChainId) {
-  view = 'detail'
-} else if (query.length < 3) {
-  view = 'recent'
-} else {
-  view = 'search'
-}
+      if (openChainId) {
+        view = 'detail'
+      } else if (query.length < 3) {
+        view = 'recent'
+      } else {
+        view = 'search'
+      }
 
+      switch (view) {
+        case 'recent':
+          return (
+            <RecentChatsView
+              onOpenChat={(chatSerial: string) => {
+                const chainId = resolveChainIdFromChatSerial(chatSerial)
+                if (chainId) {
+                  setOpenChainId(chainId)
+                }
+              }}
+            />
+          )
 
-        switch (view) {
-  case 'recent':
-    return (
-     <RecentChatsView
-  onOpenChat={(chatSerial: string) => {
-    const chainId = resolveChainIdFromChatSerial(chatSerial)
-    if (chainId) {
-      setOpenChainId(chainId)
-    }
-  }}
-/>
+        case 'search': {
+          const results = runArchiveSearch(query)
+          return (
+            <SearchResultsView
+              results={results}
+              selection={selection}
+              addPair={addPair}
+              removePair={removePair}
+              onOpenChat={(chatSerial: string) => {
+                const chainId = resolveChainIdFromChatSerial(chatSerial)
+                if (chainId) {
+                  setOpenChainId(chainId)
+                }
+              }}
+            />
+          )
+        }
 
-    )
+        case 'detail':
+          if (!openChainId) return null
 
-  case 'search': {
-    const results = runArchiveSearch(query)
-    return (
-  <SearchResultsView
-  results={results}
-  selection={selection}
-  addPair={addPair}
-  removePair={removePair}
-  onOpenChat={(chatSerial: string) => {
-    const chainId = resolveChainIdFromChatSerial(chatSerial)
-    if (chainId) {
-      setOpenChainId(chainId)
-    }
-  }}
-/>
+          return (
+            <ChatDetailView
+              chain_id={openChainId}
+              highlight={query}
+              selection={selection}
+              addPair={addPair}
+              removePair={removePair}
+              onClose={() => {
+                setOpenChainId(null)
+              }}
+            />
+          )
 
+        default:
+          return null
+      }
+    })()
+  )}
+</div>
 
-    )
-  }
-
-  case 'detail':
-  if (!openChainId) return null
-
-   return (
-    <ChatDetailView
-  chain_id={openChainId}
-  highlight={query}
-  selection={selection}
-  addPair={addPair}
-  removePair={removePair}
-  onClose={() => {
-    setOpenChainId(null)
-  }}
-/>
-
-  )
-
-
-
-  default:
-    return null
-}
-
-      })()}
-    </div>
 
     {/* ====================================================== */}
     {/* FOOTER FADE                                            */}
