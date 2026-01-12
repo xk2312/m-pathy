@@ -271,9 +271,13 @@ const EMPTY_SELECTION: SelectionState = {
 /* ------------------------------------------------------------------ */
 
 export default function ArchiveOverlay() {
-  const [query, setQuery] = useState('')
-  const [chats, setChats] = useState<ChatDisplay[]>([])
-  const [openChainId, setOpenChainId] = useState<string | null>(null)
+ type ArchiveMode = 'browse' | 'detail' | 'reports'
+
+const [mode, setMode] = useState<ArchiveMode>('browse')
+const [query, setQuery] = useState('')
+const [chats, setChats] = useState<ChatDisplay[]>([])
+const [openChainId, setOpenChainId] = useState<string | null>(null)
+
 
   const [selectionState, setSelectionState] = useState<SelectionState>(() => {
     if (typeof window === 'undefined') return EMPTY_SELECTION
@@ -342,6 +346,11 @@ useEffect(() => {
     window.alert(msg)
   }
 
+  function onVerifyReport() {
+    setMode('reports')
+    setOpenChainId(null)
+  }
+
   window.addEventListener(
     'mpathy:archive:selection:clear',
     onSelectionClear
@@ -353,6 +362,10 @@ useEffect(() => {
   window.addEventListener(
     'mpathy:archive:verify:info',
     onVerifyInfo
+  )
+  window.addEventListener(
+    'mpathy:archive:verify:report',
+    onVerifyReport
   )
 
   return () => {
@@ -368,8 +381,13 @@ useEffect(() => {
       'mpathy:archive:verify:info',
       onVerifyInfo
     )
+    window.removeEventListener(
+      'mpathy:archive:verify:report',
+      onVerifyReport
+    )
   }
 }, [])
+
 
 
 
@@ -484,7 +502,7 @@ useEffect(() => {
     {/* ====================================================== */}
     {/* HEADER — ORIENTATION                                   */}
     {/* ====================================================== */}
-   <header
+  <header
   className="
     pb-4
     flex
@@ -499,18 +517,21 @@ useEffect(() => {
       tracking-tight
     "
   >
-    Archive
+    {mode === 'reports' ? 'Report' : 'Archive'}
   </h1>
 
-  <p
-    className="
-      text-sm
-      text-text-secondary
-      max-w-[560px]
-    "
-  >
-    Browse, review, and select past conversations.
-  </p>
+  {mode !== 'reports' && (
+    <p
+      className="
+        text-sm
+        text-text-secondary
+        max-w-[560px]
+      "
+    >
+      Browse, review, and select past conversations.
+    </p>
+  )}
+
 
 {selection.length > 0 && (
   <div
@@ -682,31 +703,34 @@ useEffect(() => {
 })()}
 
 
-      <button
-        type="button"
-        aria-label="Close Archive"
-        onClick={(e) => {
-          e.stopPropagation()
-          window.dispatchEvent(
-            new CustomEvent('mpathy:archive:close')
-          )
-        }}
-        className="
-          absolute
-          -top-3
-          right-0
-          translate-x-[30px]
-          z-50
-          cursor-pointer
-          pointer-events-auto
-          text-sm
-          text-secondary
-          hover:text-text-primary
-          transition
-        "
-      >
-        ✕
-      </button>
+     <button
+  type="button"
+  aria-label="Close Archive"
+  onClick={(e) => {
+    e.stopPropagation()
+    setMode('browse')
+    setOpenChainId(null)
+    window.dispatchEvent(
+      new CustomEvent('mpathy:archive:close')
+    )
+  }}
+  className="
+    absolute
+    -top-3
+    right-0
+    translate-x-[30px]
+    z-50
+    cursor-pointer
+    pointer-events-auto
+    text-sm
+    text-secondary
+    hover:text-text-primary
+    transition
+  "
+>
+  ✕
+</button>
+
     </section>
 
     {/* ====================================================== */}
