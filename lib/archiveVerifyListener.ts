@@ -293,9 +293,30 @@ if (result?.result !== 'SEALED' && result?.result !== 'IGNORED') {
   return
 }
 
+// ─────────────────────────────
+// NEW: already verified → no new report
+// ─────────────────────────────
+if (result?.result === 'IGNORED') {
+  window.dispatchEvent(
+    new CustomEvent('mpathy:archive:verify:info', {
+      detail: {
+        code: 'ALREADY_VERIFIED',
+        message:
+          'The text has already been verified and the report already exists in the Reports section.',
+      },
+    }),
+  )
 
+  // Clear selection even if no report is created
+  window.dispatchEvent(
+    new CustomEvent('mpathy:archive:selection:clear'),
+  )
+  return
+}
 
-   // 5. Build report snapshot BEFORE cleanup
+// ─────────────────────────────
+// SEALED → build report
+// ─────────────────────────────
 const report: TVerificationReport = {
   protocol_version: 'v1',
   generated_at: new Date().toISOString(),
@@ -306,7 +327,6 @@ const report: TVerificationReport = {
   last_verified_at: new Date().toISOString(),
   public_key: publicKey,
 
-  // content snapshot (reproducible)
   content: {
     canonical_text: canonicalText,
     pairs: selection.map((p) => ({
@@ -322,27 +342,27 @@ const report: TVerificationReport = {
     })),
   },
 
-  // proof placeholders (filled from server context when available)
   truth_hash: result?.truth_hash,
   hash_profile: result?.hash_profile,
   key_profile: result?.key_profile,
   seal_timestamp: result?.timestamp,
 }
 
-// 6. Persist report (append-only)
+// Persist report (append-only)
 persistReport(report)
 
-// 7. Notify UI
+// Notify UI
 window.dispatchEvent(
   new CustomEvent('mpathy:archive:verify:report', {
     detail: report,
   }),
 )
 
-// 8. Clear selection AFTER report is safely stored
+// Clear selection AFTER report is safely stored
 window.dispatchEvent(
   new CustomEvent('mpathy:archive:selection:clear'),
 )
+
 
   })
 }
