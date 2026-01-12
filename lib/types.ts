@@ -51,10 +51,31 @@ export interface VerificationReport {
   protocol_version: string
   generated_at: string
 
-  // NEW — origin of the report (A2 canonical write-path)
   source?: 'archive-selection'
 
-  // legacy / extended verification data (still valid)
+  // ── Summary (human & mail friendly)
+  pair_count?: number
+  status?: 'verified' | 'unverified'
+  last_verified_at?: string
+  public_key: string
+
+  // ── Proof (authoritative, server-related)
+  truth_hash?: string
+  hash_profile?: string
+  key_profile?: string
+  seal_timestamp?: string
+
+  // ── Content snapshot (reproducible)
+  content?: {
+    canonical_text: string
+    pairs: {
+      pair_id: string
+      user: { content: string; timestamp: string }
+      assistant: { content: string; timestamp: string }
+    }[]
+  }
+
+  // legacy / extended (kept, untouched)
   chat_meta?: {
     chat_id: string
     chat_serial: number
@@ -63,17 +84,10 @@ export interface VerificationReport {
   verification_chain?: VerificationItem[]
   chain_signature?: string
 
-  public_key: string
-
-  // aggregated status (optional for A2, used in A3)
   verified_true?: number
   verified_false?: number
-
-  // A2 / A3 convenience fields
-  pair_count?: number
-  status?: 'verified' | 'unverified'
-  last_verified_at?: string
 }
+
 
 
 // central export block

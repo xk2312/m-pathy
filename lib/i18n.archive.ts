@@ -26,46 +26,89 @@ export const i18nArchive = {
   not: "NOT",
   phrase: "Phrase"
 },
+overlay: {
+  header: "Chat {{chatNumber}}",
+  verifyChat: "Verify chat",
+  downloadReport: "Download report",
+  uploadReport: "Upload report",
+  preparing: "Preparing report…",
+  success: "Verified ✓",
+  fail: "Verify ✗",
+  cancelled: "Verification cancelled.",
+  loading: "Verifying…",
+  close: "Close"
+},
 
-    overlay: {
-      header: "Chat {{chatNumber}}",
-      verifyChat: "Verify chat",
-      downloadReport: "Download report",
-      uploadReport: "Upload report",
-      preparing: "Preparing report…",
-      success: "Verified ✓",
-      fail: "Verify ✗",
-      cancelled: "Verification cancelled.",
-      loading: "Verifying…",
-      close: "Close"
-    },
-    intro: {
-      header: "Context uploaded",
-      subtext: "From archive:",
-      continue: "Continue"
-    },
-    report: {
-      title: "Reports",
-      subtitle: "Local verified reports.",
-      upload: "Upload",
-      uploadSuccess: "Report uploaded ✓",
-      view: "Open",
-      verifySignature: "Verify sign.",
-      reverify: "Re-verify",
-      missingSignature: "No signature found.",
-      noReports: "No reports.",
-      valid: "✅ Valid",
-      invalid: "⚠️ Invalid"
-    },
-    system: {
-      errorGeneric: "Error.",
-      errorLoad: "Failed to load archive data.",
-      errorSave: "Could not save changes.",
-      successSave: "Saved ✓",
-      loading: "Loading…",
-      empty: "Nothing here yet."
-    },
-    tapToOpen: "Tap to open"
+intro: {
+  header: "Context uploaded",
+  subtext: "From archive:",
+  continue: "Continue"
+},
+
+report: {
+  title: "Reports",
+  subtitle: "Local verified reports.",
+  upload: "Upload",
+  uploadSuccess: "Report uploaded ✓",
+  view: "Open",
+  verifySignature: "Verify sign.",
+  reverify: "Re-verify",
+  missingSignature: "No signature found.",
+  noReports: "No reports.",
+  valid: "✅ Valid",
+  invalid: "⚠️ Invalid",
+
+  // ─────────────────────────────
+  // NEW — Report structure & content
+  // ─────────────────────────────
+
+  sections: {
+    summary: "Summary",
+    proof: "Verification proof",
+    content: "Verified content",
+    metadata: "Metadata"
+  },
+
+  summary: {
+    status: "Status",
+    verifiedAt: "Verified at",
+    pairCount: "Verified message pairs",
+    source: "Source",
+    publicKey: "Public key"
+  },
+
+  proof: {
+    truthHash: "Truth hash",
+    hashProfile: "Hash profile",
+    keyProfile: "Key profile",
+    protocolVersion: "Protocol version",
+    timestamp: "Seal timestamp"
+  },
+
+  content: {
+    title: "Verified content",
+    description: "This content was used to generate the verification hash.",
+    user: "User",
+    assistant: "Assistant"
+  },
+
+  explanations: {
+    localOnly: "This report is stored locally on your device.",
+    reproducible: "Anyone can re-verify this report using its content and proof."
+  }
+},
+
+system: {
+  errorGeneric: "Error.",
+  errorLoad: "Failed to load archive data.",
+  errorSave: "Could not save changes.",
+  successSave: "Saved ✓",
+  loading: "Loading…",
+  empty: "Nothing here yet."
+},
+
+tapToOpen: "Tap to open"
+
   },
 
   de: {
@@ -96,44 +139,88 @@ export const i18nArchive = {
       phrase: "Phrase"
     },
     overlay: {
-      header: "Chat {{chatNumber}}",
-      verifyChat: "Chat prüfen",
-      downloadReport: "Bericht herunterladen",
-      uploadReport: "Bericht hochladen",
-      preparing: "Bericht wird vorbereitet…",
-      success: "Verifiziert ✓",
-      fail: "Fehler ✗",
-      cancelled: "Überprüfung abgebrochen.",
-      loading: "Überprüfung läuft…",
-      close: "Schließen"
-    },
-    intro: {
-      header: "Kontext geladen",
-      subtext: "Aus Archiv:",
-      continue: "Weiter"
-    },
-    report: {
-      title: "Berichte",
-      subtitle: "Lokal verifizierte Berichte.",
-      upload: "Hochladen",
-      uploadSuccess: "Bericht hochgeladen ✓",
-      view: "Öffnen",
-      verifySignature: "Signatur prüfen.",
-      reverify: "Erneut prüfen",
-      missingSignature: "Keine Signatur gefunden.",
-      noReports: "Keine Berichte.",
-      valid: "✅ Gültig",
-      invalid: "⚠️ Ungültig"
-    },
-    system: {
-      errorGeneric: "Fehler.",
-      errorLoad: "Archiv konnte nicht geladen werden.",
-      errorSave: "Änderungen konnten nicht gespeichert werden.",
-      successSave: "Gespeichert ✓",
-      loading: "Lädt…",
-      empty: "Noch nichts hier."
-    },
-    tapToOpen: "Tippen zum Öffnen"
+  header: "Chat {{chatNumber}}",
+  verifyChat: "Chat prüfen",
+  downloadReport: "Bericht herunterladen",
+  uploadReport: "Bericht hochladen",
+  preparing: "Bericht wird vorbereitet…",
+  success: "Verifiziert ✓",
+  fail: "Fehler ✗",
+  cancelled: "Überprüfung abgebrochen.",
+  loading: "Überprüfung läuft…",
+  close: "Schließen"
+},
+
+intro: {
+  header: "Kontext geladen",
+  subtext: "Aus Archiv:",
+  continue: "Weiter"
+},
+
+report: {
+  title: "Berichte",
+  subtitle: "Lokal verifizierte Berichte.",
+  upload: "Hochladen",
+  uploadSuccess: "Bericht hochgeladen ✓",
+  view: "Öffnen",
+  verifySignature: "Signatur prüfen",
+  reverify: "Erneut prüfen",
+  missingSignature: "Keine Signatur gefunden.",
+  noReports: "Keine Berichte.",
+  valid: "✅ Gültig",
+  invalid: "⚠️ Ungültig",
+
+  // ─────────────────────────────
+  // NEU — Struktur & Inhalt des Berichts
+  // ─────────────────────────────
+
+  sections: {
+    summary: "Zusammenfassung",
+    proof: "Verifikationsnachweis",
+    content: "Verifizierter Inhalt",
+    metadata: "Metadaten"
+  },
+
+  summary: {
+    status: "Status",
+    verifiedAt: "Verifiziert am",
+    pairCount: "Verifizierte Nachrichtenpaare",
+    source: "Quelle",
+    publicKey: "Öffentlicher Schlüssel"
+  },
+
+  proof: {
+    truthHash: "Truth-Hash",
+    hashProfile: "Hash-Profil",
+    keyProfile: "Schlüssel-Profil",
+    protocolVersion: "Protokollversion",
+    timestamp: "Zeitpunkt der Versiegelung"
+  },
+
+  content: {
+    title: "Verifizierter Inhalt",
+    description: "Dieser Inhalt wurde zur Erzeugung des Verifikations-Hashs verwendet.",
+    user: "Nutzer",
+    assistant: "Assistent"
+  },
+
+  explanations: {
+    localOnly: "Dieser Bericht wird ausschließlich lokal auf deinem Gerät gespeichert.",
+    reproducible: "Jede Person kann diesen Bericht anhand von Inhalt und Nachweis erneut verifizieren."
+  }
+},
+
+system: {
+  errorGeneric: "Fehler.",
+  errorLoad: "Archiv konnte nicht geladen werden.",
+  errorSave: "Änderungen konnten nicht gespeichert werden.",
+  successSave: "Gespeichert ✓",
+  loading: "Lädt…",
+  empty: "Noch nichts hier."
+},
+
+tapToOpen: "Tippen zum Öffnen"
+
   },
 
   fr: {

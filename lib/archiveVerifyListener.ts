@@ -295,30 +295,54 @@ if (result?.result !== 'SEALED' && result?.result !== 'IGNORED') {
 
 
 
-    // 5. Create local report ONLY after server confirmation
-    const report: TVerificationReport = {
-      protocol_version: 'v1',
-      generated_at: new Date().toISOString(),
-      source: 'archive-selection',
-      pair_count: selection.length,
-      public_key: publicKey,
-      status: 'verified',
-      last_verified_at: new Date().toISOString(),
-    }
+   // 5. Build report snapshot BEFORE cleanup
+const report: TVerificationReport = {
+  protocol_version: 'v1',
+  generated_at: new Date().toISOString(),
+  source: 'archive-selection',
 
-    // 6. Persist report (append-only)
-    persistReport(report)
+  pair_count: selection.length,
+  status: 'verified',
+  last_verified_at: new Date().toISOString(),
+  public_key: publicKey,
 
-    // 7. Notify UI
-    window.dispatchEvent(
-      new CustomEvent('mpathy:archive:verify:report', {
-        detail: report,
-      }),
-    )
+  // content snapshot (reproducible)
+  content: {
+    canonical_text: canonicalText,
+    pairs: selection.map((p) => ({
+      pair_id: p.pair_id,
+      user: {
+        content: p.user.content,
+        timestamp: p.user.timestamp,
+      },
+      assistant: {
+        content: p.assistant.content,
+        timestamp: p.assistant.timestamp,
+      },
+    })),
+  },
 
-    // 8. Clear selection AFTER successful seal
-    window.dispatchEvent(
-      new CustomEvent('mpathy:archive:selection:clear'),
-    )
+  // proof placeholders (filled from server context when available)
+  truth_hash: result?.truth_hash,
+  hash_profile: result?.hash_profile,
+  key_profile: result?.key_profile,
+  seal_timestamp: result?.timestamp,
+}
+
+// 6. Persist report (append-only)
+persistReport(report)
+
+// 7. Notify UI
+window.dispatchEvent(
+  new CustomEvent('mpathy:archive:verify:report', {
+    detail: report,
+  }),
+)
+
+// 8. Clear selection AFTER report is safely stored
+window.dispatchEvent(
+  new CustomEvent('mpathy:archive:selection:clear'),
+)
+
   })
 }
