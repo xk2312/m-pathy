@@ -334,6 +334,14 @@ useEffect(() => {
     window.alert(msg)
   }
 
+  function onVerifyInfo(event: Event) {
+    const custom = event as CustomEvent<{ message?: string }>
+    const msg =
+      custom.detail?.message ??
+      'The text has already been verified and the report already exists in the Reports section.'
+    window.alert(msg)
+  }
+
   window.addEventListener(
     'mpathy:archive:selection:clear',
     onSelectionClear
@@ -341,6 +349,10 @@ useEffect(() => {
   window.addEventListener(
     'mpathy:archive:verify:error',
     onVerifyError
+  )
+  window.addEventListener(
+    'mpathy:archive:verify:info',
+    onVerifyInfo
   )
 
   return () => {
@@ -352,8 +364,13 @@ useEffect(() => {
       'mpathy:archive:verify:error',
       onVerifyError
     )
+    window.removeEventListener(
+      'mpathy:archive:verify:info',
+      onVerifyInfo
+    )
   }
 }, [])
+
 
 
 
