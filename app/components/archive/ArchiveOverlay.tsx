@@ -729,7 +729,7 @@ useEffect(() => {
 
     </section>
 
-   {/* ====================================================== */}
+{/* ====================================================== */}
 {/* BODY                                                   */}
 {/* ====================================================== */}
 <div className="flex-1 overflow-y-auto mt-[15px]">
@@ -737,7 +737,7 @@ useEffect(() => {
     <ReportList />
   ) : (
     (() => {
-      type ArchiveView = 'recent' | 'search' | 'detail' | 'empty'
+      type ArchiveView = 'recent' | 'search' | 'detail'
 
       let view: ArchiveView
 
@@ -754,7 +754,8 @@ useEffect(() => {
           return (
             <RecentChatsView
               onOpenChat={(chatSerial: string) => {
-                const chainId = resolveChainIdFromChatSerial(chatSerial)
+                const chainId =
+                  resolveChainIdFromChatSerial(chatSerial)
                 if (chainId) {
                   setOpenChainId(chainId)
                 }
@@ -771,7 +772,8 @@ useEffect(() => {
               addPair={addPair}
               removePair={removePair}
               onOpenChat={(chatSerial: string) => {
-                const chainId = resolveChainIdFromChatSerial(chatSerial)
+                const chainId =
+                  resolveChainIdFromChatSerial(chatSerial)
                 if (chainId) {
                   setOpenChainId(chainId)
                 }
@@ -802,6 +804,7 @@ useEffect(() => {
     })()
   )}
 </div>
+
 
 
     {/* ====================================================== */}
