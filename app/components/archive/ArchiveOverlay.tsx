@@ -270,6 +270,9 @@ useEffect(() => {
     window.alert(msg)
   }
 
+  function onVerifySuccess() {
+    setMode('reports')
+  }
 
   window.addEventListener(
     'mpathy:archive:selection:clear',
@@ -283,7 +286,10 @@ useEffect(() => {
     'mpathy:archive:verify:info',
     onVerifyInfo
   )
-
+  window.addEventListener(
+    'mpathy:archive:verify:success',
+    onVerifySuccess
+  )
 
   return () => {
     window.removeEventListener(
@@ -298,9 +304,13 @@ useEffect(() => {
       'mpathy:archive:verify:info',
       onVerifyInfo
     )
+    window.removeEventListener(
+      'mpathy:archive:verify:success',
+      onVerifySuccess
+    )
   }
-
 }, [])
+
 
 
 
