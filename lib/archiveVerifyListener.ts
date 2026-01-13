@@ -301,10 +301,22 @@ window.dispatchEvent(
   }),
 )
 
+// Explicit verify success signal (CHAT → REPORTS)
+window.dispatchEvent(
+  new CustomEvent('mpathy:archive:verify:success', {
+    detail: {
+      at: new Date().toISOString(),
+    },
+  }),
+)
+
+
+
 // Clear selection AFTER report is safely stored
 window.dispatchEvent(
   new CustomEvent('mpathy:archive:selection:clear'),
 )
+
 
 
   })
