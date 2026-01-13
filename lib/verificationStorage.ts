@@ -120,10 +120,22 @@ function normalizeReport(
   if ((r as any) && typeof (r as any).generated_at === 'string') {
     const rr = r as Partial<TVerificationReport>
 
+       const anyR = r as any
+
     const truth_hash =
-      typeof rr.truth_hash === 'string' ? rr.truth_hash : ''
+      typeof rr.truth_hash === 'string'
+        ? rr.truth_hash
+        : typeof anyR.truthHash === 'string'
+          ? anyR.truthHash
+          : ''
+
     const public_key =
-      typeof rr.public_key === 'string' ? rr.public_key : ''
+      typeof rr.public_key === 'string'
+        ? rr.public_key
+        : typeof anyR.publicKey === 'string'
+          ? anyR.publicKey
+          : ''
+
 
     return {
       protocol_version: 'v1',
