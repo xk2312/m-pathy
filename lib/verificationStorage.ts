@@ -96,6 +96,7 @@
 import type { VerificationReport as TVerificationReport } from './types'
 import { readLS, writeLS } from './storage'
 
+
 const KEY = 'mpathy:verification:reports:v1'
 
 type LegacyVerificationReport = {
@@ -171,10 +172,20 @@ function normalizeReport(
 }
 
 export function loadReports(): TVerificationReport[] {
-  const raw =
-    readLS<Array<LegacyVerificationReport | Partial<TVerificationReport>>>(KEY) || []
+  if (typeof window === 'undefined') return []
+
+  let raw: Array<LegacyVerificationReport | Partial<TVerificationReport>> = []
+
+  try {
+    const stored = window.localStorage.getItem(KEY)
+    raw = stored ? JSON.parse(stored) : []
+  } catch {
+    raw = []
+  }
+
   return raw.map(normalizeReport).filter((r) => r.truth_hash && r.public_key)
 }
+
 
 export function saveReport(report: TVerificationReport): void {
   const all = loadReports()
