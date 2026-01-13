@@ -96,7 +96,7 @@
 import type { VerificationReport as TVerificationReport } from './types'
 import { readLS, writeLS } from './storage'
 
-const KEY = 'mpathy:verification:v1'
+const KEY = 'mpathy:verification:reports:v1'
 
 type LegacyVerificationReport = {
   generatedAt: string
