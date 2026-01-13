@@ -128,8 +128,27 @@ export default function ReportList() {
 const [reports, setReports] = useState<VerificationReport[]>([])
 
 React.useEffect(() => {
-  setReports(loadReports())
+  function readReports() {
+    setReports(loadReports())
+  }
+
+  // Initial read on mount
+  readReports()
+
+  // Canonical read trigger on successful verify
+  window.addEventListener(
+    'mpathy:archive:verify:success',
+    readReports
+  )
+
+  return () => {
+    window.removeEventListener(
+      'mpathy:archive:verify:success',
+      readReports
+    )
+  }
 }, [])
+
   const [selected, setSelected] = useState<string | null>(null)
 
   const handleDelete = (hash: string) => {
