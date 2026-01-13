@@ -104,19 +104,10 @@ export default function ChatDetailView({
   }
 
   return (
-    <section className="flex flex-col gap-10">
-      <div className="flex items-center justify-between">
-        <div className="text-lg font-medium">Chat</div>
-        <button
-          onClick={onClose}
-          className="text-sm text-text-muted hover:text-text-primary transition"
-        >
-          Close
-        </button>
-      </div>
+  <section className="flex flex-col gap-6">
+    <div className="space-y-6">
+      {pairs.map((pair) => {
 
-      <div className="space-y-6">
-        {pairs.map((pair) => {
   const selected = isSelected(pair.pair_id)
 
   return (
