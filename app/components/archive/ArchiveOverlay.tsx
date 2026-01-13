@@ -704,7 +704,7 @@ useEffect(() => {
 {/* ====================================================== */}
 <div className="flex-1 overflow-y-auto mt-[15px]">
 {mode === 'reports' ? (
-  <ReportList />
+  <ReportList key="reports" />
 ) : (
   (() => {
     switch (chatView) {
