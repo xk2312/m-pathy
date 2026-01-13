@@ -270,10 +270,6 @@ useEffect(() => {
     window.alert(msg)
   }
 
-  function onVerifyReport() {
-    setMode('reports')
-    setOpenChainId(null)
-  }
 
   window.addEventListener(
     'mpathy:archive:selection:clear',
@@ -287,10 +283,7 @@ useEffect(() => {
     'mpathy:archive:verify:info',
     onVerifyInfo
   )
-  window.addEventListener(
-    'mpathy:archive:verify:report',
-    onVerifyReport
-  )
+
 
   return () => {
     window.removeEventListener(
@@ -305,11 +298,8 @@ useEffect(() => {
       'mpathy:archive:verify:info',
       onVerifyInfo
     )
-    window.removeEventListener(
-      'mpathy:archive:verify:report',
-      onVerifyReport
-    )
   }
+
 }, [])
 
 
@@ -373,23 +363,8 @@ useEffect(() => {
   }
 }, [])
 
-useEffect(() => {
-  function onVerifySuccess() {
-    setMode('reports')
-  }
+// (entfernt – ungültiger Scope, kein useEffect)
 
-  window.addEventListener(
-    'mpathy:archive:verify:success',
-    onVerifySuccess as EventListener,
-  )
-
-  return () => {
-    window.removeEventListener(
-      'mpathy:archive:verify:success',
-      onVerifySuccess as EventListener,
-    )
-  }
-}, [])
 
 
 
