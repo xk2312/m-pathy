@@ -1,3 +1,119 @@
+/**
+ * ============================================================================
+ * FILE INDEX — lib/i18n.archive.ts
+ * PROJECT: GPTM-Galaxy+ · m-pathy Archive + Verification
+ * CONTEXT: ARCHIVE Overlay — UI-Texte & semantische Ebenen
+ * MODE: Research · Documentation · Planning ONLY
+ * ============================================================================
+ *
+ * FILE PURPOSE (IST)
+ * ---------------------------------------------------------------------------
+ * Zentrale i18n-Definition für alle Archive-bezogenen UI-Texte.
+ *
+ * Abgedeckte Bereiche:
+ * - ARCHIVE (Chat-Archiv)
+ * - OVERLAY (Chat Detail / Verify)
+ * - REPORTS (Verification Reports)
+ * - SYSTEM (Fehler / Status)
+ * - INTRO / CONTEXT UPLOAD
+ *
+ * Unterstützte Sprachen:
+ * - en, de, fr, es, it, pt, nl, ru, zh, ja, ko, ar, hi
+ *
+ *
+ * KANONISCHER SOLLZUSTAND (REFERENZ)
+ * ---------------------------------------------------------------------------
+ * EBENE 0 (immer sichtbar):
+ *   - Titel "ARCHIVE"
+ *   - Erklärungstext unter Titel
+ *   - Suchschlitz (fix)
+ *   - Close-X
+ *
+ * EBENE 1 (immer sichtbar):
+ *   - Mode-Switch [ CHAT | REPORTS ]
+ *
+ * EBENE 2 (wechselnd):
+ *   CHAT:
+ *     - Recent Chats
+ *     - Search View
+ *     - Chat Detail View
+ *
+ *   REPORTS:
+ *     - Reports Overview
+ *
+ *
+ * STRUKTURELL RELEVANTE BEREICHE (IST)
+ * ---------------------------------------------------------------------------
+ * 1. archive
+ *    - Titel, Suche, Empty States, Labels
+ *    - Texte für CHAT-Mode
+ *
+ * 2. overlay
+ *    - Texte für Chat Detail & Verify
+ *    - Statusmeldungen (loading, success, fail)
+ *
+ * 3. report
+ *    - Reports Overview
+ *    - Report Detail / Inhalte / Proof
+ *    - Download / Re-Verify / Status
+ *
+ * 4. system
+ *    - Fehler- & Ladezustände
+ *
+ *
+ * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
+ * ---------------------------------------------------------------------------
+ * Δ1: EBENE-1-Mode-Switch-Texte
+ *     SOLL:
+ *       - Explizite UI-Texte für Mode-Switch [CHAT | REPORTS]
+ *     IST:
+ *       - Keine dedizierten i18n-Keys für den Mode-Switch selbst
+ *       - REPORTS-Texte existieren, aber nicht als expliziter Umschalter
+ *
+ * Δ2: EBENE-0-Erklärungstext
+ *     SOLL:
+ *       - Erklärung unter ARCHIVE immer sichtbar
+ *     IST:
+ *       - Erklärungstext ist unter `archive` definiert,
+ *         aber nicht klar als EBENE-0-invariant gekennzeichnet
+ *
+ * Δ3: REPORTS-Scope
+ *     SOLL:
+ *       - REPORTS = Reports Overview
+ *     IST:
+ *       - i18n-Struktur deckt zusätzlich:
+ *         • Report-Detail
+ *         • Proof
+ *         • Verified Content
+ *         • Metadata
+ *
+ * Δ4: Semantische Vermischung
+ *     SOLL:
+ *       - Klare Trennung CHAT vs. REPORTS
+ *     IST:
+ *       - i18n-Keys für CHAT (archive, overlay)
+ *         und REPORTS (report) leben in derselben Datei
+ *
+ *
+ * BEWUSST NICHT IM SCOPE
+ * ---------------------------------------------------------------------------
+ * - Keine Bewertung der Textqualität
+ * - Keine Aussagen zu Übersetzungsgenauigkeit
+ * - Keine Empfehlung zur Key-Struktur
+ * - Keine Umstrukturierungsvorschläge
+ *
+ *
+ * FAZIT (DESKRIPTIV)
+ * ---------------------------------------------------------------------------
+ * Diese Datei stellt eine vollständige und konsistente i18n-Basis für das
+ * Archive-Overlay bereit, erweitert jedoch semantisch den REPORTS-Bereich
+ * über eine reine „Reports Overview“ hinaus und bildet die kanonische
+ * EBENE-1-Mode-Switch-Struktur nicht explizit ab.
+ *
+ * ============================================================================
+ */
+
+
 export const i18nArchive = {
   en: {
     archive: {

@@ -1,211 +1,136 @@
 /**
  * ============================================================================
- * INVENTUS INDEX — ArchiveOverlay.tsx
+ * FILE INDEX — ArchiveOverlay.tsx
+ * PROJECT: GPTM-Galaxy+ · m-pathy Archive Overlay
+ * CONTEXT: Chat Archive UI — Soll/Ist-Abgleich (kanonische Struktur)
+ * MODE: Research · Documentation · Planning ONLY
  * ============================================================================
  *
- * ZWECK
- * -----
- * Vollständiger UI-Orchestrator für das Archiv-System.
- * Diese Datei ist die zentrale Steuerinstanz für:
- *   - Anzeige vergangener Chats
- *   - Suche & Preview
- *   - Auswahl einzelner Message-Paare
- *   - Übergabe der Selection an Verify / Add-to-Chat
- *   - Initialisierung systemweiter Listener (Verify)
- *
- * KEINE Business-Logik.
- * KEINE Kryptographie.
- * KEINE Server-Logik.
+ * FILE PURPOSE (IST)
+ * ---------------------------------------------------------------------------
+ * Zentrale UI-Overlay-Komponente für das ARCHIVE.
+ * Übernimmt vollständige visuelle Kontrolle über die App und rendert:
+ * - Chat-Archive (Recent, Search, Detail)
+ * - Reports-Übersicht
+ * - Selection-Handling
+ * - Verify-Event-Reaktionen
  *
  *
- * ============================================================================
- * HAUPTVERANTWORTUNG
- * ============================================================================
+ * KANONISCHER SOLLZUSTAND (REFERENZ)
+ * ---------------------------------------------------------------------------
+ * EBENE 0 (immer sichtbar):
+ *   - ARCHIVE Titel
+ *   - Erklärungstext
+ *   - Suchschlitz (fixe Position/Höhe/Abstände)
+ *   - Close-X logisch zu ARCHIVE
  *
- * - UI-State (Query, View, Selection, Open Chat)
- * - Event-Dispatching (Verify, Close, Selection-Clear)
- * - Persistenz der Selection (SessionStorage)
- * - Reine Weitergabe von Daten an Subviews
+ * EBENE 1 (immer sichtbar):
+ *   - Mode-Switch [ CHAT | REPORTS ]
+ *   - Umschalten nur per Klick
+ *   - Umschalten beeinflusst ausschließlich EBENE 2
  *
- *
- * ============================================================================
- * EXTERNE ABHÄNGIGKEITEN (KRITISCH)
- * ============================================================================
- *
- * Storage:
- *   - readSS / writeSS
- *     Key: 'mpathy:archive:selection:v1'
- *
- * Listener:
- *   - initArchiveVerifyListener()
- *     → MUSS exakt EINMAL beim Mount ausgeführt werden
- *
- * Archive-Daten:
- *   - getRecentChats()
- *   - runArchiveSearch()
- *   - getArchiveSearchPreview()
+ * EBENE 2 (wechselnd):
+ *   CHAT:
+ *     - Recent Chats (Default)
+ *     - Detailed Chat View
+ *     - Search View (Query ≥ Schwelle)
+ *   REPORTS:
+ *     - Reports Overview (exklusiv)
  *
  *
- * ============================================================================
- * ZENTRALER UI-STATE
- * ============================================================================
+ * STRUKTURELL RELEVANTE BEREICHE (IST)
+ * ---------------------------------------------------------------------------
+ * 1. Mode-State
+ *    - type ArchiveMode = 'browse' | 'detail' | 'reports'
+ *    - State: mode, openChainId, query
  *
- * query:
- *   - aktueller Suchstring
+ * 2. EBENE-0-Elemente
+ *    - <h1>Archive</h1>
+ *    - Erklärungstext (bedingt gerendert)
+ *    - Suchfeld + Close-Button
  *
- * chats:
- *   - reduzierte Metadaten der letzten Chats
+ * 3. EBENE-2-Routing (implizit)
+ *    - Ableitung von Views über:
+ *      • mode
+ *      • query.length
+ *      • openChainId
  *
- * openChainId:
- *   - wenn gesetzt → Detail-View aktiv
+ * 4. CHAT-Views
+ *    - RecentChatsView
+ *    - SearchResultsView
+ *    - ChatDetailView
  *
- * selectionState:
- *   {
- *     pairs: ArchivePair[],
- *     updated_at: ISOString
- *   }
- *
- * selection:
- *   - Alias auf selectionState.pairs
- *
- *
- * ============================================================================
- * SELECTION-LIFECYCLE (ABSOLUT KRITISCH)
- * ============================================================================
- *
- * Initialisierung:
- *   - aus SessionStorage ('mpathy:archive:selection:v1')
- *
- * addPair(pair):
- *   - prüft auf Duplicate (pair_id)
- *   - updated State + persistiert
- *
- * removePair(pair_id):
- *   - filtert Pair
- *   - updated State + persistiert
- *
- * clearSelection():
- *   - leert State
- *   - überschreibt SessionStorage
- *
- * Externer Clear:
- *   - hört auf Event 'mpathy:archive:selection:clear'
- *   - wird NUR vom Verify-Listener ausgelöst
+ * 5. REPORTS-View
+ *    - <ReportList />
  *
  *
- * ============================================================================
- * VERIFY-FLOW (NUR DISPATCH, KEINE LOGIK)
- * ============================================================================
+ * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
+ * ---------------------------------------------------------------------------
+ * Δ1: Mode-Modellierung
+ *     SOLL:
+ *       - EBENE 1: expliziter Mode-Switch [CHAT | REPORTS]
+ *       - EBENE 2 reagiert ausschließlich auf diesen Switch
+ *     IST:
+ *       - Kein expliziter UI-Mode-Switch vorhanden
+ *       - Mode wird implizit über State + Events gesetzt
+ *       - 'browse' und 'detail' sind Mode-States, obwohl sie laut Soll
+ *         Unterzustände von CHAT sind
  *
- * Button: "Verify N"
+ * Δ2: CHAT-Unterzustände
+ *     SOLL:
+ *       - Recent / Detail / Search = Unterzustände von CHAT
+ *     IST:
+ *       - Unterzustände werden implizit aus query.length und openChainId
+ *         abgeleitet, nicht explizit als CHAT-Substate modelliert
  *
- * onClick:
- *   window.dispatchEvent(
- *     new CustomEvent('mpathy:archive:verify', {
- *       detail: {
- *         intent: 'verify',
- *         pairs: selection
- *       }
- *     })
- *   )
+ * Δ3: REPORTS-Isolation
+ *     SOLL:
+ *       - REPORTS enthält ausschließlich Reports Overview
+ *       - Keine Chat-Logik aktiv
+ *     IST:
+ *       - REPORTS wird über mode === 'reports' gerendert
+ *       - CHAT-States (query, openChainId, selection) bleiben erhalten
+ *       - Kein struktureller Schnitt zwischen CHAT- und REPORTS-State
  *
- * WICHTIG:
- *   - ArchiveOverlay erwartet KEINE Rückgabe
- *   - KEIN await
- *   - KEINE Server-Kommunikation hier
+ * Δ4: EBENE-0-Invarianz
+ *     SOLL:
+ *       - Titel, Erklärung, Suchschlitz, Close-X immer sichtbar
+ *     IST:
+ *       - Erklärungstext wird bei mode === 'reports' nicht gerendert
+ *       - EBENE-0-Elemente reagieren auf Mode-State
  *
+ * Δ5: Implizites Umschalten durch Query
+ *     SOLL:
+ *       - Kein impliziter Mode-Wechsel durch Query
+ *     IST:
+ *       - query.length steuert View-Wechsel (recent ↔ search)
+ *       - Logik liegt im selben Render-Block wie Mode-Switch
  *
- * ============================================================================
- * ADD-TO-CHAT (AKTUELL GLEICHER DISPATCH)
- * ============================================================================
- *
- * Button: "Add N/6 to new chat"
- *
- * - nutzt aktuell denselben Event-Namen
- * - Semantische Trennung erfolgt im Listener
- * - Maximal 6 Paare erlaubt
- *
- *
- * ============================================================================
- * VIEW-LOGIK (DETERMINISTISCH)
- * ============================================================================
- *
- * view =
- *   - 'detail' → openChainId !== null
- *   - 'recent' → query.length < 3
- *   - 'search' → query.length >= 3
- *
- * Subviews:
- *   - RecentChatsView
- *   - SearchResultsView
- *   - ChatDetailView
- *
- *
- * ============================================================================
- * CHAIN-ID-RESOLUTION
- * ============================================================================
- *
- * resolveChainIdFromChatSerial(chatSerial):
- *   - mappt ChatSerial → Time-Range
- *   - matched gegen Triketon Anchors (LS: 'mpathy:triketon:v1')
- *   - liefert chain_id oder null
+ * Δ6: ARCHIVE-Neuaufbau / State-Persistenz
+ *     SOLL:
+ *       - Kein Neuaufbau des ARCHIVE beim Mode-Wechsel
+ *     IST:
+ *       - Kein expliziter Schutz gegen Re-Initialisierung bei
+ *         Mode-Wechsel oder Event-getriggertem setMode()
  *
  *
- * ============================================================================
- * BOOTSTRAP-EFFEKT (useEffect, EINMAL)
- * ============================================================================
- *
- * - initArchiveVerifyListener()
- * - Laden der letzten Chats
- * - Blockieren des Body-Scrolls
- * - Hard-Hide des Prompt-Roots
- *
- * Cleanup:
- *   - Restore Body Overflow
- *   - Restore Prompt Display
+ * BEWUSST NICHT IM SCOPE
+ * ---------------------------------------------------------------------------
+ * - Keine Bewertung der Architektur
+ * - Keine Lösungsvorschläge
+ * - Keine Refactor-Empfehlungen
+ * - Keine UI-Änderungen
  *
  *
- * ============================================================================
- * EVENT-VERTRÄGE (AUS SICHT DIESER DATEI)
- * ============================================================================
- *
- * Dispatcht:
- *   - 'mpathy:archive:verify'
- *   - 'mpathy:archive:close'
- *
- * Hört:
- *   - 'mpathy:archive:selection:clear'
- *
- *
- * ============================================================================
- * BEKANNTE FEHLERQUELLEN
- * ============================================================================
- *
- * - Verify klickt → nichts passiert:
- *     → Ursache liegt IMMER im archiveVerifyListener
- *     → Diese Datei dispatcht korrekt
- *
- * - Selection inkonsistent:
- *     → SessionStorage überschrieben / nicht gelesen
- *
- * - Reports öffnen sich nicht:
- *     → Listener dispatcht kein 'verify:report'
- *
- *
- * ============================================================================
- * NICHT VERHANDELBAR
- * ============================================================================
- *
- * - Keine Server-Logik hier
- * - Keine Hash-Berechnung
- * - Keine Report-Erstellung
- * - Keine Verify-Entscheidung
- *
- * ArchiveOverlay ist reiner ORCHESTRATOR.
+ * FAZIT (DESKRIPTIV)
+ * ---------------------------------------------------------------------------
+ * Diese Datei implementiert funktional sowohl CHAT- als auch REPORTS-Inhalte,
+ * bildet den kanonischen Sollzustand jedoch nur teilweise explizit ab.
+ * Insbesondere EBENE-1-Mode-Switch und die strikte Trennung der
+ * CHAT-Unterzustände sind derzeit implizit statt strukturell modelliert.
  *
  * ============================================================================
  */
-
 
 'use client'
 
@@ -222,10 +147,6 @@ import ChatDetailView from './views/ChatDetailView'
 import { runArchiveSearch, getArchiveSearchPreview } from './ArchiveSearch'
 import { initArchiveVerifyListener } from '@/lib/archiveVerifyListener'
 import ReportList from '@/components/reports/ReportList'
-
-
-
-
 
 /**
  * ============================================================
@@ -272,9 +193,10 @@ const EMPTY_SELECTION: SelectionState = {
 /* ------------------------------------------------------------------ */
 
 export default function ArchiveOverlay() {
- type ArchiveMode = 'browse' | 'detail' | 'reports'
+type ArchiveMode = 'chat' | 'reports'
 
-const [mode, setMode] = useState<ArchiveMode>('browse')
+const [mode, setMode] = useState<ArchiveMode>('chat')
+
 const [query, setQuery] = useState('')
 const [chats, setChats] = useState<ChatDisplay[]>([])
 const [openChainId, setOpenChainId] = useState<string | null>(null)
@@ -347,10 +269,11 @@ useEffect(() => {
     window.alert(msg)
   }
 
-  function onVerifyReport() {
-    setMode('reports')
-    setOpenChainId(null)
-  }
+ function onVerifyReport() {
+  setMode('reports')
+  setOpenChainId(null)
+}
+
 
   window.addEventListener(
     'mpathy:archive:selection:clear',
@@ -503,7 +426,7 @@ useEffect(() => {
     {/* ====================================================== */}
     {/* HEADER — ORIENTATION                                   */}
     {/* ====================================================== */}
-  <header
+ <header
   className="
     pb-4
     flex
@@ -512,21 +435,34 @@ useEffect(() => {
   "
 >
   <h1 className="text-3xl font-medium tracking-tight">
-  Archive
-</h1>
+    Archive
+  </h1>
 
-
-  {mode !== 'reports' && (
-    <p
-      className="
-        text-sm
-        text-text-secondary
-        max-w-[560px]
-      "
+  <div className="flex gap-4 text-sm">
+    <button
+      onClick={() => setMode('chat')}
+      className={mode === 'chat' ? 'text-cyan-400' : 'text-text-secondary'}
     >
-      Browse, review, and select past conversations.
-    </p>
-  )}
+      CHAT
+    </button>
+    <button
+      onClick={() => setMode('reports')}
+      className={mode === 'reports' ? 'text-cyan-400' : 'text-text-secondary'}
+    >
+      REPORTS
+    </button>
+  </div>
+
+  <p
+    className="
+      text-sm
+      text-text-secondary
+      max-w-[560px]
+    "
+  >
+    Browse, review, and select past conversations.
+  </p>
+
 
 
 {selection.length > 0 && (
@@ -704,7 +640,7 @@ useEffect(() => {
   aria-label="Close Archive"
   onClick={(e) => {
     e.stopPropagation()
-    setMode('browse')
+    setMode('chat')
     setOpenChainId(null)
     window.dispatchEvent(
       new CustomEvent('mpathy:archive:close')
@@ -733,11 +669,12 @@ useEffect(() => {
 {/* BODY                                                   */}
 {/* ====================================================== */}
 <div className="flex-1 overflow-y-auto mt-[15px]">
-  {mode === 'reports' ? (
-    <ReportList />
-  ) : (
-    (() => {
-      type ArchiveView = 'recent' | 'search' | 'detail'
+{mode === 'reports' ? (
+  <ReportList />
+) : (
+  (() => {
+    type ArchiveView = 'recent' | 'search' | 'detail'
+
 
       let view: ArchiveView
 

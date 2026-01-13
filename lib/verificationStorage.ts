@@ -1,6 +1,97 @@
-// lib/verificationStorage.ts
-// GPTM-Galaxy+ · m-pathy Archive + Verification System v5
-// Local Verification Reports – storage, retrieval, re-verify
+/**
+ * ============================================================================
+ * FILE INDEX — lib/verificationStorage.ts
+ * PROJECT: GPTM-Galaxy+ · m-pathy Archive + Verification
+ * CONTEXT: ARCHIVE Overlay — MODE = REPORTS (Datenhaltung)
+ * MODE: Research · Documentation · Planning ONLY
+ * ============================================================================
+ *
+ * FILE PURPOSE (IST)
+ * ---------------------------------------------------------------------------
+ * Persistenz- und Zugriffsschicht für Verification Reports im LocalStorage.
+ *
+ * Aufgaben:
+ * - Laden, Normalisieren und Speichern von Verification Reports
+ * - Abwärtskompatibilität zu Legacy-Report-Formaten
+ * - Bereitstellung einer einheitlichen Canonical-Report-Struktur
+ *
+ *
+ * KANONISCHER SOLLZUSTAND (REFERENZ)
+ * ---------------------------------------------------------------------------
+ * EBENE 0:
+ *   - Nicht relevant (keine UI-Struktur)
+ *
+ * EBENE 1:
+ *   - MODE = REPORTS ist logisch eigenständig
+ *
+ * EBENE 2 (REPORTS):
+ *   - Reports Overview basiert ausschließlich auf Report-Daten
+ *   - Keine Abhängigkeit zu CHAT-Zuständen oder CHAT-Inhalten
+ *
+ *
+ * STRUKTURELL RELEVANTE BEREICHE (IST)
+ * ---------------------------------------------------------------------------
+ * 1. Storage-Key
+ *    - KEY = 'mpathy:verification:v1'
+ *
+ * 2. Normalisierung
+ *    - normalizeReport()
+ *    - Unterstützt:
+ *      • Canonical snake_case Reports
+ *      • Legacy camelCase Reports
+ *
+ * 3. Öffentliche API
+ *    - loadReports()
+ *    - saveReport()
+ *    - deleteReport()
+ *    - getReport()
+ *
+ * 4. Datenbegrenzung
+ *    - Maximal 100 Reports (slice(0, 100))
+ *
+ *
+ * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
+ * ---------------------------------------------------------------------------
+ * Δ1: REPORTS-Isolation auf Storage-Ebene
+ *     SOLL:
+ *       - REPORTS-Daten sind klar von CHAT-Daten getrennt
+ *     IST:
+ *       - Trennung erfolgt implizit über Storage-Key
+ *       - Keine formale Kopplung an ARCHIVE-Mode oder Overlay-Zustand
+ *
+ * Δ2: REPORTS-Detailtiefe
+ *     SOLL:
+ *       - REPORTS-Mode zeigt eine Reports Overview
+ *     IST:
+ *       - Storage unterstützt vollständige Report-Inhalte,
+ *         inklusive Content, Verification Chain und Signaturen
+ *
+ * Δ3: Lebenszyklus-Kopplung
+ *     SOLL:
+ *       - REPORTS sind unabhängig von Chat-Navigation
+ *     IST:
+ *       - Reports werden dauerhaft im LocalStorage gehalten,
+ *         unabhängig vom Zustand des ARCHIVE-Overlays
+ *
+ *
+ * BEWUSST NICHT IM SCOPE
+ * ---------------------------------------------------------------------------
+ * - Keine UI-Logik
+ * - Keine Aussage zur kryptographischen Validität
+ * - Keine Bewertung der Normalisierungsstrategie
+ * - Keine Empfehlungen zur Speicherstrategie
+ *
+ *
+ * FAZIT (DESKRIPTIV)
+ * ---------------------------------------------------------------------------
+ * Diese Datei stellt eine saubere, eigenständige Datenbasis für REPORTS dar,
+ * die logisch unabhängig vom CHAT-Overlay existiert, jedoch strukturell mehr
+ * Informationen bereitstellt als im kanonischen „Reports Overview“-Begriff
+ * vorgesehen.
+ *
+ * ============================================================================
+ */
+
 
 import type { VerificationReport as TVerificationReport } from './types'
 import { readLS, writeLS } from './storage'

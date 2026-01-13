@@ -1,176 +1,119 @@
 /**
  * ============================================================================
- * INVENTUS INDEX — archiveVerifyListener.ts
+ * FILE INDEX — lib/archiveVerifyListener.ts
+ * PROJECT: GPTM-Galaxy+ · m-pathy Archive + Verification
+ * CONTEXT: ARCHIVE Overlay — CHAT → VERIFY → REPORTS Übergang
+ * MODE: Research · Documentation · Planning ONLY
  * ============================================================================
  *
- * ZWECK
- * -----
- * Zentrale Client-Seal- & Verify-Bridge für Archive-Selections.
- * Diese Datei verbindet:
- *   UI-Event ("Verify") → Archive Selection → Server-Seal (WRITE)
- *   → Local Report Persistenz → UI-Update → Selection-Clear
+ * FILE PURPOSE (IST)
+ * ---------------------------------------------------------------------------
+ * Zentrale Event-Listener-Logik für den Verify-Flow aus dem ARCHIVE.
  *
- * WICHTIGES PRINZIP
- * -----------------
- * - Der Server berechnet den TruthHash selbst.
- * - Client-seitige TruthHashes sind reines Decoy / Ablenkungsmanöver.
- * - Diese Datei darf KEINE Hash-Logik enthalten.
- * - Kein Zustand wird mutiert, bevor der Server SUCCESS bestätigt.
- *
- * SINGLE ENTRY POINT
- * ------------------
- * initArchiveVerifyListener()
- * → registriert genau EINEN globalen Event-Listener
+ * Aufgaben:
+ * - Reagiert auf CustomEvent 'mpathy:archive:verify'
+ * - Ermittelt aktuelle Selection (SessionStorage oder Event)
+ * - Baut kanonischen Text aus Chat-Pairs
+ * - Sendet SEAL-Request an Triketon-API
+ * - Erstellt und persistiert Verification Reports
+ * - Dispatcht Folge-Events für UI (error | info | report | selection:clear)
  *
  *
- * ============================================================================
- * EVENT-VERTRAG (ABSOLUT KRITISCH)
- * ============================================================================
+ * KANONISCHER SOLLZUSTAND (REFERENZ)
+ * ---------------------------------------------------------------------------
+ * EBENE 0:
+ *   - Nicht relevant (keine UI-Elemente)
  *
- * EINGEHENDES EVENT (von UI):
- * --------------------------
- * Name:   'mpathy:archive:verify'
- * Detail: { intent: 'verify' }
+ * EBENE 1:
+ *   - Umschalten zwischen CHAT und REPORTS erfolgt explizit
  *
- * → Fehlt `detail.intent === 'verify'`, passiert GAR NICHTS.
+ * EBENE 2:
+ *   CHAT:
+ *     - Selection von Message-Pairs
+ *     - Explizite Verify-Aktion
  *
- *
- * AUSGEHENDE EVENTS (von dieser Datei):
- * ------------------------------------
- * 1) 'mpathy:archive:verify:report'
- *    → detail: TVerificationReport
- *    → triggert Report-UI / Overlay
- *
- * 2) 'mpathy:archive:selection:clear'
- *    → leert Archive-Selection NACH erfolgreichem Seal
+ *   REPORTS:
+ *     - Reports Overview
+ *     - Anzeige neu erstellter Reports
+ *     - Keine CHAT-Logik aktiv
  *
  *
- * ============================================================================
- * DATA SOURCES (READ ONLY)
- * ============================================================================
+ * STRUKTURELL RELEVANTE BEREICHE (IST)
+ * ---------------------------------------------------------------------------
+ * 1. Event-System
+ *    - EVENT_NAME = 'mpathy:archive:verify'
+ *    - Folge-Events:
+ *      • mpathy:archive:verify:error
+ *      • mpathy:archive:verify:info
+ *      • mpathy:archive:verify:report
+ *      • mpathy:archive:selection:clear
  *
- * Archive Selection:
- *   readArchiveSelection()
- *   → SessionStorage: 'mpathy:archive:selection:v1'
- *   → Erwartet: { pairs: ArchivePair[] }
+ * 2. Selection-Ermittlung
+ *    - readArchiveSelection() (SessionStorage)
+ *    - Fallback auf Event-Detail
  *
- * Device Public Key:
- *   readLS('mpathy:triketon:device_public_key_2048')
+ * 3. Canonical Truth Text
+ *    - buildCanonicalTruthText()
+ *    - Sortierung nach pair_id
+ *    - USER / ASSISTANT Serialisierung
  *
+ * 4. Verify / Seal Request
+ *    - POST /api/triketon/seal
+ *    - Client-side Decoy Hashes
  *
- * ============================================================================
- * SERVER-KOMMUNIKATION (WRITE)
- * ============================================================================
- *
- * Endpoint:
- *   POST /api/triketon/seal
- *
- * Payload (minimal relevant):
- *   {
- *     intent: 'seal',
- *     publicKey: string,
- *     text: canonicalText
- *   }
- *
- * Payload (Decoy / Ablenkung):
- *   - truthHash
- *   - truthHash2
- *   - protocol_version
- *   - source
- *
- * SERVER-ANTWORT (akzeptiert):
- *   result === 'SEALED' | 'IGNORED'
- *
- * → Alles andere führt zu silent abort.
+ * 5. Report-Erstellung
+ *    - Aufbau eines TVerificationReport
+ *    - Persistenz in LocalStorage
  *
  *
- * ============================================================================
- * KANONISCHE TEXTBILDUNG
- * ============================================================================
+ * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
+ * ---------------------------------------------------------------------------
+ * Δ1: Kopplung CHAT → REPORTS
+ *     SOLL:
+ *       - Klare, explizite Übergabe von CHAT zu REPORTS
+ *     IST:
+ *       - Übergang erfolgt implizit über Events
+ *       - Kein formaler Mode-Switch, sondern Seiteneffekt
  *
- * buildCanonicalTruthText(pairs)
+ * Δ2: REPORTS-Aktivierung
+ *     SOLL:
+ *       - REPORTS-Mode wird explizit aktiviert
+ *     IST:
+ *       - UI reagiert auf 'mpathy:archive:verify:report'
+ *       - Mode-Umschaltung ist verteilt (nicht zentral)
  *
- * Algorithmus:
- *   1. Kopie der Pairs
- *   2. Sortierung nach pair_id (lexikografisch)
- *   3. Mapping:
- *        USER:
- *        <user.content>
+ * Δ3: State-Rücksetzung
+ *     SOLL:
+ *       - CHAT-Selection und CHAT-State klar vom REPORTS-State getrennt
+ *     IST:
+ *       - Selection wird per Event global geleert
+ *       - Kein expliziter Scope zwischen CHAT- und REPORTS-Zuständen
  *
- *        ASSISTANT:
- *        <assistant.content>
- *   4. Join mit Leerzeilen
- *   5. trim()
- *
- * Ergebnis:
- *   - deterministisch
- *   - gleiche Selection → gleicher Text
- *
- *
- * ============================================================================
- * REPORT-PERSISTENZ (APPEND-ONLY)
- * ============================================================================
- *
- * Storage-Key:
- *   'mpathy:verification:reports:v1'
- *
- * Persistiert:
- *   {
- *     protocol_version: 'v1',
- *     generated_at: ISO,
- *     source: 'archive-selection',
- *     pair_count: number,
- *     public_key: string,
- *     status: 'verified',
- *     last_verified_at: ISO
- *   }
- *
- * → Reports werden NIE überschrieben.
+ * Δ4: ARCHIVE-Neuaufbau-Schutz
+ *     SOLL:
+ *       - Kein Neuaufbau von ARCHIVE beim Mode-Wechsel
+ *     IST:
+ *       - Listener agiert global und zustandslos
+ *       - Keine explizite Garantie gegen Re-Initialisierung
  *
  *
- * ============================================================================
- * ABLAUF (LINEAR, OHNE ABKÜRZUNGEN)
- * ============================================================================
- *
- * UI klickt "Verify"
- * → UI dispatcht 'mpathy:archive:verify'
- * → Listener prüft intent
- * → Selection wird gelesen
- * → Kanonischer Text wird gebaut
- * → PublicKey wird gelesen
- * → POST /api/triketon/seal
- * → Server bestätigt (SEALED | IGNORED)
- * → Report wird lokal persistiert
- * → UI wird benachrichtigt
- * → Selection wird gelöscht
+ * BEWUSST NICHT IM SCOPE
+ * ---------------------------------------------------------------------------
+ * - Keine Bewertung der Kryptographie
+ * - Keine Sicherheitsanalyse
+ * - Keine Aussage zur Decoy-Hash-Strategie
+ * - Keine Patch- oder Refactor-Vorschläge
  *
  *
- * ============================================================================
- * SILENT FAILURE POINTS (WARUM „PASSIERT NICHTS“)
- * ============================================================================
- *
- * - Event ohne detail.intent
- * - Leere / falsche Archive-Selection
- * - PublicKey fehlt
- * - Fetch schlägt fehl
- * - Server antwortet != 200
- * - Response-Schema unerwartet
- *
- * → KEIN Logging. KEINE UI-Fehlermeldung.
- *
- *
- * ============================================================================
- * NICHT VERHANDELBAR
- * ============================================================================
- *
- * - Diese Datei darf KEINE Verify-READ-Logik enthalten
- * - Verify-READ erfolgt AUSSCHLIESSLICH über Reports
- * - Kein direkter TruthHash-Vergleich im Client
- * - Kein Fallback auf alte Server-Logik
+ * FAZIT (DESKRIPTIV)
+ * ---------------------------------------------------------------------------
+ * Diese Datei implementiert den vollständigen Verify-Flow vom CHAT-Selection-
+ * Ereignis bis zur Erstellung eines Reports, steuert jedoch den Übergang in
+ * den REPORTS-Mode ausschließlich indirekt über Events und nicht über eine
+ * explizite, kanonische Mode-Logik gemäß Sollzustand.
  *
  * ============================================================================
  */
-
 
 import { readLS, writeLS } from '@/lib/storage'
 import { readArchiveSelection } from '@/lib/storage'

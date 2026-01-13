@@ -1,6 +1,111 @@
-// components/archive/ReportList.tsx
-// GPTM-Galaxy+ · m-pathy Archive + Verification System v5
-// Report Viewer Overlay – canonical report list + detail view
+/**
+ * ============================================================================
+ * FILE INDEX — ReportList.tsx
+ * PROJECT: GPTM-Galaxy+ · m-pathy Archive + Verification
+ * CONTEXT: ARCHIVE Overlay — MODE = REPORTS
+ * MODE: Research · Documentation · Planning ONLY
+ * ============================================================================
+ *
+ * FILE PURPOSE (IST)
+ * ---------------------------------------------------------------------------
+ * UI-Komponente zur Darstellung der Verification Reports.
+ *
+ * Funktionen:
+ * - Laden aller Reports aus LocalStorage
+ * - Sortierte Listenansicht (last_verified_at / generated_at)
+ * - Auswahl eines Reports
+ * - Detail-Overlay (Modal) für einzelnen Report
+ * - Download & Delete von Reports
+ * - Anzeige des Verifikationsstatus über ReportStatus
+ *
+ *
+ * KANONISCHER SOLLZUSTAND (REFERENZ)
+ * ---------------------------------------------------------------------------
+ * EBENE 0:
+ *   - Nicht zuständig (keine globale Overlay-Struktur)
+ *
+ * EBENE 1:
+ *   - MODE = REPORTS ist explizit aktiv
+ *
+ * EBENE 2 (REPORTS):
+ *   - Ausschließlich "Reports Overview"
+ *   - Keine Chat-Inhalte
+ *   - Keine Chat-Navigation
+ *   - Keine Archive-Search
+ *
+ *
+ * STRUKTURELL RELEVANTE BEREICHE (IST)
+ * ---------------------------------------------------------------------------
+ * 1. Datenquelle
+ *    - loadReports(), getReport(), deleteReport()
+ *    - Quelle: Verification Storage (LocalStorage)
+ *
+ * 2. Reports Overview
+ *    - Liste aller Reports
+ *    - Sortierung nach Zeitstempel
+ *    - Klick → Auswahl eines Reports
+ *
+ * 3. Report Detail View (Overlay / Modal)
+ *    - Fixed Fullscreen Overlay
+ *    - JSON-Darstellung des Reports
+ *    - Download / Delete / Close
+ *
+ * 4. Verifikationsstatus
+ *    - Nutzung von <ReportStatus />
+ *
+ *
+ * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
+ * ---------------------------------------------------------------------------
+ * Δ1: Detailansicht innerhalb REPORTS
+ *     SOLL:
+ *       - REPORTS-Mode zeigt eine Reports Overview
+ *     IST:
+ *       - Zusätzlich wird eine Report-Detailansicht
+ *         als Modal innerhalb REPORTS gerendert
+ *
+ * Δ2: Vollbild-Overlay im Overlay
+ *     SOLL:
+ *       - ARCHIVE-Overlay ist ein klar definierter Raum
+ *     IST:
+ *       - Report-Detail nutzt ein eigenes fullscreen
+ *         fixed Overlay (inset-0, z-50)
+ *
+ * Δ3: Statusanzeige-Abhängigkeit
+ *     SOLL:
+ *       - REPORTS arbeiten ausschließlich mit Report-Daten
+ *     IST:
+ *       - <ReportStatus /> wird eingebunden, welches
+ *         semantisch an Chat-Daten gekoppelt ist
+ *
+ * Δ4: Scope-Erweiterung REPORTS
+ *     SOLL:
+ *       - REPORTS = Übersicht
+ *     IST:
+ *       - REPORTS umfasst:
+ *         • Übersicht
+ *         • Detailansicht
+ *         • Download
+ *         • Invalidierung (Delete)
+ *
+ *
+ * BEWUSST NICHT IM SCOPE
+ * ---------------------------------------------------------------------------
+ * - Keine UX-/Design-Bewertung
+ * - Keine Aussage zur Sinnhaftigkeit von Detailansichten
+ * - Keine Patch- oder Refactor-Vorschläge
+ * - Keine Änderungsempfehlungen
+ *
+ *
+ * FAZIT (DESKRIPTIV)
+ * ---------------------------------------------------------------------------
+ * Diese Datei implementiert den REPORTS-Mode funktional vollständig,
+ * erweitert ihn jedoch über eine reine „Reports Overview“ hinaus und
+ * nutzt ein verschachteltes Overlay innerhalb des ARCHIVE-Overlays,
+ * was vom kanonischen Sollzustand abweicht.
+ *
+ * ============================================================================
+ */
+
 
 'use client'
 

@@ -1,3 +1,98 @@
+/**
+ * ============================================================================
+ * FILE INDEX — reportstatus.tsx
+ * PROJECT: GPTM-Galaxy+ · m-pathy Verification / Reports
+ * CONTEXT: Archive Overlay — REPORTS / Verification Status
+ * MODE: Research · Documentation · Planning ONLY
+ * ============================================================================
+ *
+ * FILE PURPOSE (IST)
+ * ---------------------------------------------------------------------------
+ * UI-Komponente zur Anzeige des Verifikationsstatus eines
+ * User–Assistant-Nachrichtenpaares.
+ *
+ * - Prüft lokal gespeicherte Triketon-Anker
+ * - Führt Server-Verify (/api/triketon/verify) aus
+ * - Rendert Status: loading | verified | failed
+ *
+ *
+ * KANONISCHER SOLLZUSTAND (REFERENZ)
+ * ---------------------------------------------------------------------------
+ * EBENE 0:
+ *   - Nicht relevant (keine Overlay-Struktur)
+ *
+ * EBENE 1:
+ *   - REPORTS ist ein eigenständiger Modus
+ *
+ * EBENE 2 (REPORTS):
+ *   - Reports Overview
+ *   - Detaildarstellungen beziehen sich ausschließlich auf Reports
+ *   - Keine CHAT-Abhängigkeiten
+ *
+ *
+ * STRUKTURELL RELEVANTE BEREICHE (IST)
+ * ---------------------------------------------------------------------------
+ * 1. Input Props
+ *    - userText
+ *    - assistantText
+ *    - truthHash
+ *
+ * 2. Lokale Verifikation
+ *    - Zugriff auf localStorage: 'mpathy:triketon:v1'
+ *    - Suche nach passendem truth_hash
+ *
+ * 3. Server-Verifikation
+ *    - POST /api/triketon/verify
+ *    - Übergabe: publicKey, truthHash, text
+ *
+ * 4. UI-Zustände
+ *    - verified === null  → Loading
+ *    - verified === true  → Success
+ *    - verified === false → Fail
+ *
+ *
+ * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
+ * ---------------------------------------------------------------------------
+ * Δ1: Kopplung an CHAT-Inhalte
+ *     SOLL:
+ *       - REPORTS-Mode arbeitet ausschließlich mit Report-Daten
+ *     IST:
+ *       - Komponente benötigt vollständige userText- und assistantText-
+ *         Inhalte aus CHAT-Kontext
+ *
+ * Δ2: REPORTS-Selbstständigkeit
+ *     SOLL:
+ *       - Reports Overview und zugehörige Statusanzeigen sind
+ *         vollständig vom Chat-Overlay entkoppelt
+ *     IST:
+ *       - Verifikation rekonstruiert Textpaare aus Chat-Daten
+ *       - Abhängigkeit vom ursprünglichen Chat-Inhalt besteht fort
+ *
+ * Δ3: EBENE-2-Reinheit
+ *     SOLL:
+ *       - REPORTS enthalten keine implizite CHAT-Logik
+ *     IST:
+ *       - Semantische CHAT-Daten (user/assistant text) sind
+ *         notwendige Inputs für REPORTS-Komponenten
+ *
+ *
+ * BEWUSST NICHT IM SCOPE
+ * ---------------------------------------------------------------------------
+ * - Keine Aussage zur kryptographischen Korrektheit
+ * - Keine Bewertung der Verify-API
+ * - Keine UI-/UX-Empfehlungen
+ * - Keine Refactor- oder Patch-Vorschläge
+ *
+ *
+ * FAZIT (DESKRIPTIV)
+ * ---------------------------------------------------------------------------
+ * Diese Datei implementiert korrekt eine Verifikationsstatus-Anzeige,
+ * ist jedoch logisch an Chat-Inhalte gekoppelt und damit nicht vollständig
+ * isoliert innerhalb des REPORTS-Modus gemäß kanonischem Sollzustand.
+ *
+ * ============================================================================
+ */
+
 'use client'
 
 import React, { useEffect, useState } from 'react'

@@ -1,6 +1,106 @@
-// lib/storage.ts
-// GPTM-Galaxy+ · m-pathy Archive + Verification System v5
-// LocalStorage + SessionStorage Layer – MEFL conform
+/**
+ * ============================================================================
+ * FILE INDEX — lib/storage.ts
+ * PROJECT: GPTM-Galaxy+ · m-pathy Archive + Verification
+ * CONTEXT: Archive Overlay (Chat / Reports) — Soll/Ist-Abgleich
+ * MODE: Research · Documentation · Planning ONLY
+ * ============================================================================
+ *
+ * FILE PURPOSE (IST)
+ * ---------------------------------------------------------------------------
+ * Zentrale Abstraktionsschicht für LocalStorage und SessionStorage.
+ * Verwaltet Namespaces, Lese-/Schreibzugriffe sowie Archiv- und
+ * Selection-relevante Datenstrukturen.
+ *
+ *
+ * RELEVANT FÜR ARCHIVE-OVERLAY (SOLLBEZUG)
+ * ---------------------------------------------------------------------------
+ * - Liefert die persistente Datenbasis für:
+ *   • Chat-Inhalte
+ *   • Archive-Chats
+ *   • Archive-Pairs
+ *   • Selections (Session-basiert)
+ *   • Verification Reports
+ * - Diese Datei ist KEINE UI-Datei, beeinflusst aber indirekt:
+ *   • CHAT-Mode (Recent / Detail / Search)
+ *   • REPORTS-Mode (Reports Overview)
+ *
+ *
+ * STRUKTURELL RELEVANTE BEREICHE (IST)
+ * ---------------------------------------------------------------------------
+ * 1. Namespace-Definitionen (LocalStorage)
+ *    - MpathyNamespace
+ *      • mpathy:archive:v1
+ *      • mpathy:archive:pairs:v1
+ *      • mpathy:verification:reports:v1
+ *      • weitere systemische Keys
+ *
+ * 2. Namespace-Definitionen (SessionStorage)
+ *    - mpathy:archive:selection:v1
+ *
+ * 3. Archiv-Datenmodelle
+ *    - ArchivePair
+ *    - ArchiveSelection
+ *
+ * 4. Storage-Zugriffsfunktionen
+ *    - readLS / writeLS / clearLS / clearAllLS
+ *    - readSS / writeSS / clearSS
+ *    - readArchiveSelection / writeArchiveSelection
+ *
+ *
+ * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
+ * ---------------------------------------------------------------------------
+ * Δ1: UI-Ebenen-Trennung (EBENE 0 / 1 / 2)
+ *     SOLL:
+ *       - Klare logische Trennung zwischen CHAT-Mode und REPORTS-Mode
+ *     IST:
+ *       - Storage-Ebene kennt keine explizite semantische Trennung
+ *         zwischen CHAT- und REPORTS-Mode
+ *       - Beide Modi greifen potenziell auf denselben Storage-Layer zu
+ *
+ * Δ2: REPORTS-Mode-Isolation
+ *     SOLL:
+ *       - REPORTS-Mode zeigt ausschließlich "Reports Overview"
+ *       - Kein Zugriff auf Chat- oder Archive-Chat-Daten
+ *     IST:
+ *       - Keine strukturelle Absicherung auf Storage-Ebene, die
+ *         REPORTS-Zugriffe auf Chat-/Archive-Namespaces verhindert
+ *
+ * Δ3: Suchlogik-Abgrenzung
+ *     SOLL:
+ *       - Search ist ein Unterzustand von CHAT
+ *       - REPORTS kennt keine Chat-Suche
+ *     IST:
+ *       - Storage bietet keine explizite Trennung oder Kennzeichnung,
+ *         ob Selection / Archive-Daten aus CHAT-Search oder anderen
+ *         Kontexten stammen
+ *
+ * Δ4: ARCHIVE-Neuaufbau-Vermeidung
+ *     SOLL:
+ *       - Kein Neuaufbau von ARCHIVE beim Mode-Wechsel
+ *     IST:
+ *       - Storage ist rein zustandslos gegenüber UI-Wechseln
+ *       - Keine explizite Persistenz oder Sperre gegen Reinitialisierung
+ *         auf Mode-Wechsel-Ebene
+ *
+ *
+ * BEWUSST NICHT IM SCOPE
+ * ---------------------------------------------------------------------------
+ * - Keine UI-Logik
+ * - Keine Mode-Switch-Logik
+ * - Keine Rendering-Entscheidungen
+ * - Keine Patch- oder Lösungsvorschläge
+ *
+ *
+ * FAZIT (DESKRIPTIV)
+ * ---------------------------------------------------------------------------
+ * Diese Datei bildet die technische Speicherbasis für das Archive-Overlay,
+ * erzwingt jedoch aktuell keine strukturellen Garantien bezüglich der
+ * kanonischen UI-Trennung von CHAT und REPORTS gemäß Sollzustand.
+ *
+ * ============================================================================
+ */
+
 
 export type MpathyNamespace =
   | 'mpathy:chat:v1'

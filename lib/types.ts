@@ -1,6 +1,100 @@
-// lib/types.ts
-// GPTM-Galaxy+ · m-pathy Archive + Verification System v5
-// Single Source of Truth – MEFL conform
+/**
+ * ============================================================================
+ * FILE INDEX — lib/types.ts
+ * PROJECT: GPTM-Galaxy+ · m-pathy Archive + Verification
+ * CONTEXT: ARCHIVE Overlay — Typen & Datenverträge
+ * MODE: Research · Documentation · Planning ONLY
+ * ============================================================================
+ *
+ * FILE PURPOSE (IST)
+ * ---------------------------------------------------------------------------
+ * Zentrale Typdefinitionen (Single Source of Truth) für:
+ * - Chat-Nachrichten
+ * - Archiv-Einträge
+ * - Selections
+ * - Context Uploads
+ * - Verification Reports (Legacy → Canonical)
+ *
+ *
+ * KANONISCHER SOLLZUSTAND (REFERENZ)
+ * ---------------------------------------------------------------------------
+ * EBENE 0 / EBENE 1:
+ *   - Nicht zuständig (UI-Struktur)
+ *
+ * EBENE 2 (CHAT | REPORTS):
+ *   - CHAT und REPORTS sind logisch getrennte Modi
+ *   - REPORTS basieren ausschließlich auf Report-Daten
+ *   - Keine Vermischung von CHAT- und REPORTS-Verträgen
+ *
+ *
+ * STRUKTURELL RELEVANTE BEREICHE (IST)
+ * ---------------------------------------------------------------------------
+ * 1. Core-Chat-Typen
+ *    - ChatMessage
+ *    - ArchiveEntry
+ *    - ArchiveSelection
+ *    - ContextUpload
+ *
+ * 2. Verification-Typen
+ *    - VerificationItem
+ *    - VerificationReportLegacy (camelCase)
+ *    - VerificationReportBase (IO / Migration)
+ *    - VerificationReport (Canonical v5)
+ *
+ * 3. Export-Aggregation
+ *    - Zentrale Typ-Re-Exports (T*)
+ *
+ *
+ * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
+ * ---------------------------------------------------------------------------
+ * Δ1: Typische Trennung CHAT vs. REPORTS
+ *     SOLL:
+ *       - Klare, unabhängige Typverträge für CHAT und REPORTS
+ *     IST:
+ *       - Typen für CHAT, ARCHIVE und REPORTS sind gemeinsam
+ *         in einer zentralen Datei gebündelt
+ *
+ * Δ2: REPORTS-Abhängigkeit von CHAT-Metadaten
+ *     SOLL:
+ *       - REPORTS arbeiten ausschließlich mit Report-Daten
+ *     IST:
+ *       - VerificationReport enthält optional chat_meta
+ *         (chat_id, chat_serial, message_total)
+ *
+ * Δ3: Legacy-Unterstützung
+ *     SOLL:
+ *       - Klare, kanonische Report-Struktur
+ *     IST:
+ *       - Zusätzliche Legacy-Interfaces (VerificationReportLegacy)
+ *         sind weiterhin Teil des öffentlichen Typraums
+ *
+ * Δ4: Scope-Erweiterung REPORTS
+ *     SOLL:
+ *       - Reports Overview als klar umrissener Datenraum
+ *     IST:
+ *       - Typen erlauben umfangreiche Inhalte
+ *         (content, verification_chain, signatures, counts)
+ *
+ *
+ * BEWUSST NICHT IM SCOPE
+ * ---------------------------------------------------------------------------
+ * - Keine Aussage zur Typ-Granularität
+ * - Keine Bewertung der Legacy-Kompatibilität
+ * - Keine Empfehlungen zur Aufteilung der Typen
+ * - Keine Änderungen an Datenverträgen
+ *
+ *
+ * FAZIT (DESKRIPTIV)
+ * ---------------------------------------------------------------------------
+ * Diese Datei definiert konsistente und umfassende Typverträge für das
+ * gesamte Archive- und Verification-System, bündelt jedoch CHAT- und
+ * REPORTS-relevante Typen in einem gemeinsamen Typraum und ermöglicht
+ * damit semantische Überschneidungen, die vom kanonischen UI-Sollzustand
+ * getrennt gedacht sind.
+ *
+ * ============================================================================
+ */
+
 
 export type Role = 'user' | 'assistant' | 'system'
 
