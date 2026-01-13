@@ -562,24 +562,34 @@ useEffect(() => {
     relative
   "
 >
-  <Input
-    value={query}
-    onChange={(e) => setQuery(e.target.value)}
-    placeholder="Search your chats…"
-    className="
-      w-full
-      bg-[#121418]
-      border
-      border-border-soft
-      rounded-pill
-      px-8
-      py-7
-      text-base
-      placeholder:text-text-muted
-      focus-visible:ring-2
-      focus-visible:ring-cyan-500
-    "
-  />
+<Input
+  value={query}
+  onChange={(e) => {
+    const next = e.target.value
+    setQuery(next)
+
+    if (next.trim().length >= 3) {
+      setChatView('search')
+    } else {
+      setChatView('recent')
+    }
+  }}
+  placeholder="Search your chats…"
+  className="
+    w-full
+    bg-[#121418]
+    border
+    border-border-soft
+    rounded-pill
+    px-8
+    py-7
+    text-base
+    placeholder:text-text-muted
+    focus-visible:ring-2
+    focus-visible:ring-cyan-500
+  "
+/>
+
 
    {query.length >= 3 && !openChainId && (() => {
   const preview = getArchiveSearchPreview(query)
