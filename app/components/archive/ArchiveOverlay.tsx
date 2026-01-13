@@ -270,11 +270,10 @@ useEffect(() => {
     window.alert(msg)
   }
 
- function onVerifyReport() {
-  setMode('reports')
-  setOpenChainId(null)
-}
-
+  function onVerifyReport() {
+    setMode('reports')
+    setOpenChainId(null)
+  }
 
   window.addEventListener(
     'mpathy:archive:selection:clear',
@@ -312,6 +311,7 @@ useEffect(() => {
     )
   }
 }, [])
+
 
 
 
@@ -367,17 +367,35 @@ useEffect(() => {
   const originalPromptDisplay = promptEl?.style.display
   if (promptEl) promptEl.style.display = 'none'
 
-  return () => {
+    return () => {
     document.body.style.overflow = originalOverflow
     if (promptEl) promptEl.style.display = originalPromptDisplay ?? ''
   }
 }, [])
 
+useEffect(() => {
+  function onVerifySuccess() {
+    setMode('reports')
+  }
+
+  window.addEventListener(
+    'mpathy:archive:verify:success',
+    onVerifySuccess as EventListener,
+  )
+
+  return () => {
+    window.removeEventListener(
+      'mpathy:archive:verify:success',
+      onVerifySuccess as EventListener,
+    )
+  }
+}, [])
 
 
-  /* -------------------------------------------------------------- */
-  /* Render                                                         */
-  /* -------------------------------------------------------------- */
+
+/* -------------------------------------------------------------- */
+/* Render                                                         */
+/* -------------------------------------------------------------- */
 
   return (
     /* ============================================================ */
