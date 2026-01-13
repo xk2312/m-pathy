@@ -271,8 +271,13 @@ useEffect(() => {
   }
 
   function onVerifySuccess() {
+  // force REPORTS to remount and reload LocalStorage
+  setMode('chat')
+  requestAnimationFrame(() => {
     setMode('reports')
-  }
+  })
+}
+
 
   window.addEventListener(
     'mpathy:archive:selection:clear',
