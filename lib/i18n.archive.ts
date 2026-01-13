@@ -117,25 +117,31 @@
 export const i18nArchive = {
   en: {
     archive: {
-      title: "Archive",
-      searchPlaceholder: "Search archive…",
-      noResults: "No matches.",
-      empty: "No saved chats yet.",
-      loading: "Loading archive…",
-      viewMessage: "Open message",
-      viewChat: "Open chat",
-      add: "Add",
-      startChat: "New chat",
-      verify: "Verify",
-      chatNumber: "Chat {{chatNumber}}",
-        messageReference: 'Message reference',
-      totalMessages: "{{count}} msgs",
-      keywords: "Keywords",
-    summarize: "Summarize",
-    loadSelection: "Load selection",
-    clearSelection: "Clear",
-    defaultHeader: "Recent chats"
-    },
+  title: "Archive",
+  searchPlaceholder: "Search archive…",
+  noResults: "No matches.",
+  empty: "No saved chats yet.",
+  loading: "Loading archive…",
+  viewMessage: "Open message",
+  viewChat: "Open chat",
+  add: "Add",
+  startChat: "New chat",
+  verify: "Verify",
+  chatNumber: "Chat {{chatNumber}}",
+  messageReference: 'Message reference',
+  totalMessages: "{{count}} msgs",
+  keywords: "Keywords",
+  summarize: "Summarize",
+  loadSelection: "Load selection",
+  clearSelection: "Clear",
+  defaultHeader: "Recent chats",
+
+  modes: {
+    chat: "Chat",
+    reports: "Reports"
+  }
+}
+,
     operators: {
   and: "AND",
   or: "OR",
