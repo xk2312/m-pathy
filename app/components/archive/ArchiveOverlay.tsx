@@ -210,27 +210,41 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-
-import { Input } from '@/components/ui/Input'
-import ReportList from '@/components/reports/ReportList'
-
 import { getRecentChats } from '@/lib/archiveIndex'
 import { readLS, readSS, writeSS } from '@/lib/storage'
-import { initArchiveVerifyListener } from '@/lib/archiveVerifyListener'
-
-import RecentChatsView from './views/RecentChatsView'
+import { Input } from '@/components/ui/Input'
+import { MessageSquare } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import SearchResultsView from './views/SearchResultsView'
+import RecentChatsView from './views/RecentChatsView'
+import EmptyStateView from './views/EmptyStateView'
 import ChatDetailView from './views/ChatDetailView'
 import { runArchiveSearch, getArchiveSearchPreview } from './ArchiveSearch'
+import { initArchiveVerifyListener } from '@/lib/archiveVerifyListener'
+import ReportList from '@/components/reports/ReportList'
 
-import type { ArchivePair } from '@/lib/storage'
+
+
+
+
+/**
+ * ============================================================
+ * ARCHIVE OVERLAY — FULL RESET (FIXED)
+ * ============================================================
+ *
+ * - Full sovereign system space (no dim-layer tricks)
+ * - Overlay REPLACES the app visually
+ * - No prompt, no sidebar, no bleed-through
+ * - Strong vertical dramaturgy
+ * - VIEW affordance restored
+ *
+ * Canonical per README + Addendum.
+ * ============================================================
+ */
 
 /* ------------------------------------------------------------------ */
 /* Types                                                              */
 /* ------------------------------------------------------------------ */
-
-type ArchiveMode = 'chat' | 'reports'
 
 type ChatDisplay = {
   chat_serial: number
@@ -239,27 +253,32 @@ type ChatDisplay = {
   lastTimestamp: string
 }
 
+import type { ArchivePair } from '@/lib/storage'
+
 type SelectionState = {
   pairs: ArchivePair[]
   updated_at: string
 }
+
 
 const EMPTY_SELECTION: SelectionState = {
   pairs: [],
   updated_at: new Date().toISOString(),
 }
 
+
 /* ------------------------------------------------------------------ */
 /* Component                                                          */
 /* ------------------------------------------------------------------ */
 
 export default function ArchiveOverlay() {
-  const router = useRouter()
+ type ArchiveMode = 'browse' | 'detail' | 'reports'
 
-  const [mode, setMode] = useState<ArchiveMode>('chat')
-  const [query, setQuery] = useState('')
-  const [openChainId, setOpenChainId] = useState<string | null>(null)
-  const [chats, setChats] = useState<ChatDisplay[]>([])
+const [mode, setMode] = useState<ArchiveMode>('browse')
+const [query, setQuery] = useState('')
+const [chats, setChats] = useState<ChatDisplay[]>([])
+const [openChainId, setOpenChainId] = useState<string | null>(null)
+
 
   const [selectionState, setSelectionState] = useState<SelectionState>(() => {
     if (typeof window === 'undefined') return EMPTY_SELECTION
@@ -271,164 +290,197 @@ export default function ArchiveOverlay() {
 
   const selection = selectionState.pairs
 
-  /* ---------------- Selection helpers ---------------- */
 
-  function persistSelection(next: ArchivePair[]) {
-    writeSS('mpathy:archive:selection:v1', {
-      pairs: next,
-      updated_at: new Date().toISOString(),
-    })
+const router = useRouter()
+
+function persistSelection(next: ArchivePair[]) {
+  const nextState: SelectionState = {
+    pairs: next,
+    updated_at: new Date().toISOString(),
+  }
+  writeSS('mpathy:archive:selection:v1', nextState)
+}
+
+
+
+function addPair(pair: ArchivePair) {
+  setSelectionState(prev => {
+    const next = prev.pairs.some(p => p.pair_id === pair.pair_id)
+      ? prev.pairs
+      : [...prev.pairs, pair]
+    persistSelection(next)
+    return { ...prev, pairs: next }
+  })
+}
+
+
+function removePair(pair_id: string) {
+  setSelectionState(prev => {
+    const next = prev.pairs.filter(p => p.pair_id !== pair_id)
+    persistSelection(next)
+    return { ...prev, pairs: next }
+  })
+}
+
+
+function clearSelection() {
+  persistSelection([])
+  setSelectionState(EMPTY_SELECTION)
+}
+
+useEffect(() => {
+  function onSelectionClear() {
+    clearSelection()
   }
 
-  function addPair(pair: ArchivePair) {
-    setSelectionState(prev => {
-      const next = prev.pairs.some(p => p.pair_id === pair.pair_id)
-        ? prev.pairs
-        : [...prev.pairs, pair]
-      persistSelection(next)
-      return { ...prev, pairs: next }
-    })
+  function onVerifyError(event: Event) {
+    const custom = event as CustomEvent<{ message?: string }>
+    const msg = custom.detail?.message ?? 'Verify failed.'
+    window.alert(msg)
   }
 
-  function removePair(pair_id: string) {
-    setSelectionState(prev => {
-      const next = prev.pairs.filter(p => p.pair_id !== pair_id)
-      persistSelection(next)
-      return { ...prev, pairs: next }
-    })
+  function onVerifyInfo(event: Event) {
+    const custom = event as CustomEvent<{ message?: string }>
+    const msg =
+      custom.detail?.message ??
+      'The text has already been verified and the report already exists in the Reports section.'
+    window.alert(msg)
   }
 
-  function clearSelection() {
-    persistSelection([])
-    setSelectionState(EMPTY_SELECTION)
+  function onVerifyReport() {
+    setMode('reports')
+    setOpenChainId(null)
   }
 
-  /* ---------------- Effects ---------------- */
+  window.addEventListener(
+    'mpathy:archive:selection:clear',
+    onSelectionClear
+  )
+  window.addEventListener(
+    'mpathy:archive:verify:error',
+    onVerifyError
+  )
+  window.addEventListener(
+    'mpathy:archive:verify:info',
+    onVerifyInfo
+  )
+  window.addEventListener(
+    'mpathy:archive:verify:report',
+    onVerifyReport
+  )
 
-  useEffect(() => {
-    initArchiveVerifyListener()
+  return () => {
+    window.removeEventListener(
+      'mpathy:archive:selection:clear',
+      onSelectionClear
+    )
+    window.removeEventListener(
+      'mpathy:archive:verify:error',
+      onVerifyError
+    )
+    window.removeEventListener(
+      'mpathy:archive:verify:info',
+      onVerifyInfo
+    )
+    window.removeEventListener(
+      'mpathy:archive:verify:report',
+      onVerifyReport
+    )
+  }
+}, [])
 
-    const onVerifyReport = () => {
-      setMode('reports')
-      setOpenChainId(null)
-    }
-
-    window.addEventListener('mpathy:archive:verify:report', onVerifyReport)
-    window.addEventListener('mpathy:archive:selection:clear', clearSelection)
-
-    return () => {
-      window.removeEventListener('mpathy:archive:verify:report', onVerifyReport)
-      window.removeEventListener('mpathy:archive:selection:clear', clearSelection)
-    }
-  }, [])
 
 
-  /* ---------------- Helpers ---------------- */
+
+
 
   const resolveChainIdFromChatSerial = (chatSerial: string) => {
-    const chat = getRecentChats(13).find(
-      c => String(c.chat_serial) === chatSerial
-    )
-    if (!chat) return null
+  const chat = getRecentChats(13).find(
+    (c) => String(c.chat_serial) === chatSerial
+  )
 
-    const anchors =
-      readLS<{ timestamp: string; chain_id: string }[]>('mpathy:triketon:v1') ??
-      []
+  if (!chat) return null
 
-    const start = Date.parse(chat.first_timestamp)
-    const end = Date.parse(chat.last_timestamp)
+  const anchors =
+    readLS<{ timestamp: string; chain_id: string }[]>('mpathy:triketon:v1') ?? []
 
-    return (
-      anchors.find(a => {
-        const t = Date.parse(a.timestamp)
-        return t >= start && t <= end
-      })?.chain_id ?? null
-    )
+  const start = Date.parse(chat.first_timestamp)
+  const end = Date.parse(chat.last_timestamp)
+
+  const hit = anchors.find((a) => {
+    const t = Date.parse(a.timestamp)
+    return t >= start && t <= end
+  })
+
+  return hit?.chain_id ?? null
+}
+
+ /* -------------------------------------------------------------- */
+/* Bootstrap                                                      */
+/* -------------------------------------------------------------- */
+
+useEffect(() => {
+  // 🔌 init bulk verify listener (EPIC 4 / T-09)
+  initArchiveVerifyListener()
+
+  const base = getRecentChats(13)
+
+  const mapped = base.map((chat) => ({
+    chat_serial: chat.chat_serial,
+    keywords: chat.keywords ?? [],
+    messageCount: chat.messages?.length ?? 0,
+    lastTimestamp: chat.last_timestamp,
+  }))
+
+  setChats(mapped)
+
+  // 🔒 hard block background (prompt, chat, scroll)
+  const originalOverflow = document.body.style.overflow
+  document.body.style.overflow = 'hidden'
+
+  // ✅ hard-hide prompt while archive is mounted (no routing assumptions)
+  const promptEl = document.querySelector('.prompt-root-scene') as HTMLElement | null
+  const originalPromptDisplay = promptEl?.style.display
+  if (promptEl) promptEl.style.display = 'none'
+
+  return () => {
+    document.body.style.overflow = originalOverflow
+    if (promptEl) promptEl.style.display = originalPromptDisplay ?? ''
   }
+}, [])
 
-  /* ---------------- Render ---------------- */
 
-  let chatView: 'recent' | 'search' | 'detail'
-  if (openChainId) chatView = 'detail'
-  else if (query.length < 3) chatView = 'recent'
-  else chatView = 'search'
+
+  /* -------------------------------------------------------------- */
+  /* Render                                                         */
+  /* -------------------------------------------------------------- */
 
   return (
-    <div className="fixed inset-0 z-[2147483647] bg-[#080808] text-text-primary">
-      {/* HEADER */}
-      <header className="px-6 py-4 space-y-4">
-        <h1 className="text-3xl font-medium">Archive</h1>
-        <p className="text-sm text-text-secondary">
-          Browse, review, and select past conversations.
-        </p>
+    /* ============================================================ */
+    /* SYSTEM SPACE — FULL TAKEOVER                                  */
+    /* ============================================================ */
+<div
+  className="
+    fixed
+    inset-0
+    z-[2147483647]
+    bg-gradient-to-b
+    from-[#121418]
+    via-[#0C0C0C]
+    to-[#080808]
+    text-text-primary
+    overflow-hidden
+    pr-[30px]
+    pb-[30px]
+    pl-[30px]
+  "
+>
 
-        <Input
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          placeholder="Search your chats…"
-        />
 
-        <div className="flex gap-4 text-sm">
-          <button
-            className={mode === 'chat' ? 'text-white' : 'text-text-muted'}
-            onClick={() => setMode('chat')}
-          >
-            Chat
-          </button>
-          <button
-            className={mode === 'reports' ? 'text-white' : 'text-text-muted'}
-            onClick={() => setMode('reports')}
-          >
-            Reports
-          </button>
-        </div>
-      </header>
 
-      {/* BODY */}
-      <main className="flex-1 overflow-y-auto px-6">
-        {mode === 'reports' && <ReportList />}
 
-        {mode === 'chat' && (
-          <>
-            {chatView === 'recent' && (
-              <RecentChatsView
-                onOpenChat={(chatSerial: string) => {
-                  const chainId =
-                    resolveChainIdFromChatSerial(chatSerial)
-                  if (chainId) setOpenChainId(chainId)
-                }}
-              />
-            )}
 
-            {chatView === 'search' && (
-              <SearchResultsView
-                results={runArchiveSearch(query)}
-                selection={selection}
-                addPair={addPair}
-                removePair={removePair}
-                onOpenChat={(chatSerial: string) => {
-                  const chainId =
-                    resolveChainIdFromChatSerial(chatSerial)
-                  if (chainId) setOpenChainId(chainId)
-                }}
-              />
-            )}
 
-            {chatView === 'detail' && openChainId && (
-              <ChatDetailView
-                chain_id={openChainId}
-                highlight={query}
-                selection={selection}
-                addPair={addPair}
-                removePair={removePair}
-                onClose={() => setOpenChainId(null)}
-              />
-            )}
-          </>
-        )}
-      </main>
-    </div>
-  )
 
 
       {/* ========================================================== */}
@@ -652,7 +704,7 @@ export default function ArchiveOverlay() {
   aria-label="Close Archive"
   onClick={(e) => {
     e.stopPropagation()
-  setMode('browse' as ArchiveMode)
+    setMode('browse')
     setOpenChainId(null)
     window.dispatchEvent(
       new CustomEvent('mpathy:archive:close')
@@ -735,7 +787,7 @@ export default function ArchiveOverlay() {
 
           return (
             <ChatDetailView
-        chain_id={openChainId!}
+              chain_id={openChainId}
               highlight={query}
               selection={selection}
               addPair={addPair}
@@ -771,4 +823,8 @@ export default function ArchiveOverlay() {
 
   </div>
 </div>
+
+    </div>
+  )
 }
+
