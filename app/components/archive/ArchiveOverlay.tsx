@@ -440,12 +440,17 @@ useEffect(() => {
   </h1>
 
   <div className="flex gap-4 text-sm">
-    <button
-      onClick={() => setMode('chat')}
-      className={mode === 'chat' ? 'text-cyan-400' : 'text-text-secondary'}
-    >
-      CHAT
-    </button>
+   <button
+  onClick={() => {
+    setMode('chat')
+    setChatView('recent')
+    setOpenChainId(null)
+  }}
+  className={mode === 'chat' ? 'text-cyan-400' : 'text-text-secondary'}
+>
+  CHAT
+</button>
+
     <button
       onClick={() => setMode('reports')}
       className={mode === 'reports' ? 'text-cyan-400' : 'text-text-secondary'}
