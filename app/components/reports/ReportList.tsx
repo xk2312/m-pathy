@@ -125,7 +125,11 @@ export default function ReportList() {
     i18nArchive[lang as keyof typeof i18nArchive]?.report ??
     i18nArchive.en.report
 
-  const [reports, setReports] = useState<VerificationReport[]>(loadReports())
+const [reports, setReports] = useState<VerificationReport[]>([])
+
+React.useEffect(() => {
+  setReports(loadReports())
+}, [])
   const [selected, setSelected] = useState<string | null>(null)
 
   const handleDelete = (hash: string) => {
