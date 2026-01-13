@@ -196,10 +196,11 @@ export default function ArchiveOverlay() {
 type ArchiveMode = 'chat' | 'reports'
 
 const [mode, setMode] = useState<ArchiveMode>('chat')
-
+const [chatView, setChatView] = useState<'recent' | 'search' | 'detail'>('recent')
 const [query, setQuery] = useState('')
 const [chats, setChats] = useState<ChatDisplay[]>([])
 const [openChainId, setOpenChainId] = useState<string | null>(null)
+
 
 
   const [selectionState, setSelectionState] = useState<SelectionState>(() => {
@@ -673,73 +674,64 @@ useEffect(() => {
   <ReportList />
 ) : (
   (() => {
-    type ArchiveView = 'recent' | 'search' | 'detail'
+    switch (chatView) {
+      case 'recent':
+        return (
+          <RecentChatsView
+            onOpenChat={(chatSerial: string) => {
+              const chainId =
+                resolveChainIdFromChatSerial(chatSerial)
+              if (chainId) {
+                setOpenChainId(chainId)
+                setChatView('detail')
+              }
+            }}
+          />
+        )
 
-
-      let view: ArchiveView
-
-      if (openChainId) {
-        view = 'detail'
-      } else if (query.length < 3) {
-        view = 'recent'
-      } else {
-        view = 'search'
+      case 'search': {
+        const results = runArchiveSearch(query)
+        return (
+          <SearchResultsView
+            results={results}
+            selection={selection}
+            addPair={addPair}
+            removePair={removePair}
+            onOpenChat={(chatSerial: string) => {
+              const chainId =
+                resolveChainIdFromChatSerial(chatSerial)
+              if (chainId) {
+                setOpenChainId(chainId)
+                setChatView('detail')
+              }
+            }}
+          />
+        )
       }
 
-      switch (view) {
-        case 'recent':
-          return (
-            <RecentChatsView
-              onOpenChat={(chatSerial: string) => {
-                const chainId =
-                  resolveChainIdFromChatSerial(chatSerial)
-                if (chainId) {
-                  setOpenChainId(chainId)
-                }
-              }}
-            />
-          )
+      case 'detail':
+        if (!openChainId) return null
 
-        case 'search': {
-          const results = runArchiveSearch(query)
-          return (
-            <SearchResultsView
-              results={results}
-              selection={selection}
-              addPair={addPair}
-              removePair={removePair}
-              onOpenChat={(chatSerial: string) => {
-                const chainId =
-                  resolveChainIdFromChatSerial(chatSerial)
-                if (chainId) {
-                  setOpenChainId(chainId)
-                }
-              }}
-            />
-          )
-        }
+        return (
+          <ChatDetailView
+            chain_id={openChainId}
+            highlight={query}
+            selection={selection}
+            addPair={addPair}
+            removePair={removePair}
+            onClose={() => {
+              setOpenChainId(null)
+              setChatView('recent')
+            }}
+          />
+        )
 
-        case 'detail':
-          if (!openChainId) return null
+      default:
+        return null
+    }
+  })()
+)}
 
-          return (
-            <ChatDetailView
-              chain_id={openChainId}
-              highlight={query}
-              selection={selection}
-              addPair={addPair}
-              removePair={removePair}
-              onClose={() => {
-                setOpenChainId(null)
-              }}
-            />
-          )
-
-        default:
-          return null
-      }
-    })()
-  )}
 </div>
 
 
