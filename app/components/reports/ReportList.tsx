@@ -220,15 +220,16 @@ React.useEffect(() => {
             const tb = Date.parse(b.last_verified_at ?? b.generated_at)
             return tb - ta
           })
-          .map((r) => {
-            if (!r.truth_hash) return null
+          .map((r, i) => {
+            if (!r) return null
 
             return (
               <Card
-                key={r.truth_hash}
-                onClick={() => setSelected(r.truth_hash)}
+                key={r.truth_hash || `report-${i}`}
+                onClick={() => setSelected(r.truth_hash || `report-${i}`)}
                 className="bg-surface1 border-border-soft cursor-pointer hover:border-cyan-500/60"
               >
+
                 <CardContent className="p-3 flex flex-col gap-1">
                   <div className="text-sm text-text-primary">
                     Verified · [Last verified:{' '}
