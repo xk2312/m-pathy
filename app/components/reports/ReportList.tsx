@@ -223,6 +223,7 @@ export default function ReportList() {
 
             return (
              <div
+
   key={r.public_key || `report-${i}`}
   className="
     bg-surface1
@@ -230,11 +231,11 @@ export default function ReportList() {
     p-[16px]
     mb-[20px]
     cursor-pointer
-    transition-all
-    hover:ring-1
-    hover:ring-cyan-500/40
+    transition-colors
+    group
   "
 >
+
   {/* HEADER */}
   <div
   className="flex justify-between items-center px-[16px] py-[12px]"
