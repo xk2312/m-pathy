@@ -218,13 +218,16 @@ export default function ReportList() {
             const tb = Date.parse(b.last_verified_at ?? b.generated_at)
             return tb - ta
           })
-          .map((r, i) => {
-            if (!r) return null
+         .map((r, i) => {
+  if (!r) return null
+  const reportId = r.public_key ?? `report-${i}`
 
-            return (
+  return (
+
              <div
 
-  key={r.public_key || `report-${i}`}
+  key={reportId}
+
   className="
     bg-surface1
     rounded-xl
@@ -241,7 +244,7 @@ export default function ReportList() {
   className="flex justify-between items-center px-[16px] py-[12px]"
   onClick={() =>
     setSelected(
-      selected === (r.public_key || `report-${i}`)
+selected === reportId
         ? null
         : r.public_key || `report-${i}`
     )
