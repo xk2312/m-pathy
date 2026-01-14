@@ -1,169 +1,4 @@
-/* ============================================================================
-INDEX — page2/page.tsx (Chat Runtime, Storage, Triketon, UI Orchestration)
 
-ROLLE DER DATEI
-- Zentrale Chat-Runtime (Client)
-- Orchestriert UI, Chat-Flow, LocalStorage, Triketon-Ledger
-- Bindeglied zwischen Chat, Archive, Verify, Reports und Navigation
-- KEINE reine View-Datei, sondern Verhaltens- und Persistenz-Zentrum
-
-────────────────────────────────────────────────────────────────────────────
-1. IMPORTS & GLOBAL SETUP
-────────────────────────────────────────────────────────────────────────────
-- React Hooks, Layout, Navigation, MobileOverlay
-- Zentrale Storage-Anbindung:
-  - initChatStorage()
-  - loadChat(), saveChat(), hardClearChat()
-  - appendTriketonLedgerEntry()
-  - ensureTriketonLedgerReady(), verifyOrResetTriketonLedger()
-- Triketon-Krypto:
-  - normalizeForTruthHash()
-  - computeTruthHash()
-
-⚠️ Relevanz:
-- Single Source of Truth für Chat-Persistenz
-- Jede Abweichung hier wirkt sich direkt auf Archive & Verify aus
-
-────────────────────────────────────────────────────────────────────────────
-2. THEME / TOKENS / PERSONAS
-────────────────────────────────────────────────────────────────────────────
-- TOKENS, THEMES, PERSONAS
-- Layout-Breiten (Säule, Dock, Assistant)
-- KEIN Archive-spezifisches Styling, aber:
-  → bestimmt Scroll-, Overlay- und Dock-Verhalten
-
-────────────────────────────────────────────────────────────────────────────
-3. LOCAL CHAT TYPES & HELPERS
-────────────────────────────────────────────────────────────────────────────
-- ChatMessage Typ (role, content, meta, format)
-- truncateMessages()
-- loadMessages() / saveMessages()
-- LS_KEY = "mpathy:thread:default"
-
-⚠️ Wichtig:
-- Parallele Existenz zu lib/chatStorage.ts
-- Historisch gewachsen → potenzielle Drift-Quelle
-
-────────────────────────────────────────────────────────────────────────────
-4. MESSAGE RENDERING
-────────────────────────────────────────────────────────────────────────────
-- mdToHtml(): eigener Markdown-Renderer
-- MessageBody
-- Bubble (User / Assistant)
-- Triketon-Button pro Assistant-Message
-
-⚠️ Archive-Relevanz:
-- Darstellung ≠ Archiv-Darstellung
-- Archive nutzt eigene Views (ChatDetailView)
-
-────────────────────────────────────────────────────────────────────────────
-5. CONVERSATION & SCROLL MANAGEMENT
-────────────────────────────────────────────────────────────────────────────
-- Conversation-Komponente
-- EIN Scroll-Container (convoRef)
-- Sticky-to-bottom Logik
-- padBottom / Dock-Höhen-Kompensation
-
-⚠️ Kritisch:
-- Grundlage für korrekte Chat-Historie
-- Fehler hier wirken wie „Messages fehlen“
-
-────────────────────────────────────────────────────────────────────────────
-6. INPUT / PROMPT DOCK
-────────────────────────────────────────────────────────────────────────────
-- InputDock
-- PromptRoot Integration
-- sendingRef / clickGateRef (Dedupe)
-
-────────────────────────────────────────────────────────────────────────────
-7. PAGE2 MAIN STATE
-────────────────────────────────────────────────────────────────────────────
-- messages State (init via loadChat)
-- Autosave via saveChat(messages)
-- clearingRef + onClearChat()
-
-⚠️ Sehr wichtig:
-- loadChat() bestimmt, was Archive später sehen kann
-- Wenn hier nicht persistiert → Archive leer
-
-────────────────────────────────────────────────────────────────────────────
-8. TRIKETON STATE & OVERLAY
-────────────────────────────────────────────────────────────────────────────
-- activeTriketonMessageId
-- openTriketon / closeTriketon
-- Triketon Overlay UI
-
-────────────────────────────────────────────────────────────────────────────
-9. SYSTEM MESSAGES & EVENTS
-────────────────────────────────────────────────────────────────────────────
-- systemSay()
-- Listener: "mpathy:system-message"
-- FooterStatus (mode / expert)
-
-⚠️ Verbindung zu Verify:
-- Verify-Flow triggert hier Mode-Wechsel & UI-Reaktion
-
-────────────────────────────────────────────────────────────────────────────
-10. SEND FLOW (KERNLOGIK)
-────────────────────────────────────────────────────────────────────────────
-- onSendFromPrompt()
-- optimistic UI Update
-- persistMessages()
-- appendTriketonLedgerEntry() — USER
-
-- sendMessageLocal()
-  - API /api/chat
-  - FreeGate / Stripe / Login
-  - Assistant-Antwort
-
-- Streaming-Assistant:
-  - Chunking
-  - persistMessages() pro Chunk
-  - appendTriketonLedgerEntry() — ASSISTANT
-
-⚠️ EXTREM KRITISCH:
-- Hier entsteht die Chat-Historie
-- Fehler → Archive & Verify brechen
-
-────────────────────────────────────────────────────────────────────────────
-11. LAYOUT & GRID
-────────────────────────────────────────────────────────────────────────────
-- 2-Spalten-Layout (Säule + Chat)
-- SidebarContainer (links)
-- Chat Stage (rechts)
-- MobileOverlay
-
-⚠️ ArchiveOverlay sitzt NICHT hier,
-aber wird visuell & logisch beeinflusst
-
-────────────────────────────────────────────────────────────────────────────
-12. MOBILE / VIEWPORT / KEYBOARD HANDLING
-────────────────────────────────────────────────────────────────────────────
-- useBreakpoint()
-- visualViewport Handling
-- Header shrink / typing states
-
-────────────────────────────────────────────────────────────────────────────
-13. RETURN TREE
-────────────────────────────────────────────────────────────────────────────
-- <LanguageProvider>
-- <Navigation>
-- <SidebarContainer>
-- <Conversation>
-- <PromptRoot>
-- <MobileOverlay>
-- <OnboardingWatcher>
-- Triketon Modal
-
-────────────────────────────────────────────────────────────────────────────
-ZUSAMMENFASSUNG (ARCHIVE / REPORTS SICHT)
-────────────────────────────────────────────────────────────────────────────
-- page2/page.tsx ist die Quelle aller Chat-Daten
-- Archive kann nur anzeigen, was hier korrekt gespeichert wird
-- Triketon-Ledger wird hier geschrieben
-- KEIN anderer Ort kann Archive „reparieren“, wenn hier etwas fehlt
-
-=========================================================================== */
 
 "use client";
 
@@ -185,8 +20,6 @@ import { v4 as uuidv4 } from "uuid";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
 import { loadChat, saveChat, initChatStorage, hardClearChat, appendTriketonLedgerEntry, ensureTriketonLedgerReady, verifyOrResetTriketonLedger, } from '@/lib/chatStorage'
 import { computeTruthHash, normalizeForTruthHash } from "@/lib/triketonVerify";
-
-
 
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
@@ -917,12 +750,22 @@ function Bubble({
                 type="button"
                 onClick={() => {
                   const payload = {
-                    id: (msg as any)?.id ?? "",
-                    role: (msg as any)?.role ?? "assistant",
-                    meta: (msg as any)?.meta ?? null,
-                    triketon: (msg as any)?.triketon ?? null,
-                  };
-                  onOpenTriketon?.(payload);
+  id: (msg as any)?.id ?? "",
+  role: (msg as any)?.role ?? "assistant",
+  meta: (msg as any)?.meta ?? null,
+  triketon:
+    (msg as any)?.triketon ??
+    ((msg as any)?.truth_hash
+      ? {
+          public_key: (msg as any)?.public_key ?? "",
+          truth_hash: (msg as any)?.truth_hash ?? "",
+          timestamp: (msg as any)?.timestamp ?? "",
+          version: (msg as any)?.version ?? "v1",
+        }
+      : null),
+};
+onOpenTriketon?.(payload);
+
                 }}
                 onMouseEnter={() => setTriketonHover(true)}
                 onMouseLeave={() => setTriketonHover(false)}
