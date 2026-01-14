@@ -179,12 +179,15 @@ function normalizeReport(
 
        const anyR = r as any
 
-    const truth_hash =
-      typeof rr.truth_hash === 'string'
-        ? rr.truth_hash
-        : typeof anyR.truthHash === 'string'
-          ? anyR.truthHash
-          : ''
+   const truth_hash =
+  typeof rr.truth_hash === 'string'
+    ? rr.truth_hash
+    : typeof anyR.truthHash === 'string'
+      ? anyR.truthHash
+      : (Array.isArray(anyR.content?.pairs) && anyR.content.pairs[0]?.truth_hash)
+        ? anyR.content.pairs[0].truth_hash
+        : ''
+
 
     const public_key =
       typeof rr.public_key === 'string'
