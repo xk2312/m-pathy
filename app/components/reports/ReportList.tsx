@@ -148,20 +148,19 @@ React.useEffect(() => {
   // Initial read on mount
   readReports()
 
-  // Runtime-übergreifender Sync (Browser-Standard)
-  function onStorage(e: StorageEvent) {
-    if (e.key === 'mpathy:verification:reports:v1') {
-      readReports()
-    }
-  }
-
-  window.addEventListener('storage', onStorage)
+  // Canonical read trigger on successful verify
+  window.addEventListener(
+    'mpathy:archive:verify:success',
+    readReports
+  )
 
   return () => {
-    window.removeEventListener('storage', onStorage)
+    window.removeEventListener(
+      'mpathy:archive:verify:success',
+      readReports
+    )
   }
 }, [])
-
 
   const [selected, setSelected] = useState<string | null>(null)
 
