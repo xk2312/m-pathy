@@ -230,17 +230,63 @@ React.useEffect(() => {
                 className="bg-surface1 border-border-soft cursor-pointer hover:border-cyan-500/60"
               >
 
-                <CardContent className="p-3 flex flex-col gap-1">
-                  <div className="text-sm text-text-primary">
-                    Verified · [Last verified:{' '}
-                    {new Date(r.last_verified_at ?? r.generated_at).toLocaleString()}
-                    ]
-                  </div>
+                <CardContent className="p-4 flex flex-col gap-3 rounded-xl bg-surface1">
+  <div
+    className="flex justify-between items-center cursor-pointer"
+    onClick={() =>
+      setSelected(selected === (r.public_key || `report-${i}`) ? null : r.public_key || `report-${i}`)
+    }
+  >
+    <div>
+      <div className="text-sm text-text-primary">
+        Verified · [Last verified:{' '}
+        {new Date(r.last_verified_at ?? r.generated_at).toLocaleString()}]
+      </div>
+      <div className="text-xs text-text-secondary">
+        {r.pair_count} message pairs · Source: Archive Selection
+      </div>
+    </div>
+    <span className="text-cyan-400 text-sm">
+      {selected === (r.public_key || `report-${i}`) ? '▲' : '▼'}
+    </span>
+  </div>
 
-                  <div className="text-xs text-text-secondary">
-                    {r.pair_count} message pairs · Source: Archive Selection
-                  </div>
-                </CardContent>
+  {selected === (r.public_key || `report-${i}`) && (
+    <div className="mt-3 bg-surface2 rounded-md p-3 border border-border-soft">
+      <pre className="text-xs max-h-48 overflow-y-auto whitespace-pre-wrap">
+        {JSON.stringify(r, null, 2)}
+      </pre>
+
+      <div className="mt-2">
+        <ReportStatus report={r} />
+      </div>
+
+      <div className="flex justify-end gap-3 mt-3">
+        <Button
+          variant="ghost"
+          onClick={() =>
+            window.dispatchEvent(
+              new CustomEvent('mpathy:archive:verify', {
+                detail: { intent: 'reverify', payload: { public_key: r.public_key, content: r.content } },
+              })
+            )
+          }
+        >
+          Re-Verify
+        </Button>
+
+        <Button onClick={() => handleDownload(r.public_key || '')}>
+          {t.view}
+        </Button>
+
+        <Button variant="solid" onClick={() => handleDelete(r.public_key || '')}>
+          {t.invalid}
+        </Button>
+      </div>
+    </div>
+  )}
+</CardContent>
+
               </Card>
             )
           })}
