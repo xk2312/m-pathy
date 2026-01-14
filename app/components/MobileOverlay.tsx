@@ -161,26 +161,44 @@ useEffect(() => {
 
 // ✅ FIX 2: Overlay schließen bei Navigation weg vom Chat (z. B. ins Archiv)
 useEffect(() => {
+  console.log("[MobileOverlay] effect mounted | open =", open);
   if (!open) return;
 
-  const onLocationChange = () => {
+  const onLocationChange = (evt?: any) => {
     try {
-      if (!window.location.pathname.includes("/chat")) {
+      const path = window.location.pathname;
+      console.log(
+        "[MobileOverlay] navigation detected",
+        {
+          event: evt?.type ?? "manual",
+          pathname: path,
+          willClose: !path.includes("/chat"),
+        }
+      );
+
+      if (!path.includes("/chat")) {
+        console.log("[MobileOverlay] calling onClose()");
         onClose();
       }
-    } catch {}
+    } catch (e) {
+      console.error("[MobileOverlay] navigation handler error", e);
+    }
   };
+
+  console.log("[MobileOverlay] registering navigation listeners");
 
   window.addEventListener("popstate", onLocationChange);
   window.addEventListener("pushstate", onLocationChange as EventListener);
   window.addEventListener("replacestate", onLocationChange as EventListener);
 
   return () => {
+    console.log("[MobileOverlay] cleanup navigation listeners");
     window.removeEventListener("popstate", onLocationChange);
     window.removeEventListener("pushstate", onLocationChange as EventListener);
     window.removeEventListener("replacestate", onLocationChange as EventListener);
   };
 }, [open, onClose]);
+
 
 
 // ▼ Overlay-Open → i18n auf Browser-Sprache synchronisieren (nur wenn abweichend)
