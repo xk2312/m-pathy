@@ -224,8 +224,9 @@ export default function ReportList() {
             return (
               <Card
   key={r.public_key || `report-${i}`}
-  className="bg-surface1 cursor-pointer border-0 ring-0 hover:ring-1 hover:ring-cyan-500/40 transition-all rounded-xl p-3"
+  className="bg-surface1 cursor-pointer border-0 ring-0 hover:ring-1 hover:ring-cyan-500/40 transition-all rounded-xl p-[10px] mb-[20px]"
 >
+
 
                 <CardContent className="p-3 flex flex-col gap-2 rounded-xl bg-surface1">
                   <div
