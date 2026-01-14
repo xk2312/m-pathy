@@ -230,6 +230,7 @@ type ArchiveMode = 'chat' | 'reports'
 const [mode, setMode] = useState<ArchiveMode>('chat')
 const [chatView, setChatView] = useState<'recent' | 'search' | 'detail'>('recent')
 const [query, setQuery] = useState('')
+
 const [chats, setChats] = useState<ChatDisplay[]>([])
 const [openChainId, setOpenChainId] = useState<string | null>(null)
 
@@ -302,13 +303,14 @@ useEffect(() => {
     window.alert(msg)
   }
 
-  function onVerifySuccess() {
-  // force REPORTS to remount and reload LocalStorage
-  setMode('chat')
-  requestAnimationFrame(() => {
-    setMode('reports')
-  })
+function onVerifySuccess() {
+  // deterministic post-verify handling
+  clearSelection();                     // reset selection in SessionStorage
+  setSelectionState(EMPTY_SELECTION);    // reset local state
+  setMode('reports');                    // switch to REPORTS once, no remount loop
 }
+
+
 
 
   window.addEventListener(
@@ -323,10 +325,11 @@ useEffect(() => {
     'mpathy:archive:verify:info',
     onVerifyInfo
   )
-  window.addEventListener(
-    'mpathy:archive:verify:success',
-    onVerifySuccess
-  )
+ window.addEventListener(
+  'mpathy:archive:verify:success',
+  onVerifySuccess
+)
+
 
   return () => {
     window.removeEventListener(
@@ -347,6 +350,16 @@ useEffect(() => {
     )
   }
 }, [])
+
+/* -------------------------------------------------------------- */
+/* REPORTS REFRESH — TRIGGER ON MODE CHANGE                        */
+/* -------------------------------------------------------------- */
+useEffect(() => {
+  if (mode === 'reports') {
+    // dispatch refresh event for ReportList
+    window.dispatchEvent(new CustomEvent('mpathy:archive:reports:refresh'))
+  }
+}, [mode])
 
 
 
@@ -725,69 +738,79 @@ useEffect(() => {
 {/* BODY                                                   */}
 {/* ====================================================== */}
 <div className="flex-1 overflow-y-auto mt-[15px]">
-{mode === 'reports' ? (
-  <ReportList key="reports" />
-) : (
-  (() => {
-    switch (chatView) {
-      case 'recent':
-        return (
-          <RecentChatsView
-            onOpenChat={(chatSerial: string) => {
-              const chainId =
-                resolveChainIdFromChatSerial(chatSerial)
-              if (chainId) {
-                setOpenChainId(chainId)
-                setChatView('detail')
-              }
-            }}
-          />
-        )
 
-      case 'search': {
-        const results = runArchiveSearch(query)
-        return (
-          <SearchResultsView
-            results={results}
-            selection={selection}
-            addPair={addPair}
-            removePair={removePair}
-            onOpenChat={(chatSerial: string) => {
-              const chainId =
-                resolveChainIdFromChatSerial(chatSerial)
-              if (chainId) {
-                setOpenChainId(chainId)
-                setChatView('detail')
-              }
-            }}
-          />
-        )
-      }
+  {/* REPORTS ROOT — ALWAYS OVERVIEW */}
+  {mode === 'reports' && (
+    <div className="reports-root">
+      <ReportList />
+    </div>
+  )}
 
-      case 'detail':
-        if (!openChainId) return null
+  {/* CHAT ROOT — INDEPENDENT */}
+  {mode === 'chat' && (
+    <div className="chat-root">
+      {(() => {
+        switch (chatView) {
+          case 'recent':
+            return (
+              <RecentChatsView
+                onOpenChat={(chatSerial: string) => {
+                  const chainId =
+                    resolveChainIdFromChatSerial(chatSerial)
+                  if (chainId) {
+                    setOpenChainId(chainId)
+                    setChatView('detail')
+                  }
+                }}
+              />
+            )
 
-        return (
-          <ChatDetailView
-            chain_id={openChainId}
-            highlight={query}
-            selection={selection}
-            addPair={addPair}
-            removePair={removePair}
-            onClose={() => {
-              setOpenChainId(null)
-              setChatView('recent')
-            }}
-          />
-        )
+          case 'search': {
+            const results = runArchiveSearch(query)
+            return (
+              <SearchResultsView
+                results={results}
+                selection={selection}
+                addPair={addPair}
+                removePair={removePair}
+                onOpenChat={(chatSerial: string) => {
+                  const chainId =
+                    resolveChainIdFromChatSerial(chatSerial)
+                  if (chainId) {
+                    setOpenChainId(chainId)
+                    setChatView('detail')
+                  }
+                }}
+              />
+            )
+          }
 
-      default:
-        return null
-    }
-  })()
-)}
+          case 'detail':
+            if (!openChainId) return null
+
+            return (
+              <ChatDetailView
+                chain_id={openChainId}
+                highlight={query}
+                selection={selection}
+                addPair={addPair}
+                removePair={removePair}
+                onClose={() => {
+                  setOpenChainId(null)
+                  setChatView('recent')
+                }}
+              />
+            )
+
+          default:
+            return null
+        }
+      })()}
+    </div>
+  )}
 
 </div>
+
 
 
 

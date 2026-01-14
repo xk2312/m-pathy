@@ -141,26 +141,28 @@ export default function ReportList() {
 const [reports, setReports] = useState<VerificationReport[]>([])
 
 React.useEffect(() => {
-  function readReports() {
+  const readReports = () => {
     setReports(loadReports())
   }
 
   // Initial read on mount
   readReports()
 
-  // Canonical read trigger on successful verify
-  window.addEventListener(
-    'mpathy:archive:verify:success',
-    readReports
-  )
+  // Re-read after successful verify
+  window.addEventListener('mpathy:archive:verify:success', readReports)
+
+  // Re-read when ArchiveOverlay dispatches refresh event
+  const onRefresh = () => {
+    readReports()
+  }
+  window.addEventListener('mpathy:archive:reports:refresh', onRefresh)
 
   return () => {
-    window.removeEventListener(
-      'mpathy:archive:verify:success',
-      readReports
-    )
+    window.removeEventListener('mpathy:archive:verify:success', readReports)
+    window.removeEventListener('mpathy:archive:reports:refresh', onRefresh)
   }
 }, [])
+
 
   const [selected, setSelected] = useState<string | null>(null)
 
