@@ -304,9 +304,12 @@ useEffect(() => {
   }
 
 function onVerifySuccess() {
-  // intentionally empty:
-  // REPORTS mode is controlled exclusively by explicit user action (EBENE 1)
+  // deterministic post-verify handling
+  clearSelection();                     // reset selection in SessionStorage
+  setSelectionState(EMPTY_SELECTION);    // reset local state
+  setMode('reports');                    // switch to REPORTS once, no remount loop
 }
+
 
 
 
