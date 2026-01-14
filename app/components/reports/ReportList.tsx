@@ -222,6 +222,44 @@ export default function ReportList() {
   if (!r) return null
   const reportId = r.public_key ?? `report-${i}`
 
+const selectedReport: VerificationReport | null =
+  selected !== null ? getReport(selected) : null
+
+function exportReportAsText(r: VerificationReport) {
+  const lines: string[] = []
+
+  lines.push('VERIFICATION REPORT')
+  lines.push('===================')
+  lines.push('')
+  lines.push(`Status: ${r.status}`)
+  lines.push(`Source: ${r.source}`)
+  lines.push(`Protocol: ${r.protocol_version}`)
+  lines.push('')
+  lines.push(`Generated At: ${r.generated_at}`)
+  if (r.last_verified_at) {
+    lines.push(`Last Verified At: ${r.last_verified_at}`)
+  }
+  lines.push('')
+  lines.push(`Message Pairs: ${r.pair_count}`)
+  lines.push('')
+  lines.push('CONTENT')
+  lines.push('-------')
+  lines.push(JSON.stringify(r.content, null, 2))
+
+  const blob = new Blob([lines.join('\n')], {
+    type: 'text/plain;charset=utf-8',
+  })
+
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `verification-report_${r.public_key}.txt`
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
+
   return (
 
              <div
@@ -278,49 +316,37 @@ selected === reportId
       </div>
 
       <div className="flex justify-end gap-3 mt-4">
-<Button
-  onClick={() =>
-    window.dispatchEvent(
-      new CustomEvent('mpathy:archive:verify', {
-        detail: {
-          intent: 'reverify',
-          payload: { public_key: r.public_key, content: r.content },
-        },
-      })
-    )
-  }
-className="
-  !bg-cyan-500
-  !text-black
-  !px-[5px]
-  !py-[7px]
-  rounded-md
-  hover:!bg-cyan-400
-  cursor-pointer
-  transition-colors
-"
+  <Button
+    onClick={() => exportReportAsText(r)}
+    className="
+      !bg-cyan-500
+      !text-black
+      !px-[5px]
+      !py-[7px]
+      rounded-md
+      hover:!bg-cyan-400
+      cursor-pointer
+      transition-colors
+    "
+  >
+    Export Report
+  </Button>
 
->
-  Re-Verify
-</Button>
-
-<Button
-  onClick={() => setSelected(null)}
-  className="
-  !bg-transparent
-  hover:!bg-transparent
-  !text-white
-  hover:!text-gray-300
-  !px-[5px]
-  !py-[7px]
-  cursor-pointer
-  transition-colors
-"
-
->
-  Close
-</Button>
-
+  <Button
+    onClick={() => setSelected(null)}
+    className="
+      !bg-transparent
+      hover:!bg-transparent
+      !text-white
+      hover:!text-gray-300
+      !px-[5px]
+      !py-[7px]
+      cursor-pointer
+      transition-colors
+    "
+  >
+    Close
+  </Button>
 </div>
 
 
