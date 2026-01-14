@@ -1417,11 +1417,21 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
     type="button"
     className={styles.soSectionHeader}
     onClick={() => {
-      setOpenSection(null)
-      setOpenExportDetails(false)
-      setOpenDeleteDetails(false)
-      window.dispatchEvent(new CustomEvent("mpathy:archive:open"))
-    }}
+  setOpenSection(null)
+  setOpenExportDetails(false)
+  setOpenDeleteDetails(false)
+
+  // ✅ FIX 2: Mobile Overlay explizit schließen (wie bei Mode / Expert)
+  try {
+    const inOverlay = !!document.querySelector('[data-overlay="true"]');
+    if (inOverlay) {
+      onSystemMessage?.("");
+    }
+  } catch {}
+
+  window.dispatchEvent(new CustomEvent("mpathy:archive:open"))
+}}
+
     aria-label={tr("pillar.section.archiveTitle", "ARCHIVE")}
   >
     <span className={styles.soSectionHeaderIcon}>
