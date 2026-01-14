@@ -141,27 +141,35 @@ export default function ReportList() {
 const [reports, setReports] = useState<VerificationReport[]>([])
 
 React.useEffect(() => {
-  const readReports = () => {
-    setReports(loadReports())
+  const readReports = (source?: string) => {
+    try {
+      const data = loadReports()
+      console.log('[ReportList] 🔍 readReports triggered from →', source ?? 'mount')
+      console.log('[ReportList] 📦 loadReports() returned', Array.isArray(data) ? data.length : 'non-array', 'items')
+      setReports(data)
+    } catch (err) {
+      console.error('[ReportList] ❌ loadReports failed', err)
+      setReports([])
+    }
   }
 
   // Initial read on mount
-  readReports()
+  readReports('mount')
 
   // Re-read after successful verify
-  window.addEventListener('mpathy:archive:verify:success', readReports)
+  const onVerify = () => readReports('verify:success')
+  window.addEventListener('mpathy:archive:verify:success', onVerify)
 
   // Re-read when ArchiveOverlay dispatches refresh event
-  const onRefresh = () => {
-    readReports()
-  }
+  const onRefresh = () => readReports('reports:refresh')
   window.addEventListener('mpathy:archive:reports:refresh', onRefresh)
 
   return () => {
-    window.removeEventListener('mpathy:archive:verify:success', readReports)
+    window.removeEventListener('mpathy:archive:verify:success', onVerify)
     window.removeEventListener('mpathy:archive:reports:refresh', onRefresh)
   }
 }, [])
+
 
 
   const [selected, setSelected] = useState<string | null>(null)
