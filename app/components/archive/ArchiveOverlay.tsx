@@ -716,18 +716,18 @@ useEffect(() => {
     )
   }}
   className="
-    absolute
-    -top-3
-    right-0
-    translate-x-[30px]
-    z-50
-    cursor-pointer
-    pointer-events-auto
-    text-sm
-    text-secondary
-    hover:text-text-primary
-    transition
-  "
+  absolute
+  -top-[20px]
+  -right-[40px]
+  z-50
+  cursor-pointer
+  pointer-events-auto
+  text-sm
+  text-secondary
+  hover:text-text-primary
+  transition
+"
+
 >
   ✕
 </button>
