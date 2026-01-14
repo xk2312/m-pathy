@@ -153,7 +153,6 @@
 import type { VerificationReport as TVerificationReport } from './types'
 import { readLS, writeLS } from './storage'
 
-
 const KEY = 'mpathy:verification:reports:v1'
 
 type LegacyVerificationReport = {
@@ -173,21 +172,18 @@ type LegacyVerificationReport = {
 function normalizeReport(
   r: LegacyVerificationReport | Partial<TVerificationReport>
 ): TVerificationReport {
-  // Already snake_case -> still enforce Canonical required fields
   if ((r as any) && typeof (r as any).generated_at === 'string') {
     const rr = r as Partial<TVerificationReport>
+    const anyR = r as any
 
-       const anyR = r as any
-
-   const truth_hash =
-  typeof rr.truth_hash === 'string'
-    ? rr.truth_hash
-    : typeof anyR.truthHash === 'string'
-      ? anyR.truthHash
-      : (Array.isArray(anyR.content?.pairs) && anyR.content.pairs[0]?.truth_hash)
-        ? anyR.content.pairs[0].truth_hash
-        : ''
-
+    const truth_hash =
+      typeof rr.truth_hash === 'string'
+        ? rr.truth_hash
+        : typeof anyR.truthHash === 'string'
+          ? anyR.truthHash
+          : (Array.isArray(anyR.content?.pairs) && anyR.content.pairs[0]?.truth_hash)
+            ? anyR.content.pairs[0].truth_hash
+            : ''
 
     const public_key =
       typeof rr.public_key === 'string'
@@ -195,7 +191,6 @@ function normalizeReport(
         : typeof anyR.publicKey === 'string'
           ? anyR.publicKey
           : ''
-
 
     return {
       protocol_version: 'v1',
@@ -222,7 +217,6 @@ function normalizeReport(
     }
   }
 
-  // Legacy camelCase -> convert + enforce Canonical required fields
   const legacy = r as LegacyVerificationReport
 
   return {
@@ -243,50 +237,24 @@ function normalizeReport(
   }
 }
 
-export function loadReports(limit: number = 3): TVerificationReport[] {
+export function loadReports(): TVerificationReport[] {
   if (typeof window === 'undefined') return []
 
   try {
     const stored = window.localStorage.getItem(KEY)
     if (!stored) return []
 
-    let parsed: any[] = []
-    try {
-      parsed = JSON.parse(stored)
-    } catch (err) {
-      console.warn('[ArchiveVerify] ⚠️ full JSON.parse failed → slice mode', err)
-      const trimmed =
-        '[' +
-        stored
-          .replace(/^\s*\[/, '')
-          .replace(/\]\s*$/, '')
-          .split('},{')
-          .slice(0, limit)
-          .join('},{') +
-        ']'
-      try {
-        parsed = JSON.parse(trimmed)
-      } catch (e2) {
-        console.error('[ArchiveVerify] ❌ even slice parse failed', e2)
-        parsed = []
-      }
-    }
-
+    const parsed = JSON.parse(stored)
     if (!Array.isArray(parsed)) return []
-    const normalized = parsed
-      .slice(0, limit)
-      .map(normalizeReport)
-      .filter((r) => r.truth_hash && r.public_key)
 
-    console.log(`[ArchiveVerify] ✅ parsed ${normalized.length}/${parsed.length} reports (limit ${limit})`)
+    const normalized = parsed.map(normalizeReport)
+    console.log(`[ArchiveVerify] ✅ loaded ${normalized.length} reports`)
     return normalized
-  } catch (outer) {
-    console.error('[ArchiveVerify] ❌ loadReports outer error', outer)
+  } catch (err) {
+    console.error('[ArchiveVerify] ❌ loadReports failed', err)
     return []
   }
 }
-
-
 
 export function saveReport(report: TVerificationReport): void {
   const all = loadReports()
