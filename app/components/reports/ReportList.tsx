@@ -309,37 +309,6 @@ selected === reportId
             )
           })}
       </div>
-
-      {selectedReport && selectedReport.truth_hash && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-surface1 rounded-xl p-6 w-[90%] max-w-xl shadow-xl border border-border-soft">
-            <h3 className="text-lg font-semibold mb-2">{t.subtitle}</h3>
-
-            <pre className="text-xs bg-surface2 p-3 rounded-md max-h-64 overflow-y-auto">
-              {JSON.stringify(selectedReport, null, 2)}
-            </pre>
-
-            <ReportStatus report={selectedReport} />
-
-            <div className="flex justify-end gap-3 mt-4">
-              <Button onClick={() => handleDownload(selectedReport.truth_hash)}>
-                {t.view}
-              </Button>
-
-              <Button
-                variant="solid"
-                onClick={() => handleDelete(selectedReport.truth_hash)}
-              >
-                {t.invalid}
-              </Button>
-
-              <Button variant="ghost" onClick={() => setSelected(null)}>
-                Close
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
