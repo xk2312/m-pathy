@@ -228,8 +228,63 @@ const selectedReport: VerificationReport | null =
 function exportReportAsText(r: VerificationReport) {
   const lines: string[] = []
 
-  lines.push('VERIFICATION REPORT')
-  lines.push('===================')
+  lines.push('VERIFICATION REPORT — m-pathy.ai')
+  lines.push('=================================')
+  lines.push('')
+  lines.push('This report was generated on m-pathy.ai.')
+  lines.push('')
+  lines.push(
+    'The contents of this report were created, displayed, and cryptographically sealed on the m-pathy.ai platform at the time indicated.'
+  )
+  lines.push(
+    'The sealing process includes a cryptographically strong content hash (e.g. SHA-256–class),'
+  )
+  lines.push(
+    'a public-key–based identifier, and timestamped metadata generated at the time of creation.'
+  )
+  lines.push('')
+  lines.push(
+    'm-pathy.ai can technically confirm whether this report originates from its platform,'
+  )
+  lines.push(
+    'whether the contents match the originally sealed version, and whether the reported'
+  )
+  lines.push(
+    'timestamp and cryptographic identifiers are authentic.'
+  )
+  lines.push('')
+  lines.push(
+    'Any modification of the content after sealing will result in a hash mismatch and can be detected.'
+  )
+  lines.push('')
+  lines.push('LEGAL & IP NOTICE')
+  lines.push('-----------------')
+  lines.push(
+    'This report may serve as supporting evidence in intellectual property, authorship,'
+  )
+  lines.push(
+    'priority, or related disputes. In the event of legal or judicial proceedings,'
+  )
+  lines.push(
+    'parties may contact m-pathy.ai to request verification of this report’s authenticity'
+  )
+  lines.push('and integrity.')
+  lines.push('')
+  lines.push(
+    'This verification does not constitute a legal judgment and does not guarantee a specific legal outcome.'
+  )
+  lines.push(
+    'However, it may significantly strengthen evidentiary value by providing a verifiable'
+  )
+  lines.push(
+    'record of authorship, content integrity, and temporal existence.'
+  )
+  lines.push('')
+  lines.push(
+    'Final legal assessment remains the responsibility of the competent court or authority.'
+  )
+  lines.push('')
+  lines.push('---')
   lines.push('')
   lines.push(`Status: ${r.status}`)
   lines.push(`Source: ${r.source}`)
@@ -241,6 +296,10 @@ function exportReportAsText(r: VerificationReport) {
   }
   lines.push('')
   lines.push(`Message Pairs: ${r.pair_count}`)
+  if (r.truth_hash) {
+    lines.push(`Content Hash: ${r.truth_hash}`)
+  }
+  lines.push(`Public Key: ${r.public_key}`)
   lines.push('')
   lines.push('CONTENT')
   lines.push('-------')
