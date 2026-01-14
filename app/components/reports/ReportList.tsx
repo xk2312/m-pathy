@@ -279,7 +279,6 @@ selected === reportId
 
       <div className="flex justify-end gap-3 mt-4">
   <Button
-    variant="ghost"
     onClick={() =>
       window.dispatchEvent(
         new CustomEvent('mpathy:archive:verify', {
@@ -290,14 +289,34 @@ selected === reportId
         })
       )
     }
+    className="
+      bg-cyan-500
+      text-black
+      px-[5px]
+      py-[7px]
+      rounded-md
+      hover:bg-cyan-400
+      transition-colors
+    "
   >
     Re-Verify
   </Button>
 
-  <Button variant="solid" onClick={() => setSelected(null)}>
+  <Button
+    onClick={() => setSelected(null)}
+    className="
+      bg-transparent
+      text-white
+      px-[5px]
+      py-[7px]
+      hover:text-gray-300
+      transition-colors
+    "
+  >
     Close
   </Button>
 </div>
+
 
     </div>
   )}
