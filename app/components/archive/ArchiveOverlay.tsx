@@ -715,10 +715,11 @@ useEffect(() => {
       new CustomEvent('mpathy:archive:close')
     )
   }}
-  className="
+className="
   absolute
   -top-[20px]
-  -right-[40px]
+  left-full
+  -translate-x-[40px]
   z-50
   cursor-pointer
   pointer-events-auto
@@ -727,6 +728,7 @@ useEffect(() => {
   hover:text-text-primary
   transition
 "
+
 
 >
   ✕
