@@ -1,3 +1,134 @@
+/* ======================================================================
+   FILE INDEX — components/archive/ChatDetailView.tsx
+   ======================================================================
+
+   ROLLE DER DATEI
+   ----------------------------------------------------------------------
+   Detailansicht eines einzelnen Chats innerhalb des ARCHIVE-Overlays.
+   Diese Datei ist verantwortlich für:
+   - Rekonstruktion von User/Assistant-Paaren aus dem Triketon-Ledger
+   - Anzeige der einzelnen Nachrichtenpaare
+   - Auswahl (+ / −) von Paaren für den Verify-Flow
+
+   Sie ist:
+   - rein lesend gegenüber dem Ledger
+   - rein UI-orientiert
+   - KEIN Teil des Reports-Renderpfads
+
+   ----------------------------------------------------------------------
+   INPUT PROPS
+   ----------------------------------------------------------------------
+   chain_id: string
+     - Identifiziert den Chat / die Konversationskette
+     - Wird verwendet, um Ledger-Einträge zu filtern
+
+   onClose: () => void
+     - Callback zum Schließen der Detailansicht
+
+   highlight?: string
+     - Optionaler Suchbegriff
+     - Nur visuelles Highlighting, keine Logik-Auswirkung
+
+   selection: ArchivePair[]
+     - Aktuell ausgewählte Paare (SessionStorage-gebunden)
+
+   addPair(pair: ArchivePair)
+   removePair(pair_id: string)
+     - Mutieren die Selection im Parent (ArchiveOverlay)
+
+   ----------------------------------------------------------------------
+   DATENQUELLE
+   ----------------------------------------------------------------------
+   LocalStorage (read-only):
+     KEY: 'mpathy:triketon:v1'
+
+   Typ:
+     TriketonAnchor[]
+       - id
+       - role ('user' | 'assistant')
+       - content
+       - timestamp
+       - chain_id
+
+   ----------------------------------------------------------------------
+   PAAR-REKONSTRUKTION
+   ----------------------------------------------------------------------
+   Algorithmus:
+     - Iteriert sequentiell über alle Ledger-Einträge
+     - Bildet Paare aus:
+         • user → assistant
+         • gleicher chain_id
+         • benachbarte Einträge
+     - Ergebnis:
+         MessagePair[]
+           - pair_id = `${chain_id}:${a.id}`
+           - timestamp_start / end
+           - user.content
+           - assistant.content
+
+   WICHTIG:
+   - Keine Zeitfensterlogik
+   - Keine Sortierung (Ledger-Reihenfolge wird übernommen)
+   - Keine Validierung außerhalb role + chain_id
+
+   ----------------------------------------------------------------------
+   SELECTION-LOGIK
+   ----------------------------------------------------------------------
+   isSelected(pair_id)
+     - Prüft, ob Paar bereits in selection enthalten ist
+
+   Klick auf + / − Button:
+     - Wenn selected:
+         → removePair(pair_id)
+     - Wenn nicht selected:
+         → baut ArchivePair-Objekt
+         → addPair(archivePair)
+
+   ArchivePair enthält:
+     - pair_id
+     - chain_id
+     - user { id, content, timestamp }
+     - assistant { id, content, timestamp }
+
+   ----------------------------------------------------------------------
+   HIGHLIGHTING
+   ----------------------------------------------------------------------
+   highlightText(text, term)
+     - Aktiv ab term.length >= 3
+     - Case-insensitive Regex-Split
+     - Highlight rein visuell (span)
+     - KEINE Veränderung der Daten
+
+   ----------------------------------------------------------------------
+   RENDERING
+   ----------------------------------------------------------------------
+   - Back-Button → onClose
+   - Liste von Pair-Cards
+     - Zeitstempel (user message)
+     - User-Content
+     - Assistant-Content
+     - Selection-Button (absolut positioniert)
+
+   ----------------------------------------------------------------------
+   RELEVANZ FÜR REPORTS-PROBLEM
+   ----------------------------------------------------------------------
+   - Diese Datei:
+       ❌ liest KEINE Reports
+       ❌ schreibt KEINE Reports
+       ❌ beeinflusst REPORTS-Rendering NICHT
+   - Sie ist NUR indirekt relevant, da sie die Paare liefert,
+     die später im Verify-Flow zu Reports werden.
+
+   ----------------------------------------------------------------------
+   AUSSCHLUSS
+   ----------------------------------------------------------------------
+   ❌ Kein Verify-Dispatch
+   ❌ Kein Event-Handling
+   ❌ Kein Mode-Switch
+   ❌ Kein Zugriff auf verificationStorage
+
+   ====================================================================== */
+
 'use client'
 
 import { readLS } from '@/lib/storage'

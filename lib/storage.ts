@@ -1,106 +1,137 @@
-/**
- * ============================================================================
- * FILE INDEX — lib/storage.ts
- * PROJECT: GPTM-Galaxy+ · m-pathy Archive + Verification
- * CONTEXT: Archive Overlay (Chat / Reports) — Soll/Ist-Abgleich
- * MODE: Research · Documentation · Planning ONLY
- * ============================================================================
- *
- * FILE PURPOSE (IST)
- * ---------------------------------------------------------------------------
- * Zentrale Abstraktionsschicht für LocalStorage und SessionStorage.
- * Verwaltet Namespaces, Lese-/Schreibzugriffe sowie Archiv- und
- * Selection-relevante Datenstrukturen.
- *
- *
- * RELEVANT FÜR ARCHIVE-OVERLAY (SOLLBEZUG)
- * ---------------------------------------------------------------------------
- * - Liefert die persistente Datenbasis für:
- *   • Chat-Inhalte
- *   • Archive-Chats
- *   • Archive-Pairs
- *   • Selections (Session-basiert)
- *   • Verification Reports
- * - Diese Datei ist KEINE UI-Datei, beeinflusst aber indirekt:
- *   • CHAT-Mode (Recent / Detail / Search)
- *   • REPORTS-Mode (Reports Overview)
- *
- *
- * STRUKTURELL RELEVANTE BEREICHE (IST)
- * ---------------------------------------------------------------------------
- * 1. Namespace-Definitionen (LocalStorage)
- *    - MpathyNamespace
- *      • mpathy:archive:v1
- *      • mpathy:archive:pairs:v1
- *      • mpathy:verification:reports:v1
- *      • weitere systemische Keys
- *
- * 2. Namespace-Definitionen (SessionStorage)
- *    - mpathy:archive:selection:v1
- *
- * 3. Archiv-Datenmodelle
- *    - ArchivePair
- *    - ArchiveSelection
- *
- * 4. Storage-Zugriffsfunktionen
- *    - readLS / writeLS / clearLS / clearAllLS
- *    - readSS / writeSS / clearSS
- *    - readArchiveSelection / writeArchiveSelection
- *
- *
- * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
- * ---------------------------------------------------------------------------
- * Δ1: UI-Ebenen-Trennung (EBENE 0 / 1 / 2)
- *     SOLL:
- *       - Klare logische Trennung zwischen CHAT-Mode und REPORTS-Mode
- *     IST:
- *       - Storage-Ebene kennt keine explizite semantische Trennung
- *         zwischen CHAT- und REPORTS-Mode
- *       - Beide Modi greifen potenziell auf denselben Storage-Layer zu
- *
- * Δ2: REPORTS-Mode-Isolation
- *     SOLL:
- *       - REPORTS-Mode zeigt ausschließlich "Reports Overview"
- *       - Kein Zugriff auf Chat- oder Archive-Chat-Daten
- *     IST:
- *       - Keine strukturelle Absicherung auf Storage-Ebene, die
- *         REPORTS-Zugriffe auf Chat-/Archive-Namespaces verhindert
- *
- * Δ3: Suchlogik-Abgrenzung
- *     SOLL:
- *       - Search ist ein Unterzustand von CHAT
- *       - REPORTS kennt keine Chat-Suche
- *     IST:
- *       - Storage bietet keine explizite Trennung oder Kennzeichnung,
- *         ob Selection / Archive-Daten aus CHAT-Search oder anderen
- *         Kontexten stammen
- *
- * Δ4: ARCHIVE-Neuaufbau-Vermeidung
- *     SOLL:
- *       - Kein Neuaufbau von ARCHIVE beim Mode-Wechsel
- *     IST:
- *       - Storage ist rein zustandslos gegenüber UI-Wechseln
- *       - Keine explizite Persistenz oder Sperre gegen Reinitialisierung
- *         auf Mode-Wechsel-Ebene
- *
- *
- * BEWUSST NICHT IM SCOPE
- * ---------------------------------------------------------------------------
- * - Keine UI-Logik
- * - Keine Mode-Switch-Logik
- * - Keine Rendering-Entscheidungen
- * - Keine Patch- oder Lösungsvorschläge
- *
- *
- * FAZIT (DESKRIPTIV)
- * ---------------------------------------------------------------------------
- * Diese Datei bildet die technische Speicherbasis für das Archive-Overlay,
- * erzwingt jedoch aktuell keine strukturellen Garantien bezüglich der
- * kanonischen UI-Trennung von CHAT und REPORTS gemäß Sollzustand.
- *
- * ============================================================================
- */
+/* ======================================================================
+   FILE INDEX — lib/storage.ts
+   ======================================================================
 
+   ROLE
+   ----------------------------------------------------------------------
+   Zentrale Low-Level-Abstraktion für LocalStorage und SessionStorage.
+   Diese Datei ist die EINZIGE erlaubte Schnittstelle für:
+   - Lesen / Schreiben / Löschen von Storage-Daten
+   - Definition aller gültigen Storage-Namespaces
+   - Normalisierung von Zugriffen (JSON, Verfügbarkeit, Guards)
+
+   Diese Datei enthält KEINE Business-Logik.
+   Sie ist reine Infrastruktur.
+
+   ----------------------------------------------------------------------
+   STORAGE NAMESPACES (DEFINIERT HIER)
+   ----------------------------------------------------------------------
+
+   LocalStorage (MpathyNamespace):
+   - mpathy:chat:v1
+   - mpathy:archive:v1
+   - mpathy:archive:chat_map
+   - mpathy:archive:chat_counter
+   - mpathy:archive:pairs:v1
+   - mpathy:context:upload
+   - mpathy:verification:v1
+   - mpathy:verification:reports:v1   <-- RELEVANT FÜR REPORTS-RENDER
+   - mpathy:triketon:v1                <-- WRITE-ONCE (Ledger)
+   - mpathy:triketon:device_public_key_2048
+
+   SessionStorage (MpathySessionNamespace):
+   - mpathy:archive:selection:v1       <-- Auswahl für Verify
+
+   ----------------------------------------------------------------------
+   PRIMITIVE FUNKTIONEN (LOW LEVEL)
+   ----------------------------------------------------------------------
+
+   hasLocalStorage()
+   - Prüft Verfügbarkeit von window.localStorage
+   - Guard gegen SSR / Security Errors
+
+   hasSessionStorage()
+   - Prüft Verfügbarkeit von window.sessionStorage
+
+   readLS<T>(key)
+   - Liest JSON aus LocalStorage
+   - Gibt null zurück bei:
+     - fehlendem Storage
+     - fehlendem Key
+     - JSON-Parse-Fehler
+
+   writeLS<T>(key, value)
+   - Schreibt JSON nach LocalStorage
+   - Sonderfall:
+     - mpathy:triketon:v1 ist WRITE-ONCE
+       (existierender Wert wird NICHT überschrieben)
+
+   clearLS(key)
+   - Löscht EINEN LocalStorage-Key
+
+   clearAllLS()
+   - Löscht definierte LocalStorage-Keys
+   - EXPLIZIT ausgeschlossen:
+     - mpathy:triketon:v1
+
+   readSS<T>(key)
+   - Liest JSON aus SessionStorage
+
+   writeSS<T>(key, value)
+   - Schreibt JSON nach SessionStorage
+
+   clearSS(key)
+   - Löscht EINEN SessionStorage-Key
+
+   ----------------------------------------------------------------------
+   ARCHIVE-SELECTION HELPERS
+   ----------------------------------------------------------------------
+
+   readArchiveSelection()
+   - Liest mpathy:archive:selection:v1 aus SessionStorage
+   - Garantiert Rückgabeform:
+     { pairs: ArchivePair[] }
+
+   writeArchiveSelection(selection)
+   - Normalisiert Selection:
+     - entfernt Duplikate (pair_id)
+     - sortiert deterministisch
+   - Schreibt nach SessionStorage
+
+   ----------------------------------------------------------------------
+   DATENTYPEN
+   ----------------------------------------------------------------------
+
+   ArchivePair
+   - pair_id
+   - user { id, content, timestamp }
+   - assistant { id, content, timestamp }
+   - chain_id
+
+   ArchiveSelection
+   - pairs: ArchivePair[]
+
+   ----------------------------------------------------------------------
+   RELEVANZ FÜR REPORT-PROBLEM
+   ----------------------------------------------------------------------
+
+   - Diese Datei schreibt/liest Reports NICHT direkt,
+     stellt aber den Schlüssel bereit:
+       mpathy:verification:reports:v1
+
+   - Jede Inkonsistenz zwischen:
+       verificationStorage.ts
+       ReportList.tsx
+       ArchiveOverlay.tsx
+     MUSS hier ausgeschlossen werden (Namespace exakt identisch).
+
+   - Diese Datei ist NICHT verantwortlich für:
+     - Normalisierung von Reports
+     - Rendering
+     - React State
+     - Events
+
+   ----------------------------------------------------------------------
+   AUSSCHLUSS
+   ----------------------------------------------------------------------
+
+   ❌ Kein Event-System
+   ❌ Kein React
+   ❌ Keine Side-Effects außerhalb Storage
+   ❌ Keine Daten-Transformation außer JSON
+
+   ======================================================================
+*/
 
 export type MpathyNamespace =
   | 'mpathy:chat:v1'

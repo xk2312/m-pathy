@@ -1,111 +1,169 @@
-/***
- * =====================================================================
- *  M — PAGE2 MASTER (Single-File Chat UI/Behavior – Control Surface)
- * =====================================================================
- *
- *  FILE
- *  - app/page2/page.tsx
- *
- *  PURPOSE
- *  - Single-file control surface for Chat UI + streaming + local persistence
- *  - Bridges UI state → localStorage → (Triketon ledger append) → server chat API
- *  - Hosts Dock + Stage + Saeule bridge + Triketon overlay (UI-only)
- *
- *  CONTEXT (aus Übergangsprotokoll „fix legacy Triketon & LS“)
- *  - ✅ mpathy:chat:v1 funktioniert (User + Assistant erscheinen im Chat-State)
- *  - ❌ mpathy:archive:pairs:v1 wird nicht mehr aktualisiert
- *  - ❌ mpathy:triketon:v1 enthält NUR User-Einträge (Assistant fehlt/inkonsistent)
- *  - ⚠️ Ursache ist typischerweise kein einzelner Bug, sondern ein gebrochener
- *    Datenfluss / falscher Persistenzzeitpunkt während/ nach Streaming.
- *
- *  CURRENT PRIMARY PROBLEM — RELEVANZ-MARKER
- *  - 🔴 ZENTRAL: Streaming erzeugt Placeholder-Assistant + chunk updates,
- *    aber es fehlt ein singulärer, deterministischer “STREAM ENDED” Moment,
- *    an dem (A) final persistiert und (B) Assistant-Triketon einmalig appended wird.
- *
- *  READ FIRST (Hotspots)
- *  - [ANCHOR:SEND-PIPELINE]   onSendFromPrompt(...)  ← kritisch (Streaming + Persistenz)
- *  - [ANCHOR:SENDMESSAGELOCAL] sendMessageLocal(...) ← Servercall + Triketon-Payload-Mapping
- *  - [ANCHOR:CHAT-STATE]      messages init + autosave gating
- *  - [ANCHOR:TRIKETON-LEDGER] ensure/verify + append (User vs Assistant)
- *
- *  INDEX (Sprunganker)
- *  ---------------------------------------------------------------------
- *  [ANCHOR:BOOT]                – "use client" + Imports + globale Setup-Objekte
- *  [ANCHOR:I18N]                – LABELS / MEvent Labels (UI-only)
- *  [ANCHOR:CONFIG]              – TOKENS / THEMES / PERSONAS / Layout Constants
- *  [ANCHOR:HOOKS]               – useBreakpoint / useTheme / useAssistantLayout
- *  [ANCHOR:UTILS]               – Types (ChatMessage) + truncate + legacy LS helpers
- *  [ANCHOR:COMPONENTS]          – Header / MessageBody / Bubble / Conversation / InputDock
- *  [ANCHOR:MD-RENDER]           – mdToHtml + codeblocks + copy + hljs highlight
- *  [ANCHOR:CONVO-RENDER]        – Conversation() scrollport rules + padBottom spacer
- *  [ANCHOR:PAGE2-ROOT]          – export default Page2() entry
- *
- *  [ANCHOR:SCROLL-STABILITY]    – scroll unlock / double rAF nudges / dock measurement
- *  [ANCHOR:BREAKPOINTS]         – isMobile + isMobileLike + sideMargin
- *  [ANCHOR:REFS]                – headerRef / convoRef / dockRef / endRef + dockH
- *  [ANCHOR:PADBOTTOM]           – padBottom state + measureDock + CSS var --dock-h
- *  [ANCHOR:MOBILE-KEYBOARD]     – visualViewport heuristic → compactStatus
- *
- *  [ANCHOR:CHAT-STATE]          – messages init: initChatStorage + ensure/verify ledger + loadChat
- *  [ANCHOR:CLEAR-GATE]          – clearingRef + onClearChat() + hardClearChat(reload:true)
- *  [ANCHOR:AUTOSAVE]            – useEffect(messages) → saveChat (paused during clear)
- *  [ANCHOR:PERSIST-ALIAS]        – persistMessages() normalization (id injection) + saveChat
- *
- *  [ANCHOR:I18N-STATE]          – locale state + mpathy:i18n:change listener
- *  [ANCHOR:M-FLOW]              – runMFlow() + click/change delegation + auto-tagging
- *
- *  [ANCHOR:SYSTEMSAY]           – systemSay() (assistant system toasts) + scroll-to-bottom behavior
- *  [ANCHOR:FOOTER-STATUS]       – footerStatus (mode/expert labels) state
- *  [ANCHOR:SAEULE-BRIDGE]       – window "mpathy:system-message" listener → bubbles + loading gates
- *
- *  [ANCHOR:SCROLL-BOTTOM]       – stickToBottom state + scroll listener + auto-scroll effect
- *
- *  [ANCHOR:SENDMESSAGELOCAL]    – fetch("/api/chat") + 401/402/FreeGate headers + response parse
- *  [ANCHOR:GC-FREEGATE]         – X-Free-* headers → localStorage("mpathy:freegate") + warnings
- *  [ANCHOR:TRIKETON-PAYLOAD]    – server triketons → normalized object (public_key/truth_hash/timestamp)
- *  [ANCHOR:TRIKETON-APPEND-A]   – appendTriketonLedgerEntry(assistant) inside sendMessageLocal
- *
- *  [ANCHOR:SEND-PIPELINE]       – onSendFromPrompt(text) main orchestration
- *    [ANCHOR:SEND-USER]         – optimistic add user + persistMessages + USER ledger append (truth hash)
- *    [ANCHOR:SEND-NUMBERING]    – (legacy) numbering attempt via reading mpathy:triketon:v1 (note: does not write back)
- *    [ANCHOR:SEND-REQUEST]      – setLoading(true) + sendMessageLocal(optimistic)
- *    [ANCHOR:SEND-PLACEHOLDER]  – insert empty assistant bubble (NO persist)
- *    [ANCHOR:SEND-STREAM]       – chunk loop updates last assistant + persistMessages(next) per chunk
- *    [ANCHOR:SEND-META]         – meta.balanceAfter → setBalance + CustomEvent("mpathy:tokens:update")
- *    [ANCHOR:SEND-FINALLY]      – finally block persists + resets loading/mode
- *
- *  [ANCHOR:LAYOUT]              – main layout tree (Navigation + grid + scroller + fixed PromptRoot)
- *  [ANCHOR:STAGE]               – convoRef scroll container (.chat-stage) overflow/overscroll rules
- *  [ANCHOR:STAGE-INNER]         – maxWidth 680 + inner padding rules
- *  [ANCHOR:DOCK-FIXED]          – prompt-root-scene position:fixed + left/right with saeule width + zIndex 90
- *  [ANCHOR:PROMPTROOT-PROPS]    – PromptRoot inputs: padBottom, compactStatus, footerStatus, sendingRef, withGate...
- *  [ANCHOR:MOBILE-OVERLAY]      – MobileOverlay open/close + passes messages + onClearChat
- *  [ANCHOR:ONBOARDING]          – OnboardingWatcher active gate
- *  [ANCHOR:TRIKETON-OVERLAY]    – modal dialog + payload view (UI-only)
- *
- *  PROBLEM-RELEVANCE MAP (präzise)
- *  ---------------------------------------------------------------------
- *  ✅ User-Triketon:        [ANCHOR:SEND-USER] (computeTruthHash(normalizeForTruthHash(...)))
- *  ⚠️ Assistant-Triketon:   [ANCHOR:TRIKETON-APPEND-A] (exists, but may not match final text state)
- *  🔴 Persistenzzeitpunkt:  [ANCHOR:SEND-STREAM] + [ANCHOR:SEND-FINALLY]
- *     - Streaming persistiert chunkweise, aber ohne singulären finalization hook.
- *     - Genau hier entstehen: Assistant fehlt im Ledger / Paare brechen / Verify wirkt „tot“.
- *  ⚠️ Device/PublicKey Drift: [ANCHOR:TRIKETON-PAYLOAD] + server integration (nicht in diesem File fixbar)
- *  🔴 ArchivePairs-Folgeschaden: entsteht upstream (wenn Assistant-final + ledger fehlen)
- *
- *  “DO NOT TOUCH” WARNINGS (stabilitätskritisch)
- *  ---------------------------------------------------------------------
- *  - Scrollport-Regel: EINZIGER Scrollport ist convoRef (.chat-stage). Keine extra overflow in children.
- *  - Fixed Dock: prompt-root-scene ist position:fixed; zIndex bewusst hoch (90).
- *  - Mobile visualViewport hooks: nur defensiv ändern; sonst Keyboard-Jank.
- *
- *  QUICK DEBUG HOOKS (already in file)
- *  ---------------------------------------------------------------------
- *  - /debug storage (in onSendFromPrompt): shows length of storage keys
- *
- * =====================================================================
- */
+/* ============================================================================
+INDEX — page2/page.tsx (Chat Runtime, Storage, Triketon, UI Orchestration)
+
+ROLLE DER DATEI
+- Zentrale Chat-Runtime (Client)
+- Orchestriert UI, Chat-Flow, LocalStorage, Triketon-Ledger
+- Bindeglied zwischen Chat, Archive, Verify, Reports und Navigation
+- KEINE reine View-Datei, sondern Verhaltens- und Persistenz-Zentrum
+
+────────────────────────────────────────────────────────────────────────────
+1. IMPORTS & GLOBAL SETUP
+────────────────────────────────────────────────────────────────────────────
+- React Hooks, Layout, Navigation, MobileOverlay
+- Zentrale Storage-Anbindung:
+  - initChatStorage()
+  - loadChat(), saveChat(), hardClearChat()
+  - appendTriketonLedgerEntry()
+  - ensureTriketonLedgerReady(), verifyOrResetTriketonLedger()
+- Triketon-Krypto:
+  - normalizeForTruthHash()
+  - computeTruthHash()
+
+⚠️ Relevanz:
+- Single Source of Truth für Chat-Persistenz
+- Jede Abweichung hier wirkt sich direkt auf Archive & Verify aus
+
+────────────────────────────────────────────────────────────────────────────
+2. THEME / TOKENS / PERSONAS
+────────────────────────────────────────────────────────────────────────────
+- TOKENS, THEMES, PERSONAS
+- Layout-Breiten (Säule, Dock, Assistant)
+- KEIN Archive-spezifisches Styling, aber:
+  → bestimmt Scroll-, Overlay- und Dock-Verhalten
+
+────────────────────────────────────────────────────────────────────────────
+3. LOCAL CHAT TYPES & HELPERS
+────────────────────────────────────────────────────────────────────────────
+- ChatMessage Typ (role, content, meta, format)
+- truncateMessages()
+- loadMessages() / saveMessages()
+- LS_KEY = "mpathy:thread:default"
+
+⚠️ Wichtig:
+- Parallele Existenz zu lib/chatStorage.ts
+- Historisch gewachsen → potenzielle Drift-Quelle
+
+────────────────────────────────────────────────────────────────────────────
+4. MESSAGE RENDERING
+────────────────────────────────────────────────────────────────────────────
+- mdToHtml(): eigener Markdown-Renderer
+- MessageBody
+- Bubble (User / Assistant)
+- Triketon-Button pro Assistant-Message
+
+⚠️ Archive-Relevanz:
+- Darstellung ≠ Archiv-Darstellung
+- Archive nutzt eigene Views (ChatDetailView)
+
+────────────────────────────────────────────────────────────────────────────
+5. CONVERSATION & SCROLL MANAGEMENT
+────────────────────────────────────────────────────────────────────────────
+- Conversation-Komponente
+- EIN Scroll-Container (convoRef)
+- Sticky-to-bottom Logik
+- padBottom / Dock-Höhen-Kompensation
+
+⚠️ Kritisch:
+- Grundlage für korrekte Chat-Historie
+- Fehler hier wirken wie „Messages fehlen“
+
+────────────────────────────────────────────────────────────────────────────
+6. INPUT / PROMPT DOCK
+────────────────────────────────────────────────────────────────────────────
+- InputDock
+- PromptRoot Integration
+- sendingRef / clickGateRef (Dedupe)
+
+────────────────────────────────────────────────────────────────────────────
+7. PAGE2 MAIN STATE
+────────────────────────────────────────────────────────────────────────────
+- messages State (init via loadChat)
+- Autosave via saveChat(messages)
+- clearingRef + onClearChat()
+
+⚠️ Sehr wichtig:
+- loadChat() bestimmt, was Archive später sehen kann
+- Wenn hier nicht persistiert → Archive leer
+
+────────────────────────────────────────────────────────────────────────────
+8. TRIKETON STATE & OVERLAY
+────────────────────────────────────────────────────────────────────────────
+- activeTriketonMessageId
+- openTriketon / closeTriketon
+- Triketon Overlay UI
+
+────────────────────────────────────────────────────────────────────────────
+9. SYSTEM MESSAGES & EVENTS
+────────────────────────────────────────────────────────────────────────────
+- systemSay()
+- Listener: "mpathy:system-message"
+- FooterStatus (mode / expert)
+
+⚠️ Verbindung zu Verify:
+- Verify-Flow triggert hier Mode-Wechsel & UI-Reaktion
+
+────────────────────────────────────────────────────────────────────────────
+10. SEND FLOW (KERNLOGIK)
+────────────────────────────────────────────────────────────────────────────
+- onSendFromPrompt()
+- optimistic UI Update
+- persistMessages()
+- appendTriketonLedgerEntry() — USER
+
+- sendMessageLocal()
+  - API /api/chat
+  - FreeGate / Stripe / Login
+  - Assistant-Antwort
+
+- Streaming-Assistant:
+  - Chunking
+  - persistMessages() pro Chunk
+  - appendTriketonLedgerEntry() — ASSISTANT
+
+⚠️ EXTREM KRITISCH:
+- Hier entsteht die Chat-Historie
+- Fehler → Archive & Verify brechen
+
+────────────────────────────────────────────────────────────────────────────
+11. LAYOUT & GRID
+────────────────────────────────────────────────────────────────────────────
+- 2-Spalten-Layout (Säule + Chat)
+- SidebarContainer (links)
+- Chat Stage (rechts)
+- MobileOverlay
+
+⚠️ ArchiveOverlay sitzt NICHT hier,
+aber wird visuell & logisch beeinflusst
+
+────────────────────────────────────────────────────────────────────────────
+12. MOBILE / VIEWPORT / KEYBOARD HANDLING
+────────────────────────────────────────────────────────────────────────────
+- useBreakpoint()
+- visualViewport Handling
+- Header shrink / typing states
+
+────────────────────────────────────────────────────────────────────────────
+13. RETURN TREE
+────────────────────────────────────────────────────────────────────────────
+- <LanguageProvider>
+- <Navigation>
+- <SidebarContainer>
+- <Conversation>
+- <PromptRoot>
+- <MobileOverlay>
+- <OnboardingWatcher>
+- Triketon Modal
+
+────────────────────────────────────────────────────────────────────────────
+ZUSAMMENFASSUNG (ARCHIVE / REPORTS SICHT)
+────────────────────────────────────────────────────────────────────────────
+- page2/page.tsx ist die Quelle aller Chat-Daten
+- Archive kann nur anzeigen, was hier korrekt gespeichert wird
+- Triketon-Ledger wird hier geschrieben
+- KEIN anderer Ort kann Archive „reparieren“, wenn hier etwas fehlt
+
+=========================================================================== */
 
 "use client";
 

@@ -1,97 +1,122 @@
-/**
- * ============================================================================
- * FILE INDEX — reportstatus.tsx
- * PROJECT: GPTM-Galaxy+ · m-pathy Verification / Reports
- * CONTEXT: Archive Overlay — REPORTS / Verification Status
- * MODE: Research · Documentation · Planning ONLY
- * ============================================================================
- *
- * FILE PURPOSE (IST)
- * ---------------------------------------------------------------------------
- * UI-Komponente zur Anzeige des Verifikationsstatus eines
- * User–Assistant-Nachrichtenpaares.
- *
- * - Prüft lokal gespeicherte Triketon-Anker
- * - Führt Server-Verify (/api/triketon/verify) aus
- * - Rendert Status: loading | verified | failed
- *
- *
- * KANONISCHER SOLLZUSTAND (REFERENZ)
- * ---------------------------------------------------------------------------
- * EBENE 0:
- *   - Nicht relevant (keine Overlay-Struktur)
- *
- * EBENE 1:
- *   - REPORTS ist ein eigenständiger Modus
- *
- * EBENE 2 (REPORTS):
- *   - Reports Overview
- *   - Detaildarstellungen beziehen sich ausschließlich auf Reports
- *   - Keine CHAT-Abhängigkeiten
- *
- *
- * STRUKTURELL RELEVANTE BEREICHE (IST)
- * ---------------------------------------------------------------------------
- * 1. Input Props
- *    - userText
- *    - assistantText
- *    - truthHash
- *
- * 2. Lokale Verifikation
- *    - Zugriff auf localStorage: 'mpathy:triketon:v1'
- *    - Suche nach passendem truth_hash
- *
- * 3. Server-Verifikation
- *    - POST /api/triketon/verify
- *    - Übergabe: publicKey, truthHash, text
- *
- * 4. UI-Zustände
- *    - verified === null  → Loading
- *    - verified === true  → Success
- *    - verified === false → Fail
- *
- *
- * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
- * ---------------------------------------------------------------------------
- * Δ1: Kopplung an CHAT-Inhalte
- *     SOLL:
- *       - REPORTS-Mode arbeitet ausschließlich mit Report-Daten
- *     IST:
- *       - Komponente benötigt vollständige userText- und assistantText-
- *         Inhalte aus CHAT-Kontext
- *
- * Δ2: REPORTS-Selbstständigkeit
- *     SOLL:
- *       - Reports Overview und zugehörige Statusanzeigen sind
- *         vollständig vom Chat-Overlay entkoppelt
- *     IST:
- *       - Verifikation rekonstruiert Textpaare aus Chat-Daten
- *       - Abhängigkeit vom ursprünglichen Chat-Inhalt besteht fort
- *
- * Δ3: EBENE-2-Reinheit
- *     SOLL:
- *       - REPORTS enthalten keine implizite CHAT-Logik
- *     IST:
- *       - Semantische CHAT-Daten (user/assistant text) sind
- *         notwendige Inputs für REPORTS-Komponenten
- *
- *
- * BEWUSST NICHT IM SCOPE
- * ---------------------------------------------------------------------------
- * - Keine Aussage zur kryptographischen Korrektheit
- * - Keine Bewertung der Verify-API
- * - Keine UI-/UX-Empfehlungen
- * - Keine Refactor- oder Patch-Vorschläge
- *
- *
- * FAZIT (DESKRIPTIV)
- * ---------------------------------------------------------------------------
- * Diese Datei implementiert korrekt eine Verifikationsstatus-Anzeige,
- * ist jedoch logisch an Chat-Inhalte gekoppelt und damit nicht vollständig
- * isoliert innerhalb des REPORTS-Modus gemäß kanonischem Sollzustand.
- *
- * ============================================================================
- */
+/* ======================================================================
+   FILE INDEX — reportstatus.tsx
+   ======================================================================
+
+   ROLLE DER DATEI
+   ----------------------------------------------------------------------
+   UI-Komponente zur Anzeige des aktuellen Verifikationsstatus
+   eines einzelnen Verification Reports.
+
+   Diese Datei:
+   - rendert KEINE Reports-Liste
+   - entscheidet NICHT, ob Reports existieren
+   - validiert einen bereits existierenden Report erneut
+   - zeigt ausschließlich Status (loading / success / fail)
+
+   ----------------------------------------------------------------------
+   INPUT
+   ----------------------------------------------------------------------
+   Props:
+     - report: VerificationReport
+       (kanonische Report-Struktur aus lib/types)
+
+   Abhängigkeiten:
+     - useLanguage() → aktuelle Sprache
+     - i18nArchive.overlay → UI-Texte
+     - window.localStorage (read-only)
+
+   ----------------------------------------------------------------------
+   INTERNE HILFSTYPEN
+   ----------------------------------------------------------------------
+   TriketonAnchor
+     - truth_hash?: unknown
+     - public_key?: unknown
+
+   VerifyResponse
+     - result?: 'TRUE' | 'FALSE'
+
+   ----------------------------------------------------------------------
+   TEXT-AUFBAU FÜR VERIFY
+   ----------------------------------------------------------------------
+   buildVerifyText(report)
+     - bevorzugt:
+         report.content.canonical_text
+     - Fallback:
+         report.content.pairs[]
+           → USER / ASSISTANT Inhalte
+           → deterministische Join-Struktur
+     - Leerer Text → Verify wird als false gewertet
+
+   ----------------------------------------------------------------------
+   VERIFIKATIONS-ABLAUF (CLIENTSEITIG)
+   ----------------------------------------------------------------------
+   useEffect([report])
+
+   Ablauf:
+     1) Ermittelt truthHash aus report.truth_hash
+     2) Baut pairText via buildVerifyText()
+     3) Bestimmt publicKey:
+         a) report.public_key (bevorzugt)
+         b) Fallback: Lookup im Ledger
+            - LocalStorage Key: 'mpathy:triketon:v1'
+            - Match auf truth_hash
+     4) Abbruch, wenn:
+         - kein publicKey
+         - kein pairText
+     5) POST /api/triketon/verify
+         Body:
+           - publicKey
+           - truthHash
+           - text
+     6) Ergebnis:
+         - TRUE  → verified = true
+         - FALSE → verified = false
+         - Error → verified = false
+
+   ----------------------------------------------------------------------
+   STATE
+   ----------------------------------------------------------------------
+   verified: boolean | null
+     - null   → loading
+     - true   → verified success
+     - false  → verify failed / nicht prüfbar
+
+   cancelled-Flag:
+     - verhindert State-Updates nach Unmount
+
+   ----------------------------------------------------------------------
+   RENDERING
+   ----------------------------------------------------------------------
+   - verified === null
+       → Ladeanzeige (t.loading)
+   - verified === true
+       → Erfolg (🟢, t.success, t.verifyChat)
+   - verified === false
+       → Fehlanzeige (⚪︎, t.fail)
+
+   ----------------------------------------------------------------------
+   RELEVANZ FÜR REPORTS-PROBLEM
+   ----------------------------------------------------------------------
+   - Diese Datei beeinflusst NICHT:
+       • ob Reports geladen werden
+       • ob Reports sichtbar sind
+       • aus welchem Storage Reports kommen
+   - Sie setzt voraus:
+       • report.truth_hash existiert
+       • report.public_key existiert oder im Ledger auffindbar ist
+   - Fehler hier würden sich als falscher Status zeigen,
+     nicht als „No reports“.
+
+   ----------------------------------------------------------------------
+   AUSSCHLUSS
+   ----------------------------------------------------------------------
+   ❌ Kein Schreiben in LocalStorage
+   ❌ Kein Event-Dispatch
+   ❌ Keine Listenlogik
+   ❌ Kein Mode-Switch
+
+   ====================================================================== */
+
 
 'use client'
 

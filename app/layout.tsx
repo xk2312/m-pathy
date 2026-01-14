@@ -1,3 +1,135 @@
+/* ======================================================================
+   FILE INDEX — app/layout.tsx
+   ======================================================================
+
+   ROLLE DER DATEI
+   ----------------------------------------------------------------------
+   Globale Root-Layout-Datei (Next.js App Router).
+   Definiert:
+   - HTML- und BODY-Struktur
+   - globale Styles & Fonts
+   - globale System-Initialisierung
+   - Mount-Punkte für Overlays
+   - App-weite Provider & Gates
+
+   Diese Datei ist:
+   - serverseitig gerendert (Server Component)
+   - der erste Einstiegspunkt für alle Seiten
+   - KEIN Teil der Feature-Logik (Archive/Reports)
+   - aber ein zentraler Orchestrator für Initialisierung
+
+   ----------------------------------------------------------------------
+   GLOBALE IMPORTS
+   ----------------------------------------------------------------------
+   - global.css
+   - design.tokens.css
+   - next/font/google (Inter)
+   - Providers (Context Layer)
+   - LangAttrUpdater (HTML lang-Attribut)
+   - ArchiveInit (System Bootstrap)
+   - ArchiveTrigger (UI Trigger für Archive)
+   - AppGate (Client-seitige Zugriffslogik)
+
+   ----------------------------------------------------------------------
+   METADATA / VIEWPORT
+   ----------------------------------------------------------------------
+   metadata:
+     - title
+     - description
+     - favicon
+
+   viewport:
+     - device-width
+     - initialScale
+     - viewportFit = cover
+     - interactiveWidget = resizes-visual
+
+   ----------------------------------------------------------------------
+   HTML / BODY KONFIGURATION
+   ----------------------------------------------------------------------
+   <html>
+     - lang="en"
+     - suppressHydrationWarning
+     - data-orb-theme="nexus-pearl"
+
+   <body>
+     - Inter Font (className)
+     - min-h-dvh
+     - antialiased
+     - Overscroll- und Touch-Defaults
+     - Kein Margin / Padding
+
+   ----------------------------------------------------------------------
+   SYSTEM-KOMPONENTEN (GLOBAL)
+   ----------------------------------------------------------------------
+   <LangAttrUpdater />
+     - synchronisiert Sprache zwischen App-State und <html>
+
+   <ArchiveInit />
+     - initialisiert Archive-Subsystem global
+     - typischer Ort für:
+         • Event-Registration
+         • Storage-Checks
+         • One-time Bootstraps
+
+   <ArchiveTrigger />
+     - stellt UI-Trigger bereit, um ArchiveOverlay zu öffnen
+     - KEIN Rendering von Archive selbst
+
+   ----------------------------------------------------------------------
+   APP-GATE / PROVIDERS
+   ----------------------------------------------------------------------
+   <Providers>
+     - stellt globale React-Contexts bereit
+       (Theme, Language, etc.)
+
+   <AppGate>
+     - clientseitige Entscheidungslogik:
+         • Auth
+         • Access
+         • Gating
+     - umschließt alle Page-Children
+
+   ----------------------------------------------------------------------
+   OVERLAY-INFRASTRUKTUR
+   ----------------------------------------------------------------------
+   <div id="overlay-root" />
+     - zentraler Mount-Punkt für Overlays
+     - ArchiveOverlay wird hier typischerweise eingehängt
+     - KEINE Logik, nur DOM-Knoten
+
+   Safe-Area-Div (aria-hidden)
+     - iOS / Mobile Safe-Area Ausgleich
+     - rein visuell
+
+   ----------------------------------------------------------------------
+   RELEVANZ FÜR REPORTS-PROBLEM
+   ----------------------------------------------------------------------
+   - Diese Datei:
+       ❌ liest KEINE Reports
+       ❌ schreibt KEINE Reports
+       ❌ rendert KEINE ReportList
+   - Sie beeinflusst Reports NUR indirekt über:
+       • ArchiveInit (Initialisierung)
+       • overlay-root (Mount-Ort)
+       • AppGate (Client-Zugriff)
+
+   - Fehler hier würden sich äußern als:
+       • Overlay erscheint gar nicht
+       • Archive öffnet nicht
+       • Hydration-Probleme
+     NICHT als „No reports“.
+
+   ----------------------------------------------------------------------
+   AUSSCHLUSS
+   ----------------------------------------------------------------------
+   ❌ Keine Feature-Logik
+   ❌ Kein Zugriff auf verificationStorage
+   ❌ Kein Mode-Switch
+   ❌ Keine Datenfilterung
+
+   ====================================================================== */
+
 // app/layout.tsx — SERVER COMPONENT (FIXED)
 import "./global.css"
 import React from "react"

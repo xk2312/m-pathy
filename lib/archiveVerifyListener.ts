@@ -1,119 +1,154 @@
-/**
- * ============================================================================
- * FILE INDEX — lib/archiveVerifyListener.ts
- * PROJECT: GPTM-Galaxy+ · m-pathy Archive + Verification
- * CONTEXT: ARCHIVE Overlay — CHAT → VERIFY → REPORTS Übergang
- * MODE: Research · Documentation · Planning ONLY
- * ============================================================================
- *
- * FILE PURPOSE (IST)
- * ---------------------------------------------------------------------------
- * Zentrale Event-Listener-Logik für den Verify-Flow aus dem ARCHIVE.
- *
- * Aufgaben:
- * - Reagiert auf CustomEvent 'mpathy:archive:verify'
- * - Ermittelt aktuelle Selection (SessionStorage oder Event)
- * - Baut kanonischen Text aus Chat-Pairs
- * - Sendet SEAL-Request an Triketon-API
- * - Erstellt und persistiert Verification Reports
- * - Dispatcht Folge-Events für UI (error | info | report | selection:clear)
- *
- *
- * KANONISCHER SOLLZUSTAND (REFERENZ)
- * ---------------------------------------------------------------------------
- * EBENE 0:
- *   - Nicht relevant (keine UI-Elemente)
- *
- * EBENE 1:
- *   - Umschalten zwischen CHAT und REPORTS erfolgt explizit
- *
- * EBENE 2:
- *   CHAT:
- *     - Selection von Message-Pairs
- *     - Explizite Verify-Aktion
- *
- *   REPORTS:
- *     - Reports Overview
- *     - Anzeige neu erstellter Reports
- *     - Keine CHAT-Logik aktiv
- *
- *
- * STRUKTURELL RELEVANTE BEREICHE (IST)
- * ---------------------------------------------------------------------------
- * 1. Event-System
- *    - EVENT_NAME = 'mpathy:archive:verify'
- *    - Folge-Events:
- *      • mpathy:archive:verify:error
- *      • mpathy:archive:verify:info
- *      • mpathy:archive:verify:report
- *      • mpathy:archive:selection:clear
- *
- * 2. Selection-Ermittlung
- *    - readArchiveSelection() (SessionStorage)
- *    - Fallback auf Event-Detail
- *
- * 3. Canonical Truth Text
- *    - buildCanonicalTruthText()
- *    - Sortierung nach pair_id
- *    - USER / ASSISTANT Serialisierung
- *
- * 4. Verify / Seal Request
- *    - POST /api/triketon/seal
- *    - Client-side Decoy Hashes
- *
- * 5. Report-Erstellung
- *    - Aufbau eines TVerificationReport
- *    - Persistenz in LocalStorage
- *
- *
- * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
- * ---------------------------------------------------------------------------
- * Δ1: Kopplung CHAT → REPORTS
- *     SOLL:
- *       - Klare, explizite Übergabe von CHAT zu REPORTS
- *     IST:
- *       - Übergang erfolgt implizit über Events
- *       - Kein formaler Mode-Switch, sondern Seiteneffekt
- *
- * Δ2: REPORTS-Aktivierung
- *     SOLL:
- *       - REPORTS-Mode wird explizit aktiviert
- *     IST:
- *       - UI reagiert auf 'mpathy:archive:verify:report'
- *       - Mode-Umschaltung ist verteilt (nicht zentral)
- *
- * Δ3: State-Rücksetzung
- *     SOLL:
- *       - CHAT-Selection und CHAT-State klar vom REPORTS-State getrennt
- *     IST:
- *       - Selection wird per Event global geleert
- *       - Kein expliziter Scope zwischen CHAT- und REPORTS-Zuständen
- *
- * Δ4: ARCHIVE-Neuaufbau-Schutz
- *     SOLL:
- *       - Kein Neuaufbau von ARCHIVE beim Mode-Wechsel
- *     IST:
- *       - Listener agiert global und zustandslos
- *       - Keine explizite Garantie gegen Re-Initialisierung
- *
- *
- * BEWUSST NICHT IM SCOPE
- * ---------------------------------------------------------------------------
- * - Keine Bewertung der Kryptographie
- * - Keine Sicherheitsanalyse
- * - Keine Aussage zur Decoy-Hash-Strategie
- * - Keine Patch- oder Refactor-Vorschläge
- *
- *
- * FAZIT (DESKRIPTIV)
- * ---------------------------------------------------------------------------
- * Diese Datei implementiert den vollständigen Verify-Flow vom CHAT-Selection-
- * Ereignis bis zur Erstellung eines Reports, steuert jedoch den Übergang in
- * den REPORTS-Mode ausschließlich indirekt über Events und nicht über eine
- * explizite, kanonische Mode-Logik gemäß Sollzustand.
- *
- * ============================================================================
- */
+/* ======================================================================
+   FILE INDEX — archiveVerifyListener.ts
+   ======================================================================
+
+   ROLLE DER DATEI
+   ----------------------------------------------------------------------
+   Diese Datei implementiert den clientseitigen Verify-Listener.
+   Sie ist der operative Übergabepunkt zwischen:
+   - UI-Selektion (Archive / Selection)
+   - Server-Seal (Triketon API)
+   - Persistierung von Verification Reports
+   - Event-Benachrichtigung der UI
+
+   Sie enthält:
+   - Event-Listener
+   - Netzwerk-Request
+   - Report-Erzeugung
+   - Report-Persistierung
+   - KEIN Rendering
+
+   ----------------------------------------------------------------------
+   ZENTRALE EVENTS
+   ----------------------------------------------------------------------
+   LISTENED:
+     - 'mpathy:archive:verify'
+         → Startet den gesamten Verify-Flow
+
+   DISPATCHED:
+     - 'mpathy:archive:verify:error'
+     - 'mpathy:archive:verify:info'
+     - 'mpathy:archive:verify:report'
+     - 'mpathy:archive:selection:clear'
+
+   ----------------------------------------------------------------------
+   INITIALISIERUNG
+   ----------------------------------------------------------------------
+   initArchiveVerifyListener()
+     - Guard: isInitialized
+     - Garantiert: Listener wird genau EINMAL registriert
+     - Wird typischerweise beim Mount von ArchiveOverlay initialisiert
+
+   ----------------------------------------------------------------------
+   INPUT-QUELLEN FÜR SELEKTION
+   ----------------------------------------------------------------------
+   readArchiveSelection()
+     - liest aus SessionStorage:
+         KEY: 'mpathy:archive:selection:v1'
+
+   Event-Detail (optional):
+     - custom.detail.pairs
+
+   Auswahlregel:
+     - SessionStorage gewinnt gegenüber Event-Detail
+     - Fallback: Event-Detail
+     - Abbruch bei leerer Auswahl
+
+   ----------------------------------------------------------------------
+   KANONISCHER TEXT
+   ----------------------------------------------------------------------
+   buildCanonicalTruthText(pairs)
+     - Sortiert deterministisch nach pair_id
+     - Baut Text:
+         USER:\n<content>\n\nASSISTANT:\n<content>
+     - Trimmt Ergebnis
+     - Leerer Text → Verify-Error
+
+   ----------------------------------------------------------------------
+   DEVICE-IDENTITÄT
+   ----------------------------------------------------------------------
+   Public Key:
+     - Quelle: localStorage
+     - KEY: 'mpathy:triketon:device_public_key_2048'
+     - Abbruch bei fehlendem oder ungültigem Key
+
+   ----------------------------------------------------------------------
+   SERVER-SEAL
+   ----------------------------------------------------------------------
+   Endpoint:
+     - POST /api/triketon/seal
+
+   Request Body:
+     - intent: 'seal'
+     - publicKey
+     - text (canonicalTruthText)
+     - decoy hashes (truthHash, truthHash2)
+     - protocol_version
+     - source
+
+   Server-Antwort:
+     - result === 'SEALED'   → neuer Report
+     - result === 'IGNORED'  → bereits verifiziert
+     - sonst                → Error
+
+   ----------------------------------------------------------------------
+   REPORT-ERZEUGUNG
+   ----------------------------------------------------------------------
+   TVerificationReport:
+     - protocol_version = 'v1'
+     - generated_at = now
+     - last_verified_at = now
+     - status = 'verified'
+     - source = 'archive-selection'
+     - pair_count = selection.length
+     - public_key = device key
+     - truth_hash = server result
+     - content:
+         • canonical_text
+         • pairs[] (user / assistant)
+
+   ----------------------------------------------------------------------
+   REPORT-PERSISTIERUNG
+   ----------------------------------------------------------------------
+   persistReport(report)
+     - Storage-Key:
+         'mpathy:verification:reports:v1'
+     - Zugriff:
+         readLS → Array
+         writeLS → append-only
+     - KEINE Deduplikation
+     - KEIN Limit
+     - KEINE Normalisierung
+
+   ----------------------------------------------------------------------
+   UI-BENACHRICHTIGUNG
+   ----------------------------------------------------------------------
+   Nach erfolgreicher Persistierung:
+     - dispatch 'mpathy:archive:verify:report'
+         • detail: report
+     - dispatch 'mpathy:archive:selection:clear'
+
+   ----------------------------------------------------------------------
+   RELEVANZ FÜR REPORTS-SICHTBARKEIT
+   ----------------------------------------------------------------------
+   - Diese Datei schreibt Reports in den Storage-Key
+       'mpathy:verification:reports:v1'
+   - Sie rendert nichts selbst
+   - Sichtbarkeit hängt davon ab, ob:
+       a) writeLS hier erfolgreich ist
+       b) UI loadReports() aus derselben Quelle liest
+       c) UI auf Events reagiert oder neu lädt
+
+   ----------------------------------------------------------------------
+   AUSSCHLUSS
+   ----------------------------------------------------------------------
+   ❌ Kein React
+   ❌ Kein State
+   ❌ Keine i18n
+   ❌ Keine UI-Logik
+
+   ====================================================================== */
+
 
 import { readLS, writeLS } from '@/lib/storage'
 import { readArchiveSelection } from '@/lib/storage'

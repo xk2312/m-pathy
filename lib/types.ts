@@ -1,99 +1,144 @@
-/**
- * ============================================================================
- * FILE INDEX — lib/types.ts
- * PROJECT: GPTM-Galaxy+ · m-pathy Archive + Verification
- * CONTEXT: ARCHIVE Overlay — Typen & Datenverträge
- * MODE: Research · Documentation · Planning ONLY
- * ============================================================================
- *
- * FILE PURPOSE (IST)
- * ---------------------------------------------------------------------------
- * Zentrale Typdefinitionen (Single Source of Truth) für:
- * - Chat-Nachrichten
- * - Archiv-Einträge
- * - Selections
- * - Context Uploads
- * - Verification Reports (Legacy → Canonical)
- *
- *
- * KANONISCHER SOLLZUSTAND (REFERENZ)
- * ---------------------------------------------------------------------------
- * EBENE 0 / EBENE 1:
- *   - Nicht zuständig (UI-Struktur)
- *
- * EBENE 2 (CHAT | REPORTS):
- *   - CHAT und REPORTS sind logisch getrennte Modi
- *   - REPORTS basieren ausschließlich auf Report-Daten
- *   - Keine Vermischung von CHAT- und REPORTS-Verträgen
- *
- *
- * STRUKTURELL RELEVANTE BEREICHE (IST)
- * ---------------------------------------------------------------------------
- * 1. Core-Chat-Typen
- *    - ChatMessage
- *    - ArchiveEntry
- *    - ArchiveSelection
- *    - ContextUpload
- *
- * 2. Verification-Typen
- *    - VerificationItem
- *    - VerificationReportLegacy (camelCase)
- *    - VerificationReportBase (IO / Migration)
- *    - VerificationReport (Canonical v5)
- *
- * 3. Export-Aggregation
- *    - Zentrale Typ-Re-Exports (T*)
- *
- *
- * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
- * ---------------------------------------------------------------------------
- * Δ1: Typische Trennung CHAT vs. REPORTS
- *     SOLL:
- *       - Klare, unabhängige Typverträge für CHAT und REPORTS
- *     IST:
- *       - Typen für CHAT, ARCHIVE und REPORTS sind gemeinsam
- *         in einer zentralen Datei gebündelt
- *
- * Δ2: REPORTS-Abhängigkeit von CHAT-Metadaten
- *     SOLL:
- *       - REPORTS arbeiten ausschließlich mit Report-Daten
- *     IST:
- *       - VerificationReport enthält optional chat_meta
- *         (chat_id, chat_serial, message_total)
- *
- * Δ3: Legacy-Unterstützung
- *     SOLL:
- *       - Klare, kanonische Report-Struktur
- *     IST:
- *       - Zusätzliche Legacy-Interfaces (VerificationReportLegacy)
- *         sind weiterhin Teil des öffentlichen Typraums
- *
- * Δ4: Scope-Erweiterung REPORTS
- *     SOLL:
- *       - Reports Overview als klar umrissener Datenraum
- *     IST:
- *       - Typen erlauben umfangreiche Inhalte
- *         (content, verification_chain, signatures, counts)
- *
- *
- * BEWUSST NICHT IM SCOPE
- * ---------------------------------------------------------------------------
- * - Keine Aussage zur Typ-Granularität
- * - Keine Bewertung der Legacy-Kompatibilität
- * - Keine Empfehlungen zur Aufteilung der Typen
- * - Keine Änderungen an Datenverträgen
- *
- *
- * FAZIT (DESKRIPTIV)
- * ---------------------------------------------------------------------------
- * Diese Datei definiert konsistente und umfassende Typverträge für das
- * gesamte Archive- und Verification-System, bündelt jedoch CHAT- und
- * REPORTS-relevante Typen in einem gemeinsamen Typraum und ermöglicht
- * damit semantische Überschneidungen, die vom kanonischen UI-Sollzustand
- * getrennt gedacht sind.
- *
- * ============================================================================
- */
+/* ======================================================================
+   FILE INDEX — types.ts
+   ======================================================================
+
+   ROLLE DER DATEI
+   ----------------------------------------------------------------------
+   Zentrale Typdefinitionen für:
+   - Chat
+   - Archive
+   - Verification
+   - Reports (Legacy → Canonical)
+
+   Diese Datei enthält:
+   - KEINE Logik
+   - KEINE Storage-Zugriffe
+   - KEINE Events
+   - KEIN Rendering
+
+   Sie definiert ausschließlich die Form der Daten,
+   die in anderen Schichten gelesen, geschrieben und gerendert werden.
+
+   ----------------------------------------------------------------------
+   CORE-DOMÄNE (CHAT / ARCHIVE)
+   ----------------------------------------------------------------------
+
+   Role
+     - 'user' | 'assistant' | 'system'
+
+   ChatMessage
+     - Einzelne Chat-Nachricht
+     - optionale Verifikation:
+         • truth_hash?
+         • verified?
+
+   ArchiveEntry
+     - Persistierter Archiv-Eintrag
+     - enthält:
+         • truth_hash (pflicht)
+         • public_key (pflicht)
+         • verified (boolean)
+
+   ArchiveSelection
+     - UI-Selektion (Message oder Chat)
+     - Grundlage für Verify-Flow
+
+   ContextUpload
+     - Übertragener Kontext in neuen Chat
+     - verified-Flag vorhanden
+
+   ----------------------------------------------------------------------
+   VERIFICATION-DOMÄNE (REPORTS)
+   ----------------------------------------------------------------------
+
+   VerificationItem
+     - Ein Eintrag in der verification_chain
+     - msg_number + truth_hash
+
+   ----------------------------------------------------------------------
+   LEGACY REPORT SHAPE (CAMELCASE)
+   ----------------------------------------------------------------------
+
+   VerificationReportLegacy
+     - Frühere / externe / UI-nahe Report-Form
+     - camelCase-Felder:
+         • generatedAt
+         • truthHash
+         • entriesCount
+         • lastVerifiedAt
+         • publicKey
+     - optionales content:
+         • canonical_text
+         • pairs[]
+     - verification_chain + chain_signature
+     - Offen für Fremdfelder ([key: string]: any)
+
+   ----------------------------------------------------------------------
+   BASE / IO SHAPE (ÜBERGANGSFORM)
+   ----------------------------------------------------------------------
+
+   VerificationReportBase
+     - Für LocalStorage IO & Migration
+     - snake_case, aber optional
+     - Enthält:
+         • truth_hash?
+         • public_key?
+         • generated_at?
+     - chat_meta:
+         • chat_id
+         • chat_serial
+         • message_total
+
+   ----------------------------------------------------------------------
+   KANONISCHER REPORT (NACH NORMALISIERUNG)
+   ----------------------------------------------------------------------
+
+   VerificationReport
+     - Garantierte Endform nach normalizeReport()
+     - Pflichtfelder:
+         • protocol_version = 'v1'
+         • generated_at
+         • source = 'archive-selection'
+         • pair_count
+         • status
+         • public_key
+         • truth_hash
+     - Optionale Felder:
+         • last_verified_at
+         • content
+         • chat_meta
+         • verification_chain
+         • chain_signature
+         • verified_true / verified_false
+
+   ----------------------------------------------------------------------
+   ZUSAMMENHANG ZUM REPORTS-PFAD
+   ----------------------------------------------------------------------
+
+   - verificationStorage.ts
+       • liest/schreibt Daten gemäß diesen Typen
+       • normalizeReport() konvertiert Legacy/Base → VerificationReport
+
+   - ReportList.tsx / ArchiveOverlay.tsx
+       • erwarten implizit die Canonical-Form (VerificationReport)
+
+   - Jede Abweichung in Feldnamen oder Optionalität
+     kann dazu führen, dass Reports:
+       • geladen, aber
+       • gefiltert oder
+       • nicht gerendert werden
+
+   ----------------------------------------------------------------------
+   AUSSCHLUSS
+   ----------------------------------------------------------------------
+
+   ❌ Keine Logik
+   ❌ Keine Defaults
+   ❌ Keine Guards
+   ❌ Keine Seiteneffekte
+
+   ====================================================================== */
+
 
 
 export type Role = 'user' | 'assistant' | 'system'

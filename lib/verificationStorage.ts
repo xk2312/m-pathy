@@ -1,97 +1,154 @@
-/**
- * ============================================================================
- * FILE INDEX — lib/verificationStorage.ts
- * PROJECT: GPTM-Galaxy+ · m-pathy Archive + Verification
- * CONTEXT: ARCHIVE Overlay — MODE = REPORTS (Datenhaltung)
- * MODE: Research · Documentation · Planning ONLY
- * ============================================================================
- *
- * FILE PURPOSE (IST)
- * ---------------------------------------------------------------------------
- * Persistenz- und Zugriffsschicht für Verification Reports im LocalStorage.
- *
- * Aufgaben:
- * - Laden, Normalisieren und Speichern von Verification Reports
- * - Abwärtskompatibilität zu Legacy-Report-Formaten
- * - Bereitstellung einer einheitlichen Canonical-Report-Struktur
- *
- *
- * KANONISCHER SOLLZUSTAND (REFERENZ)
- * ---------------------------------------------------------------------------
- * EBENE 0:
- *   - Nicht relevant (keine UI-Struktur)
- *
- * EBENE 1:
- *   - MODE = REPORTS ist logisch eigenständig
- *
- * EBENE 2 (REPORTS):
- *   - Reports Overview basiert ausschließlich auf Report-Daten
- *   - Keine Abhängigkeit zu CHAT-Zuständen oder CHAT-Inhalten
- *
- *
- * STRUKTURELL RELEVANTE BEREICHE (IST)
- * ---------------------------------------------------------------------------
- * 1. Storage-Key
- *    - KEY = 'mpathy:verification:v1'
- *
- * 2. Normalisierung
- *    - normalizeReport()
- *    - Unterstützt:
- *      • Canonical snake_case Reports
- *      • Legacy camelCase Reports
- *
- * 3. Öffentliche API
- *    - loadReports()
- *    - saveReport()
- *    - deleteReport()
- *    - getReport()
- *
- * 4. Datenbegrenzung
- *    - Maximal 100 Reports (slice(0, 100))
- *
- *
- * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
- * ---------------------------------------------------------------------------
- * Δ1: REPORTS-Isolation auf Storage-Ebene
- *     SOLL:
- *       - REPORTS-Daten sind klar von CHAT-Daten getrennt
- *     IST:
- *       - Trennung erfolgt implizit über Storage-Key
- *       - Keine formale Kopplung an ARCHIVE-Mode oder Overlay-Zustand
- *
- * Δ2: REPORTS-Detailtiefe
- *     SOLL:
- *       - REPORTS-Mode zeigt eine Reports Overview
- *     IST:
- *       - Storage unterstützt vollständige Report-Inhalte,
- *         inklusive Content, Verification Chain und Signaturen
- *
- * Δ3: Lebenszyklus-Kopplung
- *     SOLL:
- *       - REPORTS sind unabhängig von Chat-Navigation
- *     IST:
- *       - Reports werden dauerhaft im LocalStorage gehalten,
- *         unabhängig vom Zustand des ARCHIVE-Overlays
- *
- *
- * BEWUSST NICHT IM SCOPE
- * ---------------------------------------------------------------------------
- * - Keine UI-Logik
- * - Keine Aussage zur kryptographischen Validität
- * - Keine Bewertung der Normalisierungsstrategie
- * - Keine Empfehlungen zur Speicherstrategie
- *
- *
- * FAZIT (DESKRIPTIV)
- * ---------------------------------------------------------------------------
- * Diese Datei stellt eine saubere, eigenständige Datenbasis für REPORTS dar,
- * die logisch unabhängig vom CHAT-Overlay existiert, jedoch strukturell mehr
- * Informationen bereitstellt als im kanonischen „Reports Overview“-Begriff
- * vorgesehen.
- *
- * ============================================================================
- */
+/* ======================================================================
+   FILE INDEX — verificationStorage.ts
+   ======================================================================
 
+   Zweck der Datei
+   ----------------------------------------------------------------------
+   Diese Datei ist die Single-Source-of-Truth für Verification Reports
+   im Client (LocalStorage). Sie definiert:
+   - den Storage-Key für Reports
+   - die Normalisierung alter und neuer Report-Formate
+   - das Laden, Speichern, Löschen und Abfragen von Reports
+
+   ----------------------------------------------------------------------
+   BETEILIGTER DATENPFAD (IST)
+   ----------------------------------------------------------------------
+   LocalStorage
+     KEY: 'mpathy:verification:reports:v1'
+       ↓
+     loadReports()
+       ↓
+     normalizeReport()
+       ↓
+     UI (z. B. ReportList / ArchiveOverlay → REPORTS Mode)
+
+   ----------------------------------------------------------------------
+   ZENTRALE KONSTANTEN
+   ----------------------------------------------------------------------
+   KEY
+     - Wert: 'mpathy:verification:reports:v1'
+     - Rolle: einzig verwendeter Storage-Key für alle Reports
+     - Abhängigkeiten:
+         • readLS / writeLS
+         • direkte window.localStorage-Zugriffe in loadReports()
+
+   ----------------------------------------------------------------------
+   DATENSTRUKTUREN
+   ----------------------------------------------------------------------
+   LegacyVerificationReport
+     - camelCase-Felder (Altbestand):
+         • generatedAt
+         • truthHash
+         • publicKey
+         • entriesCount
+         • lastVerifiedAt
+         • status
+         • content
+         • verification_chain
+         • chain_signature
+
+   TVerificationReport (importiert)
+     - snake_case / kanonisch:
+         • protocol_version
+         • generated_at
+         • last_verified_at
+         • pair_count
+         • status
+         • source
+         • public_key
+         • truth_hash
+         • content
+         • verification_chain
+         • chain_signature
+         • weitere optionale Profile-Felder
+
+   ----------------------------------------------------------------------
+   NORMALISIERUNGSLOGIK
+   ----------------------------------------------------------------------
+   function normalizeReport(r)
+     - Eingang:
+         • LegacyVerificationReport
+         • Partial<TVerificationReport>
+     - Zwei Pfade:
+
+       1) Snake_case erkannt (generated_at vorhanden)
+          - truth_hash:
+              • rr.truth_hash
+              • fallback: anyR.truthHash
+          - public_key:
+              • rr.public_key
+              • fallback: anyR.publicKey
+          - erzwingt:
+              • protocol_version = 'v1'
+              • source = 'archive-selection'
+              • status default = 'unverified'
+              • pair_count default = 0
+
+       2) Legacy camelCase
+          - mapping:
+              generatedAt      → generated_at
+              lastVerifiedAt   → last_verified_at
+              entriesCount     → pair_count
+              truthHash        → truth_hash
+              publicKey        → public_key
+          - source = 'archive-selection'
+
+   ----------------------------------------------------------------------
+   LADEPFAD
+   ----------------------------------------------------------------------
+   function loadReports()
+     - Guard:
+         • if typeof window === 'undefined' → []
+     - Zugriff:
+         • window.localStorage.getItem(KEY)
+         • JSON.parse
+     - Fehlerfall:
+         • try/catch → []
+     - Verarbeitung:
+         • raw.map(normalizeReport)
+         • filter: truth_hash && public_key
+
+   ----------------------------------------------------------------------
+   SCHREIBPFAD
+   ----------------------------------------------------------------------
+   function saveReport(report)
+     - lädt bestehende Reports
+     - Duplikatprüfung:
+         • truth_hash eindeutig
+     - Verhalten:
+         • neue Reports werden vorne eingefügt (unshift)
+         • Limit: max. 100 Einträge
+     - Speicherung:
+         • writeLS(KEY, reports)
+
+   ----------------------------------------------------------------------
+   LÖSCHEN
+   ----------------------------------------------------------------------
+   function deleteReport(hash)
+     - filtert nach truth_hash
+     - überschreibt gesamten Storage-Key
+
+   ----------------------------------------------------------------------
+   ABFRAGE EINZELREPORT
+   ----------------------------------------------------------------------
+   function getReport(hash)
+     - linearer Suchlauf über loadReports()
+     - Rückgabe:
+         • TVerificationReport | null
+
+   ----------------------------------------------------------------------
+   BEOBACHTUNGEN (OHNE BEWERTUNG)
+   ----------------------------------------------------------------------
+   - Es existiert genau EIN Storage-Key für Reports.
+   - Es gibt keinen Event-Emitter in dieser Datei.
+   - Diese Datei rendert nichts selbst.
+   - Alle Reports liegen vollständig im LocalStorage.
+   - Sichtbarkeit im UI hängt ausschließlich von:
+       • korrekt gefülltem KEY
+       • erfolgreichem loadReports()
+       • korrekter Nutzung in der UI-Komponente ab.
+
+   ====================================================================== */
 
 import type { VerificationReport as TVerificationReport } from './types'
 import { readLS, writeLS } from './storage'

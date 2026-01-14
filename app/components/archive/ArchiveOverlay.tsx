@@ -1,136 +1,168 @@
-/**
- * ============================================================================
- * FILE INDEX — ArchiveOverlay.tsx
- * PROJECT: GPTM-Galaxy+ · m-pathy Archive Overlay
- * CONTEXT: Chat Archive UI — Soll/Ist-Abgleich (kanonische Struktur)
- * MODE: Research · Documentation · Planning ONLY
- * ============================================================================
- *
- * FILE PURPOSE (IST)
- * ---------------------------------------------------------------------------
- * Zentrale UI-Overlay-Komponente für das ARCHIVE.
- * Übernimmt vollständige visuelle Kontrolle über die App und rendert:
- * - Chat-Archive (Recent, Search, Detail)
- * - Reports-Übersicht
- * - Selection-Handling
- * - Verify-Event-Reaktionen
- *
- *
- * KANONISCHER SOLLZUSTAND (REFERENZ)
- * ---------------------------------------------------------------------------
- * EBENE 0 (immer sichtbar):
- *   - ARCHIVE Titel
- *   - Erklärungstext
- *   - Suchschlitz (fixe Position/Höhe/Abstände)
- *   - Close-X logisch zu ARCHIVE
- *
- * EBENE 1 (immer sichtbar):
- *   - Mode-Switch [ CHAT | REPORTS ]
- *   - Umschalten nur per Klick
- *   - Umschalten beeinflusst ausschließlich EBENE 2
- *
- * EBENE 2 (wechselnd):
- *   CHAT:
- *     - Recent Chats (Default)
- *     - Detailed Chat View
- *     - Search View (Query ≥ Schwelle)
- *   REPORTS:
- *     - Reports Overview (exklusiv)
- *
- *
- * STRUKTURELL RELEVANTE BEREICHE (IST)
- * ---------------------------------------------------------------------------
- * 1. Mode-State
- *    - type ArchiveMode = 'browse' | 'detail' | 'reports'
- *    - State: mode, openChainId, query
- *
- * 2. EBENE-0-Elemente
- *    - <h1>Archive</h1>
- *    - Erklärungstext (bedingt gerendert)
- *    - Suchfeld + Close-Button
- *
- * 3. EBENE-2-Routing (implizit)
- *    - Ableitung von Views über:
- *      • mode
- *      • query.length
- *      • openChainId
- *
- * 4. CHAT-Views
- *    - RecentChatsView
- *    - SearchResultsView
- *    - ChatDetailView
- *
- * 5. REPORTS-View
- *    - <ReportList />
- *
- *
- * IST–SOLL-DELTAS (EXPLIZIT, OHNE BEWERTUNG)
- * ---------------------------------------------------------------------------
- * Δ1: Mode-Modellierung
- *     SOLL:
- *       - EBENE 1: expliziter Mode-Switch [CHAT | REPORTS]
- *       - EBENE 2 reagiert ausschließlich auf diesen Switch
- *     IST:
- *       - Kein expliziter UI-Mode-Switch vorhanden
- *       - Mode wird implizit über State + Events gesetzt
- *       - 'browse' und 'detail' sind Mode-States, obwohl sie laut Soll
- *         Unterzustände von CHAT sind
- *
- * Δ2: CHAT-Unterzustände
- *     SOLL:
- *       - Recent / Detail / Search = Unterzustände von CHAT
- *     IST:
- *       - Unterzustände werden implizit aus query.length und openChainId
- *         abgeleitet, nicht explizit als CHAT-Substate modelliert
- *
- * Δ3: REPORTS-Isolation
- *     SOLL:
- *       - REPORTS enthält ausschließlich Reports Overview
- *       - Keine Chat-Logik aktiv
- *     IST:
- *       - REPORTS wird über mode === 'reports' gerendert
- *       - CHAT-States (query, openChainId, selection) bleiben erhalten
- *       - Kein struktureller Schnitt zwischen CHAT- und REPORTS-State
- *
- * Δ4: EBENE-0-Invarianz
- *     SOLL:
- *       - Titel, Erklärung, Suchschlitz, Close-X immer sichtbar
- *     IST:
- *       - Erklärungstext wird bei mode === 'reports' nicht gerendert
- *       - EBENE-0-Elemente reagieren auf Mode-State
- *
- * Δ5: Implizites Umschalten durch Query
- *     SOLL:
- *       - Kein impliziter Mode-Wechsel durch Query
- *     IST:
- *       - query.length steuert View-Wechsel (recent ↔ search)
- *       - Logik liegt im selben Render-Block wie Mode-Switch
- *
- * Δ6: ARCHIVE-Neuaufbau / State-Persistenz
- *     SOLL:
- *       - Kein Neuaufbau des ARCHIVE beim Mode-Wechsel
- *     IST:
- *       - Kein expliziter Schutz gegen Re-Initialisierung bei
- *         Mode-Wechsel oder Event-getriggertem setMode()
- *
- *
- * BEWUSST NICHT IM SCOPE
- * ---------------------------------------------------------------------------
- * - Keine Bewertung der Architektur
- * - Keine Lösungsvorschläge
- * - Keine Refactor-Empfehlungen
- * - Keine UI-Änderungen
- *
- *
- * FAZIT (DESKRIPTIV)
- * ---------------------------------------------------------------------------
- * Diese Datei implementiert funktional sowohl CHAT- als auch REPORTS-Inhalte,
- * bildet den kanonischen Sollzustand jedoch nur teilweise explizit ab.
- * Insbesondere EBENE-1-Mode-Switch und die strikte Trennung der
- * CHAT-Unterzustände sind derzeit implizit statt strukturell modelliert.
- *
- * ============================================================================
- */
+/* ======================================================================
+   FILE INDEX — components/archive/ArchiveOverlay.tsx
+   ======================================================================
+
+   ROLLE DER DATEI
+   ----------------------------------------------------------------------
+   Zentrales UI-Overlay für das ARCHIVE-System.
+   Diese Datei ist der visuelle und logische Einstiegspunkt für:
+   - Chat-Archiv (Recent / Search / Detail)
+   - REPORTS-Modus
+   - Verify-Flow-Trigger
+   - Modus-Umschaltung (CHAT ↔ REPORTS)
+
+   Sie ist:
+   - Root-Container (Full-Screen Overlay)
+   - Event-Listener-Hub
+   - Mode-Controller
+   - Mount-Owner aller Archive-Views
+
+   ----------------------------------------------------------------------
+   GLOBALE VERANTWORTUNG
+   ----------------------------------------------------------------------
+   - Initialisiert Verify-Listener (initArchiveVerifyListener)
+   - Versteckt Hintergrund (Prompt / Scroll / Chat)
+   - Kontrolliert Sichtbarkeit von ReportList
+   - Schreibt/liest Selection aus SessionStorage
+   - Dispatcht Verify-Events
+
+   ----------------------------------------------------------------------
+   MODI & VIEW-STATE
+   ----------------------------------------------------------------------
+   mode: 'chat' | 'reports'
+     - steuert, ob ReportList oder Chat-Views gerendert werden
+     - Umschaltung:
+         • Header Buttons (CHAT / REPORTS)
+         • Verify-Success Event
+
+   chatView: 'recent' | 'search' | 'detail'
+     - Unterzustand von CHAT
+     - beeinflusst ausschließlich Chat-Rendering
+
+   query:
+     - Suchstring
+     - beeinflusst:
+         • chatView (search/recent)
+         • Highlighting
+         • hat KEINEN Einfluss auf REPORTS
+
+   openChainId:
+     - bestimmt Detail-View eines Chats
+     - nur relevant im CHAT-Modus
+
+   ----------------------------------------------------------------------
+   SELECTION (SESSION STORAGE)
+   ----------------------------------------------------------------------
+   selectionState:
+     - Initialwert:
+         readSS('mpathy:archive:selection:v1')
+     - Struktur:
+         { pairs: ArchivePair[], updated_at }
+
+   persistSelection():
+     - schreibt Selection nach SessionStorage
+     - überschreibt immer den kompletten State
+
+   addPair / removePair / clearSelection:
+     - reine State + SessionStorage-Operationen
+     - keine Side-Effects Richtung Reports
+
+   ----------------------------------------------------------------------
+   VERIFY-EVENT-PIPELINE (LISTENER)
+   ----------------------------------------------------------------------
+   useEffect([]) — Listener-Setup
+
+   LISTENED EVENTS:
+     - 'mpathy:archive:selection:clear'
+         → clearSelection()
+
+     - 'mpathy:archive:verify:error'
+         → alert()
+
+     - 'mpathy:archive:verify:info'
+         → alert()
+
+     - 'mpathy:archive:verify:success'
+         → setMode('chat') → requestAnimationFrame → setMode('reports')
+
+   WICHTIG:
+   - ArchiveOverlay reagiert NUR auf Events
+   - Es liest oder schreibt KEINE Reports
+   - Es übergibt KEINE Daten an ReportList
+
+   ----------------------------------------------------------------------
+   BOOTSTRAP-EFFECT
+   ----------------------------------------------------------------------
+   useEffect([]) — beim Mount
+
+   - initArchiveVerifyListener()
+   - lädt letzte 13 Chats via getRecentChats()
+   - mapped Chats → local state (chats)
+   - blockiert Hintergrund:
+       • body overflow hidden
+       • prompt-root-scene display none
+   - Cleanup:
+       • restore overflow
+       • restore prompt display
+
+   ----------------------------------------------------------------------
+   REPORTS-RENDERING
+   ----------------------------------------------------------------------
+   Render-Pfad:
+     if (mode === 'reports'):
+       <ReportList key="reports" />
+
+   Eigenschaften:
+     - ReportList erhält KEINE Props
+     - Kein expliziter Daten-Refresh
+     - Kein Übergabezeitpunkt von Storage → UI
+     - ArchiveOverlay kennt Reports NICHT
+
+   ----------------------------------------------------------------------
+   CHAT-RENDERING
+   ----------------------------------------------------------------------
+   CHAT-Modus rendert abhängig von chatView:
+     - RecentChatsView
+     - SearchResultsView
+     - ChatDetailView
+
+   resolveChainIdFromChatSerial():
+     - liest Triketon-Ledger aus LocalStorage
+       KEY: 'mpathy:triketon:v1'
+     - bestimmt chain_id für Detail-View
+     - hat KEINE Verbindung zu Reports
+
+   ----------------------------------------------------------------------
+   VERIFY-TRIGGER (DISPATCH)
+   ----------------------------------------------------------------------
+   Button "Verify":
+     dispatchEvent 'mpathy:archive:verify'
+       detail:
+         { intent: 'verify', pairs: selection }
+
+   Dieser Event ist der EINZIGE Einstieg
+   in den Report-Erzeugungsprozess.
+
+   ----------------------------------------------------------------------
+   KRITISCHE BEOBACHTUNGEN (OHNE WERTUNG)
+   ----------------------------------------------------------------------
+   - ArchiveOverlay kennt KEINE Reports-Daten
+   - Es gibt KEINEN expliziten Read-Punkt für Reports
+   - ReportList wird rein über mode sichtbar
+   - Es existiert KEIN Datenvertrag zwischen:
+       ArchiveOverlay ↔ ReportList
+   - REPORTS-Modus ist rein visuell
+
+   ----------------------------------------------------------------------
+   AUSSCHLUSS
+   ----------------------------------------------------------------------
+   ❌ Kein Zugriff auf verificationStorage
+   ❌ Kein Zugriff auf loadReports()
+   ❌ Kein Report-State
+   ❌ Kein Render-Guard außer mode === 'reports'
+
+   ====================================================================== */
+
 
 'use client'
 

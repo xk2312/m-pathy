@@ -1,72 +1,99 @@
-// ============================================================================
-// 📘 INDEX — chatStorage.ts (m-pathy Archive & Ledger Layer v5)
-// ----------------------------------------------------------------------------
-// PURPOSE
-//   Zentrale, versionierte Quelle für Chat-Persistenz und Triketon-Ledger-
-//   Einträge (lokal, browserseitig, auditierbar).
-//
-// CORE STRUCTURES
-//   • ChatMessage              – einzelne Nachricht im UI / Verlauf
-//   • TriketonSeal             – kryptografischer Abdruck pro Message
-//   • TriketonArchiveEntry     – formatierter Export für Archiv / Server
-//   • TriketonLedgerEntryV1    – persistente Kette aller Nachrichten
-//
-// STORAGE KEYS
-//   CHAT_STORAGE_KEY            = "mpathy:chat:v1"
-//   TRIKETON_STORAGE_KEY        = "mpathy:triketon:v1"
-//   DEVICE_KEY / DEVICE_KEY_2048 = gerätegebundene Public Keys (persistent)
-//
-// MAIN FUNCTIONS
-//   ──────────────────────────────────────────────────────────────────────────
-//   ▪ normalizeMessage() / normalizeMessages()
-//       Validiert Struktur, erzeugt IDs und filtert ungültige Einträge.
-//   ▪ truncateChat()
-//       Begrenzt Länge des Verlaufs (default 120 Nachrichten).
-//   ▪ initChatStorage()
-//       Migriert alte LocalStorage-Schlüssel (Legacy-Support).
-//   ▪ loadChat() / saveChat()
-//       Lädt bzw. speichert Chat-Verläufe im LocalStorage.
-//       saveChat() ruft zusätzlich appendTriketonLedgerEntry()
-//       für die letzte Nachricht auf.
-//   ▪ clearChat() / hardClearChat()
-//       Entfernt Chat-Daten (weich oder vollständig).
-//   ▪ appendTriketonLedgerEntry()
-//       Fügt neue Nachricht in den permanenten Ledger ein:
-//         - lädt bestehende Kette,
-//         - prüft Duplikate (truth_hash + public_key),
-//         - generiert device-bound key (getOrCreateDevicePublicKey2048),
-//         - hängt neuen Eintrag an,
-//         - verifiziert Konsistenz via verifyLocalTriketonLedger()
-//           und verifyOrResetTriketonLedger().
-//   ▪ verifyLocalTriketonLedger()
-//       Prüft strukturelle Gültigkeit aller Einträge.
-//   ▪ ensureTriketonLedgerReady()
-//       Initialisiert oder repariert den Ledger bei App-Start.
-//   ▪ verifyOrResetTriketonLedger()
-//       Validiert Chain-Integrität (truth_hash-Sequenz).
-//   ▪ getOrCreateDevicePublicKey()
-//       Erstellt/stellt einen  UUID-basierten Geräte-Key bereit.
-//   ▪ getOrCreateDevicePublicKey2048()
-//       Generiert stabilen 2048-Bit-Key auf Basis des TruthHash (einmalig).
-//
-// BEHAVIOUR NOTES
-//   • Alle Operationen sind lokal; kein Server-Write erfolgt hier.
-//   • Der Ledger ist append-only (kein Überschreiben).
-//   • Jeder Ledger-Eintrag trägt public_key (device-bound) + truth_hash.
-//   • Drift-Detection verhindert Selbst-Append oder ungültige States.
-//
-// DEPENDENCIES
-//   import { generatePublicKey2048, computeTruthHash } from "@/lib/triketonVerify"
-//
-// VERSIONING
-//   v1 schema – “TRIKETON_HASH_V1” + “TRIKETON_KEY_V1”
-//   maintained under Council13 contract “Triketon-Archive-v2”
-//
-// AUDIT TRAIL
-//   Step L7 – Post-Write Verification + Drift Guard
-//   Step L8 – Auto-Recovery & First-Write Handshake
-//
-// ============================================================================
+/* ======================================================================
+   FILE INDEX — lib/chatStorage.ts
+   Zweck: Zentrale Quelle der Wahrheit für Chat-, Triketon- und Ledger-
+          Persistenz im LocalStorage. Ursprung fast aller Verifikations-
+          und Archiv-Datenpfade.
+
+   ----------------------------------------------------------------------
+   1) HAUPTROLLE DER DATEI
+   ----------------------------------------------------------------------
+   - Persistiert Chat-Nachrichten unter `mpathy:chat:v1`
+   - Führt das Triketon-Ledger unter `mpathy:triketon:v1`
+   - Erzeugt & verwaltet:
+     • Truth Hashes
+     • Device-bound Public Keys (normal + 2048)
+     • Chain IDs (chat-scoped)
+   - Emittiert Events für nachgelagerte Systeme (Archive / Reports)
+
+   ----------------------------------------------------------------------
+   2) ZENTRALE STORAGE-KEYS
+   ----------------------------------------------------------------------
+   - CHAT_STORAGE_KEY        = "mpathy:chat:v1"
+   - TRIKETON_STORAGE_KEY    = "mpathy:triketon:v1"
+   - DEVICE_KEY              = "mpathy:triketon:device_public_key"
+   - DEVICE_KEY_2048         = "mpathy:triketon:device_public_key_2048"
+   - CHAT_CHAIN_KEY          = "mpathy:chat:chain_id"
+   - LEGACY_KEYS             = ["mpage2_messages_v1"]
+
+   ----------------------------------------------------------------------
+   3) ZENTRALE DATENTYPEN
+   ----------------------------------------------------------------------
+   - ChatMessage
+   - TriketonSeal
+   - TriketonArchiveEntry
+   - TriketonLedgerEntryV1
+
+   ----------------------------------------------------------------------
+   4) INITIALISIERUNG / BOOTSTRAP
+   ----------------------------------------------------------------------
+   - initChatStorage()
+     • migriert Legacy-Chats
+     • initialisiert leeres Triketon-Ledger
+     • startet initArchiveVerifyListener()
+     ⚠️ Kritisch: automatischer Einstiegspunkt für Verify-Flow
+
+   ----------------------------------------------------------------------
+   5) CHAT READ / WRITE
+   ----------------------------------------------------------------------
+   - loadChat()
+     • liest & normalisiert Chat-Nachrichten
+   - saveChat()
+     • speichert Chat
+     • Ledger-Write absichtlich ausgelagert (Intent-Layer)
+   - clearChat()
+   - hardClearChat()
+
+   ----------------------------------------------------------------------
+   6) TRIKETON LEDGER (KRITISCH FÜR REPORTS)
+   ----------------------------------------------------------------------
+   - appendTriketonLedgerEntry()
+     • hängt neue Ledger-Einträge an
+     • erzeugt chain_id (chat-scoped)
+     • dispatcht Event:
+       → "mpathy:triketon:updated"
+
+   - verifyLocalTriketonLedger()
+   - ensureTriketonLedgerReady()
+   - verifyOrResetTriketonLedger()
+     ⚠️ Drift-Erkennung ohne Reset (Ledger bleibt erhalten)
+
+   ----------------------------------------------------------------------
+   7) EVENTS (AUS DIESER DATEI)
+   ----------------------------------------------------------------------
+   - window.dispatchEvent("mpathy:triketon:updated")
+     → Trigger für Archive-Projektion / Report-Erzeugung
+     → ESSENZIELLER Übergabepunkt Richtung UI
+
+   ----------------------------------------------------------------------
+   8) BEZIEHUNGEN ZU ANDEREN DATEIEN
+   ----------------------------------------------------------------------
+   - archiveVerifyListener.ts
+     • wird hier initialisiert
+   - verificationStorage.ts
+     • liest Reports, die indirekt aus diesem Ledger entstehen
+   - ArchiveOverlay.tsx
+     • reagiert auf Verify- & Triketon-Events
+
+   ----------------------------------------------------------------------
+   9) RELEVANZ FÜR AKTUELLES PROBLEM (REPORTS)
+   ----------------------------------------------------------------------
+   - Reports existieren NUR, wenn:
+     a) Ledger-Einträge korrekt geschrieben werden
+     b) "mpathy:triketon:updated" korrekt verarbeitet wird
+     c) Nachgelagerte Systeme daraus Reports persistieren
+   - Diese Datei ist der **Ursprung**, nicht der Renderer.
+
+   ====================================================================== */
 
 import { generatePublicKey2048, computeTruthHash } from "@/lib/triketonVerify";
 import { syncArchiveFromTriketon } from "@/lib/archiveProjection";
