@@ -245,12 +245,32 @@ export function loadReports(): TVerificationReport[] {
 
   let raw: Array<LegacyVerificationReport | Partial<TVerificationReport>> = []
 
-  try {
-    const stored = window.localStorage.getItem(KEY)
-    raw = stored ? JSON.parse(stored) : []
-  } catch {
+ try {
+  const stored = window.localStorage.getItem(KEY)
+  if (!stored) {
     raw = []
+  } else {
+    try {
+      raw = JSON.parse(stored)
+    } catch (innerErr) {
+      console.warn('[ArchiveVerify] ⚠️ JSON.parse failed, attempting safe fallback', innerErr)
+      const safe = stored
+        .replace(/\\n/g, ' ')
+        .replace(/\r/g, ' ')
+        .replace(/\t/g, ' ')
+      try {
+        raw = JSON.parse(safe)
+      } catch {
+        console.error('[ArchiveVerify] ❌ Fallback parse failed — clearing raw to []')
+        raw = []
+      }
+    }
   }
+} catch (outerErr) {
+  console.error('[ArchiveVerify] ❌ loadReports outer error', outerErr)
+  raw = []
+}
+
 
   return raw.map(normalizeReport).filter((r) => r.truth_hash && r.public_key)
 }
