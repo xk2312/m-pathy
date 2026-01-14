@@ -240,40 +240,49 @@ function normalizeReport(
   }
 }
 
-export function loadReports(): TVerificationReport[] {
+export function loadReports(limit: number = 3): TVerificationReport[] {
   if (typeof window === 'undefined') return []
 
-  let raw: Array<LegacyVerificationReport | Partial<TVerificationReport>> = []
+  try {
+    const stored = window.localStorage.getItem(KEY)
+    if (!stored) return []
 
- try {
-  const stored = window.localStorage.getItem(KEY)
-  if (!stored) {
-    raw = []
-  } else {
+    let parsed: any[] = []
     try {
-      raw = JSON.parse(stored)
-    } catch (innerErr) {
-      console.warn('[ArchiveVerify] ⚠️ JSON.parse failed, attempting safe fallback', innerErr)
-      const safe = stored
-        .replace(/\\n/g, ' ')
-        .replace(/\r/g, ' ')
-        .replace(/\t/g, ' ')
+      parsed = JSON.parse(stored)
+    } catch (err) {
+      console.warn('[ArchiveVerify] ⚠️ full JSON.parse failed → slice mode', err)
+      const trimmed =
+        '[' +
+        stored
+          .replace(/^\s*\[/, '')
+          .replace(/\]\s*$/, '')
+          .split('},{')
+          .slice(0, limit)
+          .join('},{') +
+        ']'
       try {
-        raw = JSON.parse(safe)
-      } catch {
-        console.error('[ArchiveVerify] ❌ Fallback parse failed — clearing raw to []')
-        raw = []
+        parsed = JSON.parse(trimmed)
+      } catch (e2) {
+        console.error('[ArchiveVerify] ❌ even slice parse failed', e2)
+        parsed = []
       }
     }
+
+    if (!Array.isArray(parsed)) return []
+    const normalized = parsed
+      .slice(0, limit)
+      .map(normalizeReport)
+      .filter((r) => r.truth_hash && r.public_key)
+
+    console.log(`[ArchiveVerify] ✅ parsed ${normalized.length}/${parsed.length} reports (limit ${limit})`)
+    return normalized
+  } catch (outer) {
+    console.error('[ArchiveVerify] ❌ loadReports outer error', outer)
+    return []
   }
-} catch (outerErr) {
-  console.error('[ArchiveVerify] ❌ loadReports outer error', outerErr)
-  raw = []
 }
 
-
-  return raw.map(normalizeReport).filter((r) => r.truth_hash && r.public_key)
-}
 
 
 export function saveReport(report: TVerificationReport): void {
