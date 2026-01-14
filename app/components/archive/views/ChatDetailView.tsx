@@ -234,17 +234,19 @@ export default function ChatDetailView({
  return (
   <section className="flex flex-col gap-6">
     <button
-      onClick={onClose}
-      className="
-        self-start
-        text-sm
-        text-text-muted
-        hover:text-text-primary
-        transition
-      "
-    >
-      ← Back
-    </button>
+  onClick={onClose}
+  className="
+    self-start
+    text-sm
+    text-text-muted
+    hover:text-text-primary
+    transition
+    cursor-pointer
+  "
+>
+  ← Back
+</button>
+
 
     <div className="space-y-6">
       {pairs.map((pair) => {

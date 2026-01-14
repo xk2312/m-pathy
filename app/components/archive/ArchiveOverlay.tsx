@@ -1,167 +1,124 @@
-/* ======================================================================
-   FILE INDEX — components/archive/ArchiveOverlay.tsx
-   ======================================================================
+/**
+ * =====================================================================
+ * FILE INDEX — ArchiveOverlay.tsx
+ * Fokus: Navigation / Pointer-Affordanz (Point Zero)
+ * =====================================================================
+ *
+ * KONTEXT
+ * -------
+ * ArchiveOverlay ist ein eigenständiger Systemraum (kein Routing),
+ * der CHAT- und REPORTS-Ansichten sowie einen expliziten Exit bereitstellt.
+ * Navigation erfolgt ausschließlich über lokalen State + Custom Events.
+ *
+ * In diesem File existieren DREI user-interaktive Navigationselemente,
+ * die visuell und semantisch als klickbar (Pointer) erkennbar sein müssen.
+ *
+ * ---------------------------------------------------------------------
+ * POINTER TARGETS (3)
+ * ---------------------------------------------------------------------
+ *
+ * [1] MODE SWITCH — "CHAT"
+ * -----------------------
+ * Stelle:
+ *   <button onClick={() => { setMode('chat'); setChatView('recent'); … }}>
+ *     CHAT
+ *   </button>
+ *
+ * Funktion:
+ * - Wechsel des Archive-Modus auf CHAT
+ * - Reset von Detail- / Search-States
+ *
+ * Architektur-Regel:
+ * - Reiner Mode-Switch
+ * - Overlay bleibt offen
+ *
+ * UX-Erwartung:
+ * - cursor: pointer
+ * - Gleichwertige Affordanz zu REPORTS (Symmetrie)
+ *
+ *
+ * [2] MODE SWITCH — "REPORTS"
+ * --------------------------
+ * Stelle:
+ *   <button onClick={() => setMode('reports')}>
+ *     REPORTS
+ *   </button>
+ *
+ * Funktion:
+ * - Wechsel des Archive-Modus auf REPORTS
+ * - Triggert via useEffect ein Reports-Refresh-Event
+ *
+ * Architektur-Regel:
+ * - Reiner Mode-Switch
+ * - Kein Overlay-Close
+ *
+ * UX-Erwartung:
+ * - cursor: pointer
+ * - Visuell als klickbarer Tab erkennbar
+ *
+ * Hinweis:
+ * - ReportList.tsx ist nur Child-View
+ * - Pointer-Logik gehört ausschließlich hierher
+ *
+ *
+ * [3] NAVIGATION — "← Back / Close Archive"
+ * ----------------------------------------
+ * Stelle:
+ *   <button
+ *     aria-label="Close Archive"
+ *     onClick={() => {
+ *       setMode('chat')
+ *       setOpenChainId(null)
+ *       window.dispatchEvent(new CustomEvent('mpathy:archive:close'))
+ *     }}
+ *   >
+ *     ✕
+ *   </button>
+ *
+ * Funktion:
+ * - Beendet den ArchiveOverlay-Systemraum vollständig
+ * - Übergibt Kontrolle zurück an den Chat
+ *
+ * Architektur-Regel:
+ * - Einziger Exit aus dem ArchiveOverlay
+ * - Kein Mode-Switch, sondern Navigation / Close
+ *
+ * UX-Erwartung:
+ * - cursor: pointer
+ * - Klarer Exit-Charakter
+ *
+ *
+ * ---------------------------------------------------------------------
+ * WICHTIGE ABGRENZUNGEN
+ * ---------------------------------------------------------------------
+ *
+ * - ReportList.tsx:
+ *   Zeigt Daten, steuert KEINE Navigation
+ *
+ * - ChatDetailView / SearchResultsView:
+ *   Interne Views, kein Overlay-Exit
+ *
+ * - Pointer dürfen NUR an expliziten
+ *   Navigationselementen gesetzt werden
+ *
+ *
+ * ---------------------------------------------------------------------
+ * POINT-ZERO-REGELN
+ * ---------------------------------------------------------------------
+ *
+ * - CHAT / REPORTS:
+ *     Mode-Wechsel → Overlay bleibt offen
+ *
+ * - Back / Close:
+ *     Navigation → Overlay wird geschlossen
+ *
+ * - Pointer = reine Affordanz
+ * - Keine Logikänderung
+ * - Keine Seiteneffekte
+ *
+ * =====================================================================
+ */
 
-   ROLLE DER DATEI
-   ----------------------------------------------------------------------
-   Zentrales UI-Overlay für das ARCHIVE-System.
-   Diese Datei ist der visuelle und logische Einstiegspunkt für:
-   - Chat-Archiv (Recent / Search / Detail)
-   - REPORTS-Modus
-   - Verify-Flow-Trigger
-   - Modus-Umschaltung (CHAT ↔ REPORTS)
-
-   Sie ist:
-   - Root-Container (Full-Screen Overlay)
-   - Event-Listener-Hub
-   - Mode-Controller
-   - Mount-Owner aller Archive-Views
-
-   ----------------------------------------------------------------------
-   GLOBALE VERANTWORTUNG
-   ----------------------------------------------------------------------
-   - Initialisiert Verify-Listener (initArchiveVerifyListener)
-   - Versteckt Hintergrund (Prompt / Scroll / Chat)
-   - Kontrolliert Sichtbarkeit von ReportList
-   - Schreibt/liest Selection aus SessionStorage
-   - Dispatcht Verify-Events
-
-   ----------------------------------------------------------------------
-   MODI & VIEW-STATE
-   ----------------------------------------------------------------------
-   mode: 'chat' | 'reports'
-     - steuert, ob ReportList oder Chat-Views gerendert werden
-     - Umschaltung:
-         • Header Buttons (CHAT / REPORTS)
-         • Verify-Success Event
-
-   chatView: 'recent' | 'search' | 'detail'
-     - Unterzustand von CHAT
-     - beeinflusst ausschließlich Chat-Rendering
-
-   query:
-     - Suchstring
-     - beeinflusst:
-         • chatView (search/recent)
-         • Highlighting
-         • hat KEINEN Einfluss auf REPORTS
-
-   openChainId:
-     - bestimmt Detail-View eines Chats
-     - nur relevant im CHAT-Modus
-
-   ----------------------------------------------------------------------
-   SELECTION (SESSION STORAGE)
-   ----------------------------------------------------------------------
-   selectionState:
-     - Initialwert:
-         readSS('mpathy:archive:selection:v1')
-     - Struktur:
-         { pairs: ArchivePair[], updated_at }
-
-   persistSelection():
-     - schreibt Selection nach SessionStorage
-     - überschreibt immer den kompletten State
-
-   addPair / removePair / clearSelection:
-     - reine State + SessionStorage-Operationen
-     - keine Side-Effects Richtung Reports
-
-   ----------------------------------------------------------------------
-   VERIFY-EVENT-PIPELINE (LISTENER)
-   ----------------------------------------------------------------------
-   useEffect([]) — Listener-Setup
-
-   LISTENED EVENTS:
-     - 'mpathy:archive:selection:clear'
-         → clearSelection()
-
-     - 'mpathy:archive:verify:error'
-         → alert()
-
-     - 'mpathy:archive:verify:info'
-         → alert()
-
-     - 'mpathy:archive:verify:success'
-         → setMode('chat') → requestAnimationFrame → setMode('reports')
-
-   WICHTIG:
-   - ArchiveOverlay reagiert NUR auf Events
-   - Es liest oder schreibt KEINE Reports
-   - Es übergibt KEINE Daten an ReportList
-
-   ----------------------------------------------------------------------
-   BOOTSTRAP-EFFECT
-   ----------------------------------------------------------------------
-   useEffect([]) — beim Mount
-
-   - initArchiveVerifyListener()
-   - lädt letzte 13 Chats via getRecentChats()
-   - mapped Chats → local state (chats)
-   - blockiert Hintergrund:
-       • body overflow hidden
-       • prompt-root-scene display none
-   - Cleanup:
-       • restore overflow
-       • restore prompt display
-
-   ----------------------------------------------------------------------
-   REPORTS-RENDERING
-   ----------------------------------------------------------------------
-   Render-Pfad:
-     if (mode === 'reports'):
-       <ReportList key="reports" />
-
-   Eigenschaften:
-     - ReportList erhält KEINE Props
-     - Kein expliziter Daten-Refresh
-     - Kein Übergabezeitpunkt von Storage → UI
-     - ArchiveOverlay kennt Reports NICHT
-
-   ----------------------------------------------------------------------
-   CHAT-RENDERING
-   ----------------------------------------------------------------------
-   CHAT-Modus rendert abhängig von chatView:
-     - RecentChatsView
-     - SearchResultsView
-     - ChatDetailView
-
-   resolveChainIdFromChatSerial():
-     - liest Triketon-Ledger aus LocalStorage
-       KEY: 'mpathy:triketon:v1'
-     - bestimmt chain_id für Detail-View
-     - hat KEINE Verbindung zu Reports
-
-   ----------------------------------------------------------------------
-   VERIFY-TRIGGER (DISPATCH)
-   ----------------------------------------------------------------------
-   Button "Verify":
-     dispatchEvent 'mpathy:archive:verify'
-       detail:
-         { intent: 'verify', pairs: selection }
-
-   Dieser Event ist der EINZIGE Einstieg
-   in den Report-Erzeugungsprozess.
-
-   ----------------------------------------------------------------------
-   KRITISCHE BEOBACHTUNGEN (OHNE WERTUNG)
-   ----------------------------------------------------------------------
-   - ArchiveOverlay kennt KEINE Reports-Daten
-   - Es gibt KEINEN expliziten Read-Punkt für Reports
-   - ReportList wird rein über mode sichtbar
-   - Es existiert KEIN Datenvertrag zwischen:
-       ArchiveOverlay ↔ ReportList
-   - REPORTS-Modus ist rein visuell
-
-   ----------------------------------------------------------------------
-   AUSSCHLUSS
-   ----------------------------------------------------------------------
-   ❌ Kein Zugriff auf verificationStorage
-   ❌ Kein Zugriff auf loadReports()
-   ❌ Kein Report-State
-   ❌ Kein Render-Guard außer mode === 'reports'
-
-   ====================================================================== */
 
 
 'use client'
@@ -505,17 +462,19 @@ useEffect(() => {
     setChatView('recent')
     setOpenChainId(null)
   }}
-  className={mode === 'chat' ? 'text-cyan-400' : 'text-text-secondary'}
+  className={`${mode === 'chat' ? 'text-cyan-400' : 'text-text-secondary'} cursor-pointer`}
 >
   CHAT
 </button>
 
+
     <button
-      onClick={() => setMode('reports')}
-      className={mode === 'reports' ? 'text-cyan-400' : 'text-text-secondary'}
-    >
-      REPORTS
-    </button>
+  onClick={() => setMode('reports')}
+  className={`${mode === 'reports' ? 'text-cyan-400' : 'text-text-secondary'} cursor-pointer`}
+>
+  REPORTS
+</button>
+
   </div>
 
   <p

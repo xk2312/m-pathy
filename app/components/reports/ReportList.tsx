@@ -1,124 +1,111 @@
-/* ======================================================================
-   FILE INDEX — components/archive/ReportList.tsx
-   ======================================================================
+/**
+ * ============================================================
+ * ARCHIVE OVERLAY — NAVIGATION & POINTER INDEX
+ * ============================================================
+ *
+ * CONTEXT
+ * -------
+ * This index documents all user-interactive navigation elements
+ * inside the ARCHIVE overlay that require explicit pointer / cursor
+ * affordance and predictable UX behavior.
+ *
+ * The ARCHIVE overlay is a MODE-BASED UI, not a route.
+ * All navigation happens via local state + events.
+ *
+ * ------------------------------------------------------------
+ * POINTER TARGETS (3)
+ * ------------------------------------------------------------
+ *
+ * [A] MODE SWITCH: "CHAT"
+ * ---------------------
+ * Purpose:
+ * - Switch Archive view to CHAT mode
+ *
+ * Expected UX:
+ * - cursor: pointer
+ * - immediate visual affordance
+ *
+ * Implementation pattern:
+ * - onClick → setArchiveMode("chat")
+ * - MUST NOT trigger overlay close
+ *
+ * Typical location:
+ * - Archive header / mode switch section
+ *
+ *
+ * [B] MODE SWITCH: "REPORTS"
+ * -------------------------
+ * Purpose:
+ * - Switch Archive view to REPORTS mode
+ *
+ * Expected UX:
+ * - cursor: pointer
+ * - same affordance as CHAT (symmetry)
+ *
+ * Implementation pattern:
+ * - onClick → setArchiveMode("reports")
+ * - MUST NOT close Archive overlay
+ * - Report data rendered by <ReportList />
+ *
+ * Related file:
+ * - ReportList.tsx
+ *
+ * NOTE:
+ * - Pointer is required even though content rendering
+ *   happens in a different component.
+ *
+ *
+ * [C] NAVIGATION: "← Back"
+ * -----------------------
+ * Purpose:
+ * - Exit ARCHIVE overlay and return to Chat
+ *
+ * Expected UX:
+ * - cursor: pointer
+ * - clear affordance of navigation / exit
+ *
+ * Implementation pattern:
+ * - onClick → dispatch close action
+ *   e.g. window.dispatchEvent("mpathy:archive:close")
+ *   OR local overlay close handler
+ *
+ * IMPORTANT:
+ * - This is the ONLY element that closes the Archive overlay
+ * - Must not interfere with CHAT / REPORTS switches
+ *
+ *
+ * ------------------------------------------------------------
+ * RELATION TO ReportList.tsx
+ * ------------------------------------------------------------
+ *
+ * - ReportList.tsx is a CHILD view rendered ONLY when:
+ *     archiveMode === "reports"
+ *
+ * - ReportList does NOT control navigation.
+ * - Pointer logic for CHAT / REPORTS lives in Archive overlay,
+ *   NOT inside ReportList.
+ *
+ * - Any missing pointer on REPORTS is a UI affordance issue,
+ *   not a data or state issue.
+ *
+ *
+ * ------------------------------------------------------------
+ * DESIGN RULES (Point Zero)
+ * ------------------------------------------------------------
+ *
+ * - CHAT / REPORTS:
+ *     mode switch → pointer required → overlay stays open
+ *
+ * - ← Back:
+ *     navigation action → pointer required → overlay closes
+ *
+ * - No routing assumptions
+ * - No implicit navigation
+ * - Overlay reacts ONLY to explicit user actions
+ *
+ * ============================================================
+ */
 
-   ROLLE DER DATEI
-   ----------------------------------------------------------------------
-   Diese Datei rendert die LISTE der Verification Reports im REPORTS-Modus.
-   Sie ist der letzte Schritt im Pfad:
-     LocalStorage → loadReports() → React State → UI
-
-   Sie entscheidet:
-   - ob Reports angezeigt werden
-   - ob "No reports" angezeigt wird
-   - welcher Report ausgewählt ist
-   - welche Aktionen (View / Delete / Download) möglich sind
-
-   ----------------------------------------------------------------------
-   IMPORTS / ABHÄNGIGKEITEN
-   ----------------------------------------------------------------------
-   - loadReports(), deleteReport(), getReport()
-       aus lib/verificationStorage
-   - VerificationReport / VerificationReportLegacy
-       aus lib/types
-   - downloadVerificationReport()
-       aus lib/verificationReport
-   - useLanguage() / i18nArchive
-       für UI-Texte
-   - ReportStatus
-       für Einzel-Verify-Anzeige
-
-   ----------------------------------------------------------------------
-   STATE
-   ----------------------------------------------------------------------
-   reports: VerificationReport[]
-     - initial: []
-     - Quelle: loadReports()
-
-   selected: string | null
-     - truth_hash des ausgewählten Reports
-     - steuert Detail-Overlay
-
-   ----------------------------------------------------------------------
-   LADELOGIK (REPORT READ)
-   ----------------------------------------------------------------------
-   useEffect([]):
-     - wird EINMAL beim Mount ausgeführt
-     - ruft readReports() auf
-       → setReports(loadReports())
-
-     - registriert Event-Listener:
-         'mpathy:archive:verify:success'
-       → readReports()
-
-     - deregistriert Listener beim Unmount
-
-   Es gibt:
-     - KEIN Reload bei Mode-Wechsel
-     - KEIN Reload bei Sichtbarkeits-Toggle
-     - KEIN Reload bei Storage-Änderung ohne Event
-
-   ----------------------------------------------------------------------
-   DELETE-PFAD
-   ----------------------------------------------------------------------
-   handleDelete(hash):
-     - deleteReport(hash)
-     - setReports(loadReports())
-     - setSelected(null)
-
-   ----------------------------------------------------------------------
-   DOWNLOAD-PFAD
-   ----------------------------------------------------------------------
-   handleDownload(hash):
-     - getReport(hash)
-     - adaptiert VerificationReport → Legacy-Shape
-     - ruft downloadVerificationReport()
-
-   ----------------------------------------------------------------------
-   RENDER-LOGIK
-   ----------------------------------------------------------------------
-   Header:
-     - Titel aus i18nArchive.report.title
-
-   Leerzustand:
-     - Wenn reports.length === 0
-       → Anzeige von t.noReports
-       → KEINE weitere Bedingung
-
-   Listenansicht:
-     - reports wird:
-         • kopiert
-         • nach last_verified_at / generated_at sortiert
-     - jedes Element:
-         • Card mit truth_hash als key
-         • Klick setzt selected = truth_hash
-
-   Detail-Overlay:
-     - erscheint, wenn selectedReport !== null
-     - zeigt:
-         • JSON-Dump des Reports
-         • <ReportStatus report={selectedReport}>
-         • Aktionen: View / Invalid / Close
-
-   ----------------------------------------------------------------------
-   KRITISCHE BEOBACHTUNGEN (OHNE WERTUNG)
-   ----------------------------------------------------------------------
-   - "No reports" erscheint ausschließlich,
-     wenn reports.length === 0 ist.
-   - Es existiert KEIN Hardcode, der Reports unterdrückt.
-   - Sichtbarkeit hängt ausschließlich davon ab,
-     ob loadReports() ein nicht-leeres Array liefert.
-   - Die Datei kennt KEINEN Archive-Mode (chat / reports).
-
-   ----------------------------------------------------------------------
-   AUSSCHLUSS
-   ----------------------------------------------------------------------
-   ❌ Kein Schreiben neuer Reports
-   ❌ Kein Verify-Flow
-   ❌ Kein Mode-Switch
-   ❌ Kein eigener Storage-Zugriff
-
-   ====================================================================== */
 
 'use client'
 
