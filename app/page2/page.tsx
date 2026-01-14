@@ -763,23 +763,26 @@ function Bubble({
   }
 }
 
-const ledgerEntry = getTriketonLedgerEntryByMessageId(
-  (msg as any)?.id ?? ""
-);
+const devicePublicKey =
+  localStorage.getItem("mpathy:triketon:device_public_key_2048");
 
 const payload = {
   id: (msg as any)?.id ?? "",
   role: (msg as any)?.role ?? "assistant",
   meta: (msg as any)?.meta ?? null,
-  triketon: ledgerEntry
-    ? {
-        public_key: ledgerEntry.public_key ?? "",
-        truth_hash: ledgerEntry.truth_hash ?? "",
-        timestamp: ledgerEntry.timestamp ?? "",
-        version: ledgerEntry.version ?? "v1",
-      }
-    : null,
+  triketon: {
+    public_key: devicePublicKey ?? "",
+    truth_hash:
+      (msg as any)?.truth_hash ??
+      (msg as any)?.meta?.truth_hash ??
+      "",
+    timestamp:
+      (msg as any)?.timestamp ??
+      new Date().toISOString(),
+    version: "v1",
+  },
 };
+
 
 onOpenTriketon?.(payload);
 
