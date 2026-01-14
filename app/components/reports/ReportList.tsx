@@ -143,7 +143,7 @@ export default function ReportList() {
   React.useEffect(() => {
     const readReports = (source?: string) => {
       try {
-        const data = loadReports().slice(0, 3)
+        const data = loadReports()
         console.log('[ReportList] 🔍 readReports triggered from →', source ?? 'mount')
         console.log('[ReportList] 📦 loadReports() returned', Array.isArray(data) ? data.length : 'non-array', 'items')
         setReports(data)
@@ -153,11 +153,14 @@ export default function ReportList() {
       }
     }
 
+    // Initial read on mount
     readReports('mount')
 
+    // Re-read after successful verify
     const onVerify = () => readReports('verify:success')
     window.addEventListener('mpathy:archive:verify:success', onVerify)
 
+    // Re-read when ArchiveOverlay dispatches refresh event
     const onRefresh = () => readReports('reports:refresh')
     window.addEventListener('mpathy:archive:reports:refresh', onRefresh)
 
@@ -175,6 +178,28 @@ export default function ReportList() {
     setSelected(null)
   }
 
+  const handleDownload = (hash: string) => {
+    const r = getReport(hash)
+    if (!r) return
+
+    // Adapter: keep downloadVerificationReport() backwards compatible
+    const legacy: VerificationReportLegacy = {
+      version: r.protocol_version,
+      generatedAt: r.generated_at,
+      truthHash: r.truth_hash,
+      entriesCount: r.pair_count,
+      lastVerifiedAt: r.last_verified_at,
+      publicKey: r.public_key,
+      status: r.status,
+      source: r.source,
+      content: r.content,
+      verification_chain: r.verification_chain,
+      chain_signature: r.chain_signature,
+    }
+
+    downloadVerificationReport(legacy as any)
+  }
+
   const selectedReport: VerificationReport | null =
     selected !== null ? getReport(selected) : null
 
@@ -186,7 +211,7 @@ export default function ReportList() {
         <div className="text-sm text-muted">{t.noReports}</div>
       )}
 
-      <div className="flex flex-col gap-4 overflow-y-auto">
+      <div className="flex flex-col gap-3 overflow-y-auto">
         {[...reports]
           .sort((a, b) => {
             const ta = Date.parse(a.last_verified_at ?? a.generated_at)
@@ -196,19 +221,16 @@ export default function ReportList() {
           .map((r, i) => {
             if (!r) return null
 
-            const key = r.public_key || `report-${i}`
-            const isOpen = selected === key
-
             return (
               <Card
-                key={key}
-                className="bg-surface1 cursor-pointer hover:ring-1 hover:ring-cyan-500/40 transition-all rounded-xl"
+                key={r.public_key || `report-${i}`}
+                className="bg-surface1 cursor-pointer hover:ring-1 hover:ring-cyan-500/40 transition-all rounded-xl p-3"
               >
                 <CardContent className="p-3 flex flex-col gap-2 rounded-xl bg-surface1">
                   <div
-                    className="flex justify-between items-center cursor-pointer px-[10px] py-[6px]"
+                    className="flex justify-between items-center cursor-pointer"
                     onClick={() =>
-                      setSelected(isOpen ? null : key)
+                      setSelected(selected === (r.public_key || `report-${i}`) ? null : r.public_key || `report-${i}`)
                     }
                   >
                     <div>
@@ -221,12 +243,12 @@ export default function ReportList() {
                       </div>
                     </div>
                     <span className="text-cyan-400 text-sm">
-                      {isOpen ? '▲' : '▼'}
+                      {selected === (r.public_key || `report-${i}`) ? '▲' : '▼'}
                     </span>
                   </div>
 
-                  {isOpen && (
-                    <div className="mt-2 bg-surface2 rounded-md p-[10px] border border-border-soft">
+                  {selected === (r.public_key || `report-${i}`) && (
+                    <div className="mt-3 bg-surface2 rounded-md p-3 border border-border-soft">
                       <pre className="text-xs max-h-48 overflow-y-auto whitespace-pre-wrap">
                         {JSON.stringify(r, null, 2)}
                       </pre>
@@ -241,10 +263,7 @@ export default function ReportList() {
                           onClick={() =>
                             window.dispatchEvent(
                               new CustomEvent('mpathy:archive:verify', {
-                                detail: {
-                                  intent: 'reverify',
-                                  payload: { public_key: r.public_key, content: r.content },
-                                },
+                                detail: { intent: 'reverify', payload: { public_key: r.public_key, content: r.content } },
                               })
                             )
                           }
@@ -252,17 +271,11 @@ export default function ReportList() {
                           Re-Verify
                         </Button>
 
-                        <Button
-                          variant="solid"
-                          onClick={() => handleDelete(r.public_key || '')}
-                        >
-                          Invalid
+                        <Button onClick={() => handleDownload(r.public_key || '')}>
+                          View JSON
                         </Button>
 
-                        <Button
-                          variant="ghost"
-                          onClick={() => setSelected(null)}
-                        >
+                        <Button variant="solid" onClick={() => setSelected(null)}>
                           Close
                         </Button>
                       </div>
@@ -286,6 +299,10 @@ export default function ReportList() {
             <ReportStatus report={selectedReport} />
 
             <div className="flex justify-end gap-3 mt-4">
+              <Button onClick={() => handleDownload(selectedReport.truth_hash)}>
+                {t.view}
+              </Button>
+
               <Button
                 variant="solid"
                 onClick={() => handleDelete(selectedReport.truth_hash)}
