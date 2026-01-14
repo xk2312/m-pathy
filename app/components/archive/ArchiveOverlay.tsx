@@ -719,7 +719,7 @@ className="
   absolute
   -top-[20px]
   left-full
-  -translate-x-[40px]
+  -translate-x-[20px]
   z-50
   cursor-pointer
   pointer-events-auto
