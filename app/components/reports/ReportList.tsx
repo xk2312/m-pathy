@@ -222,86 +222,69 @@ export default function ReportList() {
             if (!r) return null
 
             return (
-             <div
+              <Card
   key={r.public_key || `report-${i}`}
-  className="
-    bg-surface1
-    rounded-xl
-    cursor-pointer
-    p-[10px]
-    mb-[20px]
-    transition-all
-    hover:ring-1
-    hover:ring-cyan-500/40
-  "
+  className="bg-surface1 cursor-pointer border-0 ring-0 hover:ring-1 hover:ring-cyan-500/40 transition-all rounded-xl p-[10px] mb-[20px]"
 >
-  <div
-    className="flex justify-between items-center"
-    onClick={() =>
-      setSelected(
-        selected === (r.public_key || `report-${i}`)
-          ? null
-          : r.public_key || `report-${i}`
-      )
-    }
-  >
-    <div>
-      <div className="text-sm text-text-primary">
-        Verified · [Last verified:{' '}
-        {new Date(r.last_verified_at ?? r.generated_at).toLocaleString()}]
-      </div>
-      <div className="text-xs text-text-secondary">
-        {r.pair_count} message pairs · Source: Archive Selection
-      </div>
-    </div>
 
-    <span className="text-cyan-400 text-sm">
-      {selected === (r.public_key || `report-${i}`) ? '▲' : '▼'}
-    </span>
-  </div>
 
-  {selected === (r.public_key || `report-${i}`) && (
-    <div className="mt-3 bg-surface2 rounded-md p-3 border border-border-soft">
-      <pre className="text-xs max-h-48 overflow-y-auto whitespace-pre-wrap">
-        {JSON.stringify(r, null, 2)}
-      </pre>
+<CardContent className="p-[10px] flex flex-col gap-2 rounded-xl bg-surface1">
+                  <div
+                    className="flex justify-between items-center cursor-pointer"
+                    onClick={() =>
+                      setSelected(selected === (r.public_key || `report-${i}`) ? null : r.public_key || `report-${i}`)
+                    }
+                  >
+                    <div>
+                      <div className="text-sm text-text-primary">
+                        Verified · [Last verified:{' '}
+                        {new Date(r.last_verified_at ?? r.generated_at).toLocaleString()}]
+                      </div>
+                      <div className="text-xs text-text-secondary">
+                        {r.pair_count} message pairs · Source: Archive Selection
+                      </div>
+                    </div>
+                    <span className="text-cyan-400 text-sm">
+                      {selected === (r.public_key || `report-${i}`) ? '▲' : '▼'}
+                    </span>
+                  </div>
 
-      <div className="mt-2">
-        <ReportStatus report={r} />
-      </div>
+                  {selected === (r.public_key || `report-${i}`) && (
+                    <div className="mt-3 bg-surface2 rounded-md p-3 border border-border-soft">
+                      <pre className="text-xs max-h-48 overflow-y-auto whitespace-pre-wrap">
+                        {JSON.stringify(r, null, 2)}
+                      </pre>
 
-      <div className="flex justify-end gap-3 mt-3">
-        <Button
-          variant="ghost"
-          onClick={() =>
-            window.dispatchEvent(
-              new CustomEvent('mpathy:archive:verify', {
-                detail: {
-                  intent: 'reverify',
-                  payload: {
-                    public_key: r.public_key,
-                    content: r.content,
-                  },
-                },
-              })
-            )
-          }
-        >
-          Re-Verify
-        </Button>
+                      <div className="mt-2">
+                        <ReportStatus report={r} />
+                      </div>
 
-        <Button onClick={() => handleDownload(r.public_key || '')}>
-          View JSON
-        </Button>
+                      <div className="flex justify-end gap-3 mt-3">
+                        <Button
+                          variant="ghost"
+                          onClick={() =>
+                            window.dispatchEvent(
+                              new CustomEvent('mpathy:archive:verify', {
+                                detail: { intent: 'reverify', payload: { public_key: r.public_key, content: r.content } },
+                              })
+                            )
+                          }
+                        >
+                          Re-Verify
+                        </Button>
 
-        <Button variant="solid" onClick={() => setSelected(null)}>
-          Close
-        </Button>
-      </div>
-    </div>
-  )}
-</div>
+                        <Button onClick={() => handleDownload(r.public_key || '')}>
+                          View JSON
+                        </Button>
 
+                        <Button variant="solid" onClick={() => setSelected(null)}>
+                          Close
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             )
           })}
       </div>
