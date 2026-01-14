@@ -249,40 +249,46 @@ export default function ReportList() {
                     </span>
                   </div>
 
-                  {selected === (r.public_key || `report-${i}`) && (
-                    <div className="mt-3 bg-surface2 rounded-md p-3 border border-border-soft">
-                      <pre className="text-xs max-h-48 overflow-y-auto whitespace-pre-wrap">
-                        {JSON.stringify(r, null, 2)}
-                      </pre>
+                {selected === (r.public_key || `report-${i}`) && (
+  <div className="mt-3 pt-3 border-t border-border-soft">
+    <div className="bg-surface2 rounded-md p-3">
+      <pre className="text-xs max-h-48 overflow-y-auto whitespace-pre-wrap">
+        {JSON.stringify(r, null, 2)}
+      </pre>
 
-                      <div className="mt-2">
-                        <ReportStatus report={r} />
-                      </div>
+      <div className="mt-2">
+        <ReportStatus report={r} />
+      </div>
 
-                      <div className="flex justify-end gap-3 mt-3">
-                        <Button
-                          variant="ghost"
-                          onClick={() =>
-                            window.dispatchEvent(
-                              new CustomEvent('mpathy:archive:verify', {
-                                detail: { intent: 'reverify', payload: { public_key: r.public_key, content: r.content } },
-                              })
-                            )
-                          }
-                        >
-                          Re-Verify
-                        </Button>
+      <div className="flex justify-end gap-3 mt-3">
+        <Button
+          variant="ghost"
+          onClick={() =>
+            window.dispatchEvent(
+              new CustomEvent('mpathy:archive:verify', {
+                detail: {
+                  intent: 'reverify',
+                  payload: { public_key: r.public_key, content: r.content },
+                },
+              })
+            )
+          }
+        >
+          Re-Verify
+        </Button>
 
-                        <Button onClick={() => handleDownload(r.public_key || '')}>
-                          View JSON
-                        </Button>
+        <Button onClick={() => handleDownload(r.public_key || '')}>
+          View JSON
+        </Button>
 
-                        <Button variant="solid" onClick={() => setSelected(null)}>
-                          Close
-                        </Button>
-                      </div>
-                    </div>
-                  )}
+        <Button variant="solid" onClick={() => setSelected(null)}>
+          Close
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
+
                 </CardContent>
               </Card>
             )
