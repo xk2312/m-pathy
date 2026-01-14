@@ -278,30 +278,27 @@ selected === reportId
       </div>
 
       <div className="flex justify-end gap-3 mt-4">
-        <Button
-          variant="ghost"
-          onClick={() =>
-            window.dispatchEvent(
-              new CustomEvent('mpathy:archive:verify', {
-                detail: {
-                  intent: 'reverify',
-                  payload: { public_key: r.public_key, content: r.content },
-                },
-              })
-            )
-          }
-        >
-          Re-Verify
-        </Button>
+  <Button
+    variant="ghost"
+    onClick={() =>
+      window.dispatchEvent(
+        new CustomEvent('mpathy:archive:verify', {
+          detail: {
+            intent: 'reverify',
+            payload: { public_key: r.public_key, content: r.content },
+          },
+        })
+      )
+    }
+  >
+    Re-Verify
+  </Button>
 
-        <Button onClick={() => handleDownload(r.public_key || '')}>
-          View JSON
-        </Button>
+  <Button variant="solid" onClick={() => setSelected(null)}>
+    Close
+  </Button>
+</div>
 
-        <Button variant="solid" onClick={() => setSelected(null)}>
-          Close
-        </Button>
-      </div>
     </div>
   )}
 </div>
