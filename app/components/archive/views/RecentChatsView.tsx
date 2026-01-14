@@ -21,12 +21,18 @@ export default function RecentChatsView({ onOpenChat }: Props) {
   useEffect(() => {
     const base = getRecentChats(13)
 
-    const mapped = base.map((chat) => ({
-      chat_serial: chat.chat_serial,
-      keywords: chat.keywords ?? [],
-      messageCount: chat.messages?.length ?? 0,
-      lastTimestamp: chat.last_timestamp,
-    }))
+    const mapped = base.map((chat) => {
+  const totalMessages = chat.messages?.length ?? 0
+  const pairCount = Math.floor(totalMessages / 2)
+
+  return {
+    chat_serial: chat.chat_serial,
+    keywords: chat.keywords ?? [],
+    messageCount: pairCount,
+    lastTimestamp: chat.last_timestamp,
+  }
+})
+
 
     setChats(mapped)
   }, [])
