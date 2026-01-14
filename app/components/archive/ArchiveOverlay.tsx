@@ -717,9 +717,9 @@ useEffect(() => {
   }}
 className="
   absolute
-  -top-[20px]
+  -top-[60px]
   left-full
-  -translate-x-[20px]
+  -translate-x-[13px]
   z-50
   cursor-pointer
   pointer-events-auto
