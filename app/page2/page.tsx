@@ -766,16 +766,25 @@ function Bubble({
 const devicePublicKey =
   localStorage.getItem("mpathy:triketon:device_public_key_2048");
 
+let ledgerTruthHash = "";
+try {
+  const raw = localStorage.getItem("mpathy:triketon:v1");
+  if (raw) {
+    const entries = JSON.parse(raw);
+    const match = Array.isArray(entries)
+      ? entries.find(e => e?.id === (msg as any)?.id)
+      : null;
+    ledgerTruthHash = match?.truth_hash ?? "";
+  }
+} catch {}
+
 const payload = {
   id: (msg as any)?.id ?? "",
   role: (msg as any)?.role ?? "assistant",
   meta: (msg as any)?.meta ?? null,
   triketon: {
     public_key: devicePublicKey ?? "",
-    truth_hash:
-      (msg as any)?.truth_hash ??
-      (msg as any)?.meta?.truth_hash ??
-      "",
+    truth_hash: ledgerTruthHash,
     timestamp:
       (msg as any)?.timestamp ??
       new Date().toISOString(),
@@ -783,8 +792,8 @@ const payload = {
   },
 };
 
-
 onOpenTriketon?.(payload);
+
 
 
           // 🔍 TRIKETON OVERLAY DEBUG — BEGIN
