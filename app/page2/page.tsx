@@ -749,7 +749,7 @@ function Bubble({
               <button
                 type="button"
                 onClick={() => {
-                  const payload = {
+                const payload = {
   id: (msg as any)?.id ?? "",
   role: (msg as any)?.role ?? "assistant",
   meta: (msg as any)?.meta ?? null,
@@ -764,7 +764,22 @@ function Bubble({
         }
       : null),
 };
-onOpenTriketon?.(payload);
+
+          // 🔍 TRIKETON OVERLAY DEBUG — BEGIN
+          console.group("[TriketonOverlay] open");
+          console.log("raw msg:", msg);
+          console.log("msg.triketon:", (msg as any)?.triketon);
+          console.log("msg.truth_hash:", (msg as any)?.truth_hash);
+          console.log("msg.public_key:", (msg as any)?.public_key);
+          console.log("msg.timestamp:", (msg as any)?.timestamp);
+          console.log("final payload:", payload);
+          console.log("payload.triketon:", payload.triketon);
+          console.groupEnd();
+          // 🔍 TRIKETON OVERLAY DEBUG — END
+
+          onOpenTriketon?.(payload);
+
+          onOpenTriketon?.(payload);
 
                 }}
                 onMouseEnter={() => setTriketonHover(true)}
