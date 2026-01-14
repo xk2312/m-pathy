@@ -278,43 +278,45 @@ selected === reportId
       </div>
 
       <div className="flex justify-end gap-3 mt-4">
-  <Button
-    onClick={() =>
-      window.dispatchEvent(
-        new CustomEvent('mpathy:archive:verify', {
-          detail: {
-            intent: 'reverify',
-            payload: { public_key: r.public_key, content: r.content },
-          },
-        })
-      )
-    }
-    className="
-      bg-cyan-500
-      text-black
-      px-[5px]
-      py-[7px]
-      rounded-md
-      hover:bg-cyan-400
-      transition-colors
-    "
-  >
-    Re-Verify
-  </Button>
+<Button
+  onClick={() =>
+    window.dispatchEvent(
+      new CustomEvent('mpathy:archive:verify', {
+        detail: {
+          intent: 'reverify',
+          payload: { public_key: r.public_key, content: r.content },
+        },
+      })
+    )
+  }
+  className="
+    !bg-cyan-500
+    !text-black
+    !px-[5px]
+    !py-[7px]
+    rounded-md
+    hover:!bg-cyan-400
+    transition-colors
+  "
+>
+  Re-Verify
+</Button>
 
-  <Button
-    onClick={() => setSelected(null)}
-    className="
-      bg-transparent
-      text-white
-      px-[5px]
-      py-[7px]
-      hover:text-gray-300
-      transition-colors
-    "
-  >
-    Close
-  </Button>
+<Button
+  onClick={() => setSelected(null)}
+  className="
+    !bg-transparent
+    hover:!bg-transparent
+    !text-white
+    hover:!text-gray-300
+    !px-[5px]
+    !py-[7px]
+    transition-colors
+  "
+>
+  Close
+</Button>
+
 </div>
 
 
