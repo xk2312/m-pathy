@@ -222,45 +222,57 @@ export default function ReportList() {
             if (!r) return null
 
             return (
-              <Card
+             <div
   key={r.public_key || `report-${i}`}
-  className="bg-surface1 cursor-pointer border-0 ring-0 hover:ring-1 hover:ring-cyan-500/40 transition-all rounded-xl p-[10px] mb-[20px]"
+  className="
+    bg-surface1
+    rounded-xl
+    p-[16px]
+    mb-[20px]
+    cursor-pointer
+    transition-all
+    hover:ring-1
+    hover:ring-cyan-500/40
+  "
 >
+  {/* HEADER */}
+  <div
+    className="flex justify-between items-center"
+    onClick={() =>
+      setSelected(
+        selected === (r.public_key || `report-${i}`)
+          ? null
+          : r.public_key || `report-${i}`
+      )
+    }
+  >
+    <div className="flex flex-col gap-1">
+      <div className="text-sm text-text-primary">
+        Verified · [Last verified:{' '}
+        {new Date(r.last_verified_at ?? r.generated_at).toLocaleString()}]
+      </div>
+      <div className="text-xs text-text-secondary">
+        {r.pair_count} message pairs · Source: Archive Selection
+      </div>
+    </div>
 
+    <span className="text-cyan-400 text-sm">
+      {selected === (r.public_key || `report-${i}`) ? '▲' : '▼'}
+    </span>
+  </div>
 
-<CardContent className="p-[10px] flex flex-col gap-2 rounded-xl bg-surface1">
-                  <div
-                    className="flex justify-between items-center cursor-pointer"
-                    onClick={() =>
-                      setSelected(selected === (r.public_key || `report-${i}`) ? null : r.public_key || `report-${i}`)
-                    }
-                  >
-                    <div>
-                      <div className="text-sm text-text-primary">
-                        Verified · [Last verified:{' '}
-                        {new Date(r.last_verified_at ?? r.generated_at).toLocaleString()}]
-                      </div>
-                      <div className="text-xs text-text-secondary">
-                        {r.pair_count} message pairs · Source: Archive Selection
-                      </div>
-                    </div>
-                    <span className="text-cyan-400 text-sm">
-                      {selected === (r.public_key || `report-${i}`) ? '▲' : '▼'}
-                    </span>
-                  </div>
-
-                {selected === (r.public_key || `report-${i}`) && (
-  <div className="mt-3 pt-3 border-t border-border-soft">
-    <div className="bg-surface2 rounded-md p-3">
+  {/* BODY */}
+  {selected === (r.public_key || `report-${i}`) && (
+    <div className="mt-4 bg-surface2 rounded-md p-4">
       <pre className="text-xs max-h-48 overflow-y-auto whitespace-pre-wrap">
         {JSON.stringify(r, null, 2)}
       </pre>
 
-      <div className="mt-2">
+      <div className="mt-3">
         <ReportStatus report={r} />
       </div>
 
-      <div className="flex justify-end gap-3 mt-3">
+      <div className="flex justify-end gap-3 mt-4">
         <Button
           variant="ghost"
           onClick={() =>
@@ -286,11 +298,9 @@ export default function ReportList() {
         </Button>
       </div>
     </div>
-  </div>
-)}
+  )}
+</div>
 
-                </CardContent>
-              </Card>
             )
           })}
       </div>
