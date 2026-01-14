@@ -749,21 +749,40 @@ function Bubble({
               <button
                 type="button"
                 onClick={() => {
-                const payload = {
+                function getTriketonLedgerEntryByMessageId(messageId: string) {
+  try {
+    const raw = localStorage.getItem("mpathy:triketon:v1");
+    if (!raw) return null;
+
+    const entries = JSON.parse(raw);
+    if (!Array.isArray(entries)) return null;
+
+    return entries.find((e) => e?.id === messageId) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+const ledgerEntry = getTriketonLedgerEntryByMessageId(
+  (msg as any)?.id ?? ""
+);
+
+const payload = {
   id: (msg as any)?.id ?? "",
   role: (msg as any)?.role ?? "assistant",
   meta: (msg as any)?.meta ?? null,
-  triketon:
-    (msg as any)?.triketon ??
-    ((msg as any)?.truth_hash
-      ? {
-          public_key: (msg as any)?.public_key ?? "",
-          truth_hash: (msg as any)?.truth_hash ?? "",
-          timestamp: (msg as any)?.timestamp ?? "",
-          version: (msg as any)?.version ?? "v1",
-        }
-      : null),
+  triketon: ledgerEntry
+    ? {
+        public_key: ledgerEntry.public_key ?? "",
+        truth_hash: ledgerEntry.truth_hash ?? "",
+        timestamp: ledgerEntry.timestamp ?? "",
+        version: ledgerEntry.version ?? "v1",
+      }
+    : null,
 };
+
+onOpenTriketon?.(payload);
+
 
           // 🔍 TRIKETON OVERLAY DEBUG — BEGIN
           console.group("[TriketonOverlay] open");
