@@ -228,7 +228,7 @@ export default function ReportList() {
 >
 
 
-                <CardContent className="p-3 flex flex-col gap-2 rounded-xl bg-surface1">
+<CardContent className="p-[10px] flex flex-col gap-2 rounded-xl bg-surface1">
                   <div
                     className="flex justify-between items-center cursor-pointer"
                     onClick={() =>
