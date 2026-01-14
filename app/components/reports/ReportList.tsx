@@ -237,15 +237,16 @@ export default function ReportList() {
 >
   {/* HEADER */}
   <div
-    className="flex justify-between items-center"
-    onClick={() =>
-      setSelected(
-        selected === (r.public_key || `report-${i}`)
-          ? null
-          : r.public_key || `report-${i}`
-      )
-    }
-  >
+  className="flex justify-between items-center px-[16px] py-[12px]"
+  onClick={() =>
+    setSelected(
+      selected === (r.public_key || `report-${i}`)
+        ? null
+        : r.public_key || `report-${i}`
+    )
+  }
+>
+
     <div className="flex flex-col gap-1">
       <div className="text-sm text-text-primary">
         Verified · [Last verified:{' '}
