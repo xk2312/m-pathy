@@ -385,6 +385,36 @@ export type TriketonLedgerEntryV1 = {
   chain_prev?: string;
 };
 
+function isHex64(x: string): boolean {
+  return /^[a-f0-9]{64}$/i.test(x);
+}
+
+async function sha256Hex(input: string): Promise<string> {
+  const data = new TextEncoder().encode(input);
+  const hashBuf = await crypto.subtle.digest("SHA-256", data);
+  const hashArr = Array.from(new Uint8Array(hashBuf));
+  return hashArr.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function ensureTruthHash256(entry: TriketonLedgerEntryV1): Promise<string> {
+  const raw = (entry.truth_hash ?? "").trim();
+
+  // Already a real SHA-256 hex? keep.
+  if (isHex64(raw.toLowerCase())) return raw.toLowerCase();
+
+  // Otherwise: derive a cryptographically strong 256-bit hash from stable fields.
+  // (No secrets; deterministic; human-auditable.)
+  const material = [
+    "TRIKETON_LEDGER_V1",
+    entry.role,
+    entry.timestamp,
+    entry.content,
+    entry.id,
+  ].join("\n");
+
+  return await sha256Hex(material);
+}
+
 export async function appendTriketonLedgerEntry(
   entry: TriketonLedgerEntryV1
 ): Promise<void> {
@@ -405,18 +435,18 @@ export async function appendTriketonLedgerEntry(
       }
     }
 
-    // 2️⃣ DUPLICATE GUARD (pure)
+    // 2️⃣ Normalize truth_hash to SHA-256 (64 hex)
+    const truthHash256 = await ensureTruthHash256(entry);
+    const entryNormalized: TriketonLedgerEntryV1 = { ...entry, truth_hash: truthHash256 };
+
+    // 3️⃣ DUPLICATE GUARD (pure)
     const exists = ledger.some(
-      (x) => x.truth_hash === entry.truth_hash && x.id === entry.id
+      (x) => x.truth_hash === entryNormalized.truth_hash && x.id === entryNormalized.id
     );
     if (exists) return;
 
-    // 3️⃣ BUILD ENTRY (complete before append)
-    const truthHashHex = (entry.truth_hash || "")
-      .replace(/^T/, "")
-      .padStart(64, "0");
-
-    const deviceKey = await getOrCreateDevicePublicKey2048(truthHashHex);
+    // 4️⃣ BUILD ENTRY (complete before append)
+    const deviceKey = await getOrCreateDevicePublicKey2048(entryNormalized.truth_hash);
 
 // derive stable chain_id (one per chat, reset on clearChat/hardClearChat)
 const CHAT_CHAIN_KEY = "mpathy:chat:chain_id";
@@ -433,16 +463,16 @@ const lastInSameChain = [...ledger]
   .find((e) => e.chain_id === chainId);
 
 const next: TriketonLedgerEntryV1 = {
-  ...entry,
+  ...entryNormalized,
   chain_id: chainId,
   public_key: deviceKey,
   chain_prev: lastInSameChain?.truth_hash,
 };
 
-// 4️⃣ APPEND (once)
+// 5️⃣ APPEND (once)
 const nextLedger = [...ledger, next];
 
-// 5️⃣ WRITE (once)
+// 6️⃣ WRITE (once)
 ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(nextLedger));
 
 // 🔔 EMIT: Triketon ledger updated (Archive live projection trigger)
@@ -456,6 +486,7 @@ if (typeof window !== "undefined") {
     console.error("[TriketonLedger] atomic append failed:", err);
   }
 }
+
 
 
 // ---------------------------------------------------------------------------
