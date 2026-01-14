@@ -289,15 +289,17 @@ selected === reportId
       })
     )
   }
-  className="
-    !bg-cyan-500
-    !text-black
-    !px-[5px]
-    !py-[7px]
-    rounded-md
-    hover:!bg-cyan-400
-    transition-colors
-  "
+className="
+  !bg-cyan-500
+  !text-black
+  !px-[5px]
+  !py-[7px]
+  rounded-md
+  hover:!bg-cyan-400
+  cursor-pointer
+  transition-colors
+"
+
 >
   Re-Verify
 </Button>
@@ -305,14 +307,16 @@ selected === reportId
 <Button
   onClick={() => setSelected(null)}
   className="
-    !bg-transparent
-    hover:!bg-transparent
-    !text-white
-    hover:!text-gray-300
-    !px-[5px]
-    !py-[7px]
-    transition-colors
-  "
+  !bg-transparent
+  hover:!bg-transparent
+  !text-white
+  hover:!text-gray-300
+  !px-[5px]
+  !py-[7px]
+  cursor-pointer
+  transition-colors
+"
+
 >
   Close
 </Button>
