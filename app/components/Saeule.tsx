@@ -1,78 +1,132 @@
-// ============================================================================
-// 📘 INDEX — app/components/Saeule.tsx (GPTM-Galaxy+ · UI Pillar)
-// ----------------------------------------------------------------------------
-// PURPOSE
-//   Interactive side pillar for GPTM-Galaxy+, controlling Modes, Experts,
-//   System status, and Actions (Export, Archive, Delete).
-//   Acts as the main human–AI interface hub connecting chat logic and UI state.
-//
-// CORE STRUCTURE
-//   • ModeAura()         → visual wrapper adding active-mode glow (StarField).
-//   • Saeule()           → main React component (modes, experts, actions).
-//
-// DATA
-//   • Modes: 13 core GPTM states (RESEARCH → FLOW).
-//   • Mode categories: CORE / INTELLECTUAL / CREATOR / HEART / SPIRIT.
-//   • Experts: 13 mapped roles with simbaSlots + categories (LIFE→UNIVERSE).
-//   • Sub-KIs & Roles: metadata arrays for logs & telemetry.
-//
-// STATE
-//   • activeMode / modeCategory / hoverModeCategory
-//   • expertCategory / hoverExpertCategory
-//   • currentExpert / sendingExpert
-//   • lang / hydrated / openSection / openExportDetails / openDeleteDetails
-//   • localStorage keys: "mode", "expert", "mpathy:thread:default"
-//   • events: “mpathy:i18n:change”, “mpathy:system-message”
-//
-// I18N & LABELS
-//   • tr(key, fallback, vars?)   → safe translator wrapper (i18n.ts)
-//   • t(key) from "@/lib/i18n"
-//   • getLang(), langHint()      → browser + <html> fallback, 13 locales
-//   • modeLabelFromId()          → mixed static + i18n labels
-//   • expertCategoryLabel(), labelForExpert() → i18n.experts.* lookups
-//
-// API CALLS
-//   • callChatAPI(prompt)
-//       → POST /api/chat → assistant.reply string
-//       → used by switchMode(), askExpert(), and CTA Build
-//
-// MAIN ACTIONS
-//   • switchMode(next)
-//       – updates mode, emits system + status messages
-//       – builds prompt via tr("prompts.*") + langHint()
-//       – closes overlay if mobile
-//   • askExpert(expert)
-//       – logs event, sets expertCategory
-//       – builds prompt from i18n.expertAskTemplate
-//       – calls API + displays reply bubble
-//   • exportThread(format, messages)
-//       – builds CSV or JSON export (UTF-8 BOM safe)
-//   • handleDeleteImmediate()
-//       – clears chat thread + resets mode to "M"
-//   • ArchiveTrigger dispatch
-//       – window.dispatchEvent("mpathy:archive:open")
-//
-// UI SECTIONS
-//   1️⃣ MODES – onboarding, council, default, + categories
-//   2️⃣ EXPERTS – categorized list + hover navigation
-//   3️⃣ ARCHIVE – opens overlay
-//   4️⃣ ACTIONS – export / delete / support links
-//   Footer: Support mail link + TRIKETON verified seal text.
-//
-// BEHAVIOR
-//   • Double useEffect pattern for lang hydration (getLocale + event listener).
-//   • On mobile, overlays close via custom window events.
-//   • I18n hierarchy: getLocale() → html.lang → navigator.language.
-//   • Mode/Expert switch always triggers local persistence + audit log.
-//
-// VERSIONING
-//   m-pathy.ai · GPTM-Galaxy+ UI layer (Council13 approved)
-//   Integration: Chat-i18n v2 · Triketon-Verified Integrity · Zero Drift.
-//
-// ============================================================================
+/* ======================================================================
+FILE INDEX — Saeule.tsx
+Zweck: Steuerung der linken Säule (Modes, Experts, Actions, Mobile Overlay Verhalten)
 
+RELEVANT FÜR AKTUELLE FIXES:
+1) Modus-Accordion ist beim Start offen (soll geschlossen sein)
+2) Mobile Overlay schließt sich nicht automatisch beim Wechsel ins Archiv
 
+----------------------------------------------------------------------
+I. STATE & INITIALISIERUNG
+----------------------------------------------------------------------
 
+[State: activeMode]
+- Definition:
+  const [activeMode, setActiveMode] = useState<ModeId>("M");
+- Bedeutung:
+  Aktiver Modus steuert:
+  - visuelle Hervorhebung
+  - Auto-Prompts
+  - Statusleiste
+  - indirekt das Öffnen des Modus-/Expert-UI
+- Relevanz:
+  Initialwert + nachträgliches Rehydrating bestimmen,
+  ob Modus-Auswahl beim Start „offen“ wirkt.
+
+[State: hydrated]
+- Definition:
+  const [hydrated, setHydrated] = useState(false);
+- Verwendung:
+  Gate für kontrollierte Select-Felder (value="")
+- Relevanz:
+  Beeinflusst Initial-Rendering der Dropdowns (Modus / Experten).
+
+----------------------------------------------------------------------
+II. PERSISTENZ & REHYDRATION (STARTVERHALTEN)
+----------------------------------------------------------------------
+
+[Effect: localStorage → activeMode]
+- Code:
+  useEffect(() => {
+    const m = localStorage.getItem("mode");
+    if (m) setActiveMode(m);
+  }, []);
+- Relevanz:
+  Überschreibt Default ("M") beim Start.
+  Kann dazu führen, dass ein Modus visuell „aktiv/offen“ ist.
+
+[Effect: URL-Parameter → activeMode]
+- Code:
+  useEffect(() => {
+    const m = url.searchParams.get("mode");
+    if (m) setActiveMode(m);
+  }, []);
+- Relevanz:
+  Externer Trigger für offenen Modus beim Initial-Load.
+
+----------------------------------------------------------------------
+III. MODUS-UI (ACCORDION / SELECT)
+----------------------------------------------------------------------
+
+[Modus-Dropdown]
+- Stelle:
+  <select id="modus-select" … value={hydrated ? activeMode : ""}>
+- Relevanz:
+  - Leerer Value ("") = geschlossen
+  - activeMode ≠ "" = sichtbar selektiert
+  → entscheidend für Fix (1)
+
+[Experten-Dropdown]
+- Stelle:
+  <select id="expert-select" … value={currentExpert ?? ""}>
+- Relevanz:
+  Analoges Verhalten, aber nicht Teil des aktuellen Fixes.
+
+----------------------------------------------------------------------
+IV. MOBILE OVERLAY – SCHLIESSLOGIK
+----------------------------------------------------------------------
+
+[Overlay-Erkennung]
+- Wiederkehrendes Pattern:
+  const inOverlay = !!document.querySelector('[data-overlay="true"]');
+
+- Bedeutung:
+  Saeule erkennt, ob sie in einem mobilen Overlay gerendert wird.
+
+[Overlay-Schließen über onSystemMessage]
+- Pattern:
+  if (inOverlay) { onSystemMessage?.(""); }
+
+- Vorkommen u. a. in:
+  - switchMode()
+  - askExpert()
+  - CTA „Start building“
+  - Button „M (Default)“
+
+- Relevanz für Fix (2):
+  Archiv-Öffnung nutzt aktuell keinen expliziten Trigger
+  innerhalb der Saeule, um dieses Signal auszulösen.
+
+----------------------------------------------------------------------
+V. SWITCHMODE — ZENTRALER STEUERUNKT
+----------------------------------------------------------------------
+
+[Function: switchMode(next: ModeId)]
+- Verantwortlich für:
+  - setActiveMode
+  - Persistenz (localStorage)
+  - Status-Events
+  - Mobile-Overlay-Schließen (teilweise redundant vorhanden)
+
+- Relevanz:
+  Hauptkandidat, um konsistentes Schließverhalten
+  bei Navigation (inkl. Archiv) sicherzustellen.
+
+----------------------------------------------------------------------
+VI. FAZIT (NEUTRAL, OHNE LÖSUNG)
+----------------------------------------------------------------------
+
+Fix (1) hängt primär an:
+- activeMode Initialwert
+- localStorage-Rehydration
+- value-Logik der Modus-Select-Komponente
+
+Fix (2) hängt primär an:
+- fehlendem Overlay-Close-Signal
+  bei Archiv-Navigation
+- bestehendem Pattern: onSystemMessage("")
+
+====================================================================== */
 
 "use client";
 
@@ -654,7 +708,7 @@ useEffect(() => {
   const [sendingExpert, setSendingExpert] = useState<ExpertId | null>(null);
   const [currentExpert, setCurrentExpert] = useState<ExpertId | null>(null);
   const [lang, setLang] = useState<string>("en");
-  const [openSection, setOpenSection] = useState<SectionId | null>("modes");
+  const [openSection, setOpenSection] = useState<SectionId | null>(null);
   const [openExportDetails, setOpenExportDetails] = useState(false);
   const [openDeleteDetails, setOpenDeleteDetails] = useState(false);
 

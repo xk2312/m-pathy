@@ -1,3 +1,117 @@
+/* ======================================================================
+FILE INDEX — MobileOverlay.tsx
+Zweck: Mobiles Drawer-Overlay für Saeule (Modes, Experts, Actions)
+Kontext: Mobile Navigation / Archiv-Zugriff / Overlay-Schließlogik
+
+RELEVANT FÜR AKTUELLEN FIX (Fix 2):
+- Beim Klick auf „Archiv“ soll sich das Mobile Overlay automatisch schließen
+- Aktuell ist ein manuelles Schließen (X / Scrim) nötig
+
+----------------------------------------------------------------------
+I. ÖFFNUNGS- & SCHLIESSSTEUERUNG
+----------------------------------------------------------------------
+
+[Prop: open]
+- Bedeutung:
+  Steuert, ob das MobileOverlay gerendert wird.
+- Verwendung:
+  if (!open) return null;
+- Relevanz:
+  Overlay kann ausschließlich über onClose geschlossen werden.
+
+[Prop: onClose]
+- Bedeutung:
+  Zentrale Schließfunktion des Overlays (State liegt außerhalb).
+- Verwendung:
+  - Scrim-Klick
+  - Close-Button
+  - ESC-Key
+  - forwardSystemMessage()
+
+----------------------------------------------------------------------
+II. ZENTRALE SCHLIESSBRÜCKE (SÄULE → OVERLAY)
+----------------------------------------------------------------------
+
+[Function: forwardSystemMessage]
+- Signatur:
+  const forwardSystemMessage = useCallback((content: string) => { ... })
+
+- Verhalten:
+  1) Optionales Weiterleiten einer Systemmeldung
+  2) Setzt closingRef.current = true
+  3) Ruft onClose() → Overlay schließt sofort
+
+- Relevanz:
+  Dies ist der EINZIGE vorgesehene Pfad,
+  über den Saeule das MobileOverlay programmgesteuert schließen kann.
+
+----------------------------------------------------------------------
+III. SCHUTZMECHANISMUS GEGEN MEHRFACH-CLOSE
+----------------------------------------------------------------------
+
+[Ref: closingRef]
+- Bedeutung:
+  Verhindert Mehrfach-Events / Race Conditions beim Schließen
+- Reset:
+  useEffect(() => { if (open) closingRef.current = false; }, [open])
+
+----------------------------------------------------------------------
+IV. OVERLAY-KONTEXT-MARKER
+----------------------------------------------------------------------
+
+[data-overlay="true"]
+- Stelle:
+  <div data-overlay="true"> … </div>
+
+- Bedeutung:
+  Dient Saeule.tsx zur Erkennung:
+  „Ich befinde mich gerade in einem Mobile Overlay“
+
+- Relevanz:
+  Saeule prüft aktiv:
+    document.querySelector('[data-overlay="true"]')
+
+----------------------------------------------------------------------
+V. EINBINDUNG DER SÄULE
+----------------------------------------------------------------------
+
+[Saeule-Integration]
+- Stelle:
+  <Saeule onSystemMessage={forwardSystemMessage} … />
+
+- Bedeutung:
+  Jede Aktion in der Saeule, die onSystemMessage("") auslöst,
+  führt im Mobile-Kontext zu:
+    → forwardSystemMessage
+    → onClose()
+    → Overlay schließt
+
+- Relevanz für Fix 2:
+  Archiv-Navigation schließt das Overlay nur,
+  wenn sie diesen Kanal nutzt.
+
+----------------------------------------------------------------------
+VI. WAS HIER NICHT PASSIERT
+----------------------------------------------------------------------
+
+- Kein Listener auf Router-Events
+- Kein Listener auf Archiv-State
+- Kein window.addEventListener für Navigation
+- Kein automatisches Close bei View-Wechseln außerhalb der Saeule
+
+----------------------------------------------------------------------
+VII. FAZIT (NEUTRAL)
+----------------------------------------------------------------------
+
+MobileOverlay.tsx bietet eine saubere,
+explizite Close-Schnittstelle über onSystemMessage.
+
+Damit sich das Overlay beim Öffnen des Archivs schließt,
+muss der Archiv-Trigger diesen Kanal erreichen
+oder onClose direkt auslösen.
+
+====================================================================== */
+
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
@@ -44,6 +158,30 @@ const forwardSystemMessage = useCallback(
 useEffect(() => {
   if (open) closingRef.current = false;
 }, [open]);
+
+// ✅ FIX 2: Overlay schließen bei Navigation weg vom Chat (z. B. ins Archiv)
+useEffect(() => {
+  if (!open) return;
+
+  const onLocationChange = () => {
+    try {
+      if (!window.location.pathname.includes("/chat")) {
+        onClose();
+      }
+    } catch {}
+  };
+
+  window.addEventListener("popstate", onLocationChange);
+  window.addEventListener("pushstate", onLocationChange as EventListener);
+  window.addEventListener("replacestate", onLocationChange as EventListener);
+
+  return () => {
+    window.removeEventListener("popstate", onLocationChange);
+    window.removeEventListener("pushstate", onLocationChange as EventListener);
+    window.removeEventListener("replacestate", onLocationChange as EventListener);
+  };
+}, [open, onClose]);
+
 
 // ▼ Overlay-Open → i18n auf Browser-Sprache synchronisieren (nur wenn abweichend)
 useEffect(() => {
