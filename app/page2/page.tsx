@@ -1,3 +1,171 @@
+/*# 📑 FILE INDEX — page2/page.tsx
+
+## Zweck der Datei
+
+Zentrale **Chat-Seite** von m‑pathy. Diese Datei orchestriert **UI‑Layout**, **Chat‑State**, **Token‑Tracking**, **Ledger‑Anbindung (Triketon)**, **API‑Kommunikation** sowie **System‑ und Mode‑Events**. Sie ist der Endpunkt, an dem eine neue Chat‑Session sichtbar wird – und damit **kritisch** für jede Archive‑Injection.
+
+---
+
+## 1. High‑Level Verantwortung
+
+* Rendering der Chat‑Oberfläche (Desktop & Mobile)
+* Verwaltung des vollständigen Chat‑States (Messages, Loading, Mode)
+* Versand von Nachrichten an `/api/chat`
+* Entgegennahme und Streaming der Assistant‑Antwort
+* Persistenz in `localStorage` über `lib/chatStorage`
+* Führung des **Triketon‑Ledgers** (TruthHash, PublicKey, Timestamp)
+* Anzeige & Steuerung von System‑/Mode‑Flows (MAIOS‑Logik)
+
+👉 **Diese Datei ist der Zielort jeder Injection**, nicht der Ort der Selektion.
+
+---
+
+## 2. Zentrale Imports & Abhängigkeiten
+
+### Kritisch für Injection
+
+* `loadChat`, `saveChat`, `appendTriketonLedgerEntry` → Persistenz & Beweiskette
+* `sendMessageLocal()` → einziger echter API‑Call zum Chat‑Backend
+* `systemSay()` → System-/Assistant‑Nachrichten ohne User‑Interaktion
+* `setMessages()` → einziger Weg, Messages in den Chat zu bringen
+
+### UI / Layout
+
+* `Conversation`, `Bubble`, `PromptRoot`, `SidebarContainer`
+* `MobileOverlay`, `Navigation`, `OnboardingWatcher`
+
+---
+
+## 3. Chat State – Zentrale Variablen
+
+```ts
+const [messages, setMessages]
+const [loading, setLoading]
+const [mode, setMode]
+const [input, setInput]
+```
+
+* `messages` ist **Single Source of Truth** für alles, was im Chat erscheint
+* Jede Injection **muss hier landen**, sonst ist sie nicht Teil des Systems
+
+---
+
+## 4. Persistenz & Ledger (Beweiskette)
+
+### Lokale Persistenz
+
+* `saveChat(messages)` → schreibt in `localStorage`
+* Autosave via `useEffect([messages])`
+
+### Triketon Ledger
+
+* `appendTriketonLedgerEntry()` wird aufgerufen bei:
+
+  * User‑Nachricht
+  * Assistant‑Antwort (final)
+
+⚠️ **Injection‑Nachrichten müssen hier NICHT direkt ins Ledger**,
+sondern nur, wenn sie als echte Chat‑Messages erscheinen.
+
+---
+
+## 5. API‑Kommunikation
+
+### Zentrale Funktion
+
+```ts
+async function sendMessageLocal(context: ChatMessage[])
+```
+
+* POST `/api/chat`
+* Übergibt kompletten Kontext + Locale
+* Antwort enthält:
+
+  * `assistant.content`
+  * `tokens_used`
+  * `balance_after`
+  * optional `triketon`
+
+👉 **Für Injection gilt:**
+
+* Entweder über diesen Pfad laufen
+* Oder exakt denselben Payload‑Typ erzeugen
+
+---
+
+## 6. System‑ & Mode‑Events (MAIOS)
+
+### Wichtige Events
+
+* `mpathy:system-message`
+* `mpathy:tokens:update`
+* interne Mode‑States (`THINKING`, `DEFAULT`, …)
+
+Diese Events beeinflussen:
+
+* Loading‑Animation
+* Header‑Status
+* Footer‑Status
+
+👉 **Injection muss Loading korrekt setzen und wieder freigeben.**
+
+---
+
+## 7. UI‑Flow beim Nachrichteneingang
+
+1. User‑Message wird optimistisch angehängt
+2. `sendMessageLocal()` wird aufgerufen
+3. Leere Assistant‑Bubble wird erzeugt
+4. Inhalt wird **gestreamt** (Chunk‑Weise)
+5. Finale Nachricht wird persistiert + im Ledger verankert
+
+⚠️ Injection darf diesen Ablauf **nicht brechen**.
+
+---
+
+## 8. Relevanz für Archive‑Injection
+
+**Diese Datei ist relevant für:**
+
+* Zielzustand nach erfolgreicher Injection
+* Anzeige der ersten Assistant‑Bubble
+* Token‑Abbuchung
+* Ledger‑Update
+
+**Diese Datei ist NICHT zuständig für:**
+
+* Auswahl im Archiv
+* Zusammenfassung der Paare
+* Session‑Storage der Injection‑Summary
+
+---
+
+## 9. Explizite No‑Gos (für Dev‑Team)
+
+❌ Keine direkte Manipulation von `messages` ohne `setMessages`
+❌ Keine Umgehung von `sendMessageLocal`, wenn Tokens gezählt werden sollen
+❌ Keine Anzeige versteckter Summary‑Texte im Frontend
+❌ Kein Ledger‑Eintrag für unsichtbare System‑Vorbereitungsschritte
+
+---
+
+## 10. Patch‑Anker (für spätere Schritte)
+
+* **Injection‑Einstieg:** vor erstem sichtbaren Assistant‑Message
+* **Loading‑State:** `setLoading(true/false)`
+* **Persistenz:** nur finale Messages
+* **Token‑Tracking:** unverändert lassen
+
+---
+
+## Kurzfazit
+
+`page2/page.tsx` ist der **Zielraum** jeder Injection.
+Alles, was hier erscheint, ist Teil der Beweiskette.
+Alles, was hier nicht erscheint, existiert systemisch nicht.
+
+➡️ **Injection‑Logik muss sich exakt an diese Regeln anpassen.**
+ */
 
 
 "use client";

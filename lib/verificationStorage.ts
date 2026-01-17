@@ -1,154 +1,159 @@
-/* ======================================================================
-   FILE INDEX — verificationStorage.ts
-   ======================================================================
+/*# 📑 FILE INDEX — verificationStorage.ts
 
-   Zweck der Datei
-   ----------------------------------------------------------------------
-   Diese Datei ist die Single-Source-of-Truth für Verification Reports
-   im Client (LocalStorage). Sie definiert:
-   - den Storage-Key für Reports
-   - die Normalisierung alter und neuer Report-Formate
-   - das Laden, Speichern, Löschen und Abfragen von Reports
+## FILE
 
-   ----------------------------------------------------------------------
-   BETEILIGTER DATENPFAD (IST)
-   ----------------------------------------------------------------------
-   LocalStorage
-     KEY: 'mpathy:verification:reports:v1'
-       ↓
-     loadReports()
-       ↓
-     normalizeReport()
-       ↓
-     UI (z. B. ReportList / ArchiveOverlay → REPORTS Mode)
+`verificationStorage.ts`
 
-   ----------------------------------------------------------------------
-   ZENTRALE KONSTANTEN
-   ----------------------------------------------------------------------
-   KEY
-     - Wert: 'mpathy:verification:reports:v1'
-     - Rolle: einzig verwendeter Storage-Key für alle Reports
-     - Abhängigkeiten:
-         • readLS / writeLS
-         • direkte window.localStorage-Zugriffe in loadReports()
+## ROLE (1 Satz)
 
-   ----------------------------------------------------------------------
-   DATENSTRUKTUREN
-   ----------------------------------------------------------------------
-   LegacyVerificationReport
-     - camelCase-Felder (Altbestand):
-         • generatedAt
-         • truthHash
-         • publicKey
-         • entriesCount
-         • lastVerifiedAt
-         • status
-         • content
-         • verification_chain
-         • chain_signature
+Client-seitiger **Persistenz- und Normalisierungs-Layer** für Verifikationsreports: Laden, Speichern, Löschen und Rückwärtskompatibilität von Verify-Ergebnissen.
 
-   TVerificationReport (importiert)
-     - snake_case / kanonisch:
-         • protocol_version
-         • generated_at
-         • last_verified_at
-         • pair_count
-         • status
-         • source
-         • public_key
-         • truth_hash
-         • content
-         • verification_chain
-         • chain_signature
-         • weitere optionale Profile-Felder
+## TOUCH
 
-   ----------------------------------------------------------------------
-   NORMALISIERUNGSLOGIK
-   ----------------------------------------------------------------------
-   function normalizeReport(r)
-     - Eingang:
-         • LegacyVerificationReport
-         • Partial<TVerificationReport>
-     - Zwei Pfade:
+**NEIN — strikt gesperrt**
 
-       1) Snake_case erkannt (generated_at vorhanden)
-          - truth_hash:
-              • rr.truth_hash
-              • fallback: anyR.truthHash
-          - public_key:
-              • rr.public_key
-              • fallback: anyR.publicKey
-          - erzwingt:
-              • protocol_version = 'v1'
-              • source = 'archive-selection'
-              • status default = 'unverified'
-              • pair_count default = 0
+Diese Datei darf im Rahmen der Injection-Implementierung **unter keinen Umständen verändert** werden.
 
-       2) Legacy camelCase
-          - mapping:
-              generatedAt      → generated_at
-              lastVerifiedAt   → last_verified_at
-              entriesCount     → pair_count
-              truthHash        → truth_hash
-              publicKey        → public_key
-          - source = 'archive-selection'
+---
 
-   ----------------------------------------------------------------------
-   LADEPFAD
-   ----------------------------------------------------------------------
-   function loadReports()
-     - Guard:
-         • if typeof window === 'undefined' → []
-     - Zugriff:
-         • window.localStorage.getItem(KEY)
-         • JSON.parse
-     - Fehlerfall:
-         • try/catch → []
-     - Verarbeitung:
-         • raw.map(normalizeReport)
-         • filter: truth_hash && public_key
+## WHY (Warum diese Datei relevant ist)
 
-   ----------------------------------------------------------------------
-   SCHREIBPFAD
-   ----------------------------------------------------------------------
-   function saveReport(report)
-     - lädt bestehende Reports
-     - Duplikatprüfung:
-         • truth_hash eindeutig
-     - Verhalten:
-         • neue Reports werden vorne eingefügt (unshift)
-         • Limit: max. 100 Einträge
-     - Speicherung:
-         • writeLS(KEY, reports)
+* Sie definiert **was ein Verifikationsreport ist** und wie er strukturiert wird.
+* Sie ist die **einzige Quelle** für Reports im REPORTS-Modus des Archivs.
+* Sie bildet die Brücke zwischen:
 
-   ----------------------------------------------------------------------
-   LÖSCHEN
-   ----------------------------------------------------------------------
-   function deleteReport(hash)
-     - filtert nach truth_hash
-     - überschreibt gesamten Storage-Key
+  * alten (Legacy) Report-Formaten
+  * dem aktuellen `TVerificationReport`-Schema
+* Sie ist **Teil der formalen Beweiskette** (Audit-Trail).
 
-   ----------------------------------------------------------------------
-   ABFRAGE EINZELREPORT
-   ----------------------------------------------------------------------
-   function getReport(hash)
-     - linearer Suchlauf über loadReports()
-     - Rückgabe:
-         • TVerificationReport | null
+---
 
-   ----------------------------------------------------------------------
-   BEOBACHTUNGEN (OHNE BEWERTUNG)
-   ----------------------------------------------------------------------
-   - Es existiert genau EIN Storage-Key für Reports.
-   - Es gibt keinen Event-Emitter in dieser Datei.
-   - Diese Datei rendert nichts selbst.
-   - Alle Reports liegen vollständig im LocalStorage.
-   - Sichtbarkeit im UI hängt ausschließlich von:
-       • korrekt gefülltem KEY
-       • erfolgreichem loadReports()
-       • korrekter Nutzung in der UI-Komponente ab.
+## DANGERS (Absolute No-Gos)
 
-   ====================================================================== */
+❌ Keine Injection-Logik hier einbauen
+❌ Keine SessionStorage-Zugriffe ergänzen
+❌ Keine neuen Keys oder Report-Typen einführen
+❌ Keine Summary- oder Kontextdaten hier speichern
+❌ Keine Änderung an Normalisierung oder Legacy-Mapping
+❌ Keine Vermischung von Verify- und Injection-Flows
+
+Diese Datei ist **audit- und beweisrelevant**.
+
+---
+
+## ANCHORS (Relevante Codebereiche)
+
+### 1️⃣ Storage-Key (Reports Namespace)
+
+```ts
+const KEY = 'mpathy:verification:reports:v1'
+```
+
+* Enthält **ausschließlich** Verifikationsreports
+* Speicherort: `localStorage`
+* Maximal 100 Reports (`slice(0, 100)`)
+
+➡️ Injection darf diesen Namespace **niemals** nutzen.
+
+---
+
+### 2️⃣ Legacy-Report-Typ
+
+```ts
+type LegacyVerificationReport
+```
+
+* Unterstützt alte Felder:
+
+  * `truthHash`
+  * `generatedAt`
+  * `entriesCount`
+* Ermöglicht saubere Migration ohne Datenverlust
+
+➡️ Nicht erweitern, nicht vereinfachen.
+
+---
+
+### 3️⃣ normalizeReport()
+
+```ts
+function normalizeReport(r)
+```
+
+* Zentraler Normalisierungspunkt
+* Vereinheitlicht:
+
+  * `truth_hash`
+  * `public_key`
+  * Timestamps
+  * Status-Felder
+
+➡️ Injection-Summary darf **hier nicht auftauchen**.
+
+---
+
+### 4️⃣ loadReports()
+
+* Lädt Reports aus `localStorage`
+* Defensive Guards gegen kaputte Daten
+* Liefert **immer ein Array**
+
+➡️ Read-only im Injection-Kontext.
+
+---
+
+### 5️⃣ saveReport()
+
+* Append-only Verhalten (neueste zuerst)
+* Duplikat-Guard via `truth_hash`
+
+➡️ Nur vom Verify-Flow aufzurufen.
+
+---
+
+### 6️⃣ deleteReport()
+
+* Entfernt Report anhand `truth_hash`
+* UI-Aktion (User-getriggert)
+
+➡️ Kein Systemprozess darf hier löschen.
+
+---
+
+### 7️⃣ getReport()
+
+* Lookup eines einzelnen Reports
+* Grundlage für Detailansichten
+
+➡️ Injection irrelevant.
+
+---
+
+## Relevanz für Injection (klar abgegrenzt)
+
+**Diese Datei ist relevant für:**
+
+* Verständnis, wo Verify-Ergebnisse landen
+* Abgrenzung: Verify (Beweis) vs. Injection (Kontext)
+
+**Diese Datei ist NICHT zuständig für:**
+
+* Summary-Erzeugung
+* Session Storage
+* Chat-Initialisierung
+* Token-Abbuchung
+
+---
+
+## Kurzfazit (für Dev-Team)
+
+`verificationStorage.ts` ist ein **reiner Verify-Speicher**.
+
+➡️ Alles hier ist **Beweis**, nicht Vorbereitung.
+➡️ Injection hat hier **nichts verloren**.
+
+**Nicht anfassen. Nicht erweitern. Nicht refactoren.**
+*/
 
 import type { VerificationReport as TVerificationReport } from './types'
 import { readLS, writeLS } from './storage'

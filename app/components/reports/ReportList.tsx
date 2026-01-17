@@ -1,111 +1,158 @@
-/**
- * ============================================================
- * ARCHIVE OVERLAY — NAVIGATION & POINTER INDEX
- * ============================================================
- *
- * CONTEXT
- * -------
- * This index documents all user-interactive navigation elements
- * inside the ARCHIVE overlay that require explicit pointer / cursor
- * affordance and predictable UX behavior.
- *
- * The ARCHIVE overlay is a MODE-BASED UI, not a route.
- * All navigation happens via local state + events.
- *
- * ------------------------------------------------------------
- * POINTER TARGETS (3)
- * ------------------------------------------------------------
- *
- * [A] MODE SWITCH: "CHAT"
- * ---------------------
- * Purpose:
- * - Switch Archive view to CHAT mode
- *
- * Expected UX:
- * - cursor: pointer
- * - immediate visual affordance
- *
- * Implementation pattern:
- * - onClick → setArchiveMode("chat")
- * - MUST NOT trigger overlay close
- *
- * Typical location:
- * - Archive header / mode switch section
- *
- *
- * [B] MODE SWITCH: "REPORTS"
- * -------------------------
- * Purpose:
- * - Switch Archive view to REPORTS mode
- *
- * Expected UX:
- * - cursor: pointer
- * - same affordance as CHAT (symmetry)
- *
- * Implementation pattern:
- * - onClick → setArchiveMode("reports")
- * - MUST NOT close Archive overlay
- * - Report data rendered by <ReportList />
- *
- * Related file:
- * - ReportList.tsx
- *
- * NOTE:
- * - Pointer is required even though content rendering
- *   happens in a different component.
- *
- *
- * [C] NAVIGATION: "← Back"
- * -----------------------
- * Purpose:
- * - Exit ARCHIVE overlay and return to Chat
- *
- * Expected UX:
- * - cursor: pointer
- * - clear affordance of navigation / exit
- *
- * Implementation pattern:
- * - onClick → dispatch close action
- *   e.g. window.dispatchEvent("mpathy:archive:close")
- *   OR local overlay close handler
- *
- * IMPORTANT:
- * - This is the ONLY element that closes the Archive overlay
- * - Must not interfere with CHAT / REPORTS switches
- *
- *
- * ------------------------------------------------------------
- * RELATION TO ReportList.tsx
- * ------------------------------------------------------------
- *
- * - ReportList.tsx is a CHILD view rendered ONLY when:
- *     archiveMode === "reports"
- *
- * - ReportList does NOT control navigation.
- * - Pointer logic for CHAT / REPORTS lives in Archive overlay,
- *   NOT inside ReportList.
- *
- * - Any missing pointer on REPORTS is a UI affordance issue,
- *   not a data or state issue.
- *
- *
- * ------------------------------------------------------------
- * DESIGN RULES (Point Zero)
- * ------------------------------------------------------------
- *
- * - CHAT / REPORTS:
- *     mode switch → pointer required → overlay stays open
- *
- * - ← Back:
- *     navigation action → pointer required → overlay closes
- *
- * - No routing assumptions
- * - No implicit navigation
- * - Overlay reacts ONLY to explicit user actions
- *
- * ============================================================
- */
 
+/*# 📑 FILE INDEX — ReportList.tsx
+
+## FILE
+
+`ReportList.tsx`
+
+## ROLE (1 Satz)
+
+UI-Komponente für den **REPORTS-Modus** des Archivs: listet Verifikationsreports, ermöglicht Einsehen, Export und Löschung, reagiert auf Verify-Events.
+
+## TOUCH
+
+**NEIN — streng gesperrt**
+
+Diese Datei darf im Rahmen der Injection-Implementierung **nicht verändert** werden.
+
+---
+
+## WHY (Warum diese Datei relevant ist)
+
+* Stellt die **sichtbare Oberfläche der Beweiskette** dar.
+* Reagiert ausschließlich auf **Verify-Ergebnisse**.
+* Macht klar, dass Injection **keinen Einfluss** auf Reports hat.
+* Dient als Abgrenzung zwischen:
+
+  * Kontext-Vorbereitung (Injection)
+  * Kryptografischer Versiegelung (Verify)
+
+---
+
+## DANGERS (Absolute No-Gos)
+
+❌ Keine Injection-Logik hier ergänzen
+❌ Keine neuen Event-Listener für Injection hinzufügen
+❌ Keine SessionStorage- oder Context-Daten hier lesen
+❌ Keine automatische Report-Erzeugung triggern
+❌ Keine Anpassung der Report-Struktur oder -Texte
+
+Diese Datei ist **audit- und beweisrelevant**.
+
+---
+
+## ANCHORS (Relevante Codebereiche)
+
+### 1️⃣ Laden der Reports
+
+```ts
+const data = loadReports()
+```
+
+* Quelle: `verificationStorage.ts`
+* Read-only Zugriff
+* Wird ausgelöst:
+
+  * beim Mount
+  * bei `mpathy:archive:verify:success`
+  * bei `mpathy:archive:reports:refresh`
+
+➡️ Injection darf **keinen dieser Events dispatchen**.
+
+---
+
+### 2️⃣ Verify-Success Listener
+
+```ts
+window.addEventListener('mpathy:archive:verify:success', onVerify)
+```
+
+* Triggert Re-Read der Reports
+* Signalisiert abgeschlossene Versiegelung
+
+➡️ Injection nutzt **eigenen Namespace**.
+
+---
+
+### 3️⃣ Report-Auswahl (UI-State)
+
+```ts
+const [selected, setSelected]
+```
+
+* Steuert Auf-/Zuklappen einzelner Reports
+* Rein UI-intern
+
+➡️ Nicht systemrelevant.
+
+---
+
+### 4️⃣ Report-Export (Text)
+
+```ts
+exportReportAsText(r)
+```
+
+* Erstellt menschenlesbare Textfassung
+* Enthält:
+
+  * Status
+  * Hash
+  * Public Key
+  * Content
+  * Legal/IP-Hinweise
+
+➡️ Rein lesend, kein Einfluss auf Injection.
+
+---
+
+### 5️⃣ Report-Löschung
+
+```ts
+deleteReport(hash)
+```
+
+* User-getriggerte Aktion
+* Entfernt Report aus LocalStorage
+
+➡️ Injection darf hier **niemals** eingreifen.
+
+---
+
+### 6️⃣ Sortierung & Anzeige
+
+* Sortiert nach `last_verified_at` / `generated_at`
+* Expand/Collapse UI
+
+➡️ Präsentationslogik.
+
+---
+
+## Relevanz für Injection (klar abgegrenzt)
+
+**Diese Datei ist relevant für:**
+
+* Verständnis, wo Verify-Ergebnisse sichtbar werden
+* Abgrenzung: Verify = Reports, Injection = Chat
+
+**Diese Datei ist NICHT zuständig für:**
+
+* Summary-Erzeugung
+* Session Storage
+* Chat-Initialisierung
+* Token-Abbuchung
+
+---
+
+## Kurzfazit (für Dev-Team)
+
+`ReportList.tsx` ist ein **reiner Report-Viewer**.
+
+➡️ Alles hier basiert auf **Verify**.
+➡️ Injection hat hier **keinen Berührungspunkt**.
+
+**Nicht anfassen.**
+ */
 
 'use client'
 

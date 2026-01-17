@@ -148,6 +148,8 @@ export type MpathyNamespace =
 
 export type MpathySessionNamespace =
   | 'mpathy:archive:selection:v1'
+  | 'mpathy:context:archive-chat:v1'
+
 
 export type ArchivePair = {
   pair_id: string
@@ -277,3 +279,37 @@ export function clearSS(key: MpathySessionNamespace): void {
   if (!hasSessionStorage()) return
   window.sessionStorage.removeItem(key)
 }
+
+/* ============================================================
+   ARCHIVE → CHAT CONTEXT (CANONICAL · SESSION ONLY)
+   ============================================================ */
+
+const ARCHIVE_CHAT_CONTEXT_KEY: MpathySessionNamespace =
+  'mpathy:context:archive-chat:v1'
+
+export function writeArchiveChatContext(text: string): void {
+  if (!hasSessionStorage()) return
+  const value = typeof text === 'string' ? text.trim() : ''
+  if (!value) return
+  window.sessionStorage.setItem(ARCHIVE_CHAT_CONTEXT_KEY, JSON.stringify(value))
+}
+
+export function readArchiveChatContext(): string | null {
+  if (!hasSessionStorage()) return null
+  const raw = window.sessionStorage.getItem(ARCHIVE_CHAT_CONTEXT_KEY)
+  if (!raw) return null
+  try {
+    const parsed = JSON.parse(raw)
+    return typeof parsed === 'string' && parsed.trim().length > 0
+      ? parsed
+      : null
+  } catch {
+    return null
+  }
+}
+
+export function clearArchiveChatContext(): void {
+  if (!hasSessionStorage()) return
+  window.sessionStorage.removeItem(ARCHIVE_CHAT_CONTEXT_KEY)
+}
+

@@ -1,154 +1,188 @@
-/* ======================================================================
-   FILE INDEX — archiveVerifyListener.ts
-   ======================================================================
+/*# 📑 FILE INDEX — archiveVerifyListener.ts
 
-   ROLLE DER DATEI
-   ----------------------------------------------------------------------
-   Diese Datei implementiert den clientseitigen Verify-Listener.
-   Sie ist der operative Übergabepunkt zwischen:
-   - UI-Selektion (Archive / Selection)
-   - Server-Seal (Triketon API)
-   - Persistierung von Verification Reports
-   - Event-Benachrichtigung der UI
+## FILE
 
-   Sie enthält:
-   - Event-Listener
-   - Netzwerk-Request
-   - Report-Erzeugung
-   - Report-Persistierung
-   - KEIN Rendering
+`archiveVerifyListener.ts`
 
-   ----------------------------------------------------------------------
-   ZENTRALE EVENTS
-   ----------------------------------------------------------------------
-   LISTENED:
-     - 'mpathy:archive:verify'
-         → Startet den gesamten Verify-Flow
+## ROLE (1 Satz)
 
-   DISPATCHED:
-     - 'mpathy:archive:verify:error'
-     - 'mpathy:archive:verify:info'
-     - 'mpathy:archive:verify:report'
-     - 'mpathy:archive:selection:clear'
+Zentraler **Verify-Orchestrator** für das Archiv: verarbeitet selektierte Nachrichtenpaare, erzeugt kanonischen Wahrheitstext, führt Server-Seal durch und erzeugt einen unveränderlichen Verifikationsreport.
 
-   ----------------------------------------------------------------------
-   INITIALISIERUNG
-   ----------------------------------------------------------------------
-   initArchiveVerifyListener()
-     - Guard: isInitialized
-     - Garantiert: Listener wird genau EINMAL registriert
-     - Wird typischerweise beim Mount von ArchiveOverlay initialisiert
+## TOUCH
 
-   ----------------------------------------------------------------------
-   INPUT-QUELLEN FÜR SELEKTION
-   ----------------------------------------------------------------------
-   readArchiveSelection()
-     - liest aus SessionStorage:
-         KEY: 'mpathy:archive:selection:v1'
+**NEIN — streng gesperrt**
 
-   Event-Detail (optional):
-     - custom.detail.pairs
+Diese Datei ist **nicht zu verändern** im Rahmen der Injection-Arbeit. Sie dient als **Referenz- und Schutzkomponente**.
 
-   Auswahlregel:
-     - SessionStorage gewinnt gegenüber Event-Detail
-     - Fallback: Event-Detail
-     - Abbruch bei leerer Auswahl
+---
 
-   ----------------------------------------------------------------------
-   KANONISCHER TEXT
-   ----------------------------------------------------------------------
-   buildCanonicalTruthText(pairs)
-     - Sortiert deterministisch nach pair_id
-     - Baut Text:
-         USER:\n<content>\n\nASSISTANT:\n<content>
-     - Trimmt Ergebnis
-     - Leerer Text → Verify-Error
+## WHY (Warum diese Datei relevant ist)
 
-   ----------------------------------------------------------------------
-   DEVICE-IDENTITÄT
-   ----------------------------------------------------------------------
-   Public Key:
-     - Quelle: localStorage
-     - KEY: 'mpathy:triketon:device_public_key_2048'
-     - Abbruch bei fehlendem oder ungültigem Key
+* Sie erklärt **warum aktuell ein Klick auf „Add to new chat“ trotzdem Verify auslöst**.
+* Sie definiert den kompletten Verify-Flow inkl.:
 
-   ----------------------------------------------------------------------
-   SERVER-SEAL
-   ----------------------------------------------------------------------
-   Endpoint:
-     - POST /api/triketon/seal
+  * Kanonisierung
+  * Server-Kommunikation
+  * Report-Erzeugung
+  * Event-Rückkanäle
+* Sie ist das **Gegenstück** zur geplanten Injection-Logik.
 
-   Request Body:
-     - intent: 'seal'
-     - publicKey
-     - text (canonicalTruthText)
-     - decoy hashes (truthHash, truthHash2)
-     - protocol_version
-     - source
+---
 
-   Server-Antwort:
-     - result === 'SEALED'   → neuer Report
-     - result === 'IGNORED'  → bereits verifiziert
-     - sonst                → Error
+## DANGERS (Absolute No-Gos)
 
-   ----------------------------------------------------------------------
-   REPORT-ERZEUGUNG
-   ----------------------------------------------------------------------
-   TVerificationReport:
-     - protocol_version = 'v1'
-     - generated_at = now
-     - last_verified_at = now
-     - status = 'verified'
-     - source = 'archive-selection'
-     - pair_count = selection.length
-     - public_key = device key
-     - truth_hash = server result
-     - content:
-         • canonical_text
-         • pairs[] (user / assistant)
+❌ Kein Umbennen von `EVENT_NAME`
+❌ Keine Erweiterung um `inject`-Logik
+❌ Keine Wiederverwendung für andere Intents
+❌ Keine Änderung an Kanonisierung oder Sortierung
+❌ Keine Änderung an Server-Endpoint oder Payload
+❌ Keine Vermischung mit Session-Storage
 
-   ----------------------------------------------------------------------
-   REPORT-PERSISTIERUNG
-   ----------------------------------------------------------------------
-   persistReport(report)
-     - Storage-Key:
-         'mpathy:verification:reports:v1'
-     - Zugriff:
-         readLS → Array
-         writeLS → append-only
-     - KEINE Deduplikation
-     - KEIN Limit
-     - KEINE Normalisierung
+Diese Datei ist **beweis- und sicherheitskritisch**.
 
-   ----------------------------------------------------------------------
-   UI-BENACHRICHTIGUNG
-   ----------------------------------------------------------------------
-   Nach erfolgreicher Persistierung:
-     - dispatch 'mpathy:archive:verify:report'
-         • detail: report
-     - dispatch 'mpathy:archive:selection:clear'
+---
 
-   ----------------------------------------------------------------------
-   RELEVANZ FÜR REPORTS-SICHTBARKEIT
-   ----------------------------------------------------------------------
-   - Diese Datei schreibt Reports in den Storage-Key
-       'mpathy:verification:reports:v1'
-   - Sie rendert nichts selbst
-   - Sichtbarkeit hängt davon ab, ob:
-       a) writeLS hier erfolgreich ist
-       b) UI loadReports() aus derselben Quelle liest
-       c) UI auf Events reagiert oder neu lädt
+## ANCHORS (Relevante Codebereiche)
 
-   ----------------------------------------------------------------------
-   AUSSCHLUSS
-   ----------------------------------------------------------------------
-   ❌ Kein React
-   ❌ Kein State
-   ❌ Keine i18n
-   ❌ Keine UI-Logik
+### 1️⃣ Globales Event & Intent-Gate
 
-   ====================================================================== */
+```ts
+const EVENT_NAME = 'mpathy:archive:verify'
+```
 
+```ts
+const intent = custom.detail?.intent
+if (intent !== 'verify') return
+```
+
+* **JEDES** Event mit diesem Namen und `intent: 'verify'` löst den Verify-Prozess aus.
+* Genau deshalb triggert aktuell auch der „Add to new chat“-Button Verify.
+
+➡️ Lösung erfolgt **nicht hier**, sondern durch **neues Event** im Overlay.
+
+---
+
+### 2️⃣ Auswahl der Paare (Prioritätslogik)
+
+```ts
+const selectionFromSS = readArchiveSelection().pairs ?? []
+const selectionFromEvent = custom.detail?.pairs ?? []
+const selection = selectionFromSS.length > 0
+  ? selectionFromSS
+  : selectionFromEvent
+```
+
+* Session Storage hat Vorrang vor Event-Payload.
+* Garantiert Stabilität bei UI-Race-Conditions.
+
+➡️ Injection darf **nicht** diese Logik nutzen.
+
+---
+
+### 3️⃣ Kanonisierung (Truth Text)
+
+```ts
+buildCanonicalTruthText(pairs)
+```
+
+* Sortierung nach `pair_id`
+* USER / ASSISTANT strikt alternierend
+* Whitespace-normalisiert
+
+➡️ Diese Funktion ist **nur für Verify**.
+
+---
+
+### 4️⃣ Device-bound Public Key
+
+```ts
+mpathy:triketon:device_public_key_2048
+```
+
+* Bindet Verify an ein physisches Gerät
+* Zentral für Beweiskette und Patentlogik
+
+➡️ Injection darf diesen Key **nicht benötigen**.
+
+---
+
+### 5️⃣ Server-Seal (WRITE / SEAL)
+
+```ts
+fetch('/api/triketon/seal', { intent: 'seal' })
+```
+
+* Server berechnet Wahrheitshash
+* Hash wird **nicht clientseitig berechnet**
+* Client sendet bewusst Decoy-Hashes
+
+➡️ Injection **nutzt keinen Seal-Endpoint**.
+
+---
+
+### 6️⃣ Result Handling: IGNORED vs SEALED
+
+* `IGNORED` → bereits verifiziert, kein neuer Report
+* `SEALED` → neuer Report wird gebaut
+
+➡️ Injection kennt **keine Reports**.
+
+---
+
+### 7️⃣ Report-Erzeugung & Persistenz
+
+```ts
+persistReport(report)
+```
+
+* Append-only
+* Speicherort: `mpathy:verification:reports:v1`
+
+➡️ Injection darf hier **niemals** schreiben.
+
+---
+
+### 8️⃣ UI-Rückkanäle (Events)
+
+```ts
+mpathy:archive:verify:error
+mpathy:archive:verify:info
+mpathy:archive:verify:report
+mpathy:archive:verify:success
+```
+
+* Steuern UI-Wechsel (CHAT → REPORTS)
+* Löschen Selection
+
+➡️ Injection bekommt **eigene Event-Namespace**.
+
+---
+
+## Relevanz für Injection (klar abgegrenzt)
+
+**Diese Datei ist relevant für:**
+
+* Verständnis des bestehenden Verify-Flows
+* Erklärung des aktuellen Fehlverhaltens
+
+**Diese Datei ist NICHT zuständig für:**
+
+* Summary-Erzeugung
+* Session-Storage
+* Chat-Initialisierung
+* UI-Loading-States
+
+---
+
+## Kurzfazit (für Dev-Team)
+
+`archiveVerifyListener.ts` ist ein **abgeschlossener, geschützter Prozess**.
+
+➡️ Verify = Versiegelung + Beweis
+➡️ Injection = Kontextaufbereitung + Chatstart
+
+**Beides darf sich nicht berühren.**
+*/
 
 import { readLS, writeLS } from '@/lib/storage'
 import { readArchiveSelection } from '@/lib/storage'

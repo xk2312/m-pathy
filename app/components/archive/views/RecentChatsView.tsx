@@ -1,3 +1,128 @@
+/*# 📑 FILE INDEX — RecentChatsView.tsx
+
+## FILE
+
+`RecentChatsView.tsx`
+
+## ROLE (1 Satz)
+
+Read-only UI-Komponente zur Anzeige der **letzten Chats** im Archiv, inklusive Metadaten (Serial, Keywords, Message Count, Timestamp) und Navigation in bestehende Chats.
+
+## TOUCH
+
+**NEIN — passiv, read-only**
+
+Diese Datei darf im Rahmen der Injection-Arbeit **nicht verändert** werden.
+
+---
+
+## WHY (Warum diese Datei relevant ist)
+
+* Sie zeigt **bestehende Chats**, nicht neue.
+* Sie ist Teil des **ARCHIVE → CHAT**-Navigationspfads.
+* Sie definiert, **wie ein Chat geöffnet wird**, wenn er bereits existiert.
+* Sie ist wichtig, um klar zu trennen:
+
+  * Öffnen eines bestehenden Chats
+  * Erzeugen eines neuen Chats (Injection-Flow)
+
+---
+
+## DANGERS (Absolute No-Gos)
+
+❌ Keine Injection-Logik hier einbauen
+❌ Keine Session- oder LocalStorage-Zugriffe ergänzen
+❌ Keine Summary- oder Context-Übergabe hier vornehmen
+❌ Keine neuen Events dispatchen
+❌ Keine Navigation für „neuen Chat“ implementieren
+
+Diese Komponente ist **Anzeige + Navigation**, sonst nichts.
+
+---
+
+## ANCHORS (Relevante Codebereiche)
+
+### 1️⃣ Datenquelle: Recent Chats
+
+```ts
+const base = getRecentChats(13)
+```
+
+* Bezieht Daten aus `archiveIndex`
+* Limitiert auf **13 Chats** (kanonische Zahl)
+* Rein lesend
+
+➡️ Kein Einfluss auf Injection.
+
+---
+
+### 2️⃣ Mapping der Chat-Metadaten
+
+```ts
+const mapped = base.map((chat) => ({ ... }))
+```
+
+* `chat_serial`
+* `keywords`
+* `messageCount`
+* `lastTimestamp`
+
+➡️ Diese Struktur ist **Anzeige-orientiert**, nicht Chat-State.
+
+---
+
+### 3️⃣ Öffnen eines bestehenden Chats
+
+```ts
+onOpenChat?.(String(chat.chat_serial))
+```
+
+* Wird ausgelöst bei:
+
+  * Klick auf das gesamte Chat-Item
+  * Klick auf den „View →“-Button
+* Führt **direkt** in einen bestehenden Chat
+
+➡️ Injection darf diesen Pfad **nicht verwenden**.
+
+---
+
+### 4️⃣ UI-Charakteristika
+
+* `MessageSquare` Icon
+* Hover-Effekte
+* Keine Buttons mit Seiteneffekten
+
+➡️ Rein präsentational.
+
+---
+
+## Relevanz für Injection (klar abgegrenzt)
+
+**Diese Datei ist relevant für:**
+
+* Verständnis des bestehenden Navigationspfads
+* Abgrenzung: *Open existing chat* vs. *Create new chat*
+
+**Diese Datei ist NICHT zuständig für:**
+
+* Auswahl von Archiv-Nachrichten
+* Summary-Erzeugung
+* Session Storage
+* Chat-Initialisierung
+* Token-Abbuchung
+
+---
+
+## Kurzfazit (für Dev-Team)
+
+`RecentChatsView.tsx` ist **rein passiv**.
+
+➡️ Sie darf **niemals** Teil des Injection-Flows werden.
+➡️ Jede Änderung hier birgt Navigations- und UX-Risiken.
+
+**Finger weg – nur lesen, nicht anfassen.**
+*/
 'use client'
 
 import { useEffect, useState } from 'react'

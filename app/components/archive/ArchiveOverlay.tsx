@@ -1,123 +1,162 @@
-/**
- * =====================================================================
- * FILE INDEX — ArchiveOverlay.tsx
- * Fokus: Navigation / Pointer-Affordanz (Point Zero)
- * =====================================================================
- *
- * KONTEXT
- * -------
- * ArchiveOverlay ist ein eigenständiger Systemraum (kein Routing),
- * der CHAT- und REPORTS-Ansichten sowie einen expliziten Exit bereitstellt.
- * Navigation erfolgt ausschließlich über lokalen State + Custom Events.
- *
- * In diesem File existieren DREI user-interaktive Navigationselemente,
- * die visuell und semantisch als klickbar (Pointer) erkennbar sein müssen.
- *
- * ---------------------------------------------------------------------
- * POINTER TARGETS (3)
- * ---------------------------------------------------------------------
- *
- * [1] MODE SWITCH — "CHAT"
- * -----------------------
- * Stelle:
- *   <button onClick={() => { setMode('chat'); setChatView('recent'); … }}>
- *     CHAT
- *   </button>
- *
- * Funktion:
- * - Wechsel des Archive-Modus auf CHAT
- * - Reset von Detail- / Search-States
- *
- * Architektur-Regel:
- * - Reiner Mode-Switch
- * - Overlay bleibt offen
- *
- * UX-Erwartung:
- * - cursor: pointer
- * - Gleichwertige Affordanz zu REPORTS (Symmetrie)
- *
- *
- * [2] MODE SWITCH — "REPORTS"
- * --------------------------
- * Stelle:
- *   <button onClick={() => setMode('reports')}>
- *     REPORTS
- *   </button>
- *
- * Funktion:
- * - Wechsel des Archive-Modus auf REPORTS
- * - Triggert via useEffect ein Reports-Refresh-Event
- *
- * Architektur-Regel:
- * - Reiner Mode-Switch
- * - Kein Overlay-Close
- *
- * UX-Erwartung:
- * - cursor: pointer
- * - Visuell als klickbarer Tab erkennbar
- *
- * Hinweis:
- * - ReportList.tsx ist nur Child-View
- * - Pointer-Logik gehört ausschließlich hierher
- *
- *
- * [3] NAVIGATION — "← Back / Close Archive"
- * ----------------------------------------
- * Stelle:
- *   <button
- *     aria-label="Close Archive"
- *     onClick={() => {
- *       setMode('chat')
- *       setOpenChainId(null)
- *       window.dispatchEvent(new CustomEvent('mpathy:archive:close'))
- *     }}
- *   >
- *     ✕
- *   </button>
- *
- * Funktion:
- * - Beendet den ArchiveOverlay-Systemraum vollständig
- * - Übergibt Kontrolle zurück an den Chat
- *
- * Architektur-Regel:
- * - Einziger Exit aus dem ArchiveOverlay
- * - Kein Mode-Switch, sondern Navigation / Close
- *
- * UX-Erwartung:
- * - cursor: pointer
- * - Klarer Exit-Charakter
- *
- *
- * ---------------------------------------------------------------------
- * WICHTIGE ABGRENZUNGEN
- * ---------------------------------------------------------------------
- *
- * - ReportList.tsx:
- *   Zeigt Daten, steuert KEINE Navigation
- *
- * - ChatDetailView / SearchResultsView:
- *   Interne Views, kein Overlay-Exit
- *
- * - Pointer dürfen NUR an expliziten
- *   Navigationselementen gesetzt werden
- *
- *
- * ---------------------------------------------------------------------
- * POINT-ZERO-REGELN
- * ---------------------------------------------------------------------
- *
- * - CHAT / REPORTS:
- *     Mode-Wechsel → Overlay bleibt offen
- *
- * - Back / Close:
- *     Navigation → Overlay wird geschlossen
- *
- * - Pointer = reine Affordanz
- * - Keine Logikänderung
- * - Keine Seiteneffekte
- *
- * =====================================================================
- */
+/*# INDEX — ArchiveOverlay.tsx
+
+## FILE
+
+`ArchiveOverlay.tsx`
+
+## ROLE (1 Satz)
+
+Zentrales Overlay für das Archiv: steuert Auswahl von Nachrichtenpaaren, Modusumschaltung (CHAT/REPORTS) und triggert nachgelagerte Systemprozesse (Verify, künftig Injection).
+
+## TOUCH
+
+**JA — hochkritisch**
+
+Diese Datei ist der **Startpunkt der gesamten Kette** für Verify *und* Injection.
+
+## WHY (Warum diese Datei relevant ist)
+
+* Enthält die UI-Buttons **Verify** und **Add to new chat**.
+* Dispatcht aktuell Events an das globale Event-System (`CustomEvent`).
+* Verwaltet Selection-State (Session Storage) und reagiert auf externe System-Events.
+* Bestimmt, **welcher Prozess ausgelöst wird**, bevor ein neuer Chat entstehen kann.
+
+## DANGERS (No-Gos für Devs)
+
+* ❌ Verify-Logik nicht umbauen oder erweitern.
+* ❌ `initArchiveVerifyListener()` nicht verändern oder entfernen.
+* ❌ Navigation in den Chat **nicht** direkt aus dem Button heraus auslösen.
+* ❌ Session Storage Keys nicht umbenennen oder mischen (LS vs. SS).
+* ❌ Keine impliziten Seiteneffekte beim Klick auf „Add to new chat“.
+
+---
+
+## ANCHORS (Relevante Stellen im Code)
+
+### 1️⃣ Selection-State & Persistenz
+
+**Bereich:** `SelectionState`, `selectionState`, `persistSelection()`
+
+* Verwaltet die aktuell ausgewählten Nachrichtenpaare.
+* Persistiert Auswahl unter:
+
+  * `mpathy:archive:selection:v1` (Session Storage)
+* Diese Selection ist **Input** für Verify *und* Injection.
+
+➡️ **Nicht ändern:** Struktur, Key, Semantik.
+
+---
+
+### 2️⃣ Global Event Listener (Verify-Rückkanal)
+
+**Bereich:** `useEffect` mit Event-Listenern
+
+```ts
+window.addEventListener('mpathy:archive:verify:error', ...)
+window.addEventListener('mpathy:archive:verify:info', ...)
+window.addEventListener('mpathy:archive:verify:success', ...)
+```
+
+* Reagiert auf Ergebnisse des Verify-Prozesses.
+* `onVerifySuccess()`:
+
+  * cleared Selection
+  * schaltet Mode auf `reports`
+
+➡️ **Nur Verify-bezogen.**
+➡️ Injection darf hier **nicht** andocken.
+
+---
+
+### 3️⃣ Bootstrap / Initialisierung
+
+**Bereich:** `useEffect` (Bootstrap)
+
+```ts
+initArchiveVerifyListener()
+```
+
+* Initialisiert **ausschließlich** den Verify-Listener.
+* Muss unverändert bleiben.
+
+➡️ Injection bekommt **einen eigenen Listener**, nicht hier hineinbauen.
+
+---
+
+### 4️⃣ HEADER — Mode Switch (CHAT / REPORTS)
+
+**Bereich:** Header Buttons
+
+```tsx
+<button>CHAT</button>
+<button>REPORTS</button>
+```
+
+* Umschaltung betrifft **nur EBENE 1** (Modus).
+* Hat **keinen Einfluss** auf Selection oder Injection.
+
+➡️ Nicht für Prozess-Logik missbrauchen.
+
+---
+
+### 5️⃣ ACTION BUTTON — Verify
+
+**Bereich:** Button „Verify {selection.length}"
+
+```ts
+CustomEvent('mpathy:archive:verify', { intent: 'verify', pairs: selection })
+```
+
+* Korrekt angebunden.
+* Dient als Referenz für Event-Dispatch.
+
+➡️ Nicht verändern.
+
+---
+
+### 6️⃣ ACTION BUTTON — Add to new chat (KRITISCH)
+
+**Bereich:** Button „Add {selection.length}/4 to new chat"
+
+```ts
+CustomEvent('mpathy:archive:verify', { intent: 'verify', pairs: selection })
+```
+
+* **Aktueller Zustand (falsch):**
+
+  * Dispatcht `verify` statt `inject`.
+* **Zukünftiger Zustand (Ziel):**
+
+  * Muss **eigenes Event** dispatchen (z. B. `mpathy:archive:inject`).
+  * Darf **keine Navigation** auslösen.
+
+➡️ **Hier wird später gepatcht.**
+
+---
+
+### 7️⃣ Close-Button (Archiv schließen)
+
+**Bereich:** Close-X Button
+
+```ts
+CustomEvent('mpathy:archive:close')
+```
+
+* Schließt das Archiv ohne Seiteneffekte.
+* Injection-Flow darf **erst nach erfolgreicher Preparation** hier ankommen.
+
+➡️ Nicht direkt vom Injection-Button aus nutzen.
+
+---
+
+## ZUSAMMENFASSUNG (für Dev-Team)
+
+* `ArchiveOverlay.tsx` ist **Trigger & UI-Orchestrator**.
+* Verify und Injection **dürfen hier nur angestoßen**, nicht ausgeführt werden.
+* Der einzige Patchpunkt für Injection ist der **„Add to new chat“-Button**.
+* Alles andere dient der Stabilität und darf nicht verändert werden.
+
+**Ohne Verständnis dieses Index: kein Patch erlaubt.***/
 
 
 
