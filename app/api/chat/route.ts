@@ -415,19 +415,33 @@ const cookieHeader = req.headers.get("cookie") ?? null;
 
 let sessionEmail: string | null = null;
 let sessionUserId: string | null = null;
+
 if (cookieHeader) {
   const parts = cookieHeader.split(";").map((p) => p.trim());
   const authPart = parts.find((p) => p.startsWith(`${AUTH_COOKIE_NAME}=`));
+
   if (authPart) {
-    const raw = authPart.slice(AUTH_COOKIE_NAME.length + 1);
-    const payload = verifySessionToken(raw);
-    sessionEmail = payload?.email ?? null;
-    if (payload && (payload as any).id != null) {
-      sessionUserId = String((payload as any).id);
+    try {
+      const raw = authPart.slice(AUTH_COOKIE_NAME.length + 1);
+      const payload = verifySessionToken(raw);
+
+      if (payload?.email) {
+        sessionEmail = payload.email;
+        if ((payload as any).id != null) {
+          sessionUserId = String((payload as any).id);
+        }
+      }
+    } catch {
+      // ⚠️ absichtlich leer:
+      // ungültiger Cookie → Gast (FreeGate greift)
+      sessionEmail = null;
+      sessionUserId = null;
     }
   }
 }
+
 const isAuthenticated = !!sessionEmail;
+
 
 if (!FG_SECRET) {
   return NextResponse.json({ error: "FREEGATE_SECRET missing" }, { status: 500 });
