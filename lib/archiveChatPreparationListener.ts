@@ -70,10 +70,10 @@ ${p.assistant}
 }
 
 async function requestSummary(prompt: string): Promise<string> {
-  console.info('[ARCHIVE][L4] POST /api/ai/chat')
+  console.info('[ARCHIVE][L4] POST /api/chat')
   console.info('[ARCHIVE][L4.1] prompt length:', prompt.length)
 
-  const res = await fetch('/api/ai/chat', {
+  const res = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -85,6 +85,7 @@ async function requestSummary(prompt: string): Promise<string> {
   })
 
   console.info('[ARCHIVE][L5] response status:', res.status)
+
 
   if (!res.ok) {
     throw new Error('SUMMARY_REQUEST_FAILED')
