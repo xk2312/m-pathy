@@ -433,6 +433,7 @@ useEffect(() => {
 /* -------------------------------------------------------------- */
 /* Render                                                         */
 /* -------------------------------------------------------------- */
+  const [isPreparing, setIsPreparing] = useState(false)
 
   return (
     /* ============================================================ */
@@ -455,13 +456,6 @@ useEffect(() => {
   "
 >
 
-
-
-
-
-
-
-
       {/* ========================================================== */}
 {/* CONTENT FRAME — FULL BLEED                                 */}
 {/* ========================================================== */}
@@ -479,10 +473,10 @@ useEffect(() => {
     "
   >
 
-    {/* ====================================================== */}
-    {/* HEADER — ORIENTATION                                   */}
-    {/* ====================================================== */}
- <header
+{/* ====================================================== */}
+{/* HEADER — ORIENTATION                                   */}
+{/* ====================================================== */}
+<header
   className="
     pb-4
     flex
@@ -495,25 +489,23 @@ useEffect(() => {
   </h1>
 
   <div className="flex gap-4 text-sm">
-   <button
-  onClick={() => {
-    setMode('chat')
-    setChatView('recent')
-    setOpenChainId(null)
-  }}
-  className={`${mode === 'chat' ? 'text-cyan-400' : 'text-text-secondary'} cursor-pointer`}
->
-  CHAT
-</button>
-
+    <button
+      onClick={() => {
+        setMode('chat')
+        setChatView('recent')
+        setOpenChainId(null)
+      }}
+      className={`${mode === 'chat' ? 'text-cyan-400' : 'text-text-secondary'} cursor-pointer`}
+    >
+      CHAT
+    </button>
 
     <button
-  onClick={() => setMode('reports')}
-  className={`${mode === 'reports' ? 'text-cyan-400' : 'text-text-secondary'} cursor-pointer`}
->
-  REPORTS
-</button>
-
+      onClick={() => setMode('reports')}
+      className={`${mode === 'reports' ? 'text-cyan-400' : 'text-text-secondary'} cursor-pointer`}
+    >
+      REPORTS
+    </button>
   </div>
 
   <p
@@ -526,85 +518,83 @@ useEffect(() => {
     Browse, review, and select past conversations.
   </p>
 
-
-
-{selection.length > 0 && (
-  <div
-    className="
-      mt-2
-      flex
-      items-center
-      gap-6
-    "
-  >
+  {selection.length > 0 && (
     <div
       className="
-        text-sm
-        text-text-secondary
+        mt-2
+        flex
+        items-center
+        gap-6
       "
     >
-      {selection.length} message pairs selected
+      <div
+        className="
+          text-sm
+          text-text-secondary
+        "
+      >
+        {selection.length} message pairs selected
+      </div>
+
+      {/* VERIFY — unverändert */}
+      <button
+        type="button"
+        onClick={() => {
+          window.dispatchEvent(
+            new CustomEvent('mpathy:archive:verify', {
+              detail: {
+                intent: 'verify',
+                pairs: selection,
+              },
+            })
+          )
+        }}
+        className="
+          text-sm
+          font-medium
+          text-cyan-400
+          hover:text-cyan-300
+          transition
+        "
+      >
+        Verify {selection.length}
+      </button>
+
+      {/* ARCHIVE → CHAT (Injection Start) */}
+      <button
+        type="button"
+        disabled={selection.length > 4 || isPreparing}
+        onClick={() => {
+          if (selection.length <= 4 && !isPreparing) {
+            setIsPreparing(true)
+            window.dispatchEvent(
+              new CustomEvent('mpathy:archive:start-chat', {
+                detail: {
+                  pairs: selection,
+                },
+              })
+            )
+          }
+        }}
+        className={`
+          text-sm
+          font-medium
+          transition
+          ${
+            selection.length > 4 || isPreparing
+              ? 'text-text-muted cursor-not-allowed'
+              : 'text-cyan-400 hover:text-cyan-300'
+          }
+        `}
+      >
+        {selection.length > 4
+          ? 'Too many to add'
+          : `Add ${selection.length}/4 to new chat`}
+      </button>
     </div>
-
-    <button
-      type="button"
-      onClick={() => {
-        window.dispatchEvent(
-          new CustomEvent('mpathy:archive:verify', {
-            detail: {
-              intent: 'verify',
-              pairs: selection,
-            },
-          })
-        )
-      }}
-
-      className="
-        text-sm
-        font-medium
-        text-cyan-400
-        hover:text-cyan-300
-        transition
-      "
-    >
-      Verify {selection.length}
-    </button>
-
-
-     <button
-  type="button"
-  disabled={selection.length > 4}
-  onClick={() => {
-    if (selection.length <= 4) {
-      window.dispatchEvent(
-        new CustomEvent('mpathy:archive:verify', {
-          detail: {
-            intent: 'verify',
-            pairs: selection,
-          },
-        }),
-      )
-    }
-  }}
-  className={`
-    text-sm
-    font-medium
-    transition
-    ${
-      selection.length > 4
-        ? 'text-text-muted cursor-not-allowed'
-        : 'text-cyan-400 hover:text-cyan-300'
-    }
-  `}
->
-  {selection.length > 4
-    ? 'Too many to add'
-    : `Add ${selection.length}/4 to new chat`}
-</button>  </div>
-)}
-
-
+  )}
 </header>
+
 
 
     {/* ====================================================== */}
