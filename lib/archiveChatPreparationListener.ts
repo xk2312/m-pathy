@@ -91,17 +91,24 @@ async function requestSummary(prompt: string): Promise<string> {
     throw new Error('SUMMARY_REQUEST_FAILED')
   }
 
-  const data = await res.json()
-  console.info('[ARCHIVE][L6] response keys:', Object.keys(data || {}))
+ const data = await res.json()
+console.info('[ARCHIVE][L6] response keys:', Object.keys(data || {}))
 
-  const text = data?.assistant?.content
-  console.info('[ARCHIVE][L7] summary length:', text?.length)
+const text =
+  typeof data?.content === 'string'
+    ? data.content
+    : typeof data?.assistant?.content === 'string'
+    ? data.assistant.content
+    : null
 
-  if (typeof text !== 'string') {
-    throw new Error('INVALID_SUMMARY_RESPONSE')
-  }
+console.info('[ARCHIVE][L7] summary length:', text?.length)
 
-  return text.trim()
+if (typeof text !== 'string') {
+  throw new Error('INVALID_SUMMARY_RESPONSE')
+}
+
+return text.trim()
+
 }
 
 async function handleStartChat(e: Event) {
