@@ -1,171 +1,109 @@
-/*# 📑 FILE INDEX — page2/page.tsx
+/*
+# 📑 INDEX — `page2/page.tsx`
 
-## Zweck der Datei
+## 1. Modul-Header & Runtime-Kontext
 
-Zentrale **Chat-Seite** von m‑pathy. Diese Datei orchestriert **UI‑Layout**, **Chat‑State**, **Token‑Tracking**, **Ledger‑Anbindung (Triketon)**, **API‑Kommunikation** sowie **System‑ und Mode‑Events**. Sie ist der Endpunkt, an dem eine neue Chat‑Session sichtbar wird – und damit **kritisch** für jede Archive‑Injection.
+* `"use client"` Direktive (Client-Side Rendering, Hooks erlaubt)
+* React-Importe: `useEffect`, `useState`, `useRef`, `useCallback`, `useMemo`, `FormEvent`
+* Next.js Runtime-Kontext (Client Page, kein Server Component)
 
----
+## 2. Provider & globale Infrastruktur
 
-## 1. High‑Level Verantwortung
+* `LanguageProvider` (i18n-Root, globale Sprachsteuerung)
+* `Navigation` (Hauptnavigation, persistenter UI-Frame)
+* `OnboardingWatcher` (Lifecycle-Überwachung für Erstnutzer)
+* `useMobileViewport` (Viewport-Detection & Responsive-Steuerung)
 
-* Rendering der Chat‑Oberfläche (Desktop & Mobile)
-* Verwaltung des vollständigen Chat‑States (Messages, Loading, Mode)
-* Versand von Nachrichten an `/api/chat`
-* Entgegennahme und Streaming der Assistant‑Antwort
-* Persistenz in `localStorage` über `lib/chatStorage`
-* Führung des **Triketon‑Ledgers** (TruthHash, PublicKey, Timestamp)
-* Anzeige & Steuerung von System‑/Mode‑Flows (MAIOS‑Logik)
+## 3. UI-Grundbausteine (Layout & Shell)
 
-👉 **Diese Datei ist der Zielort jeder Injection**, nicht der Ort der Selektion.
+* `SidebarContainer` (Desktop-Sidebar-Layout)
+* `MobileOverlay` (Mobile Navigation / Overlay-UI)
+* `PromptRoot` (zentraler Chat-/Prompt-Container)
+* `Image` (Next.js Image Handling)
+* `highlight.js` (Syntax-Highlighting für Code-Blöcke)
 
----
+## 4. Lokalisierung & Textsystem
 
-## 2. Zentrale Imports & Abhängigkeiten
+* `getLocale` / `setLocale` (Locale-Initialisierung & Umschaltung)
+* `t` (Übersetzungsfunktion für UI-Strings)
 
-### Kritisch für Injection
+## 5. Identitäts- & ID-Handling
 
-* `loadChat`, `saveChat`, `appendTriketonLedgerEntry` → Persistenz & Beweiskette
-* `sendMessageLocal()` → einziger echter API‑Call zum Chat‑Backend
-* `systemSay()` → System-/Assistant‑Nachrichten ohne User‑Interaktion
-* `setMessages()` → einziger Weg, Messages in den Chat zu bringen
+* `uuidv4` (Erzeugung eindeutiger IDs für Messages / Sessions)
 
-### UI / Layout
+## 6. Persistenz- & Chat-Storage-Subsystem
 
-* `Conversation`, `Bubble`, `PromptRoot`, `SidebarContainer`
-* `MobileOverlay`, `Navigation`, `OnboardingWatcher`
+* Importierter Persistenzpfad aus `chatStorage`:
 
----
+  * `loadChat`
+  * `saveChat`
+  * `initChatStorage`
+  * `hardClearChat`
+  * `appendTriketonLedgerEntry`
+  * `ensureTriketonLedgerReady`
+  * `verifyOrResetTriketonLedger`
+* **Alias `persist`**
 
-## 3. Chat State – Zentrale Variablen
+  * kapselt `save`, `load`
+  * behält historische `cut`-Semantik (max. 120 Einträge)
 
-```ts
-const [messages, setMessages]
-const [loading, setLoading]
-const [mode, setMode]
-const [input, setInput]
-```
+## 7. Triketon-/Verification-Layer
 
-* `messages` ist **Single Source of Truth** für alles, was im Chat erscheint
-* Jede Injection **muss hier landen**, sonst ist sie nicht Teil des Systems
+* `normalizeForTruthHash` (kanonische Normalisierung)
+* `computeTruthHash` (deterministische Hash-Berechnung)
+* Einbindung in Message- / Ledger-Flow (keine UI-Logik)
 
----
+## 8. Theme- & Token-Typisierung
 
-## 4. Persistenz & Ledger (Beweiskette)
+* `ColorTokens` (bg / text Tokens)
+* `ThemeTokens` (erweiterbare Theme-Struktur)
+* rein typdefinierend, keine Laufzeitwirkung
 
-### Lokale Persistenz
+## 9. React-State-Management (lokal)
 
-* `saveChat(messages)` → schreibt in `localStorage`
-* Autosave via `useEffect([messages])`
+* Diverse `useState`-States für:
 
-### Triketon Ledger
+  * Chat-Nachrichten
+  * UI-Zustände (Sidebar, Mobile Overlay, Input)
+  * Initialisierungs-Flags
+* `useRef` für stabile Referenzen über Renders hinweg
 
-* `appendTriketonLedgerEntry()` wird aufgerufen bei:
+## 10. Lifecycle- & Initialisierungslogik
 
-  * User‑Nachricht
-  * Assistant‑Antwort (final)
+* `useEffect`-Blöcke für:
 
-⚠️ **Injection‑Nachrichten müssen hier NICHT direkt ins Ledger**,
-sondern nur, wenn sie als echte Chat‑Messages erscheinen.
+  * Locale-Initialisierung
+  * Chat-Storage-Setup
+  * Ledger-Validierung
+  * Wiederherstellung persistierter Chats
+* klare Trennung zwischen:
 
----
+  * Initial Load
+  * Rehydration
+  * Laufzeit-Interaktion
 
-## 5. API‑Kommunikation
+## 11. Event- & Callback-Orchestrierung
 
-### Zentrale Funktion
+* `useCallback` für:
 
-```ts
-async function sendMessageLocal(context: ChatMessage[])
-```
+  * Message-Handling
+  * Submit-Flows
+  * Reset-/Clear-Aktionen
+* keine globalen Event-Listener außerhalb React-Lifecycle
 
-* POST `/api/chat`
-* Übergibt kompletten Kontext + Locale
-* Antwort enthält:
+## 12. Render-Baum (Top-Level)
 
-  * `assistant.content`
-  * `tokens_used`
-  * `balance_after`
-  * optional `triketon`
+* Root-Return mit:
 
-👉 **Für Injection gilt:**
+  * `LanguageProvider`
+  * Navigation
+  * Layout-Shell (Sidebar / Mobile)
+  * `PromptRoot` als funktionaler Kern
+* **Kein leerer Return**
+* **Kein Conditional, das alles ausblendet**
 
-* Entweder über diesen Pfad laufen
-* Oder exakt denselben Payload‑Typ erzeugen
+*/
 
----
-
-## 6. System‑ & Mode‑Events (MAIOS)
-
-### Wichtige Events
-
-* `mpathy:system-message`
-* `mpathy:tokens:update`
-* interne Mode‑States (`THINKING`, `DEFAULT`, …)
-
-Diese Events beeinflussen:
-
-* Loading‑Animation
-* Header‑Status
-* Footer‑Status
-
-👉 **Injection muss Loading korrekt setzen und wieder freigeben.**
-
----
-
-## 7. UI‑Flow beim Nachrichteneingang
-
-1. User‑Message wird optimistisch angehängt
-2. `sendMessageLocal()` wird aufgerufen
-3. Leere Assistant‑Bubble wird erzeugt
-4. Inhalt wird **gestreamt** (Chunk‑Weise)
-5. Finale Nachricht wird persistiert + im Ledger verankert
-
-⚠️ Injection darf diesen Ablauf **nicht brechen**.
-
----
-
-## 8. Relevanz für Archive‑Injection
-
-**Diese Datei ist relevant für:**
-
-* Zielzustand nach erfolgreicher Injection
-* Anzeige der ersten Assistant‑Bubble
-* Token‑Abbuchung
-* Ledger‑Update
-
-**Diese Datei ist NICHT zuständig für:**
-
-* Auswahl im Archiv
-* Zusammenfassung der Paare
-* Session‑Storage der Injection‑Summary
-
----
-
-## 9. Explizite No‑Gos (für Dev‑Team)
-
-❌ Keine direkte Manipulation von `messages` ohne `setMessages`
-❌ Keine Umgehung von `sendMessageLocal`, wenn Tokens gezählt werden sollen
-❌ Keine Anzeige versteckter Summary‑Texte im Frontend
-❌ Kein Ledger‑Eintrag für unsichtbare System‑Vorbereitungsschritte
-
----
-
-## 10. Patch‑Anker (für spätere Schritte)
-
-* **Injection‑Einstieg:** vor erstem sichtbaren Assistant‑Message
-* **Loading‑State:** `setLoading(true/false)`
-* **Persistenz:** nur finale Messages
-* **Token‑Tracking:** unverändert lassen
-
----
-
-## Kurzfazit
-
-`page2/page.tsx` ist der **Zielraum** jeder Injection.
-Alles, was hier erscheint, ist Teil der Beweiskette.
-Alles, was hier nicht erscheint, existiert systemisch nicht.
-
-➡️ **Injection‑Logik muss sich exakt an diese Regeln anpassen.**
- */
 
 
 "use client";
@@ -186,36 +124,9 @@ import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import { useMobileViewport } from "@/lib/useMobileViewport";
 import { v4 as uuidv4 } from "uuid";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
-import {
-  loadChat,
-  saveChat,
-  initChatStorage,
-  hardClearChat,
-  appendTriketonLedgerEntry,
-  ensureTriketonLedgerReady,
-  verifyOrResetTriketonLedger,
-} from '@/lib/chatStorage'
+import { loadChat, saveChat, initChatStorage, hardClearChat, appendTriketonLedgerEntry, ensureTriketonLedgerReady, verifyOrResetTriketonLedger, } from '@/lib/chatStorage'
 import { computeTruthHash, normalizeForTruthHash } from "@/lib/triketonVerify";
-
-// ⬇︎ ARCHIVE → CHAT Injection (STEP 5)
-import {
-  readArchiveChatContext,
-  clearArchiveChatContext,
-} from "@/lib/storage";
-
-useEffect(() => {
-  const context = readArchiveChatContext();
-
-  if (context) {
-    window.dispatchEvent(
-      new CustomEvent("mpathy:archive:chat-prepared", {
-        detail: { source: "archive" },
-      })
-    );
-
-    clearArchiveChatContext();
-  }
-}, []);
+import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
 
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
@@ -1811,8 +1722,22 @@ useEffect(() => {
   };
 }, []);
 
+const withArchiveInjection = (ctx: ChatMessage[]) => {
+  const injected = readArchiveChatContext();
+  if (!injected) return { context: ctx, used: false };
+
+  const systemMsg: ChatMessage = {
+    role: "system",
+    content: `ARCHIVE CONTEXT\n\n${injected}`,
+    format: "markdown",
+  };
+
+  return { context: [systemMsg, ...(Array.isArray(ctx) ? ctx : [])], used: true };
+};
+
 // GC: Marker für temporäre System-Toasts (Golden Conversion)
 const GC_MARKER = "[[gc-toast]]";
+
 
 // ===============================================================
 // Systemmeldung (für Säule / Overlay / Onboarding)
@@ -2318,11 +2243,16 @@ if (last && (last as any).id === (userMsg as any).id) return; // Duplicate-Guard
     setMode("THINKING");
 
 
-    try {
-      const assistant = await sendMessageLocal(optimistic);
+        try {
+      const { context: outgoing, used } = withArchiveInjection(optimistic);
+      const assistant = await sendMessageLocal(outgoing);
+      if (used) {
+        clearArchiveChatContext();
+      }
       if (assistant.content === t("gc_please_login_to_continue")) {
         return;
       }
+
 
 // 1) Leere Assistant-Bubble anhängen
 setMessages((prev) => {
