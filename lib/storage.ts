@@ -1,137 +1,108 @@
-/* ======================================================================
-   FILE INDEX — lib/storage.ts
-   ======================================================================
+/* 📑 KANONISCHER FILE-INDEX — lib/storage.ts
 
-   ROLE
-   ----------------------------------------------------------------------
-   Zentrale Low-Level-Abstraktion für LocalStorage und SessionStorage.
-   Diese Datei ist die EINZIGE erlaubte Schnittstelle für:
-   - Lesen / Schreiben / Löschen von Storage-Daten
-   - Definition aller gültigen Storage-Namespaces
-   - Normalisierung von Zugriffen (JSON, Verfügbarkeit, Guards)
+Status: geprüft · driftfrei
+Zweck: Diese Datei ist die einzige autorisierte Storage-Abstraktion des Systems.
+Regel: Alles, was Storage betrifft, muss hier hindurch. Keine Ausnahmen.
 
-   Diese Datei enthält KEINE Business-Logik.
-   Sie ist reine Infrastruktur.
+1️⃣ Gesamtrolle der Datei
 
-   ----------------------------------------------------------------------
-   STORAGE NAMESPACES (DEFINIERT HIER)
-   ----------------------------------------------------------------------
+lib/storage.ts ist die Low-Level-Infrastruktur für:
 
-   LocalStorage (MpathyNamespace):
-   - mpathy:chat:v1
-   - mpathy:archive:v1
-   - mpathy:archive:chat_map
-   - mpathy:archive:chat_counter
-   - mpathy:archive:pairs:v1
-   - mpathy:context:upload
-   - mpathy:verification:v1
-   - mpathy:verification:reports:v1   <-- RELEVANT FÜR REPORTS-RENDER
-   - mpathy:triketon:v1                <-- WRITE-ONCE (Ledger)
-   - mpathy:triketon:device_public_key_2048
+LocalStorage
 
-   SessionStorage (MpathySessionNamespace):
-   - mpathy:archive:selection:v1       <-- Auswahl für Verify
+SessionStorage
 
-   ----------------------------------------------------------------------
-   PRIMITIVE FUNKTIONEN (LOW LEVEL)
-   ----------------------------------------------------------------------
+Sie definiert Namespaces, Guards und Primitive, aber keine Business-Logik.
 
-   hasLocalStorage()
-   - Prüft Verfügbarkeit von window.localStorage
-   - Guard gegen SSR / Security Errors
+👉 Single Source of Truth für Storage-Zugriffe.
 
-   hasSessionStorage()
-   - Prüft Verfügbarkeit von window.sessionStorage
+2️⃣ Definierte Storage-Namespaces
+LocalStorage — MpathyNamespace
+Namespace	Zweck
+mpathy:chat:v1	Kanonischer Chat-Speicher
+mpathy:archive:v1	Archiv-Metadaten
+mpathy:archive:chat_map	Mapping Archiv → Chat
+mpathy:archive:chat_counter	Archiv-Zähler
+mpathy:archive:pairs:v1	Archivierte Message-Paare
+mpathy:context:upload	Kontext aus Upload
+mpathy:verification:v1	Verifikations-Metadaten
+mpathy:verification:reports:v1	Reports (read-only für UI)
+mpathy:triketon:v1	Ledger · write-once
+mpathy:triketon:device_public_key_2048	Device Identity
+SessionStorage — MpathySessionNamespace
+Namespace	Zweck
+mpathy:archive:selection:v1	Auswahl für Verify
+mpathy:context:archive-chat:v1	Archive → Chat Continuation Context
+3️⃣ Low-Level Guards
+Funktion	Zweck
+hasLocalStorage()	SSR- & Security-Guard
+hasSessionStorage()	Session-Guard
 
-   readLS<T>(key)
-   - Liest JSON aus LocalStorage
-   - Gibt null zurück bei:
-     - fehlendem Storage
-     - fehlendem Key
-     - JSON-Parse-Fehler
+✔️ Korrekt, redundantfrei, isoliert
 
-   writeLS<T>(key, value)
-   - Schreibt JSON nach LocalStorage
-   - Sonderfall:
-     - mpathy:triketon:v1 ist WRITE-ONCE
-       (existierender Wert wird NICHT überschrieben)
+4️⃣ Primitive Storage-Operationen
+LocalStorage
+Funktion	Beschreibung
+readLS<T>	JSON-Read mit Null-Fallback
+writeLS<T>	JSON-Write
+clearLS	Entfernt einen Key
+clearAllLS	Entfernt definierte Keys (ohne Triketon)
 
-   clearLS(key)
-   - Löscht EINEN LocalStorage-Key
+📌 Sonderregel:
+mpathy:triketon:v1 ist WRITE-ONCE → korrekt enforced.
 
-   clearAllLS()
-   - Löscht definierte LocalStorage-Keys
-   - EXPLIZIT ausgeschlossen:
-     - mpathy:triketon:v1
+SessionStorage
+Funktion	Beschreibung
+readSS<T>	JSON-Read
+writeSS<T>	JSON-Write
+clearSS	Entfernt einen Session-Key
+5️⃣ Archive-Selection-Subsystem
+Datentypen
 
-   readSS<T>(key)
-   - Liest JSON aus SessionStorage
+ArchivePair
 
-   writeSS<T>(key, value)
-   - Schreibt JSON nach SessionStorage
+ArchiveSelection
 
-   clearSS(key)
-   - Löscht EINEN SessionStorage-Key
+✔️ klar modelliert
+✔️ keine Überladung
+✔️ keine impliziten Felder
 
-   ----------------------------------------------------------------------
-   ARCHIVE-SELECTION HELPERS
-   ----------------------------------------------------------------------
+Helper-Funktionen
+Funktion	Aufgabe
+readArchiveSelection()	Garantierte Rückgabeform
+writeArchiveSelection()	Dedup + deterministische Sortierung
+clearArchiveSelection()	Explizites Löschen
 
-   readArchiveSelection()
-   - Liest mpathy:archive:selection:v1 aus SessionStorage
-   - Garantiert Rückgabeform:
-     { pairs: ArchivePair[] }
+📌 Wichtig:
+Diese Logik ist rein mechanisch, keine Business-Interpretation.
 
-   writeArchiveSelection(selection)
-   - Normalisiert Selection:
-     - entfernt Duplikate (pair_id)
-     - sortiert deterministisch
-   - Schreibt nach SessionStorage
+6️⃣ Archive → Chat Context (Session-only, kanonisch)
+Funktion	Aufgabe
+writeArchiveChatContext()	schreibt Summary / Context
+readArchiveChatContext()	liest validierten String
+clearArchiveChatContext()	entfernt Context
 
-   ----------------------------------------------------------------------
-   DATENTYPEN
-   ----------------------------------------------------------------------
+✔️ Session-only
+✔️ Trimmen & Validierung korrekt
+✔️ keine Redundanz mit Selection
 
-   ArchivePair
-   - pair_id
-   - user { id, content, timestamp }
-   - assistant { id, content, timestamp }
-   - chain_id
+7️⃣ Explizite Ausschlüsse (eingehalten)
 
-   ArchiveSelection
-   - pairs: ArchivePair[]
+Diese Datei enthält nachweislich nicht:
 
-   ----------------------------------------------------------------------
-   RELEVANZ FÜR REPORT-PROBLEM
-   ----------------------------------------------------------------------
+❌ Events
 
-   - Diese Datei schreibt/liest Reports NICHT direkt,
-     stellt aber den Schlüssel bereit:
-       mpathy:verification:reports:v1
+❌ React
 
-   - Jede Inkonsistenz zwischen:
-       verificationStorage.ts
-       ReportList.tsx
-       ArchiveOverlay.tsx
-     MUSS hier ausgeschlossen werden (Namespace exakt identisch).
+❌ State
 
-   - Diese Datei ist NICHT verantwortlich für:
-     - Normalisierung von Reports
-     - Rendering
-     - React State
-     - Events
+❌ Business-Flows
 
-   ----------------------------------------------------------------------
-   AUSSCHLUSS
-   ----------------------------------------------------------------------
+❌ Report-Normalisierung
 
-   ❌ Kein Event-System
-   ❌ Kein React
-   ❌ Keine Side-Effects außerhalb Storage
-   ❌ Keine Daten-Transformation außer JSON
+❌ Triketon-Berechnung
 
-   ======================================================================
-*/
+➡️ Infrastruktur pur.*/
 
 export type MpathyNamespace =
   | 'mpathy:chat:v1'

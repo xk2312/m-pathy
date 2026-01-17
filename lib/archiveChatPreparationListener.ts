@@ -2,24 +2,18 @@
 
 import {
   writeArchiveChatContext,
-  readArchiveChatContext,
   clearArchiveChatContext,
   clearArchiveSelection,
 } from './storage'
 
-type StartChatEventDetail = {
-  pairs: {
-    user: {
-      content: string
-    }
-    assistant: {
-      content: string
-    }
-    }[]
-}
-
+/* ======================================================
+   CONFIG
+   ====================================================== */
 
 const TIMEOUT_MS = 15000
+
+const SYSTEM_SUMMARY_HEADER =
+  'You are a precise summarization engine.'
 
 const SYSTEM_CONTINUATION_HEADER = `
 You are continuing a conversation based on a verified archival summary.
@@ -37,11 +31,27 @@ Rules:
 Produce the next assistant response to the user.
 `.trim()
 
-console.info('[ARCHIVE][L0] archiveChatPreparationListener loaded')
+console.info('[ARCHIVE][BOOT] archiveChatPreparation loaded')
+
+/* ======================================================
+   TYPES
+   ====================================================== */
+
+type ArchivePairLike = {
+  user: { content?: string }
+  assistant: { content?: string }
+}
+
+type StartChatEventDetail = {
+  pairs: ArchivePairLike[]
+}
+
+/* ======================================================
+   UTILS
+   ====================================================== */
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return new Promise((resolve, reject) => {
-
     const id = setTimeout(() => reject(new Error('TIMEOUT')), ms)
     promise
       .then((res) => {
@@ -55,23 +65,15 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   })
 }
 
-/**
- * VORGANG 1 – SUMMARY GENERATION
- * (wortgleich zur Spezifikation)
- */
-function buildSummaryPrompt(
-  pairs: {
-    user: { content?: string }
-    assistant: { content?: string }
-  }[]
-): string {
-  console.info('[ARCHIVE][L3] buildSummaryPrompt pairs:', pairs.length)
+/* ======================================================
+   SUMMARY PROMPT
+   ====================================================== */
+
+function buildSummaryPrompt(pairs: ArchivePairLike[]): string {
+  console.info('[ARCHIVE][S1] buildSummaryPrompt pairs:', pairs.length)
 
   return `
 You will receive a set of up to four complete USER–ASSISTANT message pairs.
-Each pair consists of:
-- a USER message
-- the corresponding ASSISTANT response
 
 Your task is to produce a detailed, complete, and lossless summary of the conversation so far.
 
@@ -94,117 +96,58 @@ USER:
 ${typeof p.user?.content === 'string' ? p.user.content : ''}
 
 ASSISTANT:
-${typeof p.assistant?.content === 'string' ? p.assistant.content : ''}
+${typeof p.assistant?.content === 'string'
+  ? p.assistant.content
+  : ''}
 `
   )
   .join('\n')}
 `.trim()
 }
 
+/* ======================================================
+   API CALLS
+   ====================================================== */
 
 async function requestSummary(prompt: string): Promise<string> {
-  console.info('[ARCHIVE][L4] POST /api/chat')
-  console.info('[ARCHIVE][L4.1] prompt length:', prompt.length)
+  console.info('[ARCHIVE][S2] POST /api/chat (summary)')
+  console.info('[ARCHIVE][S2.1] prompt length:', prompt.length)
 
   const res = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       messages: [
-        { role: 'system', content: 'You are a precise summarization engine.' },
+        { role: 'system', content: SYSTEM_SUMMARY_HEADER },
         { role: 'user', content: prompt },
       ],
     }),
   })
 
-  console.info('[ARCHIVE][L5] response status:', res.status)
+  console.info('[ARCHIVE][S2.2] response status:', res.status)
 
+  if (!res.ok) throw new Error('SUMMARY_REQUEST_FAILED')
 
-  if (!res.ok) {
-    throw new Error('SUMMARY_REQUEST_FAILED')
+  const data = await res.json()
+  const text =
+    typeof data?.content === 'string'
+      ? data.content
+      : typeof data?.assistant?.content === 'string'
+      ? data.assistant.content
+      : null
+
+  console.info('[ARCHIVE][S2.3] summary length:', text?.length)
+
+  if (typeof text !== 'string') {
+    throw new Error('INVALID_SUMMARY_RESPONSE')
   }
 
- const data = await res.json()
-console.info('[ARCHIVE][L6] response keys:', Object.keys(data || {}))
-
-const text =
-  typeof data?.content === 'string'
-    ? data.content
-    : typeof data?.assistant?.content === 'string'
-    ? data.assistant.content
-    : null
-
-console.info('[ARCHIVE][L7] summary length:', text?.length)
-
-if (typeof text !== 'string') {
-  throw new Error('INVALID_SUMMARY_RESPONSE')
+  return text.trim()
 }
 
-return text.trim()
-
-}
-
-async function handleStartChat(e: Event) {
-  console.info('[ARCHIVE][L1] start-chat event received')
-
-  const event = e as CustomEvent<StartChatEventDetail>
-  const pairs = Array.isArray(event.detail?.pairs) ? event.detail.pairs : []
-
-  console.info('[ARCHIVE][L2] pairs count:', pairs.length)
-
-  try {
-    const prompt = buildSummaryPrompt(pairs)
-
-    const summary = await withTimeout(
-      requestSummary(prompt),
-      TIMEOUT_MS
-    )
-
-    if (!summary) {
-      throw new Error('EMPTY_SUMMARY')
-    }
-
-    console.info('[ARCHIVE][L8] summary ok, length:', summary.length)
-
-    // Persist ONLY the summary, nowhere else
-    writeArchiveChatContext(summary)
-    console.info('[ARCHIVE][L9] summary written to session storage')
-
-    window.dispatchEvent(
-      new CustomEvent('mpathy:archive:chat-prepared')
-    )
-    console.info('[ARCHIVE][L10] chat-prepared dispatched')
-  } catch (err) {
-    console.error('[ARCHIVE][E]', err)
-    window.dispatchEvent(
-      new CustomEvent('mpathy:archive:chat-error')
-    )
-  }
-}
-
-if (typeof window !== 'undefined') {
-  window.addEventListener(
-    'mpathy:archive:start-chat',
-    handleStartChat
-  )
-  console.info('[ARCHIVE][L11] start-chat listener attached')
-}
-
-/* ======================================================
-   PHASE 2 — CHAT CONTINUATION (ADD-ONLY)
-   ====================================================== */
-
-async function handleArchiveChatPrepared() {
-  console.info('[ARCHIVE][P2][L1] chat-prepared received')
-
-  const summary = readArchiveChatContext()
-
-  if (typeof summary !== 'string' || !summary.trim()) {
-    console.error('[ARCHIVE][P2][E] missing or empty summary')
-    return
-  }
-
-  console.info('[ARCHIVE][P2][L2] summary length:', summary.length)
+async function requestContinuation(summary: string): Promise<any> {
+  console.info('[ARCHIVE][C1] POST /api/chat (continuation)')
+  console.info('[ARCHIVE][C1.1] summary length:', summary.length)
 
   const res = await fetch('/api/chat', {
     method: 'POST',
@@ -217,27 +160,89 @@ async function handleArchiveChatPrepared() {
     }),
   })
 
-  if (!res.ok) {
-    console.error('[ARCHIVE][P2][E] continuation request failed')
-    return
-  }
+  console.info('[ARCHIVE][C1.2] response status:', res.status)
+
+  if (!res.ok) throw new Error('CONTINUATION_REQUEST_FAILED')
 
   const data = await res.json()
-  console.info('[ARCHIVE][P2][L3] continuation response received')
+  console.info('[ARCHIVE][C1.3] continuation response received')
 
-  // Inject into existing chat pipeline (no routing changes)
-   // FINAL CLEANUP — strictly last (canonical storage API)
-  clearArchiveSelection()
-  clearArchiveChatContext()
-
-  console.info('[ARCHIVE][P2][L5] archive namespaces cleared')
-
+  return data
 }
+
+/* ======================================================
+   MAIN FLOW — SINGLE ENTRY POINT
+   ====================================================== */
+
+async function handleStartChat(e: Event) {
+  console.info('[ARCHIVE][F0] start-chat event received')
+
+  const event = e as CustomEvent<StartChatEventDetail>
+  const pairs = Array.isArray(event.detail?.pairs)
+    ? event.detail.pairs
+    : []
+
+  console.info('[ARCHIVE][F1] pairs count:', pairs.length)
+
+  try {
+    /* -------- SUMMARY -------- */
+    const summaryPrompt = buildSummaryPrompt(pairs)
+
+    const summary = await withTimeout(
+      requestSummary(summaryPrompt),
+      TIMEOUT_MS
+    )
+
+    if (!summary) throw new Error('EMPTY_SUMMARY')
+
+    console.info('[ARCHIVE][F2] summary ok')
+
+    writeArchiveChatContext(summary)
+    console.info('[ARCHIVE][F3] summary written to session storage')
+
+    /* -------- CONTINUATION -------- */
+    const continuation = await withTimeout(
+      requestContinuation(summary),
+      TIMEOUT_MS
+    )
+
+    console.info('[ARCHIVE][F4] continuation ok')
+
+    /* ======================================================
+       ⛔️ KRITISCHER ÜBERGABEPUNKT
+       ------------------------------------------------------
+       HIER muss die Antwort in die KANONISCHE CHAT-PIPELINE:
+       - write to mpathy:chat:v1
+       - Triketon-Seal erzeugen
+       - UI auf neuen Chat wechseln
+       ------------------------------------------------------
+       Beispiel (PSEUDO, ggf. anpassen):
+       
+       writeChatAssistantMessage(continuation)
+       sealWithTriketon(...)
+       navigateToChat(...)
+       
+       ====================================================== */
+
+    console.info('[ARCHIVE][F5] TODO: write continuation into chat pipeline')
+
+    /* -------- CLEANUP (STRICTLY LAST) -------- */
+    clearArchiveSelection()
+    clearArchiveChatContext()
+    console.info('[ARCHIVE][F6] archive namespaces cleared')
+  } catch (err) {
+    console.error('[ARCHIVE][ERROR]', err)
+  }
+}
+
+/* ======================================================
+   LISTENER ATTACH
+   ====================================================== */
 
 if (typeof window !== 'undefined') {
   window.addEventListener(
-    'mpathy:archive:chat-prepared',
-    handleArchiveChatPrepared
+    'mpathy:archive:start-chat',
+    handleStartChat
   )
-  console.info('[ARCHIVE][P2][L0] phase-2 listener attached')
+  console.info('[ARCHIVE][BOOT] start-chat listener attached')
 }

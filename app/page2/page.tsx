@@ -126,8 +126,9 @@ import { v4 as uuidv4 } from "uuid";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
 import { loadChat, saveChat, initChatStorage, hardClearChat, appendTriketonLedgerEntry, ensureTriketonLedgerReady, verifyOrResetTriketonLedger, } from '@/lib/chatStorage'
 import { computeTruthHash, normalizeForTruthHash } from "@/lib/triketonVerify";
-import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
+import { readArchiveChatContext, clearArchiveChatContext,clearArchiveSelection  } from "@/lib/storage";
 import '@/lib/archiveChatPreparationListener'
+
 
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
@@ -2212,6 +2213,43 @@ appendTriketonLedgerEntry({
     } catch (err) {
       console.warn("[TriketonLedger] user append failed:", err);
     }
+setMessages((prev) => {
+  if (!Array.isArray(prev) || prev.length === 0) return prev;
+
+  const last = prev[prev.length - 1] as any;
+  if (!last || last.role !== "assistant") return prev;
+
+  const finalText = String(last.content ?? "");
+  if (!finalText.trim()) return prev;
+
+  const id =
+    typeof last.id === "string" && last.id.length
+      ? last.id
+      : (typeof crypto !== "undefined" && typeof (crypto as any).randomUUID === "function")
+        ? (crypto as any).randomUUID()
+        : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+
+ const publicKey = "local_assistant";
+
+
+  try {
+    appendTriketonLedgerEntry({
+      id,
+      role: "assistant",
+      content: finalText,
+      truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
+      public_key: String(publicKey),
+      timestamp: new Date().toISOString(),
+      version: "v1",
+      orbit_context: "chat",
+      chain_id: "local",
+    });
+  } catch (err) {
+    console.warn("[TriketonLedger] assistant append failed:", err);
+  }
+
+  return prev;
+});
 
     // ---------------------------------------------------------------------------
     // Step L4 – Chain Serialization & Recovery (v1)
@@ -2255,7 +2293,7 @@ if (last && (last as any).id === (userMsg as any).id) return; // Duplicate-Guard
       }
 
 
-// 1) Leere Assistant-Bubble anhängen
+// 1) Leere Assistant-Bubble anhängen (Continuation Entry)
 setMessages((prev) => {
   const base = Array.isArray(prev) ? prev : [];
 
@@ -2270,17 +2308,16 @@ setMessages((prev) => {
     assistantMsg,
   ]);
 
-  // ⚠️ KEINE Persistenz hier (Placeholder)
+  console.info("[ARCHIVE][CONTINUATION] empty assistant bubble appended");
   return next;
 });
 
-
-// 2) Inhalt schrittweise aufbauen (deterministisch awaited)
-const fullText = assistant.content ?? "";
-const CHUNK_SIZE = 2;
-const TICK_MS = 16;
-
+// 2) Inhalt schrittweise aufbauen (KANONISCHER Stream-Pfad)
 const streamAssistant = async () => {
+  const fullText = assistant.content ?? "";
+  const CHUNK_SIZE = 2;
+  const TICK_MS = 16;
+
   for (let i = 0; i < fullText.length; i += CHUNK_SIZE) {
     await new Promise((r) => setTimeout(r, TICK_MS));
 
@@ -2302,51 +2339,17 @@ const streamAssistant = async () => {
   }
 };
 
-// ⬇️ WICHTIG: await statt fire-and-forget
+// 3) Streaming ausführen
+console.info("[ARCHIVE][CONTINUATION] handover to streamAssistant");
 await streamAssistant();
 
-setMessages((prev) => {
-  if (!Array.isArray(prev) || prev.length === 0) return prev;
-
-  const last = prev[prev.length - 1] as any;
-  if (!last || last.role !== "assistant") return prev;
-
-  const finalText = String(last.content ?? "");
-  if (!finalText.trim()) return prev;
-
-  const id =
-    typeof last.id === "string" && last.id.length
-      ? last.id
-      : (typeof crypto !== "undefined" && typeof (crypto as any).randomUUID === "function")
-        ? (crypto as any).randomUUID()
-        : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
-
-  const publicKey =
-    (assistant as any)?.triketon?.public_key ||
-    (assistant as any)?.triketon?.publicKey ||
-    "local_assistant";
-
-  try {
-    appendTriketonLedgerEntry({
-      id,
-      role: "assistant",
-      content: finalText,
-      truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
-      public_key: String(publicKey),
-      timestamp: new Date().toISOString(),
-      version: "v1",
-      orbit_context: "chat",
-      chain_id: "local",
-    });
-  } catch (err) {
-    console.warn("[TriketonLedger] assistant append failed:", err);
-  }
-
-  return prev;
-});
 
 
+// 4) Cleanup erst NACH erfolgreichem Write
+clearArchiveChatContext();
+clearArchiveSelection();
 
+console.info("[ARCHIVE][CONTINUATION] archive context cleared");
 
       const meta = (assistant as any).meta as
         | { status?: string; balanceAfter?: number | null }
