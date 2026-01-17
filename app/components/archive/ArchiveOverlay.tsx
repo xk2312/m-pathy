@@ -533,39 +533,35 @@ useEffect(() => {
 
 
      <button
-      type="button"
-      disabled={selection.length > 6}
-      onClick={() => {
-        if (selection.length <= 6) {
-          window.dispatchEvent(
-  new CustomEvent('mpathy:archive:verify', {
-    detail: {
-      intent: 'verify',
-      pairs: selection,
-    },
-  }),
-)
-
-
-        }
-      }}
-
-      className={`
-        text-sm
-        font-medium
-        transition
-        ${
-          selection.length > 6
-            ? 'text-text-muted cursor-not-allowed'
-            : 'text-cyan-400 hover:text-cyan-300'
-        }
-      `}
-    >
-      {selection.length > 6
-        ? 'Too many to add'
-        : `Add ${selection.length}/6 to new chat`}
-    </button>
-  </div>
+  type="button"
+  disabled={selection.length > 4}
+  onClick={() => {
+    if (selection.length <= 4) {
+      window.dispatchEvent(
+        new CustomEvent('mpathy:archive:verify', {
+          detail: {
+            intent: 'verify',
+            pairs: selection,
+          },
+        }),
+      )
+    }
+  }}
+  className={`
+    text-sm
+    font-medium
+    transition
+    ${
+      selection.length > 4
+        ? 'text-text-muted cursor-not-allowed'
+        : 'text-cyan-400 hover:text-cyan-300'
+    }
+  `}
+>
+  {selection.length > 4
+    ? 'Too many to add'
+    : `Add ${selection.length}/4 to new chat`}
+</button>  </div>
 )}
 
 
