@@ -273,6 +273,9 @@ export function writeArchiveSelection(selection: ArchiveSelection): void {
     pairs: ordered,
   })
 }
+export function clearArchiveSelection(): void {
+  clearSS('mpathy:archive:selection:v1')
+}
 
 
 export function clearSS(key: MpathySessionNamespace): void {

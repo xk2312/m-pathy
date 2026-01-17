@@ -1,6 +1,11 @@
 'use client'
 
-import { writeArchiveChatContext } from './storage'
+import {
+  writeArchiveChatContext,
+  readArchiveChatContext,
+  clearArchiveChatContext,
+  clearArchiveSelection,
+} from './storage'
 
 type StartChatEventDetail = {
   pairs: {
@@ -10,16 +15,33 @@ type StartChatEventDetail = {
     assistant: {
       content: string
     }
-  }[]
+    }[]
 }
 
 
 const TIMEOUT_MS = 15000
 
+const SYSTEM_CONTINUATION_HEADER = `
+You are continuing a conversation based on a verified archival summary.
+
+The summary below is a complete, lossless representation of the prior USER–ASSISTANT conversation.
+It contains all relevant facts, intents, constraints, and decisions.
+
+Rules:
+- Treat the summary as authoritative conversation history.
+- Do NOT question or reinterpret the summary.
+- Do NOT ask for missing context.
+- Do NOT reference the archive or summarization process.
+- Continue the conversation naturally and directly.
+
+Produce the next assistant response to the user.
+`.trim()
+
 console.info('[ARCHIVE][L0] archiveChatPreparationListener loaded')
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return new Promise((resolve, reject) => {
+
     const id = setTimeout(() => reject(new Error('TIMEOUT')), ms)
     promise
       .then((res) => {
@@ -166,4 +188,56 @@ if (typeof window !== 'undefined') {
     handleStartChat
   )
   console.info('[ARCHIVE][L11] start-chat listener attached')
+}
+
+/* ======================================================
+   PHASE 2 — CHAT CONTINUATION (ADD-ONLY)
+   ====================================================== */
+
+async function handleArchiveChatPrepared() {
+  console.info('[ARCHIVE][P2][L1] chat-prepared received')
+
+  const summary = readArchiveChatContext()
+
+  if (typeof summary !== 'string' || !summary.trim()) {
+    console.error('[ARCHIVE][P2][E] missing or empty summary')
+    return
+  }
+
+  console.info('[ARCHIVE][P2][L2] summary length:', summary.length)
+
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages: [
+        { role: 'system', content: SYSTEM_CONTINUATION_HEADER },
+        { role: 'user', content: `ARCHIVAL SUMMARY:\n\n${summary}` },
+      ],
+    }),
+  })
+
+  if (!res.ok) {
+    console.error('[ARCHIVE][P2][E] continuation request failed')
+    return
+  }
+
+  const data = await res.json()
+  console.info('[ARCHIVE][P2][L3] continuation response received')
+
+  // Inject into existing chat pipeline (no routing changes)
+   // FINAL CLEANUP — strictly last (canonical storage API)
+  clearArchiveSelection()
+  clearArchiveChatContext()
+
+  console.info('[ARCHIVE][P2][L5] archive namespaces cleared')
+
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener(
+    'mpathy:archive:chat-prepared',
+    handleArchiveChatPrepared
+  )
+  console.info('[ARCHIVE][P2][L0] phase-2 listener attached')
 }
