@@ -1,3 +1,138 @@
+/* ======================================================================
+   FILE INDEX — lib/storage.ts
+   ======================================================================
+
+   ROLE
+   ----------------------------------------------------------------------
+   Zentrale Low-Level-Abstraktion für LocalStorage und SessionStorage.
+   Diese Datei ist die EINZIGE erlaubte Schnittstelle für:
+   - Lesen / Schreiben / Löschen von Storage-Daten
+   - Definition aller gültigen Storage-Namespaces
+   - Normalisierung von Zugriffen (JSON, Verfügbarkeit, Guards)
+
+   Diese Datei enthält KEINE Business-Logik.
+   Sie ist reine Infrastruktur.
+
+   ----------------------------------------------------------------------
+   STORAGE NAMESPACES (DEFINIERT HIER)
+   ----------------------------------------------------------------------
+
+   LocalStorage (MpathyNamespace):
+   - mpathy:chat:v1
+   - mpathy:archive:v1
+   - mpathy:archive:chat_map
+   - mpathy:archive:chat_counter
+   - mpathy:archive:pairs:v1
+   - mpathy:context:upload
+   - mpathy:verification:v1
+   - mpathy:verification:reports:v1   <-- RELEVANT FÜR REPORTS-RENDER
+   - mpathy:triketon:v1                <-- WRITE-ONCE (Ledger)
+   - mpathy:triketon:device_public_key_2048
+
+   SessionStorage (MpathySessionNamespace):
+   - mpathy:archive:selection:v1       <-- Auswahl für Verify
+
+   ----------------------------------------------------------------------
+   PRIMITIVE FUNKTIONEN (LOW LEVEL)
+   ----------------------------------------------------------------------
+
+   hasLocalStorage()
+   - Prüft Verfügbarkeit von window.localStorage
+   - Guard gegen SSR / Security Errors
+
+   hasSessionStorage()
+   - Prüft Verfügbarkeit von window.sessionStorage
+
+   readLS<T>(key)
+   - Liest JSON aus LocalStorage
+   - Gibt null zurück bei:
+     - fehlendem Storage
+     - fehlendem Key
+     - JSON-Parse-Fehler
+
+   writeLS<T>(key, value)
+   - Schreibt JSON nach LocalStorage
+   - Sonderfall:
+     - mpathy:triketon:v1 ist WRITE-ONCE
+       (existierender Wert wird NICHT überschrieben)
+
+   clearLS(key)
+   - Löscht EINEN LocalStorage-Key
+
+   clearAllLS()
+   - Löscht definierte LocalStorage-Keys
+   - EXPLIZIT ausgeschlossen:
+     - mpathy:triketon:v1
+
+   readSS<T>(key)
+   - Liest JSON aus SessionStorage
+
+   writeSS<T>(key, value)
+   - Schreibt JSON nach SessionStorage
+
+   clearSS(key)
+   - Löscht EINEN SessionStorage-Key
+
+   ----------------------------------------------------------------------
+   ARCHIVE-SELECTION HELPERS
+   ----------------------------------------------------------------------
+
+   readArchiveSelection()
+   - Liest mpathy:archive:selection:v1 aus SessionStorage
+   - Garantiert Rückgabeform:
+     { pairs: ArchivePair[] }
+
+   writeArchiveSelection(selection)
+   - Normalisiert Selection:
+     - entfernt Duplikate (pair_id)
+     - sortiert deterministisch
+   - Schreibt nach SessionStorage
+
+   ----------------------------------------------------------------------
+   DATENTYPEN
+   ----------------------------------------------------------------------
+
+   ArchivePair
+   - pair_id
+   - user { id, content, timestamp }
+   - assistant { id, content, timestamp }
+   - chain_id
+
+   ArchiveSelection
+   - pairs: ArchivePair[]
+
+   ----------------------------------------------------------------------
+   RELEVANZ FÜR REPORT-PROBLEM
+   ----------------------------------------------------------------------
+
+   - Diese Datei schreibt/liest Reports NICHT direkt,
+     stellt aber den Schlüssel bereit:
+       mpathy:verification:reports:v1
+
+   - Jede Inkonsistenz zwischen:
+       verificationStorage.ts
+       ReportList.tsx
+       ArchiveOverlay.tsx
+     MUSS hier ausgeschlossen werden (Namespace exakt identisch).
+
+   - Diese Datei ist NICHT verantwortlich für:
+     - Normalisierung von Reports
+     - Rendering
+     - React State
+     - Events
+
+   ----------------------------------------------------------------------
+   AUSSCHLUSS
+   ----------------------------------------------------------------------
+
+   ❌ Kein Event-System
+   ❌ Kein React
+   ❌ Keine Side-Effects außerhalb Storage
+   ❌ Keine Daten-Transformation außer JSON
+
+   ======================================================================
+*/
+
 export type MpathyNamespace =
   | 'mpathy:chat:v1'
   | 'mpathy:archive:v1'
@@ -137,6 +272,9 @@ export function writeArchiveSelection(selection: ArchiveSelection): void {
   writeSS<ArchiveSelection>('mpathy:archive:selection:v1', {
     pairs: ordered,
   })
+}
+export function clearArchiveSelection(): void {
+  clearSS('mpathy:archive:selection:v1')
 }
 
 
