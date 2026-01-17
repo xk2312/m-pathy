@@ -115,7 +115,7 @@ async function requestSummary(prompt: string): Promise<string> {
 
   const res = await fetch('/api/chat', {
   method: 'POST',
-  credentials: 'include',
+credentials: 'include',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     messages: [
@@ -124,6 +124,7 @@ async function requestSummary(prompt: string): Promise<string> {
     ],
   }),
 })
+
 
 
   console.info('[ARCHIVE][S2.2] response status:', res.status)
