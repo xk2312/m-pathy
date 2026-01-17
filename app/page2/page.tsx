@@ -186,8 +186,36 @@ import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import { useMobileViewport } from "@/lib/useMobileViewport";
 import { v4 as uuidv4 } from "uuid";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
-import { loadChat, saveChat, initChatStorage, hardClearChat, appendTriketonLedgerEntry, ensureTriketonLedgerReady, verifyOrResetTriketonLedger, } from '@/lib/chatStorage'
+import {
+  loadChat,
+  saveChat,
+  initChatStorage,
+  hardClearChat,
+  appendTriketonLedgerEntry,
+  ensureTriketonLedgerReady,
+  verifyOrResetTriketonLedger,
+} from '@/lib/chatStorage'
 import { computeTruthHash, normalizeForTruthHash } from "@/lib/triketonVerify";
+
+// ⬇︎ ARCHIVE → CHAT Injection (STEP 5)
+import {
+  readArchiveChatContext,
+  clearArchiveChatContext,
+} from "@/lib/storage";
+
+useEffect(() => {
+  const context = readArchiveChatContext();
+
+  if (context) {
+    window.dispatchEvent(
+      new CustomEvent("mpathy:archive:chat-prepared", {
+        detail: { source: "archive" },
+      })
+    );
+
+    clearArchiveChatContext();
+  }
+}, []);
 
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
