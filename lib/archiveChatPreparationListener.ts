@@ -4,10 +4,15 @@ import { writeArchiveChatContext } from './storage'
 
 type StartChatEventDetail = {
   pairs: {
-    user: string
-    assistant: string
+    user: {
+      content: string
+    }
+    assistant: {
+      content: string
+    }
   }[]
 }
+
 
 const TIMEOUT_MS = 15000
 
@@ -32,7 +37,12 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
  * VORGANG 1 – SUMMARY GENERATION
  * (wortgleich zur Spezifikation)
  */
-function buildSummaryPrompt(pairs: { user: string; assistant: string }[]): string {
+function buildSummaryPrompt(
+  pairs: {
+    user: { content?: string }
+    assistant: { content?: string }
+  }[]
+): string {
   console.info('[ARCHIVE][L3] buildSummaryPrompt pairs:', pairs.length)
 
   return `
@@ -59,15 +69,16 @@ ${pairs
     (p, i) => `
 PAIR ${i + 1}
 USER:
-${p.user}
+${typeof p.user?.content === 'string' ? p.user.content : ''}
 
 ASSISTANT:
-${p.assistant}
+${typeof p.assistant?.content === 'string' ? p.assistant.content : ''}
 `
   )
   .join('\n')}
 `.trim()
 }
+
 
 async function requestSummary(prompt: string): Promise<string> {
   console.info('[ARCHIVE][L4] POST /api/chat')
