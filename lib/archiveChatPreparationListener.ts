@@ -13,7 +13,6 @@ type StartChatEventDetail = {
   }[]
 }
 
-
 const TIMEOUT_MS = 15000
 
 console.info('[ARCHIVE][L0] archiveChatPreparationListener loaded')
