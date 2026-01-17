@@ -175,6 +175,7 @@ import ChatDetailView from './views/ChatDetailView'
 import { runArchiveSearch, getArchiveSearchPreview } from './ArchiveSearch'
 import { initArchiveVerifyListener } from '@/lib/archiveVerifyListener'
 import ReportList from '@/components/reports/ReportList'
+import SystemSpinner from '@/components/system/SystemSpinner'
 
 /**
  * ============================================================
@@ -455,6 +456,27 @@ useEffect(() => {
     pl-[30px]
   "
 >
+
+  {isPreparing && (
+    <div
+      className="
+        absolute
+        inset-0
+        z-[2147483648]
+        flex
+        items-center
+        justify-center
+        bg-black/60
+      "
+    >
+      <div className="flex items-center gap-3">
+        <SystemSpinner />
+        <span className="text-sm text-text-secondary">
+          Preparing context…
+        </span>
+      </div>
+    </div>
+  )}
 
       {/* ========================================================== */}
 {/* CONTENT FRAME — FULL BLEED                                 */}

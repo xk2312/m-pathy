@@ -127,6 +127,7 @@ import { v4 as uuidv4 } from "uuid";
 import { loadChat, saveChat, initChatStorage, hardClearChat, appendTriketonLedgerEntry, ensureTriketonLedgerReady, verifyOrResetTriketonLedger, } from '@/lib/chatStorage'
 import { computeTruthHash, normalizeForTruthHash } from "@/lib/triketonVerify";
 import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
+import '@/lib/archiveChatPreparationListener'
 
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
