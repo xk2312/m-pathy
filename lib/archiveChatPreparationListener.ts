@@ -114,15 +114,17 @@ async function requestSummary(prompt: string): Promise<string> {
   console.info('[ARCHIVE][S2.1] prompt length:', prompt.length)
 
   const res = await fetch('/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      messages: [
-        { role: 'system', content: SYSTEM_SUMMARY_HEADER },
-        { role: 'user', content: prompt },
-      ],
-    }),
-  })
+  method: 'POST',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    messages: [
+      { role: 'system', content: SYSTEM_SUMMARY_HEADER },
+      { role: 'user', content: prompt },
+    ],
+  }),
+})
+
 
   console.info('[ARCHIVE][S2.2] response status:', res.status)
 
@@ -150,15 +152,17 @@ async function requestContinuation(summary: string): Promise<any> {
   console.info('[ARCHIVE][C1.1] summary length:', summary.length)
 
   const res = await fetch('/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      messages: [
-        { role: 'system', content: SYSTEM_CONTINUATION_HEADER },
-        { role: 'user', content: `ARCHIVAL SUMMARY:\n\n${summary}` },
-      ],
-    }),
-  })
+  method: 'POST',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    messages: [
+      { role: 'system', content: SYSTEM_CONTINUATION_HEADER },
+      { role: 'user', content: `ARCHIVAL SUMMARY:\n\n${summary}` },
+    ],
+  }),
+})
+
 
   console.info('[ARCHIVE][C1.2] response status:', res.status)
 
