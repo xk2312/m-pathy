@@ -415,33 +415,19 @@ const cookieHeader = req.headers.get("cookie") ?? null;
 
 let sessionEmail: string | null = null;
 let sessionUserId: string | null = null;
-
 if (cookieHeader) {
   const parts = cookieHeader.split(";").map((p) => p.trim());
   const authPart = parts.find((p) => p.startsWith(`${AUTH_COOKIE_NAME}=`));
-
   if (authPart) {
-    try {
-      const raw = authPart.slice(AUTH_COOKIE_NAME.length + 1);
-      const payload = verifySessionToken(raw);
-
-      if (payload?.email) {
-        sessionEmail = payload.email;
-        if ((payload as any).id != null) {
-          sessionUserId = String((payload as any).id);
-        }
-      }
-    } catch {
-      // ⚠️ absichtlich leer:
-      // ungültiger Cookie → Gast (FreeGate greift)
-      sessionEmail = null;
-      sessionUserId = null;
+    const raw = authPart.slice(AUTH_COOKIE_NAME.length + 1);
+    const payload = verifySessionToken(raw);
+    sessionEmail = payload?.email ?? null;
+    if (payload && (payload as any).id != null) {
+      sessionUserId = String((payload as any).id);
     }
   }
 }
-
 const isAuthenticated = !!sessionEmail;
-
 
 if (!FG_SECRET) {
   return NextResponse.json({ error: "FREEGATE_SECRET missing" }, { status: 500 });
@@ -707,14 +693,7 @@ if (balanceBefore <= 0) {
 
     let triketon: any = null;
 
-    // HARD-ORDER GATE: DB write allowed only after client ledger truth is established
-    const clientLedgerAppendOk = true;
-
     try {
-      if (!clientLedgerAppendOk) {
-        throw new Error("Client ledger append not confirmed — DB write blocked");
-      }
-
       const { spawn } = await import("child_process");
       const { getPool } = await import("@/lib/ledger");
 
@@ -724,7 +703,6 @@ if (balanceBefore <= 0) {
           ["-m", "triketon.triketon2048", "seal", content, "--json"],
           { stdio: ["ignore", "pipe", "pipe"] }
         );
-
 
         let out = "";
         let err = "";
@@ -738,39 +716,27 @@ if (balanceBefore <= 0) {
         });
       });
 
-      if (seal?.public_key && seal?.timestamp) {
+      if (seal?.public_key && seal?.truth_hash && seal?.timestamp) {
         const pool = await getPool();
-        const { createHash } = await import("crypto");
-
-        const normalized = content
-          .normalize("NFKC")
-          .replace(/\s+/g, " ")
-          .trim();
-
-        const dbTruthHash = createHash("sha256")
-          .update(normalized, "utf8")
-          .digest("hex");
-
         await pool.query(
           `INSERT INTO triketon_anchors
            (public_key, truth_hash, timestamp, orbit_context)
            VALUES ($1, $2, $3, 'chat')
-           ON CONFLICT (public_key, truth_hash) DO NOTHING`,
-          [seal.public_key, dbTruthHash, seal.timestamp]
+           ON CONFLICT DO NOTHING`,
+          [seal.public_key, seal.truth_hash, seal.timestamp]
         );
 
-        const { computeClientTruthHash } = await import("@/lib/triketon2048/hashClient");
+              const { computeClientTruthHash } = await import("@/lib/triketon2048/hashClient");
 
         triketon = {
           publicKey: seal.public_key,
-          truthHash: computeClientTruthHash(content), // CLIENT DECOY
+          truthHash: computeClientTruthHash(content),
           timestamp: seal.timestamp,
           version: seal.version ?? "v1",
           hashProfile: "CLIENT_DECOY_V1",
           keyProfile: seal.key_profile ?? "TRIKETON_KEY_V1",
           anchorStatus: "anchored",
         };
-
 
       }
     } catch (e) {
