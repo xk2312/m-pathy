@@ -1,109 +1,3 @@
-/* 📑 KANONISCHER FILE-INDEX — lib/storage.ts
-
-Status: geprüft · driftfrei
-Zweck: Diese Datei ist die einzige autorisierte Storage-Abstraktion des Systems.
-Regel: Alles, was Storage betrifft, muss hier hindurch. Keine Ausnahmen.
-
-1️⃣ Gesamtrolle der Datei
-
-lib/storage.ts ist die Low-Level-Infrastruktur für:
-
-LocalStorage
-
-SessionStorage
-
-Sie definiert Namespaces, Guards und Primitive, aber keine Business-Logik.
-
-👉 Single Source of Truth für Storage-Zugriffe.
-
-2️⃣ Definierte Storage-Namespaces
-LocalStorage — MpathyNamespace
-Namespace	Zweck
-mpathy:chat:v1	Kanonischer Chat-Speicher
-mpathy:archive:v1	Archiv-Metadaten
-mpathy:archive:chat_map	Mapping Archiv → Chat
-mpathy:archive:chat_counter	Archiv-Zähler
-mpathy:archive:pairs:v1	Archivierte Message-Paare
-mpathy:context:upload	Kontext aus Upload
-mpathy:verification:v1	Verifikations-Metadaten
-mpathy:verification:reports:v1	Reports (read-only für UI)
-mpathy:triketon:v1	Ledger · write-once
-mpathy:triketon:device_public_key_2048	Device Identity
-SessionStorage — MpathySessionNamespace
-Namespace	Zweck
-mpathy:archive:selection:v1	Auswahl für Verify
-mpathy:context:archive-chat:v1	Archive → Chat Continuation Context
-3️⃣ Low-Level Guards
-Funktion	Zweck
-hasLocalStorage()	SSR- & Security-Guard
-hasSessionStorage()	Session-Guard
-
-✔️ Korrekt, redundantfrei, isoliert
-
-4️⃣ Primitive Storage-Operationen
-LocalStorage
-Funktion	Beschreibung
-readLS<T>	JSON-Read mit Null-Fallback
-writeLS<T>	JSON-Write
-clearLS	Entfernt einen Key
-clearAllLS	Entfernt definierte Keys (ohne Triketon)
-
-📌 Sonderregel:
-mpathy:triketon:v1 ist WRITE-ONCE → korrekt enforced.
-
-SessionStorage
-Funktion	Beschreibung
-readSS<T>	JSON-Read
-writeSS<T>	JSON-Write
-clearSS	Entfernt einen Session-Key
-5️⃣ Archive-Selection-Subsystem
-Datentypen
-
-ArchivePair
-
-ArchiveSelection
-
-✔️ klar modelliert
-✔️ keine Überladung
-✔️ keine impliziten Felder
-
-Helper-Funktionen
-Funktion	Aufgabe
-readArchiveSelection()	Garantierte Rückgabeform
-writeArchiveSelection()	Dedup + deterministische Sortierung
-clearArchiveSelection()	Explizites Löschen
-
-📌 Wichtig:
-Diese Logik ist rein mechanisch, keine Business-Interpretation.
-
-6️⃣ Archive → Chat Context (Session-only, kanonisch)
-Funktion	Aufgabe
-writeArchiveChatContext()	schreibt Summary / Context
-readArchiveChatContext()	liest validierten String
-clearArchiveChatContext()	entfernt Context
-
-✔️ Session-only
-✔️ Trimmen & Validierung korrekt
-✔️ keine Redundanz mit Selection
-
-7️⃣ Explizite Ausschlüsse (eingehalten)
-
-Diese Datei enthält nachweislich nicht:
-
-❌ Events
-
-❌ React
-
-❌ State
-
-❌ Business-Flows
-
-❌ Report-Normalisierung
-
-❌ Triketon-Berechnung
-
-➡️ Infrastruktur pur.*/
-
 export type MpathyNamespace =
   | 'mpathy:chat:v1'
   | 'mpathy:archive:v1'
@@ -244,9 +138,6 @@ export function writeArchiveSelection(selection: ArchiveSelection): void {
     pairs: ordered,
   })
 }
-export function clearArchiveSelection(): void {
-  clearSS('mpathy:archive:selection:v1')
-}
 
 
 export function clearSS(key: MpathySessionNamespace): void {
@@ -286,4 +177,3 @@ export function clearArchiveChatContext(): void {
   if (!hasSessionStorage()) return
   window.sessionStorage.removeItem(ARCHIVE_CHAT_CONTEXT_KEY)
 }
-
