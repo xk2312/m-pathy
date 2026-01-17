@@ -1,11 +1,6 @@
 'use client'
 
-import {
-  writeArchiveChatContext,
-  readArchiveChatContext,
-  clearArchiveChatContext,
-  clearArchiveSelection,
-} from './storage'
+import { writeArchiveChatContext } from './storage'
 
 type StartChatEventDetail = {
   pairs: {
@@ -15,33 +10,16 @@ type StartChatEventDetail = {
     assistant: {
       content: string
     }
-    }[]
+  }[]
 }
 
 
 const TIMEOUT_MS = 15000
 
-const SYSTEM_CONTINUATION_HEADER = `
-You are continuing a conversation based on a verified archival summary.
-
-The summary below is a complete, lossless representation of the prior USER–ASSISTANT conversation.
-It contains all relevant facts, intents, constraints, and decisions.
-
-Rules:
-- Treat the summary as authoritative conversation history.
-- Do NOT question or reinterpret the summary.
-- Do NOT ask for missing context.
-- Do NOT reference the archive or summarization process.
-- Continue the conversation naturally and directly.
-
-Produce the next assistant response to the user.
-`.trim()
-
 console.info('[ARCHIVE][L0] archiveChatPreparationListener loaded')
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return new Promise((resolve, reject) => {
-
     const id = setTimeout(() => reject(new Error('TIMEOUT')), ms)
     promise
       .then((res) => {
