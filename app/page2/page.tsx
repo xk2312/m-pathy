@@ -2323,15 +2323,56 @@ if (last && (last as any).id === (userMsg as any).id) return; // Duplicate-Guard
     setMode("THINKING");
 
 
-        try {
-      const { context: outgoing, used } = withArchiveInjection(optimistic);
-      const assistant = await sendMessageLocal(outgoing);
-      if (used) {
-        clearArchiveChatContext();
-      }
-      if (assistant.content === t("gc_please_login_to_continue")) {
-        return;
-      }
+try {
+  console.info("[CHAT][P3][A0] check archive chat context");
+  const archiveSummary = readArchiveChatContext();
+
+  if (archiveSummary) {
+    console.info("[CHAT][P3][A1] archive summary found");
+    console.info("[CHAT][P3][A2] hard clear chat (new genesis)");
+    hardClearChat({ reload: false });
+
+    const userMessage = {
+      id: crypto.randomUUID(),
+      role: "user" as const,
+      content: archiveSummary,
+      timestamp: new Date().toISOString(),
+    };
+
+    console.info("[CHAT][P3][A3] sending archive summary as USER message");
+    const assistant = await sendMessageLocal([userMessage]);
+
+    console.info("[CHAT][P3][A4] sendMessageLocal resolved");
+    console.info("[CHAT][P3][A5] clearing archive chat context");
+    clearArchiveChatContext();
+
+    if (assistant.content === t("gc_please_login_to_continue")) {
+      console.warn("[CHAT][P3][A6] login required response detected");
+      return;
+    }
+
+    console.info("[CHAT][P3][A7] archive flow complete, awaiting streaming");
+    return;
+  }
+
+  console.info("[CHAT][P3][B1] no archive summary, fallback to injection");
+  const { context: outgoing, used } = withArchiveInjection(optimistic);
+
+  console.info("[CHAT][P3][B2] sending normal chat message");
+  const assistant = await sendMessageLocal(outgoing);
+
+  if (used) {
+    console.info("[CHAT][P3][B3] injection used, clearing archive context");
+    clearArchiveChatContext();
+  }
+
+  if (assistant.content === t("gc_please_login_to_continue")) {
+    console.warn("[CHAT][P3][B4] login required response detected");
+    return;
+  }
+
+
+
 
 
 // 1) Leere Assistant-Bubble anhängen
