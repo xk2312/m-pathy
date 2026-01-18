@@ -2412,7 +2412,7 @@ try {
     }
 
     console.info("[CHAT][P3][A7] archive flow complete, awaiting streaming");
-    return;
+    
   }
 
 
