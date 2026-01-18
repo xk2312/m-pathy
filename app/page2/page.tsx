@@ -1383,64 +1383,9 @@ useEffect(() => {
   }
 }, [messages]);
 
-// PATCH 3a — Listen for fresh archive-chat context writes (event-based, not presence-based)
-useEffect(() => {
-  if (typeof window === "undefined") return;
 
-  const handler = () => {
-    try {
-      console.info("[CHAT][P3a] archive chat context write detected");
-      // ⚠️ NO LOGIC HERE — only signal point
-      // Actual send still happens via normal chat initiation
-    } catch (err) {
-      console.warn("[CHAT][P3a] listener error", err);
-    }
-  };
 
-  window.addEventListener("mpathy:archive:written", handler);
-  return () => {
-    window.removeEventListener("mpathy:archive:written", handler);
-  };
-}, []);
 
-// ===============================================================
-// PATCH 3b – ARCHIVE → CHAT Übergabepunkt (kanonisch)
-// ===============================================================
-useEffect(() => {
-  if (typeof window === "undefined") return;
-
-  const handleArchivePrepared = async () => {
-    console.info("[CHAT][P3][E0] archive prepared event received");
-
-    const summary = readArchiveChatContext();
-    if (!summary) {
-      console.warn("[CHAT][P3][E1] no archive summary found");
-      return;
-    }
-
-    console.info("[CHAT][P3][E2] starting new chat from archive summary");
-    hardClearChat({ reload: false });
-
-    const userMessage = {
-      id: crypto.randomUUID(),
-      role: "user" as const,
-      content: summary,
-      timestamp: new Date().toISOString(),
-    };
-
-    console.info("[CHAT][P3][E3] sending summary as USER message");
-    await sendMessageLocal([userMessage]);
-  };
-
-  window.addEventListener("mpathy:archive:prepared", handleArchivePrepared);
-
-  return () => {
-    window.removeEventListener(
-      "mpathy:archive:prepared",
-      handleArchivePrepared
-    );
-  };
-}, []);
 
 // … weiterer Code …
 
@@ -1462,6 +1407,41 @@ useEffect(() => {
     document.getElementById("chat-input")?.focus();
   });
 }, []);
+const handleArchivePrepared = useCallback(async () => {
+  console.info("[CHAT][ARCHIVE] prepared event received");
+
+  const summary = readArchiveChatContext();
+  if (!summary) return;
+
+  hardClearChat({ reload: false });
+
+  const userMessage = {
+    id: crypto.randomUUID(),
+    role: "user" as const,
+    content: summary,
+    timestamp: new Date().toISOString(),
+  };
+
+  const assistant = await sendMessageLocal([userMessage]);
+  setMessages((prev) => [...prev, assistant]);
+
+  clearArchiveChatContext();
+}, []);
+
+useEffect(() => {
+  window.addEventListener(
+    "mpathy:archive:prepared",
+    handleArchivePrepared
+  );
+
+  return () => {
+    window.removeEventListener(
+      "mpathy:archive:prepared",
+      handleArchivePrepared
+    );
+  };
+}, [handleArchivePrepared]);
+
 
 // GC Step 12 – Combined paid=1 handler (Balance + Success + URL cleanup + Autofocus)
 useEffect(() => {
