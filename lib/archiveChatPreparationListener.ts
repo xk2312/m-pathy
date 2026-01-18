@@ -431,24 +431,23 @@ async function handleStartChat(e: Event) {
 
     console.info('[ARCHIVE][F2] summary ok')
 
-    writeArchiveChatContext(summary)
+        writeArchiveChatContext(summary)
     console.info('[ARCHIVE][F3] summary written to session storage')
 
-       return
+    // 🔑 KANONISCHER ÜBERGABEPUNKT:
+    // Chat-Start wird über die normale Chat-Pipeline ausgelöst
+    window.dispatchEvent(
+      new CustomEvent('mpathy:archive:prepared', {
+        detail: { source: 'archive' },
+      })
+    )
+    console.info('[ARCHIVE][F4] archive prepared event dispatched')
+
+    return
+
 
   } catch (err) {
     console.error('[ARCHIVE][ERROR]', err)
   }
 }
 
-/* ======================================================
-   LISTENER ATTACH
-   ====================================================== */
-
-if (typeof window !== 'undefined') {
-  window.addEventListener(
-    'mpathy:archive:start-chat',
-    handleStartChat
-  )
-  console.info('[ARCHIVE][BOOT] start-chat listener attached')
-}

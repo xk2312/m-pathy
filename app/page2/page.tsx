@@ -1383,7 +1383,64 @@ useEffect(() => {
   }
 }, [messages]);
 
+// PATCH 3a — Listen for fresh archive-chat context writes (event-based, not presence-based)
+useEffect(() => {
+  if (typeof window === "undefined") return;
 
+  const handler = () => {
+    try {
+      console.info("[CHAT][P3a] archive chat context write detected");
+      // ⚠️ NO LOGIC HERE — only signal point
+      // Actual send still happens via normal chat initiation
+    } catch (err) {
+      console.warn("[CHAT][P3a] listener error", err);
+    }
+  };
+
+  window.addEventListener("mpathy:archive:written", handler);
+  return () => {
+    window.removeEventListener("mpathy:archive:written", handler);
+  };
+}, []);
+
+// ===============================================================
+// PATCH 3b – ARCHIVE → CHAT Übergabepunkt (kanonisch)
+// ===============================================================
+useEffect(() => {
+  if (typeof window === "undefined") return;
+
+  const handleArchivePrepared = async () => {
+    console.info("[CHAT][P3][E0] archive prepared event received");
+
+    const summary = readArchiveChatContext();
+    if (!summary) {
+      console.warn("[CHAT][P3][E1] no archive summary found");
+      return;
+    }
+
+    console.info("[CHAT][P3][E2] starting new chat from archive summary");
+    hardClearChat({ reload: false });
+
+    const userMessage = {
+      id: crypto.randomUUID(),
+      role: "user" as const,
+      content: summary,
+      timestamp: new Date().toISOString(),
+    };
+
+    console.info("[CHAT][P3][E3] sending summary as USER message");
+    await sendMessageLocal([userMessage]);
+  };
+
+  window.addEventListener("mpathy:archive:prepared", handleArchivePrepared);
+
+  return () => {
+    window.removeEventListener(
+      "mpathy:archive:prepared",
+      handleArchivePrepared
+    );
+  };
+}, []);
 
 // … weiterer Code …
 
@@ -2239,29 +2296,7 @@ void 0;
     if (!trimmed) return;
 
     // Debug ohne Console: /debug storage zeigt Key-Existenz + Länge (ohne Inhalte)
-
-// ---------------------------------------------------------------------------
-// PATCH 3a — ARCHIVE → CHAT INIT HOOK (kanonisch, einmalig)
-// ---------------------------------------------------------------------------
-useEffect(() => {
-  try {
-    const summary = readArchiveChatContext();
-    if (!summary) return;
-
-    console.info("[CHAT][P3a][I1] archive context detected on init");
-
-    // Guard gegen Doppelauslösung
-    if ((window as any).__archiveChatBootstrapped) return;
-    (window as any).__archiveChatBootstrapped = true;
-
-    // identischer Pfad wie User-Prompt (kein Sonderweg)
-    onSendFromPrompt(summary);
-  } catch (err) {
-    console.warn("[CHAT][P3a][I_ERR] init archive hook failed:", err);
-  }
-}, [onSendFromPrompt]);
-
-
+    
     if (trimmed === "/debug storage") {
       try {
         const kChatV1 = "mpathy:chat:v1";
