@@ -616,21 +616,18 @@ useEffect(() => {
         type="button"
         disabled={selection.length > 4 || isPreparing}
         onClick={() => {
-          if (selection.length <= 4 && !isPreparing) {
-            setIsPreparing(true)
-            window.dispatchEvent(
-              new CustomEvent('mpathy:archive:start-chat', {
-                detail: {
-                  pairs: selection,
-                },
-              })
-            )
-            setIsPreparing(false)
-            window.dispatchEvent(
-              new CustomEvent('mpathy:archive:close')
-            )
-          }
-        }}
+  if (selection.length <= 4 && !isPreparing) {
+    setIsPreparing(true)
+    window.dispatchEvent(
+      new CustomEvent('mpathy:archive:start-chat', {
+        detail: {
+          pairs: selection,
+        },
+      })
+    )
+  }
+}}
+
         className={`
           text-sm
           font-medium
