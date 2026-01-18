@@ -2360,6 +2360,8 @@ const CHUNK_SIZE = 2;
 const TICK_MS = 16;
 
 const streamAssistant = async () => {
+  let firstChunkRendered = false;
+
   for (let i = 0; i < fullText.length; i += CHUNK_SIZE) {
     await new Promise((r) => setTimeout(r, TICK_MS));
 
@@ -2375,11 +2377,20 @@ const streamAssistant = async () => {
         { ...last, content: last.content + chunk },
       ]);
 
+      // ✅ EXAKT HIER: erster sichtbarer Assistant-Token
+      if (!firstChunkRendered) {
+        firstChunkRendered = true;
+        window.dispatchEvent(
+          new CustomEvent("mpathy:archive:close")
+        );
+      }
+
       persistMessages(next);
       return next;
     });
   }
 };
+
 
 // ⬇️ WICHTIG: await statt fire-and-forget
 await streamAssistant();
