@@ -1333,8 +1333,6 @@ useEffect(() => {
   });
 }, []);
 
-
-// Chat State
 // Chat State
 const [messages, setMessages] = React.useState<any[]>(() => {
   initChatStorage();
@@ -1422,10 +1420,12 @@ const handleArchivePrepared = useCallback(async () => {
     timestamp: new Date().toISOString(),
   };
 
-  const assistant = await sendMessageLocal([userMessage]);
-  setMessages((prev) => [...prev, assistant]);
+ const assistant = await sendMessageLocal([userMessage]);
+setMessages((prev) => [...prev, assistant]);
 
-  clearArchiveChatContext();
+setLoading(false);               // 🔴 DAS FEHLTE
+clearArchiveChatContext();
+
 }, []);
 
 useEffect(() => {
