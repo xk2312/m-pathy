@@ -2390,15 +2390,17 @@ try {
     console.info("[CHAT][P3][A2] hard clear chat (new genesis)");
     hardClearChat({ reload: false });
 
-    const userMessage = {
-      id: crypto.randomUUID(),
-      role: "user" as const,
-      content: archiveSummary,
-      timestamp: new Date().toISOString(),
-    };
+    const injectedContext = [
+      {
+        id: crypto.randomUUID(),
+        role: "user" as const,
+        content: archiveSummary,
+        timestamp: new Date().toISOString(),
+      },
+    ];
 
-    console.info("[CHAT][P3][A3] sending archive summary as USER message");
-    const assistant = await sendMessageLocal([userMessage]);
+    console.info("[CHAT][P3][A3] injecting archive summary into canonical chat pipeline");
+    const assistant = await sendMessageLocal(injectedContext);
 
     console.info("[CHAT][P3][A4] sendMessageLocal resolved");
     console.info("[CHAT][P3][A5] clearing archive chat context");
@@ -2412,6 +2414,7 @@ try {
     console.info("[CHAT][P3][A7] archive flow complete, awaiting streaming");
     return;
   }
+
 
   console.info("[CHAT][P3][B1] no archive summary, fallback to injection");
   const { context: outgoing, used } = withArchiveInjection(optimistic);
