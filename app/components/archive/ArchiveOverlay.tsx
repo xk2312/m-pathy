@@ -612,7 +612,7 @@ useEffect(() => {
       </button>
 
       {/* ARCHIVE → CHAT (Injection Start) */}
-      <button
+           <button
         type="button"
         disabled={selection.length > 4 || isPreparing}
         onClick={() => {
@@ -624,6 +624,10 @@ useEffect(() => {
                   pairs: selection,
                 },
               })
+            )
+            setIsPreparing(false)
+            window.dispatchEvent(
+              new CustomEvent('mpathy:archive:close')
             )
           }
         }}
@@ -638,6 +642,7 @@ useEffect(() => {
           }
         `}
       >
+
         {selection.length > 4
           ? 'Too many to add'
           : `Add ${selection.length}/4 to new chat`}
