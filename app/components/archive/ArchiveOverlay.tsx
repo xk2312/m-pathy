@@ -457,13 +457,23 @@ useEffect(() => {
 
 // (entfernt – ungültiger Scope, kein useEffect)
 
-
-
-
 /* -------------------------------------------------------------- */
 /* Render                                                         */
 /* -------------------------------------------------------------- */
-  const [isPreparing, setIsPreparing] = useState(false)
+const [isPreparing, setIsPreparing] = useState(false);
+
+useEffect(() => {
+  const handleArchiveClose = () => {
+    console.info('[ARCHIVE→CHAT] archive closed → reset isPreparing');
+    setIsPreparing(false);
+  };
+
+  window.addEventListener('mpathy:archive:close', handleArchiveClose);
+
+  return () => {
+    window.removeEventListener('mpathy:archive:close', handleArchiveClose);
+  };
+}, []);
 
   return (
     /* ============================================================ */

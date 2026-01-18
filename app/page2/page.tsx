@@ -1371,8 +1371,6 @@ const onClearChat = React.useCallback(() => {
   }
 }, []);
 
-
-
 // Autosave — pausiert, wenn gerade "Clear" läuft"
 useEffect(() => {
   if (clearingRef.current) return;
@@ -1380,10 +1378,6 @@ useEffect(() => {
     saveChat(messages);
   }
 }, [messages]);
-
-
-
-
 
 // … weiterer Code …
 
