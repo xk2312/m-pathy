@@ -612,22 +612,21 @@ useEffect(() => {
       </button>
 
       {/* ARCHIVE → CHAT (Injection Start) */}
-           <button
+      <button
         type="button"
         disabled={selection.length > 4 || isPreparing}
         onClick={() => {
-  if (selection.length <= 4 && !isPreparing) {
-    setIsPreparing(true)
-    window.dispatchEvent(
-      new CustomEvent('mpathy:archive:start-chat', {
-        detail: {
-          pairs: selection,
-        },
-      })
-    )
-  }
-}}
-
+          if (selection.length <= 4 && !isPreparing) {
+            setIsPreparing(true)
+            window.dispatchEvent(
+              new CustomEvent('mpathy:archive:start-chat', {
+                detail: {
+                  pairs: selection,
+                },
+              })
+            )
+          }
+        }}
         className={`
           text-sm
           font-medium
@@ -639,7 +638,6 @@ useEffect(() => {
           }
         `}
       >
-
         {selection.length > 4
           ? 'Too many to add'
           : `Add ${selection.length}/4 to new chat`}
