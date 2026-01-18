@@ -2239,6 +2239,29 @@ void 0;
     if (!trimmed) return;
 
     // Debug ohne Console: /debug storage zeigt Key-Existenz + Länge (ohne Inhalte)
+
+// ---------------------------------------------------------------------------
+// PATCH 3a — ARCHIVE → CHAT INIT HOOK (kanonisch, einmalig)
+// ---------------------------------------------------------------------------
+useEffect(() => {
+  try {
+    const summary = readArchiveChatContext();
+    if (!summary) return;
+
+    console.info("[CHAT][P3a][I1] archive context detected on init");
+
+    // Guard gegen Doppelauslösung
+    if ((window as any).__archiveChatBootstrapped) return;
+    (window as any).__archiveChatBootstrapped = true;
+
+    // identischer Pfad wie User-Prompt (kein Sonderweg)
+    onSendFromPrompt(summary);
+  } catch (err) {
+    console.warn("[CHAT][P3a][I_ERR] init archive hook failed:", err);
+  }
+}, [onSendFromPrompt]);
+
+
     if (trimmed === "/debug storage") {
       try {
         const kChatV1 = "mpathy:chat:v1";
@@ -2370,9 +2393,6 @@ try {
     console.warn("[CHAT][P3][B4] login required response detected");
     return;
   }
-
-
-
 
 
 // 1) Leere Assistant-Bubble anhängen
