@@ -1,137 +1,137 @@
 /* ======================================================================
-   FILE INDEX — lib/storage.ts
+   FILE INDEX — storage.ts
+   MODE: GranularFileIndexDeveloper · CodeForensik
+   SCOPE: LOCAL / SESSION STORAGE · ARCHIVE ↔ CHAT BRIDGE
+   STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)
    ======================================================================
 
-   ROLE
+   1. ROLLE DER DATEI
    ----------------------------------------------------------------------
-   Zentrale Low-Level-Abstraktion für LocalStorage und SessionStorage.
-   Diese Datei ist die EINZIGE erlaubte Schnittstelle für:
-   - Lesen / Schreiben / Löschen von Storage-Daten
-   - Definition aller gültigen Storage-Namespaces
-   - Normalisierung von Zugriffen (JSON, Verfügbarkeit, Guards)
+   Diese Datei ist die **kanonische Storage-Abstraktion** für m-pathy.
 
-   Diese Datei enthält KEINE Business-Logik.
-   Sie ist reine Infrastruktur.
+   Sie kapselt:
+   - LocalStorage (dauerhaft)
+   - SessionStorage (ephemer, flow-basiert)
+   - Namespace-Verträge (Typsicherheit)
 
+   → storage.ts ist die **Brücke zwischen ARCHIVE und CHAT**.
+
+
+   2. STORAGE-NAMESPACES (VERTRAG)
    ----------------------------------------------------------------------
-   STORAGE NAMESPACES (DEFINIERT HIER)
-   ----------------------------------------------------------------------
-
    LocalStorage (MpathyNamespace):
    - mpathy:chat:v1
    - mpathy:archive:v1
-   - mpathy:archive:chat_map
-   - mpathy:archive:chat_counter
    - mpathy:archive:pairs:v1
    - mpathy:context:upload
-   - mpathy:verification:v1
-   - mpathy:verification:reports:v1   <-- RELEVANT FÜR REPORTS-RENDER
-   - mpathy:triketon:v1                <-- WRITE-ONCE (Ledger)
-   - mpathy:triketon:device_public_key_2048
+   - mpathy:verification:*
+   - mpathy:triketon:v1 (append-only!)
 
    SessionStorage (MpathySessionNamespace):
-   - mpathy:archive:selection:v1       <-- Auswahl für Verify
+   - mpathy:archive:selection:v1
+   - mpathy:context:archive-chat:v1
 
+   TODO-RELEVANZ:
+   - ToDo-Flow nutzt AUSSCHLIESSLICH
+     SessionStorage → archive-chat:v1
+   - Korrekte Wahl (kein Persist-Leak)
+
+
+   3. BASIS-PRIMITIVEN
    ----------------------------------------------------------------------
-   PRIMITIVE FUNKTIONEN (LOW LEVEL)
+   readLS / writeLS / clearLS
+   readSS / writeSS / clearSS
+
+   Eigenschaften:
+   - Defensive Guards (hasLocalStorage / hasSessionStorage)
+   - JSON-Serialisierung
+   - Fail-Safe (null bei Fehler)
+
+   TODO-RELEVANZ:
+   - readSS / writeSS sind die
+     Low-Level-Grundlage des Flows
+
+
+   4. ARCHIVE SELECTION
    ----------------------------------------------------------------------
-
-   hasLocalStorage()
-   - Prüft Verfügbarkeit von window.localStorage
-   - Guard gegen SSR / Security Errors
-
-   hasSessionStorage()
-   - Prüft Verfügbarkeit von window.sessionStorage
-
-   readLS<T>(key)
-   - Liest JSON aus LocalStorage
-   - Gibt null zurück bei:
-     - fehlendem Storage
-     - fehlendem Key
-     - JSON-Parse-Fehler
-
-   writeLS<T>(key, value)
-   - Schreibt JSON nach LocalStorage
-   - Sonderfall:
-     - mpathy:triketon:v1 ist WRITE-ONCE
-       (existierender Wert wird NICHT überschrieben)
-
-   clearLS(key)
-   - Löscht EINEN LocalStorage-Key
-
-   clearAllLS()
-   - Löscht definierte LocalStorage-Keys
-   - EXPLIZIT ausgeschlossen:
-     - mpathy:triketon:v1
-
-   readSS<T>(key)
-   - Liest JSON aus SessionStorage
-
-   writeSS<T>(key, value)
-   - Schreibt JSON nach SessionStorage
-
-   clearSS(key)
-   - Löscht EINEN SessionStorage-Key
-
-   ----------------------------------------------------------------------
-   ARCHIVE-SELECTION HELPERS
-   ----------------------------------------------------------------------
-
    readArchiveSelection()
-   - Liest mpathy:archive:selection:v1 aus SessionStorage
-   - Garantiert Rückgabeform:
-     { pairs: ArchivePair[] }
+   writeArchiveSelection()
+   clearArchiveSelection()
 
-   writeArchiveSelection(selection)
-   - Normalisiert Selection:
-     - entfernt Duplikate (pair_id)
-     - sortiert deterministisch
-   - Schreibt nach SessionStorage
+   Eigenschaften:
+   - Deduplication (pair_id)
+   - Deterministische Sortierung
+   - Session-only
 
+   TODO-RELEVANZ:
+   - Selection wird im ARCHIVE genutzt
+   - Muss NACH Erfolg gelöscht werden
+   - NICHT vor Chat-Erstellung
+
+
+   5. ARCHIVE → CHAT CONTEXT (KERNSTELLE)
    ----------------------------------------------------------------------
-   DATENTYPEN
+   const ARCHIVE_CHAT_CONTEXT_KEY =
+     'mpathy:context:archive-chat:v1'
+
+   Funktionen:
+   - writeArchiveChatContext(text)
+   - readArchiveChatContext()
+   - clearArchiveChatContext()
+
+   Bedeutung:
+   - Übergabe-Slot zwischen ARCHIVE und CHAT
+   - ONE-SHOT gedacht
+   - Session-lokal
+
+   TODO-RELEVANZ (MAXIMAL):
+   - writeArchiveChatContext():
+     → korrekt genutzt (Summary wird geschrieben)
+   - readArchiveChatContext():
+     → wird in page.tsx gelesen
+   - clearArchiveChatContext():
+     → MUSS nach erfolgreichem NEUEN Chat erfolgen
+     → darf NICHT bei Fehler ausgelöst werden
+
+
+   6. KEINE BUSINESS-LOGIK
    ----------------------------------------------------------------------
+   WICHTIG:
+   - storage.ts enthält KEINE Flow-Logik
+   - KEINE Events
+   - KEINE UI
+   - KEINE API-Calls
 
-   ArchivePair
-   - pair_id
-   - user { id, content, timestamp }
-   - assistant { id, content, timestamp }
-   - chain_id
+   TODO-RELEVANZ:
+   - Diese Datei wird NICHT umgebaut
+   - Sie ist der stabile Vertrag
 
-   ArchiveSelection
-   - pairs: ArchivePair[]
 
+   7. FEHLERBILD (KANONISCH)
    ----------------------------------------------------------------------
-   RELEVANZ FÜR REPORT-PROBLEM
+   storage.ts verhält sich korrekt.
+
+   Der Fehler entsteht NICHT hier, sondern:
+   - writeArchiveChatContext() wird aufgerufen
+   - ABER der nächste Schritt (neuer Chat)
+     wird nicht ausgelöst
+   - clearArchiveChatContext() wird nie erreicht
+
+
+   8. ZUSAMMENFASSUNG (KANONISCH)
    ----------------------------------------------------------------------
+   storage.ts ist STABIL und KORREKT.
 
-   - Diese Datei schreibt/liest Reports NICHT direkt,
-     stellt aber den Schlüssel bereit:
-       mpathy:verification:reports:v1
+   Für die ToDos relevant:
+   - readArchiveChatContext()
+   - writeArchiveChatContext()
+   - clearArchiveChatContext()
+   - clearArchiveSelection()
 
-   - Jede Inkonsistenz zwischen:
-       verificationStorage.ts
-       ReportList.tsx
-       ArchiveOverlay.tsx
-     MUSS hier ausgeschlossen werden (Namespace exakt identisch).
+   → storage.ts definiert den Übergabevertrag,
+     nicht die Ausführung.
 
-   - Diese Datei ist NICHT verantwortlich für:
-     - Normalisierung von Reports
-     - Rendering
-     - React State
-     - Events
-
-   ----------------------------------------------------------------------
-   AUSSCHLUSS
-   ----------------------------------------------------------------------
-
-   ❌ Kein Event-System
-   ❌ Kein React
-   ❌ Keine Side-Effects außerhalb Storage
-   ❌ Keine Daten-Transformation außer JSON
-
-   ======================================================================
-*/
+   ====================================================================== */
 
 export type MpathyNamespace =
   | 'mpathy:chat:v1'

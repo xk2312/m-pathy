@@ -1,163 +1,192 @@
-/*# INDEX — ArchiveOverlay.tsx
+/* ======================================================================
+   FILE INDEX — ArchiveOverlay.tsx
+   MODE: GranularFileIndexDeveloper · CodeForensik
+   SCOPE: ARCHIVE UI · SELECTION · START-CHAT-TRIGGER · SPINNER
+   STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)
+   ======================================================================
 
-## FILE
+   1. ROLLE DER DATEI
+   ----------------------------------------------------------------------
+   Diese Datei implementiert das vollständige ARCHIVE-Overlay als
+   eigenständigen Systemraum.
 
-`ArchiveOverlay.tsx`
+   Sie ist verantwortlich für:
+   - Darstellung & Navigation (CHAT | REPORTS)
+   - Auswahl von Archiv-Paaren
+   - Triggern von Verify- und Start-Chat-Flows
+   - UI-Blocking (Overlay + Spinner)
+   - Lifecycle des Overlays (open / close)
 
-## ROLE (1 Satz)
+   → Diese Datei ist der **UI-Auslöser** des fehlerhaften Flows.
 
-Zentrales Overlay für das Archiv: steuert Auswahl von Nachrichtenpaaren, Modusumschaltung (CHAT/REPORTS) und triggert nachgelagerte Systemprozesse (Verify, künftig Injection).
 
-## TOUCH
+   2. ZENTRALE IMPORTS (RELEVANT)
+   ----------------------------------------------------------------------
+   import { readLS, readSS, writeSS } from '@/lib/storage'
+   import SystemSpinner from '@/components/system/SystemSpinner'
 
-**JA — hochkritisch**
+   TODO-RELEVANZ:
+   - readSS / writeSS: Zugriff auf
+     `mpathy:archive:selection:v1`
+   - SystemSpinner: UI-Blocker, der aktuell
+     **nicht beendet wird**
 
-Diese Datei ist der **Startpunkt der gesamten Kette** für Verify *und* Injection.
 
-## WHY (Warum diese Datei relevant ist)
+   3. ZUSTAND: MODE / CHATVIEW
+   ----------------------------------------------------------------------
+   type ArchiveMode = 'chat' | 'reports'
 
-* Enthält die UI-Buttons **Verify** und **Add to new chat**.
-* Dispatcht aktuell Events an das globale Event-System (`CustomEvent`).
-* Verwaltet Selection-State (Session Storage) und reagiert auf externe System-Events.
-* Bestimmt, **welcher Prozess ausgelöst wird**, bevor ein neuer Chat entstehen kann.
+   const [mode, setMode]
+   const [chatView, setChatView]
 
-## DANGERS (No-Gos für Devs)
+   Bedeutung:
+   - mode steuert EBENE 1 (CHAT vs REPORTS)
+   - chatView steuert Unterzustände (recent/search/detail)
 
-* ❌ Verify-Logik nicht umbauen oder erweitern.
-* ❌ `initArchiveVerifyListener()` nicht verändern oder entfernen.
-* ❌ Navigation in den Chat **nicht** direkt aus dem Button heraus auslösen.
-* ❌ Session Storage Keys nicht umbenennen oder mischen (LS vs. SS).
-* ❌ Keine impliziten Seiteneffekte beim Klick auf „Add to new chat“.
+   TODO-RELEVANZ:
+   - Nach erfolgreichem Start eines neuen Chats
+     muss das ARCHIVE **geschlossen** werden
+     (über Event, Router oder State-Reset)
 
----
 
-## ANCHORS (Relevante Stellen im Code)
+   4. SELECTION-STATE (SESSION STORAGE)
+   ----------------------------------------------------------------------
+   const [selectionState, setSelectionState] = useState(...)
+   readSS('mpathy:archive:selection:v1')
 
-### 1️⃣ Selection-State & Persistenz
+   Funktionen:
+   - persistSelection
+   - addPair
+   - removePair
+   - clearSelection
 
-**Bereich:** `SelectionState`, `selectionState`, `persistSelection()`
+   Status:
+   - Selection wird korrekt gepflegt
+   - Maximal 4 Paare enforced (UI-seitig)
 
-* Verwaltet die aktuell ausgewählten Nachrichtenpaare.
-* Persistiert Auswahl unter:
+   TODO-RELEVANZ:
+   - selection ist die **Quelle**
+     für den Start-Chat-Event
+   - clearSelection muss NACH Erfolg
+     sicher ausgeführt werden
 
-  * `mpathy:archive:selection:v1` (Session Storage)
-* Diese Selection ist **Input** für Verify *und* Injection.
 
-➡️ **Nicht ändern:** Struktur, Key, Semantik.
+   5. VERIFY-LISTENER (SEPARAT)
+   ----------------------------------------------------------------------
+   Events:
+   - mpathy:archive:verify
+   - mpathy:archive:verify:success
+   - mpathy:archive:verify:error
+   - mpathy:archive:verify:info
 
----
+   Wichtig:
+   - onVerifySuccess:
+     clearSelection()
+     setMode('reports')
 
-### 2️⃣ Global Event Listener (Verify-Rückkanal)
+   TODO-RELEVANZ:
+   - Verify-Flow ist sauber getrennt
+   - Start-Chat-Flow DARF diesen
+     Mechanismus nicht stören
 
-**Bereich:** `useEffect` mit Event-Listenern
 
-```ts
-window.addEventListener('mpathy:archive:verify:error', ...)
-window.addEventListener('mpathy:archive:verify:info', ...)
-window.addEventListener('mpathy:archive:verify:success', ...)
-```
+   6. BOOTSTRAP-EFFECT
+   ----------------------------------------------------------------------
+   useEffect(() => { ... }, [])
 
-* Reagiert auf Ergebnisse des Verify-Prozesses.
-* `onVerifySuccess()`:
+   Aufgaben:
+   - initArchiveVerifyListener()
+   - getRecentChats()
+   - UI-Hard-Block:
+     - body overflow hidden
+     - prompt-root-scene ausblenden
 
-  * cleared Selection
-  * schaltet Mode auf `reports`
+   TODO-RELEVANZ:
+   - Overlay ist ein „Full Takeover“
+   - Muss nach Start-Chat wieder sauber
+     verlassen werden
 
-➡️ **Nur Verify-bezogen.**
-➡️ Injection darf hier **nicht** andocken.
 
----
+   7. SPINNER-STATE (KRITISCH)
+   ----------------------------------------------------------------------
+   const [isPreparing, setIsPreparing] = useState(false)
 
-### 3️⃣ Bootstrap / Initialisierung
+   Rendering:
+   {isPreparing && <SystemSpinner />}
 
-**Bereich:** `useEffect` (Bootstrap)
+   Aktivierung:
+   - Beim Klick auf „Add X/4 to new chat“:
+     setIsPreparing(true)
 
-```ts
-initArchiveVerifyListener()
-```
+   Deaktivierung:
+   - ❌ EXISTIERT AKTUELL NICHT
 
-* Initialisiert **ausschließlich** den Verify-Listener.
-* Muss unverändert bleiben.
+   TODO-RELEVANZ (MAXIMAL):
+   - isPreparing muss nach erfolgreichem
+     neuen Chat explizit auf false gesetzt werden
+   - Aktuell bleibt Spinner dauerhaft aktiv
 
-➡️ Injection bekommt **einen eigenen Listener**, nicht hier hineinbauen.
 
----
+   8. START-CHAT-TRIGGER (KERNSTELLE)
+   ----------------------------------------------------------------------
+   Button:
+   “Add X/4 to new chat”
 
-### 4️⃣ HEADER — Mode Switch (CHAT / REPORTS)
+   onClick:
+   - setIsPreparing(true)
+   - dispatch CustomEvent:
+     'mpathy:archive:start-chat'
+     detail: { pairs: selection }
 
-**Bereich:** Header Buttons
+   Status:
+   - Event wird korrekt dispatcht
+   - archiveChatPreparationListener
+     empfängt dieses Event
 
-```tsx
-<button>CHAT</button>
-<button>REPORTS</button>
-```
+   TODO-RELEVANZ:
+   - NACH erfolgreichem Flow:
+     - Spinner stoppen
+     - Archive schließen
+     - ggf. Routing in neuen Chat
 
-* Umschaltung betrifft **nur EBENE 1** (Modus).
-* Hat **keinen Einfluss** auf Selection oder Injection.
 
-➡️ Nicht für Prozess-Logik missbrauchen.
+   9. ARCHIVE SCHLIESSEN
+   ----------------------------------------------------------------------
+   Close-Button:
+   dispatch 'mpathy:archive:close'
 
----
+   Status:
+   - Schließt Overlay zuverlässig
 
-### 5️⃣ ACTION BUTTON — Verify
+   TODO-RELEVANZ:
+   - Muss programmatisch nach
+     erfolgreichem Start-Chat ausgelöst werden
 
-**Bereich:** Button „Verify {selection.length}"
 
-```ts
-CustomEvent('mpathy:archive:verify', { intent: 'verify', pairs: selection })
-```
+   10. BODY-RENDERING
+   ----------------------------------------------------------------------
+   - mode === 'reports' → ReportList
+   - mode === 'chat' → Recent / Search / Detail
 
-* Korrekt angebunden.
-* Dient als Referenz für Event-Dispatch.
+   TODO-RELEVANZ:
+   - Nach neuem Chat darf
+     KEIN Archive-Content mehr sichtbar sein
 
-➡️ Nicht verändern.
 
----
+   11. ZUSAMMENFASSUNG (KANONISCH)
+   ----------------------------------------------------------------------
+   - Diese Datei ist UI-seitig korrekt
+   - Sie triggert den Start-Chat sauber
+   - Sie blockiert die UI bewusst (Spinner)
+   - Sie hat aktuell KEINEN Mechanismus,
+     um den Flow wieder freizugeben
 
-### 6️⃣ ACTION BUTTON — Add to new chat (KRITISCH)
+   → Für die ToDos relevant sind:
+     - setIsPreparing(true / false)
+     - dispatch 'mpathy:archive:start-chat'
+     - dispatch 'mpathy:archive:close'
 
-**Bereich:** Button „Add {selection.length}/4 to new chat"
-
-```ts
-CustomEvent('mpathy:archive:verify', { intent: 'verify', pairs: selection })
-```
-
-* **Aktueller Zustand (falsch):**
-
-  * Dispatcht `verify` statt `inject`.
-* **Zukünftiger Zustand (Ziel):**
-
-  * Muss **eigenes Event** dispatchen (z. B. `mpathy:archive:inject`).
-  * Darf **keine Navigation** auslösen.
-
-➡️ **Hier wird später gepatcht.**
-
----
-
-### 7️⃣ Close-Button (Archiv schließen)
-
-**Bereich:** Close-X Button
-
-```ts
-CustomEvent('mpathy:archive:close')
-```
-
-* Schließt das Archiv ohne Seiteneffekte.
-* Injection-Flow darf **erst nach erfolgreicher Preparation** hier ankommen.
-
-➡️ Nicht direkt vom Injection-Button aus nutzen.
-
----
-
-## ZUSAMMENFASSUNG (für Dev-Team)
-
-* `ArchiveOverlay.tsx` ist **Trigger & UI-Orchestrator**.
-* Verify und Injection **dürfen hier nur angestoßen**, nicht ausgeführt werden.
-* Der einzige Patchpunkt für Injection ist der **„Add to new chat“-Button**.
-* Alles andere dient der Stabilität und darf nicht verändert werden.
-
-**Ohne Verständnis dieses Index: kein Patch erlaubt.***/
-
+   ====================================================================== */
 
 
 'use client'

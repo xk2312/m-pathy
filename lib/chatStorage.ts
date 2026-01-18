@@ -1,174 +1,154 @@
-/* # 📑 FILE INDEX — chatStorage.ts
+/* ======================================================================
+   FILE INDEX — chatStorage.ts
+   MODE: GranularFileIndexDeveloper · CodeForensik
+   SCOPE: CHAT PERSISTENZ · LEDGER · HARD RESET · CHAIN
+   STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)
+   ======================================================================
 
-## FILE
+   1. ROLLE DER DATEI
+   ----------------------------------------------------------------------
+   Diese Datei ist die **Single Source of Truth** für:
+   - Chat-Persistenz (localStorage)
+   - Triketon-Ledger (append-only)
+   - Chain-Integrität pro Chat
+   - Hard-Resets zwischen Chats
 
-`lib/chatStorage.ts`
+   → Jeder „neue Chat“ MUSS hier sauber beginnen.
 
-## ROLE (1 Satz)
 
-Zentrale **Single Source of Truth** für Chat‑Persistenz und Triketon‑Ledger auf Client‑Seite (localStorage), inkl. Normalisierung, Migration, Chain‑Integrity und Device‑Key‑Management.
+   2. RELEVANTE STORAGE-KEYS
+   ----------------------------------------------------------------------
+   CHAT_STORAGE_KEY        = "mpathy:chat:v1"
+   TRIKETON_STORAGE_KEY    = "mpathy:triketon:v1"
+   CHAT_CHAIN_KEY          = "mpathy:chat:chain_id"
+   THREAD_EXPORT_KEY       = "mpathy:thread:default"
 
-## TOUCH
+   TODO-RELEVANZ:
+   - Neuer Archive-Chat MUSS:
+     - neuen chain_id erzeugen
+     - alten Chat-Context NICHT weiterverwenden
 
-**NEIN — funktional gesperrt**
 
-Diese Datei ist **nicht aktiv zu patchen** für Injection, aber **hochrelevant als Ziel- und Integritätsraum**.
+   3. NORMALISIERUNG & VALIDIERUNG
+   ----------------------------------------------------------------------
+   - normalizeMessage()
+   - normalizeMessages()
 
----
+   Eigenschaften:
+   - erzwingt gültige Rollen
+   - garantiert IDs
+   - schützt vor korrupten Daten
 
-## WHY (Warum diese Datei relevant ist)
+   TODO-RELEVANZ:
+   - Archive-Summary als USER-Message
+     MUSS dieses Format erfüllen
+   - Kein Sonderformat nötig
 
-* Definiert, **was als Chat gilt** und was nicht.
-* Legt fest, **wann Inhalte Teil der Beweiskette (Ledger)** werden.
-* Trennt strikt zwischen:
 
-  * sichtbarem Chat (`CHAT_STORAGE_KEY`)
-  * Triketon‑Ledger (`TRIKETON_STORAGE_KEY`)
-* Ist Referenz dafür, **welche Inhalte Injection *nicht* anfassen darf**.
+   4. CHAT LIFECYCLE
+   ----------------------------------------------------------------------
+   loadChat()
+   saveChat()
+   clearChat()
+   hardClearChat()
 
----
+   KRITISCHE STELLE:
+   - hardClearChat():
+     - löscht chat + chain_id
+     - optional reload()
 
-## DANGERS (Absolute No‑Gos)
+   TODO-RELEVANZ (HOCH):
+   - Für neuen Archive-Chat:
+     → hardClearChat({ reload: false })
+     → danach neuen Chat aufbauen
+   - Reload darf NICHT automatisch erfolgen
 
-❌ Keine neuen Storage‑Keys hier einführen
-❌ Keine SessionStorage‑Logik hier ergänzen
-❌ Keine Injection‑Summary hier persistieren
-❌ Keine Ledger‑Writes für unsichtbare / vorbereitende Inhalte
-❌ Keine Veränderung an Hash‑, Key‑ oder Chain‑Logik
 
-Diese Datei ist **beweisrelevant**. Änderungen = Risiko.
+   5. LEDGER-APPEND (TRIKETON)
+   ----------------------------------------------------------------------
+   appendTriketonLedgerEntry()
 
----
+   Eigenschaften:
+   - append-only
+   - duplicate guard
+   - chain_prev wird gesetzt
+   - Event "mpathy:triketon:updated"
 
-## ANCHORS (Relevante Codebereiche)
+   TODO-RELEVANZ:
+   - Neuer Chat MUSS neue chain_id haben
+   - Summary als USER-Message erzeugt
+     einen frischen Ledger-Genesis
 
-### 1️⃣ Zentrale Storage Keys
 
-```ts
-const CHAT_STORAGE_KEY = "mpathy:chat:v1";
-const TRIKETON_STORAGE_KEY = "mpathy:triketon:v1";
-```
+   6. TRUTH HASH (256 BIT)
+   ----------------------------------------------------------------------
+   ensureTruthHash256()
 
-* `CHAT_STORAGE_KEY`
+   Bedeutung:
+   - garantiert SHA-256 Hex
+   - ersetzt frühere Token-Hashes
 
-  * Enthält **nur sichtbare Chat‑Messages**
-* `TRIKETON_STORAGE_KEY`
+   TODO-RELEVANZ:
+   - Archive-Summary erhält stabilen,
+     auditierbaren TruthHash
+   - Keine Sonderbehandlung nötig
 
-  * Append‑only Ledger
-  * Grundlage für Archiv‑Projektion
 
-➡️ Injection‑Vorbereitung darf **keinen dieser Keys beschreiben**.
+   7. DEVICE-BOUND KEYS
+   ----------------------------------------------------------------------
+   getOrCreateDevicePublicKey()
+   getOrCreateDevicePublicKey2048()
 
----
+   Bedeutung:
+   - persistent
+   - device-spezifisch
 
-### 2️⃣ ChatMessage Typ (Grenze des Chats)
+   TODO-RELEVANZ:
+   - Neuer Chat nutzt EXISTIERENDE
+     Device Keys
+   - Kein Reset erforderlich
 
-```ts
-export type ChatMessage = {
-  id: string;
-  role: "system" | "user" | "assistant";
-  content: string;
-  ts?: number;
-  triketon?: TriketonSeal;
-};
-```
 
-* **Alles**, was im Chat existiert, muss diesem Typ entsprechen.
-* Alles außerhalb dieses Typs ist **kein Chat**.
+   8. LEDGER-VERIFIKATION & RECOVERY
+   ----------------------------------------------------------------------
+   ensureTriketonLedgerReady()
+   verifyLocalTriketonLedger()
+   verifyOrResetTriketonLedger()
 
-➡️ Injection‑Summary **gehört hier nicht hinein**.
+   Bedeutung:
+   - schützt vor Drift
+   - Ledger wird NICHT leichtfertig gelöscht
 
----
+   TODO-RELEVANZ:
+   - Archive-Flow DARF Ledger nicht anfassen
+   - Nur Chat-Chain wird neu gestartet
 
-### 3️⃣ initChatStorage()
 
-```ts
-export function initChatStorage(): void
-```
+   9. ARCHIVE-VERKNÜPFUNG (INDIREKT)
+   ----------------------------------------------------------------------
+   import { syncArchiveFromTriketon }
 
-* Migration von Legacy‑Keys
-* Initialisiert Triketon‑Ledger (Genesis)
-* Startet **verify‑Listener**
+   Bedeutung:
+   - Ledger-Updates triggern Archive-Projektion
+   - Neuer Chat wird automatisch archivierbar
 
-➡️ Injection‑Listener **nicht hier registrieren**.
+   TODO-RELEVANZ:
+   - Funktioniert ohne Änderungen
 
----
 
-### 4️⃣ saveChat()
+   10. ZUSAMMENFASSUNG (KANONISCH)
+   ----------------------------------------------------------------------
+   chatStorage.ts ist STABIL.
 
-```ts
-export async function saveChat(messages: ChatMessage[], max = 120)
-```
+   Für die ToDos relevant:
+   - hardClearChat()
+   - CHAT_CHAIN_KEY Reset
+   - saveChat() / appendTriketonLedgerEntry()
 
-* Persistiert Chat **atomar**
-* Ledger‑Writes **bewusst ausgelagert** (Intent‑Layer)
+   → Neuer Archive-Chat = sauberer Neustart
+     OHNE Reload, OHNE Legacy-Leaks.
 
-➡️ Injection darf erst **nach** sichtbarer Assistant‑Message hier landen.
-
----
-
-### 5️⃣ appendTriketonLedgerEntry()
-
-* Baut die **Beweiskette**:
-
-  * `chain_id`
-  * `chain_prev`
-  * `truth_hash`
-* Duplikat‑Guard
-* Triggert `mpathy:triketon:updated`
-
-➡️ Injection‑Preparation **niemals** hier eintragen.
-
----
-
-### 6️⃣ Device‑Bound Keys
-
-```ts
-getOrCreateDevicePublicKey()
-getOrCreateDevicePublicKey2048()
-```
-
-* Persistente, gerätegebundene Identität
-* Kritisch für Patent & Beweisführung
-
-➡️ Nicht anfassen.
-
----
-
-### 7️⃣ Ledger‑Verifikation & Recovery
-
-* `verifyLocalTriketonLedger()`
-* `ensureTriketonLedgerReady()`
-* `verifyOrResetTriketonLedger()`
-
-➡️ Garantiert Konsistenz, **kein Business‑Logic‑Ort**.
-
----
-
-## Relevanz für Injection (klar abgegrenzt)
-
-**Diese Datei ist relevant für:**
-
-* Definition, ab wann Inhalte **Teil des Chats** sind
-* Abgrenzung: Vorbereitung vs. Beweiskette
-
-**Diese Datei ist NICHT zuständig für:**
-
-* Summary‑Erzeugung
-* Session‑Storage
-* UI‑States
-* Event‑Handling
-
----
-
-## Kurzfazit (für Dev‑Team)
-
-`chatStorage.ts` ist ein **geschützter Kern**.
-Injection‑Logik darf hier **nicht hineinbluten**.
-
-➡️ Alles, was hier landet, ist **sichtbar, persistent und beweisrelevant**.
-➡️ Vorbereitung bleibt **außerhalb**.
-*/
+   ====================================================================== */
 
 import { generatePublicKey2048, computeTruthHash } from "@/lib/triketonVerify";
 import { syncArchiveFromTriketon } from "@/lib/archiveProjection";

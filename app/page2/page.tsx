@@ -1,110 +1,189 @@
-/*
-# 📑 INDEX — `page2/page.tsx`
+/* ======================================================================
+   FILE INDEX — page.tsx  (Chat Page / Page2)
+   MODE: GranularFileIndexDeveloper · CodeForensik
+   SCOPE: CHAT RUNTIME · ARCHIVE INJECTION · API SEND · UI RESET
+   STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)
+   ======================================================================
 
-## 1. Modul-Header & Runtime-Kontext
+   0. EINORDNUNG (SYSTEMISCH)
+   ----------------------------------------------------------------------
+   Diese Datei ist der ZENTRALE Chat-Raum.
+   Alles, was am Ende als „neuer Chat“ sichtbar wird,
+   MUSS hier korrekt ankommen.
 
-* `"use client"` Direktive (Client-Side Rendering, Hooks erlaubt)
-* React-Importe: `useEffect`, `useState`, `useRef`, `useCallback`, `useMemo`, `FormEvent`
-* Next.js Runtime-Kontext (Client Page, kein Server Component)
-
-## 2. Provider & globale Infrastruktur
-
-* `LanguageProvider` (i18n-Root, globale Sprachsteuerung)
-* `Navigation` (Hauptnavigation, persistenter UI-Frame)
-* `OnboardingWatcher` (Lifecycle-Überwachung für Erstnutzer)
-* `useMobileViewport` (Viewport-Detection & Responsive-Steuerung)
-
-## 3. UI-Grundbausteine (Layout & Shell)
-
-* `SidebarContainer` (Desktop-Sidebar-Layout)
-* `MobileOverlay` (Mobile Navigation / Overlay-UI)
-* `PromptRoot` (zentraler Chat-/Prompt-Container)
-* `Image` (Next.js Image Handling)
-* `highlight.js` (Syntax-Highlighting für Code-Blöcke)
-
-## 4. Lokalisierung & Textsystem
-
-* `getLocale` / `setLocale` (Locale-Initialisierung & Umschaltung)
-* `t` (Übersetzungsfunktion für UI-Strings)
-
-## 5. Identitäts- & ID-Handling
-
-* `uuidv4` (Erzeugung eindeutiger IDs für Messages / Sessions)
-
-## 6. Persistenz- & Chat-Storage-Subsystem
-
-* Importierter Persistenzpfad aus `chatStorage`:
-
-  * `loadChat`
-  * `saveChat`
-  * `initChatStorage`
-  * `hardClearChat`
-  * `appendTriketonLedgerEntry`
-  * `ensureTriketonLedgerReady`
-  * `verifyOrResetTriketonLedger`
-* **Alias `persist`**
-
-  * kapselt `save`, `load`
-  * behält historische `cut`-Semantik (max. 120 Einträge)
-
-## 7. Triketon-/Verification-Layer
-
-* `normalizeForTruthHash` (kanonische Normalisierung)
-* `computeTruthHash` (deterministische Hash-Berechnung)
-* Einbindung in Message- / Ledger-Flow (keine UI-Logik)
-
-## 8. Theme- & Token-Typisierung
-
-* `ColorTokens` (bg / text Tokens)
-* `ThemeTokens` (erweiterbare Theme-Struktur)
-* rein typdefinierend, keine Laufzeitwirkung
-
-## 9. React-State-Management (lokal)
-
-* Diverse `useState`-States für:
-
-  * Chat-Nachrichten
-  * UI-Zustände (Sidebar, Mobile Overlay, Input)
-  * Initialisierungs-Flags
-* `useRef` für stabile Referenzen über Renders hinweg
-
-## 10. Lifecycle- & Initialisierungslogik
-
-* `useEffect`-Blöcke für:
-
-  * Locale-Initialisierung
-  * Chat-Storage-Setup
-  * Ledger-Validierung
-  * Wiederherstellung persistierter Chats
-* klare Trennung zwischen:
-
-  * Initial Load
-  * Rehydration
-  * Laufzeit-Interaktion
-
-## 11. Event- & Callback-Orchestrierung
-
-* `useCallback` für:
-
-  * Message-Handling
-  * Submit-Flows
-  * Reset-/Clear-Aktionen
-* keine globalen Event-Listener außerhalb React-Lifecycle
-
-## 12. Render-Baum (Top-Level)
-
-* Root-Return mit:
-
-  * `LanguageProvider`
-  * Navigation
-  * Layout-Shell (Sidebar / Mobile)
-  * `PromptRoot` als funktionaler Kern
-* **Kein leerer Return**
-* **Kein Conditional, das alles ausblendet**
-
-*/
+   → page.tsx ist der ENDKNOTEN des Archive-Flows.
 
 
+   1. RELEVANTE IMPORTS (ARCHIVE)
+   ----------------------------------------------------------------------
+   import '@/lib/archiveChatPreparationListener'
+   import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
+
+   Bedeutung:
+   - archiveChatPreparationListener wird hier global registriert
+   - page.tsx ist Empfänger des vorbereiteten Archive-Kontexts
+
+   TODO-RELEVANZ:
+   - Archive-Flow endet HIER
+   - Fehlerfreier Übergang muss hier finalisiert werden
+
+
+   2. ARCHIVE CONTEXT INJECTION (KERNLOGIK)
+   ----------------------------------------------------------------------
+   function withArchiveInjection(ctx: ChatMessage[])
+
+   Ablauf:
+   - liest aus SessionStorage:
+     `mpathy:context:archive-chat:v1`
+   - erzeugt SYSTEM-Nachricht:
+     role: "system"
+     content: `ARCHIVE CONTEXT\n\n${injected}`
+   - injiziert diese Nachricht VOR bestehendem Context
+
+   Rückgabe:
+   {
+     context: ChatMessage[]
+     used: boolean
+   }
+
+   TODO-RELEVANZ (HOCH):
+   - Aktuell wird Archive-Context
+     als SYSTEM-Nachricht injiziert
+   - ToDo verlangt:
+     → erneutes Senden als USER-Nachricht
+     → NICHT im bestehenden Chat rendern
+
+
+   3. CLEAR NACH VERWENDUNG
+   ----------------------------------------------------------------------
+   Im Sendeflow:
+   if (used) {
+     clearArchiveChatContext();
+   }
+
+   Bedeutung:
+   - Archive-Context ist ONE-SHOT
+   - Wird nach erstem API-Call gelöscht
+
+   TODO-RELEVANZ:
+   - Zeitpunkt des Clear ist kritisch
+   - Bei neuem Flow muss sichergestellt sein,
+     dass Clear NACH erfolgreichem neuen Chat erfolgt
+
+
+   4. API SEND (NORMALE CHAT-LOGIK)
+   ----------------------------------------------------------------------
+   async function sendMessageLocal(context: ChatMessage[])
+
+   Eigenschaften:
+   - POST /api/chat
+   - credentials: same-origin
+   - messages = context
+   - locale wird mitgesendet
+
+   Status:
+   - Diese Funktion ist KORREKT
+   - Sie ist der gewünschte Zielpfad
+     für den neuen Archive-Flow
+
+   TODO-RELEVANZ:
+   - Archive-Zusammenfassung MUSS hier landen
+   - Es darf KEIN Sonder-Continuation-Call existieren
+
+
+   5. PROMPT HANDLER (USER SEND)
+   ----------------------------------------------------------------------
+   const onSendFromPrompt = useCallback(async (text: string) => { ... })
+
+   Ablauf:
+   - User-Message wird erzeugt
+   - optimistic UI update
+   - Ledger Append (User)
+   - withArchiveInjection(optimistic)
+   - sendMessageLocal(outgoing)
+
+   TODO-RELEVANZ (MAXIMAL):
+   - Dieser Handler ist der IDEALE Ort,
+     um Archive-Summary als USER-Message
+     in einen NEUEN Chat einzuspeisen
+   - Aktuell wird er nur bei manuellem Prompt genutzt
+
+
+   6. CHAT STATE & PERSISTENZ
+   ----------------------------------------------------------------------
+   const [messages, setMessages]
+   persistMessages()
+   hardClearChat()
+
+   Bedeutung:
+   - messages = aktueller Chat
+   - hardClearChat löscht Storage + reload
+
+   TODO-RELEVANZ:
+   - Für neuen Archive-Chat:
+     → alter Chat muss verlassen/gelöscht werden
+     → neuer Chat beginnt leer + injizierter User-Message
+
+
+   7. LOADING / SPINNER-STATE
+   ----------------------------------------------------------------------
+   const [loading, setLoading]
+
+   Steuerung:
+   - true beim Senden
+   - false bei Antwort oder Fehler
+
+   TODO-RELEVANZ:
+   - ARCHIVE-SPINNER ist NICHT dieser loading-State
+   - ABER: neuer Chat muss loading korrekt setzen,
+     sonst bleibt UI inkonsistent
+
+
+   8. ARCHIVE-SEITIGE EVENTS (INDIREKT)
+   ----------------------------------------------------------------------
+   page.tsx hört NICHT direkt auf:
+   - mpathy:archive:start-chat
+   - mpathy:archive:close
+
+   Diese Events werden:
+   - vom archiveChatPreparationListener verarbeitet
+   - page.tsx reagiert nur indirekt über Storage
+
+   TODO-RELEVANZ:
+   - saubere Trennung:
+     Listener → Storage
+     Page → liest Storage → API
+
+
+   9. ZIELARCHITEKTUR (IMPLIZIT ABLEITBAR)
+   ----------------------------------------------------------------------
+   - page.tsx ist der EINZIGE Ort,
+     an dem ein neuer Chat sichtbar entsteht
+   - Alles andere (Archive, Listener, Spinner)
+     sind nur Vorstufen
+
+   TODO-RELEVANZ:
+   - ToDo-Umsetzung MUSS hier enden
+   - Kein UI-Code im Listener
+   - Kein API-Code im ArchiveOverlay
+
+
+   10. ZUSAMMENFASSUNG (KANONISCH)
+   ----------------------------------------------------------------------
+   page.tsx:
+   - besitzt korrekte Chat-API-Anbindung
+   - besitzt Archive-Context-Injection
+   - besitzt vollständige Ledger-Integration
+   - ist der korrekte Endpunkt für den neuen Flow
+
+   KRITISCHE STELLEN FÜR ToDos:
+   - withArchiveInjection()
+   - onSendFromPrompt()
+   - clearArchiveChatContext()
+   - hardClearChat()
+   - sendMessageLocal()
+
+   ====================================================================== */
 
 "use client";
 
