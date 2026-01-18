@@ -612,32 +612,35 @@ useEffect(() => {
       </button>
 
       {/* ARCHIVE → CHAT (Injection Start) */}
-      <button
-        type="button"
-        disabled={selection.length > 4 || isPreparing}
-        onClick={() => {
-          if (selection.length <= 4 && !isPreparing) {
-            setIsPreparing(true)
-            window.dispatchEvent(
-              new CustomEvent('mpathy:archive:start-chat', {
-                detail: {
-                  pairs: selection,
-                },
-              })
-            )
-          }
-        }}
-        className={`
-          text-sm
-          font-medium
-          transition
-          ${
-            selection.length > 4 || isPreparing
-              ? 'text-text-muted cursor-not-allowed'
-              : 'text-cyan-400 hover:text-cyan-300'
-          }
-        `}
-      >
+      
+        <button
+  type="button"
+  disabled={selection.length > 4 || isPreparing}
+  onClick={() => {
+    if (selection.length <= 4 && !isPreparing) {
+      setIsPreparing(true)
+      window.dispatchEvent(
+        new CustomEvent('mpathy:archive:start-chat', {
+          detail: {
+            pairs: selection,
+          },
+        })
+      )
+      router.push('/page2')
+    }
+  }}
+  className={`
+    text-sm
+    font-medium
+    transition
+    ${
+      selection.length > 4 || isPreparing
+        ? 'text-text-muted cursor-not-allowed'
+        : 'text-cyan-400 hover:text-cyan-300'
+    }
+  `}
+>
+
         {selection.length > 4
           ? 'Too many to add'
           : `Add ${selection.length}/4 to new chat`}
