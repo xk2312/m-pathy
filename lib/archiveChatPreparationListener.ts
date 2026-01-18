@@ -434,35 +434,8 @@ async function handleStartChat(e: Event) {
     writeArchiveChatContext(summary)
     console.info('[ARCHIVE][F3] summary written to session storage')
 
-    /* -------- CONTINUATION -------- */
-    const continuation = await withTimeout(
-      requestContinuation(summary),
-      TIMEOUT_MS
-    )
+       return
 
-    console.info('[ARCHIVE][F4] continuation ok')
-
-    /* ======================================================
-       ⛔️ KRITISCHER ÜBERGABEPUNKT
-       ------------------------------------------------------
-       HIER muss die Antwort in die KANONISCHE CHAT-PIPELINE:
-       - write to mpathy:chat:v1
-       - Triketon-Seal erzeugen
-       - UI auf neuen Chat wechseln
-       ------------------------------------------------------
-       Beispiel (PSEUDO, ggf. anpassen):
-       
-       writeChatAssistantMessage(continuation)
-       sealWithTriketon(...)
-       navigateToChat(...)
-       
-       ====================================================== */
-
-    console.info('[ARCHIVE][F5] TODO: write continuation into chat pipeline')
-
-    /* -------- CLEANUP (STRICTLY LAST) -------- */
-   
-    console.info('[ARCHIVE][F6] archive namespaces cleared')
   } catch (err) {
     console.error('[ARCHIVE][ERROR]', err)
   }
