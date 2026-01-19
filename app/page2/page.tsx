@@ -2034,13 +2034,31 @@ if (busy) {
   // ===============================================================
   // Lokale Chat-Sendefunktion (ruft echte API)
   // ===============================================================
- async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "same-origin",
-      body: JSON.stringify({ messages: context, locale: getLocale() }),
-    });
+ // 1. SYSTEM_CONTINUATION_HEADER lokal definieren oder importieren:
+const SYSTEM_CONTINUATION_HEADER =
+  "You are continuing a conversation based on a verified archival summary. The summary below is a complete, lossless representation of the prior USER–ASSISTANT conversation. It contains all relevant facts, intents, constraints, and decisions. Rules: Treat the summary as authoritative conversation history. Do NOT question or reinterpret the summary. Do NOT ask for missing context. Do NOT reference the archive or summarization process. Continue the conversation naturally and directly. Produce the next assistant response to the user.";
+
+// 2. sendMessageLocal korrekt:
+async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
+  let messages = context;
+  if (
+    !messages.length ||
+    messages[0].role !== "system"
+  ) {
+    const systemMsg: ChatMessage = {
+      role: "system",
+      content: SYSTEM_CONTINUATION_HEADER,
+      // timestamp: new Date().toISOString(), // falls im Typ enthalten!
+    };
+    messages = [systemMsg, ...messages];
+  }
+
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+    body: JSON.stringify({ messages: messages, locale: getLocale() }),
+  });
 
     // === GC Step 5 – FreeGate/Balance Gates → Login oder Stripe Checkout ===
     if (res.status === 401) {
