@@ -1401,7 +1401,7 @@ useEffect(() => {
 }, []);
 
 
-const handleArchivePrepared = useCallback(() => {
+const handleArchivePrepared = useCallback(async () => {
   console.info("[CHAT][ARCHIVE] prepared event received");
 
   const summary = readArchiveChatContext();
@@ -1410,18 +1410,25 @@ const handleArchivePrepared = useCallback(() => {
   // 🧹 Chat neu starten, aber nicht neu laden
   hardClearChat({ reload: false });
 
-  // 🪄 Archivtext direkt als erste Assistant-Nachricht einsetzen
-  const assistantMessage = {
+  // 🪄 Summary als USER-Message einspeisen (nicht Assistant)
+  const userMessage = {
     id: crypto.randomUUID(),
-    role: "assistant" as const,
+    role: "user" as const,
     content: summary,
     timestamp: new Date().toISOString(),
   };
 
-  setMessages([assistantMessage]);
+  // 🚀 Über reguläre Chat-Pipeline senden → erzeugt Ledger + Antwort
+  const assistant = await sendMessageLocal([userMessage]);
+
+  // 🧩 Beide Nachrichten ins State setzen
+  setMessages([userMessage, assistant]);
+
+  // 🧘‍♂️ Spinner aus, Context leeren
   setLoading(false);
   clearArchiveChatContext();
 }, []);
+
 
 
 useEffect(() => {
