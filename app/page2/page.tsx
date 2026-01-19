@@ -1399,28 +1399,30 @@ useEffect(() => {
     document.getElementById("chat-input")?.focus();
   });
 }, []);
-const handleArchivePrepared = useCallback(async () => {
+
+
+const handleArchivePrepared = useCallback(() => {
   console.info("[CHAT][ARCHIVE] prepared event received");
 
   const summary = readArchiveChatContext();
   if (!summary) return;
 
+  // 🧹 Chat neu starten, aber nicht neu laden
   hardClearChat({ reload: false });
 
-  const userMessage = {
+  // 🪄 Archivtext direkt als erste Assistant-Nachricht einsetzen
+  const assistantMessage = {
     id: crypto.randomUUID(),
-    role: "user" as const,
+    role: "assistant" as const,
     content: summary,
     timestamp: new Date().toISOString(),
   };
 
- const assistant = await sendMessageLocal([userMessage]);
-setMessages((prev) => [...prev, assistant]);
-
-setLoading(false);               // 🔴 DAS FEHLTE
-clearArchiveChatContext();
-
+  setMessages([assistantMessage]);
+  setLoading(false);
+  clearArchiveChatContext();
 }, []);
+
 
 useEffect(() => {
   window.addEventListener(
