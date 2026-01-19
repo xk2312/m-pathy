@@ -148,15 +148,17 @@ export type Role = 'user' | 'assistant' | 'system'
 ────────────────────────────────────────────── */
 
 export interface ChatMessage {
-  id: string
-  chat_serial: number
-  msg_number: number
-  role: Role
-  content: string
-  timestamp: string
+  id?: string                  // 🪶 lokal generiert (crypto.randomUUID)
+  chat_serial?: number          // optional bis Ledger zuweist
+  msg_number?: number           // optional bis persistiert
+  role: Role                    // unverändert
+  content: string               // unverändert
+  timestamp?: string            // optional, da im Archiv-Flow generiert
+  format?: "plain" | "markdown" | "html" // erlaubt UI-Darstellung
   truth_hash?: string
   verified?: boolean
 }
+
 
 export interface ArchiveEntry {
   id: string

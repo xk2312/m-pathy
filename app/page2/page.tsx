@@ -207,6 +207,7 @@ import { loadChat, saveChat, initChatStorage, hardClearChat, appendTriketonLedge
 import { computeTruthHash, normalizeForTruthHash } from "@/lib/triketonVerify";
 import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
 import '@/lib/archiveChatPreparationListener'
+import type { ChatMessage, Role } from "@/lib/types";
 
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
@@ -419,17 +420,6 @@ function useTheme(persona: keyof typeof PERSONAS = "default") {
 const LS_KEY = "mpathy:thread:default";
 const MAX_HISTORY = 200;
 
-type Role = "user" | "assistant" | "system";
-type ChatMessage = {
-  role: Role;
-  content: string;
-  format?: "plain" | "markdown" | "html";
-  meta?: {
-    status?: string;
-    balanceAfter?: number | null;
-    tokensUsed?: number | null;
-  };
-};
 
 function truncateMessages(list: ReadonlyArray<ChatMessage>, max = MAX_HISTORY): ChatMessage[] {
   return list.length > max ? list.slice(list.length - max) : [...list];
@@ -2192,8 +2182,65 @@ if (busy) {
     }
   }
 
-  if (!res.ok) throw new Error("Chat API failed");
+   if (!res.ok) throw new Error("Chat API failed");
 
+  // 🔹 Prüfe, ob OpenAI-kompatibles Streaming aktiv ist
+  const isStream = res.headers.get("content-type")?.includes("text/event-stream");
+
+  if (isStream && res.body) {
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let buffer = "";
+    let fullContent = "";
+
+    const id =
+      typeof crypto !== 'undefined' &&
+      typeof (crypto as any).randomUUID === 'function'
+        ? (crypto as any).randomUUID()
+        : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+
+    const assistantMsg: ChatMessage = {
+      id,
+      role: "assistant",
+      content: "",
+      format: "markdown",
+    };
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith("data:")) continue;
+        if (trimmed === "data: [DONE]") continue;
+
+        try {
+          const json = JSON.parse(trimmed.replace(/^data:\s*/, ""));
+          const token = json?.choices?.[0]?.delta?.content ?? "";
+          if (token) {
+            fullContent += token;
+            assistantMsg.content = fullContent;
+
+            window.dispatchEvent(
+              new CustomEvent("mpathy:stream:delta", { detail: { text: token } })
+            );
+          }
+        } catch {
+          /* ignore partial fragments */
+        }
+      }
+    }
+
+    assistantMsg.content = fullContent.trim();
+    return assistantMsg;
+  }
+
+  // 🔹 Kein Stream → Standardverhalten unverändert
   const data = await res.json();
 
   // FreeGate-Limit: Login erforderlich
@@ -2211,51 +2258,50 @@ if (busy) {
   const assistant = data.assistant ?? data;
   const content = assistant.content ?? "";
 
-  // Falls der Server KEINEN Text liefert → Login-Text erzwingen
   const safeContent =
-  content.trim().length > 0 ? content : loginText
+    content.trim().length > 0 ? content : loginText;
 
-const status =
-  data && typeof data.status === 'string' ? data.status : 'ok'
+  const status =
+    data && typeof data.status === 'string' ? data.status : 'ok';
 
-const balanceAfter =
-  data && typeof data.balance_after === 'number' ? data.balance_after : null
+  const balanceAfter =
+    data && typeof data.balance_after === 'number' ? data.balance_after : null;
 
-const tokensUsed =
-  data && typeof data.tokens_used === 'number' ? data.tokens_used : null
+  const tokensUsed =
+    data && typeof data.tokens_used === 'number' ? data.tokens_used : null;
 
-const rawTriketon = (data as any)?.triketon
+  const rawTriketon = (data as any)?.triketon;
 
-const triketon =
-  rawTriketon && typeof rawTriketon === 'object'
-    ? {
-        sealed: true,
-        public_key:
-          (rawTriketon as any).public_key ??
-          (rawTriketon as any).publicKey ??
-          '',
-        truth_hash:
-          (rawTriketon as any).truth_hash ??
-          (rawTriketon as any).truthHash ??
-          '',
-        timestamp:
-          (rawTriketon as any).timestamp ??
-          (rawTriketon as any).sealed_at ??
-          '',
-        version: 'v1',
-        hash_profile: 'TRIKETON_HASH_V1',
-        key_profile: 'TRIKETON_KEY_V1',
-        orbit_context: 'chat',
-      }
-    : undefined
+  const triketon =
+    rawTriketon && typeof rawTriketon === 'object'
+      ? {
+          sealed: true,
+          public_key:
+            (rawTriketon as any).public_key ??
+            (rawTriketon as any).publicKey ??
+            '',
+          truth_hash:
+            (rawTriketon as any).truth_hash ??
+            (rawTriketon as any).truthHash ??
+            '',
+          timestamp:
+            (rawTriketon as any).timestamp ??
+            (rawTriketon as any).sealed_at ??
+            '',
+          version: 'v1',
+          hash_profile: 'TRIKETON_HASH_V1',
+          key_profile: 'TRIKETON_KEY_V1',
+          orbit_context: 'chat',
+        }
+      : undefined;
 
-const id =
-  typeof crypto !== 'undefined' &&
-  typeof (crypto as any).randomUUID === 'function'
-    ? (crypto as any).randomUUID()
-    : `${Date.now()}_${Math.random().toString(16).slice(2)}`
+  const id =
+    typeof crypto !== 'undefined' &&
+    typeof (crypto as any).randomUUID === 'function'
+      ? (crypto as any).randomUUID()
+      : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
 
-void 0;
+  void 0;
 
   return {
     id,
@@ -2264,8 +2310,9 @@ void 0;
     format: assistant.format ?? "markdown",
     meta: { status, balanceAfter, tokensUsed },
     triketon,
-  } as any as ChatMessage
+  } as any as ChatMessage;
 }
+
 
 // ⬆️ Diese schließende Klammer beendet die Message-Builder-Funktion sauber.
 // Danach folgt dein React-Code mit useEffect() und return (<LanguageProvider> …)
