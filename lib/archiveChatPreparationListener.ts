@@ -1,6 +1,10 @@
 'use client'
 
-import { writeArchiveChatContext,} from './storage'
+import {
+  writeArchiveChatContext,
+  clearArchiveChatContext,
+  clearArchiveSelection,
+} from './storage'
 
 
 
@@ -82,23 +86,33 @@ function handleStartChat(e: Event) {
     writeArchiveChatContext(summary);
     console.info('[ARCHIVE][F3] summary written to session storage');
 
-    // 🔑 Kanonischer Übergabepunkt → Chat übernimmt
+     // 🔑 Kanonischer Übergabepunkt → Chat übernimmt
     window.dispatchEvent(
       new CustomEvent('mpathy:archive:prepared', {
         detail: { source: 'archive' },
       })
     );
-console.info('[ARCHIVE][F4] archive prepared event dispatched');
+    console.info('[ARCHIVE][F4] archive prepared event dispatched');
 
-// 🕒 Spinner sichtbar halten, dann Archiv schließen
-setTimeout(() => {
-  console.info('[ARCHIVE][F5] auto-closing archive after delay');
-  window.dispatchEvent(new CustomEvent('mpathy:archive:close'));
-}, 3000);
+    // 🕒 Spinner sichtbar halten, dann Archiv schließen
+    setTimeout(() => {
+      console.info('[ARCHIVE][F5] auto-closing archive after delay');
+      window.dispatchEvent(new CustomEvent('mpathy:archive:close'));
+
+      // 🧹 SessionStorage nach Archiv-Schluss säubern
+      try {
+        clearArchiveChatContext();
+        clearArchiveSelection();
+        console.info('[ARCHIVE][F6] session storage cleared (selection + context)');
+      } catch (cleanupErr) {
+        console.warn('[ARCHIVE][F6-WARN] cleanup failed:', cleanupErr);
+      }
+    }, 3000);
   } catch (err) {
     console.error('[ARCHIVE][ERROR]', err);
   }
 }
+
 
 /* ======================================================
    LISTENER ATTACH
