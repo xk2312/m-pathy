@@ -2488,7 +2488,7 @@ setMessages((prev) => {
 });
 
 
-// 2) Inhalt schrittweise aufbauen (deterministisch awaited)
+// 2) Inhalt schrittweise aufbauen (visuell gestreamt)
 const fullText = assistant.content ?? "";
 const CHUNK_SIZE = 2;
 const TICK_MS = 16;
@@ -2497,8 +2497,6 @@ const streamAssistant = async () => {
   let firstChunkRendered = false;
 
   for (let i = 0; i < fullText.length; i += CHUNK_SIZE) {
-    await new Promise((r) => setTimeout(r, TICK_MS));
-
     const chunk = fullText.slice(i, i + CHUNK_SIZE);
 
     setMessages((prev) => {
@@ -2511,7 +2509,6 @@ const streamAssistant = async () => {
         { ...last, content: last.content + chunk },
       ]);
 
-      // ✅ EXAKT HIER: erster sichtbarer Assistant-Token
       if (!firstChunkRendered) {
         firstChunkRendered = true;
         window.dispatchEvent(
@@ -2522,13 +2519,17 @@ const streamAssistant = async () => {
       persistMessages(next);
       return next;
     });
+
+    // 🧠 kurze Pause + Repaint erlauben → echte sichtbare Chunks
+    await new Promise((r) => setTimeout(r, TICK_MS));
+    await new Promise(requestAnimationFrame);
   }
 };
 
-
-// ⬇️ WICHTIG: await statt fire-and-forget
+// ⬇️ Stream sequentiell durchlaufen
 await streamAssistant();
 
+// 🔐 Nach Stream-Ende: Ledger-Eintrag erzeugen
 setMessages((prev) => {
   if (!Array.isArray(prev) || prev.length === 0) return prev;
 
@@ -2568,6 +2569,7 @@ setMessages((prev) => {
 
   return prev;
 });
+
 
 
 
