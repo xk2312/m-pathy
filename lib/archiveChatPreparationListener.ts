@@ -234,11 +234,7 @@
 
 'use client'
 
-import {
-  writeArchiveChatContext,
-  clearArchiveChatContext,
-  clearArchiveSelection,
-} from './storage'
+import { writeArchiveChatContext,} from './storage'
 
 /* ======================================================
    CONFIG
