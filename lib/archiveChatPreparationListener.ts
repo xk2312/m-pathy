@@ -88,7 +88,13 @@ function handleStartChat(e: Event) {
         detail: { source: 'archive' },
       })
     );
-    console.info('[ARCHIVE][F4] archive prepared event dispatched');
+console.info('[ARCHIVE][F4] archive prepared event dispatched');
+
+// 🕒 Spinner sichtbar halten, dann Archiv schließen
+setTimeout(() => {
+  console.info('[ARCHIVE][F5] auto-closing archive after delay');
+  window.dispatchEvent(new CustomEvent('mpathy:archive:close'));
+}, 3000);
   } catch (err) {
     console.error('[ARCHIVE][ERROR]', err);
   }
