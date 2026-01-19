@@ -2388,18 +2388,65 @@ try {
     ];
 
     console.info("[CHAT][P3][A3] injecting archive summary into canonical chat pipeline");
-    const assistant = await sendMessageLocal(injectedContext);
+    // 🧩 Sofort User-Message anzeigen
+setMessages(injectedContext);
+setLoading(true);
 
-    console.info("[CHAT][P3][A4] sendMessageLocal resolved");
-    console.info("[CHAT][P3][A5] clearing archive chat context");
+// 🚀 Antwort asynchron anfordern
+sendMessageLocal(injectedContext)
+  .then((assistant) => {
+    console.info("[CHAT][P3][A4] assistant response received");
+
+    // 1️⃣ Leere Assistant-Bubble anhängen
+    setMessages((prev) => {
+      const base = Array.isArray(prev) ? prev : [];
+      const assistantMsg = {
+        ...assistant,
+        id: crypto.randomUUID(),
+        content: "",
+      };
+      return [...base, assistantMsg];
+    });
+
+    // 2️⃣ Text progressiv aufbauen
+    const fullText = assistant.content ?? "";
+    const CHUNK_SIZE = 2;
+    const TICK_MS = 16;
+    let firstChunkRendered = false;
+
+    (async () => {
+      for (let i = 0; i < fullText.length; i += CHUNK_SIZE) {
+        await new Promise((r) => setTimeout(r, TICK_MS));
+        const chunk = fullText.slice(i, i + CHUNK_SIZE);
+
+        setMessages((prev) => {
+          const base = Array.isArray(prev) ? prev : [];
+          const last = base[base.length - 1];
+          if (!last || last.role !== "assistant") return prev;
+
+          const next = [
+            ...base.slice(0, -1),
+            { ...last, content: last.content + chunk },
+          ];
+
+          if (!firstChunkRendered) {
+            firstChunkRendered = true;
+            window.dispatchEvent(
+              new CustomEvent("mpathy:archive:close")
+            );
+          }
+
+          persistMessages(next);
+          return next;
+        });
+      }
+    })();
+  })
+  .finally(() => {
+    setLoading(false);
     clearArchiveChatContext();
+  });
 
-    if (assistant.content === t("gc_please_login_to_continue")) {
-      console.warn("[CHAT][P3][A6] login required response detected");
-      return;
-    }
-
-    console.info("[CHAT][P3][A7] archive flow complete, awaiting streaming");
     
   }
 
