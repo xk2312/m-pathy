@@ -1401,7 +1401,7 @@ useEffect(() => {
 }, []);
 
 
-const handleArchivePrepared = useCallback(async () => {
+const handleArchivePrepared = useCallback(() => {
   console.info("[CHAT][ARCHIVE] prepared event received");
 
   const summary = readArchiveChatContext();
@@ -1418,16 +1418,21 @@ const handleArchivePrepared = useCallback(async () => {
     timestamp: new Date().toISOString(),
   };
 
-  // 🚀 Über reguläre Chat-Pipeline senden → erzeugt Ledger + Antwort
-  const assistant = await sendMessageLocal([userMessage]);
+  // ✨ User-Nachricht sofort rendern
+  setMessages([userMessage]);
+  setLoading(true);
 
-  // 🧩 Beide Nachrichten ins State setzen
-  setMessages([userMessage, assistant]);
-
-  // 🧘‍♂️ Spinner aus, Context leeren
-  setLoading(false);
-  clearArchiveChatContext();
+  // 🚀 Assistant-Antwort asynchron laden und hinzufügen
+  sendMessageLocal([userMessage])
+    .then((assistant) => {
+      setMessages((prev) => [...prev, assistant]);
+    })
+    .finally(() => {
+      setLoading(false);
+      clearArchiveChatContext();
+    });
 }, []);
+
 
 
 
