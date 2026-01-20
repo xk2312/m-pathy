@@ -181,7 +181,9 @@ export default function ArchiveOverlay() {
 }
 
 function ArchiveOverlayInner() {
-  const { t, lang } = useLanguage()   // 🔁 dynamischer Translator aus Provider
+  const { t, lang } = useLanguage()
+
+  const [systemMessage, setSystemMessage] = useState<string | null>(null)
 
   // 🧪 TEMP: I18N diagnostic output
   console.info("[TEST:getActiveDict]", lang, t("archive.title"))
@@ -189,6 +191,16 @@ function ArchiveOverlayInner() {
 
   // 🧪 TEMP: I18N diagnostic output
   console.info("[TEST:getActiveDict]", lang, t("archive.title"))
+
+  useEffect(() => {
+  if (!systemMessage) return
+
+  const id = setTimeout(() => {
+    setSystemMessage(null)
+  }, 4000)
+
+  return () => clearTimeout(id)
+}, [systemMessage])
 
   type ArchiveMode = 'chat' | 'reports'
 
@@ -255,49 +267,29 @@ useEffect(() => {
     clearSelection()
   }
 
- type VerifyCode =
-  | 'NO_SELECTION'
-  | 'EMPTY_TEXT'
-  | 'SEAL_FAILED'
-  | 'BAD_SERVER_RESULT'
-  | 'ALREADY_VERIFIED'
-  | 'CANCELLED'
-
-function mapVerifyCodeToMessage(code?: VerifyCode) {
-  switch (code) {
-    case 'NO_SELECTION':
-      return t('system.noSelectionToVerify')
-    case 'EMPTY_TEXT':
-      return t('system.nothingToVerify')
-    case 'SEAL_FAILED':
-      return t('system.serverSealFailed')
-    case 'BAD_SERVER_RESULT':
-      return t('system.unexpectedResponse')
-    case 'ALREADY_VERIFIED':
-      return t('system.alreadyVerified')
-    case 'CANCELLED':
-      return t('system.verificationCancelled')
-    default:
-      return t('system.errorGeneric')
-  }
-}
+const [systemMessage, setSystemMessage] = useState<string | null>(null)
 
 function onVerifyError(event: Event) {
-  const custom = event as CustomEvent<{ code?: VerifyCode }>
-  window.alert(mapVerifyCodeToMessage(custom.detail?.code))
+  const custom = event as CustomEvent<{ message?: string }>
+  const msg = custom.detail?.message ?? t('overlay.fail')
+  setSystemMessage(msg)
 }
 
 function onVerifyInfo(event: Event) {
-  const custom = event as CustomEvent<{ code?: VerifyCode }>
-  window.alert(mapVerifyCodeToMessage(custom.detail?.code))
+  const custom = event as CustomEvent<{ message?: string }>
+  const msg = custom.detail?.message ?? t('overlay.cancelled')
+  setSystemMessage(msg)
 }
 
+
+
 function onVerifySuccess() {
-  // deterministic post-verify handling
-  clearSelection();                     // reset selection in SessionStorage
-  setSelectionState(EMPTY_SELECTION);    // reset local state
-  setMode('reports');                    // switch to REPORTS once, no remount loop
+  setSystemMessage(null)                 // reset system message deterministically
+  clearSelection()                       // reset selection in SessionStorage
+  setSelectionState(EMPTY_SELECTION)     // reset local state
+  setMode('reports')                     // switch to REPORTS once, no remount loop
 }
+
 
 
 
@@ -427,9 +419,11 @@ const [isPreparing, setIsPreparing] = useState(false);
 
 useEffect(() => {
   const handleArchiveClose = () => {
-    console.info('[ARCHIVE→CHAT] archive closed → reset isPreparing');
-    setIsPreparing(false);
-  };
+  console.info('[ARCHIVE→CHAT] archive closed → reset isPreparing');
+  setIsPreparing(false);
+  setSystemMessage(null);                // clear system message on close
+};
+
 
   window.addEventListener('mpathy:archive:close', handleArchiveClose);
 
@@ -459,26 +453,49 @@ useEffect(() => {
   "
 >
 
-  {isPreparing && (
-    <div
-      className="
-        absolute
-        inset-0
-        z-[2147483648]
-        flex
-        items-center
-        justify-center
-        bg-black/60
-      "
-    >
-      <div className="flex items-center gap-3">
-        <SystemSpinner />
-        <span className="text-sm text-text-secondary">
-          {t("overlay.preparing")}
-        </span>
-      </div>
+ {isPreparing && (
+  <div
+    className="
+      absolute
+      inset-0
+      z-[2147483648]
+      flex
+      items-center
+      justify-center
+      bg-black/60
+    "
+  >
+    <div className="flex items-center gap-3">
+      <SystemSpinner />
+      <span className="text-sm text-text-secondary">
+        {t("overlay.preparing")}
+      </span>
     </div>
-  )}
+  </div>
+)}
+
+{systemMessage && (
+  <div
+    className="
+      absolute
+      bottom-6
+      left-1/2
+      -translate-x-1/2
+      z-[2147483649]
+      px-4
+      py-2
+      rounded-md
+      bg-[#121418]
+      border
+      border-border-soft
+      text-sm
+      text-text-primary
+    "
+  >
+    {systemMessage}
+  </div>
+)}
+
 
       {/* ========================================================== */}
 {/* CONTENT FRAME — FULL BLEED                                 */}
