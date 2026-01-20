@@ -181,9 +181,13 @@ document.cookie = `NEXT_LOCALE=${safe}; path=/; max-age=31536000; SameSite=Lax`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const t = useMemo(() => {
-    return (k: string) => dict[lang]?.[k] ?? dict.en?.[k] ?? k;
-  }, [lang, dict]);
+const t = useMemo(() => {
+  return (k: string) =>
+    dict[lang]?.[k] ??
+    dict.en?.[k] ??
+    k;
+}, [lang, dict]);
+
 
 
   const value = useMemo(

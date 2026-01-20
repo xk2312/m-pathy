@@ -82,7 +82,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { useLanguage } from '@/app/providers/LanguageProvider'
+import { LanguageProvider, useLanguage } from '@/app/providers/LanguageProvider'
 import { i18nArchive } from '@/lib/i18n.archive'
 import { getRecentChats } from '@/lib/archiveIndex'
 import { readLS, readSS, writeSS } from '@/lib/storage'
@@ -97,6 +97,20 @@ import { runArchiveSearch, getArchiveSearchPreview } from './ArchiveSearch'
 import { initArchiveVerifyListener } from '@/lib/archiveVerifyListener'
 import ReportList from '@/components/reports/ReportList'
 import SystemSpinner from '@/components/system/SystemSpinner'
+
+function flattenI18n(obj: any, prefix = ''): Record<string, string> {
+  const out: Record<string, string> = {}
+  for (const k in obj) {
+    const v = obj[k]
+    const key = prefix ? `${prefix}.${k}` : k
+    if (v && typeof v === 'object') {
+      Object.assign(out, flattenI18n(v, key))
+    } else {
+      out[key] = String(v ?? '')
+    }
+  }
+  return out
+}
 
 /**
  * ============================================================
@@ -143,7 +157,35 @@ const EMPTY_SELECTION: SelectionState = {
 /* ------------------------------------------------------------------ */
 
 export default function ArchiveOverlay() {
+  return (
+    <LanguageProvider
+      dict={{
+        en: flattenI18n(i18nArchive.en),
+        de: flattenI18n(i18nArchive.de),
+        fr: flattenI18n(i18nArchive.fr),
+        es: flattenI18n(i18nArchive.es),
+        it: flattenI18n(i18nArchive.it),
+        pt: flattenI18n(i18nArchive.pt),
+        nl: flattenI18n(i18nArchive.nl),
+        ru: flattenI18n(i18nArchive.ru),
+        zh: flattenI18n(i18nArchive.zh),
+        ja: flattenI18n(i18nArchive.ja),
+        ko: flattenI18n(i18nArchive.ko),
+        ar: flattenI18n(i18nArchive.ar),
+        hi: flattenI18n(i18nArchive.hi),
+      }}
+    >
+      <ArchiveOverlayInner />
+    </LanguageProvider>
+  )
+}
+
+function ArchiveOverlayInner() {
   const { t, lang } = useLanguage()   // 🔁 dynamischer Translator aus Provider
+
+  // 🧪 TEMP: I18N diagnostic output
+  console.info("[TEST:getActiveDict]", lang, t("archive.title"))
+
 
   // 🧪 TEMP: I18N diagnostic output
   console.info("[TEST:getActiveDict]", lang, t("archive.title"))

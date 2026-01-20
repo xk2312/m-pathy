@@ -348,13 +348,13 @@ introText: "Durchsuche, überprüfe und wähle frühere Unterhaltungen aus.",
 addToChat: "Füge {{count}}/4 zu neuem Chat hinzu",
 tooMany: "Zu viele zum Hinzufügen",
 searchUserChats: "Chats durchsuchen…",
-
-    },
-
-      modes: {
+modes: {
         chat: "Chat",
         reports: "Berichte"
       },
+    },
+
+      
 
     operators: {
       and: "UND",
@@ -473,13 +473,11 @@ tapToOpen: "Tippen zum Öffnen"
 addToChat: "Ajouter {{count}}/4 au nouveau chat",
 tooMany: "Trop à ajouter",
 searchUserChats: "Rechercher dans vos chats…",
-
-    },
-
-      modes: {
+modes: {
         chat: "Chat",
         reports: "Rapports"
       },
+    },
 
     operators: {
       and: "ET",
@@ -554,13 +552,13 @@ searchUserChats: "Rechercher dans vos chats…",
 addToChat: "Añadir {{count}}/4 al nuevo chat",
 tooMany: "Demasiados para añadir",
 searchUserChats: "Buscar en tus chats…",
-
-    },
-
-      modes: {
+modes: {
         chat: "Chat",
         reports: "Informes"
       },
+    },
+
+      
 
 
     operators: {
@@ -639,13 +637,13 @@ searchUserChats: "Buscar en tus chats…",
 addToChat: "Aggiungi {{count}}/4 al nuovo chat",
 tooMany: "Troppi da aggiungere",
 searchUserChats: "Cerca nelle tue chat…",
-
-    },
-
-      modes: {
+ modes: {
         chat: "Chat",
         reports: "Rapporti"
       },
+    },
+
+     
 
 
     operators: {
@@ -721,13 +719,13 @@ searchUserChats: "Cerca nelle tue chat…",
 addToChat: "Adicionar {{count}}/4 ao novo chat",
 tooMany: "Demasiados para adicionar",
 searchUserChats: "Pesquisar nos seus chats…",
-
-    },
-
-      modes: {
+  modes: {
         chat: "Chat",
         reports: "Relatórios"
       },
+    },
+
+    
 
 
     operators: {
@@ -803,13 +801,13 @@ searchUserChats: "Pesquisar nos seus chats…",
 addToChat: "Voeg {{count}}/4 toe aan nieuwe chat",
 tooMany: "Te veel om toe te voegen",
 searchUserChats: "Zoek in je chats…",
-
-    },
-
-      modes: {
+modes: {
         chat: "Chat",
         reports: "Rapporten"
       },
+    },
+
+      
 
 
     operators: {
@@ -885,13 +883,13 @@ searchUserChats: "Zoek in je chats…",
 addToChat: "Добавить {{count}}/4 в новый чат",
 tooMany: "Слишком много для добавления",
 searchUserChats: "Искать в чатах…",
-
-    },
-
-      modes: {
+modes: {
         chat: "Чат",
         reports: "Отчёты"
       },
+    },
+
+      
 
 
     operators: {
@@ -967,13 +965,13 @@ searchUserChats: "Искать в чатах…",
 addToChat: "添加 {{count}}/4 到新聊天",
 tooMany: "选择过多",
 searchUserChats: "搜索聊天…",
-
-    },
-
-      modes: {
+ modes: {
         chat: "聊天",
         reports: "报告"
       },
+    },
+
+     
 
     operators: {
       and: "与",
@@ -1048,13 +1046,13 @@ searchUserChats: "搜索聊天…",
 addToChat: "{{count}}/4 を新しいチャットに追加",
 tooMany: "追加が多すぎます",
 searchUserChats: "チャットを検索…",
-
-    },
-
-      modes: {
+modes: {
         chat: "チャット",
         reports: "レポート"
       },
+    },
+
+      
 
 
     operators: {
@@ -1130,13 +1128,13 @@ searchUserChats: "チャットを検索…",
 addToChat: "{{count}}/4개를 새 채팅에 추가",
 tooMany: "추가 항목이 너무 많음",
 searchUserChats: "채팅 검색…",
-
-    },
-
-      modes: {
+modes: {
         chat: "채팅",
         reports: "보고서"
       },
+    },
+
+      
 
     operators: {
       and: "그리고",
@@ -1210,13 +1208,13 @@ searchUserChats: "채팅 검색…",
 addToChat: "أضف {{count}}/4 إلى دردشة جديدة",
 tooMany: "عدد كبير للإضافة",
 searchUserChats: "ابحث في الدردشات…",
-
-    },
-   
-      modes: {
+modes: {
         chat: "دردشة",
         reports: "التقارير"
       },
+    },
+   
+      
 
     operators: {
       and: "و",
@@ -1291,14 +1289,14 @@ searchUserChats: "ابحث في الدردشات…",
 addToChat: "{{count}}/4 नए चैट में जोड़ें",
 tooMany: "जोड़ने के लिए बहुत अधिक",
 searchUserChats: "चैट खोजें…",
-
-    },
-
-  
-      modes: {
+modes: {
         chat: "चैट",
         reports: "रिपोर्ट"
       },
+    },
+
+  
+      
 
 
     operators: {
