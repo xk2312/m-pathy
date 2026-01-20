@@ -216,6 +216,44 @@ function persistReport(report: TVerificationReport) {
   const existing = readLS<TVerificationReport[]>(key) ?? []
   writeLS(key, [...existing, report])
 }
+function resolveLang(): string {
+  if (typeof document !== 'undefined' && document.documentElement.lang) {
+    return document.documentElement.lang.split('-')[0]
+  }
+  if (typeof navigator !== 'undefined' && navigator.language) {
+    return navigator.language.split('-')[0]
+  }
+  return 'en'
+}
+
+const VERIFY_MESSAGES: Record<
+  string,
+  Record<string, string>
+> = {
+  en: {
+    NO_SELECTION: 'No selection made.',
+    EMPTY_TEXT: 'Selected content is empty.',
+    SEAL_FAILED: 'Verification failed. Please try again.',
+    BAD_SERVER_RESULT: 'Unexpected server result.',
+    ALREADY_VERIFIED: 'This selection has already been verified.',
+  },
+  de: {
+    NO_SELECTION: 'Keine Auswahl getroffen.',
+    EMPTY_TEXT: 'Der ausgewählte Inhalt ist leer.',
+    SEAL_FAILED: 'Verifizierung fehlgeschlagen. Bitte erneut versuchen.',
+    BAD_SERVER_RESULT: 'Unerwartete Server-Antwort.',
+    ALREADY_VERIFIED: 'Diese Auswahl wurde bereits verifiziert.',
+  },
+}
+
+function msg(code: string): string {
+  const lang = resolveLang()
+  return (
+    VERIFY_MESSAGES[lang]?.[code] ??
+    VERIFY_MESSAGES.en[code] ??
+    code
+  )
+}
 
 export function initArchiveVerifyListener() {
   if (isInitialized) return
@@ -235,20 +273,28 @@ export function initArchiveVerifyListener() {
     if (!selection || selection.length === 0) {
       window.dispatchEvent(
   new CustomEvent('mpathy:archive:verify:error', {
-    detail: { code: 'NO_SELECTION' },
+    detail: {
+      code: 'NO_SELECTION',
+      message: msg('NO_SELECTION'),
+    },
   }),
 )
+
 
       return
     }
 
     const canonicalText = buildCanonicalTruthText(selection)
     if (!canonicalText) {
-      window.dispatchEvent(
+    window.dispatchEvent(
   new CustomEvent('mpathy:archive:verify:error', {
-    detail: { code: 'EMPTY_TEXT' },
+    detail: {
+      code: 'EMPTY_TEXT',
+      message: msg('EMPTY_TEXT'),
+    },
   }),
 )
+
 
       return
     }
@@ -289,22 +335,30 @@ const response = await fetch('/api/triketon/seal', {
 })
 
 if (!response.ok) {
-  window.dispatchEvent(
+ window.dispatchEvent(
   new CustomEvent('mpathy:archive:verify:error', {
-    detail: { code: 'SEAL_FAILED' },
+    detail: {
+      code: 'SEAL_FAILED',
+      message: msg('SEAL_FAILED'),
+    },
   }),
 )
+
 
   return
 }
 
 const result = await response.json()
 if (result?.result !== 'SEALED' && result?.result !== 'IGNORED') {
-  window.dispatchEvent(
+ window.dispatchEvent(
   new CustomEvent('mpathy:archive:verify:error', {
-    detail: { code: 'BAD_SERVER_RESULT' },
+    detail: {
+      code: 'BAD_SERVER_RESULT',
+      message: msg('BAD_SERVER_RESULT'),
+    },
   }),
 )
+
 
   return
 }
@@ -313,13 +367,15 @@ if (result?.result !== 'SEALED' && result?.result !== 'IGNORED') {
 // NEW: already verified → no new report
 // ─────────────────────────────
 if (result?.result === 'IGNORED') {
-  window.dispatchEvent(
+ window.dispatchEvent(
   new CustomEvent('mpathy:archive:verify:info', {
     detail: {
       code: 'ALREADY_VERIFIED',
+      message: msg('ALREADY_VERIFIED'),
     },
   }),
 )
+
 
 
   // Clear selection even if no report is created
