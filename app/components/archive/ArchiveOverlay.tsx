@@ -256,18 +256,17 @@ useEffect(() => {
   }
 
   function onVerifyError(event: Event) {
-    const custom = event as CustomEvent<{ message?: string }>
-    const msg = custom.detail?.message ?? 'Verify failed.'
-    window.alert(msg)
-  }
+  const custom = event as CustomEvent<{ message?: string }>
+  const msg = custom.detail?.message ?? t('overlay.fail')
+  window.alert(msg)
+}
 
-  function onVerifyInfo(event: Event) {
-    const custom = event as CustomEvent<{ message?: string }>
-    const msg =
-      custom.detail?.message ??
-      'The text has already been verified and the report already exists in the Reports section.'
-    window.alert(msg)
-  }
+function onVerifyInfo(event: Event) {
+  const custom = event as CustomEvent<{ message?: string }>
+  const msg = custom.detail?.message ?? t('overlay.cancelled')
+  window.alert(msg)
+}
+
 
 function onVerifySuccess() {
   // deterministic post-verify handling
