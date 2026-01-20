@@ -67,6 +67,8 @@ import React, {
   useState,
 } from "react";
 import { getLocale, setLocale } from "@/lib/i18n";
+import { getActiveDict } from "@/lib/i18n"
+
 
 type Dict = Record<string, Record<string, string>>;
 
@@ -182,8 +184,10 @@ document.cookie = `NEXT_LOCALE=${safe}; path=/; max-age=31536000; SameSite=Lax`;
   }, []);
 
   const t = useMemo(() => {
-    return (k: string) => dict[lang]?.[k] ?? dict.en?.[k] ?? k;
-  }, [lang, dict]);
+    const { t } = getActiveDict(lang)
+    return t
+  }, [lang]);
+
 
 
   const value = useMemo(

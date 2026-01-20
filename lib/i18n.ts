@@ -110,6 +110,8 @@ import { attachKpi } from "./i18n.kpi";
 import { attachTestimonials } from "./i18n.testimonial";
 import { attachPrompts } from "./i18n.prompts";
 import { attachDoorman } from "./i18n.doorman";
+import { i18nArchive } from "@/lib/i18n.archive";
+
 
 type Dict = Record<string, string>;
 
@@ -3015,3 +3017,28 @@ attachPowerPrompts(dict as any);
 UX_LOCALES = Object.keys(dict);
 
 export type UIDict = typeof dict;
+
+/**
+ * Smart dictionary selector:
+ * - Wenn der Key mit "archive." oder "report." beginnt → i18nArchive
+ * - sonst → normales UI-Dict
+ */
+export function getActiveDict(lang: string) {
+  const base = (lang || "en").slice(0, 2).toLowerCase();
+  const hasArchiveKey = (key: string) =>
+    key.startsWith("archive.") || key.startsWith("report.");
+
+  return {
+    t: (key: string) => {
+      if (hasArchiveKey(key)) {
+        return (
+          (i18nArchive as any)[base]?.archive?.[
+            key.split(".").slice(1).join(".")
+          ] ?? (i18nArchive as any).en.archive[key.split(".").slice(1).join(".")] ?? key
+        );
+      }
+      // Default-UI-Dict
+      return dict[base]?.[key] ?? dict.en?.[key] ?? key;
+    },
+  };
+}
