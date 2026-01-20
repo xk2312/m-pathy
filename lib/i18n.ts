@@ -3025,24 +3025,42 @@ export type UIDict = typeof dict;
  */
 export function getActiveDict(lang: string) {
   const base = (lang || "en").slice(0, 2).toLowerCase();
-  const hasArchiveKey = (key: string) =>
-    key.startsWith("archive.") || key.startsWith("report.");
+  const isArchiveDomain = (key: string) =>
+    key.startsWith("archive.") ||
+    key.startsWith("overlay.") ||
+    key.startsWith("intro.") ||
+    key.startsWith("report.") ||
+    key.startsWith("system.") ||
+    key.startsWith("operators.") ||
+    key === "tapToOpen";
 
   return {
     t: (key: string) => {
-      if (hasArchiveKey(key)) {
-        return (
-          (i18nArchive as any)[base]?.archive?.[
-            key.split(".").slice(1).join(".")
-          ] ?? (i18nArchive as any).en.archive[key.split(".").slice(1).join(".")] ?? key
-        );
+      if (isArchiveDomain(key)) {
+        const segs = key.split(".");
+        const top = segs[0];
+        const rest = segs.slice(1);
+
+        const baseRoot = (i18nArchive as any)[base] ?? (i18nArchive as any).en;
+        const enRoot = (i18nArchive as any).en;
+
+        const fromBase = rest.reduce((acc: any, part) => acc?.[part], baseRoot?.[top]);
+        if (typeof fromBase === "string") return fromBase;
+
+        const fromEn = rest.reduce((acc: any, part) => acc?.[part], enRoot?.[top]);
+        if (typeof fromEn === "string") return fromEn;
+
+        if (top === "tapToOpen") {
+          const v = (baseRoot as any)?.tapToOpen ?? (enRoot as any)?.tapToOpen;
+          return typeof v === "string" ? v : key;
+        }
+
+        return key;
       }
-      // Default-UI-Dict
-// Default-UI-Dict + dynamische Archive-Unterstützung
-const baseDict = dict[base] ?? dict.en;
-const value =
-  key.split(".").reduce((acc: any, part) => acc?.[part], baseDict) ?? key;
-return value;
+
+      const baseDict = dict[base] ?? dict.en;
+      const value = key.split(".").reduce((acc: any, part) => acc?.[part], baseDict) ?? key;
+      return value;
     },
   };
 }
