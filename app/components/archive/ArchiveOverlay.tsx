@@ -192,6 +192,8 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { useLanguage } from '@/app/providers/LanguageProvider'
+import { i18nArchive } from '@/lib/i18n.archive'
 import { getRecentChats } from '@/lib/archiveIndex'
 import { readLS, readSS, writeSS } from '@/lib/storage'
 import { Input } from '@/components/ui/Input'
@@ -250,7 +252,12 @@ const EMPTY_SELECTION: SelectionState = {
 /* Component                                                          */
 /* ------------------------------------------------------------------ */
 
+type ArchiveI18n = (typeof i18nArchive)[keyof typeof i18nArchive]
+
 export default function ArchiveOverlay() {
+  const { lang } = useLanguage()
+  const t: ArchiveI18n = i18nArchive[lang as keyof typeof i18nArchive]
+  
 type ArchiveMode = 'chat' | 'reports'
 
 const [mode, setMode] = useState<ArchiveMode>('chat')
@@ -511,7 +518,7 @@ useEffect(() => {
       <div className="flex items-center gap-3">
         <SystemSpinner />
         <span className="text-sm text-text-secondary">
-          Preparing context…
+          {t.overlay.preparing}
         </span>
       </div>
     </div>
@@ -546,7 +553,7 @@ useEffect(() => {
   "
 >
   <h1 className="text-3xl font-medium tracking-tight">
-    Archive
+    {t.archive.title}
   </h1>
 
   <div className="flex gap-4 text-sm">
@@ -558,14 +565,14 @@ useEffect(() => {
       }}
       className={`${mode === 'chat' ? 'text-cyan-400' : 'text-text-secondary'} cursor-pointer`}
     >
-      CHAT
+{(t.archive as any).modes.chat}
     </button>
 
     <button
       onClick={() => setMode('reports')}
       className={`${mode === 'reports' ? 'text-cyan-400' : 'text-text-secondary'} cursor-pointer`}
     >
-      REPORTS
+{(t.archive as any).modes.reports}
     </button>
   </div>
 
@@ -576,7 +583,7 @@ useEffect(() => {
       max-w-[560px]
     "
   >
-    Browse, review, and select past conversations.
+  {t.archive.introText}
   </p>
 
   {selection.length > 0 && (
@@ -594,7 +601,7 @@ useEffect(() => {
           text-text-secondary
         "
       >
-        {selection.length} message pairs selected
+{(t.archive.selectionStatus as string).replace('{{count}}', String(selection.length))}
       </div>
 
       {/* VERIFY — unverändert */}
@@ -618,7 +625,7 @@ useEffect(() => {
           transition
         "
       >
-        Verify {selection.length}
+{(t.archive.verify as string).replace('{{count}}', String(selection.length))}
       </button>
 
       {/* ARCHIVE → CHAT (Injection Start) */}
@@ -652,8 +659,9 @@ useEffect(() => {
 >
 
         {selection.length > 4
-          ? 'Too many to add'
-          : `Add ${selection.length}/4 to new chat`}
+  ? t.archive.tooMany
+  : (t.archive.addToChat as string).replace('{{count}}', String(selection.length))}
+
       </button>
     </div>
   )}
@@ -686,7 +694,7 @@ useEffect(() => {
       setChatView('recent')
     }
   }}
-  placeholder="Search your chats…"
+placeholder={(t.archive.searchUserChats as string)}
   className="
     w-full
     bg-[#121418]
@@ -760,7 +768,7 @@ useEffect(() => {
 
      <button
   type="button"
-  aria-label="Close Archive"
+aria-label={t.overlay.close}
   onClick={(e) => {
     e.stopPropagation()
     setMode('chat')

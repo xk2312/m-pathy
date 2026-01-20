@@ -201,7 +201,8 @@
 export const i18nArchive = {
   en: {
     archive: {
-  title: "Archive",
+title: "Archive",
+introText: "Browse, review, and select past conversations.",
   searchPlaceholder: "Search archive…",
   noResults: "No matches.",
   empty: "No saved chats yet.",
@@ -219,6 +220,11 @@ export const i18nArchive = {
   loadSelection: "Load selection",
   clearSelection: "Clear",
   defaultHeader: "Recent chats",
+
+  selectionStatus: "{{count}} message pairs selected",
+  addToChat: "Add {{count}}/4 to new chat",
+  tooMany: "Too many to add",
+  searchUserChats: "Search your chats…",
 
   modes: {
     chat: "Chat",
@@ -319,7 +325,8 @@ tapToOpen: "Tap to open"
 
   de: {
     archive: {
-      title: "Archiv",
+title: "Archiv",
+introText: "Durchsuche, überprüfe und wähle frühere Unterhaltungen aus.",
       searchPlaceholder: "Archiv durchsuchen…",
       noResults: "Keine Treffer.",
       empty: "Noch keine gespeicherten Chats.",
@@ -336,8 +343,19 @@ tapToOpen: "Tap to open"
       summarize: "Zusammenfassen",
       loadSelection: "Auswahl laden",
       clearSelection: "Leeren",
-      defaultHeader: "Letzte Chats"
+      defaultHeader: "Letzte Chats",
+      selectionStatus: "{{count}} Nachrichtenpaare ausgewählt",
+addToChat: "Füge {{count}}/4 zu neuem Chat hinzu",
+tooMany: "Zu viele zum Hinzufügen",
+searchUserChats: "Chats durchsuchen…",
+
     },
+
+      modes: {
+        chat: "Chat",
+        reports: "Berichte"
+      },
+
     operators: {
       and: "UND",
       or: "ODER",
@@ -430,8 +448,10 @@ tapToOpen: "Tippen zum Öffnen"
   },
 
   fr: {
-    archive: {
-      title: "Archive",
+  archive: {
+    title: "Archive",
+    introText: "Parcourez, examinez et sélectionnez vos conversations passées.",
+
       searchPlaceholder: "Rechercher dans l’archive…",
       noResults: "Aucun résultat.",
       empty: "Aucune discussion enregistrée.",
@@ -448,8 +468,19 @@ tapToOpen: "Tippen zum Öffnen"
       summarize: "Résumer",
       loadSelection: "Charger la sélection",
       clearSelection: "Effacer",
-      defaultHeader: "Chats récents"
+      defaultHeader: "Chats récents",
+      selectionStatus: "{{count}} paires de messages sélectionnées",
+addToChat: "Ajouter {{count}}/4 au nouveau chat",
+tooMany: "Trop à ajouter",
+searchUserChats: "Rechercher dans vos chats…",
+
     },
+
+      modes: {
+        chat: "Chat",
+        reports: "Rapports"
+      },
+
     operators: {
       and: "ET",
       or: "OU",
@@ -498,8 +529,10 @@ tapToOpen: "Tippen zum Öffnen"
   },
 
   es: {
-    archive: {
-      title: "Archivo",
+  archive: {
+    title: "Archivo",
+    introText: "Explora, revisa y selecciona conversaciones anteriores.",
+
       searchPlaceholder: "Buscar en el archivo…",
       noResults: "Sin coincidencias.",
       empty: "No hay chats guardados.",
@@ -516,8 +549,20 @@ tapToOpen: "Tippen zum Öffnen"
       summarize: "Resumir",
       loadSelection: "Cargar selección",
       clearSelection: "Borrar",
-      defaultHeader: "Chats recientes"
+      defaultHeader: "Chats recientes",
+      selectionStatus: "{{count}} pares seleccionados",
+addToChat: "Añadir {{count}}/4 al nuevo chat",
+tooMany: "Demasiados para añadir",
+searchUserChats: "Buscar en tus chats…",
+
     },
+
+      modes: {
+        chat: "Chat",
+        reports: "Informes"
+      },
+
+
     operators: {
       and: "Y",
       or: "O",
@@ -568,8 +613,10 @@ tapToOpen: "Tippen zum Öffnen"
 
 
     it: {
-    archive: {
-      title: "Archivio",
+  archive: {
+    title: "Archivio",
+    introText: "Sfoglia, rivedi e seleziona conversazioni precedenti.",
+
       searchPlaceholder: "Cerca nell'archivio…",
       noResults: "Nessun risultato.",
       empty: "Nessuna chat salvata.",
@@ -587,8 +634,20 @@ tapToOpen: "Tippen zum Öffnen"
       summarize: "Riassumi",
       loadSelection: "Carica selezione",
       clearSelection: "Pulisci",
-      defaultHeader: "Chat recenti"
+      defaultHeader: "Chat recenti",
+      selectionStatus: "{{count}} coppie selezionate",
+addToChat: "Aggiungi {{count}}/4 al nuovo chat",
+tooMany: "Troppi da aggiungere",
+searchUserChats: "Cerca nelle tue chat…",
+
     },
+
+      modes: {
+        chat: "Chat",
+        reports: "Rapporti"
+      },
+
+
     operators: {
       and: "E",
       or: "O",
@@ -636,9 +695,11 @@ tapToOpen: "Tippen zum Öffnen"
     tapToOpen: "Tocca per aprire"
   },
 
-  pt: {
-    archive: {
-      title: "Arquivo",
+ pt: {
+  archive: {
+    title: "Arquivo",
+    introText: "Navegue, reveja e selecione conversas anteriores.",
+
       searchPlaceholder: "Pesquisar no arquivo…",
       noResults: "Nenhum resultado.",
       empty: "Nenhum chat salvo.",
@@ -655,8 +716,20 @@ tapToOpen: "Tippen zum Öffnen"
       summarize: "Resumir",
       loadSelection: "Carregar seleção",
       clearSelection: "Limpar",
-      defaultHeader: "Chats recentes"
+      defaultHeader: "Chats recentes",
+      selectionStatus: "{{count}} pares de mensagens selecionados",
+addToChat: "Adicionar {{count}}/4 ao novo chat",
+tooMany: "Demasiados para adicionar",
+searchUserChats: "Pesquisar nos seus chats…",
+
     },
+
+      modes: {
+        chat: "Chat",
+        reports: "Relatórios"
+      },
+
+
     operators: {
       and: "E",
       or: "OU",
@@ -704,9 +777,11 @@ tapToOpen: "Tippen zum Öffnen"
     tapToOpen: "Toque para abrir"
   },
 
-  nl: {
-    archive: {
-      title: "Archief",
+ nl: {
+  archive: {
+    title: "Archief",
+    introText: "Blader, bekijk en selecteer eerdere gesprekken.",
+
       searchPlaceholder: "Zoek in archief…",
       noResults: "Geen resultaten.",
       empty: "Nog geen opgeslagen chats.",
@@ -723,8 +798,20 @@ tapToOpen: "Tippen zum Öffnen"
       summarize: "Samenvatten",
       loadSelection: "Selectie laden",
       clearSelection: "Wissen",
-      defaultHeader: "Recente chats"
+      defaultHeader: "Recente chats",
+      selectionStatus: "{{count}} berichtparen geselecteerd",
+addToChat: "Voeg {{count}}/4 toe aan nieuwe chat",
+tooMany: "Te veel om toe te voegen",
+searchUserChats: "Zoek in je chats…",
+
     },
+
+      modes: {
+        chat: "Chat",
+        reports: "Rapporten"
+      },
+
+
     operators: {
       and: "EN",
       or: "OF",
@@ -772,9 +859,11 @@ tapToOpen: "Tippen zum Öffnen"
     tapToOpen: "Tik om te openen"
   },
 
-  ru: {
-    archive: {
-      title: "Архив",
+ ru: {
+  archive: {
+    title: "Архив",
+    introText: "Просматривайте, проверяйте и выбирайте прошлые беседы.",
+
       searchPlaceholder: "Поиск в архиве…",
       noResults: "Нет совпадений.",
       empty: "Сохранённых чатов пока нет.",
@@ -791,8 +880,20 @@ tapToOpen: "Tippen zum Öffnen"
       summarize: "Суммировать",
       loadSelection: "Загрузить выбор",
       clearSelection: "Очистить",
-      defaultHeader: "Недавние чаты"
+      defaultHeader: "Недавние чаты",
+      selectionStatus: "Выбрано {{count}} пар сообщений",
+addToChat: "Добавить {{count}}/4 в новый чат",
+tooMany: "Слишком много для добавления",
+searchUserChats: "Искать в чатах…",
+
     },
+
+      modes: {
+        chat: "Чат",
+        reports: "Отчёты"
+      },
+
+
     operators: {
       and: "И",
       or: "ИЛИ",
@@ -841,8 +942,10 @@ tapToOpen: "Tippen zum Öffnen"
   },
 
   zh: {
-    archive: {
-      title: "存档",
+  archive: {
+    title: "存档",
+    introText: "浏览、查看并选择过去的对话。",
+
       searchPlaceholder: "搜索存档…",
       noResults: "无匹配项。",
       empty: "尚无已保存的聊天。",
@@ -859,8 +962,19 @@ tapToOpen: "Tippen zum Öffnen"
       summarize: "总结",
       loadSelection: "加载选择",
       clearSelection: "清除",
-      defaultHeader: "最近的聊天"
+      defaultHeader: "最近的聊天",
+      selectionStatus: "已选择 {{count}} 对消息",
+addToChat: "添加 {{count}}/4 到新聊天",
+tooMany: "选择过多",
+searchUserChats: "搜索聊天…",
+
     },
+
+      modes: {
+        chat: "聊天",
+        reports: "报告"
+      },
+
     operators: {
       and: "与",
       or: "或",
@@ -909,8 +1023,10 @@ tapToOpen: "Tippen zum Öffnen"
   },
 
   ja: {
-    archive: {
-      title: "アーカイブ",
+  archive: {
+    title: "アーカイブ",
+    introText: "過去の会話を閲覧、確認、選択します。",
+
       searchPlaceholder: "アーカイブを検索…",
       noResults: "一致なし。",
       empty: "保存されたチャットはありません。",
@@ -927,8 +1043,20 @@ tapToOpen: "Tippen zum Öffnen"
       summarize: "要約",
       loadSelection: "選択を読み込む",
       clearSelection: "クリア",
-      defaultHeader: "最近のチャット"
+      defaultHeader: "最近のチャット",
+      selectionStatus: "{{count}} メッセージペアを選択",
+addToChat: "{{count}}/4 を新しいチャットに追加",
+tooMany: "追加が多すぎます",
+searchUserChats: "チャットを検索…",
+
     },
+
+      modes: {
+        chat: "チャット",
+        reports: "レポート"
+      },
+
+
     operators: {
       and: "かつ",
       or: "または",
@@ -977,8 +1105,10 @@ tapToOpen: "Tippen zum Öffnen"
   },
 
   ko: {
-    archive: {
-      title: "보관함",
+  archive: {
+    title: "보관함",
+    introText: "이전 대화를 탐색하고 검토하며 선택합니다.",
+
       searchPlaceholder: "보관함 검색…",
       noResults: "일치 항목 없음.",
       empty: "저장된 채팅이 없습니다.",
@@ -995,8 +1125,19 @@ tapToOpen: "Tippen zum Öffnen"
       summarize: "요약",
       loadSelection: "선택 불러오기",
       clearSelection: "지우기",
-      defaultHeader: "최근 채팅"
+      defaultHeader: "최근 채팅",
+      selectionStatus: "{{count}}개 메시지 쌍 선택됨",
+addToChat: "{{count}}/4개를 새 채팅에 추가",
+tooMany: "추가 항목이 너무 많음",
+searchUserChats: "채팅 검색…",
+
     },
+
+      modes: {
+        chat: "채팅",
+        reports: "보고서"
+      },
+
     operators: {
       and: "그리고",
       or: "또는",
@@ -1044,8 +1185,10 @@ tapToOpen: "Tippen zum Öffnen"
     tapToOpen: "열려면 탭하세요"
   },
   ar: {
-    archive: {
-      title: "الأرشيف",
+  archive: {
+    title: "الأرشيف",
+    introText: "تصفح وراجع واختر المحادثات السابقة.",
+
       searchPlaceholder: "ابحث في الأرشيف…",
       noResults: "لا توجد نتائج.",
       empty: "لا توجد محادثات محفوظة بعد.",
@@ -1062,8 +1205,19 @@ tapToOpen: "Tippen zum Öffnen"
       summarize: "تلخيص",
       loadSelection: "تحميل التحديد",
       clearSelection: "مسح",
-      defaultHeader: "الدردشات الأخيرة"
+      defaultHeader: "الدردشات الأخيرة",
+      selectionStatus: "تم اختيار {{count}} من الأزواج",
+addToChat: "أضف {{count}}/4 إلى دردشة جديدة",
+tooMany: "عدد كبير للإضافة",
+searchUserChats: "ابحث في الدردشات…",
+
     },
+   
+      modes: {
+        chat: "دردشة",
+        reports: "التقارير"
+      },
+
     operators: {
       and: "و",
       or: "أو",
@@ -1110,9 +1264,12 @@ tapToOpen: "Tippen zum Öffnen"
     },
     tapToOpen: "اضغط للفتح"
   },
-  hi: {
-    archive: {
-      title: "संग्रह",
+
+ hi: {
+  archive: {
+    title: "संग्रह",
+    introText: "पिछली बातचीत ब्राउज़ करें, समीक्षा करें और चुनें।",
+
       searchPlaceholder: "संग्रह में खोजें…",
       noResults: "कोई परिणाम नहीं।",
       empty: "अभी तक कोई चैट सहेजी नहीं गई है।",
@@ -1129,8 +1286,21 @@ tapToOpen: "Tippen zum Öffnen"
       summarize: "सारांश बनाएं",
       loadSelection: "चयन लोड करें",
       clearSelection: "साफ करें",
-      defaultHeader: "हाल की चैट"
+      defaultHeader: "हाल की चैट",
+      selectionStatus: "{{count}} संदेश जोड़े चुने गए",
+addToChat: "{{count}}/4 नए चैट में जोड़ें",
+tooMany: "जोड़ने के लिए बहुत अधिक",
+searchUserChats: "चैट खोजें…",
+
     },
+
+  
+      modes: {
+        chat: "चैट",
+        reports: "रिपोर्ट"
+      },
+
+
     operators: {
       and: "और",
       or: "या",
