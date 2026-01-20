@@ -138,9 +138,22 @@ type ChatDisplay = {
 
 type Props = {
   onOpenChat?: (chainId: string) => void
+  headerLabel: string
+  chatLabel: (n: number) => string
+  totalMessagesLabel: (count: number) => string
+  viewLabel: string
+  keywordsLabel: string
 }
 
-export default function RecentChatsView({ onOpenChat }: Props) {
+
+export default function RecentChatsView({
+  onOpenChat,
+  headerLabel,
+  chatLabel,
+  totalMessagesLabel,
+  viewLabel,
+  keywordsLabel,
+}: Props) {
   const [chats, setChats] = useState<ChatDisplay[]>([])
 
   useEffect(() => {
@@ -165,8 +178,9 @@ export default function RecentChatsView({ onOpenChat }: Props) {
   return (
     <section className="flex flex-col gap-16">
       <div className="text-xs text-text-muted tracking-wide">
-        Recent chats
-      </div>
+  {headerLabel}
+</div>
+
 
     {chats.map((chat) => (
   <article
@@ -196,16 +210,18 @@ export default function RecentChatsView({ onOpenChat }: Props) {
               <div className="flex items-baseline justify-between gap-6">
                 <div className="flex items-baseline gap-4 flex-wrap">
                   <div className="text-sm text-text-primary">
-                    Chat {chat.chat_serial}
-                  </div>
+  {chatLabel(chat.chat_serial)}
+</div>
+
 
                   <div className="text-xs text-text-muted tracking-wide">
-                    [{chat.messageCount} msgs ·{' '}
-                    {new Date(chat.lastTimestamp).toLocaleDateString()}]
-                  </div>
+  [{totalMessagesLabel(chat.messageCount)} ·{' '}
+  {new Date(chat.lastTimestamp).toLocaleDateString()}]
+</div>
+
                 </div>
 
-                <button
+              <button
   type="button"
   className="text-xs text-text-muted opacity-0 group-hover:opacity-100 transition"
   onClick={(e) => {
@@ -213,16 +229,18 @@ export default function RecentChatsView({ onOpenChat }: Props) {
     onOpenChat?.(String(chat.chat_serial))
   }}
 >
-  View →
+  {viewLabel} →
 </button>
+
 
               </div>
 
               {chat.keywords.length > 0 && (
                 <div className="flex flex-col gap-2">
                   <div className="text-[10px] uppercase tracking-wider text-text-muted">
-                    Keywords
-                  </div>
+  {keywordsLabel}
+</div>
+
 
                   <div className="flex flex-wrap gap-x-4 gap-y-2">
                     {chat.keywords.map((keyword) => (
