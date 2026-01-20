@@ -256,16 +256,36 @@ useEffect(() => {
   }
 
   function onVerifyError(event: Event) {
-  const custom = event as CustomEvent<{ message?: string }>
-  const msg = custom.detail?.message ?? t('overlay.fail')
+  const custom = event as CustomEvent<{ code?: string }>
+  const code = custom.detail?.code
+
+  const msg =
+    code === 'NO_SELECTION'
+      ? t('system.noSelectionToVerify')
+      : code === 'EMPTY_TEXT'
+      ? t('system.nothingToVerify')
+      : code === 'SEAL_FAILED'
+      ? t('system.serverSealFailed')
+      : code === 'BAD_SERVER_RESULT'
+      ? t('system.unexpectedResponse')
+      : t('overlay.fail')
+
   window.alert(msg)
 }
 
+
 function onVerifyInfo(event: Event) {
-  const custom = event as CustomEvent<{ message?: string }>
-  const msg = custom.detail?.message ?? t('overlay.cancelled')
+  const custom = event as CustomEvent<{ code?: string }>
+  const code = custom.detail?.code
+
+  const msg =
+    code === 'ALREADY_VERIFIED'
+      ? t('system.alreadyVerified')
+      : t('overlay.cancelled')
+
   window.alert(msg)
 }
+
 
 
 function onVerifySuccess() {
