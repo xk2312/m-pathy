@@ -159,20 +159,26 @@ export default function RecentChatsView({
   useEffect(() => {
     const base = getRecentChats(13)
 
-    const mapped = base.map((chat) => {
-  const totalMessages = chat.messages?.length ?? 0
-  const pairCount = Math.floor(totalMessages / 2)
+    const mapped = base
+  .map((chat) => {
+    const totalMessages = chat.messages?.length ?? 0
+    const pairCount = Math.floor(totalMessages / 2)
 
-  return {
-    chat_serial: chat.chat_serial,
-    keywords: chat.keywords ?? [],
-    messageCount: pairCount,
-    lastTimestamp: chat.last_timestamp,
-  }
-})
+    return {
+      chat_serial: chat.chat_serial,
+      keywords: chat.keywords ?? [],
+      messageCount: pairCount,
+      lastTimestamp: chat.last_timestamp,
+    }
+  })
+  .sort(
+    (a, b) =>
+      new Date(b.lastTimestamp).getTime() -
+      new Date(a.lastTimestamp).getTime()
+  )
 
+setChats(mapped)
 
-    setChats(mapped)
   }, [])
 
   return (

@@ -132,6 +132,39 @@
      nicht die Ausführung.
 
    ====================================================================== */
+/* ============================================================
+   LOCALSTORAGE DIAGNOSTIC — READ ONLY
+   ============================================================ */
+
+if (typeof window !== 'undefined') {
+  try {
+    console.group('[LS-DIAG] Boot')
+
+    console.info('[LS-DIAG] origin:', window.location.origin)
+    console.info('[LS-DIAG] href:', window.location.href)
+    console.info('[LS-DIAG] userAgent:', navigator.userAgent)
+
+    const lsAvailable =
+      typeof window.localStorage !== 'undefined'
+
+    console.info('[LS-DIAG] localStorage available:', lsAvailable)
+
+    if (lsAvailable) {
+      console.info(
+        '[LS-DIAG] localStorage keys:',
+        Object.keys(window.localStorage)
+      )
+      console.info(
+        '[LS-DIAG] localStorage length:',
+        window.localStorage.length
+      )
+    }
+
+    console.groupEnd()
+  } catch (e) {
+    console.warn('[LS-DIAG] error during diagnostics', e)
+  }
+}
 
 export type MpathyNamespace =
   | 'mpathy:chat:v1'
