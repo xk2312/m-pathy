@@ -183,10 +183,34 @@ document.cookie = `NEXT_LOCALE=${safe}; path=/; max-age=31536000; SameSite=Lax`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const t = useMemo(() => {
-    const { t } = getActiveDict(lang)
-    return t
-  }, [lang]);
+ const t = useMemo(() => {
+  const { t: baseT } = getActiveDict(lang);
+
+  return (key: string): string => {
+    const parts = key.split(".");
+    let value: any = (baseT as any)(parts[0]);
+    if (typeof value === "object") {
+      for (let i = 1; i < parts.length; i++) {
+        value = value?.[parts[i]];
+        if (value === undefined) break;
+      }
+    }
+    if (value === undefined) {
+      // Fallback zu Englisch
+      const { t: fallbackT } = getActiveDict("en");
+      let fallback: any = (fallbackT as any)(parts[0]);
+      if (typeof fallback === "object") {
+        for (let i = 1; i < parts.length; i++) {
+          fallback = fallback?.[parts[i]];
+          if (fallback === undefined) break;
+        }
+      }
+      value = fallback;
+    }
+    return typeof value === "string" ? value : key;
+  };
+}, [lang]);
+
 
 
 
