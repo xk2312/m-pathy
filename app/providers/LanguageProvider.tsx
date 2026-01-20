@@ -184,9 +184,10 @@ document.cookie = `NEXT_LOCALE=${safe}; path=/; max-age=31536000; SameSite=Lax`;
   }, []);
 
  const t = useMemo(() => {
-    const { t } = getActiveDict(lang);
-    return t;
-  }, [lang]);
+  const { t: translate } = getActiveDict(lang)
+  return (key: string) => translate(key)
+}, [lang])
+
 
 
 

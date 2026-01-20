@@ -1,192 +1,82 @@
-/* ======================================================================
-   FILE INDEX — ArchiveOverlay.tsx
-   MODE: GranularFileIndexDeveloper · CodeForensik
-   SCOPE: ARCHIVE UI · SELECTION · START-CHAT-TRIGGER · SPINNER
-   STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)
-   ======================================================================
+/* ===========================================================
+   INVENTUS · ARCHIVE OVERLAY – I18N INDEX
+   ===========================================================
 
-   1. ROLLE DER DATEI
-   ----------------------------------------------------------------------
-   Diese Datei implementiert das vollständige ARCHIVE-Overlay als
-   eigenständigen Systemraum.
+   🧭 Ziel:
+   Vollständiger Index aller Textstellen mit Übersetzungsbedarf
+   + Fehleranalyse, warum aktuell die Texte nicht geladen werden.
 
-   Sie ist verantwortlich für:
-   - Darstellung & Navigation (CHAT | REPORTS)
-   - Auswahl von Archiv-Paaren
-   - Triggern von Verify- und Start-Chat-Flows
-   - UI-Blocking (Overlay + Spinner)
-   - Lifecycle des Overlays (open / close)
+   -----------------------------------------------------------
+   🗂️ 1.  Übersetzungsquellen
+   -----------------------------------------------------------
+   - t("archive.title")
+   - t("archive.introText")
+   - t("archive.modes.chat")
+   - t("archive.modes.reports")
+   - t("archive.searchUserChats")
+   - t("archive.selectionStatus")
+   - t("archive.verify")
+   - t("archive.addToChat")
+   - t("archive.tooMany")
+   - t("overlay.close")
+   - t("overlay.preparing")
 
-   → Diese Datei ist der **UI-Auslöser** des fehlerhaften Flows.
+   -----------------------------------------------------------
+   ⚠️ 2.  Fehlersignatur
+   -----------------------------------------------------------
+   Symptom:  Auf der Oberfläche werden Schlüssel selbst angezeigt
+             (z. B. „archive.title“ statt „Archiv“).
 
+   Ursache:  Der LanguageProvider übergibt t() korrekt,
+             aber getActiveDict(lang) liefert KEINE verschachtelte
+             Struktur, sondern eine reine Lookup-Funktion.
+             ArchiveOverlay ruft t("archive.xxx") korrekt auf,
+             aber i18nArchive wird nicht in getActiveDict()
+             eingeschlossen, weil das Archiv-Dictionary getrennt
+             vom UI-Dictionary geladen wird.
 
-   2. ZENTRALE IMPORTS (RELEVANT)
-   ----------------------------------------------------------------------
-   import { readLS, readSS, writeSS } from '@/lib/storage'
-   import SystemSpinner from '@/components/system/SystemSpinner'
+   Effekt:   t() findet nur UI-Keys (dict), nicht archive/report.
 
-   TODO-RELEVANZ:
-   - readSS / writeSS: Zugriff auf
-     `mpathy:archive:selection:v1`
-   - SystemSpinner: UI-Blocker, der aktuell
-     **nicht beendet wird**
+   -----------------------------------------------------------
+   🧩 3.  Fehlerquelle im Code
+   -----------------------------------------------------------
+   Datei:  lib/i18n.ts
+   Funktion: getActiveDict(lang)
+   → enthält zwar das Mapping für archive / report,
+     aber ArchiveOverlay greift über useLanguage()
+     auf den Provider zu, der nur dict, nicht i18nArchive,
+     injiziert.
 
+   -----------------------------------------------------------
+   🔧 4.  Lösungspfad (Council-13-konform)
+   -----------------------------------------------------------
+   ✅ Variante A (sauberste):
+      - Im LanguageProvider zusätzlich i18nArchive als dict
+        in getActiveDict übergeben:
+          const { t } = getActiveDict(lang)
+        → sicherstellen, dass i18nArchive global importiert ist
+        → exportiere t(), das Archive- und UI-Keys versteht.
 
-   3. ZUSTAND: MODE / CHATVIEW
-   ----------------------------------------------------------------------
-   type ArchiveMode = 'chat' | 'reports'
+   ✅ Variante B (lokal im Overlay):
+      - Direkt importieren:
+          import { i18nArchive } from "@/lib/i18n.archive"
+          import { useLanguage } from "@/app/providers/LanguageProvider"
+        Dann:
+          const { lang } = useLanguage()
+          const t = i18nArchive[lang] || i18nArchive.en
+        → Aufrufe:
+          {t.archive.title}
+          {t.archive.modes.chat}
 
-   const [mode, setMode]
-   const [chatView, setChatView]
+   -----------------------------------------------------------
+   🧪 5.  Empfehlung
+   -----------------------------------------------------------
+   - Prüfe, ob getActiveDict(lang) das Objekt i18nArchive[lang]
+     wirklich zurückgibt (nicht nur die t-Funktion).
+   - Wenn nein → Council-entscheid Variante B implementieren.
+   - Danach „archive.xxx“ verschwindet, alle Labels laden.
 
-   Bedeutung:
-   - mode steuert EBENE 1 (CHAT vs REPORTS)
-   - chatView steuert Unterzustände (recent/search/detail)
-
-   TODO-RELEVANZ:
-   - Nach erfolgreichem Start eines neuen Chats
-     muss das ARCHIVE **geschlossen** werden
-     (über Event, Router oder State-Reset)
-
-
-   4. SELECTION-STATE (SESSION STORAGE)
-   ----------------------------------------------------------------------
-   const [selectionState, setSelectionState] = useState(...)
-   readSS('mpathy:archive:selection:v1')
-
-   Funktionen:
-   - persistSelection
-   - addPair
-   - removePair
-   - clearSelection
-
-   Status:
-   - Selection wird korrekt gepflegt
-   - Maximal 4 Paare enforced (UI-seitig)
-
-   TODO-RELEVANZ:
-   - selection ist die **Quelle**
-     für den Start-Chat-Event
-   - clearSelection muss NACH Erfolg
-     sicher ausgeführt werden
-
-
-   5. VERIFY-LISTENER (SEPARAT)
-   ----------------------------------------------------------------------
-   Events:
-   - mpathy:archive:verify
-   - mpathy:archive:verify:success
-   - mpathy:archive:verify:error
-   - mpathy:archive:verify:info
-
-   Wichtig:
-   - onVerifySuccess:
-     clearSelection()
-     setMode('reports')
-
-   TODO-RELEVANZ:
-   - Verify-Flow ist sauber getrennt
-   - Start-Chat-Flow DARF diesen
-     Mechanismus nicht stören
-
-
-   6. BOOTSTRAP-EFFECT
-   ----------------------------------------------------------------------
-   useEffect(() => { ... }, [])
-
-   Aufgaben:
-   - initArchiveVerifyListener()
-   - getRecentChats()
-   - UI-Hard-Block:
-     - body overflow hidden
-     - prompt-root-scene ausblenden
-
-   TODO-RELEVANZ:
-   - Overlay ist ein „Full Takeover“
-   - Muss nach Start-Chat wieder sauber
-     verlassen werden
-
-
-   7. SPINNER-STATE (KRITISCH)
-   ----------------------------------------------------------------------
-   const [isPreparing, setIsPreparing] = useState(false)
-
-   Rendering:
-   {isPreparing && <SystemSpinner />}
-
-   Aktivierung:
-   - Beim Klick auf „Add X/4 to new chat“:
-     setIsPreparing(true)
-
-   Deaktivierung:
-   - ❌ EXISTIERT AKTUELL NICHT
-
-   TODO-RELEVANZ (MAXIMAL):
-   - isPreparing muss nach erfolgreichem
-     neuen Chat explizit auf false gesetzt werden
-   - Aktuell bleibt Spinner dauerhaft aktiv
-
-
-   8. START-CHAT-TRIGGER (KERNSTELLE)
-   ----------------------------------------------------------------------
-   Button:
-   “Add X/4 to new chat”
-
-   onClick:
-   - setIsPreparing(true)
-   - dispatch CustomEvent:
-     'mpathy:archive:start-chat'
-     detail: { pairs: selection }
-
-   Status:
-   - Event wird korrekt dispatcht
-   - archiveChatPreparationListener
-     empfängt dieses Event
-
-   TODO-RELEVANZ:
-   - NACH erfolgreichem Flow:
-     - Spinner stoppen
-     - Archive schließen
-     - ggf. Routing in neuen Chat
-
-
-   9. ARCHIVE SCHLIESSEN
-   ----------------------------------------------------------------------
-   Close-Button:
-   dispatch 'mpathy:archive:close'
-
-   Status:
-   - Schließt Overlay zuverlässig
-
-   TODO-RELEVANZ:
-   - Muss programmatisch nach
-     erfolgreichem Start-Chat ausgelöst werden
-
-
-   10. BODY-RENDERING
-   ----------------------------------------------------------------------
-   - mode === 'reports' → ReportList
-   - mode === 'chat' → Recent / Search / Detail
-
-   TODO-RELEVANZ:
-   - Nach neuem Chat darf
-     KEIN Archive-Content mehr sichtbar sein
-
-
-   11. ZUSAMMENFASSUNG (KANONISCH)
-   ----------------------------------------------------------------------
-   - Diese Datei ist UI-seitig korrekt
-   - Sie triggert den Start-Chat sauber
-   - Sie blockiert die UI bewusst (Spinner)
-   - Sie hat aktuell KEINEN Mechanismus,
-     um den Flow wieder freizugeben
-
-   → Für die ToDos relevant sind:
-     - setIsPreparing(true / false)
-     - dispatch 'mpathy:archive:start-chat'
-     - dispatch 'mpathy:archive:close'
-
-   ====================================================================== */
+   =========================================================== */
 
 
 'use client'
