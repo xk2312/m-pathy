@@ -157,7 +157,7 @@ export default function RecentChatsView({
   const [chats, setChats] = useState<ChatDisplay[]>([])
 
   useEffect(() => {
-    const base = getRecentChats(13)
+    const base = getRecentChats(1300)
 
     const mapped = base.map((chat) => {
   const totalMessages = chat.messages?.length ?? 0
