@@ -270,6 +270,14 @@ report: {
   noReports: "No reports.",
   valid: "✅ Valid",
   invalid: "⚠️ Invalid",
+  statusVerified: "Verified",
+lastVerified: "Last verified",
+messagePairs: "{{count}} message pairs",
+source: "Source",
+sourceArchiveSelection: "Archive selection",
+export: "Export report",
+close: "Close",
+
 
   // ─────────────────────────────
   // NEW — Report structure & content
@@ -395,6 +403,14 @@ report: {
   noReports: "Keine Berichte.",
   valid: "✅ Gültig",
   invalid: "⚠️ Ungültig",
+  statusVerified: "Verifiziert",
+lastVerified: "Zuletzt verifiziert",
+messagePairs: "{{count}} Nachrichtenpaare",
+source: "Quelle",
+sourceArchiveSelection: "Archiv-Auswahl",
+export: "Bericht exportieren",
+close: "Schließen",
+
 
   // ─────────────────────────────
   // NEU — Struktur & Inhalt des Berichts
@@ -516,7 +532,15 @@ modes: {
       missingSignature: "Aucune signature trouvée.",
       noReports: "Aucun rapport.",
       valid: "✅ Valide",
-      invalid: "⚠️ Invalide"
+      invalid: "⚠️ Invalide",
+      statusVerified: "Vérifié",
+lastVerified: "Dernière vérification",
+messagePairs: "{{count}} paires de messages",
+source: "Source",
+sourceArchiveSelection: "Sélection d’archive",
+export: "Exporter le rapport",
+close: "Fermer",
+
     },
     system: {
       errorGeneric: "Erreur.",
@@ -599,7 +623,15 @@ modes: {
       missingSignature: "No se encontró firma.",
       noReports: "Sin informes.",
       valid: "✅ Válido",
-      invalid: "⚠️ Inválido"
+      invalid: "⚠️ Inválido",
+      statusVerified: "Verificado",
+lastVerified: "Última verificación",
+messagePairs: "{{count}} pares de mensajes",
+source: "Fuente",
+sourceArchiveSelection: "Selección de archivo",
+export: "Exportar informe",
+close: "Cerrar",
+
     },
     system: {
       errorGeneric: "Error.",
@@ -685,7 +717,15 @@ searchUserChats: "Cerca nelle tue chat…",
       missingSignature: "Firma non trovata.",
       noReports: "Nessun rapporto.",
       valid: "✅ Valido",
-      invalid: "⚠️ Non valido"
+      invalid: "⚠️ Non valido",
+      statusVerified: "Verificato",
+lastVerified: "Ultima verifica",
+messagePairs: "{{count}} coppie di messaggi",
+source: "Fonte",
+sourceArchiveSelection: "Selezione archivio",
+export: "Esporta rapporto",
+close: "Chiudi",
+
     },
     system: {
       errorGeneric: "Errore.",
@@ -768,7 +808,15 @@ searchUserChats: "Pesquisar nos seus chats…",
       missingSignature: "Assinatura não encontrada.",
       noReports: "Nenhum relatório.",
       valid: "✅ Válido",
-      invalid: "⚠️ Inválido"
+      invalid: "⚠️ Inválido",
+      statusVerified: "Verificado",
+lastVerified: "Última verificação",
+messagePairs: "{{count}} pares de mensagens",
+source: "Fonte",
+sourceArchiveSelection: "Seleção de arquivo",
+export: "Exportar relatório",
+close: "Fechar",
+
     },
     system: {
       errorGeneric: "Erro.",
@@ -851,7 +899,15 @@ modes: {
       missingSignature: "Geen handtekening gevonden.",
       noReports: "Geen rapporten.",
       valid: "✅ Geldig",
-      invalid: "⚠️ Ongeldig"
+      invalid: "⚠️ Ongeldig",
+      statusVerified: "Geverifieerd",
+lastVerified: "Laatst geverifieerd",
+messagePairs: "{{count}} berichtparen",
+source: "Bron",
+sourceArchiveSelection: "Archiefselectie",
+export: "Rapport exporteren",
+close: "Sluiten",
+
     },
     system: {
       errorGeneric: "Fout.",
@@ -934,7 +990,15 @@ modes: {
       missingSignature: "Подпись не найдена.",
       noReports: "Нет отчётов.",
       valid: "✅ Действителен",
-      invalid: "⚠️ Недействителен"
+      invalid: "⚠️ Недействителен",
+      statusVerified: "Подтверждено",
+lastVerified: "Последняя проверка",
+messagePairs: "{{count}} пар сообщений",
+source: "Источник",
+sourceArchiveSelection: "Выбор архива",
+export: "Экспорт отчёта",
+close: "Закрыть",
+
     },
     system: {
       errorGeneric: "Ошибка.",
@@ -1016,7 +1080,15 @@ searchUserChats: "搜索聊天…",
       missingSignature: "未找到签名。",
       noReports: "无报告。",
       valid: "✅ 有效",
-      invalid: "⚠️ 无效"
+      invalid: "⚠️ 无效",
+      statusVerified: "已验证",
+lastVerified: "上次验证",
+messagePairs: "{{count}} 条消息对",
+source: "来源",
+sourceArchiveSelection: "存档选择",
+export: "导出报告",
+close: "关闭",
+
     },
     system: {
       errorGeneric: "错误。",
@@ -1099,7 +1171,15 @@ modes: {
       missingSignature: "署名が見つかりません。",
       noReports: "レポートなし。",
       valid: "✅ 有効",
-      invalid: "⚠️ 無効"
+      invalid: "⚠️ 無効",
+      statusVerified: "検証済み",
+lastVerified: "最終検証",
+messagePairs: "{{count}} 件のメッセージペア",
+source: "ソース",
+sourceArchiveSelection: "アーカイブ選択",
+export: "レポートをエクスポート",
+close: "閉じる",
+
     },
     system: {
       errorGeneric: "エラー。",
@@ -1181,7 +1261,15 @@ modes: {
       missingSignature: "서명을 찾을 수 없습니다.",
       noReports: "보고서 없음.",
       valid: "✅ 유효함",
-      invalid: "⚠️ 무효"
+      invalid: "⚠️ 무효",
+      statusVerified: "검증됨",
+lastVerified: "마지막 검증",
+messagePairs: "{{count}} 메시지 쌍",
+source: "출처",
+sourceArchiveSelection: "아카이브 선택",
+export: "보고서 내보내기",
+close: "닫기",
+
     },
     system: {
       errorGeneric: "오류.",
@@ -1262,7 +1350,15 @@ modes: {
       missingSignature: "لم يتم العثور على توقيع.",
       noReports: "لا توجد تقارير.",
       valid: "✅ صالح",
-      invalid: "⚠️ غير صالح"
+      invalid: "⚠️ غير صالح",
+      statusVerified: "تم التحقق",
+lastVerified: "آخر تحقق",
+messagePairs: "{{count}} أزواج رسائل",
+source: "المصدر",
+sourceArchiveSelection: "اختيار الأرشيف",
+export: "تصدير التقرير",
+close: "إغلاق",
+
     },
     system: {
       errorGeneric: "خطأ.",
@@ -1346,7 +1442,15 @@ modes: {
       missingSignature: "हस्ताक्षर नहीं मिला।",
       noReports: "कोई रिपोर्ट नहीं।",
       valid: "✅ मान्य",
-      invalid: "⚠️ अमान्य"
+      invalid: "⚠️ अमान्य",
+      statusVerified: "सत्यापित",
+lastVerified: "अंतिम सत्यापन",
+messagePairs: "{{count}} संदेश जोड़े",
+source: "स्रोत",
+sourceArchiveSelection: "आर्काइव चयन",
+export: "रिपोर्ट निर्यात करें",
+close: "बंद करें",
+
     },
     system: {
       errorGeneric: "त्रुटि।",

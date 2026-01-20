@@ -384,12 +384,14 @@ selected === reportId
 
     <div className="flex flex-col gap-1">
       <div className="text-sm text-text-primary">
-        Verified · [Last verified:{' '}
-        {new Date(r.last_verified_at ?? r.generated_at).toLocaleString()}]
-      </div>
-      <div className="text-xs text-text-secondary">
-        {r.pair_count} message pairs · Source: Archive Selection
-      </div>
+  {t.statusVerified} · [{t.lastVerified}:{' '}
+  {new Date(r.last_verified_at ?? r.generated_at).toLocaleString()}]
+</div>
+
+     <div className="text-xs text-text-secondary">
+  {t.messagePairs.replace('{{count}}', String(r.pair_count))} · {t.source}: {t.sourceArchiveSelection}
+</div>
+
     </div>
 
     <span className="text-cyan-400 text-sm">
@@ -410,36 +412,38 @@ selected === reportId
 
       <div className="flex justify-end gap-3 mt-4">
   <Button
-    onClick={() => exportReportAsText(r)}
-    className="
-      !bg-cyan-500
-      !text-black
-      !px-[5px]
-      !py-[7px]
-      rounded-md
-      hover:!bg-cyan-400
-      cursor-pointer
-      transition-colors
-    "
-  >
-    Export Report
-  </Button>
+  onClick={() => exportReportAsText(r)}
+  className="
+    !bg-cyan-500
+    !text-black
+    !px-[5px]
+    !py-[7px]
+    rounded-md
+    hover:!bg-cyan-400
+    cursor-pointer
+    transition-colors
+  "
+>
+  {t.export}
+</Button>
+
 
   <Button
-    onClick={() => setSelected(null)}
-    className="
-      !bg-transparent
-      hover:!bg-transparent
-      !text-white
-      hover:!text-gray-300
-      !px-[5px]
-      !py-[7px]
-      cursor-pointer
-      transition-colors
-    "
-  >
-    Close
-  </Button>
+  onClick={() => setSelected(null)}
+  className="
+    !bg-transparent
+    hover:!bg-transparent
+    !text-white
+    hover:!text-gray-300
+    !px-[5px]
+    !py-[7px]
+    cursor-pointer
+    transition-colors
+  "
+>
+  {t.close}
+</Button>
+
 </div>
 
 
