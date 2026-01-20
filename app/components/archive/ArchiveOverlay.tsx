@@ -747,15 +747,25 @@ className="
           case 'recent':
             return (
               <RecentChatsView
-                onOpenChat={(chatSerial: string) => {
-                  const chainId =
-                    resolveChainIdFromChatSerial(chatSerial)
-                  if (chainId) {
-                    setOpenChainId(chainId)
-                    setChatView('detail')
-                  }
-                }}
-              />
+  headerLabel={t('archive.defaultHeader')}
+  chatLabel={(n) =>
+    t('archive.chatNumber').replace('{{chatNumber}}', String(n))
+  }
+  totalMessagesLabel={(count) =>
+    t('archive.totalMessages').replace('{{count}}', String(count))
+  }
+  viewLabel={t('archive.viewChat')}
+  keywordsLabel={t('archive.keywords')}
+  onOpenChat={(chatSerial: string) => {
+    const chainId =
+      resolveChainIdFromChatSerial(chatSerial)
+    if (chainId) {
+      setOpenChainId(chainId)
+      setChatView('detail')
+    }
+  }}
+/>
+
             )
 
           case 'search': {
