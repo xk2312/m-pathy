@@ -255,38 +255,42 @@ useEffect(() => {
     clearSelection()
   }
 
-  function onVerifyError(event: Event) {
-  const custom = event as CustomEvent<{ code?: string }>
-  const code = custom.detail?.code
+ type VerifyCode =
+  | 'NO_SELECTION'
+  | 'EMPTY_TEXT'
+  | 'SEAL_FAILED'
+  | 'BAD_SERVER_RESULT'
+  | 'ALREADY_VERIFIED'
+  | 'CANCELLED'
 
-  const msg =
-    code === 'NO_SELECTION'
-      ? t('system.noSelectionToVerify')
-      : code === 'EMPTY_TEXT'
-      ? t('system.nothingToVerify')
-      : code === 'SEAL_FAILED'
-      ? t('system.serverSealFailed')
-      : code === 'BAD_SERVER_RESULT'
-      ? t('system.unexpectedResponse')
-      : t('overlay.fail')
-
-  window.alert(msg)
+function mapVerifyCodeToMessage(code?: VerifyCode) {
+  switch (code) {
+    case 'NO_SELECTION':
+      return t('system.noSelectionToVerify')
+    case 'EMPTY_TEXT':
+      return t('system.nothingToVerify')
+    case 'SEAL_FAILED':
+      return t('system.serverSealFailed')
+    case 'BAD_SERVER_RESULT':
+      return t('system.unexpectedResponse')
+    case 'ALREADY_VERIFIED':
+      return t('system.alreadyVerified')
+    case 'CANCELLED':
+      return t('system.verificationCancelled')
+    default:
+      return t('system.errorGeneric')
+  }
 }
 
+function onVerifyError(event: Event) {
+  const custom = event as CustomEvent<{ code?: VerifyCode }>
+  window.alert(mapVerifyCodeToMessage(custom.detail?.code))
+}
 
 function onVerifyInfo(event: Event) {
-  const custom = event as CustomEvent<{ code?: string }>
-  const code = custom.detail?.code
-
-  const msg =
-    code === 'ALREADY_VERIFIED'
-      ? t('system.alreadyVerified')
-      : t('overlay.cancelled')
-
-  window.alert(msg)
+  const custom = event as CustomEvent<{ code?: VerifyCode }>
+  window.alert(mapVerifyCodeToMessage(custom.detail?.code))
 }
-
-
 
 function onVerifySuccess() {
   // deterministic post-verify handling
