@@ -186,6 +186,7 @@ type Props = {
   selection: ArchivePair[]
   addPair: (pair: ArchivePair) => void
   removePair: (pair_id: string) => void
+  backLabel: string
 }
 
 
@@ -194,12 +195,14 @@ type Props = {
 
 export default function ChatDetailView({
   chain_id,
-  onClose,
   highlight,
   selection,
   addPair,
   removePair,
+  onClose,
+  backLabel,
 }: Props) {
+
 
   const isSelected = (pair_id: string) =>
     selection.some(p => p.pair_id === pair_id)
@@ -244,8 +247,9 @@ export default function ChatDetailView({
     cursor-pointer
   "
 >
-  ← Back
+  ← {backLabel}
 </button>
+
 
 
     <div className="space-y-6">

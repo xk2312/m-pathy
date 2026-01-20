@@ -792,17 +792,19 @@ className="
             if (!openChainId) return null
 
             return (
-              <ChatDetailView
-                chain_id={openChainId}
-                highlight={query}
-                selection={selection}
-                addPair={addPair}
-                removePair={removePair}
-                onClose={() => {
-                  setOpenChainId(null)
-                  setChatView('recent')
-                }}
-              />
+             <ChatDetailView
+  chain_id={openChainId}
+  highlight={query}
+  selection={selection}
+  addPair={addPair}
+  removePair={removePair}
+  backLabel={t('archive.back')}
+  onClose={() => {
+    setOpenChainId(null)
+    setChatView('recent')
+  }}
+/>
+
             )
 
           default:
