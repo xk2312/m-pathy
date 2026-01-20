@@ -252,13 +252,11 @@ const EMPTY_SELECTION: SelectionState = {
 /* Component                                                          */
 /* ------------------------------------------------------------------ */
 
-type ArchiveI18n = (typeof i18nArchive)[keyof typeof i18nArchive]
-
 export default function ArchiveOverlay() {
-  const { lang } = useLanguage()
-  const t: ArchiveI18n = i18nArchive[lang as keyof typeof i18nArchive]
+  const { t, lang } = useLanguage()   // 🔁 dynamischer Translator aus Provider
   
-type ArchiveMode = 'chat' | 'reports'
+  type ArchiveMode = 'chat' | 'reports'
+
 
 const [mode, setMode] = useState<ArchiveMode>('chat')
 const [chatView, setChatView] = useState<'recent' | 'search' | 'detail'>('recent')
@@ -518,7 +516,7 @@ useEffect(() => {
       <div className="flex items-center gap-3">
         <SystemSpinner />
         <span className="text-sm text-text-secondary">
-          {t.overlay.preparing}
+          {t("overlay.preparing")}
         </span>
       </div>
     </div>
@@ -553,7 +551,7 @@ useEffect(() => {
   "
 >
   <h1 className="text-3xl font-medium tracking-tight">
-    {t.archive.title}
+{t("archive.title")}
   </h1>
 
   <div className="flex gap-4 text-sm">
@@ -565,14 +563,14 @@ useEffect(() => {
       }}
       className={`${mode === 'chat' ? 'text-cyan-400' : 'text-text-secondary'} cursor-pointer`}
     >
-{(t.archive as any).modes.chat}
+{t("archive.modes.chat")}
     </button>
 
     <button
       onClick={() => setMode('reports')}
       className={`${mode === 'reports' ? 'text-cyan-400' : 'text-text-secondary'} cursor-pointer`}
     >
-{(t.archive as any).modes.reports}
+{t("archive.modes.reports")}
     </button>
   </div>
 
@@ -583,8 +581,7 @@ useEffect(() => {
       max-w-[560px]
     "
   >
-  {t.archive.introText}
-  </p>
+{t("archive.introText")}  </p>
 
   {selection.length > 0 && (
     <div
@@ -601,8 +598,7 @@ useEffect(() => {
           text-text-secondary
         "
       >
-{(t.archive.selectionStatus as string).replace('{{count}}', String(selection.length))}
-      </div>
+{t("archive.selectionStatus").replace('{{count}}', String(selection.length))}      </div>
 
       {/* VERIFY — unverändert */}
       <button
@@ -625,8 +621,8 @@ useEffect(() => {
           transition
         "
       >
-{(t.archive.verify as string).replace('{{count}}', String(selection.length))}
-      </button>
+{t("archive.verify").replace('{{count}}', String(selection.length))}      
+</button>
 
       {/* ARCHIVE → CHAT (Injection Start) */}
       
@@ -658,9 +654,9 @@ useEffect(() => {
   `}
 >
 
-        {selection.length > 4
-  ? t.archive.tooMany
-  : (t.archive.addToChat as string).replace('{{count}}', String(selection.length))}
+  {selection.length > 4
+  ? t("archive.tooMany")
+  : t("archive.addToChat").replace("{{count}}", String(selection.length))}
 
       </button>
     </div>
@@ -694,7 +690,7 @@ useEffect(() => {
       setChatView('recent')
     }
   }}
-placeholder={(t.archive.searchUserChats as string)}
+placeholder={t("archive.searchUserChats")}
   className="
     w-full
     bg-[#121418]
@@ -768,8 +764,7 @@ placeholder={(t.archive.searchUserChats as string)}
 
      <button
   type="button"
-aria-label={t.overlay.close}
-  onClick={(e) => {
+aria-label={t("overlay.close")}  onClick={(e) => {
     e.stopPropagation()
     setMode('chat')
     setOpenChainId(null)
