@@ -244,6 +244,94 @@ const VERIFY_MESSAGES: Record<
     BAD_SERVER_RESULT: 'Unerwartete Server-Antwort.',
     ALREADY_VERIFIED: 'Diese Auswahl wurde bereits verifiziert.',
   },
+  fr: {
+  NO_SELECTION: 'Aucune sélection effectuée.',
+  EMPTY_TEXT: 'Le contenu sélectionné est vide.',
+  SEAL_FAILED: 'La vérification a échoué. Veuillez réessayer.',
+  BAD_SERVER_RESULT: 'Résultat du serveur inattendu.',
+  ALREADY_VERIFIED: 'Cette sélection a déjà été vérifiée.',
+},
+
+es: {
+  NO_SELECTION: 'No se ha realizado ninguna selección.',
+  EMPTY_TEXT: 'El contenido seleccionado está vacío.',
+  SEAL_FAILED: 'La verificación falló. Por favor, inténtalo de nuevo.',
+  BAD_SERVER_RESULT: 'Resultado del servidor inesperado.',
+  ALREADY_VERIFIED: 'Esta selección ya ha sido verificada.',
+},
+
+it: {
+  NO_SELECTION: 'Nessuna selezione effettuata.',
+  EMPTY_TEXT: 'Il contenuto selezionato è vuoto.',
+  SEAL_FAILED: 'Verifica non riuscita. Riprova.',
+  BAD_SERVER_RESULT: 'Risultato del server inatteso.',
+  ALREADY_VERIFIED: 'Questa selezione è già stata verificata.',
+},
+
+pt: {
+  NO_SELECTION: 'Nenhuma seleção feita.',
+  EMPTY_TEXT: 'O conteúdo selecionado está vazio.',
+  SEAL_FAILED: 'A verificação falhou. Tente novamente.',
+  BAD_SERVER_RESULT: 'Resultado inesperado do servidor.',
+  ALREADY_VERIFIED: 'Esta seleção já foi verificada.',
+},
+
+nl: {
+  NO_SELECTION: 'Geen selectie gemaakt.',
+  EMPTY_TEXT: 'De geselecteerde inhoud is leeg.',
+  SEAL_FAILED: 'Verificatie mislukt. Probeer het opnieuw.',
+  BAD_SERVER_RESULT: 'Onverwacht serverresultaat.',
+  ALREADY_VERIFIED: 'Deze selectie is al geverifieerd.',
+},
+
+ru: {
+  NO_SELECTION: 'Выбор не сделан.',
+  EMPTY_TEXT: 'Выбранный контент пуст.',
+  SEAL_FAILED: 'Ошибка проверки. Пожалуйста, попробуйте снова.',
+  BAD_SERVER_RESULT: 'Неожиданный результат сервера.',
+  ALREADY_VERIFIED: 'Этот выбор уже был проверен.',
+},
+
+zh: {
+  NO_SELECTION: '未进行选择。',
+  EMPTY_TEXT: '所选内容为空。',
+  SEAL_FAILED: '验证失败。请重试。',
+  BAD_SERVER_RESULT: '服务器返回异常结果。',
+  ALREADY_VERIFIED: '该选择已被验证。',
+},
+
+ja: {
+  NO_SELECTION: '選択が行われていません。',
+  EMPTY_TEXT: '選択された内容が空です。',
+  SEAL_FAILED: '検証に失敗しました。もう一度お試しください。',
+  BAD_SERVER_RESULT: '予期しないサーバー結果です。',
+  ALREADY_VERIFIED: 'この選択はすでに検証されています。',
+},
+
+ko: {
+  NO_SELECTION: '선택이 이루어지지 않았습니다.',
+  EMPTY_TEXT: '선택된 콘텐츠가 비어 있습니다.',
+  SEAL_FAILED: '검증에 실패했습니다. 다시 시도해주세요.',
+  BAD_SERVER_RESULT: '예상치 못한 서버 결과입니다.',
+  ALREADY_VERIFIED: '이 선택은 이미 검증되었습니다.',
+},
+
+ar: {
+  NO_SELECTION: 'لم يتم إجراء أي تحديد.',
+  EMPTY_TEXT: 'المحتوى المحدد فارغ.',
+  SEAL_FAILED: 'فشلت عملية التحقق. يرجى المحاولة مرة أخرى.',
+  BAD_SERVER_RESULT: 'نتيجة غير متوقعة من الخادم.',
+  ALREADY_VERIFIED: 'تم التحقق من هذا التحديد بالفعل.',
+},
+
+hi: {
+  NO_SELECTION: 'कोई चयन नहीं किया गया है।',
+  EMPTY_TEXT: 'चयनित सामग्री खाली है।',
+  SEAL_FAILED: 'सत्यापन विफल रहा। कृपया पुनः प्रयास करें।',
+  BAD_SERVER_RESULT: 'सर्वर से अप्रत्याशित परिणाम।',
+  ALREADY_VERIFIED: 'यह चयन पहले ही सत्यापित किया जा चुका है।',
+},
+
 }
 
 function msg(code: string): string {
