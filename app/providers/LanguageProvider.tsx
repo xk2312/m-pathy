@@ -67,8 +67,6 @@ import React, {
   useState,
 } from "react";
 import { getLocale, setLocale } from "@/lib/i18n";
-import { getActiveDict } from "@/lib/i18n"
-
 
 type Dict = Record<string, Record<string, string>>;
 
@@ -183,13 +181,9 @@ document.cookie = `NEXT_LOCALE=${safe}; path=/; max-age=31536000; SameSite=Lax`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
- const t = useMemo(() => {
-  const { t: translate } = getActiveDict(lang)
-  return (key: string) => translate(key)
-}, [lang])
-
-
-
+  const t = useMemo(() => {
+    return (k: string) => dict[lang]?.[k] ?? dict.en?.[k] ?? k;
+  }, [lang, dict]);
 
 
   const value = useMemo(
@@ -210,4 +204,3 @@ export function useLang() {
 
 // 🆕 Kompatibilität für Archive-System und zukünftige Hooks
 export const useLanguage = useLang;
-
