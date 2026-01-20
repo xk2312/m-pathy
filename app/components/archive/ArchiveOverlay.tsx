@@ -144,7 +144,10 @@ const EMPTY_SELECTION: SelectionState = {
 
 export default function ArchiveOverlay() {
   const { t, lang } = useLanguage()   // 🔁 dynamischer Translator aus Provider
-  
+
+  // 🧪 TEMP: I18N diagnostic output
+  console.info("[TEST:getActiveDict]", lang, t("archive.title"))
+
   type ArchiveMode = 'chat' | 'reports'
 
 
