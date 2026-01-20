@@ -181,9 +181,7 @@ export default function ArchiveOverlay() {
 }
 
 function ArchiveOverlayInner() {
-  const { t, lang } = useLanguage()
-
-  const [systemMessage, setSystemMessage] = useState<string | null>(null)
+  const { t, lang } = useLanguage()   // 🔁 dynamischer Translator aus Provider
 
   // 🧪 TEMP: I18N diagnostic output
   console.info("[TEST:getActiveDict]", lang, t("archive.title"))
@@ -257,29 +255,25 @@ useEffect(() => {
     clearSelection()
   }
 
-const [systemMessage, setSystemMessage] = useState<string | null>(null)
-
-function onVerifyError(event: Event) {
+  function onVerifyError(event: Event) {
   const custom = event as CustomEvent<{ message?: string }>
   const msg = custom.detail?.message ?? t('overlay.fail')
-  setSystemMessage(msg)
+  window.alert(msg)
 }
 
 function onVerifyInfo(event: Event) {
   const custom = event as CustomEvent<{ message?: string }>
   const msg = custom.detail?.message ?? t('overlay.cancelled')
-  setSystemMessage(msg)
+  window.alert(msg)
 }
-
 
 
 function onVerifySuccess() {
-  setSystemMessage(null)                 // reset system message deterministically
-  clearSelection()                       // reset selection in SessionStorage
-  setSelectionState(EMPTY_SELECTION)     // reset local state
-  setMode('reports')                     // switch to REPORTS once, no remount loop
+  // deterministic post-verify handling
+  clearSelection();                     // reset selection in SessionStorage
+  setSelectionState(EMPTY_SELECTION);    // reset local state
+  setMode('reports');                    // switch to REPORTS once, no remount loop
 }
-
 
 
 
@@ -409,11 +403,9 @@ const [isPreparing, setIsPreparing] = useState(false);
 
 useEffect(() => {
   const handleArchiveClose = () => {
-  console.info('[ARCHIVE→CHAT] archive closed → reset isPreparing');
-  setIsPreparing(false);
-  setSystemMessage(null);                // clear system message on close
-};
-
+    console.info('[ARCHIVE→CHAT] archive closed → reset isPreparing');
+    setIsPreparing(false);
+  };
 
   window.addEventListener('mpathy:archive:close', handleArchiveClose);
 
@@ -443,49 +435,26 @@ useEffect(() => {
   "
 >
 
- {isPreparing && (
-  <div
-    className="
-      absolute
-      inset-0
-      z-[2147483648]
-      flex
-      items-center
-      justify-center
-      bg-black/60
-    "
-  >
-    <div className="flex items-center gap-3">
-      <SystemSpinner />
-      <span className="text-sm text-text-secondary">
-        {t("overlay.preparing")}
-      </span>
+  {isPreparing && (
+    <div
+      className="
+        absolute
+        inset-0
+        z-[2147483648]
+        flex
+        items-center
+        justify-center
+        bg-black/60
+      "
+    >
+      <div className="flex items-center gap-3">
+        <SystemSpinner />
+        <span className="text-sm text-text-secondary">
+          {t("overlay.preparing")}
+        </span>
+      </div>
     </div>
-  </div>
-)}
-
-{systemMessage && (
-  <div
-    className="
-      absolute
-      bottom-6
-      left-1/2
-      -translate-x-1/2
-      z-[2147483649]
-      px-4
-      py-2
-      rounded-md
-      bg-[#121418]
-      border
-      border-border-soft
-      text-sm
-      text-text-primary
-    "
-  >
-    {systemMessage}
-  </div>
-)}
-
+  )}
 
       {/* ========================================================== */}
 {/* CONTENT FRAME — FULL BLEED                                 */}
