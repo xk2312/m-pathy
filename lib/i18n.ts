@@ -3038,7 +3038,11 @@ export function getActiveDict(lang: string) {
         );
       }
       // Default-UI-Dict
-      return dict[base]?.[key] ?? dict.en?.[key] ?? key;
+// Default-UI-Dict + dynamische Archive-Unterstützung
+const baseDict = dict[base] ?? dict.en;
+const value =
+  key.split(".").reduce((acc: any, part) => acc?.[part], baseDict) ?? key;
+return value;
     },
   };
 }
