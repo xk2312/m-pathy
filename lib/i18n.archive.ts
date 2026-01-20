@@ -325,8 +325,16 @@ system: {
   errorSave: "Could not save changes.",
   successSave: "Saved ✓",
   loading: "Loading…",
-  empty: "Nothing here yet."
-},
+  empty: "Nothing here yet.",
+
+  noSelectionToVerify: "No selection to verify.",
+  nothingToVerify: "Nothing to verify.",
+  serverSealFailed: "Server seal failed.",
+  unexpectedResponse: "Unexpected server response.",
+  alreadyVerified:
+    "The text has already been verified and the report already exists in the Reports section."
+}
+,
 
 tapToOpen: "Tap to open"
 
@@ -458,7 +466,14 @@ system: {
   errorSave: "Änderungen konnten nicht gespeichert werden.",
   successSave: "Gespeichert ✓",
   loading: "Lädt…",
-  empty: "Noch nichts hier."
+  empty: "Noch nichts hier.",
+  noSelectionToVerify: "Keine Auswahl zum Verifizieren.",
+nothingToVerify: "Nichts zu verifizieren.",
+serverSealFailed: "Server-Versiegelung fehlgeschlagen.",
+unexpectedResponse: "Unerwartete Serverantwort.",
+alreadyVerified:
+  "Der Text wurde bereits verifiziert und der Bericht existiert bereits im Bereich Berichte."
+
 },
 
 tapToOpen: "Tippen zum Öffnen"
@@ -548,7 +563,14 @@ close: "Fermer",
       errorSave: "Impossible d’enregistrer les modifications.",
       successSave: "Enregistré ✓",
       loading: "Chargement…",
-      empty: "Rien ici pour l’instant."
+      empty: "Rien ici pour l’instant.",
+      noSelectionToVerify: "Aucune sélection à vérifier.",
+nothingToVerify: "Rien à vérifier.",
+serverSealFailed: "Échec du scellement côté serveur.",
+unexpectedResponse: "Réponse inattendue du serveur.",
+alreadyVerified:
+  "Le texte a déjà été vérifié et le rapport existe déjà dans la section Rapports."
+
     },
     tapToOpen: "Appuyer pour ouvrir"
   },
@@ -639,7 +661,14 @@ close: "Cerrar",
       errorSave: "No se pudieron guardar los cambios.",
       successSave: "Guardado ✓",
       loading: "Cargando…",
-      empty: "Nada aquí todavía."
+      empty: "Nada aquí todavía.",
+      noSelectionToVerify: "No hay selección para verificar.",
+nothingToVerify: "Nada que verificar.",
+serverSealFailed: "Falló el sellado del servidor.",
+unexpectedResponse: "Respuesta inesperada del servidor.",
+alreadyVerified:
+  "El texto ya ha sido verificado y el informe ya existe en la sección Informes."
+
     },
     tapToOpen: "Tocar para abrir"
   },
@@ -733,7 +762,14 @@ close: "Chiudi",
       errorSave: "Impossibile salvare le modifiche.",
       successSave: "Salvato ✓",
       loading: "Caricamento…",
-      empty: "Niente qui ancora."
+      empty: "Niente qui ancora.",
+      noSelectionToVerify: "Nessuna selezione da verificare.",
+nothingToVerify: "Nulla da verificare.",
+serverSealFailed: "Sigillatura del server non riuscita.",
+unexpectedResponse: "Risposta del server imprevista.",
+alreadyVerified:
+  "Il testo è già stato verificato e il report esiste già nella sezione Report."
+
     },
     tapToOpen: "Tocca per aprire"
   },
@@ -824,7 +860,14 @@ close: "Fechar",
       errorSave: "Falha ao salvar alterações.",
       successSave: "Salvo ✓",
       loading: "Carregando…",
-      empty: "Nada aqui ainda."
+      empty: "Nada aqui ainda.",
+      noSelectionToVerify: "Nenhuma seleção para verificar.",
+nothingToVerify: "Nada para verificar.",
+serverSealFailed: "Falha na selagem do servidor.",
+unexpectedResponse: "Resposta inesperada do servidor.",
+alreadyVerified:
+  "O texto já foi verificado e o relatório já existe na seção Relatórios."
+
     },
     tapToOpen: "Toque para abrir"
   },
@@ -915,7 +958,14 @@ close: "Sluiten",
       errorSave: "Kan wijzigingen niet opslaan.",
       successSave: "Opgeslagen ✓",
       loading: "Laden…",
-      empty: "Nog niets hier."
+      empty: "Nog niets hier.",
+      noSelectionToVerify: "Geen selectie om te verifiëren.",
+nothingToVerify: "Niets om te verifiëren.",
+serverSealFailed: "Serververzegeling mislukt.",
+unexpectedResponse: "Onverwachte serverreactie.",
+alreadyVerified:
+  "De tekst is al geverifieerd en het rapport bestaat al in de sectie Rapporten."
+
     },
     tapToOpen: "Tik om te openen"
   },
@@ -1006,7 +1056,14 @@ close: "Закрыть",
       errorSave: "Не удалось сохранить изменения.",
       successSave: "Сохранено ✓",
       loading: "Загрузка…",
-      empty: "Пока ничего нет."
+      empty: "Пока ничего нет.",
+      noSelectionToVerify: "Нет выбранных данных для проверки.",
+nothingToVerify: "Нечего проверять.",
+serverSealFailed: "Ошибка серверного запечатывания.",
+unexpectedResponse: "Неожиданный ответ сервера.",
+alreadyVerified:
+  "Текст уже был проверен, и отчет уже существует в разделе отчетов."
+
     },
     tapToOpen: "Нажмите, чтобы открыть"
   },
@@ -1096,7 +1153,14 @@ close: "关闭",
       errorSave: "无法保存更改。",
       successSave: "已保存 ✓",
       loading: "加载中…",
-      empty: "暂无内容。"
+      empty: "暂无内容。",
+      noSelectionToVerify: "没有可验证的选择。",
+nothingToVerify: "没有需要验证的内容。",
+serverSealFailed: "服务器封存失败。",
+unexpectedResponse: "服务器返回了意外的响应。",
+alreadyVerified:
+  "文本已被验证，报告已存在于报告部分。"
+
     },
     tapToOpen: "点击打开"
   },
@@ -1187,7 +1251,14 @@ close: "閉じる",
       errorSave: "変更を保存できませんでした。",
       successSave: "保存済み ✓",
       loading: "読み込み中…",
-      empty: "まだ何もありません。"
+      empty: "まだ何もありません。",
+      noSelectionToVerify: "検証する選択がありません。",
+nothingToVerify: "検証するものがありません。",
+serverSealFailed: "サーバーの封印に失敗しました。",
+unexpectedResponse: "予期しないサーバー応答です。",
+alreadyVerified:
+  "テキストはすでに検証されており、レポートはレポートセクションに存在します。"
+
     },
     tapToOpen: "タップして開く"
   },
@@ -1277,7 +1348,14 @@ close: "닫기",
       errorSave: "변경사항을 저장하지 못했습니다.",
       successSave: "저장됨 ✓",
       loading: "로드 중…",
-      empty: "아직 아무것도 없습니다."
+      empty: "아직 아무것도 없습니다.",
+      noSelectionToVerify: "검증할 선택 항목이 없습니다.",
+nothingToVerify: "검증할 내용이 없습니다.",
+serverSealFailed: "서버 봉인에 실패했습니다.",
+unexpectedResponse: "예기치 않은 서버 응답입니다.",
+alreadyVerified:
+  "텍스트는 이미 검증되었으며 보고서는 보고서 섹션에 이미 존재합니다."
+
     },
     tapToOpen: "열려면 탭하세요"
   },
@@ -1366,7 +1444,14 @@ close: "إغلاق",
       errorSave: "فشل حفظ التغييرات.",
       successSave: "تم الحفظ ✓",
       loading: "جارٍ التحميل…",
-      empty: "لا شيء هنا بعد."
+      empty: "لا شيء هنا بعد.",
+      noSelectionToVerify: "لا يوجد تحديد للتحقق.",
+nothingToVerify: "لا يوجد ما يمكن التحقق منه.",
+serverSealFailed: "فشل ختم الخادم.",
+unexpectedResponse: "استجابة غير متوقعة من الخادم.",
+alreadyVerified:
+  "تم التحقق من النص بالفعل والتقرير موجود بالفعل في قسم التقارير."
+
     },
     tapToOpen: "اضغط للفتح"
   },
@@ -1458,7 +1543,14 @@ close: "बंद करें",
       errorSave: "परिवर्तन सहेजे नहीं जा सके।",
       successSave: "सहेजा गया ✓",
       loading: "लोड हो रहा है…",
-      empty: "यहां अभी कुछ नहीं है।"
+      empty: "यहां अभी कुछ नहीं है।",
+      noSelectionToVerify: "सत्यापन के लिए कोई चयन नहीं है।",
+nothingToVerify: "सत्यापित करने के लिए कुछ भी नहीं है।",
+serverSealFailed: "सर्वर सील विफल हुई।",
+unexpectedResponse: "सर्वर से अप्रत्याशित प्रतिक्रिया।",
+alreadyVerified:
+  "पाठ पहले ही सत्यापित किया जा चुका है और रिपोर्ट रिपोर्ट अनुभाग में पहले से मौजूद है।"
+
     },
     tapToOpen: "खोलने के लिए टैप करें"
   },

@@ -234,20 +234,22 @@ export function initArchiveVerifyListener() {
 
     if (!selection || selection.length === 0) {
       window.dispatchEvent(
-        new CustomEvent('mpathy:archive:verify:error', {
-          detail: { code: 'NO_SELECTION', message: 'No selection to verify.' },
-        }),
-      )
+  new CustomEvent('mpathy:archive:verify:error', {
+    detail: { code: 'NO_SELECTION' },
+  }),
+)
+
       return
     }
 
     const canonicalText = buildCanonicalTruthText(selection)
     if (!canonicalText) {
       window.dispatchEvent(
-        new CustomEvent('mpathy:archive:verify:error', {
-          detail: { code: 'EMPTY_TEXT', message: 'Nothing to verify.' },
-        }),
-      )
+  new CustomEvent('mpathy:archive:verify:error', {
+    detail: { code: 'EMPTY_TEXT' },
+  }),
+)
+
       return
     }
 
@@ -288,20 +290,22 @@ const response = await fetch('/api/triketon/seal', {
 
 if (!response.ok) {
   window.dispatchEvent(
-    new CustomEvent('mpathy:archive:verify:error', {
-      detail: { code: 'SEAL_FAILED', message: 'Server seal failed.' },
-    }),
-  )
+  new CustomEvent('mpathy:archive:verify:error', {
+    detail: { code: 'SEAL_FAILED' },
+  }),
+)
+
   return
 }
 
 const result = await response.json()
 if (result?.result !== 'SEALED' && result?.result !== 'IGNORED') {
   window.dispatchEvent(
-    new CustomEvent('mpathy:archive:verify:error', {
-      detail: { code: 'BAD_SERVER_RESULT', message: 'Unexpected server response.' },
-    }),
-  )
+  new CustomEvent('mpathy:archive:verify:error', {
+    detail: { code: 'BAD_SERVER_RESULT' },
+  }),
+)
+
   return
 }
 
@@ -310,14 +314,13 @@ if (result?.result !== 'SEALED' && result?.result !== 'IGNORED') {
 // ─────────────────────────────
 if (result?.result === 'IGNORED') {
   window.dispatchEvent(
-    new CustomEvent('mpathy:archive:verify:info', {
-      detail: {
-        code: 'ALREADY_VERIFIED',
-        message:
-          'The text has already been verified and the report already exists in the Reports section.',
-      },
-    }),
-  )
+  new CustomEvent('mpathy:archive:verify:info', {
+    detail: {
+      code: 'ALREADY_VERIFIED',
+    },
+  }),
+)
+
 
   // Clear selection even if no report is created
   window.dispatchEvent(
