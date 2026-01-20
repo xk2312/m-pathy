@@ -192,16 +192,6 @@ function ArchiveOverlayInner() {
   // 🧪 TEMP: I18N diagnostic output
   console.info("[TEST:getActiveDict]", lang, t("archive.title"))
 
-  useEffect(() => {
-  if (!systemMessage) return
-
-  const id = setTimeout(() => {
-    setSystemMessage(null)
-  }, 4000)
-
-  return () => clearTimeout(id)
-}, [systemMessage])
-
   type ArchiveMode = 'chat' | 'reports'
 
 
