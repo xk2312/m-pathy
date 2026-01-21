@@ -186,9 +186,10 @@ export default function SecuritySection() {
                   {card.title}
                 </h3>
 
-                <p className="text-white/75 text-sm leading-relaxed mb-[var(--h-card-body-space)]">
+                <p className="text-white/75 text-sm leading-[1.7]">
                   {card.body}
                 </p>
+
 
                 <button
                 type="button"
