@@ -192,20 +192,21 @@ export default function SecuritySection() {
 
 
                 <button
-                type="button"
-                className="m-button-secondary inline-flex items-center justify-center gap-2 cursor-pointer group"
-                style={{
+                  type="button"
+                  className="m-button-secondary inline-flex items-center justify-center gap-2 cursor-pointer group mt-3"
+                  style={{
                     padding: "7px 13px",
-                }}
-                onClick={() => handleAsk(card.prefill)}
+                  }}
+                  onClick={() => handleAsk(card.prefill)}
                 >
-                {texts.ctaLabel}
-                <span
+                  {texts.ctaLabel}
+                  <span
                     className="text-cyan-300 text-base transition-transform duration-[180ms] ease-out group-hover:translate-x-[3px]"
-                >
+                  >
                     →
-                </span>
+                  </span>
                 </button>
+
 
 
               </article>
