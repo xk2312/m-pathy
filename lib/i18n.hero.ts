@@ -16,8 +16,11 @@ export const heroDict = {
     hero_proof_4: "Human-controlled interaction, no manipulation loops",
     hero_proof_5: "Outputs designed for auditability and accountability",
     hero_price_monthly: "€179 / month",
-    hero_price_yearly: "€1,932 / year · 10% discount (annual)",
     hero_cta: "Start professional access",
+    hero_entry_note_prefix: "Start by using the chat. You can explore the system freely. After ",
+    hero_entry_note_highlight: "9 responses",
+    hero_entry_note_suffix: ", you’ll be asked to choose a subscription to continue.",
+
   },
 
  de: {
