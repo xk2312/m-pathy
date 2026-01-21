@@ -23,22 +23,46 @@ export default function Hero() {
     >
 
       {/* A0 Headline */}
-      <h1
-        className="
-          font-semibold
-          tracking-tight
-          bg-gradient-to-b from-white to-white/75
-          text-transparent bg-clip-text
-        "
-        style={{
-          fontSize: "var(--h-a0-size)",
-          lineHeight: "var(--h-a0-line)",
-          letterSpacing: "var(--h-a0-letter)",
-          fontWeight: "var(--h-a0-weight)",
-        }}
-      >
-        {t("hero_title")}
-      </h1>
+      <div
+  style={{
+    position: "relative",
+    display: "inline-block",
+  }}
+>
+  {/* subtle halo */}
+  <div
+    aria-hidden
+    style={{
+      position: "absolute",
+      inset: "-40px",
+      background:
+        "radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%)",
+      filter: "blur(24px)",
+      zIndex: 0,
+      pointerEvents: "none",
+    }}
+  />
+
+  <h1
+    className="
+      font-semibold
+      tracking-tight
+      bg-gradient-to-b from-white to-white/75
+      text-transparent bg-clip-text
+    "
+    style={{
+      position: "relative",
+      zIndex: 1,
+      fontSize: "var(--h-a0-size)",
+      lineHeight: "var(--h-a0-line)",
+      letterSpacing: "var(--h-a0-letter)",
+      fontWeight: "var(--h-a0-weight)",
+    }}
+  >
+    {t("hero_title")}
+  </h1>
+</div>
+
 
       {/* A0 Subline */}
       <p
