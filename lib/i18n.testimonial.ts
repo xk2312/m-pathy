@@ -31,7 +31,7 @@ fr: {
     line3: "Le système est conçu pour la responsabilité, pas pour l’extraction.",
     label: "- m-pathy -",
   },
-},
+}, 
 
 es: {
   space: {

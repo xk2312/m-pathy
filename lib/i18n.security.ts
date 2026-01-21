@@ -2,47 +2,48 @@
 
 export const dict = {
   en: {
-    kicker: "SECURITY BY DESIGN",
-    title: "Your Digital Safety Layers",
-    intro:
-      "See how m-pathy protects your conversations - emotionally, technically and cryptographically, always under your control.",
+  kicker: "SECURITY BY DESIGN",
+  title: "Your Digital Safety Layers",
+  intro:
+    "See how m-pathy is designed to support safe interactions – emotionally, technically and cryptographically, always under your control.",
 
-    cta_label: "Ask Digital Security Expert",
+  cta_label: "Ask Digital Security Expert",
 
-    cards: {
-      emotional: {
-        title: "Emotional Security",
-        body:
-          "m-pathy protects your emotional state: no judgment, no pressure, and automatic CALM mode when overload is detected. Your space stays steady, gentle and safe.",
-        prefill:
-          "@Digital Security Expert: tell me everything about emotional security on m-pathy.ai."
-      },
+  cards: {
+    emotional: {
+      title: "Emotional Security",
+      body:
+        "m-pathy is designed to reduce cognitive and emotional overload during interaction. The system avoids judgment, pressure and escalation patterns, and applies CALM interaction limits when overload signals are detected.",
+      prefill:
+        "@Digital Security Expert: explain how m-pathy is designed to reduce emotional and cognitive overload during interaction."
+    },
 
-      local_only: {
-        title: "Local-Only Conversations",
-        body:
-          "m-pathy stores no chats or personal data on servers. Everything stays on your device - invisible to us and fully under your control.",
-        prefill:
-          "@Digital Security Expert: tell me about m-pathy.ai and no server-side storage."
-      },
+    local_only: {
+      title: "Local-Only Conversations",
+      body:
+        "Conversation content is not retained or made accessible by m-pathy as part of the product. Interactions remain under user control. Platform infrastructure may apply isolated, access-restricted compliance storage as required by cloud and regulatory obligations, without functional use or operator access to conversation content.",
+      prefill:
+        "@Digital Security Expert: explain how m-pathy handles conversation content, local control, and compliance-related infrastructure storage."
+    },
 
-      deletion: {
-        title: "Total Deletion Control",
-        body:
-          "You can delete any thread at any time. Deletion is final: no copies, no shadows, no backups. Your data disappears completely.",
-        prefill:
-          "@Digital Security Expert: tell me about deletability and the “forever mutable” principle on m-pathy.ai."
-      },
+    deletion: {
+      title: "Total Deletion Control",
+      body:
+        "You can delete any thread at any time. Deleted content is removed from the m-pathy product environment and cannot be restored or reused by the system. Any compliance-related infrastructure artifacts or cryptographic proofs do not contain conversation content and cannot be used to reconstruct it.",
+      prefill:
+        "@Digital Security Expert: explain how deletion works on m-pathy, including user control and compliance boundaries."
+    },
 
-      triketon: {
-        title: "Triketon Encryption",
-        body:
-          "Triketon seals your actions with triple-256 hashing and a dynamic salt of time, page and context parameters. It ensures integrity, authenticity and tamper-proof proof of origin.",
-        prefill:
-          "@Digital Security Expert: tell me about Triketon on m-pathy.ai."
-      }
+    triketon: {
+      title: "Triketon Cryptographic Sealing",
+      body:
+        "Triketon applies cryptographic sealing using triple 256-bit hashing with dynamic contextual salt derived from time, page and interaction context. It enables integrity verification and proof of origin without storing or exposing conversation content.",
+      prefill:
+        "@Digital Security Expert: explain how Triketon provides integrity and proof of origin without storing conversation content."
     }
-  },
+  }
+},
+
 
   // 🇩🇪 German
   de: {
