@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { dict as securityDict } from "@/lib/i18n.security";
+import SecurityIcon from "@/app/components/security/SecurityIcon";
 
 // Zielpfad wie bei PowerPrompts / Experts
 const PAGE2_PATH = process.env.NEXT_PUBLIC_PAGE2_PATH ?? "/page2";
@@ -174,15 +175,10 @@ export default function SecuritySection() {
                 {/* Icon-Placeholder – hier später SVGs im Stil der Aktionsbefehle */}
                 <div className="mb-[var(--h-card-icon-space)]">
                   {/* TODO: replace with real SVG icons */}
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/70 text-sm">
-                    {id === "emotional"
-                      ? "☺"
-                      : id === "storage"
-                      ? "💾"
-                      : id === "deletion"
-                      ? "⌫"
-                      : "🔐"}
+                  <span className="inline-flex h-8 w-8 items-center justify-center text-white/60">
+                    <SecurityIcon type={id} className="h-5 w-5" />
                   </span>
+
                 </div>
 
                 <h3 className="text-white font-semibold text-lg mb-[var(--h-card-title-space)]">
