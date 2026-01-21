@@ -42,23 +42,28 @@ export default function Hero() {
 
       {/* A0 Subline */}
       <p
-        className="font-medium text-[#C7C7C7]"
-        style={{
-          marginTop: "36px",
-          fontSize: "var(--h-a0-sub-size)",
-          lineHeight: "var(--h-a0-sub-line)",
-          opacity: "var(--h-a0-sub-opacity)",
-          maxWidth: "720px",
-        }}
-      >
+  className="font-normal text-[#B5B5B5]"
+  style={{
+    marginTop: "36px",
+    fontSize: "15px",
+    lineHeight: "1.55",
+    maxWidth: "720px",
+  }}
+>
+
         {t("hero_sub")}
       </p>
 
       {/* Proof bullets */}
       <ul
-        className="text-sm text-[#AFAFAF] space-y-2"
-        style={{ marginTop: "28px" }}
-      >
+  className="text-[#B5B5B5] space-y-2"
+  style={{
+    marginTop: "24px",
+    fontSize: "15px",
+    lineHeight: "1.55",
+  }}
+>
+
         <li>{t("hero_proof_1")}</li>
         <li>{t("hero_proof_2")}</li>
         <li>{t("hero_proof_3")}</li>
@@ -71,7 +76,7 @@ export default function Hero() {
         className="text-center"
         style={{ marginTop: "40px" }}
       >
-        <div className="text-2xl font-semibold text-white">
+      <div className="text-xl font-semibold text-white">
           {t("hero_price_monthly")}
         </div>
       </div>
@@ -95,13 +100,17 @@ export default function Hero() {
       </div>
       {/* Entry reassurance */}
                <p
-        className="text-xs text-[#9A9A9A]"
+     
+        className="text-[#9A9A9A]"
         style={{
           marginTop: "8px",
+          fontSize: "13px",
+          lineHeight: "1.45",
+          letterSpacing: "0.01em",
           maxWidth: "520px",
-          lineHeight: "1.5",
         }}
       >
+
         {t("hero_entry_note_prefix")}{" "}
         <strong>{t("hero_entry_note_highlight")}</strong>
         {t("hero_entry_note_suffix")}
