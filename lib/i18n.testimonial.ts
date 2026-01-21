@@ -7,120 +7,121 @@ type DictRoot = Record<string, any>;
 export const testimonialsDict = {
   en: {
     space: {
-      line1: "Your thoughts stay with you.",
-      line2: "Unread by anyone.",
-      line3: "Provable as yours - even years later.",
-      label: "- m-pathy -",
-    },
-  },
+  line1: "Provable as yours – even years later.",
+  line2: "Not retained. Not repurposed. Not observed.",
+  line3: "Designed for accountability, not extraction.",
+  label: "- m-pathy -",
+},
 
-  de: {
-    space: {
-      line1: "Deine Gedanken bleiben bei dir.",
-      line2: "Von niemandem gelesen.",
-      line3: "Als deine belegbar - selbst nach Jahren.",
-      label: "- m-pathy -",
-    },
-  },
+ },
 
-  fr: {
-    space: {
-      line1: "Tes pensées restent avec toi.",
-      line2: "Lues par personne.",
-      line3: "Attribuables à toi - même des années plus tard.",
-      label: "- m-pathy -",
-    },
+de: {
+  space: {
+    line1: "Als deine belegbar – selbst nach Jahren.",
+    line2: "Nicht gespeichert. Nicht weiterverwendet. Nicht beobachtet.",
+    line3: "Für Rechenschaft entworfen – nicht für Extraktion.",
+    label: "- m-pathy -",
   },
+},
 
-  es: {
-    space: {
-      line1: "Tus pensamientos permanecen contigo.",
-      line2: "No leídos por nadie.",
-      line3: "Demostrables como tuyos - incluso años después.",
-      label: "- m-pathy -",
-    },
+fr: {
+  space: {
+    line1: "Attribuable à vous — même des années plus tard.",
+    line2: "Non conservé. Non réutilisé. Non observé.",
+    line3: "Conçu pour la responsabilité, pas pour l’extraction.",
+    label: "- m-pathy -",
   },
+},
 
-  it: {
-    space: {
-      line1: "I tuoi pensieri restano con te.",
-      line2: "Non letti da nessuno.",
-      line3: "Dimostrabili come tuoi - anche dopo anni.",
-      label: "- m-pathy -",
-    },
+es: {
+  space: {
+    line1: "Demostrable como suyo — incluso años después.",
+    line2: "No almacenado. No reutilizado. No observado.",
+    line3: "Diseñado para la responsabilidad, no para la extracción.",
+    label: "- m-pathy -",
   },
+},
 
-  pt: {
-    space: {
-      line1: "Seus pensamentos ficam com você.",
-      line2: "Não lidos por ninguém.",
-      line3: "Comprováveis como seus - mesmo anos depois.",
-      label: "- m-pathy -",
-    },
+it: {
+  space: {
+    line1: "Dimostrabile come tuo — anche dopo anni.",
+    line2: "Non memorizzato. Non riutilizzato. Non osservato.",
+    line3: "Progettato per la responsabilità, non per l’estrazione.",
+    label: "- m-pathy -",
   },
+},
 
-  nl: {
-    space: {
-      line1: "Je gedachten blijven bij jou.",
-      line2: "Door niemand gelezen.",
-      line3: "Als van jou te bewijzen - zelfs jaren later.",
-      label: "- m-pathy -",
-    },
+pt: {
+  space: {
+    line1: "Comprovável como seu — mesmo após anos.",
+    line2: "Não armazenado. Não reutilizado. Não observado.",
+    line3: "Projetado para responsabilidade, não para extração.",
+    label: "- m-pathy -",
   },
+},
 
-  ru: {
-    space: {
-      line1: "Твои мысли остаются с тобой.",
-      line2: "Никем не прочитаны.",
-      line3: "Доказуемо принадлежат тебе - даже спустя годы.",
-      label: "- m-pathy -",
-    },
+nl: {
+  space: {
+    line1: "Als van u aantoonbaar — zelfs jaren later.",
+    line2: "Niet opgeslagen. Niet hergebruikt. Niet geobserveerd.",
+    line3: "Ontworpen voor verantwoording, niet voor extractie.",
+    label: "- m-pathy -",
   },
+},
 
-  zh: {
-    space: {
-      line1: "你的思绪始终属于你。",
-      line2: "无人读取。",
-      line3: "多年之后，仍可证明归你所有。",
-      label: "- m-pathy -",
-    },
+ru: {
+  space: {
+    line1: "Доказуемо ваше — даже спустя годы.",
+    line2: "Не сохраняется. Не используется повторно. Не наблюдается.",
+    line3: "Создано для подотчётности, а не для извлечения.",
+    label: "- m-pathy -",
   },
+},
 
-  ja: {
-    space: {
-      line1: "あなたの思考は、あなたと共にあります。",
-      line2: "誰にも読まれません。",
-      line3: "何年後でも、あなたのものだと証明できます。",
-      label: "- m-pathy -",
-    },
+zh: {
+  space: {
+    line1: "即使多年之后，仍可证明归你所有。",
+    line2: "不存储。不复用。不监控。",
+    line3: "为问责而设计，而非数据提取。",
+    label: "- m-pathy -",
   },
+},
 
-  ko: {
-    space: {
-      line1: "당신의 생각은 당신과 함께 남아 있습니다.",
-      line2: "그 누구도 읽지 않습니다.",
-      line3: "수년이 지나도 당신의 것임을 증명할 수 있습니다.",
-      label: "- m-pathy -",
-    },
+ja: {
+  space: {
+    line1: "何年後でも、あなたのものだと証明できます。",
+    line2: "保存しない。再利用しない。監視しない。",
+    line3: "抽出のためではなく、説明責任のために設計。",
+    label: "- m-pathy -",
   },
+},
 
-  ar: {
-    space: {
-      line1: "أفكارك تبقى معك.",
-      line2: "لا يقرأها أحد.",
-      line3: "يمكن إثبات أنها لك - حتى بعد سنوات.",
-      label: "- m-pathy -",
-    },
+ko: {
+  space: {
+    line1: "수년이 지나도 당신의 것임을 증명할 수 있습니다.",
+    line2: "저장하지 않습니다. 재사용하지 않습니다. 관찰하지 않습니다.",
+    line3: "추출이 아닌 책임을 위해 설계되었습니다.",
+    label: "- m-pathy -",
   },
+},
 
-  hi: {
-    space: {
-      line1: "आपके विचार आपके साथ ही रहते हैं।",
-      line2: "किसी द्वारा पढ़े नहीं जाते।",
-      line3: "सालों बाद भी, आपके होने का प्रमाण दिया जा सकता है।",
-      label: "- m-pathy -",
-    },
+ar: {
+  space: {
+    line1: "قابل للإثبات بأنه لك — حتى بعد سنوات.",
+    line2: "غير مخزن. غير معاد استخدامه. غير مراقب.",
+    line3: "مصمم للمساءلة، لا للاستخراج.",
+    label: "- m-pathy -",
   },
+},
+
+hi: {
+  space: {
+    line1: "कई वर्षों बाद भी, इसे आपका साबित किया जा सकता है।",
+    line2: "संग्रहीत नहीं। पुनः उपयोग नहीं। निगरानी नहीं।",
+    line3: "उत्तरदायित्व के लिए डिज़ाइन किया गया, निष्कर्षण के लिए नहीं।",
+    label: "- m-pathy -",
+  },
+},
 } as const;
 
 export function attachTestimonials(dict: DictRoot) {
