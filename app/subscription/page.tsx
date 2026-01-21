@@ -277,18 +277,9 @@ export default function SubscriptionPage() {
           </section>
           <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
 
-          {/* ─────────────── 13 EXPERTS SECTION ─────────────── */}
-          <section
-            className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
-            aria-label="Experts section"
-          >
-            <div
-              className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
-            >
-              <Experts13 />
-            </div>
-          </section>
+          {/* ─────────────── SECURITY BY DESIGN ─────────────── */}
+            <SecuritySection />
+
 
           {/* ─────────────── BUFFER & DIVIDER #2 (Experts → Modes) ─────────────── */}
           <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
@@ -407,8 +398,19 @@ export default function SubscriptionPage() {
           </section>
           <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
 
-          {/* ─────────────── SECURITY BY DESIGN ─────────────── */}
-          <SecuritySection />
+          {/* ─────────────── 13 EXPERTS SECTION ─────────────── */}
+<section
+  className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
+  aria-label="Experts section"
+>
+  <div
+    className="page-center"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
+  >
+    <Experts13 />
+  </div>
+</section>
+
 
           {/* ─────────────── BUFFER & DIVIDER #6 (Security → KPI) ─────────────── */}
           <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
