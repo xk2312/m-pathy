@@ -93,6 +93,18 @@ export default function Hero() {
           {t("hero_cta")}
         </ZenithButton>
       </div>
+      {/* Entry reassurance */}
+      <p
+        className="text-xs text-[#9A9A9A]"
+        style={{
+          marginTop: "14px",
+          maxWidth: "520px",
+          lineHeight: "1.5",
+        }}
+      >
+        Start by using the chat. You can explore the system freely.
+        After <strong>9 responses</strong>, you’ll be asked to choose a subscription to continue.
+      </p>
 
 
 
