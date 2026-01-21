@@ -17,7 +17,7 @@ export interface VerificationReport {
   truthHash: string
   entriesCount: number
 
-  // 🔒 NEU — lokal, nicht serverseitig
+  // 🔒 NEU - lokal, nicht serverseitig
   pair?: {
     user: {
       content: string

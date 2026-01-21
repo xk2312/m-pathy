@@ -635,7 +635,7 @@
   grid-template-columns: 1fr;
   gap: 8px;
 }
-/* Expert-Grid Fallback auf Mobile — bleibt 1 Spalte, siehe oben Breakpoints */
+/* Expert-Grid Fallback auf Mobile - bleibt 1 Spalte, siehe oben Breakpoints */
 @media (max-width: 719px) {
   .expertGrid { grid-template-columns: 1fr; gap: 12px; }
 }

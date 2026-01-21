@@ -10,7 +10,7 @@ Ich habe **keine Semantik verändert**, nur explizit gemacht, was bisher implizi
 
 ---
 
-# m-pathy Archive System — README
+# m-pathy Archive System - README
 
 **Archive v1 · Verification-First · Deterministic Projection**
 
@@ -148,7 +148,7 @@ chain_id (string) → chat_id (number)
 
 ## 4. Zentrale Semantik (kritisch)
 
-### 4.1 `chain_id` — das Rückgrat
+### 4.1 `chain_id` - das Rückgrat
 
 * entsteht **nur im Triketon-Write**
 * definiert **exakt einen Chat**

@@ -1,5 +1,5 @@
 /* ======================================================================
-   FILE INDEX — components/archive/ChatDetailView.tsx
+   FILE INDEX - components/archive/ChatDetailView.tsx
    ======================================================================
 
    ROLLE DER DATEI

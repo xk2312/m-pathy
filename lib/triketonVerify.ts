@@ -1,5 +1,5 @@
 // ============================================================================
-// 📘 INDEX — lib/triketonVerify.ts (Triketon Verification & Key Generator v5)
+// 📘 INDEX - lib/triketonVerify.ts (Triketon Verification & Key Generator v5)
 // ----------------------------------------------------------------------------
 // PURPOSE
 //   Core deterministic verification layer for m-pathy’s Triketon Archive System.
@@ -14,7 +14,7 @@
 //
 //   ▪ computeTruthHash(text)
 //       Produces deterministic 32-bit integer hash (T-prefixed) from normalized
-//       text. Not cryptographically secure — used for verification & drift checks.
+//       text. Not cryptographically secure - used for verification & drift checks.
 //
 //   ▪ verifyEntry(entry)
 //       Compares stored truth_hash with recomputed one → TRUE if consistent.

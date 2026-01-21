@@ -92,9 +92,9 @@ export default function ShowcaseCarousel(){
           {/* ⬇︎ Liste + Copy als sauberer, eigenständiger JSX-Block */}
           <div className="rounded-2xl p-4 sm:p-5 bg-white/5 border border-white/10 ring-1 ring-white/10 backdrop-blur-[2px] shadow-sm">
             <ol className="list-decimal pl-5 space-y-1 text-white/85">
-              <li>NEM Step 1 — Scope &amp; Constraints</li>
-              <li>NEM Step 2 — Design &amp; Validation</li>
-              <li>NEM Step 3 — Review &amp; Report</li>
+              <li>NEM Step 1 - Scope &amp; Constraints</li>
+              <li>NEM Step 2 - Design &amp; Validation</li>
+              <li>NEM Step 3 - Review &amp; Report</li>
             </ol>
             <p className="mt-3 text-white/60 text-sm">{t("s2_why")}</p>
           </div>

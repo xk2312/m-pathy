@@ -85,7 +85,7 @@ const ICONS: Record<CatId, JSX.Element> = {
 const BASE = {
   kicker: "Action Prompts",
   title: "Intention in Motion",
-  hint: "Say what you want — and let form follow intention.",
+  hint: "Say what you want - and let form follow intention.",
   groups: {
     parents: "Parents",
     students: "Students",
@@ -103,7 +103,7 @@ const BASE = {
   p2: "Teach us how to resolve conflict with empathy and fairness.",
   a3: "Show the best cannabis treatment for chronic back pain.",
   a4: "I need three cannabis flowers suitable for ADHD.",
-  m1: "I have no budget — create a guerrilla marketing plan for my handmade kids’ toys site.",
+  m1: "I have no budget - create a guerrilla marketing plan for my handmade kids’ toys site.",
   m2: "I need a guerrilla tactic to drive heavy sales for my new Chrome plugin.",
   u1: "I need a business concept. Start Capsula13.",
   u2: "I need a NEM. Start ChemoMaster.",

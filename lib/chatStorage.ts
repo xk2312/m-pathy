@@ -1,5 +1,5 @@
 /* ======================================================================
-   FILE INDEX — chatStorage.ts
+   FILE INDEX - chatStorage.ts
    MODE: GranularFileIndexDeveloper · CodeForensik
    SCOPE: CHAT PERSISTENZ · LEDGER · HARD RESET · CHAIN
    STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)

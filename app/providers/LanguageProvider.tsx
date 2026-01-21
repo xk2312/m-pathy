@@ -1,5 +1,5 @@
 /*** =======================================================================
- *  INVENTUS INDEX — app/components/AccountPanel.tsx
+ *  INVENTUS INDEX - app/components/AccountPanel.tsx
  *  Account-Overlay · Status / E-Mail / Token-Stand (Read-Only View)
  * =======================================================================
  *

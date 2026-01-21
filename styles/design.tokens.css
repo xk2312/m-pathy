@@ -1,6 +1,6 @@
 /***
  * =========================================================
- *  M — DESIGN.TOKENS MASTER (Global Style Source of Truth)
+ *  M - DESIGN.TOKENS MASTER (Global Style Source of Truth)
  * =========================================================
  *
  *  INDEX (Sprunganker):
@@ -50,7 +50,7 @@
  *      – Audit-Palette (dark0/1/2, aqua, indigo, warn-gold)
  *
  *  ---------------------------------------------------------
- *           POWERPROMPTS — SPACING & GEOMETRY
+ *           POWERPROMPTS - SPACING & GEOMETRY
  *  ---------------------------------------------------------
  *
  *  [ANCHOR:PP-SPACING]
@@ -70,7 +70,7 @@
  *      – Padding, Radius, FS, Colors, Glow, Sweep, A11y
  *
  *  ---------------------------------------------------------
- *               15 MODES — AURA SYSTEM
+ *               15 MODES - AURA SYSTEM
  *  ---------------------------------------------------------
  *
  *  [ANCHOR:MODES-COLORS]
@@ -89,7 +89,7 @@
  *      – 3 Intensitäten pro Modus (aura-intensity, pulse, halo)
  *
  *  ---------------------------------------------------------
- *          MODES — DROPDOWN / PANEL SYSTEM
+ *          MODES - DROPDOWN / PANEL SYSTEM
  *  ---------------------------------------------------------
  *
  *  [ANCHOR:MODES-PANEL]
@@ -105,7 +105,7 @@
  *      – Text/Desc-Größen & Farben
  *
  *  ---------------------------------------------------------
- *           EXPERTS — PANELS, PILLS, SPACING
+ *           EXPERTS - PANELS, PILLS, SPACING
  *  ---------------------------------------------------------
  *
  *  [ANCHOR:EXPERTS-PANEL]
@@ -115,7 +115,7 @@
  *      – header-gap, dropdown-gap, pill-pad-x/y
  *
  *  ---------------------------------------------------------
- *           SECURITY — SECTION TOKENS
+ *           SECURITY - SECTION TOKENS
  *  ---------------------------------------------------------
  *
  *  [ANCHOR:SEC-SECTION]
@@ -128,7 +128,7 @@
  *      – icon size/stroke/opacity + mobile-scale
  *
  *  ---------------------------------------------------------
- *             HEADING SYSTEM — A0–A4
+ *             HEADING SYSTEM - A0–A4
  *  ---------------------------------------------------------
  *
  *  [ANCHOR:HEAD-A-SIZES]
@@ -147,7 +147,7 @@
  *      – vertical spacing: section spacing, gaps, mobile scaling
  *
  *  ---------------------------------------------------------
- *         NAVIGATION — TOKENS (Logo · Orbit · Tail)
+ *         NAVIGATION - TOKENS (Logo · Orbit · Tail)
  *  ---------------------------------------------------------
  *
  *  [ANCHOR:NAV-HEIGHTS]
@@ -173,7 +173,7 @@
  *      – bp-mobile, dock-h, chat-safe-top, chat-safe-bottom
  *
  *  ---------------------------------------------------------
- *            SUBSCRIPTION — DIVIDER & CARDS
+ *            SUBSCRIPTION - DIVIDER & CARDS
  *  ---------------------------------------------------------
  *
  *  [ANCHOR:SUB-DIVIDERS]
@@ -183,7 +183,7 @@
  *      – card inner padding
  *
  *  ---------------------------------------------------------
- *               SUBSCRIPTION — BUFFER MAGAZIN
+ *               SUBSCRIPTION - BUFFER MAGAZIN
  *  ---------------------------------------------------------
  *
  *  [ANCHOR:BUFFERS]
@@ -191,7 +191,7 @@
  *      – mobile scaling
  *
  *  ---------------------------------------------------------
- *                 BUTTON SYSTEM — SIZES
+ *                 BUTTON SYSTEM - SIZES
  *  ---------------------------------------------------------
  *
  *  [ANCHOR:BTN-SIZES]
@@ -223,7 +223,7 @@
  *      – muted/strong text, bg, border, bottom-pad
  *
  *  ---------------------------------------------------------
- *          PAGE2 — CHAT DOCK & PROMPT TOKENS
+ *          PAGE2 - CHAT DOCK & PROMPT TOKENS
  *  ---------------------------------------------------------
  *
  *  [ANCHOR:CHAT-DOCK]
@@ -785,7 +785,7 @@
   --h-a3-weight: 500;
   --h-a3-letter: 0;
 
-  /* Micro – Footer, Legal, Attribution (z. B. — Grok —) */
+  /* Micro – Footer, Legal, Attribution (z. B. - Grok -) */
   --h-a4-size: 0.78rem;
   --h-a4-line: 1.35;
   --h-a4-weight: 400;
@@ -979,7 +979,7 @@
 }
 
 :root {
-  /* BUTTON SIZES — divine spacing */
+  /* BUTTON SIZES - divine spacing */
   --btn-radius-full: 9999px;
 
   /* Heights */
@@ -1017,7 +1017,7 @@
   --btn-shadow-primary: 0 1px 3px rgba(0,0,0,0.12);
   --btn-shadow-hover: 0 2px 6px rgba(0,0,0,0.16);
 }
-/* CORE BUTTON STYLE — the heart of m-pathy */
+/* CORE BUTTON STYLE - the heart of m-pathy */
 
 .m-btn {
   display: inline-flex;
@@ -1092,7 +1092,7 @@
   margin-bottom: var(--btn-gap-y-lg);
 }
 /* ─────────────────────────────────────────────
-   FOOTER — TOKENS (Spoty Refined)
+   FOOTER - TOKENS (Spoty Refined)
    ───────────────────────────────────────────── */
 :root {
   /* Vertical + Horizontal Padding */

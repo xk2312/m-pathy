@@ -1,6 +1,6 @@
 "use client";
 /*** =======================================================================
- *  INVENTUS INDEX — app/subscription/page.tsx
+ *  INVENTUS INDEX - app/subscription/page.tsx
  *  Screening · Struktur · Sprach-Hotspots (Subscription-Seite)
  * ======================================================================= 
  *

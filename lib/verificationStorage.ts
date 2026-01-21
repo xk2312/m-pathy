@@ -1,4 +1,4 @@
-/*# 📑 FILE INDEX — verificationStorage.ts
+/*# 📑 FILE INDEX - verificationStorage.ts
 
 ## FILE
 
@@ -10,7 +10,7 @@ Client-seitiger **Persistenz- und Normalisierungs-Layer** für Verifikationsrepo
 
 ## TOUCH
 
-**NEIN — strikt gesperrt**
+**NEIN - strikt gesperrt**
 
 Diese Datei darf im Rahmen der Injection-Implementierung **unter keinen Umständen verändert** werden.
 

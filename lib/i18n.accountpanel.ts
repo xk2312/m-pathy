@@ -1,5 +1,5 @@
 // ===============================================
-// i18n.accountpanel.ts — 13 languages
+// i18n.accountpanel.ts - 13 languages
 // ===============================================
 
 export type AccountStatus = {
@@ -44,7 +44,7 @@ export type AccountLocale = {
 // ---- LOCALES ----
 export const i18nAccountPanel = {
   // --------------------------------------
-  // ENGLISH — MASTER
+  // ENGLISH - MASTER
   // --------------------------------------
   en: {
     account: {
@@ -75,7 +75,7 @@ export const i18nAccountPanel = {
   },
 
   // --------------------------------------
-  // GERMAN — DEUTSCH
+  // GERMAN - DEUTSCH
   // --------------------------------------
   de: {
     account: {
@@ -106,7 +106,7 @@ export const i18nAccountPanel = {
   },
 
   // --------------------------------------
-  // FRENCH — FRANÇAIS
+  // FRENCH - FRANÇAIS
   // --------------------------------------
   fr: {
     account: {
@@ -137,7 +137,7 @@ export const i18nAccountPanel = {
   },
 
   // --------------------------------------
-  // SPANISH — ESPAÑOL
+  // SPANISH - ESPAÑOL
   // --------------------------------------
   es: {
     account: {
@@ -168,7 +168,7 @@ export const i18nAccountPanel = {
   },
 
   // --------------------------------------
-  // ITALIAN — ITALIANO
+  // ITALIAN - ITALIANO
   // --------------------------------------
   it: {
     account: {
@@ -199,7 +199,7 @@ export const i18nAccountPanel = {
   },
 
   // --------------------------------------
-  // PORTUGUESE — PORTUGUÊS
+  // PORTUGUESE - PORTUGUÊS
   // --------------------------------------
   pt: {
     account: {
@@ -230,7 +230,7 @@ export const i18nAccountPanel = {
   },
 
   // --------------------------------------
-  // DUTCH — NEDERLANDS
+  // DUTCH - NEDERLANDS
   // --------------------------------------
   nl: {
     account: {
@@ -261,7 +261,7 @@ export const i18nAccountPanel = {
   },
 
   // --------------------------------------
-  // RUSSIAN — РУССКИЙ
+  // RUSSIAN - РУССКИЙ
   // --------------------------------------
   ru: {
     account: {
@@ -292,7 +292,7 @@ export const i18nAccountPanel = {
   },
 
   // --------------------------------------
-  // CHINESE (Simplified) — 简体中文
+  // CHINESE (Simplified) - 简体中文
   // --------------------------------------
   zh: {
     account: {
@@ -323,7 +323,7 @@ export const i18nAccountPanel = {
   },
 
   // --------------------------------------
-  // JAPANESE — 日本語
+  // JAPANESE - 日本語
   // --------------------------------------
   ja: {
     account: {
@@ -354,7 +354,7 @@ export const i18nAccountPanel = {
   },
 
   // --------------------------------------
-  // KOREAN — 한국어
+  // KOREAN - 한국어
   // --------------------------------------
   ko: {
     account: {
@@ -385,7 +385,7 @@ export const i18nAccountPanel = {
   },
 
   // --------------------------------------
-  // ARABIC — العربية (RTL-ready)
+  // ARABIC - العربية (RTL-ready)
   // --------------------------------------
   ar: {
     account: {
@@ -416,7 +416,7 @@ export const i18nAccountPanel = {
   },
 
   // --------------------------------------
-  // HINDI — हिन्दी
+  // HINDI - हिन्दी
   // --------------------------------------
   hi: {
     account: {

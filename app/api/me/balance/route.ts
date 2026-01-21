@@ -1,5 +1,5 @@
 /*** =======================================================================
- *  INVENTUS INDEX — app/api/me/balance/route.ts
+ *  INVENTUS INDEX - app/api/me/balance/route.ts
  *  Token-Read Endpoint · Session → Ledger → AccountPanel
  * =======================================================================
  *

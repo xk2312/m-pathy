@@ -169,7 +169,7 @@ export default function LogoM({
           `}</style>
         </defs>
 
-   {/* === G_SPIRAL — Starlight Filament (true spiral + dash trail) ======= */}
+   {/* === G_SPIRAL - Starlight Filament (true spiral + dash trail) ======= */}
 <g
   id="G_SPIRAL"
   className="m-glow"

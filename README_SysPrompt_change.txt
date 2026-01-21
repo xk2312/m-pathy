@@ -6,7 +6,7 @@ Du kannst es **1:1 als `README.txt` hinterlegen**.
 
 ---
 
-# 📘 README — Systemprompt austauschen (MAIOS / GPTX)
+# 📘 README - Systemprompt austauschen (MAIOS / GPTX)
 
 **Staging & Main · fehlerfrei · < 2 Minuten · kein Bugloop**
 
@@ -68,7 +68,7 @@ ssh -o IdentitiesOnly=yes -i ~/.ssh/id_ed25519 deploy@78.47.96.191
 
 ## ✅ Standard-Ablauf (2 Minuten, garantiert)
 
-### 1️⃣ Auf **STAGING** — neuen Prompt setzen
+### 1️⃣ Auf **STAGING** - neuen Prompt setzen
 
 ```bash
 sudo cp -a /srv/m-pathy/GPTX.txt /srv/app/shared/GPTX.txt
@@ -85,7 +85,7 @@ sudo head -n 2 /srv/app/shared/GPTX.txt
 
 ---
 
-### 2️⃣ Auf **MAIN** — Symlink sicherstellen (einmalig, dann nie wieder)
+### 2️⃣ Auf **MAIN** - Symlink sicherstellen (einmalig, dann nie wieder)
 
 ```bash
 sudo mkdir -p /srv/m-pathy
@@ -95,7 +95,7 @@ sudo head -n 2 /srv/m-pathy/GPTX.txt
 
 ---
 
-### 3️⃣ Auf **MAIN** — Service neu starten
+### 3️⃣ Auf **MAIN** - Service neu starten
 
 ```bash
 sudo systemctl restart mpathy
@@ -103,7 +103,7 @@ sudo systemctl restart mpathy
 
 ---
 
-### 4️⃣ Auf **MAIN** — Funktionstest
+### 4️⃣ Auf **MAIN** - Funktionstest
 
 ```bash
 curl -sS http://127.0.0.1:3000/api/chat \
@@ -169,12 +169,12 @@ Wenn du willst, erstelle ich dir daraus zusätzlich:
 * eine **1-Seiten-Cheat-Card**
 
 Perfekt.
-Hier ist die **1-seitige Cheat Card** — **Council13-approved**, **copy-paste-ready**, **Bugloop-frei**.
+Hier ist die **1-seitige Cheat Card** - **Council13-approved**, **copy-paste-ready**, **Bugloop-frei**.
 Die kannst du **neben den Monitor legen** oder **oben ins Repo pinnen**.
 
 ---
 
-# ⚡ CHEAT CARD — Systemprompt tauschen (MAIOS / GPTX)
+# ⚡ CHEAT CARD - Systemprompt tauschen (MAIOS / GPTX)
 
 **Ziel:**
 Neuen MAIOS-Systemprompt **sicher & in < 2 Minuten** auf **Staging + Main** aktivieren.
@@ -218,7 +218,7 @@ ssh -o IdentitiesOnly=yes -i ~/.ssh/id_ed25519 deploy@78.47.96.191
 
 ## ✅ Ablauf (immer gleich)
 
-### 1️⃣ STAGING — Prompt setzen
+### 1️⃣ STAGING - Prompt setzen
 
 ```bash
 sudo cp -a /srv/m-pathy/GPTX.txt /srv/app/shared/GPTX.txt
@@ -231,7 +231,7 @@ sudo head -n 2 /srv/app/shared/GPTX.txt
 
 ---
 
-### 2️⃣ MAIN — Symlink (einmalig prüfen)
+### 2️⃣ MAIN - Symlink (einmalig prüfen)
 
 ```bash
 sudo ln -sfn /srv/app/shared/GPTX.txt /srv/m-pathy/GPTX.txt
@@ -240,7 +240,7 @@ sudo head -n 2 /srv/m-pathy/GPTX.txt
 
 ---
 
-### 3️⃣ MAIN — Restart
+### 3️⃣ MAIN - Restart
 
 ```bash
 sudo systemctl restart mpathy
@@ -248,7 +248,7 @@ sudo systemctl restart mpathy
 
 ---
 
-### 4️⃣ MAIN — Test
+### 4️⃣ MAIN - Test
 
 ```bash
 curl -sS http://127.0.0.1:3000/api/chat \

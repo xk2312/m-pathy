@@ -1,5 +1,5 @@
 /* ======================================================================
-FILE INDEX — Saeule.tsx
+FILE INDEX - Saeule.tsx
 Zweck: Steuerung der linken Säule (Modes, Experts, Actions, Mobile Overlay Verhalten)
 
 RELEVANT FÜR AKTUELLE FIXES:
@@ -98,7 +98,7 @@ IV. MOBILE OVERLAY – SCHLIESSLOGIK
   innerhalb der Saeule, um dieses Signal auszulösen.
 
 ----------------------------------------------------------------------
-V. SWITCHMODE — ZENTRALER STEUERUNKT
+V. SWITCHMODE - ZENTRALER STEUERUNKT
 ----------------------------------------------------------------------
 
 [Function: switchMode(next: ModeId)]
@@ -614,7 +614,7 @@ function tr(key: string, fallback: string, vars?: Record<string, string>): strin
   }
 }
 
-/* ▼▼ Sprach-Hint — 13 Sprachen, GPT-4.1 kompatibel ▼▼ */
+/* ▼▼ Sprach-Hint - 13 Sprachen, GPT-4.1 kompatibel ▼▼ */
 function langHint(lang: string): string {
   const base = (lang || "en").slice(0, 2).toLowerCase();
   const map: Record<string, string> = {
@@ -637,7 +637,7 @@ function langHint(lang: string): string {
 
 /* ▲▲ Ende Sprach-Hint ▲▲ */
 
-// Saeule.tsx — REPLACE the whole function
+// Saeule.tsx - REPLACE the whole function
 async function callChatAPI(prompt: string): Promise<string | null> {
 
   try {
@@ -901,7 +901,7 @@ emitSystemMessage({
 emitStatus({ modeLabel: label });
 
 
-// ▼▼ Sofortiges Schließen des Mobile-Overlays — UI-only, kein System-Event ▼▼
+// ▼▼ Sofortiges Schließen des Mobile-Overlays - UI-only, kein System-Event ▼▼
 try {
   const inOverlay = !!document.querySelector('[data-overlay="true"]');
   if (inOverlay) {
@@ -1050,7 +1050,7 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
     <aside
       className={styles.saeule}
 
-      aria-label={tr("columnAria", "Column — Controls & Selection")}
+      aria-label={tr("columnAria", "Column - Controls & Selection")}
       data-test="saeule"
     >
       <section
@@ -1093,7 +1093,7 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
 
               const finalText = reply && reply.length
                 ? reply
-                : tr("cta.fallback", "All set — tell me what you want to build (app, flow, feature …).");
+                : tr("cta.fallback", "All set - tell me what you want to build (app, flow, feature …).");
 
               say(finalText);
             }}

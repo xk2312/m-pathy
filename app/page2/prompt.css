@@ -1,6 +1,6 @@
 /***
 =============================
-M — PROMPT.CSS MASTER INDEX
+M - PROMPT.CSS MASTER INDEX
 (Starship Prompt · Dock · Doorman · Orb · Motion)
 =============================
 INDEX (Anchor Navigation)
@@ -229,7 +229,7 @@ END OF INDEX
     calc(100vw - var(--chat-stage-pad-inline, 48px) * 2)
   );
 
-  width: 100%;               /* <— zwingt echte Zentrierung */
+  width: 100%;               /* <- zwingt echte Zentrierung */
   margin-inline: auto;
   text-align: center;
 
@@ -297,7 +297,7 @@ END OF INDEX
 
 
 /* =============================================================
-   PROMPT SHELL — Das Raumschiff (äußerer Rahmen)
+   PROMPT SHELL - Das Raumschiff (äußerer Rahmen)
    ============================================================= */
 
 .prompt-shell {
@@ -395,7 +395,7 @@ END OF INDEX
 
 
 /* =============================================================
-   TEXTAREA — Innenraum der Pille (ohne eigenen Rahmen)
+   TEXTAREA - Innenraum der Pille (ohne eigenen Rahmen)
    ============================================================= */
 
 
@@ -430,7 +430,7 @@ END OF INDEX
   cursor: default;
 }
 /* =============================================================
-   SIMBA ORB — Minimal, Token Driven, Raumschiff-Perfektion
+   SIMBA ORB - Minimal, Token Driven, Raumschiff-Perfektion
    ============================================================= */
 
 .prompt-orb {
@@ -460,7 +460,7 @@ END OF INDEX
     opacity 160ms linear;
 }
 
-/* Hover / Active States — Pur über Tokens */
+/* Hover / Active States - Pur über Tokens */
 .prompt-orb:hover:not(:disabled) {
   background: var(--prompt-orb-bg-hover);
   border-color: var(--prompt-orb-border-hover);
@@ -476,7 +476,7 @@ END OF INDEX
   opacity: 0.4;
   cursor: default;
 }
-/* SIMBA Plus — freies, zartes + ohne Ring */
+/* SIMBA Plus - freies, zartes + ohne Ring */
 .prompt-plus-orb {
   flex: 0 0 auto;
   margin-right: 12px;
@@ -547,7 +547,7 @@ END OF INDEX
 }
 
 /* =============================================================
-   SEND-RIPPLE — Energieschock beim Abschicken
+   SEND-RIPPLE - Energieschock beim Abschicken
    ============================================================= */
 
 #m-input-dock.send-ripple::after {
@@ -620,7 +620,7 @@ END OF INDEX
 
 
 /* =============================================================
-   Busy-State — leises „Breath“-Pulsieren beim Laden
+   Busy-State - leises „Breath“-Pulsieren beim Laden
    ============================================================= */
 
 .prompt-orb[data-busy="true"] {

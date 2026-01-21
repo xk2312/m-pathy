@@ -126,7 +126,7 @@ const pillClass =
         </button>
       </div>
 
-      {/* CATEGORY GRID — erscheint erst wenn open */}
+      {/* CATEGORY GRID - erscheint erst wenn open */}
       {open && (
         <div className="m-experts13-categories max-w-5xl mx-auto grid gap-x-10 gap-y-8 md:grid-cols-2 lg:grid-cols-3 mb-12">
           {/* GROUP 1 – Life & Matter */}
@@ -389,7 +389,7 @@ const pillClass =
         </div>
       )}
 
-       {/* EXPERT PANEL — erscheint erst wenn selected */}
+       {/* EXPERT PANEL - erscheint erst wenn selected */}
       {selected && (
         <div
           className="m-experts13-panel max-w-4xl mx-auto bg-white/5 ring-1 ring-white/10 backdrop-blur-md rounded-3xl mt-10"

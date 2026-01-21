@@ -1,5 +1,5 @@
 /* ======================================================================
-   FILE INDEX — page.tsx  (Chat Page / Page2)
+   FILE INDEX - page.tsx  (Chat Page / Page2)
    MODE: GranularFileIndexDeveloper · CodeForensik
    SCOPE: CHAT RUNTIME · ARCHIVE INJECTION · API SEND · UI RESET
    STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)
@@ -218,12 +218,12 @@ const persist = {
   cut : (arr: any[], max = 120) => Array.isArray(arr) ? arr.slice(-max) : [],
 };
 
-// ——— Theme-Token-Typen (global, einmalig) ———
+// --- Theme-Token-Typen (global, einmalig) ---
 type ColorTokens = { bg0?: string; bg1?: string; text?: string };
 type ThemeTokens = { color?: ColorTokens; [k: string]: any };
 
 /* =======================================================================
-   [ANCHOR:I18N] — Sprachlabels für Button-Events
+   [ANCHOR:I18N] - Sprachlabels für Button-Events
    ======================================================================= */
 
 
@@ -265,7 +265,7 @@ const LABELS: Record<string, Record<MEvent, string>> = {
 };
 
 /* =======================================================================
-   [ANCHOR:CONFIG] — Design Tokens, Themes, Personas, System Prompt
+   [ANCHOR:CONFIG] - Design Tokens, Themes, Personas, System Prompt
    ======================================================================= */
 
    type Tokens = {
@@ -366,7 +366,7 @@ const LABELS: Record<string, Record<MEvent, string>> = {
   }
   
 /* =======================================================================
-   [ANCHOR:HOOKS]  — Breakpoint + Theme Resolution
+   [ANCHOR:HOOKS]  - Breakpoint + Theme Resolution
    ======================================================================= */
 
 function useBreakpoint() {
@@ -413,7 +413,7 @@ function useTheme(persona: keyof typeof PERSONAS = "default") {
 }
 
 /* =======================================================================
-   [ANCHOR:UTILS] — kleine Helfer (keine Exports in page.tsx!)
+   [ANCHOR:UTILS] - kleine Helfer (keine Exports in page.tsx!)
    ======================================================================= */
 
 // [ANCHOR:UTILS]
@@ -446,7 +446,7 @@ function saveMessages(messages: ReadonlyArray<ChatMessage>): void {
 }
   
 /* =======================================================================
-   [ANCHOR:COMPONENTS]  — UI-Bausteine
+   [ANCHOR:COMPONENTS]  - UI-Bausteine
    ======================================================================= */
 
 /** Kopfzeile */
@@ -973,7 +973,7 @@ onOpenTriketon?.(payload);
 
 
 
-          // 🔍 TRIKETON OVERLAY DEBUG — BEGIN
+          // 🔍 TRIKETON OVERLAY DEBUG - BEGIN
           console.group("[TriketonOverlay] open");
           console.log("raw msg:", msg);
           console.log("msg.triketon:", (msg as any)?.triketon);
@@ -983,7 +983,7 @@ onOpenTriketon?.(payload);
           console.log("final payload:", payload);
           console.log("payload.triketon:", payload.triketon);
           console.groupEnd();
-          // 🔍 TRIKETON OVERLAY DEBUG — END
+          // 🔍 TRIKETON OVERLAY DEBUG - END
 
           onOpenTriketon?.(payload);
 
@@ -1067,7 +1067,7 @@ function Conversation({
   );
 }
 
-/** Eingabedock — unterstützt "flow" (im Layoutfluss) und "fixed" (schwebend) */
+/** Eingabedock - unterstützt "flow" (im Layoutfluss) und "fixed" (schwebend) */
 function InputDock({
   tokens,
   isMobile,
@@ -1174,7 +1174,7 @@ function InputDock({
 
 
 /* =======================================================================
-   [ANCHOR:BEHAVIOR] — Chatlogik (Azure OpenAI)
+   [ANCHOR:BEHAVIOR] - Chatlogik (Azure OpenAI)
    ======================================================================= */
 
 export default function Page2() {
@@ -1308,7 +1308,7 @@ useEffect(() => {
 }, []);
 //// === EINFÜGEN ENDE ======================================================
  
-// Initial Scroll "Unlock" — stabiler (double rAF) + Reflow-Nudge
+// Initial Scroll "Unlock" - stabiler (double rAF) + Reflow-Nudge
 useEffect(() => {
   const el = convoRef.current as HTMLDivElement | null;
   if (!el) return;
@@ -1361,7 +1361,7 @@ const onClearChat = React.useCallback(() => {
   }
 }, []);
 
-// Autosave — pausiert, wenn gerade "Clear" läuft"
+// Autosave - pausiert, wenn gerade "Clear" läuft"
 useEffect(() => {
   if (clearingRef.current) return;
   if (Array.isArray(messages)) {
@@ -1551,7 +1551,7 @@ useEffect(() => {
 const PRICE_1M = process.env.NEXT_PUBLIC_STRIPE_PRICE_1M as string | undefined;
 
 
-// (entfernt) — lokaler Persistenzblock wurde gestrichen
+// (entfernt) - lokaler Persistenzblock wurde gestrichen
 // Persistenz läuft zentral über lib/chatStorage.ts  → siehe persist.* oben
 // … weiterer Code …
 
@@ -1908,13 +1908,13 @@ const systemSay = useCallback((content: string, opts?: { gc?: boolean }) => {
 
   // Footer-Status (nur Anzeige in der Statusleiste, keine Bubble)
 const [footerStatus, setFooterStatus] = useState<{ modeLabel: string; expertLabel: string }>({
-  modeLabel: "—",
-  expertLabel: "—",
+  modeLabel: "-",
+  expertLabel: "-",
 });
 
 
   // ===============================================================
-// BRIDGE — Saeule → Chat (Event → echte Nachricht)
+// BRIDGE - Saeule → Chat (Event → echte Nachricht)
 // ===============================================================
 useEffect(() => {
   const onSystem = (e: Event) => {
@@ -1974,7 +1974,7 @@ if (busy) {
 }
 
 
-    // 3) Falls eine Antwort signalisiert wird (reply/info), Puls AUS — auch wenn kein Text kommt
+    // 3) Falls eine Antwort signalisiert wird (reply/info), Puls AUS - auch wenn kein Text kommt
     if (kind === "reply" || kind === "info") {
       try { setLoading(false); } catch {}
     }
@@ -2690,7 +2690,7 @@ setMessages((prev) => {
 
 
   /* =====================================================================
-   [ANCHOR:LAYOUT] — Bühne, Container, Radial-Hintergrund
+   [ANCHOR:LAYOUT] - Bühne, Container, Radial-Hintergrund
    ===================================================================== */
 
 // Mobile Overlay

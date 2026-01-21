@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# macOS — One-Command: staging → main (PR/Auto-Merge) → deploy origin/main → prod
+# macOS - One-Command: staging → main (PR/Auto-Merge) → deploy origin/main → prod
 # Judges-approved Masterplan (Palantir/Complexity/Colossus)
 set -euo pipefail
 

@@ -1,6 +1,6 @@
 // lib/keywordExtract.ts
 // GPTM-Galaxy+ · m-pathy Archive + Verification System
-// Keyword Extraction — Final Gate Pipeline (13 languages, deterministic)
+// Keyword Extraction - Final Gate Pipeline (13 languages, deterministic)
 
 import { TArchiveEntry } from './types'
 
@@ -230,7 +230,7 @@ const text = normalize(
     // Gate 3: courtesy/smalltalk (token + phrase)
     if (courtesy.has(w) || (next && courtesy.has(next)) || courtesy.has(phrase)) continue
 
-    // Gate 4: request/intent (token + phrase) — removes “gib mir”, “antworte”, “zeige”, etc.
+    // Gate 4: request/intent (token + phrase) - removes “gib mir”, “antworte”, “zeige”, etc.
     if (requests.has(w) || (next && requests.has(next)) || requests.has(phrase)) continue
 
     // Gate 5: pronoun-leading (phrase start)

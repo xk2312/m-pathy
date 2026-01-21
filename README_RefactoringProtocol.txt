@@ -1,4 +1,4 @@
-# README — Refactoring Protocol (Canonical)
+# README - Refactoring Protocol (Canonical)
 
 MODE: Standard · Team-wide · Reproducible · Junior-safe
 GOAL: Sichere, deterministische und driftfreie Refactorings in komplexen Systemen

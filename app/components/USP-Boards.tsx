@@ -11,7 +11,7 @@ import {
 } from "recharts";
 
 /** 
- * USP Board — Standalone TSX (pretty UI + animated radar grid)
+ * USP Board - Standalone TSX (pretty UI + animated radar grid)
  * - No shadcn/ui or icon libs needed
  * - Crisp dark cards, tabs, buttons
  * - High-contrast toggle (H)

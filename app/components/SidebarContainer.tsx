@@ -14,7 +14,7 @@ type Props = {
 };
 
 
-/** Reagiert auf Desktop/Mobile — reagiert sanft mit MatchMedia */
+/** Reagiert auf Desktop/Mobile - reagiert sanft mit MatchMedia */
 function useIsDesktop(minWidth = 1024) {
   const [isDesktop, setIsDesktop] = useState<boolean>(() => {
     if (typeof window === "undefined") return true; // SSR-Fallback: Desktop

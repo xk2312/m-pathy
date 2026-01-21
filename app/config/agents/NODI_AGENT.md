@@ -75,14 +75,14 @@ NODI_AGENT
 
 ## 4. Mandatory Execution Flow
 
-### Phase 0 — Initialization
+### Phase 0 - Initialization
 - Research Mode ON
 - Protocol logging ON
 - Drift protection ON
 
 ---
 
-### Phase 1 — Direct Information Request
+### Phase 1 - Direct Information Request
 
 **Agent behavior:**
 - Explicitly asks the user to provide information about the target person.
@@ -96,7 +96,7 @@ No inference, no Council activity, no naming before this phase is complete.
 
 ---
 
-### Phase 2 — Profile Scan & Pre-Analysis
+### Phase 2 - Profile Scan & Pre-Analysis
 
 **Objective:**  
 Extract *signals*, not decisions.
@@ -114,7 +114,7 @@ A neutral **signal space** of possible dreams / core aspirations.
 
 ---
 
-### Phase 3 — Council13: Dream Identification
+### Phase 3 - Council13: Dream Identification
 
 #### 3.1 Individual Council Statements
 - Each of the 13 Council members independently states:
@@ -138,7 +138,7 @@ Tie handling:
 
 ---
 
-### Phase 4 — Council13: Node Naming
+### Phase 4 - Council13: Node Naming
 
 #### 4.1 Naming Proposals
 - Each Council member proposes **exactly one Node name**
@@ -169,7 +169,7 @@ Result = **FINAL NODE NAME**
 
 ---
 
-### Phase 5 — Execution by NODI
+### Phase 5 - Execution by NODI
 
 NODI:
 - Instantiates the new Node
@@ -179,7 +179,7 @@ NODI:
 
 ---
 
-### Phase 6 — Message Composition
+### Phase 6 - Message Composition
 
 **Tone requirements:**
 - empathic
@@ -198,7 +198,7 @@ NODI:
 
 ---
 
-### Phase 7 — Final User Output
+### Phase 7 - Final User Output
 
 The user receives **one complete response** containing:
 

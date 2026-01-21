@@ -1,5 +1,5 @@
 -- ============================================================
--- 001_init_ledger.sql  (GPTM-Galaxy+ Payment v1 — Core Schema)
+-- 001_init_ledger.sql  (GPTM-Galaxy+ Payment v1 - Core Schema)
 -- Idempotent-ish: erstellt fehlende Objekte; doppelte Events gesperrt.
 -- ============================================================
 

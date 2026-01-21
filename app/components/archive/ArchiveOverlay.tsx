@@ -114,7 +114,7 @@ function flattenI18n(obj: any, prefix = ''): Record<string, string> {
 
 /**
  * ============================================================
- * ARCHIVE OVERLAY — FULL RESET (FIXED)
+ * ARCHIVE OVERLAY - FULL RESET (FIXED)
  * ============================================================
  *
  * - Full sovereign system space (no dim-layer tricks)
@@ -317,7 +317,7 @@ function onVerifySuccess() {
 }, [])
 
 /* -------------------------------------------------------------- */
-/* REPORTS REFRESH — TRIGGER ON MODE CHANGE                        */
+/* REPORTS REFRESH - TRIGGER ON MODE CHANGE                        */
 /* -------------------------------------------------------------- */
 useEffect(() => {
   if (mode === 'reports') {
@@ -416,7 +416,7 @@ useEffect(() => {
 
   return (
     /* ============================================================ */
-    /* SYSTEM SPACE — FULL TAKEOVER                                  */
+    /* SYSTEM SPACE - FULL TAKEOVER                                  */
     /* ============================================================ */
 <div
   className="
@@ -457,7 +457,7 @@ useEffect(() => {
   )}
 
       {/* ========================================================== */}
-{/* CONTENT FRAME — FULL BLEED                                 */}
+{/* CONTENT FRAME - FULL BLEED                                 */}
 {/* ========================================================== */}
 <div className="w-full h-full flex flex-col">
 
@@ -474,7 +474,7 @@ useEffect(() => {
   >
 
 {/* ====================================================== */}
-{/* HEADER — ORIENTATION                                   */}
+{/* HEADER - ORIENTATION                                   */}
 {/* ====================================================== */}
 <header
   className="
@@ -534,7 +534,7 @@ useEffect(() => {
       >
 {t("archive.selectionStatus").replace('{{count}}', String(selection.length))}      </div>
 
-      {/* VERIFY — unverändert */}
+      {/* VERIFY - unverändert */}
       <button
         type="button"
         onClick={() => {
@@ -732,14 +732,14 @@ className="
 {/* ====================================================== */}
 <div className="flex-1 overflow-y-auto mt-[15px]">
 
-  {/* REPORTS ROOT — ALWAYS OVERVIEW */}
+  {/* REPORTS ROOT - ALWAYS OVERVIEW */}
   {mode === 'reports' && (
     <div className="reports-root">
       <ReportList />
     </div>
   )}
 
-  {/* CHAT ROOT — INDEPENDENT */}
+  {/* CHAT ROOT - INDEPENDENT */}
   {mode === 'chat' && (
     <div className="chat-root">
       {(() => {

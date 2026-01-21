@@ -1,5 +1,5 @@
 /* ======================================================================
-   FILE INDEX — storage.ts
+   FILE INDEX - storage.ts
    MODE: GranularFileIndexDeveloper · CodeForensik
    SCOPE: LOCAL / SESSION STORAGE · ARCHIVE ↔ CHAT BRIDGE
    STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)

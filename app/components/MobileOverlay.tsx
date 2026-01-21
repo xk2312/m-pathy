@@ -1,5 +1,5 @@
 /* ======================================================================
-FILE INDEX — MobileOverlay.tsx
+FILE INDEX - MobileOverlay.tsx
 Zweck: Mobiles Drawer-Overlay für Saeule (Modes, Experts, Actions)
 Kontext: Mobile Navigation / Archiv-Zugriff / Overlay-Schließlogik
 

@@ -1,6 +1,6 @@
 // components/archive/ArchiveSearch.tsx
 // GPTM-Galaxy+ · m-pathy Archive + Verification System v5
-// Archive Search — logic only (MEFL)
+// Archive Search - logic only (MEFL)
 
 import { readLS } from '@/lib/storage'
 import { limitNodes } from '@/lib/performance'

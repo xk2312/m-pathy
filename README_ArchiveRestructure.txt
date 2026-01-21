@@ -1,4 +1,4 @@
-# README — Archive Restructure (Soll/Ist-Gesamtindex)
+# README - Archive Restructure (Soll/Ist-Gesamtindex)
 
 MODE: Research · Documentation · Planning ONLY
 SCOPE: ARCHIVE Overlay (Chat / Reports)
@@ -6,23 +6,23 @@ STATUS: Konsolidierter Gesamt-Index auf Basis von 8 Dateien
 
 ---
 
-## 1. Referenz — KANONISCHER SOLLZUSTAND (bindend)
+## 1. Referenz - KANONISCHER SOLLZUSTAND (bindend)
 
-### EBENE 0 — FIX (immer sichtbar)
+### EBENE 0 - FIX (immer sichtbar)
 
 * Titel: **ARCHIVE** (immer oben)
 * Erklärungstext unter dem Titel (immer sichtbar)
 * Suchschlitz (konstante Position, Höhe, Abstände)
 * Close-X (logisch dem ARCHIVE zugeordnet)
 
-### EBENE 1 — MODE-SWITCH (immer sichtbar)
+### EBENE 1 - MODE-SWITCH (immer sichtbar)
 
 * Horizontaler Switch: **[ CHAT ] [ REPORTS ]**
 * Startzustand: CHAT aktiv
 * Umschalten nur per Klick
 * Umschalten beeinflusst **ausschließlich EBENE 2**
 
-### EBENE 2 — INHALT (modusabhängig)
+### EBENE 2 - INHALT (modusabhängig)
 
 * **CHAT**:
 
@@ -59,7 +59,7 @@ STATUS: Konsolidierter Gesamt-Index auf Basis von 8 Dateien
 
 ## 3. Konsolidierte Ist–Soll-Deltas (systemisch)
 
-### ΔA — Fehlende explizite EBENE-1-Mode-Switch-Struktur
+### ΔA - Fehlende explizite EBENE-1-Mode-Switch-Struktur
 
 **Beobachtung (IST):**
 
@@ -72,7 +72,7 @@ STATUS: Konsolidierter Gesamt-Index auf Basis von 8 Dateien
 
 ---
 
-### ΔB — Vermischung von Modus und Unterzustand
+### ΔB - Vermischung von Modus und Unterzustand
 
 **Beobachtung (IST):**
 
@@ -86,7 +86,7 @@ STATUS: Konsolidierter Gesamt-Index auf Basis von 8 Dateien
 
 ---
 
-### ΔC — REPORTS ist nicht strikt isoliert
+### ΔC - REPORTS ist nicht strikt isoliert
 
 **Beobachtung (IST):**
 
@@ -100,7 +100,7 @@ STATUS: Konsolidierter Gesamt-Index auf Basis von 8 Dateien
 
 ---
 
-### ΔD — REPORTS-Umfang überschreitet „Overview“
+### ΔD - REPORTS-Umfang überschreitet „Overview“
 
 **Beobachtung (IST):**
 
@@ -118,7 +118,7 @@ STATUS: Konsolidierter Gesamt-Index auf Basis von 8 Dateien
 
 ---
 
-### ΔE — Verschachtelte Overlays im ARCHIVE
+### ΔE - Verschachtelte Overlays im ARCHIVE
 
 **Beobachtung (IST):**
 
@@ -132,7 +132,7 @@ STATUS: Konsolidierter Gesamt-Index auf Basis von 8 Dateien
 
 ---
 
-### ΔF — Event-getriebene statt kanonische Mode-Steuerung
+### ΔF - Event-getriebene statt kanonische Mode-Steuerung
 
 **Beobachtung (IST):**
 
@@ -145,7 +145,7 @@ STATUS: Konsolidierter Gesamt-Index auf Basis von 8 Dateien
 
 ---
 
-### ΔG — Semantische Vermischung auf Typ- & i18n-Ebene
+### ΔG - Semantische Vermischung auf Typ- & i18n-Ebene
 
 **Beobachtung (IST):**
 
@@ -175,14 +175,14 @@ STATUS: Konsolidierter Gesamt-Index auf Basis von 8 Dateien
 
 ---
 
-## 6. Patchplan — Sequenziell (Planung only, kein Code)
+## 6. Patchplan - Sequenziell (Planung only, kein Code)
 
 MODE: Planning · MEFL · Ein Pfad
 ZIEL: Ist → Kanonischer Sollzustand (ARCHIVE Overlay)
 
 ---
 
-### PATCH 1 — Einführung expliziter EBENE‑1‑Mode‑Switch‑Logik
+### PATCH 1 - Einführung expliziter EBENE‑1‑Mode‑Switch‑Logik
 
 **Ziel:** Klare Trennung von EBENE 1 (CHAT | REPORTS) und EBENE 2
 
@@ -203,7 +203,7 @@ ZIEL: Ist → Kanonischer Sollzustand (ARCHIVE Overlay)
 
 ---
 
-### PATCH 2 — Modellierung von CHAT‑Unterzuständen
+### PATCH 2 - Modellierung von CHAT‑Unterzuständen
 
 **Ziel:** Trennung von Modus (CHAT) und Unterzuständen (Recent | Detail | Search)
 
@@ -223,7 +223,7 @@ ZIEL: Ist → Kanonischer Sollzustand (ARCHIVE Overlay)
 
 ---
 
-### PATCH 3 — EBENE‑0‑Invarianz erzwingen
+### PATCH 3 - EBENE‑0‑Invarianz erzwingen
 
 **Ziel:** Titel, Erklärung, Suchschlitz, Close‑X immer sichtbar
 
@@ -242,7 +242,7 @@ ZIEL: Ist → Kanonischer Sollzustand (ARCHIVE Overlay)
 
 ---
 
-### PATCH 4 — REPORTS strikt isolieren (UI)
+### PATCH 4 - REPORTS strikt isolieren (UI)
 
 **Ziel:** REPORTS enthält ausschließlich Reports Overview
 
@@ -263,7 +263,7 @@ ZIEL: Ist → Kanonischer Sollzustand (ARCHIVE Overlay)
 
 ---
 
-### PATCH 5 — REPORTS‑Detailansichten entkoppeln
+### PATCH 5 - REPORTS‑Detailansichten entkoppeln
 
 **Ziel:** Keine Sub‑Overlays im ARCHIVE
 
@@ -282,7 +282,7 @@ ZIEL: Ist → Kanonischer Sollzustand (ARCHIVE Overlay)
 
 ---
 
-### PATCH 6 — Verify‑Flow: expliziter Mode‑Übergang
+### PATCH 6 - Verify‑Flow: expliziter Mode‑Übergang
 
 **Ziel:** Deterministischer Übergang CHAT → REPORTS
 
@@ -302,7 +302,7 @@ ZIEL: Ist → Kanonischer Sollzustand (ARCHIVE Overlay)
 
 ---
 
-### PATCH 7 — Semantische Trennung auf Typ‑Ebene (Vorbereitung)
+### PATCH 7 - Semantische Trennung auf Typ‑Ebene (Vorbereitung)
 
 **Ziel:** Klarere CHAT/REPORTS‑Grenzen
 
@@ -321,7 +321,7 @@ ZIEL: Ist → Kanonischer Sollzustand (ARCHIVE Overlay)
 
 ---
 
-### PATCH 8 — i18n‑Abgleich zur Ebenen‑Struktur
+### PATCH 8 - i18n‑Abgleich zur Ebenen‑Struktur
 
 **Ziel:** Sprachlich explizite EBENE‑0/1/2‑Abbildung
 
@@ -352,4 +352,4 @@ Der Patchplan ist abgeschlossen, wenn:
 
 ---
 
-**Ende des Patchplans — kein Code enthalten**
+**Ende des Patchplans - kein Code enthalten**

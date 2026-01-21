@@ -1,6 +1,6 @@
 /***
  * =========================================================
- *  M — GLOBAL.CSS MASTER INDEX (Root-Level Stylesheet)
+ *  M - GLOBAL.CSS MASTER INDEX (Root-Level Stylesheet)
  * =========================================================
  *
  *  INDEX (Sprunganker):
@@ -1090,7 +1090,7 @@ div[data-convo="1"] { scrollbar-color: rgba(255,255,255,0.25) transparent;
   padding: var(--sub-card-inner-padding, 13px);
 }
 /* ─────────────────────────────────────────────
-   FOOTER — LAYOUT + STRUCTURE (Spoty Refined)
+   FOOTER - LAYOUT + STRUCTURE (Spoty Refined)
    ───────────────────────────────────────────── */
 .footer-root {
   width: 100%;

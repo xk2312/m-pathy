@@ -1,4 +1,4 @@
-# **m-pathy Archive Overlay — README**
+# **m-pathy Archive Overlay - README**
 
 **Version:** v1.1
 **Status:** Canonical · Living Document
@@ -48,7 +48,7 @@ Es gibt:
 
 ## 3. Räume (Overlay-Architektur)
 
-### 3.1 Archive Overlay — Auswahlraum
+### 3.1 Archive Overlay - Auswahlraum
 
 * Einstieg über **Archiv-Button in der Säule**
 * Zustände:
@@ -65,7 +65,7 @@ Hier wird **nur ausgewählt**.
 
 ---
 
-### 3.2 Chat Read Overlay — Leseraum
+### 3.2 Chat Read Overlay - Leseraum
 
 * Öffnet sich **über** dem Archive Overlay
 * Zeigt:
@@ -82,7 +82,7 @@ Auch hier gilt:
 
 ---
 
-### 3.3 Selection & Action Container — Entscheidungsraum
+### 3.3 Selection & Action Container - Entscheidungsraum
 
 * **Ein einziger globaler Container**
 * Sticky, sichtbar ab **mindestens 1 ausgewähltem Paar**
@@ -139,7 +139,7 @@ Er ist der **Übergabepunkt zwischen Auswahl und Intent**.
 
 ---
 
-## 5. Sammelcontainer — Verhalten
+## 5. Sammelcontainer - Verhalten
 
 ### Eigenschaften
 
@@ -272,7 +272,7 @@ Danach gelten **exakt dieselben Regeln** wie bei Einzelpaaren.
 
 ---
 
-## 10. Keywords — semantische Rolle
+## 10. Keywords - semantische Rolle
 
 * Keywords sind **Bedeutungsträger**
 * Sie repräsentieren:
@@ -303,7 +303,7 @@ Klick geht **immer auf das Nachrichtenpaar**, niemals auf das Keyword.
 
 ---
 
-## 12. i18n — Kanonische Quelle
+## 12. i18n - Kanonische Quelle
 
 ### Quelle
 
@@ -357,7 +357,7 @@ Gut. Ich spiegel **präzise**, **nüchtern** und **verwertbar** zurück – und 
 
 ---
 
-## 📌 **ADDENDUM — Archive Overlay UI & Interaction Constraints (v1.2)**
+## 📌 **ADDENDUM - Archive Overlay UI & Interaction Constraints (v1.2)**
 
 **Zweck dieses Zusatzes:**
 Fixierung aller **UI-, Layout- und Interaction-Invarianten**, die im aktuellen Implementierungszyklus sichtbar verletzt wurden, damit sie **nicht erneut diskutiert oder missverstanden** werden.
@@ -539,7 +539,7 @@ Wenn eines der folgenden Symptome auftritt, ist **sofort zu stoppen**:
 
 ---
 
-# 📄 **README-ADDENDUM — Prompt Gating & Overlay Ownership (v1.3)**
+# 📄 **README-ADDENDUM - Prompt Gating & Overlay Ownership (v1.3)**
 
 > **Dieses Addendum ist verpflichtend.**
 > Es beschreibt das Wissen, das wir gerade schmerzhaft gelernt haben – und verhindert, dass genau dieser Fehler je wieder passiert.
@@ -706,7 +706,7 @@ Wenn eine Antwort **Nein** ist → **STOP**.
 
 ---
 
-@Inventus — Erweiterung für readme.archive.txt
+@Inventus - Erweiterung für readme.archive.txt
 
 Zweck: Lückenlose Dokumentation dessen, was in diesem Chat real passiert ist (nicht was intendiert war)
 

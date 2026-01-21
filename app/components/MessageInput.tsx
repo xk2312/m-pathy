@@ -44,11 +44,11 @@ export default function MessageInput({
     []
   );
 
-  /* 5.3 — Plus-Menü State (nur Mobile sichtbar) */
+  /* 5.3 - Plus-Menü State (nur Mobile sichtbar) */
   const [toolsOpen, setToolsOpen] = useState(false);
   const toolsRef = useRef<HTMLDivElement | null>(null);
 
-  /* 5.3 — Click-Outside schließt das Menü */
+  /* 5.3 - Click-Outside schließt das Menü */
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
       if (!toolsOpen) return;
@@ -458,7 +458,7 @@ export default function MessageInput({
   );
 }
 
-/* —— kleine, wiederverwendbare Styles —— */
+/* -- kleine, wiederverwendbare Styles -- */
 const toolBtnStyle: React.CSSProperties = {
   height: 44,
   minWidth: 44,

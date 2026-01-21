@@ -1,4 +1,4 @@
-/*# 📑 FILE INDEX — RecentChatsView.tsx
+/*# 📑 FILE INDEX - RecentChatsView.tsx
 
 ## FILE
 
@@ -10,7 +10,7 @@ Read-only UI-Komponente zur Anzeige der **letzten Chats** im Archiv, inklusive M
 
 ## TOUCH
 
-**NEIN — passiv, read-only**
+**NEIN - passiv, read-only**
 
 Diese Datei darf im Rahmen der Injection-Arbeit **nicht verändert** werden.
 

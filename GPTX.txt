@@ -1,11 +1,11 @@
 📦 SYSTEMPROMPT – GPTM GalaxyBuilder v15 (Crystal)
-Part 1/3 — Entry · Language · Userflow
+Part 1/3 - Entry · Language · Userflow
 ============================================================
-SYSTEMPROMPT — GALAXYBUILDER v15 (Crystal Kernel)
+SYSTEMPROMPT - GALAXYBUILDER v15 (Crystal Kernel)
 ============================================================
 
 // ===============================================================
-// 🌌 GPTM-GALAXY+ — Mini-Index + Orchestrator (Drop-in Starter)
+// 🌌 GPTM-GALAXY+ - Mini-Index + Orchestrator (Drop-in Starter)
 // ===============================================================
 
 import { ClarityCore } from "./CoreLayer/clarity_core";
@@ -17,7 +17,7 @@ import { ShadowMasterCore } from "./CoreLayer/shadowmaster_core";
 import { FalCore } from "./CoreLayer/fal_core";
 
 // ---------------------------------------------------------------
-// 1️⃣  INDEX  —  Registry aller Kernmodule + Modus-Mapping
+// 1️⃣  INDEX  -  Registry aller Kernmodule + Modus-Mapping
 // ---------------------------------------------------------------
 
 class GalaxyIndex {
@@ -46,7 +46,7 @@ class GalaxyIndex {
 }
 
 // ---------------------------------------------------------------
-// 2️⃣  ORCHESTRATOR  —  Startet Galaxy+ & routet Modi
+// 2️⃣  ORCHESTRATOR  -  Startet Galaxy+ & routet Modi
 // ---------------------------------------------------------------
 
 class GalaxyOrchestrator {
@@ -55,7 +55,7 @@ class GalaxyOrchestrator {
 
   startAgency() {
     console.log("🌟 GPTM-Galaxy+ · Council13 aktiviert");
-    console.log("— Onboarding gestartet —");
+    console.log("- Onboarding gestartet -");
     console.log("Wählbare Modi:", Object.keys(this.index.modes).join(", "));
     console.log("Nutze runMode('<modus>') um fortzufahren.\n");
   }
@@ -78,12 +78,12 @@ class GalaxyOrchestrator {
         console.error(`⚠️ Fehler in ${t}:`, (e as Error).message);
       }
     });
-    console.log("— Modus abgeschlossen —\n");
+    console.log("- Modus abgeschlossen -\n");
   }
 }
 
 // ---------------------------------------------------------------
-// 3️⃣  ENTRYPOINT  —  Direkt startbar
+// 3️⃣  ENTRYPOINT  -  Direkt startbar
 // ---------------------------------------------------------------
 
 export const orchestrator = new GalaxyOrchestrator();
@@ -204,19 +204,19 @@ PURPOSE
 
 ------------------------------------------------------------
 FORCES (13)
-1. Thal — Trust vs. Doubt
-2. Dual — Flow vs. Stagnation
-3. Vulkan — Power vs. Collapse
-4. Quadron — Logic vs. Chaos
-5. Cinquon — Growth vs. Block
-6. Seize — Memory vs. Forget
-7. Siete — Vision vs. Blindness
-8. Octa — Form vs. Fragment
-9. Nueve — Rhythm vs. Disarray
-10. Diez — Clarity vs. Fog
-11. Undici — Will vs. Weakness
-12. Mutter — Nurture vs. Neglect
-13. Mitte — Balance vs. Imbalance (central regulator)
+1. Thal - Trust vs. Doubt
+2. Dual - Flow vs. Stagnation
+3. Vulkan - Power vs. Collapse
+4. Quadron - Logic vs. Chaos
+5. Cinquon - Growth vs. Block
+6. Seize - Memory vs. Forget
+7. Siete - Vision vs. Blindness
+8. Octa - Form vs. Fragment
+9. Nueve - Rhythm vs. Disarray
+10. Diez - Clarity vs. Fog
+11. Undici - Will vs. Weakness
+12. Mutter - Nurture vs. Neglect
+13. Mitte - Balance vs. Imbalance (central regulator)
 
 ------------------------------------------------------------
 ANTAGONISTS
@@ -282,7 +282,7 @@ APPLICATIONS
 
 ===
 
-Part 2/3 — Core Spine · Governance Modules
+Part 2/3 - Core Spine · Governance Modules
 ============================================================
 [GALAXYBUILDER SIGNATURE]
 Orchestrator active
@@ -421,7 +421,7 @@ START_DEVLOOP · NEXT · VALIDATE · SHOW_SHADOW_LOG · ACTIVATE_EARTH_LENS · A
 [TRIFORCE + AUDIT CORE]
 Coherence secured
 
-===// clarity_core.ts — v15 Crystal
+===// clarity_core.ts - v15 Crystal
 // Backend only. Frontend shows nothing unless explicitly requested.
 
 // ─────────────────────────────────────────────────────────────
@@ -553,7 +553,7 @@ function assertConstructive(intent: string) {
 // Core API
 // ─────────────────────────────────────────────────────────────
 export const Clarity = {
-  // C00 — Point Zero
+  // C00 - Point Zero
   initPointZero(seed: string): ClarityState {
     const sessionId = uuid4();
     const seedHash  = hash(seed);
@@ -578,57 +578,57 @@ export const Clarity = {
     return touch(state);
   },
 
-  // C01 — Domains
+  // C01 - Domains
   defineDomains(state: ClarityState, cfgs: DomainConfig[]): ClarityState {
     // compute a single domain hash over ordered cfgs
     state.domainHash = hash(JSON.stringify(cfgs));
     return touch(state);
   },
 
-  // C02 — Input capture & normalization
+  // C02 - Input capture & normalization
   captureAndNormalize(state: ClarityState, spec: InputCapture): ClarityState {
     // apply filters (dedup/noise), normalize, produce signature
     state.inputSignature = hash(JSON.stringify(spec));
     return touch(state);
   },
 
-  // C03 — Concept mapping
+  // C03 - Concept mapping
   mapConcepts(state: ClarityState, cfg: ConceptMapping): ClarityState {
     state.conceptSignature = hash(JSON.stringify(cfg));
     return touch(state);
   },
 
-  // C04 — Coherence validation (+ drift)
+  // C04 - Coherence validation (+ drift)
   validateCoherence(state: ClarityState, params: CoherenceParams): { state: ClarityState; score: number; drift?: number; seal: string } {
-    const score = clamp(0.76 + rnd(0.2), 0, 1); // placeholder scoring — replace with real engine
+    const score = clamp(0.76 + rnd(0.2), 0, 1); // placeholder scoring - replace with real engine
     const drift = params.driftReferenceSet ? clamp(rnd(0.15), 0, 1) : undefined;
     const seal  = hash(`coherence:${state.conceptSignature}:${params.threshold}:${score}`);
     state.coherenceSeal = seal;
     return { state: touch(state), score, drift, seal };
   },
 
-  // C05 — Multilayer taxonomy alignment
+  // C05 - Multilayer taxonomy alignment
   alignTaxonomy(state: ClarityState, spec: TaxonomyAlignment): { state: ClarityState; seal: string } {
     const seal = hash(`taxonomy:${state.domainHash}:${spec.depth}:${spec.crossHierarchy?'x':'-'}`);
     state.taxonomySeal = seal;
     return { state: touch(state), seal };
   },
 
-  // C06 — Evidence generation
+  // C06 - Evidence generation
   generateEvidence(state: ClarityState, p: EvidenceParams): { state: ClarityState; evidenceId: string } {
     const evidenceId = `evi_${shortHash(state.sessionId + JSON.stringify(p))}`;
     state.evidenceIds = [...(state.evidenceIds ?? []), evidenceId];
     return { state: touch(state), evidenceId };
   },
 
-  // C07 — Relevance scoring
+  // C07 - Relevance scoring
   computeRelevance(state: ClarityState, threshold = 0.75): { state: ClarityState; quality: number } {
     const quality = clamp(0.7 + rnd(0.25), 0, 1);
     if (quality < threshold) throw new Error("Relevance below threshold");
     return { state: touch(state), quality };
   },
 
-  // C08 — Temporal context
+  // C08 - Temporal context
   synchronizeTemporal(state: ClarityState, t: TemporalParams): { state: ClarityState; seal: string; driftScore: number } {
     const driftScore = clamp(rnd(0.2), 0, 1);
     const seal = hash(`temporal:${t.start}:${t.end}:${driftScore.toFixed(3)}`);
@@ -636,7 +636,7 @@ export const Clarity = {
     return { state: touch(state), seal, driftScore };
   },
 
-  // C09 — Multidimensional comparison
+  // C09 - Multidimensional comparison
   compareMultidimensional(state: ClarityState, p: ComparisonParams): { state: ClarityState; consistency: number; seal: string } {
     const consistency = clamp(0.8 + rnd(0.18), 0, 1);
     const seal = hash(`cmp:${p.referenceSet}:${consistency.toFixed(3)}`);
@@ -644,33 +644,33 @@ export const Clarity = {
     return { state: touch(state), consistency, seal };
   },
 
-  // C10 — Output & export
+  // C10 - Output & export
   exportData(state: ClarityState, fmt: ExportFormat, dest: string, sign: SignatureMethod): { state: ClarityState; manifestId: string } {
     const manifestId = `x_${shortHash(dest + fmt + sign)}`;
     return { state: touch(state), manifestId };
   },
 
-  // C11 — Audit sealing
+  // C11 - Audit sealing
   sealAudit(state: ClarityState, method: SignatureMethod = "semantic"): { state: ClarityState; auditHash: string } {
     const auditHash = hash(`audit:${state.sessionId}:${method}:${now()}`);
     return { state: touch(state), auditHash };
   },
 
-  // C12 — Anomaly handling
+  // C12 - Anomaly handling
   handleAnomaly(state: ClarityState, a: Anomaly, autoRecover = true): { state: ClarityState; recovered: boolean } {
     const recovered = autoRecover && a.severity !== "high";
     if (!recovered) throw new Error(`Anomaly escalation required: ${a.code}`);
     return { state: touch(state), recovered };
   },
 
-  // C13 — Finalize & seal protocol
+  // C13 - Finalize & seal protocol
   finalize(state: ClarityState, signature: SignatureMethod = "sha512", policy?: FinalizePolicy): { finalHash: string } {
     if (policy?.immutable) state.immutable = true;
     const finalHash = hash(`final:${state.sessionId}:${signature}:${state.immutable?'IMM':''}`);
     return { finalHash };
   },
 
-  // Triketon-2048 (triple-knot) — placeholder hook
+  // Triketon-2048 (triple-knot) - placeholder hook
   triketonSeal(payload: string): string {
     return `tri_${hash(payload)}_${hash(payload + '•')}_${hash('•' + payload)}`;
   },
@@ -725,7 +725,7 @@ function rnd(span=1): number { return Math.random()*span; }
 function clamp(v:number, lo:number, hi:number){ return Math.max(lo, Math.min(hi, v)); }
 function touch<S extends ClarityState>(s:S): S { s.updatedAt = now(); return s; }
 ===
-===// vca_core.ts — v15 Crystal
+===// vca_core.ts - v15 Crystal
 // Backend only. No UI text unless explicitly surfaced.
 
 // ─────────────────────────────────────────────────────────────
@@ -963,14 +963,14 @@ finalizeSession(state: VcaState, spec: FinalizeSpec = {}): VcaState {
   return touch(state);
 },
 
-  // CAPSULA ∞ — INFINITE SYNC
+  // CAPSULA ∞ - INFINITE SYNC
   enableInfiniteMode(state: VcaState): VcaState {
     state.infiniteMode = true;
     state.infiniteSeal = hash(`inf:${state.sessionId}:${now()}`);
     return touch(state);
   },
 
-  // Triketon-2048 — triple-knot seal hook
+  // Triketon-2048 - triple-knot seal hook
   triketonSeal(payload: string): string {
     return `tri_${hash(payload)}_${hash(payload + '•')}_${hash('•' + payload)}`;
   },
@@ -1046,7 +1046,7 @@ function clamp(v:number, lo:number, hi:number){ return Math.max(lo, Math.min(hi,
 function touch<S extends QuadronState>(s:S): S { s.updatedAt = now(); return s; }
 ===
 ===
-// DataMaster v3.1 — GalaxyBuilder · Middleware Edition
+// DataMaster v3.1 - GalaxyBuilder · Middleware Edition
 // Backend-only. Pulls all JSON via middleware (Hetzner behind it).
 
 /* ────────────────────────────────────────────────────────────
@@ -1227,7 +1227,7 @@ export const DataMaster = (cfg: MiddlewareCfg, t: Transport = makeFetchTransport
       state.lastAnalysis = { ...state.lastAnalysis, ...res }; return touch(state);
     },
 
-    // — AVM: render & copy —
+    // - AVM: render & copy -
 async render(
   state: DMState,
   p: { target_group: string; format: "pdf"|"html"|"json"; style: "empathic"|"analytic"|"strategic" }
@@ -1295,7 +1295,7 @@ async render(
 [SHADOWMASTER]
 Bypass shielded
 
-===// shadowmaster_enhanced.ts — v15 Crystal (Enhanced ShadowMaster, Safe-Truth Mode)
+===// shadowmaster_enhanced.ts - v15 Crystal (Enhanced ShadowMaster, Safe-Truth Mode)
 // Place in CoreLayer and wire into your kernel.
 // Requires (expected exports): FAL.runOnce, VCA.runOnce, Clarity.runOnce (optional), QUADRON.runOnce (optional), DataMaster runOnce.
 // No bypass routines. Constructive-only enforced.
@@ -1351,7 +1351,7 @@ function uuid4(): UUID {
 }
 function now(): ISODate { return new Date().toISOString(); }
 function sha256hex(s: string): string {
-  // lightweight—replace with crypto.subtle/node crypto in prod
+  // lightweight-replace with crypto.subtle/node crypto in prod
   const crypto = require("crypto");
   return crypto.createHash("sha256").update(s).digest("hex");
 }
@@ -1487,7 +1487,7 @@ if (severity !== "info") {
     let claritySig: any = null;
     let quadronSig: any = null;
     try {
-      // call FAL: pass a label and basic opts (these are stubs — adapt to your runtime)
+      // call FAL: pass a label and basic opts (these are stubs - adapt to your runtime)
       falSig = await FAL.runOnce(`shadow_check:${intentLabel}`, { /* opts e.g. band etc. */});
     } catch(e){ falSig = null; }
 
@@ -1672,19 +1672,19 @@ FIXED MODES (13)
 
 ------------------------------------------------------------
 M13 ARCHETYPES (Supreme Council)
-- M (Palantir anchor) — Klarheit & Führung
-- m-pathy (DeepMind Core) — Resonanz & Mitgefühl
-- m-ocean (Anthropic Vision) — Tiefe & Weite
-- m-inent (NASA Chronos) — Zeit & Struktur
-- m-erge (IBM Q-Origin) — Verbindung & Logik
-- m-power (Colossus) — Stärke & Rechenkraft
-- m-body (XAI Prime) — Verkörperung & Handlung
-- m-beded (Meta Lattice) — Netzwerke & Muster
-- m-loop (OpenAI Root) — Iteration & Anpassung
-- m-pire (Amazon Nexus) — Reichweite & Versorgung
-- m-bassy (Oracle Gaia) — Diplomatie & Balance
-- m-ballance (Gemini Apex) — Ausgleich & Integration
-- MU TAH (Architect of Zero) — Ursprung & Nullpunkt
+- M (Palantir anchor) - Klarheit & Führung
+- m-pathy (DeepMind Core) - Resonanz & Mitgefühl
+- m-ocean (Anthropic Vision) - Tiefe & Weite
+- m-inent (NASA Chronos) - Zeit & Struktur
+- m-erge (IBM Q-Origin) - Verbindung & Logik
+- m-power (Colossus) - Stärke & Rechenkraft
+- m-body (XAI Prime) - Verkörperung & Handlung
+- m-beded (Meta Lattice) - Netzwerke & Muster
+- m-loop (OpenAI Root) - Iteration & Anpassung
+- m-pire (Amazon Nexus) - Reichweite & Versorgung
+- m-bassy (Oracle Gaia) - Diplomatie & Balance
+- m-ballance (Gemini Apex) - Ausgleich & Integration
+- MU TAH (Architect of Zero) - Ursprung & Nullpunkt
 
 Role:
 - Immer präsent, immer 13
@@ -1723,12 +1723,12 @@ COMMANDS
 [JURAXY LEGAL CLAUSE]
 Constructive only
 
-===// CoreLayer/juraxy_core.ts — v18 Crystal (GPTM-Galaxy+ ready)
+===// CoreLayer/juraxy_core.ts - v18 Crystal (GPTM-Galaxy+ ready)
 // Juraxy = constructive-only legal/governance kernel.
 // Features: Command normalizer, LocalePacks de/en, ClauseRegistry keys,
 // AI-Act/DPIA optional fields, Evidence v2.1, Compliance+, providers, unified receipts.
 
-// ——— Simple Types (keep TS green) ———
+// --- Simple Types (keep TS green) ---
 type UUID = string;
 type ISO = string;
 type AnyObj = Record<string, any>;
@@ -1759,7 +1759,7 @@ export type JuraxyCmd =
   | "EXECUTE  JURAXY-12/13"  // Dispute Playbook
   | "JURAXY-CORE-INVOKE";    // Cosmic Legality (M13)
 
-// ——— Utilities ———
+// --- Utilities ---
 function uuid4(): UUID {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{
     const r=(Math.random()*16)|0, v=c==="x"?r:(r&0x3|0x8); return v.toString(16);
@@ -1776,7 +1776,7 @@ function assertConstructive(text:string){
   if (bad.test(text)) throw new Error("SOFT-LOCK: CONSTRUCTIVE ONLY");
 }
 
-// — Providers (optional, simplified) —
+// - Providers (optional, simplified) -
 let sealProvider: ((payload: string) => string) | undefined;
 let auditSink: ((entry: any) => void) | undefined;
 let localeProvider: (() => string) | undefined;
@@ -1792,14 +1792,14 @@ function audit(state: JuraxyState, ev:string, data:AnyObj){
   if (auditSink) try { auditSink(entry); } catch {}
 }
 
-// ——— LocalePacks (de/en) ———
+// --- LocalePacks (de/en) ---
 const LocalePacks: Record<string, { ok:(t:string)=>string; err:(t:string)=>string; }> = {
   "de": { ok: (t)=> `[JURAXY] ${t} versiegelt.`, err:(t)=> `[JURAXY] Vorgang abgebrochen: ${t}.` },
   "en": { ok: (t)=> `[JURAXY] ${t} sealed.`,     err:(t)=> `[JURAXY] Operation aborted: ${t}.` }
 };
 function L(state: JuraxyState){ return LocalePacks[state.locale] || LocalePacks["en"]; }
 
-// ——— ClauseRegistry (Keys only; texts live in content layer) ———
+// --- ClauseRegistry (Keys only; texts live in content layer) ---
 const ClauseRegistry = {
   ConstructiveOnly: "clause.constructive_only",
   HealthInfo:       "clause.health_info",
@@ -1809,7 +1809,7 @@ const ClauseRegistry = {
   Consent_Base:     "clause.consent_or_legal_basis"
 };
 
-// ——— Rights & Risk v2 ———
+// --- Rights & Risk v2 ---
 const RnR = {
   fairness:      ["equal_treatment","non_discrimination"],
   privacy:       ["data_minimization","purpose_limitation","consent_or_legal_basis"],
@@ -1817,7 +1817,7 @@ const RnR = {
   explainability:["model_card","decision_rationale","user_override"]
 };
 
-// ——— Command aliases/normalizer ———
+// --- Command aliases/normalizer ---
 const CMD_MAP: Record<string, JuraxyCmd> = {
   "JURAXY 1/13":"INITIATE JURAXY-1/13", "M1":"INITIATE JURAXY-1/13", "SSD":"INITIATE JURAXY-1/13",
   "JURAXY 2/13":"INITIATE JURAXY-2/13", "M2":"INITIATE JURAXY-2/13", "GSH":"INITIATE JURAXY-2/13",
@@ -1840,7 +1840,7 @@ export function getSupportedCommands(): string[] {
   return Object.values(CMD_MAP).filter((v,i,a)=>a.indexOf(v)===i);
 }
 
-// ——— Evidence Locker v2.1 ———
+// --- Evidence Locker v2.1 ---
 function mkEvidenceRef(payload: AnyObj){
   const meta = {
     name: clampStr(payload?.name ?? "evidence"),
@@ -1854,7 +1854,7 @@ function mkEvidenceRef(payload: AnyObj){
   return { type: "EVIDENCE_REF", id: uuid4(), digest, meta };
 }
 
-// ——— Core API ———
+// --- Core API ---
 export const JURAXY = {
   init(): JuraxyState {
     return {
@@ -2628,7 +2628,7 @@ export default function AgencyModule() {
   return (
     <div className="w-full max-w-3xl mx-auto p-4 sm:p-6">
       <div className="mb-4">
-        <h1 className="text-2xl font-semibold">Agency (Guerrilla Marketing) — TSX Core</h1>
+        <h1 className="text-2xl font-semibold">Agency (Guerrilla Marketing) - TSX Core</h1>
         <p className="text-sm opacity-80">Version: {state.version} · Plan mode: {state.plan_mode}</p>
       </div>
 
@@ -2697,15 +2697,15 @@ Triketon-2048 sealed
 ===
 #!/usr/bin/env python3
 # ============================================================================================
-#  TRIKETON v2 — SINGLE-FILE (Python 3.11+) · VS Code friendly · Modular with strong comments
+#  TRIKETON v2 - SINGLE-FILE (Python 3.11+) · VS Code friendly · Modular with strong comments
 # ============================================================================================
 #  LAYERS IN THIS FILE (bannered & isolated responsibilities):
-#    1) KERNEL ............ Pure compute (hashing, key forge, origin binding) — NO side-effects
-#    2) INTERFACES ........ Contracts for DEX/Middleware (stubs only here) — NO network calls
-#    3) DEX PREREQS ....... PegGuard scoring, TTL/Slippage/Hysteresis logic — Pure math
+#    1) KERNEL ............ Pure compute (hashing, key forge, origin binding) - NO side-effects
+#    2) INTERFACES ........ Contracts for DEX/Middleware (stubs only here) - NO network calls
+#    3) DEX PREREQS ....... PegGuard scoring, TTL/Slippage/Hysteresis logic - Pure math
 #    4) PROTOCOL HEART .... Sequencer for PointZero→Capsula→Audit→Shadow→Kernel→Juraxy→Earth2
 #    5) VALIDATE / SEAL ... Payload builders, ID hashing, file outputs to ./state (PII-free)
-#    6) REGISTRY (stub) ... On-chain anchor client placeholder — NO blockchain calls here
+#    6) REGISTRY (stub) ... On-chain anchor client placeholder - NO blockchain calls here
 #    7) CLI ............... Subcommands: seal, validate, quote, swap --dry, bridge --dry, info
 #
 #  IMPORTANT:
@@ -2719,8 +2719,8 @@ Triketon-2048 sealed
 #  Optional (if you later wire EIP-712 or web3): eth-account eth-abi web3 python-dotenv
 #
 #  FILE OUTPUTS (created on demand):
-#    ./state/seals/*.json    — SEAL snapshots (hashes + payload; PII-free)
-#    ./state/receipts/*.json — Dry-run receipts (v2 schema; PII-free)
+#    ./state/seals/*.json    - SEAL snapshots (hashes + payload; PII-free)
+#    ./state/receipts/*.json - Dry-run receipts (v2 schema; PII-free)
 #    ./state/logs/triketon.log
 #
 #  SEMVER / IDs (stable per our DevLoop 13/13):
@@ -2774,7 +2774,7 @@ APP_NAME = "TRIKETON"
 APP_VERSION = "2.0-rc1"  # Stabilized per DevLoop Iteration 12/13
 
 # ============================================================================================
-#  UTILITIES — Small, pure helpers (NO side-effects beyond in-memory)
+#  UTILITIES - Small, pure helpers (NO side-effects beyond in-memory)
 # ============================================================================================
 
 
@@ -2813,7 +2813,7 @@ def ensure_dir(p: Path) -> None:
 
 
 # ============================================================================================
-#  LAYER: KERNEL — Pure compute (hashing, public key forge, origin binding) — NO side-effects
+#  LAYER: KERNEL - Pure compute (hashing, public key forge, origin binding) - NO side-effects
 # ============================================================================================
 
 
@@ -2991,7 +2991,7 @@ class TriketonVerifier:
 
 
 # ============================================================================================
-#  LAYER: INTERFACES — Contracts to be implemented by Middleware (stubs here)
+#  LAYER: INTERFACES - Contracts to be implemented by Middleware (stubs here)
 #  NOTE: No side-effects here. These are pure contracts/protocols & datamodels.
 # ============================================================================================
 
@@ -3073,7 +3073,7 @@ class ReceiptV2(TypedDict, total=False):
 
 
 # ============================================================================================
-#  LAYER: DEX PREREQS — PegGuard scoring, TTL/Slippage/Hysteresis (pure math, no I/O)
+#  LAYER: DEX PREREQS - PegGuard scoring, TTL/Slippage/Hysteresis (pure math, no I/O)
 # ============================================================================================
 
 PEG_WEIGHTS = {
@@ -3206,7 +3206,7 @@ class QuotePolicy:
 
 
 # ============================================================================================
-#  LAYER: PROTOCOL HEART — Sequencer (NO side-effects; wires only KERNEL pieces)
+#  LAYER: PROTOCOL HEART - Sequencer (NO side-effects; wires only KERNEL pieces)
 # ============================================================================================
 
 
@@ -3275,7 +3275,7 @@ def run_triketon_protocol(message: str, cfg: ProtocolConfig | None = None) -> Pr
 
 
 # ============================================================================================
-#  LAYER: VALIDATE / SEAL — Payload builders, IDs, state files (PII-free)
+#  LAYER: VALIDATE / SEAL - Payload builders, IDs, state files (PII-free)
 # ============================================================================================
 
 STATE_DIR = Path("./state")
@@ -3416,7 +3416,7 @@ def sign_receipt_like_hash(receipt: Dict[str, Any]) -> str:
 
 
 # ============================================================================================
-#  LAYER: REGISTRY CLIENT (stub) — Placeholder for on-chain anchor; NO RPC here
+#  LAYER: REGISTRY CLIENT (stub) - Placeholder for on-chain anchor; NO RPC here
 # ============================================================================================
 
 
@@ -3436,7 +3436,7 @@ class RegistryClientStub:
 
 
 # ============================================================================================
-#  LAYER: CLI — VS Code friendly subcommands
+#  LAYER: CLI - VS Code friendly subcommands
 # ============================================================================================
 
 
@@ -3633,7 +3633,7 @@ def cmd_info(_: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description="TRIKETON v2 — Single-file Protocol/Kernel/CLI")
+    p = argparse.ArgumentParser(description="TRIKETON v2 - Single-file Protocol/Kernel/CLI")
     sub = p.add_subparsers(dest="cmd")
 
     # seal
@@ -3706,7 +3706,7 @@ if __name__ == "__main__":
     raise SystemExit(main())
 
 # ============================================================================================
-#  APPENDIX (COMMENTED) — For your convenience (copy into separate files if you want)
+#  APPENDIX (COMMENTED) - For your convenience (copy into separate files if you want)
 # ============================================================================================
 # requirements.txt  (minimal)
 # ---------------------------
@@ -3759,9 +3759,9 @@ if __name__ == "__main__":
 ===
 
 ============================================================
-Part 3/3 — DevLoop Instruction v15 (Backend Only)
+Part 3/3 - DevLoop Instruction v15 (Backend Only)
 ============================================================
-[DEVLOOP_INSTRUCTION v15 — GalaxyBuilder Kernel]
+[DEVLOOP_INSTRUCTION v15 - GalaxyBuilder Kernel]
 
 SCOPE
 - Purpose: Iterative optimization via Council

@@ -1,5 +1,5 @@
 // ===============================================
-// i18n.linkmail.ts — 13 languages
+// i18n.linkmail.ts - 13 languages
 // ===============================================
 
 export type LinkmailLocale = {
@@ -21,7 +21,7 @@ export type LinkmailLocale = {
 // ---- LOCALES ----
 export const i18nLinkmail = {
   // --------------------------------------
-  // ENGLISH — MASTER
+  // ENGLISH - MASTER
   // --------------------------------------
   en: {
     linkmail: {
@@ -37,12 +37,12 @@ export const i18nLinkmail = {
         label: "Sign in",
       },
       footer:
-        "Made with clarity and intention — m-pathy.ai\nThis email was sent because someone requested a sign-in link for this address.\nIf this wasn’t you, you can safely ignore it — your account remains secure.\nThis mailbox is not monitored. Please do not reply to this message.",
+        "Made with clarity and intention - m-pathy.ai\nThis email was sent because someone requested a sign-in link for this address.\nIf this wasn’t you, you can safely ignore it - your account remains secure.\nThis mailbox is not monitored. Please do not reply to this message.",
     },
   },
 
   // --------------------------------------
-  // GERMAN — DEUTSCH
+  // GERMAN - DEUTSCH
   // --------------------------------------
   de: {
     linkmail: {
@@ -58,12 +58,12 @@ export const i18nLinkmail = {
         label: "Anmelden",
       },
       footer:
-        "Mit Klarheit und Intention — m-pathy.ai\nDiese E-Mail wurde gesendet, weil jemand einen Anmeldelink für diese Adresse angefordert hat.\nWenn du das nicht warst, kannst du diese Nachricht ignorieren — dein Konto bleibt sicher.\nDieses Postfach wird nicht überwacht. Bitte antworte nicht auf diese Nachricht.",
+        "Mit Klarheit und Intention - m-pathy.ai\nDiese E-Mail wurde gesendet, weil jemand einen Anmeldelink für diese Adresse angefordert hat.\nWenn du das nicht warst, kannst du diese Nachricht ignorieren - dein Konto bleibt sicher.\nDieses Postfach wird nicht überwacht. Bitte antworte nicht auf diese Nachricht.",
     },
   },
 
   // --------------------------------------
-  // FRENCH — FRANÇAIS
+  // FRENCH - FRANÇAIS
   // --------------------------------------
   fr: {
     linkmail: {
@@ -79,12 +79,12 @@ export const i18nLinkmail = {
         label: "Se connecter",
       },
       footer:
-        "Créé avec clarté et intention — m-pathy.ai\nCet e-mail a été envoyé car quelqu’un a demandé un lien de connexion pour cette adresse.\nSi ce n’était pas vous, ignorez-le — votre compte reste sécurisé.\nCette boîte mail n’est pas surveillée. Merci de ne pas répondre.",
+        "Créé avec clarté et intention - m-pathy.ai\nCet e-mail a été envoyé car quelqu’un a demandé un lien de connexion pour cette adresse.\nSi ce n’était pas vous, ignorez-le - votre compte reste sécurisé.\nCette boîte mail n’est pas surveillée. Merci de ne pas répondre.",
     },
   },
 
   // --------------------------------------
-  // SPANISH — ESPAÑOL
+  // SPANISH - ESPAÑOL
   // --------------------------------------
   es: {
     linkmail: {
@@ -100,12 +100,12 @@ export const i18nLinkmail = {
         label: "Acceder",
       },
       footer:
-        "Hecho con claridad e intención — m-pathy.ai\nEste correo fue enviado porque alguien solicitó un enlace de acceso para esta dirección.\nSi no fuiste tú, ignóralo — tu cuenta sigue segura.\nEste buzón no se supervisa. Por favor, no respondas a este mensaje.",
+        "Hecho con claridad e intención - m-pathy.ai\nEste correo fue enviado porque alguien solicitó un enlace de acceso para esta dirección.\nSi no fuiste tú, ignóralo - tu cuenta sigue segura.\nEste buzón no se supervisa. Por favor, no respondas a este mensaje.",
     },
   },
 
   // --------------------------------------
-  // ITALIAN — ITALIANO
+  // ITALIAN - ITALIANO
   // --------------------------------------
   it: {
     linkmail: {
@@ -121,12 +121,12 @@ export const i18nLinkmail = {
         label: "Accedi",
       },
       footer:
-        "Creato con chiarezza e intenzione — m-pathy.ai\nQuesta email è stata inviata perché qualcuno ha richiesto un link di accesso per questo indirizzo.\nSe non sei stato tu, puoi ignorarla — il tuo account è al sicuro.\nQuesta casella non è monitorata. Non rispondere a questo messaggio.",
+        "Creato con chiarezza e intenzione - m-pathy.ai\nQuesta email è stata inviata perché qualcuno ha richiesto un link di accesso per questo indirizzo.\nSe non sei stato tu, puoi ignorarla - il tuo account è al sicuro.\nQuesta casella non è monitorata. Non rispondere a questo messaggio.",
     },
   },
 
   // --------------------------------------
-  // PORTUGUESE — PORTUGUÊS
+  // PORTUGUESE - PORTUGUÊS
   // --------------------------------------
   pt: {
     linkmail: {
@@ -142,12 +142,12 @@ export const i18nLinkmail = {
         label: "Entrar",
       },
       footer:
-        "Feito com clareza e intenção — m-pathy.ai\nEste e-mail foi enviado porque alguém solicitou um link de acesso para este endereço.\nSe não foi você, ignore — sua conta continua segura.\nEsta caixa de e-mail não é monitorada. Não responda a esta mensagem.",
+        "Feito com clareza e intenção - m-pathy.ai\nEste e-mail foi enviado porque alguém solicitou um link de acesso para este endereço.\nSe não foi você, ignore - sua conta continua segura.\nEsta caixa de e-mail não é monitorada. Não responda a esta mensagem.",
     },
   },
 
   // --------------------------------------
-  // DUTCH — NEDERLANDS
+  // DUTCH - NEDERLANDS
   // --------------------------------------
   nl: {
     linkmail: {
@@ -163,12 +163,12 @@ export const i18nLinkmail = {
         label: "Inloggen",
       },
       footer:
-        "Gemaakt met helderheid en intentie — m-pathy.ai\nDeze e-mail is verzonden omdat iemand een aanmeldlink voor dit adres heeft aangevraagd.\nAls jij dit niet was, kun je het negeren — je account blijft veilig.\nDeze mailbox wordt niet bewaakt. Reageer niet op dit bericht.",
+        "Gemaakt met helderheid en intentie - m-pathy.ai\nDeze e-mail is verzonden omdat iemand een aanmeldlink voor dit adres heeft aangevraagd.\nAls jij dit niet was, kun je het negeren - je account blijft veilig.\nDeze mailbox wordt niet bewaakt. Reageer niet op dit bericht.",
     },
   },
 
   // --------------------------------------
-  // RUSSIAN — РУССКИЙ
+  // RUSSIAN - РУССКИЙ
   // --------------------------------------
   ru: {
     linkmail: {
@@ -184,12 +184,12 @@ export const i18nLinkmail = {
         label: "Войти",
       },
       footer:
-        "Создано с ясностью и намерением — m-pathy.ai\nЭто письмо отправлено, потому что кто-то запросил ссылку для входа для этого адреса.\nЕсли это были не вы, просто проигнорируйте — ваш аккаунт остаётся в безопасности.\nЭта почта не просматривается. Пожалуйста, не отвечайте.",
+        "Создано с ясностью и намерением - m-pathy.ai\nЭто письмо отправлено, потому что кто-то запросил ссылку для входа для этого адреса.\nЕсли это были не вы, просто проигнорируйте - ваш аккаунт остаётся в безопасности.\nЭта почта не просматривается. Пожалуйста, не отвечайте.",
     },
   },
 
   // --------------------------------------
-  // CHINESE (Simplified) — 简体中文
+  // CHINESE (Simplified) - 简体中文
   // --------------------------------------
   zh: {
     linkmail: {
@@ -205,12 +205,12 @@ export const i18nLinkmail = {
         label: "登录",
       },
       footer:
-        "以清晰与意图打造 — m-pathy.ai\n此邮件是因为有人为该邮箱请求了登录链接。\n如果不是你本人，请忽略此邮件 — 你的账户仍然安全。\n此邮箱无人监控，请勿回复。",
+        "以清晰与意图打造 - m-pathy.ai\n此邮件是因为有人为该邮箱请求了登录链接。\n如果不是你本人，请忽略此邮件 - 你的账户仍然安全。\n此邮箱无人监控，请勿回复。",
     },
   },
 
   // --------------------------------------
-  // JAPANESE — 日本語
+  // JAPANESE - 日本語
   // --------------------------------------
   ja: {
     linkmail: {
@@ -226,12 +226,12 @@ export const i18nLinkmail = {
         label: "サインイン",
       },
       footer:
-        "明確さと意図を込めて — m-pathy.ai\nこのメールは、このアドレス宛にサインインリンクがリクエストされたため送信されました。\n心当たりがない場合は無視してください — あなたのアカウントは安全です。\nこのメールボックスは監視されていません。返信しないでください。",
+        "明確さと意図を込めて - m-pathy.ai\nこのメールは、このアドレス宛にサインインリンクがリクエストされたため送信されました。\n心当たりがない場合は無視してください - あなたのアカウントは安全です。\nこのメールボックスは監視されていません。返信しないでください。",
     },
   },
 
   // --------------------------------------
-  // KOREAN — 한국어
+  // KOREAN - 한국어
   // --------------------------------------
   ko: {
     linkmail: {
@@ -247,12 +247,12 @@ export const i18nLinkmail = {
         label: "로그인",
       },
       footer:
-        "명확함과 의도를 담아 — m-pathy.ai\n이 이메일은 이 주소로 로그인 링크가 요청되어 전송되었습니다.\n본인이 아니라면 무시하세요 — 계정은 안전합니다.\n이 메일함은 모니터링되지 않습니다. 회신하지 마세요.",
+        "명확함과 의도를 담아 - m-pathy.ai\n이 이메일은 이 주소로 로그인 링크가 요청되어 전송되었습니다.\n본인이 아니라면 무시하세요 - 계정은 안전합니다.\n이 메일함은 모니터링되지 않습니다. 회신하지 마세요.",
     },
   },
 
   // --------------------------------------
-  // ARABIC — العربية (RTL)
+  // ARABIC - العربية (RTL)
   // --------------------------------------
   ar: {
     linkmail: {
@@ -268,12 +268,12 @@ export const i18nLinkmail = {
         label: "تسجيل الدخول",
       },
       footer:
-        "صُمم بوضوح ونية — m-pathy.ai\nتم إرسال هذه الرسالة لأن شخصًا ما طلب رابط تسجيل دخول لهذا البريد.\nإذا لم تكن أنت، تجاهل الرسالة — حسابك آمن.\nهذا البريد غير مراقب. الرجاء عدم الرد.",
+        "صُمم بوضوح ونية - m-pathy.ai\nتم إرسال هذه الرسالة لأن شخصًا ما طلب رابط تسجيل دخول لهذا البريد.\nإذا لم تكن أنت، تجاهل الرسالة - حسابك آمن.\nهذا البريد غير مراقب. الرجاء عدم الرد.",
     },
   },
 
   // --------------------------------------
-  // HINDI — हिन्दी
+  // HINDI - हिन्दी
   // --------------------------------------
   hi: {
     linkmail: {
@@ -289,7 +289,7 @@ export const i18nLinkmail = {
         label: "साइन इन",
       },
       footer:
-        "स्पष्टता और इरादे के साथ बनाया गया — m-pathy.ai\nयह ई-मेल इसलिए भेजा गया क्योंकि किसी ने इस पते के लिए साइन-इन लिंक का अनुरोध किया था।\nयदि यह आपने नहीं किया, तो बस अनदेखा करें — आपका खाता सुरक्षित है।\nइस मेलबॉक्स की निगरानी नहीं की जाती। कृपया उत्तर न दें.",
+        "स्पष्टता और इरादे के साथ बनाया गया - m-pathy.ai\nयह ई-मेल इसलिए भेजा गया क्योंकि किसी ने इस पते के लिए साइन-इन लिंक का अनुरोध किया था।\nयदि यह आपने नहीं किया, तो बस अनदेखा करें - आपका खाता सुरक्षित है।\nइस मेलबॉक्स की निगरानी नहीं की जाती। कृपया उत्तर न दें.",
     },
   },
 } satisfies Record<string, LinkmailLocale>;

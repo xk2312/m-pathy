@@ -1,6 +1,6 @@
 /***
  * =====================================================================
- *  M — CHAT PERSISTENCE (Local UI History · Non-Truth Layer)
+ *  M - CHAT PERSISTENCE (Local UI History · Non-Truth Layer)
  * =====================================================================
  *
  *  FILE

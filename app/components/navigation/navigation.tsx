@@ -1,7 +1,7 @@
 /***
 
 * =========================================================
-* M — NAVIGATION MASTER (Fixed Header · Chat-Aware Layout)
+* M - NAVIGATION MASTER (Fixed Header · Chat-Aware Layout)
 * =========================================================
 *
 * INDEX (Sprunganker):

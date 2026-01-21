@@ -1,5 +1,5 @@
 
-/*# 📑 FILE INDEX — ReportList.tsx
+/*# 📑 FILE INDEX - ReportList.tsx
 
 ## FILE
 
@@ -11,7 +11,7 @@ UI-Komponente für den **REPORTS-Modus** des Archivs: listet Verifikationsreport
 
 ## TOUCH
 
-**NEIN — streng gesperrt**
+**NEIN - streng gesperrt**
 
 Diese Datei darf im Rahmen der Injection-Implementierung **nicht verändert** werden.
 
@@ -262,7 +262,7 @@ const selectedReport: VerificationReport | null =
 function exportReportAsText(r: VerificationReport) {
   const lines: string[] = []
 
-  lines.push('VERIFICATION REPORT — m-pathy.ai')
+  lines.push('VERIFICATION REPORT - m-pathy.ai')
   lines.push('=================================')
   lines.push('')
   lines.push('This report was generated on m-pathy.ai.')

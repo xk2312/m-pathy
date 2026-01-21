@@ -1,6 +1,6 @@
 /***
  * =====================================================================
- *  M — ARCHIVE PAIR PROJECTION (Deterministic Q→A Index)
+ *  M - ARCHIVE PAIR PROJECTION (Deterministic Q→A Index)
  * =====================================================================
  *
  *  FILE

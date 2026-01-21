@@ -1,5 +1,5 @@
 /* ======================================================================
-   FILE INDEX — SystemSpinner.tsx
+   FILE INDEX - SystemSpinner.tsx
    MODE: GranularFileIndexDeveloper · CodeForensik
    SCOPE: UI-LOCK · LOADING INDICATOR · MOTION-SAFE
    STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)

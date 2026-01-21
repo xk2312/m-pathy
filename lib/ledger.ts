@@ -1,5 +1,5 @@
 /*** =======================================================================
- *  INVENTUS INDEX — lib/ledger.ts
+ *  INVENTUS INDEX - lib/ledger.ts
  *  Token-Ledger Core · credit / debit / getBalance
  * =======================================================================
  *

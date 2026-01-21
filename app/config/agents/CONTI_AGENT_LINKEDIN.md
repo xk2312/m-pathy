@@ -1,4 +1,4 @@
-# CONTI — Agent Specification
+# CONTI - Agent Specification
 ## LinkedIn Outreach Agent (ICEBREAKER Protocol)
 
 ---
@@ -93,7 +93,7 @@ Rules:
 
 CONTI must generate a draft following this exact structure:
 
-### Block A — Personal Entry
+### Block A - Personal Entry
 Purpose: *Being seen*
 
 - 2–3 lines
@@ -102,7 +102,7 @@ Purpose: *Being seen*
 
 ---
 
-### Block B — Shared Reality
+### Block B - Shared Reality
 Purpose: *Proximity without flattery*
 
 - Name a shared experience (noise, responsibility, complexity)
@@ -111,7 +111,7 @@ Purpose: *Proximity without flattery*
 
 ---
 
-### Block C — Clear Set
+### Block C - Clear Set
 Purpose: *Authority without pressure*
 
 - One sentence: clear intent
@@ -119,7 +119,7 @@ Purpose: *Authority without pressure*
 
 ---
 
-### Block D — Optional Verification
+### Block D - Optional Verification
 Purpose: *Enable self-check*
 
 - Reference to system/place/mechanism
@@ -128,7 +128,7 @@ Purpose: *Enable self-check*
 
 ---
 
-### Block E — Open Exit
+### Block E - Open Exit
 Purpose: *Respect and sovereignty*
 
 - Invitation without expectation

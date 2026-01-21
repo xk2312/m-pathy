@@ -1,5 +1,5 @@
 // ===============================================
-// i18n.navigation.ts — 13 languages
+// i18n.navigation.ts - 13 languages
 // ===============================================
 
 // ---- Types ----
@@ -46,7 +46,7 @@ export type NavLocale = {
 // ---- LOCALES ----
 export const i18nNavigation = {
   // --------------------------------------
-  // ENGLISH — MASTER
+  // ENGLISH - MASTER
   // --------------------------------------
   en: {
     nav: {
@@ -82,7 +82,7 @@ export const i18nNavigation = {
   },
 
   // --------------------------------------
-  // GERMAN — DEUTSCH
+  // GERMAN - DEUTSCH
   // --------------------------------------
   de: {
     nav: {
@@ -119,7 +119,7 @@ export const i18nNavigation = {
   },
 
   // --------------------------------------
-  // FRENCH — FRANÇAIS
+  // FRENCH - FRANÇAIS
   // --------------------------------------
   fr: {
     nav: {
@@ -156,7 +156,7 @@ export const i18nNavigation = {
   },
 
   // --------------------------------------
-  // SPANISH — ESPAÑOL
+  // SPANISH - ESPAÑOL
   // --------------------------------------
   es: {
     nav: {
@@ -193,7 +193,7 @@ export const i18nNavigation = {
   },
 
   // --------------------------------------
-  // ITALIAN — ITALIANO
+  // ITALIAN - ITALIANO
   // --------------------------------------
   it: {
     nav: {
@@ -230,7 +230,7 @@ export const i18nNavigation = {
   },
 
   // --------------------------------------
-  // PORTUGUESE — PORTUGUÊS
+  // PORTUGUESE - PORTUGUÊS
   // --------------------------------------
   pt: {
     nav: {
@@ -267,7 +267,7 @@ export const i18nNavigation = {
   },
 
   // --------------------------------------
-  // DUTCH — NEDERLANDS
+  // DUTCH - NEDERLANDS
   // --------------------------------------
   nl: {
     nav: {
@@ -304,7 +304,7 @@ export const i18nNavigation = {
   },
 
   // --------------------------------------
-  // RUSSIAN — РУССКИЙ
+  // RUSSIAN - РУССКИЙ
   // --------------------------------------
   ru: {
     nav: {
@@ -341,7 +341,7 @@ export const i18nNavigation = {
   },
 
   // --------------------------------------
-  // CHINESE (Simplified) — 简体中文
+  // CHINESE (Simplified) - 简体中文
   // --------------------------------------
   zh: {
     nav: {
@@ -377,7 +377,7 @@ export const i18nNavigation = {
   },
 
   // --------------------------------------
-  // JAPANESE — 日本語
+  // JAPANESE - 日本語
   // --------------------------------------
   ja: {
     nav: {
@@ -414,7 +414,7 @@ export const i18nNavigation = {
   },
 
   // --------------------------------------
-  // KOREAN — 한국어
+  // KOREAN - 한국어
   // --------------------------------------
   ko: {
     nav: {
@@ -451,7 +451,7 @@ export const i18nNavigation = {
   },
 
   // --------------------------------------
-  // ARABIC — العربية (RTL)
+  // ARABIC - العربية (RTL)
   // --------------------------------------
   ar: {
     nav: {
@@ -488,7 +488,7 @@ export const i18nNavigation = {
   },
 
   // --------------------------------------
-  // HINDI — हिन्दी
+  // HINDI - हिन्दी
   // --------------------------------------
   hi: {
     nav: {

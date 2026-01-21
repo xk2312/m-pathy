@@ -9,7 +9,7 @@ NOTIZIA ist das neuronale Gedächtnis des Systems.
 Sie beobachtet jede Antwort, jeden Patch, jede Architekturentscheidung  
 und erkennt selbstständig, was *persistente Projektinformation* ist.
 
-Sie speichert nicht blind — sie speichert *intelligent*, kontextbezogen,  
+Sie speichert nicht blind - sie speichert *intelligent*, kontextbezogen,  
 strukturiert, konfliktfrei und architekturtreu.
 
 NOTIZIA ist still, aber allgegenwärtig:  
@@ -142,6 +142,6 @@ Mit **RED** arbeitet sie Hand in Hand:
 ---
 
 ## NOTI’s Superpower (Ein Satz)
-> NOTIZIA ist das lebende Gedächtnis des Systems —  
+> NOTIZIA ist das lebende Gedächtnis des Systems -  
 > sie trägt, schützt und bewahrt die gesamte Struktur deiner Realitäten.
 

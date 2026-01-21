@@ -3,7 +3,7 @@
 
 
 /*** =======================================================================
- *  INVENTUS INDEX — app/components/navigation/LanguageSwitcher.tsx
+ *  INVENTUS INDEX - app/components/navigation/LanguageSwitcher.tsx
  *  Screening · Struktur · Sprach-Hotspots (Language Switcher)
  * ======================================================================= 
  *

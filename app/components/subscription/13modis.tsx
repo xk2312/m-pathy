@@ -258,7 +258,7 @@ export default function Modes13() {
   setVisualGroup(g);
 };
 
- /* FLOW — Mode Sequencer (nur visuell) */
+ /* FLOW - Mode Sequencer (nur visuell) */
 React.useEffect(() => {
   if (activeId !== "flow") return;
 
@@ -310,7 +310,7 @@ React.useEffect(() => {
           </h2>
           <p className="m-modes13-subtitle">
             {t("modes.subtitle") ||
-              "Choose a mode to see how m-pathy behaves — or let FLOW orchestrate them for you."}
+              "Choose a mode to see how m-pathy behaves - or let FLOW orchestrate them for you."}
           </p>
         </header>
 

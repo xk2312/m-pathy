@@ -18,7 +18,7 @@ Ziel ist:
 * Alle Reports aus dem Speicher **deterministisch** lesen,
 * sie **visuell klar und minimalistisch** darstellen,
 * **Re-Verify** (erneute Prüfung) auslösen zu können,
-* und **Invalidierung** (Löschen) zu ermöglichen — ohne Drift, ohne API-Abhängigkeiten.
+* und **Invalidierung** (Löschen) zu ermöglichen - ohne Drift, ohne API-Abhängigkeiten.
 
 Die Architektur ist **lokal**, **deterministisch** und **unabhängig vom Server**.
 

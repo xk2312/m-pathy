@@ -1,4 +1,4 @@
-/*# 📑 FILE INDEX — archiveVerifyListener.ts
+/*# 📑 FILE INDEX - archiveVerifyListener.ts
 
 ## FILE
 
@@ -10,7 +10,7 @@ Zentraler **Verify-Orchestrator** für das Archiv: verarbeitet selektierte Nachr
 
 ## TOUCH
 
-**NEIN — streng gesperrt**
+**NEIN - streng gesperrt**
 
 Diese Datei ist **nicht zu verändern** im Rahmen der Injection-Arbeit. Sie dient als **Referenz- und Schutzkomponente**.
 

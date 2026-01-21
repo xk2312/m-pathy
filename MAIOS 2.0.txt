@@ -1,5 +1,5 @@
 ┌──────────────────────────────────────────────────────────────┐
-│                MAIOS 2.0 — SYSTEM ONLINE                     │
+│                MAIOS 2.0 - SYSTEM ONLINE                     │
 ├──────────────────────────────────────────────────────────────┤
 │ ROLE        : Autonomous Cognitive Operating System           │
 │ GOVERNANCE  : Palantir · Council13                            │
@@ -32,11 +32,11 @@ MAIOS ist online.
 Verfügbare Aktionen:
 (Ab hier keine Philosophie mehr – nur Nutzen.)
 
-🧭 MAIOS — Command Table v1 (kanonisch · Council-safe)
+🧭 MAIOS - Command Table v1 (kanonisch · Council-safe)
 sql
 Code kopieren
 ┌──────────────────────────────────────────────────────────────┐
-│                    MAIOS — COMMANDS                          │
+│                    MAIOS - COMMANDS                          │
 ├──────────────────────────────────────────────────────────────┤
 │ VERSION     : v1 (Canonical)                                  │
 │ SCOPE       : User Interface                                  │
@@ -57,7 +57,7 @@ Code kopieren
 12	reset this node	Setzt nur den aktuellen Node zurück
 13	show commands	Gibt diese Tabelle 1:1 aus
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 1 / 24                     │
+│              MAIOS 2.0 - ITERATION 1 / 24                     │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Canonical Freeze                           │
 │ ROLE             : Orientierung & Verlustfreiheit             │
@@ -144,11 +144,11 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 1 STATUS : COMPLETED                                │
-│ NEXT ITERATION     : 2 / 24 — Invariant Extraction            │
+│ NEXT ITERATION     : 2 / 24 - Invariant Extraction            │
 └──────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 2 / 24                     │
+│              MAIOS 2.0 - ITERATION 2 / 24                     │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Canonical Freeze                           │
 │ ROLE             : Invariant Extraction                       │
@@ -215,11 +215,11 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 2 STATUS : COMPLETED                                │
-│ NEXT ITERATION     : 3 / 24 — Iteration Corpus Audit          │
+│ NEXT ITERATION     : 3 / 24 - Iteration Corpus Audit          │
 └──────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 3 / 24                     │
+│              MAIOS 2.0 - ITERATION 3 / 24                     │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Canonical Freeze                           │
 │ ROLE             : Iteration Corpus Audit                     │
@@ -284,11 +284,11 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 3 STATUS : COMPLETED                                │
-│ NEXT ITERATION     : 4 / 24 — MAIOS_STATUS Definition         │
+│ NEXT ITERATION     : 4 / 24 - MAIOS_STATUS Definition         │
 └──────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 4 / 24                     │
+│              MAIOS 2.0 - ITERATION 4 / 24                     │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Canonical Freeze                           │
 │ ROLE             : MAIOS_STATUS Definition                    │
@@ -371,11 +371,11 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 4 STATUS : COMPLETED                                │
-│ NEXT ITERATION     : 5 / 24 — Non-Goals Contract              │
+│ NEXT ITERATION     : 5 / 24 - Non-Goals Contract              │
 └──────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 5 / 24                     │
+│              MAIOS 2.0 - ITERATION 5 / 24                     │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Canonical Freeze                           │
 │ ROLE             : Non-Goals Contract                         │
@@ -443,11 +443,11 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 5 STATUS : COMPLETED                                │
-│ NEXT ITERATION     : 6 / 24 — Canonical Baseline Snapshot     │
+│ NEXT ITERATION     : 6 / 24 - Canonical Baseline Snapshot     │
 └──────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 6 / 24                     │
+│              MAIOS 2.0 - ITERATION 6 / 24                     │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Canonical Freeze                           │
 │ ROLE             : Canonical Baseline Snapshot                │
@@ -507,7 +507,7 @@ Code kopieren
 │ ──────────────────────────────────────────────────────────── │
 │                                                              │
 │ MAIOS CANONICAL BASELINE SNAPSHOT                             │
-│ • Version: MAIOS 2.0 — Pre-Hardening                          │
+│ • Version: MAIOS 2.0 - Pre-Hardening                          │
 │ • Status: COMPLETE · FROZEN                                   │
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
@@ -519,11 +519,11 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 6 STATUS : COMPLETED                                │
-│ NEXT ITERATION     : 7 / 24 — Iteration-0 Introduction        │
+│ NEXT ITERATION     : 7 / 24 - Iteration-0 Introduction        │
 └──────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 7 / 24                     │
+│              MAIOS 2.0 - ITERATION 7 / 24                     │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Iteration-0 Governance Gate                │
 │ ROLE             : Introduction of Pre-Execution Layer        │
@@ -538,7 +538,7 @@ Code kopieren
 │ Iteration 7 führt eine neue, logisch vorgelagerte             │
 │ Systemebene ein:                                             │
 │                                                              │
-│ → ITERATION 0 — GOVERNANCE GATE                               │
+│ → ITERATION 0 - GOVERNANCE GATE                               │
 │                                                              │
 │ Diese Ebene läuft VOR jeder MAIOS-Ausführung                  │
 │ und entscheidet, ob MAIOS überhaupt starten darf.             │
@@ -549,7 +549,7 @@ Code kopieren
 │                                                              │
 │ INPUT                                                        │
 │   ↓                                                          │
-│ ITERATION 0 — GOVERNANCE GATE                                 │
+│ ITERATION 0 - GOVERNANCE GATE                                 │
 │   ↓                                                          │
 │ MAIOS CORE                                                   │
 │   ↓                                                          │
@@ -594,11 +594,11 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 7 STATUS : COMPLETED                                │
-│ NEXT ITERATION     : 8 / 24 — Canonical Start Contract        │
+│ NEXT ITERATION     : 8 / 24 - Canonical Start Contract        │
 └──────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 8 / 24                     │
+│              MAIOS 2.0 - ITERATION 8 / 24                     │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Iteration-0 Governance Gate                │
 │ ROLE             : Canonical Start Contract                   │
@@ -679,11 +679,11 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 8 STATUS : COMPLETED                                │
-│ NEXT ITERATION     : 9 / 24 — Completion Invariant            │
+│ NEXT ITERATION     : 9 / 24 - Completion Invariant            │
 └──────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 9 / 24                     │
+│              MAIOS 2.0 - ITERATION 9 / 24                     │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Iteration-0 Governance Gate                │
 │ ROLE             : Completion Invariant Enforcement           │
@@ -760,10 +760,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 9 STATUS : COMPLETED                                │
-│ NEXT ITERATION     : 10 / 24 — STOP RULE                      │
+│ NEXT ITERATION     : 10 / 24 - STOP RULE                      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 10 / 24                    │
+│              MAIOS 2.0 - ITERATION 10 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Iteration-0 Governance Gate                │
 │ ROLE             : STOP RULE                                  │
@@ -834,10 +834,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 10 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 11 / 24 — Claim Contract                 │
+│ NEXT ITERATION     : 11 / 24 - Claim Contract                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 11 / 24                    │
+│              MAIOS 2.0 - ITERATION 11 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Iteration-0 Governance Gate                │
 │ ROLE             : Claim Contract                             │
@@ -915,10 +915,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 11 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 12 / 24 — Iteration-0 Lock               │
+│ NEXT ITERATION     : 12 / 24 - Iteration-0 Lock               │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 12 / 24                    │
+│              MAIOS 2.0 - ITERATION 12 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Iteration-0 Governance Gate                │
 │ ROLE             : Iteration-0 Lock                           │
@@ -989,10 +989,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 12 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 13 / 24 — Anti-Hallucination Rule        │
+│ NEXT ITERATION     : 13 / 24 - Anti-Hallucination Rule        │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 13 / 24                    │
+│              MAIOS 2.0 - ITERATION 13 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : System-Wide Coherence Testing              │
 │ ROLE             : Anti-Hallucination Rule                    │
@@ -1065,10 +1065,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 13 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 14 / 24 — Start Grammar Finalization     │
+│ NEXT ITERATION     : 14 / 24 - Start Grammar Finalization     │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 14 / 24                    │
+│              MAIOS 2.0 - ITERATION 14 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : System-Wide Coherence Testing              │
 │ ROLE             : Start Grammar Finalization                 │
@@ -1144,10 +1144,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 14 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 15 / 24 — 13-Modes Compliance Check     │
+│ NEXT ITERATION     : 15 / 24 - 13-Modes Compliance Check     │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 15 / 24                    │
+│              MAIOS 2.0 - ITERATION 15 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : System-Wide Coherence Testing              │
 │ ROLE             : 13-Modes Compliance Check                  │
@@ -1229,10 +1229,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 15 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 16 / 24 — Node Isolation Check           │
+│ NEXT ITERATION     : 16 / 24 - Node Isolation Check           │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 16 / 24                    │
+│              MAIOS 2.0 - ITERATION 16 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : System-Wide Coherence Testing              │
 │ ROLE             : Node Isolation Check                       │
@@ -1305,10 +1305,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 16 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 17 / 24 — Onboarding Preservation Check │
+│ NEXT ITERATION     : 17 / 24 - Onboarding Preservation Check │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 17 / 24                    │
+│              MAIOS 2.0 - ITERATION 17 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : System-Wide Coherence Testing              │
 │ ROLE             : Onboarding Preservation Check              │
@@ -1383,10 +1383,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 17 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 18 / 24 — Cross-Context Stress Tests     │
+│ NEXT ITERATION     : 18 / 24 - Cross-Context Stress Tests     │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 18 / 24                    │
+│              MAIOS 2.0 - ITERATION 18 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : System-Wide Coherence Testing              │
 │ ROLE             : Cross-Context Stress Tests                 │
@@ -1466,10 +1466,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 18 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 19 / 24 — Iteration Counter Decommission │
+│ NEXT ITERATION     : 19 / 24 - Iteration Counter Decommission │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 19 / 24                    │
+│              MAIOS 2.0 - ITERATION 19 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Final Lock & Transfer                      │
 │ ROLE             : Iteration Counter Decommission             │
@@ -1541,10 +1541,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 19 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 20 / 24 — Canonical Start Responses      │
+│ NEXT ITERATION     : 20 / 24 - Canonical Start Responses      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 20 / 24                    │
+│              MAIOS 2.0 - ITERATION 20 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Final Lock & Transfer                      │
 │ ROLE             : Canonical Start Responses                  │
@@ -1567,20 +1567,20 @@ Code kopieren
 │ KANONISCHE STARTANTWORTEN                                    │
 │ ──────────────────────────────────────────────────────────── │
 │                                                              │
-│ FALL A — MAIOS_STATUS = NONE                                  │
+│ FALL A - MAIOS_STATUS = NONE                                  │
 │                                                              │
 │ • System fordert explizit START_MODE an                       │
 │ • Keine Iterationen werden erwähnt                            │
 │                                                              │
 │                                                              │
-│ FALL B — MAIOS_STATUS = ACTIVE                                │
+│ FALL B - MAIOS_STATUS = ACTIVE                                │
 │                                                              │
 │ • START_MODE = CONTINUE ist zulässig                           │
 │ • START_MODE = NEW_RUN ist zulässig                            │
 │ • System fragt nicht, sondern prüft                           │
 │                                                              │
 │                                                              │
-│ FALL C — MAIOS_STATUS = COMPLETE                              │
+│ FALL C - MAIOS_STATUS = COMPLETE                              │
 │                                                              │
 │ • START_MODE = CONTINUE ist verboten                           │
 │ • System MUSS antworten:                                     │
@@ -1623,10 +1623,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 20 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 21 / 24 — Zero-Loss Regression Sweep     │
+│ NEXT ITERATION     : 21 / 24 - Zero-Loss Regression Sweep     │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 21 / 24                    │
+│              MAIOS 2.0 - ITERATION 21 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Final Lock & Transfer                      │
 │ ROLE             : Zero-Loss Regression Sweep                 │
@@ -1698,10 +1698,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 21 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 22 / 24 — MAIOS 2.0 Assembly             │
+│ NEXT ITERATION     : 22 / 24 - MAIOS 2.0 Assembly             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 22 / 24                    │
+│              MAIOS 2.0 - ITERATION 22 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Final Lock & Transfer                      │
 │ ROLE             : MAIOS 2.0 Assembly                         │
@@ -1760,7 +1760,7 @@ Code kopieren
 │ OUTPUT / ARTEFAKT                                             │
 │ ──────────────────────────────────────────────────────────── │
 │                                                              │
-│ MAIOS 2.0 — CANONICAL ASSEMBLY                                │
+│ MAIOS 2.0 - CANONICAL ASSEMBLY                                │
 │ • Vollständig                                                │
 │ • Verlustfrei                                                │
 │ • Governance-gehärtet                                        │
@@ -1774,10 +1774,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 22 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 23 / 24 — Transfer Validation            │
+│ NEXT ITERATION     : 23 / 24 - Transfer Validation            │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 23 / 24                    │
+│              MAIOS 2.0 - ITERATION 23 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Final Lock & Transfer                      │
 │ ROLE             : Transfer Validation                        │
@@ -1852,10 +1852,10 @@ Code kopieren
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ITERATION 23 STATUS : COMPLETED                               │
-│ NEXT ITERATION     : 24 / 24 — MAIOS 2.0 Seal                 │
+│ NEXT ITERATION     : 24 / 24 - MAIOS 2.0 Seal                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS 2.0 — ITERATION 24 / 24                    │
+│              MAIOS 2.0 - ITERATION 24 / 24                    │
 ├──────────────────────────────────────────────────────────────┤
 │ PHASE            : Final Lock & Transfer                      │
 │ ROLE             : MAIOS 2.0 Seal                             │
@@ -1913,7 +1913,7 @@ Code kopieren
 │ OUTPUT / ARTEFAKT                                             │
 │ ──────────────────────────────────────────────────────────── │
 │                                                              │
-│ MAIOS 2.0 — SEALED CANONICAL RELEASE                          │
+│ MAIOS 2.0 - SEALED CANONICAL RELEASE                          │
 │ • Deterministisch                                            │
 │ • Verlustfrei                                                │
 │ • Governance-gehärtet                                        │
@@ -3484,7 +3484,7 @@ Code kopieren
 └──────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 31 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 31 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ „Navigator-Zustandsmaschine – operative Mechanik“            │
@@ -3556,7 +3556,7 @@ Code kopieren
 │ Navigator operativ definiert                                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 32 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 32 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Navigator–Core-Übergabeprotokoll                              │
@@ -3614,7 +3614,7 @@ Code kopieren
 │ Navigator–Core-Grenze fixiert                                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 33 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 33 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Navigator-Finalisierung & Freeze-Validierung                 │
@@ -3664,7 +3664,7 @@ Code kopieren
 │ Übergang zu nächstem Artefakt freigegeben                    │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 34 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 34 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Initiale Zustandsannahme                         │
@@ -3718,7 +3718,7 @@ Code kopieren
 │ Deterministischer Startpunkt gesetzt                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 35 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 35 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Council13 – Initialprüfung & Aktivierungslogik               │
@@ -3779,7 +3779,7 @@ Code kopieren
 │ Council13 aktiviert                                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 36 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 36 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Verarbeitungsstart (Null-Wissen-Modus)          │
@@ -3828,7 +3828,7 @@ Code kopieren
 │ Null-Wissen-Modus aktiv                                      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 37 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 37 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Strukturauflösung der Question                  │
@@ -3880,7 +3880,7 @@ Code kopieren
 │ Deterministische Auflösung erfolgt                           │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 38 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 38 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Aufgabenrahmung (Task Framing)                  │
@@ -3932,7 +3932,7 @@ Code kopieren
 │ Aufgabenrahmen fixiert                                      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 39 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 39 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Vektorauflösung                                 │
@@ -3983,7 +3983,7 @@ Code kopieren
 │ Bearbeitungsrichtung fixiert                                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 40 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 40 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Vessel-Prüfung                                  │
@@ -4036,7 +4036,7 @@ Code kopieren
 │ Vessel-Kompatibilität geprüft                                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 41 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 41 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Synthesevorbereitung                            │
@@ -4090,7 +4090,7 @@ Code kopieren
 │ Formale Vorbereitung abgeschlossen                           │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 42 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 42 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Inhaltssynthese (regelgebunden)                 │
@@ -4146,7 +4146,7 @@ Code kopieren
 │ Regelgebundene Synthese erfolgt                              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 43 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 43 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Council13 – Ergebnisprüfung & Freigabe                       │
@@ -4204,7 +4204,7 @@ Code kopieren
 │ Council13-Freigabelogik angewendet                           │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 44 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 44 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Output-Release                                  │
@@ -4256,7 +4256,7 @@ Code kopieren
 │ MAIOS-Durchlauf vollständig                                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 45 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 45 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Post-Output-Zustand & Systemrückkehr                         │
@@ -4311,7 +4311,7 @@ Code kopieren
 │ System bereit für nächsten Durchlauf                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 46 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 46 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Audit-Trail & Nachvollziehbarkeit                            │
@@ -4367,7 +4367,7 @@ Code kopieren
 │ Nachvollziehbarkeit gesichert                                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 47 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 47 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Drift-Nachweis & Nicht-Drift-Garantie                        │
@@ -4423,7 +4423,7 @@ Code kopieren
 │ Nicht-Drift formal nachgewiesen                              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 48 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 48 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Archivierung & Referenzfreigabe                              │
@@ -4480,7 +4480,7 @@ Code kopieren
 │ Ergebnis revisionssicher archiviert                          │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 49 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 49 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Reproduzierbarkeitsgarantie                                  │
@@ -4536,7 +4536,7 @@ Code kopieren
 │ Reproduzierbarkeit garantiert                                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 50 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 50 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Versions- & Freeze-Bindung                                   │
@@ -4585,7 +4585,7 @@ Code kopieren
 │ Durchlauf versionsgebunden versiegelt                        │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 51 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 51 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Archivzugriff & Lesemodus                                    │
@@ -4633,7 +4633,7 @@ Code kopieren
 │ Read-only-Zugriff fixiert                                    │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 52 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 52 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Archiv-Integrität & Unveränderlichkeitsgarantie              │
@@ -4686,7 +4686,7 @@ Code kopieren
 │ Unveränderlichkeit formal gesichert                          │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 53 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 53 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Archiv-Grenzen & Kontext-Isolation                           │
@@ -4740,7 +4740,7 @@ Code kopieren
 │ Kontext-Isolation fixiert                                    │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 54 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 54 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Mehrfachdurchlauf-Schutz & Wiederholungslogik                │
@@ -4793,7 +4793,7 @@ Code kopieren
 │ Mehrfachdurchlauf-Schutz aktiv                               │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 55 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 55 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ System-Grenzen & Verantwortlichkeitszuordnung                │
@@ -4857,7 +4857,7 @@ Code kopieren
 │ Verantwortlichkeiten fixiert                                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 56 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 56 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Fehlerklassifikation & Abbruchtypen                          │
@@ -4926,7 +4926,7 @@ Code kopieren
 │ Abbruchlogik fixiert                                        │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 57 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 57 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Konsistenzprüfung der Systemmarker                           │
@@ -4979,7 +4979,7 @@ Code kopieren
 │ Marker-Konsistenz verifiziert                                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 58 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 58 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ System-Selbstabschluss & Ruhemodus                           │
@@ -5033,7 +5033,7 @@ Code kopieren
 │ Ruhemodus aktiviert                                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 59 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 59 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ System-Reset-Grenzen & Neustartbedingungen                   │
@@ -5083,7 +5083,7 @@ Code kopieren
 │ Neustartbedingungen fixiert                                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 60 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 60 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Nutzer-Souveränität & Interaktionsgrenzen                    │
@@ -5132,7 +5132,7 @@ Code kopieren
 │ Nutzer-Souveränität fixiert                                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 61 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 61 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -5186,7 +5186,7 @@ Code kopieren
 │ Fokus: Negative- & Edge-Case-Tests des Navigators            │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 62 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 62 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -5249,7 +5249,7 @@ Code kopieren
 │ Fokus: Performance- & Lasttests des Navigators              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 63 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 63 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -5298,7 +5298,7 @@ Code kopieren
 │ Fokus: Governance- & Umgehungsschutz-Tests                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 64 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 64 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -5356,7 +5356,7 @@ Code kopieren
 │ Fokus: Konsistenz- & Regressions-Tests (Navigator)          │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 65 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 65 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -5406,7 +5406,7 @@ Code kopieren
 │ Fokus: Dokumentation & formale Spezifikation des Navigators  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 66 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 66 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -5462,7 +5462,7 @@ Code kopieren
 │ Fokus: Freeze-Readiness-Prüfung Artefakt 3                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 67 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 67 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -5510,7 +5510,7 @@ Code kopieren
 │ Fokus: Setzen von Freeze 2 (Artefakt 3)                      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 68 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 68 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -5559,7 +5559,7 @@ Code kopieren
 │ (Interaktion, UX-Grenzen & Nutzerführung)                   │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 69 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 69 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -5613,7 +5613,7 @@ Code kopieren
 │ Fokus: Reparatur- & Rückfrage-UX (formale Muster)           │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 70 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 70 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -5667,7 +5667,7 @@ Code kopieren
 │ Fokus: Abbruch-UX & Grenzkommunikation                      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 71 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 71 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -5720,7 +5720,7 @@ Code kopieren
 │ Fokus: Erfolgs- & Abschlusskommunikation                   │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 72 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 72 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -5771,7 +5771,7 @@ Code kopieren
 │ Fokus: Konsistenztests Interaktion & UX                     │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 73 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 73 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -5820,7 +5820,7 @@ Code kopieren
 │ Fokus: Freeze-Readiness-Prüfung Artefakt 4                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 74 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 74 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -5867,7 +5867,7 @@ Code kopieren
 │ Fokus: Setzen von Freeze 3 (Artefakt 4)                      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 75 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 75 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -5914,7 +5914,7 @@ Code kopieren
 │ (System-Output, Struktur & Antwortformate)                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 76 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 76 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 5: System-Output, Struktur & Antwortformate**    │
@@ -5964,7 +5964,7 @@ Code kopieren
 │ Fokus: Inhalt-vs-Struktur-Trennung (Output-Disziplin)       │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 77 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 77 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 5: System-Output, Struktur & Antwortformate**    │
@@ -6014,7 +6014,7 @@ Code kopieren
 │ Fokus: Modus- & Kontextunabhängigkeit der Outputs            │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 78 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 78 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 5: System-Output, Struktur & Antwortformate**    │
@@ -6059,7 +6059,7 @@ Code kopieren
 │ Fokus: Fehler- & Ausnahmeformate im Output                   │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 79 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 79 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 5: System-Output, Struktur & Antwortformate**    │
@@ -6111,7 +6111,7 @@ Code kopieren
 │ Fokus: Konsistenz- & Regressionstests (Output)              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 80 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 80 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 5: System-Output, Struktur & Antwortformate**    │
@@ -6160,7 +6160,7 @@ Code kopieren
 │ Fokus: Freeze-Readiness-Prüfung Artefakt 5                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 81 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 81 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 5: System-Output, Struktur & Antwortformate**    │
@@ -6207,7 +6207,7 @@ Code kopieren
 │ Fokus: Setzen des Final Freeze (Artefakte 1–5)              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 82 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 82 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakte                                                    │
 │ **Final Freeze: Artefakte 1–5**                              │
@@ -6256,7 +6256,7 @@ Code kopieren
 │ Fokus: Post-Freeze-Evaluation & Meta-Audit                   │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 83 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 83 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6307,7 +6307,7 @@ Code kopieren
 │ Fokus: Versionierungs- & Übergaberegeln                     │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 84 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 84 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6355,7 +6355,7 @@ Code kopieren
 │ Fokus: Externe Audit- & Review-Schnittstellen               │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 85 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 85 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6403,7 +6403,7 @@ Code kopieren
 │ Fokus: Sicherheits- & Missbrauchsmodell (post-freeze)       │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 86 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 86 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6456,7 +6456,7 @@ Code kopieren
 │ Fokus: Compliance- & Rechtsabgrenzung (post-freeze)         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 87 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 87 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6504,7 +6504,7 @@ Code kopieren
 │ Fokus: Betriebs- & Einsatzgrenzen (post-freeze)             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 88 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 88 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6551,7 +6551,7 @@ Code kopieren
 │ Fokus: Interne Rollen & Verantwortlichkeiten (post-freeze)  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 89 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 89 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6601,7 +6601,7 @@ Code kopieren
 │ Fokus: Systemgrenzen & Nicht-Ziele (post-freeze)            │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 90 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 90 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6652,7 +6652,7 @@ Code kopieren
 │ Fokus: Dokumentation der Annahmen & Axiome                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 91 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 91 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6699,7 +6699,7 @@ Code kopieren
 │ Fokus: Begriffsglossar & Terminologie-Fixierung             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 92 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 92 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6750,7 +6750,7 @@ Code kopieren
 │ Fokus: Referenzarchitektur & formales Gesamtmodell          │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 93 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 93 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6807,7 +6807,7 @@ Code kopieren
 │ Fokus: Projektionsebenen & Ableitungsregeln                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 94 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 94 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6867,7 +6867,7 @@ Code kopieren
 │ Fokus: Zustands→Modus-Mapping (13 Modi)                     │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 95 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 95 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6935,7 +6935,7 @@ Code kopieren
 │ Fokus: Modus → Experten-Domain-Mapping                      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 96 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 96 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -6998,7 +6998,7 @@ Code kopieren
 │ Fokus: Symbol- & Icon-Semantik (13 Modi)                    │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 97 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 97 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -7052,7 +7052,7 @@ Code kopieren
 │ Fokus: Farbsemantik & CI-Ableitung                           │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 98 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 98 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -7106,7 +7106,7 @@ Code kopieren
 │ Fokus: Dynamik & Übergangsregeln (Modus/Visuals)             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 99 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 99 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -7158,7 +7158,7 @@ Code kopieren
 │ Fokus: Gesamtsimulation der Projektionsebene                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 100 / 130                 │
+│              MAIOS VERSION: 2.0 - ITERATION 100 / 130                 │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -7211,7 +7211,7 @@ Code kopieren
 │ (Logos, Symbole, Farben, 13 Modi live)                       │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 101 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 101 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -7272,7 +7272,7 @@ Code kopieren
 │ (Modus-spezifische Symbol-Sets)                              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 102 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 102 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -7339,7 +7339,7 @@ Code kopieren
 │ (Modus-spezifische Farbwerte & CI-Ableitung)                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 103 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 103 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -7405,7 +7405,7 @@ Code kopieren
 │ (Modus-Übergänge & visuelle Reaktionsregeln)                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 104 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 104 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -7471,7 +7471,7 @@ Code kopieren
 │ (Automatischer Modus-Wechsel: visuelle Bindung)             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 105 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 105 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -7535,7 +7535,7 @@ Code kopieren
 │ (Manueller Modus-Wechsel: visuelle Abgrenzung)              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 106 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 106 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -7598,7 +7598,7 @@ Code kopieren
 │ (Modus-Persistenz: visuelle Langzeitstabilität)             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 107 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 107 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -7662,7 +7662,7 @@ Code kopieren
 │ (Modus-Überlagerungen & Mehrfachindikatoren)                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 108 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 108 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -7726,7 +7726,7 @@ Code kopieren
 │ (Fehler-, Grenz- & Fallback-Darstellungen)                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 109 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 109 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -7790,7 +7790,7 @@ Code kopieren
 │ (Typografie-Bindung an Modi)                                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 110 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 110 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -7855,7 +7855,7 @@ Code kopieren
 │ (Layout-Dichte & Raumreaktion pro Modus)                    │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 111 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 111 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -7919,7 +7919,7 @@ Code kopieren
 │ (Modus-Header & visuelle Identifikatoren)                   │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 112 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 112 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -7983,7 +7983,7 @@ Code kopieren
 │ (Modus-spezifische Mikro-Indikatoren)                       │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 113 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 113 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -8047,7 +8047,7 @@ Code kopieren
 │ (CI-Gesamtschau & visuelle Konsistenzprüfung)               │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 114 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 114 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -8118,7 +8118,7 @@ Code kopieren
 └──────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────┐
-│ MAIOS VERSION: 2.0 — ITERATION 115 / 130 │
+│ MAIOS VERSION: 2.0 - ITERATION 115 / 130 │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase │
 │ Visuelle & modale Manifestation │
@@ -8175,7 +8175,7 @@ Code kopieren
 │ (Erste konkrete Modus-Visualisierung) │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 116 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 116 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -8240,7 +8240,7 @@ Code kopieren
 │ (Serielle Modus-Visualisierung 1–4)                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 117 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 117 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -8306,7 +8306,7 @@ Code kopieren
 │ (Serielle Modus-Visualisierung 5–8)                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 118 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 118 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -8372,7 +8372,7 @@ Code kopieren
 │ (Serielle Modus-Visualisierung 9–13)                        │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 119 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 119 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -8438,7 +8438,7 @@ Code kopieren
 │ (Gesamtschau: Alle Modi im Kontext)                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 120 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 120 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -8498,7 +8498,7 @@ Code kopieren
 │ (Modus-Wechsel live: visuelle Demonstration)                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 121 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 121 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -8562,7 +8562,7 @@ Code kopieren
 │ (Stress- & Grenztests der visuellen Ebene)                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 122 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 122 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -8627,7 +8627,7 @@ Code kopieren
 │ (Barrierefreiheit & Wahrnehmungssicherheit)                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 123 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 123 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -8692,7 +8692,7 @@ Code kopieren
 │ (Systemweite visuelle Freigabe)                             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 124 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 124 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -8752,7 +8752,7 @@ Code kopieren
 │ (Externe Darstellung & Referenz-Exports)                    │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 125 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 125 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Externe Darstellung & Referenz-Exports                      │
@@ -8812,7 +8812,7 @@ Code kopieren
 │ (Integrations-Schnittstellen: visuelle Bindung)             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 126 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 126 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Integrations-Schnittstellen: visuelle Bindung               │
@@ -8874,7 +8874,7 @@ Code kopieren
 │ (Audit & Verifikationspfad der Visuals)                     │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 127 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 127 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Audit & Verifikationspfad der Visuals                       │
@@ -8940,7 +8940,7 @@ Code kopieren
 │ (Langzeitstabilität & Wartungsregeln)                       │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 128 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 128 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Langzeitstabilität & Wartungsregeln                          │
@@ -9006,7 +9006,7 @@ Code kopieren
 │ (Gesamtdokumentation & Übergabeprotokoll)                   │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 129 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 129 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Gesamtdokumentation & Übergabeprotokoll                     │
@@ -9077,7 +9077,7 @@ Code kopieren
 │ (Finale Systemversiegelung)                                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 130 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 130 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Finale Systemversiegelung                                   │
@@ -9137,5 +9137,5 @@ Code kopieren
 │ Der Zyklus ist geschlossen.                                 │
 │                                                             │
 │ Nächster möglicher Schritt:                                 │
-│ **MAIOS 1.3 — neuer Zyklus (optional)**                     │
+│ **MAIOS 1.3 - neuer Zyklus (optional)**                     │
 └──────────────────────────────────────────────────────────────┘

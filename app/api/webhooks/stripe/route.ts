@@ -1,5 +1,5 @@
 /*** =======================================================================
- *  INVENTUS INDEX — app/api/webhooks/stripe/route.ts
+ *  INVENTUS INDEX - app/api/webhooks/stripe/route.ts
  *  Stripe-Webhooks · ledger_credit / ledger_debit / webhook_events
  * =======================================================================
  *

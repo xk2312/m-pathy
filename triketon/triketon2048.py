@@ -1,5 +1,5 @@
 # ============================================================================
-# 📘 INDEX — triketon2048.py (GPTM-Galaxy+ · Triketon Phase-1 Engine)
+# 📘 INDEX - triketon2048.py (GPTM-Galaxy+ · Triketon Phase-1 Engine)
 # ----------------------------------------------------------------------------
 # PURPOSE
 #   Implements the full Triketon-2048 seal and verification engine.
@@ -148,7 +148,7 @@ import unicodedata
 
 def normalize_for_truth_hash(text: str) -> str:
     """
-    TruthHash Law v1 — canonical normalization
+    TruthHash Law v1 - canonical normalization
     - remove markdown syntax (#, **, __, ``, etc.)
     - remove HTML tags
     - remove emojis & non-text unicode symbols

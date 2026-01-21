@@ -1,5 +1,5 @@
 /* ======================================================================
-   FILE INDEX — lib/i18n.archive.ts
+   FILE INDEX - lib/i18n.archive.ts
    ======================================================================
 
    ROLLE DER DATEI
@@ -280,7 +280,7 @@ close: "Close",
 
 
   // ─────────────────────────────
-  // NEW — Report structure & content
+  // NEW - Report structure & content
   // ─────────────────────────────
 
   sections: {
@@ -421,7 +421,7 @@ close: "Schließen",
 
 
   // ─────────────────────────────
-  // NEU — Struktur & Inhalt des Berichts
+  // NEU - Struktur & Inhalt des Berichts
   // ─────────────────────────────
 
   sections: {

@@ -61,7 +61,7 @@ done
   corepack prepare pnpm@10.14.0 --activate || true
   pnpm install --frozen-lockfile --dry-run || true
   echo
-  echo "===== next build (—help only; KEIN Buildlauf) ====="
+  echo "===== next build (-help only; KEIN Buildlauf) ====="
   npx next --help || true
 } > "$OUT/04_local_checks.txt" 2>&1
 

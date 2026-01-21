@@ -1,5 +1,5 @@
 /* ======================================================================
-   FILE INDEX — app/layout.tsx
+   FILE INDEX - app/layout.tsx
    ======================================================================
 
    ROLLE DER DATEI
@@ -130,7 +130,7 @@
 
    ====================================================================== */
 
-// app/layout.tsx — SERVER COMPONENT (FIXED)
+// app/layout.tsx - SERVER COMPONENT (FIXED)
 import "./global.css"
 import React from "react"
 import type { Metadata, Viewport } from "next"

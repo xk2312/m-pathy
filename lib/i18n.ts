@@ -1,5 +1,5 @@
 /*** =======================================================================
- *  INVENTUS INDEX — lib/i18n.ts
+ *  INVENTUS INDEX - lib/i18n.ts
  *  Screening · Struktur · Sprach-Hotspots
  * ======================================================================= 
  *
@@ -221,7 +221,7 @@ const en = {
 
   // CTA fallback
   "cta.fallback":
-    "All set — tell me what you want to build (app, flow, feature …).",
+    "All set - tell me what you want to build (app, flow, feature …).",
 
   // CTA labels (Säule header button etc.)
   "cta.build": "Build",
@@ -249,13 +249,13 @@ const en = {
 "triketon.button.label": "Triketon2048",
 "triketon.button.tooltip": "Verified · Proof of Truth",
 
-"triketon.overlay.title": "Triketon2048 — Verified Response",
+"triketon.overlay.title": "Triketon2048 - Verified Response",
 
 "triketon.overlay.intro":
 "This response has been cryptographically sealed. Its authenticity can be verified at any time.",
 
 "triketon.overlay.explainer":
-"We do not store the content of this response on our servers. Only a mathematical proof of its integrity is stored — never the text itself.",
+"We do not store the content of this response on our servers. Only a mathematical proof of its integrity is stored - never the text itself.",
 
 "triketon.overlay.ownership":
 "Your words belong to you. Only you have access to the full content.",
@@ -276,21 +276,21 @@ const en = {
 "triketon.usecase.researcher.title": "For Researchers",
 
 "triketon.usecase.researcher.body":
-"As a researcher, you may need to prove that a hypothesis, insight, or result existed at a specific point in time — without publishing or revealing your work prematurely. Triketon allows you to establish priority and integrity without disclosure.",
+"As a researcher, you may need to prove that a hypothesis, insight, or result existed at a specific point in time - without publishing or revealing your work prematurely. Triketon allows you to establish priority and integrity without disclosure.",
 
 // --- Use Case: Inventor -------------------------------------------
 
 "triketon.usecase.inventor.title": "For Inventors",
 
 "triketon.usecase.inventor.body":
-"As an inventor, you may want to prove that an idea originated with you — without exposing it before you are ready. Triketon lets you seal ideas, not hide them, and prove authorship without loss of control.",
+"As an inventor, you may want to prove that an idea originated with you - without exposing it before you are ready. Triketon lets you seal ideas, not hide them, and prove authorship without loss of control.",
 
 // --- Use Case: Creative -------------------------------------------
 
 "triketon.usecase.creative.title": "For Creators",
 
 "triketon.usecase.creative.body":
-"As a creator, you may want certainty that your words are yours — even when shared digitally. Triketon provides proof of authorship without watermarks, platforms, or ownership transfer.",
+"As a creator, you may want certainty that your words are yours - even when shared digitally. Triketon provides proof of authorship without watermarks, platforms, or ownership transfer.",
 
 // --- Universal Closing --------------------------------------------
 
@@ -331,7 +331,7 @@ const en = {
   conversationAria: "Chat log",
   assistantSays: "Assistant message",
   youSaid: "Your message",
-  columnAria: "Column — Controls & Selection",
+  columnAria: "Column - Controls & Selection",
   mobileOverlayLabel: "Mobile column overlay",
 } as const;
 
@@ -468,13 +468,13 @@ const de = {
 "triketon.button.label": "Triketon2048",
 "triketon.button.tooltip": "Verifiziert · Wahrheitsbeweis",
 
-"triketon.overlay.title": "Triketon2048 — Verifizierte Antwort",
+"triketon.overlay.title": "Triketon2048 - Verifizierte Antwort",
 
 "triketon.overlay.intro":
 "Diese Antwort wurde kryptografisch versiegelt. Ihre Echtheit kann jederzeit überprüft werden.",
 
 "triketon.overlay.explainer":
-"Wir speichern den Inhalt dieser Antwort nicht auf unseren Servern. Gespeichert wird ausschließlich ein mathematischer Beweis ihrer Unverändertheit — niemals der Text selbst.",
+"Wir speichern den Inhalt dieser Antwort nicht auf unseren Servern. Gespeichert wird ausschließlich ein mathematischer Beweis ihrer Unverändertheit - niemals der Text selbst.",
 
 "triketon.overlay.ownership":
 "Deine Worte gehören dir. Nur du hast Zugriff auf den vollständigen Inhalt.",
@@ -492,15 +492,15 @@ const de = {
 
 "triketon.usecase.researcher.title": "Für Forschende",
 "triketon.usecase.researcher.body":
-"Als Forschende möchtest du nachweisen können, dass eine Hypothese, Erkenntnis oder ein Ergebnis zu einem bestimmten Zeitpunkt existierte — ohne deine Arbeit vorzeitig zu veröffentlichen oder offenzulegen. Triketon ermöglicht Prioritätsnachweise ohne Offenlegung.",
+"Als Forschende möchtest du nachweisen können, dass eine Hypothese, Erkenntnis oder ein Ergebnis zu einem bestimmten Zeitpunkt existierte - ohne deine Arbeit vorzeitig zu veröffentlichen oder offenzulegen. Triketon ermöglicht Prioritätsnachweise ohne Offenlegung.",
 
 "triketon.usecase.inventor.title": "Für Erfinder:innen",
 "triketon.usecase.inventor.body":
-"Als Erfinder:in möchtest du belegen können, dass eine Idee von dir stammt — ohne sie preiszugeben, bevor du dazu bereit bist. Triketon versiegelt Ideen, statt sie zu verstecken, und ermöglicht Urheberschaft ohne Kontrollverlust.",
+"Als Erfinder:in möchtest du belegen können, dass eine Idee von dir stammt - ohne sie preiszugeben, bevor du dazu bereit bist. Triketon versiegelt Ideen, statt sie zu verstecken, und ermöglicht Urheberschaft ohne Kontrollverlust.",
 
 "triketon.usecase.creative.title": "Für Kreative",
 "triketon.usecase.creative.body":
-"Als Kreative:r möchtest du sicher sein, dass deine Worte dir gehören — auch wenn sie digital geteilt werden. Triketon bietet Urhebernachweis ohne Wasserzeichen, Plattformbindung oder Rechteübertragung.",
+"Als Kreative:r möchtest du sicher sein, dass deine Worte dir gehören - auch wenn sie digital geteilt werden. Triketon bietet Urhebernachweis ohne Wasserzeichen, Plattformbindung oder Rechteübertragung.",
 
 "triketon.overlay.closing":
 "Beweis ohne Besitz. Verifikation ohne Überwachung.",
@@ -538,7 +538,7 @@ const de = {
   conversationAria: "Chat-Verlauf",
   assistantSays: "Nachricht des Assistenten",
   youSaid: "Deine Nachricht",
-  columnAria: "Seitenleiste — Steuerung & Auswahl",
+  columnAria: "Seitenleiste - Steuerung & Auswahl",
   mobileOverlayLabel: "Mobile Seitenleistenansicht",
 } as const;
 
@@ -647,7 +647,7 @@ const fr = {
 
    // CTA fallback
   "cta.fallback":
-    "Tout est prêt — dis-moi ce que tu veux créer (application, flow, fonctionnalité…).",
+    "Tout est prêt - dis-moi ce que tu veux créer (application, flow, fonctionnalité…).",
 
   // CTA labels
   "cta.build": "Construire",
@@ -674,13 +674,13 @@ const fr = {
 "triketon.button.label": "Triketon2048",
 "triketon.button.tooltip": "Vérifié · Preuve de vérité",
 
-"triketon.overlay.title": "Triketon2048 — Réponse vérifiée",
+"triketon.overlay.title": "Triketon2048 - Réponse vérifiée",
 
 "triketon.overlay.intro":
 "Cette réponse a été scellée cryptographiquement. Son authenticité peut être vérifiée à tout moment.",
 
 "triketon.overlay.explainer":
-"Nous ne stockons pas le contenu de cette réponse sur nos serveurs. Seule une preuve mathématique de son intégrité est conservée — jamais le texte lui-même.",
+"Nous ne stockons pas le contenu de cette réponse sur nos serveurs. Seule une preuve mathématique de son intégrité est conservée - jamais le texte lui-même.",
 
 "triketon.overlay.ownership":
 "Vos mots vous appartiennent. Vous seul avez accès au contenu complet.",
@@ -698,15 +698,15 @@ const fr = {
 
 "triketon.usecase.researcher.title": "Pour les chercheurs",
 "triketon.usecase.researcher.body":
-"En tant que chercheur, vous pouvez avoir besoin de prouver qu’une hypothèse, une idée ou un résultat existait à un moment donné — sans publier ni révéler votre travail prématurément. Triketon permet d’établir une antériorité sans divulgation.",
+"En tant que chercheur, vous pouvez avoir besoin de prouver qu’une hypothèse, une idée ou un résultat existait à un moment donné - sans publier ni révéler votre travail prématurément. Triketon permet d’établir une antériorité sans divulgation.",
 
 "triketon.usecase.inventor.title": "Pour les inventeurs",
 "triketon.usecase.inventor.body":
-"En tant qu’inventeur, vous pouvez vouloir prouver qu’une idée vient de vous — sans l’exposer avant d’y être prêt. Triketon scelle les idées au lieu de les cacher et prouve l’origine sans perte de contrôle.",
+"En tant qu’inventeur, vous pouvez vouloir prouver qu’une idée vient de vous - sans l’exposer avant d’y être prêt. Triketon scelle les idées au lieu de les cacher et prouve l’origine sans perte de contrôle.",
 
 "triketon.usecase.creative.title": "Pour les créateurs",
 "triketon.usecase.creative.body":
-"En tant que créateur, vous pouvez vouloir la certitude que vos mots sont les vôtres — même lorsqu’ils sont partagés numériquement. Triketon fournit une preuve d’auteur sans filigrane, plateforme ou transfert de droits.",
+"En tant que créateur, vous pouvez vouloir la certitude que vos mots sont les vôtres - même lorsqu’ils sont partagés numériquement. Triketon fournit une preuve d’auteur sans filigrane, plateforme ou transfert de droits.",
 
 "triketon.overlay.closing":
 "Preuve sans possession. Vérification sans surveillance.",
@@ -744,7 +744,7 @@ const fr = {
   conversationAria: "Historique du chat",
   assistantSays: "Message de l’assistant",
   youSaid: "Votre message",
-  columnAria: "Panneau — Commandes et sélection",
+  columnAria: "Panneau - Commandes et sélection",
   mobileOverlayLabel: "Affichage mobile du panneau",
 } as const;
 
@@ -853,7 +853,7 @@ const es = {
 
   // CTA fallback
   "cta.fallback":
-    "Todo listo — cuéntame qué quieres construir (app, flujo, funcionalidad…).",
+    "Todo listo - cuéntame qué quieres construir (app, flujo, funcionalidad…).",
 
   // CTA labels
   "cta.build": "Construir",
@@ -881,13 +881,13 @@ const es = {
 "triketon.button.label": "Triketon2048",
 "triketon.button.tooltip": "Verificado · Prueba de verdad",
 
-"triketon.overlay.title": "Triketon2048 — Respuesta verificada",
+"triketon.overlay.title": "Triketon2048 - Respuesta verificada",
 
 "triketon.overlay.intro":
 "Esta respuesta ha sido sellada criptográficamente. Su autenticidad puede verificarse en cualquier momento.",
 
 "triketon.overlay.explainer":
-"No almacenamos el contenido de esta respuesta en nuestros servidores. Solo se guarda una prueba matemática de su integridad — nunca el texto en sí.",
+"No almacenamos el contenido de esta respuesta en nuestros servidores. Solo se guarda una prueba matemática de su integridad - nunca el texto en sí.",
 
 "triketon.overlay.ownership":
 "Tus palabras te pertenecen. Solo tú tienes acceso al contenido completo.",
@@ -905,15 +905,15 @@ const es = {
 
 "triketon.usecase.researcher.title": "Para investigadores",
 "triketon.usecase.researcher.body":
-"Como investigador, puedes necesitar demostrar que una hipótesis, idea o resultado existía en un momento determinado — sin publicar ni revelar tu trabajo antes de tiempo. Triketon permite establecer prioridad sin divulgación.",
+"Como investigador, puedes necesitar demostrar que una hipótesis, idea o resultado existía en un momento determinado - sin publicar ni revelar tu trabajo antes de tiempo. Triketon permite establecer prioridad sin divulgación.",
 
 "triketon.usecase.inventor.title": "Para inventores",
 "triketon.usecase.inventor.body":
-"Como inventor, puedes querer demostrar que una idea se originó contigo — sin exponerla antes de estar listo. Triketon sella ideas en lugar de ocultarlas y permite probar la autoría sin perder el control.",
+"Como inventor, puedes querer demostrar que una idea se originó contigo - sin exponerla antes de estar listo. Triketon sella ideas en lugar de ocultarlas y permite probar la autoría sin perder el control.",
 
 "triketon.usecase.creative.title": "Para creadores",
 "triketon.usecase.creative.body":
-"Como creador, puedes querer la certeza de que tus palabras son tuyas — incluso cuando se comparten digitalmente. Triketon ofrece prueba de autoría sin marcas de agua, plataformas ni cesión de derechos.",
+"Como creador, puedes querer la certeza de que tus palabras son tuyas - incluso cuando se comparten digitalmente. Triketon ofrece prueba de autoría sin marcas de agua, plataformas ni cesión de derechos.",
 
 "triketon.overlay.closing":
 "Prueba sin posesión. Verificación sin vigilancia.",
@@ -951,7 +951,7 @@ const es = {
   conversationAria: "Historial del chat",
   assistantSays: "Mensaje del asistente",
   youSaid: "Tu mensaje",
-  columnAria: "Panel — Controles y selección",
+  columnAria: "Panel - Controles y selección",
   mobileOverlayLabel: "Vista móvil del panel",
 } as const;
 
@@ -1060,7 +1060,7 @@ const it = {
 
    // CTA fallback
   "cta.fallback":
-    "Tutto pronto — dimmi cosa desideri creare (app, flusso, funzionalità…).",
+    "Tutto pronto - dimmi cosa desideri creare (app, flusso, funzionalità…).",
 
   // CTA labels
   "cta.build": "Crea",
@@ -1089,13 +1089,13 @@ const it = {
 "triketon.button.label": "Triketon2048",
 "triketon.button.tooltip": "Verificato · Prova di verità",
 
-"triketon.overlay.title": "Triketon2048 — Risposta verificata",
+"triketon.overlay.title": "Triketon2048 - Risposta verificata",
 
 "triketon.overlay.intro":
 "Questa risposta è stata sigillata crittograficamente. La sua autenticità può essere verificata in qualsiasi momento.",
 
 "triketon.overlay.explainer":
-"Non memorizziamo il contenuto di questa risposta sui nostri server. Viene conservata solo una prova matematica della sua integrità — mai il testo stesso.",
+"Non memorizziamo il contenuto di questa risposta sui nostri server. Viene conservata solo una prova matematica della sua integrità - mai il testo stesso.",
 
 "triketon.overlay.ownership":
 "Le tue parole ti appartengono. Solo tu hai accesso al contenuto completo.",
@@ -1113,15 +1113,15 @@ const it = {
 
 "triketon.usecase.researcher.title": "Per i ricercatori",
 "triketon.usecase.researcher.body":
-"Come ricercatore, potresti dover dimostrare che un’ipotesi, un’intuizione o un risultato esistevano in un momento specifico — senza pubblicare o rivelare il tuo lavoro prematuramente. Triketon consente di stabilire la priorità senza divulgazione.",
+"Come ricercatore, potresti dover dimostrare che un’ipotesi, un’intuizione o un risultato esistevano in un momento specifico - senza pubblicare o rivelare il tuo lavoro prematuramente. Triketon consente di stabilire la priorità senza divulgazione.",
 
 "triketon.usecase.inventor.title": "Per gli inventori",
 "triketon.usecase.inventor.body":
-"Come inventore, potresti voler dimostrare che un’idea ha avuto origine da te — senza esporla prima di essere pronto. Triketon sigilla le idee invece di nasconderle e permette di provare la paternità senza perdita di controllo.",
+"Come inventore, potresti voler dimostrare che un’idea ha avuto origine da te - senza esporla prima di essere pronto. Triketon sigilla le idee invece di nasconderle e permette di provare la paternità senza perdita di controllo.",
 
 "triketon.usecase.creative.title": "Per i creativi",
 "triketon.usecase.creative.body":
-"Come creativo, potresti desiderare la certezza che le tue parole siano tue — anche quando vengono condivise digitalmente. Triketon fornisce prova di paternità senza filigrane, piattaforme o trasferimento di diritti.",
+"Come creativo, potresti desiderare la certezza che le tue parole siano tue - anche quando vengono condivise digitalmente. Triketon fornisce prova di paternità senza filigrane, piattaforme o trasferimento di diritti.",
 
 "triketon.overlay.closing":
 "Prova senza possesso. Verifica senza sorveglianza.",
@@ -1158,7 +1158,7 @@ const it = {
   conversationAria: "Cronologia della chat",
   assistantSays: "Messaggio dell’assistente",
   youSaid: "Il tuo messaggio",
-  columnAria: "Pannello — Controlli e selezione",
+  columnAria: "Pannello - Controlli e selezione",
   mobileOverlayLabel: "Vista mobile del pannello",
 } as const;
 
@@ -1267,7 +1267,7 @@ const pt = {
 
   // CTA fallback
   "cta.fallback":
-    "Tudo pronto — diz-me o que queres construir (app, fluxo, funcionalidade…).",
+    "Tudo pronto - diz-me o que queres construir (app, fluxo, funcionalidade…).",
 
   // CTA labels
   "cta.build": "Criar",
@@ -1296,13 +1296,13 @@ const pt = {
 "triketon.button.label": "Triketon2048",
 "triketon.button.tooltip": "Verificado · Prova de verdade",
 
-"triketon.overlay.title": "Triketon2048 — Resposta verificada",
+"triketon.overlay.title": "Triketon2048 - Resposta verificada",
 
 "triketon.overlay.intro":
 "Esta resposta foi selada criptograficamente. A sua autenticidade pode ser verificada a qualquer momento.",
 
 "triketon.overlay.explainer":
-"Não armazenamos o conteúdo desta resposta em nossos servidores. Apenas uma prova matemática da sua integridade é guardada — nunca o texto em si.",
+"Não armazenamos o conteúdo desta resposta em nossos servidores. Apenas uma prova matemática da sua integridade é guardada - nunca o texto em si.",
 
 "triketon.overlay.ownership":
 "As suas palavras pertencem a você. Somente você tem acesso ao conteúdo completo.",
@@ -1320,15 +1320,15 @@ const pt = {
 
 "triketon.usecase.researcher.title": "Para pesquisadores",
 "triketon.usecase.researcher.body":
-"Como pesquisador, você pode precisar provar que uma hipótese, ideia ou resultado existia em um determinado momento — sem publicar ou revelar o seu trabalho prematuramente. Triketon permite estabelecer prioridade sem divulgação.",
+"Como pesquisador, você pode precisar provar que uma hipótese, ideia ou resultado existia em um determinado momento - sem publicar ou revelar o seu trabalho prematuramente. Triketon permite estabelecer prioridade sem divulgação.",
 
 "triketon.usecase.inventor.title": "Para inventores",
 "triketon.usecase.inventor.body":
-"Como inventor, você pode querer provar que uma ideia se originou com você — sem expô-la antes de estar pronto. Triketon sela ideias em vez de escondê-las e permite comprovar a autoria sem perda de controle.",
+"Como inventor, você pode querer provar que uma ideia se originou com você - sem expô-la antes de estar pronto. Triketon sela ideias em vez de escondê-las e permite comprovar a autoria sem perda de controle.",
 
 "triketon.usecase.creative.title": "Para criadores",
 "triketon.usecase.creative.body":
-"Como criador, você pode querer a certeza de que suas palavras são suas — mesmo quando compartilhadas digitalmente. Triketon oferece prova de autoria sem marcas d’água, plataformas ou transferência de direitos.",
+"Como criador, você pode querer a certeza de que suas palavras são suas - mesmo quando compartilhadas digitalmente. Triketon oferece prova de autoria sem marcas d’água, plataformas ou transferência de direitos.",
 
 "triketon.overlay.closing":
 "Prova sem posse. Verificação sem vigilância.",
@@ -1365,7 +1365,7 @@ const pt = {
   conversationAria: "Histórico do chat",
   assistantSays: "Mensagem do assistente",
   youSaid: "Sua mensagem",
-  columnAria: "Painel — Controles e seleção",
+  columnAria: "Painel - Controles e seleção",
   mobileOverlayLabel: "Visão móvel do painel",
 } as const;
 
@@ -1475,7 +1475,7 @@ const nl = {
 
   // CTA fallback
   "cta.fallback":
-    "Alles is klaar — vertel me wat je wilt bouwen (app, flow, functie…).",
+    "Alles is klaar - vertel me wat je wilt bouwen (app, flow, functie…).",
 
   // CTA labels
   "cta.build": "Bouwen",
@@ -1504,13 +1504,13 @@ const nl = {
 "triketon.button.label": "Triketon2048",
 "triketon.button.tooltip": "Geverifieerd · Bewijs van waarheid",
 
-"triketon.overlay.title": "Triketon2048 — Geverifieerde reactie",
+"triketon.overlay.title": "Triketon2048 - Geverifieerde reactie",
 
 "triketon.overlay.intro":
 "Deze reactie is cryptografisch verzegeld. De echtheid kan op elk moment worden geverifieerd.",
 
 "triketon.overlay.explainer":
-"We slaan de inhoud van deze reactie niet op onze servers op. Alleen een wiskundig bewijs van de integriteit wordt bewaard — nooit de tekst zelf.",
+"We slaan de inhoud van deze reactie niet op onze servers op. Alleen een wiskundig bewijs van de integriteit wordt bewaard - nooit de tekst zelf.",
 
 "triketon.overlay.ownership":
 "Jouw woorden zijn van jou. Alleen jij hebt toegang tot de volledige inhoud.",
@@ -1528,15 +1528,15 @@ const nl = {
 
 "triketon.usecase.researcher.title": "Voor onderzoekers",
 "triketon.usecase.researcher.body":
-"Als onderzoeker wil je mogelijk aantonen dat een hypothese, inzicht of resultaat op een bepaald moment bestond — zonder je werk voortijdig te publiceren of te onthullen. Triketon maakt het mogelijk om prioriteit vast te leggen zonder openbaarmaking.",
+"Als onderzoeker wil je mogelijk aantonen dat een hypothese, inzicht of resultaat op een bepaald moment bestond - zonder je werk voortijdig te publiceren of te onthullen. Triketon maakt het mogelijk om prioriteit vast te leggen zonder openbaarmaking.",
 
 "triketon.usecase.inventor.title": "Voor uitvinders",
 "triketon.usecase.inventor.body":
-"Als uitvinder wil je mogelijk bewijzen dat een idee bij jou is ontstaan — zonder het te delen voordat je er klaar voor bent. Triketon verzegelt ideeën in plaats van ze te verbergen en bewijst auteurschap zonder verlies van controle.",
+"Als uitvinder wil je mogelijk bewijzen dat een idee bij jou is ontstaan - zonder het te delen voordat je er klaar voor bent. Triketon verzegelt ideeën in plaats van ze te verbergen en bewijst auteurschap zonder verlies van controle.",
 
 "triketon.usecase.creative.title": "Voor creatieven",
 "triketon.usecase.creative.body":
-"Als creatief wil je zekerheid dat jouw woorden van jou zijn — zelfs wanneer ze digitaal worden gedeeld. Triketon biedt bewijs van auteurschap zonder watermerken, platforms of overdracht van rechten.",
+"Als creatief wil je zekerheid dat jouw woorden van jou zijn - zelfs wanneer ze digitaal worden gedeeld. Triketon biedt bewijs van auteurschap zonder watermerken, platforms of overdracht van rechten.",
 
 "triketon.overlay.closing":
 "Bewijs zonder bezit. Verificatie zonder toezicht.",
@@ -1573,7 +1573,7 @@ const nl = {
   conversationAria: "Chatgeschiedenis",
   assistantSays: "Bericht van de assistent",
   youSaid: "Jouw bericht",
-  columnAria: "Zijlijn — Bediening & selectie",
+  columnAria: "Zijlijn - Bediening & selectie",
   mobileOverlayLabel: "Mobiele weergave van het paneel",
 } as const;
 
@@ -1683,7 +1683,7 @@ const ru = {
 
   // CTA fallback
   "cta.fallback":
-    "Все готово — расскажи, что ты хочешь создать (приложение, поток, функцию…).",
+    "Все готово - расскажи, что ты хочешь создать (приложение, поток, функцию…).",
 
   // CTA labels
   "cta.build": "Создать",
@@ -1712,13 +1712,13 @@ const ru = {
 "triketon.button.label": "Triketon2048",
 "triketon.button.tooltip": "Подтверждено · Доказательство истины",
 
-"triketon.overlay.title": "Triketon2048 — Подтверждённый ответ",
+"triketon.overlay.title": "Triketon2048 - Подтверждённый ответ",
 
 "triketon.overlay.intro":
 "Этот ответ был криптографически запечатан. Его подлинность может быть проверена в любое время.",
 
 "triketon.overlay.explainer":
-"Мы не храним содержимое этого ответа на наших серверах. Сохраняется только математическое доказательство его целостности — никогда сам текст.",
+"Мы не храним содержимое этого ответа на наших серверах. Сохраняется только математическое доказательство его целостности - никогда сам текст.",
 
 "triketon.overlay.ownership":
 "Ваши слова принадлежат вам. Только вы имеете доступ к полному содержимому.",
@@ -1730,21 +1730,21 @@ const ru = {
 "triketon.overlay.data.timestamp": "Временная метка",
 
 "triketon.overlay.footer":
-"Triketon2048 — это не функция. Это обещание.",
+"Triketon2048 - это не функция. Это обещание.",
 
 "triketon.overlay.usecases.title": "Почему это важно",
 
 "triketon.usecase.researcher.title": "Для исследователей",
 "triketon.usecase.researcher.body":
-"Как исследователь, вы можете захотеть доказать, что гипотеза, идея или результат существовали в определённый момент времени — не публикуя и не раскрывая работу преждевременно. Triketon позволяет зафиксировать приоритет без раскрытия.",
+"Как исследователь, вы можете захотеть доказать, что гипотеза, идея или результат существовали в определённый момент времени - не публикуя и не раскрывая работу преждевременно. Triketon позволяет зафиксировать приоритет без раскрытия.",
 
 "triketon.usecase.inventor.title": "Для изобретателей",
 "triketon.usecase.inventor.body":
-"Как изобретатель, вы можете захотеть доказать, что идея возникла у вас — не раскрывая её до готовности. Triketon запечатывает идеи, а не скрывает их, и позволяет доказать авторство без потери контроля.",
+"Как изобретатель, вы можете захотеть доказать, что идея возникла у вас - не раскрывая её до готовности. Triketon запечатывает идеи, а не скрывает их, и позволяет доказать авторство без потери контроля.",
 
 "triketon.usecase.creative.title": "Для творцов",
 "triketon.usecase.creative.body":
-"Как творец, вы можете хотеть уверенности, что ваши слова принадлежат вам — даже при цифровом распространении. Triketon обеспечивает доказательство авторства без водяных знаков, платформ или передачи прав.",
+"Как творец, вы можете хотеть уверенности, что ваши слова принадлежат вам - даже при цифровом распространении. Triketon обеспечивает доказательство авторства без водяных знаков, платформ или передачи прав.",
 
 "triketon.overlay.closing":
 "Доказательство без владения. Проверка без наблюдения.",
@@ -1781,7 +1781,7 @@ const ru = {
   conversationAria: "История чата",
   assistantSays: "Сообщение ассистента",
   youSaid: "Ваше сообщение",
-  columnAria: "Боковая панель — управление и выбор",
+  columnAria: "Боковая панель - управление и выбор",
   mobileOverlayLabel: "Мобильная версия панели",
 } as const;
 
@@ -1890,7 +1890,7 @@ const zh = {
 
   // CTA fallback
   "cta.fallback":
-    "一切准备就绪——告诉我你想创建什么（应用、流程、功能…）。",
+    "一切准备就绪--告诉我你想创建什么（应用、流程、功能…）。",
 
   // CTA labels
   "cta.build": "创建",
@@ -1919,7 +1919,7 @@ const zh = {
 "triketon.button.label": "Triketon2048",
 "triketon.button.tooltip": "検証済み · 真実の証明",
 
-"triketon.overlay.title": "Triketon2048 — 検証済みの回答",
+"triketon.overlay.title": "Triketon2048 - 検証済みの回答",
 
 "triketon.overlay.intro":
 "この回答は暗号的に封印されています。その真正性はいつでも検証できます。",
@@ -1988,7 +1988,7 @@ const zh = {
   conversationAria: "聊天记录",
   assistantSays: "助手消息",
   youSaid: "你的消息",
-  columnAria: "侧栏 — 控制与选择",
+  columnAria: "侧栏 - 控制与选择",
   mobileOverlayLabel: "移动端侧栏界面",
 } as const;
 
@@ -2097,7 +2097,7 @@ const ja = {
 
   // CTA fallback
   "cta.fallback":
-    "準備完了です — 作りたいもの（アプリ、フロー、機能など）を教えてください。",
+    "準備完了です - 作りたいもの（アプリ、フロー、機能など）を教えてください。",
 
   // CTA labels
   "cta.build": "ビルド",
@@ -2156,7 +2156,7 @@ const ja = {
   conversationAria: "チャットログ",
   assistantSays: "アシスタントのメッセージ",
   youSaid: "あなたのメッセージ",
-  columnAria: "コラム — コントロール & 選択",
+  columnAria: "コラム - コントロール & 選択",
   mobileOverlayLabel: "モバイルコラムオーバーレイ",
 } as const;
 
@@ -2265,7 +2265,7 @@ const ko = {
 
   // CTA fallback
   "cta.fallback":
-    "준비 완료 — 무엇을 만들고 싶은지 알려주세요 (앱, 플로우, 기능 등).",
+    "준비 완료 - 무엇을 만들고 싶은지 알려주세요 (앱, 플로우, 기능 등).",
 
   // CTA labels
   "cta.build": "빌드",
@@ -2294,7 +2294,7 @@ const ko = {
 "triketon.button.label": "Triketon2048",
 "triketon.button.tooltip": "검증됨 · 진실의 증명",
 
-"triketon.overlay.title": "Triketon2048 — 검증된 응답",
+"triketon.overlay.title": "Triketon2048 - 검증된 응답",
 
 "triketon.overlay.intro":
 "이 응답은 암호학적으로 봉인되었습니다. 그 진위는 언제든지 검증할 수 있습니다.",
@@ -2363,7 +2363,7 @@ const ko = {
   conversationAria: "채팅 로그",
   assistantSays: "어시스턴트 메시지",
   youSaid: "내 메시지",
-  columnAria: "컬럼 — 컨트롤 & 선택",
+  columnAria: "컬럼 - 컨트롤 & 선택",
   mobileOverlayLabel: "모바일 컬럼 오버레이",
 } as const;
 
@@ -2472,7 +2472,7 @@ const ar = {
 
   // CTA fallback
   "cta.fallback":
-"أنت جاهز — أخبرني بما تريد بناءه (تطبيق، تدفق، ميزة…).",
+"أنت جاهز - أخبرني بما تريد بناءه (تطبيق، تدفق، ميزة…).",
 
   // CTA labels
   "cta.build": "إنشاء",
@@ -2501,13 +2501,13 @@ const ar = {
 "triketon.button.label": "Triketon2048",
 "triketon.button.tooltip": "موثّق · دليل الحقيقة",
 
-"triketon.overlay.title": "Triketon2048 — رد موثّق",
+"triketon.overlay.title": "Triketon2048 - رد موثّق",
 
 "triketon.overlay.intro":
 "تم ختم هذا الرد تشفيرياً. يمكن التحقق من صحته في أي وقت.",
 
 "triketon.overlay.explainer":
-"نحن لا نخزن محتوى هذا الرد على خوادمنا. يتم حفظ دليل رياضي على سلامته فقط — وليس النص نفسه أبداً.",
+"نحن لا نخزن محتوى هذا الرد على خوادمنا. يتم حفظ دليل رياضي على سلامته فقط - وليس النص نفسه أبداً.",
 
 "triketon.overlay.ownership":
 "كلماتك ملك لك. أنت وحدك من يملك حق الوصول إلى المحتوى الكامل.",
@@ -2525,15 +2525,15 @@ const ar = {
 
 "triketon.usecase.researcher.title": "للباحثين",
 "triketon.usecase.researcher.body":
-"بصفتك باحثاً، قد تحتاج إلى إثبات أن فرضية أو فكرة أو نتيجة كانت موجودة في وقت معين — دون نشر أو كشف عملك مبكراً. يتيح Triketon إثبات الأولوية دون إفصاح.",
+"بصفتك باحثاً، قد تحتاج إلى إثبات أن فرضية أو فكرة أو نتيجة كانت موجودة في وقت معين - دون نشر أو كشف عملك مبكراً. يتيح Triketon إثبات الأولوية دون إفصاح.",
 
 "triketon.usecase.inventor.title": "للمخترعين",
 "triketon.usecase.inventor.body":
-"بصفتك مخترعاً، قد ترغب في إثبات أن فكرة ما نشأت منك — دون كشفها قبل أن تكون مستعداً. يقوم Triketon بختم الأفكار بدلاً من إخفائها ويثبت الملكية دون فقدان السيطرة.",
+"بصفتك مخترعاً، قد ترغب في إثبات أن فكرة ما نشأت منك - دون كشفها قبل أن تكون مستعداً. يقوم Triketon بختم الأفكار بدلاً من إخفائها ويثبت الملكية دون فقدان السيطرة.",
 
 "triketon.usecase.creative.title": "للمبدعين",
 "triketon.usecase.creative.body":
-"بصفتك مبدعاً، قد ترغب في التأكد من أن كلماتك ملك لك — حتى عند مشاركتها رقمياً. يوفر Triketon دليلاً على التأليف دون علامات مائية أو منصات أو نقل للحقوق.",
+"بصفتك مبدعاً، قد ترغب في التأكد من أن كلماتك ملك لك - حتى عند مشاركتها رقمياً. يوفر Triketon دليلاً على التأليف دون علامات مائية أو منصات أو نقل للحقوق.",
 
 "triketon.overlay.closing":
 "إثبات بلا امتلاك. تحقق بلا مراقبة.",
@@ -2570,7 +2570,7 @@ const ar = {
   conversationAria: "سجل الدردشة",
   assistantSays: "رسالة المساعد",
   youSaid: "رسالتك",
-  columnAria: "العمود — التحكم والاختيار",
+  columnAria: "العمود - التحكم والاختيار",
   mobileOverlayLabel: "واجهة العمود للجوال",
 } as const;
 
@@ -2679,7 +2679,7 @@ const hi = {
 
   // CTA fallback
   "cta.fallback":
-    "सब तैयार है — मुझे बताएं कि आप क्या बनाना चाहते हैं (ऐप, फ्लो, फीचर…).",
+    "सब तैयार है - मुझे बताएं कि आप क्या बनाना चाहते हैं (ऐप, फ्लो, फीचर…).",
 
   // CTA labels
   "cta.build": "निर्माण",
@@ -2708,13 +2708,13 @@ const hi = {
 "triketon.button.label": "Triketon2048",
 "triketon.button.tooltip": "सत्यापित · सत्य का प्रमाण",
 
-"triketon.overlay.title": "Triketon2048 — सत्यापित उत्तर",
+"triketon.overlay.title": "Triketon2048 - सत्यापित उत्तर",
 
 "triketon.overlay.intro":
 "इस उत्तर को क्रिप्टोग्राफ़िक रूप से सील किया गया है। इसकी प्रामाणिकता किसी भी समय सत्यापित की जा सकती है।",
 
 "triketon.overlay.explainer":
-"हम इस उत्तर की सामग्री को अपने सर्वरों पर संग्रहीत नहीं करते। केवल इसकी अखंडता का गणितीय प्रमाण रखा जाता है — स्वयं पाठ कभी नहीं।",
+"हम इस उत्तर की सामग्री को अपने सर्वरों पर संग्रहीत नहीं करते। केवल इसकी अखंडता का गणितीय प्रमाण रखा जाता है - स्वयं पाठ कभी नहीं।",
 
 "triketon.overlay.ownership":
 "आपके शब्द आपके हैं। पूर्ण सामग्री तक पहुँच केवल आपके पास है।",
@@ -2732,15 +2732,15 @@ const hi = {
 
 "triketon.usecase.researcher.title": "शोधकर्ताओं के लिए",
 "triketon.usecase.researcher.body":
-"एक शोधकर्ता के रूप में, आपको यह सिद्ध करने की आवश्यकता हो सकती है कि कोई परिकल्पना, विचार या परिणाम किसी निश्चित समय पर मौजूद था — बिना अपने कार्य को समय से पहले प्रकाशित या प्रकट किए। Triketon बिना प्रकटीकरण के प्राथमिकता और अखंडता सिद्ध करता है।",
+"एक शोधकर्ता के रूप में, आपको यह सिद्ध करने की आवश्यकता हो सकती है कि कोई परिकल्पना, विचार या परिणाम किसी निश्चित समय पर मौजूद था - बिना अपने कार्य को समय से पहले प्रकाशित या प्रकट किए। Triketon बिना प्रकटीकरण के प्राथमिकता और अखंडता सिद्ध करता है।",
 
 "triketon.usecase.inventor.title": "आविष्कारकों के लिए",
 "triketon.usecase.inventor.body":
-"एक आविष्कारक के रूप में, आप यह सिद्ध करना चाह सकते हैं कि कोई विचार आपसे उत्पन्न हुआ — बिना उसे तैयार होने से पहले उजागर किए। Triketon विचारों को छिपाने के बजाय सील करता है और नियंत्रण खोए बिना रचनात्मक स्वामित्व सिद्ध करता है।",
+"एक आविष्कारक के रूप में, आप यह सिद्ध करना चाह सकते हैं कि कोई विचार आपसे उत्पन्न हुआ - बिना उसे तैयार होने से पहले उजागर किए। Triketon विचारों को छिपाने के बजाय सील करता है और नियंत्रण खोए बिना रचनात्मक स्वामित्व सिद्ध करता है।",
 
 "triketon.usecase.creative.title": "रचनाकारों के लिए",
 "triketon.usecase.creative.body":
-"एक रचनाकार के रूप में, आप यह सुनिश्चित करना चाह सकते हैं कि आपके शब्द आपके ही हैं — भले ही उन्हें डिजिटल रूप से साझा किया जाए। Triketon बिना वॉटरमार्क, प्लेटफ़ॉर्म या अधिकार हस्तांतरण के लेखकत्व का प्रमाण प्रदान करता है।",
+"एक रचनाकार के रूप में, आप यह सुनिश्चित करना चाह सकते हैं कि आपके शब्द आपके ही हैं - भले ही उन्हें डिजिटल रूप से साझा किया जाए। Triketon बिना वॉटरमार्क, प्लेटफ़ॉर्म या अधिकार हस्तांतरण के लेखकत्व का प्रमाण प्रदान करता है।",
 
 "triketon.overlay.closing":
 "स्वामित्व के बिना प्रमाण। निगरानी के बिना सत्यापन.",
@@ -2777,7 +2777,7 @@ const hi = {
   conversationAria: "चैट लॉग",
   assistantSays: "सहायक संदेश",
   youSaid: "आपका संदेश",
-  columnAria: "कॉलम — नियंत्रण और चयन",
+  columnAria: "कॉलम - नियंत्रण और चयन",
   mobileOverlayLabel: "मोबाइल कॉलम ओवरले",
 } as const;
 
@@ -2875,7 +2875,7 @@ export function getLocale(): Locale {
   return currentLocale;
 }
 
-/** Set current locale (persists on client) — explizites Override */
+/** Set current locale (persists on client) - explizites Override */
 export function setLocale(locale: Locale) {
   const base = toBase(locale);
   if (!isSupported(base)) return;

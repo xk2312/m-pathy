@@ -1,7 +1,7 @@
 // app/api/ready/route.ts
 import { NextResponse } from "next/server";
 
-// — Helper: Timeout als Promise
+// - Helper: Timeout als Promise
 function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
   return new Promise((resolve, reject) => {
     const t = setTimeout(() => reject(new Error(`${label} timeout after ${ms}ms`)), ms);

@@ -1,5 +1,5 @@
 -- ============================================================
--- 002_ledger_functions.sql  (GPTM-Galaxy+ Payment v1 — Ledger)
+-- 002_ledger_functions.sql  (GPTM-Galaxy+ Payment v1 - Ledger)
 -- Transaktionale Kernfunktionen für credit/debit/get_balance.
 -- Guarantees:
 --  - Beträge > 0

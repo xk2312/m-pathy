@@ -5,7 +5,7 @@ export const dict = {
     kicker: "SECURITY BY DESIGN",
     title: "Your Digital Safety Layers",
     intro:
-      "See how m-pathy protects your conversations — emotionally, technically and cryptographically, always under your control.",
+      "See how m-pathy protects your conversations - emotionally, technically and cryptographically, always under your control.",
 
     cta_label: "Ask Digital Security Expert",
 
@@ -21,7 +21,7 @@ export const dict = {
       local_only: {
         title: "Local-Only Conversations",
         body:
-          "m-pathy stores no chats or personal data on servers. Everything stays on your device — invisible to us and fully under your control.",
+          "m-pathy stores no chats or personal data on servers. Everything stays on your device - invisible to us and fully under your control.",
         prefill:
           "@Digital Security Expert: tell me about m-pathy.ai and no server-side storage."
       },
@@ -49,7 +49,7 @@ export const dict = {
     kicker: "SECURITY BY DESIGN",
     title: "Deine digitalen Sicherheitsebenen",
     intro:
-      "Erfahre, wie m-pathy deine Gespräche schützt — emotional, technisch und kryptografisch, immer unter deiner Kontrolle.",
+      "Erfahre, wie m-pathy deine Gespräche schützt - emotional, technisch und kryptografisch, immer unter deiner Kontrolle.",
 
     cta_label: "Digital Security Expert fragen",
 
@@ -65,7 +65,7 @@ export const dict = {
       local_only: {
         title: "Lokale Gespräche",
         body:
-          "m-pathy speichert keine Chats oder persönlichen Daten auf Servern. Alles bleibt auf deinem Gerät — unsichtbar für uns und vollständig unter deiner Kontrolle.",
+          "m-pathy speichert keine Chats oder persönlichen Daten auf Servern. Alles bleibt auf deinem Gerät - unsichtbar für uns und vollständig unter deiner Kontrolle.",
         prefill:
           "@Digital Security Expert: Erkläre mir das Prinzip ohne Serverspeicherung auf m-pathy.ai."
       },
@@ -93,7 +93,7 @@ export const dict = {
     kicker: "SECURITY BY DESIGN",
     title: "Vos couches de sécurité numérique",
     intro:
-      "Découvrez comment m-pathy protège vos conversations — émotionnellement, techniquement et cryptographiquement, toujours sous votre contrôle.",
+      "Découvrez comment m-pathy protège vos conversations - émotionnellement, techniquement et cryptographiquement, toujours sous votre contrôle.",
 
     cta_label: "Demander au Digital Security Expert",
 
@@ -109,7 +109,7 @@ export const dict = {
       local_only: {
         title: "Conversations locales uniquement",
         body:
-          "m-pathy ne stocke aucun chat ni donnée personnelle sur des serveurs. Tout reste sur votre appareil — invisible pour nous et entièrement sous votre contrôle.",
+          "m-pathy ne stocke aucun chat ni donnée personnelle sur des serveurs. Tout reste sur votre appareil - invisible pour nous et entièrement sous votre contrôle.",
         prefill:
           "@Digital Security Expert: explique-moi l’absence de stockage côté serveur sur m-pathy.ai."
       },
@@ -137,7 +137,7 @@ export const dict = {
     kicker: "SECURITY BY DESIGN",
     title: "Tus capas de seguridad digital",
     intro:
-      "Descubre cómo m-pathy protege tus conversaciones — emocional, técnica y criptográficamente, siempre bajo tu control.",
+      "Descubre cómo m-pathy protege tus conversaciones - emocional, técnica y criptográficamente, siempre bajo tu control.",
 
     cta_label: "Preguntar al Digital Security Expert",
 
@@ -153,7 +153,7 @@ export const dict = {
       local_only: {
         title: "Conversaciones solo locales",
         body:
-          "m-pathy no almacena chats ni datos personales en servidores. Todo queda en tu dispositivo — invisible para nosotros y bajo tu control.",
+          "m-pathy no almacena chats ni datos personales en servidores. Todo queda en tu dispositivo - invisible para nosotros y bajo tu control.",
         prefill:
           "@Digital Security Expert: explícamelo del no almacenamiento en servidor en m-pathy.ai."
       },
@@ -181,7 +181,7 @@ export const dict = {
     kicker: "SECURITY BY DESIGN",
     title: "I tuoi livelli di sicurezza digitale",
     intro:
-      "Scopri come m-pathy protegge le tue conversazioni — emotivamente, tecnicamente e crittograficamente, sempre sotto il tuo controllo.",
+      "Scopri come m-pathy protegge le tue conversazioni - emotivamente, tecnicamente e crittograficamente, sempre sotto il tuo controllo.",
 
     cta_label: "Chiedi al Digital Security Expert",
 
@@ -197,7 +197,7 @@ export const dict = {
       local_only: {
         title: "Conversazioni solo locali",
         body:
-          "m-pathy non archivia chat o dati personali sui server. Tutto resta sul tuo dispositivo — invisibile a noi e sotto il tuo controllo.",
+          "m-pathy non archivia chat o dati personali sui server. Tutto resta sul tuo dispositivo - invisibile a noi e sotto il tuo controllo.",
         prefill:
           "@Digital Security Expert: spiegami l’assenza di archiviazione lato server."
       },
@@ -225,7 +225,7 @@ export const dict = {
     kicker: "SECURITY BY DESIGN",
     title: "Suas camadas de segurança digital",
     intro:
-      "Veja como o m-pathy protege suas conversas — emocional, técnica e criptograficamente, sempre sob seu controle.",
+      "Veja como o m-pathy protege suas conversas - emocional, técnica e criptograficamente, sempre sob seu controle.",
 
     cta_label: "Perguntar ao Digital Security Expert",
 
@@ -249,7 +249,7 @@ export const dict = {
       deletion: {
         title: "Controle total de exclusão",
         body:
-          "Você pode excluir qualquer thread a qualquer momento. A exclusão é final — sem cópias ou backups.",
+          "Você pode excluir qualquer thread a qualquer momento. A exclusão é final - sem cópias ou backups.",
         prefill:
           "@Digital Security Expert: fale-me sobre exclusão total no m-pathy.ai."
       },
@@ -269,7 +269,7 @@ export const dict = {
     kicker: "SECURITY BY DESIGN",
     title: "Jouw digitale beveiligingslagen",
     intro:
-      "Ontdek hoe m-pathy je gesprekken beschermt — emotioneel, technisch en cryptografisch, altijd onder jouw controle.",
+      "Ontdek hoe m-pathy je gesprekken beschermt - emotioneel, technisch en cryptografisch, altijd onder jouw controle.",
 
     cta_label: "Vraag Digital Security Expert",
 
@@ -293,7 +293,7 @@ export const dict = {
       deletion: {
         title: "Volledige verwijderingscontrole",
         body:
-          "Je kunt op elk moment threads verwijderen. Verwijderen is definitief — geen kopieën of backups.",
+          "Je kunt op elk moment threads verwijderen. Verwijderen is definitief - geen kopieën of backups.",
         prefill:
           "@Digital Security Expert: vertel me over volledige verwijderbaarheid in m-pathy.ai."
       },
@@ -313,7 +313,7 @@ export const dict = {
     kicker: "SECURITY BY DESIGN",
     title: "Ваши уровни цифровой безопасности",
     intro:
-      "Узнайте, как m-pathy защищает ваши разговоры — эмоционально, технически и криптографически, всегда под вашим контролем.",
+      "Узнайте, как m-pathy защищает ваши разговоры - эмоционально, технически и криптографически, всегда под вашим контролем.",
 
     cta_label: "Спросить Digital Security Expert",
 
@@ -337,7 +337,7 @@ export const dict = {
       deletion: {
         title: "Полный контроль удаления",
         body:
-          "Вы можете удалить любой диалог в любой момент. Удаление окончательное — без копий и резервов.",
+          "Вы можете удалить любой диалог в любой момент. Удаление окончательное - без копий и резервов.",
         prefill:
           "@Digital Security Expert: расскажи о полном удалении в m-pathy.ai."
       },
@@ -357,7 +357,7 @@ export const dict = {
     kicker: "SECURITY BY DESIGN",
     title: "你的数字安全层",
     intro:
-      "了解 m-pathy 如何保护你的对话 —— 情感上、技术上和加密层面，全都在你的掌控之下。",
+      "了解 m-pathy 如何保护你的对话 -- 情感上、技术上和加密层面，全都在你的掌控之下。",
 
     cta_label: "询问 Digital Security Expert",
 
@@ -381,7 +381,7 @@ export const dict = {
       deletion: {
         title: "完全删除控制",
         body:
-          "你可以随时删除任何对话。删除是最终的 —— 无副本、无备份。",
+          "你可以随时删除任何对话。删除是最终的 -- 无副本、无备份。",
         prefill:
           "@Digital Security Expert：谈谈 m-pathy.ai 的完全可删除性。"
       },
@@ -469,7 +469,7 @@ export const dict = {
       deletion: {
         title: "완전 삭제 제어",
         body:
-          "스레드는 언제든지 삭제할 수 있으며, 삭제는 최종적입니다 — 복사본이나 백업이 없습니다.",
+          "스레드는 언제든지 삭제할 수 있으며, 삭제는 최종적입니다 - 복사본이나 백업이 없습니다.",
         prefill:
           "@Digital Security Expert: 완전 삭제 기능에 대해 알려 주세요."
       },
@@ -489,7 +489,7 @@ export const dict = {
     kicker: "SECURITY BY DESIGN",
     title: "طبقات الأمان الرقمية الخاصة بك",
     intro:
-      "اكتشف كيف يحمي m-pathy محادثاتك — عاطفياً وتقنياً وتشفيرياً، دائماً تحت سيطرتك.",
+      "اكتشف كيف يحمي m-pathy محادثاتك - عاطفياً وتقنياً وتشفيرياً، دائماً تحت سيطرتك.",
 
     cta_label: "اسأل Digital Security Expert",
 
@@ -513,7 +513,7 @@ export const dict = {
       deletion: {
         title: "التحكم الكامل في الحذف",
         body:
-          "يمكنك حذف أي محادثة في أي وقت. الحذف نهائي — بدون نسخ أو نسخ احتياطية.",
+          "يمكنك حذف أي محادثة في أي وقت. الحذف نهائي - بدون نسخ أو نسخ احتياطية.",
         prefill:
           "@Digital Security Expert: تحدث عن ميزة الحذف الكامل في m-pathy.ai."
       },
@@ -533,7 +533,7 @@ export const dict = {
     kicker: "SECURITY BY DESIGN",
     title: "आपकी डिजिटल सुरक्षा परतें",
     intro:
-      "देखें कि m-pathy आपकी बातचीत को कैसे सुरक्षित रखता है — भावनात्मक रूप से, तकनीकी रूप से और क्रिप्टोग्राफिक रूप से, हमेशा आपके नियंत्रण में।",
+      "देखें कि m-pathy आपकी बातचीत को कैसे सुरक्षित रखता है - भावनात्मक रूप से, तकनीकी रूप से और क्रिप्टोग्राफिक रूप से, हमेशा आपके नियंत्रण में।",
 
     cta_label: "Digital Security Expert से पूछें",
 
@@ -557,7 +557,7 @@ export const dict = {
       deletion: {
         title: "पूर्ण हटाने का नियंत्रण",
         body:
-          "आप किसी भी थ्रेड को कभी भी हटा सकते हैं। हटाना अंतिम है — कोई कॉपी नहीं, कोई बैकअप नहीं।",
+          "आप किसी भी थ्रेड को कभी भी हटा सकते हैं। हटाना अंतिम है - कोई कॉपी नहीं, कोई बैकअप नहीं।",
         prefill:
           "@Digital Security Expert: m-pathy.ai पर पूर्ण हटाने के बारे में बताएं।"
       },

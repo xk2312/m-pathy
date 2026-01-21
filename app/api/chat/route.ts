@@ -1,5 +1,5 @@
 /* ======================================================================
-   FILE INDEX — app/api/chat/route.ts
+   FILE INDEX - app/api/chat/route.ts
    MODE: GranularFileIndexDeveloper · CodeForensik
    SCOPE: CHAT API · SUMMARY · CONTINUATION · LEDGER · FREEGATE
    STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)
@@ -337,7 +337,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-// — FreeGate (BS13/7: jetzt *mit* 402 + Checkout) —
+// - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
 
 // Session aus m_auth-Cookie lesen (falls vorhanden)
 const cookieHeader = req.headers.get("cookie") ?? null;
@@ -401,7 +401,7 @@ if (!isAuthenticated && blocked) {
 }
 
 
-// — Ab hier: echte Azure-Antwort —
+// - Ab hier: echte Azure-Antwort -
 assertEnv();
 
     let status = "ok";
@@ -627,7 +627,7 @@ if (balanceBefore <= 0) {
 
     try {
       if (!clientLedgerAppendOk) {
-        throw new Error("Client ledger append not confirmed — DB write blocked");
+        throw new Error("Client ledger append not confirmed - DB write blocked");
       }
 
       const { spawn } = await import("child_process");

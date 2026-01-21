@@ -1,7 +1,7 @@
 // lib/i18n.footer.ts
 export const footerDict = {
   en: {
-    motto: "M — clarity, depth, stillness.",
+    motto: "M - clarity, depth, stillness.",
     company: "NAAL UG (limited liability)",
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 Munich",
@@ -18,11 +18,11 @@ export const footerDict = {
     no_subscription: "No subscription, no automatic renewal",
     no_hidden_fees: "No hidden fees",
 
-    copyright: "© 2025 m-pathy — All rights reserved.",
+    copyright: "© 2025 m-pathy - All rights reserved.",
   },
 
   de: {
-    motto: "M — Klarheit, Tiefe, Stille.",
+    motto: "M - Klarheit, Tiefe, Stille.",
     company: "NAAL UG (haftungsbeschränkt)",
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 München",
@@ -39,11 +39,11 @@ export const footerDict = {
     no_subscription: "Kein Abo, keine automatische Verlängerung",
     no_hidden_fees: "Keine versteckten Gebühren",
 
-    copyright: "© 2025 m-pathy — Alle Rechte vorbehalten.",
+    copyright: "© 2025 m-pathy - Alle Rechte vorbehalten.",
   },
 
   fr: {
-    motto: "M — clarté, profondeur, silence.",
+    motto: "M - clarté, profondeur, silence.",
     company: "NAAL UG (responsabilité limitée)",
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 Munich",
@@ -60,11 +60,11 @@ export const footerDict = {
     no_subscription: "Pas d’abonnement, pas de renouvellement automatique",
     no_hidden_fees: "Aucun frais caché",
 
-    copyright: "© 2025 m-pathy — Tous droits réservés.",
+    copyright: "© 2025 m-pathy - Tous droits réservés.",
   },
 
   es: {
-    motto: "M — claridad, profundidad, quietud.",
+    motto: "M - claridad, profundidad, quietud.",
     company: "NAAL UG (responsabilidad limitada)",
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 Múnich",
@@ -81,11 +81,11 @@ export const footerDict = {
     no_subscription: "Sin suscripción, sin renovación automática",
     no_hidden_fees: "Sin tarifas ocultas",
 
-    copyright: "© 2025 m-pathy — Todos los derechos reservados.",
+    copyright: "© 2025 m-pathy - Todos los derechos reservados.",
   },
 
   it: {
-    motto: "M — chiarezza, profondità, quiete.",
+    motto: "M - chiarezza, profondità, quiete.",
     company: "NAAL UG (responsabilità limitata)",
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 Monaco",
@@ -103,11 +103,11 @@ export const footerDict = {
     no_hidden_fees: "Nessun costo nascosto",
 
     copyright:
-      "© 2025 m-pathy — Tutti i diritti riservati.",
+      "© 2025 m-pathy - Tutti i diritti riservati.",
   },
 
   pt: {
-    motto: "M — clareza, profundidade, quietude.",
+    motto: "M - clareza, profundidade, quietude.",
     company: "NAAL UG (responsabilidade limitada)",
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 Munique",
@@ -125,11 +125,11 @@ export const footerDict = {
     no_hidden_fees: "Sem taxas ocultas",
 
     copyright:
-      "© 2025 m-pathy — Todos os direitos reservados.",
+      "© 2025 m-pathy - Todos os direitos reservados.",
   },
 
   nl: {
-    motto: "M — helderheid, diepte, stilte.",
+    motto: "M - helderheid, diepte, stilte.",
     company: "NAAL UG (beperkte aansprakelijkheid)",
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 München",
@@ -147,11 +147,11 @@ export const footerDict = {
     no_hidden_fees: "Geen verborgen kosten",
 
     copyright:
-      "© 2025 m-pathy — Alle rechten voorbehouden.",
+      "© 2025 m-pathy - Alle rechten voorbehouden.",
   },
 
   ru: {
-    motto: "M — ясность, глубина, тишина.",
+    motto: "M - ясность, глубина, тишина.",
     company: "NAAL UG (ограниченная ответственность)",
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 Мюнхен",
@@ -169,11 +169,11 @@ export const footerDict = {
     no_hidden_fees: "Без скрытых платежей",
 
     copyright:
-      "© 2025 m-pathy — Все права защищены.",
+      "© 2025 m-pathy - Все права защищены.",
   },
 
   zh: {
-    motto: "M — 清晰、深度、静谧。",
+    motto: "M - 清晰、深度、静谧。",
     company: "NAAL UG（有限责任）",
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 慕尼黑",
@@ -191,11 +191,11 @@ export const footerDict = {
     no_hidden_fees: "无隐藏费用",
 
     copyright:
-      "© 2025 m-pathy — 保留所有权利。",
+      "© 2025 m-pathy - 保留所有权利。",
   },
 
   ja: {
-    motto: "M — 明晰、深さ、静けさ。",
+    motto: "M - 明晰、深さ、静けさ。",
     company: "NAAL UG（有限責任）",
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 ミュンヘン",
@@ -213,11 +213,11 @@ export const footerDict = {
     no_hidden_fees: "隠れた料金なし",
 
     copyright:
-      "© 2025 m-pathy — 全著作権所有。",
+      "© 2025 m-pathy - 全著作権所有。",
   },
 
   ko: {
-    motto: "M — 명료함, 깊이, 고요함.",
+    motto: "M - 명료함, 깊이, 고요함.",
     company: "NAAL UG (유한책임)",
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 뮌헨",
@@ -235,11 +235,11 @@ export const footerDict = {
     no_hidden_fees: "숨겨진 수수료 없음",
 
     copyright:
-      "© 2025 m-pathy — 모든 권리 보유.",
+      "© 2025 m-pathy - 모든 권리 보유.",
   },
 
   ar: {
-    motto: "M — الوضوح، العمق، السكون.",
+    motto: "M - الوضوح، العمق، السكون.",
     company: "NAAL UG (مسؤولية محدودة)",
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 ميونخ",
@@ -257,11 +257,11 @@ export const footerDict = {
     no_hidden_fees: "لا رسوم مخفية",
 
     copyright:
-      "© 2025 m-pathy — جميع الحقوق محفوظة.",
+      "© 2025 m-pathy - جميع الحقوق محفوظة.",
   },
 
   hi: {
-    motto: "M — स्पष्टता, गहराई, स्थिरता.",
+    motto: "M - स्पष्टता, गहराई, स्थिरता.",
     company: "NAAL UG (सीमित दायित्व)",
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 म्यूनिख",
@@ -279,6 +279,6 @@ export const footerDict = {
     no_hidden_fees: "कोई छिपे हुए शुल्क नहीं",
 
     copyright:
-      "© 2025 m-pathy — सर्वाधिकार सुरक्षित.",
+      "© 2025 m-pathy - सर्वाधिकार सुरक्षित.",
   },
 };

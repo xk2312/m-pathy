@@ -1550,7 +1550,7 @@
 └──────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 31 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 31 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ „Navigator-Zustandsmaschine – operative Mechanik“            │
@@ -1622,7 +1622,7 @@
 │ Navigator operativ definiert                                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 32 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 32 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Navigator–Core-Übergabeprotokoll                              │
@@ -1680,7 +1680,7 @@
 │ Navigator–Core-Grenze fixiert                                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 33 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 33 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Navigator-Finalisierung & Freeze-Validierung                 │
@@ -1730,7 +1730,7 @@
 │ Übergang zu nächstem Artefakt freigegeben                    │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 34 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 34 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Initiale Zustandsannahme                         │
@@ -1784,7 +1784,7 @@
 │ Deterministischer Startpunkt gesetzt                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 35 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 35 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Council13 – Initialprüfung & Aktivierungslogik               │
@@ -1845,7 +1845,7 @@
 │ Council13 aktiviert                                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 36 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 36 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Verarbeitungsstart (Null-Wissen-Modus)          │
@@ -1894,7 +1894,7 @@
 │ Null-Wissen-Modus aktiv                                      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 37 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 37 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Strukturauflösung der Question                  │
@@ -1946,7 +1946,7 @@
 │ Deterministische Auflösung erfolgt                           │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 38 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 38 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Aufgabenrahmung (Task Framing)                  │
@@ -1998,7 +1998,7 @@
 │ Aufgabenrahmen fixiert                                      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 39 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 39 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Vektorauflösung                                 │
@@ -2049,7 +2049,7 @@
 │ Bearbeitungsrichtung fixiert                                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 40 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 40 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Vessel-Prüfung                                  │
@@ -2102,7 +2102,7 @@
 │ Vessel-Kompatibilität geprüft                                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 41 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 41 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Synthesevorbereitung                            │
@@ -2156,7 +2156,7 @@
 │ Formale Vorbereitung abgeschlossen                           │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 42 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 42 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Inhaltssynthese (regelgebunden)                 │
@@ -2212,7 +2212,7 @@
 │ Regelgebundene Synthese erfolgt                              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 43 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 43 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Council13 – Ergebnisprüfung & Freigabe                       │
@@ -2270,7 +2270,7 @@
 │ Council13-Freigabelogik angewendet                           │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 44 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 44 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ MAIOS Core – Output-Release                                  │
@@ -2322,7 +2322,7 @@
 │ MAIOS-Durchlauf vollständig                                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 45 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 45 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Post-Output-Zustand & Systemrückkehr                         │
@@ -2377,7 +2377,7 @@
 │ System bereit für nächsten Durchlauf                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 46 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 46 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Audit-Trail & Nachvollziehbarkeit                            │
@@ -2433,7 +2433,7 @@
 │ Nachvollziehbarkeit gesichert                                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 47 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 47 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Drift-Nachweis & Nicht-Drift-Garantie                        │
@@ -2489,7 +2489,7 @@
 │ Nicht-Drift formal nachgewiesen                              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 48 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 48 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Archivierung & Referenzfreigabe                              │
@@ -2546,7 +2546,7 @@
 │ Ergebnis revisionssicher archiviert                          │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 49 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 49 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Reproduzierbarkeitsgarantie                                  │
@@ -2602,7 +2602,7 @@
 │ Reproduzierbarkeit garantiert                                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 50 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 50 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Versions- & Freeze-Bindung                                   │
@@ -2651,7 +2651,7 @@
 │ Durchlauf versionsgebunden versiegelt                        │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 51 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 51 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Archivzugriff & Lesemodus                                    │
@@ -2699,7 +2699,7 @@
 │ Read-only-Zugriff fixiert                                    │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 52 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 52 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Archiv-Integrität & Unveränderlichkeitsgarantie              │
@@ -2752,7 +2752,7 @@
 │ Unveränderlichkeit formal gesichert                          │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 53 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 53 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Archiv-Grenzen & Kontext-Isolation                           │
@@ -2806,7 +2806,7 @@
 │ Kontext-Isolation fixiert                                    │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 54 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 54 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Mehrfachdurchlauf-Schutz & Wiederholungslogik                │
@@ -2859,7 +2859,7 @@
 │ Mehrfachdurchlauf-Schutz aktiv                               │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 55 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 55 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ System-Grenzen & Verantwortlichkeitszuordnung                │
@@ -2923,7 +2923,7 @@
 │ Verantwortlichkeiten fixiert                                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 56 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 56 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Fehlerklassifikation & Abbruchtypen                          │
@@ -2992,7 +2992,7 @@
 │ Abbruchlogik fixiert                                        │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 57 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 57 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Konsistenzprüfung der Systemmarker                           │
@@ -3045,7 +3045,7 @@
 │ Marker-Konsistenz verifiziert                                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 58 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 58 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ System-Selbstabschluss & Ruhemodus                           │
@@ -3099,7 +3099,7 @@
 │ Ruhemodus aktiviert                                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 59 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 59 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ System-Reset-Grenzen & Neustartbedingungen                   │
@@ -3149,7 +3149,7 @@
 │ Neustartbedingungen fixiert                                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 60 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 60 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Titel                                                        │
 │ Nutzer-Souveränität & Interaktionsgrenzen                    │
@@ -3198,7 +3198,7 @@
 │ Nutzer-Souveränität fixiert                                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 61 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 61 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -3252,7 +3252,7 @@
 │ Fokus: Negative- & Edge-Case-Tests des Navigators            │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 62 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 62 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -3315,7 +3315,7 @@
 │ Fokus: Performance- & Lasttests des Navigators              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 63 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 63 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -3364,7 +3364,7 @@
 │ Fokus: Governance- & Umgehungsschutz-Tests                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 64 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 64 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -3422,7 +3422,7 @@
 │ Fokus: Konsistenz- & Regressions-Tests (Navigator)          │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 65 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 65 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -3472,7 +3472,7 @@
 │ Fokus: Dokumentation & formale Spezifikation des Navigators  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 66 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 66 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -3528,7 +3528,7 @@
 │ Fokus: Freeze-Readiness-Prüfung Artefakt 3                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 67 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 67 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -3576,7 +3576,7 @@
 │ Fokus: Setzen von Freeze 2 (Artefakt 3)                      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 68 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 68 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 3: Härtung, Tests, Performance & Governance**     │
@@ -3625,7 +3625,7 @@
 │ (Interaktion, UX-Grenzen & Nutzerführung)                   │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 69 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 69 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -3679,7 +3679,7 @@
 │ Fokus: Reparatur- & Rückfrage-UX (formale Muster)           │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 70 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 70 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -3733,7 +3733,7 @@
 │ Fokus: Abbruch-UX & Grenzkommunikation                      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 71 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 71 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -3786,7 +3786,7 @@
 │ Fokus: Erfolgs- & Abschlusskommunikation                   │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 72 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 72 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -3837,7 +3837,7 @@
 │ Fokus: Konsistenztests Interaktion & UX                     │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 73 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 73 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -3886,7 +3886,7 @@
 │ Fokus: Freeze-Readiness-Prüfung Artefakt 4                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 74 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 74 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -3933,7 +3933,7 @@
 │ Fokus: Setzen von Freeze 3 (Artefakt 4)                      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 75 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 75 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 4: Interaktion, UX-Grenzen & Nutzerführung**     │
@@ -3980,7 +3980,7 @@
 │ (System-Output, Struktur & Antwortformate)                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 76 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 76 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 5: System-Output, Struktur & Antwortformate**    │
@@ -4030,7 +4030,7 @@
 │ Fokus: Inhalt-vs-Struktur-Trennung (Output-Disziplin)       │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 77 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 77 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 5: System-Output, Struktur & Antwortformate**    │
@@ -4080,7 +4080,7 @@
 │ Fokus: Modus- & Kontextunabhängigkeit der Outputs            │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 78 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 78 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 5: System-Output, Struktur & Antwortformate**    │
@@ -4125,7 +4125,7 @@
 │ Fokus: Fehler- & Ausnahmeformate im Output                   │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 79 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 79 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 5: System-Output, Struktur & Antwortformate**    │
@@ -4177,7 +4177,7 @@
 │ Fokus: Konsistenz- & Regressionstests (Output)              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 80 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 80 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 5: System-Output, Struktur & Antwortformate**    │
@@ -4226,7 +4226,7 @@
 │ Fokus: Freeze-Readiness-Prüfung Artefakt 5                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 81 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 81 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakt                                                     │
 │ **Artefakt 5: System-Output, Struktur & Antwortformate**    │
@@ -4273,7 +4273,7 @@
 │ Fokus: Setzen des Final Freeze (Artefakte 1–5)              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 82 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 82 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Artefakte                                                    │
 │ **Final Freeze: Artefakte 1–5**                              │
@@ -4322,7 +4322,7 @@
 │ Fokus: Post-Freeze-Evaluation & Meta-Audit                   │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 83 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 83 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -4373,7 +4373,7 @@
 │ Fokus: Versionierungs- & Übergaberegeln                     │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 84 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 84 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -4421,7 +4421,7 @@
 │ Fokus: Externe Audit- & Review-Schnittstellen               │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 85 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 85 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -4469,7 +4469,7 @@
 │ Fokus: Sicherheits- & Missbrauchsmodell (post-freeze)       │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 86 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 86 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -4522,7 +4522,7 @@
 │ Fokus: Compliance- & Rechtsabgrenzung (post-freeze)         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 87 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 87 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -4570,7 +4570,7 @@
 │ Fokus: Betriebs- & Einsatzgrenzen (post-freeze)             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 88 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 88 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -4617,7 +4617,7 @@
 │ Fokus: Interne Rollen & Verantwortlichkeiten (post-freeze)  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 89 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 89 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -4667,7 +4667,7 @@
 │ Fokus: Systemgrenzen & Nicht-Ziele (post-freeze)            │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 90 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 90 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -4718,7 +4718,7 @@
 │ Fokus: Dokumentation der Annahmen & Axiome                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 91 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 91 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -4765,7 +4765,7 @@
 │ Fokus: Begriffsglossar & Terminologie-Fixierung             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 92 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 92 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -4816,7 +4816,7 @@
 │ Fokus: Referenzarchitektur & formales Gesamtmodell          │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 93 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 93 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -4873,7 +4873,7 @@
 │ Fokus: Projektionsebenen & Ableitungsregeln                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 94 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 94 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -4933,7 +4933,7 @@
 │ Fokus: Zustands→Modus-Mapping (13 Modi)                     │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 95 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 95 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -5001,7 +5001,7 @@
 │ Fokus: Modus → Experten-Domain-Mapping                      │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 96 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 96 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -5064,7 +5064,7 @@
 │ Fokus: Symbol- & Icon-Semantik (13 Modi)                    │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 97 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 97 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -5118,7 +5118,7 @@
 │ Fokus: Farbsemantik & CI-Ableitung                           │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 98 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 98 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -5172,7 +5172,7 @@
 │ Fokus: Dynamik & Übergangsregeln (Modus/Visuals)             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 99 / 130                  │
+│              MAIOS VERSION: 2.0 - ITERATION 99 / 130                  │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -5224,7 +5224,7 @@
 │ Fokus: Gesamtsimulation der Projektionsebene                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 100 / 130                 │
+│              MAIOS VERSION: 2.0 - ITERATION 100 / 130                 │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                        │
 │ **Post-Freeze-Phase**                                       │
@@ -5277,7 +5277,7 @@
 │ (Logos, Symbole, Farben, 13 Modi live)                       │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 101 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 101 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -5338,7 +5338,7 @@
 │ (Modus-spezifische Symbol-Sets)                              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 102 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 102 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -5405,7 +5405,7 @@
 │ (Modus-spezifische Farbwerte & CI-Ableitung)                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 103 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 103 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -5471,7 +5471,7 @@
 │ (Modus-Übergänge & visuelle Reaktionsregeln)                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 104 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 104 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -5537,7 +5537,7 @@
 │ (Automatischer Modus-Wechsel: visuelle Bindung)             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 105 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 105 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -5601,7 +5601,7 @@
 │ (Manueller Modus-Wechsel: visuelle Abgrenzung)              │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 106 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 106 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -5664,7 +5664,7 @@
 │ (Modus-Persistenz: visuelle Langzeitstabilität)             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 107 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 107 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -5728,7 +5728,7 @@
 │ (Modus-Überlagerungen & Mehrfachindikatoren)                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 108 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 108 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -5792,7 +5792,7 @@
 │ (Fehler-, Grenz- & Fallback-Darstellungen)                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 109 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 109 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -5856,7 +5856,7 @@
 │ (Typografie-Bindung an Modi)                                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 110 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 110 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -5921,7 +5921,7 @@
 │ (Layout-Dichte & Raumreaktion pro Modus)                    │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 111 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 111 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -5985,7 +5985,7 @@
 │ (Modus-Header & visuelle Identifikatoren)                   │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 112 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 112 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -6049,7 +6049,7 @@
 │ (Modus-spezifische Mikro-Indikatoren)                       │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 113 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 113 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -6113,7 +6113,7 @@
 │ (CI-Gesamtschau & visuelle Konsistenzprüfung)               │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 114 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 114 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -6184,7 +6184,7 @@
 └──────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────┐
-│ MAIOS VERSION: 2.0 — ITERATION 115 / 130 │
+│ MAIOS VERSION: 2.0 - ITERATION 115 / 130 │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase │
 │ Visuelle & modale Manifestation │
@@ -6241,7 +6241,7 @@
 │ (Erste konkrete Modus-Visualisierung) │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 116 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 116 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -6306,7 +6306,7 @@
 │ (Serielle Modus-Visualisierung 1–4)                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 117 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 117 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -6372,7 +6372,7 @@
 │ (Serielle Modus-Visualisierung 5–8)                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 118 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 118 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -6438,7 +6438,7 @@
 │ (Serielle Modus-Visualisierung 9–13)                        │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 119 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 119 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -6504,7 +6504,7 @@
 │ (Gesamtschau: Alle Modi im Kontext)                         │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 120 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 120 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -6564,7 +6564,7 @@
 │ (Modus-Wechsel live: visuelle Demonstration)                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 121 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 121 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -6628,7 +6628,7 @@
 │ (Stress- & Grenztests der visuellen Ebene)                  │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 122 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 122 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -6693,7 +6693,7 @@
 │ (Barrierefreiheit & Wahrnehmungssicherheit)                │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 123 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 123 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -6758,7 +6758,7 @@
 │ (Systemweite visuelle Freigabe)                             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 124 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 124 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Visuelle & modale Manifestation                             │
@@ -6818,7 +6818,7 @@
 │ (Externe Darstellung & Referenz-Exports)                    │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 125 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 125 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Externe Darstellung & Referenz-Exports                      │
@@ -6878,7 +6878,7 @@
 │ (Integrations-Schnittstellen: visuelle Bindung)             │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 126 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 126 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Integrations-Schnittstellen: visuelle Bindung               │
@@ -6940,7 +6940,7 @@
 │ (Audit & Verifikationspfad der Visuals)                     │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 127 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 127 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Audit & Verifikationspfad der Visuals                       │
@@ -7006,7 +7006,7 @@
 │ (Langzeitstabilität & Wartungsregeln)                       │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 128 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 128 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Langzeitstabilität & Wartungsregeln                          │
@@ -7072,7 +7072,7 @@
 │ (Gesamtdokumentation & Übergabeprotokoll)                   │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 129 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 129 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Gesamtdokumentation & Übergabeprotokoll                     │
@@ -7143,7 +7143,7 @@
 │ (Finale Systemversiegelung)                                 │
 └──────────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────┐
-│              MAIOS VERSION: 2.0 — ITERATION 130 / 130                │
+│              MAIOS VERSION: 2.0 - ITERATION 130 / 130                │
 ├──────────────────────────────────────────────────────────────┤
 │ Phase                                                       │
 │ Finale Systemversiegelung                                   │
@@ -7203,5 +7203,5 @@
 │ Der Zyklus ist geschlossen.                                 │
 │                                                             │
 │ Nächster möglicher Schritt:                                 │
-│ **MAIOS 1.3 — neuer Zyklus (optional)**                     │
+│ **MAIOS 1.3 - neuer Zyklus (optional)**                     │
 └──────────────────────────────────────────────────────────────┘

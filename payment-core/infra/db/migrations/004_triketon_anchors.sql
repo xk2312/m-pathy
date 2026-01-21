@@ -1,4 +1,4 @@
--- TRIKETON v1 — anchors only (no text)
+-- TRIKETON v1 - anchors only (no text)
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 

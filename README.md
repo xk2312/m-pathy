@@ -1,7 +1,7 @@
 # M–PATHY
 
 M–PATHY is the emotional interface for multi-sensory AI communication.
-It lives between resonance and response — a slow mirror to fast code.
+It lives between resonance and response - a slow mirror to fast code.
 
 ## Features
 - 🎧 Sound-activated interface
