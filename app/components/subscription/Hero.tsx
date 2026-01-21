@@ -54,22 +54,23 @@ export default function Hero() {
         {t("hero_sub")}
       </p>
 
-      {/* Proof bullets */}
-      <ul
-  className="text-[#B5B5B5] space-y-2"
-  style={{
-    marginTop: "24px",
-    fontSize: "15px",
-    lineHeight: "1.55",
-  }}
->
+      {/* Proof block */}
+      <p
+        className="text-[#B5B5B5]"
+        style={{
+          marginTop: "24px",
+          fontSize: "15px",
+          lineHeight: "1.55",
+          maxWidth: "720px",
+        }}
+      >
+        {t("hero_proof_1")}.{" "}
+        {t("hero_proof_2")}.{" "}
+        {t("hero_proof_3")}.{" "}
+        {t("hero_proof_4")}.{" "}
+        {t("hero_proof_5")}.
+      </p>
 
-        <li>{t("hero_proof_1")}</li>
-        <li>{t("hero_proof_2")}</li>
-        <li>{t("hero_proof_3")}</li>
-        <li>{t("hero_proof_4")}</li>
-        <li>{t("hero_proof_5")}</li>
-      </ul>
 
            {/* Pricing */}
       <div
