@@ -234,48 +234,50 @@ export default function SubscriptionPage() {
   />
 
   {/* ─────────────── HERO ─────────────── */}
-          <section className="pt-[96px] pb-[96px]">
+<section className="pt-[96px] pb-[96px]">
+  <div className="page-center">
+    <Hero />
+  </div>
+</section>
 
-            <div className="page-center">
-              <Hero />
+{/* ─────────────── BUFFER (Hero → Testimonials) ─────────────── */}
+<div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
 
-            </div>
-          </section>
+{/* ─────────────── TESTIMONIAL SECTION ─────────────── */}
+<section
+  className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]"
+  aria-label="Testimonials section"
+>
+  <div
+    className="page-center"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
+  >
+    <Testimonial />
+  </div>
+</section>
 
-          {/* ─────────────── TESTIMONIAL SECTION ─────────────── */}
-          <section
-            className="pt-[clamp(80px,13vw,160px)] pb-[clamp(80px,13vw,160px)]"
-            aria-label="Testimonials section"
-          >
-            <div
-              className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
-            >
-              <Testimonial />
-            </div>
-          </section>
 
-          {/* ─────────────── BUFFER & DIVIDER #1 (Hero → Testimonials → Experts) ─────────────── */}
-          <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
-          <section
-            aria-hidden
-            className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]"
-          >
-            <div
-              className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-            >
-              <div
-                className="mx-auto rounded-full"
-                style={{
-                  height: "var(--sub-divider-1-height)",
-                  background: "var(--sub-divider-1-fill)",
-                  boxShadow: "var(--sub-divider-1-glow)",
-                }}
-              />
-            </div>
-          </section>
-          <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
+          {/* ─────────────── DIVIDER #1 (Hero → Testimonials → Experts) ─────────────── */}
+<section
+  aria-hidden
+  className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]"
+>
+  <div
+    className="page-center"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+  >
+    <div
+      className="mx-auto rounded-full"
+      style={{
+        height: "var(--sub-divider-1-height)",
+        background: "var(--sub-divider-1-fill)",
+        boxShadow: "var(--sub-divider-1-glow)",
+      }}
+    />
+  </div>
+</section>
+<div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
+
 
           {/* ─────────────── SECURITY BY DESIGN ─────────────── */}
             <SecuritySection />
