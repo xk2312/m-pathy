@@ -12,15 +12,16 @@ export default function Hero() {
   const { t } = useLang();
 
   return (
-    <div
+       <div
       className="
         text-center
         flex flex-col items-center justify-center
         mx-auto
         max-w-[var(--h-a0-max-width)]
-        min-h-screen
+        min-h-[calc(100vh-var(--header-height))]
       "
     >
+
       {/* A0 Headline */}
       <h1
         className="
