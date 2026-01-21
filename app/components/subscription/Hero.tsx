@@ -54,8 +54,8 @@ export default function Hero() {
         {t("hero_sub")}
       </p>
 
-      {/* Proof block */}
-      <p
+      {/* Proof list with calm markers */}
+      <ul
         className="text-[#B5B5B5]"
         style={{
           marginTop: "24px",
@@ -64,12 +64,28 @@ export default function Hero() {
           maxWidth: "720px",
         }}
       >
-        {t("hero_proof_1")}.{" "}
-        {t("hero_proof_2")}.{" "}
-        {t("hero_proof_3")}.{" "}
-        {t("hero_proof_4")}.{" "}
-        {t("hero_proof_5")}.
-      </p>
+        <li className="flex gap-2">
+          <span style={{ opacity: 0.65 }}>▪︎</span>
+          <span>{t("hero_proof_1")}</span>
+        </li>
+        <li className="flex gap-2">
+          <span style={{ opacity: 0.65 }}>▪︎</span>
+          <span>{t("hero_proof_2")}</span>
+        </li>
+        <li className="flex gap-2">
+          <span style={{ opacity: 0.65 }}>▪︎</span>
+          <span>{t("hero_proof_3")}</span>
+        </li>
+        <li className="flex gap-2">
+          <span style={{ opacity: 0.65 }}>▪︎</span>
+          <span>{t("hero_proof_4")}</span>
+        </li>
+        <li className="flex gap-2">
+          <span style={{ opacity: 0.65 }}>▪︎</span>
+          <span>{t("hero_proof_5")}</span>
+        </li>
+      </ul>
+
 
 
            {/* Pricing */}
