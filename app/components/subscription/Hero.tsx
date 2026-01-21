@@ -31,17 +31,18 @@ export default function Hero() {
 >
   {/* subtle halo */}
   <div
-    aria-hidden
-    style={{
-      position: "absolute",
-      inset: "-40px",
-      background:
-        "radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 70%)",
-      filter: "blur(24px)",
-      zIndex: 0,
-      pointerEvents: "none",
-    }}
-  />
+  aria-hidden
+  style={{
+    position: "absolute",
+    inset: "-32px",
+    background:
+      "radial-gradient(circle, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 65%)",
+    filter: "blur(18px)",
+    zIndex: 0,
+    pointerEvents: "none",
+  }}
+/>
+
 
   <h1
     className="
