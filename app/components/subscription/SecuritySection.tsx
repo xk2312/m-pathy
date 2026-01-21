@@ -175,9 +175,10 @@ export default function SecuritySection() {
                 {/* Icon-Placeholder – hier später SVGs im Stil der Aktionsbefehle */}
                 <div className="mb-[var(--h-card-icon-space)]">
                   {/* TODO: replace with real SVG icons */}
-                  <span className="inline-flex h-8 w-8 items-center justify-center text-white/60">
+                  <span className="inline-flex items-center justify-center mb-2 text-white/60">
                     <SecurityIcon type={id} className="h-5 w-5" />
                   </span>
+
 
                 </div>
 
