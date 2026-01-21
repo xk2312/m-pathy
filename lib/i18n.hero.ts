@@ -6,9 +6,18 @@ type DictRoot = Record<string, any>;
 
 export const heroDict = {
   en: {
-    hero_title: "Verified by design. Gentle by nature.",
-    hero_sub: "A place for thinking — without being observed.",
-    hero_cta: "Begin here",
+    hero_title: "Built for the EU AI Act — by architecture.",
+    hero_sub:
+      "A professional AI workspace for regulated environments. Designed for compliant reasoning, analysis, and decision-making without data extraction, hidden training, or surveillance.",
+
+    hero_proof_1: "Data minimization by architecture, not policy",
+    hero_proof_2: "No training on your data — ever",
+    hero_proof_3: "Non-retentive, session-bound reasoning",
+    hero_proof_4: "Human-controlled interaction, no manipulation loops",
+    hero_proof_5: "Outputs designed for auditability and accountability",
+    hero_price_monthly: "€179 / month",
+    hero_price_yearly: "€1,932 / year · 10% discount (annual)",
+    hero_cta: "Start professional access",
   },
 
  de: {
