@@ -53,11 +53,11 @@ export const subscribeDict = {
       "Activate professional access to m-pathy with monthly professional reasoning capacity.",
 
     // F. Footnotes
-    footnote_1:
-      "Token usage depends on model choice, prompt length, and features. Sustained or intensive work will consume capacity faster.",
-    footnote_2:
-      "Detailed information about token accounting and capacity limits will be provided in the technical documentation."
-  }
+footnote_1:
+  "Reasoning capacity usage depends on model selection, prompt complexity, and enabled features. Sustained or high-intensity workloads will consume capacity faster.",
+footnote_2:
+  "Your current capacity and usage can be monitored at any time via the account panel in the chat interface."
+}
 },
 
 
@@ -113,10 +113,10 @@ export const subscribeDict = {
 
     // F. Fußnoten
     footnote_1:
-      "Der Tokenverbrauch hängt vom gewählten Modell, der Prompt-Länge und den genutzten Funktionen ab. Intensive oder dauerhafte Nutzung verbraucht die Kapazität schneller.",
-    footnote_2:
-      "Detaillierte Informationen zur Token-Abrechnung und zu Kapazitätsgrenzen werden in der technischen Dokumentation bereitgestellt."
-  }
+  "Die Nutzung der Reasoning-Kapazität hängt von der Modellwahl, der Prompt-Komplexität und den aktivierten Funktionen ab. Anhaltende oder intensive Arbeitslasten verbrauchen die Kapazität schneller.",
+footnote_2:
+  "Ihre aktuelle Kapazität und Nutzung können jederzeit über das Account-Panel in der Chat-Oberfläche eingesehen werden."
+}
 },
 
 
@@ -176,10 +176,10 @@ export const subscribeDict = {
 
     // F. Notes
     footnote_1:
-      "La consommation de tokens dépend du modèle utilisé, de la longueur des prompts et des fonctionnalités activées. Un usage intensif ou prolongé consommera la capacité plus rapidement.",
-    footnote_2:
-      "Les informations détaillées sur le comptage des tokens et les limites de capacité seront fournies dans la documentation technique."
-  }
+  "L’utilisation de la capacité de raisonnement dépend du modèle sélectionné, de la complexité des prompts et des fonctionnalités activées. Des charges de travail soutenues ou intensives consomment la capacité plus rapidement.",
+footnote_2:
+  "Votre capacité actuelle et son utilisation peuvent être consultées à tout moment via le panneau de compte dans l’interface de chat."
+ }
 },
 es: {
   subscribe: {
@@ -232,10 +232,10 @@ es: {
 
     // F. Notas
     footnote_1:
-      "El consumo de tokens depende del modelo elegido, la longitud del prompt y las funciones utilizadas. El uso intensivo o prolongado consumirá la capacidad más rápido.",
-    footnote_2:
-      "La documentación técnica proporcionará información detallada sobre el conteo de tokens y los límites de capacidad."
-  }
+  "El uso de la capacidad de razonamiento depende del modelo seleccionado, la complejidad del prompt y las funciones activadas. Las cargas de trabajo sostenidas o intensivas consumen la capacidad más rápidamente.",
+footnote_2:
+  "Su capacidad actual y su uso pueden supervisarse en cualquier momento a través del panel de cuenta en la interfaz de chat."
+}
 },
 
 
@@ -291,10 +291,10 @@ es: {
 
     // F. Note
     footnote_1:
-      "Il consumo di token dipende dal modello scelto, dalla lunghezza del prompt e dalle funzionalità utilizzate. Un uso intensivo o prolungato consumerà la capacità più rapidamente.",
-    footnote_2:
-      "La documentazione tecnica fornirà informazioni dettagliate sul conteggio dei token e sui limiti di capacità."
-  }
+  "L’utilizzo della capacità di ragionamento dipende dal modello selezionato, dalla complessità del prompt e dalle funzionalità attivate. Carichi di lavoro prolungati o intensivi consumano la capacità più rapidamente.",
+footnote_2:
+  "La capacità attuale e il relativo utilizzo possono essere monitorati in qualsiasi momento tramite il pannello account nell’interfaccia chat."
+ }
 },
 
 
@@ -350,10 +350,10 @@ es: {
 
     // F. Notas
     footnote_1:
-      "O consumo de tokens depende do modelo escolhido, do comprimento do prompt e das funcionalidades utilizadas. O uso intensivo ou prolongado consumirá a capacidade mais rapidamente.",
-    footnote_2:
-      "A documentação técnica fornecerá informações detalhadas sobre a contabilização de tokens e os limites de capacidade."
-  }
+  "O uso da capacidade de raciocínio depende do modelo selecionado, da complexidade do prompt e das funcionalidades ativadas. Cargas de trabalho sustentadas ou intensivas consomem a capacidade mais rapidamente.",
+footnote_2:
+  "A sua capacidade atual e o respetivo uso podem ser acompanhados a qualquer momento através do painel de conta na interface de chat."
+ }
 },
 
 
@@ -413,10 +413,10 @@ es: {
 
     // F. Voetnoten
     footnote_1:
-      "Het tokenverbruik hangt af van het gekozen model, de lengte van de prompt en de gebruikte functies. Intensief of langdurig gebruik verbruikt de capaciteit sneller.",
-    footnote_2:
-      "Gedetailleerde informatie over tokenverrekening en capaciteitslimieten wordt verstrekt in de technische documentatie."
-  }
+  "Het gebruik van redeneercapaciteit hangt af van de gekozen modellen, de complexiteit van de prompt en de geactiveerde functies. Aanhoudende of intensieve werkbelasting verbruikt de capaciteit sneller.",
+footnote_2:
+  "Uw huidige capaciteit en het gebruik ervan kunnen op elk moment worden ingezien via het accountpaneel in de chatinterface."
+ }
 },
 
 
@@ -472,10 +472,10 @@ es: {
 
     // F. Примечания
     footnote_1:
-      "Расход токенов зависит от выбранной модели, длины запроса и используемых функций. Интенсивная или длительная работа быстрее расходует ёмкость.",
-    footnote_2:
-      "Подробная информация о расчёте токенов и лимитах ёмкости будет представлена в технической документации."
-  }
+  "Использование вычислительной ёмкости мышления зависит от выбранной модели, сложности запроса и активированных функций. Длительные или интенсивные рабочие нагрузки расходуют ёмкость быстрее.",
+footnote_2:
+  "Текущую ёмкость и её использование можно в любое время отслеживать через панель аккаунта в интерфейсе чата."
+}
 },
 
 
@@ -531,10 +531,10 @@ es: {
 
     // F. 注释
     footnote_1:
-      "Token 消耗取决于所选模型、提示长度和使用的功能。持续或高强度使用将更快消耗容量。",
-    footnote_2:
-      "关于 token 计算和容量限制的详细信息将提供于技术文档中。"
-  }
+  "推理容量的使用取决于所选模型、提示复杂度以及启用的功能。持续或高强度的工作负载会更快消耗容量。",
+footnote_2:
+  "您可以随时通过聊天界面中的账户面板查看当前容量及其使用情况。"
+}
 },
 
 
@@ -590,10 +590,10 @@ es: {
 
     // F. 注記
     footnote_1:
-      "トークン消費量は、選択したモデル、プロンプトの長さ、使用する機能によって異なります。継続的または集中的な利用は、容量をより早く消費します。",
-    footnote_2:
-      "トークン計算および容量制限の詳細は、技術ドキュメントで提供されます。"
-  }
+  "推論容量の使用量は、選択したモデル、プロンプトの複雑さ、および有効化された機能によって異なります。継続的または高負荷の作業は、容量をより早く消費します。",
+footnote_2:
+  "現在の容量と使用状況は、チャットインターフェース内のアカウントパネルからいつでも確認できます。"
+ }
 },
 
   // ─────────────────────────────
@@ -652,10 +652,10 @@ es: {
 
     // F. 각주
     footnote_1:
-      "토큰 사용량은 선택한 모델, 프롬프트 길이, 사용 기능에 따라 달라집니다. 집중적이거나 지속적인 사용은 용량을 더 빠르게 소모합니다.",
-    footnote_2:
-      "토큰 산정 및 용량 한계에 대한 자세한 정보는 기술 문서에서 제공됩니다."
-  }
+  "추론 용량의 사용량은 선택한 모델, 프롬프트의 복잡도, 활성화된 기능에 따라 달라집니다. 지속적이거나 고강도의 작업은 용량을 더 빠르게 소모합니다.",
+footnote_2:
+  "현재 용량과 사용 현황은 채팅 인터페이스의 계정 패널을 통해 언제든지 확인할 수 있습니다."
+}
 },
 
 
@@ -711,10 +711,10 @@ es: {
 
     // F. الحواشي
     footnote_1:
-      "يعتمد استهلاك التوكنات على النموذج المختار وطول الموجه والميزات المستخدمة. الاستخدام المكثف أو المستمر يستهلك السعة بشكل أسرع.",
-    footnote_2:
-      "سيتم توفير معلومات تفصيلية حول احتساب التوكنات وحدود السعة في الوثائق التقنية."
-  }
+  "يعتمد استخدام سعة التفكير على النموذج المختار وتعقيد الموجه والميزات المفعّلة. تؤدي أعباء العمل المستمرة أو المكثفة إلى استهلاك السعة بشكل أسرع.",
+footnote_2:
+  "يمكن متابعة السعة الحالية واستخدامها في أي وقت من خلال لوحة الحساب داخل واجهة الدردشة."
+ }
 },
 
 
@@ -770,9 +770,9 @@ es: {
 
     // F. फुटनोट्स
     footnote_1:
-      "टोकन की खपत चुने गए मॉडल, प्रॉम्प्ट की लंबाई और उपयोग की गई सुविधाओं पर निर्भर करती है। गहन या निरंतर उपयोग क्षमता को तेज़ी से समाप्त करेगा।",
-    footnote_2:
-      "टोकन गणना और क्षमता सीमाओं के बारे में विस्तृत जानकारी तकनीकी दस्तावेज़ में प्रदान की जाएगी।"
-  }
+  "तर्क क्षमता का उपयोग चुने गए मॉडल, प्रॉम्प्ट की जटिलता और सक्रिय सुविधाओं पर निर्भर करता है। निरंतर या उच्च तीव्रता वाला कार्य क्षमता को तेज़ी से उपयोग करता है।",
+footnote_2:
+  "आप अपनी वर्तमान क्षमता और उसके उपयोग को किसी भी समय चैट इंटरफ़ेस में अकाउंट पैनल के माध्यम से देख सकते हैं।"
+ }
 },
 };
