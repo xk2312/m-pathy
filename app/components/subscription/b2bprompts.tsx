@@ -4,6 +4,9 @@ import Link from 'next/link'
 import { useLang } from '@/app/providers/LanguageProvider'
 import { b2bprompts } from '@/lib/i18n.b2bprompts'
 
+const PAGE2_PATH =
+  process.env.NEXT_PUBLIC_PAGE2_PATH ?? '/page2'
+
 type PromptGroup = {
   label: string
   prompt: string
@@ -53,7 +56,7 @@ export default function B2BPrompts() {
             </p>
 
             <Link
-              href={`/chat?prefill=${encodeURIComponent(group.prompt)}`}
+              href={`${PAGE2_PATH}?prefill=${encodeURIComponent(group.prompt)}`}
               className="inline-flex items-center gap-2 text-sm text-cyan-300 hover:text-cyan-200 transition-colors"
             >
               {group.cta}
