@@ -116,7 +116,7 @@ import VoiaBloom from "@/app/components/VoiaBloom";
 import Navigation from "@/app/components/navigation/navigation";
 import Hero from "@/app/components/subscription/Hero";
 import Testimonial from "@/app/components/subscription/testimonial";
-import PowerPrompts from "@/app/components/subscription/powerprompts";
+import B2BPrompts from "@/app/components/subscription/b2bprompts";
 import Modis13 from "@/app/components/subscription/13modis";
 import ExpertsOverview from "@/app/components/subscription/ExpertsOverview";
 import Subscribe from "@/app/components/subscription/subscribe";
@@ -341,18 +341,19 @@ export default function SubscriptionPage() {
           </section>
           <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
 
-          {/* ─────────────── POWERPROMPTS SECTION ─────────────── */}
-          <section
-            className="pt-[var(--h-space-a2-section)] pb-[var(--h-space-a2-section)]"
-            aria-label="PowerPrompts section"
-          >
-            <div
-              className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-            >
-              <PowerPrompts />
-            </div>
-          </section>
+          {/* ─────────────── B2B PROMPTS SECTION ─────────────── */}
+<section
+  className="pt-[var(--h-space-a2-section)] pb-[var(--h-space-a2-section)]"
+  aria-label="B2B prompts section"
+>
+  <div
+    className="page-center"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
+  >
+    <B2BPrompts />
+  </div>
+</section>
+
 
           {/* ─────────────── BUFFER & DIVIDER #4 (PowerPrompts → Subscribe) ─────────────── */}
           <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
