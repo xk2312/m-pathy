@@ -118,7 +118,13 @@ function handleStartChat(e: Event) {
    LISTENER ATTACH
    ====================================================== */
 
-if (typeof window !== 'undefined') {
-  window.addEventListener('mpathy:archive:start-chat', handleStartChat);
-  console.info('[ARCHIVE][BOOT] start-chat listener attached');
+if (
+  typeof window !== 'undefined' &&
+  window.location.pathname.startsWith('/chat')
+) {
+  window.addEventListener(
+    'mpathy:archive:start-chat',
+    handleStartChat
+  );
 }
+
