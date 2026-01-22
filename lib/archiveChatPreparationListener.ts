@@ -60,7 +60,7 @@ function buildSummaryText(pairs: ArchivePairLike[]): string {
 
 
 /* ======================================================
-   MAIN FLOW - SINGLE ENTRY POINT (CLEAN · LOCAL)
+   MAIN FLOW — SINGLE ENTRY POINT (CLEAN · LOCAL)
    ====================================================== */
 
 function handleStartChat(e: Event) {
@@ -78,7 +78,7 @@ function handleStartChat(e: Event) {
     const summary = buildSummaryText(pairs);
 
     if (!summary || summary.length === 0) {
-      console.warn('[ARCHIVE][F1.1] empty summary - aborting');
+      console.warn('[ARCHIVE][F1.1] empty summary — aborting');
       return;
     }
 
@@ -118,13 +118,7 @@ function handleStartChat(e: Event) {
    LISTENER ATTACH
    ====================================================== */
 
-if (
-  typeof window !== 'undefined' &&
-  window.location.pathname.startsWith('/chat')
-) {
-  window.addEventListener(
-    'mpathy:archive:start-chat',
-    handleStartChat
-  );
+if (typeof window !== 'undefined') {
+  window.addEventListener('mpathy:archive:start-chat', handleStartChat);
+  console.info('[ARCHIVE][BOOT] start-chat listener attached');
 }
-
