@@ -17,9 +17,9 @@ export const heroDict = {
     hero_proof_5: "Outputs designed for auditability and accountability",
     hero_price_monthly: "€179 / month",
     hero_cta: "Start professional access",
-    hero_entry_note_prefix: "Start by using the chat. You can explore the system freely. After ",
-    hero_entry_note_highlight: "9 responses",
-    hero_entry_note_suffix: ", you’ll be asked to choose a subscription to continue.",
+    hero_entry_note_prefix: "Start by using the chat. You can explore the system freely. ",
+    hero_entry_note_highlight: "Exploratory access is limited",
+    hero_entry_note_suffix: ", after which you can continue tomorrow or log in and subscribe.",
 
   },
 
@@ -36,11 +36,10 @@ export const heroDict = {
 
   hero_price_monthly: "179 € / Monat",
   hero_cta: "Professionellen Zugang starten",
-  hero_entry_note_prefix:
-    "Beginne mit dem Chat. Du kannst das System frei erkunden. Nach ",
-  hero_entry_note_highlight: "9 Antworten",
-  hero_entry_note_suffix:
-    " wirst du aufgefordert, ein Abonnement auszuwählen, um fortzufahren.",
+  hero_entry_note_prefix: "Starte im Chat. Du kannst das System frei erkunden. ",
+  hero_entry_note_highlight: "Der explorative Zugang ist begrenzt",
+  hero_entry_note_suffix: ", danach kannst du morgen fortfahren oder dich einloggen und abonnieren.",
+
 },
 
 fr: {
@@ -56,11 +55,10 @@ fr: {
 
   hero_price_monthly: "179 € / mois",
   hero_cta: "Démarrer l’accès professionnel",
-  hero_entry_note_prefix:
-    "Commencez par utiliser le chat. Vous pouvez explorer librement le système. Après ",
-  hero_entry_note_highlight: "9 réponses",
-  hero_entry_note_suffix:
-    ", un abonnement sera requis pour continuer.",
+  hero_entry_note_prefix: "Commencez dans le chat. Vous pouvez explorer le système librement. ",
+  hero_entry_note_highlight: "L’accès exploratoire est limité",
+  hero_entry_note_suffix: ", après quoi vous pourrez continuer demain ou vous connecter et vous abonner.",
+
 },
 
 es: {
@@ -76,11 +74,10 @@ es: {
 
   hero_price_monthly: "179 € / mes",
   hero_cta: "Iniciar acceso profesional",
-  hero_entry_note_prefix:
-    "Empieza usando el chat. Puedes explorar el sistema libremente. Después de ",
-  hero_entry_note_highlight: "9 respuestas",
-  hero_entry_note_suffix:
-    ", se te pedirá elegir una suscripción para continuar.",
+  hero_entry_note_prefix: "Comienza en el chat. Puedes explorar el sistema libremente. ",
+  hero_entry_note_highlight: "El acceso exploratorio es limitado",
+  hero_entry_note_suffix: ", después podrás continuar mañana o iniciar sesión y suscribirte.",
+
 },
 
 it: {
@@ -96,11 +93,10 @@ it: {
 
   hero_price_monthly: "179 € / mese",
   hero_cta: "Avvia accesso professionale",
-  hero_entry_note_prefix:
-    "Inizia usando la chat. Puoi esplorare liberamente il sistema. Dopo ",
-  hero_entry_note_highlight: "9 risposte",
-  hero_entry_note_suffix:
-    ", sarà richiesto un abbonamento per continuare.",
+  hero_entry_note_prefix: "Inizia nella chat. Puoi esplorare il sistema liberamente. ",
+  hero_entry_note_highlight: "L’accesso esplorativo è limitato",
+  hero_entry_note_suffix: ", dopodiché puoi continuare domani o accedere e abbonarti.",
+
 },
 
 pt: {
@@ -116,11 +112,10 @@ pt: {
 
   hero_price_monthly: "179 € / mês",
   hero_cta: "Iniciar acesso profissional",
-  hero_entry_note_prefix:
-    "Comece usando o chat. Pode explorar o sistema livremente. Após ",
-  hero_entry_note_highlight: "9 respostas",
-  hero_entry_note_suffix:
-    ", será solicitado escolher uma subscrição para continuar.",
+  hero_entry_note_prefix: "Comece pelo chat. Você pode explorar o sistema livremente. ",
+  hero_entry_note_highlight: "O acesso exploratório é limitado",
+  hero_entry_note_suffix: ", depois você pode continuar amanhã ou fazer login e assinar.",
+
 },
 
 nl: {
@@ -136,11 +131,10 @@ nl: {
 
   hero_price_monthly: "€179 / maand",
   hero_cta: "Professionele toegang starten",
-  hero_entry_note_prefix:
-    "Begin met de chat. Je kunt het systeem vrij verkennen. Na ",
-  hero_entry_note_highlight: "9 antwoorden",
-  hero_entry_note_suffix:
-    " wordt gevraagd een abonnement te kiezen om door te gaan.",
+  hero_entry_note_prefix: "Begin in de chat. Je kunt het systeem vrij verkennen. ",
+  hero_entry_note_highlight: "Verkennende toegang is beperkt",
+  hero_entry_note_suffix: ", daarna kun je morgen verdergaan of inloggen en een abonnement afsluiten.",
+
 },
 
 ru: {
@@ -156,11 +150,10 @@ ru: {
 
   hero_price_monthly: "179 € / месяц",
   hero_cta: "Начать профессиональный доступ",
-  hero_entry_note_prefix:
-    "Начните с чата. Вы можете свободно изучать систему. После ",
-  hero_entry_note_highlight: "9 ответов",
-  hero_entry_note_suffix:
-    " потребуется выбрать подписку для продолжения.",
+  hero_entry_note_prefix: "Начните в чате. Вы можете свободно изучать систему. ",
+  hero_entry_note_highlight: "Исследовательский доступ ограничен",
+  hero_entry_note_suffix: ", после чего вы сможете продолжить завтра или войти и оформить подписку.",
+
 },
 
 zh: {
@@ -176,11 +169,10 @@ zh: {
 
   hero_price_monthly: "€179 / 月",
   hero_cta: "开始专业访问",
-  hero_entry_note_prefix:
-    "从聊天开始。你可以自由探索系统。在 ",
-  hero_entry_note_highlight: "9 次回复",
-  hero_entry_note_suffix:
-    " 后，将提示你选择订阅以继续。",
+  hero_entry_note_prefix: "从聊天开始。你可以自由探索系统。 ",
+  hero_entry_note_highlight: "探索访问是有限的",
+  hero_entry_note_suffix: "，之后你可以明天继续，或登录并订阅。",
+
 },
 
 ja: {
@@ -196,11 +188,10 @@ ja: {
 
   hero_price_monthly: "€179 / 月",
   hero_cta: "プロフェッショナル利用を開始",
-  hero_entry_note_prefix:
-    "まずはチャットから始めてください。自由に試すことができます。 ",
-  hero_entry_note_highlight: "9 回の応答",
-  hero_entry_note_suffix:
-    "後、継続するにはサブスクリプションが必要です。",
+ hero_entry_note_prefix: "チャットから開始してください。システムを自由に試すことができます。 ",
+  hero_entry_note_highlight: "探索アクセスには制限があります",
+  hero_entry_note_suffix: "。その後、明日続行するか、ログインして購読できます。",
+
 },
 
 ko: {
@@ -216,11 +207,10 @@ ko: {
 
   hero_price_monthly: "€179 / 월",
   hero_cta: "전문가용 액세스 시작",
-  hero_entry_note_prefix:
-    "채팅으로 시작하세요. 시스템을 자유롭게 탐색할 수 있습니다. ",
-  hero_entry_note_highlight: "9회 응답",
-  hero_entry_note_suffix:
-    " 후 계속하려면 구독을 선택해야 합니다.",
+  hero_entry_note_prefix: "채팅에서 시작하세요. 시스템을 자유롭게 탐색할 수 있습니다. ",
+  hero_entry_note_highlight: "탐색 접근에는 제한이 있습니다",
+  hero_entry_note_suffix: ", 이후에는 내일 계속하거나 로그인하여 구독할 수 있습니다.",
+
 },
 
 ar: {
@@ -236,11 +226,10 @@ ar: {
 
   hero_price_monthly: "179 € / شهرياً",
   hero_cta: "بدء الوصول الاحترافي",
-  hero_entry_note_prefix:
-    "ابدأ باستخدام الدردشة. يمكنك استكشاف النظام بحرية. بعد ",
-  hero_entry_note_highlight: "9 ردود",
-  hero_entry_note_suffix:
-    " سيُطلب منك اختيار اشتراك للمتابعة.",
+  hero_entry_note_prefix: "ابدأ باستخدام الدردشة. يمكنك استكشاف النظام بحرية. ",
+  hero_entry_note_highlight: "الوصول الاستكشافي محدود",
+  hero_entry_note_suffix: "، وبعد ذلك يمكنك المتابعة غدًا أو تسجيل الدخول والاشتراك.",
+
 },
 
 hi: {
@@ -256,11 +245,10 @@ hi: {
 
   hero_price_monthly: "€179 / माह",
   hero_cta: "पेशेवर एक्सेस शुरू करें",
-  hero_entry_note_prefix:
-    "चैट से शुरुआत करें। आप सिस्टम को स्वतंत्र रूप से देख सकते हैं। ",
-  hero_entry_note_highlight: "9 प्रतिक्रियाओं",
-  hero_entry_note_suffix:
-    " के बाद जारी रखने के लिए सदस्यता चुननी होगी।",
+  hero_entry_note_prefix: "चैट से शुरू करें। आप सिस्टम को स्वतंत्र रूप से एक्सप्लोर कर सकते हैं। ",
+  hero_entry_note_highlight: "अन्वेषणात्मक एक्सेस सीमित है",
+  hero_entry_note_suffix: ", इसके बाद आप कल जारी रख सकते हैं या लॉग इन करके सदस्यता ले सकते हैं।",
+
 },
 
 } as const;
