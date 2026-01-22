@@ -79,8 +79,6 @@ export default function Comparison() {
   const { lang } = useLang();
   const locale = comparisonDict[lang] ?? comparisonDict.en;
 
-
-
   const groups = locale.groups as Record<
     string,
     { title: string } & (
