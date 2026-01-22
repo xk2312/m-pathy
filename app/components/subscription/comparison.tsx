@@ -1,5 +1,8 @@
 "use client";
 
+"use client";
+
+import React from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { dict as comparisonDict } from "@/lib/i18n.comparison";
 import { comparisonMatrix, ProviderKey } from "@/lib/comparison.matrix";
@@ -143,7 +146,8 @@ export default function Comparison() {
 
             <tbody>
               {tableGroups.map(([groupKey, group], idx) => (
-                <>
+  <React.Fragment key={groupKey}>
+
                   {/* SECTION SEPARATOR */}
                   {idx > 0 ? (
                     <tr>
@@ -189,8 +193,9 @@ export default function Comparison() {
                       </tr>
                     );
                   })}
-                </>
-              ))}
+                  </React.Fragment>
+))}
+
             </tbody>
           </table>
         </div>
