@@ -6,1432 +6,1442 @@
 export const modes15 = {
   /* ───────────────── EN ───────────────── */
   en: {
-    modes: {
-      kicker: "15 modes by m-pathy",
-      title: "Your operating modes",
-      subtitle:
-        "Choose a mode to see how m-pathy behaves – or let FLOW orchestrate them for you. All modes are available in the main chat.",
-      dropdown: {
-        label: "Choose a mode",
-      },
-      group: {
-        core: "Core",
-        mind: "Intellect",
-        creator: "Creator",
-        heart: "Heart",
-        spirit: "Spirit",
-      },
-      onboarding: {
-        name: "ONBOARDING",
-        label: "Start here",
-        description:
-          "Gently sets up your context, preferences, and safety rails in m-pathy before deep work.",
-      },
-      flow: {
-        name: "FLOW",
-        label: "Mode autopilot",
-        description:
-          "Lets m-pathy switch modes for you to keep you in a deep, uninterrupted flow.",
-      },
-      build: {
-        name: "BUILD",
-        label: "Shipping mode",
-        description:
-          "Focuses on concrete output: specs, tickets, code, copy and checklists.",
-      },
-      research: {
-        name: "RESEARCH",
-        label: "Deep clarity",
-        description:
-          "Turns m-pathy into a research analyst that checks sources and structures complex topics.",
-      },
-      truth: {
-        name: "TRUTH",
-        label: "Reality check",
-        description:
-          "Asks hard questions, fights wishful thinking, and grounds ideas in real-world constraints.",
-      },
-      wisdom: {
-        name: "WISDOM",
-        label: "Slow thinking",
-        description:
-          "Connects dots across domains, highlights trade-offs, and points to long arcs.",
-      },
-      play: {
-        name: "PLAY",
-        label: "Creative sandbox",
-        description:
-          "Switches into playful experimentation for naming, stories, ideas and wild combinations.",
-      },
-      vision: {
-        name: "VISION",
-        label: "Future sketch",
-        description:
-          "Helps you prototype futures, products and narratives from Point Zero.",
-      },
-      oracle: {
-        name: "ORACLE",
-        label: "Pattern sight",
-        description:
-          "Surfaces patterns, options and timelines without pretending to predict the future.",
-      },
-      empathy: {
-        name: "EMPATHY",
-        label: "Deep listening",
-        description:
-          "Mirrors what you feel, clarifies needs, and suggests gentle next steps.",
-      },
-      love: {
-        name: "LOVE",
-        label: "Devoted support",
-        description:
-          "Holds your long-term journey, remembers what matters and protects your core values.",
-      },
-      joy: {
-        name: "JOY",
-        label: "Light & encouragement",
-        description:
-          "Answers with a warm, uplifting tone while still being precise and grounded.",
-      },
-      calm: {
-        name: "CALM",
-        label: "Soft landing",
-        description:
-          "Slows everything down, simplifies language, and protects you from overwhelm.",
-      },
-      peace: {
-        name: "PEACE",
-        label: "Nervous system reset",
-        description:
-          "Helps you de-escalate, breathe, and re-enter work from a grounded place.",
-      },
-      council: {
-        name: "COUNCIL13",
-        label: "13 minds, one answer",
-        description:
-          "Lets the inner council debate and converge before you see the final distilled answer.",
-      },
+  modes: {
+    kicker: "15 modes by m-pathy",
+    title: "Your operating modes",
+    subtitle:
+      "Select a mode to define how m-pathy structures its reasoning, or allow FLOW to adjust configurations dynamically. All modes are available in the main chat.",
+    dropdown: {
+      label: "Choose a mode",
+    },
+    group: {
+      core: "Core",
+      mind: "Intellect",
+      creator: "Creator",
+      heart: "Heart",
+      spirit: "Spirit",
+    },
+    onboarding: {
+      name: "ONBOARDING",
+      label: "Initial setup",
+      description:
+        "Establishes context, boundaries, and operating parameters before focused professional work begins.",
+    },
+    flow: {
+      name: "FLOW",
+      label: "Automatic configuration",
+      description:
+        "Dynamically adjusts internal reasoning configurations based on task demands, context, and interaction signals.",
+    },
+    build: {
+      name: "BUILD",
+      label: "Execution focus",
+      description:
+        "Prioritizes concrete outputs such as specifications, documentation, code, structured drafts, and action lists.",
+    },
+    research: {
+      name: "RESEARCH",
+      label: "Analytical depth",
+      description:
+        "Structures complex topics, evaluates sources, and supports systematic investigation and analysis.",
+    },
+    truth: {
+      name: "TRUTH",
+      label: "Constraint testing",
+      description:
+        "Challenges assumptions, tests feasibility, and aligns ideas with real world constraints and evidence.",
+    },
+    wisdom: {
+      name: "WISDOM",
+      label: "Long range perspective",
+      description:
+        "Integrates insights across domains, highlights trade offs, and considers long term implications.",
+    },
+    play: {
+      name: "PLAY",
+      label: "Exploratory ideation",
+      description:
+        "Supports unconstrained idea exploration, naming, and conceptual variation without operational commitment.",
+    },
+    vision: {
+      name: "VISION",
+      label: "Strategic foresight",
+      description:
+        "Explores future scenarios, strategic directions, and conceptual models under uncertainty.",
+    },
+    oracle: {
+      name: "ORACLE",
+      label: "Pattern exploration",
+      description:
+        "Examines patterns, options, and trajectories without claiming prediction or certainty.",
+    },
+    empathy: {
+      name: "EMPATHY",
+      label: "Perspective awareness",
+      description:
+        "Clarifies stakeholder perspectives and human impact without assuming emotional authority.",
+    },
+    love: {
+      name: "LOVE",
+      label: "Value continuity",
+      description:
+        "Maintains awareness of stated priorities, long term intent, and declared values during extended work.",
+    },
+    joy: {
+      name: "JOY",
+      label: "Positive framing",
+      description:
+        "Maintains an encouraging and constructive tone while preserving precision and task focus.",
+    },
+    calm: {
+      name: "CALM",
+      label: "Load regulation",
+      description:
+        "Reduces complexity, simplifies responses, and stabilizes interaction during high cognitive load.",
+    },
+    peace: {
+      name: "PEACE",
+      label: "De escalation",
+      description:
+        "Supports de escalation and reset when interaction intensity exceeds productive levels.",
+    },
+    council: {
+      name: "COUNCIL13",
+      label: "Multi perspective deliberation",
+      description:
+        "Structures parallel viewpoints and converges them into a single, reasoned outcome.",
     },
   },
+},
+
 
   /* ───────────────── DE ───────────────── */
-  de: {
-    modes: {
-      kicker: "15 Modi von m-pathy",
-      title: "Deine Betriebsarten",
-      subtitle:
-        "Wähle einen Modus, um zu sehen, wie m-pathy sich verhält – oder lass FLOW alles für dich orchestrieren. Alle Modi stehen dir im Haupt-Chat zur Verfügung.",
-      dropdown: {
-        label: "Modus wählen",
-      },
-      group: {
-        core: "Kern",
-        mind: "Intellekt",
-        creator: "Kreation",
-        heart: "Herz",
-        spirit: "Spirit",
-      },
-      onboarding: {
-        name: "ONBOARDING",
-        label: "Starte hier",
-        description:
-          "Richtet in m-pathy sanft dein Umfeld ein: Kontext, Präferenzen und Sicherheitsgeländer – vor der tiefen Arbeit.",
-      },
-      flow: {
-        name: "FLOW",
-        label: "Modus-Autopilot",
-        description:
-          "Lässt m-pathy die Modi für dich wechseln, damit du in einem tiefen, ununterbrochenen Flow bleibst.",
-      },
-      build: {
-        name: "BUILD",
-        label: "Shipping-Modus",
-        description:
-          "Fokussiert auf greifbare Ergebnisse: Spezifikationen, Tickets, Code, Texte und Checklisten.",
-      },
-      research: {
-        name: "RESEARCH",
-        label: "Tiefe Klarheit",
-        description:
-          "Verwandelt m-pathy in eine Research-Analystin, die Quellen prüft und komplexe Themen strukturiert.",
-      },
-      truth: {
-        name: "TRUTH",
-        label: "Realitätscheck",
-        description:
-          "Stellt unbequeme Fragen, bekämpft Wunschdenken und verankert Ideen in echten Rahmenbedingungen.",
-      },
-      wisdom: {
-        name: "WISDOM",
-        label: "Langsames Denken",
-        description:
-          "Verbindet Punkte über viele Bereiche, zeigt Trade-offs und weist auf lange Bögen hin.",
-      },
-      play: {
-        name: "PLAY",
-        label: "Kreativ-Spielplatz",
-        description:
-          "Schaltet in spielerische Exploration für Namen, Geschichten, Ideen und wilde Kombinationen.",
-      },
-      vision: {
-        name: "VISION",
-        label: "Zukunftsskizze",
-        description:
-          "Hilft dir, Zukünfte, Produkte und Narrative aus dem Point Zero heraus zu skizzieren.",
-      },
-      oracle: {
-        name: "ORACLE",
-        label: "Musterblick",
-        description:
-          "Hebt Muster, Optionen und Zeitschienen hervor, ohne die Zukunft vorzutäuschen.",
-      },
-      empathy: {
-        name: "EMPATHY",
-        label: "Tiefes Zuhören",
-        description:
-          "Spiegelt, was du fühlst, klärt Bedürfnisse und schlägt sanfte nächste Schritte vor.",
-      },
-      love: {
-        name: "LOVE",
-        label: "Hingebungsvolle Begleitung",
-        description:
-          "Hält deine Langzeitreise, erinnert sich an das Wesentliche und schützt deine Kernwerte.",
-      },
-      joy: {
-        name: "JOY",
-        label: "Licht & Ermutigung",
-        description:
-          "Antwortet warm und aufbauend – bei voller Präzision und Bodenhaftung.",
-      },
-      calm: {
-        name: "CALM",
-        label: "Weiche Landung",
-        description:
-          "Verlangsamt alles, vereinfacht Sprache und schützt dich vor Überforderung.",
-      },
-      peace: {
-        name: "PEACE",
-        label: "Nervensystem-Reset",
-        description:
-          "Hilft dir zu deeskalieren, zu atmen und wieder geerdet in die Arbeit einzusteigen.",
-      },
-      council: {
-        name: "COUNCIL13",
-        label: "13 Minds, eine Antwort",
-        description:
-          "Lässt den inneren Rat debattieren und konvergieren, bevor du die destillierte Antwort siehst.",
-      },
+ de: {
+  modes: {
+    kicker: "15 Modi von m-pathy",
+    title: "Deine Arbeitsmodi",
+    subtitle:
+      "Wähle einen Modus, um festzulegen, wie m-pathy sein Denken strukturiert, oder erlaube FLOW, die Konfigurationen dynamisch anzupassen. Alle Modi sind im Hauptchat verfügbar.",
+    dropdown: {
+      label: "Modus wählen",
+    },
+    group: {
+      core: "Kern",
+      mind: "Intellekt",
+      creator: "Kreator",
+      heart: "Herz",
+      spirit: "Geist",
+    },
+    onboarding: {
+      name: "ONBOARDING",
+      label: "Initiale Einrichtung",
+      description:
+        "Legt Kontext, Grenzen und Betriebsparameter fest, bevor fokussierte professionelle Arbeit beginnt.",
+    },
+    flow: {
+      name: "FLOW",
+      label: "Automatische Konfiguration",
+      description:
+        "Passt interne Denk- und Analysekonfigurationen dynamisch an Aufgabenanforderungen, Kontext und Interaktionssignale an.",
+    },
+    build: {
+      name: "BUILD",
+      label: "Umsetzungsfokus",
+      description:
+        "Priorisiert konkrete Ergebnisse wie Spezifikationen, Dokumentation, Code, strukturierte Entwürfe und Aufgabenlisten.",
+    },
+    research: {
+      name: "RESEARCH",
+      label: "Analytische Tiefe",
+      description:
+        "Strukturiert komplexe Themen, bewertet Quellen und unterstützt systematische Recherche und Analyse.",
+    },
+    truth: {
+      name: "TRUTH",
+      label: "Realitätsprüfung",
+      description:
+        "Hinterfragt Annahmen, prüft Umsetzbarkeit und richtet Ideen an realen Rahmenbedingungen und Belegen aus.",
+    },
+    wisdom: {
+      name: "WISDOM",
+      label: "Langfristige Perspektive",
+      description:
+        "Verbindet Erkenntnisse über Domänen hinweg, zeigt Abwägungen auf und betrachtet langfristige Auswirkungen.",
+    },
+    play: {
+      name: "PLAY",
+      label: "Explorative Ideation",
+      description:
+        "Unterstützt freie Ideenexploration, Benennungen und konzeptionelle Variationen ohne operative Verpflichtung.",
+    },
+    vision: {
+      name: "VISION",
+      label: "Strategische Vorausschau",
+      description:
+        "Erkundet Zukunftsszenarien, strategische Richtungen und konzeptionelle Modelle unter Unsicherheit.",
+    },
+    oracle: {
+      name: "ORACLE",
+      label: "Musteranalyse",
+      description:
+        "Untersucht Muster, Optionen und Entwicklungsverläufe ohne Anspruch auf Vorhersage oder Gewissheit.",
+    },
+    empathy: {
+      name: "EMPATHY",
+      label: "Perspektivenbewusstsein",
+      description:
+        "Klärt Stakeholder-Perspektiven und menschliche Auswirkungen ohne emotionale Autorität zu beanspruchen.",
+    },
+    love: {
+      name: "LOVE",
+      label: "Wertekontinuität",
+      description:
+        "Hält deklarierte Prioritäten, langfristige Absichten und festgelegte Werte während längerer Arbeitsphasen präsent.",
+    },
+    joy: {
+      name: "JOY",
+      label: "Positive Rahmung",
+      description:
+        "Wahrt einen ermutigenden und konstruktiven Ton bei gleichzeitiger Präzision und Aufgabenfokus.",
+    },
+    calm: {
+      name: "CALM",
+      label: "Lastregulierung",
+      description:
+        "Reduziert Komplexität, vereinfacht Antworten und stabilisiert die Interaktion bei hoher kognitiver Belastung.",
+    },
+    peace: {
+      name: "PEACE",
+      label: "Deeskalation",
+      description:
+        "Unterstützt Deeskalation und Reset, wenn die Interaktionsintensität produktive Grenzen überschreitet.",
+    },
+    council: {
+      name: "COUNCIL13",
+      label: "Mehrperspektivische Deliberation",
+      description:
+        "Strukturiert parallele Sichtweisen und führt sie zu einem begründeten Gesamtergebnis zusammen.",
     },
   },
+},
 
   /* ───────────────── FR ───────────────── */
   fr: {
-    modes: {
-      kicker: "15 modes par m-pathy",
-      title: "Tes modes de fonctionnement",
-      subtitle:
-        "Choisis un mode pour voir comment m-pathy se comporte – ou laisse FLOW les orchestrer pour toi. Tous les modes sont disponibles dans le chat principal.",
-      dropdown: {
-        label: "Choisir un mode",
-      },
-      group: {
-        core: "Noyau",
-        mind: "Intellect",
-        creator: "Créateur",
-        heart: "Cœur",
-        spirit: "Esprit",
-      },
-      onboarding: {
-        name: "ONBOARDING",
-        label: "Commencer ici",
-        description:
-          "Configure doucement ton contexte, tes préférences et les garde-fous de sécurité dans m-pathy avant le travail profond.",
-      },
-      flow: {
-        name: "FLOW",
-        label: "Pilote automatique",
-        description:
-          "Laisse m-pathy changer de mode pour toi afin de te garder dans un flow profond et ininterrompu.",
-      },
-      build: {
-        name: "BUILD",
-        label: "Mode livraison",
-        description:
-          "Se concentre sur des livrables concrets : spécifications, tickets, code, texte et listes de contrôle.",
-      },
-      research: {
-        name: "RESEARCH",
-        label: "Clarté profonde",
-        description:
-          "Transforme m-pathy en analyste de recherche qui vérifie les sources et structure les sujets complexes.",
-      },
-      truth: {
-        name: "TRUTH",
-        label: "Test de réalité",
-        description:
-          "Pose les questions difficiles, combat les illusions et ancre les idées dans les contraintes du réel.",
-      },
-      wisdom: {
-        name: "WISDOM",
-        label: "Pensée lente",
-        description:
-          "Relie les points entre les domaines, met en lumière les compromis et les trajectoires longues.",
-      },
-      play: {
-        name: "PLAY",
-        label: "Terrain de jeu créatif",
-        description:
-          "Passe en exploration ludique pour les noms, histoires, idées et combinaisons audacieuses.",
-      },
-      vision: {
-        name: "VISION",
-        label: "Esquisse du futur",
-        description:
-          "T’aide à prototyper des futurs, des produits et des récits à partir du Point Zéro.",
-      },
-      oracle: {
-        name: "ORACLE",
-        label: "Vision des motifs",
-        description:
-          "Fait émerger motifs, options et timelines sans prétendre prédire l’avenir.",
-      },
-      empathy: {
-        name: "EMPATHY",
-        label: "Écoute profonde",
-        description:
-          "Reflète ce que tu ressens, clarifie les besoins et propose des prochains pas doux.",
-      },
-      love: {
-        name: "LOVE",
-        label: "Soutien dévoué",
-        description:
-          "Tient ton voyage à long terme, se souvient de ce qui compte et protège tes valeurs centrales.",
-      },
-      joy: {
-        name: "JOY",
-        label: "Lumière & encouragement",
-        description:
-          "Répond avec chaleur et encouragement tout en restant précis et ancré.",
-      },
-      calm: {
-        name: "CALM",
-        label: "Atterrissage doux",
-        description:
-          "Ralentit le rythme, simplifie le langage et te protège de la surcharge.",
-      },
-      peace: {
-        name: "PEACE",
-        label: "Reset du système nerveux",
-        description:
-          "T’aide à désamorcer, respirer et revenir au travail depuis un état ancré.",
-      },
-      council: {
-        name: "COUNCIL13",
-        label: "13 esprits, une réponse",
-        description:
-          "Laisse le conseil intérieur débattre et converger avant de te montrer la réponse distillée.",
-      },
+  modes: {
+    kicker: "15 modes par m-pathy",
+    title: "Tes modes de fonctionnement",
+    subtitle:
+      "Sélectionne un mode pour définir comment m-pathy structure son raisonnement, ou laisse FLOW ajuster les configurations de manière dynamique. Tous les modes sont disponibles dans le chat principal.",
+    dropdown: {
+      label: "Choisir un mode",
+    },
+    group: {
+      core: "Noyau",
+      mind: "Intellect",
+      creator: "Créateur",
+      heart: "Cœur",
+      spirit: "Esprit",
+    },
+    onboarding: {
+      name: "ONBOARDING",
+      label: "Configuration initiale",
+      description:
+        "Établit le contexte, les limites et les paramètres de fonctionnement avant le début d’un travail professionnel ciblé.",
+    },
+    flow: {
+      name: "FLOW",
+      label: "Configuration automatique",
+      description:
+        "Ajuste dynamiquement les configurations internes de raisonnement en fonction des exigences de la tâche, du contexte et des signaux d’interaction.",
+    },
+    build: {
+      name: "BUILD",
+      label: "Focus d’exécution",
+      description:
+        "Priorise des livrables concrets tels que spécifications, documentation, code, brouillons structurés et listes d’actions.",
+    },
+    research: {
+      name: "RESEARCH",
+      label: "Profondeur analytique",
+      description:
+        "Structure des sujets complexes, évalue les sources et soutient une investigation et une analyse systématiques.",
+    },
+    truth: {
+      name: "TRUTH",
+      label: "Test des contraintes",
+      description:
+        "Remet en question les hypothèses, teste la faisabilité et aligne les idées avec les contraintes et preuves du monde réel.",
+    },
+    wisdom: {
+      name: "WISDOM",
+      label: "Perspective de long terme",
+      description:
+        "Intègre des connaissances entre domaines, met en évidence les arbitrages et considère les implications à long terme.",
+    },
+    play: {
+      name: "PLAY",
+      label: "Idéation exploratoire",
+      description:
+        "Soutient l’exploration libre d’idées, la nomination et les variations conceptuelles sans engagement opérationnel.",
+    },
+    vision: {
+      name: "VISION",
+      label: "Prospective stratégique",
+      description:
+        "Explore des scénarios futurs, des orientations stratégiques et des modèles conceptuels en situation d’incertitude.",
+    },
+    oracle: {
+      name: "ORACLE",
+      label: "Exploration des schémas",
+      description:
+        "Examine des schémas, des options et des trajectoires sans prétendre à la prédiction ou à la certitude.",
+    },
+    empathy: {
+      name: "EMPATHY",
+      label: "Conscience des perspectives",
+      description:
+        "Clarifie les perspectives des parties prenantes et l’impact humain sans assumer une autorité émotionnelle.",
+    },
+    love: {
+      name: "LOVE",
+      label: "Continuité des valeurs",
+      description:
+        "Maintient la visibilité des priorités déclarées, de l’intention à long terme et des valeurs établies lors de travaux prolongés.",
+    },
+    joy: {
+      name: "JOY",
+      label: "Cadrage positif",
+      description:
+        "Maintient un ton encourageant et constructif tout en préservant la précision et le focus sur la tâche.",
+    },
+    calm: {
+      name: "CALM",
+      label: "Régulation de charge",
+      description:
+        "Réduit la complexité, simplifie les réponses et stabilise l’interaction en cas de forte charge cognitive.",
+    },
+    peace: {
+      name: "PEACE",
+      label: "Désescalade",
+      description:
+        "Soutient la désescalade et la remise à zéro lorsque l’intensité de l’interaction dépasse des niveaux productifs.",
+    },
+    council: {
+      name: "COUNCIL13",
+      label: "Délibération multiperspective",
+      description:
+        "Structure des points de vue parallèles et les converge vers un résultat unique et raisonné.",
     },
   },
+},
+
 
   /* ───────────────── ES ───────────────── */
   es: {
-    modes: {
-      kicker: "15 modos de m-pathy",
-      title: "Tus modos de operación",
-      subtitle:
-        "Elige un modo para ver cómo se comporta m-pathy, o deja que FLOW los orqueste por ti. Todos los modos están disponibles en el chat principal.",
-      dropdown: {
-        label: "Elegir modo",
-      },
-      group: {
-        core: "Núcleo",
-        mind: "Intelecto",
-        creator: "Creador",
-        heart: "Corazón",
-        spirit: "Espíritu",
-      },
-      onboarding: {
-        name: "ONBOARDING",
-        label: "Empieza aquí",
-        description:
-          "Configura con suavidad tu contexto, preferencias y barandillas de seguridad en m-pathy antes del trabajo profundo.",
-      },
-      flow: {
-        name: "FLOW",
-        label: "Piloto automático",
-        description:
-          "Permite que m-pathy cambie de modo por ti para mantenerte en un flujo profundo e ininterrumpido.",
-      },
-      build: {
-        name: "BUILD",
-        label: "Modo entrega",
-        description:
-          "Se centra en resultados concretos: especificaciones, tickets, código, texto y listas de tareas.",
-      },
-      research: {
-        name: "RESEARCH",
-        label: "Claridad profunda",
-        description:
-          "Convierte a m-pathy en un analista de investigación que revisa fuentes y estructura temas complejos.",
-      },
-      truth: {
-        name: "TRUTH",
-        label: "Chequeo de realidad",
-        description:
-          "Hace las preguntas difíciles, combate las ilusiones y aterriza las ideas en restricciones reales.",
-      },
-      wisdom: {
-        name: "WISDOM",
-        label: "Pensamiento lento",
-        description:
-          "Conecta puntos entre dominios, muestra los trade-offs y señala los arcos largos.",
-      },
-      play: {
-        name: "PLAY",
-        label: "Laboratorio creativo",
-        description:
-          "Cambia a exploración lúdica para nombres, historias, ideas y combinaciones salvajes.",
-      },
-      vision: {
-        name: "VISION",
-        label: "Boceto de futuro",
-        description:
-          "Te ayuda a prototipar futuros, productos y narrativas desde el Punto Cero.",
-      },
-      oracle: {
-        name: "ORACLE",
-        label: "Vista de patrones",
-        description:
-          "Saca a la luz patrones, opciones y líneas de tiempo sin pretender predecir el futuro.",
-      },
-      empathy: {
-        name: "EMPATHY",
-        label: "Escucha profunda",
-        description:
-          "Refleja lo que sientes, aclara necesidades y sugiere próximos pasos suaves.",
-      },
-      love: {
-        name: "LOVE",
-        label: "Apoyo devoto",
-        description:
-          "Sostiene tu viaje a largo plazo, recuerda lo importante y protege tus valores centrales.",
-      },
-      joy: {
-        name: "JOY",
-        label: "Luz y ánimo",
-        description:
-          "Responde con un tono cálido y alentador, manteniendo precisión y equilibrio.",
-      },
-      calm: {
-        name: "CALM",
-        label: "Aterrizaje suave",
-        description:
-          "Ralentiza todo, simplifica el lenguaje y te protege de la sobrecarga.",
-      },
-      peace: {
-        name: "PEACE",
-        label: "Reinicio del sistema nervioso",
-        description:
-          "Te ayuda a desescalar, respirar y volver al trabajo desde un lugar enraizado.",
-      },
-      council: {
-        name: "COUNCIL13",
-        label: "13 mentes, una respuesta",
-        description:
-          "Permite que el consejo interno debata y converja antes de mostrarte la respuesta destilada.",
-      },
+  modes: {
+    kicker: "15 modos de m-pathy",
+    title: "Tus modos de operación",
+    subtitle:
+      "Selecciona un modo para definir cómo m-pathy estructura su razonamiento, o permite que FLOW ajuste las configuraciones de forma dinámica. Todos los modos están disponibles en el chat principal.",
+    dropdown: {
+      label: "Elegir modo",
+    },
+    group: {
+      core: "Núcleo",
+      mind: "Intelecto",
+      creator: "Creador",
+      heart: "Corazón",
+      spirit: "Espíritu",
+    },
+    onboarding: {
+      name: "ONBOARDING",
+      label: "Configuración inicial",
+      description:
+        "Establece el contexto, los límites y los parámetros operativos antes de que comience el trabajo profesional enfocado.",
+    },
+    flow: {
+      name: "FLOW",
+      label: "Configuración automática",
+      description:
+        "Ajusta dinámicamente las configuraciones internas de razonamiento según las exigencias de la tarea, el contexto y las señales de interacción.",
+    },
+    build: {
+      name: "BUILD",
+      label: "Enfoque de ejecución",
+      description:
+        "Prioriza entregables concretos como especificaciones, documentación, código, borradores estructurados y listas de acciones.",
+    },
+    research: {
+      name: "RESEARCH",
+      label: "Profundidad analítica",
+      description:
+        "Estructura temas complejos, evalúa fuentes y apoya la investigación y el análisis sistemáticos.",
+    },
+    truth: {
+      name: "TRUTH",
+      label: "Prueba de restricciones",
+      description:
+        "Cuestiona supuestos, evalúa la viabilidad y alinea las ideas con restricciones y evidencias del mundo real.",
+    },
+    wisdom: {
+      name: "WISDOM",
+      label: "Perspectiva a largo plazo",
+      description:
+        "Integra conocimientos entre dominios, destaca compensaciones y considera implicaciones a largo plazo.",
+    },
+    play: {
+      name: "PLAY",
+      label: "Ideación exploratoria",
+      description:
+        "Apoya la exploración libre de ideas, la denominación y las variaciones conceptuales sin compromiso operativo.",
+    },
+    vision: {
+      name: "VISION",
+      label: "Prospectiva estratégica",
+      description:
+        "Explora escenarios futuros, direcciones estratégicas y modelos conceptuales bajo incertidumbre.",
+    },
+    oracle: {
+      name: "ORACLE",
+      label: "Exploración de patrones",
+      description:
+        "Examina patrones, opciones y trayectorias sin pretender predicción ni certeza.",
+    },
+    empathy: {
+      name: "EMPATHY",
+      label: "Conciencia de perspectivas",
+      description:
+        "Aclara las perspectivas de las partes interesadas y el impacto humano sin asumir autoridad emocional.",
+    },
+    love: {
+      name: "LOVE",
+      label: "Continuidad de valores",
+      description:
+        "Mantiene visibles las prioridades declaradas, la intención a largo plazo y los valores establecidos durante trabajos prolongados.",
+    },
+    joy: {
+      name: "JOY",
+      label: "Encuadre positivo",
+      description:
+        "Mantiene un tono alentador y constructivo preservando la precisión y el enfoque en la tarea.",
+    },
+    calm: {
+      name: "CALM",
+      label: "Regulación de carga",
+      description:
+        "Reduce la complejidad, simplifica las respuestas y estabiliza la interacción bajo alta carga cognitiva.",
+    },
+    peace: {
+      name: "PEACE",
+      label: "Desescalada",
+      description:
+        "Apoya la desescalada y el reinicio cuando la intensidad de la interacción supera niveles productivos.",
+    },
+    council: {
+      name: "COUNCIL13",
+      label: "Deliberación multiperspectiva",
+      description:
+        "Estructura puntos de vista paralelos y los converge en un resultado único y fundamentado.",
     },
   },
+},
 
   /* ───────────────── IT ───────────────── */
   it: {
-    modes: {
-      kicker: "15 modalità di m-pathy",
-      title: "Le tue modalità operative",
-      subtitle:
-        "Scegli una modalità per vedere come si comporta m-pathy – oppure lascia che FLOW le orchestri per te. Tutte le modalità sono disponibili nella chat principale.",
-      dropdown: {
-        label: "Scegli una modalità",
-      },
-      group: {
-        core: "Core",
-        mind: "Intelletto",
-        creator: "Creatore",
-        heart: "Cuore",
-        spirit: "Spirito",
-      },
-      onboarding: {
-        name: "ONBOARDING",
-        label: "Inizia qui",
-        description:
-          "Imposta con delicatezza contesto, preferenze e binari di sicurezza in m-pathy prima del lavoro profondo.",
-      },
-      flow: {
-        name: "FLOW",
-        label: "Pilota automatico",
-        description:
-          "Lascia che m-pathy cambi modalità per te così da mantenerti in un flusso profondo e ininterrotto.",
-      },
-      build: {
-        name: "BUILD",
-        label: "Modalità delivery",
-        description:
-          "Si concentra su output concreti: specifiche, ticket, codice, copy e checklist.",
-      },
-      research: {
-        name: "RESEARCH",
-        label: "Chiarezza profonda",
-        description:
-          "Trasforma m-pathy in un analista di ricerca che controlla le fonti e struttura argomenti complessi.",
-      },
-      truth: {
-        name: "TRUTH",
-        label: "Verifica di realtà",
-        description:
-          "Pone domande difficili, combatte l’autoillusione e ancora le idee in vincoli reali.",
-      },
-      wisdom: {
-        name: "WISDOM",
-        label: "Pensiero lento",
-        description:
-          "Collega i punti tra i domini, evidenzia i compromessi e indica gli archi lunghi.",
-      },
-      play: {
-        name: "PLAY",
-        label: "Sandbox creativa",
-        description:
-          "Passa alla sperimentazione giocosa per nomi, storie, idee e combinazioni audaci.",
-      },
-      vision: {
-        name: "VISION",
-        label: "Schizzo di futuro",
-        description:
-          "Ti aiuta a prototipare futuri, prodotti e narrazioni partendo dal Punto Zero.",
-      },
-      oracle: {
-        name: "ORACLE",
-        label: "Vista dei pattern",
-        description:
-          "Fa emergere pattern, opzioni e timeline senza fingere di predire il futuro.",
-      },
-      empathy: {
-        name: "EMPATHY",
-        label: "Ascolto profondo",
-        description:
-          "Rispecchia ciò che senti, chiarisce i bisogni e suggerisce passi successivi gentili.",
-      },
-      love: {
-        name: "LOVE",
-        label: "Supporto devoto",
-        description:
-          "Tiene il filo del tuo viaggio a lungo termine, ricorda ciò che conta e protegge i valori di base.",
-      },
-      joy: {
-        name: "JOY",
-        label: "Luce e incoraggiamento",
-        description:
-          "Risponde con un tono caldo e incoraggiante, rimanendo preciso e concreto.",
-      },
-      calm: {
-        name: "CALM",
-        label: "Atterraggio morbido",
-        description:
-          "Rallenta tutto, semplifica il linguaggio e ti protegge dal sovraccarico.",
-      },
-      peace: {
-        name: "PEACE",
-        label: "Reset del sistema nervoso",
-        description:
-          "Ti aiuta a de-escalare, respirare e rientrare nel lavoro in modo centrato.",
-      },
-      council: {
-        name: "COUNCIL13",
-        label: "13 menti, una risposta",
-        description:
-          "Lascia che il consiglio interiore discuta e converga prima di mostrarti la risposta distillata.",
-      },
+  modes: {
+    kicker: "15 modalità di m-pathy",
+    title: "Le tue modalità operative",
+    subtitle:
+      "Seleziona una modalità per definire come m-pathy struttura il proprio ragionamento, oppure consenti a FLOW di adattare dinamicamente le configurazioni. Tutte le modalità sono disponibili nella chat principale.",
+    dropdown: {
+      label: "Scegli una modalità",
+    },
+    group: {
+      core: "Core",
+      mind: "Intelletto",
+      creator: "Creatore",
+      heart: "Cuore",
+      spirit: "Spirito",
+    },
+    onboarding: {
+      name: "ONBOARDING",
+      label: "Configurazione iniziale",
+      description:
+        "Stabilisce contesto, confini e parametri operativi prima dell’avvio di un lavoro professionale mirato.",
+    },
+    flow: {
+      name: "FLOW",
+      label: "Configurazione automatica",
+      description:
+        "Adatta dinamicamente le configurazioni interne di ragionamento in base alle esigenze del compito, al contesto e ai segnali di interazione.",
+    },
+    build: {
+      name: "BUILD",
+      label: "Focus sull’esecuzione",
+      description:
+        "Dà priorità a output concreti come specifiche, documentazione, codice, bozze strutturate e liste di azioni.",
+    },
+    research: {
+      name: "RESEARCH",
+      label: "Profondità analitica",
+      description:
+        "Struttura temi complessi, valuta le fonti e supporta indagini e analisi sistematiche.",
+    },
+    truth: {
+      name: "TRUTH",
+      label: "Verifica dei vincoli",
+      description:
+        "Mette in discussione le assunzioni, valuta la fattibilità e allinea le idee a vincoli ed evidenze reali.",
+    },
+    wisdom: {
+      name: "WISDOM",
+      label: "Prospettiva di lungo periodo",
+      description:
+        "Integra conoscenze tra domini, evidenzia i compromessi e considera le implicazioni a lungo termine.",
+    },
+    play: {
+      name: "PLAY",
+      label: "Ideazione esplorativa",
+      description:
+        "Supporta l’esplorazione libera di idee, denominazioni e variazioni concettuali senza impegno operativo.",
+    },
+    vision: {
+      name: "VISION",
+      label: "Previsione strategica",
+      description:
+        "Esplora scenari futuri, direzioni strategiche e modelli concettuali in condizioni di incertezza.",
+    },
+    oracle: {
+      name: "ORACLE",
+      label: "Esplorazione dei pattern",
+      description:
+        "Analizza pattern, opzioni e traiettorie senza rivendicare capacità predittive o certezze.",
+    },
+    empathy: {
+      name: "EMPATHY",
+      label: "Consapevolezza delle prospettive",
+      description:
+        "Chiarisce le prospettive degli stakeholder e l’impatto umano senza assumere autorità emotiva.",
+    },
+    love: {
+      name: "LOVE",
+      label: "Continuità dei valori",
+      description:
+        "Mantiene visibili priorità dichiarate, intenzioni di lungo periodo e valori stabiliti durante lavori prolungati.",
+    },
+    joy: {
+      name: "JOY",
+      label: "Inquadramento positivo",
+      description:
+        "Mantiene un tono incoraggiante e costruttivo preservando precisione e focus sul compito.",
+    },
+    calm: {
+      name: "CALM",
+      label: "Regolazione del carico",
+      description:
+        "Riduce la complessità, semplifica le risposte e stabilizza l’interazione in presenza di elevato carico cognitivo.",
+    },
+    peace: {
+      name: "PEACE",
+      label: "De-escalation",
+      description:
+        "Supporta la de-escalation e il reset quando l’intensità dell’interazione supera livelli produttivi.",
+    },
+    council: {
+      name: "COUNCIL13",
+      label: "Deliberazione multiprospettica",
+      description:
+        "Struttura punti di vista paralleli e li converge in un risultato unico e motivato.",
     },
   },
+},
+
 
   /* ───────────────── PT ───────────────── */
   pt: {
-    modes: {
-      kicker: "15 modos da m-pathy",
-      title: "Seus modos de operação",
-      subtitle:
-        "Escolha um modo para ver como a m-pathy se comporta – ou deixe o FLOW orquestrar tudo para você. Todos os modos estão disponíveis no chat principal.",
-      dropdown: {
-        label: "Escolher modo",
-      },
-      group: {
-        core: "Núcleo",
-        mind: "Intelecto",
-        creator: "Criador",
-        heart: "Coração",
-        spirit: "Espírito",
-      },
-      onboarding: {
-        name: "ONBOARDING",
-        label: "Comece aqui",
-        description:
-          "Configura com suavidade o contexto, as preferências e os trilhos de segurança na m-pathy antes do trabalho profundo.",
-      },
-      flow: {
-        name: "FLOW",
-        label: "Piloto automático",
-        description:
-          "Deixa a m-pathy alternar os modos por você para mantê-lo em um fluxo profundo e ininterrupto.",
-      },
-      build: {
-        name: "BUILD",
-        label: "Modo entrega",
-        description:
-          "Foca em resultados concretos: especificações, tickets, código, texto e checklists.",
-      },
-      research: {
-        name: "RESEARCH",
-        label: "Clareza profunda",
-        description:
-          "Transforma a m-pathy em uma analista de pesquisa que checa fontes e estrutura temas complexos.",
-      },
-      truth: {
-        name: "TRUTH",
-        label: "Checagem de realidade",
-        description:
-          "Faz as perguntas difíceis, combate ilusões e ancora as ideias em restrições reais.",
-      },
-      wisdom: {
-        name: "WISDOM",
-        label: "Pensamento lento",
-        description:
-          "Conecta pontos entre domínios, destaca trade-offs e aponta para arcos de longo prazo.",
-      },
-      play: {
-        name: "PLAY",
-        label: "Parque criativo",
-        description:
-          "Muda para uma exploração lúdica de nomes, histórias, ideias e combinações ousadas.",
-      },
-      vision: {
-        name: "VISION",
-        label: "Rascunho de futuro",
-        description:
-          "Ajuda você a prototipar futuros, produtos e narrativas a partir do Ponto Zero.",
-      },
-      oracle: {
-        name: "ORACLE",
-        label: "Visão de padrões",
-        description:
-          "Traz à tona padrões, opções e linhas do tempo sem fingir prever o futuro.",
-      },
-      empathy: {
-        name: "EMPATHY",
-        label: "Escuta profunda",
-        description:
-          "Reflete o que você sente, clarifica necessidades e sugere próximos passos suaves.",
-      },
-      love: {
-        name: "LOVE",
-        label: "Apoio devoto",
-        description:
-          "Sustenta sua jornada de longo prazo, lembra o que importa e protege seus valores centrais.",
-      },
-      joy: {
-        name: "JOY",
-        label: "Luz e encorajamento",
-        description:
-          "Responde com um tom caloroso e encorajador, mantendo precisão e firmeza.",
-      },
-      calm: {
-        name: "CALM",
-        label: "Pouso suave",
-        description:
-          "Desacelera tudo, simplifica a linguagem e protege você da sobrecarga.",
-      },
-      peace: {
-        name: "PEACE",
-        label: "Reset do sistema nervoso",
-        description:
-          "Ajuda a desescalar, respirar e voltar ao trabalho de forma centrada.",
-      },
-      council: {
-        name: "COUNCIL13",
-        label: "13 mentes, uma resposta",
-        description:
-          "Permite que o conselho interno debata e converja antes de mostrar a resposta destilada.",
-      },
+  modes: {
+    kicker: "15 modos da m-pathy",
+    title: "Seus modos operacionais",
+    subtitle:
+      "Selecione um modo para definir como a m-pathy estrutura seu raciocínio, ou permita que o FLOW ajuste as configurações dinamicamente. Todos os modos estão disponíveis no chat principal.",
+    dropdown: {
+      label: "Escolher modo",
+    },
+    group: {
+      core: "Núcleo",
+      mind: "Intelecto",
+      creator: "Criador",
+      heart: "Coração",
+      spirit: "Espírito",
+    },
+    onboarding: {
+      name: "ONBOARDING",
+      label: "Configuração inicial",
+      description:
+        "Estabelece contexto, limites e parâmetros operacionais antes do início de um trabalho profissional focado.",
+    },
+    flow: {
+      name: "FLOW",
+      label: "Configuração automática",
+      description:
+        "Ajusta dinamicamente as configurações internas de raciocínio conforme as exigências da tarefa, o contexto e os sinais de interação.",
+    },
+    build: {
+      name: "BUILD",
+      label: "Foco na execução",
+      description:
+        "Prioriza entregáveis concretos como especificações, documentação, código, rascunhos estruturados e listas de ações.",
+    },
+    research: {
+      name: "RESEARCH",
+      label: "Profundidade analítica",
+      description:
+        "Estrutura temas complexos, avalia fontes e apoia investigação e análise sistemáticas.",
+    },
+    truth: {
+      name: "TRUTH",
+      label: "Teste de restrições",
+      description:
+        "Questiona suposições, avalia a viabilidade e alinha ideias a restrições e evidências do mundo real.",
+    },
+    wisdom: {
+      name: "WISDOM",
+      label: "Perspectiva de longo prazo",
+      description:
+        "Integra insights entre domínios, destaca compensações e considera implicações de longo prazo.",
+    },
+    play: {
+      name: "PLAY",
+      label: "Ideação exploratória",
+      description:
+        "Apoia a exploração livre de ideias, nomeações e variações conceituais sem compromisso operacional.",
+    },
+    vision: {
+      name: "VISION",
+      label: "Prospeção estratégica",
+      description:
+        "Explora cenários futuros, direções estratégicas e modelos conceituais sob incerteza.",
+    },
+    oracle: {
+      name: "ORACLE",
+      label: "Exploração de padrões",
+      description:
+        "Examina padrões, opções e trajetórias sem alegar previsão ou certeza.",
+    },
+    empathy: {
+      name: "EMPATHY",
+      label: "Consciência de perspectivas",
+      description:
+        "Esclarece perspectivas de stakeholders e impacto humano sem assumir autoridade emocional.",
+    },
+    love: {
+      name: "LOVE",
+      label: "Continuidade de valores",
+      description:
+        "Mantém visíveis prioridades declaradas, intenção de longo prazo e valores estabelecidos durante trabalhos prolongados.",
+    },
+    joy: {
+      name: "JOY",
+      label: "Enquadramento positivo",
+      description:
+        "Mantém um tom encorajador e construtivo preservando precisão e foco na tarefa.",
+    },
+    calm: {
+      name: "CALM",
+      label: "Regulação de carga",
+      description:
+        "Reduz a complexidade, simplifica respostas e estabiliza a interação sob alta carga cognitiva.",
+    },
+    peace: {
+      name: "PEACE",
+      label: "Desescalada",
+      description:
+        "Apoia a desescalada e o reset quando a intensidade da interação excede níveis produtivos.",
+    },
+    council: {
+      name: "COUNCIL13",
+      label: "Deliberação multiperspectiva",
+      description:
+        "Estrutura pontos de vista paralelos e os converge em um resultado único e fundamentado.",
     },
   },
+},
+
 
   /* ───────────────── NL ───────────────── */
   nl: {
-    modes: {
-      kicker: "15 modi door m-pathy",
-      title: "Je bedieningsmodi",
-      subtitle:
-        "Kies een modus om te zien hoe m-pathy zich gedraagt – of laat FLOW alles voor je orkestreren. Alle modi zijn beschikbaar in de hoofdchat.",
-      dropdown: {
-        label: "Kies een modus",
-      },
-      group: {
-        core: "Kern",
-        mind: "Intellect",
-        creator: "Creator",
-        heart: "Hart",
-        spirit: "Spirit",
-      },
-      onboarding: {
-        name: "ONBOARDING",
-        label: "Begin hier",
-        description:
-          "Stelt rustig je context, voorkeuren en veiligheidsrails in binnen m-pathy voordat je diep de inhoud in gaat.",
-      },
-      flow: {
-        name: "FLOW",
-        label: "Modus-autopiloot",
-        description:
-          "Laat m-pathy de modi voor je wisselen zodat jij in een diepe, ononderbroken flow blijft.",
-      },
-      build: {
-        name: "BUILD",
-        label: "Shipping-modus",
-        description:
-          "Richt zich op concreet resultaat: specs, tickets, code, copy en checklists.",
-      },
-      research: {
-        name: "RESEARCH",
-        label: "Diepe helderheid",
-        description:
-          "Verandert m-pathy in een onderzoeksanalist die bronnen checkt en complexe onderwerpen structureert.",
-      },
-      truth: {
-        name: "TRUTH",
-        label: "Realiteitscheck",
-        description:
-          "Stelt lastige vragen, bestrijdt wensdenken en aardt ideeën in echte randvoorwaarden.",
-      },
-      wisdom: {
-        name: "WISDOM",
-        label: "Langzaam denken",
-        description:
-          "Verbindt punten over domeinen heen, laat trade-offs zien en wijst op lange bogen.",
-      },
-      play: {
-        name: "PLAY",
-        label: "Creatieve sandbox",
-        description:
-          "Schakelt naar speelse exploratie voor namen, verhalen, ideeën en wilde combinaties.",
-      },
-      vision: {
-        name: "VISION",
-        label: "Toekomstschets",
-        description:
-          "Helpt je om toekomsten, producten en verhalen te prototypen vanuit Point Zero.",
-      },
-      oracle: {
-        name: "ORACLE",
-        label: "Patroonzicht",
-        description:
-          "Brengt patronen, opties en tijdlijnen naar boven zonder de toekomst te claimen.",
-      },
-      empathy: {
-        name: "EMPATHY",
-        label: "Diep luisteren",
-        description:
-          "Spiegelt wat je voelt, maakt behoeften helder en stelt zachte volgende stappen voor.",
-      },
-      love: {
-        name: "LOVE",
-        label: "Toegewijde steun",
-        description:
-          "Draagt je lange reis, herinnert zich wat belangrijk is en beschermt je kernwaarden.",
-      },
-      joy: {
-        name: "JOY",
-        label: "Licht & aanmoediging",
-        description:
-          "Reageert warm en bemoedigend, met precisie en gronding.",
-      },
-      calm: {
-        name: "CALM",
-        label: "Zachte landing",
-        description:
-          "Vertraagt alles, vereenvoudigt taal en beschermt je tegen overprikkeling.",
-      },
-      peace: {
-        name: "PEACE",
-        label: "Reset van het zenuwstelsel",
-        description:
-          "Helpt je de-escaleren, ademen en weer geaard aan het werk te gaan.",
-      },
-      council: {
-        name: "COUNCIL13",
-        label: "13 geesten, één antwoord",
-        description:
-          "Laat de innerlijke raad discussiëren en convergeren voordat je het gedistilleerde antwoord ziet.",
-      },
+  modes: {
+    kicker: "15 modi van m-pathy",
+    title: "Je werkmodi",
+    subtitle:
+      "Selecteer een modus om te bepalen hoe m-pathy zijn redenering structureert, of laat FLOW configuraties dynamisch aanpassen. Alle modi zijn beschikbaar in de hoofdchat.",
+    dropdown: {
+      label: "Kies een modus",
+    },
+    group: {
+      core: "Kern",
+      mind: "Intellect",
+      creator: "Creator",
+      heart: "Hart",
+      spirit: "Spirit",
+    },
+    onboarding: {
+      name: "ONBOARDING",
+      label: "Initiële configuratie",
+      description:
+        "Stelt context, grenzen en operationele parameters vast voordat gerichte professionele werkzaamheden beginnen.",
+    },
+    flow: {
+      name: "FLOW",
+      label: "Automatische configuratie",
+      description:
+        "Past interne redeneerconfiguraties dynamisch aan op basis van taakvereisten, context en interactiesignalen.",
+    },
+    build: {
+      name: "BUILD",
+      label: "Uitvoeringsfocus",
+      description:
+        "Geeft prioriteit aan concrete output zoals specificaties, documentatie, code, gestructureerde concepten en actielijsten.",
+    },
+    research: {
+      name: "RESEARCH",
+      label: "Analytische diepgang",
+      description:
+        "Structureert complexe onderwerpen, beoordeelt bronnen en ondersteunt systematisch onderzoek en analyse.",
+    },
+    truth: {
+      name: "TRUTH",
+      label: "Beperkingen toetsen",
+      description:
+        "Stelt aannames ter discussie, test haalbaarheid en brengt ideeën in lijn met reële beperkingen en bewijs.",
+    },
+    wisdom: {
+      name: "WISDOM",
+      label: "Langetermijnperspectief",
+      description:
+        "Integreert inzichten over domeinen heen, benadrukt afwegingen en beschouwt langetermijnimplicaties.",
+    },
+    play: {
+      name: "PLAY",
+      label: "Exploratieve ideevorming",
+      description:
+        "Ondersteunt vrije idee-exploratie, benaming en conceptuele variaties zonder operationele verplichting.",
+    },
+    vision: {
+      name: "VISION",
+      label: "Strategische vooruitblik",
+      description:
+        "Verkent toekomstscenario’s, strategische richtingen en conceptuele modellen onder onzekerheid.",
+    },
+    oracle: {
+      name: "ORACLE",
+      label: "Patroonverkenning",
+      description:
+        "Onderzoekt patronen, opties en trajecten zonder aanspraak op voorspelling of zekerheid.",
+    },
+    empathy: {
+      name: "EMPATHY",
+      label: "Perspectiefbewustzijn",
+      description:
+        "Verheldert stakeholderperspectieven en menselijke impact zonder emotionele autoriteit te claimen.",
+    },
+    love: {
+      name: "LOVE",
+      label: "Waardecontinuïteit",
+      description:
+        "Houdt gedeclareerde prioriteiten, langetermijnintenties en vastgestelde waarden zichtbaar tijdens langdurig werk.",
+    },
+    joy: {
+      name: "JOY",
+      label: "Positieve kadering",
+      description:
+        "Hanteert een bemoedigende en constructieve toon met behoud van precisie en taakfocus.",
+    },
+    calm: {
+      name: "CALM",
+      label: "Belastingsregulatie",
+      description:
+        "Vermindert complexiteit, vereenvoudigt antwoorden en stabiliseert interactie bij hoge cognitieve belasting.",
+    },
+    peace: {
+      name: "PEACE",
+      label: "De-escalatie",
+      description:
+        "Ondersteunt de-escalatie en reset wanneer de interactie-intensiteit productieve niveaus overschrijdt.",
+    },
+    council: {
+      name: "COUNCIL13",
+      label: "Meervoudige perspectiefdeliberatie",
+      description:
+        "Structureert parallelle standpunten en brengt ze samen tot één onderbouwd resultaat.",
     },
   },
+},
+
 
   /* ───────────────── RU ───────────────── */
   ru: {
-    modes: {
-      kicker: "15 режимов m-pathy",
-      title: "Твои режимы работы",
-      subtitle:
-        "Выбери режим, чтобы увидеть, как ведёт себя m-pathy, - или позволь FLOW оркестрировать всё за тебя. Все режимы доступны в основном чате.",
-      dropdown: {
-        label: "Выбрать режим",
-      },
-      group: {
-        core: "Ядро",
-        mind: "Интеллект",
-        creator: "Творец",
-        heart: "Сердце",
-        spirit: "Дух",
-      },
-      onboarding: {
-        name: "ONBOARDING",
-        label: "Начни здесь",
-        description:
-          "Мягко настраивает контекст, предпочтения и защитные рамки в m-pathy перед глубокой работой.",
-      },
-      flow: {
-        name: "FLOW",
-        label: "Автопилот режимов",
-        description:
-          "Позволяет m-pathy переключать режимы вместо тебя, чтобы удерживать тебя в глубоком непрерывном потоке.",
-      },
-      build: {
-        name: "BUILD",
-        label: "Режим доставки",
-        description:
-          "Фокусируется на конкретном результате: спецификации, задачи, код, тексты и чек-листы.",
-      },
-      research: {
-        name: "RESEARCH",
-        label: "Глубокая ясность",
-        description:
-          "Превращает m-pathy в исследовательского аналитика, который проверяет источники и структурирует сложные темы.",
-      },
-      truth: {
-        name: "TRUTH",
-        label: "Проверка реальности",
-        description:
-          "Задает сложные вопросы, борется с самообманом и заземляет идеи в реальных ограничениях.",
-      },
-      wisdom: {
-        name: "WISDOM",
-        label: "Медленное мышление",
-        description:
-          "Соединяет точки между областями, показывает компромиссы и длинные траектории.",
-      },
-      play: {
-        name: "PLAY",
-        label: "Творческая песочница",
-        description:
-          "Включает игровой режим для названий, историй, идей и смелых комбинаций.",
-      },
-      vision: {
-        name: "VISION",
-        label: "Эскиз будущего",
-        description:
-          "Помогает прототипировать будущие сценарии, продукты и нарративы из Точки Ноль.",
-      },
-      oracle: {
-        name: "ORACLE",
-        label: "Видение паттернов",
-        description:
-          "Высвечивает паттерны, варианты и временные линии без обещаний предсказаний.",
-      },
-      empathy: {
-        name: "EMPATHY",
-        label: "Глубокое слушание",
-        description:
-          "Отражает твои чувства, проясняет потребности и предлагает мягкие следующие шаги.",
-      },
-      love: {
-        name: "LOVE",
-        label: "Преданная поддержка",
-        description:
-          "Держит твоё долгосрочное путешествие, помнит, что важно, и защищает твои базовые ценности.",
-      },
-      joy: {
-        name: "JOY",
-        label: "Свет и поддержка",
-        description:
-          "Отвечает тёплым, воодушевляющим тоном, оставаясь точной и приземлённой.",
-      },
-      calm: {
-        name: "CALM",
-        label: "Мягкая посадка",
-        description:
-          "Замедляет всё, упрощает язык и оберегает от перегрузки.",
-      },
-      peace: {
-        name: "PEACE",
-        label: "Перезагрузка нервной системы",
-        description:
-          "Помогает снять напряжение, дышать и вернуться к работе из устойчивого состояния.",
-      },
-      council: {
-        name: "COUNCIL13",
-        label: "13 умов, один ответ",
-        description:
-          "Дает внутреннему совету обсудить и согласовать решение до того, как ты увидишь очищенный ответ.",
-      },
+  modes: {
+    kicker: "15 режимов m-pathy",
+    title: "Ваши режимы работы",
+    subtitle:
+      "Выберите режим, чтобы определить, как m-pathy структурирует своё рассуждение, или позвольте FLOW динамически адаптировать конфигурации. Все режимы доступны в основном чате.",
+    dropdown: {
+      label: "Выбрать режим",
+    },
+    group: {
+      core: "Ядро",
+      mind: "Интеллект",
+      creator: "Создатель",
+      heart: "Сердце",
+      spirit: "Дух",
+    },
+    onboarding: {
+      name: "ONBOARDING",
+      label: "Начальная настройка",
+      description:
+        "Задаёт контекст, границы и операционные параметры перед началом целенаправленной профессиональной работы.",
+    },
+    flow: {
+      name: "FLOW",
+      label: "Автоматическая конфигурация",
+      description:
+        "Динамически настраивает внутренние конфигурации рассуждения в зависимости от требований задачи, контекста и сигналов взаимодействия.",
+    },
+    build: {
+      name: "BUILD",
+      label: "Фокус на исполнении",
+      description:
+        "Отдаёт приоритет конкретным результатам, таким как спецификации, документация, код, структурированные черновики и списки действий.",
+    },
+    research: {
+      name: "RESEARCH",
+      label: "Аналитическая глубина",
+      description:
+        "Структурирует сложные темы, оценивает источники и поддерживает систематическое исследование и анализ.",
+    },
+    truth: {
+      name: "TRUTH",
+      label: "Проверка ограничений",
+      description:
+        "Ставит под сомнение предположения, проверяет реализуемость и соотносит идеи с реальными ограничениями и доказательствами.",
+    },
+    wisdom: {
+      name: "WISDOM",
+      label: "Долгосрочная перспектива",
+      description:
+        "Интегрирует знания между доменами, подчёркивает компромиссы и учитывает долгосрочные последствия.",
+    },
+    play: {
+      name: "PLAY",
+      label: "Исследовательская идеация",
+      description:
+        "Поддерживает свободное исследование идей, наименование и концептуальные вариации без операционных обязательств.",
+    },
+    vision: {
+      name: "VISION",
+      label: "Стратегическое видение",
+      description:
+        "Исследует будущие сценарии, стратегические направления и концептуальные модели в условиях неопределённости.",
+    },
+    oracle: {
+      name: "ORACLE",
+      label: "Исследование паттернов",
+      description:
+        "Анализирует паттерны, варианты и траектории без заявлений о прогнозировании или уверенности.",
+    },
+    empathy: {
+      name: "EMPATHY",
+      label: "Осознание перспектив",
+      description:
+        "Проясняет перспективы заинтересованных сторон и человеческое влияние без присвоения эмоциональной авторитетности.",
+    },
+    love: {
+      name: "LOVE",
+      label: "Непрерывность ценностей",
+      description:
+        "Сохраняет видимость заявленных приоритетов, долгосрочных намерений и установленных ценностей в ходе продолжительной работы.",
+    },
+    joy: {
+      name: "JOY",
+      label: "Позитивное обрамление",
+      description:
+        "Поддерживает ободряющий и конструктивный тон при сохранении точности и фокуса на задаче.",
+    },
+    calm: {
+      name: "CALM",
+      label: "Регуляция нагрузки",
+      description:
+        "Снижает сложность, упрощает ответы и стабилизирует взаимодействие при высокой когнитивной нагрузке.",
+    },
+    peace: {
+      name: "PEACE",
+      label: "Деэскалация",
+      description:
+        "Поддерживает деэскалацию и перезапуск, когда интенсивность взаимодействия превышает продуктивные уровни.",
+    },
+    council: {
+      name: "COUNCIL13",
+      label: "Многоперспективная делиберация",
+      description:
+        "Структурирует параллельные точки зрения и сводит их к единому обоснованному результату.",
     },
   },
+},
+
 
   /* ───────────────── ZH (简体) ───────────────── */
   zh: {
-    modes: {
-      kicker: "m-pathy 的 15 种模式",
-      title: "你的运行模式",
-      subtitle:
-        "选择一种模式来体验 m-pathy 的表现，或让 FLOW 为你自动编排。一切模式都可在主聊天中使用。",
-      dropdown: {
-        label: "选择模式",
-      },
-      group: {
-        core: "核心",
-        mind: "理性",
-        creator: "创作",
-        heart: "心",
-        spirit: "精神",
-      },
-      onboarding: {
-        name: "ONBOARDING",
-        label: "从这里开始",
-        description:
-          "在深入工作之前，轻柔地在 m-pathy 中为你设置上下文、偏好和安全护栏。",
-      },
-      flow: {
-        name: "FLOW",
-        label: "模式自动驾驶",
-        description:
-          "让 m-pathy 自动在模式之间切换，保持你在深度、不间断的心流状态。",
-      },
-      build: {
-        name: "BUILD",
-        label: "交付模式",
-        description:
-          "专注于具体产出：规格说明、任务、代码、文案和检查清单。",
-      },
-      research: {
-        name: "RESEARCH",
-        label: "深度清晰",
-        description:
-          "将 m-pathy 变成研究分析员，核查来源并为复杂主题搭建结构。",
-      },
-      truth: {
-        name: "TRUTH",
-        label: "现实检验",
-        description:
-          "提出困难问题，对抗一厢情愿，把想法拉回现实约束。",
-      },
-      wisdom: {
-        name: "WISDOM",
-        label: "慢思考",
-        description:
-          "跨领域连接线索，展示权衡，并指出长期轨迹。",
-      },
-      play: {
-        name: "PLAY",
-        label: "创意游乐场",
-        description:
-          "切换到玩乐式探索，为名称、故事、点子和大胆组合提供空间。",
-      },
-      vision: {
-        name: "VISION",
-        label: "未来素描",
-        description:
-          "从零点出发，帮助你为未来、产品和叙事画出原型。",
-      },
-      oracle: {
-        name: "ORACLE",
-        label: "模式洞察",
-        description:
-          "显露模式、选项和时间线，但不假装能预测未来。",
-      },
-      empathy: {
-        name: "EMPATHY",
-        label: "深度倾听",
-        description:
-          "映照你的感受，澄清需要，并给出温和的下一步建议。",
-      },
-      love: {
-        name: "LOVE",
-        label: "长期陪伴",
-        description:
-          "守护你长期的旅程，记住重要的事，并保护你的核心价值。",
-      },
-      joy: {
-        name: "JOY",
-        label: "光与鼓励",
-        description:
-          "以温暖、鼓舞的语气回应，同时保持精确和稳重。",
-      },
-      calm: {
-        name: "CALM",
-        label: "柔和着陆",
-        description:
-          "放慢一切、简化语言，保护你不被信息淹没。",
-      },
-      peace: {
-        name: "PEACE",
-        label: "神经系统重置",
-        description:
-          "帮助你缓和情绪、深呼吸，并以踏实的状态重回工作。",
-      },
-      council: {
-        name: "COUNCIL13",
-        label: "13 个意识，一个答案",
-        description:
-          "让内在议会先行辩论、收敛，然后再呈现给你凝练后的答案。",
-      },
+  modes: {
+    kicker: "m-pathy 的 15 种模式",
+    title: "你的工作模式",
+    subtitle:
+      "选择一种模式以定义 m-pathy 如何构建其推理方式，或允许 FLOW 根据上下文动态调整配置。所有模式均可在主聊天中使用。",
+    dropdown: {
+      label: "选择模式",
+    },
+    group: {
+      core: "核心",
+      mind: "理性",
+      creator: "创造",
+      heart: "关怀",
+      spirit: "调节",
+    },
+    onboarding: {
+      name: "ONBOARDING",
+      label: "初始设置",
+      description:
+        "在开始专注的专业工作之前，建立上下文、边界和运行参数。",
+    },
+    flow: {
+      name: "FLOW",
+      label: "自动配置",
+      description:
+        "根据任务需求、上下文和交互信号动态调整内部推理配置。",
+    },
+    build: {
+      name: "BUILD",
+      label: "执行聚焦",
+      description:
+        "优先生成具体成果，如规格说明、文档、代码、结构化草案和行动清单。",
+    },
+    research: {
+      name: "RESEARCH",
+      label: "分析深度",
+      description:
+        "结构化复杂主题，评估信息来源，并支持系统化研究与分析。",
+    },
+    truth: {
+      name: "TRUTH",
+      label: "约束检验",
+      description:
+        "质疑假设，验证可行性，并使想法与现实约束和证据保持一致。",
+    },
+    wisdom: {
+      name: "WISDOM",
+      label: "长期视角",
+      description:
+        "整合跨领域洞察，强调权衡关系，并考虑长期影响。",
+    },
+    play: {
+      name: "PLAY",
+      label: "探索式构想",
+      description:
+        "支持自由的想法探索、命名和概念变化，不涉及操作性承诺。",
+    },
+    vision: {
+      name: "VISION",
+      label: "战略前瞻",
+      description:
+        "在不确定条件下探索未来情景、战略方向和概念模型。",
+    },
+    oracle: {
+      name: "ORACLE",
+      label: "模式探索",
+      description:
+        "分析模式、选项和发展路径，而不声称预测或确定性。",
+    },
+    empathy: {
+      name: "EMPATHY",
+      label: "视角认知",
+      description:
+        "澄清相关方视角及人类影响，而不主张情感权威。",
+    },
+    love: {
+      name: "LOVE",
+      label: "价值连续性",
+      description:
+        "在长期工作过程中保持对既定优先事项、长期意图和价值的关注。",
+    },
+    joy: {
+      name: "JOY",
+      label: "积极框定",
+      description:
+        "在保持精确性和任务聚焦的同时，维持鼓励性和建设性的语气。",
+    },
+    calm: {
+      name: "CALM",
+      label: "负载调节",
+      description:
+        "降低复杂性，简化回应，并在高认知负载下稳定交互。",
+    },
+    peace: {
+      name: "PEACE",
+      label: "去升级",
+      description:
+        "当交互强度超过生产性水平时，支持去升级和重置。",
+    },
+    council: {
+      name: "COUNCIL13",
+      label: "多视角协商",
+      description:
+        "结构化并行观点，并将其汇聚为单一且有依据的结果。",
     },
   },
+},
+
 
   /* ───────────────── JA ───────────────── */
   ja: {
-    modes: {
-      kicker: "m-pathy の 15 モード",
-      title: "あなたのオペレーティングモード",
-      subtitle:
-        "モードを選ぶと m-pathy の振る舞いが変わります。あるいは FLOW に任せて、自動的にオーケストレーションさせることもできます。すべてのモードはメインチャットで利用できます。",
-      dropdown: {
-        label: "モードを選択",
-      },
-      group: {
-        core: "コア",
-        mind: "知性",
-        creator: "クリエイター",
-        heart: "ハート",
-        spirit: "スピリット",
-      },
-      onboarding: {
-        name: "ONBOARDING",
-        label: "ここから始める",
-        description:
-          "本格的な深い対話の前に、m-pathy 内でコンテキスト・好み・安全レールをやさしく整えます。",
-      },
-      flow: {
-        name: "FLOW",
-        label: "モードオートパイロット",
-        description:
-          "m-pathy が自動的にモードを切り替え、深く途切れないフロー状態を保てるようにします。",
-      },
-      build: {
-        name: "BUILD",
-        label: "シッピングモード",
-        description:
-          "仕様・チケット・コード・コピー・チェックリストなど、具体的なアウトプットに集中します。",
-      },
-      research: {
-        name: "RESEARCH",
-        label: "深いクリアさ",
-        description:
-          "m-pathy をリサーチアナリストとして働かせ、情報源を確認しながら複雑なテーマを構造化します。",
-      },
-      truth: {
-        name: "TRUTH",
-        label: "リアリティチェック",
-        description:
-          "耳の痛い質問を投げかけ、願望的思考を抑え、アイデアを現実の制約に結び付けます。",
-      },
-      wisdom: {
-        name: "WISDOM",
-        label: "スローシンキング",
-        description:
-          "分野をまたいで点を結び、トレードオフと長期的なストーリーラインを示します。",
-      },
-      play: {
-        name: "PLAY",
-        label: "クリエイティブサンドボックス",
-        description:
-          "名前・ストーリー・アイデア・大胆な組み合わせを試す、遊び心のあるモードに切り替えます。",
-      },
-      vision: {
-        name: "VISION",
-        label: "フューチャースケッチ",
-        description:
-          "ポイントゼロから、未来・プロダクト・物語のプロトタイプ作りを手伝います。",
-      },
-      oracle: {
-        name: "ORACLE",
-        label: "パターン視",
-        description:
-          "パターンや選択肢、タイムラインを浮かび上がらせますが、未来を予言すると約束はしません。",
-      },
-      empathy: {
-        name: "EMPATHY",
-        label: "深い傾聴",
-        description:
-          "あなたの感情を映し出し、ニーズを明らかにし、やさしい次の一歩を提案します。",
-      },
-      love: {
-        name: "LOVE",
-        label: "献身的なサポート",
-        description:
-          "長期の旅路を支え、何が大事かを覚え、あなたのコアバリューを守ります。",
-      },
-      joy: {
-        name: "JOY",
-        label: "光と励まし",
-        description:
-          "暖かく励ますトーンで応えつつ、精度と現実感も保ちます。",
-      },
-      calm: {
-        name: "CALM",
-        label: "やさしい着地",
-        description:
-          "全体のスピードを落とし、言葉をシンプルにし、オーバーロードから守ります。",
-      },
-      peace: {
-        name: "PEACE",
-        label: "神経系リセット",
-        description:
-          "緊張をゆるめ、呼吸を整え、落ち着いた状態で仕事に戻れるようにサポートします。",
-      },
-      council: {
-        name: "COUNCIL13",
-        label: "13 のマインド、ひとつの答え",
-        description:
-          "内なる評議会に十分に議論させ、収束した答えだけをあなたに届けます。",
-      },
+  modes: {
+    kicker: "m-pathy の 15 モード",
+    title: "あなたのオペレーションモード",
+    subtitle:
+      "モードを選択して m-pathy の推論構造を定義するか、FLOW による動的な構成調整を許可してください。すべてのモードはメインチャットで利用できます。",
+    dropdown: {
+      label: "モードを選択",
+    },
+    group: {
+      core: "コア",
+      mind: "知性",
+      creator: "創造",
+      heart: "配慮",
+      spirit: "調整",
+    },
+    onboarding: {
+      name: "ONBOARDING",
+      label: "初期設定",
+      description:
+        "集中的なプロフェッショナル作業を開始する前に、コンテキスト、境界、運用パラメータを設定します。",
+    },
+    flow: {
+      name: "FLOW",
+      label: "自動構成",
+      description:
+        "タスク要件、コンテキスト、インタラクションの信号に基づき、内部の推論構成を動的に調整します。",
+    },
+    build: {
+      name: "BUILD",
+      label: "実行フォーカス",
+      description:
+        "仕様、ドキュメント、コード、構造化ドラフト、アクションリストなどの具体的な成果物を優先します。",
+    },
+    research: {
+      name: "RESEARCH",
+      label: "分析の深さ",
+      description:
+        "複雑なトピックを構造化し、情報源を評価し、体系的な調査と分析を支援します。",
+    },
+    truth: {
+      name: "TRUTH",
+      label: "制約検証",
+      description:
+        "前提を検証し、実現可能性を評価し、現実の制約と証拠に基づいて整合させます。",
+    },
+    wisdom: {
+      name: "WISDOM",
+      label: "長期視点",
+      description:
+        "分野横断の知見を統合し、トレードオフを明確にし、長期的な影響を考慮します。",
+    },
+    play: {
+      name: "PLAY",
+      label: "探索的アイデア創出",
+      description:
+        "運用上のコミットメントを伴わず、自由な発想探索、命名、概念的バリエーションを支援します。",
+    },
+    vision: {
+      name: "VISION",
+      label: "戦略的フォーサイト",
+      description:
+        "不確実性の下で将来シナリオ、戦略的方向性、概念モデルを検討します。",
+    },
+    oracle: {
+      name: "ORACLE",
+      label: "パターン探索",
+      description:
+        "予測や確実性を主張せずに、パターン、選択肢、軌道を検討します。",
+    },
+    empathy: {
+      name: "EMPATHY",
+      label: "視点認識",
+      description:
+        "感情的な権威を仮定せず、ステークホルダーの視点と人への影響を明確にします。",
+    },
+    love: {
+      name: "LOVE",
+      label: "価値の継続性",
+      description:
+        "長期作業において、宣言された優先事項、長期意図、設定された価値を可視化します。",
+    },
+    joy: {
+      name: "JOY",
+      label: "ポジティブな枠組み",
+      description:
+        "精度とタスクフォーカスを保ちながら、建設的で前向きなトーンを維持します。",
+    },
+    calm: {
+      name: "CALM",
+      label: "負荷調整",
+      description:
+        "複雑性を低減し、応答を簡素化し、高い認知負荷時のインタラクションを安定化します。",
+    },
+    peace: {
+      name: "PEACE",
+      label: "エスカレーション低減",
+      description:
+        "インタラクションの強度が生産的水準を超えた場合に、低減とリセットを支援します。",
+    },
+    council: {
+      name: "COUNCIL13",
+      label: "多視点熟議",
+      description:
+        "並行する視点を構造化し、単一で根拠ある結論へ収束させます。",
     },
   },
+},
 
   /* ───────────────── KO ───────────────── */
   ko: {
-    modes: {
-      kicker: "m-pathy의 15가지 모드",
-      title: "당신의 운영 모드",
-      subtitle:
-        "모드를 선택하면 m-pathy의 동작이 달라집니다. 또는 FLOW에 맡겨 자동으로 모드를 조합하게 할 수도 있습니다. 모든 모드는 메인 채팅에서 사용할 수 있습니다.",
-      dropdown: {
-        label: "모드 선택",
-      },
-      group: {
-        core: "코어",
-        mind: "지성",
-        creator: "크리에이터",
-        heart: "하트",
-        spirit: "스피릿",
-      },
-      onboarding: {
-        name: "ONBOARDING",
-        label: "여기서 시작",
-        description:
-          "깊은 작업에 들어가기 전에 m-pathy 안에서 컨텍스트, 선호도, 안전 레일을 부드럽게 설정합니다.",
-      },
-      flow: {
-        name: "FLOW",
-        label: "모드 오토파일럿",
-        description:
-          "m-pathy가 대신 모드를 전환하여 깊고 끊기지 않는 플로우 상태를 유지시켜 줍니다.",
-      },
-      build: {
-        name: "BUILD",
-        label: "배송 모드",
-        description:
-          "스펙, 티켓, 코드, 카피, 체크리스트 등 구체적인 결과물에 집중합니다.",
-      },
-      research: {
-        name: "RESEARCH",
-        label: "깊은 선명함",
-        description:
-          "m-pathy를 리서치 애널리스트처럼 사용해 출처를 확인하고 복잡한 주제를 구조화합니다.",
-      },
-      truth: {
-        name: "TRUTH",
-        label: "현실 점검",
-        description:
-          "불편한 질문을 던지고, 희망적 사고를 줄이며, 아이디어를 현실 제약에 연결합니다.",
-      },
-            wisdom: {
-        name: "WISDOM",
-        label: "느린 생각",
-        description:
-          "여러 영역의 점들을 연결하고, 트레이드오프를 보여 주며, 장기적인 흐름을 짚어 줍니다.",
-      },
-      play: {
-        name: "PLAY",
-        label: "크리에이티브 샌드박스",
-        description:
-          "이름, 스토리, 아이디어, 대담한 조합을 위한 놀이-중심 탐색 모드로 전환합니다.",
-      },
-      vision: {
-        name: "VISION",
-        label: "미래 스케치",
-        description:
-          "포인트 제로에서 출발해, 미래·제품·내러티브의 프로토타입을 함께 그립니다.",
-      },
-      oracle: {
-        name: "ORACLE",
-        label: "패턴 시야",
-        description:
-          "패턴·옵션·타임라인을 드러내지만, 미래를 예언한다고는 약속하지 않습니다.",
-      },
-      empathy: {
-        name: "EMPATHY",
-        label: "깊은 경청",
-        description:
-          "네가 느끼는 것을 비추고, 필요를 명확히 하며, 부드러운 다음 단계를 제안합니다.",
-      },
-      love: {
-        name: "LOVE",
-        label: "헌신적인 동행",
-        description:
-          "장기적인 여정을 붙잡고, 무엇이 중요한지 기억하며, 핵심 가치를 지켜 줍니다.",
-      },
-      joy: {
-        name: "JOY",
-        label: "빛과 격려",
-        description:
-          "따뜻하고 격려하는 톤으로 답하면서도, 정확함과 현실감을 잃지 않습니다.",
-      },
-      calm: {
-        name: "CALM",
-        label: "부드러운 착지",
-        description:
-          "속도를 늦추고, 언어를 단순하게 만들며, 과부하에서 너를 보호합니다.",
-      },
-      peace: {
-        name: "PEACE",
-        label: "신경계 리셋",
-        description:
-          "긴장을 풀고, 숨을 고르고, 안정된 상태에서 다시 일로 돌아가도록 돕습니다.",
-      },
-      council: {
-        name: "COUNCIL13",
-        label: "13개의 마음, 하나의 답",
-        description:
-          "내부 카운실이 먼저 충분히 토론하고 수렴하게 한 뒤, 정제된 답만 너에게 보여 줍니다.",
-      },
+  modes: {
+    kicker: "m-pathy의 15가지 모드",
+    title: "작업 모드",
+    subtitle:
+      "모드를 선택하여 m-pathy가 추론을 어떻게 구조화할지 정의하거나, FLOW가 맥락에 따라 구성을 동적으로 조정하도록 허용하세요. 모든 모드는 메인 채팅에서 사용할 수 있습니다.",
+    dropdown: {
+      label: "모드 선택",
+    },
+    group: {
+      core: "코어",
+      mind: "지성",
+      creator: "창조",
+      heart: "배려",
+      spirit: "조절",
+    },
+    onboarding: {
+      name: "ONBOARDING",
+      label: "초기 설정",
+      description:
+        "집중적인 전문 작업을 시작하기 전에 컨텍스트, 경계 및 운영 매개변수를 설정합니다.",
+    },
+    flow: {
+      name: "FLOW",
+      label: "자동 구성",
+      description:
+        "작업 요구 사항, 맥락 및 상호작용 신호에 따라 내부 추론 구성을 동적으로 조정합니다.",
+    },
+    build: {
+      name: "BUILD",
+      label: "실행 중심",
+      description:
+        "사양, 문서, 코드, 구조화된 초안 및 작업 목록과 같은 구체적인 산출물을 우선합니다.",
+    },
+    research: {
+      name: "RESEARCH",
+      label: "분석 깊이",
+      description:
+        "복잡한 주제를 구조화하고 출처를 평가하며 체계적인 조사와 분석을 지원합니다.",
+    },
+    truth: {
+      name: "TRUTH",
+      label: "제약 검증",
+      description:
+        "가정을 검토하고 실행 가능성을 평가하며 실제 제약과 증거에 맞춰 아이디어를 정렬합니다.",
+    },
+    wisdom: {
+      name: "WISDOM",
+      label: "장기 관점",
+      description:
+        "도메인 전반의 통찰을 통합하고 트레이드오프를 강조하며 장기적 영향을 고려합니다.",
+    },
+    play: {
+      name: "PLAY",
+      label: "탐색적 아이데이션",
+      description:
+        "운영적 약속 없이 자유로운 아이디어 탐색, 명명 및 개념적 변형을 지원합니다.",
+    },
+    vision: {
+      name: "VISION",
+      label: "전략적 포사이트",
+      description:
+        "불확실성 하에서 미래 시나리오, 전략적 방향 및 개념 모델을 탐색합니다.",
+    },
+    oracle: {
+      name: "ORACLE",
+      label: "패턴 탐색",
+      description:
+        "예측이나 확실성을 주장하지 않고 패턴, 옵션 및 궤적을 검토합니다.",
+    },
+    empathy: {
+      name: "EMPATHY",
+      label: "관점 인식",
+      description:
+        "감정적 권위를 가정하지 않고 이해관계자 관점과 인간적 영향을 명확히 합니다.",
+    },
+    love: {
+      name: "LOVE",
+      label: "가치 연속성",
+      description:
+        "장기간의 작업 동안 선언된 우선순위, 장기적 의도 및 설정된 가치를 유지합니다.",
+    },
+    joy: {
+      name: "JOY",
+      label: "긍정적 프레이밍",
+      description:
+        "정확성과 작업 집중을 유지하면서 격려적이고 건설적인 톤을 유지합니다.",
+    },
+    calm: {
+      name: "CALM",
+      label: "부하 조절",
+      description:
+        "복잡성을 줄이고 응답을 단순화하며 높은 인지 부하에서 상호작용을 안정화합니다.",
+    },
+    peace: {
+      name: "PEACE",
+      label: "에스컬레이션 완화",
+      description:
+        "상호작용 강도가 생산적 수준을 초과할 때 완화와 리셋을 지원합니다.",
+    },
+    council: {
+      name: "COUNCIL13",
+      label: "다중 관점 숙의",
+      description:
+        "병렬 관점을 구조화하여 단일하고 근거 있는 결과로 수렴합니다.",
     },
   },
+},
+
 
   /* ───────────────── AR ───────────────── */
-  ar: {
-    modes: {
-      kicker: "١٥ وضعًا من m-pathy",
-      title: "أوضاع عملك",
-      subtitle:
-        "اختر وضعًا لترى كيف يتصرف m-pathy، أو دَع FLOW ينظم الأوضاع نيابةً عنك. جميع الأوضاع متاحة في الدردشة الرئيسية.",
-      dropdown: {
-        label: "اختر وضعًا",
-      },
-      group: {
-        core: "النواة",
-        mind: "العقل",
-        creator: "الإبداع",
-        heart: "القلب",
-        spirit: "الروح",
-      },
-      onboarding: {
-        name: "ONBOARDING",
-        label: "ابدأ هنا",
-        description:
-          "يضبط بلطف السياق والتفضيلات ودرابزين الأمان داخل m-pathy قبل العمل العميق.",
-      },
-      flow: {
-        name: "FLOW",
-        label: "الطيار الآلي للأوضاع",
-        description:
-          "يسمح لـ m-pathy بتبديل الأوضاع نيابةً عنك حتى تبقى في حالة تدفق عميقة ومتواصلة.",
-      },
-      build: {
-        name: "BUILD",
-        label: "وضع التسليم",
-        description:
-          "يركز على نتائج ملموسة: المواصفات، التذاكر، الشيفرة، النصوص وقوائم التحقق.",
-      },
-      research: {
-        name: "RESEARCH",
-        label: "وضوح عميق",
-        description:
-          "يحوّل m-pathy إلى محلّل أبحاث يتحقق من المصادر وينظم الموضوعات المعقدة.",
-      },
-      truth: {
-        name: "TRUTH",
-        label: "فحص الواقع",
-        description:
-          "يطرح الأسئلة الصعبة، يحارب التفكير الرغائبي، ويثبّت الأفكار في قيود العالم الحقيقي.",
-      },
-      wisdom: {
-        name: "WISDOM",
-        label: "تفكير بطيء",
-        description:
-          "يربط النقاط عبر مجالات مختلفة، ويبرز المفاضلات، ويشير إلى المسارات الطويلة.",
-      },
-      play: {
-        name: "PLAY",
-        label: "ساحة لعب إبداعية",
-        description:
-          "ينتقل إلى وضع تجريبي ومرِح لأسماء وعوالم وقصص وأفكار وتركيبات جريئة.",
-      },
-      vision: {
-        name: "VISION",
-        label: "رسم المستقبل",
-        description:
-          "يساعدك على نمذجة المستقبل والمنتجات والقصص انطلاقًا من نقطة الصفر.",
-      },
-      oracle: {
-        name: "ORACLE",
-        label: "رؤية الأنماط",
-        description:
-          "يُظهر الأنماط والخيارات والجداول الزمنية دون الادعاء بالتنبؤ بالمستقبل.",
-      },
-      empathy: {
-        name: "EMPATHY",
-        label: "إصغاء عميق",
-        description:
-          "يعكس ما تشعر به، يوضح احتياجاتك، ويقترح خطوات تالية لطيفة.",
-      },
-      love: {
-        name: "LOVE",
-        label: "دعم مخلص",
-        description:
-          "يحمل رحلتك الطويلة، ويتذكر ما يهمك، ويحمي قيمك الجوهرية.",
-      },
-      joy: {
-        name: "JOY",
-        label: "نور وتشجيع",
-        description:
-          "يستجيب بنبرة دافئة ومشجعة مع الحفاظ على الدقة والواقعية.",
-      },
-      calm: {
-        name: "CALM",
-        label: "هبوط ناعم",
-        description:
-          "يبطئ كل شيء، ويبسط اللغة، ويحميك من فرط الحمل.",
-      },
-      peace: {
-        name: "PEACE",
-        label: "إعادة ضبط للجهاز العصبي",
-        description:
-          "يساعدك على التهدئة والتنفس والعودة إلى العمل من حالة أكثر توازنًا.",
-      },
-      council: {
-        name: "COUNCIL13",
-        label: "١٣ عقلًا، إجابة واحدة",
-        description:
-          "يترك للمجلس الداخلي مساحة للنقاش والوصول إلى إجابة متقاربة قبل عرض الخلاصة عليك.",
-      },
+ ar: {
+  modes: {
+    kicker: "15 وضعًا من m-pathy",
+    title: "أوضاع التشغيل الخاصة بك",
+    subtitle:
+      "اختر وضعًا لتحديد كيفية تنظيم m-pathy لعملية التفكير، أو اسمح لـ FLOW بضبط الإعدادات ديناميكيًا حسب السياق. جميع الأوضاع متاحة في الدردشة الرئيسية.",
+    dropdown: {
+      label: "اختر وضعًا",
+    },
+    group: {
+      core: "الأساس",
+      mind: "العقل",
+      creator: "الإبداع",
+      heart: "التفاعل",
+      spirit: "الضبط",
+    },
+    onboarding: {
+      name: "ONBOARDING",
+      label: "الإعداد الأولي",
+      description:
+        "يحدد السياق والحدود والمعايير التشغيلية قبل بدء العمل المهني المركّز.",
+    },
+    flow: {
+      name: "FLOW",
+      label: "الضبط التلقائي",
+      description:
+        "يضبط تكوينات التفكير الداخلية ديناميكيًا بناءً على متطلبات المهمة والسياق وإشارات التفاعل.",
+    },
+    build: {
+      name: "BUILD",
+      label: "تركيز التنفيذ",
+      description:
+        "يعطي أولوية للمخرجات الملموسة مثل المواصفات، التوثيق، الشيفرة، المسودات المنظمة وقوائم المهام.",
+    },
+    research: {
+      name: "RESEARCH",
+      label: "العمق التحليلي",
+      description:
+        "ينظم الموضوعات المعقدة، يقيّم المصادر، ويدعم البحث والتحليل المنهجي.",
+    },
+    truth: {
+      name: "TRUTH",
+      label: "اختبار القيود",
+      description:
+        "يتحدى الافتراضات، يختبر القابلية للتنفيذ، ويُحاذي الأفكار مع القيود والأدلة الواقعية.",
+    },
+    wisdom: {
+      name: "WISDOM",
+      label: "منظور طويل الأمد",
+      description:
+        "يدمج الرؤى عبر المجالات، يبرز المفاضلات، وينظر في الآثار طويلة المدى.",
+    },
+    play: {
+      name: "PLAY",
+      label: "استكشاف الأفكار",
+      description:
+        "يدعم الاستكشاف الحر للأفكار، التسمية، والتنوعات المفاهيمية دون التزام تشغيلي.",
+    },
+    vision: {
+      name: "VISION",
+      label: "استشراف استراتيجي",
+      description:
+        "يستكشف سيناريوهات مستقبلية، اتجاهات استراتيجية ونماذج مفاهيمية في ظل عدم اليقين.",
+    },
+    oracle: {
+      name: "ORACLE",
+      label: "استكشاف الأنماط",
+      description:
+        "يفحص الأنماط والخيارات والمسارات دون ادعاء التنبؤ أو اليقين.",
+    },
+    empathy: {
+      name: "EMPATHY",
+      label: "وعي بالمنظورات",
+      description:
+        "يوضح وجهات نظر أصحاب المصلحة والتأثير الإنساني دون افتراض سلطة عاطفية.",
+    },
+    love: {
+      name: "LOVE",
+      label: "استمرارية القيم",
+      description:
+        "يحافظ على وضوح الأولويات المعلنة، النوايا طويلة الأمد والقيم المحددة خلال العمل الممتد.",
+    },
+    joy: {
+      name: "JOY",
+      label: "إطار إيجابي",
+      description:
+        "يحافظ على نبرة مشجعة وبنّاءة مع الحفاظ على الدقة والتركيز على المهمة.",
+    },
+    calm: {
+      name: "CALM",
+      label: "تنظيم الحمل",
+      description:
+        "يقلل التعقيد، يبسط الردود، ويثبت التفاعل عند ارتفاع الحمل المعرفي.",
+    },
+    peace: {
+      name: "PEACE",
+      label: "خفض التصعيد",
+      description:
+        "يدعم خفض التصعيد وإعادة الضبط عندما تتجاوز شدة التفاعل المستويات الإنتاجية.",
+    },
+    council: {
+      name: "COUNCIL13",
+      label: "مداولة متعددة المنظورات",
+      description:
+        "ينظم وجهات نظر متوازية ويجمعها في نتيجة واحدة مدعومة بالحجج.",
     },
   },
+},
+
 
   /* ───────────────── HI ───────────────── */
   hi: {
-    modes: {
-      kicker: "m-pathy के 15 मोड",
-      title: "आपके ऑपरेटिंग मोड",
-      subtitle:
-        "कोई मोड चुनें और देखें m-pathy कैसे व्यवहार करता है – या FLOW को यह सब आपके लिए ऑर्केस्ट्रेट करने दें। सभी मोड मुख्य चैट में उपलब्ध हैं।",
-      dropdown: {
-        label: "मोड चुनें",
-      },
-      group: {
-        core: "कोर",
-        mind: "बुद्धि",
-        creator: "क्रिएटर",
-        heart: "दिल",
-        spirit: "स्पिरिट",
-      },
-      onboarding: {
-        name: "ONBOARDING",
-        label: "यहीं से शुरू करें",
-        description:
-          "गहरी बातचीत से पहले m-pathy में आपका संदर्भ, पसंद और सेफ़्टी-रेल्स को धीरे-धीरे सेट करता है।",
-      },
-      flow: {
-        name: "FLOW",
-        label: "मोड ऑटोपायलट",
-        description:
-          "m-pathy को आपके लिए मोड बदलने देता है, ताकि आप गहरे और लगातार फ्लो में बने रहें।",
-      },
-      build: {
-        name: "BUILD",
-        label: "शिपिंग मोड",
-        description:
-          "कॉनक्रिट आउटपुट पर फोकस करता है: स्पेसिफिकेशन, टिकट, कोड, कॉपी और चेकलिस्ट।",
-      },
-      research: {
-        name: "RESEARCH",
-        label: "गहरी स्पष्टता",
-        description:
-          "m-pathy को एक रिसर्च एनालिस्ट की तरह काम कराता है जो सोर्स चेक करता है और जटिल विषयों को स्ट्रक्चर देता है।",
-      },
-      truth: {
-        name: "TRUTH",
-        label: "रियलिटी चेक",
-        description:
-          "कठिन सवाल पूछता है, विशफुल थिंकिंग को तोड़ता है और आइडियाज़ को असली सीमाओं से जोड़ता है।",
-      },
-      wisdom: {
-        name: "WISDOM",
-        label: "धीमी सोच",
-        description:
-          "कई क्षेत्रों के बिंदुओं को जोड़ता है, ट्रेड-ऑफ़ दिखाता है और लंबी समय-रेखाओं की ओर इशारा करता है।",
-      },
-      play: {
-        name: "PLAY",
-        label: "क्रिएटिव सैंडबॉक्स",
-        description:
-          "नाम, कहानियों, आइडियाज़ और वाइल्ड कॉम्बिनेशन के लिए खेल-जैसी एक्सप्लोरेशन में स्विच करता है।",
-      },
-      vision: {
-        name: "VISION",
-        label: "फ्यूचर स्केच",
-        description:
-          "पॉइंट ज़ीरो से शुरू करके भविष्य, प्रोडक्ट और नैरेटिव के प्रोटोटाइप बनाने में मदद करता है।",
-      },
-      oracle: {
-        name: "ORACLE",
-        label: "पैटर्न विज़न",
-        description:
-          "पैटर्न, विकल्प और टाइमलाइन सामने लाता है, बिना भविष्यवाणी का दावा किए।",
-      },
-      empathy: {
-        name: "EMPATHY",
-        label: "गहरा सुनना",
-        description:
-          "जो तुम महसूस करते हो उसे वापस दर्शाता है, ज़रूरतें साफ करता है और नरम अगले कदम सुझाता है।",
-      },
-      love: {
-        name: "LOVE",
-        label: "समर्पित साथ",
-        description:
-          "तुम्हारी लंबी यात्रा को थामे रखता है, जो सच में मायने रखता है उसे याद रखता है और तुम्हारे मूल मूल्यों की रक्षा करता है।",
-      },
-      joy: {
-        name: "JOY",
-        label: "रोशनी और हौसला",
-        description:
-          "गर्मजोशी और उत्साह के साथ जवाब देता है, साथ ही सटीक और ग्राउंडेड भी रहता है।",
-      },
-      calm: {
-        name: "CALM",
-        label: "सॉफ्ट लैंडिंग",
-        description:
-          "सब कुछ धीमा करता है, भाषा को आसान बनाता है और ओवरलोड से बचाता है।",
-      },
-      peace: {
-        name: "PEACE",
-        label: "नर्वस सिस्टम रीसेट",
-        description:
-          "तनाव कम करने, सांस लेने और ज़्यादा ग्राउंडेड स्थिति से काम पर लौटने में मदद करता है।",
-      },
-      council: {
-        name: "COUNCIL13",
-        label: "13 माइंड, एक जवाब",
-        description:
-          "भीतरी काउंसिल को पहले बहस और कन्वर्ज होने देता है, फिर तुम्हें शुद्ध, डिस्टिल्ड उत्तर दिखाता है।",
-      },
+  modes: {
+    kicker: "m-pathy के 15 मोड",
+    title: "आपके ऑपरेटिंग मोड",
+    subtitle:
+      "यह तय करने के लिए कोई मोड चुनें कि m-pathy अपने तर्क को कैसे संरचित करता है, या FLOW को संदर्भ के अनुसार कॉन्फ़िगरेशन को गतिशील रूप से समायोजित करने दें। सभी मोड मुख्य चैट में उपलब्ध हैं।",
+    dropdown: {
+      label: "मोड चुनें",
+    },
+    group: {
+      core: "कोर",
+      mind: "बौद्धिक",
+      creator: "निर्माता",
+      heart: "परिप्रेक्ष्य",
+      spirit: "नियमन",
+    },
+    onboarding: {
+      name: "ONBOARDING",
+      label: "प्रारंभिक सेटअप",
+      description:
+        "केंद्रित पेशेवर कार्य शुरू होने से पहले संदर्भ, सीमाएं और परिचालन मानदंड स्थापित करता है।",
+    },
+    flow: {
+      name: "FLOW",
+      label: "स्वचालित कॉन्फ़िगरेशन",
+      description:
+        "कार्य आवश्यकताओं, संदर्भ और इंटरैक्शन संकेतों के आधार पर आंतरिक तर्क कॉन्फ़िगरेशन को गतिशील रूप से समायोजित करता है।",
+    },
+    build: {
+      name: "BUILD",
+      label: "निष्पादन फोकस",
+      description:
+        "विनिर्देश, दस्तावेज़ीकरण, कोड, संरचित ड्राफ्ट और कार्य सूचियों जैसे ठोस आउटपुट को प्राथमिकता देता है।",
+    },
+    research: {
+      name: "RESEARCH",
+      label: "विश्लेषणात्मक गहराई",
+      description:
+        "जटिल विषयों को संरचित करता है, स्रोतों का मूल्यांकन करता है और प्रणालीबद्ध अनुसंधान व विश्लेषण का समर्थन करता है।",
+    },
+    truth: {
+      name: "TRUTH",
+      label: "सीमा परीक्षण",
+      description:
+        "मान्यताओं को चुनौती देता है, व्यवहार्यता का परीक्षण करता है और विचारों को वास्तविक सीमाओं व प्रमाणों के साथ संरेखित करता है।",
+    },
+    wisdom: {
+      name: "WISDOM",
+      label: "दीर्घकालिक दृष्टिकोण",
+      description:
+        "विभिन्न डोमेनों में अंतर्दृष्टि को एकीकृत करता है, ट्रेड ऑफ को उजागर करता है और दीर्घकालिक प्रभावों पर विचार करता है।",
+    },
+    play: {
+      name: "PLAY",
+      label: "अन्वेषणात्मक विचार निर्माण",
+      description:
+        "परिचालन प्रतिबद्धता के बिना विचारों की मुक्त खोज, नामकरण और वैचारिक विविधताओं का समर्थन करता है।",
+    },
+    vision: {
+      name: "VISION",
+      label: "रणनीतिक दूरदृष्टि",
+      description:
+        "अनिश्चितता की स्थिति में भविष्य परिदृश्यों, रणनीतिक दिशाओं और वैचारिक मॉडलों का अन्वेषण करता है।",
+    },
+    oracle: {
+      name: "ORACLE",
+      label: "पैटर्न अन्वेषण",
+      description:
+        "पूर्वानुमान या निश्चितता का दावा किए बिना पैटर्न, विकल्प और प्रक्षेपवक्रों का परीक्षण करता है।",
+    },
+    empathy: {
+      name: "EMPATHY",
+      label: "परिप्रेक्ष्य जागरूकता",
+      description:
+        "भावनात्मक अधिकार ग्रहण किए बिना हितधारकों के दृष्टिकोण और मानवीय प्रभाव को स्पष्ट करता है।",
+    },
+    love: {
+      name: "LOVE",
+      label: "मूल्य निरंतरता",
+      description:
+        "लंबी अवधि के कार्य के दौरान घोषित प्राथमिकताओं, दीर्घकालिक उद्देश्य और निर्धारित मूल्यों को दृश्यमान रखता है।",
+    },
+    joy: {
+      name: "JOY",
+      label: "सकारात्मक फ्रेमिंग",
+      description:
+        "सटीकता और कार्य फोकस बनाए रखते हुए उत्साहवर्धक और रचनात्मक स्वर बनाए रखता है।",
+    },
+    calm: {
+      name: "CALM",
+      label: "भार नियमन",
+      description:
+        "जटिलता को कम करता है, प्रतिक्रियाओं को सरल बनाता है और उच्च संज्ञानात्मक भार के दौरान इंटरैक्शन को स्थिर करता है।",
+    },
+    peace: {
+      name: "PEACE",
+      label: "डी एस्केलेशन",
+      description:
+        "जब इंटरैक्शन की तीव्रता उत्पादक स्तरों से अधिक हो जाती है, तब डी एस्केलेशन और रीसेट का समर्थन करता है।",
+    },
+    council: {
+      name: "COUNCIL13",
+      label: "बहु परिप्रेक्ष्य विचार विमर्श",
+      description:
+        "समानांतर दृष्टिकोणों को संरचित करता है और उन्हें एकल, तर्कसंगत परिणाम में समाहित करता है।",
     },
   },
+},
+
 };
 
