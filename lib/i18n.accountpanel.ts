@@ -37,7 +37,7 @@ export type AccountLocale = {
     info: AccountInfo;
     button: AccountButton;
     email: AccountEmail;
-    aria: AccountAria;
+    aria: AccountAria; 
   };
 };
 
