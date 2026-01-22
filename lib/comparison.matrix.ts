@@ -34,16 +34,16 @@ export const comparisonMatrix: Record<
     architecture: {
       maios: true,
       mpathy: true,
-      chatgpt: true,
-      copilot: true,
-      gemini: true,
+      chatgpt: false,
+      copilot: false,
+      gemini: false,
     },
     change_management: {
       maios: true,
-      mpathy: false,
-      chatgpt: true,
-      copilot: true,
-      gemini: true,
+      mpathy: true,
+      chatgpt: false,
+      copilot: false,
+      gemini: false,
     },
   },
 
@@ -78,7 +78,7 @@ export const comparisonMatrix: Record<
     },
     audit_info: {
       maios: true,
-      mpathy: false,
+      mpathy: true,
       chatgpt: false,
       copilot: true,
       gemini: true,
@@ -102,7 +102,7 @@ export const comparisonMatrix: Record<
     },
     overreliance: {
       maios: true,
-      mpathy: false,
+      mpathy: true,
       chatgpt: false,
       copilot: false,
       gemini: false,
@@ -116,17 +116,17 @@ export const comparisonMatrix: Record<
     },
     escalation: {
       maios: true,
-      mpathy: false,
+      mpathy: true,
       chatgpt: false,
-      copilot: true,
-      gemini: true,
+      copilot: false,
+      gemini: false,
     },
   },
 
   risk: {
     risk_process: {
       maios: true,
-      mpathy: false,
+      mpathy: true,
       chatgpt: true,
       copilot: true,
       gemini: true,
@@ -146,7 +146,7 @@ export const comparisonMatrix: Record<
       gemini: true,
     },
     bias: {
-      maios: true,
+      maios: false,
       mpathy: false,
       chatgpt: true,
       copilot: true,
@@ -154,7 +154,7 @@ export const comparisonMatrix: Record<
     },
     safety_testing: {
       maios: true,
-      mpathy: false,
+      mpathy: true,
       chatgpt: true,
       copilot: true,
       gemini: true,
@@ -171,10 +171,10 @@ export const comparisonMatrix: Record<
     },
     traceability: {
       maios: true,
-      mpathy: false,
+      mpathy: true,
       chatgpt: false,
-      copilot: true,
-      gemini: true,
+      copilot: false,
+      gemini: false,
     },
     minimization: {
       maios: true,
@@ -202,21 +202,21 @@ export const comparisonMatrix: Record<
   post_market: {
     monitoring: {
       maios: true,
-      mpathy: false,
+      mpathy: true,
       chatgpt: true,
       copilot: true,
       gemini: true,
     },
     incidents: {
       maios: true,
-      mpathy: false,
+      mpathy: true,
       chatgpt: true,
       copilot: true,
       gemini: true,
     },
     corrective: {
       maios: true,
-      mpathy: false,
+      mpathy: true,
       chatgpt: true,
       copilot: true,
       gemini: true,
@@ -230,10 +230,10 @@ export const comparisonMatrix: Record<
     },
     updates: {
       maios: true,
-      mpathy: false,
-      chatgpt: true,
-      copilot: true,
-      gemini: true,
+      mpathy: true,
+      chatgpt: false,
+      copilot: false,
+      gemini: false,
     },
   },
 };
