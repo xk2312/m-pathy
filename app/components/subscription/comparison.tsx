@@ -79,12 +79,6 @@ export default function Comparison() {
   const { lang } = useLang();
   const locale = comparisonDict[lang] ?? comparisonDict.en;
 
-  React.useEffect(() => {
-    (window as any).__MPATHY_IGNORE_ARCHIVE_EVENTS__ = true;
-    return () => {
-      delete (window as any).__MPATHY_IGNORE_ARCHIVE_EVENTS__;
-    };
-  }, []);
 
 
   const groups = locale.groups as Record<
