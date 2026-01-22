@@ -122,6 +122,8 @@ import ExpertsOverview from "@/app/components/subscription/ExpertsOverview";
 import Subscribe from "@/app/components/subscription/subscribe";
 import SecuritySection from "@/app/components/subscription/SecuritySection";
 import Footer from "@/app/components/subscription/footer";
+import Comparison from "@/app/components/subscription/comparison";
+
 
 // import CouncilOrbit from "@/app/components/subscription/CouncilOrbit";
 
@@ -439,15 +441,10 @@ export default function SubscriptionPage() {
           </section>
           <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
 
-          {/* ─────────────── KPI BOARD ─────────────── */}
-          <section className="pt-[clamp(70px,12vw,130px)]">
-            <div
-              className="page-center kpi-scope"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-            >
-              <MPathyKpiBoard />
-            </div>
-          </section>
+          <section>
+  <Comparison />
+</section>
+
 
           {/* Abschluss-Buffer – 130px (KPI → Footer/Ende) */}
           <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
