@@ -20,8 +20,9 @@ function CellMark({ supported }: { supported: boolean }) {
         className={[
           "inline-flex items-center justify-center",
           "w-7 h-7 rounded-full",
-          "border border-white/15",
-          supported ? "text-white/90" : "text-white/35",
+          supported
+            ? "bg-cyan-400/20 text-white border border-cyan-300/30"
+            : "border border-white/20 text-white/30",
         ].join(" ")}
         aria-label={supported ? "Supported" : "Not supported"}
         title={supported ? "Supported" : "Not supported"}
@@ -32,12 +33,11 @@ function CellMark({ supported }: { supported: boolean }) {
             height="14"
             viewBox="0 0 24 24"
             fill="none"
-            className="opacity-90"
           >
             <path
               d="M20 6L9 17l-5-5"
               stroke="currentColor"
-              strokeWidth="2.2"
+              strokeWidth="2.4"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -48,18 +48,17 @@ function CellMark({ supported }: { supported: boolean }) {
             height="14"
             viewBox="0 0 24 24"
             fill="none"
-            className="opacity-90"
           >
             <path
               d="M18 6L6 18"
               stroke="currentColor"
-              strokeWidth="2.2"
+              strokeWidth="1.9"
               strokeLinecap="round"
             />
             <path
               d="M6 6l12 12"
               stroke="currentColor"
-              strokeWidth="2.2"
+              strokeWidth="1.9"
               strokeLinecap="round"
             />
           </svg>
@@ -71,6 +70,7 @@ function CellMark({ supported }: { supported: boolean }) {
     </span>
   );
 }
+
 
 export default function Comparison() {
   const { lang } = useLang();
@@ -171,9 +171,10 @@ export default function Comparison() {
 
                     return (
                       <tr
-                        key={`${groupKey}-${rowKey}`}
-                        className="border-t border-white/5 text-white/70"
-                      >
+                    key={`${groupKey}-${rowKey}`}
+                    className="border-t border-white/5 text-white/70 even:bg-white/[0.03]"
+                    >
+
                         <td className="py-4 pr-6">
                           <span className="text-white/75">
                             {label}
