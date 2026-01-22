@@ -4,119 +4,121 @@
 export const subscribeDict = {
   // 🇬🇧 English – Master
   en: {
-    subscribe: {
-      // A. Header
-      kicker: "ENTRY PACKAGE",
-      title: "One clear month with M.",
-      subtitle:
-        "A single, quiet decision: unlock a full month of m-pathy with enough tokens for a real project - no subscription, no renewal trap.",
+  subscribe: {
+    // A. Header
+    kicker: "PROFESSIONAL ACCESS",
+    title: "One professional workspace. One month of real capacity.",
+    subtitle:
+      "A single, deliberate decision. Full access to m-pathy for one month, designed for professional use, deep work, and accountable reasoning. No freemium loops. No engagement mechanics. No renewal pressure.",
 
-      // B. Price & package
-      badge_label: "Launch access",
-      badge_value: "One-time only",
+    // B. Price & package
+    badge_label: "Professional access",
+    badge_value: "Monthly billing",
 
-      price_main: "9,99 €",
-      price_period: "for 30 days of access to M",
+    price_main: "179 €",
+    price_period: "per month",
 
-      token_headline: "Token pool for your work",
-      token_value: "Up to 500,000 tokens for this month",
-      token_subline:
-        "Enough capacity for deep explorations, long sessions and real builds - without counting every single request.",
+    token_headline: "Monthly reasoning capacity",
+    token_value: "Up to 5 million tokens per month",
+    token_subline:
+      "Designed for sustained analysis, long sessions, and real projects without micro management or artificial limits.",
 
-      // C. Benefits
-      benefits_title: "What this month gives you",
-      benefit_1:
-        "Space to explore M in depth - at your own pace, without pressure.",
-      benefit_2:
-        "A stable field for one focused project: from first spark to concrete results.",
-      benefit_3:
-        "Emotional clarity and technical power in one place - guided, but always under your control.",
-      benefit_4:
-        "Time to feel if M fits into your life and work before you decide on anything long term.",
+    // C. Benefits
+    benefits_title: "What this month enables",
+    benefit_1:
+      "A stable workspace for one focused professional context.",
+    benefit_2:
+      "Deep analytical sessions without interruption.",
+    benefit_3:
+      "Iterative reasoning across days and weeks.",
+    benefit_4:
+      "Outputs designed for accountability, not extraction.",
 
-      // D. Safety / Conditions
-      safety_title: "Clarity & safety",
-      safety_no_subscription:
-        "No subscription, no automatic renewal, no hidden steps.",
-      safety_one_month:
-        "Access simply ends after one month. If you want more, you decide consciously.",
-      safety_control:
-        "You stay in full control of your time, your money and your access - nothing runs away from you.",
-      safety_data:
-        "Your conversations follow the same security principles as the rest of m-pathy: calm, controlled and as private as possible.",
+    // D. Safety / Conditions
+    safety_title: "Operational clarity",
+    safety_no_subscription:
+      "No usage gamification. No hidden thresholds. No automatic escalation.",
+    safety_one_month:
+      "Professional access is billed monthly and can be stopped at any time.",
+    safety_control:
+      "You remain in control of your workspace, your usage, and your decision to continue.",
+    safety_data:
+      "All interactions follow the same security and governance principles as the rest of m-pathy.",
 
-      // E. CTA
-      cta_preline: "Ready to enter for one month?",
-      cta_label: "Enter M now",
-      cta_subline: "One month. One decision. No subscription.",
-      cta_aria:
-        "Start one month of access to m-pathy with up to one million tokens for 14.99 euros.",
+    // E. CTA
+    cta_preline: "Ready to activate professional access?",
+    cta_label: "Activate professional access",
+    cta_subline: "Professional workspace. Clear capacity. Conscious decision.",
+    cta_aria:
+      "Activate professional access to m-pathy with monthly professional reasoning capacity.",
 
-      // F. Footnotes
-      footnote_1:
-        "Token usage depends on model, prompt length and features. Intense use will consume the pool faster.",
-      footnote_2:
-        "Exact details of token accounting and limits will be documented clearly in the upcoming technical overview."
-    }
-  },
+    // F. Footnotes
+    footnote_1:
+      "Token usage depends on model choice, prompt length, and features. Sustained or intensive work will consume capacity faster.",
+    footnote_2:
+      "Detailed information about token accounting and capacity limits will be provided in the technical documentation."
+  }
+},
+
 
   // 🇩🇪 German
   de: {
-    subscribe: {
-      // A. Header
-      kicker: "EINSTIEGSPAKET",
-      title: "Ein klarer Monat mit M.",
-      subtitle:
-        "Eine stille, bewusste Entscheidung: ein voller Monat m-pathy mit genug Tokens für ein echtes Projekt – kein Abo, keine Verlängerungsfalle.",
+  subscribe: {
+    // A. Header
+    kicker: "PROFESSIONELLER ZUGANG",
+    title: "Ein professioneller Arbeitsraum. Ein Monat echte Kapazität.",
+    subtitle:
+      "Eine bewusste Entscheidung. Voller Zugriff auf m-pathy für einen Monat, ausgelegt für professionelle Nutzung, tiefes Arbeiten und nachvollziehbares Denken. Keine Freemium-Loops. Keine Engagement-Mechaniken. Kein Verlängerungsdruck.",
 
-      // B. Preis & Paket
-      badge_label: "Launch-Zugang",
-      badge_value: "Einmalig",
+    // B. Preis & Paket
+    badge_label: "Professioneller Zugang",
+    badge_value: "Monatliche Abrechnung",
 
-      price_main: "9,99 €",
-      price_period: "für 30 Tage Zugang zu M",
+    price_main: "179 €",
+    price_period: "pro Monat",
 
-      token_headline: "Tokenpool für deine Arbeit",
-      token_value: "Bis zu 500.000 Tokens für diesen Monat",
-      token_subline:
-        "Genug Kapazität für tiefe Erkundungen, lange Sessions und echte Builds – ohne jede einzelne Anfrage mitzuzählen.",
+    token_headline: "Monatliche Denk-Kapazität",
+    token_value: "Bis zu 5 Millionen Tokens pro Monat",
+    token_subline:
+      "Ausgelegt für nachhaltige Analysen, lange Sessions und reale Projekte ohne Mikromanagement oder künstliche Limits.",
 
-      // C. Benefits
-      benefits_title: "Was dir dieser Monat schenkt",
-      benefit_1:
-        "Raum, M in Ruhe und Tiefe zu erleben – in deinem Tempo, ohne Druck.",
-      benefit_2:
-        "Ein stabiles Feld für ein fokussiertes Projekt: vom ersten Funken bis zu greifbaren Ergebnissen.",
-      benefit_3:
-        "Emotionale Klarheit und technische Power an einem Ort – geführt, aber immer unter deiner Kontrolle.",
-      benefit_4:
-        "Zeit, um zu fühlen, ob M in dein Leben und Arbeiten passt, bevor du irgendetwas Langfristiges entscheidest.",
+    // C. Nutzen
+    benefits_title: "Was dieser Monat ermöglicht",
+    benefit_1:
+      "Ein stabiler Arbeitsraum für einen fokussierten professionellen Kontext.",
+    benefit_2:
+      "Tiefe analytische Sessions ohne Unterbrechung.",
+    benefit_3:
+      "Iteratives Denken über Tage und Wochen hinweg.",
+    benefit_4:
+      "Ergebnisse mit Fokus auf Nachvollziehbarkeit statt Extraktion.",
 
-      // D. Safety / Konditionen
-      safety_title: "Klarheit & Sicherheit",
-      safety_no_subscription:
-        "Kein Abo, keine automatische Verlängerung, keine versteckten Schritte.",
-      safety_one_month:
-        "Der Zugang endet einfach nach einem Monat. Wenn du weitermachen möchtest, entscheidest du erneut – bewusst.",
-      safety_control:
-        "Du behältst die volle Kontrolle über Zeit, Geld und Zugang – nichts läuft dir davon.",
-      safety_data:
-        "Deine Gespräche folgen denselben Sicherheitsprinzipien wie der Rest von m-pathy: ruhig, kontrolliert und so privat wie möglich.",
+    // D. Klarheit & Rahmen
+    safety_title: "Operative Klarheit",
+    safety_no_subscription:
+      "Keine Nutzungs-Gamification. Keine versteckten Schwellen. Keine automatische Eskalation.",
+    safety_one_month:
+      "Der professionelle Zugang wird monatlich abgerechnet und kann jederzeit beendet werden.",
+    safety_control:
+      "Du behältst die volle Kontrolle über deinen Arbeitsraum, deine Nutzung und deine Entscheidung zur Fortsetzung.",
+    safety_data:
+      "Alle Interaktionen folgen denselben Sicherheits- und Governance-Prinzipien wie der Rest von m-pathy.",
 
-      // E. CTA
-      cta_preline: "Bereit für einen Monat mit M?",
-      cta_label: "Jetzt M betreten",
-      cta_subline: "Ein Monat. Eine Entscheidung. Kein Abo.",
-      cta_aria:
-        "Starte einen Monat Zugang zu m-pathy mit bis zu einer Million Tokens für 9,99 Euro.",
+    // E. CTA
+    cta_preline: "Bereit, professionellen Zugang zu aktivieren?",
+    cta_label: "Professionellen Zugang aktivieren",
+    cta_subline: "Professioneller Arbeitsraum. Klare Kapazität. Bewusste Entscheidung.",
+    cta_aria:
+      "Professionellen Zugang zu m-pathy mit monatlicher Denk-Kapazität aktivieren.",
 
-      // F. Fußnoten
-      footnote_1:
-        "Der Tokenverbrauch hängt von Modell, Promptlänge und Features ab. Intensive Nutzung verbraucht den Pool schneller.",
-      footnote_2:
-        "Die technischen Details zur Token-Verrechnung und zu Limits werden in einer klaren, verständlichen Übersicht dokumentiert."
-    }
-  },
+    // F. Fußnoten
+    footnote_1:
+      "Der Tokenverbrauch hängt vom gewählten Modell, der Prompt-Länge und den genutzten Funktionen ab. Intensive oder dauerhafte Nutzung verbraucht die Kapazität schneller.",
+    footnote_2:
+      "Detaillierte Informationen zur Token-Abrechnung und zu Kapazitätsgrenzen werden in der technischen Dokumentation bereitgestellt."
+  }
+},
+
 
   // ─────────────────────────────
   // Block 1 – fr, es, it, pt
@@ -124,211 +126,236 @@ export const subscribeDict = {
 
   // 🇫🇷 French
   fr: {
-    subscribe: {
-      kicker: "OFFRE D’ENTRÉE",
-      title: "Un mois clair avec M.",
-      subtitle:
-        "Une décision calme et unique : débloquer un mois complet de m-pathy avec assez de tokens pour un vrai projet - sans abonnement, sans reconduction automatique.",
+  subscribe: {
+    // A. En-tête
+    kicker: "ACCÈS PROFESSIONNEL",
+    title: "Un espace de travail professionnel. Un mois de capacité réelle.",
+    subtitle:
+      "Une décision consciente. Accès complet à m-pathy pendant un mois, conçu pour un usage professionnel, un travail en profondeur et un raisonnement traçable. Aucun mécanisme freemium. Aucune logique d’engagement. Aucune pression de renouvellement.",
 
-      badge_label: "Accès lancement",
-      badge_value: "Paiement unique",
+    // B. Prix & offre
+    badge_label: "Accès professionnel",
+    badge_value: "Facturation mensuelle",
 
-      price_main: "9,99 €",
-      price_period: "pour 30 jours d’accès à M",
+    price_main: "179 €",
+    price_period: "par mois",
 
-      token_headline: "Pool de tokens pour votre travail",
-      token_value: "Jusqu’à 500.000 de tokens pour ce mois",
-      token_subline:
-        "Suffisamment de capacité pour des explorations profondes, de longues sessions et de vraies créations - sans compter chaque requête.",
+    token_headline: "Capacité de raisonnement mensuelle",
+    token_value: "Jusqu’à 5 millions de tokens par mois",
+    token_subline:
+      "Conçue pour des analyses soutenues, des sessions longues et des projets réels, sans micro-gestion ni limites artificielles.",
 
-      benefits_title: "Ce que ce mois vous apporte",
-      benefit_1:
-        "De l’espace pour explorer M en profondeur - à votre rythme, sans pression.",
-      benefit_2:
-        "Un champ stable pour un projet focalisé : de la première étincelle aux résultats concrets.",
-      benefit_3:
-        "Clarté émotionnelle et puissance technique réunies - guidées, mais toujours sous votre contrôle.",
-      benefit_4:
-        "Du temps pour ressentir si M a sa place dans votre vie et votre travail avant toute décision à long terme.",
+    // C. Bénéfices
+    benefits_title: "Ce que ce mois permet",
+    benefit_1:
+      "Un espace de travail stable pour un contexte professionnel clairement défini.",
+    benefit_2:
+      "Des sessions analytiques approfondies sans interruption.",
+    benefit_3:
+      "Un raisonnement itératif sur plusieurs jours ou semaines.",
+    benefit_4:
+      "Des résultats conçus pour la responsabilité, pas pour l’extraction.",
 
-      safety_title: "Clarté & sécurité",
-      safety_no_subscription:
-        "Aucun abonnement, aucune reconduction automatique, aucune étape cachée.",
-      safety_one_month:
-        "L’accès se termine simplement après un mois. Si vous voulez continuer, vous décidez à nouveau - en conscience.",
-      safety_control:
-        "Vous gardez le contrôle complet sur votre temps, votre budget et votre accès - rien ne vous échappe.",
-      safety_data:
-        "Vos conversations suivent les mêmes principes de sécurité que le reste de m-pathy : calmes, maîtrisées et aussi privées que possible.",
+    // D. Cadre & clarté
+    safety_title: "Clarté opérationnelle",
+    safety_no_subscription:
+      "Aucune gamification de l’usage. Aucun seuil caché. Aucune escalade automatique.",
+    safety_one_month:
+      "L’accès professionnel est facturé mensuellement et peut être interrompu à tout moment.",
+    safety_control:
+      "Vous gardez le contrôle total de votre espace de travail, de votre utilisation et de votre décision de poursuivre.",
+    safety_data:
+      "Toutes les interactions suivent les mêmes principes de sécurité et de gouvernance que le reste de m-pathy.",
 
-      cta_preline: "Prêt·e pour un mois avec M ?",
-      cta_label: "Entrer chez M maintenant",
-      cta_subline: "Un mois. Une décision. Aucun abonnement.",
-      cta_aria:
-        "Démarrer un mois d’accès à m-pathy avec jusqu’à un million de tokens pour 9,99 euros.",
+    // E. CTA
+    cta_preline: "Prêt à activer l’accès professionnel ?",
+    cta_label: "Activer l’accès professionnel",
+    cta_subline: "Espace professionnel. Capacité claire. Décision consciente.",
+    cta_aria:
+      "Activer l’accès professionnel à m-pathy avec une capacité de raisonnement mensuelle.",
 
-      footnote_1:
-        "L’utilisation des tokens dépend du modèle, de la longueur des prompts et des fonctionnalités. Un usage intensif consommera le pool plus rapidement.",
-      footnote_2:
-        "Les détails exacts de la comptabilisation des tokens et des limites seront clarifiés dans une documentation technique à venir."
-    }
-  },
+    // F. Notes
+    footnote_1:
+      "La consommation de tokens dépend du modèle utilisé, de la longueur des prompts et des fonctionnalités activées. Un usage intensif ou prolongé consommera la capacité plus rapidement.",
+    footnote_2:
+      "Les informations détaillées sur le comptage des tokens et les limites de capacité seront fournies dans la documentation technique."
+  }
+},
+es: {
+  subscribe: {
+    // A. Encabezado
+    kicker: "ACCESO PROFESIONAL",
+    title: "Un espacio de trabajo profesional. Un mes de capacidad real.",
+    subtitle:
+      "Una decisión consciente. Acceso completo a m-pathy durante un mes, diseñado para uso profesional, trabajo profundo y razonamiento responsable. Sin bucles freemium. Sin mecánicas de engagement. Sin presión de renovación.",
 
-  // 🇪🇸 Spanish
-  es: {
-    subscribe: {
-      kicker: "PAQUETE DE ENTRADA",
-      title: "Un mes claro con M.",
-      subtitle:
-        "Una decisión tranquila y única: desbloquear un mes completo de m-pathy con suficientes tokens para un proyecto real - sin suscripción ni renovación automática.",
+    // B. Precio y plan
+    badge_label: "Acceso profesional",
+    badge_value: "Facturación mensual",
 
-      badge_label: "Acceso de lanzamiento",
-      badge_value: "Pago único",
+    price_main: "179 €",
+    price_period: "por mes",
 
-      price_main: "9,99 €",
-      price_period: "por 30 días de acceso a M",
+    token_headline: "Capacidad de razonamiento mensual",
+    token_value: "Hasta 5 millones de tokens por mes",
+    token_subline:
+      "Diseñada para análisis sostenidos, sesiones largas y proyectos reales sin microgestión ni límites artificiales.",
 
-      token_headline: "Pool de tokens para tu trabajo",
-      token_value: "Hasta 500.000 de tokens para este mes",
-      token_subline:
-        "Suficiente capacidad para exploraciones profundas, sesiones largas y construcciones reales - sin contar cada solicitud.",
+    // C. Beneficios
+    benefits_title: "Lo que este mes permite",
+    benefit_1:
+      "Un espacio de trabajo estable para un contexto profesional enfocado.",
+    benefit_2:
+      "Sesiones analíticas profundas sin interrupciones.",
+    benefit_3:
+      "Razonamiento iterativo a lo largo de días y semanas.",
+    benefit_4:
+      "Resultados diseñados para la rendición de cuentas, no para la extracción.",
 
-      benefits_title: "Lo que te ofrece este mes",
-      benefit_1:
-        "Espacio para explorar M en profundidad - a tu ritmo, sin presión.",
-      benefit_2:
-        "Un campo estable para un proyecto enfocado: desde la primera chispa hasta resultados concretos.",
-      benefit_3:
-        "Claridad emocional y potencia técnica en un mismo lugar - guiadas, pero siempre bajo tu control.",
-      benefit_4:
-        "Tiempo para sentir si M encaja en tu vida y en tu trabajo antes de decidir algo a largo plazo.",
+    // D. Claridad operativa
+    safety_title: "Claridad operativa",
+    safety_no_subscription:
+      "Sin gamificación del uso. Sin umbrales ocultos. Sin escaladas automáticas.",
+    safety_one_month:
+      "El acceso profesional se factura mensualmente y puede cancelarse en cualquier momento.",
+    safety_control:
+      "Mantienes el control total de tu espacio de trabajo, tu uso y tu decisión de continuar.",
+    safety_data:
+      "Todas las interacciones siguen los mismos principios de seguridad y gobernanza que el resto de m-pathy.",
 
-      safety_title: "Claridad y seguridad",
-      safety_no_subscription:
-        "Sin suscripción, sin renovación automática, sin pasos ocultos.",
-      safety_one_month:
-        "El acceso simplemente termina después de un mes. Si quieres seguir, decides de nuevo - de forma consciente.",
-      safety_control:
-        "Mantienes el control total sobre tu tiempo, tu dinero y tu acceso - nada se te escapa.",
-      safety_data:
-        "Tus conversaciones siguen los mismos principios de seguridad que el resto de m-pathy: calma, control y máxima privacidad posible.",
+    // E. CTA
+    cta_preline: "¿Listo para activar el acceso profesional?",
+    cta_label: "Activar acceso profesional",
+    cta_subline: "Espacio profesional. Capacidad clara. Decisión consciente.",
+    cta_aria:
+      "Activar acceso profesional a m-pathy con capacidad de razonamiento mensual.",
 
-      cta_preline: "¿Listo/a para un mes con M?",
-      cta_label: "Entrar en M ahora",
-      cta_subline: "Un mes. Una decisión. Sin suscripción.",
-      cta_aria:
-        "Iniciar un mes de acceso a m-pathy con hasta un millón de tokens por 9,99 euros.",
+    // F. Notas
+    footnote_1:
+      "El consumo de tokens depende del modelo elegido, la longitud del prompt y las funciones utilizadas. El uso intensivo o prolongado consumirá la capacidad más rápido.",
+    footnote_2:
+      "La documentación técnica proporcionará información detallada sobre el conteo de tokens y los límites de capacidad."
+  }
+},
 
-      footnote_1:
-        "El uso de tokens depende del modelo, la longitud de los prompts y las funciones. Un uso intenso consumirá el pool más rápido.",
-      footnote_2:
-        "Los detalles exactos sobre el conteo de tokens y los límites se documentarán claramente en una próxima vista técnica."
-    }
-  },
 
   // 🇮🇹 Italian
   it: {
-    subscribe: {
-      kicker: "PACCHETTO DI INGRESSO",
-      title: "Un mese chiaro con M.",
-      subtitle:
-        "Una decisione calma e unica: sbloccare un mese intero di m-pathy con abbastanza token per un progetto reale - senza abbonamento, senza rinnovo automatico.",
+  subscribe: {
+    // A. Intestazione
+    kicker: "ACCESSO PROFESSIONALE",
+    title: "Uno spazio di lavoro professionale. Un mese di capacità reale.",
+    subtitle:
+      "Una decisione consapevole. Accesso completo a m-pathy per un mese, progettato per uso professionale, lavoro profondo e ragionamento responsabile. Nessun loop freemium. Nessuna meccanica di engagement. Nessuna pressione al rinnovo.",
 
-      badge_label: "Accesso lancio",
-      badge_value: "Una sola volta",
+    // B. Prezzo e piano
+    badge_label: "Accesso professionale",
+    badge_value: "Fatturazione mensile",
 
-      price_main: "9,99 €",
-      price_period: "per 30 giorni di accesso a M",
+    price_main: "179 €",
+    price_period: "al mese",
 
-      token_headline: "Pool di token per il tuo lavoro",
-      token_value: "Fino a 500.000 di token per questo mese",
-      token_subline:
-        "Capacità sufficiente per esplorazioni profonde, sessioni lunghe e veri sviluppi - senza contare ogni singola richiesta.",
+    token_headline: "Capacità di ragionamento mensile",
+    token_value: "Fino a 5 milioni di token al mese",
+    token_subline:
+      "Progettata per analisi prolungate, sessioni lunghe e progetti reali senza microgestione o limiti artificiali.",
 
-      benefits_title: "Cosa ti offre questo mese",
-      benefit_1:
-        "Spazio per esplorare M in profondità - al tuo ritmo, senza pressione.",
-      benefit_2:
-        "Un campo stabile per un progetto focalizzato: dalla prima scintilla ai risultati concreti.",
-      benefit_3:
-        "Chiarezza emotiva e potenza tecnica nello stesso luogo - guidate, ma sempre sotto il tuo controllo.",
-      benefit_4:
-        "Tempo per sentire se M si inserisce nella tua vita e nel tuo lavoro prima di decidere qualcosa a lungo termine.",
+    // C. Benefici
+    benefits_title: "Cosa consente questo mese",
+    benefit_1:
+      "Uno spazio di lavoro stabile per un contesto professionale mirato.",
+    benefit_2:
+      "Sessioni analitiche profonde senza interruzioni.",
+    benefit_3:
+      "Ragionamento iterativo nell’arco di giorni e settimane.",
+    benefit_4:
+      "Risultati progettati per la responsabilità, non per l’estrazione.",
 
-      safety_title: "Chiarezza e sicurezza",
-      safety_no_subscription:
-        "Nessun abbonamento, nessun rinnovo automatico, nessun passaggio nascosto.",
-      safety_one_month:
-        "L’accesso termina semplicemente dopo un mese. Se vuoi continuare, decidi di nuovo - in modo consapevole.",
-      safety_control:
-        "Rimani in pieno controllo del tuo tempo, del tuo denaro e del tuo accesso - niente ti sfugge.",
-      safety_data:
-        "Le tue conversazioni seguono gli stessi principi di sicurezza del resto di m-pathy: calma, controllo e la massima privacy possibile.",
+    // D. Chiarezza operativa
+    safety_title: "Chiarezza operativa",
+    safety_no_subscription:
+      "Nessuna gamification dell’uso. Nessuna soglia nascosta. Nessuna escalation automatica.",
+    safety_one_month:
+      "L’accesso professionale è fatturato mensilmente e può essere interrotto in qualsiasi momento.",
+    safety_control:
+      "Mantieni il pieno controllo del tuo spazio di lavoro, del tuo utilizzo e della decisione di continuare.",
+    safety_data:
+      "Tutte le interazioni seguono gli stessi principi di sicurezza e governance del resto di m-pathy.",
 
-      cta_preline: "Pronto/a per un mese con M?",
-      cta_label: "Entra ora in M",
-      cta_subline: "Un mese. Una decisione. Nessun abbonamento.",
-      cta_aria:
-        "Avvia un mese di accesso a m-pathy con fino a un milione di token per 9,99 euro.",
+    // E. CTA
+    cta_preline: "Pronto ad attivare l’accesso professionale?",
+    cta_label: "Attiva accesso professionale",
+    cta_subline: "Spazio professionale. Capacità chiara. Decisione consapevole.",
+    cta_aria:
+      "Attiva l’accesso professionale a m-pathy con capacità di ragionamento mensile.",
 
-      footnote_1:
-        "L’utilizzo dei token dipende dal modello, dalla lunghezza dei prompt e dalle funzionalità. Un uso intenso consumerà il pool più rapidamente.",
-      footnote_2:
-        "I dettagli esatti sul conteggio dei token e sui limiti saranno documentati chiaramente in una prossima panoramica tecnica."
-    }
-  },
+    // F. Note
+    footnote_1:
+      "Il consumo di token dipende dal modello scelto, dalla lunghezza del prompt e dalle funzionalità utilizzate. Un uso intensivo o prolungato consumerà la capacità più rapidamente.",
+    footnote_2:
+      "La documentazione tecnica fornirà informazioni dettagliate sul conteggio dei token e sui limiti di capacità."
+  }
+},
+
 
   // 🇵🇹 Portuguese
   pt: {
-    subscribe: {
-      kicker: "PACOTE DE ENTRADA",
-      title: "Um mês claro com M.",
-      subtitle:
-        "Uma decisão tranquila e única: desbloquear um mês completo de m-pathy com tokens suficientes para um projeto real - sem assinatura e sem renovação automática.",
+  subscribe: {
+    // A. Cabeçalho
+    kicker: "ACESSO PROFISSIONAL",
+    title: "Um espaço de trabalho profissional. Um mês de capacidade real.",
+    subtitle:
+      "Uma decisão consciente. Acesso completo ao m-pathy por um mês, concebido para uso profissional, trabalho profundo e raciocínio responsável. Sem loops freemium. Sem mecânicas de engajamento. Sem pressão de renovação.",
 
-      badge_label: "Acesso de lançamento",
-      badge_value: "Pagamento único",
+    // B. Preço e plano
+    badge_label: "Acesso profissional",
+    badge_value: "Faturação mensal",
 
-      price_main: "9,99 €",
-      price_period: "por 30 dias de acesso a M",
+    price_main: "179 €",
+    price_period: "por mês",
 
-      token_headline: "Pool de tokens para o seu trabalho",
-      token_value: "Até 500.000 de tokens neste mês",
-      token_subline:
-        "Capacidade suficiente para explorações profundas, sessões longas e construções reais - sem contar cada requisição.",
+    token_headline: "Capacidade de raciocínio mensal",
+    token_value: "Até 5 milhões de tokens por mês",
+    token_subline:
+      "Concebida para análises sustentadas, sessões longas e projetos reais, sem microgestão ou limites artificiais.",
 
-      benefits_title: "O que este mês te oferece",
-      benefit_1:
-        "Espaço para explorar M em profundidade - no seu ritmo, sem pressão.",
-      benefit_2:
-        "Um campo estável para um projeto focado: da primeira faísca aos resultados concretos.",
-      benefit_3:
-        "Clareza emocional e potência técnica no mesmo lugar - guiadas, mas sempre sob o seu controlo.",
-      benefit_4:
-        "Tempo para sentir se M cabe na sua vida e no seu trabalho antes de decidir algo de longo prazo.",
+    // C. Benefícios
+    benefits_title: "O que este mês possibilita",
+    benefit_1:
+      "Um espaço de trabalho estável para um contexto profissional focado.",
+    benefit_2:
+      "Sessões analíticas profundas sem interrupções.",
+    benefit_3:
+      "Raciocínio iterativo ao longo de dias e semanas.",
+    benefit_4:
+      "Resultados concebidos para responsabilidade, não para extração.",
 
-      safety_title: "Clareza e segurança",
-      safety_no_subscription:
-        "Sem assinatura, sem renovação automática, sem etapas escondidas.",
-      safety_one_month:
-        "O acesso simplesmente termina após um mês. Se quiser continuar, você decide de novo - conscientemente.",
-      safety_control:
-        "Você mantém controlo total sobre o seu tempo, o seu dinheiro e o seu acesso - nada foge de você.",
-      safety_data:
-        "As suas conversas seguem os mesmos princípios de segurança do restante m-pathy: calmas, controladas e o mais privadas possível.",
+    // D. Clareza operacional
+    safety_title: "Clareza operacional",
+    safety_no_subscription:
+      "Sem gamificação do uso. Sem limites ocultos. Sem escalonamento automático.",
+    safety_one_month:
+      "O acesso profissional é faturado mensalmente e pode ser interrompido a qualquer momento.",
+    safety_control:
+      "Mantém controlo total sobre o seu espaço de trabalho, a sua utilização e a decisão de continuar.",
+    safety_data:
+      "Todas as interações seguem os mesmos princípios de segurança e governação do restante m-pathy.",
 
-      cta_preline: "Pronto/a para um mês com M?",
-      cta_label: "Entrar em M agora",
-      cta_subline: "Um mês. Uma decisão. Sem assinatura.",
-      cta_aria:
-        "Comece um mês de acesso ao m-pathy com até um milhão de tokens por 9,99 euros.",
+    // E. CTA
+    cta_preline: "Pronto para ativar o acesso profissional?",
+    cta_label: "Ativar acesso profissional",
+    cta_subline: "Espaço profissional. Capacidade clara. Decisão consciente.",
+    cta_aria:
+      "Ativar acesso profissional ao m-pathy com capacidade de raciocínio mensal.",
 
-      footnote_1:
-        "O uso de tokens depende do modelo, do tamanho dos prompts e das funcionalidades. Uso intenso consome o pool mais rapidamente.",
-      footnote_2:
-        "Os detalhes exatos sobre contabilização de tokens e limites serão explicados de forma clara numa visão técnica futura."
-    }
-  },
+    // F. Notas
+    footnote_1:
+      "O consumo de tokens depende do modelo escolhido, do comprimento do prompt e das funcionalidades utilizadas. O uso intensivo ou prolongado consumirá a capacidade mais rapidamente.",
+    footnote_2:
+      "A documentação técnica fornecerá informações detalhadas sobre a contabilização de tokens e os limites de capacidade."
+  }
+},
+
 
   // ─────────────────────────────
   // Block 2 – nl, ru, zh, ja
@@ -336,211 +363,238 @@ export const subscribeDict = {
 
   // 🇳🇱 Dutch
   nl: {
-    subscribe: {
-      kicker: "INSTAPPakket",
-      title: "Eén heldere maand met M.",
-      subtitle:
-        "Eén rustige, bewuste keuze: een volle maand m-pathy met genoeg tokens voor een echt project - geen abonnement, geen automatische verlenging.",
+  subscribe: {
+    // A. Kop
+    kicker: "PROFESSIONELE TOEGANG",
+    title: "Eén professionele werkruimte. Eén maand echte capaciteit.",
+    subtitle:
+      "Een bewuste beslissing. Volledige toegang tot m-pathy voor één maand, ontworpen voor professioneel gebruik, diep werk en verantwoord redeneren. Geen freemium-loops. Geen engagementmechanismen. Geen verlengingsdruk.",
 
-      badge_label: "Launch-toegang",
-      badge_value: "Eenmalig",
+    // B. Prijs en plan
+    badge_label: "Professionele toegang",
+    badge_value: "Maandelijkse facturatie",
 
-      price_main: "9,99 €",
-      price_period: "voor 30 dagen toegang tot M",
+    price_main: "179 €",
+    price_period: "per maand",
 
-      token_headline: "Tokenpool voor jouw werk",
-      token_value: "Tot 500.000 tokens voor deze maand",
-      token_subline:
-        "Voldoende capaciteit voor diepe verkenningen, lange sessies en echte builds - zonder elke aanvraag te moeten tellen.",
+    token_headline: "Maandelijkse redeneercapaciteit",
+    token_value: "Tot 5 miljoen tokens per maand",
+    token_subline:
+      "Ontworpen voor langdurige analyses, lange sessies en echte projecten zonder micromanagement of kunstmatige limieten.",
 
-      benefits_title: "Wat deze maand je geeft",
-      benefit_1:
-        "Ruimte om M in alle rust en diepte te verkennen - in je eigen tempo, zonder druk.",
-      benefit_2:
-        "Een stabiel veld voor één gefocust project: van eerste idee tot concrete resultaten.",
-      benefit_3:
-        "Emotionele helderheid en technische kracht op één plek - begeleid, maar altijd onder jouw controle.",
-      benefit_4:
-        "Tijd om te voelen of M in jouw leven en werk past, vóór je iets voor de lange termijn beslist.",
+    // C. Voordelen
+    benefits_title: "Wat deze maand mogelijk maakt",
+    benefit_1:
+      "Een stabiele werkruimte voor één gerichte professionele context.",
+    benefit_2:
+      "Diepgaande analytische sessies zonder onderbreking.",
+    benefit_3:
+      "Iteratief redeneren over dagen en weken.",
+    benefit_4:
+      "Resultaten ontworpen voor verantwoording, niet voor extractie.",
 
-      safety_title: "Helderheid & veiligheid",
-      safety_no_subscription:
-        "Geen abonnement, geen automatische verlenging, geen verborgen stappen.",
-      safety_one_month:
-        "De toegang stopt gewoon na één maand. Als je verder wilt, kies je opnieuw - bewust.",
-      safety_control:
-        "Jij houdt de volledige controle over je tijd, je geld en je toegang - niets loopt weg.",
-      safety_data:
-        "Je gesprekken volgen dezelfde veiligheidsprincipes als de rest van m-pathy: rustig, gecontroleerd en zo privé mogelijk.",
+    // D. Operationele duidelijkheid
+    safety_title: "Operationele duidelijkheid",
+    safety_no_subscription:
+      "Geen gebruiksgamificatie. Geen verborgen drempels. Geen automatische escalatie.",
+    safety_one_month:
+      "Professionele toegang wordt maandelijks gefactureerd en kan op elk moment worden stopgezet.",
+    safety_control:
+      "Je behoudt volledige controle over je werkruimte, je gebruik en je beslissing om door te gaan.",
+    safety_data:
+      "Alle interacties volgen dezelfde veiligheids- en governanceprincipes als de rest van m-pathy.",
 
-      cta_preline: "Klaar voor een maand met M?",
-      cta_label: "Nu M binnenstappen",
-      cta_subline: "Eén maand. Eén beslissing. Geen abonnement.",
-      cta_aria:
-        "Start een maand toegang tot m-pathy met tot één miljoen tokens voor 9,99 euro.",
+    // E. CTA
+    cta_preline: "Klaar om professionele toegang te activeren?",
+    cta_label: "Professionele toegang activeren",
+    cta_subline: "Professionele werkruimte. Duidelijke capaciteit. Bewuste beslissing.",
+    cta_aria:
+      "Activeer professionele toegang tot m-pathy met maandelijkse redeneercapaciteit.",
 
-      footnote_1:
-        "Het tokenverbruik hangt af van model, promptlengte en functies. Intensief gebruik verbruikt de pool sneller.",
-      footnote_2:
-        "De exacte details van token-telling en limieten worden binnenkort duidelijk vastgelegd in een technische overzichtspagina."
-    }
-  },
+    // F. Voetnoten
+    footnote_1:
+      "Het tokenverbruik hangt af van het gekozen model, de lengte van de prompt en de gebruikte functies. Intensief of langdurig gebruik verbruikt de capaciteit sneller.",
+    footnote_2:
+      "Gedetailleerde informatie over tokenverrekening en capaciteitslimieten wordt verstrekt in de technische documentatie."
+  }
+},
+
 
   // 🇷🇺 Russian
   ru: {
-    subscribe: {
-      kicker: "СТАРТОВЫЙ ПАКЕТ",
-      title: "Один ясный месяц с M.",
-      subtitle:
-        "Спокойное, разовое решение: открыть полный месяц m-pathy с достаточным количеством токенов для реального проекта - без подписки и без автопродления.",
+  subscribe: {
+    // A. Заголовок
+    kicker: "ПРОФЕССИОНАЛЬНЫЙ ДОСТУП",
+    title: "Одно профессиональное рабочее пространство. Один месяц реальной ёмкости.",
+    subtitle:
+      "Осознанное решение. Полный доступ к m-pathy на один месяц, рассчитанный на профессиональное использование, глубокую работу и подотчётное мышление. Без freemium-циклов. Без механик вовлечения. Без давления продления.",
 
-      badge_label: "Стартовый доступ",
-      badge_value: "Разовый платеж",
+    // B. Цена и план
+    badge_label: "Профессиональный доступ",
+    badge_value: "Ежемесячная оплата",
 
-      price_main: "9,99 €",
-      price_period: "за 30 дней доступа к M",
+    price_main: "179 €",
+    price_period: "в месяц",
 
-      token_headline: "Пул токенов для вашей работы",
-      token_value: "До 500.000 токенов на этот месяц",
-      token_subline:
-        "Достаточно ресурсов для глубоких исследований, долгих сессий и реальных решений - без подсчёта каждой заявки.",
+    token_headline: "Ежемесячная вычислительная ёмкость мышления",
+    token_value: "До 5 миллионов токенов в месяц",
+    token_subline:
+      "Предназначено для длительных анализов, продолжительных сессий и реальных проектов без микроменеджмента и искусственных ограничений.",
 
-      benefits_title: "Что даёт вам этот месяц",
-      benefit_1:
-        "Пространство, чтобы спокойно и глубоко познакомиться с M - в своём темпе, без давления.",
-      benefit_2:
-        "Стабильное поле для одного сфокусированного проекта: от первой искры до конкретных результатов.",
-      benefit_3:
-        "Эмоциональная ясность и техническая мощь в одном месте - с поддержкой, но под вашим полным контролем.",
-      benefit_4:
-        "Время почувствовать, подходит ли M вашей жизни и работе, до того как принимать долгосрочные решения.",
+    // C. Преимущества
+    benefits_title: "Что даёт этот месяц",
+    benefit_1:
+      "Стабильное рабочее пространство для одного сфокусированного профессионального контекста.",
+    benefit_2:
+      "Глубокие аналитические сессии без прерываний.",
+    benefit_3:
+      "Итеративное мышление на протяжении дней и недель.",
+    benefit_4:
+      "Результаты, ориентированные на подотчётность, а не на извлечение данных.",
 
-      safety_title: "Ясность и безопасность",
-      safety_no_subscription:
-        "Никакой подписки, никакого автопродления, никаких скрытых шагов.",
-      safety_one_month:
-        "Доступ просто заканчивается через месяц. Если вы хотите продолжить, вы решаете об этом заново - осознанно.",
-      safety_control:
-        "Вы полностью контролируете своё время, деньги и доступ - ничего не уходит из-под контроля.",
-      safety_data:
-        "Ваши беседы подчиняются тем же принципам безопасности, что и остальная часть m-pathy: спокойно, управляемо и максимально конфиденциально.",
+    // D. Операционная ясность
+    safety_title: "Операционная ясность",
+    safety_no_subscription:
+      "Без геймификации использования. Без скрытых порогов. Без автоматической эскалации.",
+    safety_one_month:
+      "Профессиональный доступ оплачивается ежемесячно и может быть прекращён в любой момент.",
+    safety_control:
+      "Вы полностью контролируете своё рабочее пространство, использование и решение о продолжении.",
+    safety_data:
+      "Все взаимодействия следуют тем же принципам безопасности и управления, что и остальная часть m-pathy.",
 
-      cta_preline: "Готовы к одному месяцу с M?",
-      cta_label: "Войти к M сейчас",
-      cta_subline: "Один месяц. Одно решение. Без подписки.",
-      cta_aria:
-        "Начните месяц доступа к m-pathy с пулом до одного миллиона токенов за 9,99 евро.",
+    // E. CTA
+    cta_preline: "Готовы активировать профессиональный доступ?",
+    cta_label: "Активировать профессиональный доступ",
+    cta_subline: "Профессиональное пространство. Чёткая ёмкость. Осознанное решение.",
+    cta_aria:
+      "Активировать профессиональный доступ к m-pathy с ежемесячной вычислительной ёмкостью мышления.",
 
-      footnote_1:
-        "Расход токенов зависит от модели, длины запросов и набора функций. Интенсивное использование быстрее расходует пул.",
-      footnote_2:
-        "Точные детали учёта токенов и ограничений будут ясно описаны в отдельном техническом обзоре."
-    }
-  },
+    // F. Примечания
+    footnote_1:
+      "Расход токенов зависит от выбранной модели, длины запроса и используемых функций. Интенсивная или длительная работа быстрее расходует ёмкость.",
+    footnote_2:
+      "Подробная информация о расчёте токенов и лимитах ёмкости будет представлена в технической документации."
+  }
+},
+
 
   // 🇨🇳 Chinese (Simplified)
   zh: {
-    subscribe: {
-      kicker: "入门套餐",
-      title: "与 M 的清晰一月。",
-      subtitle:
-        "一次安静而清醒的选择：解锁整整一个月的 m-pathy，并获得足够的 Tokens 来完成一个真实项目--没有订阅，没有自动续费。",
+  subscribe: {
+    // A. 标题
+    kicker: "专业访问",
+    title: "一个专业工作空间。一个月的真实能力。",
+    subtitle:
+      "一次有意识的决定。为期一个月的 m-pathy 全面访问，专为专业使用、深度工作和可追责推理而设计。无 freemium 循环。无参与度机制。无续费压力。",
 
-      badge_label: "启动访问",
-      badge_value: "一次性",
+    // B. 价格与方案
+    badge_label: "专业访问",
+    badge_value: "按月计费",
 
-      price_main: "9,99 €",
-      price_period: "享有 30 天 M 的访问权",
+    price_main: "179 €",
+    price_period: "每月",
 
-      token_headline: "为你工作准备的 Token 池",
-      token_value: "本月最多可用 500,000 个 Tokens",
-      token_subline:
-        "足够支撑深入探索、长时间会话和真实构建--无需计算每一次请求。",
+    token_headline: "每月推理容量",
+    token_value: "每月最多 500 万 tokens",
+    token_subline:
+      "专为持续分析、长时间会话和真实项目而设计，无需微观管理或人为限制。",
 
-      benefits_title: "这个月能给你什么",
-      benefit_1:
-        "空间，让你以自己的节奏、在没有压力的状态下深入体验 M。",
-      benefit_2:
-        "一个稳定的场域，用于专注于一个项目：从第一个灵感到具体结果。",
-      benefit_3:
-        "情绪清晰与技术力量汇聚在同一处--在引导下，但始终由你掌控。",
-      benefit_4:
-        "时间，让你在做出任何长期决定之前，先感受 M 是否适合你的生活和工作。",
+    // C. 价值
+    benefits_title: "这个月可以实现的内容",
+    benefit_1:
+      "为一个专注的专业场景提供稳定的工作空间。",
+    benefit_2:
+      "不中断的深度分析会话。",
+    benefit_3:
+      "跨越数天和数周的迭代推理。",
+    benefit_4:
+      "为可追责性而设计的输出，而非数据提取。",
 
-      safety_title: "清晰与安全",
-      safety_no_subscription:
-        "无订阅、无自动续费、无隐藏步骤。",
-      safety_one_month:
-        "访问将在一个月后自然结束。若你想继续，你会再次做出清醒的选择。",
-      safety_control:
-        "你始终掌控自己的时间、金钱和访问权限--一切都在你手中。",
-      safety_data:
-        "你的对话遵循与 m-pathy 其他部分相同的安全原则：平静、可控、尽可能私密。",
+    // D. 操作清晰度
+    safety_title: "操作清晰度",
+    safety_no_subscription:
+      "无使用游戏化。无隐藏阈值。无自动升级。",
+    safety_one_month:
+      "专业访问按月计费，可随时停止。",
+    safety_control:
+      "你始终完全掌控你的工作空间、使用情况以及是否继续的决定。",
+    safety_data:
+      "所有交互均遵循与 m-pathy 其他部分相同的安全与治理原则。",
 
-      cta_preline: "准备好与 M 共度一个月了吗？",
-      cta_label: "现在进入 M",
-      cta_subline: "一个月。一 个决定。无订阅。",
-      cta_aria:
-        "以 9,99 欧元获得一个月的 m-pathy 访问权，包含最多一百万 Tokens。",
+    // E. CTA
+    cta_preline: "准备好激活专业访问了吗？",
+    cta_label: "激活专业访问",
+    cta_subline: "专业工作空间。清晰容量。理性决策。",
+    cta_aria:
+      "激活 m-pathy 的专业访问并获得每月推理容量。",
 
-      footnote_1:
-        "Token 消耗取决于模型、提示长度和功能。高强度使用会更快耗尽 Token 池。",
-      footnote_2:
-        "关于 Token 计费方式和限制的详细说明，将在后续技术概览中清晰呈现。"
-    }
-  },
+    // F. 注释
+    footnote_1:
+      "Token 消耗取决于所选模型、提示长度和使用的功能。持续或高强度使用将更快消耗容量。",
+    footnote_2:
+      "关于 token 计算和容量限制的详细信息将提供于技术文档中。"
+  }
+},
+
 
   // 🇯🇵 Japanese
   ja: {
-    subscribe: {
-      kicker: "エントリーパッケージ",
-      title: "M と過ごす、澄んだ 1 か月。",
-      subtitle:
-        "静かで意識的なひとつの選択：本物のプロジェクトに十分なトークンとともに、m-pathy を 1 か月まるごと解放する - サブスクリプションなし、自動更新なし。",
+  subscribe: {
+    // A. ヘッダー
+    kicker: "プロフェッショナルアクセス",
+    title: "一つのプロフェッショナルな作業空間。一か月分の実質的な容量。",
+    subtitle:
+      "意識的な一つの判断。m-pathy を一か月間フルに利用でき、プロフェッショナル用途、深い作業、説明責任のある思考のために設計されています。フリーミアムのループはありません。エンゲージメントの仕組みもありません。更新のプレッシャーもありません。",
 
-      badge_label: "ローンチアクセス",
-      badge_value: "一度きりの支払い",
+    // B. 価格とプラン
+    badge_label: "プロフェッショナルアクセス",
+    badge_value: "月次課金",
 
-      price_main: "9,99 €",
-      price_period: "M への 30 日間アクセス",
+    price_main: "179 €",
+    price_period: "月額",
 
-      token_headline: "あなたのためのトークンプール",
-      token_value: "この 1 か月で最大 500,000 トークン",
-      token_subline:
-        "深い探求、長いセッション、本格的なビルドに十分な容量 - 1 回ごとのリクエストを数える必要はありません。",
+    token_headline: "月次推論容量",
+    token_value: "月あたり最大 500 万トークン",
+    token_subline:
+      "長時間の分析、継続的なセッション、実際のプロジェクトのために設計されています。細かな管理や人工的な制限はありません。",
 
-      benefits_title: "この 1 か月がもたらすもの",
-      benefit_1:
-        "自分のペースで、プレッシャーなく、M を深く体験するためのスペース。",
-      benefit_2:
-        "ひとつのフォーカスしたプロジェクトのための安定したフィールド：最初のひらめきから具体的な結果まで。",
-      benefit_3:
-        "感情の明晰さと技術的なパワーがひとつの場所に集約 - ガイドはあるが、コントロールは常にあなたにある。",
-      benefit_4:
-        "長期的な決断をする前に、M があなたの人生と仕事にフィットするかどうかを感じる時間。",
+    // C. ベネフィット
+    benefits_title: "この一か月で可能になること",
+    benefit_1:
+      "一つの明確なプロフェッショナル文脈のための安定した作業空間。",
+    benefit_2:
+      "中断のない深い分析セッション。",
+    benefit_3:
+      "数日から数週間にわたる反復的な思考。",
+    benefit_4:
+      "抽出ではなく、説明責任を重視したアウトプット。",
 
-      safety_title: "明瞭さと安全性",
-      safety_no_subscription:
-        "サブスクリプションなし、自動更新なし、隠れたステップなし。",
-      safety_one_month:
-        "アクセスは 1 か月後に自然に終了します。続けたい場合は、再び意識的に選択します。",
-      safety_control:
-        "あなたは時間、お金、アクセスを完全にコントロールし続けます - 何も勝手に進みません。",
-      safety_data:
-        "あなたの会話は、m-pathy の他の部分と同じセキュリティ原則に従います：静かに、コントロールされた状態で、可能な限りプライベートに。",
+    // D. 運用上の明確さ
+    safety_title: "運用上の明確さ",
+    safety_no_subscription:
+      "利用のゲーミフィケーションなし。隠れた閾値なし。自動エスカレーションなし。",
+    safety_one_month:
+      "プロフェッショナルアクセスは月次課金で、いつでも停止できます。",
+    safety_control:
+      "作業空間、利用状況、継続の判断はすべて自分で完全に管理できます。",
+    safety_data:
+      "すべてのやり取りは、m-pathy 全体と同じセキュリティおよびガバナンス原則に従います。",
 
-      cta_preline: "M と過ごす 1 か月の準備はできましたか？",
-      cta_label: "今すぐ M に入る",
-      cta_subline: "1 か月。1 つの決断。サブスクリプションなし。",
-      cta_aria:
-        "9,99 ユーロで、最大 100 万トークン付きの m-pathy 1 か月アクセスを開始します。",
+    // E. CTA
+    cta_preline: "プロフェッショナルアクセスを有効化しますか？",
+    cta_label: "プロフェッショナルアクセスを有効化",
+    cta_subline: "プロフェッショナルな作業空間。明確な容量。意識的な判断。",
+    cta_aria:
+      "月次推論容量を備えた m-pathy のプロフェッショナルアクセスを有効化します。",
 
-      footnote_1:
-        "トークンの消費は、モデル、プロンプトの長さ、機能によって変わります。集中的な利用ではプールがより早く消費されます。",
-      footnote_2:
-        "トークンのカウント方法と制限の詳細は、今後公開される技術概要で明確に説明されます。"
-    }
-  },
+    // F. 注記
+    footnote_1:
+      "トークン消費量は、選択したモデル、プロンプトの長さ、使用する機能によって異なります。継続的または集中的な利用は、容量をより早く消費します。",
+    footnote_2:
+      "トークン計算および容量制限の詳細は、技術ドキュメントで提供されます。"
+  }
+},
 
   // ─────────────────────────────
   // Block 3 – ko, ar, hi
@@ -548,157 +602,177 @@ export const subscribeDict = {
 
   // 🇰🇷 Korean
   ko: {
-    subscribe: {
-      kicker: "입문 패키지",
-      title: "M과 함께하는 선명한 한 달.",
-      subtitle:
-        "한 번의 차분하고 의식적인 선택: 실제 프로젝트를 위한 충분한 토큰과 함께, m-pathy를 한 달 내내 열어 두는 것 - 구독 없음, 자동 갱신 없음.",
+  subscribe: {
+    // A. 헤더
+    kicker: "프로페셔널 액세스",
+    title: "하나의 전문 작업 공간. 한 달간의 실질적인 용량.",
+    subtitle:
+      "의식적인 한 번의 결정. 전문적인 사용, 깊은 작업, 책임 있는 추론을 위해 설계된 m-pathy의 한 달 전체 접근 권한입니다. 프리미엄 유도 루프 없음. 참여 유도 메커니즘 없음. 갱신 압박 없음.",
 
-      badge_label: "런치 액세스",
-      badge_value: "한 번 결제",
+    // B. 가격 및 플랜
+    badge_label: "프로페셔널 액세스",
+    badge_value: "월간 결제",
 
-      price_main: "9,99 €",
-      price_period: "M에 30일 동안 접근",
+    price_main: "179 €",
+    price_period: "월 기준",
 
-      token_headline: "당신의 작업을 위한 토큰 풀",
-      token_value: "이번 달 최대 500,000 토큰",
-      token_subline:
-        "깊은 탐색, 긴 세션, 실제 빌드를 위한 충분한 용량 - 각 요청을 일일이 세지 않아도 됩니다.",
+    token_headline: "월간 추론 용량",
+    token_value: "월 최대 500만 토큰",
+    token_subline:
+      "지속적인 분석, 긴 세션, 실제 프로젝트를 위해 설계되었으며 미세 관리나 인위적인 제한이 없습니다.",
 
-      benefits_title: "이 한 달이 선물하는 것",
-      benefit_1:
-        "당신의 속도에 맞춰, 압박 없이 M을 깊이 경험할 수 있는 공간.",
-      benefit_2:
-        "하나의 집중된 프로젝트를 위한 안정된 필드: 첫 영감부터 구체적인 결과까지.",
-      benefit_3:
-        "감정적 명료성과 기술적 파워가 한 곳에 모인 공간 - 가이드는 있지만, 컨트롤은 항상 당신에게 있습니다.",
-      benefit_4:
-        "장기적인 결정을 내리기 전에, M이 당신의 삶과 일에 맞는지 느껴 볼 수 있는 시간.",
+    // C. 혜택
+    benefits_title: "이 한 달이 제공하는 것",
+    benefit_1:
+      "집중된 하나의 전문적 맥락을 위한 안정적인 작업 공간.",
+    benefit_2:
+      "중단 없는 깊이 있는 분석 세션.",
+    benefit_3:
+      "며칠과 몇 주에 걸친 반복적 추론.",
+    benefit_4:
+      "데이터 추출이 아닌 책임성을 중심으로 설계된 결과물.",
 
-      safety_title: "명료함과 안전",
-      safety_no_subscription:
-        "구독 없음, 자동 갱신 없음, 숨겨진 단계 없음.",
-      safety_one_month:
-        "접근은 한 달 후 자연스럽게 종료됩니다. 계속하고 싶다면, 다시 의식적으로 선택합니다.",
-      safety_control:
-        "당신은 시간, 비용, 접근 권한을 완전히 스스로 통제합니다 - 아무것도 당신 모르게 진행되지 않습니다.",
-      safety_data:
-        "당신의 대화는 m-pathy의 다른 부분과 동일한 보안 원칙을 따릅니다: 차분함, 통제, 가능한 최대한의 프라이버시.",
+    // D. 운영 명확성
+    safety_title: "운영 명확성",
+    safety_no_subscription:
+      "사용 게임화 없음. 숨겨진 임계값 없음. 자동 확장 없음.",
+    safety_one_month:
+      "프로페셔널 액세스는 월 단위로 결제되며 언제든지 중단할 수 있습니다.",
+    safety_control:
+      "작업 공간, 사용 방식, 계속 여부에 대한 결정은 전적으로 사용자가 통제합니다.",
+    safety_data:
+      "모든 상호작용은 m-pathy 전체와 동일한 보안 및 거버넌스 원칙을 따릅니다.",
 
-      cta_preline: "M과 함께하는 한 달을 시작할 준비가 되었나요?",
-      cta_label: "지금 M에 들어가기",
-      cta_subline: "한 달. 하나의 결정. 구독 없음.",
-      cta_aria:
-        "9,99유로에 최대 백만 개의 토큰이 포함된 m-pathy 한 달 이용을 시작합니다.",
+    // E. CTA
+    cta_preline: "프로페셔널 액세스를 활성화할 준비가 되셨나요?",
+    cta_label: "프로페셔널 액세스 활성화",
+    cta_subline: "전문 작업 공간. 명확한 용량. 의식적인 결정.",
+    cta_aria:
+      "월간 추론 용량이 포함된 m-pathy 프로페셔널 액세스를 활성화합니다.",
 
-      footnote_1:
-        "토큰 사용량은 모델, 프롬프트 길이 및 기능에 따라 달라집니다. 강도 높은 사용은 토큰 풀을 더 빨리 소모합니다.",
-      footnote_2:
-        "토큰 집계 방식과 한도에 대한 자세한 내용은 추후 제공될 기술 개요에서 명확하게 안내됩니다."
-    }
-  },
+    // F. 각주
+    footnote_1:
+      "토큰 사용량은 선택한 모델, 프롬프트 길이, 사용 기능에 따라 달라집니다. 집중적이거나 지속적인 사용은 용량을 더 빠르게 소모합니다.",
+    footnote_2:
+      "토큰 산정 및 용량 한계에 대한 자세한 정보는 기술 문서에서 제공됩니다."
+  }
+},
+
 
   // 🇦🇪 Arabic
   ar: {
-    subscribe: {
-      kicker: "حزمة الدخول",
-      title: "شهر واضح مع M.",
-      subtitle:
-        "قرار هادئ وواعٍ واحد: فتح شهر كامل من m-pathy مع عدد كافٍ من التوكنات لمشروع حقيقي - بدون اشتراك، وبدون تجديد تلقائي.",
+  subscribe: {
+    // A. العنوان
+    kicker: "وصول مهني",
+    title: "مساحة عمل مهنية واحدة. شهر واحد من القدرة الحقيقية.",
+    subtitle:
+      "قرار واعٍ واحد. وصول كامل إلى m-pathy لمدة شهر، مصمم للاستخدام المهني، والعمل العميق، والتفكير القابل للمساءلة. بدون حلقات freemium. بدون آليات جذب. بدون ضغط للتجديد.",
 
-      badge_label: "وصول الإطلاق",
-      badge_value: "دفعة واحدة",
+    // B. السعر والخطة
+    badge_label: "وصول مهني",
+    badge_value: "فوترة شهرية",
 
-      price_main: "9,99 €",
-      price_period: "لمدة 30 يومًا من الوصول إلى M",
+    price_main: "179 €",
+    price_period: "شهريًا",
 
-      token_headline: "مخزون التوكنات لعملك",
-      token_value: "حتى 500,000 توكن لهذا الشهر",
-      token_subline:
-        "سعة كافية لاستكشافات عميقة، وجلسات طويلة، وبناء حقيقي - دون الحاجة لعدّ كل طلب.",
+    token_headline: "سعة التفكير الشهرية",
+    token_value: "حتى 5 ملايين توكن شهريًا",
+    token_subline:
+      "مصممة للتحليل المستمر، والجلسات الطويلة، والمشاريع الحقيقية دون إدارة دقيقة أو حدود مصطنعة.",
 
-      benefits_title: "ماذا يمنحك هذا الشهر",
-      benefit_1:
-        "مساحة لتجربة M بعمق - وفق إيقاعك أنت، دون ضغط.",
-      benefit_2:
-        "حقل ثابت لمشروع واحد مركّز: من أول شرارة حتى النتائج الملموسة.",
-      benefit_3:
-        "وضوح عاطفي وقوة تقنية في مكان واحد - بتوجيه، لكن تحت سيطرتك الكاملة دائمًا.",
-      benefit_4:
-        "وقت لتشعر إن كان M مناسبًا لحياتك وعملك قبل اتخاذ أي قرار طويل المدى.",
+    // C. المزايا
+    benefits_title: "ما الذي يتيحه هذا الشهر",
+    benefit_1:
+      "مساحة عمل مستقرة لسياق مهني واحد ومركّز.",
+    benefit_2:
+      "جلسات تحليل عميقة دون انقطاع.",
+    benefit_3:
+      "تفكير تكراري يمتد عبر أيام وأسابيع.",
+    benefit_4:
+      "مخرجات مصممة للمساءلة لا للاستخراج.",
 
-      safety_title: "الوضوح والأمان",
-      safety_no_subscription:
-        "لا اشتراك، لا تجديد تلقائي، ولا خطوات مخفية.",
-      safety_one_month:
-        "ينتهي الوصول ببساطة بعد شهر واحد. إذا أردت الاستمرار، فأنت من يقرر من جديد - بوعي.",
-      safety_control:
-        "تبقى متحكمًا تمامًا في وقتك ومالك ووصولك - لا شيء يخرج عن يدك.",
-      safety_data:
-        "تتبع محادثاتك نفس مبادئ الأمان في باقي نظام m-pathy: هدوء، سيطرة، وأقصى قدر ممكن من الخصوصية.",
+    // D. الوضوح التشغيلي
+    safety_title: "الوضوح التشغيلي",
+    safety_no_subscription:
+      "لا لتلعيب الاستخدام. لا لعتبات مخفية. لا لتصعيد تلقائي.",
+    safety_one_month:
+      "يتم احتساب الوصول المهني شهريًا ويمكن إيقافه في أي وقت.",
+    safety_control:
+      "تحتفظ بالتحكم الكامل في مساحة عملك، واستخدامك، وقرار الاستمرار.",
+    safety_data:
+      "جميع التفاعلات تتبع نفس مبادئ الأمان والحوكمة المعتمدة في m-pathy.",
 
-      cta_preline: "هل أنت مستعد لشهر مع M؟",
-      cta_label: "ادخل إلى M الآن",
-      cta_subline: "شهر واحد. قرار واحد. بلا اشتراك.",
-      cta_aria:
-        "ابدأ شهرًا من الوصول إلى m-pathy مع ما يصل إلى مليون توكن مقابل 9,99 يورو.",
+    // E. CTA
+    cta_preline: "هل أنت مستعد لتفعيل الوصول المهني؟",
+    cta_label: "تفعيل الوصول المهني",
+    cta_subline: "مساحة عمل مهنية. سعة واضحة. قرار واعٍ.",
+    cta_aria:
+      "تفعيل الوصول المهني إلى m-pathy مع سعة تفكير شهرية.",
 
-      footnote_1:
-        "استهلاك التوكنات يعتمد على النموذج وطول الطلبات والخصائص المستخدمة. الاستخدام المكثف يستهلك المخزون بشكل أسرع.",
-      footnote_2:
-        "سيتم توضيح التفاصيل الدقيقة لكيفية احتساب التوكنات والحدود في عرض تقني قادم وبأسلوب واضح."
-    }
-  },
+    // F. الحواشي
+    footnote_1:
+      "يعتمد استهلاك التوكنات على النموذج المختار وطول الموجه والميزات المستخدمة. الاستخدام المكثف أو المستمر يستهلك السعة بشكل أسرع.",
+    footnote_2:
+      "سيتم توفير معلومات تفصيلية حول احتساب التوكنات وحدود السعة في الوثائق التقنية."
+  }
+},
+
 
   // 🇮🇳 Hindi
   hi: {
-    subscribe: {
-      kicker: "एंट्री पैकेज",
-      title: "M के साथ एक साफ़-सुथरा महीना।",
-      subtitle:
-        "एक शांत और सजग निर्णय: m-pathy का पूरा एक महीना खोलना, इतना टोकन-पूल कि आप एक असली प्रोजेक्ट चला सकें - बिना सब्सक्रिप्शन, बिना ऑटो-रिन्युअल।",
+  subscribe: {
+    // A. शीर्षक
+    kicker: "पेशेवर एक्सेस",
+    title: "एक पेशेवर कार्यक्षेत्र। एक महीने की वास्तविक क्षमता।",
+    subtitle:
+      "एक सचेत निर्णय। m-pathy तक एक महीने की पूर्ण पहुँच, पेशेवर उपयोग, गहन कार्य और उत्तरदायी सोच के लिए डिज़ाइन की गई। कोई freemium लूप नहीं। कोई एंगेजमेंट मैकेनिज़्म नहीं। कोई नवीनीकरण दबाव नहीं।",
 
-      badge_label: "लॉन्च एक्सेस",
-      badge_value: "केवल एक बार भुगतान",
+    // B. मूल्य और योजना
+    badge_label: "पेशेवर एक्सेस",
+    badge_value: "मासिक बिलिंग",
 
-      price_main: "9,99 €",
-      price_period: "M तक 30 दिनों की पहुँच",
+    price_main: "179 €",
+    price_period: "प्रति माह",
 
-      token_headline: "आपके काम के लिए टोकन-पूल",
-      token_value: "इस महीने के लिए अधिकतम 500,000 टोकन",
-      token_subline:
-        "गहरी खोज, लंबी सेशन्स और असली बिल्ड्स के लिए पर्याप्त क्षमता - हर रिक्वेस्ट को अलग-अलग गिनने की ज़रूरत नहीं।",
+    token_headline: "मासिक तर्क क्षमता",
+    token_value: "प्रति माह 50 लाख टोकन तक",
+    token_subline:
+      "स्थायी विश्लेषण, लंबी सत्रों और वास्तविक परियोजनाओं के लिए डिज़ाइन की गई, बिना सूक्ष्म प्रबंधन या कृत्रिम सीमाओं के।",
 
-      benefits_title: "यह महीना आपको क्या देता है",
-      benefit_1:
-        "अपनी गति से, बिना किसी दबाव के M को गहराई से अनुभव करने की जगह।",
-      benefit_2:
-        "एक फ़ोकस्ड प्रोजेक्ट के लिए स्थिर फ़ील्ड: पहली चिंगारी से लेकर ठोस नतीजों तक।",
-      benefit_3:
-        "भावनात्मक स्पष्टता और टेक्निकल पावर एक ही जगह - गाइडेड, लेकिन पूरा नियंत्रण आपके हाथ में।",
-      benefit_4:
-        "लंबी अवधि का निर्णय लेने से पहले यह महसूस करने का समय कि M आपके जीवन और काम में फिट बैठता है या नहीं।",
+    // C. लाभ
+    benefits_title: "यह महीना क्या सक्षम बनाता है",
+    benefit_1:
+      "एक केंद्रित पेशेवर संदर्भ के लिए एक स्थिर कार्यक्षेत्र।",
+    benefit_2:
+      "बिना बाधा के गहन विश्लेषण सत्र।",
+    benefit_3:
+      "दिनों और हफ्तों में फैली पुनरावृत्त सोच।",
+    benefit_4:
+      "निकासी के बजाय उत्तरदायित्व के लिए डिज़ाइन किए गए परिणाम।",
 
-      safety_title: "स्पष्टता और सुरक्षा",
-      safety_no_subscription:
-        "कोई सब्सक्रिप्शन नहीं, कोई ऑटो-रिन्युअल नहीं, कोई छुपा हुआ क़दम नहीं।",
-      safety_one_month:
-        "एक महीने के बाद पहुँच बस समाप्त हो जाती है। अगर आप जारी रखना चाहें, तो आप दोबारा - सजग होकर - निर्णय लेते हैं।",
-      safety_control:
-        "समय, पैसा और पहुँच - सब पर पूरा नियंत्रण आपके पास रहता है, कुछ भी अपने-आप नहीं चलता।",
-      safety_data:
-        "आपकी बातचीत m-pathy के बाक़ी हिस्सों की तरह ही सुरक्षा सिद्धांतों का पालन करती है: शांत, नियंत्रित और जितनी संभव हो उतनी निजी।",
+    // D. संचालन स्पष्टता
+    safety_title: "संचालन स्पष्टता",
+    safety_no_subscription:
+      "कोई उपयोग गेमिफिकेशन नहीं। कोई छिपी हुई सीमाएँ नहीं। कोई स्वचालित एस्केलेशन नहीं।",
+    safety_one_month:
+      "पेशेवर एक्सेस मासिक रूप से बिल किया जाता है और किसी भी समय रोका जा सकता है।",
+    safety_control:
+      "आप अपने कार्यक्षेत्र, उपयोग और आगे बढ़ने के निर्णय पर पूर्ण नियंत्रण रखते हैं।",
+    safety_data:
+      "सभी इंटरैक्शन m-pathy के अन्य भागों के समान सुरक्षा और गवर्नेंस सिद्धांतों का पालन करते हैं।",
 
-      cta_preline: "क्या आप M के साथ एक महीने के लिए तैयार हैं?",
-      cta_label: "अभी M में प्रवेश करें",
-      cta_subline: "एक महीना। एक निर्णय। कोई सब्सक्रिप्शन नहीं।",
-      cta_aria:
-        "9,99 यूरो में अधिकतम दस लाख टोकन के साथ m-pathy के एक महीने के एक्सेस की शुरुआत करें।",
+    // E. CTA
+    cta_preline: "क्या आप पेशेवर एक्सेस सक्रिय करने के लिए तैयार हैं?",
+    cta_label: "पेशेवर एक्सेस सक्रिय करें",
+    cta_subline: "पेशेवर कार्यक्षेत्र। स्पष्ट क्षमता। सचेत निर्णय।",
+    cta_aria:
+      "मासिक तर्क क्षमता के साथ m-pathy का पेशेवर एक्सेस सक्रिय करें।",
 
-      footnote_1:
-        "टोकन उपयोग मॉडल, प्रॉम्प्ट की लंबाई और फीचर्स पर निर्भर करता है। गहन उपयोग से टोकन-पूल ज़्यादा तेज़ी से ख़र्च होगा.",
-      footnote_2:
-        "टोकन की गिनती और लिमिट्स से जुड़ी सटीक जानकारी आने वाले टेक्निकल ओवरव्यू में साफ़-साफ़ समझाई जाएगी।"
-    }
+    // F. फुटनोट्स
+    footnote_1:
+      "टोकन की खपत चुने गए मॉडल, प्रॉम्प्ट की लंबाई और उपयोग की गई सुविधाओं पर निर्भर करती है। गहन या निरंतर उपयोग क्षमता को तेज़ी से समाप्त करेगा।",
+    footnote_2:
+      "टोकन गणना और क्षमता सीमाओं के बारे में विस्तृत जानकारी तकनीकी दस्तावेज़ में प्रदान की जाएगी।"
   }
+},
 };
