@@ -118,7 +118,7 @@ import Hero from "@/app/components/subscription/Hero";
 import Testimonial from "@/app/components/subscription/testimonial";
 import PowerPrompts from "@/app/components/subscription/powerprompts";
 import Modis13 from "@/app/components/subscription/13modis";
-import Experts13 from "@/app/components/subscription/13experts";
+import ExpertsOverview from "@/app/components/subscription/ExpertsOverview";
 import Subscribe from "@/app/components/subscription/subscribe";
 import SecuritySection from "@/app/components/subscription/SecuritySection";
 import Footer from "@/app/components/subscription/footer";
@@ -305,18 +305,19 @@ export default function SubscriptionPage() {
           </section>
           <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
 
-          {/* ─────────────── 13 MODES SECTION ─────────────── */}
+         {/* ─────────────── EXPERTS OVERVIEW SECTION ─────────────── */}
           <section
             className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
-            aria-label="Modes section"
+            aria-label="Experts overview section"
           >
             <div
               className="page-center"
               style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
             >
-              <Modis13 />
+              <ExpertsOverview />
             </div>
           </section>
+
 
           {/* ─────────────── BUFFER & DIVIDER #3 (Modes → PowerPrompts) ─────────────── */}
           <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
@@ -400,18 +401,19 @@ export default function SubscriptionPage() {
           </section>
           <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
 
-          {/* ─────────────── 13 EXPERTS SECTION ─────────────── */}
-<section
-  className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
-  aria-label="Experts section"
->
-  <div
-    className="page-center"
-    style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
-  >
-    <Experts13 />
-  </div>
-</section>
+         {/* ─────────────── 13 MODES SECTION ─────────────── */}
+          <section
+            className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
+            aria-label="Modes section"
+          >
+            <div
+              className="page-center"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
+            >
+              <Modis13 />
+            </div>
+          </section>
+
 
 
           {/* ─────────────── BUFFER & DIVIDER #6 (Security → KPI) ─────────────── */}
