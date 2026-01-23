@@ -102,17 +102,22 @@ export default function Comparison() {
   const { lang } = useLang();
   const locale = comparisonDict[lang] ?? comparisonDict.en;
 
- const groups = locale.groups as Record<
-  string,
-  { title: string } & (
-    | { rows: Record<string, string> }
-    | { body: string }
-  )
->;
+const rawGroups = locale?.groups;
+const groups =
+  rawGroups && typeof rawGroups === "object" && !Array.isArray(rawGroups)
+    ? rawGroups
+    : {};
 
 const tableGroups = Object.entries(groups).filter(
-  ([_, group]) => "rows" in group
+  ([_, group]) =>
+    group &&
+    typeof group === "object" &&
+    "rows" in group &&
+    group.rows &&
+    typeof group.rows === "object" &&
+    !Array.isArray(group.rows)
 ) as [string, { title: string; rows: Record<string, string> }][];
+
 
 
   return (
