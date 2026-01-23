@@ -25,12 +25,10 @@ const providers: ProviderKey[] = [
 ];
 
 /* ======================================================
-   COMPARISON DATA INSERT POINT
-   Source: former comparison.matrix.ts
-   Note: Data is intentionally local for deterministic render
+   COMPARISON DATA
    ====================================================== */
 
-export const comparisonMatrix: Record<
+const comparisonMatrix: Record<
   string,
   Record<string, Record<ProviderKey, boolean>>
 > = {
@@ -263,54 +261,21 @@ export const comparisonMatrix: Record<
   },
 };
 
+/* ======================================================
+   CELL MARK
+   ====================================================== */
 
 function CellMark({ supported }: { supported: boolean }) {
   return (
-    <span className="inline-flex items-center justify-center">
-      <span
-        className={[
-          "inline-flex items-center justify-center",
-          "w-7 h-7 rounded-full",
-          supported
-            ? "bg-cyan-400/20 text-white border border-cyan-300/30"
-            : "border border-white/20 text-white/30",
-        ].join(" ")}
-        aria-label={supported ? "Supported" : "Not supported"}
-        title={supported ? "Supported" : "Not supported"}
-      >
-        {supported ? (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M20 6L9 17l-5-5"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        ) : (
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M18 6L6 18"
-              stroke="currentColor"
-              strokeWidth="1.9"
-              strokeLinecap="round"
-            />
-            <path
-              d="M6 6l12 12"
-              stroke="currentColor"
-              strokeWidth="1.9"
-              strokeLinecap="round"
-            />
-          </svg>
-        )}
-      </span>
-      <span className="sr-only">
-        {supported ? "Supported" : "Not supported"}
-      </span>
+    <span className="inline-block w-6 text-center">
+      {supported ? "✓" : "✕"}
     </span>
   );
 }
+
+/* ======================================================
+   COMPONENT
+   ====================================================== */
 
 export default function Comparison() {
   const { lang } = useLang();
@@ -334,45 +299,45 @@ export default function Comparison() {
       className="pt-[var(--h-space-a2-section)] pb-[var(--h-space-a2-section)]"
       aria-labelledby="comparison-heading"
     >
-      <div
-        className="page-center"
-        style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-      >
-        <header className="text-center max-w-3xl mx-auto mb-12">
+      <div className="page-center max-w-[1400px] mx-auto">
+        {/* HEADER */}
+        <header className="text-center max-w-3xl mx-auto mb-14">
           <p className="text-white/50 text-sm tracking-wide mb-3">
             {locale.kicker}
           </p>
           <h2
             id="comparison-heading"
-            className="text-white text-[clamp(34px,6vw,52px)] font-semibold mb-4"
+            className="text-white text-[clamp(32px,5vw,48px)] font-semibold mb-4"
           >
             {locale.title}
           </h2>
-          <p className="text-white/70 max-w-2xl mx-auto">
+          <p className="text-white/70">
             {locale.intro}
           </p>
         </header>
 
-        <div className="flex items-center justify-center gap-6 mb-10 text-sm text-white/60">
-          <div className="inline-flex items-center gap-2">
-            <CellMark supported />
-            <span>{locale.legend.supported}</span>
-          </div>
-          <div className="inline-flex items-center gap-2">
-            <CellMark supported={false} />
-            <span>{locale.legend.not_supported}</span>
-          </div>
+        {/* LEGEND */}
+        <div className="flex justify-center gap-10 mb-10 text-sm text-white/60">
+          <span>✓ {locale.legend.supported}</span>
+          <span>✕ {locale.legend.not_supported}</span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-white/10 text-white/60 text-sm">
-                <th className="py-4 text-left">
+        {/* TABLE WRAPPER */}
+        <div className="overflow-x-auto rounded-xl border border-white/10">
+          <table
+            className="w-full min-w-[980px] border-collapse text-sm"
+            style={{ tableLayout: "fixed" }}
+          >
+            <thead className="bg-white/[0.03]">
+              <tr className="border-b border-white/10 text-white/70">
+                <th className="px-4 py-4 text-left w-[340px]">
                   {locale.table.columns.criterion}
                 </th>
                 {providers.map((p) => (
-                  <th key={p} className="py-4 text-center">
+                  <th
+                    key={p}
+                    className="px-2 py-4 text-center w-[128px]"
+                  >
                     {locale.table.columns[p]}
                   </th>
                 ))}
@@ -380,41 +345,36 @@ export default function Comparison() {
             </thead>
 
             <tbody>
-              {tableGroups.map(([groupKey, group], idx) => (
+              {tableGroups.map(([groupKey, group]) => (
                 <React.Fragment key={groupKey}>
-                  {idx > 0 && (
-                    <tr>
-                      <td colSpan={providers.length + 1} className="pt-10">
-                        <div className="h-px bg-white/10" />
-                      </td>
-                    </tr>
-                  )}
-
-                  <tr>
+                  {/* GROUP TITLE */}
+                  <tr className="bg-white/[0.02]">
                     <td
                       colSpan={providers.length + 1}
-                      className="pt-8 pb-4 text-white/85 font-medium tracking-wide"
+                      className="px-4 py-3 text-xs uppercase tracking-wide text-white/60"
                     >
-                      <span className="text-xs uppercase text-white/55">
-                        {group.title}
-                      </span>
+                      {group.title}
                     </td>
                   </tr>
 
+                  {/* ROWS */}
                   {Object.entries(group.rows).map(([rowKey, label]) => {
                     const row = comparisonMatrix[groupKey]?.[rowKey];
 
                     return (
                       <tr
                         key={`${groupKey}-${rowKey}`}
-                        className="border-t border-white/5 text-white/70 even:bg-white/[0.03]"
+                        className="border-b border-white/5 text-white/75"
                       >
-                        <td className="py-4 pr-6">
-                          <span className="text-white/75">{label}</span>
+                        <td className="px-4 py-3">
+                          {label}
                         </td>
 
                         {providers.map((p) => (
-                          <td key={p} className="py-4 text-center">
+                          <td
+                            key={p}
+                            className="px-2 py-3 text-center"
+                          >
                             <CellMark supported={Boolean(row?.[p])} />
                           </td>
                         ))}
@@ -427,9 +387,10 @@ export default function Comparison() {
           </table>
         </div>
 
-        <section className="max-w-4xl mx-auto mt-20 text-sm text-white/60">
-          <details className="rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-4">
-            <summary className="cursor-pointer select-none text-white/80 font-medium">
+        {/* SOURCES */}
+        <section className="max-w-4xl mx-auto mt-16 text-sm text-white/60">
+          <details className="rounded-xl border border-white/10 bg-white/[0.02] px-5 py-4">
+            <summary className="cursor-pointer text-white/80 font-medium">
               {locale.footer.sources_title}
             </summary>
 
