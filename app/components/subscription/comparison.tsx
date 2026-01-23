@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { dict as comparisonDict } from "@/lib/i18n.comparison";
@@ -100,7 +98,13 @@ function CellMark({ supported }: { supported: boolean }) {
 
 export default function Comparison() {
   const { lang } = useLang();
-  const locale = comparisonDict[lang] ?? comparisonDict.en;
+
+  if (!lang || !comparisonDict[lang]) {
+    return null;
+  }
+
+  const locale = comparisonDict[lang];
+
 
 const rawGroups = locale?.groups;
 const groups =
