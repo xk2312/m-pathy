@@ -164,22 +164,28 @@ document.cookie = `NEXT_LOCALE=${safe}; path=/; max-age=31536000; SameSite=Lax`;
 
 
   // Initial-Boot & Listener: Sprache aus dem zentralen Kern spiegeln
-  useEffect(() => {
-    // 1) Startzustand: aktuelles Kern-Locale
+   useEffect(() => {
+    // 1) Startzustand: nur setzen, wenn valide
     const initial = getLocale();
-    applyLang(initial);
+    if (initial) {
+      applyLang(initial);
+    }
 
     // 2) Auf Änderungen des Kern-Locale reagieren
     const handler = (ev: Event) => {
       const detail = (ev as CustomEvent).detail as { locale?: string } | undefined;
-      const next = detail?.locale ?? getLocale();
-      applyLang(next);
+      const candidate = detail?.locale ?? getLocale();
+
+      if (!candidate) return;
+
+      applyLang(candidate);
     };
 
     window.addEventListener("mpathy:i18n:change", handler);
     return () => window.removeEventListener("mpathy:i18n:change", handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
 const t = useMemo(() => {
   return (k: string) =>
