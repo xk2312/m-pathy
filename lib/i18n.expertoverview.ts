@@ -1,6 +1,6 @@
 export const expertoverview = {
   en: {
-    kicker: "EXPERTS 13",
+    kicker: "EXPERTS",
     title: "Multiple domains. One governed system.",
     intro:
       "m-pathy operates across multiple reasoning domains. Each domain represents a structured way of thinking, governed by the same security, audit, and compliance boundaries.",
@@ -68,7 +68,7 @@ export const expertoverview = {
   },
 
   de: {
-    kicker: "EXPERTEN 13",
+    kicker: "EXPERTEN",
     title: "Mehrere Domänen. Ein geregeltes System.",
     intro:
       "m-pathy arbeitet über mehrere Denkdomänen hinweg. Jede Domäne steht für eine strukturierte Denkweise innerhalb klarer Sicherheits-, Audit- und Compliance-Grenzen.",
