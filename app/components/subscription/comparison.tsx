@@ -102,12 +102,18 @@ export default function Comparison() {
   const { lang } = useLang();
   const locale = comparisonDict[lang] ?? comparisonDict.en;
 
-  const groups = locale.groups as Record<
-    string,
-    { title: string; rows: Record<string, string> }
-  >;
+ const groups = locale.groups as Record<
+  string,
+  { title: string } & (
+    | { rows: Record<string, string> }
+    | { body: string }
+  )
+>;
 
-  const tableGroups = Object.entries(groups);
+const tableGroups = Object.entries(groups).filter(
+  ([_, group]) => "rows" in group
+) as [string, { title: string; rows: Record<string, string> }][];
+
 
   return (
     <section className="py-24">
