@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import React from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { dict as comparisonDict } from "@/lib/i18n.comparison";
