@@ -49,7 +49,6 @@ export default function Footer() {
         {/* COLUMN 3 – PAYMENT + STATUS (verwendet .footer-pay aus CSS) */}
         <div className="footer-col footer-pay">
           <p>{t.stripe_secure}</p>
-          <p>{t.no_subscription}</p>
           <p>{t.no_hidden_fees}</p>
         </div>
       </div>
