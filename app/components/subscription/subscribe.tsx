@@ -136,15 +136,37 @@ export default function Subscribe() {
             {/* RIGHT – 3 Bullets + kurze Safety-Zeile */}
             <div className="space-y-5">
               <div>
-                <p className="text-sm font-semibold text-white/80">
-                  {locale.benefits_title}
-                </p>
-                <ul className="mt-3 space-y-2.5 text-sm text-white/70">
-                  <li>• {locale.benefit_1}</li>
-                  <li>• {locale.benefit_2}</li>
-                  <li>• {locale.benefit_3}</li>
-                </ul>
-              </div>
+  <p className="text-sm font-semibold text-white/80">
+    {locale.benefits_title}
+  </p>
+
+  <ul className="
+    mt-3
+    grid
+    grid-cols-1
+    gap-x-6
+    gap-y-1.5
+    text-[13px]
+    leading-snug
+    text-white/70
+    lg:grid-cols-2
+  ">
+    <li>{locale.benefit_1}</li>
+    <li>{locale.benefit_2}</li>
+    <li>{locale.benefit_3}</li>
+    <li>{locale.benefit_4}</li>
+    <li>{locale.benefit_5}</li>
+    <li>{locale.benefit_6}</li>
+    <li>{locale.benefit_7}</li>
+    <li>{locale.benefit_8}</li>
+    <li>{locale.benefit_9}</li>
+    <li>{locale.benefit_10}</li>
+    <li>{locale.benefit_11}</li>
+    <li>{locale.benefit_12}</li>
+    <li>{locale.benefit_13}</li>
+  </ul>
+</div>
+
 
               <div className="rounded-2xl border border-white/10 bg-black/40 px-4 py-4">
                 <p className="text-xs font-semibold text-white/75 mb-1">
