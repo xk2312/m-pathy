@@ -47,9 +47,9 @@ export const dict = {
 
 de: {
   kicker: "SECURITY BY DESIGN",
-  title: "Deine digitalen Sicherheitsebenen",
+  title: "Ihre digitalen Sicherheitsebenen",
   intro:
-    "Erfahre, wie m-pathy sichere Mensch–KI-Interaktionen unterstützt – emotional, technisch und kryptografisch, stets unter deiner Kontrolle.",
+    "Erfahren Sie, wie m-pathy sichere Mensch-KI-Interaktionen unterstützt – emotional, technisch und kryptografisch, stets unter Ihrer Kontrolle.",
 
   cta_label: "Digital Security Expert fragen",
 
@@ -59,23 +59,23 @@ de: {
       body:
         "m-pathy ist darauf ausgelegt, kognitive und emotionale Überlastung zu reduzieren. Das System vermeidet Bewertung, Druck und Eskalation und setzt bei Überlastung CALM-Interaktionsgrenzen.",
       prefill:
-        "@Digital Security Expert: erkläre, wie m-pathy emotionale und kognitive Überlastung reduziert."
+        "@Digital Security Expert: erklären Sie, wie m-pathy emotionale und kognitive Überlastung reduziert."
     },
 
     local_only: {
       title: "Lokale Gespräche",
       body:
-        "Gesprächsinhalte werden nicht als Teil des Produkts gespeichert oder zugänglich gemacht. Alle Interaktionen bleiben unter Nutzerkontrolle.",
+        "Gesprächsinhalte werden nicht als Teil des Produkts gespeichert oder zugänglich gemacht. Alle Interaktionen bleiben unter Ihrer Kontrolle.",
       prefill:
-        "@Digital Security Expert: erkläre den Umgang mit Gesprächsinhalten, lokaler Kontrolle und Compliance-Speicherung."
+        "@Digital Security Expert: erklären Sie den Umgang mit Gesprächsinhalten, lokaler Kontrolle und Compliance-Speicherung."
     },
 
     deletion: {
       title: "Volle Löschkontrolle",
       body:
-        "Du kannst Threads jederzeit löschen. Gelöschte Inhalte werden aus der Produktumgebung entfernt und können nicht wiederhergestellt oder erneut genutzt werden. Compliance-Artefakte oder kryptografische Nachweise enthalten keine Gesprächsinhalte und erlauben keine Rekonstruktion.",
+        "Sie können Threads jederzeit löschen. Gelöschte Inhalte werden aus der Produktumgebung entfernt und können weder wiederhergestellt noch erneut genutzt werden. Compliance-Artefakte oder kryptografische Nachweise enthalten keine Gesprächsinhalte und erlauben keine Rekonstruktion.",
       prefill:
-        "@Digital Security Expert: erkläre Löschung, Nutzerkontrolle und Compliance-Grenzen."
+        "@Digital Security Expert: erklären Sie Löschung, Nutzerkontrolle und Compliance-Grenzen."
     },
 
     triketon: {
@@ -83,437 +83,443 @@ de: {
       body:
         "Triketon nutzt kryptografische Versiegelung mit dreifachem 256-Bit-Hashing und dynamischem Kontext-Salt. Es ermöglicht Integritätsprüfung und Herkunftsnachweis ohne Speicherung von Gesprächsinhalten.",
       prefill:
-        "@Digital Security Expert: erkläre Triketon, Integrität und Herkunftsnachweis."
+        "@Digital Security Expert: erklären Sie Triketon, Integrität und Herkunftsnachweis."
     }
   }
 },
 
+
 fr: {
   kicker: "SECURITY BY DESIGN",
-  title: "Vos couches de sécurité numérique",
+  title: "Vos couches de sécurité numériques",
   intro:
-    "Découvrez comment m-pathy soutient des interactions humain–IA sûres – émotionnellement, techniquement et cryptographiquement, sous votre contrôle.",
+    "Découvrez comment m-pathy prend en charge des interactions humain-IA sécurisées, sur les plans émotionnel, technique et cryptographique, toujours sous votre contrôle.",
 
-  cta_label: "Demander au Digital Security Expert",
+  cta_label: "Interroger l’expert en sécurité numérique",
 
   cards: {
     emotional: {
       title: "Sécurité émotionnelle",
       body:
-        "m-pathy est conçu pour réduire la surcharge cognitive et émotionnelle. Le système évite le jugement, la pression et l’escalade, et applique des limites CALM en cas de surcharge.",
+        "m-pathy est conçu pour réduire la surcharge cognitive et émotionnelle. Le système évite l’évaluation, la pression et l’escalade, et applique des limites d’interaction CALM en cas de surcharge.",
       prefill:
-        "@Digital Security Expert: explique comment m-pathy réduit la surcharge émotionnelle et cognitive."
+        "@Digital Security Expert: expliquez comment m-pathy réduit la surcharge émotionnelle et cognitive."
     },
 
     local_only: {
       title: "Conversations locales",
       body:
-        "Le contenu des conversations n’est ni conservé ni rendu accessible dans le cadre du produit. Toutes les interactions restent sous le contrôle de l’utilisateur.",
+        "Les contenus des conversations ne sont ni stockés ni rendus accessibles dans le cadre du produit. Toutes les interactions restent sous votre contrôle.",
       prefill:
-        "@Digital Security Expert: explique la gestion du contenu, le contrôle local et le stockage de conformité."
+        "@Digital Security Expert: expliquez la gestion des contenus de conversation, le contrôle local et le stockage de conformité."
     },
 
     deletion: {
       title: "Contrôle total de suppression",
       body:
-        "Vous pouvez supprimer des fils à tout moment. Les contenus supprimés sont retirés de l’environnement produit et ne peuvent être restaurés. Les artefacts de conformité ou preuves cryptographiques ne contiennent aucun contenu de conversation.",
+        "Vous pouvez supprimer des fils à tout moment. Les contenus supprimés sont retirés de l’environnement produit et ne peuvent ni être restaurés ni réutilisés. Les artefacts de conformité ou preuves cryptographiques ne contiennent aucun contenu de conversation et ne permettent aucune reconstruction.",
       prefill:
-        "@Digital Security Expert: explique la suppression et les limites de conformité."
+        "@Digital Security Expert: expliquez la suppression, le contrôle utilisateur et les limites de conformité."
     },
 
     triketon: {
-      title: "Scellage cryptographique Triketon",
+      title: "Triketon - scellement cryptographique",
       body:
-        "Triketon applique un scellage cryptographique par triple hachage 256 bits avec sel contextuel dynamique. Il permet la vérification d’intégrité et la preuve d’origine sans stocker de contenu.",
+        "Triketon utilise un scellement cryptographique avec un triple hachage 256 bits et un sel de contexte dynamique. Il permet la vérification de l’intégrité et de l’origine sans stocker de contenus de conversation.",
       prefill:
-        "@Digital Security Expert: explique Triketon et la preuve d’origine."
+        "@Digital Security Expert: expliquez Triketon, l’intégrité et la preuve d’origine."
     }
   }
 },
 
+
 es: {
   kicker: "SECURITY BY DESIGN",
-  title: "Tus capas de seguridad digital",
+  title: "Sus capas de seguridad digital",
   intro:
-    "Descubre cómo m-pathy respalda interacciones humano–IA seguras – emocional, técnica y criptográficamente, siempre bajo tu control.",
+    "Descubra cómo m-pathy respalda interacciones humano-IA seguras a nivel emocional, técnico y criptográfico, siempre bajo su control.",
 
-  cta_label: "Preguntar al Digital Security Expert",
+  cta_label: "Consultar al experto en seguridad digital",
 
   cards: {
     emotional: {
       title: "Seguridad emocional",
       body:
-        "m-pathy está diseñado para reducir la sobrecarga cognitiva y emocional. El sistema evita juicios, presión y escaladas, y aplica límites CALM cuando detecta sobrecarga.",
+        "m-pathy está diseñado para reducir la sobrecarga cognitiva y emocional. El sistema evita la evaluación, la presión y la escalada, y aplica límites de interacción CALM en caso de sobrecarga.",
       prefill:
-        "@Digital Security Expert: explica cómo m-pathy reduce la sobrecarga emocional y cognitiva."
+        "@Digital Security Expert: explique cómo m-pathy reduce la sobrecarga emocional y cognitiva."
     },
 
     local_only: {
       title: "Conversaciones locales",
       body:
-        "El contenido de las conversaciones no se conserva ni se hace accesible como parte del producto. Todas las interacciones permanecen bajo control del usuario.",
+        "Los contenidos de las conversaciones no se almacenan ni se hacen accesibles como parte del producto. Todas las interacciones permanecen bajo su control.",
       prefill:
-        "@Digital Security Expert: explica el control local y el almacenamiento por cumplimiento."
+        "@Digital Security Expert: explique la gestión de contenidos de conversación, el control local y el almacenamiento de cumplimiento."
     },
 
     deletion: {
       title: "Control total de eliminación",
       body:
-        "Puedes eliminar hilos en cualquier momento. El contenido eliminado se borra del entorno del producto y no puede restaurarse. Los artefactos de cumplimiento o pruebas criptográficas no contienen contenido de conversación.",
+        "Puede eliminar hilos en cualquier momento. Los contenidos eliminados se retiran del entorno del producto y no pueden restaurarse ni reutilizarse. Los artefactos de cumplimiento o las pruebas criptográficas no contienen contenidos de conversación ni permiten su reconstrucción.",
       prefill:
-        "@Digital Security Expert: explica la eliminación y los límites de cumplimiento."
+        "@Digital Security Expert: explique la eliminación, el control del usuario y los límites de cumplimiento."
     },
 
     triketon: {
-      title: "Sellado criptográfico Triketon",
+      title: "Triketon - sellado criptográfico",
       body:
-        "Triketon aplica sellado criptográfico con triple hash de 256 bits y sal contextual dinámica. Permite verificar integridad y origen sin almacenar contenido.",
+        "Triketon utiliza sellado criptográfico con triple hash de 256 bits y sal de contexto dinámica. Permite la verificación de integridad y procedencia sin almacenar contenidos de conversación.",
       prefill:
-        "@Digital Security Expert: explica Triketon y la prueba de origen."
+        "@Digital Security Expert: explique Triketon, la integridad y la prueba de procedencia."
     }
   }
 },
 
+
 it: {
   kicker: "SECURITY BY DESIGN",
-  title: "I tuoi livelli di sicurezza digitale",
+  title: "I Suoi livelli di sicurezza digitale",
   intro:
-    "Scopri come m-pathy supporta interazioni uomo–IA sicure – emotivamente, tecnicamente e crittograficamente, sotto il tuo controllo.",
+    "Scopra come m-pathy supporta interazioni uomo-IA sicure, sul piano emotivo, tecnico e crittografico, sempre sotto il Suo controllo.",
 
-  cta_label: "Chiedi al Digital Security Expert",
+  cta_label: "Chiedere al Digital Security Expert",
 
   cards: {
     emotional: {
       title: "Sicurezza emotiva",
       body:
-        "m-pathy è progettato per ridurre il sovraccarico cognitivo ed emotivo. Il sistema evita giudizi, pressione ed escalation e applica limiti CALM in caso di sovraccarico.",
+        "m-pathy è progettato per ridurre il sovraccarico cognitivo ed emotivo. Il sistema evita valutazioni, pressione ed escalation e applica limiti di interazione CALM in caso di sovraccarico.",
       prefill:
-        "@Digital Security Expert: spiega come m-pathy riduce il sovraccarico emotivo e cognitivo."
+        "@Digital Security Expert: spieghi come m-pathy riduce il sovraccarico emotivo e cognitivo."
     },
 
     local_only: {
       title: "Conversazioni locali",
       body:
-        "I contenuti delle conversazioni non vengono conservati né resi accessibili come parte del prodotto. Tutte le interazioni restano sotto il controllo dell’utente.",
+        "I contenuti delle conversazioni non vengono memorizzati né resi accessibili come parte del prodotto. Tutte le interazioni rimangono sotto il Suo controllo.",
       prefill:
-        "@Digital Security Expert: spiega controllo locale e archiviazione di conformità."
+        "@Digital Security Expert: spieghi la gestione dei contenuti delle conversazioni, il controllo locale e l’archiviazione per la conformità."
     },
 
     deletion: {
-      title: "Controllo totale di eliminazione",
+      title: "Controllo completo di eliminazione",
       body:
-        "Puoi eliminare i thread in qualsiasi momento. I contenuti eliminati vengono rimossi dall’ambiente del prodotto e non possono essere ripristinati. Artefatti di conformità o prove crittografiche non contengono contenuti.",
+        "Può eliminare i thread in qualsiasi momento. I contenuti eliminati vengono rimossi dall’ambiente del prodotto e non possono essere ripristinati né riutilizzati. Gli artefatti di conformità o le prove crittografiche non contengono contenuti delle conversazioni e non consentono alcuna ricostruzione.",
       prefill:
-        "@Digital Security Expert: spiega eliminazione e limiti di conformità."
+        "@Digital Security Expert: spieghi l’eliminazione, il controllo dell’utente e i limiti di conformità."
     },
 
     triketon: {
-      title: "Sigillatura crittografica Triketon",
+      title: "Triketon - sigillatura crittografica",
       body:
-        "Triketon applica sigillatura crittografica con triplo hashing a 256 bit e sale contestuale dinamico. Consente verifica d’integrità e prova d’origine senza archiviare contenuti.",
+        "Triketon utilizza la sigillatura crittografica con triplo hashing a 256 bit e un sale di contesto dinamico. Consente la verifica dell’integrità e della provenienza senza memorizzare contenuti delle conversazioni.",
       prefill:
-        "@Digital Security Expert: spiega Triketon e la prova d’origine."
+        "@Digital Security Expert: spieghi Triketon, l’integrità e la prova di provenienza."
     }
   }
 },
 
+
 pt: {
   kicker: "SECURITY BY DESIGN",
-  title: "Suas camadas de segurança digital",
+  title: "As suas camadas de segurança digital",
   intro:
-    "Veja como o m-pathy apoia interações humano–IA seguras – emocional, técnica e criptograficamente, sob seu controle.",
+    "Descubra como o m-pathy suporta interações humano-IA seguras nos níveis emocional, técnico e criptográfico, sempre sob o seu controlo.",
 
-  cta_label: "Perguntar ao Digital Security Expert",
+  cta_label: "Consultar o especialista em segurança digital",
 
   cards: {
     emotional: {
       title: "Segurança emocional",
       body:
-        "m-pathy foi projetado para reduzir sobrecarga cognitiva e emocional. O sistema evita julgamentos, pressão e escaladas e aplica limites CALM quando detecta sobrecarga.",
+        "O m-pathy foi concebido para reduzir a sobrecarga cognitiva e emocional. O sistema evita avaliação, pressão e escalada, aplicando limites de interação CALM em situações de sobrecarga.",
       prefill:
-        "@Digital Security Expert: explique como o m-pathy reduz sobrecarga emocional e cognitiva."
+        "@Digital Security Expert: explique como o m-pathy reduz a sobrecarga emocional e cognitiva."
     },
 
     local_only: {
       title: "Conversas locais",
       body:
-        "O conteúdo das conversas não é retido nem acessível como parte do produto. Todas as interações permanecem sob controle do usuário.",
+        "Os conteúdos das conversas não são armazenados nem disponibilizados como parte do produto. Todas as interações permanecem sob o seu controlo.",
       prefill:
-        "@Digital Security Expert: explique controle local e armazenamento por conformidade."
+        "@Digital Security Expert: explique a gestão dos conteúdos das conversas, o controlo local e o armazenamento para conformidade."
     },
 
     deletion: {
-      title: "Controle total de exclusão",
+      title: "Controlo total de eliminação",
       body:
-        "Você pode excluir threads a qualquer momento. Conteúdos excluídos são removidos do ambiente do produto e não podem ser restaurados. Artefatos de conformidade ou provas criptográficas não contêm conteúdo.",
+        "Pode eliminar threads a qualquer momento. Os conteúdos eliminados são removidos do ambiente do produto e não podem ser restaurados nem reutilizados. Artefactos de conformidade ou provas criptográficas não contêm conteúdos de conversas nem permitem reconstrução.",
       prefill:
-        "@Digital Security Expert: explique exclusão e limites de conformidade."
+        "@Digital Security Expert: explique a eliminação, o controlo do utilizador e os limites de conformidade."
     },
 
     triketon: {
-      title: "Selagem criptográfica Triketon",
+      title: "Triketon - selagem criptográfica",
       body:
-        "Triketon aplica selagem criptográfica com triplo hashing de 256 bits e sal contextual dinâmico. Permite verificação de integridade e prova de origem sem armazenar conteúdo.",
+        "O Triketon utiliza selagem criptográfica com tripla hash de 256 bits e sal de contexto dinâmico. Permite a verificação de integridade e proveniência sem armazenar conteúdos de conversas.",
       prefill:
-        "@Digital Security Expert: explique Triketon e prova de origem."
+        "@Digital Security Expert: explique o Triketon, a integridade e a prova de proveniência."
     }
   }
 },
 
 nl: {
   kicker: "SECURITY BY DESIGN",
-  title: "Jouw digitale beveiligingslagen",
+  title: "Uw digitale beveiligingslagen",
   intro:
-    "Ontdek hoe m-pathy veilige mens–AI-interacties ondersteunt – emotioneel, technisch en cryptografisch, onder jouw controle.",
+    "Ontdek hoe m-pathy veilige mens-AI-interacties ondersteunt op emotioneel, technisch en cryptografisch niveau, altijd onder uw controle.",
 
-  cta_label: "Vraag Digital Security Expert",
+  cta_label: "Vraag de Digital Security Expert",
 
   cards: {
     emotional: {
       title: "Emotionele veiligheid",
       body:
-        "m-pathy is ontworpen om cognitieve en emotionele overbelasting te verminderen. Het systeem vermijdt oordeel, druk en escalatie en past CALM-limieten toe bij overbelasting.",
+        "m-pathy is ontworpen om cognitieve en emotionele overbelasting te verminderen. Het systeem vermijdt beoordeling, druk en escalatie en past CALM-interactiegrenzen toe bij overbelasting.",
       prefill:
-        "@Digital Security Expert: leg uit hoe m-pathy overbelasting vermindert."
+        "@Digital Security Expert: leg uit hoe m-pathy emotionele en cognitieve overbelasting vermindert."
     },
 
     local_only: {
       title: "Lokale gesprekken",
       body:
-        "Gespreksinhoud wordt niet bewaard of toegankelijk gemaakt als onderdeel van het product. Alle interacties blijven onder gebruikerscontrole.",
+        "Gespreksinhoud wordt niet opgeslagen of toegankelijk gemaakt als onderdeel van het product. Alle interacties blijven onder uw controle.",
       prefill:
-        "@Digital Security Expert: leg lokale controle en compliance-opslag uit."
+        "@Digital Security Expert: leg het beheer van gespreksinhoud, lokale controle en compliance-opslag uit."
     },
 
     deletion: {
       title: "Volledige verwijderingscontrole",
       body:
-        "Je kunt threads op elk moment verwijderen. Verwijderde inhoud wordt uit de productomgeving gehaald en kan niet worden hersteld. Compliance-artefacten of cryptografische bewijzen bevatten geen inhoud.",
+        "U kunt threads op elk moment verwijderen. Verwijderde inhoud wordt uit de productomgeving verwijderd en kan niet worden hersteld of opnieuw worden gebruikt. Compliance-artefacten of cryptografische bewijzen bevatten geen gespreksinhoud en maken geen reconstructie mogelijk.",
       prefill:
-        "@Digital Security Expert: leg verwijdering en compliance-grenzen uit."
+        "@Digital Security Expert: leg verwijdering, gebruikerscontrole en compliance-grenzen uit."
     },
 
     triketon: {
-      title: "Triketon cryptografische verzegeling",
+      title: "Triketon - cryptografische verzegeling",
       body:
-        "Triketon past cryptografische verzegeling toe met drievoudige 256-bit hashing en dynamische context-salt. Het maakt integriteitscontrole en herkomstbewijs mogelijk zonder opslag van inhoud.",
+        "Triketon maakt gebruik van cryptografische verzegeling met drievoudige 256-bits hashing en dynamische context-salt. Het maakt integriteitscontrole en herkomstbewijs mogelijk zonder gespreksinhoud op te slaan.",
       prefill:
-        "@Digital Security Expert: leg Triketon en herkomstbewijs uit."
+        "@Digital Security Expert: leg Triketon, integriteit en herkomstbewijs uit."
     }
   }
 },
+
 
 ru: {
   kicker: "SECURITY BY DESIGN",
   title: "Ваши уровни цифровой безопасности",
   intro:
-    "Узнайте, как m-pathy поддерживает безопасные взаимодействия человек–ИИ — эмоционально, технически и криптографически, под вашим контролем.",
+    "Узнайте, как m-pathy поддерживает безопасные взаимодействия человек–ИИ на эмоциональном, техническом и криптографическом уровнях, всегда под Вашим контролем.",
 
-  cta_label: "Спросить Digital Security Expert",
+  cta_label: "Спросить эксперта по цифровой безопасности",
 
   cards: {
     emotional: {
       title: "Эмоциональная безопасность",
       body:
-        "m-pathy разработан для снижения когнитивной и эмоциональной перегрузки. Система избегает оценки, давления и эскалации и применяет ограничения CALM при перегрузке.",
+        "m-pathy разработан для снижения когнитивной и эмоциональной перегрузки. Система избегает оценки, давления и эскалации и применяет границы взаимодействия CALM при перегрузке.",
       prefill:
-        "@Digital Security Expert: объясни, как m-pathy снижает перегрузку."
+        "@Digital Security Expert: объясните, как m-pathy снижает эмоциональную и когнитивную перегрузку."
     },
 
     local_only: {
-      title: "Локальные диалоги",
+      title: "Локальные разговоры",
       body:
-        "Содержимое разговоров не хранится и не становится доступным как часть продукта. Все взаимодействия остаются под контролем пользователя.",
+        "Содержимое разговоров не хранится и не предоставляется как часть продукта. Все взаимодействия остаются под Вашим контролем.",
       prefill:
-        "@Digital Security Expert: объясни локальный контроль и хранение для соответствия."
+        "@Digital Security Expert: объясните управление содержимым разговоров, локальный контроль и хранение для соответствия требованиям."
     },
 
     deletion: {
       title: "Полный контроль удаления",
       body:
-        "Вы можете удалить диалоги в любое время. Удалённое содержимое удаляется из продуктовой среды и не подлежит восстановлению. Артефакты соответствия или криптодоказательства не содержат содержимого.",
+        "Вы можете удалять цепочки в любое время. Удаленный контент удаляется из продуктовой среды и не может быть восстановлен или повторно использован. Артефакты соответствия или криптографические доказательства не содержат содержимого разговоров и не позволяют реконструкцию.",
       prefill:
-        "@Digital Security Expert: объясни удаление и границы соответствия."
+        "@Digital Security Expert: объясните удаление, пользовательский контроль и границы соответствия."
     },
 
     triketon: {
-      title: "Криптографическое запечатывание Triketon",
+      title: "Triketon - криптографическое запечатывание",
       body:
-        "Triketon применяет криптографическое запечатывание с тройным 256-битным хешированием и динамической контекстной солью. Обеспечивает проверку целостности и происхождения без хранения содержимого.",
+        "Triketon использует криптографическое запечатывание с тройным 256-битным хешированием и динамической солью контекста. Это позволяет проверку целостности и подтверждение происхождения без хранения содержимого разговоров.",
       prefill:
-        "@Digital Security Expert: объясни Triketon и подтверждение происхождения."
+        "@Digital Security Expert: объясните Triketon, целостность и подтверждение происхождения."
     }
   }
 },
 
 zh: {
   kicker: "SECURITY BY DESIGN",
-  title: "你的数字安全层",
+  title: "您的数字安全层",
   intro:
-    "了解 m-pathy 如何支持安全的人类–AI 交互——在情感、技术和加密层面，始终由你掌控。",
+    "了解 m-pathy 如何在情感、技术和密码学层面支持安全的人机交互，始终由您掌控。",
 
-  cta_label: "询问 Digital Security Expert",
+  cta_label: "咨询数字安全专家",
 
   cards: {
     emotional: {
       title: "情感安全",
       body:
-        "m-pathy 旨在降低认知和情绪过载。系统避免评判、压力和升级，并在检测到过载时应用 CALM 限制。",
+        "m-pathy 旨在降低认知与情感过载。系统避免评判、压力与升级，并在过载时启用 CALM 交互边界。",
       prefill:
-        "@Digital Security Expert：解释 m-pathy 如何降低过载。"
+        "@Digital Security Expert: 说明 m-pathy 如何降低情感与认知过载。"
     },
 
     local_only: {
       title: "本地对话",
       body:
-        "对话内容不会作为产品的一部分被保存或访问。所有交互均由用户控制。",
+        "对话内容不会作为产品的一部分被存储或提供访问。所有交互均由您控制。",
       prefill:
-        "@Digital Security Expert：解释本地控制与合规存储。"
+        "@Digital Security Expert: 说明对话内容管理、本地控制与合规存储。"
     },
 
     deletion: {
       title: "完全删除控制",
       body:
-        "你可以随时删除对话。已删除内容会从产品环境中移除，无法恢复。合规工件或加密证明不包含对话内容。",
+        "您可随时删除对话线程。已删除内容将从产品环境中移除，且无法恢复或再次使用。合规工件或加密证明不包含对话内容，亦无法重建。",
       prefill:
-        "@Digital Security Expert：解释删除与合规边界。"
+        "@Digital Security Expert: 说明删除机制、用户控制与合规边界。"
     },
 
     triketon: {
-      title: "Triketon 加密封装",
+      title: "Triketon - 加密封存",
       body:
-        "Triketon 使用三重 256 位哈希和动态上下文盐进行加密封装，实现完整性验证和来源证明，而不存储内容。",
+        "Triketon 采用三重 256 位哈希与动态上下文盐的加密封存机制，可在不存储对话内容的情况下实现完整性校验与来源证明。",
       prefill:
-        "@Digital Security Expert：解释 Triketon 与来源证明。"
+        "@Digital Security Expert: 说明 Triketon、完整性与来源证明。"
     }
   }
 },
 
+
 ja: {
   kicker: "SECURITY BY DESIGN",
-  title: "あなたのデジタル安全レイヤー",
+  title: "デジタルセキュリティ層",
   intro:
-    "m-pathy が安全な人間–AI インタラクションをどのように支援するかをご確認ください。感情的・技術的・暗号的に、常にあなたの管理下にあります。",
+    "m-pathy が感情的・技術的・暗号的な側面で安全な人間と AI の相互作用をどのように支援するかをご確認ください。すべてはお客様の管理下にあります。",
 
-  cta_label: "Digital Security Expert に聞く",
+  cta_label: "デジタルセキュリティ専門家に相談",
 
   cards: {
     emotional: {
-      title: "感情の安全性",
+      title: "感情的安全性",
       body:
-        "m-pathy は認知的・感情的な過負荷を減らす設計です。判断や圧力、エスカレーションを避け、過負荷時に CALM 制限を適用します。",
+        "m-pathy は認知的および感情的な過負荷を軽減するよう設計されています。システムは評価、圧力、エスカレーションを避け、過負荷時には CALM インタラクション制限を適用します。",
       prefill:
-        "@Digital Security Expert: 過負荷低減の仕組みを説明してください。"
+        "@Digital Security Expert: m-pathy が感情的および認知的過負荷をどのように軽減するか説明してください。"
     },
 
     local_only: {
       title: "ローカル会話",
       body:
-        "会話内容は製品の一部として保存・参照されません。すべての対話は利用者の管理下にあります。",
+        "会話内容は製品の一部として保存またはアクセス可能にされません。すべての対話はお客様の管理下にあります。",
       prefill:
-        "@Digital Security Expert: ローカル管理とコンプライアンス保管を説明してください。"
+        "@Digital Security Expert: 会話内容の管理、ローカル制御、コンプライアンス保存について説明してください。"
     },
 
     deletion: {
       title: "完全な削除管理",
       body:
-        "スレッドはいつでも削除できます。削除された内容は製品環境から除去され、復元できません。コンプライアンス用の成果物や暗号証明に内容は含まれません。",
+        "スレッドはいつでも削除できます。削除された内容は製品環境から除去され、復元や再利用はできません。コンプライアンス成果物や暗号的証明には会話内容が含まれず、再構築も不可能です。",
       prefill:
-        "@Digital Security Expert: 削除とコンプライアンス境界を説明してください。"
+        "@Digital Security Expert: 削除、ユーザー管理、コンプライアンスの範囲について説明してください。"
     },
 
     triketon: {
-      title: "Triketon 暗号封印",
+      title: "Triketon - 暗号的封印",
       body:
-        "Triketon は三重 256 ビットハッシュと動的コンテキストソルトで暗号封印を行い、内容を保存せずに完全性と出所を検証します。",
+        "Triketon は三重 256 ビットハッシュと動的コンテキストソルトを用いた暗号的封印を採用し、会話内容を保存せずに完全性検証と出所証明を可能にします。",
       prefill:
-        "@Digital Security Expert: Triketon と出所証明を説明してください。"
+        "@Digital Security Expert: Triketon、完全性、および出所証明について説明してください。"
     }
   }
 },
 
 ko: {
   kicker: "SECURITY BY DESIGN",
-  title: "당신의 디지털 보안 레이어",
+  title: "디지털 보안 계층",
   intro:
-    "m-pathy가 안전한 인간–AI 상호작용을 어떻게 지원하는지 확인하세요. 감정적·기술적·암호학적으로 모두 사용자 통제하에 있습니다.",
+    "m-pathy가 감정적, 기술적, 암호학적 측면에서 안전한 인간-인공지능 상호작용을 어떻게 지원하는지 확인하십시오. 모든 것은 귀하의 통제 하에 있습니다.",
 
-  cta_label: "Digital Security Expert에게 문의",
+  cta_label: "디지털 보안 전문가에게 문의",
 
   cards: {
     emotional: {
-      title: "감정적 보안",
+      title: "감정적 안전",
       body:
-        "m-pathy는 인지적·감정적 과부하를 줄이도록 설계되었습니다. 판단, 압박, 에스컬레이션을 피하고 과부하 시 CALM 제한을 적용합니다.",
+        "m-pathy는 인지적 및 감정적 과부하를 줄이도록 설계되었습니다. 시스템은 평가, 압박, 격화를 피하며 과부하 시 CALM 상호작용 한계를 적용합니다.",
       prefill:
-        "@Digital Security Expert: 과부하 감소 설계를 설명해 주세요."
+        "@Digital Security Expert: m-pathy가 감정적 및 인지적 과부하를 어떻게 줄이는지 설명하십시오."
     },
 
     local_only: {
       title: "로컬 대화",
       body:
-        "대화 내용은 제품의 일부로 저장되거나 접근되지 않습니다. 모든 상호작용은 사용자 통제하에 있습니다.",
+        "대화 내용은 제품의 일부로 저장되거나 접근 가능하게 되지 않습니다. 모든 상호작용은 귀하의 통제 하에 유지됩니다.",
       prefill:
-        "@Digital Security Expert: 로컬 제어와 컴플라이언스 저장을 설명해 주세요."
+        "@Digital Security Expert: 대화 내용 관리, 로컬 제어 및 컴플라이언스 저장을 설명하십시오."
     },
 
     deletion: {
-      title: "완전 삭제 제어",
+      title: "완전한 삭제 제어",
       body:
-        "언제든지 스레드를 삭제할 수 있습니다. 삭제된 내용은 제품 환경에서 제거되며 복구되지 않습니다. 컴플라이언스 산출물이나 암호 증명에는 내용이 포함되지 않습니다.",
+        "스레드는 언제든지 삭제할 수 있습니다. 삭제된 콘텐츠는 제품 환경에서 제거되며 복구되거나 재사용될 수 없습니다. 컴플라이언스 산출물 또는 암호학적 증빙에는 대화 내용이 포함되지 않으며 재구성도 불가능합니다.",
       prefill:
-        "@Digital Security Expert: 삭제와 컴플라이언스 경계를 설명해 주세요."
+        "@Digital Security Expert: 삭제, 사용자 제어 및 컴플라이언스 한계를 설명하십시오."
     },
 
     triketon: {
-      title: "Triketon 암호 봉인",
+      title: "Triketon - 암호학적 봉인",
       body:
-        "Triketon은 삼중 256비트 해싱과 동적 컨텍스트 솔트를 사용해 암호 봉인을 적용하며, 내용 저장 없이 무결성과 출처를 검증합니다.",
+        "Triketon은 삼중 256비트 해시와 동적 컨텍스트 솔트를 사용하는 암호학적 봉인을 적용하여 대화 내용을 저장하지 않고도 무결성 검증과 출처 증명을 가능하게 합니다.",
       prefill:
-        "@Digital Security Expert: Triketon과 출처 증명을 설명해 주세요."
+        "@Digital Security Expert: Triketon, 무결성 및 출처 증명을 설명하십시오."
     }
   }
 },
 
 ar: {
   kicker: "SECURITY BY DESIGN",
-  title: "طبقات الأمان الرقمية الخاصة بك",
+  title: "طبقات الأمان الرقمية",
   intro:
-    "تعرّف كيف يدعم m-pathy تفاعلات إنسان–ذكاء اصطناعي آمنة — عاطفياً وتقنياً وتشفيرياً، دائماً تحت سيطرتك.",
+    "تعرّف على كيفية دعم m-pathy لتفاعلات آمنة بين الإنسان والذكاء الاصطناعي على المستويات العاطفية والتقنية والتشفيرية، مع بقاء التحكم الكامل بيدك.",
 
-  cta_label: "اسأل Digital Security Expert",
+  cta_label: "استشارة خبير الأمن الرقمي",
 
   cards: {
     emotional: {
       title: "الأمان العاطفي",
       body:
-        "تم تصميم m-pathy لتقليل الحمل المعرفي والعاطفي. يتجنب النظام الحكم والضغط والتصعيد ويطبق حدود CALM عند الإجهاد.",
+        "تم تصميم m-pathy للحد من الحمل المعرفي والعاطفي. يتجنب النظام التقييم والضغط والتصعيد، ويطبّق حدود تفاعل CALM عند حدوث حمل زائد.",
       prefill:
-        "@Digital Security Expert: اشرح كيفية تقليل الحمل."
+        "@Digital Security Expert: اشرح كيف يقلل m-pathy الحمل العاطفي والمعرفي."
     },
 
     local_only: {
       title: "محادثات محلية",
       body:
-        "لا يتم الاحتفاظ بمحتوى المحادثات أو إتاحته كجزء من المنتج. تبقى جميع التفاعلات تحت سيطرة المستخدم.",
+        "لا يتم تخزين محتوى المحادثات أو إتاحته كجزء من المنتج. تبقى جميع التفاعلات تحت سيطرتك.",
       prefill:
-        "@Digital Security Expert: اشرح التحكم المحلي والتخزين للامتثال."
+        "@Digital Security Expert: اشرح إدارة محتوى المحادثات والتحكم المحلي والتخزين لأغراض الامتثال."
     },
 
     deletion: {
       title: "تحكم كامل في الحذف",
       body:
-        "يمكنك حذف المحادثات في أي وقت. تتم إزالة المحتوى المحذوف من بيئة المنتج ولا يمكن استعادته. لا تحتوي artefacts الامتثال أو الأدلة المشفرة على محتوى المحادثات.",
+        "يمكنك حذف سلاسل المحادثات في أي وقت. تتم إزالة المحتوى المحذوف من بيئة المنتج ولا يمكن استعادته أو إعادة استخدامه. لا تحتوي عناصر الامتثال أو الأدلة التشفيرية على محتوى المحادثات ولا تسمح بإعادة بنائه.",
       prefill:
-        "@Digital Security Expert: اشرح الحذف وحدود الامتثال."
+        "@Digital Security Expert: اشرح آليات الحذف وتحكم المستخدم وحدود الامتثال."
     },
 
     triketon: {
-      title: "ختم تشفيري Triketon",
+      title: "Triketon - الإغلاق التشفيري",
       body:
-        "يطبق Triketon ختمًا تشفيريًا باستخدام تجزئة ثلاثية 256 بت وملح سياقي ديناميكي، مع تمكين التحقق من السلامة وإثبات المصدر دون تخزين المحتوى.",
+        "يستخدم Triketon إغلاقًا تشفيريًا مع تجزئة ثلاثية 256 بت وملح سياق ديناميكي، مما يتيح التحقق من السلامة وإثبات المصدر دون تخزين محتوى المحادثات.",
       prefill:
-        "@Digital Security Expert: اشرح Triketon وإثبات المصدر."
+        "@Digital Security Expert: اشرح Triketon والسلامة وإثبات المصدر."
     }
   }
 },
@@ -522,43 +528,44 @@ hi: {
   kicker: "SECURITY BY DESIGN",
   title: "आपकी डिजिटल सुरक्षा परतें",
   intro:
-    "देखें कि m-pathy सुरक्षित मानव–AI इंटरैक्शन को कैसे समर्थन देता है — भावनात्मक, तकनीकी और क्रिप्टोग्राफिक रूप से, आपके नियंत्रण में।",
+    "जानें कि m-pathy भावनात्मक, तकनीकी और क्रिप्टोग्राफ़िक स्तरों पर सुरक्षित मानव–एआई इंटरैक्शन का समर्थन कैसे करता है, हमेशा आपके नियंत्रण में।",
 
-  cta_label: "Digital Security Expert से पूछें",
+  cta_label: "डिजिटल सुरक्षा विशेषज्ञ से पूछें",
 
   cards: {
     emotional: {
       title: "भावनात्मक सुरक्षा",
       body:
-        "m-pathy को संज्ञानात्मक और भावनात्मक ओवरलोड कम करने के लिए डिज़ाइन किया गया है। सिस्टम जजमेंट, दबाव और एस्केलेशन से बचता है और ओवरलोड पर CALM सीमाएँ लागू करता है।",
+        "m-pathy को संज्ञानात्मक और भावनात्मक अधिभार को कम करने के लिए डिज़ाइन किया गया है। सिस्टम मूल्यांकन, दबाव और उग्रता से बचता है और अधिभार की स्थिति में CALM इंटरैक्शन सीमाएँ लागू करता है।",
       prefill:
-        "@Digital Security Expert: ओवरलोड कम करने की डिज़ाइन समझाएँ।"
+        "@Digital Security Expert: बताइए कि m-pathy भावनात्मक और संज्ञानात्मक अधिभार को कैसे कम करता है।"
     },
 
     local_only: {
-      title: "स्थानीय बातचीत",
+      title: "स्थानीय संवाद",
       body:
-        "बातचीत की सामग्री उत्पाद के हिस्से के रूप में न तो रखी जाती है और न ही सुलभ होती है। सभी इंटरैक्शन उपयोगकर्ता के नियंत्रण में रहते हैं।",
+        "संवाद की सामग्री को उत्पाद के हिस्से के रूप में संग्रहीत या सुलभ नहीं किया जाता। सभी इंटरैक्शन आपके नियंत्रण में रहते हैं।",
       prefill:
-        "@Digital Security Expert: स्थानीय नियंत्रण और अनुपालन भंडारण समझाएँ।"
+        "@Digital Security Expert: संवाद सामग्री प्रबंधन, स्थानीय नियंत्रण और अनुपालन संग्रहण को समझाइए।"
     },
 
     deletion: {
       title: "पूर्ण हटाने का नियंत्रण",
       body:
-        "आप किसी भी समय थ्रेड हटा सकते हैं। हटाई गई सामग्री उत्पाद वातावरण से हटा दी जाती है और पुनर्स्थापित नहीं की जा सकती। अनुपालन आर्टिफैक्ट या क्रिप्टोग्राफ़िक प्रमाण में सामग्री नहीं होती।",
+        "आप किसी भी समय थ्रेड्स को हटा सकते हैं। हटाई गई सामग्री को उत्पाद वातावरण से निकाल दिया जाता है और न तो पुनर्स्थापित किया जा सकता है और न ही पुनः उपयोग किया जा सकता है। अनुपालन कलाकृतियाँ या क्रिप्टोग्राफ़िक प्रमाण संवाद सामग्री नहीं रखते और पुनर्निर्माण की अनुमति नहीं देते।",
       prefill:
-        "@Digital Security Expert: हटाने और अनुपालन सीमाएँ समझाएँ।"
+        "@Digital Security Expert: हटाने, उपयोगकर्ता नियंत्रण और अनुपालन सीमाओं को समझाइए।"
     },
 
     triketon: {
-      title: "Triketon क्रिप्टोग्राफ़िक सीलिंग",
+      title: "Triketon – क्रिप्टोग्राफ़िक सीलिंग",
       body:
-        "Triketon तीन-गुना 256-बिट हैशिंग और डायनेमिक संदर्भ सॉल्ट के साथ क्रिप्टोग्राफ़िक सीलिंग लागू करता है, बिना सामग्री संग्रहीत किए अखंडता और उत्पत्ति प्रमाण देता है।",
+        "Triketon त्रि-स्तरीय 256-बिट हैशिंग और गतिशील कॉन्टेक्स्ट सॉल्ट के साथ क्रिप्टोग्राफ़िक सीलिंग का उपयोग करता है। यह संवाद सामग्री को संग्रहीत किए बिना अखंडता जाँच और स्रोत प्रमाण सक्षम करता है।",
       prefill:
-        "@Digital Security Expert: Triketon और उत्पत्ति प्रमाण समझाएँ।"
+        "@Digital Security Expert: Triketon, अखंडता और स्रोत प्रमाण को समझाइए।"
     }
   }
-}
+},
+
 
 };

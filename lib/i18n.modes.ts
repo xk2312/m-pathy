@@ -116,14 +116,14 @@ export const modes15 = {
 
 
   /* ───────────────── DE ───────────────── */
- de: {
+de: {
   modes: {
     kicker: "15 Modi von m-pathy",
-    title: "Deine Arbeitsmodi",
+    title: "Ihre Arbeitsmodi",
     subtitle:
-      "Wähle einen Modus, um festzulegen, wie m-pathy sein Denken strukturiert, oder erlaube FLOW, die Konfigurationen dynamisch anzupassen. Alle Modi sind im Hauptchat verfügbar.",
+      "Wählen Sie einen Modus, um festzulegen, wie m-pathy sein Denken strukturiert, oder erlauben Sie FLOW, Konfigurationen dynamisch anzupassen. Alle Modi sind im Hauptchat verfügbar.",
     dropdown: {
-      label: "Modus wählen",
+      label: "Modus auswählen",
     },
     group: {
       core: "Kern",
@@ -136,7 +136,7 @@ export const modes15 = {
       name: "ONBOARDING",
       label: "Initiale Einrichtung",
       description:
-        "Legt Kontext, Grenzen und Betriebsparameter fest, bevor fokussierte professionelle Arbeit beginnt.",
+        "Etabliert Kontext, Grenzen und Betriebsparameter, bevor fokussierte professionelle Arbeit beginnt.",
     },
     flow: {
       name: "FLOW",
@@ -166,7 +166,7 @@ export const modes15 = {
       name: "WISDOM",
       label: "Langfristige Perspektive",
       description:
-        "Verbindet Erkenntnisse über Domänen hinweg, zeigt Abwägungen auf und betrachtet langfristige Auswirkungen.",
+        "Verbindet Erkenntnisse über Domänen hinweg, zeigt Abwägungen auf und berücksichtigt langfristige Auswirkungen.",
     },
     play: {
       name: "PLAY",
@@ -190,7 +190,7 @@ export const modes15 = {
       name: "EMPATHY",
       label: "Perspektivenbewusstsein",
       description:
-        "Klärt Stakeholder-Perspektiven und menschliche Auswirkungen ohne emotionale Autorität zu beanspruchen.",
+        "Klärt Stakeholder-Perspektiven und menschliche Auswirkungen ohne Anspruch auf emotionale Autorität.",
     },
     love: {
       name: "LOVE",
@@ -202,7 +202,7 @@ export const modes15 = {
       name: "JOY",
       label: "Positive Rahmung",
       description:
-        "Wahrt einen ermutigenden und konstruktiven Ton bei gleichzeitiger Präzision und Aufgabenfokus.",
+        "Wahrt einen konstruktiven und zugewandten Ton bei gleichzeitiger Präzision und Aufgabenfokus.",
     },
     calm: {
       name: "CALM",
@@ -214,24 +214,25 @@ export const modes15 = {
       name: "PEACE",
       label: "Deeskalation",
       description:
-        "Unterstützt Deeskalation und Reset, wenn die Interaktionsintensität produktive Grenzen überschreitet.",
+        "Unterstützt Deeskalation und Neustart, wenn die Interaktionsintensität produktive Grenzen überschreitet.",
     },
     council: {
       name: "COUNCIL13",
       label: "Mehrperspektivische Deliberation",
       description:
-        "Strukturiert parallele Sichtweisen und führt sie zu einem begründeten Gesamtergebnis zusammen.",
+        "Strukturiert parallele Sichtweisen und führt diese zu einem begründeten Gesamtergebnis zusammen.",
     },
   },
 },
+
 
   /* ───────────────── FR ───────────────── */
   fr: {
   modes: {
     kicker: "15 modes par m-pathy",
-    title: "Tes modes de fonctionnement",
+    title: "Vos modes de fonctionnement",
     subtitle:
-      "Sélectionne un mode pour définir comment m-pathy structure son raisonnement, ou laisse FLOW ajuster les configurations de manière dynamique. Tous les modes sont disponibles dans le chat principal.",
+      "Sélectionnez un mode pour définir comment m-pathy structure son raisonnement, ou autorisez FLOW à ajuster les configurations de manière dynamique. Tous les modes sont disponibles dans le chat principal.",
     dropdown: {
       label: "Choisir un mode",
     },
@@ -252,11 +253,11 @@ export const modes15 = {
       name: "FLOW",
       label: "Configuration automatique",
       description:
-        "Ajuste dynamiquement les configurations internes de raisonnement en fonction des exigences de la tâche, du contexte et des signaux d’interaction.",
+        "Ajuste dynamiquement les configurations internes de raisonnement selon les exigences de la tâche, le contexte et les signaux d’interaction.",
     },
     build: {
       name: "BUILD",
-      label: "Focus d’exécution",
+      label: "Orientation exécution",
       description:
         "Priorise des livrables concrets tels que spécifications, documentation, code, brouillons structurés et listes d’actions.",
     },
@@ -264,17 +265,17 @@ export const modes15 = {
       name: "RESEARCH",
       label: "Profondeur analytique",
       description:
-        "Structure des sujets complexes, évalue les sources et soutient une investigation et une analyse systématiques.",
+        "Structure des sujets complexes, évalue les sources et soutient une recherche et une analyse systématiques.",
     },
     truth: {
       name: "TRUTH",
       label: "Test des contraintes",
       description:
-        "Remet en question les hypothèses, teste la faisabilité et aligne les idées avec les contraintes et preuves du monde réel.",
+        "Remet en question les hypothèses, évalue la faisabilité et aligne les idées sur les contraintes et preuves du monde réel.",
     },
     wisdom: {
       name: "WISDOM",
-      label: "Perspective de long terme",
+      label: "Perspective long terme",
       description:
         "Intègre des connaissances entre domaines, met en évidence les arbitrages et considère les implications à long terme.",
     },
@@ -282,7 +283,7 @@ export const modes15 = {
       name: "PLAY",
       label: "Idéation exploratoire",
       description:
-        "Soutient l’exploration libre d’idées, la nomination et les variations conceptuelles sans engagement opérationnel.",
+        "Soutient l’exploration d’idées sans contrainte, la nomination et les variations conceptuelles sans engagement opérationnel.",
     },
     vision: {
       name: "VISION",
@@ -292,15 +293,15 @@ export const modes15 = {
     },
     oracle: {
       name: "ORACLE",
-      label: "Exploration des schémas",
+      label: "Exploration des motifs",
       description:
-        "Examine des schémas, des options et des trajectoires sans prétendre à la prédiction ou à la certitude.",
+        "Examine des motifs, options et trajectoires sans revendiquer de prédiction ni de certitude.",
     },
     empathy: {
       name: "EMPATHY",
       label: "Conscience des perspectives",
       description:
-        "Clarifie les perspectives des parties prenantes et l’impact humain sans assumer une autorité émotionnelle.",
+        "Clarifie les perspectives des parties prenantes et l’impact humain sans présumer d’autorité émotionnelle.",
     },
     love: {
       name: "LOVE",
@@ -310,7 +311,7 @@ export const modes15 = {
     },
     joy: {
       name: "JOY",
-      label: "Cadrage positif",
+      label: "Cadre positif",
       description:
         "Maintient un ton encourageant et constructif tout en préservant la précision et le focus sur la tâche.",
     },
@@ -318,13 +319,13 @@ export const modes15 = {
       name: "CALM",
       label: "Régulation de charge",
       description:
-        "Réduit la complexité, simplifie les réponses et stabilise l’interaction en cas de forte charge cognitive.",
+        "Réduit la complexité, simplifie les réponses et stabilise l’interaction en cas de charge cognitive élevée.",
     },
     peace: {
       name: "PEACE",
       label: "Désescalade",
       description:
-        "Soutient la désescalade et la remise à zéro lorsque l’intensité de l’interaction dépasse des niveaux productifs.",
+        "Soutient la désescalade et la réinitialisation lorsque l’intensité de l’interaction dépasse les seuils productifs.",
     },
     council: {
       name: "COUNCIL13",
@@ -336,13 +337,14 @@ export const modes15 = {
 },
 
 
+
   /* ───────────────── ES ───────────────── */
   es: {
   modes: {
-    kicker: "15 modos de m-pathy",
-    title: "Tus modos de operación",
+    kicker: "15 modos por m-pathy",
+    title: "Sus modos de trabajo",
     subtitle:
-      "Selecciona un modo para definir cómo m-pathy estructura su razonamiento, o permite que FLOW ajuste las configuraciones de forma dinámica. Todos los modos están disponibles en el chat principal.",
+      "Seleccione un modo para definir cómo m-pathy estructura su razonamiento, o permita que FLOW ajuste las configuraciones de forma dinámica. Todos los modos están disponibles en el chat principal.",
     dropdown: {
       label: "Elegir modo",
     },
@@ -405,7 +407,7 @@ export const modes15 = {
       name: "ORACLE",
       label: "Exploración de patrones",
       description:
-        "Examina patrones, opciones y trayectorias sin pretender predicción ni certeza.",
+        "Examina patrones, opciones y trayectorias sin afirmar predicción ni certeza.",
     },
     empathy: {
       name: "EMPATHY",
@@ -421,7 +423,7 @@ export const modes15 = {
     },
     joy: {
       name: "JOY",
-      label: "Encuadre positivo",
+      label: "Enfoque positivo",
       description:
         "Mantiene un tono alentador y constructivo preservando la precisión y el enfoque en la tarea.",
     },
@@ -429,19 +431,19 @@ export const modes15 = {
       name: "CALM",
       label: "Regulación de carga",
       description:
-        "Reduce la complejidad, simplifica las respuestas y estabiliza la interacción bajo alta carga cognitiva.",
+        "Reduce la complejidad, simplifica las respuestas y estabiliza la interacción ante una alta carga cognitiva.",
     },
     peace: {
       name: "PEACE",
       label: "Desescalada",
       description:
-        "Apoya la desescalada y el reinicio cuando la intensidad de la interacción supera niveles productivos.",
+        "Apoya la desescalada y el reinicio cuando la intensidad de la interacción supera los niveles productivos.",
     },
     council: {
       name: "COUNCIL13",
       label: "Deliberación multiperspectiva",
       description:
-        "Estructura puntos de vista paralelos y los converge en un resultado único y fundamentado.",
+        "Estructura puntos de vista paralelos y los converge en un resultado único y razonado.",
     },
   },
 },
@@ -450,14 +452,14 @@ export const modes15 = {
   it: {
   modes: {
     kicker: "15 modalità di m-pathy",
-    title: "Le tue modalità operative",
+    title: "Le Sue modalità operative",
     subtitle:
-      "Seleziona una modalità per definire come m-pathy struttura il proprio ragionamento, oppure consenti a FLOW di adattare dinamicamente le configurazioni. Tutte le modalità sono disponibili nella chat principale.",
+      "Selezioni una modalità per definire come m-pathy struttura il proprio ragionamento, oppure consenta a FLOW di adattare dinamicamente le configurazioni. Tutte le modalità sono disponibili nella chat principale.",
     dropdown: {
-      label: "Scegli una modalità",
+      label: "Selezionare una modalità",
     },
     group: {
-      core: "Core",
+      core: "Nucleo",
       mind: "Intelletto",
       creator: "Creatore",
       heart: "Cuore",
@@ -467,7 +469,7 @@ export const modes15 = {
       name: "ONBOARDING",
       label: "Configurazione iniziale",
       description:
-        "Stabilisce contesto, confini e parametri operativi prima dell’avvio di un lavoro professionale mirato.",
+        "Stabilisce contesto, limiti e parametri operativi prima dell’avvio del lavoro professionale mirato.",
     },
     flow: {
       name: "FLOW",
@@ -477,25 +479,25 @@ export const modes15 = {
     },
     build: {
       name: "BUILD",
-      label: "Focus sull’esecuzione",
+      label: "Focus di esecuzione",
       description:
-        "Dà priorità a output concreti come specifiche, documentazione, codice, bozze strutturate e liste di azioni.",
+        "Dà priorità a risultati concreti come specifiche, documentazione, codice, bozze strutturate ed elenchi di azioni.",
     },
     research: {
       name: "RESEARCH",
       label: "Profondità analitica",
       description:
-        "Struttura temi complessi, valuta le fonti e supporta indagini e analisi sistematiche.",
+        "Struttura temi complessi, valuta le fonti e supporta la ricerca e l’analisi sistematiche.",
     },
     truth: {
       name: "TRUTH",
       label: "Verifica dei vincoli",
       description:
-        "Mette in discussione le assunzioni, valuta la fattibilità e allinea le idee a vincoli ed evidenze reali.",
+        "Mette in discussione le ipotesi, valuta la fattibilità e allinea le idee ai vincoli e alle evidenze del mondo reale.",
     },
     wisdom: {
       name: "WISDOM",
-      label: "Prospettiva di lungo periodo",
+      label: "Prospettiva a lungo termine",
       description:
         "Integra conoscenze tra domini, evidenzia i compromessi e considera le implicazioni a lungo termine.",
     },
@@ -503,7 +505,7 @@ export const modes15 = {
       name: "PLAY",
       label: "Ideazione esplorativa",
       description:
-        "Supporta l’esplorazione libera di idee, denominazioni e variazioni concettuali senza impegno operativo.",
+        "Supporta l’esplorazione libera delle idee, la denominazione e le variazioni concettuali senza impegno operativo.",
     },
     vision: {
       name: "VISION",
@@ -513,9 +515,9 @@ export const modes15 = {
     },
     oracle: {
       name: "ORACLE",
-      label: "Esplorazione dei pattern",
+      label: "Analisi dei pattern",
       description:
-        "Analizza pattern, opzioni e traiettorie senza rivendicare capacità predittive o certezze.",
+        "Esamina pattern, opzioni e traiettorie senza rivendicare previsioni o certezze.",
     },
     empathy: {
       name: "EMPATHY",
@@ -527,7 +529,7 @@ export const modes15 = {
       name: "LOVE",
       label: "Continuità dei valori",
       description:
-        "Mantiene visibili priorità dichiarate, intenzioni di lungo periodo e valori stabiliti durante lavori prolungati.",
+        "Mantiene visibili le priorità dichiarate, l’intento a lungo termine e i valori stabiliti durante lavori prolungati.",
     },
     joy: {
       name: "JOY",
@@ -539,33 +541,34 @@ export const modes15 = {
       name: "CALM",
       label: "Regolazione del carico",
       description:
-        "Riduce la complessità, semplifica le risposte e stabilizza l’interazione in presenza di elevato carico cognitivo.",
+        "Riduce la complessità, semplifica le risposte e stabilizza l’interazione in presenza di un elevato carico cognitivo.",
     },
     peace: {
       name: "PEACE",
       label: "De-escalation",
       description:
-        "Supporta la de-escalation e il reset quando l’intensità dell’interazione supera livelli produttivi.",
+        "Supporta la de-escalation e il ripristino quando l’intensità dell’interazione supera livelli produttivi.",
     },
     council: {
       name: "COUNCIL13",
       label: "Deliberazione multiprospettica",
       description:
-        "Struttura punti di vista paralleli e li converge in un risultato unico e motivato.",
+        "Struttura punti di vista paralleli e li converge in un unico risultato motivato.",
     },
   },
 },
 
 
+
   /* ───────────────── PT ───────────────── */
   pt: {
   modes: {
-    kicker: "15 modos da m-pathy",
-    title: "Seus modos operacionais",
+    kicker: "15 modos por m-pathy",
+    title: "Os seus modos de trabalho",
     subtitle:
-      "Selecione um modo para definir como a m-pathy estrutura seu raciocínio, ou permita que o FLOW ajuste as configurações dinamicamente. Todos os modos estão disponíveis no chat principal.",
+      "Selecione um modo para definir como o m-pathy estrutura o seu raciocínio ou permita que o FLOW ajuste as configurações dinamicamente. Todos os modos estão disponíveis no chat principal.",
     dropdown: {
-      label: "Escolher modo",
+      label: "Selecionar modo",
     },
     group: {
       core: "Núcleo",
@@ -578,13 +581,13 @@ export const modes15 = {
       name: "ONBOARDING",
       label: "Configuração inicial",
       description:
-        "Estabelece contexto, limites e parâmetros operacionais antes do início de um trabalho profissional focado.",
+        "Define contexto, limites e parâmetros operacionais antes do início do trabalho profissional focado.",
     },
     flow: {
       name: "FLOW",
       label: "Configuração automática",
       description:
-        "Ajusta dinamicamente as configurações internas de raciocínio conforme as exigências da tarefa, o contexto e os sinais de interação.",
+        "Ajusta dinamicamente as configurações internas de raciocínio de acordo com as exigências da tarefa, o contexto e os sinais de interação.",
     },
     build: {
       name: "BUILD",
@@ -596,73 +599,73 @@ export const modes15 = {
       name: "RESEARCH",
       label: "Profundidade analítica",
       description:
-        "Estrutura temas complexos, avalia fontes e apoia investigação e análise sistemáticas.",
+        "Estrutura temas complexos, avalia fontes e apoia a investigação e análise sistemáticas.",
     },
     truth: {
       name: "TRUTH",
       label: "Teste de restrições",
       description:
-        "Questiona suposições, avalia a viabilidade e alinha ideias a restrições e evidências do mundo real.",
+        "Questiona pressupostos, avalia a viabilidade e alinha ideias com restrições e evidências do mundo real.",
     },
     wisdom: {
       name: "WISDOM",
-      label: "Perspectiva de longo prazo",
+      label: "Perspetiva de longo prazo",
       description:
-        "Integra insights entre domínios, destaca compensações e considera implicações de longo prazo.",
+        "Integra conhecimentos entre domínios, destaca compromissos e considera implicações de longo prazo.",
     },
     play: {
       name: "PLAY",
       label: "Ideação exploratória",
       description:
-        "Apoia a exploração livre de ideias, nomeações e variações conceituais sem compromisso operacional.",
+        "Apoia a exploração livre de ideias, a nomeação e variações conceptuais sem compromisso operacional.",
     },
     vision: {
       name: "VISION",
       label: "Prospeção estratégica",
       description:
-        "Explora cenários futuros, direções estratégicas e modelos conceituais sob incerteza.",
+        "Explora cenários futuros, direções estratégicas e modelos conceptuais sob incerteza.",
     },
     oracle: {
       name: "ORACLE",
       label: "Exploração de padrões",
       description:
-        "Examina padrões, opções e trajetórias sem alegar previsão ou certeza.",
+        "Examina padrões, opções e trajetórias sem reivindicar previsão ou certeza.",
     },
     empathy: {
       name: "EMPATHY",
-      label: "Consciência de perspectivas",
+      label: "Consciência de perspetivas",
       description:
-        "Esclarece perspectivas de stakeholders e impacto humano sem assumir autoridade emocional.",
+        "Clarifica perspetivas de partes interessadas e impacto humano sem assumir autoridade emocional.",
     },
     love: {
       name: "LOVE",
       label: "Continuidade de valores",
       description:
-        "Mantém visíveis prioridades declaradas, intenção de longo prazo e valores estabelecidos durante trabalhos prolongados.",
+        "Mantém visíveis as prioridades declaradas, a intenção de longo prazo e os valores estabelecidos durante trabalhos prolongados.",
     },
     joy: {
       name: "JOY",
       label: "Enquadramento positivo",
       description:
-        "Mantém um tom encorajador e construtivo preservando precisão e foco na tarefa.",
+        "Mantém um tom encorajador e construtivo, preservando precisão e foco na tarefa.",
     },
     calm: {
       name: "CALM",
       label: "Regulação de carga",
       description:
-        "Reduz a complexidade, simplifica respostas e estabiliza a interação sob alta carga cognitiva.",
+        "Reduz a complexidade, simplifica respostas e estabiliza a interação sob elevada carga cognitiva.",
     },
     peace: {
       name: "PEACE",
-      label: "Desescalada",
+      label: "Desescalonamento",
       description:
-        "Apoia a desescalada e o reset quando a intensidade da interação excede níveis produtivos.",
+        "Apoia o desescalonamento e a reposição quando a intensidade da interação excede níveis produtivos.",
     },
     council: {
       name: "COUNCIL13",
-      label: "Deliberação multiperspectiva",
+      label: "Deliberação multiperspetiva",
       description:
-        "Estrutura pontos de vista paralelos e os converge em um resultado único e fundamentado.",
+        "Estrutura pontos de vista paralelos e converge-os num resultado único e fundamentado.",
     },
   },
 },
@@ -672,24 +675,24 @@ export const modes15 = {
   nl: {
   modes: {
     kicker: "15 modi van m-pathy",
-    title: "Je werkmodi",
+    title: "Uw werkmodi",
     subtitle:
-      "Selecteer een modus om te bepalen hoe m-pathy zijn redenering structureert, of laat FLOW configuraties dynamisch aanpassen. Alle modi zijn beschikbaar in de hoofdchat.",
+      "Selecteer een modus om te bepalen hoe m-pathy zijn redenering structureert, of sta FLOW toe configuraties dynamisch aan te passen. Alle modi zijn beschikbaar in de hoofdchat.",
     dropdown: {
-      label: "Kies een modus",
+      label: "Modus selecteren",
     },
     group: {
       core: "Kern",
       mind: "Intellect",
       creator: "Creator",
       heart: "Hart",
-      spirit: "Spirit",
+      spirit: "Geest",
     },
     onboarding: {
       name: "ONBOARDING",
       label: "Initiële configuratie",
       description:
-        "Stelt context, grenzen en operationele parameters vast voordat gerichte professionele werkzaamheden beginnen.",
+        "Stelt context, grenzen en operationele parameters vast voordat gericht professioneel werk begint.",
     },
     flow: {
       name: "FLOW",
@@ -701,7 +704,7 @@ export const modes15 = {
       name: "BUILD",
       label: "Uitvoeringsfocus",
       description:
-        "Geeft prioriteit aan concrete output zoals specificaties, documentatie, code, gestructureerde concepten en actielijsten.",
+        "Geeft prioriteit aan concrete resultaten zoals specificaties, documentatie, code, gestructureerde concepten en actielijsten.",
     },
     research: {
       name: "RESEARCH",
@@ -713,25 +716,25 @@ export const modes15 = {
       name: "TRUTH",
       label: "Beperkingen toetsen",
       description:
-        "Stelt aannames ter discussie, test haalbaarheid en brengt ideeën in lijn met reële beperkingen en bewijs.",
+        "Stelt aannames ter discussie, toetst haalbaarheid en stemt ideeën af op reële beperkingen en bewijs.",
     },
     wisdom: {
       name: "WISDOM",
       label: "Langetermijnperspectief",
       description:
-        "Integreert inzichten over domeinen heen, benadrukt afwegingen en beschouwt langetermijnimplicaties.",
+        "Integreert inzichten over domeinen heen, belicht afwegingen en houdt rekening met langetermijngevolgen.",
     },
     play: {
       name: "PLAY",
-      label: "Exploratieve ideevorming",
+      label: "Exploratieve ideatie",
       description:
-        "Ondersteunt vrije idee-exploratie, benaming en conceptuele variaties zonder operationele verplichting.",
+        "Ondersteunt vrije ideeënverkenning, benaming en conceptuele variaties zonder operationele verplichting.",
     },
     vision: {
       name: "VISION",
       label: "Strategische vooruitblik",
       description:
-        "Verkent toekomstscenario’s, strategische richtingen en conceptuele modellen onder onzekerheid.",
+        "Verkent toekomstige scenario’s, strategische richtingen en conceptuele modellen onder onzekerheid.",
     },
     oracle: {
       name: "ORACLE",
@@ -743,13 +746,13 @@ export const modes15 = {
       name: "EMPATHY",
       label: "Perspectiefbewustzijn",
       description:
-        "Verheldert stakeholderperspectieven en menselijke impact zonder emotionele autoriteit te claimen.",
+        "Verheldert perspectieven van stakeholders en menselijke impact zonder emotionele autoriteit te claimen.",
     },
     love: {
       name: "LOVE",
-      label: "Waardecontinuïteit",
+      label: "Waardencontinuïteit",
       description:
-        "Houdt gedeclareerde prioriteiten, langetermijnintenties en vastgestelde waarden zichtbaar tijdens langdurig werk.",
+        "Houdt gedeclareerde prioriteiten, langetermijnintentie en vastgelegde waarden zichtbaar tijdens langdurig werk.",
     },
     joy: {
       name: "JOY",
@@ -767,13 +770,13 @@ export const modes15 = {
       name: "PEACE",
       label: "De-escalatie",
       description:
-        "Ondersteunt de-escalatie en reset wanneer de interactie-intensiteit productieve niveaus overschrijdt.",
+        "Ondersteunt de-escalatie en herstart wanneer de interactie-intensiteit productieve grenzen overschrijdt.",
     },
     council: {
       name: "COUNCIL13",
-      label: "Meervoudige perspectiefdeliberatie",
+      label: "Multiperspectieve deliberatie",
       description:
-        "Structureert parallelle standpunten en brengt ze samen tot één onderbouwd resultaat.",
+        "Structureert parallelle standpunten en brengt deze samen tot één onderbouwd resultaat.",
     },
   },
 },
@@ -782,10 +785,10 @@ export const modes15 = {
   /* ───────────────── RU ───────────────── */
   ru: {
   modes: {
-    kicker: "15 режимов m-pathy",
-    title: "Ваши режимы работы",
+    kicker: "15 режимов от m-pathy",
+    title: "Ваши рабочие режимы",
     subtitle:
-      "Выберите режим, чтобы определить, как m-pathy структурирует своё рассуждение, или позвольте FLOW динамически адаптировать конфигурации. Все режимы доступны в основном чате.",
+      "Выберите режим, чтобы определить, как m-pathy структурирует рассуждения, или разрешите FLOW динамически настраивать конфигурации. Все режимы доступны в основном чате.",
     dropdown: {
       label: "Выбрать режим",
     },
@@ -800,19 +803,19 @@ export const modes15 = {
       name: "ONBOARDING",
       label: "Начальная настройка",
       description:
-        "Задаёт контекст, границы и операционные параметры перед началом целенаправленной профессиональной работы.",
+        "Задает контекст, границы и операционные параметры перед началом целенаправленной профессиональной работы.",
     },
     flow: {
       name: "FLOW",
       label: "Автоматическая конфигурация",
       description:
-        "Динамически настраивает внутренние конфигурации рассуждения в зависимости от требований задачи, контекста и сигналов взаимодействия.",
+        "Динамически настраивает внутренние конфигурации рассуждения в зависимости от задачи, контекста и сигналов взаимодействия.",
     },
     build: {
       name: "BUILD",
-      label: "Фокус на исполнении",
+      label: "Фокус на выполнении",
       description:
-        "Отдаёт приоритет конкретным результатам, таким как спецификации, документация, код, структурированные черновики и списки действий.",
+        "Отдает приоритет конкретным результатам, таким как спецификации, документация, код, структурированные черновики и списки действий.",
     },
     research: {
       name: "RESEARCH",
@@ -824,13 +827,13 @@ export const modes15 = {
       name: "TRUTH",
       label: "Проверка ограничений",
       description:
-        "Ставит под сомнение предположения, проверяет реализуемость и соотносит идеи с реальными ограничениями и доказательствами.",
+        "Ставит под сомнение предположения, оценивает реализуемость и соотносит идеи с реальными ограничениями и доказательствами.",
     },
     wisdom: {
       name: "WISDOM",
       label: "Долгосрочная перспектива",
       description:
-        "Интегрирует знания между доменами, подчёркивает компромиссы и учитывает долгосрочные последствия.",
+        "Интегрирует знания между доменами, выделяет компромиссы и учитывает долгосрочные последствия.",
     },
     play: {
       name: "PLAY",
@@ -840,33 +843,33 @@ export const modes15 = {
     },
     vision: {
       name: "VISION",
-      label: "Стратегическое видение",
+      label: "Стратегическое предвидение",
       description:
-        "Исследует будущие сценарии, стратегические направления и концептуальные модели в условиях неопределённости.",
+        "Исследует будущие сценарии, стратегические направления и концептуальные модели в условиях неопределенности.",
     },
     oracle: {
       name: "ORACLE",
-      label: "Исследование паттернов",
+      label: "Анализ паттернов",
       description:
-        "Анализирует паттерны, варианты и траектории без заявлений о прогнозировании или уверенности.",
+        "Изучает паттерны, варианты и траектории без заявления о прогнозе или уверенности.",
     },
     empathy: {
       name: "EMPATHY",
       label: "Осознание перспектив",
       description:
-        "Проясняет перспективы заинтересованных сторон и человеческое влияние без присвоения эмоциональной авторитетности.",
+        "Проясняет перспективы заинтересованных сторон и человеческое влияние без притязаний на эмоциональный авторитет.",
     },
     love: {
       name: "LOVE",
       label: "Непрерывность ценностей",
       description:
-        "Сохраняет видимость заявленных приоритетов, долгосрочных намерений и установленных ценностей в ходе продолжительной работы.",
+        "Сохраняет видимость заявленных приоритетов, долгосрочного намерения и установленных ценностей при длительной работе.",
     },
     joy: {
       name: "JOY",
-      label: "Позитивное обрамление",
+      label: "Позитивное оформление",
       description:
-        "Поддерживает ободряющий и конструктивный тон при сохранении точности и фокуса на задаче.",
+        "Поддерживает поощряющий и конструктивный тон при сохранении точности и фокуса на задаче.",
     },
     calm: {
       name: "CALM",
@@ -890,22 +893,23 @@ export const modes15 = {
 },
 
 
+
   /* ───────────────── ZH (简体) ───────────────── */
   zh: {
   modes: {
     kicker: "m-pathy 的 15 种模式",
-    title: "你的工作模式",
+    title: "您的工作模式",
     subtitle:
-      "选择一种模式以定义 m-pathy 如何构建其推理方式，或允许 FLOW 根据上下文动态调整配置。所有模式均可在主聊天中使用。",
+      "选择一种模式以定义 m-pathy 如何结构化其推理，或允许 FLOW 动态调整配置。所有模式均可在主聊天中使用。",
     dropdown: {
       label: "选择模式",
     },
     group: {
       core: "核心",
-      mind: "理性",
-      creator: "创造",
+      mind: "智识",
+      creator: "创作",
       heart: "关怀",
-      spirit: "调节",
+      spirit: "精神",
     },
     onboarding: {
       name: "ONBOARDING",
@@ -917,196 +921,197 @@ export const modes15 = {
       name: "FLOW",
       label: "自动配置",
       description:
-        "根据任务需求、上下文和交互信号动态调整内部推理配置。",
+        "根据任务需求、上下文和交互信号，动态调整内部推理配置。",
     },
     build: {
       name: "BUILD",
       label: "执行聚焦",
       description:
-        "优先生成具体成果，如规格说明、文档、代码、结构化草案和行动清单。",
+        "优先产出具体成果，如规范、文档、代码、结构化草案和行动清单。",
     },
     research: {
       name: "RESEARCH",
       label: "分析深度",
       description:
-        "结构化复杂主题，评估信息来源，并支持系统化研究与分析。",
+        "结构化复杂主题，评估来源，并支持系统化研究与分析。",
     },
     truth: {
       name: "TRUTH",
       label: "约束检验",
       description:
-        "质疑假设，验证可行性，并使想法与现实约束和证据保持一致。",
+        "质疑假设，评估可行性，并使想法与现实约束和证据对齐。",
     },
     wisdom: {
       name: "WISDOM",
       label: "长期视角",
       description:
-        "整合跨领域洞察，强调权衡关系，并考虑长期影响。",
+        "跨领域整合洞见，强调权衡，并考量长期影响。",
     },
     play: {
       name: "PLAY",
       label: "探索式构想",
       description:
-        "支持自由的想法探索、命名和概念变化，不涉及操作性承诺。",
+        "在无操作性承诺的情况下，支持自由构想、命名与概念变体。",
     },
     vision: {
       name: "VISION",
       label: "战略前瞻",
       description:
-        "在不确定条件下探索未来情景、战略方向和概念模型。",
+        "在不确定性下探索未来情景、战略方向和概念模型。",
     },
     oracle: {
       name: "ORACLE",
       label: "模式探索",
       description:
-        "分析模式、选项和发展路径，而不声称预测或确定性。",
+        "审视模式、选项和路径，不主张预测或确定性。",
     },
     empathy: {
       name: "EMPATHY",
-      label: "视角认知",
+      label: "视角意识",
       description:
-        "澄清相关方视角及人类影响，而不主张情感权威。",
+        "澄清利益相关者视角与人类影响，不主张情感权威。",
     },
     love: {
       name: "LOVE",
       label: "价值连续性",
       description:
-        "在长期工作过程中保持对既定优先事项、长期意图和价值的关注。",
+        "在长期工作中保持既定优先级、长期意图与声明价值的可见性。",
     },
     joy: {
       name: "JOY",
-      label: "积极框定",
+      label: "积极取向",
       description:
-        "在保持精确性和任务聚焦的同时，维持鼓励性和建设性的语气。",
+        "在保持精确与任务聚焦的同时，维持鼓励性与建设性的语气。",
     },
     calm: {
       name: "CALM",
       label: "负载调节",
       description:
-        "降低复杂性，简化回应，并在高认知负载下稳定交互。",
+        "降低复杂度，简化回应，并在高认知负载下稳定交互。",
     },
     peace: {
       name: "PEACE",
-      label: "去升级",
+      label: "降级处理",
       description:
-        "当交互强度超过生产性水平时，支持去升级和重置。",
+        "当交互强度超过有效水平时，支持降级与重置。",
     },
     council: {
       name: "COUNCIL13",
-      label: "多视角协商",
+      label: "多视角审议",
       description:
-        "结构化并行观点，并将其汇聚为单一且有依据的结果。",
+        "结构化并行观点，并将其汇聚为单一、理性结论。",
     },
   },
 },
 
 
+
   /* ───────────────── JA ───────────────── */
   ja: {
   modes: {
-    kicker: "m-pathy の 15 モード",
-    title: "あなたのオペレーションモード",
+    kicker: "m-pathy による 15 のモード",
+    title: "作業モード",
     subtitle:
-      "モードを選択して m-pathy の推論構造を定義するか、FLOW による動的な構成調整を許可してください。すべてのモードはメインチャットで利用できます。",
+      "モードを選択して、m-pathy がどのように推論を構造化するかを定義するか、FLOW による動的な設定調整を許可してください。すべてのモードはメインチャットで利用できます。",
     dropdown: {
       label: "モードを選択",
     },
     group: {
       core: "コア",
       mind: "知性",
-      creator: "創造",
+      creator: "創作",
       heart: "配慮",
-      spirit: "調整",
+      spirit: "精神",
     },
     onboarding: {
       name: "ONBOARDING",
       label: "初期設定",
       description:
-        "集中的なプロフェッショナル作業を開始する前に、コンテキスト、境界、運用パラメータを設定します。",
+        "集中的な専門業務を開始する前に、文脈、境界、運用パラメータを確立します。",
     },
     flow: {
       name: "FLOW",
-      label: "自動構成",
+      label: "自動設定",
       description:
-        "タスク要件、コンテキスト、インタラクションの信号に基づき、内部の推論構成を動的に調整します。",
+        "タスク要件、文脈、対話シグナルに基づき、内部の推論設定を動的に調整します。",
     },
     build: {
       name: "BUILD",
-      label: "実行フォーカス",
+      label: "実行重視",
       description:
-        "仕様、ドキュメント、コード、構造化ドラフト、アクションリストなどの具体的な成果物を優先します。",
+        "仕様、文書、コード、構造化ドラフト、アクションリストなどの具体的成果物を優先します。",
     },
     research: {
       name: "RESEARCH",
-      label: "分析の深さ",
+      label: "分析の深度",
       description:
-        "複雑なトピックを構造化し、情報源を評価し、体系的な調査と分析を支援します。",
+        "複雑なテーマを構造化し、情報源を評価し、体系的な調査と分析を支援します。",
     },
     truth: {
       name: "TRUTH",
       label: "制約検証",
       description:
-        "前提を検証し、実現可能性を評価し、現実の制約と証拠に基づいて整合させます。",
+        "前提を検証し、実現可能性を評価し、現実の制約と証拠に整合させます。",
     },
     wisdom: {
       name: "WISDOM",
-      label: "長期視点",
+      label: "長期的視点",
       description:
-        "分野横断の知見を統合し、トレードオフを明確にし、長期的な影響を考慮します。",
+        "領域横断の洞察を統合し、トレードオフを示し、長期的影響を考慮します。",
     },
     play: {
       name: "PLAY",
-      label: "探索的アイデア創出",
+      label: "探索的発想",
       description:
-        "運用上のコミットメントを伴わず、自由な発想探索、命名、概念的バリエーションを支援します。",
+        "運用上の拘束なしに、自由な発想、命名、概念的バリエーションを支援します。",
     },
     vision: {
       name: "VISION",
-      label: "戦略的フォーサイト",
+      label: "戦略的展望",
       description:
-        "不確実性の下で将来シナリオ、戦略的方向性、概念モデルを検討します。",
+        "不確実性の下で、将来シナリオ、戦略的方向性、概念モデルを探ります。",
     },
     oracle: {
       name: "ORACLE",
       label: "パターン探索",
       description:
-        "予測や確実性を主張せずに、パターン、選択肢、軌道を検討します。",
+        "予測や確実性を主張することなく、パターン、選択肢、軌道を検討します。",
     },
     empathy: {
       name: "EMPATHY",
-      label: "視点認識",
+      label: "視点の把握",
       description:
-        "感情的な権威を仮定せず、ステークホルダーの視点と人への影響を明確にします。",
+        "感情的権威を前提とせず、利害関係者の視点と人への影響を明確にします。",
     },
     love: {
       name: "LOVE",
-      label: "価値の継続性",
+      label: "価値の連続性",
       description:
-        "長期作業において、宣言された優先事項、長期意図、設定された価値を可視化します。",
+        "長期作業において、宣言された優先事項、長期意図、価値を可視化します。",
     },
     joy: {
       name: "JOY",
-      label: "ポジティブな枠組み",
+      label: "前向きな枠組み",
       description:
-        "精度とタスクフォーカスを保ちながら、建設的で前向きなトーンを維持します。",
+        "精度とタスク重視を保ちながら、建設的で前向きなトーンを維持します。",
     },
     calm: {
       name: "CALM",
       label: "負荷調整",
       description:
-        "複雑性を低減し、応答を簡素化し、高い認知負荷時のインタラクションを安定化します。",
+        "複雑さを下げ、応答を簡素化し、高い認知負荷下で対話を安定させます。",
     },
     peace: {
       name: "PEACE",
-      label: "エスカレーション低減",
+      label: "緩和",
       description:
-        "インタラクションの強度が生産的水準を超えた場合に、低減とリセットを支援します。",
+        "対話の強度が生産的水準を超えた場合に、緩和とリセットを支援します。",
     },
     council: {
       name: "COUNCIL13",
-      label: "多視点熟議",
+      label: "多視点協議",
       description:
-        "並行する視点を構造化し、単一で根拠ある結論へ収束させます。",
+        "並行する視点を構造化し、単一の合理的結論へ収束させます。",
     },
   },
 },
@@ -1115,108 +1120,108 @@ export const modes15 = {
   ko: {
   modes: {
     kicker: "m-pathy의 15가지 모드",
-    title: "작업 모드",
+    title: "업무 모드",
     subtitle:
-      "모드를 선택하여 m-pathy가 추론을 어떻게 구조화할지 정의하거나, FLOW가 맥락에 따라 구성을 동적으로 조정하도록 허용하세요. 모든 모드는 메인 채팅에서 사용할 수 있습니다.",
+      "모드를 선택하여 m-pathy의 추론 구조를 정의하거나 FLOW가 설정을 동적으로 조정하도록 허용하십시오. 모든 모드는 메인 채팅에서 사용할 수 있습니다.",
     dropdown: {
       label: "모드 선택",
     },
     group: {
       core: "코어",
       mind: "지성",
-      creator: "창조",
+      creator: "창작",
       heart: "배려",
-      spirit: "조절",
+      spirit: "정신",
     },
     onboarding: {
       name: "ONBOARDING",
       label: "초기 설정",
       description:
-        "집중적인 전문 작업을 시작하기 전에 컨텍스트, 경계 및 운영 매개변수를 설정합니다.",
+        "집중적인 전문 작업을 시작하기 전에 맥락, 경계, 운영 매개변수를 설정합니다.",
     },
     flow: {
       name: "FLOW",
-      label: "자동 구성",
+      label: "자동 설정",
       description:
-        "작업 요구 사항, 맥락 및 상호작용 신호에 따라 내부 추론 구성을 동적으로 조정합니다.",
+        "작업 요구, 맥락, 상호작용 신호에 따라 내부 추론 설정을 동적으로 조정합니다.",
     },
     build: {
       name: "BUILD",
-      label: "실행 중심",
+      label: "실행 집중",
       description:
-        "사양, 문서, 코드, 구조화된 초안 및 작업 목록과 같은 구체적인 산출물을 우선합니다.",
+        "명세, 문서, 코드, 구조화된 초안, 작업 목록과 같은 구체적 산출물을 우선합니다.",
     },
     research: {
       name: "RESEARCH",
-      label: "분석 깊이",
+      label: "분석 심화",
       description:
-        "복잡한 주제를 구조화하고 출처를 평가하며 체계적인 조사와 분석을 지원합니다.",
+        "복잡한 주제를 구조화하고 출처를 평가하며 체계적 연구와 분석을 지원합니다.",
     },
     truth: {
       name: "TRUTH",
       label: "제약 검증",
       description:
-        "가정을 검토하고 실행 가능성을 평가하며 실제 제약과 증거에 맞춰 아이디어를 정렬합니다.",
+        "가정을 검토하고 실행 가능성을 평가하며 아이디어를 현실 제약과 증거에 맞춥니다.",
     },
     wisdom: {
       name: "WISDOM",
       label: "장기 관점",
       description:
-        "도메인 전반의 통찰을 통합하고 트레이드오프를 강조하며 장기적 영향을 고려합니다.",
+        "영역 간 통찰을 통합하고 절충을 드러내며 장기적 영향을 고려합니다.",
     },
     play: {
       name: "PLAY",
-      label: "탐색적 아이데이션",
+      label: "탐색적 발상",
       description:
-        "운영적 약속 없이 자유로운 아이디어 탐색, 명명 및 개념적 변형을 지원합니다.",
+        "운영상 약속 없이 자유로운 발상, 명명, 개념 변형을 지원합니다.",
     },
     vision: {
       name: "VISION",
-      label: "전략적 포사이트",
+      label: "전략적 전망",
       description:
-        "불확실성 하에서 미래 시나리오, 전략적 방향 및 개념 모델을 탐색합니다.",
+        "불확실성 하에서 미래 시나리오, 전략 방향, 개념 모델을 탐색합니다.",
     },
     oracle: {
       name: "ORACLE",
       label: "패턴 탐색",
       description:
-        "예측이나 확실성을 주장하지 않고 패턴, 옵션 및 궤적을 검토합니다.",
+        "예측이나 확실성을 주장하지 않고 패턴, 옵션, 경로를 검토합니다.",
     },
     empathy: {
       name: "EMPATHY",
       label: "관점 인식",
       description:
-        "감정적 권위를 가정하지 않고 이해관계자 관점과 인간적 영향을 명확히 합니다.",
+        "감정적 권위를 전제하지 않고 이해관계자 관점과 인간적 영향을 명확히 합니다.",
     },
     love: {
       name: "LOVE",
       label: "가치 연속성",
       description:
-        "장기간의 작업 동안 선언된 우선순위, 장기적 의도 및 설정된 가치를 유지합니다.",
+        "장기 작업 동안 선언된 우선순위, 장기 의도, 가치를 가시적으로 유지합니다.",
     },
     joy: {
       name: "JOY",
       label: "긍정적 프레이밍",
       description:
-        "정확성과 작업 집중을 유지하면서 격려적이고 건설적인 톤을 유지합니다.",
+        "정확성과 과업 집중을 유지하며 건설적이고 긍정적인 톤을 유지합니다.",
     },
     calm: {
       name: "CALM",
       label: "부하 조절",
       description:
-        "복잡성을 줄이고 응답을 단순화하며 높은 인지 부하에서 상호작용을 안정화합니다.",
+        "복잡도를 낮추고 응답을 단순화하며 높은 인지 부하에서 상호작용을 안정화합니다.",
     },
     peace: {
       name: "PEACE",
-      label: "에스컬레이션 완화",
+      label: "완화",
       description:
-        "상호작용 강도가 생산적 수준을 초과할 때 완화와 리셋을 지원합니다.",
+        "상호작용 강도가 생산적 수준을 넘을 때 완화와 재설정을 지원합니다.",
     },
     council: {
       name: "COUNCIL13",
-      label: "다중 관점 숙의",
+      label: "다관점 숙의",
       description:
-        "병렬 관점을 구조화하여 단일하고 근거 있는 결과로 수렴합니다.",
+        "병렬 관점을 구조화하여 단일의 합리적 결론으로 수렴시킵니다.",
     },
   },
 },
@@ -1226,60 +1231,60 @@ export const modes15 = {
  ar: {
   modes: {
     kicker: "15 وضعًا من m-pathy",
-    title: "أوضاع التشغيل الخاصة بك",
+    title: "أنماط العمل",
     subtitle:
-      "اختر وضعًا لتحديد كيفية تنظيم m-pathy لعملية التفكير، أو اسمح لـ FLOW بضبط الإعدادات ديناميكيًا حسب السياق. جميع الأوضاع متاحة في الدردشة الرئيسية.",
+      "اختر نمطًا لتحديد كيفية تنظيم m-pathy لعملية التفكير، أو اسمح لـ FLOW بضبط الإعدادات بشكل ديناميكي. جميع الأنماط متاحة في الدردشة الرئيسية.",
     dropdown: {
-      label: "اختر وضعًا",
+      label: "اختيار النمط",
     },
     group: {
-      core: "الأساس",
+      core: "النواة",
       mind: "العقل",
       creator: "الإبداع",
-      heart: "التفاعل",
-      spirit: "الضبط",
+      heart: "الاعتبار",
+      spirit: "الروح",
     },
     onboarding: {
       name: "ONBOARDING",
       label: "الإعداد الأولي",
       description:
-        "يحدد السياق والحدود والمعايير التشغيلية قبل بدء العمل المهني المركّز.",
+        "يحدد السياق والحدود ومعلمات التشغيل قبل بدء العمل المهني المركّز.",
     },
     flow: {
       name: "FLOW",
-      label: "الضبط التلقائي",
+      label: "إعداد تلقائي",
       description:
-        "يضبط تكوينات التفكير الداخلية ديناميكيًا بناءً على متطلبات المهمة والسياق وإشارات التفاعل.",
+        "يضبط إعدادات التفكير الداخلية ديناميكيًا وفقًا لمتطلبات المهمة والسياق وإشارات التفاعل.",
     },
     build: {
       name: "BUILD",
       label: "تركيز التنفيذ",
       description:
-        "يعطي أولوية للمخرجات الملموسة مثل المواصفات، التوثيق، الشيفرة، المسودات المنظمة وقوائم المهام.",
+        "يعطي أولوية للمخرجات الملموسة مثل المواصفات، التوثيق، الشيفرة، المسودات المنظمة وقوائم الإجراءات.",
     },
     research: {
       name: "RESEARCH",
       label: "العمق التحليلي",
       description:
-        "ينظم الموضوعات المعقدة، يقيّم المصادر، ويدعم البحث والتحليل المنهجي.",
+        "ينظم الموضوعات المعقدة، يقيم المصادر، ويدعم البحث والتحليل المنهجي.",
     },
     truth: {
       name: "TRUTH",
       label: "اختبار القيود",
       description:
-        "يتحدى الافتراضات، يختبر القابلية للتنفيذ، ويُحاذي الأفكار مع القيود والأدلة الواقعية.",
+        "يتحدى الافتراضات، يقيم القابلية للتنفيذ، ويُوائم الأفكار مع القيود والأدلة الواقعية.",
     },
     wisdom: {
       name: "WISDOM",
       label: "منظور طويل الأمد",
       description:
-        "يدمج الرؤى عبر المجالات، يبرز المفاضلات، وينظر في الآثار طويلة المدى.",
+        "يدمج الرؤى عبر المجالات، يبرز المفاضلات، وينظر في الآثار بعيدة المدى.",
     },
     play: {
       name: "PLAY",
-      label: "استكشاف الأفكار",
+      label: "توليد أفكار استكشافي",
       description:
-        "يدعم الاستكشاف الحر للأفكار، التسمية، والتنوعات المفاهيمية دون التزام تشغيلي.",
+        "يدعم استكشاف الأفكار بحرية، التسمية، والتنوعات المفاهيمية دون التزام تشغيلي.",
     },
     vision: {
       name: "VISION",
@@ -1291,19 +1296,19 @@ export const modes15 = {
       name: "ORACLE",
       label: "استكشاف الأنماط",
       description:
-        "يفحص الأنماط والخيارات والمسارات دون ادعاء التنبؤ أو اليقين.",
+        "يفحص الأنماط والخيارات والمسارات دون الادعاء بالتنبؤ أو اليقين.",
     },
     empathy: {
       name: "EMPATHY",
-      label: "وعي بالمنظورات",
+      label: "وعي المنظورات",
       description:
-        "يوضح وجهات نظر أصحاب المصلحة والتأثير الإنساني دون افتراض سلطة عاطفية.",
+        "يوضح منظورات أصحاب المصلحة والأثر الإنساني دون افتراض سلطة عاطفية.",
     },
     love: {
       name: "LOVE",
       label: "استمرارية القيم",
       description:
-        "يحافظ على وضوح الأولويات المعلنة، النوايا طويلة الأمد والقيم المحددة خلال العمل الممتد.",
+        "يحافظ على وضوح الأولويات المعلنة والنية طويلة الأمد والقيم المحددة أثناء العمل الممتد.",
     },
     joy: {
       name: "JOY",
@@ -1321,80 +1326,81 @@ export const modes15 = {
       name: "PEACE",
       label: "خفض التصعيد",
       description:
-        "يدعم خفض التصعيد وإعادة الضبط عندما تتجاوز شدة التفاعل المستويات الإنتاجية.",
+        "يدعم خفض التصعيد وإعادة الضبط عندما تتجاوز شدة التفاعل الحدود المنتجة.",
     },
     council: {
       name: "COUNCIL13",
       label: "مداولة متعددة المنظورات",
       description:
-        "ينظم وجهات نظر متوازية ويجمعها في نتيجة واحدة مدعومة بالحجج.",
+        "ينظم وجهات نظر متوازية ويجمعها في نتيجة واحدة قائمة على التعليل.",
     },
   },
 },
 
 
+
   /* ───────────────── HI ───────────────── */
   hi: {
   modes: {
-    kicker: "m-pathy के 15 मोड",
-    title: "आपके ऑपरेटिंग मोड",
+    kicker: "m-pathy द्वारा 15 मोड",
+    title: "आपके कार्य मोड",
     subtitle:
-      "यह तय करने के लिए कोई मोड चुनें कि m-pathy अपने तर्क को कैसे संरचित करता है, या FLOW को संदर्भ के अनुसार कॉन्फ़िगरेशन को गतिशील रूप से समायोजित करने दें। सभी मोड मुख्य चैट में उपलब्ध हैं।",
+      "यह निर्धारित करने के लिए कोई मोड चुनें कि m-pathy अपने तर्क को कैसे संरचित करता है, या FLOW को कॉन्फ़िगरेशन को गतिशील रूप से समायोजित करने की अनुमति दें। सभी मोड मुख्य चैट में उपलब्ध हैं।",
     dropdown: {
       label: "मोड चुनें",
     },
     group: {
       core: "कोर",
       mind: "बौद्धिक",
-      creator: "निर्माता",
-      heart: "परिप्रेक्ष्य",
-      spirit: "नियमन",
+      creator: "सृजन",
+      heart: "संवेदनशीलता",
+      spirit: "आत्मा",
     },
     onboarding: {
       name: "ONBOARDING",
       label: "प्रारंभिक सेटअप",
       description:
-        "केंद्रित पेशेवर कार्य शुरू होने से पहले संदर्भ, सीमाएं और परिचालन मानदंड स्थापित करता है।",
+        "केंद्रित पेशेवर कार्य प्रारंभ होने से पहले संदर्भ, सीमाएँ और परिचालन मानक स्थापित करता है।",
     },
     flow: {
       name: "FLOW",
       label: "स्वचालित कॉन्फ़िगरेशन",
       description:
-        "कार्य आवश्यकताओं, संदर्भ और इंटरैक्शन संकेतों के आधार पर आंतरिक तर्क कॉन्फ़िगरेशन को गतिशील रूप से समायोजित करता है।",
+        "कार्य आवश्यकताओं, संदर्भ और अंतःक्रिया संकेतों के आधार पर आंतरिक तर्क कॉन्फ़िगरेशन को गतिशील रूप से समायोजित करता है।",
     },
     build: {
       name: "BUILD",
       label: "निष्पादन फोकस",
       description:
-        "विनिर्देश, दस्तावेज़ीकरण, कोड, संरचित ड्राफ्ट और कार्य सूचियों जैसे ठोस आउटपुट को प्राथमिकता देता है।",
+        "विनिर्देशों, दस्तावेज़ों, कोड, संरचित ड्राफ्ट और कार्य सूचियों जैसे ठोस परिणामों को प्राथमिकता देता है।",
     },
     research: {
       name: "RESEARCH",
       label: "विश्लेषणात्मक गहराई",
       description:
-        "जटिल विषयों को संरचित करता है, स्रोतों का मूल्यांकन करता है और प्रणालीबद्ध अनुसंधान व विश्लेषण का समर्थन करता है।",
+        "जटिल विषयों को संरचित करता है, स्रोतों का मूल्यांकन करता है और व्यवस्थित अनुसंधान व विश्लेषण का समर्थन करता है।",
     },
     truth: {
       name: "TRUTH",
       label: "सीमा परीक्षण",
       description:
-        "मान्यताओं को चुनौती देता है, व्यवहार्यता का परीक्षण करता है और विचारों को वास्तविक सीमाओं व प्रमाणों के साथ संरेखित करता है।",
+        "मान्यताओं को चुनौती देता है, व्यवहार्यता का आकलन करता है और विचारों को वास्तविक सीमाओं व प्रमाणों से संरेखित करता है।",
     },
     wisdom: {
       name: "WISDOM",
       label: "दीर्घकालिक दृष्टिकोण",
       description:
-        "विभिन्न डोमेनों में अंतर्दृष्टि को एकीकृत करता है, ट्रेड ऑफ को उजागर करता है और दीर्घकालिक प्रभावों पर विचार करता है।",
+        "विभिन्न क्षेत्रों में अंतर्दृष्टि को एकीकृत करता है, संतुलन दर्शाता है और दीर्घकालिक प्रभावों पर विचार करता है।",
     },
     play: {
       name: "PLAY",
-      label: "अन्वेषणात्मक विचार निर्माण",
+      label: "अन्वेषणात्मक विचार",
       description:
-        "परिचालन प्रतिबद्धता के बिना विचारों की मुक्त खोज, नामकरण और वैचारिक विविधताओं का समर्थन करता है।",
+        "बिना परिचालन प्रतिबद्धता के स्वतंत्र विचार, नामकरण और वैचारिक विविधताओं का समर्थन करता है।",
     },
     vision: {
       name: "VISION",
-      label: "रणनीतिक दूरदृष्टि",
+      label: "रणनीतिक पूर्वदृष्टि",
       description:
         "अनिश्चितता की स्थिति में भविष्य परिदृश्यों, रणनीतिक दिशाओं और वैचारिक मॉडलों का अन्वेषण करता है।",
     },
@@ -1402,43 +1408,43 @@ export const modes15 = {
       name: "ORACLE",
       label: "पैटर्न अन्वेषण",
       description:
-        "पूर्वानुमान या निश्चितता का दावा किए बिना पैटर्न, विकल्प और प्रक्षेपवक्रों का परीक्षण करता है।",
+        "पूर्वानुमान या निश्चितता का दावा किए बिना पैटर्न, विकल्पों और मार्गों की जाँच करता है।",
     },
     empathy: {
       name: "EMPATHY",
-      label: "परिप्रेक्ष्य जागरूकता",
+      label: "दृष्टिकोण जागरूकता",
       description:
-        "भावनात्मक अधिकार ग्रहण किए बिना हितधारकों के दृष्टिकोण और मानवीय प्रभाव को स्पष्ट करता है।",
+        "भावनात्मक अधिकार माने बिना हितधारकों के दृष्टिकोण और मानवीय प्रभाव को स्पष्ट करता है।",
     },
     love: {
       name: "LOVE",
       label: "मूल्य निरंतरता",
       description:
-        "लंबी अवधि के कार्य के दौरान घोषित प्राथमिकताओं, दीर्घकालिक उद्देश्य और निर्धारित मूल्यों को दृश्यमान रखता है।",
+        "दीर्घकालिक कार्य के दौरान घोषित प्राथमिकताओं, दीर्घकालिक आशय और निर्धारित मूल्यों को दृश्यमान रखता है।",
     },
     joy: {
       name: "JOY",
-      label: "सकारात्मक फ्रेमिंग",
+      label: "सकारात्मक रूपरेखा",
       description:
-        "सटीकता और कार्य फोकस बनाए रखते हुए उत्साहवर्धक और रचनात्मक स्वर बनाए रखता है।",
+        "सटीकता और कार्य फोकस बनाए रखते हुए उत्साहजनक और रचनात्मक स्वर बनाए रखता है।",
     },
     calm: {
       name: "CALM",
       label: "भार नियमन",
       description:
-        "जटिलता को कम करता है, प्रतिक्रियाओं को सरल बनाता है और उच्च संज्ञानात्मक भार के दौरान इंटरैक्शन को स्थिर करता है।",
+        "जटिलता को कम करता है, उत्तरों को सरल बनाता है और उच्च संज्ञानात्मक भार में अंतःक्रिया को स्थिर करता है।",
     },
     peace: {
       name: "PEACE",
-      label: "डी एस्केलेशन",
+      label: "तनाव शमन",
       description:
-        "जब इंटरैक्शन की तीव्रता उत्पादक स्तरों से अधिक हो जाती है, तब डी एस्केलेशन और रीसेट का समर्थन करता है।",
+        "जब अंतःक्रिया की तीव्रता उत्पादक स्तर से अधिक हो जाती है, तब शमन और पुनर्स्थापन का समर्थन करता है।",
     },
     council: {
       name: "COUNCIL13",
-      label: "बहु परिप्रेक्ष्य विचार विमर्श",
+      label: "बहु-दृष्टिकोण विचार-विमर्श",
       description:
-        "समानांतर दृष्टिकोणों को संरचित करता है और उन्हें एकल, तर्कसंगत परिणाम में समाहित करता है।",
+        "समानांतर दृष्टिकोणों को संरचित करता है और उन्हें एक एकीकृत, तर्कसंगत परिणाम में संयोजित करता है।",
     },
   },
 },
