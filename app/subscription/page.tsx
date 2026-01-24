@@ -284,7 +284,31 @@ export default function SubscriptionPage() {
           {/* ─────────────── SECURITY BY DESIGN ─────────────── */}
             <SecuritySection />
 
+{/* ─────────────── BUFFER & DIVIDER #6 (Security → KPI) ─────────────── */}
+          <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
+          <section
+            aria-hidden
+            className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]"
+          >
+            <div
+              className="page-center"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+            >
+              <div
+                className="mx-auto rounded-full"
+                style={{
+                  height: "var(--sub-divider-1-height)",
+                  background: "var(--sub-divider-1-fill)",
+                  boxShadow: "var(--sub-divider-1-glow)",
+                }}
+              />
+            </div>
+          </section>
+          <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
 
+          <section>
+  <Comparison />
+</section>
           {/* ─────────────── BUFFER & DIVIDER #2 (Experts → Modes) ─────────────── */}
           <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
           <section
@@ -419,31 +443,7 @@ export default function SubscriptionPage() {
 
 
 
-          {/* ─────────────── BUFFER & DIVIDER #6 (Security → KPI) ─────────────── */}
-          <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
-          <section
-            aria-hidden
-            className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]"
-          >
-            <div
-              className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-            >
-              <div
-                className="mx-auto rounded-full"
-                style={{
-                  height: "var(--sub-divider-1-height)",
-                  background: "var(--sub-divider-1-fill)",
-                  boxShadow: "var(--sub-divider-1-glow)",
-                }}
-              />
-            </div>
-          </section>
-          <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
-
-          <section>
-  <Comparison />
-</section>
+          
 
 
           {/* Abschluss-Buffer – 130px (KPI → Footer/Ende) */}
