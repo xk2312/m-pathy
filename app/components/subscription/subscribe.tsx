@@ -141,16 +141,13 @@ export default function Subscribe() {
   </p>
 
   <ul className="
-    mt-3
-    grid
-    grid-cols-1
-    gap-x-6
-    gap-y-1.5
-    text-[13px]
-    leading-snug
-    text-white/70
-    lg:grid-cols-2
-  ">
+  mt-3
+  space-y-1.5
+  text-[13px]
+  leading-relaxed
+  text-white/70
+">
+
     <li>{locale.benefit_1}</li>
     <li>{locale.benefit_2}</li>
     <li>{locale.benefit_3}</li>
