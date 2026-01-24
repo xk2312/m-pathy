@@ -140,28 +140,66 @@ export default function Subscribe() {
     {locale.benefits_title}
   </p>
 
-  <ul className="
+ <ul className="
   mt-3
-  space-y-1.5
+  space-y-2
   text-[13px]
-  leading-relaxed
-  text-white/70
+  leading-[1.55]
 ">
+  <li className="flex items-start gap-2">
+    <span className="text-white/40">→</span>
+    <span className="text-white/75">{locale.benefit_1}</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white/40">→</span>
+    <span className="text-white/75">{locale.benefit_2}</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white/40">→</span>
+    <span className="text-white/75">{locale.benefit_3}</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white/40">→</span>
+    <span className="text-white/75">{locale.benefit_4}</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white/40">→</span>
+    <span className="text-white/75">{locale.benefit_5}</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white/40">→</span>
+    <span className="text-white/75">{locale.benefit_6}</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white/40">→</span>
+    <span className="text-white/75">{locale.benefit_7}</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white/40">→</span>
+    <span className="text-white/75">{locale.benefit_8}</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white/40">→</span>
+    <span className="text-white/75">{locale.benefit_9}</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white/40">→</span>
+    <span className="text-white/75">{locale.benefit_10}</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white/40">→</span>
+    <span className="text-white/75">{locale.benefit_11}</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white/40">→</span>
+    <span className="text-white/75">{locale.benefit_12}</span>
+  </li>
+  <li className="flex items-start gap-2">
+    <span className="text-white/40">→</span>
+    <span className="text-white/75">{locale.benefit_13}</span>
+  </li>
+</ul>
 
-    <li>{locale.benefit_1}</li>
-    <li>{locale.benefit_2}</li>
-    <li>{locale.benefit_3}</li>
-    <li>{locale.benefit_4}</li>
-    <li>{locale.benefit_5}</li>
-    <li>{locale.benefit_6}</li>
-    <li>{locale.benefit_7}</li>
-    <li>{locale.benefit_8}</li>
-    <li>{locale.benefit_9}</li>
-    <li>{locale.benefit_10}</li>
-    <li>{locale.benefit_11}</li>
-    <li>{locale.benefit_12}</li>
-    <li>{locale.benefit_13}</li>
-  </ul>
 </div>
 
 
