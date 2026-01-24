@@ -5,70 +5,73 @@
 type DictRoot = Record<string, any>;
 
 export const doormanDict = {
-  en: {
-    "prompt.doorman.main": "You can start.",
-    "prompt.doorman.sub": "Wherever you are.",
-  },
 
-  de: {
-    "prompt.doorman.main": "Du kannst beginnen.",
-    "prompt.doorman.sub": "Wo auch immer du gerade bist.",
-  },
+en: {
+  "prompt.doorman.main": "This workspace is governed, verifiable,",
+  "prompt.doorman.sub": "and built for accountability.",
+},
 
-  fr: {
-    "prompt.doorman.main": "Tu peux commencer.",
-    "prompt.doorman.sub": "Là où tu en es.",
-  },
+de: {
+  "prompt.doorman.main": "Dieser Arbeitsraum ist reguliert und überprüfbar,",
+  "prompt.doorman.sub": "gebaut für Nachvollziehbarkeit und Verantwortung.",
+},
 
-  es: {
-    "prompt.doorman.main": "Puedes empezar.",
-    "prompt.doorman.sub": "Dondequiera que estés.",
-  },
+fr: {
+  "prompt.doorman.main": "Cet espace est gouverné et vérifiable,",
+  "prompt.doorman.sub": "conçu pour la responsabilité.",
+},
 
-  it: {
-    "prompt.doorman.main": "Puoi iniziare.",
-    "prompt.doorman.sub": "Da dove sei.",
-  },
+es: {
+  "prompt.doorman.main": "Este espacio está regulado y es verificable,",
+  "prompt.doorman.sub": "diseñado para la responsabilidad.",
+},
 
-  pt: {
-    "prompt.doorman.main": "Você pode começar.",
-    "prompt.doorman.sub": "De onde você estiver.",
-  },
+it: {
+  "prompt.doorman.main": "Questo spazio è regolato e verificabile,",
+  "prompt.doorman.sub": "progettato per la responsabilità.",
+},
 
-  nl: {
-    "prompt.doorman.main": "Je kunt beginnen.",
-    "prompt.doorman.sub": "Waar je ook bent.",
-  },
+pt: {
+  "prompt.doorman.main": "Este espaço é governado e verificável,",
+  "prompt.doorman.sub": "concebido para responsabilidade.",
+},
 
-  ru: {
-    "prompt.doorman.main": "Ты можешь начать.",
-    "prompt.doorman.sub": "С того места, где ты сейчас.",
-  },
+nl: {
+  "prompt.doorman.main": "Deze werkomgeving is gereguleerd en verifieerbaar,",
+  "prompt.doorman.sub": "ontworpen voor verantwoording.",
+},
 
-  zh: {
-    "prompt.doorman.main": "你可以开始。",
-    "prompt.doorman.sub": "就在你所在的地方。",
-  },
+ru: {
+  "prompt.doorman.main": "Это пространство регулируемо и проверяемо,",
+  "prompt.doorman.sub": "создано для подотчетности.",
+},
 
-  ja: {
-    "prompt.doorman.main": "ここから始められます。",
-    "prompt.doorman.sub": "今のあなたの場所から。",
-  },
+zh: {
+  "prompt.doorman.main": "此工作空间受控且可验证，",
+  "prompt.doorman.sub": "专为责任与可追溯性而建。",
+},
 
-  ko: {
-    "prompt.doorman.main": "지금 시작해도 됩니다.",
-    "prompt.doorman.sub": "당신이 있는 바로 그 자리에서.",
-  },
+ja: {
+  "prompt.doorman.main": "この作業空間は管理され検証可能で、",
+  "prompt.doorman.sub": "説明責任のために設計されています。",
+},
 
-  ar: {
-    "prompt.doorman.main": "يمكنك أن تبدأ.",
-    "prompt.doorman.sub": "من حيث أنت الآن.",
-  },
+ko: {
+  "prompt.doorman.main": "이 작업 공간은 관리되고 검증 가능하며,",
+  "prompt.doorman.sub": "책임성을 위해 설계되었습니다.",
+},
 
-  hi: {
-    "prompt.doorman.main": "तुम शुरू कर सकते हो।",
-    "prompt.doorman.sub": "जहाँ तुम अभी हो।",
-  },
+ar: {
+  "prompt.doorman.main": "هذه البيئة خاضعة للحوكمة وقابلة للتحقق،",
+  "prompt.doorman.sub": "ومصممة للمساءلة.",
+},
+
+hi: {
+  "prompt.doorman.main": "यह कार्यक्षेत्र नियंत्रित और सत्यापन योग्य है,",
+  "prompt.doorman.sub": "और उत्तरदायित्व के लिए बनाया गया है।",
+},
+
+
 } as const;
 
 export function attachDoorman(dict: DictRoot) {

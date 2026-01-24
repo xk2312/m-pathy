@@ -312,16 +312,17 @@ const en = {
   "pillar.section.archiveTitle": "ARCHIVE",
 
 
-  // Actions (export / delete)
-  "actions.export.title": "Export chat",
-  "actions.export.help": "Save your chat as a file.",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
+// Actions (export / delete)
+"actions.export.title": "Export chat",
+"actions.export.help": "Save your chat as a file.",
+"actions.export.csv": "CSV",
+"actions.export.json": "JSON",
 
-  "actions.delete.title": "Delete chat",
-  "actions.delete.warning":
-    "This deletes the entire chat forever. Choose CSV or JSON to archive the chat locally.",
-  "actions.delete.now": "DELETE",
+"actions.delete.title": "Delete chat",
+"actions.delete.warning":
+  "This action permanently deletes the entire chat. Export CSV or JSON first if you want to keep it.",
+"actions.delete.now": "Delete",
+
 
   // ARIA for actions
   exportCsvAria: "Export thread as CSV",
@@ -520,16 +521,17 @@ const de = {
   "pillar.section.archiveTitle": "ARCHIV",
 
 
-  // Actions (export / delete)
-  "actions.export.title": "Chat exportieren",
-  "actions.export.help": "Speichere deinen Chat als Datei.",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
+ // Actions (export / delete)
+"actions.export.title": "Chat exportieren",
+"actions.export.help": "Speichern Sie Ihren Chat als Datei.",
+"actions.export.csv": "CSV",
+"actions.export.json": "JSON",
 
-  "actions.delete.title": "Chat löschen",
-  "actions.delete.warning":
-    "Dieser Vorgang löscht den gesamten Chat dauerhaft. Exportiere vorher CSV oder JSON, wenn du ihn behalten möchtest.",
-  "actions.delete.now": "Löschen",
+"actions.delete.title": "Chat löschen",
+"actions.delete.warning":
+  "Dieser Vorgang löscht den gesamten Chat dauerhaft. Exportieren Sie zuvor CSV oder JSON, wenn Sie ihn behalten möchten.",
+"actions.delete.now": "Löschen",
+
 
   // ARIA
   exportCsvAria: "Chat als CSV exportieren",
@@ -727,16 +729,17 @@ const fr = {
   "pillar.section.utility": "Actions & export",
   "pillar.section.archiveTitle": "ARCHIVES",
 
-  // Actions (export / delete)
-  "actions.export.title": "Exporter le chat",
-  "actions.export.help": "Enregistrer votre chat sous forme de fichier.",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
+ // Actions (export / delete)
+"actions.export.title": "Exporter le chat",
+"actions.export.help": "Enregistrez votre chat en tant que fichier.",
+"actions.export.csv": "CSV",
+"actions.export.json": "JSON",
 
-  "actions.delete.title": "Supprimer le chat",
-  "actions.delete.warning":
-    "Cette action supprime définitivement tout le chat. Exportez-le en CSV ou JSON si vous souhaitez le conserver.",
-  "actions.delete.now": "Supprimer",
+"actions.delete.title": "Supprimer le chat",
+"actions.delete.warning":
+  "Cette action supprime définitivement l’intégralité du chat. Exportez en CSV ou JSON si vous souhaitez le conserver.",
+"actions.delete.now": "Supprimer",
+
 
   // ARIA for actions
   exportCsvAria: "Exporter le chat en CSV",
@@ -935,16 +938,17 @@ const es = {
   "pillar.section.utility": "Acciones y exportación",
   "pillar.section.archiveTitle": "ARCHIVO",
 
-  // Actions (export / delete)
-  "actions.export.title": "Exportar chat",
-  "actions.export.help": "Guarda tu chat como archivo.",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
+// Actions (export / delete)
+"actions.export.title": "Exportar chat",
+"actions.export.help": "Guarde su chat como archivo.",
+"actions.export.csv": "CSV",
+"actions.export.json": "JSON",
 
-  "actions.delete.title": "Borrar chat",
-  "actions.delete.warning":
-    "Esto eliminará el chat completo de manera permanente. Expórtalo en CSV o JSON si deseas conservarlo.",
-  "actions.delete.now": "Borrar",
+"actions.delete.title": "Eliminar chat",
+"actions.delete.warning":
+  "Esta acción elimina permanentemente todo el chat. Exporte en CSV o JSON si desea conservarlo.",
+"actions.delete.now": "Eliminar",
+
 
   // ARIA
   exportCsvAria: "Exportar chat como CSV",
@@ -1143,16 +1147,17 @@ const it = {
   "pillar.section.utility": "Azioni e esportazione",
   "pillar.section.archiveTitle": "ARCHIVIO",
 
-  // Actions (export / delete)
-  "actions.export.title": "Esporta chat",
-  "actions.export.help": "Salva la chat come file.",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
+// Actions (export / delete)
+"actions.export.title": "Esporta chat",
+"actions.export.help": "Salvi il chat come file.",
+"actions.export.csv": "CSV",
+"actions.export.json": "JSON",
 
-  "actions.delete.title": "Cancella chat",
-  "actions.delete.warning":
-    "Questa azione eliminerà definitivamente l’intera chat. Esportala in CSV o JSON se desideri conservarla.",
-  "actions.delete.now": "Elimina",
+"actions.delete.title": "Elimina chat",
+"actions.delete.warning":
+  "Questa azione elimina definitivamente l’intero chat. Esporti CSV o JSON se desidera conservarlo.",
+"actions.delete.now": "Elimina",
+
 
   // ARIA
   exportCsvAria: "Esporta la chat in formato CSV",
@@ -1351,16 +1356,17 @@ const pt = {
   "pillar.section.utility": "Ações e exportação",
   "pillar.section.archiveTitle": "ARQUIVO",
 
-  // Actions (export / delete)
-  "actions.export.title": "Exportar chat",
-  "actions.export.help": "Salve seu chat como arquivo.",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
+ // Actions (export / delete)
+"actions.export.title": "Exportar chat",
+"actions.export.help": "Guarde seu chat como arquivo.",
+"actions.export.csv": "CSV",
+"actions.export.json": "JSON",
 
-  "actions.delete.title": "Excluir chat",
-  "actions.delete.warning":
-    "Isso apagará todo o chat permanentemente. Exporte como CSV ou JSON se quiser manter uma cópia.",
-  "actions.delete.now": "Excluir",
+"actions.delete.title": "Excluir chat",
+"actions.delete.warning":
+  "Esta ação exclui permanentemente todo o chat. Exporte CSV ou JSON se desejar mantê-lo.",
+"actions.delete.now": "Excluir",
+
 
   // ARIA
   exportCsvAria: "Exportar chat como CSV",
@@ -1560,16 +1566,17 @@ const nl = {
   "pillar.section.utility": "Acties & export",
   "pillar.section.archiveTitle": "ARCHIEF",
 
-  // Actions (export / delete)
-  "actions.export.title": "Chat exporteren",
-  "actions.export.help": "Sla je chat op als bestand.",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
+// Actions (export / delete)
+"actions.export.title": "Chat exporteren",
+"actions.export.help": "Sla uw chat op als bestand.",
+"actions.export.csv": "CSV",
+"actions.export.json": "JSON",
 
-  "actions.delete.title": "Chat wissen",
-  "actions.delete.warning":
-    "Dit verwijdert de hele chat permanent. Exporteer hem als CSV of JSON als je hem wilt bewaren.",
-  "actions.delete.now": "Verwijderen",
+"actions.delete.title": "Chat verwijderen",
+"actions.delete.warning":
+  "Deze actie verwijdert de volledige chat permanent. Exporteer eerst CSV of JSON als u deze wilt behouden.",
+"actions.delete.now": "Verwijderen",
+
 
   // ARIA
   exportCsvAria: "Chat exporteren als CSV",
@@ -1769,16 +1776,17 @@ const ru = {
   "pillar.section.utility": "Действия и экспорт",
   "pillar.section.archiveTitle": "АРХИВ",
 
-  // Actions (export / delete)
-  "actions.export.title": "Экспортировать чат",
-  "actions.export.help": "Сохраните чат как файл.",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
+// Actions (export / delete)
+"actions.export.title": "Экспорт чата",
+"actions.export.help": "Сохраните чат в виде файла.",
+"actions.export.csv": "CSV",
+"actions.export.json": "JSON",
 
-  "actions.delete.title": "Удалить чат",
-  "actions.delete.warning":
-    "Это действие навсегда удалит весь чат. Экспортируйте его в CSV или JSON, если хотите сохранить.",
-  "actions.delete.now": "Удалить",
+"actions.delete.title": "Удалить чат",
+"actions.delete.warning":
+  "Это действие навсегда удаляет весь чат. Экспортируйте CSV или JSON, если хотите его сохранить.",
+"actions.delete.now": "Удалить",
+
 
   // ARIA
   exportCsvAria: "Экспортировать чат в CSV",
@@ -1977,16 +1985,17 @@ const zh = {
   "pillar.section.utility": "操作与导出",
   "pillar.section.archiveTitle": "存档",
 
-  // Actions (export / delete)
-  "actions.export.title": "导出聊天",
-  "actions.export.help": "将聊天保存为文件。",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
+// Actions (export / delete)
+"actions.export.title": "导出聊天",
+"actions.export.help": "将聊天保存为文件。",
+"actions.export.csv": "CSV",
+"actions.export.json": "JSON",
 
-  "actions.delete.title": "删除聊天",
-  "actions.delete.warning":
-    "此操作将永久删除整个聊天。如果想保留，请先导出为 CSV 或 JSON。",
-  "actions.delete.now": "删除",
+"actions.delete.title": "删除聊天",
+"actions.delete.warning":
+  "此操作将永久删除整个聊天。如需保留，请先导出 CSV 或 JSON。",
+"actions.delete.now": "删除",
+
 
   // ARIA
   exportCsvAria: "将聊天导出为 CSV",
@@ -2146,16 +2155,17 @@ const ja = {
   "pillar.section.utility": "操作 & エクスポート",
   "pillar.section.archiveTitle": "アーカイブ",
 
-  // Actions (export / delete)
-  "actions.export.title": "チャットをエクスポート",
-  "actions.export.help": "チャットをファイルとして保存します。",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
+// Actions (export / delete)
+"actions.export.title": "チャットをエクスポート",
+"actions.export.help": "チャットをファイルとして保存します。",
+"actions.export.csv": "CSV",
+"actions.export.json": "JSON",
 
-  "actions.delete.title": "チャットを削除",
-  "actions.delete.warning":
-    "この操作はチャット全体を永久に削除します。保存したい場合は、先に CSV または JSON でエクスポートしてください。",
-  "actions.delete.now": "削除",
+"actions.delete.title": "チャットを削除",
+"actions.delete.warning":
+  "この操作はチャット全体を完全に削除します。保持する場合は事前に CSV または JSON をエクスポートしてください。",
+"actions.delete.now": "削除",
+
 
   // ARIA
   exportCsvAria: "チャットを CSV でエクスポート",
@@ -2354,16 +2364,17 @@ const ko = {
   "pillar.section.utility": "작업 & 내보내기",
   "pillar.section.archiveTitle": "아카이브",
 
-  // Actions (export / delete)
-  "actions.export.title": "채팅 내보내기",
-  "actions.export.help": "채팅을 파일로 저장합니다.",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
+ // Actions (export / delete)
+"actions.export.title": "채팅 내보내기",
+"actions.export.help": "채팅을 파일로 저장합니다.",
+"actions.export.csv": "CSV",
+"actions.export.json": "JSON",
 
-  "actions.delete.title": "채팅 삭제",
-  "actions.delete.warning":
-    "이 작업은 전체 채팅을 영구적으로 삭제합니다. 보관하려면 먼저 CSV 또는 JSON으로 내보내세요.",
-  "actions.delete.now": "삭제",
+"actions.delete.title": "채팅 삭제",
+"actions.delete.warning":
+  "이 작업은 전체 채팅을 영구적으로 삭제합니다. 보관하려면 먼저 CSV 또는 JSON으로 내보내세요.",
+"actions.delete.now": "삭제",
+
 
   // ARIA
   exportCsvAria: "채팅을 CSV로 내보내기",
@@ -2562,16 +2573,17 @@ const ar = {
   "pillar.section.utility": "الإجراءات والتصدير",
   "pillar.section.archiveTitle": "الأرشيف",
 
-  // Actions (export / delete)
-  "actions.export.title": "تصدير الدردشة",
-  "actions.export.help": "احفظ الدردشة كملف.",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
+// Actions (export / delete)
+"actions.export.title": "تصدير الدردشة",
+"actions.export.help": "احفظ الدردشة كملف.",
+"actions.export.csv": "CSV",
+"actions.export.json": "JSON",
 
-  "actions.delete.title": "حذف الدردشة",
-  "actions.delete.warning":
-    "سيتم حذف الدردشة بالكامل بشكل نهائي. إذا رغبت بالاحتفاظ بها، صدّرها كـ CSV أو JSON أولاً.",
-  "actions.delete.now": "حذف",
+"actions.delete.title": "حذف الدردشة",
+"actions.delete.warning":
+  "يؤدي هذا الإجراء إلى حذف الدردشة بالكامل بشكل دائم. صدّر CSV أو JSON إذا رغبت في الاحتفاظ بها.",
+"actions.delete.now": "حذف",
+
 
   // ARIA
   exportCsvAria: "تصدير الدردشة بصيغة CSV",
@@ -2770,16 +2782,16 @@ const hi = {
   "pillar.section.utility": "क्रियाएँ और निर्यात",
   "pillar.section.archiveTitle": "संग्रह",
 
-  // Actions (export / delete)
-  "actions.export.title": "चैट निर्यात करें",
-  "actions.export.help": "अपनी चैट को एक फ़ाइल के रूप में सहेजें।",
-  "actions.export.csv": "CSV",
-  "actions.export.json": "JSON",
+// Actions (export / delete)
+"actions.export.title": "चैट निर्यात करें",
+"actions.export.help": "चैट को फ़ाइल के रूप में सहेजें।",
+"actions.export.csv": "CSV",
+"actions.export.json": "JSON",
 
-  "actions.delete.title": "चैट हटाएँ",
-  "actions.delete.warning":
-    "यह कार्रवाई पूरी चैट को स्थायी रूप से हटा देगी। यदि आप इसे सहेजना चाहते हैं, तो पहले इसे CSV या JSON के रूप में निर्यात करें।",
-  "actions.delete.now": "हटाएँ",
+"actions.delete.title": "चैट हटाएँ",
+"actions.delete.warning":
+  "यह कार्रवाई पूरी चैट को स्थायी रूप से हटा देती है। यदि रखना चाहते हैं तो पहले CSV या JSON निर्यात करें।",
+"actions.delete.now": "हटाएँ",
 
   // ARIA
   exportCsvAria: "चैट को CSV में निर्यात करें",
