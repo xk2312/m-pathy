@@ -283,35 +283,7 @@ export default function SubscriptionPage() {
           <section>
   <Comparison />
 </section>
-
-
-          {/* ─────────────── DIVIDER #1 (Hero → Testimonials → Experts) ─────────────── */}
-<section
-  aria-hidden
-  className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]"
->
-  <div
-    className="page-center"
-    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-  >
-    <div
-      className="mx-auto rounded-full"
-      style={{
-        height: "var(--sub-divider-1-height)",
-        background: "var(--sub-divider-1-fill)",
-        boxShadow: "var(--sub-divider-1-glow)",
-      }}
-    />
-  </div>
-</section>
-<div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
-
-
-          {/* ─────────────── SECURITY BY DESIGN ─────────────── */}
-            <SecuritySection />
-
-
-          {/* ─────────────── BUFFER & DIVIDER #2 (Experts → Modes) ─────────────── */}
+ {/* ─────────────── BUFFER & DIVIDER #4 (PowerPrompts → Subscribe) ─────────────── */}
           <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
           <section
             aria-hidden
@@ -333,19 +305,42 @@ export default function SubscriptionPage() {
           </section>
           <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
 
-         {/* ─────────────── EXPERTS OVERVIEW SECTION ─────────────── */}
+          {/* ─────────────── SUBSCRIBE SECTION (Offer) ─────────────── */}
+          <Subscribe />
+{/* ─────────────── BUFFER & DIVIDER #5 (Subscribe → Security) ─────────────── */}
+          <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
+          <section
+            aria-hidden
+            className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]"
+          >
+            <div
+              className="page-center"
+              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+            >
+              <div
+                className="mx-auto rounded-full"
+                style={{
+                  height: "var(--sub-divider-1-height)",
+                  background: "var(--sub-divider-1-fill)",
+                  boxShadow: "var(--sub-divider-1-glow)",
+                }}
+              />
+            </div>
+          </section>
+          <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
+
+         {/* ─────────────── 13 MODES SECTION ─────────────── */}
           <section
             className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
-            aria-label="Experts overview section"
+            aria-label="Modes section"
           >
             <div
               className="page-center"
               style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
             >
-              <ExpertsOverview />
+              <Modis13 />
             </div>
           </section>
-
 
           {/* ─────────────── BUFFER & DIVIDER #3 (Modes → PowerPrompts) ─────────────── */}
           <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
@@ -382,8 +377,7 @@ export default function SubscriptionPage() {
   </div>
 </section>
 
-
-          {/* ─────────────── BUFFER & DIVIDER #4 (PowerPrompts → Subscribe) ─────────────── */}
+ {/* ─────────────── BUFFER & DIVIDER #2 (Experts → Modes) ─────────────── */}
           <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
           <section
             aria-hidden
@@ -405,43 +399,54 @@ export default function SubscriptionPage() {
           </section>
           <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
 
-          {/* ─────────────── SUBSCRIBE SECTION (Offer) ─────────────── */}
-          <Subscribe />
-
-          {/* ─────────────── BUFFER & DIVIDER #5 (Subscribe → Security) ─────────────── */}
-          <div style={{ height: "var(--h-gap-md)" }} aria-hidden="true" />
-          <section
-            aria-hidden
-            className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]"
-          >
-            <div
-              className="page-center"
-              style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
-            >
-              <div
-                className="mx-auto rounded-full"
-                style={{
-                  height: "var(--sub-divider-1-height)",
-                  background: "var(--sub-divider-1-fill)",
-                  boxShadow: "var(--sub-divider-1-glow)",
-                }}
-              />
-            </div>
-          </section>
-          <div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
-
-         {/* ─────────────── 13 MODES SECTION ─────────────── */}
+         {/* ─────────────── EXPERTS OVERVIEW SECTION ─────────────── */}
           <section
             className="pt-[clamp(20px,4vw,40px)] pb-[clamp(20px,4vw,40px)]"
-            aria-label="Modes section"
+            aria-label="Experts overview section"
           >
             <div
               className="page-center"
               style={{ maxWidth: "calc(var(--page-inner-max) * 1.0)" }}
             >
-              <Modis13 />
+              <ExpertsOverview />
             </div>
           </section>
+          {/* ─────────────── DIVIDER #1 (Hero → Testimonials → Experts) ─────────────── */}
+<section
+  aria-hidden
+  className="pt-[var(--sub-divider-gap-y)] pb-[var(--sub-divider-gap-y)]"
+>
+  <div
+    className="page-center"
+    style={{ maxWidth: "calc(var(--page-inner-max) * 1.31)" }}
+  >
+    <div
+      className="mx-auto rounded-full"
+      style={{
+        height: "var(--sub-divider-1-height)",
+        background: "var(--sub-divider-1-fill)",
+        boxShadow: "var(--sub-divider-1-glow)",
+      }}
+    />
+  </div>
+</section>
+<div style={{ height: "var(--h-gap-sm)" }} aria-hidden="true" />
+
+
+          {/* ─────────────── SECURITY BY DESIGN ─────────────── */}
+            <SecuritySection />
+
+
+         
+
+
+          
+          
+
+
+         
+
+          
 
 
 
