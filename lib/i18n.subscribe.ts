@@ -23,16 +23,22 @@ export const subscribeDict = {
     token_subline:
       "Designed for sustained analysis, long sessions, and real projects without micro management or artificial limits.",
 
-    // C. Benefits
-    benefits_title: "What this month enables",
-    benefit_1:
-      "A stable workspace for one focused professional context.",
-    benefit_2:
-      "Deep analytical sessions without interruption.",
-    benefit_3:
-      "Iterative reasoning across days and weeks.",
-    benefit_4:
-      "Outputs designed for accountability, not extraction.",
+   // C. Benefits
+benefits_title: "Key features",
+benefit_1: "Real time archive of all chats.",
+benefit_2: "Instant full text search across all content.",
+benefit_3: "Unlimited creation of verified reports.",
+benefit_4: "Cryptographic sealing with hash.",
+benefit_5: "Provable authorship and IP attribution.",
+benefit_6: "Result comparison with other systems.",
+benefit_7: "Isolated working environment without internet access.",
+benefit_8: "Suitable for sensitive and regulated content.",
+benefit_9: "Full chat export as CSV or JSON.",
+benefit_10: "High precision dev loops without context loss.",
+benefit_11: "Traceable reasoning paths instead of single answers.",
+benefit_12: "Resonant AI interaction aligned with thinking flow.",
+benefit_13: "Complete professional work cycle per month.",
+
 
     // D. Safety / Conditions
     safety_title: "Operational clarity",
@@ -82,16 +88,22 @@ footnote_2:
     token_subline:
       "Ausgelegt für nachhaltige Analysen, lange Sessions und reale Projekte ohne Mikromanagement oder künstliche Limits.",
 
-    // C. Nutzen
-    benefits_title: "Was dieser Monat ermöglicht",
-    benefit_1:
-      "Ein stabiler Arbeitsraum für einen fokussierten professionellen Kontext.",
-    benefit_2:
-      "Tiefe analytische Sessions ohne Unterbrechung.",
-    benefit_3:
-      "Iteratives Denken über Tage und Wochen hinweg.",
-    benefit_4:
-      "Ergebnisse mit Fokus auf Nachvollziehbarkeit statt Extraktion.",
+   // C. Nutzen
+benefits_title: "Wichtige Funktionen",
+benefit_1: "Echtzeit Archiv aller Chats.",
+benefit_2: "Sofortige Volltextsuche über alle Inhalte.",
+benefit_3: "Unbegrenzte Erstellung verifizierter Reports.",
+benefit_4: "Kryptografisches Sealing mit Hash.",
+benefit_5: "Nachweisbare Urheberschaft und IP Zuordnung.",
+benefit_6: "Vergleich von Ergebnissen mit anderen Systemen.",
+benefit_7: "Isolierte Arbeitsumgebung ohne Internetzugang.",
+benefit_8: "Geeignet für sensible und regulatorische Inhalte.",
+benefit_9: "Export kompletter Chats als CSV oder JSON.",
+benefit_10: "Hochpräzise Dev Loops ohne Kontextverlust.",
+benefit_11: "Nachvollziehbare Denkpfade statt Einzelantworten.",
+benefit_12: "Resonante KI Interaktion im Denkfluss.",
+benefit_13: "Vollständiger professioneller Arbeitszyklus pro Monat.",
+
 
     // D. Klarheit & Rahmen
     safety_title: "Operative Klarheit",
@@ -146,15 +158,21 @@ footnote_2:
       "Conçue pour des analyses soutenues, des sessions longues et des projets réels, sans micro-gestion ni limites artificielles.",
 
     // C. Bénéfices
-    benefits_title: "Ce que ce mois permet",
-    benefit_1:
-      "Un espace de travail stable pour un contexte professionnel clairement défini.",
-    benefit_2:
-      "Des sessions analytiques approfondies sans interruption.",
-    benefit_3:
-      "Un raisonnement itératif sur plusieurs jours ou semaines.",
-    benefit_4:
-      "Des résultats conçus pour la responsabilité, pas pour l’extraction.",
+benefits_title: "Fonctionnalités clés",
+benefit_1: "Archive en temps réel de toutes les conversations.",
+benefit_2: "Recherche plein texte instantanée sur tout le contenu.",
+benefit_3: "Création illimitée de rapports vérifiés.",
+benefit_4: "Scellement cryptographique avec hash.",
+benefit_5: "Attribution prouvable de l’auteur et de la propriété intellectuelle.",
+benefit_6: "Comparaison des résultats avec d’autres systèmes.",
+benefit_7: "Environnement de travail isolé sans accès Internet.",
+benefit_8: "Adapté aux contenus sensibles et réglementés.",
+benefit_9: "Export complet des conversations en CSV ou JSON.",
+benefit_10: "Dev loops de haute précision sans perte de contexte.",
+benefit_11: "Chemins de raisonnement traçables plutôt que réponses isolées.",
+benefit_12: "Interaction IA résonante alignée sur le flux de pensée.",
+benefit_13: "Cycle de travail professionnel complet par mois.",
+
 
     // D. Cadre & clarté
     safety_title: "Clarté opérationnelle",
@@ -202,15 +220,21 @@ es: {
       "Diseñada para análisis sostenidos, sesiones largas y proyectos reales sin microgestión ni límites artificiales.",
 
     // C. Beneficios
-    benefits_title: "Lo que este mes permite",
-    benefit_1:
-      "Un espacio de trabajo estable para un contexto profesional enfocado.",
-    benefit_2:
-      "Sesiones analíticas profundas sin interrupciones.",
-    benefit_3:
-      "Razonamiento iterativo a lo largo de días y semanas.",
-    benefit_4:
-      "Resultados diseñados para la rendición de cuentas, no para la extracción.",
+benefits_title: "Funciones clave",
+benefit_1: "Archivo en tiempo real de todas las conversaciones.",
+benefit_2: "Búsqueda de texto completo instantánea en todo el contenido.",
+benefit_3: "Creación ilimitada de informes verificados.",
+benefit_4: "Sellado criptográfico con hash.",
+benefit_5: "Autoría y atribución de propiedad intelectual verificables.",
+benefit_6: "Comparación de resultados con otros sistemas.",
+benefit_7: "Entorno de trabajo aislado sin acceso a Internet.",
+benefit_8: "Adecuado para contenido sensible y regulado.",
+benefit_9: "Exportación completa de chats en CSV o JSON.",
+benefit_10: "Dev loops de alta precisión sin pérdida de contexto.",
+benefit_11: "Rutas de razonamiento trazables en lugar de respuestas aisladas.",
+benefit_12: "Interacción de IA resonante alineada con el flujo de pensamiento.",
+benefit_13: "Ciclo de trabajo profesional completo por mes.",
+
 
     // D. Claridad operativa
     safety_title: "Claridad operativa",
@@ -261,15 +285,21 @@ footnote_2:
       "Progettata per analisi prolungate, sessioni lunghe e progetti reali senza microgestione o limiti artificiali.",
 
     // C. Benefici
-    benefits_title: "Cosa consente questo mese",
-    benefit_1:
-      "Uno spazio di lavoro stabile per un contesto professionale mirato.",
-    benefit_2:
-      "Sessioni analitiche profonde senza interruzioni.",
-    benefit_3:
-      "Ragionamento iterativo nell’arco di giorni e settimane.",
-    benefit_4:
-      "Risultati progettati per la responsabilità, non per l’estrazione.",
+benefits_title: "Funzionalità chiave",
+benefit_1: "Archivio in tempo reale di tutte le conversazioni.",
+benefit_2: "Ricerca full text immediata su tutti i contenuti.",
+benefit_3: "Creazione illimitata di report verificati.",
+benefit_4: "Sigillatura crittografica con hash.",
+benefit_5: "Attribuzione verificabile di autore e proprietà intellettuale.",
+benefit_6: "Confronto dei risultati con altri sistemi.",
+benefit_7: "Ambiente di lavoro isolato senza accesso a Internet.",
+benefit_8: "Adatto a contenuti sensibili e regolamentati.",
+benefit_9: "Esportazione completa delle chat in CSV o JSON.",
+benefit_10: "Dev loops ad alta precisione senza perdita di contesto.",
+benefit_11: "Percorsi di ragionamento tracciabili invece di risposte singole.",
+benefit_12: "Interazione IA risonante allineata al flusso di pensiero.",
+benefit_13: "Ciclo di lavoro professionale completo al mese.",
+
 
     // D. Chiarezza operativa
     safety_title: "Chiarezza operativa",
@@ -320,15 +350,21 @@ footnote_2:
       "Concebida para análises sustentadas, sessões longas e projetos reais, sem microgestão ou limites artificiais.",
 
     // C. Benefícios
-    benefits_title: "O que este mês possibilita",
-    benefit_1:
-      "Um espaço de trabalho estável para um contexto profissional focado.",
-    benefit_2:
-      "Sessões analíticas profundas sem interrupções.",
-    benefit_3:
-      "Raciocínio iterativo ao longo de dias e semanas.",
-    benefit_4:
-      "Resultados concebidos para responsabilidade, não para extração.",
+benefits_title: "Principais funcionalidades",
+benefit_1: "Arquivo em tempo real de todas as conversas.",
+benefit_2: "Pesquisa de texto completo instantânea em todo o conteúdo.",
+benefit_3: "Criação ilimitada de relatórios verificados.",
+benefit_4: "Selagem criptográfica com hash.",
+benefit_5: "Autoria e atribuição de propriedade intelectual comprováveis.",
+benefit_6: "Comparação de resultados com outros sistemas.",
+benefit_7: "Ambiente de trabalho isolado sem acesso à Internet.",
+benefit_8: "Adequado para conteúdos sensíveis e regulados.",
+benefit_9: "Exportação completa de chats em CSV ou JSON.",
+benefit_10: "Dev loops de alta precisão sem perda de contexto.",
+benefit_11: "Caminhos de raciocínio rastreáveis em vez de respostas isoladas.",
+benefit_12: "Interação de IA ressonante alinhada ao fluxo de pensamento.",
+benefit_13: "Ciclo de trabalho profissional completo por mês.",
+
 
     // D. Clareza operacional
     safety_title: "Clareza operacional",
@@ -383,15 +419,21 @@ footnote_2:
       "Ontworpen voor langdurige analyses, lange sessies en echte projecten zonder micromanagement of kunstmatige limieten.",
 
     // C. Voordelen
-    benefits_title: "Wat deze maand mogelijk maakt",
-    benefit_1:
-      "Een stabiele werkruimte voor één gerichte professionele context.",
-    benefit_2:
-      "Diepgaande analytische sessies zonder onderbreking.",
-    benefit_3:
-      "Iteratief redeneren over dagen en weken.",
-    benefit_4:
-      "Resultaten ontworpen voor verantwoording, niet voor extractie.",
+benefits_title: "Belangrijke functies",
+benefit_1: "Realtime archief van alle chats.",
+benefit_2: "Directe full text zoekfunctie over alle inhoud.",
+benefit_3: "Onbeperkte aanmaak van geverifieerde rapporten.",
+benefit_4: "Cryptografische verzegeling met hash.",
+benefit_5: "Aantoonbaar auteurschap en IP toewijzing.",
+benefit_6: "Vergelijking van resultaten met andere systemen.",
+benefit_7: "Geïsoleerde werkomgeving zonder internettoegang.",
+benefit_8: "Geschikt voor gevoelige en gereguleerde inhoud.",
+benefit_9: "Volledige export van chats als CSV of JSON.",
+benefit_10: "Hoog nauwkeurige dev loops zonder contextverlies.",
+benefit_11: "Traceerbare redeneerpaden in plaats van losse antwoorden.",
+benefit_12: "Resonante AI interactie afgestemd op denkflow.",
+benefit_13: "Volledige professionele werkcyclus per maand.",
+
 
     // D. Operationele duidelijkheid
     safety_title: "Operationele duidelijkheid",
@@ -442,15 +484,21 @@ footnote_2:
       "Предназначено для длительных анализов, продолжительных сессий и реальных проектов без микроменеджмента и искусственных ограничений.",
 
     // C. Преимущества
-    benefits_title: "Что даёт этот месяц",
-    benefit_1:
-      "Стабильное рабочее пространство для одного сфокусированного профессионального контекста.",
-    benefit_2:
-      "Глубокие аналитические сессии без прерываний.",
-    benefit_3:
-      "Итеративное мышление на протяжении дней и недель.",
-    benefit_4:
-      "Результаты, ориентированные на подотчётность, а не на извлечение данных.",
+benefits_title: "Ключевые функции",
+benefit_1: "Архив всех чатов в реальном времени.",
+benefit_2: "Мгновенный полнотекстовый поиск по всему содержимому.",
+benefit_3: "Неограниченное создание верифицированных отчетов.",
+benefit_4: "Криптографическое запечатывание с хешем.",
+benefit_5: "Доказуемое авторство и атрибуция интеллектуальной собственности.",
+benefit_6: "Сравнение результатов с другими системами.",
+benefit_7: "Изолированная рабочая среда без доступа к Интернету.",
+benefit_8: "Подходит для конфиденциального и регулируемого контента.",
+benefit_9: "Полный экспорт чатов в CSV или JSON.",
+benefit_10: "Высокоточные dev loops без потери контекста.",
+benefit_11: "Отслеживаемые пути рассуждений вместо отдельных ответов.",
+benefit_12: "Резонансное взаимодействие ИИ в соответствии с потоком мышления.",
+benefit_13: "Полный профессиональный рабочий цикл в месяц.",
+
 
     // D. Операционная ясность
     safety_title: "Операционная ясность",
@@ -501,15 +549,21 @@ footnote_2:
       "专为持续分析、长时间会话和真实项目而设计，无需微观管理或人为限制。",
 
     // C. 价值
-    benefits_title: "这个月可以实现的内容",
-    benefit_1:
-      "为一个专注的专业场景提供稳定的工作空间。",
-    benefit_2:
-      "不中断的深度分析会话。",
-    benefit_3:
-      "跨越数天和数周的迭代推理。",
-    benefit_4:
-      "为可追责性而设计的输出，而非数据提取。",
+benefits_title: "关键功能",
+benefit_1: "所有对话的实时归档。",
+benefit_2: "对全部内容的即时全文搜索。",
+benefit_3: "无限创建已验证报告。",
+benefit_4: "带哈希的加密封存。",
+benefit_5: "可证明的作者身份与知识产权归属。",
+benefit_6: "与其他系统的结果对比。",
+benefit_7: "无互联网访问的隔离工作环境。",
+benefit_8: "适用于敏感和受监管内容。",
+benefit_9: "以 CSV 或 JSON 导出完整聊天。",
+benefit_10: "高精度 dev loops 且不丢失上下文。",
+benefit_11: "可追溯的推理路径而非单一答案。",
+benefit_12: "与思考流程一致的共振式 AI 交互。",
+benefit_13: "每月完整的专业工作周期。",
+
 
     // D. 操作清晰度
     safety_title: "操作清晰度",
@@ -560,15 +614,21 @@ footnote_2:
       "長時間の分析、継続的なセッション、実際のプロジェクトのために設計されています。細かな管理や人工的な制限はありません。",
 
     // C. ベネフィット
-    benefits_title: "この一か月で可能になること",
-    benefit_1:
-      "一つの明確なプロフェッショナル文脈のための安定した作業空間。",
-    benefit_2:
-      "中断のない深い分析セッション。",
-    benefit_3:
-      "数日から数週間にわたる反復的な思考。",
-    benefit_4:
-      "抽出ではなく、説明責任を重視したアウトプット。",
+benefits_title: "主要機能",
+benefit_1: "すべてのチャットのリアルタイムアーカイブ。",
+benefit_2: "全コンテンツに対する即時フルテキスト検索。",
+benefit_3: "検証済みレポートの無制限作成。",
+benefit_4: "ハッシュ付き暗号学的シーリング。",
+benefit_5: "証明可能な著作者と知的財産の帰属。",
+benefit_6: "他システムとの結果比較。",
+benefit_7: "インターネット非接続の隔離された作業環境。",
+benefit_8: "機密および規制対象コンテンツに対応。",
+benefit_9: "CSV または JSON での完全エクスポート。",
+benefit_10: "文脈損失のない高精度 dev loops。",
+benefit_11: "単一回答ではなく追跡可能な思考経路。",
+benefit_12: "思考フローに整合する共鳴型 AI 対話。",
+benefit_13: "月次の完全なプロフェッショナル作業サイクル。",
+
 
     // D. 運用上の明確さ
     safety_title: "運用上の明確さ",
@@ -622,15 +682,21 @@ footnote_2:
       "지속적인 분석, 긴 세션, 실제 프로젝트를 위해 설계되었으며 미세 관리나 인위적인 제한이 없습니다.",
 
     // C. 혜택
-    benefits_title: "이 한 달이 제공하는 것",
-    benefit_1:
-      "집중된 하나의 전문적 맥락을 위한 안정적인 작업 공간.",
-    benefit_2:
-      "중단 없는 깊이 있는 분석 세션.",
-    benefit_3:
-      "며칠과 몇 주에 걸친 반복적 추론.",
-    benefit_4:
-      "데이터 추출이 아닌 책임성을 중심으로 설계된 결과물.",
+benefits_title: "주요 기능",
+benefit_1: "모든 대화의 실시간 아카이브.",
+benefit_2: "전체 콘텐츠에 대한 즉각적인 전체 텍스트 검색.",
+benefit_3: "검증된 보고서 무제한 생성.",
+benefit_4: "해시 기반 암호화 봉인.",
+benefit_5: "증명 가능한 저작권자 및 지식재산 귀속.",
+benefit_6: "다른 시스템과의 결과 비교.",
+benefit_7: "인터넷 접근 없는 격리된 작업 환경.",
+benefit_8: "민감하고 규제된 콘텐츠에 적합.",
+benefit_9: "CSV 또는 JSON 으로 전체 채팅 내보내기.",
+benefit_10: "컨텍스트 손실 없는 고정밀 dev loops.",
+benefit_11: "단일 답변이 아닌 추적 가능한 추론 경로.",
+benefit_12: "사고 흐름에 정렬된 공명형 AI 상호작용.",
+benefit_13: "월 단위의 완전한 전문 작업 사이클.",
+
 
     // D. 운영 명확성
     safety_title: "운영 명확성",
@@ -681,15 +747,21 @@ footnote_2:
       "مصممة للتحليل المستمر، والجلسات الطويلة، والمشاريع الحقيقية دون إدارة دقيقة أو حدود مصطنعة.",
 
     // C. المزايا
-    benefits_title: "ما الذي يتيحه هذا الشهر",
-    benefit_1:
-      "مساحة عمل مستقرة لسياق مهني واحد ومركّز.",
-    benefit_2:
-      "جلسات تحليل عميقة دون انقطاع.",
-    benefit_3:
-      "تفكير تكراري يمتد عبر أيام وأسابيع.",
-    benefit_4:
-      "مخرجات مصممة للمساءلة لا للاستخراج.",
+benefits_title: "الميزات الرئيسية",
+benefit_1: "أرشيف فوري لجميع المحادثات.",
+benefit_2: "بحث نصي كامل فوري عبر جميع المحتويات.",
+benefit_3: "إنشاء غير محدود لتقارير موثقة.",
+benefit_4: "ختم تشفيري باستخدام بصمة hash.",
+benefit_5: "إثبات المؤلف ونسبة الملكية الفكرية.",
+benefit_6: "مقارنة النتائج مع أنظمة أخرى.",
+benefit_7: "بيئة عمل معزولة دون اتصال بالإنترنت.",
+benefit_8: "مناسب للمحتوى الحساس والمنظم.",
+benefit_9: "تصدير كامل للمحادثات بصيغة CSV أو JSON.",
+benefit_10: "Dev loops عالية الدقة دون فقدان السياق.",
+benefit_11: "مسارات تفكير قابلة للتتبع بدلا من إجابات منفردة.",
+benefit_12: "تفاعل ذكاء اصطناعي متناغم مع تدفق التفكير.",
+benefit_13: "دورة عمل مهنية كاملة لكل شهر.",
+
 
     // D. الوضوح التشغيلي
     safety_title: "الوضوح التشغيلي",
@@ -740,15 +812,21 @@ footnote_2:
       "स्थायी विश्लेषण, लंबी सत्रों और वास्तविक परियोजनाओं के लिए डिज़ाइन की गई, बिना सूक्ष्म प्रबंधन या कृत्रिम सीमाओं के।",
 
     // C. लाभ
-    benefits_title: "यह महीना क्या सक्षम बनाता है",
-    benefit_1:
-      "एक केंद्रित पेशेवर संदर्भ के लिए एक स्थिर कार्यक्षेत्र।",
-    benefit_2:
-      "बिना बाधा के गहन विश्लेषण सत्र।",
-    benefit_3:
-      "दिनों और हफ्तों में फैली पुनरावृत्त सोच।",
-    benefit_4:
-      "निकासी के बजाय उत्तरदायित्व के लिए डिज़ाइन किए गए परिणाम।",
+    // HI
+benefits_title: "मुख्य विशेषताएं",
+benefit_1: "सभी चैट का रियल टाइम आर्काइव.",
+benefit_2: "सभी सामग्री पर त्वरित फुल टेक्स्ट खोज.",
+benefit_3: "सत्यापित रिपोर्ट्स का असीमित निर्माण.",
+benefit_4: "हैश के साथ क्रिप्टोग्राफिक सीलिंग.",
+benefit_5: "प्रमाणित लेखकत्व और बौद्धिक संपदा निर्धारण.",
+benefit_6: "अन्य प्रणालियों के साथ परिणामों की तुलना.",
+benefit_7: "इंटरनेट रहित पृथक कार्य वातावरण.",
+benefit_8: "संवेदनशील और विनियमित सामग्री के लिए उपयुक्त.",
+benefit_9: "CSV या JSON के रूप में पूर्ण चैट निर्यात.",
+benefit_10: "संदर्भ हानि के बिना उच्च सटीक dev loops.",
+benefit_11: "एकल उत्तरों के बजाय ट्रेस करने योग्य तर्क पथ.",
+benefit_12: "विचार प्रवाह के अनुरूप प्रतिध्वनित AI इंटरैक्शन.",
+benefit_13: "प्रति माह पूर्ण पेशेवर कार्य चक्र.",
 
     // D. संचालन स्पष्टता
     safety_title: "संचालन स्पष्टता",
