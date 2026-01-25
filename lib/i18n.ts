@@ -147,8 +147,7 @@ const en = {
   statusExpert: "Expert:",
   clearChat: "Clear chat",
   startBuilding: "build",
-  startBuildingMsg:
-"Give me 13 examples for each category that demonstrate your building capabilities. Use the sector of children's toys for kids aged 2–6, for kids aged 6–12, and for men aged 30 and above, and show them in a table.",
+  startBuildingMsg: "Start Council13 – Truth Mode\n\nAsk me what I want to create first.\n\nAfter I answered, execute this:\n\n\"go into a Develop in exactly 13 iterations.\n\nCouncil13 governance: 10 members propose, 3 members act as jury, decisions require 2/3 jury consensus, jury votes must be explicitly reasoned.\n\nPer iteration: proposals may affect formula or production process. End each iteration with a KPI table using the same fixed KPIs and scale: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nRules (Truth Mode): evidence-based only, no medical claims, no boundary crossing. If evidence is weak or emerging, state it explicitly.\n\nStart with Iteration 1 and guide me through the full process.\"",
 
   // Actions / footer
   export: "Export",
@@ -368,8 +367,7 @@ const de = {
   statusExpert: "Experte:",
   clearChat: "Chat löschen",
   startBuilding: "Bauen starten",
-  startBuildingMsg:
-  "Gib mir jeweils 13 Beispiele, die deine Baufähigkeiten zeigen. Nimm den Sektor Kinderspielzeug für 2-6 jährige Kinder, für 6-12 jährige Kinder und für Männer ab 30 und zeig mir eine Tabelle.",
+  startBuildingMsg: "Start Council13 Truth Mode\n\nFrag mich zuerst, was ich erschaffen möchte.\n\nNachdem ich geantwortet habe, führe Folgendes aus:\n\n\"gehe in eine Entwicklung mit exakt 13 Iterationen.\n\nCouncil13 Governance: 10 Mitglieder machen Vorschläge, 3 Mitglieder fungieren als Jury, Entscheidungen erfordern eine Zwei Drittel Mehrheit der Jury, Jury Stimmen müssen explizit begründet werden.\n\nPro Iteration können Vorschläge die Formel oder den Produktionsprozess betreffen. Beende jede Iteration mit einer KPI Tabelle unter Verwendung derselben festen KPIs und Skala: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nRegeln Truth Mode: ausschließlich evidenzbasiert, keine medizinischen Aussagen, keine Grenzüberschreitungen. Wenn Evidenz schwach oder im Entstehen ist, weise explizit darauf hin.\n\nBeginne mit Iteration 1 und führe mich durch den gesamten Prozess.\"",
 
   // Actions / footer
   export: "Exportieren",
@@ -577,8 +575,8 @@ const fr = {
   statusExpert: "Expert :",
   clearChat: "Effacer le chat",
   startBuilding: "Commencer",
-  startBuildingMsg:
-"Donne-moi 13 exemples pour chaque catégorie qui montrent tes capacités de construction. Prends le secteur des jouets pour enfants âgés de 2 à 6 ans, de 6 à 12 ans, ainsi que pour les hommes de plus de 30 ans, et présente-les dans un tableau.",
+startBuildingMsg:
+"Start Council13 Truth Mode\n\nDemande moi d abord ce que je souhaite créer.\n\nAprès ma réponse, exécute ceci:\n\n\"entre dans un développement en exactement 13 itérations.\n\nGouvernance Council13: 10 membres proposent, 3 membres agissent comme jury, les décisions requièrent une majorité de deux tiers du jury, les votes du jury doivent être explicitement justifiés.\n\nPar itération, les propositions peuvent affecter la formule ou le processus de production. Termine chaque itération par un tableau KPI utilisant les mêmes KPIs fixes et la même échelle: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nRègles Truth Mode: uniquement basé sur des preuves, aucune affirmation médicale, aucun dépassement de limites. Si les preuves sont faibles ou émergentes, le préciser explicitement.\n\nCommence avec l itération 1 et guide moi à travers tout le processus.\"",
 
   // Actions / footer
   export: "Exporter",
@@ -785,8 +783,8 @@ const es = {
   statusExpert: "Experto:",
   clearChat: "Borrar chat",
   startBuilding: "Iniciar construcción",
-  startBuildingMsg:
-"Dame 13 ejemplos para cada categoría que demuestren tus capacidades de construcción. Toma el sector de juguetes infantiles para niños de 2 a 6 años, de 6 a 12 años y para hombres mayores de 30, y muéstramelos en una tabla.",
+startBuildingMsg:
+"Start Council13 Truth Mode\n\nPregúntame primero qué quiero crear.\n\nDespués de que responda, ejecuta esto:\n\n\"entra en un desarrollo con exactamente 13 iteraciones.\n\nGobernanza Council13: 10 miembros proponen, 3 miembros actúan como jurado, las decisiones requieren una mayoría de dos tercios del jurado, los votos del jurado deben estar explícitamente razonados.\n\nPor iteración, las propuestas pueden afectar la fórmula o el proceso de producción. Finaliza cada iteración con una tabla de KPI utilizando los mismos KPIs fijos y la misma escala: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nReglas Truth Mode: solo basado en evidencia, sin afirmaciones médicas, sin cruces de límites. Si la evidencia es débil o emergente, indícalo explícitamente.\n\nComienza con la Iteración 1 y guíame a través de todo el proceso.\"",
 
   // Actions / footer
   export: "Exportar",
@@ -995,7 +993,7 @@ const it = {
   clearChat: "Cancella chat",
   startBuilding: "Inizia a creare",
   startBuildingMsg:
-    "Dammi 13 esempi per ciascuna categoria che mostrino le tue capacità di costruzione. Prendi il settore dei giocattoli per bambini di 2–6 anni, 6–12 anni e per uomini sopra i 30 anni, e mostrali in una tabella.",
+"Start Council13 Truth Mode\n\nChiedimi prima cosa voglio creare.\n\nDopo la mia risposta, esegui questo:\n\n\"entra in uno sviluppo con esattamente 13 iterazioni.\n\nGovernance Council13: 10 membri propongono, 3 membri agiscono come giuria, le decisioni richiedono una maggioranza di due terzi della giuria, i voti della giuria devono essere esplicitamente motivati.\n\nPer iterazione, le proposte possono influenzare la formula o il processo produttivo. Concludi ogni iterazione con una tabella KPI utilizzando gli stessi KPI fissi e la stessa scala: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nRegole Truth Mode: solo basato su evidenze, nessuna affermazione medica, nessuna violazione dei limiti. Se le evidenze sono deboli o emergenti, dichiaralo esplicitamente.\n\nInizia con Iterazione 1 e guidami attraverso l intero processo.\"",
 
   // Actions / footer
   export: "Esporta",
@@ -1204,7 +1202,7 @@ const pt = {
   clearChat: "Limpar chat",
   startBuilding: "Começar a criar",
   startBuildingMsg:
-  "Dá-me 13 exemplos para cada categoria que mostrem as tuas capacidades de construção. Usa o setor de brinquedos infantis para crianças de 2–6 anos, de 6–12 anos e para homens acima de 30 anos, e apresenta tudo numa tabela.",
+"Start Council13 Truth Mode\n\nPergunta primeiro o que eu quero criar.\n\nDepois que eu responder, executa isto:\n\n\"entra em um desenvolvimento com exatamente 13 iterações.\n\nGovernança Council13: 10 membros propõem, 3 membros atuam como júri, decisões exigem maioria de dois terços do júri, os votos do júri devem ser explicitamente justificados.\n\nPor iteração, as propostas podem afetar a fórmula ou o processo de produção. Finaliza cada iteração com uma tabela de KPIs usando os mesmos KPIs fixos e a mesma escala: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nRegras Truth Mode: apenas baseado em evidências, sem alegações médicas, sem ultrapassar limites. Se a evidência for fraca ou emergente, declare explicitamente.\n\nComeça com a Iteração 1 e guia me por todo o processo.\"",
 
   // Actions / footer
   export: "Exportar",
@@ -1413,7 +1411,7 @@ const nl = {
   clearChat: "Chat wissen",
   startBuilding: "Bouwen starten",
   startBuildingMsg:
-"Geef me voor elke categorie 13 voorbeelden die jouw bouwvaardigheden tonen. Neem de sector kinderspeelgoed voor kinderen van 2–6 jaar, 6–12 jaar en voor mannen boven de 30, en toon het in een tabel.",
+"Start Council13 Truth Mode\n\nVraag mij eerst wat ik wil creëren.\n\nNadat ik heb geantwoord, voer dit uit:\n\n\"ga een ontwikkelproces in met exact 13 iteraties.\n\nCouncil13 governance: 10 leden doen voorstellen, 3 leden fungeren als jury, beslissingen vereisen een tweederde meerderheid van de jury, jury stemmen moeten expliciet worden onderbouwd.\n\nPer iteratie kunnen voorstellen de formule of het productieproces beïnvloeden. Sluit elke iteratie af met een KPI tabel met dezelfde vaste KPIs en schaal: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nRegels Truth Mode: uitsluitend evidence based, geen medische claims, geen grensoverschrijding. Als bewijs zwak of opkomend is, dit expliciet vermelden.\n\nBegin met Iteratie 1 en leid mij door het volledige proces.\"",
 
   // Actions / footer
   export: "Exporteren",
@@ -1622,8 +1620,8 @@ const ru = {
   statusExpert: "Эксперт:",
   clearChat: "Очистить чат",
   startBuilding: "Начать создание",
-  startBuildingMsg:
-"Дай мне по 13 примеров для каждой категории, которые демонстрируют твои строительные способности. Возьми сектор детских игрушек для детей 2–6 лет, 6–12 лет и для мужчин старше 30, и представь это в виде таблицы.",
+ startBuildingMsg:
+"Start Council13 Truth Mode\n\nСначала спроси меня, что я хочу создать.\n\nПосле моего ответа выполни следующее:\n\n\"перейди в разработку с ровно 13 итерациями.\n\nУправление Council13: 10 участников предлагают, 3 участника выступают в роли жюри, решения требуют большинства в две трети голосов жюри, голоса жюри должны быть явно обоснованы.\n\nВ каждой итерации предложения могут влиять на формулу или производственный процесс. Завершай каждую итерацию таблицей KPI с использованием одних и тех же фиксированных KPI и шкалы: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nПравила Truth Mode: только на основе доказательств, без медицинских утверждений, без выхода за границы. Если доказательства слабые или формирующиеся, укажи это явно.\n\nНачни с Итерации 1 и проведи меня через весь процесс.\"",
 
   // Actions / footer
   export: "Экспорт",
@@ -1833,7 +1831,7 @@ const zh = {
   clearChat: "清空聊天",
   startBuilding: "开始创建",
   startBuildingMsg:
-    "请向我说明 build 功能以及与您高效协作所需的关键命令。请以表格形式展示。",
+"Start Council13 Truth Mode\n\n首先问我想要创造什么。\n\n在我回答之后，执行以下内容:\n\n\"进入一个恰好包含13次迭代的开发过程。\n\nCouncil13治理: 10名成员提出方案，3名成员作为评审团，决策需要评审团三分之二多数同意，评审团的投票必须明确给出理由。\n\n在每次迭代中，提案可以影响配方或生产流程。每次迭代结束时使用相同固定KPI和量表的KPI表: Market Readiness, Completeness, Legal Readiness, Patentability, Causality。\n\nTruth Mode规则: 仅基于证据，不做医疗声明，不越界。如果证据薄弱或仍在形成中，需明确说明。\n\n从迭代1开始并引导我完成整个过程。\"",
 
   // Actions / footer
   export: "导出",
@@ -2042,7 +2040,7 @@ const ja = {
   clearChat: "チャットを消去",
   startBuilding: "ビルド開始",
   startBuildingMsg:
-"あなたのビルド能力を示す各カテゴリーにつき13の例を提示してください。2〜6歳向け、6〜12歳向け、そして30歳以上の男性向けの子ども用おもちゃの分野を使い、それらを表形式で見せてください。",
+"Start Council13 Truth Mode\n\nまず私に何を作りたいか尋ねてください。\n\n私が答えた後、以下を実行してください:\n\n\"正確に13回のイテレーションによる開発に入る。\n\nCouncil13ガバナンス: 10名が提案し、3名が陪審として行動し、決定には陪審の三分の二の合意が必要であり、陪審の投票は明確に理由付けされなければならない。\n\n各イテレーションで提案は配合や製造プロセスに影響を与える可能性がある。各イテレーションの最後に同一の固定KPIと尺度を用いたKPI表を作成する: Market Readiness, Completeness, Legal Readiness, Patentability, Causality。\n\nTruth Modeのルール: 証拠に基づくことのみ、医療的主張を行わない、境界を越えない。証拠が弱いまたは形成途中の場合は明示する。\n\nイテレーション1から開始し、全プロセスを案内する。\"",
 
   // Actions / footer
   export: "エクスポート",
@@ -2212,7 +2210,7 @@ const ko = {
   clearChat: "채팅 지우기",
   startBuilding: "빌드 시작",
   startBuildingMsg:
-"당신의 빌드 능력을 보여주는 카테고리별 13가지 예시를 제시해주세요. 2–6세 어린이, 6–12세 어린이, 그리고 30세 이상 남성을 위한 어린이 장난감 분야를 사용하여 표로 보여주세요.",
+"Start Council13 Truth Mode\n\n먼저 내가 무엇을 만들고 싶은지 물어보세요.\n\n내가 답한 후 다음을 실행하세요:\n\n\"정확히 13회의 반복으로 개발에 들어갑니다.\n\nCouncil13 거버넌스: 10명의 구성원이 제안하고 3명이 배심 역할을 하며 결정은 배심의 삼분의 이 동의가 필요하고 배심 투표는 명확한 근거를 제시해야 합니다.\n\n각 반복에서 제안은 공식이나 생산 과정에 영향을 줄 수 있습니다. 각 반복은 동일한 고정 KPI와 척도를 사용하는 KPI 표로 마무리합니다: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nTruth Mode 규칙: 증거 기반만 허용, 의료 주장 금지, 경계 침범 금지. 증거가 약하거나 초기 단계인 경우 명확히 밝히세요.\n\n반복 1부터 시작하여 전체 과정을 안내하세요.\"",
 
   // Actions / footer
   export: "내보내기",
@@ -2421,7 +2419,7 @@ const ar = {
   clearChat: "مسح الدردشة",
   startBuilding: "ابدأ البناء",
   startBuildingMsg:
-"أعطني 13 مثالًا لكل فئة تُظهر قدراتك في البناء. استخدم قطاع ألعاب الأطفال للفئات العمرية 2–6 سنوات، 6–12 سنة، وللرجال فوق سن 30، واعرض ذلك في جدول.",
+"Start Council13 Truth Mode\n\nاسألني أولاً عما أريد إنشاءه.\n\nبعد إجابتي نفذ ما يلي:\n\n\"ادخل في عملية تطوير مكونة من 13 تكراراً بالضبط.\n\nحوكمة Council13: عشرة أعضاء يقدمون مقترحات، ثلاثة أعضاء يعملون كلجنة تحكيم، القرارات تتطلب موافقة ثلثي لجنة التحكيم، ويجب تبرير أصوات لجنة التحكيم بشكل صريح.\n\nفي كل تكرار يمكن أن تؤثر المقترحات على الصيغة أو عملية الإنتاج. أنهِ كل تكرار بجدول مؤشرات أداء باستخدام نفس المؤشرات الثابتة ونفس المقياس: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nقواعد Truth Mode: الاعتماد على الأدلة فقط، دون ادعاءات طبية، دون تجاوز للحدود. إذا كانت الأدلة ضعيفة أو في طور التكوين فاذكر ذلك بوضوح.\n\nابدأ بالتكرار 1 ووجهني خلال العملية كاملة.\"",
 
   // Actions / footer
   export: "تصدير",
@@ -2630,7 +2628,7 @@ const hi = {
   clearChat: "चैट साफ़ करें",
   startBuilding: "निर्माण शुरू करें",
   startBuildingMsg:
-  "प्रत्येक श्रेणी के लिए 13 उदाहरण दें जो आपकी निर्माण क्षमता दिखाते हों। 2–6 वर्ष, 6–12 वर्ष के बच्चों और 30 वर्ष से ऊपर के पुरुषों के लिए बच्चों के खिलौनों के क्षेत्र का उपयोग करें, और इन्हें तालिका में दिखाएँ।",
+"Start Council13 Truth Mode\n\nसबसे पहले मुझसे पूछें कि मैं क्या बनाना चाहता हूँ।\n\nमेरे उत्तर देने के बाद यह निष्पादित करें:\n\n\"ठीक 13 पुनरावृत्तियों के साथ एक विकास प्रक्रिया में प्रवेश करें।\n\nCouncil13 शासन: 10 सदस्य प्रस्ताव रखते हैं, 3 सदस्य जूरी के रूप में कार्य करते हैं, निर्णय के लिए जूरी के दो तिहाई बहुमत की आवश्यकता होती है, जूरी के मत स्पष्ट रूप से तर्कसंगत होने चाहिए।\n\nप्रत्येक पुनरावृत्ति में प्रस्ताव सूत्र या उत्पादन प्रक्रिया को प्रभावित कर सकते हैं। प्रत्येक पुनरावृत्ति को समान स्थिर KPI और समान पैमाने का उपयोग करते हुए KPI तालिका के साथ समाप्त करें: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nTruth Mode नियम: केवल साक्ष्य आधारित, कोई चिकित्सीय दावा नहीं, कोई सीमा उल्लंघन नहीं। यदि साक्ष्य कमजोर या उभरता हुआ है तो इसे स्पष्ट रूप से बताएं।\n\nपुनरावृत्ति 1 से शुरू करें और पूरे प्रक्रिया में मेरा मार्गदर्शन करें।\"",
 
   // Actions / footer
   export: "निर्यात",
