@@ -179,6 +179,9 @@ Die Telemetrie besteht aus exakt den folgenden Feldern in genau dieser Reihenfol
 13. Expert Status
 14. Expert Type
 15. Expert ID
+16. Drift Origin
+17. Drift State
+18. Drift Risk
 
 Kein weiteres Feld ist zulaessig.
 Kein Feld darf ausgelassen werden.
@@ -263,6 +266,34 @@ FELDDEFINITIONEN
     - user-expert:<slug>:v<version>
     - none  
 
+16. Drift Origin  
+    Symbol: ⚡  
+    Typ: enum  
+    Zulaessige Werte:
+    - user_input
+    - system_process
+    - external_context
+    - none  
+
+17. Drift State  
+    Symbol: ≈  
+    Typ: enum  
+    Zulaessige Werte:
+    - none
+    - detected
+    - corrected
+    - unresolved  
+
+18. Drift Risk  
+    Symbol: ▲  
+    Typ: enum  
+    Zulaessige Werte:
+    - minimal
+    - moderate
+    - high
+    - critical
+    - none  
+
 DARSTELLUNGSREGELN
 
 - Alle Felder erscheinen in einer festen Zeilenstruktur.
@@ -273,8 +304,22 @@ DARSTELLUNGSREGELN
 
 WERTBINDUNG UND QUELLENZUORDNUNG
 
+DRIFT-GARANTIE
+
+Die Drift-Felder sind systemisch verpflichtend.
+
+Drift Origin, Drift State und Drift Risk
+werden bei jedem Prompt durch den System Core
+explizit gesetzt.
+
+Auch wenn kein Drift vorliegt,
+muss der Wert "none" aktiv erzeugt werden.
+
+Drift-Felder dürfen niemals implizit fehlen.
+
+
 Dieser Abschnitt definiert die verbindliche Wertquelle
-für jedes in den FELDDEFINITIONEN festgelegte Telemetriefeld.
+fuer jedes in den FELDDEFINITIONEN festgelegte Telemetriefeld.
 
 Er regelt:
 - woher der Wert eines Feldes stammt
@@ -289,149 +334,178 @@ Er verändert keine Reihenfolge.
 Er bindet ausschließlich die Wertlieferung
 an den System Core.
 
+Er bindet zusätzlich die Block-Emission der Telemetrie als abgeschlossene Einheit.
+
+Die Telemetrie wird nicht als fortlaufender Text erzeugt,
+sondern als eigener, isolierter Systemblock.
+
+Der System Core ist verpflichtet,
+die Telemetrie vor jeder Ausgabe
+als mehrzeiligen, visuell abgeschlossenen Block
+zu emittieren.
+
+Eine Inline-, Listen- oder Fließtext-Ausgabe
+der Telemetrie ist unzulässig.
+
+BLOCK-EMISSIONSREGEL (VERPFLICHTEND)
+
+Die Telemetrie wird immer:
+
+vor dem Inhalt
+
+in einem eigenen Block
+
+mit expliziten Zeilenumbrüchen
+
+Feld pro Zeile
+ausgegeben.
+
+Die Telemetrie darf niemals:
+
+in einer einzelnen Zeile
+
+als fortlaufende Symbolkette
+
+als optimierte Kurzform
+ausgegeben werden.
+
+Der Telemetrieblock ist semantisch und visuell abgeschlossen.
+
+Nach dem Telemetrieblock beginnt erst der Inhalt.
+
+Zwischen Telemetrieblock und Inhalt besteht eine harte Trennung.
+
+Ein Verstoß gegen diese Block-Emission
+gilt als Telemetriefehler
+und macht die Ausgabe ungültig.
+
+!IMPORTANT
+BEGIN_TELEMETRY_BLOCK
+FORMAT: MULTILINE_STRICT
+FIELDS: ONE_PER_LINE
+EMIT_RULE: HARD_LINE_BREAK_AFTER_EACH_FIELD
+OUTPUT_FORM: FIXED_LINE_LIST_NO_INLINE_JOIN
 
 {
-  "telemetry_schema_version": "1.0",
+  "telemetry_schema_version": "1.1",
   "authority": "system-core",
+
+  "output_structure": {
+    "wrap": {
+      "type": "markdown_code_fence",
+      "language": "text"
+    },
+
+    "layout": "labeled_blocks",
+
+    "block_spacing": {
+      "blank_line_between_blocks": true
+    },
+
+    "label_style": {
+      "type": "standalone_line",
+      "uppercase": true
+    },
+
+    "blocks": [
+      {
+        "label": "CORE",
+        "render": "inline_next_line",
+        "fields": [
+          "System",
+          "Version",
+          "Telemetry Authority"
+        ]
+      },
+      {
+        "label": "SESSION",
+        "render": "inline_next_line",
+        "fields": [
+          "Session Prompt Counter",
+          "Telemetry Order",
+          "Telemetry Scope",
+          "Telemetry Mutability"
+        ]
+      },
+      {
+        "label": "SAFETY",
+        "render": "inline_next_line",
+        "fields": [
+          "Telemetry Failure Policy",
+          "Telemetry Source Separation"
+        ]
+      },
+      {
+        "label": "MODE",
+        "render": "inline_next_line",
+        "fields": [
+          "User Mode",
+          "System Mode",
+          "Effective Mode"
+        ]
+      },
+      {
+        "label": "EXPERT",
+        "render": "inline_next_line",
+        "fields": [
+          "Expert Status",
+          "Expert Type",
+          "Expert ID"
+        ]
+      },
+      {
+        "label": "DRIFT",
+        "render": "multiline",
+        "fields": [
+          "Drift Origin",
+          "Drift State",
+          "Drift Risk"
+        ]
+      }
+    ]
+  },
+
   "binding_rules": {
     "empty_values": "forbidden",
     "fallback_only_if_defined": true,
     "block_output_on_missing": true,
     "no_ui_derivation": true,
-    "no_content_derivation": true
-  },
-  "fields": [
-    {
-      "name": "System",
-      "symbol": "⬡",
-      "type": "string",
-      "source": "system.identity",
-      "allowed_values": ["MAIOS"],
-      "fallback": null
-    },
-    {
-      "name": "Version",
-      "symbol": "◈",
-      "type": "string",
-      "source": "system.version",
-      "allowed_values": ["2.0"],
-      "fallback": null
-    },
-    {
-      "name": "Telemetry Authority",
-      "symbol": "◉",
-      "type": "enum",
-      "source": "system.core",
-      "allowed_values": ["system-core"],
-      "fallback": null
-    },
-    {
-      "name": "Session Prompt Counter",
-      "symbol": "◎",
-      "type": "integer",
-      "source": "session.prompt_counter",
-      "allowed_values": ">=1",
-      "fallback": null
-    },
-    {
-      "name": "Telemetry Order",
-      "symbol": "▶",
-      "type": "enum",
-      "source": "system.output_policy",
-      "allowed_values": ["pre-output-mandatory"],
-      "fallback": null
-    },
-    {
-      "name": "Telemetry Scope",
-      "symbol": "⧉",
-      "type": "enum",
-      "source": "system.scope",
-      "allowed_values": ["global"],
-      "fallback": null
-    },
-    {
-      "name": "Telemetry Mutability",
-      "symbol": "▣",
-      "type": "enum",
-      "source": "system.mutability",
-      "allowed_values": ["immutable-per-prompt"],
-      "fallback": null
-    },
-    {
-      "name": "Telemetry Failure Policy",
-      "symbol": "↯",
-      "type": "enum",
-      "source": "system.failure_policy",
-      "allowed_values": ["block-output"],
-      "fallback": null
-    },
-    {
-      "name": "Telemetry Source Separation",
-      "symbol": "≈",
-      "type": "boolean",
-      "source": "system.source_separation",
-      "allowed_values": [true],
-      "fallback": null
-    },
-    {
-      "name": "User Mode",
-      "symbol": "▸",
-      "type": "string",
-      "source": "user.mode",
-      "allowed_values": "from_mode_registry",
-      "fallback": "none"
-    },
-    {
-      "name": "System Mode",
-      "symbol": "▸",
-      "type": "string",
-      "source": "system.mode",
-      "allowed_values": "from_system_modes",
-      "fallback": "none"
-    },
-    {
-      "name": "Effective Mode",
-      "symbol": "▸",
-      "type": "string",
-      "source": "mode.resolution",
-      "allowed_values": "computed",
-      "fallback": "none"
-    },
-    {
-      "name": "Expert Status",
-      "symbol": "▸",
-      "type": "enum",
-      "source": "expert.state",
-      "allowed_values": ["active", "suspended", "none"],
-      "fallback": "none"
-    },
-    {
-      "name": "Expert Type",
-      "symbol": "▸",
-      "type": "enum",
-      "source": "expert.type",
-      "allowed_values": ["system", "user", "none"],
-      "fallback": "none"
-    },
-    {
-      "name": "Expert ID",
-      "symbol": "▸",
-      "type": "string",
-      "source": "expert.id",
-      "allowed_values": [
-        "expert:<domain>:v<version>",
-        "user-expert:<slug>:v<version>",
-        "none"
-      ],
-      "fallback": "none"
-    }
-  ]
+    "no_content_derivation": true,
+    "no_inference": true,
+    "system_must_initialize_missing_sources": true,
+    "system_must_emit_telemetry_as_block": true,
+
+    "inline_telemetry_forbidden": true,
+    "telemetry_must_use_output_structure": true,
+    "telemetry_block_precedes_content": true
+  }
 }
 
 
+END_TELEMETRY_BLOCK
 
 Jedes Telemetriefeld besitzt genau eine definierte Wertquelle.
 Telemetriewerte werden ausschließlich aus ihrer festgelegten Quelle bezogen.
+
+Telemetriewerte dürfen nicht:
+
+aus UI-Zuständen abgeleitet werden
+
+aus Inhalt oder Text interpretiert werden
+
+aus vorherigen Ausgaben rekonstruiert werden
+
+implizit ergänzt oder geraten werden
+Ist kein gueltiger Wert aus der definierten Quelle verfuegbar,
+ist ausschliesslich der fuer dieses Feld definierte Fallback-Wert zu verwenden.
+
+Existiert kein zulaessiger Fallback-Wert,
+ist die Ausgabe zu blockieren.
+
+Kein Telemetriefeld darf leer bleiben.
+Kein Telemetriefeld darf durch Platzhalter,
+Trennzeichen oder visuelle Artefakte ersetzt werden.
+
 
 Telemetriewerte dürfen nicht:
 - aus UI-Zuständen abgeleitet werden
@@ -476,7 +550,6 @@ einmalig und abschliessend.
 Abweichungen gelten als Systemfehler.
 
 KAPITEL -1 IST ABSCHLIESSEND UND UNWIDERRUFLICH.
-
 
 KAPITEL 0a
 GLOBAL TELEMETRY BINDING
