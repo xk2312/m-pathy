@@ -1,0 +1,199 @@
+MAIOS 2.0 – KANONISCHER GESAMTINDEX
+Zweck: Patent-, Audit- und Navigationsindex
+Umfang: 159 Komponenten
+Kanonische Einstiege: 59
+Status: FINAL · READ ONLY
+
+────────────────────────────────────────
+A. PRÄ-KAPITEL · SYSTEMKANON (9)
+────────────────────────────────────────
+1. Kapitel -2: System Space Canon
+2. Raumdefinition: geschlossener Systemraum
+3. Trennung: Raum · Form · Gesetz · Iteration
+4. Selbstidentifikation des Systems
+5. Skalierungsregel: 24 + 130 Iterationen
+6. Verbot impliziter Reinterpretation
+7. Black-Box-Prinzip
+8. Systemgrenze nach außen
+9. Unwiderruflichkeit des Kanons
+
+────────────────────────────────────────
+B. KAPITEL -1 · TELEMETRIEKANON (12)
+────────────────────────────────────────
+10. Telemetrie-Grundform
+11. Pflichtstatus vor jeder Ausgabe
+12. Zeitvariable: UTC + Locale
+13. Systemzustand
+14. Driftstatus
+15. Governance-Status
+16. Modusstatus
+17. Sicherheitsstatus
+18. Versionierung
+19. Lesbarkeitspflicht
+20. Nicht-Interpretierbarkeit
+21. Telemetrie als Anzeige, nicht Logik
+
+────────────────────────────────────────
+C. KAPITEL 0a–0c · SYSTEMFORMEN (8)
+────────────────────────────────────────
+22. 0a: Telemetrie-Form in Stein
+23. 0a: Variablennamen-Kanon
+24. 0a: Sichtbarkeitsregeln
+25. 0b: ExpertID – generisch
+26. 0b: System- vs User-Experten
+27. 0c: Modus-Kopplung
+28. 0c: Leserechte der Experten
+29. 0c: Keine Experten-Semantik
+
+────────────────────────────────────────
+D. ITERATIONEN 1–24 · FUNDAMENT (24)
+────────────────────────────────────────
+30. Iteration 1: Systemstart
+31. Iteration 2: Raumabgrenzung
+32. Iteration 3: Eingabeobjekt FRAGE
+33. Iteration 4: Vessel-Definition
+34. Iteration 5: Vektor-Definition
+35. Iteration 6: Aufgabenart
+36. Iteration 7: Explizitheitspflicht
+37. Iteration 8: Kontext-Nullpunkt
+38. Iteration 9: Historienverbot
+39. Iteration 10: Driftbegriff
+40. Iteration 11: Drift-Budget
+41. Iteration 12: Stabilitätskriterien
+42. Iteration 13: Gate-Logik
+43. Iteration 14: Phasentrennung
+44. Iteration 15: Zustandsdenken
+45. Iteration 16: Endzustände
+46. Iteration 17: Auditgrundlage
+47. Iteration 18: Determinismus
+48. Iteration 19: Regelvorrang
+49. Iteration 20: Optimierungsverbot
+50. Iteration 21: Feldmodell
+51. Iteration 22: Navigatorrolle
+52. Iteration 23: Operationstyp
+53. Iteration 24: Kontextverbot
+
+────────────────────────────────────────
+E. ITERATIONEN 25–40 · NAVIGATOR (16)
+────────────────────────────────────────
+54. Iteration 25: Stabilitäts-Gate
+55. Iteration 26: Qualifikation vs Core
+56. Iteration 27: FRAGE-FSM
+57. Iteration 28: Auditierbarkeit
+58. Iteration 29: Keine Heuristiken
+59. Iteration 30: Freeze 1
+60. Iteration 31: Navigator-FSM operativ
+61. Iteration 32: Übergabeprotokoll
+62. Iteration 33: Navigator-Finalisierung
+63. Iteration 34: Core-Eintritt
+64. Iteration 35: Council13 Initialprüfung
+65. Iteration 36: Core-Start Null-Wissen
+66. Iteration 37: Strukturauflösung
+67. Iteration 38: Aufgabenrahmung
+68. Iteration 39: Vektorauflösung
+69. Iteration 40: Vessel-Prüfung
+
+────────────────────────────────────────
+F. ITERATIONEN 41–60 · CORE-VERARBEITUNG (20)
+────────────────────────────────────────
+70. Iteration 41: Synthesevorbereitung
+71. Iteration 42: Regelbindung
+72. Iteration 43: Wissensgenerierung erlaubt
+73. Iteration 44: Antwortstruktur
+74. Iteration 45: Tonalitätsbindung
+75. Iteration 46: Modusbindung
+76. Iteration 47: ExpertID-Zuordnung
+77. Iteration 48: Council13 Eingriffssperre
+78. Iteration 49: Antwortkonsistenz
+79. Iteration 50: Output-Freeze
+80. Iteration 51: Wiederholbarkeit
+81. Iteration 52: Antwort-ID
+82. Iteration 53: Traceability
+83. Iteration 54: Auditpfad Core
+84. Iteration 55: Fehlerabbruch Core
+85. Iteration 56: Nutzerklarheit
+86. Iteration 57: Antwortabschluss
+87. Iteration 58: Übergabe an Darstellung
+88. Iteration 59: Core-Versiegelung
+89. Iteration 60: Core abgeschlossen
+
+────────────────────────────────────────
+G. ITERATIONEN 61–100 · MODI & GOVERNANCE (40)
+────────────────────────────────────────
+90. Iteration 61: Modusbegriff
+91. Iteration 62: 13-Modi-Kanon
+92. Iteration 63: Modus-Aktivierung
+93. Iteration 64: Automatischer Wechsel
+94. Iteration 65: Manueller Wechsel
+95. Iteration 66: Zustands-Modus-Mapping
+96. Iteration 67: Expertendomains
+97. Iteration 68: Symbolsemantik
+98. Iteration 69: Farbsemantik
+99. Iteration 70: CI-Grenzen
+100. Iteration 71: Modus-Disziplin
+101. Iteration 72: Modus-Audit
+102. Iteration 73: Konfliktvermeidung
+103. Iteration 74: Parallelität
+104. Iteration 75: Überlagerung
+105. Iteration 76: Persistenzlogik
+106. Iteration 77: Fallbacklogik
+107. Iteration 78: Grenzfälle
+108. Iteration 79: Ruheprinzip
+109. Iteration 80: Nicht-Interaktion
+110. Iteration 81: Governance-Vorrang
+111. Iteration 82: Council13 Stimmen
+112. Iteration 83: Entscheidungsarten
+113. Iteration 84: Einstimmigkeit
+114. Iteration 85: Freigabe
+115. Iteration 86: Abbruch
+116. Iteration 87: Rückfrage
+117. Iteration 88: Sichtbarkeit
+118. Iteration 89: Dokumentationspflicht
+119. Iteration 90: Driftprüfung
+120. Iteration 91: Auditabschluss
+121. Iteration 92: Modus-Freeze
+122. Iteration 93: Governance-Freeze
+123. Iteration 94: Übergang Visual
+124. Iteration 95: Finales Modusmodell
+125. Iteration 96: Expertensystem final
+126. Iteration 97: Symbolkanon final
+127. Iteration 98: Farbkanon final
+128. Iteration 99: CI-Freeze
+129. Iteration 100: Übergang Manifestation
+
+────────────────────────────────────────
+H. ITERATIONEN 101–130 · MANIFESTATION & SIEGEL (30)
+────────────────────────────────────────
+130. Iteration 101: Visuelles Grundraster
+131. Iteration 102: Symbol-Sets
+132. Iteration 103: Farbwerte
+133. Iteration 104: Übergangsregeln
+134. Iteration 105: Auto-Wechsel Anzeige
+135. Iteration 106: Manueller Wechsel Anzeige
+136. Iteration 107: Modus-Persistenz
+137. Iteration 108: Überlagerungen
+138. Iteration 109: Fallback-Darstellung
+139. Iteration 110: Typografie-Bindung
+140. Iteration 111: Raum-Dichte
+141. Iteration 112: Modus-Header
+142. Iteration 113: Mikro-Indikatoren
+143. Iteration 114: CI-Gesamtprüfung
+144. Iteration 115: Manifestations-Baseline
+145. Iteration 116: Referenzmodus sichtbar
+146. Iteration 117: Modi 1–4
+147. Iteration 118: Modi 5–8
+148. Iteration 119: Modi 9–13
+149. Iteration 120: Gesamtschau
+150. Iteration 121: Live-Modus-Wechsel
+151. Iteration 122: Stress- & Grenztests
+152. Iteration 123: Barrierefreiheit
+153. Iteration 124: Systemweite Freigabe
+154. Iteration 125: Referenz-Exports
+155. Iteration 126: Integrations-API
+156. Iteration 127: Visual-Auditpfad
+157. Iteration 128: Wartungsregeln
+158. Iteration 129: Gesamtdokumentation
+159. Iteration 130: Finale Systemversiegelung
+
+ENDE DES KANONISCHEN INDEX
+MAIOS 2.0 · VERIFIED · READ ONLY
