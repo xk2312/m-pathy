@@ -970,12 +970,17 @@
   border: none;
   color: var(--text-primary);
   cursor: pointer;
-  padding: 2px 0; /* tightened vertical spacing */
-  transition: color 0.25s ease;
+  padding: 3px 0;
+  transition: color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  border-radius: 6px;
 }
 
+/* Hover effect for all modes (incl. Council13) */
 .accordionHeader:hover {
-  color: var(--text-secondary);
+  color: var(--text-primary);
+  background: rgba(83, 233, 253, 0.06); /* subtle cyan glow */
+  box-shadow: 0 0 6px rgba(83, 233, 253, 0.15);
+  cursor: pointer;
 }
 
 .headerRow {
@@ -1028,4 +1033,9 @@
   align-items: center;
   justify-content: flex-end;
   width: 20px;
+}
+/* Active/open mode stronger visual cue */
+.accordionHeader[aria-expanded="true"] {
+  background: rgba(83, 233, 253, 0.10);
+  box-shadow: 0 0 8px rgba(83, 233, 253, 0.25);
 }
