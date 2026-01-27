@@ -1331,7 +1331,6 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
           >
           <section className={styles.sectionExperts} aria-label={tr("pillar.section.experts", "Experts")}>
   <div className={styles.block}>
-    <div className={styles.soGroupTitle}>{tr("pillar.section.experts", "Experts")}</div>
 
     <div className={styles.notesBlock}>
       <p className={styles.notesText}>
