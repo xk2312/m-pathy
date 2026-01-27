@@ -1201,7 +1201,7 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
   id: "research",
   title: "Research",
   purpose:
-    "Executes the sealed evaluation loop — each input rated for clarity and meaning (1–10) with three outputs: understanding, insight, and comment."
+    "Executes the sealed evaluation loop - each input rated for clarity and meaning (1-10) with three outputs: understanding, insight, and comment."
 }
 ,
 
@@ -1329,30 +1329,104 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
             }
             aria-label={tr("experts.title", "Experts")}
           >
-           <section className={styles.sectionExperts} aria-label={tr("pillar.section.experts", "Experts")}>
+          <section className={styles.sectionExperts} aria-label={tr("pillar.section.experts", "Experts")}>
   <div className={styles.block}>
-    <div className={styles.soGroupTitle}>{sectionTitleExperts(lang)}</div>
+    <div className={styles.soGroupTitle}>{tr("pillar.section.experts", "Experts")}</div>
 
-    {/* Descriptive replacement for expert overview */}
-    <div className={styles.infoBlock}>
+    <p className={styles.textMuted}>
+      {tr(
+        "experts.descriptive.intro",
+        "Select expert by prompting “consult EXPERTNAME expert”."
+      )}
+    </p>
+
+    {(() => {
+      const [openExpert, setOpenExpert] = useState<string | null>(null);
+
+      const EXPERTS = [
+        {
+          id: "computer-science",
+          title: "Computer Science",
+          purpose: "Analyses algorithms, AI logic, and system design."
+        },
+        {
+          id: "psychology",
+          title: "Psychology",
+          purpose: "Examines cognition, behavior, and communication."
+        },
+        {
+          id: "law",
+          title: "Law",
+          purpose: "Reviews legal frameworks and compliance structures."
+        },
+        {
+          id: "economics",
+          title: "Economics",
+          purpose: "Evaluates markets, data, and decision models."
+        },
+        {
+          id: "engineering",
+          title: "Engineering",
+          purpose: "Assesses technical systems and process logic."
+        },
+        {
+          id: "medicine",
+          title: "Medicine",
+          purpose: "Interprets medical data and research context."
+        },
+        {
+          id: "information-security",
+          title: "Information Security",
+          purpose: "Analyzes risks, protection, and data integrity."
+        }
+      ];
+
+      return (
+        <div className={styles.accordionContainer}>
+          {EXPERTS.map((expert) => (
+            <div key={expert.id} className={styles.accordionItem}>
+              <button
+                type="button"
+                className={styles.accordionHeader}
+                onClick={() => setOpenExpert(openExpert === expert.id ? null : expert.id)}
+                aria-expanded={openExpert === expert.id}
+              >
+                <span className={styles.modeTitle}>{expert.title}</span>
+                <ChevronDown
+                  size={16}
+                  strokeWidth={1.75}
+                  className={openExpert === expert.id ? styles.iconRotated : styles.icon}
+                />
+              </button>
+
+              <div
+                className={
+                  openExpert === expert.id
+                    ? `${styles.accordionBody} ${styles.accordionBodyOpen}`
+                    : styles.accordionBody
+                }
+              >
+                <p>
+                  <strong>{tr("labels.purpose", "Purpose:")}</strong> {expert.purpose}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    })()}
+
+    <div className={styles.additionalExperts}>
       <p className={styles.textMuted}>
         {tr(
-          "experts.descriptive.intro",
-          "This section now provides a structured description of all experts available in the system."
+          "experts.additional",
+          "Additional experts: Biology, Chemistry, Physics, Molecular Science, Systems Theory, Mathematics, Statistics, Risk Analysis, Electrical Engineering, Meteorology, Architecture, Geopolitics."
         )}
       </p>
-
-      <ul className={styles.expertList}>
-        {EXPERTS.map((expert) => (
-          <li key={expert.id} className={styles.expertItem}>
-            <span className={styles.expertLabel}>{labelForExpert(expert.id, lang)}</span>
-            <p className={styles.expertRole}>{ROLES[expert.id]}</p>
-          </li>
-        ))}
-      </ul>
     </div>
   </div>
 </section>
+
 
           </div>
         </div>
