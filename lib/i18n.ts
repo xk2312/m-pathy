@@ -192,10 +192,10 @@ const en = {
   "experts.title": "Experts",
 
   "experts.descriptive.intro":
-  "Select an expert to add domain-specific perspective and reasoning to your workspace.",
+  "Select expert by prompting “consult EXPERTNAME expert”.",
 
   "experts.additional":
-  "Experts contribute specialized knowledge while remaining bound to verification-first system rules.",
+  "Additional experts: Biology, Chemistry, Physics, Molecular Science, Systems Theory, Mathematics, Statistics, Risk Analysis, Electrical Engineering, Meteorology, Architecture, Geopolitics.",
 
 
   // Expert labels (pillar – Experts list)
