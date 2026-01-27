@@ -1177,17 +1177,11 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
             }
             aria-label={tr("pillar.section.modes", "Modes")}
           >
-          
-
 
 <section className={styles.sectionModes} aria-label={tr("pillar.section.modes", "Modes")}>
   <div className={styles.block}>
     <div className={styles.soGroupTitle}>{tr("pillar.section.modes", "Modes")}</div>
 
-    {/* local accordion state */}
-    {/*
-      openMode: currently expanded mode id or null
-    */}
     {(() => {
       const [openMode, setOpenMode] = useState<string | null>(null);
 
@@ -1269,10 +1263,10 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
               >
                 <span className={styles.modeTitle}>{mode.title}</span>
                 <ChevronDown
-  size={16}
-  strokeWidth={1.75}
-  className={openMode === mode.id ? styles.iconRotated : styles.icon}
-/>
+                  size={16}
+                  strokeWidth={1.75}
+                  className={openMode === mode.id ? styles.iconRotated : styles.icon}
+                />
               </button>
 
               <div
@@ -1292,7 +1286,6 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
       );
     })()}
 
-    {/* Governance Footer */}
     <div className={styles.governanceBlock}>
       <h4>{tr("labels.governance", "Governance — Council 13")}</h4>
       <p className={styles.textMuted}>
@@ -1304,6 +1297,7 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
     </div>
   </div>
 </section>
+
 
 
           </div>
