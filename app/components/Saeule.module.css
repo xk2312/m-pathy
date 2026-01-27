@@ -946,6 +946,7 @@
     height: auto;
     overflow: visible;
   }
+}
 .accordionContainer {
   display: flex;
   flex-direction: column;
@@ -1010,5 +1011,4 @@
 .accordionBodyOpen {
   max-height: 400px;
   opacity: 1;
-}
 }
