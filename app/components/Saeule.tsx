@@ -1333,12 +1333,14 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
   <div className={styles.block}>
     <div className={styles.soGroupTitle}>{tr("pillar.section.experts", "Experts")}</div>
 
-    <p className={`${styles.textMuted} ${styles.textItalic}`}>
-      {tr(
-        "experts.descriptive.intro",
-        "Select expert by prompting “consult EXPERTNAME expert”."
-      )}
-    </p>
+    <div className={styles.notesBlock}>
+      <p className={styles.notesText}>
+        {tr(
+          "experts.descriptive.intro",
+          "Select expert by prompting “consult EXPERTNAME expert”."
+        )}
+      </p>
+    </div>
 
     {(() => {
       const [openExpert, setOpenExpert] = useState<string | null>(null);
@@ -1364,11 +1366,13 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
                 aria-expanded={openExpert === expert.id}
               >
                 <span className={styles.modeTitle}>{expert.title}</span>
-                <ChevronDown
-                  size={16}
-                  strokeWidth={1.75}
-                  className={openExpert === expert.id ? styles.iconRotated : styles.icon}
-                />
+                <div className={styles.chevronWrapper}>
+                  <ChevronDown
+                    size={16}
+                    strokeWidth={1.75}
+                    className={openExpert === expert.id ? styles.iconRotated : styles.icon}
+                  />
+                </div>
               </button>
 
               <div
@@ -1388,12 +1392,14 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
       );
     })()}
 
-    <p className={`${styles.textMuted} ${styles.textItalic}`}>
-      {tr(
-        "experts.additional",
-        "Additional experts: Biology, Chemistry, Physics, Molecular Science, Systems Theory, Mathematics, Statistics, Risk Analysis, Electrical Engineering, Meteorology, Architecture, Geopolitics."
-      )}
-    </p>
+    <div className={styles.notesBlock}>
+      <p className={styles.notesText}>
+        {tr(
+          "experts.additional",
+          "Additional experts: Biology, Chemistry, Physics, Molecular Science, Systems Theory, Mathematics, Statistics, Risk Analysis, Electrical Engineering, Meteorology, Architecture, Geopolitics."
+        )}
+      </p>
+    </div>
   </div>
 </section>
 
