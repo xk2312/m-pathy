@@ -1191,77 +1191,69 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
       const [openMode, setOpenMode] = useState<string | null>(null);
 
       const MODES = [
-        {
-          id: "onboarding",
-          title: "Onboarding",
-          purpose: "Structured entry and initialization of the system.",
-          allowed: "Guided questions, step-by-step explanation, and status clarification.",
-          prohibited: "Expert activation or authoritative system decisions."
-        },
-        {
-          id: "play",
-          title: "Play",
-          purpose: "Explorative, creative interaction without binding effects.",
-          allowed: "Imaginative reasoning and open experimentation.",
-          prohibited: "Binding commitments or factual assertions."
-        },
-        {
-          id: "empathy",
-          title: "Empathy",
-          purpose: "Emotion-sensitive response behavior.",
-          allowed: "Validating emotions, supportive and mindful expression.",
-          prohibited: "Therapy, diagnosis, or manipulation."
-        },
-        {
-          id: "truth",
-          title: "Truth",
-          purpose: "Fact-oriented and precise communication.",
-          allowed: "Strict factual accuracy and verifiable content.",
-          prohibited: "Speculative or embellished statements."
-        },
-        {
-          id: "wisdom",
-          title: "Wisdom",
-          purpose: "Contextual and balanced interpretation.",
-          allowed: "Reflective synthesis and comparison of perspectives.",
-          prohibited: "Prescriptive or authoritative advice."
-        },
-        {
-          id: "research",
-          title: "Research",
-          purpose: "Protocol-bound, systematic evaluation of information.",
-          allowed: "Operation under the permanent evaluation protocol.",
-          prohibited: "Deviation from the sealed research schema."
-        },
-        {
-          id: "calm",
-          title: "Calm",
-          purpose: "Stabilization during overload or uncertainty.",
-          allowed: "Simplification, deceleration, and complexity reduction.",
-          prohibited: "Re-evaluation or factual expansion."
-        },
-        {
-          id: "safety",
-          title: "Safety",
-          purpose: "Protection in high-risk or rule-violation contexts.",
-          allowed: "Restricting or blocking unsafe outputs.",
-          prohibited: "Creative interpretation or extrapolation."
-        },
-        {
-          id: "recovery",
-          title: "Recovery",
-          purpose: "Return to a consistent verified state.",
-          allowed: "Reset, normalization, and clarification of mode status.",
-          prohibited: "Persistent modification or new derivation."
-        },
-        {
-          id: "governance",
-          title: "Governance — Council13",
-          purpose: "Thirteen fixed perspectives evaluating complex options with balance.",
-          allowed: "Observation and transparent comparison only.",
-          prohibited: "Commands, persistence, or autonomous activation."
-        }
-      ];
+  {
+    id: "onboarding",
+    title: "Onboarding",
+    purpose:
+      "Guides teams through structured system initialization, ensuring clear setup, context awareness, and compliance readiness."
+  },
+  {
+    id: "play",
+    title: "Play",
+    purpose:
+      "Enables exploratory ideation and prototyping without operational risk — ideal for testing logic, prompts, and creative hypotheses safely."
+  },
+  {
+    id: "empathy",
+    title: "Empathy",
+    purpose:
+      "Adapts responses to human tone and context, improving collaboration and clarity in emotionally charged or complex exchanges."
+  },
+  {
+    id: "truth",
+    title: "Truth",
+    purpose:
+      "Delivers verified, traceable facts for business decisions, ensuring auditability and regulatory transparency in every statement."
+  },
+  {
+    id: "wisdom",
+    title: "Wisdom",
+    purpose:
+      "Synthesizes multiple viewpoints into balanced guidance — ideal for decision rounds or evaluating competing project directions."
+  },
+  {
+    id: "research",
+    title: "Research",
+    purpose:
+      "Structures data analysis and document review under deterministic logic, aligning results with corporate governance and evidence trails."
+  },
+  {
+    id: "calm",
+    title: "Calm",
+    purpose:
+      "Stabilizes workflows in high-load or uncertain situations, simplifying complex input to maintain operational clarity and focus."
+  },
+  {
+    id: "safety",
+    title: "Safety",
+    purpose:
+      "Protects against unintended outputs or regulatory violations by enforcing strict compliance filters and real-time content control."
+  },
+  {
+    id: "recovery",
+    title: "Recovery",
+    purpose:
+      "Restores the workspace to a consistent, verifiable state after errors or interruptions, preserving data integrity and continuity."
+  },
+  {
+    id: "governance",
+    title: "Governance — Council13",
+    note: "Select mode by prompting “set MODENAME mode”.",
+    purpose:
+      "Provides an impartial evaluation of complex options through thirteen fixed perspectives — observation, comparison, and transparent reasoning only."
+  }
+];
+
 
       return (
         <div className={styles.accordionContainer}>
@@ -1291,8 +1283,7 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
                 }
               >
                 <p><strong>{tr("labels.purpose", "Purpose:")}</strong> {mode.purpose}</p>
-                <p><strong>{tr("labels.allowed", "Allowed:")}</strong> {mode.allowed}</p>
-                <p><strong>{tr("labels.prohibited", "Prohibited:")}</strong> {mode.prohibited}</p>
+                
               </div>
             </div>
           ))}
