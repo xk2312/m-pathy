@@ -1178,6 +1178,7 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
             aria-label={tr("pillar.section.modes", "Modes")}
           >
 
+
 <section className={styles.sectionModes} aria-label={tr("pillar.section.modes", "Modes")}>
   <div className={styles.block}>
     <div className={styles.soGroupTitle}>{tr("pillar.section.modes", "Modes")}</div>
@@ -1193,19 +1194,12 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
           allowed: "Guided questions, step-by-step explanation, and status clarification.",
           prohibited: "Expert activation or authoritative system decisions."
         },
-        {
-          id: "play",
-          title: "Play",
-          purpose: "Explorative, creative interaction without binding effects.",
-          allowed: "Imaginative reasoning and open experimentation.",
-          prohibited: "Binding commitments or factual assertions."
-        },
-        {
-          id: "empathy",
-          title: "Empathy",
-          purpose: "Emotion-sensitive response behavior.",
-          allowed: "Validating emotions, supportive and mindful expression.",
-          prohibited: "Therapy, diagnosis, or manipulation."
+         {
+          id: "research",
+          title: "Research",
+          purpose: "Protocol-bound, systematic evaluation of information.",
+          allowed: "Operation under the permanent evaluation protocol.",
+          prohibited: "Deviation from the sealed research schema."
         },
         {
           id: "truth",
@@ -1214,7 +1208,14 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
           allowed: "Strict factual accuracy and verifiable content.",
           prohibited: "Speculative or embellished statements."
         },
-        {
+         {
+          id: "calm",
+          title: "Calm",
+          purpose: "Stabilization during overload or uncertainty.",
+          allowed: "Simplification, deceleration, and complexity reduction.",
+          prohibited: "Re-evaluation or factual expansion."
+        },
+         {
           id: "wisdom",
           title: "Wisdom",
           purpose: "Contextual and balanced interpretation.",
@@ -1222,18 +1223,11 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
           prohibited: "Prescriptive or authoritative advice."
         },
         {
-          id: "research",
-          title: "Research",
-          purpose: "Protocol-bound, systematic evaluation of information.",
-          allowed: "Operation under the permanent evaluation protocol.",
-          prohibited: "Deviation from the sealed research schema."
-        },
-        {
-          id: "calm",
-          title: "Calm",
-          purpose: "Stabilization during overload or uncertainty.",
-          allowed: "Simplification, deceleration, and complexity reduction.",
-          prohibited: "Re-evaluation or factual expansion."
+          id: "empathy",
+          title: "Empathy",
+          purpose: "Emotion-sensitive response behavior.",
+          allowed: "Validating emotions, supportive and mindful expression.",
+          prohibited: "Therapy, diagnosis, or manipulation."
         },
         {
           id: "safety",
@@ -1248,6 +1242,24 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
           purpose: "Return to a consistent verified state.",
           allowed: "Reset, normalization, and clarification of mode status.",
           prohibited: "Persistent modification or new derivation."
+        },
+        {
+          id: "play",
+          title: "Play",
+          purpose: "Explorative, creative interaction without binding effects.",
+          allowed: "Imaginative reasoning and open experimentation.",
+          prohibited: "Binding commitments or factual assertions."
+        },    
+        {
+          id: "governance",
+          title: "Governance — Council13",
+          purpose:
+            "Represents thirteen fixed perspectives used to evaluate complex choices with transparency and balance.",
+          allowed:
+            "Observation, comparison, and transparent evaluation of multi-option scenarios.",
+          prohibited:
+            "Command, persistence, or self-activation within system state.",
+          note: "Select mode by prompting “set MODENAME mode”."
         }
       ];
 
@@ -1261,12 +1273,14 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
                 onClick={() => setOpenMode(openMode === mode.id ? null : mode.id)}
                 aria-expanded={openMode === mode.id}
               >
-                <span className={styles.modeTitle}>{mode.title}</span>
-                <ChevronDown
-                  size={16}
-                  strokeWidth={1.75}
-                  className={openMode === mode.id ? styles.iconRotated : styles.icon}
-                />
+                <div className={styles.headerRow}>
+                  <span className={styles.modeTitle}>{mode.title}</span>
+                  <ChevronDown
+                    size={16}
+                    strokeWidth={1.75}
+                    className={openMode === mode.id ? styles.iconRotated : styles.icon}
+                  />
+                </div>
               </button>
 
               <div
@@ -1279,24 +1293,18 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
                 <p><strong>{tr("labels.purpose", "Purpose:")}</strong> {mode.purpose}</p>
                 <p><strong>{tr("labels.allowed", "Allowed:")}</strong> {mode.allowed}</p>
                 <p><strong>{tr("labels.prohibited", "Prohibited:")}</strong> {mode.prohibited}</p>
+                {mode.note && (
+                  <p><strong>{tr("labels.note", "Note:")}</strong> {mode.note}</p>
+                )}
               </div>
             </div>
           ))}
         </div>
       );
     })()}
-
-    <div className={styles.governanceBlock}>
-      <h4>{tr("labels.governance", "Governance — Council 13")}</h4>
-      <p className={styles.textMuted}>
-        {tr(
-          "governance.council13.description",
-          "Represents thirteen fixed perspectives used to evaluate complex choices with transparency and balance. It observes, compares, and informs — never commands or persists."
-        )}
-      </p>
-    </div>
   </div>
 </section>
+
 
 
 
