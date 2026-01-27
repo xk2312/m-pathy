@@ -1176,158 +1176,92 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
             }
             aria-label={tr("pillar.section.modes", "Modes")}
           >
-            <section
-              className={styles.sectionModes}
-              aria-label={tr("pillar.section.modes", "Modes")}
-            >
-{/* ONBOARDING */}
-<div className={styles.block}>
-  <ModeAura active={activeMode === "onboarding"}>
-    <button
-      type="button"
-      aria-pressed={activeMode === "onboarding"}
-      className={`${styles.buttonPrimary} ${
-        activeMode === "onboarding" ? styles.active : ""
-      }`}
-      onClick={() => switchMode("onboarding")}
-    >
-      <SimbaIcon name="modeOnboarding" />
-      {tr("mode.onboarding", "ONBOARDING")}
-    </button>
-  </ModeAura>
-</div>
+            <section className={styles.sectionModes} aria-label={tr("pillar.section.modes", "Modes")}>
+  <div className={styles.block}>
+    <div className={styles.soGroupTitle}>
+      {tr("pillar.section.modes", "Modes")}
+    </div>
 
-{/* Council13 als Modus */}
-<div className={styles.block}>
-  <ModeAura active={activeMode === "council"}>
-    <button
-      type="button"
-      aria-pressed={activeMode === "council"}
-      className={`${styles.buttonGhostPrimary} ${
-        activeMode === "council" ? styles.active : ""
-      }`}
-      onClick={() => switchMode("council")}
-      style={{ width: "100%", cursor: "pointer" }}
-    >
-      <SimbaIcon name="modeCouncil" />
-      {tr("mode.council", "COUNCIL13")}
-    </button>
-  </ModeAura>
-</div>
+    <div className={styles.infoBlock}>
+      <p className={styles.textMuted}>
+        {tr(
+          "modes.descriptive.intro",
+          "This section now provides a structured description of all available modes in the system."
+        )}
+      </p>
 
-{/* M (Default) */}
-<div className={styles.block}>
-  <ModeAura active={activeMode === "M"}>
-    <button
-      type="button"
-      aria-pressed={activeMode === "M"}
-      className={`${styles.buttonSolid} ${
-        activeMode === "M" ? styles.active : ""
-      }`}
-      onClick={() => {
-        // ▼ Overlay sofort schließen (ohne Bubble)
-        try {
-          const inOverlay = !!document.querySelector(
-            '[data-overlay="true"]'
-          );
-          if (inOverlay) {
-            onSystemMessage?.("");
-          }
-        } catch {}
-        // ▲ Ende Overlay-Close
-        void switchMode("M");
-      }}
-    >
-      <SimbaIcon name="modeDefault" />
-      {tr("mode.default", "M · Default")}
-    </button>
-  </ModeAura>
-</div>
+      <ul className={styles.modeList}>
+        <li className={styles.modeItem}>
+          <span className={styles.modeLabel}>{tr("mode.onboarding", "ONBOARDING")}</span>
+          <p className={styles.modeDescription}>
+            {tr(
+              "mode.onboarding.description",
+              "Entry mode. Guides new users step by step through the system."
+            )}
+          </p>
+        </li>
 
+        <li className={styles.modeItem}>
+          <span className={styles.modeLabel}>{tr("mode.council", "COUNCIL13")}</span>
+          <p className={styles.modeDescription}>
+            {tr(
+              "mode.council.description",
+              "Council of the thirteen symbolic AIs representing the system's pillars. No active assistants."
+            )}
+          </p>
+        </li>
 
-            {/* Charakter-Modis – Micronavi + Liste */}
-      <div className={styles.block}>
-        <div className={styles.soGroupTitle}>
-          {tr("labels.modes.character", "Charakter modes")}
-        </div>
+        <li className={styles.modeItem}>
+          <span className={styles.modeLabel}>{tr("mode.default", "M · DEFAULT")}</span>
+          <p className={styles.modeDescription}>
+            {tr(
+              "mode.default.description",
+              "Default mode. Restores base configuration and resets the system state."
+            )}
+          </p>
+        </li>
+      </ul>
 
-        {/* Hover-Zone: Micronavi + Modus-Liste */}
-        <div
-          className={styles.modeZone}
-          onMouseLeave={() => setHoverModeCategory(null)}
-        >
-          {/* Micronavi: CORE / INTELLECTUAL / CREATOR / HEART / SPIRIT */}
-            <div className={styles.modeCategoryNav}>
-            {MODE_CATEGORIES.map((cat) => {
-              const isActiveCat = modeCategory === cat.id; // aktive Kategorie = modeCategory
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  className={
-                    isActiveCat
-                      ? `${styles.modeCategoryItem} ${styles.modeCategoryItemActive}`
-                      : styles.modeCategoryItem
-                  }
-                  onMouseEnter={() => setHoverModeCategory(cat.id)}
-                  onFocus={() => setHoverModeCategory(cat.id)}
-                  aria-pressed={isActiveCat}
-                >
-                  <span className={styles.modeCategoryItemLabel}>
-                    {tr(`modes.category.${cat.id}`, cat.label)}
-                  </span>
-
-
-                </button>
-              );
-            })}
-          </div>
-
-
-         {/* Modus-Liste – zeigt gehoverte Kategorie, sonst aktive */}
-<div className={styles.modeList}>
-  {(() => {
-    const currentCategoryId = hoverModeCategory ?? modeCategory;
-    const currentCategory = MODE_CATEGORIES.find(
-      (cat) => cat.id === currentCategoryId
-    );
-    if (!currentCategory) return null;
-
-    return currentCategory.modes.map((modeId) => {
-      const mode = MODI.find((m) => m.id === modeId);
-      if (!mode) return null;
-      const isActive = activeMode === modeId;
-
-      return (
-        <ModeAura key={modeId} active={isActive}>
-          <button
-            type="button"
-            className={
-              isActive
-                ? `${styles.modeListItem} ${styles.modeListItemActive}`
-                : styles.modeListItem
-            }
-            onClick={() => switchMode(modeId)}
-            aria-pressed={isActive}
-          >
-            <span className={styles.modeListItemLabel}>
-              {modeLabelFromId(modeId)}
-            </span>
-          </button>
-        </ModeAura>
-      );
-    });
-  })()}
-</div>
-
-
-        </div>
+      <div className={styles.soGroupTitle}>
+        {tr("labels.modes.character", "Character modes")}
       </div>
 
+      <ul className={styles.modeList}>
+        <li className={styles.modeItem}>
+          <span className={styles.modeLabel}>{tr("modes.category.core", "CORE")}</span>
+          <p className={styles.modeDescription}>
+            {tr("modes.category.core.description", "Central kernel – foundation of identity and memory.")}
+          </p>
+        </li>
+        <li className={styles.modeItem}>
+          <span className={styles.modeLabel}>{tr("modes.category.intellect", "INTELLECT")}</span>
+          <p className={styles.modeDescription}>
+            {tr("modes.category.intellect.description", "Analytical and logical cognitive functions.")}
+          </p>
+        </li>
+        <li className={styles.modeItem}>
+          <span className={styles.modeLabel}>{tr("modes.category.creator", "CREATOR")}</span>
+          <p className={styles.modeDescription}>
+            {tr("modes.category.creator.description", "Inventive and expressive creation processes.")}
+          </p>
+        </li>
+        <li className={styles.modeItem}>
+          <span className={styles.modeLabel}>{tr("modes.category.heart", "HEART")}</span>
+          <p className={styles.modeDescription}>
+            {tr("modes.category.heart.description", "Empathic and human-centered resonance layer.")}
+          </p>
+        </li>
+        <li className={styles.modeItem}>
+          <span className={styles.modeLabel}>{tr("modes.category.spirit", "SPIRIT")}</span>
+          <p className={styles.modeDescription}>
+            {tr("modes.category.spirit.description", "Abstract intuition and synthesis of meaning.")}
+          </p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-
-              
-            </section>
           </div>
         </div>
 
