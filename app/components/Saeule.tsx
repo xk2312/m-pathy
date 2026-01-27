@@ -868,7 +868,7 @@ useEffect(() => {
   const supportMailHref = useMemo(() => {
     const subject = encodeURIComponent(labelSupportSubject);
     const body = encodeURIComponent(labelSupportBody);
-    return `mailto:support@m-pathy.ai?subject=${subject}&body=${body}`;
+    return `mailto:m@m-pathy.ai?subject=${subject}&body=${body}`;
   }, [labelSupportSubject, labelSupportBody]);
 
 

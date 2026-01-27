@@ -7,7 +7,7 @@ export const footerDict = {
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 Munich",
     country: "Germany",
-    email: "support@m-pathy.ai",
+    email: "m@m-pathy.ai",
 
     // Legal and compliance
     link_imprint: "Imprint",
@@ -31,7 +31,7 @@ export const footerDict = {
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 München",
     country: "Deutschland",
-    email: "support@m-pathy.ai",
+    email: "m@m-pathy.ai",
 
     link_imprint: "Impressum",
     link_privacy: "Datenschutzerklärung",
@@ -52,7 +52,7 @@ export const footerDict = {
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 Munich",
     country: "Allemagne",
-    email: "support@m-pathy.ai",
+    email: "m@m-pathy.ai",
 
     link_imprint: "Mentions légales",
     link_privacy: "Politique de confidentialité",
@@ -73,7 +73,7 @@ export const footerDict = {
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 Múnich",
     country: "Alemania",
-    email: "support@m-pathy.ai",
+    email: "m@m-pathy.ai",
 
     link_imprint: "Aviso legal",
     link_privacy: "Política de privacidad",
@@ -94,7 +94,7 @@ export const footerDict = {
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 Monaco",
     country: "Germania",
-    email: "support@m-pathy.ai",
+    email: "m@m-pathy.ai",
 
     link_imprint: "Impressum",
     link_privacy: "Informativa sulla privacy",
@@ -115,7 +115,7 @@ export const footerDict = {
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 Munique",
     country: "Alemanha",
-    email: "support@m-pathy.ai",
+    email: "m@m-pathy.ai",
 
     link_imprint: "Imprint",
     link_privacy: "Política de privacidade",
@@ -136,7 +136,7 @@ export const footerDict = {
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 München",
     country: "Duitsland",
-    email: "support@m-pathy.ai",
+    email: "m@m-pathy.ai",
 
     link_imprint: "Colofon",
     link_privacy: "Privacybeleid",
@@ -157,7 +157,7 @@ export const footerDict = {
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 Мюнхен",
     country: "Германия",
-    email: "support@m-pathy.ai",
+    email: "m@m-pathy.ai",
 
     link_imprint: "Выходные данные",
     link_privacy: "Политика конфиденциальности",
@@ -178,7 +178,7 @@ export const footerDict = {
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 慕尼黑",
     country: "德国",
-    email: "support@m-pathy.ai",
+    email: "m@m-pathy.ai",
 
     link_imprint: "法律声明",
     link_privacy: "隐私政策",
@@ -199,7 +199,7 @@ export const footerDict = {
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 ミュンヘン",
     country: "ドイツ",
-    email: "support@m-pathy.ai",
+    email: "m@m-pathy.ai",
 
     link_imprint: "会社情報",
     link_privacy: "プライバシーポリシー",
@@ -220,7 +220,7 @@ export const footerDict = {
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 뮌헨",
     country: "독일",
-    email: "support@m-pathy.ai",
+    email: "m@m-pathy.ai",
 
     link_imprint: "법적 고지",
     link_privacy: "개인정보 처리방침",
@@ -241,7 +241,7 @@ export const footerDict = {
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 ميونخ",
     country: "ألمانيا",
-    email: "support@m-pathy.ai",
+    email: "m@m-pathy.ai",
 
     link_imprint: "بيانات الشركة",
     link_privacy: "سياسة الخصوصية",
@@ -262,7 +262,7 @@ export const footerDict = {
     address1: "Maria-Theresia-Str. 11",
     address2: "81675 म्यूनिख",
     country: "जर्मनी",
-    email: "support@m-pathy.ai",
+    email: "m@m-pathy.ai",
 
     link_imprint: "कानूनी विवरण",
     link_privacy: "गोपनीयता नीति",

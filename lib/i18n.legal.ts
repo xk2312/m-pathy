@@ -44,7 +44,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 Munich\n" +
             "Germany\n\n" +
-            "E-mail: support@m-pathy.ai",
+            "E-mail: m@m-pathy.ai",
         },
         {
           id: "representative",
@@ -66,7 +66,7 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "contact",
           heading: "5. Contact",
           body:
-            "The fastest way to contact us about m-pathy is currently by e-mail to support@m-pathy.ai. " +
+            "The fastest way to contact us about m-pathy is currently by e-mail to m@m-pathy.ai. " +
             "Please do not send any sensitive health or payment data by e-mail.",
         },
       ],
@@ -90,7 +90,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "NAAL UG (limited liability)\n" +
             "Maria-Theresia-Str. 11\n" +
             "81675 Munich, Germany\n" +
-            "E-mail: support@m-pathy.ai",
+            "E-mail: m@m-pathy.ai",
         },
         {
           id: "principles",
@@ -281,7 +281,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 München\n" +
             "Deutschland\n\n" +
-            "E-Mail: support@m-pathy.ai",
+            "E-Mail: m@m-pathy.ai",
         },
         {
           id: "representative",
@@ -303,7 +303,7 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "contact",
           heading: "5. Kontakt",
           body:
-            "Der schnellste Weg, m-pathy zu kontaktieren, ist derzeit per E-Mail an support@m-pathy.ai. " +
+            "Der schnellste Weg, m-pathy zu kontaktieren, ist derzeit per E-Mail an m@m-pathy.ai. " +
             "Bitte senden Sie keine sensiblen Gesundheits- oder Zahlungsdaten per E-Mail.",
         },
       ],
@@ -328,7 +328,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 München\n" +
             "Deutschland\n" +
-            "E-Mail: support@m-pathy.ai",
+            "E-Mail: m@m-pathy.ai",
         },
         {
           id: "principles",
@@ -518,7 +518,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 Munich\n" +
             "Allemagne\n\n" +
-            "E-mail : support@m-pathy.ai",
+            "E-mail : m@m-pathy.ai",
         },
         {
           id: "representative",
@@ -540,7 +540,7 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "contact",
           heading: "5. Contact",
           body:
-            "Le moyen le plus rapide de contacter m-pathy est actuellement par e-mail à support@m-pathy.ai. " +
+            "Le moyen le plus rapide de contacter m-pathy est actuellement par e-mail à m@m-pathy.ai. " +
             "Veuillez ne pas transmettre de données sensibles, notamment de santé ou de paiement, par e-mail.",
         },
       ],
@@ -565,7 +565,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 Munich\n" +
             "Allemagne\n" +
-            "E-mail : support@m-pathy.ai",
+            "E-mail : m@m-pathy.ai",
         },
         {
           id: "principles",
@@ -754,7 +754,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 Múnich\n" +
             "Alemania\n\n" +
-            "Correo electrónico: support@m-pathy.ai",
+            "Correo electrónico: m@m-pathy.ai",
         },
         {
           id: "representative",
@@ -776,7 +776,7 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "contact",
           heading: "5. Contacto",
           body:
-            "La forma más rápida de contactar con m-pathy es actualmente por correo electrónico a support@m-pathy.ai. " +
+            "La forma más rápida de contactar con m-pathy es actualmente por correo electrónico a m@m-pathy.ai. " +
             "Por favor, no envíe datos sensibles, en particular datos de salud o de pago, por correo electrónico.",
         },
       ],
@@ -801,7 +801,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 Múnich\n" +
             "Alemania\n" +
-            "Correo electrónico: support@m-pathy.ai",
+            "Correo electrónico: m@m-pathy.ai",
         },
         {
           id: "principles",
@@ -991,7 +991,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 Monaco di Baviera\n" +
             "Germania\n\n" +
-            "E-mail: support@m-pathy.ai",
+            "E-mail: m@m-pathy.ai",
         },
         {
           id: "representative",
@@ -1013,7 +1013,7 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "contact",
           heading: "5. Contatto",
           body:
-            "Il modo più rapido per contattare m-pathy è attualmente tramite e-mail all’indirizzo support@m-pathy.ai. " +
+            "Il modo più rapido per contattare m-pathy è attualmente tramite e-mail all’indirizzo m@m-pathy.ai. " +
             "Si prega di non inviare dati sensibili, in particolare dati sanitari o di pagamento, tramite e-mail.",
         },
       ],
@@ -1038,7 +1038,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 Monaco di Baviera\n" +
             "Germania\n" +
-            "E-mail: support@m-pathy.ai",
+            "E-mail: m@m-pathy.ai",
         },
         {
           id: "principles",
@@ -1228,7 +1228,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 Munique\n" +
             "Alemanha\n\n" +
-            "E-mail: support@m-pathy.ai",
+            "E-mail: m@m-pathy.ai",
         },
         {
           id: "representative",
@@ -1250,7 +1250,7 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "contact",
           heading: "5. Contacto",
           body:
-            "A forma mais rápida de contactar o m-pathy é atualmente por e-mail para support@m-pathy.ai. " +
+            "A forma mais rápida de contactar o m-pathy é atualmente por e-mail para m@m-pathy.ai. " +
             "Por favor, não envie dados sensíveis, em especial dados de saúde ou de pagamento, por e-mail.",
         },
       ],
@@ -1275,7 +1275,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 Munique\n" +
             "Alemanha\n" +
-            "E-mail: support@m-pathy.ai",
+            "E-mail: m@m-pathy.ai",
         },
         {
           id: "principles",
@@ -1465,7 +1465,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 München\n" +
             "Duitsland\n\n" +
-            "E-mail: support@m-pathy.ai",
+            "E-mail: m@m-pathy.ai",
         },
         {
           id: "representative",
@@ -1487,7 +1487,7 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "contact",
           heading: "5. Contact",
           body:
-            "De snelste manier om contact op te nemen met m-pathy is momenteel per e-mail via support@m-pathy.ai. " +
+            "De snelste manier om contact op te nemen met m-pathy is momenteel per e-mail via m@m-pathy.ai. " +
             "Stuur geen gevoelige gegevens, met name gezondheids- of betalingsgegevens, per e-mail.",
         },
       ],
@@ -1512,7 +1512,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 München\n" +
             "Duitsland\n" +
-            "E-mail: support@m-pathy.ai",
+            "E-mail: m@m-pathy.ai",
         },
         {
           id: "principles",
@@ -1702,7 +1702,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 Мюнхен\n" +
             "Германия\n\n" +
-            "E-mail: support@m-pathy.ai",
+            "E-mail: m@m-pathy.ai",
         },
         {
           id: "representative",
@@ -1724,7 +1724,7 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "contact",
           heading: "5. Контактная информация",
           body:
-            "Наиболее быстрый способ связаться с m-pathy в настоящее время - по электронной почте support@m-pathy.ai. " +
+            "Наиболее быстрый способ связаться с m-pathy в настоящее время - по электронной почте m@m-pathy.ai. " +
             "Пожалуйста, не направляйте по электронной почте конфиденциальные данные, в частности медицинские или платежные данные.",
         },
       ],
@@ -1749,7 +1749,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 Мюнхен\n" +
             "Германия\n" +
-            "E-mail: support@m-pathy.ai",
+            "E-mail: m@m-pathy.ai",
         },
         {
           id: "principles",
@@ -1938,7 +1938,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 慕尼黑\n" +
             "德国\n\n" +
-            "电子邮件：support@m-pathy.ai",
+            "电子邮件：m@m-pathy.ai",
         },
         {
           id: "representative",
@@ -1960,7 +1960,7 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "contact",
           heading: "5. 联系方式",
           body:
-            "目前联系 m-pathy 的最快方式是通过电子邮件 support@m-pathy.ai。 " +
+            "目前联系 m-pathy 的最快方式是通过电子邮件 m@m-pathy.ai。 " +
             "请勿通过电子邮件发送敏感信息，尤其是健康数据或支付数据。",
         },
       ],
@@ -1985,7 +1985,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 慕尼黑\n" +
             "德国\n" +
-            "电子邮件：support@m-pathy.ai",
+            "电子邮件：m@m-pathy.ai",
         },
         {
           id: "principles",
@@ -2174,7 +2174,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 ミュンヘン\n" +
             "ドイツ\n\n" +
-            "Eメール：support@m-pathy.ai",
+            "Eメール：m@m-pathy.ai",
         },
         {
           id: "representative",
@@ -2196,7 +2196,7 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "contact",
           heading: "5. 連絡先",
           body:
-            "現在、m-pathy への最も迅速な連絡方法は support@m-pathy.ai 宛のEメールです。 " +
+            "現在、m-pathy への最も迅速な連絡方法は m@m-pathy.ai 宛のEメールです。 " +
             "健康情報や支払情報などの機微なデータは、Eメールで送信しないでください。",
         },
       ],
@@ -2221,7 +2221,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 ミュンヘン\n" +
             "ドイツ\n" +
-            "Eメール：support@m-pathy.ai",
+            "Eメール：m@m-pathy.ai",
         },
         {
           id: "principles",
@@ -2409,7 +2409,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 뮌헨\n" +
             "독일\n\n" +
-            "이메일: support@m-pathy.ai",
+            "이메일: m@m-pathy.ai",
         },
         {
           id: "representative",
@@ -2431,7 +2431,7 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "contact",
           heading: "5. 연락처",
           body:
-            "현재 m-pathy에 가장 빠르게 연락하는 방법은 support@m-pathy.ai 로 이메일을 보내는 것입니다. " +
+            "현재 m-pathy에 가장 빠르게 연락하는 방법은 m@m-pathy.ai 로 이메일을 보내는 것입니다. " +
             "건강 정보나 결제 정보 등 민감한 데이터는 이메일로 보내지 마시기 바랍니다.",
         },
       ],
@@ -2456,7 +2456,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 뮌헨\n" +
             "독일\n" +
-            "이메일: support@m-pathy.ai",
+            "이메일: m@m-pathy.ai",
         },
         {
           id: "principles",
@@ -2644,7 +2644,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 ميونخ\n" +
             "ألمانيا\n\n" +
-            "البريد الإلكتروني: support@m-pathy.ai",
+            "البريد الإلكتروني: m@m-pathy.ai",
         },
         {
           id: "representative",
@@ -2666,7 +2666,7 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "contact",
           heading: "5. معلومات الاتصال",
           body:
-            "حاليًا، أسرع طريقة للتواصل مع m-pathy هي عبر البريد الإلكتروني support@m-pathy.ai. " +
+            "حاليًا، أسرع طريقة للتواصل مع m-pathy هي عبر البريد الإلكتروني m@m-pathy.ai. " +
             "يرجى عدم إرسال أي بيانات حساسة، ولا سيما البيانات الصحية أو بيانات الدفع، عبر البريد الإلكتروني.",
         },
       ],
@@ -2691,7 +2691,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 ميونخ\n" +
             "ألمانيا\n" +
-            "البريد الإلكتروني: support@m-pathy.ai",
+            "البريد الإلكتروني: m@m-pathy.ai",
         },
         {
           id: "principles",
@@ -2880,7 +2880,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 म्यूनिख\n" +
             "जर्मनी\n\n" +
-            "ई-मेल: support@m-pathy.ai",
+            "ई-मेल: m@m-pathy.ai",
         },
         {
           id: "representative",
@@ -2902,7 +2902,7 @@ export const legalDict: Record<string, LegalLocale> = {
           id: "contact",
           heading: "5. संपर्क",
           body:
-            "वर्तमान में m-pathy से संपर्क करने का सबसे तेज़ तरीका ई-मेल support@m-pathy.ai है। " +
+            "वर्तमान में m-pathy से संपर्क करने का सबसे तेज़ तरीका ई-मेल m@m-pathy.ai है। " +
             "कृपया ई-मेल के माध्यम से कोई भी संवेदनशील डेटा, विशेष रूप से स्वास्थ्य या भुगतान संबंधी जानकारी, न भेजें।",
         },
       ],
@@ -2927,7 +2927,7 @@ export const legalDict: Record<string, LegalLocale> = {
             "Maria-Theresia-Str. 11\n" +
             "81675 म्यूनिख\n" +
             "जर्मनी\n" +
-            "ई-मेल: support@m-pathy.ai",
+            "ई-मेल: m@m-pathy.ai",
         },
         {
           id: "principles",
