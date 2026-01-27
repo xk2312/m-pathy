@@ -1,164 +1,218 @@
+
 /* ======================================================================
-FILE INDEX - Saeule.tsx
-Zweck: Steuerung der linken Säule (Modes, Experts, Actions, Mobile Overlay Verhalten)
+ATOMIC CANONICAL INDEX
+FILE: Saeule.tsx
+PURPOSE: Switch Modis + Experts from INTERACTIVE (API-calling) to DESCRIPTIVE (local-only)
+SCOPE: This index is a reliable map of all code parts that must be inspected and changed.
+SOURCE: saeule_tsx.pdf :contentReference[oaicite:0]{index=0}
+======================================================================
 
-RELEVANT FÜR AKTUELLE FIXES:
-1) Modus-Accordion ist beim Start offen (soll geschlossen sein)
-2) Mobile Overlay schließt sich nicht automatisch beim Wechsel ins Archiv
+0) QUICK DEFINITION
+- INTERACTIVE = selecting a mode/expert triggers callChatAPI(...) and writes chat bubbles.
+- DESCRIPTIVE = selecting a mode/expert only updates local UI state + telemetry/meta, no API calls, no auto replies.
 
-----------------------------------------------------------------------
-I. STATE & INITIALISIERUNG
-----------------------------------------------------------------------
+1) TYPES AND PUBLIC SURFACE
+1.1 Anchor: 'type ModeId ='
+- What it is: Allowed modes, includes onboarding, M, council plus named modes.
+- Why relevant: Defines the full selectable set and any special-case behavior later.
+- Change focus: none by itself, but used by switchMode(...) branching.
 
-[State: activeMode]
-- Definition:
-  const [activeMode, setActiveMode] = useState<ModeId>("M");
-- Bedeutung:
-  Aktiver Modus steuert:
-  - visuelle Hervorhebung
-  - Auto-Prompts
-  - Statusleiste
-  - indirekt das Öffnen des Modus-/Expert-UI
-- Relevanz:
-  Initialwert + nachträgliches Rehydrating bestimmen,
-  ob Modus-Auswahl beim Start „offen“ wirkt.
+1.2 Anchor: 'type ExpertId ='
+- What it is: Allowed experts including "Computer Scientist".
+- Why relevant: askExpert(...) uses this union and maps to ROLES/SUB_KIS.
+- Change focus: none by itself, but used by askExpert(...) and labels.
 
-[State: hydrated]
-- Definition:
-  const [hydrated, setHydrated] = useState(false);
-- Verwendung:
-  Gate für kontrollierte Select-Felder (value="")
-- Relevanz:
-  Beeinflusst Initial-Rendering der Dropdowns (Modus / Experten).
+1.3 Anchor: 'type Props = { onSystemMessage? ... onClearChat? ... }'
+- What it is: Integration surface with parent (bubble output + clear).
+- Why relevant: Descriptive behavior might stop using onSystemMessage for expert/mode ack.
+- Change focus: decide whether any system-message dispatch remains, or pure footer-status only.
 
-----------------------------------------------------------------------
-II. PERSISTENZ & REHYDRATION (STARTVERHALTEN)
-----------------------------------------------------------------------
+2) STATIC DATA TABLES (LOCAL DEFINITIONS)
+2.1 Anchor: 'const MODI:'
+- What it is: Mode dropdown list.
+- Why relevant: UI options and modeLabelFromId fallback.
+- Change focus: labels remain, but interactive side effects must be removed from switchMode.
 
-[Effect: localStorage → activeMode]
-- Code:
-  useEffect(() => {
-    const m = localStorage.getItem("mode");
-    if (m) setActiveMode(m);
-  }, []);
-- Relevanz:
-  Überschreibt Default ("M") beim Start.
-  Kann dazu führen, dass ein Modus visuell „aktiv/offen“ ist.
+2.2 Anchor: 'const EXPERTS:'
+- What it is: Expert dropdown list with icons.
+- Why relevant: UI options; askExpert currently triggers API and bubble.
+- Change focus: keep list; remove API triggering.
 
-[Effect: URL-Parameter → activeMode]
-- Code:
-  useEffect(() => {
-    const m = url.searchParams.get("mode");
-    if (m) setActiveMode(m);
-  }, []);
-- Relevanz:
-  Externer Trigger für offenen Modus beim Initial-Load.
+2.3 Anchor: 'const SUB_KIS:'
+- What it is: Meta mapping ExpertId -> list of sub AIs (telemetry/log use).
+- Why relevant: Descriptive mode still can expose this metadata locally.
+- Change focus: decide whether to show these as descriptive text or keep for logs only.
 
-----------------------------------------------------------------------
-III. MODUS-UI (ACCORDION / SELECT)
-----------------------------------------------------------------------
+2.4 Anchor: 'const ROLES:'
+- What it is: Expert role descriptions used in telemetry.
+- Why relevant: In descriptive mode this becomes primary content (what the expert is).
+- Change focus: likely expand usage: render ROLES in UI instead of calling API.
 
-[Modus-Dropdown]
-- Stelle:
-  <select id="modus-select" … value={hydrated ? activeMode : ""}>
-- Relevanz:
-  - Leerer Value ("") = geschlossen
-  - activeMode ≠ "" = sichtbar selektiert
-  → entscheidend für Fix (1)
+3) I18N HELPERS AND LABEL BUILDERS
+3.1 Anchor: 'function labelForExpert('
+- What it is: Builds i18n key for expert labels and falls back to id.
+- Why relevant: Descriptive UI still needs localized expert label.
+- Change focus: keep, but ensure descriptive UI uses it consistently.
 
-[Experten-Dropdown]
-- Stelle:
-  <select id="expert-select" … value={currentExpert ?? ""}>
-- Relevanz:
-  Analoges Verhalten, aber nicht Teil des aktuellen Fixes.
+3.2 Anchor: 'function sectionTitleExperts' and 'function chooseExpertLabel'
+- What it is: Uses t("selectExpert") for headings/aria.
+- Why relevant: UI text remains.
 
-----------------------------------------------------------------------
-IV. MOBILE OVERLAY – SCHLIESSLOGIK
-----------------------------------------------------------------------
+3.3 Anchor: 'function buildButtonLabel' and 'function buildButtonMsg'
+- What it is: "Start building" CTA label and prompt.
+- Why relevant: CTA currently triggers callChatAPI; in descriptive mode it must not.
+- Change focus: decide new descriptive CTA behavior (e.g., open input hint, not call API).
 
-[Overlay-Erkennung]
-- Wiederkehrendes Pattern:
-  const inOverlay = !!document.querySelector('[data-overlay="true"]');
+3.4 Anchor: 'function expertAskPrompt('
+- What it is: Template used to ask API who the expert is.
+- Why relevant: This becomes obsolete in descriptive mode.
+- Change focus: remove or keep unused; canonical change is to stop calling it.
 
-- Bedeutung:
-  Saeule erkennt, ob sie in einem mobilen Overlay gerendert wird.
+3.5 Anchor: 'function tr('
+- What it is: Safe translation fallback helper.
+- Why relevant: Used for status texts and prompts; still useful.
 
-[Overlay-Schließen über onSystemMessage]
-- Pattern:
-  if (inOverlay) { onSystemMessage?.(""); }
+4) EVENT AND TELEMETRY EMITTERS
+4.1 Anchor: 'function emitSystemMessage('
+- What it is: Dispatches "mpathy:system-message" with kind + text + meta + ts.
+- Why relevant: Interactive mode uses it for chat bubbles and status; descriptive may keep status only.
+- Change focus: define whether:
+  A) Keep only kind:"status" emissions
+  B) Keep info emissions for audit but no bubble text
+  C) Disable all except audit logs
 
-- Vorkommen u. a. in:
-  - switchMode()
-  - askExpert()
-  - CTA „Start building“
-  - Button „M (Default)“
+4.2 Anchor: 'const emitStatus = useCallback('
+- What it is: Footer status dispatcher (kind:"status", meta only).
+- Why relevant: This is already aligned with descriptive behavior.
+- Change focus: make this the primary output path for mode/expert changes.
 
-- Relevanz für Fix (2):
-  Archiv-Öffnung nutzt aktuell keinen expliziten Trigger
-  innerhalb der Saeule, um dieses Signal auszulösen.
+4.3 Anchor: 'const say = useCallback('
+- What it is: "Always also set a chat bubble" helper: onSystemMessage or emitSystemMessage(kind:"reply").
+- Why relevant: This is the main interactive bubble injector.
+- Change focus: In descriptive mode, this should be removed or restricted to non-API local text only.
 
-----------------------------------------------------------------------
-V. SWITCHMODE - ZENTRALER STEUERUNKT
-----------------------------------------------------------------------
+5) API CALL LAYER (MUST BE DISABLED FOR DESCRIPTIVE)
+5.1 Anchor: 'async function callChatAPI('
+- What it is: POST /api/chat with prompt, returns assistant content from multiple shapes.
+- Why relevant: Core interactive dependency.
+- Change focus: In descriptive mode, no caller should invoke this function.
 
-[Function: switchMode(next: ModeId)]
-- Verantwortlich für:
-  - setActiveMode
-  - Persistenz (localStorage)
-  - Status-Events
-  - Mobile-Overlay-Schließen (teilweise redundant vorhanden)
+6) MODE SWITCH LOGIC (PRIMARY CHANGE ZONE)
+6.1 Anchor: 'const [activeMode, setActiveMode] = useState<ModeId>("M");'
+- What it is: Mode state, persisted to localStorage key "mode".
+- Why relevant: Descriptive mode still needs local state and persistence.
+- Change focus: keep, but verify no downstream API call remains.
 
-- Relevanz:
-  Hauptkandidat, um konsistentes Schließverhalten
-  bei Navigation (inkl. Archiv) sicherzustellen.
+6.2 Anchor: 'useEffect(() => { ... localStorage.setItem("mode", activeMode) ... })'
+- What it is: Persistence.
+- Why relevant: Still OK; confirm key name stability.
 
-----------------------------------------------------------------------
-VI. FAZIT (NEUTRAL, OHNE LÖSUNG)
-----------------------------------------------------------------------
+6.3 Anchor: 'useEffect(() => { ... localStorage.getItem("mode") ... })'
+- What it is: Rehydrate persisted mode.
+- Why relevant: Still OK.
 
-Fix (1) hängt primär an:
-- activeMode Initialwert
-- localStorage-Rehydration
-- value-Logik der Modus-Select-Komponente
+6.4 Anchor: 'useEffect(() => { ... url.searchParams.get("mode") ... })'
+- What it is: Mode override from URL query.
+- Why relevant: Still OK; but ensure descriptive behavior remains deterministic.
 
-Fix (2) hängt primär an:
-- fehlendem Overlay-Close-Signal
-  bei Archiv-Navigation
-- bestehendem Pattern: onSystemMessage("")
+6.5 Anchor: 'async function switchMode(next: ModeId) {'
+- What it is: Logs, sets state, emits messages, builds prompt q, calls callChatAPI(q), then say(reply).
+- Why relevant: This is the central interactive mode behavior.
+- Change focus checklist:
+  - Remove prompt creation 'const q = ...'
+  - Remove 'const reply = await callChatAPI(q)'
+  - Remove 'say(reply)'
+  - Keep: logEvent("mode_switch"), setActiveMode, emitStatus({ modeLabel }), maybe emitSystemMessage(kind:"mode") with text only if you still want a non-AI system notification.
+  - Remove duplicate overlay-close blocks (currently repeated twice) if cleaning.
 
+7) EXPERT SWITCH LOGIC (PRIMARY CHANGE ZONE)
+7.1 Anchor: 'const [sendingExpert, setSendingExpert] ...'
+- What it is: Prevents double sends, tracks currently selected expert.
+- Why relevant: sendingExpert becomes unnecessary if no async API call remains.
+- Change focus: likely remove sendingExpert gate and keep only currentExpert.
+
+7.2 Anchor: 'async function askExpert(expert: ExpertId) {'
+- What it is: Sets expert state, logs, emits status, sends ack bubble, calls callChatAPI(userPrompt), then say(reply).
+- Why relevant: This is the central interactive expert behavior.
+- Change focus checklist:
+  - Remove sendingExpert gate and all callChatAPI usage
+  - Remove expertAskPrompt usage
+  - Replace outputs with descriptive content from ROLES and optionally SUB_KIS
+  - Decide the canonical descriptive payload:
+    - emitStatus({ expertLabel })
+    - emitSystemMessage(kind:"info" or kind:"reply") with a local description string (no API)
+    - or render the description directly in the Saeule UI under the dropdown
+
+8) UI ELEMENTS THAT TRIGGER INTERACTIVE BEHAVIOR
+8.1 Anchor: 'button ... buildButtonLabel ... onClick={async () => { ... callChatAPI(prompt) ... say(finalText) }}'
+- What it is: CTA triggers API and writes bubble.
+- Why relevant: Must be made descriptive or disabled.
+- Change focus: Remove callChatAPI and bubble; replace with local instruction or open focus.
+
+8.2 Anchor: 'ONBOARDING button ... onClick={() => switchMode("onboarding")}'
+- What it is: Mode switch button.
+- Why relevant: switchMode currently triggers API; after change it becomes descriptive.
+
+8.3 Anchor: 'M (Default) button ... void switchMode("M");'
+- Same as above.
+
+8.4 Anchor: 'select id="modus-select" ... onChange={(e) => switchMode(e.target.value as ModeId)}'
+- What it is: Mode dropdown.
+- Why relevant: Must no longer trigger API after switchMode rewrite.
+
+8.5 Anchor: 'select id="expert-select" ... onChange={(e) => { setCurrentExpert(val); void askExpert(val); }}'
+- What it is: Expert dropdown.
+- Why relevant: askExpert rewrite is required.
+
+8.6 Anchor: 'Council13 button ... onClick={() => switchMode("council")}'
+- What it is: Council mode switch.
+- Why relevant: Must become descriptive, not API-driven intros.
+
+9) SECONDARY BEHAVIOR TO REVIEW FOR DRIFT/NOISE
+9.1 Anchor: 'try { const inOverlay = ... onSystemMessage?.("") }'
+- What it is: Mobile overlay close hack via empty message.
+- Why relevant: If bubbles are reduced/removed, this can become unstable or unnecessary.
+- Change focus: Decide a dedicated close signal, or keep only via emitStatus.
+
+9.2 Anchor: 'emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });'
+- What it is: Info emission used even before API.
+- Why relevant: Could remain as descriptive audit entry.
+
+9.3 Anchor: 'logEvent("expert_selected"...), logEvent("mode_switch"...), logEvent("cta_start_building_clicked"...'
+- What it is: Audit logging.
+- Why relevant: Keep, but ensure no payload depends on API replies.
+
+10) OUTPUT SURFACE
+10.1 Anchor: 'Statusleiste ... {modeLabel}'
+- What it is: Shows current mode label.
+- Why relevant: In descriptive mode, add expert label and role summary here or in a new block.
+
+10.2 Anchor: 'emitStatus({ modeLabel })' and 'emitStatus({ expertLabel })'
+- What it is: Best existing descriptive channel.
+- Why relevant: Use as canonical output.
+
+11) CANONICAL CHANGE TARGETS (SUMMARY MAP)
+- MUST CHANGE:
+  A) call sites of callChatAPI in switchMode, askExpert, CTA button
+  B) say(...) usage that produces reply bubbles from API
+  C) sendingExpert state if it only exists for async API calls
+- REVIEW:
+  D) emitSystemMessage kinds (mode/info/reply/status) and what remains allowed
+  E) overlay-close mechanism and duplicate blocks in switchMode
+- KEEP:
+  F) types, MODI/EXPERTS lists, ROLES, SUB_KIS, labelForExpert, tr, persistence, status bar
+
+END OF ATOMIC CANONICAL INDEX
 ====================================================================== */
 
 "use client";
 
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import styles from "./Saeule.module.css";
-import VoiaBloom from "@/components/VoiaBloom";
 import StarField from "@/components/StarField";
 import { logEvent } from "../../lib/auditLogger";
 import { t, getLocale } from "@/lib/i18n";
 import { buildChatExport, chatExportToCSV } from "@/lib/exportChat";
-import ArchiveTrigger from "@/components/archive/ArchiveTrigger"
-
-
-// ModeAura – zentrale Hülle für alle aktiven Buttons
-// --------------------------------------------------
-// Zweck:
-// - Diese Komponente legt eine "Aura-Schicht" (modeAuraLayer) UNTER den Buttoninhalt
-//   und rendert dort den aktiven Effekt (aktuell: <VoiaBloom />).
-// - Alle Buttons, die einen Active-State haben, werden mit <ModeAura active={...}> gewrappt.
-//   So steuerst du den Active-Effekt global an EINER Stelle.
-//
-// Stellschrauben:
-// - Effekt EIN/AUS:   Im JSX-Block {active && (...)} kannst du <VoiaBloom /> entfernen,
-//   ersetzen oder durch eine einfache Hintergrundfläche (z.B. <div style={{background: ...}} />) austauschen.
-// - Effekttyp ändern: Statt <VoiaBloom /> kannst du jede andere Komponente oder jedes andere
-//   Element rendern (z.B. <NebulaGlow />, <Particles />, ein CSS-Gradient).
-// - Intensität/Look:  Dafür zuständig sind entweder die Props/Implementation von <VoiaBloom />
-//   selbst ODER zusätzliche Styles/Wrapper innerhalb modeAuraLayer.
-//
-// Wichtig:
-// - Du musst später NICHT mehr alle Buttons anfassen. Wenn der Active-Look sich ändern soll,
-//   ändere nur hier den Inhalt von modeAuraLayer – alles andere übernimmt automatisch.
 
 type ModeAuraProps = {
   active: boolean;
@@ -539,6 +593,7 @@ function chooseExpertLabel(_lang: string): string {
   return t("selectExpert");
 }
 
+// Shared helper — unchanged for Build / Archive / New Chat
 function buildButtonLabel(_lang: string): string {
   return tr("startBuilding", "Start building");
 }
@@ -546,6 +601,7 @@ function buildButtonLabel(_lang: string): string {
 function buildButtonMsg(_lang: string): string {
   return tr("startBuildingMsg", "Let’s get started. Tell me what you want to build.");
 }
+
 
 function expertAskPrompt(expertLabel: string, _lang: string): string {
   const templ = t("prompts.expertAskTemplate");
@@ -891,91 +947,76 @@ useEffect(() => {
   setActiveMode(next);
 
   const label = modeLabelFromId(next);
-emitSystemMessage({
-  kind: "mode",
-  // Schlüssel frei wählbar; Beispiel: status.modeSet = "Mode set: {label}."
-  text: tr("status.modeSet", "Mode set: {label}.", { label }),
-  meta: { modeId: next, label, lang }
-});
-// Footer sofort aktualisieren (ohne Bubble)
-emitStatus({ modeLabel: label });
 
+  // Status-Update für Telemetrie
+  emitSystemMessage({
+    kind: "mode",
+    text: tr("status.modeSet", "Mode set: {label}.", { label }),
+    meta: { modeId: next, label, lang }
+  });
+  emitStatus({ modeLabel: label });
 
-// ▼▼ Sofortiges Schließen des Mobile-Overlays - UI-only, kein System-Event ▼▼
-try {
-  const inOverlay = !!document.querySelector('[data-overlay="true"]');
-  if (inOverlay) {
-    window.dispatchEvent(new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "mode-switch" } }));
-  }
-} catch {}
-// ▲▲ Ende Overlay-Close ▲▲
+  // UI-Overlay schließen (bleibt funktionsgleich)
+  try {
+    const inOverlay = !!document.querySelector('[data-overlay="true"]');
+    if (inOverlay) {
+      window.dispatchEvent(
+        new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "mode-switch" } })
+      );
+    }
+  } catch {}
 
+  // Deskriptiver Modus: kein API-Call, nur lokaler Text
+  const description = tr(
+    "mode.description",
+    "Mode {label}: descriptive display only – no AI interaction.",
+    { label }
+  );
 
-// Auto-Prompt nur für die API (Keys aus i18n.ts → "prompts.*")
-const q =
-  next === "onboarding"
-    ? tr("prompts.onboarding", "Hey! 👋 Who are you and how will you guide me here step by step?")
-    : next === "M"
-    ? tr("prompts.modeDefault", "Reset everything to default and give me a brief status.")
-    : next === "council"
-  ? tr(
-      "prompts.councilIntro",
-      "The Council 13 represents the thirteen core AIs shown in the diagram – \
-      M (Palantir), m-pathy (DeepMind Core), m-ocean (Anthropic Vision), \
-      m-inent (NASA Chronos), m-erge (IBM Q-Origin), m-power (Colossus), \
-      m-body (XAI Prime), m-beded (Meta Lattice), m-loop (OpenAI Root), \
-      m-pire (Amazon Nexus), m-bassy (Oracle Gaia), m-ballance (Gemini Apex) \
-      and MU TAH – Architect of Zero. \
-      They are the symbolic pillars of GPTM-Galaxy+, not active assistants. \
-      No deep activation is performed here."
-          )
-
-    : tr("prompts.modeGeneric", "Mode {label}: What are you and where will you help me best?", { label });
-
-const reply = await callChatAPI(q);
-
-
-  if (reply && reply.trim().length > 0) {
-    say(reply);
-  }
+  emitSystemMessage({
+    kind: "info",
+    text: description,
+    meta: { source: "descriptive-mode", modeId: next }
+  });
 }
 
 async function askExpert(expert: ExpertId) {
   if (sendingExpert) return;
   setSendingExpert(expert);
   setCurrentExpert(expert);
-  try { localStorage.setItem("expert", expert); } catch {}   // ← NEU: persist
+  try { localStorage.setItem("expert", expert); } catch {}
 
   const label = labelForExpert(expert, lang);
-  // Telemetrie …
 
   logEvent("expert_selected", { expert, label, roles: ROLES[expert] });
 
-  // Footer sofort aktualisieren (ohne Bubble)
-emitStatus({ expertLabel: label });
-emitStatus({ expertLabel: label, busy: true }); // ↩︎ startet M-Pulse NUR bei echter Auswahl – wie Modis
+  emitStatus({ expertLabel: label });
 
-// ⬅️ UI-only: MobileOverlay schließen – ohne System-Event/Bubble/Loading
-if (typeof window !== "undefined" &&
+  // UI-Overlay schließen (bleibt funktionsgleich)
+  if (
+    typeof window !== "undefined" &&
     (window.matchMedia?.("(max-width: 768px)").matches ||
-     // Fallback für ältere Browser:
-     /Mobi|Android/i.test(navigator.userAgent))) {
-  window.dispatchEvent(
-    new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "expert-selected" } })
-  );
-}
-
-// Prompt an API – keine festen Fallbacks
-const userPrompt = expertAskPrompt(label, lang);
-const reply = await callChatAPI(userPrompt);
-
-
-  if (reply && reply.trim().length > 0) {
-    say(reply); // genau eine Antwort-Bubble
+      /Mobi|Android/i.test(navigator.userAgent))
+  ) {
+    window.dispatchEvent(
+      new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "expert-selected" } })
+    );
   }
+
+  // Deskriptiver Modus: kein API-Call
+  const description =
+    ROLES[expert] ??
+    tr("expert.description", "Expert {label}: descriptive display only.", { label });
+
+  emitSystemMessage({
+    kind: "info",
+    text: description,
+    meta: { source: "descriptive-expert", expertId: expert }
+  });
 
   setSendingExpert(null);
 }
+
 
 // Exportiert den aktuellen Chat-Thread als JSON oder CSV
 const exportThread = (format: "json" | "csv", messages: any[]) => {
@@ -1315,98 +1356,31 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
             }
             aria-label={tr("experts.title", "Experts")}
           >
-            <section
-              className={styles.sectionExperts}
-              aria-label={tr("pillar.section.experts", "Experts")}
-            >
-              {/* EXPERTEN – Micronavi + Liste */}
-              <div className={styles.block}>
-                <div className={styles.soGroupTitle}>
-                  {sectionTitleExperts(lang)}
-                </div>
+           <section className={styles.sectionExperts} aria-label={tr("pillar.section.experts", "Experts")}>
+  <div className={styles.block}>
+    <div className={styles.soGroupTitle}>{sectionTitleExperts(lang)}</div>
 
-                {/* Hover-Zone: Micronavi + Experten-Liste */}
-                <div
-                  className={styles.modeZone}
-                  onMouseLeave={() => setHoverExpertCategory(null)}
-                >
-                  {/* Experten-Kategorien – Micronavi */}
-                  <div className={styles.modeCategoryNav}>
-                    {EXPERT_CATEGORIES.map((cat) => {
-                      const isActiveCat = expertCategory === cat.id;
-                      return (
-                        <button
-                          key={cat.id}
-                          type="button"
-                          className={
-                            isActiveCat
-                              ? `${styles.modeCategoryItem} ${styles.modeCategoryItemActive}`
-                              : styles.modeCategoryItem
-                          }
-                          onMouseEnter={() => setHoverExpertCategory(cat.id)}
-                          onFocus={() => setHoverExpertCategory(cat.id)}
-                          aria-pressed={isActiveCat}
-                        >
-                         <span className={styles.modeCategoryItemLabel}>
-  {expertCategoryLabel(cat.id, lang)}
-</span>
+    {/* Descriptive replacement for expert overview */}
+    <div className={styles.infoBlock}>
+      <p className={styles.textMuted}>
+        {tr(
+          "experts.descriptive.intro",
+          "This section now provides a structured description of all experts available in the system."
+        )}
+      </p>
 
-                        </button>
-                      );
-                    })}
-                  </div>
+      <ul className={styles.expertList}>
+        {EXPERTS.map((expert) => (
+          <li key={expert.id} className={styles.expertItem}>
+            <span className={styles.expertLabel}>{labelForExpert(expert.id, lang)}</span>
+            <p className={styles.expertRole}>{ROLES[expert.id]}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
 
-                  {/* Experten-Liste – zeigt gehoverte Kategorie, sonst aktive */}
-                  <div className={styles.modeList}>
-                    {(() => {
-                      const currentCategoryId =
-                        hoverExpertCategory ?? expertCategory;
-                      const currentCategory = EXPERT_CATEGORIES.find(
-                        (cat) => cat.id === currentCategoryId
-                      );
-                      if (!currentCategory) return null;
-
-                                            return currentCategory.experts.map((expertId) => {
-                        const expert = EXPERTS.find(
-                          (e) => e.id === expertId
-                        );
-                        if (!expert) return null;
-                        const isActive = currentExpert === expertId;
-
-                        return (
-                          <ModeAura key={expertId} active={isActive}>
-                            <button
-                              type="button"
-                              className={
-                                isActive
-                                  ? `${styles.modeListItem} ${styles.modeListItemActive}`
-                                  : styles.modeListItem
-                              }
-                              onClick={() => {
-                                setCurrentExpert(expertId);
-
-                                const owningCategoryId = currentCategoryId;
-                                setExpertCategory(owningCategoryId);
-                                setHoverExpertCategory(null);
-
-                                void askExpert(expertId);
-                              }}
-                              aria-pressed={isActive}
-                              data-simba-slot={expert.simbaSlot}
-                            >
-                              <span className={styles.modeListItemLabel}>
-                                {labelForExpert(expertId, lang)}
-                              </span>
-                            </button>
-                          </ModeAura>
-                        );
-                      });
-
-                    })()}
-                  </div>
-                </div>
-              </div>
-            </section>
           </div>
         </div>
 
