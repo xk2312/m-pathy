@@ -1195,14 +1195,16 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
     id: "onboarding",
     title: "Onboarding",
     purpose:
-      "Guides teams through structured system initialization, ensuring clear setup, context awareness, and compliance readiness."
+      "You can ask about system features, available commands, or request step-by-step guidance for initial setup and usage."
   },
   {
-    id: "research",
-    title: "Research",
-    purpose:
-      "Structures data analysis and document review under deterministic logic, aligning results with corporate governance and evidence trails."
-  },
+  id: "research",
+  title: "Research",
+  purpose:
+    "Executes the sealed evaluation loop — each input rated for clarity and meaning (1–10) with three outputs: understanding, insight, and comment."
+}
+,
+
   {
     id: "truth",
     title: "Truth",
