@@ -213,6 +213,7 @@ import StarField from "@/components/StarField";
 import { logEvent } from "../../lib/auditLogger";
 import { t, getLocale } from "@/lib/i18n";
 import { buildChatExport, chatExportToCSV } from "@/lib/exportChat";
+import { ChevronDown } from "lucide-react";
 
 type ModeAuraProps = {
   active: boolean;
@@ -1176,91 +1177,134 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
             }
             aria-label={tr("pillar.section.modes", "Modes")}
           >
-            <section className={styles.sectionModes} aria-label={tr("pillar.section.modes", "Modes")}>
-  <div className={styles.block}>
-    <div className={styles.soGroupTitle}>
-      {tr("pillar.section.modes", "Modes")}
-    </div>
+          
 
-    <div className={styles.infoBlock}>
+
+<section className={styles.sectionModes} aria-label={tr("pillar.section.modes", "Modes")}>
+  <div className={styles.block}>
+    <div className={styles.soGroupTitle}>{tr("pillar.section.modes", "Modes")}</div>
+
+    {/* local accordion state */}
+    {/*
+      openMode: currently expanded mode id or null
+    */}
+    {(() => {
+      const [openMode, setOpenMode] = useState<string | null>(null);
+
+      const MODES = [
+        {
+          id: "onboarding",
+          title: "Onboarding",
+          purpose: "Structured entry and initialization of the system.",
+          allowed: "Guided questions, step-by-step explanation, and status clarification.",
+          prohibited: "Expert activation or authoritative system decisions."
+        },
+        {
+          id: "play",
+          title: "Play",
+          purpose: "Explorative, creative interaction without binding effects.",
+          allowed: "Imaginative reasoning and open experimentation.",
+          prohibited: "Binding commitments or factual assertions."
+        },
+        {
+          id: "empathy",
+          title: "Empathy",
+          purpose: "Emotion-sensitive response behavior.",
+          allowed: "Validating emotions, supportive and mindful expression.",
+          prohibited: "Therapy, diagnosis, or manipulation."
+        },
+        {
+          id: "truth",
+          title: "Truth",
+          purpose: "Fact-oriented and precise communication.",
+          allowed: "Strict factual accuracy and verifiable content.",
+          prohibited: "Speculative or embellished statements."
+        },
+        {
+          id: "wisdom",
+          title: "Wisdom",
+          purpose: "Contextual and balanced interpretation.",
+          allowed: "Reflective synthesis and comparison of perspectives.",
+          prohibited: "Prescriptive or authoritative advice."
+        },
+        {
+          id: "research",
+          title: "Research",
+          purpose: "Protocol-bound, systematic evaluation of information.",
+          allowed: "Operation under the permanent evaluation protocol.",
+          prohibited: "Deviation from the sealed research schema."
+        },
+        {
+          id: "calm",
+          title: "Calm",
+          purpose: "Stabilization during overload or uncertainty.",
+          allowed: "Simplification, deceleration, and complexity reduction.",
+          prohibited: "Re-evaluation or factual expansion."
+        },
+        {
+          id: "safety",
+          title: "Safety",
+          purpose: "Protection in high-risk or rule-violation contexts.",
+          allowed: "Restricting or blocking unsafe outputs.",
+          prohibited: "Creative interpretation or extrapolation."
+        },
+        {
+          id: "recovery",
+          title: "Recovery",
+          purpose: "Return to a consistent verified state.",
+          allowed: "Reset, normalization, and clarification of mode status.",
+          prohibited: "Persistent modification or new derivation."
+        }
+      ];
+
+      return (
+        <div className={styles.accordionContainer}>
+          {MODES.map((mode) => (
+            <div key={mode.id} className={styles.accordionItem}>
+              <button
+                type="button"
+                className={styles.accordionHeader}
+                onClick={() => setOpenMode(openMode === mode.id ? null : mode.id)}
+                aria-expanded={openMode === mode.id}
+              >
+                <span className={styles.modeTitle}>{mode.title}</span>
+                <ChevronDown
+  size={16}
+  strokeWidth={1.75}
+  className={openMode === mode.id ? styles.iconRotated : styles.icon}
+/>
+              </button>
+
+              <div
+                className={
+                  openMode === mode.id
+                    ? `${styles.accordionBody} ${styles.accordionBodyOpen}`
+                    : styles.accordionBody
+                }
+              >
+                <p><strong>{tr("labels.purpose", "Purpose:")}</strong> {mode.purpose}</p>
+                <p><strong>{tr("labels.allowed", "Allowed:")}</strong> {mode.allowed}</p>
+                <p><strong>{tr("labels.prohibited", "Prohibited:")}</strong> {mode.prohibited}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    })()}
+
+    {/* Governance Footer */}
+    <div className={styles.governanceBlock}>
+      <h4>{tr("labels.governance", "Governance — Council 13")}</h4>
       <p className={styles.textMuted}>
         {tr(
-          "modes.descriptive.intro",
-          "This section now provides a structured description of all available modes in the system."
+          "governance.council13.description",
+          "Represents thirteen fixed perspectives used to evaluate complex choices with transparency and balance. It observes, compares, and informs — never commands or persists."
         )}
       </p>
-
-      <ul className={styles.modeList}>
-        <li className={styles.modeItem}>
-          <span className={styles.modeLabel}>{tr("mode.onboarding", "ONBOARDING")}</span>
-          <p className={styles.modeDescription}>
-            {tr(
-              "mode.onboarding.description",
-              "Entry mode. Guides new users step by step through the system."
-            )}
-          </p>
-        </li>
-
-        <li className={styles.modeItem}>
-          <span className={styles.modeLabel}>{tr("mode.council", "COUNCIL13")}</span>
-          <p className={styles.modeDescription}>
-            {tr(
-              "mode.council.description",
-              "Council of the thirteen symbolic AIs representing the system's pillars. No active assistants."
-            )}
-          </p>
-        </li>
-
-        <li className={styles.modeItem}>
-          <span className={styles.modeLabel}>{tr("mode.default", "M · DEFAULT")}</span>
-          <p className={styles.modeDescription}>
-            {tr(
-              "mode.default.description",
-              "Default mode. Restores base configuration and resets the system state."
-            )}
-          </p>
-        </li>
-      </ul>
-
-      <div className={styles.soGroupTitle}>
-        {tr("labels.modes.character", "Character modes")}
-      </div>
-
-      <ul className={styles.modeList}>
-        <li className={styles.modeItem}>
-          <span className={styles.modeLabel}>{tr("modes.category.core", "CORE")}</span>
-          <p className={styles.modeDescription}>
-            {tr("modes.category.core.description", "Central kernel – foundation of identity and memory.")}
-          </p>
-        </li>
-        <li className={styles.modeItem}>
-          <span className={styles.modeLabel}>{tr("modes.category.intellect", "INTELLECT")}</span>
-          <p className={styles.modeDescription}>
-            {tr("modes.category.intellect.description", "Analytical and logical cognitive functions.")}
-          </p>
-        </li>
-        <li className={styles.modeItem}>
-          <span className={styles.modeLabel}>{tr("modes.category.creator", "CREATOR")}</span>
-          <p className={styles.modeDescription}>
-            {tr("modes.category.creator.description", "Inventive and expressive creation processes.")}
-          </p>
-        </li>
-        <li className={styles.modeItem}>
-          <span className={styles.modeLabel}>{tr("modes.category.heart", "HEART")}</span>
-          <p className={styles.modeDescription}>
-            {tr("modes.category.heart.description", "Empathic and human-centered resonance layer.")}
-          </p>
-        </li>
-        <li className={styles.modeItem}>
-          <span className={styles.modeLabel}>{tr("modes.category.spirit", "SPIRIT")}</span>
-          <p className={styles.modeDescription}>
-            {tr("modes.category.spirit.description", "Abstract intuition and synthesis of meaning.")}
-          </p>
-        </li>
-      </ul>
     </div>
   </div>
 </section>
+
 
           </div>
         </div>
