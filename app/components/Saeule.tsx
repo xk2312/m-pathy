@@ -1199,11 +1199,18 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
           prohibited: "Expert activation or authoritative system decisions."
         },
         {
-          id: "research",
-          title: "Research",
-          purpose: "Protocol-bound, systematic evaluation of information.",
-          allowed: "Operation under the permanent evaluation protocol.",
-          prohibited: "Deviation from the sealed research schema."
+          id: "play",
+          title: "Play",
+          purpose: "Explorative, creative interaction without binding effects.",
+          allowed: "Imaginative reasoning and open experimentation.",
+          prohibited: "Binding commitments or factual assertions."
+        },
+        {
+          id: "empathy",
+          title: "Empathy",
+          purpose: "Emotion-sensitive response behavior.",
+          allowed: "Validating emotions, supportive and mindful expression.",
+          prohibited: "Therapy, diagnosis, or manipulation."
         },
         {
           id: "truth",
@@ -1220,11 +1227,32 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
           prohibited: "Prescriptive or authoritative advice."
         },
         {
+          id: "research",
+          title: "Research",
+          purpose: "Protocol-bound, systematic evaluation of information.",
+          allowed: "Operation under the permanent evaluation protocol.",
+          prohibited: "Deviation from the sealed research schema."
+        },
+        {
           id: "calm",
           title: "Calm",
           purpose: "Stabilization during overload or uncertainty.",
           allowed: "Simplification, deceleration, and complexity reduction.",
           prohibited: "Re-evaluation or factual expansion."
+        },
+        {
+          id: "safety",
+          title: "Safety",
+          purpose: "Protection in high-risk or rule-violation contexts.",
+          allowed: "Restricting or blocking unsafe outputs.",
+          prohibited: "Creative interpretation or extrapolation."
+        },
+        {
+          id: "recovery",
+          title: "Recovery",
+          purpose: "Return to a consistent verified state.",
+          allowed: "Reset, normalization, and clarification of mode status.",
+          prohibited: "Persistent modification or new derivation."
         },
         {
           id: "governance",
