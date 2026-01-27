@@ -1198,16 +1198,10 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
       "Guides teams through structured system initialization, ensuring clear setup, context awareness, and compliance readiness."
   },
   {
-    id: "play",
-    title: "Play",
+    id: "research",
+    title: "Research",
     purpose:
-      "Enables exploratory ideation and prototyping without operational risk — ideal for testing logic, prompts, and creative hypotheses safely."
-  },
-  {
-    id: "empathy",
-    title: "Empathy",
-    purpose:
-      "Adapts responses to human tone and context, improving collaboration and clarity in emotionally charged or complex exchanges."
+      "Structures data analysis and document review under deterministic logic, aligning results with corporate governance and evidence trails."
   },
   {
     id: "truth",
@@ -1215,18 +1209,21 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
     purpose:
       "Delivers verified, traceable facts for business decisions, ensuring auditability and regulatory transparency in every statement."
   },
+  
+  {
+    id: "empathy",
+    title: "Empathy",
+    purpose:
+      "Adapts responses to human tone and context, improving collaboration and clarity in emotionally charged or complex exchanges."
+  },
+  
   {
     id: "wisdom",
     title: "Wisdom",
     purpose:
-      "Synthesizes multiple viewpoints into balanced guidance — ideal for decision rounds or evaluating competing project directions."
+      "Synthesizes multiple viewpoints into balanced guidance - ideal for decision rounds or evaluating competing project directions."
   },
-  {
-    id: "research",
-    title: "Research",
-    purpose:
-      "Structures data analysis and document review under deterministic logic, aligning results with corporate governance and evidence trails."
-  },
+  
   {
     id: "calm",
     title: "Calm",
@@ -1246,11 +1243,17 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
       "Restores the workspace to a consistent, verifiable state after errors or interruptions, preserving data integrity and continuity."
   },
   {
+    id: "play",
+    title: "Play",
+    purpose:
+      "Enables exploratory ideation and prototyping without operational risk - ideal for testing logic, prompts, and creative hypotheses safely."
+  },
+  {
     id: "governance",
     title: "Governance — Council13",
     note: "Select mode by prompting “set MODENAME mode”.",
     purpose:
-      "Provides an impartial evaluation of complex options through thirteen fixed perspectives — observation, comparison, and transparent reasoning only."
+      "Provides an impartial evaluation of complex options through thirteen fixed perspectives - observation, comparison, and transparent reasoning only."
   }
 ];
 
@@ -1486,7 +1489,6 @@ onClick={() => exportThread("json", messages)}
                 )}
               </div>
 
- a
                             {/* Chat löschen-Modul */}
               <div className={styles.block}>
                 <button
