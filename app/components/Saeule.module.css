@@ -949,14 +949,14 @@
 .accordionContainer {
   display: flex;
   flex-direction: column;
-  margin-top: 4px;
-  gap: 5px;
+  margin-top: 3px;
+  gap: 3px;
 }
 
 .accordionItem {
   width: 100%;
   border-bottom: 1px solid var(--border-soft);
-  margin-bottom: 5px;
+  margin-bottom: 3px;
   padding-bottom: 2px;
 }
 

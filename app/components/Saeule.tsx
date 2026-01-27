@@ -1181,8 +1181,6 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
 
 <section className={styles.sectionModes} aria-label={tr("pillar.section.modes", "Modes")}>
   <div className={styles.block}>
-    <div className={styles.soGroupTitle}>{tr("pillar.section.modes", "Modes")}</div>
-
     {(() => {
       const [openMode, setOpenMode] = useState<string | null>(null);
 
