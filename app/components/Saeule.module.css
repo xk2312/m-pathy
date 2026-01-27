@@ -950,14 +950,14 @@
 .accordionContainer {
   display: flex;
   flex-direction: column;
-  margin-top: 3px;
-  gap: 3px;
+  margin-top: 2px;
+  gap: 2px;
 }
 
 .accordionItem {
   width: 100%;
   border-bottom: 1px solid var(--border-soft);
-  margin-bottom: 3px;
+  margin-bottom: 2px;
   padding-bottom: 2px;
 }
 
@@ -970,7 +970,7 @@
   border: none;
   color: var(--text-primary);
   cursor: pointer;
-  padding: 3px 0; /* tightened vertical spacing */
+  padding: 2px 0; /* tightened vertical spacing */
   transition: color 0.25s ease;
 }
 
@@ -985,7 +985,7 @@
 }
 
 .modeTitle {
-  font-size: 13px;  /* kompakt – 1px kleiner als vorher */
+  font-size: 12px;  /* kompakt – 1px kleiner als vorher */
   font-weight: 600;
   line-height: 1.3;
 }
@@ -1000,7 +1000,7 @@
 
 .accordionBody {
   font-size: 10px;  /* kompakter Textkörper */
-  line-height: 1.4;
+  line-height: 1.2;
   color: var(--text-secondary);
   max-height: 0;
   overflow: hidden;
