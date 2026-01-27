@@ -1252,7 +1252,7 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
   },
   {
     id: "governance",
-    title: "Governance — Council13",
+    title: "Governance -> Council13",
     note: "Select mode by prompting “set MODENAME mode”.",
     purpose:
       "Provides an impartial evaluation of complex options through thirteen fixed perspectives - observation, comparison, and transparent reasoning only."
