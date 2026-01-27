@@ -1012,3 +1012,20 @@
   max-height: 400px;
   opacity: 1;
 }
+.notesBlock {
+  margin-bottom: 6px;
+}
+
+.notesText {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.chevronWrapper {
+  margin-left: auto;           /* force icon to right edge */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 20px;
+}

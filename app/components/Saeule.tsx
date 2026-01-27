@@ -1178,9 +1178,15 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
             aria-label={tr("pillar.section.modes", "Modes")}
           >
 
-
 <section className={styles.sectionModes} aria-label={tr("pillar.section.modes", "Modes")}>
   <div className={styles.block}>
+    {/* Notes section above all modes */}
+    <div className={styles.notesBlock}>
+      <p className={styles.notesText}>
+        {tr("modes.notes", "Select mode by prompting “set MODENAME mode”.")}
+      </p>
+    </div>
+
     {(() => {
       const [openMode, setOpenMode] = useState<string | null>(null);
 
@@ -1192,7 +1198,7 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
           allowed: "Guided questions, step-by-step explanation, and status clarification.",
           prohibited: "Expert activation or authoritative system decisions."
         },
-         {
+        {
           id: "research",
           title: "Research",
           purpose: "Protocol-bound, systematic evaluation of information.",
@@ -1206,14 +1212,7 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
           allowed: "Strict factual accuracy and verifiable content.",
           prohibited: "Speculative or embellished statements."
         },
-         {
-          id: "calm",
-          title: "Calm",
-          purpose: "Stabilization during overload or uncertainty.",
-          allowed: "Simplification, deceleration, and complexity reduction.",
-          prohibited: "Re-evaluation or factual expansion."
-        },
-         {
+        {
           id: "wisdom",
           title: "Wisdom",
           purpose: "Contextual and balanced interpretation.",
@@ -1221,43 +1220,18 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
           prohibited: "Prescriptive or authoritative advice."
         },
         {
-          id: "empathy",
-          title: "Empathy",
-          purpose: "Emotion-sensitive response behavior.",
-          allowed: "Validating emotions, supportive and mindful expression.",
-          prohibited: "Therapy, diagnosis, or manipulation."
+          id: "calm",
+          title: "Calm",
+          purpose: "Stabilization during overload or uncertainty.",
+          allowed: "Simplification, deceleration, and complexity reduction.",
+          prohibited: "Re-evaluation or factual expansion."
         },
-        {
-          id: "safety",
-          title: "Safety",
-          purpose: "Protection in high-risk or rule-violation contexts.",
-          allowed: "Restricting or blocking unsafe outputs.",
-          prohibited: "Creative interpretation or extrapolation."
-        },
-        {
-          id: "recovery",
-          title: "Recovery",
-          purpose: "Return to a consistent verified state.",
-          allowed: "Reset, normalization, and clarification of mode status.",
-          prohibited: "Persistent modification or new derivation."
-        },
-        {
-          id: "play",
-          title: "Play",
-          purpose: "Explorative, creative interaction without binding effects.",
-          allowed: "Imaginative reasoning and open experimentation.",
-          prohibited: "Binding commitments or factual assertions."
-        },    
         {
           id: "governance",
           title: "Governance — Council13",
-          purpose:
-            "Represents thirteen fixed perspectives used to evaluate complex choices with transparency and balance.",
-          allowed:
-            "Observation, comparison, and transparent evaluation of multi-option scenarios.",
-          prohibited:
-            "Command, persistence, or self-activation within system state.",
-          note: "Select mode by prompting “set MODENAME mode”."
+          purpose: "Thirteen fixed perspectives evaluating complex options with balance.",
+          allowed: "Observation and transparent comparison only.",
+          prohibited: "Commands, persistence, or autonomous activation."
         }
       ];
 
@@ -1271,8 +1245,8 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
                 onClick={() => setOpenMode(openMode === mode.id ? null : mode.id)}
                 aria-expanded={openMode === mode.id}
               >
-                <div className={styles.headerRow}>
-                  <span className={styles.modeTitle}>{mode.title}</span>
+                <span className={styles.modeTitle}>{mode.title}</span>
+                <div className={styles.chevronWrapper}>
                   <ChevronDown
                     size={16}
                     strokeWidth={1.75}
@@ -1291,9 +1265,6 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
                 <p><strong>{tr("labels.purpose", "Purpose:")}</strong> {mode.purpose}</p>
                 <p><strong>{tr("labels.allowed", "Allowed:")}</strong> {mode.allowed}</p>
                 <p><strong>{tr("labels.prohibited", "Prohibited:")}</strong> {mode.prohibited}</p>
-                {mode.note && (
-                  <p><strong>{tr("labels.note", "Note:")}</strong> {mode.note}</p>
-                )}
               </div>
             </div>
           ))}
