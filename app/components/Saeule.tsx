@@ -1190,73 +1190,57 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
     {(() => {
       const [openMode, setOpenMode] = useState<string | null>(null);
 
-      const MODES = [
+const MODES = [
   {
     id: "onboarding",
-    title: "Onboarding",
-    purpose:
-      "You can ask about system features, available commands, or request step-by-step guidance for initial setup and usage."
+    titleKey: "mode.onboarding",
+    purposeKey: "mode.onboarding.purpose",
   },
   {
-  id: "research",
-  title: "Research",
-  purpose:
-    "Executes the sealed evaluation loop - each input rated for clarity and meaning (1-10) with three outputs: understanding, insight, and comment."
-}
-,
-
+    id: "research",
+    titleKey: "mode.research",
+    purposeKey: "mode.research.purpose",
+  },
   {
     id: "truth",
-    title: "Truth",
-    purpose:
-      "Delivers verified, traceable facts for business decisions, ensuring auditability and regulatory transparency in every statement."
+    titleKey: "mode.truth",
+    purposeKey: "mode.truth.purpose",
   },
-  
   {
     id: "empathy",
-    title: "Empathy",
-    purpose:
-      "Adapts responses to human tone and context, improving collaboration and clarity in emotionally charged or complex exchanges."
+    titleKey: "mode.empathy",
+    purposeKey: "mode.empathy.purpose",
   },
-  
   {
     id: "wisdom",
-    title: "Wisdom",
-    purpose:
-      "Synthesizes multiple viewpoints into balanced guidance - ideal for decision rounds or evaluating competing project directions."
+    titleKey: "mode.wisdom",
+    purposeKey: "mode.wisdom.purpose",
   },
-  
   {
     id: "calm",
-    title: "Calm",
-    purpose:
-      "Stabilizes workflows in high-load or uncertain situations, simplifying complex input to maintain operational clarity and focus."
+    titleKey: "mode.calm",
+    purposeKey: "mode.calm.purpose",
   },
   {
     id: "safety",
-    title: "Safety",
-    purpose:
-      "Protects against unintended outputs or regulatory violations by enforcing strict compliance filters and real-time content control."
+    titleKey: "mode.safety",
+    purposeKey: "mode.safety.purpose",
   },
   {
     id: "recovery",
-    title: "Recovery",
-    purpose:
-      "Restores the workspace to a consistent, verifiable state after errors or interruptions, preserving data integrity and continuity."
+    titleKey: "mode.recovery",
+    purposeKey: "mode.recovery.purpose",
   },
   {
     id: "play",
-    title: "Play",
-    purpose:
-      "Enables exploratory ideation and prototyping without operational risk - ideal for testing logic, prompts, and creative hypotheses safely."
+    titleKey: "mode.play",
+    purposeKey: "mode.play.purpose",
   },
   {
     id: "governance",
-    title: "Governance -> Council13",
-    note: "Select mode by prompting “set MODENAME mode”.",
-    purpose:
-      "Provides an impartial evaluation of complex options through thirteen fixed perspectives - observation, comparison, and transparent reasoning only."
-  }
+    titleKey: "mode.council",
+    purposeKey: "mode.governance.purpose",
+  },
 ];
 
 
@@ -1270,7 +1254,9 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
                 onClick={() => setOpenMode(openMode === mode.id ? null : mode.id)}
                 aria-expanded={openMode === mode.id}
               >
-                <span className={styles.modeTitle}>{mode.title}</span>
+              <span className={styles.modeTitle}>
+              {tr(mode.titleKey, mode.id)}
+            </span>
                 <div className={styles.chevronWrapper}>
                   <ChevronDown
                     size={16}
@@ -1287,7 +1273,10 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
                     : styles.accordionBody
                 }
               >
-                <p><strong>{tr("labels.purpose", "Purpose:")}</strong> {mode.purpose}</p>
+              <p>
+                <strong>{tr("labels.purpose", "Purpose:")}</strong>{" "}
+                {tr(mode.purposeKey, "")}
+              </p>
                 
               </div>
             </div>
@@ -1345,14 +1334,43 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
       const [openExpert, setOpenExpert] = useState<string | null>(null);
 
       const EXPERTS = [
-        { id: "computer-science", title: "Computer Science", purpose: "Analyses algorithms, AI logic, and system design." },
-        { id: "psychology", title: "Psychology", purpose: "Examines cognition, behavior, and communication." },
-        { id: "law", title: "Law", purpose: "Reviews legal frameworks and compliance structures." },
-        { id: "economics", title: "Economics", purpose: "Evaluates markets, data, and decision models." },
-        { id: "engineering", title: "Engineering", purpose: "Assesses technical systems and process logic." },
-        { id: "medicine", title: "Medicine", purpose: "Interprets medical data and research context." },
-        { id: "information-security", title: "Information Security", purpose: "Analyzes risks, protection, and data integrity." }
-      ];
+  {
+    id: "computer-science",
+    titleKey: "experts.computer-science.title",
+    purposeKey: "experts.computer-science.purpose",
+  },
+  {
+    id: "psychology",
+    titleKey: "experts.psychology.title",
+    purposeKey: "experts.psychology.purpose",
+  },
+  {
+    id: "law",
+    titleKey: "experts.law.title",
+    purposeKey: "experts.law.purpose",
+  },
+  {
+    id: "economics",
+    titleKey: "experts.economics.title",
+    purposeKey: "experts.economics.purpose",
+  },
+  {
+    id: "engineering",
+    titleKey: "experts.engineering.title",
+    purposeKey: "experts.engineering.purpose",
+  },
+  {
+    id: "medicine",
+    titleKey: "experts.medicine.title",
+    purposeKey: "experts.medicine.purpose",
+  },
+  {
+    id: "information-security",
+    titleKey: "experts.information-security.title",
+    purposeKey: "experts.information-security.purpose",
+  },
+];
+
 
       return (
         <div className={styles.accordionContainer}>
@@ -1364,7 +1382,9 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
                 onClick={() => setOpenExpert(openExpert === expert.id ? null : expert.id)}
                 aria-expanded={openExpert === expert.id}
               >
-                <span className={styles.modeTitle}>{expert.title}</span>
+<span className={styles.modeTitle}>
+  {tr(expert.titleKey, expert.id)}
+</span>
                 <div className={styles.chevronWrapper}>
                   <ChevronDown
                     size={16}
@@ -1382,7 +1402,8 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
                 }
               >
                 <p>
-                  <strong>{tr("labels.purpose", "Purpose:")}</strong> {expert.purpose}
+                  <strong>{tr("labels.purpose", "Purpose:")}</strong> {tr(expert.purposeKey, "")}
+
                 </p>
               </div>
             </div>
@@ -1391,14 +1412,12 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
       );
     })()}
 
-    <div className={styles.notesBlock}>
-      <p className={styles.notesText}>
-        {tr(
-          "experts.additional",
-          "Additional experts: Biology, Chemistry, Physics, Molecular Science, Systems Theory, Mathematics, Statistics, Risk Analysis, Electrical Engineering, Meteorology, Architecture, Geopolitics."
-        )}
-      </p>
-    </div>
+   <div className={styles.notesBlock}>
+  <p className={styles.notesText}>
+    {tr("experts.additional", "")}
+  </p>
+</div>
+
   </div>
 </section>
 

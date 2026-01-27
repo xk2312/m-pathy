@@ -131,92 +131,102 @@ const en = {
   // Overlay header / buttons (mobile)
   close: "Close",
 
-  // Sidebar / Column
-  columnTitle: "Column",
-  sectionControl: "Controls",
-  onboarding: "ONBOARDING",
-  mDefault: "M · Default",
-  selectMode: "Choose mode",
-  council13: "COUNCIL13",
-  selectAI: "Choose AI",
-  modules: "Modules",
-  coming: "Coming",
-
   // Sidebar additions (experts & CTA)
-  selectExpert: "Choose expert",
-  statusExpert: "Expert:",
   clearChat: "Clear chat",
   startBuilding: "build",
   startBuildingMsg: "Start Council13 – Truth Mode\n\nAsk me what I want to create first.\n\nAfter I answered, execute this:\n\n\"go into a Develop in exactly 13 iterations.\n\nCouncil13 governance: 10 members propose, 3 members act as jury, decisions require 2/3 jury consensus, jury votes must be explicitly reasoned.\n\nPer iteration: proposals may affect formula or production process. End each iteration with a KPI table using the same fixed KPIs and scale: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nRules (Truth Mode): evidence-based only, no medical claims, no boundary crossing. If evidence is weak or emerging, state it explicitly.\n\nStart with Iteration 1 and guide me through the full process.\"",
 
-  // Actions / footer
-  export: "Export",
-  levels: "Levels",
-  levelsComing: "Levels coming soon",
+ 
   threadExported: "Thread exported.",
 
-  // Status bar
-  statusMode: "Mode:",
-  statusAgent: "Agent:",
-
-  // Backward-compat alias (if some code still uses statusAI)
-  statusAI: "Agent:",
-
-  // Status texts
-  "status.modeSet": "Mode set: {label}.",
-
-  // Modes – system buttons
-  "mode.onboarding": "ONBOARDING",
-  "mode.council": "COUNCIL13",
-  "mode.default": "M · Default",
-  "mode.select": "Choose mode",
-
-  // Modes – character modes (11)
+  // Modes – character modes (12)
   "mode.research": "RESEARCH",
   "mode.calm": "CALM",
-  "mode.flow": "FLOW",
   "mode.truth": "TRUTH",
   "mode.wisdom": "WISDOM",
   "mode.play": "PLAY",
-  "mode.vision": "VISION",
   "mode.empathy": "EMPATHY",
-  "mode.love": "LOVE",
   "mode.joy": "JOY",
-  "mode.oracle": "ORACLE",
+  "mode.safety": "Safety",
+  "mode.recovery":"Recovery",
+  "mode.onboarding": "Onboarding",
+  "mode.council": "Governance -> Council13",
 
-  // Modes – categories
-  "labels.modes.character": "Character modes",
-  "modes.category.core": "CORE",
-  "modes.category.intellectual": "INTELLECTUAL",
-  "modes.category.creator": "CREATOR",
-  "modes.category.heart": "HEART",
-  "modes.category.spirit": "SPIRIT",
+
+  "labels.purpose": "Purpose:",
+  "modes.notes": "Select mode by prompting “set MODENAME mode”.",
+
+  "mode.onboarding.purpose":
+  "You can ask about system features, available commands, or request step-by-step guidance for initial setup and usage.",
+
+  "mode.research.purpose":
+  "Executes the sealed evaluation loop - each input rated for clarity and meaning (1-10) with three outputs: understanding, insight, and comment.",
+
+  "mode.truth.purpose":
+  "Delivers verified, traceable facts for business decisions, ensuring auditability and regulatory transparency in every statement.",
+
+  "mode.empathy.purpose":
+  "Adapts responses to human tone and context, improving collaboration and clarity in emotionally charged or complex exchanges.",
+
+  "mode.wisdom.purpose":
+  "Synthesizes multiple viewpoints into balanced guidance - ideal for decision rounds or evaluating competing project directions.",
+
+  "mode.calm.purpose":
+  "Stabilizes workflows in high-load or uncertain situations, simplifying complex input to maintain operational clarity and focus.",
+
+  "mode.safety.purpose":
+  "Protects against unintended outputs or regulatory violations by enforcing strict compliance filters and real-time content control.",
+
+  "mode.recovery.purpose":
+  "Restores the workspace to a consistent, verifiable state after errors or interruptions, preserving data integrity and continuity.",
+
+  "mode.play.purpose":
+  "Enables exploratory ideation and prototyping without operational risk - ideal for testing logic, prompts, and creative hypotheses safely.",
+
+  "mode.governance.purpose":
+  "Provides an impartial evaluation of complex options through thirteen fixed perspectives - observation, comparison, and transparent reasoning only.",
+
+
 
   // Experts (used by Saeule.tsx)
   "experts.title": "Experts",
-  "experts.choose": "Choose expert",
 
-  // Expert categories (pillar – Experts tabs)
-  "experts.category.life": "Life",
-  "experts.category.tech": "Tech",
-  "experts.category.space": "Space",
-  "experts.category.ethics": "Ethics",
-  "experts.category.universe": "Universe",
+  "experts.descriptive.intro":
+  "Select an expert to add domain-specific perspective and reasoning to your workspace.",
+
+  "experts.additional":
+  "Experts contribute specialized knowledge while remaining bound to verification-first system rules.",
+
 
   // Expert labels (pillar – Experts list)
-  "experts.biologist": "Biologist",
-  "experts.chemist": "Chemist",
-  "experts.physicist": "Physicist",
-  "experts.computer_scientist": "Computer Scientist",
-  "experts.jurist": "Jurist",
-  "experts.architect_civil_engineer": "Architect / Civil Engineer",
-  "experts.landscape_designer": "Landscape Designer",
-  "experts.interior_designer": "Interior Designer",
-  "experts.electrical_engineer": "Electrical Engineer",
-  "experts.mathematician": "Mathematician",
-  "experts.astrologer": "Astrologer",
-  "experts.weather_expert": "Weather Expert",
-  "experts.molecular_scientist": "Molecular Scientist",
+  "experts.computer-science.title": "Computer Science",
+  "experts.computer-science.purpose":
+  "Provides structured reasoning on algorithms, systems architecture, data structures, and software design.",
+
+  "experts.psychology.title": "Psychology",
+  "experts.psychology.purpose":
+  "Supports analysis of human behavior, cognition, motivation, and decision-making contexts.",
+
+  "experts.law.title": "Law",
+  "experts.law.purpose":
+  "Ensures legal reasoning, regulatory awareness, and compliance-oriented evaluation.",
+
+  "experts.economics.title": "Economics",
+  "experts.economics.purpose":
+  "Analyzes incentives, trade-offs, markets, and economic impact of decisions.",
+
+  "experts.engineering.title": "Engineering",
+  "experts.engineering.purpose":
+  "Applies practical problem-solving, system constraints, and feasibility analysis.",
+
+  "experts.medicine.title": "Medicine",
+  "experts.medicine.purpose":
+  "Offers medically grounded context while strictly avoiding diagnosis or treatment claims.",
+
+  "experts.information-security.title": "Information Security",
+  "experts.information-security.purpose":
+  "Evaluates risks, threat models, and safeguards related to data, systems, and operations.",
+
 
   // CTA fallback
   "cta.fallback":
