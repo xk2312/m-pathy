@@ -1333,7 +1333,7 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
   <div className={styles.block}>
     <div className={styles.soGroupTitle}>{tr("pillar.section.experts", "Experts")}</div>
 
-    <p className={styles.textMuted}>
+    <p className={`${styles.textMuted} ${styles.textItalic}`}>
       {tr(
         "experts.descriptive.intro",
         "Select expert by prompting “consult EXPERTNAME expert”."
@@ -1344,41 +1344,13 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
       const [openExpert, setOpenExpert] = useState<string | null>(null);
 
       const EXPERTS = [
-        {
-          id: "computer-science",
-          title: "Computer Science",
-          purpose: "Analyses algorithms, AI logic, and system design."
-        },
-        {
-          id: "psychology",
-          title: "Psychology",
-          purpose: "Examines cognition, behavior, and communication."
-        },
-        {
-          id: "law",
-          title: "Law",
-          purpose: "Reviews legal frameworks and compliance structures."
-        },
-        {
-          id: "economics",
-          title: "Economics",
-          purpose: "Evaluates markets, data, and decision models."
-        },
-        {
-          id: "engineering",
-          title: "Engineering",
-          purpose: "Assesses technical systems and process logic."
-        },
-        {
-          id: "medicine",
-          title: "Medicine",
-          purpose: "Interprets medical data and research context."
-        },
-        {
-          id: "information-security",
-          title: "Information Security",
-          purpose: "Analyzes risks, protection, and data integrity."
-        }
+        { id: "computer-science", title: "Computer Science", purpose: "Analyses algorithms, AI logic, and system design." },
+        { id: "psychology", title: "Psychology", purpose: "Examines cognition, behavior, and communication." },
+        { id: "law", title: "Law", purpose: "Reviews legal frameworks and compliance structures." },
+        { id: "economics", title: "Economics", purpose: "Evaluates markets, data, and decision models." },
+        { id: "engineering", title: "Engineering", purpose: "Assesses technical systems and process logic." },
+        { id: "medicine", title: "Medicine", purpose: "Interprets medical data and research context." },
+        { id: "information-security", title: "Information Security", purpose: "Analyzes risks, protection, and data integrity." }
       ];
 
       return (
@@ -1416,14 +1388,12 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
       );
     })()}
 
-    <div className={styles.additionalExperts}>
-      <p className={styles.textMuted}>
-        {tr(
-          "experts.additional",
-          "Additional experts: Biology, Chemistry, Physics, Molecular Science, Systems Theory, Mathematics, Statistics, Risk Analysis, Electrical Engineering, Meteorology, Architecture, Geopolitics."
-        )}
-      </p>
-    </div>
+    <p className={`${styles.textMuted} ${styles.textItalic}`}>
+      {tr(
+        "experts.additional",
+        "Additional experts: Biology, Chemistry, Physics, Molecular Science, Systems Theory, Mathematics, Statistics, Risk Analysis, Electrical Engineering, Meteorology, Architecture, Geopolitics."
+      )}
+    </p>
   </div>
 </section>
 
