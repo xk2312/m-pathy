@@ -22,14 +22,21 @@ export default function MaiosPage() {
       <Navigation />
 
       <main
-        id="content"
-        role="main"
-        className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
-      >
-        <div className="px-[clamp(10px,4vw,90px)] pb-[clamp(40px,6vw,120px)]">
+  id="content"
+  role="main"
+  className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
+>
+  <div className="px-[clamp(10px,4vw,90px)] pb-[clamp(40px,6vw,120px)]">
 
-          {/* HERO */}
-          <section className="pt-[120px] pb-[120px]">
+    {/* TOP SUPER BUFFER */}
+    <div
+      aria-hidden="true"
+      style={{ height: "var(--h-gap-xl)" }}
+    />
+
+    {/* HERO */}
+    <section className="pt-[120px] pb-[120px]">
+
             <div className="page-center max-w-[820px]">
               <h1 className="text-[clamp(32px,6vw,56px)] font-semibold tracking-tight">
                 {t.hero.title}
