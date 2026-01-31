@@ -2887,17 +2887,16 @@ const withGate = (fn: () => void) => {
         )}
 
             {/* Rechte Spalte: oben Scroll, unten festes Dock */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            minHeight: 0,
-  
-            height: isMobile ?
-undefined : "100dvh",
-            /* position: relative und zIndex: 10 werden entfernt, da sie den Fixed-Kontext brechen */
-          }}
-        >
+       <div
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    minHeight: 0,
+
+    height: "100dvh",
+  }}
+>
+
            <div
             ref={convoRef as any}
             className="chat-stage"
