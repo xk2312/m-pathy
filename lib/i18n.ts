@@ -427,8 +427,11 @@ threadExported: "Thread exportiert.",
 // Experten (verwendet in Saeule.tsx)
 "experts.title": "Experten",
 
+// de
 "experts.descriptive.intro":
-"Wähle einen Experten durch den Befehl „consult EXPERTNAME expert“.",
+  "Expertenauswahl durch Eingabe von „konsultiere EXPERTENNAME experte“.",
+
+
 
 "experts.additional":
 "Weitere Experten: Biologie, Chemie, Physik, Molekularwissenschaft, Systemtheorie, Mathematik, Statistik, Risikoanalyse, Elektrotechnik, Meteorologie, Architektur, Geopolitik.",
@@ -651,8 +654,11 @@ threadExported: "Fil exporté.",
 // Experts (utilisé par Saeule.tsx)
 "experts.title": "Experts",
 
+// fr
 "experts.descriptive.intro":
-"Sélectionne un expert avec la commande « consult EXPERTNAME expert ».",
+  "Sélectionnez un expert en saisissant « consulter NOM_EXPERT expert ».",
+
+
 
 "experts.additional":
 "Autres experts : Biologie, Chimie, Physique, Science moléculaire, Théorie des systèmes, Mathématiques, Statistiques, Analyse des risques, Génie électrique, Météorologie, Architecture, Géopolitique.",
@@ -874,8 +880,10 @@ threadExported: "Hilo exportado.",
 // Expertos (usado en Saeule.tsx)
 "experts.title": "Expertos",
 
+// es
 "experts.descriptive.intro":
-"Selecciona un experto usando «consult EXPERTNAME expert».",
+  "Seleccione un experto escribiendo « consultar NOMBRE_EXPERTO experto ».",
+
 
 "experts.additional":
 "Expertos adicionales: Biología, Química, Física, Ciencia Molecular, Teoría de Sistemas, Matemáticas, Estadística, Análisis de Riesgos, Ingeniería Eléctrica, Meteorología, Arquitectura, Geopolítica.",
@@ -1098,8 +1106,10 @@ threadExported: "Thread esportato.",
 // Esperti (usato in Saeule.tsx)
 "experts.title": "Esperti",
 
+// it
 "experts.descriptive.intro":
-"Seleziona un esperto con «consult EXPERTNAME expert».",
+  "Seleziona un esperto digitando « consulta NOME_ESPERTO esperto ».",
+
 
 "experts.additional":
 "Altri esperti: Biologia, Chimica, Fisica, Scienza Molecolare, Teoria dei Sistemi, Matematica, Statistica, Analisi del Rischio, Ingegneria Elettrica, Meteorologia, Architettura, Geopolitica.",
@@ -1322,8 +1332,10 @@ threadExported: "Tópico exportado.",
 // Especialistas (utilizado em Saeule.tsx)
 "experts.title": "Especialistas",
 
+// pt
 "experts.descriptive.intro":
-"Seleciona um especialista usando «consult EXPERTNAME expert».",
+  "Selecione um especialista digitando « consultar NOME_ESPECIALISTA especialista ».",
+
 
 "experts.additional":
 "Outros especialistas: Biologia, Química, Física, Ciência Molecular, Teoria de Sistemas, Matemática, Estatística, Análise de Risco, Engenharia Elétrica, Meteorologia, Arquitetura, Geopolítica.",
@@ -1546,8 +1558,9 @@ threadExported: "Thread geëxporteerd.",
 // Experts (gebruikt in Saeule.tsx)
 "experts.title": "Experts",
 
+// nl
 "experts.descriptive.intro":
-"Selecteer een expert met «consult EXPERTNAME expert».",
+  "Selecteer een expert door « raadpleeg EXPERTNAAM expert » in te voeren.",
 
 "experts.additional":
 "Aanvullende experts: Biologie, Chemie, Fysica, Moleculaire Wetenschap, Systeemtheorie, Wiskunde, Statistiek, Risicoanalyse, Elektrotechniek, Meteorologie, Architectuur, Geopolitiek.",
@@ -1770,8 +1783,10 @@ threadExported: "Тред экспортирован.",
 // Эксперты (используется в Saeule.tsx)
 "experts.title": "Эксперты",
 
+// ru
 "experts.descriptive.intro":
-"Выбери эксперта командой «consult EXPERTNAME expert».",
+  "Выберите эксперта, введя « консультировать ИМЯ_ЭКСПЕРТА эксперт ».",
+
 
 "experts.additional":
 "Другие эксперты: Биология, Химия, Физика, Молекулярная наука, Теория систем, Математика, Статистика, Анализ рисков, Электротехника, Метеорология, Архитектура, Геополитика.",
@@ -1994,8 +2009,10 @@ threadExported: "线程已导出。",
 // 专家 (用于 Saeule.tsx)
 "experts.title": "专家",
 
+// zh
 "experts.descriptive.intro":
-"通过命令「consult EXPERTNAME expert」选择专家。",
+  "通过输入“咨询 专家名称 专家”来选择专家。",
+
 
 "experts.additional":
 "其他专家：生物学、化学、物理学、分子科学、系统理论、数学、统计学、风险分析、电气工程、气象学、建筑学、地缘政治。",
@@ -2218,8 +2235,10 @@ threadExported: "スレッドをエクスポートしました。",
 // エキスパート (Saeule.tsxで使用)
 "experts.title": "エキスパート",
 
+// ja
 "experts.descriptive.intro":
-"「consult EXPERTNAME expert」でエキスパートを選択します。",
+  "「専門家名 の専門家に相談」と入力して専門家を選択します。",
+
 
 "experts.additional":
 "その他のエキスパート: 生物学、化学、物理学、分子科学、システム理論、数学、統計学、リスク分析、電気工学、気象学、建築学、地政学。",
@@ -2403,8 +2422,10 @@ threadExported: "스레드가 내보내졌습니다.",
 // 전문가 (Saeule.tsx에서 사용)
 "experts.title": "전문가",
 
+// ko
 "experts.descriptive.intro":
-"「consult EXPERTNAME expert」 명령으로 전문가를 선택하세요.",
+  "“전문가이름 전문가 상담”을 입력하여 전문가를 선택하세요.",
+
 
 "experts.additional":
 "기타 전문가: 생물학, 화학, 물리학, 분자 과학, 시스템 이론, 수학, 통계학, 위험 분석, 전기공학, 기상학, 건축학, 지정학.",
@@ -2627,8 +2648,10 @@ threadExported: "थ्रेड निर्यात किया गया।
 // विशेषज्ञ (Saeule.tsx में उपयोग किया गया)
 "experts.title": "विशेषज्ञ",
 
+// ar
 "experts.descriptive.intro":
-"«consult EXPERTNAME expert» कमांड द्वारा विशेषज्ञ चुनें।",
+  "اختر خبيرًا عن طريق إدخال « استشارة اسم_الخبير خبير ».",
+
 
 "experts.additional":
 "अन्य विशेषज्ञ: जीवविज्ञान, रसायन विज्ञान, भौतिकी, आणविक विज्ञान, प्रणाली सिद्धांत, गणित, सांख्यिकी, जोखिम विश्लेषण, विद्युत अभियांत्रिकी, मौसम विज्ञान, वास्तुकला, भू-राजनीति।",
@@ -2851,8 +2874,9 @@ threadExported: "थ्रेड निर्यात किया गया।
 // विशेषज्ञ (Saeule.tsx में उपयोग किया गया)
 "experts.title": "विशेषज्ञ",
 
+// hi
 "experts.descriptive.intro":
-"«consult EXPERTNAME expert» कमांड द्वारा विशेषज्ञ चुनें।",
+  "« विशेषज्ञ_नाम विशेषज्ञ से परामर्श » लिखकर विशेषज्ञ चुनें।",
 
 "experts.additional":
 "अन्य विशेषज्ञ: जीवविज्ञान, रसायन विज्ञान, भौतिकी, आणविक विज्ञान, प्रणाली सिद्धांत, गणित, सांख्यिकी, जोखिम विश्लेषण, विद्युत अभियांत्रिकी, मौसम विज्ञान, वास्तुकला, भू-राजनीति।",
