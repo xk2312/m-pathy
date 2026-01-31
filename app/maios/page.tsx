@@ -1,0 +1,232 @@
+// app/maios/page.tsx
+"use client";
+
+import { useEffect } from "react";
+
+import Navigation from "@/app/components/navigation/navigation";
+import Footer from "@/app/components/subscription/footer";
+import { useLang } from "@/app/providers/LanguageProvider";
+import { dict as maiosDict } from "@/lib/i18n.maios";
+
+export default function MaiosPage() {
+  const { lang } = useLang();
+  const t = (maiosDict as any)[lang] ?? maiosDict.en;
+
+  useEffect(() => {
+    document.documentElement.classList.add("enable-scroll");
+    return () => document.documentElement.classList.remove("enable-scroll");
+  }, []);
+
+  return (
+    <>
+      <Navigation />
+
+      <main
+        id="content"
+        role="main"
+        className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
+      >
+        <div className="px-[clamp(10px,4vw,90px)] pb-[clamp(40px,6vw,120px)]">
+
+          {/* HERO */}
+          <section className="pt-[120px] pb-[120px]">
+            <div className="page-center max-w-[820px]">
+              <h1 className="text-[clamp(32px,6vw,56px)] font-semibold tracking-tight">
+                {t.hero.title}
+              </h1>
+              <p className="mt-4 text-white/80 text-[clamp(18px,3vw,22px)]">
+                {t.hero.subtitle}
+              </p>
+              <p className="mt-6 text-white/60 max-w-[680px]">
+                {t.hero.intro}
+              </p>
+            </div>
+          </section>
+
+          {/* CLARIFICATION */}
+          <section className="pt-[80px] pb-[80px]">
+            <div className="page-center max-w-[760px]">
+              <h2 className="text-xl font-semibold mb-6">
+                {t.clarification.title}
+              </h2>
+              <ul className="space-y-2 text-white/70">
+                {t.clarification.body.map((line: string, i: number) => (
+                  <li key={i}>{line}</li>
+                ))}
+              </ul>
+            </div>
+          </section>
+
+          {/* PROBLEM STATEMENT */}
+          <section className="pt-[100px] pb-[100px]">
+            <div className="page-center max-w-[820px]">
+              <h2 className="text-2xl font-semibold">
+                {t.problem_statement.title}
+              </h2>
+              <p className="mt-2 text-white/60">
+                {t.problem_statement.subtitle}
+              </p>
+              <div className="mt-6 space-y-3 text-white/70">
+                {t.problem_statement.body.map((line: string, i: number) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* PROBLEMS */}
+          <section className="pt-[100px] pb-[100px]">
+            <div className="page-center max-w-[820px]">
+              <h2 className="text-2xl font-semibold mb-8">
+                {t.problems.title}
+              </h2>
+              <ul className="space-y-4">
+                {t.problems.items.map((item: any, i: number) => (
+                  <li key={i} className="text-white/75">
+                    {item.title}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+
+          {/* WHAT MAIOS IS */}
+          <section className="pt-[100px] pb-[100px]">
+            <div className="page-center max-w-[820px]">
+              <h2 className="text-2xl font-semibold mb-6">
+                {t.what_it_is.title}
+              </h2>
+              <div className="space-y-3 text-white/70">
+                {t.what_it_is.body.map((line: string, i: number) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* WHAT MAIOS IS NOT */}
+          <section className="pt-[80px] pb-[80px]">
+            <div className="page-center max-w-[820px]">
+              <h2 className="text-xl font-semibold mb-6">
+                {t.what_it_is_not.title}
+              </h2>
+              <ul className="space-y-2 text-white/70">
+                {t.what_it_is_not.body.map((line: string, i: number) => (
+                  <li key={i}>{line}</li>
+                ))}
+              </ul>
+            </div>
+          </section>
+
+          {/* AUDIENCE */}
+          <section className="pt-[100px] pb-[100px]">
+            <div className="page-center max-w-[820px]">
+              <h2 className="text-2xl font-semibold mb-6">
+                {t.audience.title}
+              </h2>
+              <div className="space-y-3 text-white/70">
+                {t.audience.body.map((line: string, i: number) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </div>
+              <ul className="mt-6 space-y-2 text-white/65">
+                {t.audience.sectors.map((s: string, i: number) => (
+                  <li key={i}>{s}</li>
+                ))}
+              </ul>
+              <div className="mt-6 space-y-2 text-white/60">
+                {t.audience.footer.map((line: string, i: number) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* OFFERING */}
+          <section className="pt-[120px] pb-[120px]">
+            <div className="page-center max-w-[820px]">
+              <h2 className="text-2xl font-semibold mb-8">
+                {t.offering.title}
+              </h2>
+
+              <h3 className="text-xl font-semibold mb-4">
+                {t.offering.core.title}
+              </h3>
+              <div className="space-y-2 text-white/70 mb-10">
+                {t.offering.core.body.map((line: string, i: number) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </div>
+
+              <h3 className="text-xl font-semibold mb-4">
+                {t.offering.inventory.title}
+              </h3>
+              <div className="space-y-2 text-white/70">
+                {t.offering.inventory.body.map((line: string, i: number) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* PROOF */}
+          <section className="pt-[100px] pb-[100px]">
+            <div className="page-center max-w-[820px]">
+              <h2 className="text-2xl font-semibold mb-6">
+                {t.proof.title}
+              </h2>
+              <div className="space-y-2 text-white/70">
+                {t.proof.body.map((line: string, i: number) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* CONSULTING */}
+          <section className="pt-[100px] pb-[100px]">
+            <div className="page-center max-w-[820px]">
+              <h2 className="text-2xl font-semibold mb-6">
+                {t.consulting.title}
+              </h2>
+              <div className="space-y-2 text-white/70">
+                {t.consulting.body.map((line: string, i: number) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* CONTACT */}
+          <section className="pt-[120px] pb-[120px]">
+            <div className="page-center max-w-[720px]">
+              <h2 className="text-2xl font-semibold mb-4">
+                {t.contact.title}
+              </h2>
+              <p className="text-white/70 mb-8">
+                {t.contact.body[0]}
+              </p>
+              <div className="space-y-2 text-white/60 text-sm">
+                {t.contact.footer.map((line: string, i: number) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* CLOSING */}
+          <section className="pt-[80px] pb-[40px]">
+            <div className="page-center max-w-[720px] text-white/70">
+              {t.closing.body.map((line: string, i: number) => (
+                <p key={i}>{line}</p>
+              ))}
+            </div>
+          </section>
+
+        </div>
+
+        <Footer />
+      </main>
+    </>
+  );
+}
