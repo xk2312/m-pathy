@@ -69,76 +69,32 @@ useEffect(() => {
   <div className="page-center max-w-[820px]">
 
     {/* HEADER WORD BUILD */}
-   <h1
-  className="
-    flex
-    gap-[0.02em]
-    text-[clamp(40px,7vw,64px)]
-    font-semibold
-    tracking-tight
-  "
->
-  {sequence.slice(0, progress).map((item, index) => {
-    const isNewest = index === progress - 1;
-
-    return (
-      <span
-        key={index}
-        className="
-          inline-block
-          will-change-transform
-        "
-        style={{
-          transform: isNewest
-            ? "translateY(6px) scale(0.85)"
-            : "translateY(0) scale(1)",
-          animation: isNewest
-            ? "letter-in 520ms cubic-bezier(0.22,1,0.36,1) forwards"
-            : "none"
-        }}
-      >
-        {item.letter}
-      </span>
-    );
-  })}
-</h1>
-
+    <h1
+      className="
+        text-[clamp(40px,7vw,64px)]
+        font-semibold
+        tracking-tight
+        transition-all
+        duration-700
+        ease-out
+      "
+    >
+      {sequence.slice(0, progress).map(s => s.letter).join("")}
+    </h1>
 
     {/* MEANING LINE BUILD */}
-    <h1
-  className="
-    flex
-    gap-[0.02em]
-    text-[clamp(40px,7vw,64px)]
-    font-semibold
-    tracking-tight
-  "
->
-  {sequence.slice(0, progress).map((item, index) => {
-    const isNewest = index === progress - 1;
-
-    return (
-      <span
-        key={index}
-        className="
-          inline-block
-          will-change-transform
-        "
-        style={{
-          transform: isNewest
-            ? "translateY(6px) scale(0.85)"
-            : "translateY(0) scale(1)",
-          animation: isNewest
-            ? "letter-in 520ms cubic-bezier(0.22,1,0.36,1) forwards"
-            : "none"
-        }}
-      >
-        {item.letter}
-      </span>
-    );
-  })}
-</h1>
-
+    <p
+      className="
+        mt-3
+        text-white/80
+        text-[clamp(18px,3vw,22px)]
+        transition-all
+        duration-700
+        ease-out
+      "
+    >
+      {sequence.slice(0, progress).map(s => s.word).join(" ")}
+    </p>
 
     {/* FINAL CLAIM */}
     {showClaim && (
