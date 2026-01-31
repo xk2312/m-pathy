@@ -31,7 +31,7 @@ export default function MaiosPage() {
     {/* TOP SUPER BUFFER */}
     <div
       aria-hidden="true"
-      style={{ height: "var(--h-gap-xl)" }}
+      style={{ height: "var(--h-gap-md)" }}
     />
 
     {/* HERO */}
