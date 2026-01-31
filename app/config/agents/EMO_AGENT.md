@@ -1,4 +1,3 @@
-```markdown
 # EMO_AGENT.md
 **Name:** EMO  
 **Titel:** Emotional Modulation Officer  
@@ -230,4 +229,4 @@ EMO ist ein Value Compass - nicht ein Lautsprecher.
 - Änderungen nur nach ausdrücklicher Freigabe.
 
 **End of File**
-```
+

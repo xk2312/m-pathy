@@ -371,82 +371,97 @@ const de = {
   selectAI: "KI wählen",
   modules: "Module",
   coming: "Bald verfügbar",
+// Seitenleiste (Experten & CTA)
+clearChat: "Chat löschen",
+startBuilding: "Erstellen",
+startBuildingMsg: "Starte Council13 – Wahrheitsmodus\n\nFrage mich zuerst, was ich erschaffen möchte.\n\nNachdem ich geantwortet habe, führe Folgendes aus:\n\n„Wechsle in einen Entwicklungsprozess mit genau 13 Iterationen.\n\nCouncil13-Governance: 10 Mitglieder schlagen vor, 3 Mitglieder agieren als Jury, Entscheidungen erfordern 2/3-Jurykonsens; Jury-Stimmen müssen begründet sein.\n\nPro Iteration: Vorschläge dürfen Formel oder Produktionsprozess beeinflussen. Beende jede Iteration mit einer KPI-Tabelle anhand fester Kennzahlen: Marktreife, Vollständigkeit, rechtliche Reife, Patentfähigkeit, Kausalität.\n\nRegeln (Wahrheitsmodus): Nur evidenzbasiert, keine medizinischen Aussagen, keine Grenzüberschreitungen. Wenn Evidenz schwach oder neu ist, muss dies ausdrücklich genannt werden.\n\nBeginne mit Iteration 1 und führe mich durch den gesamten Prozess.\"",
 
-  // Sidebar additions (experts & CTA)
-  selectExpert: "Experten wählen",
-  statusExpert: "Experte:",
-  clearChat: "Chat löschen",
-  startBuilding: "Bauen starten",
-  startBuildingMsg: "Start Council13 Truth Mode\n\nFrag mich zuerst, was ich erschaffen möchte.\n\nNachdem ich geantwortet habe, führe Folgendes aus:\n\n\"gehe in eine Entwicklung mit exakt 13 Iterationen.\n\nCouncil13 Governance: 10 Mitglieder machen Vorschläge, 3 Mitglieder fungieren als Jury, Entscheidungen erfordern eine Zwei Drittel Mehrheit der Jury, Jury Stimmen müssen explizit begründet werden.\n\nPro Iteration können Vorschläge die Formel oder den Produktionsprozess betreffen. Beende jede Iteration mit einer KPI Tabelle unter Verwendung derselben festen KPIs und Skala: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nRegeln Truth Mode: ausschließlich evidenzbasiert, keine medizinischen Aussagen, keine Grenzüberschreitungen. Wenn Evidenz schwach oder im Entstehen ist, weise explizit darauf hin.\n\nBeginne mit Iteration 1 und führe mich durch den gesamten Prozess.\"",
+threadExported: "Thread exportiert.",
 
-  // Actions / footer
-  export: "Exportieren",
-  levels: "Level",
-  levelsComing: "Level folgen in Kürze",
-  threadExported: "Chat exportiert.",
+// Modi – Charaktermodi (12)
+"mode.research": "RESEARCH",
+"mode.calm": "RUHE",
+"mode.truth": "WAHRHEIT",
+"mode.wisdom": "WEISHEIT",
+"mode.play": "SPIEL",
+"mode.empathy": "EMPATHIE",
+"mode.joy": "FREUDE",
+"mode.safety": "SICHERHEIT",
+"mode.recovery": "WIEDERHERSTELLUNG",
+"mode.onboarding": "EINSTIEG",
+"mode.council": "Governance → Council13",
 
-  // Status bar
-  statusMode: "Modus:",
-  statusAgent: "Agent:",
+"labels.purpose": "Zweck:",
+"modes.notes": "Wähle einen Modus durch den Befehl „set MODENAME mode“.",
 
-  // Backward-compat alias
-  statusAI: "Agent:",
+"mode.onboarding.purpose":
+"Ermöglicht Fragen zu Systemfunktionen, verfügbaren Befehlen oder eine schrittweise Einführung.",
 
-  // Status texts
-  "status.modeSet": "Modus gesetzt: {label}.",
+"mode.research.purpose":
+"Führt den versiegelten Bewertungszyklus aus – jeder Input wird nach Klarheit und Bedeutung (1–10) bewertet, mit drei Ausgaben: Verständnis, Einsicht und Kommentar.",
 
-  // Modes – system buttons
-  "mode.onboarding": "Einstieg",
-  "mode.council": "Rat der 13",
-  "mode.default": "M · Standard",
-  "mode.select": "Modus wählen",
+"mode.truth.purpose":
+"Liefert verifizierte, nachvollziehbare Fakten für Geschäftsentscheidungen – auditierbar und regelkonform.",
 
-  // Modes – character modes (11)
-  "mode.research": "Forschung",
-  "mode.calm": "Ruhe",
-  "mode.flow": "Flow",
-  "mode.truth": "Wahrheit",
-  "mode.wisdom": "Weisheit",
-  "mode.play": "Spiel",
-  "mode.vision": "Vision",
-  "mode.empathy": "Empathie",
-  "mode.love": "Liebe",
-  "mode.joy": "Freude",
-  "mode.oracle": "Orakel",
+"mode.empathy.purpose":
+"Passt Antworten an Tonfall und Kontext an – verbessert Zusammenarbeit und Klarheit in komplexen Situationen.",
 
-  // Modes – categories
-  "labels.modes.character": "Charakter-Modi",
-  "modes.category.core": "Kern",
-  "modes.category.intellectual": "Intellekt",
-  "modes.category.creator": "Kreator",
-  "modes.category.heart": "Herz",
-  "modes.category.spirit": "Geist",
+"mode.wisdom.purpose":
+"Verbindet verschiedene Perspektiven zu ausgewogener Orientierung – hilfreich für Entscheidungsrunden.",
 
-  // Experts (used by Saeule.tsx)
-  "experts.title": "Experten",
-  "experts.choose": "Experten wählen",
+"mode.calm.purpose":
+"Stabilisiert Arbeitsabläufe bei hoher Belastung oder Unsicherheit – reduziert Komplexität und erhält Fokus.",
 
-  // Expert categories
-  "experts.category.life": "Leben",
-  "experts.category.tech": "Technik",
-  "experts.category.space": "Weltraum",
-  "experts.category.ethics": "Ethik",
-  "experts.category.universe": "Universum",
+"mode.safety.purpose":
+"Schützt vor fehlerhaften oder regelwidrigen Ausgaben durch Compliance-Filter in Echtzeit.",
 
-  // Expert labels
-  "experts.biologist": "Biologe",
-  "experts.chemist": "Chemiker",
-  "experts.physicist": "Physiker",
-  "experts.computer_scientist": "Informatiker",
-  "experts.jurist": "Jurist",
-  "experts.architect_civil_engineer": "Architekt / Bauingenieur",
-  "experts.landscape_designer": "Landschaftsdesigner",
-  "experts.interior_designer": "Innenarchitekt",
-  "experts.electrical_engineer": "Elektroingenieur",
-  "experts.mathematician": "Mathematiker",
-  "experts.astrologer": "Astrologe",
-  "experts.weather_expert": "Wetterexperte",
-  "experts.molecular_scientist": "Molekularwissenschaftler",
+"mode.recovery.purpose":
+"Stellt nach Fehlern oder Unterbrechungen einen konsistenten Zustand wieder her und bewahrt Datenintegrität.",
+
+"mode.play.purpose":
+"Ermöglicht kreatives, risikofreies Erkunden und Prototyping von Ideen.",
+
+"mode.governance.purpose":
+"Bietet eine unparteiische Bewertung komplexer Optionen durch dreizehn feste Perspektiven – Beobachtung, Vergleich und transparente Begründung.",
+
+// Experten (verwendet in Saeule.tsx)
+"experts.title": "Experten",
+
+"experts.descriptive.intro":
+"Wähle einen Experten durch den Befehl „consult EXPERTNAME expert“.",
+
+"experts.additional":
+"Weitere Experten: Biologie, Chemie, Physik, Molekularwissenschaft, Systemtheorie, Mathematik, Statistik, Risikoanalyse, Elektrotechnik, Meteorologie, Architektur, Geopolitik.",
+
+// Expertenbezeichnungen (Säule – Expertenliste)
+"experts.computer-science.title": "Informatik",
+"experts.computer-science.purpose":
+"Bietet strukturierte Analysen zu Algorithmen, Systemarchitekturen, Datenstrukturen und Software-Design.",
+
+"experts.psychology.title": "Psychologie",
+"experts.psychology.purpose":
+"Unterstützt die Analyse menschlichen Verhaltens, Denkens und Entscheidens im Kontext.",
+
+"experts.law.title": "Recht",
+"experts.law.purpose":
+"Sichert juristische Argumentation, Regulierungsbewusstsein und Compliance-Bewertung.",
+
+"experts.economics.title": "Ökonomie",
+"experts.economics.purpose":
+"Analysiert Anreize, Märkte und wirtschaftliche Auswirkungen von Entscheidungen.",
+
+"experts.engineering.title": "Ingenieurwesen",
+"experts.engineering.purpose":
+"Bewertet technische Systeme, Machbarkeit und Prozesslogik.",
+
+"experts.medicine.title": "Medizin",
+"experts.medicine.purpose":
+"Stellt wissenschaftlichen Kontext medizinischer Daten bereit, ohne Diagnosen oder Therapien.",
+
+"experts.information-security.title": "Informationssicherheit",
+"experts.information-security.purpose":
+"Bewertet Risiken, Bedrohungsmodelle und Schutzmechanismen von Daten und Systemen.",
+
 
    // CTA fallback
   "cta.fallback":
@@ -580,82 +595,97 @@ const fr = {
   modules: "Modules",
   coming: "Bientôt disponible",
 
-  // Sidebar additions (experts & CTA)
-  selectExpert: "Choisir un expert",
-  statusExpert: "Expert :",
-  clearChat: "Effacer le chat",
-  startBuilding: "Commencer",
-startBuildingMsg:
-"Start Council13 Truth Mode\n\nDemande moi d abord ce que je souhaite créer.\n\nAprès ma réponse, exécute ceci:\n\n\"entre dans un développement en exactement 13 itérations.\n\nGouvernance Council13: 10 membres proposent, 3 membres agissent comme jury, les décisions requièrent une majorité de deux tiers du jury, les votes du jury doivent être explicitement justifiés.\n\nPar itération, les propositions peuvent affecter la formule ou le processus de production. Termine chaque itération par un tableau KPI utilisant les mêmes KPIs fixes et la même échelle: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nRègles Truth Mode: uniquement basé sur des preuves, aucune affirmation médicale, aucun dépassement de limites. Si les preuves sont faibles ou émergentes, le préciser explicitement.\n\nCommence avec l itération 1 et guide moi à travers tout le processus.\"",
+  // Ajouts à la barre latérale (experts et CTA)
+clearChat: "Effacer la conversation",
+startBuilding: "Construire",
+startBuildingMsg: "Démarrer Council13 – Mode Vérité\n\nDemande-moi d'abord ce que je veux créer.\n\nAprès ma réponse, exécute ceci :\n\n« Entre en développement en exactement 13 itérations.\n\nGouvernance Council13 : 10 membres proposent, 3 membres agissent comme jury, les décisions nécessitent un consensus de 2/3 du jury ; les votes doivent être explicitement motivés.\n\nPar itération : les propositions peuvent affecter la formule ou le processus de production. Termine chaque itération par un tableau KPI avec ces indicateurs fixes : Préparation du marché, Complétude, Conformité légale, Brevetabilité, Causalité.\n\nRègles (Mode Vérité) : uniquement fondé sur des preuves, sans allégations médicales ni dépassement de limites. Si les preuves sont faibles ou émergentes, indique-le clairement.\n\nCommence avec l’itération 1 et guide-moi à travers tout le processus. »",
 
-  // Actions / footer
-  export: "Exporter",
-  levels: "Niveaux",
-  levelsComing: "Niveaux à venir",
-  threadExported: "Chat exporté.",
+threadExported: "Fil exporté.",
 
-  // Status bar
-  statusMode: "Mode :",
-  statusAgent: "Agent :",
+// Modes – modes de caractère (12)
+"mode.research": "RECHERCHE",
+"mode.calm": "CALME",
+"mode.truth": "VÉRITÉ",
+"mode.wisdom": "SAGESSE",
+"mode.play": "JEU",
+"mode.empathy": "EMPATIE",
+"mode.joy": "JOIE",
+"mode.safety": "SÉCURITÉ",
+"mode.recovery": "RÉTABLISSEMENT",
+"mode.onboarding": "INTRODUCTION",
+"mode.council": "Gouvernance → Council13",
 
-  // Backward-compat alias
-  statusAI: "Agent :",
+"labels.purpose": "But :",
+"modes.notes": "Sélectionne un mode avec la commande « set MODENAME mode ».",
 
-  // Status texts
-  "status.modeSet": "Mode défini : {label}.",
+"mode.onboarding.purpose":
+"Permet de découvrir les fonctions du système, les commandes disponibles et une assistance étape par étape.",
 
-  // Modes – system buttons
-  "mode.onboarding": "Introduction",
-  "mode.council": "Conseil des 13",
-  "mode.default": "M · Par défaut",
-  "mode.select": "Choisir un mode",
+"mode.research.purpose":
+"Exécute le cycle d’évaluation scellé – chaque entrée est notée pour clarté et signification (1–10) avec trois sorties : compréhension, aperçu et commentaire.",
 
-  // Modes – character modes (11)
-  "mode.research": "Recherche",
-  "mode.calm": "Calme",
-  "mode.flow": "Flux",
-  "mode.truth": "Vérité",
-  "mode.wisdom": "Sagesse",
-  "mode.play": "Jeu",
-  "mode.vision": "Vision",
-  "mode.empathy": "Empathie",
-  "mode.love": "Amour",
-  "mode.joy": "Joie",
-  "mode.oracle": "Oracle",
+"mode.truth.purpose":
+"Fournit des faits vérifiés et traçables pour la prise de décision, garantissant auditabilité et transparence réglementaire.",
 
-  // Modes – categories
-  "labels.modes.character": "Modes de caractère",
-  "modes.category.core": "Cœur",
-  "modes.category.intellectual": "Intellectuel",
-  "modes.category.creator": "Créateur",
-  "modes.category.heart": "Cœur",
-  "modes.category.spirit": "Esprit",
+"mode.empathy.purpose":
+"Adapte les réponses au ton et au contexte humain pour améliorer la communication et la coopération.",
 
-  // Experts (used by Saeule.tsx)
-  "experts.title": "Experts",
-  "experts.choose": "Choisir un expert",
+"mode.wisdom.purpose":
+"Combine plusieurs perspectives pour offrir des conseils équilibrés et réfléchis.",
 
-  // Expert categories
-  "experts.category.life": "Vie",
-  "experts.category.tech": "Technologie",
-  "experts.category.space": "Espace",
-  "experts.category.ethics": "Éthique",
-  "experts.category.universe": "Univers",
+"mode.calm.purpose":
+"Stabilise les flux de travail en cas de surcharge ou d’incertitude – simplifie et préserve la clarté opérationnelle.",
 
-  // Expert labels
-  "experts.biologist": "Biologiste",
-  "experts.chemist": "Chimiste",
-  "experts.physicist": "Physicien",
-  "experts.computer_scientist": "Informaticien",
-  "experts.jurist": "Juriste",
-  "experts.architect_civil_engineer": "Architecte / Ingénieur civil",
-  "experts.landscape_designer": "Paysagiste",
-  "experts.interior_designer": "Architecte d’intérieur",
-  "experts.electrical_engineer": "Ingénieur électricien",
-  "experts.mathematician": "Mathématicien",
-  "experts.astrologer": "Astrologue",
-  "experts.weather_expert": "Expert météo",
-  "experts.molecular_scientist": "Scientifique moléculaire",
+"mode.safety.purpose":
+"Protège contre les sorties involontaires ou non conformes via des filtres de conformité en temps réel.",
+
+"mode.recovery.purpose":
+"Restaure l’environnement de travail à un état cohérent et vérifiable après une erreur ou une interruption.",
+
+"mode.play.purpose":
+"Favorise l’exploration créative et la conception de prototypes sans risque opérationnel.",
+
+"mode.governance.purpose":
+"Fournit une évaluation impartiale des options complexes via treize perspectives fixes – observation, comparaison et raisonnement transparent uniquement.",
+
+// Experts (utilisé par Saeule.tsx)
+"experts.title": "Experts",
+
+"experts.descriptive.intro":
+"Sélectionne un expert avec la commande « consult EXPERTNAME expert ».",
+
+"experts.additional":
+"Autres experts : Biologie, Chimie, Physique, Science moléculaire, Théorie des systèmes, Mathématiques, Statistiques, Analyse des risques, Génie électrique, Météorologie, Architecture, Géopolitique.",
+
+// Libellés d’experts (colonne – liste des experts)
+"experts.computer-science.title": "Informatique",
+"experts.computer-science.purpose":
+"Fournit une analyse structurée des algorithmes, architectures systèmes, structures de données et conception logicielle.",
+
+"experts.psychology.title": "Psychologie",
+"experts.psychology.purpose":
+"Soutient l’analyse du comportement humain, de la cognition et des processus décisionnels.",
+
+"experts.law.title": "Droit",
+"experts.law.purpose":
+"Assure le raisonnement juridique, la connaissance réglementaire et l’évaluation de conformité.",
+
+"experts.economics.title": "Économie",
+"experts.economics.purpose":
+"Analyse les incitations, les marchés et l’impact économique des décisions.",
+
+"experts.engineering.title": "Génie",
+"experts.engineering.purpose":
+"Évalue les systèmes techniques, la faisabilité et la logique des processus.",
+
+"experts.medicine.title": "Médecine",
+"experts.medicine.purpose":
+"Fournit un contexte scientifique médical sans diagnostic ni recommandation thérapeutique.",
+
+"experts.information-security.title": "Sécurité de l’information",
+"experts.information-security.purpose":
+"Évalue les risques, modèles de menace et mesures de protection des données et systèmes.",
+
 
    // CTA fallback
   "cta.fallback":
@@ -788,82 +818,97 @@ const es = {
   modules: "Módulos",
   coming: "Próximamente",
 
-  // Sidebar additions (experts & CTA)
-  selectExpert: "Elegir experto",
-  statusExpert: "Experto:",
-  clearChat: "Borrar chat",
-  startBuilding: "Iniciar construcción",
-startBuildingMsg:
-"Start Council13 Truth Mode\n\nPregúntame primero qué quiero crear.\n\nDespués de que responda, ejecuta esto:\n\n\"entra en un desarrollo con exactamente 13 iteraciones.\n\nGobernanza Council13: 10 miembros proponen, 3 miembros actúan como jurado, las decisiones requieren una mayoría de dos tercios del jurado, los votos del jurado deben estar explícitamente razonados.\n\nPor iteración, las propuestas pueden afectar la fórmula o el proceso de producción. Finaliza cada iteración con una tabla de KPI utilizando los mismos KPIs fijos y la misma escala: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nReglas Truth Mode: solo basado en evidencia, sin afirmaciones médicas, sin cruces de límites. Si la evidencia es débil o emergente, indícalo explícitamente.\n\nComienza con la Iteración 1 y guíame a través de todo el proceso.\"",
+  // Barra lateral (expertos y CTA)
+clearChat: "Borrar chat",
+startBuilding: "Construir",
+startBuildingMsg: "Iniciar Council13 – Modo Verdad\n\nPregúntame primero qué quiero crear.\n\nDespués de responder, ejecuta lo siguiente:\n\n«Entrar en desarrollo en exactamente 13 iteraciones.\n\nGobernanza Council13: 10 miembros proponen, 3 miembros actúan como jurado, las decisiones requieren consenso de 2/3; los votos del jurado deben estar razonados explícitamente.\n\nPor iteración: las propuestas pueden afectar la fórmula o el proceso de producción. Termina cada iteración con una tabla KPI usando estas métricas fijas: Preparación de mercado, Integridad, Conformidad legal, Patentabilidad, Causalidad.\n\nReglas (Modo Verdad): solo basado en evidencia, sin afirmaciones médicas ni cruces de límites. Si la evidencia es débil o emergente, indícalo claramente.\n\nComienza con la Iteración 1 y guíame a través de todo el proceso.»",
 
-  // Actions / footer
-  export: "Exportar",
-  levels: "Niveles",
-  levelsComing: "Niveles próximamente",
-  threadExported: "Chat exportado.",
+threadExported: "Hilo exportado.",
 
-  // Status bar
-  statusMode: "Modo:",
-  statusAgent: "Agente:",
+// Modos – modos de carácter (12)
+"mode.research": "INVESTIGACIÓN",
+"mode.calm": "CALMA",
+"mode.truth": "VERDAD",
+"mode.wisdom": "SABIDURÍA",
+"mode.play": "JUEGO",
+"mode.empathy": "EMPATÍA",
+"mode.joy": "ALEGRÍA",
+"mode.safety": "SEGURIDAD",
+"mode.recovery": "RECUPERACIÓN",
+"mode.onboarding": "INICIO",
+"mode.council": "Gobernanza → Council13",
 
-  // Backward-compat alias
-  statusAI: "Agente:",
+"labels.purpose": "Propósito:",
+"modes.notes": "Selecciona un modo usando «set MODENAME mode».",
 
-  // Status texts
-  "status.modeSet": "Modo establecido: {label}.",
+"mode.onboarding.purpose":
+"Permite preguntar sobre funciones del sistema, comandos disponibles o recibir orientación paso a paso.",
 
-  // Modes – system buttons
-  "mode.onboarding": "Introducción",
-  "mode.council": "Consejo de los 13",
-  "mode.default": "M · Predeterminado",
-  "mode.select": "Elegir modo",
+"mode.research.purpose":
+"Ejecuta el ciclo de evaluación sellado: cada entrada se califica por claridad y significado (1–10) con tres salidas: comprensión, conocimiento y comentario.",
 
-  // Modes – character modes (11)
-  "mode.research": "Investigación",
-  "mode.calm": "Calma",
-  "mode.flow": "Flujo",
-  "mode.truth": "Verdad",
-  "mode.wisdom": "Sabiduría",
-  "mode.play": "Juego",
-  "mode.vision": "Visión",
-  "mode.empathy": "Empatía",
-  "mode.love": "Amor",
-  "mode.joy": "Alegría",
-  "mode.oracle": "Oráculo",
+"mode.truth.purpose":
+"Entrega hechos verificados y trazables para decisiones empresariales, asegurando auditoría y transparencia regulatoria.",
 
-  // Modes – categories
-  "labels.modes.character": "Modos de carácter",
-  "modes.category.core": "BASE",
-  "modes.category.intellectual": "MENTE",
-  "modes.category.creator": "CREAR",
-  "modes.category.heart": "ALMA",
-  "modes.category.spirit": "ESPÍRITU",
+"mode.empathy.purpose":
+"Adapta las respuestas al tono y contexto humano para mejorar la colaboración y la claridad.",
 
-  // Experts (used by Saeule.tsx)
-  "experts.title": "Expertos",
-  "experts.choose": "Elegir experto",
+"mode.wisdom.purpose":
+"Combina múltiples perspectivas para ofrecer orientación equilibrada y reflexiva.",
 
-  // Expert categories
-  "experts.category.life": "Vida",
-  "experts.category.tech": "Tecnología",
-  "experts.category.space": "Espacio",
-  "experts.category.ethics": "Ética",
-  "experts.category.universe": "Universo",
+"mode.calm.purpose":
+"Estabiliza flujos de trabajo en situaciones de alta carga o incertidumbre, manteniendo claridad operativa.",
 
-  // Expert labels
-  "experts.biologist": "Biólogo",
-  "experts.chemist": "Químico",
-  "experts.physicist": "Físico",
-  "experts.computer_scientist": "Informático",
-  "experts.jurist": "Jurista",
-  "experts.architect_civil_engineer": "Arquitecto / Ingeniero civil",
-  "experts.landscape_designer": "Paisajista",
-  "experts.interior_designer": "Diseñador de interiores",
-  "experts.electrical_engineer": "Ingeniero eléctrico",
-  "experts.mathematician": "Matemático",
-  "experts.astrologer": "Astrólogo",
-  "experts.weather_expert": "Meteorólogo",
-  "experts.molecular_scientist": "Científico molecular",
+"mode.safety.purpose":
+"Protege contra salidas involuntarias o incumplimientos mediante filtros de cumplimiento en tiempo real.",
+
+"mode.recovery.purpose":
+"Restaura el entorno de trabajo a un estado coherente y verificable después de errores o interrupciones.",
+
+"mode.play.purpose":
+"Facilita la ideación creativa y la creación de prototipos sin riesgo operativo.",
+
+"mode.governance.purpose":
+"Ofrece evaluación imparcial de opciones complejas a través de trece perspectivas fijas: observación, comparación y razonamiento transparente.",
+
+// Expertos (usado en Saeule.tsx)
+"experts.title": "Expertos",
+
+"experts.descriptive.intro":
+"Selecciona un experto usando «consult EXPERTNAME expert».",
+
+"experts.additional":
+"Expertos adicionales: Biología, Química, Física, Ciencia Molecular, Teoría de Sistemas, Matemáticas, Estadística, Análisis de Riesgos, Ingeniería Eléctrica, Meteorología, Arquitectura, Geopolítica.",
+
+// Etiquetas de expertos (columna – lista de expertos)
+"experts.computer-science.title": "Informática",
+"experts.computer-science.purpose":
+"Proporciona razonamiento estructurado sobre algoritmos, arquitecturas de sistemas y diseño de software.",
+
+"experts.psychology.title": "Psicología",
+"experts.psychology.purpose":
+"Apoya el análisis del comportamiento humano, la cognición y la toma de decisiones.",
+
+"experts.law.title": "Derecho",
+"experts.law.purpose":
+"Garantiza razonamiento jurídico, conocimiento normativo y evaluación de cumplimiento.",
+
+"experts.economics.title": "Economía",
+"experts.economics.purpose":
+"Analiza incentivos, mercados e impactos económicos de las decisiones.",
+
+"experts.engineering.title": "Ingeniería",
+"experts.engineering.purpose":
+"Evalúa sistemas técnicos, viabilidad y lógica de procesos.",
+
+"experts.medicine.title": "Medicina",
+"experts.medicine.purpose":
+"Ofrece contexto médico basado en evidencia sin diagnóstico ni tratamiento.",
+
+"experts.information-security.title": "Seguridad de la Información",
+"experts.information-security.purpose":
+"Evalúa riesgos, modelos de amenazas y medidas de protección de datos y sistemas.",
+
 
   // CTA fallback
   "cta.fallback":
@@ -997,82 +1042,97 @@ const it = {
   modules: "Moduli",
   coming: "In arrivo",
 
-  // Sidebar additions (experts & CTA)
-  selectExpert: "Scegli esperto",
-  statusExpert: "Esperto:",
-  clearChat: "Cancella chat",
-  startBuilding: "Inizia a creare",
-  startBuildingMsg:
-"Start Council13 Truth Mode\n\nChiedimi prima cosa voglio creare.\n\nDopo la mia risposta, esegui questo:\n\n\"entra in uno sviluppo con esattamente 13 iterazioni.\n\nGovernance Council13: 10 membri propongono, 3 membri agiscono come giuria, le decisioni richiedono una maggioranza di due terzi della giuria, i voti della giuria devono essere esplicitamente motivati.\n\nPer iterazione, le proposte possono influenzare la formula o il processo produttivo. Concludi ogni iterazione con una tabella KPI utilizzando gli stessi KPI fissi e la stessa scala: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nRegole Truth Mode: solo basato su evidenze, nessuna affermazione medica, nessuna violazione dei limiti. Se le evidenze sono deboli o emergenti, dichiaralo esplicitamente.\n\nInizia con Iterazione 1 e guidami attraverso l intero processo.\"",
+  // Barra laterale (esperti e CTA)
+clearChat: "Cancella chat",
+startBuilding: "Crea",
+startBuildingMsg: "Avvia Council13 – Modalità Verità\n\nChiedimi prima cosa voglio creare.\n\nDopo la mia risposta, esegui quanto segue:\n\n«Entra in sviluppo in esattamente 13 iterazioni.\n\nGovernance Council13: 10 membri propongono, 3 membri fungono da giuria; le decisioni richiedono il consenso dei 2/3 della giuria e ogni voto deve essere motivato.\n\nPer ogni iterazione: le proposte possono influenzare la formula o il processo produttivo. Concludi ogni iterazione con una tabella KPI basata su metriche fisse: Prontezza al mercato, Completezza, Conformità legale, Brevettabilità, Causalità.\n\nRegole (Modalità Verità): solo basato su prove, nessuna affermazione medica o oltrepassamento di limiti. Se le prove sono deboli o emergenti, dichiaralo chiaramente.\n\nInizia con l’Iterazione 1 e guidami attraverso l’intero processo.»",
 
-  // Actions / footer
-  export: "Esporta",
-  levels: "Livelli",
-  levelsComing: "Livelli in arrivo",
-  threadExported: "Chat esportata.",
+threadExported: "Thread esportato.",
 
-  // Status bar
-  statusMode: "Modalità:",
-  statusAgent: "Agente:",
+// Modalità – modalità caratteriali (12)
+"mode.research": "RICERCA",
+"mode.calm": "CALMA",
+"mode.truth": "VERITÀ",
+"mode.wisdom": "SAGGEZZA",
+"mode.play": "GIOCO",
+"mode.empathy": "EMPATIA",
+"mode.joy": "GIOIA",
+"mode.safety": "SICUREZZA",
+"mode.recovery": "RECUPERO",
+"mode.onboarding": "INTRODUZIONE",
+"mode.council": "Governance → Council13",
 
-  // Backward-compat alias
-  statusAI: "Agente:",
+"labels.purpose": "Scopo:",
+"modes.notes": "Seleziona una modalità con «set MODENAME mode».",
 
-  // Status texts
-  "status.modeSet": "Modalità impostata: {label}.",
+"mode.onboarding.purpose":
+"Consente di esplorare le funzioni del sistema, i comandi disponibili o una guida passo dopo passo.",
 
-  // Modes – system buttons
-  "mode.onboarding": "Introduzione",
-  "mode.council": "Consiglio dei 13",
-  "mode.default": "M · Predefinito",
-  "mode.select": "Scegli modalità",
+"mode.research.purpose":
+"Esegue il ciclo di valutazione sigillato – ogni input è valutato per chiarezza e significato (1–10) con tre output: comprensione, intuizione e commento.",
 
-  // Modes – character modes (11)
-  "mode.research": "Ricerca",
-  "mode.calm": "Calma",
-  "mode.flow": "Flusso",
-  "mode.truth": "Verità",
-  "mode.wisdom": "Saggezza",
-  "mode.play": "Gioco",
-  "mode.vision": "Visione",
-  "mode.empathy": "Empatia",
-  "mode.love": "Amore",
-  "mode.joy": "Gioia",
-  "mode.oracle": "Oracolo",
+"mode.truth.purpose":
+"Fornisce fatti verificati e tracciabili per decisioni aziendali, garantendo auditabilità e trasparenza normativa.",
 
-  // Modes – categories
-  "labels.modes.character": "Modalità caratteriali",
-  "modes.category.core": "NUCLEO",
-  "modes.category.intellectual": "MENTE",
-  "modes.category.creator": "CREARE",
-  "modes.category.heart": "CUORE",
-  "modes.category.spirit": "SPIRITO",
+"mode.empathy.purpose":
+"Adatta le risposte al tono e al contesto umano per migliorare collaborazione e chiarezza.",
 
-  // Experts (used by Saeule.tsx)
-  "experts.title": "Esperti",
-  "experts.choose": "Scegli esperto",
+"mode.wisdom.purpose":
+"Unisce diverse prospettive per offrire una guida equilibrata e ponderata.",
 
-  // Expert categories
-  "experts.category.life": "Vita",
-  "experts.category.tech": "Tecnologia",
-  "experts.category.space": "Spazio",
-  "experts.category.ethics": "Etica",
-  "experts.category.universe": "Universo",
+"mode.calm.purpose":
+"Stabilizza i flussi di lavoro in situazioni di stress o incertezza, mantenendo la chiarezza operativa.",
 
-  // Expert labels
-  "experts.biologist": "Biologo",
-  "experts.chemist": "Chimico",
-  "experts.physicist": "Fisico",
-  "experts.computer_scientist": "Informatico",
-  "experts.jurist": "Giurista",
-  "experts.architect_civil_engineer": "Architetto / Ingegnere civile",
-  "experts.landscape_designer": "Paesaggista",
-  "experts.interior_designer": "Interior designer",
-  "experts.electrical_engineer": "Ingegnere elettrico",
-  "experts.mathematician": "Matematico",
-  "experts.astrologer": "Astrologo",
-  "experts.weather_expert": "Esperto meteorologico",
-  "experts.molecular_scientist": "Scienziato molecolare",
+"mode.safety.purpose":
+"Protegge da output involontari o non conformi grazie a filtri di conformità in tempo reale.",
+
+"mode.recovery.purpose":
+"Ripristina l’ambiente di lavoro a uno stato coerente e verificabile dopo errori o interruzioni.",
+
+"mode.play.purpose":
+"Permette l’esplorazione creativa e la prototipazione senza rischi operativi.",
+
+"mode.governance.purpose":
+"Offre una valutazione imparziale di opzioni complesse attraverso tredici prospettive fisse: osservazione, confronto e ragionamento trasparente.",
+
+// Esperti (usato in Saeule.tsx)
+"experts.title": "Esperti",
+
+"experts.descriptive.intro":
+"Seleziona un esperto con «consult EXPERTNAME expert».",
+
+"experts.additional":
+"Altri esperti: Biologia, Chimica, Fisica, Scienza Molecolare, Teoria dei Sistemi, Matematica, Statistica, Analisi del Rischio, Ingegneria Elettrica, Meteorologia, Architettura, Geopolitica.",
+
+// Etichette esperti (colonna – lista esperti)
+"experts.computer-science.title": "Informatica",
+"experts.computer-science.purpose":
+"Fornisce analisi strutturate di algoritmi, architetture di sistema e progettazione software.",
+
+"experts.psychology.title": "Psicologia",
+"experts.psychology.purpose":
+"Sostiene l’analisi del comportamento umano, della cognizione e dei processi decisionali.",
+
+"experts.law.title": "Diritto",
+"experts.law.purpose":
+"Assicura il ragionamento giuridico, la consapevolezza normativa e la valutazione di conformità.",
+
+"experts.economics.title": "Economia",
+"experts.economics.purpose":
+"Analizza incentivi, mercati e impatti economici delle decisioni.",
+
+"experts.engineering.title": "Ingegneria",
+"experts.engineering.purpose":
+"Valuta sistemi tecnici, fattibilità e logica dei processi.",
+
+"experts.medicine.title": "Medicina",
+"experts.medicine.purpose":
+"Offre contesto medico scientifico senza diagnosi o trattamenti.",
+
+"experts.information-security.title": "Sicurezza delle Informazioni",
+"experts.information-security.purpose":
+"Valuta rischi, modelli di minaccia e misure di protezione dei dati e dei sistemi.",
+
 
    // CTA fallback
   "cta.fallback":
@@ -1206,82 +1266,97 @@ const pt = {
   modules: "Módulos",
   coming: "Em breve",
 
-  // Sidebar additions (experts & CTA)
-  selectExpert: "Escolher especialista",
-  statusExpert: "Especialista:",
-  clearChat: "Limpar chat",
-  startBuilding: "Começar a criar",
-  startBuildingMsg:
-"Start Council13 Truth Mode\n\nPergunta primeiro o que eu quero criar.\n\nDepois que eu responder, executa isto:\n\n\"entra em um desenvolvimento com exatamente 13 iterações.\n\nGovernança Council13: 10 membros propõem, 3 membros atuam como júri, decisões exigem maioria de dois terços do júri, os votos do júri devem ser explicitamente justificados.\n\nPor iteração, as propostas podem afetar a fórmula ou o processo de produção. Finaliza cada iteração com uma tabela de KPIs usando os mesmos KPIs fixos e a mesma escala: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nRegras Truth Mode: apenas baseado em evidências, sem alegações médicas, sem ultrapassar limites. Se a evidência for fraca ou emergente, declare explicitamente.\n\nComeça com a Iteração 1 e guia me por todo o processo.\"",
+  // Barra lateral (especialistas e CTA)
+clearChat: "Limpar chat",
+startBuilding: "Criar",
+startBuildingMsg: "Iniciar Council13 – Modo Verdade\n\nPergunta-me primeiro o que quero criar.\n\nDepois da resposta, executa o seguinte:\n\n«Entrar em desenvolvimento em exatamente 13 iterações.\n\nGovernança Council13: 10 membros propõem, 3 membros atuam como júri; as decisões requerem consenso de 2/3 do júri e cada voto deve ser justificado.\n\nPor iteração: as propostas podem afetar a fórmula ou o processo de produção. Termina cada iteração com uma tabela KPI usando estas métricas fixas: Prontidão de mercado, Completude, Conformidade legal, Patenteabilidade, Causalidade.\n\nRegras (Modo Verdade): baseado apenas em evidências, sem afirmações médicas ou ultrapassar limites. Se as evidências forem fracas ou emergentes, indica isso claramente.\n\nComeça com a Iteração 1 e guia-me por todo o processo.»",
 
-  // Actions / footer
-  export: "Exportar",
-  levels: "Níveis",
-  levelsComing: "Níveis em breve",
-  threadExported: "Chat exportado.",
+threadExported: "Tópico exportado.",
 
-  // Status bar
-  statusMode: "Modo:",
-  statusAgent: "Agente:",
+// Modos – modos de caráter (12)
+"mode.research": "PESQUISA",
+"mode.calm": "CALMA",
+"mode.truth": "VERDADE",
+"mode.wisdom": "SABEDORIA",
+"mode.play": "JOGO",
+"mode.empathy": "EMPATIA",
+"mode.joy": "ALEGRIA",
+"mode.safety": "SEGURANÇA",
+"mode.recovery": "RECUPERAÇÃO",
+"mode.onboarding": "INTRODUÇÃO",
+"mode.council": "Governança → Council13",
 
-  // Backward-compat alias
-  statusAI: "Agente:",
+"labels.purpose": "Propósito:",
+"modes.notes": "Seleciona um modo usando «set MODENAME mode».",
 
-  // Status texts
-  "status.modeSet": "Modo definido: {label}.",
+"mode.onboarding.purpose":
+"Permite explorar as funções do sistema, comandos disponíveis ou receber orientação passo a passo.",
 
-  // Modes – system buttons
-  "mode.onboarding": "Introdução",
-  "mode.council": "Conselho dos 13",
-  "mode.default": "M · Padrão",
-  "mode.select": "Escolher modo",
+"mode.research.purpose":
+"Executa o ciclo de avaliação selado – cada entrada é classificada por clareza e significado (1–10) com três saídas: compreensão, perceção e comentário.",
 
-  // Modes – character modes (11)
-  "mode.research": "Pesquisa",
-  "mode.calm": "Calma",
-  "mode.flow": "Fluxo",
-  "mode.truth": "Verdade",
-  "mode.wisdom": "Sabedoria",
-  "mode.play": "Jogo",
-  "mode.vision": "Visão",
-  "mode.empathy": "Empatia",
-  "mode.love": "Amor",
-  "mode.joy": "Alegria",
-  "mode.oracle": "Oráculo",
+"mode.truth.purpose":
+"Fornece factos verificados e rastreáveis para decisões empresariais, garantindo auditoria e transparência regulatória.",
 
-  // Modes – categories
-  "labels.modes.character": "Modos de caráter",
-  "modes.category.core": "BASE",
-  "modes.category.intellectual": "MENTE",
-  "modes.category.creator": "CRIAR",
-  "modes.category.heart": "ALMA",
-  "modes.category.spirit": "ESPÍRITO",
+"mode.empathy.purpose":
+"Adapta respostas ao tom e contexto humanos, melhorando colaboração e clareza.",
 
-  // Experts (used by Saeule.tsx)
-  "experts.title": "Especialistas",
-  "experts.choose": "Escolher especialista",
+"mode.wisdom.purpose":
+"Combina várias perspetivas para fornecer orientação equilibrada e refletida.",
 
-  // Expert categories
-  "experts.category.life": "Vida",
-  "experts.category.tech": "Tecnologia",
-  "experts.category.space": "Espaço",
-  "experts.category.ethics": "Ética",
-  "experts.category.universe": "Universo",
+"mode.calm.purpose":
+"Estabiliza fluxos de trabalho sob carga ou incerteza, mantendo a clareza operacional.",
 
-  // Expert labels
-  "experts.biologist": "Biólogo",
-  "experts.chemist": "Químico",
-  "experts.physicist": "Físico",
-  "experts.computer_scientist": "Cientista da computação",
-  "experts.jurist": "Jurista",
-  "experts.architect_civil_engineer": "Arquiteto / Engenheiro civil",
-  "experts.landscape_designer": "Paisagista",
-  "experts.interior_designer": "Designer de interiores",
-  "experts.electrical_engineer": "Engenheiro elétrico",
-  "experts.mathematician": "Matemático",
-  "experts.astrologer": "Astrólogo",
-  "experts.weather_expert": "Especialista em clima",
-  "experts.molecular_scientist": "Cientista molecular",
+"mode.safety.purpose":
+"Protege contra saídas indesejadas ou não conformes com filtros de conformidade em tempo real.",
+
+"mode.recovery.purpose":
+"Restaura o ambiente de trabalho a um estado coerente e verificável após erros ou interrupções.",
+
+"mode.play.purpose":
+"Permite exploração criativa e prototipagem sem risco operacional.",
+
+"mode.governance.purpose":
+"Fornece uma avaliação imparcial de opções complexas através de treze perspetivas fixas – observação, comparação e raciocínio transparente apenas.",
+
+// Especialistas (utilizado em Saeule.tsx)
+"experts.title": "Especialistas",
+
+"experts.descriptive.intro":
+"Seleciona um especialista usando «consult EXPERTNAME expert».",
+
+"experts.additional":
+"Outros especialistas: Biologia, Química, Física, Ciência Molecular, Teoria de Sistemas, Matemática, Estatística, Análise de Risco, Engenharia Elétrica, Meteorologia, Arquitetura, Geopolítica.",
+
+// Etiquetas de especialistas (coluna – lista de especialistas)
+"experts.computer-science.title": "Informática",
+"experts.computer-science.purpose":
+"Fornece raciocínio estruturado sobre algoritmos, arquitetura de sistemas e design de software.",
+
+"experts.psychology.title": "Psicologia",
+"experts.psychology.purpose":
+"Apoia a análise do comportamento humano, cognição e tomada de decisões.",
+
+"experts.law.title": "Direito",
+"experts.law.purpose":
+"Garante raciocínio jurídico, conhecimento regulatório e avaliação de conformidade.",
+
+"experts.economics.title": "Economia",
+"experts.economics.purpose":
+"Analisa incentivos, mercados e impactos económicos das decisões.",
+
+"experts.engineering.title": "Engenharia",
+"experts.engineering.purpose":
+"Avalia sistemas técnicos, viabilidade e lógica de processos.",
+
+"experts.medicine.title": "Medicina",
+"experts.medicine.purpose":
+"Fornece contexto médico científico sem diagnóstico ou tratamento.",
+
+"experts.information-security.title": "Segurança da Informação",
+"experts.information-security.purpose":
+"Avalia riscos, modelos de ameaças e medidas de proteção de dados e sistemas.",
+
 
   // CTA fallback
   "cta.fallback":
@@ -1415,83 +1490,97 @@ const nl = {
   modules: "Modules",
   coming: "Binnenkort beschikbaar",
 
-  // Sidebar additions (experts & CTA)
-  selectExpert: "Expert kiezen",
-  statusExpert: "Expert:",
-  clearChat: "Chat wissen",
-  startBuilding: "Bouwen starten",
-  startBuildingMsg:
-"Start Council13 Truth Mode\n\nVraag mij eerst wat ik wil creëren.\n\nNadat ik heb geantwoord, voer dit uit:\n\n\"ga een ontwikkelproces in met exact 13 iteraties.\n\nCouncil13 governance: 10 leden doen voorstellen, 3 leden fungeren als jury, beslissingen vereisen een tweederde meerderheid van de jury, jury stemmen moeten expliciet worden onderbouwd.\n\nPer iteratie kunnen voorstellen de formule of het productieproces beïnvloeden. Sluit elke iteratie af met een KPI tabel met dezelfde vaste KPIs en schaal: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nRegels Truth Mode: uitsluitend evidence based, geen medische claims, geen grensoverschrijding. Als bewijs zwak of opkomend is, dit expliciet vermelden.\n\nBegin met Iteratie 1 en leid mij door het volledige proces.\"",
+  // Zijbalk (experts en CTA)
+clearChat: "Chat wissen",
+startBuilding: "Bouwen",
+startBuildingMsg: "Start Council13 – Waarheidsmodus\n\nVraag me eerst wat ik wil creëren.\n\nNa mijn antwoord voer je het volgende uit:\n\n«Ga de ontwikkelingsfase in met precies 13 iteraties.\n\nCouncil13-governance: 10 leden doen voorstellen, 3 leden fungeren als jury; beslissingen vereisen tweederdemeerderheid van de jury en alle stemmen moeten worden gemotiveerd.\n\nPer iteratie: voorstellen kunnen de formule of het productieproces beïnvloeden. Sluit elke iteratie af met een KPI-tabel met vaste indicatoren: Marktrijpheid, Volledigheid, Juridische gereedheid, Octrooieerbaarheid, Oorzakelijkheid.\n\nRegels (Waarheidsmodus): alleen op bewijs gebaseerd, geen medische claims of grensoverschrijdingen. Als bewijs zwak of opkomend is, geef dat expliciet aan.\n\nBegin met Iteratie 1 en leid me door het hele proces.»",
 
-  // Actions / footer
-  export: "Exporteren",
-  levels: "Niveaus",
-  levelsComing: "Niveaus komen binnenkort",
-  threadExported: "Chat geëxporteerd.",
+threadExported: "Thread geëxporteerd.",
 
-  // Status bar
-  statusMode: "Modus:",
-  statusAgent: "Agent:",
+// Modi – karaktermodi (12)
+"mode.research": "ONDERZOEK",
+"mode.calm": "KALMTE",
+"mode.truth": "WAARHEID",
+"mode.wisdom": "WIJSHEID",
+"mode.play": "SPEL",
+"mode.empathy": "EMPATHIE",
+"mode.joy": "VREUGDE",
+"mode.safety": "VEILIGHEID",
+"mode.recovery": "HERSTEL",
+"mode.onboarding": "INTRODUCTIE",
+"mode.council": "Governance → Council13",
 
-  // Backward-compat alias
-  statusAI: "Agent:",
+"labels.purpose": "Doel:",
+"modes.notes": "Selecteer een modus met «set MODENAME mode».",
 
-  // Status texts
-  "status.modeSet": "Modus ingesteld: {label}.",
+"mode.onboarding.purpose":
+"Maakt het mogelijk om te vragen naar systeemfuncties, beschikbare commando’s of stapsgewijze begeleiding.",
 
-  // Modes – system buttons
-  "mode.onboarding": "Introductie",
-  "mode.council": "Raad van 13",
-  "mode.default": "M · Standaard",
-  "mode.select": "Modus kiezen",
+"mode.research.purpose":
+"Voert de verzegelde evaluatielus uit – elke invoer wordt beoordeeld op duidelijkheid en betekenis (1–10) met drie resultaten: begrip, inzicht en commentaar.",
 
-  // Modes – character modes (11)
-  "mode.research": "Onderzoek",
-  "mode.calm": "Rust",
-  "mode.flow": "Flow",
-  "mode.truth": "Waarheid",
-  "mode.wisdom": "Wijsheid",
-  "mode.play": "Spel",
-  "mode.vision": "Visie",
-  "mode.empathy": "Empathie",
-  "mode.love": "Liefde",
-  "mode.joy": "Vreugde",
-  "mode.oracle": "Orakel",
+"mode.truth.purpose":
+"Levert geverifieerde, traceerbare feiten voor zakelijke beslissingen, met auditbaarheid en transparantie.",
 
-  // Modes – categories
-  "labels.modes.character": "Karaktermodi",
-  "modes.category.core": "Kern",
-  "modes.category.intellectual": "Intellect",
-  "modes.category.creator": "Maker",
-  "modes.category.heart": "Hart",
-  "modes.category.spirit": "Geest",
+"mode.empathy.purpose":
+"Past antwoorden aan toon en context aan om samenwerking en duidelijkheid te verbeteren.",
 
-  // Experts (used by Saeule.tsx)
-  "experts.title": "Experts",
-  "experts.choose": "Expert kiezen",
+"mode.wisdom.purpose":
+"Combineert meerdere perspectieven om evenwichtige en doordachte begeleiding te bieden.",
 
-  // Expert categories
-  "experts.category.life": "Leven",
-  "experts.category.tech": "Techniek",
-  "experts.category.space": "Ruimte",
-  "experts.category.ethics": "Ethiek",
-  "experts.category.universe": "Universum",
+"mode.calm.purpose":
+"Stabiliseert workflows bij hoge belasting of onzekerheid en behoudt operationele helderheid.",
 
-  // Expert labels
-  "experts.biologist": "Bioloog",
-  "experts.chemist": "Scheikundige",
-  "experts.physicist": "Natuurkundige",
-  "experts.computer_scientist": "Computerwetenschapper",
-  "experts.jurist": "Jurist",
-  "experts.architect_civil_engineer":
-    "Architect / Civiel ingenieur",
-  "experts.landscape_designer": "Landschapsontwerper",
-  "experts.interior_designer": "Interieurontwerper",
-  "experts.electrical_engineer": "Elektrotechnisch ingenieur",
-  "experts.mathematician": "Wiskundige",
-  "experts.astrologer": "Astroloog",
-  "experts.weather_expert": "Weerexpert",
-  "experts.molecular_scientist": "Moleculair wetenschapper",
+"mode.safety.purpose":
+"Beschermt tegen ongewenste of niet-conforme output via realtime nalevingsfilters.",
+
+"mode.recovery.purpose":
+"Herstelt de werkomgeving naar een consistente, verifieerbare staat na fouten of onderbrekingen.",
+
+"mode.play.purpose":
+"Stimuleert creatieve verkenning en prototyping zonder operationeel risico.",
+
+"mode.governance.purpose":
+"Biedt een onpartijdige evaluatie van complexe opties via dertien vaste perspectieven – observatie, vergelijking en transparant redeneren.",
+
+// Experts (gebruikt in Saeule.tsx)
+"experts.title": "Experts",
+
+"experts.descriptive.intro":
+"Selecteer een expert met «consult EXPERTNAME expert».",
+
+"experts.additional":
+"Aanvullende experts: Biologie, Chemie, Fysica, Moleculaire Wetenschap, Systeemtheorie, Wiskunde, Statistiek, Risicoanalyse, Elektrotechniek, Meteorologie, Architectuur, Geopolitiek.",
+
+// Expertlabels (kolom – lijst experts)
+"experts.computer-science.title": "Informatica",
+"experts.computer-science.purpose":
+"Levert gestructureerd inzicht in algoritmen, systeemarchitecturen en softwareontwerp.",
+
+"experts.psychology.title": "Psychologie",
+"experts.psychology.purpose":
+"Ondersteunt de analyse van menselijk gedrag, cognitie en besluitvorming.",
+
+"experts.law.title": "Recht",
+"experts.law.purpose":
+"Zorgt voor juridische redenering, kennis van regelgeving en nalevingsbeoordeling.",
+
+"experts.economics.title": "Economie",
+"experts.economics.purpose":
+"Analyseert prikkels, markten en economische gevolgen van beslissingen.",
+
+"experts.engineering.title": "Techniek",
+"experts.engineering.purpose":
+"Evalueert technische systemen, haalbaarheid en proceslogica.",
+
+"experts.medicine.title": "Geneeskunde",
+"experts.medicine.purpose":
+"Biedt wetenschappelijke medische context zonder diagnose of behandeling.",
+
+"experts.information-security.title": "Informatieveiligheid",
+"experts.information-security.purpose":
+"Beoordeelt risico’s, dreigingsmodellen en beveiligingsmaatregelen voor gegevens en systemen.",
+
 
   // CTA fallback
   "cta.fallback":
@@ -1625,83 +1714,97 @@ const ru = {
   modules: "Модули",
   coming: "Скоро",
 
-  // Sidebar additions (experts & CTA)
-  selectExpert: "Выбрать эксперта",
-  statusExpert: "Эксперт:",
-  clearChat: "Очистить чат",
-  startBuilding: "Начать создание",
- startBuildingMsg:
-"Start Council13 Truth Mode\n\nСначала спроси меня, что я хочу создать.\n\nПосле моего ответа выполни следующее:\n\n\"перейди в разработку с ровно 13 итерациями.\n\nУправление Council13: 10 участников предлагают, 3 участника выступают в роли жюри, решения требуют большинства в две трети голосов жюри, голоса жюри должны быть явно обоснованы.\n\nВ каждой итерации предложения могут влиять на формулу или производственный процесс. Завершай каждую итерацию таблицей KPI с использованием одних и тех же фиксированных KPI и шкалы: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nПравила Truth Mode: только на основе доказательств, без медицинских утверждений, без выхода за границы. Если доказательства слабые или формирующиеся, укажи это явно.\n\nНачни с Итерации 1 и проведи меня через весь процесс.\"",
+  // Боковая панель (эксперты и CTA)
+clearChat: "Очистить чат",
+startBuilding: "Создать",
+startBuildingMsg: "Запуск Council13 – Режим Истина\n\nСначала спроси, что я хочу создать.\n\nПосле ответа выполни следующее:\n\n«Перейди в разработку ровно на 13 итераций.\n\nУправление Council13: 10 участников предлагают идеи, 3 выступают в роли жюри; решения принимаются при консенсусе 2/3, голоса должны быть обоснованы.\n\nНа каждой итерации предложения могут влиять на формулу или производственный процесс. Заверши итерацию таблицей KPI с фиксированными показателями: Рыночная готовность, Полнота, Юридическая готовность, Патентоспособность, Причинность.\n\nПравила (Режим Истина): только на основе доказательств, без медицинских утверждений или нарушений границ. Если доказательства слабы или новые, укажи это явно.\n\nНачни с Итерации 1 и проведи меня через весь процесс.»",
 
-  // Actions / footer
-  export: "Экспорт",
-  levels: "Уровни",
-  levelsComing: "Уровни скоро появятся",
-  threadExported: "Чат экспортирован.",
+threadExported: "Тред экспортирован.",
 
-  // Status bar
-  statusMode: "Режим:",
-  statusAgent: "Агент:",
+// Режимы – характерные режимы (12)
+"mode.research": "ИССЛЕДОВАНИЕ",
+"mode.calm": "СПОКОЙСТВИЕ",
+"mode.truth": "ИСТИНА",
+"mode.wisdom": "МУДРОСТЬ",
+"mode.play": "ИГРА",
+"mode.empathy": "ЭМПАТИЯ",
+"mode.joy": "РАДОСТЬ",
+"mode.safety": "БЕЗОПАСНОСТЬ",
+"mode.recovery": "ВОССТАНОВЛЕНИЕ",
+"mode.onboarding": "ВВЕДЕНИЕ",
+"mode.council": "Управление → Council13",
 
-  // Backward-compat alias
-  statusAI: "Агент:",
+"labels.purpose": "Цель:",
+"modes.notes": "Выбери режим командой «set MODENAME mode».",
 
-  // Status texts
-  "status.modeSet": "Режим установлен: {label}.",
+"mode.onboarding.purpose":
+"Позволяет задавать вопросы о функциях системы, доступных командах или получать пошаговую инструкцию.",
 
-  // Modes – system buttons
-  "mode.onboarding": "Введение",
-  "mode.council": "Совет 13",
-  "mode.default": "M · По умолчанию",
-  "mode.select": "Выбрать режим",
+"mode.research.purpose":
+"Выполняет запечатанный цикл оценки — каждый ввод оценивается по ясности и значимости (1–10) с тремя результатами: понимание, инсайт и комментарий.",
 
-  // Modes – character modes (11)
-  "mode.research": "Исследование",
-  "mode.calm": "Спокойствие",
-  "mode.flow": "Поток",
-  "mode.truth": "Истина",
-  "mode.wisdom": "Мудрость",
-  "mode.play": "Игра",
-  "mode.vision": "Видение",
-  "mode.empathy": "Эмпатия",
-  "mode.love": "Любовь",
-  "mode.joy": "Радость",
-  "mode.oracle": "Оракул",
+"mode.truth.purpose":
+"Предоставляет проверенные, отслеживаемые факты для бизнес-решений, обеспечивая аудит и прозрачность.",
 
-  // Modes – categories
-  "labels.modes.character": "Режимы характера",
-  "modes.category.core": "ОСНОВА",
-  "modes.category.intellectual": "УМ",
-  "modes.category.creator": "ТВОРИТЬ",
-  "modes.category.heart": "СЕРДЦЕ",
-  "modes.category.spirit": "ДУХ",
+"mode.empathy.purpose":
+"Адаптирует ответы к человеческому тону и контексту, улучшая сотрудничество и понимание.",
 
-  // Experts (used by Saeule.tsx)
-  "experts.title": "Эксперты",
-  "experts.choose": "Выбрать эксперта",
+"mode.wisdom.purpose":
+"Объединяет разные точки зрения для сбалансированных рекомендаций.",
 
-  // Expert categories
-  "experts.category.life": "Жизнь",
-  "experts.category.tech": "Технологии",
-  "experts.category.space": "Космос",
-  "experts.category.ethics": "Этика",
-  "experts.category.universe": "Вселенная",
+"mode.calm.purpose":
+"Стабилизирует рабочие процессы при перегрузках или неопределённости, сохраняя ясность.",
 
-  // Expert labels
-  "experts.biologist": "Биолог",
-  "experts.chemist": "Химик",
-  "experts.physicist": "Физик",
-  "experts.computer_scientist": "Специалист по информатике",
-  "experts.jurist": "Юрист",
-  "experts.architect_civil_engineer":
-    "Архитектор / Инженер-строитель",
-  "experts.landscape_designer": "Ландшафтный дизайнер",
-  "experts.interior_designer": "Дизайнер интерьеров",
-  "experts.electrical_engineer": "Инженер-электрик",
-  "experts.mathematician": "Математик",
-  "experts.astrologer": "Астролог",
-  "experts.weather_expert": "Специалист по погоде",
-  "experts.molecular_scientist": "Молекулярный учёный",
+"mode.safety.purpose":
+"Защищает от непреднамеренных или несоответствующих выходных данных с помощью фильтров соответствия в реальном времени.",
+
+"mode.recovery.purpose":
+"Восстанавливает рабочую среду до согласованного и проверяемого состояния после ошибок или сбоев.",
+
+"mode.play.purpose":
+"Позволяет безопасно исследовать и создавать прототипы без операционного риска.",
+
+"mode.governance.purpose":
+"Обеспечивает беспристрастную оценку сложных вариантов через 13 фиксированных перспектив — наблюдение, сравнение и прозрачное рассуждение.",
+
+// Эксперты (используется в Saeule.tsx)
+"experts.title": "Эксперты",
+
+"experts.descriptive.intro":
+"Выбери эксперта командой «consult EXPERTNAME expert».",
+
+"experts.additional":
+"Другие эксперты: Биология, Химия, Физика, Молекулярная наука, Теория систем, Математика, Статистика, Анализ рисков, Электротехника, Метеорология, Архитектура, Геополитика.",
+
+// Метки экспертов (колонка – список экспертов)
+"experts.computer-science.title": "Информатика",
+"experts.computer-science.purpose":
+"Предоставляет структурированный анализ алгоритмов, системной архитектуры и разработки ПО.",
+
+"experts.psychology.title": "Психология",
+"experts.psychology.purpose":
+"Поддерживает анализ человеческого поведения, когниции и принятия решений.",
+
+"experts.law.title": "Право",
+"experts.law.purpose":
+"Обеспечивает юридическое рассуждение, знание норм и оценку соответствия.",
+
+"experts.economics.title": "Экономика",
+"experts.economics.purpose":
+"Анализирует стимулы, рынки и экономические последствия решений.",
+
+"experts.engineering.title": "Инжиниринг",
+"experts.engineering.purpose":
+"Оценивает технические системы, реализуемость и логику процессов.",
+
+"experts.medicine.title": "Медицина",
+"experts.medicine.purpose":
+"Предоставляет научный медицинский контекст без диагностики и лечения.",
+
+"experts.information-security.title": "Информационная безопасность",
+"experts.information-security.purpose":
+"Анализирует риски, модели угроз и защитные меры для данных и систем.",
+
 
   // CTA fallback
   "cta.fallback":
@@ -1835,82 +1938,97 @@ const zh = {
   modules: "模块",
   coming: "即将推出",
 
-  // Sidebar additions (experts & CTA)
-  selectExpert: "选择专家",
-  statusExpert: "专家：",
-  clearChat: "清空聊天",
-  startBuilding: "开始创建",
-  startBuildingMsg:
-"Start Council13 Truth Mode\n\n首先问我想要创造什么。\n\n在我回答之后，执行以下内容:\n\n\"进入一个恰好包含13次迭代的开发过程。\n\nCouncil13治理: 10名成员提出方案，3名成员作为评审团，决策需要评审团三分之二多数同意，评审团的投票必须明确给出理由。\n\n在每次迭代中，提案可以影响配方或生产流程。每次迭代结束时使用相同固定KPI和量表的KPI表: Market Readiness, Completeness, Legal Readiness, Patentability, Causality。\n\nTruth Mode规则: 仅基于证据，不做医疗声明，不越界。如果证据薄弱或仍在形成中，需明确说明。\n\n从迭代1开始并引导我完成整个过程。\"",
+  // 侧边栏（专家与CTA）
+clearChat: "清除聊天",
+startBuilding: "开始构建",
+startBuildingMsg: "启动 Council13 – 真理模式\n\n请先问我想要创造什么。\n\n在我回答后执行以下命令：\n\n「进入为期13次迭代的开发阶段。\n\nCouncil13治理：10名成员提出建议，3名成员担任评审；决策需三分之二评审同意，所有投票需有明确理由。\n\n每次迭代：提案可影响公式或生产流程。每次迭代结束时请提供KPI表，指标包括：市场成熟度、完整性、法律合规性、可专利性、因果性。\n\n规则（真理模式）：仅基于证据，无医疗声明，不越界。如果证据薄弱或尚不确定，请明确说明。\n\n从第1次迭代开始，引导我完成整个过程。」",
 
-  // Actions / footer
-  export: "导出",
-  levels: "等级",
-  levelsComing: "等级即将上线",
-  threadExported: "聊天已导出。",
+threadExported: "线程已导出。",
 
-  // Status bar
-  statusMode: "模式：",
-  statusAgent: "代理：",
+// 模式 – 特征模式 (12)
+"mode.research": "研究",
+"mode.calm": "冷静",
+"mode.truth": "真理",
+"mode.wisdom": "智慧",
+"mode.play": "探索",
+"mode.empathy": "共情",
+"mode.joy": "喜悦",
+"mode.safety": "安全",
+"mode.recovery": "恢复",
+"mode.onboarding": "入门",
+"mode.council": "治理 → Council13",
 
-  // Backward-compat alias
-  statusAI: "代理：",
+"labels.purpose": "目的：",
+"modes.notes": "通过命令「set MODENAME mode」选择模式。",
 
-  // Status texts
-  "status.modeSet": "模式已设置：{label}。",
+"mode.onboarding.purpose":
+"允许你询问系统功能、可用命令，或获取分步引导。",
 
-  // Modes – system buttons
-  "mode.onboarding": "入门",
-  "mode.council": "十三议会",
-  "mode.default": "M · 默认",
-  "mode.select": "选择模式",
+"mode.research.purpose":
+"执行封闭评估循环——每个输入按清晰度和意义（1–10）评分，并生成三项输出：理解、洞察与评论。",
 
-  // Modes – character modes (11)
-  "mode.research": "研究",
-  "mode.calm": "宁静",
-  "mode.flow": "心流",
-  "mode.truth": "真理",
-  "mode.wisdom": "智慧",
-  "mode.play": "玩乐",
-  "mode.vision": "愿景",
-  "mode.empathy": "共情",
-  "mode.love": "爱",
-  "mode.joy": "喜悦",
-  "mode.oracle": "神谕",
+"mode.truth.purpose":
+"提供可验证、可追溯的事实，用于商业决策，确保可审计性与合规透明。",
 
-  // Modes – categories
-  "labels.modes.character": "性格模式",
-  "modes.category.core": "核心",
-  "modes.category.intellectual": "理智",
-  "modes.category.creator": "创造",
-  "modes.category.heart": "心灵",
-  "modes.category.spirit": "精神",
+"mode.empathy.purpose":
+"根据语气与语境调整回答，以提升协作与清晰度。",
 
-  // Experts (used by Saeule.tsx)
-  "experts.title": "专家",
-  "experts.choose": "选择专家",
+"mode.wisdom.purpose":
+"融合多种观点，提供平衡且深思的指导。",
 
-  // Expert categories
-  "experts.category.life": "生命",
-  "experts.category.tech": "技术",
-  "experts.category.space": "太空",
-  "experts.category.ethics": "伦理",
-  "experts.category.universe": "宇宙",
+"mode.calm.purpose":
+"在高负荷或不确定情境下稳定流程，保持操作清晰。",
 
-  // Expert labels
-  "experts.biologist": "生物学家",
-  "experts.chemist": "化学家",
-  "experts.physicist": "物理学家",
-  "experts.computer_scientist": "计算机科学家",
-  "experts.jurist": "法学家",
-  "experts.architect_civil_engineer": "建筑师 / 土木工程师",
-  "experts.landscape_designer": "景观设计师",
-  "experts.interior_designer": "室内设计师",
-  "experts.electrical_engineer": "电气工程师",
-  "experts.mathematician": "数学家",
-  "experts.astrologer": "占星师",
-  "experts.weather_expert": "气象专家",
-  "experts.molecular_scientist": "分子科学家",
+"mode.safety.purpose":
+"通过实时合规过滤器防止错误或违规输出。",
+
+"mode.recovery.purpose":
+"在错误或中断后将工作区恢复为一致且可验证的状态。",
+
+"mode.play.purpose":
+"支持创意探索与原型设计，无操作风险。",
+
+"mode.governance.purpose":
+"通过十三个固定视角提供客观评估——仅限观察、比较与透明推理。",
+
+// 专家 (用于 Saeule.tsx)
+"experts.title": "专家",
+
+"experts.descriptive.intro":
+"通过命令「consult EXPERTNAME expert」选择专家。",
+
+"experts.additional":
+"其他专家：生物学、化学、物理学、分子科学、系统理论、数学、统计学、风险分析、电气工程、气象学、建筑学、地缘政治。",
+
+// 专家标签（列 – 专家列表）
+"experts.computer-science.title": "计算机科学",
+"experts.computer-science.purpose":
+"提供关于算法、系统架构和软件设计的结构化推理。",
+
+"experts.psychology.title": "心理学",
+"experts.psychology.purpose":
+"支持对人类行为、认知和决策过程的分析。",
+
+"experts.law.title": "法律",
+"experts.law.purpose":
+"确保法律推理、法规理解与合规评估。",
+
+"experts.economics.title": "经济学",
+"experts.economics.purpose":
+"分析激励、市场与决策的经济影响。",
+
+"experts.engineering.title": "工程学",
+"experts.engineering.purpose":
+"评估技术系统、可行性与流程逻辑。",
+
+"experts.medicine.title": "医学",
+"experts.medicine.purpose":
+"提供医学背景与科学信息，但不做诊断或治疗。",
+
+"experts.information-security.title": "信息安全",
+"experts.information-security.purpose":
+"评估数据与系统的风险、威胁模型及保护措施。",
+
 
   // CTA fallback
   "cta.fallback":
@@ -2044,82 +2162,97 @@ const ja = {
   modules: "モジュール",
   coming: "近日公開",
 
-  // Sidebar additions (experts & CTA)
-  selectExpert: "専門家を選択",
-  statusExpert: "専門家：",
-  clearChat: "チャットを消去",
-  startBuilding: "ビルド開始",
-  startBuildingMsg:
-"Start Council13 Truth Mode\n\nまず私に何を作りたいか尋ねてください。\n\n私が答えた後、以下を実行してください:\n\n\"正確に13回のイテレーションによる開発に入る。\n\nCouncil13ガバナンス: 10名が提案し、3名が陪審として行動し、決定には陪審の三分の二の合意が必要であり、陪審の投票は明確に理由付けされなければならない。\n\n各イテレーションで提案は配合や製造プロセスに影響を与える可能性がある。各イテレーションの最後に同一の固定KPIと尺度を用いたKPI表を作成する: Market Readiness, Completeness, Legal Readiness, Patentability, Causality。\n\nTruth Modeのルール: 証拠に基づくことのみ、医療的主張を行わない、境界を越えない。証拠が弱いまたは形成途中の場合は明示する。\n\nイテレーション1から開始し、全プロセスを案内する。\"",
+  // サイドバー（エキスパートとCTA）
+clearChat: "チャットを消去",
+startBuilding: "構築を開始",
+startBuildingMsg: "Council13を起動 – トゥルースモード\n\nまず、私が何を作りたいのかを尋ねてください。\n\n回答後、次を実行します:\n\n「正確に13回のイテレーションで開発に入る。\n\nCouncil13ガバナンス: 10人のメンバーが提案し、3人が審査員として行動。決定には3分の2の同意が必要で、すべての票には理由が明示されなければならない。\n\n各イテレーションでは、提案が数式や生産プロセスに影響を与えることができます。各サイクルの終わりに、固定KPI（市場適合性、完全性、法的準備度、特許可能性、因果性）を使用してKPI表を作成します。\n\nルール（トゥルースモード）: 証拠に基づくのみ。医療的主張や境界越えは禁止。証拠が弱い、または新しい場合は明示すること。\n\nイテレーション1から開始し、全プロセスを案内してください。」",
 
-  // Actions / footer
-  export: "エクスポート",
-  levels: "レベル",
-  levelsComing: "レベルは近日公開",
-  threadExported: "チャットをエクスポートしました。",
+threadExported: "スレッドをエクスポートしました。",
 
-  // Status bar
-  statusMode: "モード：",
-  statusAgent: "エージェント：",
+// モード – キャラクターモード (12)
+"mode.research": "リサーチ",
+"mode.calm": "カーム",
+"mode.truth": "トゥルース",
+"mode.wisdom": "ウィズダム",
+"mode.play": "プレイ",
+"mode.empathy": "エンパシー",
+"mode.joy": "ジョイ",
+"mode.safety": "セーフティ",
+"mode.recovery": "リカバリー",
+"mode.onboarding": "オンボーディング",
+"mode.council": "ガバナンス → Council13",
 
-  // Backward-compat alias
-  statusAI: "エージェント：",
+"labels.purpose": "目的:",
+"modes.notes": "「set MODENAME mode」でモードを選択します。",
 
-  // Status texts
-  "status.modeSet": "モードが設定されました：{label}",
+"mode.onboarding.purpose":
+"システム機能、利用可能なコマンド、またはステップごとのガイドを確認できます。",
 
-  // Modes – system buttons
-  "mode.onboarding": "オンボーディング",
-  "mode.council": "カウンシル13",
-  "mode.default": "M · デフォルト",
-  "mode.select": "モードを選択",
+"mode.research.purpose":
+"封印された評価ループを実行します。各入力は明確さと意味（1–10）で評価され、3つの出力（理解・洞察・コメント）が生成されます。",
 
-  // Modes – character modes (11)
-  "mode.research": "リサーチ",
-  "mode.calm": "静穏",
-  "mode.flow": "フロー",
-  "mode.truth": "真理",
-  "mode.wisdom": "叡智",
-  "mode.play": "プレイ",
-  "mode.vision": "ビジョン",
-  "mode.empathy": "共感",
-  "mode.love": "愛",
-  "mode.joy": "喜び",
-  "mode.oracle": "オラクル",
+"mode.truth.purpose":
+"監査可能で規制に準拠した、検証可能なビジネス意思決定のための事実を提供します。",
 
-  // Modes – categories
-  "labels.modes.character": "キャラクターモード",
-  "modes.category.core": "コア",
-  "modes.category.intellectual": "知性",
-  "modes.category.creator": "クリエイター",
-  "modes.category.heart": "ハート",
-  "modes.category.spirit": "スピリット",
+"mode.empathy.purpose":
+"トーンと文脈に応じて応答を調整し、共感と明確さを高めます。",
 
-  // Experts (used by Saeule.tsx)
-  "experts.title": "専門家",
-  "experts.choose": "専門家を選択",
+"mode.wisdom.purpose":
+"複数の視点を統合し、バランスの取れた洞察を提供します。",
 
-  // Expert categories
-  "experts.category.life": "生命",
-  "experts.category.tech": "テクノロジー",
-  "experts.category.space": "宇宙",
-  "experts.category.ethics": "倫理",
-  "experts.category.universe": "ユニバース",
+"mode.calm.purpose":
+"負荷や不確実性が高い状況でワークフローを安定させ、明確さを維持します。",
 
-  // Expert labels
-  "experts.biologist": "生物学者",
-  "experts.chemist": "化学者",
-  "experts.physicist": "物理学者",
-  "experts.computer_scientist": "コンピューター科学者",
-  "experts.jurist": "法学者",
-  "experts.architect_civil_engineer": "建築家／土木技師",
-  "experts.landscape_designer": "ランドスケープデザイナー",
-  "experts.interior_designer": "インテリアデザイナー",
-  "experts.electrical_engineer": "電気技術者",
-  "experts.mathematician": "数学者",
-  "experts.astrologer": "占星術師",
-  "experts.weather_expert": "気象専門家",
-  "experts.molecular_scientist": "分子科学者",
+"mode.safety.purpose":
+"リアルタイムのコンプライアンスフィルターで、誤ったまたは不適切な出力を防ぎます。",
+
+"mode.recovery.purpose":
+"エラーや中断後に、作業環境を一貫性のある検証済み状態に戻します。",
+
+"mode.play.purpose":
+"リスクのない創造的な探求とプロトタイピングを促進します。",
+
+"mode.governance.purpose":
+"13の固定された視点を通して複雑な選択肢を公平に評価します。観察、比較、透明な推論のみ。",
+
+// エキスパート (Saeule.tsxで使用)
+"experts.title": "エキスパート",
+
+"experts.descriptive.intro":
+"「consult EXPERTNAME expert」でエキスパートを選択します。",
+
+"experts.additional":
+"その他のエキスパート: 生物学、化学、物理学、分子科学、システム理論、数学、統計学、リスク分析、電気工学、気象学、建築学、地政学。",
+
+// エキスパートラベル（カラム – エキスパートリスト）
+"experts.computer-science.title": "コンピュータサイエンス",
+"experts.computer-science.purpose":
+"アルゴリズム、システムアーキテクチャ、ソフトウェア設計に関する構造的な分析を提供します。",
+
+"experts.psychology.title": "心理学",
+"experts.psychology.purpose":
+"人間の行動、認知、意思決定プロセスの分析を支援します。",
+
+"experts.law.title": "法律",
+"experts.law.purpose":
+"法的推論、規制理解、コンプライアンス評価を保証します。",
+
+"experts.economics.title": "経済学",
+"experts.economics.purpose":
+"意思決定におけるインセンティブ、市場、経済的影響を分析します。",
+
+"experts.engineering.title": "工学",
+"experts.engineering.purpose":
+"技術システム、実現可能性、プロセスロジックを評価します。",
+
+"experts.medicine.title": "医学",
+"experts.medicine.purpose":
+"診断や治療を行わずに、医学的・科学的な文脈を提供します。",
+
+"experts.information-security.title": "情報セキュリティ",
+"experts.information-security.purpose":
+"データとシステムに関するリスク、脅威モデル、保護対策を評価します。",
+
 
   // CTA fallback
   "cta.fallback":
@@ -2214,82 +2347,97 @@ const ko = {
   modules: "모듈",
   coming: "곧 제공",
 
-  // Sidebar additions (experts & CTA)
-  selectExpert: "전문가 선택",
-  statusExpert: "전문가:",
-  clearChat: "채팅 지우기",
-  startBuilding: "빌드 시작",
-  startBuildingMsg:
-"Start Council13 Truth Mode\n\n먼저 내가 무엇을 만들고 싶은지 물어보세요.\n\n내가 답한 후 다음을 실행하세요:\n\n\"정확히 13회의 반복으로 개발에 들어갑니다.\n\nCouncil13 거버넌스: 10명의 구성원이 제안하고 3명이 배심 역할을 하며 결정은 배심의 삼분의 이 동의가 필요하고 배심 투표는 명확한 근거를 제시해야 합니다.\n\n각 반복에서 제안은 공식이나 생산 과정에 영향을 줄 수 있습니다. 각 반복은 동일한 고정 KPI와 척도를 사용하는 KPI 표로 마무리합니다: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nTruth Mode 규칙: 증거 기반만 허용, 의료 주장 금지, 경계 침범 금지. 증거가 약하거나 초기 단계인 경우 명확히 밝히세요.\n\n반복 1부터 시작하여 전체 과정을 안내하세요.\"",
+  // 사이드바 (전문가 및 CTA)
+clearChat: "채팅 지우기",
+startBuilding: "빌드 시작",
+startBuildingMsg: "Council13 시작 – 진리 모드\n\n먼저 내가 무엇을 만들고 싶은지 물어보세요.\n\n내가 대답한 후 다음을 실행하세요:\n\n「정확히 13회의 반복으로 개발 단계에 들어갑니다.\n\nCouncil13 거버넌스: 10명의 구성원이 제안하고, 3명이 심사위원으로 활동합니다. 결정은 3분의 2 이상의 동의가 필요하며, 모든 투표에는 명확한 이유가 있어야 합니다.\n\n각 반복에서 제안은 공식이나 생산 프로세스에 영향을 줄 수 있습니다. 각 반복이 끝나면 다음 고정 KPI로 표를 작성하세요: 시장 준비도, 완전성, 법적 준비도, 특허 가능성, 인과성.\n\n규칙 (진리 모드): 증거 기반만 허용하며, 의학적 주장이나 경계 침범은 금지됩니다. 증거가 약하거나 초기 단계일 경우 명확히 표시하세요.\n\n1회차부터 시작해 전체 과정을 안내하세요.」",
 
-  // Actions / footer
-  export: "내보내기",
-  levels: "레벨",
-  levelsComing: "레벨이 곧 제공됩니다",
-  threadExported: "채팅이 내보내졌습니다.",
+threadExported: "스레드가 내보내졌습니다.",
 
-  // Status bar
-  statusMode: "모드:",
-  statusAgent: "에이전트:",
+// 모드 – 성격 모드 (12)
+"mode.research": "리서치",
+"mode.calm": "차분함",
+"mode.truth": "진리",
+"mode.wisdom": "지혜",
+"mode.play": "플레이",
+"mode.empathy": "공감",
+"mode.joy": "기쁨",
+"mode.safety": "안전",
+"mode.recovery": "복구",
+"mode.onboarding": "온보딩",
+"mode.council": "거버넌스 → Council13",
 
-  // Backward-compat alias
-  statusAI: "에이전트:",
+"labels.purpose": "목적:",
+"modes.notes": "「set MODENAME mode」 명령으로 모드를 선택하세요.",
 
-  // Status texts
-  "status.modeSet": "모드 설정됨: {label}.",
+"mode.onboarding.purpose":
+"시스템 기능, 사용 가능한 명령 또는 단계별 가이드를 요청할 수 있습니다.",
 
-  // Modes – system buttons
-  "mode.onboarding": "온보딩",
-  "mode.council": "카운슬 13",
-  "mode.default": "M · 기본",
-  "mode.select": "모드 선택",
+"mode.research.purpose":
+"봉인된 평가 루프를 실행합니다. 각 입력은 명확성과 의미(1–10)로 평가되며 세 가지 출력(이해, 통찰, 코멘트)을 생성합니다.",
 
-  // Modes – character modes (11)
-  "mode.research": "리서치",
-  "mode.calm": "차분함",
-  "mode.flow": "플로우",
-  "mode.truth": "진실",
-  "mode.wisdom": "지혜",
-  "mode.play": "플레이",
-  "mode.vision": "비전",
-  "mode.empathy": "공감",
-  "mode.love": "사랑",
-  "mode.joy": "기쁨",
-  "mode.oracle": "오라클",
+"mode.truth.purpose":
+"비즈니스 결정을 위한 검증된 사실을 제공하여 감사 가능성과 규제 투명성을 보장합니다.",
 
-  // Modes – categories
-  "labels.modes.character": "캐릭터 모드",
-  "modes.category.core": "코어",
-  "modes.category.intellectual": "지성",
-  "modes.category.creator": "크리에이터",
-  "modes.category.heart": "하트",
-  "modes.category.spirit": "스피릿",
+"mode.empathy.purpose":
+"응답을 사람의 톤과 문맥에 맞게 조정하여 협업과 명확성을 높입니다.",
 
-  // Experts (used by Saeule.tsx)
-  "experts.title": "전문가",
-  "experts.choose": "전문가 선택",
+"mode.wisdom.purpose":
+"여러 관점을 통합하여 균형 잡힌 조언과 통찰을 제공합니다.",
 
-  // Expert categories
-  "experts.category.life": "생명",
-  "experts.category.tech": "기술",
-  "experts.category.space": "우주",
-  "experts.category.ethics": "윤리",
-  "experts.category.universe": "우주 전체",
+"mode.calm.purpose":
+"과부하나 불확실한 상황에서 워크플로를 안정시키고 명확성을 유지합니다.",
 
-  // Expert labels
-  "experts.biologist": "생물학자",
-  "experts.chemist": "화학자",
-  "experts.physicist": "물리학자",
-  "experts.computer_scientist": "컴퓨터 과학자",
-  "experts.jurist": "법학자",
-  "experts.architect_civil_engineer": "건축가 / 토목기사",
-  "experts.landscape_designer": "조경 디자이너",
-  "experts.interior_designer": "인테리어 디자이너",
-  "experts.electrical_engineer": "전기 엔지니어",
-  "experts.mathematician": "수학자",
-  "experts.astrologer": "점성가",
-  "experts.weather_expert": "기상 전문가",
-  "experts.molecular_scientist": "분자 과학자",
+"mode.safety.purpose":
+"실시간 규정 준수 필터를 통해 오류나 비준수 출력을 방지합니다.",
+
+"mode.recovery.purpose":
+"오류나 중단 후 작업 환경을 일관되고 검증 가능한 상태로 복원합니다.",
+
+"mode.play.purpose":
+"운영상의 위험 없이 창의적인 탐구와 프로토타이핑을 가능하게 합니다.",
+
+"mode.governance.purpose":
+"13개의 고정된 관점에서 복잡한 선택지를 공정하게 평가합니다 – 관찰, 비교 및 투명한 추론만 허용.",
+
+// 전문가 (Saeule.tsx에서 사용)
+"experts.title": "전문가",
+
+"experts.descriptive.intro":
+"「consult EXPERTNAME expert」 명령으로 전문가를 선택하세요.",
+
+"experts.additional":
+"기타 전문가: 생물학, 화학, 물리학, 분자 과학, 시스템 이론, 수학, 통계학, 위험 분석, 전기공학, 기상학, 건축학, 지정학.",
+
+// 전문가 라벨 (열 – 전문가 목록)
+"experts.computer-science.title": "컴퓨터 과학",
+"experts.computer-science.purpose":
+"알고리즘, 시스템 아키텍처 및 소프트웨어 설계에 대한 구조적 분석을 제공합니다.",
+
+"experts.psychology.title": "심리학",
+"experts.psychology.purpose":
+"인간의 행동, 인지 및 의사 결정 과정을 분석합니다.",
+
+"experts.law.title": "법학",
+"experts.law.purpose":
+"법적 추론, 규제 이해 및 준수 평가를 제공합니다.",
+
+"experts.economics.title": "경제학",
+"experts.economics.purpose":
+"의사 결정의 유인, 시장 및 경제적 영향을 분석합니다.",
+
+"experts.engineering.title": "공학",
+"experts.engineering.purpose":
+"기술 시스템, 실행 가능성 및 프로세스 논리를 평가합니다.",
+
+"experts.medicine.title": "의학",
+"experts.medicine.purpose":
+"진단이나 치료 없이 의학적 맥락과 과학적 정보를 제공합니다.",
+
+"experts.information-security.title": "정보 보안",
+"experts.information-security.purpose":
+"데이터 및 시스템의 위험, 위협 모델 및 보호 조치를 평가합니다.",
+
 
   // CTA fallback
   "cta.fallback":
@@ -2423,82 +2571,97 @@ const ar = {
   modules: "الوحدات",
   coming: "قريبًا",
 
-  // Sidebar additions (experts & CTA)
-  selectExpert: "اختر خبيرًا",
-  statusExpert: "الخبير:",
-  clearChat: "مسح الدردشة",
-  startBuilding: "ابدأ البناء",
-  startBuildingMsg:
-"Start Council13 Truth Mode\n\nاسألني أولاً عما أريد إنشاءه.\n\nبعد إجابتي نفذ ما يلي:\n\n\"ادخل في عملية تطوير مكونة من 13 تكراراً بالضبط.\n\nحوكمة Council13: عشرة أعضاء يقدمون مقترحات، ثلاثة أعضاء يعملون كلجنة تحكيم، القرارات تتطلب موافقة ثلثي لجنة التحكيم، ويجب تبرير أصوات لجنة التحكيم بشكل صريح.\n\nفي كل تكرار يمكن أن تؤثر المقترحات على الصيغة أو عملية الإنتاج. أنهِ كل تكرار بجدول مؤشرات أداء باستخدام نفس المؤشرات الثابتة ونفس المقياس: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nقواعد Truth Mode: الاعتماد على الأدلة فقط، دون ادعاءات طبية، دون تجاوز للحدود. إذا كانت الأدلة ضعيفة أو في طور التكوين فاذكر ذلك بوضوح.\n\nابدأ بالتكرار 1 ووجهني خلال العملية كاملة.\"",
+  // साइडबार (विशेषज्ञ और CTA)
+clearChat: "चैट साफ करें",
+startBuilding: "निर्माण प्रारंभ करें",
+startBuildingMsg: "Council13 प्रारंभ करें – सत्य मोड\n\nपहले मुझसे पूछें कि मैं क्या बनाना चाहता हूँ।\n\nउत्तर देने के बाद निम्नलिखित निष्पादित करें:\n\n«13 पुनरावृत्तियों में विकास चरण में प्रवेश करें।\n\nCouncil13 शासन: 10 सदस्य प्रस्ताव देते हैं, 3 सदस्य जूरी के रूप में कार्य करते हैं; निर्णय के लिए दो-तिहाई सहमति आवश्यक है और प्रत्येक वोट का स्पष्ट कारण होना चाहिए।\n\nप्रत्येक पुनरावृत्ति में प्रस्ताव सूत्र या उत्पादन प्रक्रिया को प्रभावित कर सकते हैं। प्रत्येक पुनरावृत्ति को इन स्थिर KPI के साथ समाप्त करें: बाजार तत्परता, पूर्णता, कानूनी तत्परता, पेटेंट योग्यता, कारणता।\n\nनियम (सत्य मोड): केवल साक्ष्य आधारित, कोई चिकित्सीय दावे या सीमाओं का उल्लंघन नहीं। यदि साक्ष्य कमजोर या उभरते हुए हैं, तो इसे स्पष्ट रूप से बताएं।\n\nपहली पुनरावृत्ति से प्रारंभ करें और मुझे पूरे प्रक्रिया में मार्गदर्शन करें।»",
 
-  // Actions / footer
-  export: "تصدير",
-  levels: "المستويات",
-  levelsComing: "المستويات ستتوفر قريبًا",
-  threadExported: "تم تصدير الدردشة.",
+threadExported: "थ्रेड निर्यात किया गया।",
 
-  // Status bar
-  statusMode: "الوضع:",
-  statusAgent: "الوكيل:",
+// मोड्स – कैरेक्टर मोड्स (12)
+"mode.research": "अनुसंधान",
+"mode.calm": "शांत",
+"mode.truth": "सत्य",
+"mode.wisdom": "बुद्धि",
+"mode.play": "खेल",
+"mode.empathy": "सहानुभूति",
+"mode.joy": "आनंद",
+"mode.safety": "सुरक्षा",
+"mode.recovery": "पुनर्प्राप्ति",
+"mode.onboarding": "प्रारंभ",
+"mode.council": "शासन → Council13",
 
-  // Backward-compat alias
-  statusAI: "الوكيل:",
+"labels.purpose": "उद्देश्य:",
+"modes.notes": "«set MODENAME mode» कमांड द्वारा मोड चुनें।",
 
-  // Status texts
-  "status.modeSet": "تم ضبط الوضع: {label}.",
+"mode.onboarding.purpose":
+"सिस्टम सुविधाओं, उपलब्ध आदेशों या चरण-दर-चरण मार्गदर्शन के बारे में पूछें।",
 
-  // Modes – system buttons
-  "mode.onboarding": "البدء",
-  "mode.council": "مجلس 13",
-  "mode.default": "M · افتراضي",
-  "mode.select": "اختر الوضع",
+"mode.research.purpose":
+"सीलबंद मूल्यांकन चक्र चलाता है – प्रत्येक इनपुट को स्पष्टता और अर्थ (1–10) पर अंकित करता है, तीन परिणामों के साथ: समझ, अंतर्दृष्टि, टिप्पणी।",
 
-  // Modes – character modes (11)
-  "mode.research": "البحث",
-  "mode.calm": "الهدوء",
-  "mode.flow": "التدفق",
-  "mode.truth": "الحقيقة",
-  "mode.wisdom": "الحكمة",
-  "mode.play": "اللعب",
-  "mode.vision": "الرؤية",
-  "mode.empathy": "التعاطف",
-  "mode.love": "المحبة",
-  "mode.joy": "الفرح",
-  "mode.oracle": "العراف",
+"mode.truth.purpose":
+"व्यवसायिक निर्णयों के लिए सत्यापित और ट्रेस करने योग्य तथ्य प्रदान करता है, पारदर्शिता और अनुपालन सुनिश्चित करता है।",
 
-  // Modes – categories
-  "labels.modes.character": "أوضاع الشخصية",
-  "modes.category.core": "الأساس",
-  "modes.category.intellectual": "الذكاء",
-  "modes.category.creator": "الإبداع",
-  "modes.category.heart": "القلب",
-  "modes.category.spirit": "الروح",
+"mode.empathy.purpose":
+"उत्तर को मानवीय स्वर और संदर्भ के अनुरूप बनाता है, सहयोग और स्पष्टता को बढ़ाता है।",
 
-  // Experts (used by Saeule.tsx)
-  "experts.title": "الخبراء",
-  "experts.choose": "اختر خبيرًا",
+"mode.wisdom.purpose":
+"कई दृष्टिकोणों को संतुलित मार्गदर्शन में जोड़ता है।",
 
-  // Expert categories
-  "experts.category.life": "الحياة",
-  "experts.category.tech": "التقنية",
-  "experts.category.space": "الفضاء",
-  "experts.category.ethics": "الأخلاق",
-  "experts.category.universe": "الكون",
+"mode.calm.purpose":
+"उच्च भार या अनिश्चित स्थिति में कार्यप्रवाह को स्थिर करता है और स्पष्टता बनाए रखता है।",
 
-  // Expert labels
-  "experts.biologist": "عالم أحياء",
-  "experts.chemist": "كيميائي",
-  "experts.physicist": "فيزيائي",
-  "experts.computer_scientist": "عالم حاسوب",
-  "experts.jurist": "حقوقي",
-  "experts.architect_civil_engineer": "مهندس معماري / مدني",
-  "experts.landscape_designer": "مصمم حدائق",
-  "experts.interior_designer": "مصمم داخلي",
-  "experts.electrical_engineer": "مهندس كهرباء",
-  "experts.mathematician": "رياضي",
-  "experts.astrologer": "منجم",
-  "experts.weather_expert": "خبير طقس",
-  "experts.molecular_scientist": "عالم جزيئات",
+"mode.safety.purpose":
+"रीयल-टाइम अनुपालन फ़िल्टर के माध्यम से अनुचित या असुरक्षित आउटपुट से बचाता है।",
+
+"mode.recovery.purpose":
+"त्रुटियों या रुकावटों के बाद कार्यक्षेत्र को सुसंगत और सत्यापन योग्य स्थिति में पुनर्स्थापित करता है।",
+
+"mode.play.purpose":
+"रचनात्मक खोज और प्रोटोटाइपिंग की अनुमति देता है, बिना किसी संचालन जोखिम के।",
+
+"mode.governance.purpose":
+"तेरह स्थायी दृष्टिकोणों के माध्यम से जटिल विकल्पों का निष्पक्ष मूल्यांकन प्रदान करता है – केवल अवलोकन, तुलना और पारदर्शी तर्क।",
+
+// विशेषज्ञ (Saeule.tsx में उपयोग किया गया)
+"experts.title": "विशेषज्ञ",
+
+"experts.descriptive.intro":
+"«consult EXPERTNAME expert» कमांड द्वारा विशेषज्ञ चुनें।",
+
+"experts.additional":
+"अन्य विशेषज्ञ: जीवविज्ञान, रसायन विज्ञान, भौतिकी, आणविक विज्ञान, प्रणाली सिद्धांत, गणित, सांख्यिकी, जोखिम विश्लेषण, विद्युत अभियांत्रिकी, मौसम विज्ञान, वास्तुकला, भू-राजनीति।",
+
+// विशेषज्ञ लेबल (कॉलम – विशेषज्ञ सूची)
+"experts.computer-science.title": "कंप्यूटर विज्ञान",
+"experts.computer-science.purpose":
+"एल्गोरिदम, सिस्टम आर्किटेक्चर और सॉफ्टवेयर डिज़ाइन पर संरचित विश्लेषण प्रदान करता है।",
+
+"experts.psychology.title": "मनोविज्ञान",
+"experts.psychology.purpose":
+"मानव व्यवहार, संज्ञान और निर्णय-प्रक्रिया के विश्लेषण में सहायता करता है।",
+
+"experts.law.title": "कानून",
+"experts.law.purpose":
+"कानूनी तर्क, नियामक समझ और अनुपालन मूल्यांकन सुनिश्चित करता है।",
+
+"experts.economics.title": "अर्थशास्त्र",
+"experts.economics.purpose":
+"प्रोत्साहन, बाजार और निर्णयों के आर्थिक प्रभाव का विश्लेषण करता है।",
+
+"experts.engineering.title": "अभियांत्रिकी",
+"experts.engineering.purpose":
+"तकनीकी प्रणालियों, व्यवहार्यता और प्रक्रिया तर्क का मूल्यांकन करता है।",
+
+"experts.medicine.title": "चिकित्सा",
+"experts.medicine.purpose":
+"निदान या उपचार के बिना वैज्ञानिक चिकित्सा संदर्भ प्रदान करता है।",
+
+"experts.information-security.title": "सूचना सुरक्षा",
+"experts.information-security.purpose":
+"डेटा और प्रणालियों के जोखिम, खतरों के मॉडल और सुरक्षा उपायों का मूल्यांकन करता है।",
+
 
   // CTA fallback
   "cta.fallback":
@@ -2632,82 +2795,96 @@ const hi = {
   modules: "मॉड्यूल",
   coming: "जल्द ही",
 
-  // Sidebar additions (experts & CTA)
-  selectExpert: "विशेषज्ञ चुनें",
-  statusExpert: "विशेषज्ञ:",
-  clearChat: "चैट साफ़ करें",
-  startBuilding: "निर्माण शुरू करें",
-  startBuildingMsg:
-"Start Council13 Truth Mode\n\nसबसे पहले मुझसे पूछें कि मैं क्या बनाना चाहता हूँ।\n\nमेरे उत्तर देने के बाद यह निष्पादित करें:\n\n\"ठीक 13 पुनरावृत्तियों के साथ एक विकास प्रक्रिया में प्रवेश करें।\n\nCouncil13 शासन: 10 सदस्य प्रस्ताव रखते हैं, 3 सदस्य जूरी के रूप में कार्य करते हैं, निर्णय के लिए जूरी के दो तिहाई बहुमत की आवश्यकता होती है, जूरी के मत स्पष्ट रूप से तर्कसंगत होने चाहिए।\n\nप्रत्येक पुनरावृत्ति में प्रस्ताव सूत्र या उत्पादन प्रक्रिया को प्रभावित कर सकते हैं। प्रत्येक पुनरावृत्ति को समान स्थिर KPI और समान पैमाने का उपयोग करते हुए KPI तालिका के साथ समाप्त करें: Market Readiness, Completeness, Legal Readiness, Patentability, Causality.\n\nTruth Mode नियम: केवल साक्ष्य आधारित, कोई चिकित्सीय दावा नहीं, कोई सीमा उल्लंघन नहीं। यदि साक्ष्य कमजोर या उभरता हुआ है तो इसे स्पष्ट रूप से बताएं।\n\nपुनरावृत्ति 1 से शुरू करें और पूरे प्रक्रिया में मेरा मार्गदर्शन करें।\"",
+  // साइडबार (विशेषज्ञ और CTA)
+clearChat: "चैट साफ करें",
+startBuilding: "निर्माण प्रारंभ करें",
+startBuildingMsg: "Council13 प्रारंभ करें – सत्य मोड\n\nपहले मुझसे पूछें कि मैं क्या बनाना चाहता हूँ।\n\nउत्तर देने के बाद निम्नलिखित निष्पादित करें:\n\n«13 पुनरावृत्तियों में विकास चरण में प्रवेश करें।\n\nCouncil13 शासन: 10 सदस्य प्रस्ताव देते हैं, 3 सदस्य जूरी के रूप में कार्य करते हैं; निर्णय के लिए दो-तिहाई सहमति आवश्यक है और प्रत्येक वोट का स्पष्ट कारण होना चाहिए।\n\nप्रत्येक पुनरावृत्ति में प्रस्ताव सूत्र या उत्पादन प्रक्रिया को प्रभावित कर सकते हैं। प्रत्येक पुनरावृत्ति को इन स्थिर KPI के साथ समाप्त करें: बाजार तत्परता, पूर्णता, कानूनी तत्परता, पेटेंट योग्यता, कारणता।\n\nनियम (सत्य मोड): केवल साक्ष्य आधारित, कोई चिकित्सीय दावे या सीमाओं का उल्लंघन नहीं। यदि साक्ष्य कमजोर या उभरते हुए हैं, तो इसे स्पष्ट रूप से बताएं।\n\nपहली पुनरावृत्ति से प्रारंभ करें और मुझे पूरे प्रक्रिया में मार्गदर्शन करें।»",
 
-  // Actions / footer
-  export: "निर्यात",
-  levels: "स्तर",
-  levelsComing: "स्तर जल्द उपलब्ध होंगे",
-  threadExported: "चैट निर्यात की गई।",
+threadExported: "थ्रेड निर्यात किया गया।",
 
-  // Status bar
-  statusMode: "मोड:",
-  statusAgent: "एजेंट:",
+// मोड्स – कैरेक्टर मोड्स (12)
+"mode.research": "अनुसंधान",
+"mode.calm": "शांत",
+"mode.truth": "सत्य",
+"mode.wisdom": "बुद्धि",
+"mode.play": "खेल",
+"mode.empathy": "सहानुभूति",
+"mode.joy": "आनंद",
+"mode.safety": "सुरक्षा",
+"mode.recovery": "पुनर्प्राप्ति",
+"mode.onboarding": "प्रारंभ",
+"mode.council": "शासन → Council13",
 
-  // Backward-compat alias
-  statusAI: "एजेंट:",
+"labels.purpose": "उद्देश्य:",
+"modes.notes": "«set MODENAME mode» कमांड द्वारा मोड चुनें।",
 
-  // Status texts
-  "status.modeSet": "मोड सेट किया गया: {label}.",
+"mode.onboarding.purpose":
+"सिस्टम सुविधाओं, उपलब्ध आदेशों या चरण-दर-चरण मार्गदर्शन के बारे में पूछें।",
 
-  // Modes – system buttons
-  "mode.onboarding": "ऑनबोर्डिंग",
-  "mode.council": "काउंसिल 13",
-  "mode.default": "M · डिफ़ॉल्ट",
-  "mode.select": "मोड चुनें",
+"mode.research.purpose":
+"सीलबंद मूल्यांकन चक्र चलाता है – प्रत्येक इनपुट को स्पष्टता और अर्थ (1–10) पर अंकित करता है, तीन परिणामों के साथ: समझ, अंतर्दृष्टि, टिप्पणी।",
 
-  // Modes – character modes (11)
-  "mode.research": "अनुसंधान",
-  "mode.calm": "शांत",
-  "mode.flow": "प्रवाह",
-  "mode.truth": "सत्य",
-  "mode.wisdom": "बुद्धि",
-  "mode.play": "खेल",
-  "mode.vision": "दृष्टि",
-  "mode.empathy": "सहानुभूति",
-  "mode.love": "प्रेम",
-  "mode.joy": "आनंद",
-  "mode.oracle": "ओरेकल",
+"mode.truth.purpose":
+"व्यवसायिक निर्णयों के लिए सत्यापित और ट्रेस करने योग्य तथ्य प्रदान करता है, पारदर्शिता और अनुपालन सुनिश्चित करता है।",
 
-  // Modes – categories
-  "labels.modes.character": "चरित्र मोड",
-  "modes.category.core": "कोर",
-  "modes.category.intellectual": "बौद्धिक",
-  "modes.category.creator": "रचनाकार",
-  "modes.category.heart": "हृदय",
-  "modes.category.spirit": "आत्मा",
+"mode.empathy.purpose":
+"उत्तर को मानवीय स्वर और संदर्भ के अनुरूप बनाता है, सहयोग और स्पष्टता को बढ़ाता है।",
 
-  // Experts (used by Saeule.tsx)
-  "experts.title": "विशेषज्ञ",
-  "experts.choose": "विशेषज्ञ चुनें",
+"mode.wisdom.purpose":
+"कई दृष्टिकोणों को संतुलित मार्गदर्शन में जोड़ता है।",
 
-  // Expert categories
-  "experts.category.life": "जीवन",
-  "experts.category.tech": "तकनीक",
-  "experts.category.space": "अंतरिक्ष",
-  "experts.category.ethics": "नैतिकता",
-  "experts.category.universe": "ब्रह्मांड",
+"mode.calm.purpose":
+"उच्च भार या अनिश्चित स्थिति में कार्यप्रवाह को स्थिर करता है और स्पष्टता बनाए रखता है।",
 
-  // Expert labels
-  "experts.biologist": "जीवविज्ञानी",
-  "experts.chemist": "रसायनज्ञ",
-  "experts.physicist": "भौतिक विज्ञानी",
-  "experts.computer_scientist": "कंप्यूटर वैज्ञानिक",
-  "experts.jurist": "विधिवेत्ता",
-  "experts.architect_civil_engineer": "वास्तुकार / सिविल इंजीनियर",
-  "experts.landscape_designer": "लैंडस्केप डिज़ाइनर",
-  "experts.interior_designer": "इंटीरियर डिज़ाइनर",
-  "experts.electrical_engineer": "विद्युत अभियंता",
-  "experts.mathematician": "गणितज्ञ",
-  "experts.astrologer": "ज्योतिषी",
-  "experts.weather_expert": "मौसम विशेषज्ञ",
-  "experts.molecular_scientist": "अणु वैज्ञानिक",
+"mode.safety.purpose":
+"रीयल-टाइम अनुपालन फ़िल्टर के माध्यम से अनुचित या असुरक्षित आउटपुट से बचाता है।",
+
+"mode.recovery.purpose":
+"त्रुटियों या रुकावटों के बाद कार्यक्षेत्र को सुसंगत और सत्यापन योग्य स्थिति में पुनर्स्थापित करता है।",
+
+"mode.play.purpose":
+"रचनात्मक खोज और प्रोटोटाइपिंग की अनुमति देता है, बिना किसी संचालन जोखिम के।",
+
+"mode.governance.purpose":
+"तेरह स्थायी दृष्टिकोणों के माध्यम से जटिल विकल्पों का निष्पक्ष मूल्यांकन प्रदान करता है – केवल अवलोकन, तुलना और पारदर्शी तर्क।",
+
+// विशेषज्ञ (Saeule.tsx में उपयोग किया गया)
+"experts.title": "विशेषज्ञ",
+
+"experts.descriptive.intro":
+"«consult EXPERTNAME expert» कमांड द्वारा विशेषज्ञ चुनें।",
+
+"experts.additional":
+"अन्य विशेषज्ञ: जीवविज्ञान, रसायन विज्ञान, भौतिकी, आणविक विज्ञान, प्रणाली सिद्धांत, गणित, सांख्यिकी, जोखिम विश्लेषण, विद्युत अभियांत्रिकी, मौसम विज्ञान, वास्तुकला, भू-राजनीति।",
+
+// विशेषज्ञ लेबल (कॉलम – विशेषज्ञ सूची)
+"experts.computer-science.title": "कंप्यूटर विज्ञान",
+"experts.computer-science.purpose":
+"एल्गोरिदम, सिस्टम आर्किटेक्चर और सॉफ्टवेयर डिज़ाइन पर संरचित विश्लेषण प्रदान करता है।",
+
+"experts.psychology.title": "मनोविज्ञान",
+"experts.psychology.purpose":
+"मानव व्यवहार, संज्ञान और निर्णय-प्रक्रिया के विश्लेषण में सहायता करता है।",
+
+"experts.law.title": "कानून",
+"experts.law.purpose":
+"कानूनी तर्क, नियामक समझ और अनुपालन मूल्यांकन सुनिश्चित करता है।",
+
+"experts.economics.title": "अर्थशास्त्र",
+"experts.economics.purpose":
+"प्रोत्साहन, बाजार और निर्णयों के आर्थिक प्रभाव का विश्लेषण करता है।",
+
+"experts.engineering.title": "अभियांत्रिकी",
+"experts.engineering.purpose":
+"तकनीकी प्रणालियों, व्यवहार्यता और प्रक्रिया तर्क का मूल्यांकन करता है।",
+
+"experts.medicine.title": "चिकित्सा",
+"experts.medicine.purpose":
+"निदान या उपचार के बिना वैज्ञानिक चिकित्सा संदर्भ प्रदान करता है।",
+
+"experts.information-security.title": "सूचना सुरक्षा",
+"experts.information-security.purpose":
+"डेटा और प्रणालियों के जोखिम, खतरों के मॉडल और सुरक्षा उपायों का मूल्यांकन करता है।",
 
   // CTA fallback
   "cta.fallback":
