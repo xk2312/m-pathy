@@ -154,7 +154,8 @@ const en = {
 
 
   "labels.purpose": "Purpose:",
-  "modes.notes": "Select mode by prompting “set MODENAME mode”.",
+"modes.notes": "Select mode by prompting “set MODENAME mode”.",
+
 
   "mode.onboarding.purpose":
   "You can ask about system features, available commands, or request step-by-step guidance for initial setup and usage.",
@@ -392,7 +393,10 @@ threadExported: "Thread exportiert.",
 "mode.council": "Governance → Council13",
 
 "labels.purpose": "Zweck:",
-"modes.notes": "Wähle einen Modus durch den Befehl „set MODENAME mode“.",
+// de
+"modes.notes":
+  "Modusauswahl durch Eingabe von „setze MODUSNAME modus“.",
+
 
 "mode.onboarding.purpose":
 "Ermöglicht Fragen zu Systemfunktionen, verfügbaren Befehlen oder eine schrittweise Einführung.",
@@ -619,7 +623,9 @@ threadExported: "Fil exporté.",
 "mode.council": "Gouvernance → Council13",
 
 "labels.purpose": "But :",
-"modes.notes": "Sélectionne un mode avec la commande « set MODENAME mode ».",
+// fr
+"modes.notes":
+  "Sélectionnez un mode en saisissant « définir NOM_MODE mode ».",
 
 "mode.onboarding.purpose":
 "Permet de découvrir les fonctions du système, les commandes disponibles et une assistance étape par étape.",
@@ -845,7 +851,10 @@ threadExported: "Hilo exportado.",
 "mode.council": "Gobernanza → Council13",
 
 "labels.purpose": "Propósito:",
-"modes.notes": "Selecciona un modo usando «set MODENAME mode».",
+// es
+"modes.notes":
+  "Seleccione un modo escribiendo « establecer NOMBRE_MODO modo ».",
+
 
 "mode.onboarding.purpose":
 "Permite preguntar sobre funciones del sistema, comandos disponibles o recibir orientación paso a paso.",
@@ -1071,7 +1080,10 @@ threadExported: "Thread esportato.",
 "mode.council": "Governance → Council13",
 
 "labels.purpose": "Scopo:",
-"modes.notes": "Seleziona una modalità con «set MODENAME mode».",
+// it
+"modes.notes":
+  "Seleziona una modalità digitando « imposta NOME_MODALITÀ modalità ».",
+
 
 "mode.onboarding.purpose":
 "Consente di esplorare le funzioni del sistema, i comandi disponibili o una guida passo dopo passo.",
@@ -1297,7 +1309,10 @@ threadExported: "Tópico exportado.",
 "mode.council": "Governança → Council13",
 
 "labels.purpose": "Propósito:",
-"modes.notes": "Seleciona um modo usando «set MODENAME mode».",
+// pt
+"modes.notes":
+  "Selecione um modo digitando « definir NOME_MODO modo ».",
+
 
 "mode.onboarding.purpose":
 "Permite explorar as funções do sistema, comandos disponíveis ou receber orientação passo a passo.",
@@ -1523,7 +1538,10 @@ threadExported: "Thread geëxporteerd.",
 "mode.council": "Governance → Council13",
 
 "labels.purpose": "Doel:",
-"modes.notes": "Selecteer een modus met «set MODENAME mode».",
+// nl
+"modes.notes":
+  "Selecteer een modus door « stel MODUSNAAM modus in » in te voeren.",
+
 
 "mode.onboarding.purpose":
 "Maakt het mogelijk om te vragen naar systeemfuncties, beschikbare commando’s of stapsgewijze begeleiding.",
@@ -1748,7 +1766,10 @@ threadExported: "Тред экспортирован.",
 "mode.council": "Управление → Council13",
 
 "labels.purpose": "Цель:",
-"modes.notes": "Выбери режим командой «set MODENAME mode».",
+// ru
+"modes.notes":
+  "Выберите режим, введя « установить ИМЯ_РЕЖИМА режим ».",
+
 
 "mode.onboarding.purpose":
 "Позволяет задавать вопросы о функциях системы, доступных командах или получать пошаговую инструкцию.",
@@ -1974,7 +1995,10 @@ threadExported: "线程已导出。",
 "mode.council": "治理 → Council13",
 
 "labels.purpose": "目的：",
-"modes.notes": "通过命令「set MODENAME mode」选择模式。",
+// zh
+"modes.notes":
+  "通过输入“设置 模式名称 模式”来选择模式。",
+
 
 "mode.onboarding.purpose":
 "允许你询问系统功能、可用命令，或获取分步引导。",
@@ -2200,7 +2224,10 @@ threadExported: "スレッドをエクスポートしました。",
 "mode.council": "ガバナンス → Council13",
 
 "labels.purpose": "目的:",
-"modes.notes": "「set MODENAME mode」でモードを選択します。",
+// ja
+"modes.notes":
+  "「モード名 モードを設定」と入力してモードを選択します。",
+
 
 "mode.onboarding.purpose":
 "システム機能、利用可能なコマンド、またはステップごとのガイドを確認できます。",
@@ -2387,7 +2414,10 @@ threadExported: "스레드가 내보내졌습니다.",
 "mode.council": "거버넌스 → Council13",
 
 "labels.purpose": "목적:",
-"modes.notes": "「set MODENAME mode」 명령으로 모드를 선택하세요.",
+// ko
+"modes.notes":
+  "“모드이름 모드 설정”을 입력하여 모드를 선택하세요.",
+
 
 "mode.onboarding.purpose":
 "시스템 기능, 사용 가능한 명령 또는 단계별 가이드를 요청할 수 있습니다.",
@@ -2592,98 +2622,100 @@ const ar = {
   modules: "الوحدات",
   coming: "قريبًا",
 
-  // साइडबार (विशेषज्ञ और CTA)
-clearChat: "चैट साफ करें",
-startBuilding: "निर्माण प्रारंभ करें",
-startBuildingMsg: "Council13 प्रारंभ करें – सत्य मोड\n\nपहले मुझसे पूछें कि मैं क्या बनाना चाहता हूँ।\n\nउत्तर देने के बाद निम्नलिखित निष्पादित करें:\n\n«13 पुनरावृत्तियों में विकास चरण में प्रवेश करें।\n\nCouncil13 शासन: 10 सदस्य प्रस्ताव देते हैं, 3 सदस्य जूरी के रूप में कार्य करते हैं; निर्णय के लिए दो-तिहाई सहमति आवश्यक है और प्रत्येक वोट का स्पष्ट कारण होना चाहिए।\n\nप्रत्येक पुनरावृत्ति में प्रस्ताव सूत्र या उत्पादन प्रक्रिया को प्रभावित कर सकते हैं। प्रत्येक पुनरावृत्ति को इन स्थिर KPI के साथ समाप्त करें: बाजार तत्परता, पूर्णता, कानूनी तत्परता, पेटेंट योग्यता, कारणता।\n\nनियम (सत्य मोड): केवल साक्ष्य आधारित, कोई चिकित्सीय दावे या सीमाओं का उल्लंघन नहीं। यदि साक्ष्य कमजोर या उभरते हुए हैं, तो इसे स्पष्ट रूप से बताएं।\n\nपहली पुनरावृत्ति से प्रारंभ करें और मुझे पूरे प्रक्रिया में मार्गदर्शन करें।»",
+  // الشريط الجانبي (الخبراء و CTA)
+clearChat: "مسح الدردشة",
+startBuilding: "بدء البناء",
+startBuildingMsg: "ابدأ Council13 - وضع الحقيقة\n\nاسألني أولاً ماذا أريد أن أبني.\n\nبعد أن أجيب، نفّذ ما يلي:\n\n«ادخل مرحلة التطوير في 13 تكرارًا.\n\nحوكمة Council13: يقدّم 10 أعضاء مقترحات، ويعمل 3 أعضاء كهيئة محلفين. تتطلب القرارات موافقة ثلثي هيئة المحلفين، ويجب تبرير كل تصويت بشكل صريح.\n\nفي كل تكرار، يمكن أن تؤثر المقترحات على الصيغة أو عملية الإنتاج. يجب إنهاء كل تكرار باستخدام مؤشرات الأداء الثابتة التالية: الجاهزية للسوق، الاكتمال، الجاهزية القانونية، قابلية البراءة، السببية.\n\nالقواعد (وضع الحقيقة): الاعتماد على الأدلة فقط، دون ادعاءات طبية أو تجاوز للحدود. إذا كانت الأدلة ضعيفة أو ناشئة، فيجب التصريح بذلك بوضوح.\n\nابدأ بالتكرار الأول ووجّهني خلال العملية كاملة.»",
 
-threadExported: "थ्रेड निर्यात किया गया।",
+threadExported: "تم تصدير المحادثة.",
 
-// मोड्स – कैरेक्टर मोड्स (12)
-"mode.research": "अनुसंधान",
-"mode.calm": "शांत",
-"mode.truth": "सत्य",
-"mode.wisdom": "बुद्धि",
-"mode.play": "खेल",
-"mode.empathy": "सहानुभूति",
-"mode.joy": "आनंद",
-"mode.safety": "सुरक्षा",
-"mode.recovery": "पुनर्प्राप्ति",
-"mode.onboarding": "प्रारंभ",
-"mode.council": "शासन → Council13",
+// الأوضاع - أوضاع السلوك (12)
+"mode.research": "بحث",
+"mode.calm": "هدوء",
+"mode.truth": "حقيقة",
+"mode.wisdom": "حكمة",
+"mode.play": "لعب",
+"mode.empathy": "تعاطف",
+"mode.joy": "فرح",
+"mode.safety": "أمان",
+"mode.recovery": "استعادة",
+"mode.onboarding": "تهيئة",
+"mode.council": "حوكمة → Council13",
 
-"labels.purpose": "उद्देश्य:",
-"modes.notes": "«set MODENAME mode» कमांड द्वारा मोड चुनें।",
-
-"mode.onboarding.purpose":
-"सिस्टम सुविधाओं, उपलब्ध आदेशों या चरण-दर-चरण मार्गदर्शन के बारे में पूछें।",
-
-"mode.research.purpose":
-"सीलबंद मूल्यांकन चक्र चलाता है – प्रत्येक इनपुट को स्पष्टता और अर्थ (1–10) पर अंकित करता है, तीन परिणामों के साथ: समझ, अंतर्दृष्टि, टिप्पणी।",
-
-"mode.truth.purpose":
-"व्यवसायिक निर्णयों के लिए सत्यापित और ट्रेस करने योग्य तथ्य प्रदान करता है, पारदर्शिता और अनुपालन सुनिश्चित करता है।",
-
-"mode.empathy.purpose":
-"उत्तर को मानवीय स्वर और संदर्भ के अनुरूप बनाता है, सहयोग और स्पष्टता को बढ़ाता है।",
-
-"mode.wisdom.purpose":
-"कई दृष्टिकोणों को संतुलित मार्गदर्शन में जोड़ता है।",
-
-"mode.calm.purpose":
-"उच्च भार या अनिश्चित स्थिति में कार्यप्रवाह को स्थिर करता है और स्पष्टता बनाए रखता है।",
-
-"mode.safety.purpose":
-"रीयल-टाइम अनुपालन फ़िल्टर के माध्यम से अनुचित या असुरक्षित आउटपुट से बचाता है।",
-
-"mode.recovery.purpose":
-"त्रुटियों या रुकावटों के बाद कार्यक्षेत्र को सुसंगत और सत्यापन योग्य स्थिति में पुनर्स्थापित करता है।",
-
-"mode.play.purpose":
-"रचनात्मक खोज और प्रोटोटाइपिंग की अनुमति देता है, बिना किसी संचालन जोखिम के।",
-
-"mode.governance.purpose":
-"तेरह स्थायी दृष्टिकोणों के माध्यम से जटिल विकल्पों का निष्पक्ष मूल्यांकन प्रदान करता है – केवल अवलोकन, तुलना और पारदर्शी तर्क।",
-
-// विशेषज्ञ (Saeule.tsx में उपयोग किया गया)
-"experts.title": "विशेषज्ञ",
+"labels.purpose": "الغرض:",
 
 // ar
+"modes.notes":
+  "اختر وضعًا عن طريق إدخال « عيّن اسم_الوضع وضع ».",
+
+"mode.onboarding.purpose":
+"اسأل عن ميزات النظام أو الأوامر المتاحة أو الإرشاد خطوة بخطوة.",
+
+"mode.research.purpose":
+"يشغّل دورة تقييم مختومة تقوم بتقييم كل إدخال من حيث الوضوح والمعنى (1-10)، مع ثلاث نتائج: الفهم، الرؤية، تعليق.",
+
+"mode.truth.purpose":
+"يوفّر حقائق قابلة للتحقق والتتبع لاتخاذ القرارات المهنية، مع ضمان الشفافية والامتثال.",
+
+"mode.empathy.purpose":
+"يضبط الاستجابات على نبرة وسياق إنسانيين، مما يعزز التعاون والوضوح.",
+
+"mode.wisdom.purpose":
+"يجمع وجهات نظر متعددة في توجيه متوازن.",
+
+"mode.calm.purpose":
+"يثبّت سير العمل في حالات الحمل العالي أو عدم اليقين ويحافظ على الوضوح.",
+
+"mode.safety.purpose":
+"يحمي من المخرجات غير الملائمة أو غير الآمنة من خلال مرشح امتثال في الوقت الحقيقي.",
+
+"mode.recovery.purpose":
+"يعيد مساحة العمل إلى حالة متسقة وقابلة للتحقق بعد الأخطاء أو الانقطاعات.",
+
+"mode.play.purpose":
+"يسمح بالاستكشاف الإبداعي وبناء النماذج الأولية دون مخاطر تشغيلية.",
+
+"mode.governance.purpose":
+"يقدّم تقييمًا محايدًا للخيارات المعقدة من خلال ثلاثة عشر منظورًا ثابتًا، يقتصر على الملاحظة والمقارنة والتعليل الشفاف.",
+
+// الخبراء (مستخدم في Saeule.tsx)
+"experts.title": "الخبراء",
+
 "experts.descriptive.intro":
   "اختر خبيرًا عن طريق إدخال « استشارة اسم_الخبير خبير ».",
 
-
 "experts.additional":
-"अन्य विशेषज्ञ: जीवविज्ञान, रसायन विज्ञान, भौतिकी, आणविक विज्ञान, प्रणाली सिद्धांत, गणित, सांख्यिकी, जोखिम विश्लेषण, विद्युत अभियांत्रिकी, मौसम विज्ञान, वास्तुकला, भू-राजनीति।",
+"خبراء آخرون: علم الأحياء، الكيمياء، الفيزياء، العلوم الجزيئية، نظرية الأنظمة، الرياضيات، الإحصاء، تحليل المخاطر، الهندسة الكهربائية، علم الأرصاد الجوية، العمارة، الجغرافيا السياسية.",
 
-// विशेषज्ञ लेबल (कॉलम – विशेषज्ञ सूची)
-"experts.computer-science.title": "कंप्यूटर विज्ञान",
+// تسميات الخبراء (الأعمدة - قائمة الخبراء)
+"experts.computer-science.title": "علوم الحاسوب",
 "experts.computer-science.purpose":
-"एल्गोरिदम, सिस्टम आर्किटेक्चर और सॉफ्टवेयर डिज़ाइन पर संरचित विश्लेषण प्रदान करता है।",
+"يقدّم تحليلًا منظمًا للخوارزميات وبنية الأنظمة وتصميم البرمجيات.",
 
-"experts.psychology.title": "मनोविज्ञान",
+"experts.psychology.title": "علم النفس",
 "experts.psychology.purpose":
-"मानव व्यवहार, संज्ञान और निर्णय-प्रक्रिया के विश्लेषण में सहायता करता है।",
+"يساعد في تحليل السلوك البشري والإدراك وعمليات اتخاذ القرار.",
 
-"experts.law.title": "कानून",
+"experts.law.title": "القانون",
 "experts.law.purpose":
-"कानूनी तर्क, नियामक समझ और अनुपालन मूल्यांकन सुनिश्चित करता है।",
+"يضمن المنطق القانوني والفهم التنظيمي وتقييم الامتثال.",
 
-"experts.economics.title": "अर्थशास्त्र",
+"experts.economics.title": "الاقتصاد",
 "experts.economics.purpose":
-"प्रोत्साहन, बाजार और निर्णयों के आर्थिक प्रभाव का विश्लेषण करता है।",
+"يحلل الحوافز والأسواق والتأثيرات الاقتصادية للقرارات.",
 
-"experts.engineering.title": "अभियांत्रिकी",
+"experts.engineering.title": "الهندسة",
 "experts.engineering.purpose":
-"तकनीकी प्रणालियों, व्यवहार्यता और प्रक्रिया तर्क का मूल्यांकन करता है।",
+"يقيّم الأنظمة التقنية والجدوى والمنطق الإجرائي.",
 
-"experts.medicine.title": "चिकित्सा",
+"experts.medicine.title": "الطب",
 "experts.medicine.purpose":
-"निदान या उपचार के बिना वैज्ञानिक चिकित्सा संदर्भ प्रदान करता है।",
+"يوفّر سياقًا طبيًا علميًا دون تشخيص أو علاج.",
 
-"experts.information-security.title": "सूचना सुरक्षा",
+"experts.information-security.title": "أمن المعلومات",
 "experts.information-security.purpose":
-"डेटा और प्रणालियों के जोखिम, खतरों के मॉडल और सुरक्षा उपायों का मूल्यांकन करता है।",
+"يقيّم المخاطر ونماذج التهديدات وإجراءات الحماية للبيانات والأنظمة.",
+
 
 
   // CTA fallback
