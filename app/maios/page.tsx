@@ -11,20 +11,20 @@ import { dict as maiosDict } from "@/lib/i18n.maios";
   const { lang } = useLang();
   const t = (maiosDict as any)[lang] ?? maiosDict.en;
 
-  const [heroVisible, setHeroVisible] = useState(false);
+  const [heroPhase, setHeroPhase] = useState<0 | 1 | 2>(0);
 
-  useEffect(() => {
-    document.documentElement.classList.add("enable-scroll");
+useEffect(() => {
+  document.documentElement.classList.add("enable-scroll");
 
-    const t1 = setTimeout(() => {
-      setHeroVisible(true);
-    }, 500);
+  const t1 = setTimeout(() => setHeroPhase(1), 300);
+  const t2 = setTimeout(() => setHeroPhase(2), 900);
 
-    return () => {
-      document.documentElement.classList.remove("enable-scroll");
-      clearTimeout(t1);
-    };
-  }, []);
+  return () => {
+    document.documentElement.classList.remove("enable-scroll");
+    clearTimeout(t1);
+    clearTimeout(t2);
+  };
+}, []);
 
     return (
     <>
@@ -44,24 +44,63 @@ import { dict as maiosDict } from "@/lib/i18n.maios";
     />
 
     {/* HERO */}
-    <section className="pt-[120px] pb-[120px]">
-      <div className="page-center max-w-[820px]">
-        <h1 className="text-[clamp(32px,6vw,56px)] font-semibold tracking-tight">
-          {t.hero.title}
-        </h1>
+<section className="pt-[120px] pb-[120px]">
+  <div className="page-center max-w-[820px]">
 
-        {heroVisible && (
-          <>
-            <p className="mt-4 text-white/80 text-[clamp(18px,3vw,22px)]">
-              {t.hero.subtitle}
-            </p>
-            <p className="mt-6 text-white/60 max-w-[680px]">
-              {t.hero.intro}
-            </p>
-          </>
-        )}
-      </div>
-    </section>
+    <h1
+      className="
+        text-[clamp(32px,6vw,56px)]
+        font-semibold
+        tracking-tight
+        transition-all
+        duration-700
+        ease-out
+      "
+      style={{
+        opacity: heroPhase >= 1 ? 1 : 0,
+        transform: heroPhase >= 1 ? "translateY(0)" : "translateY(12px)"
+      }}
+    >
+      {t.hero.title}
+    </h1>
+
+    <p
+      className="
+        mt-4
+        text-white/80
+        text-[clamp(18px,3vw,22px)]
+        transition-all
+        duration-700
+        ease-out
+      "
+      style={{
+        opacity: heroPhase >= 2 ? 1 : 0,
+        transform: heroPhase >= 2 ? "translateY(0)" : "translateY(10px)"
+      }}
+    >
+      {t.hero.subtitle}
+    </p>
+
+    <p
+      className="
+        mt-6
+        text-white/60
+        max-w-[680px]
+        transition-all
+        duration-700
+        ease-out
+      "
+      style={{
+        opacity: heroPhase >= 2 ? 1 : 0,
+        transform: heroPhase >= 2 ? "translateY(0)" : "translateY(10px)"
+      }}
+    >
+      {t.hero.intro}
+    </p>
+
+  </div>
+</section>
+
 
  {/* BUFFER */}
     <div
