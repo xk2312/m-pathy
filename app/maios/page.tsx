@@ -69,18 +69,22 @@ useEffect(() => {
   <div className="page-center max-w-[820px]">
 
     {/* HEADER WORD BUILD */}
-    <h1
-      className="
-        text-[clamp(40px,7vw,64px)]
-        font-semibold
-        tracking-tight
-        transition-all
-        duration-700
-        ease-out
-      "
-    >
-      {sequence.slice(0, progress).map(s => s.letter).join("")}
-    </h1>
+   <h1
+  className="
+    text-[clamp(40px,7vw,64px)]
+    font-semibold
+    tracking-tight
+    transition-[clip-path]
+    duration-[700ms]
+    ease-[cubic-bezier(0.16,1,0.3,1)]
+  "
+  style={{
+    clipPath: `inset(0 ${100 - progress * 20}% 0 0)`
+  }}
+>
+  {sequence.map(s => s.letter).join("")}
+</h1>
+
 
     {/* MEANING LINE BUILD */}
     <p
