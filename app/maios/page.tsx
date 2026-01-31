@@ -1,23 +1,32 @@
 // app/maios/page.tsx
 "use client";
 
-import { useEffect } from "react";
-
+import { useEffect, useState  } from "react";
 import Navigation from "@/app/components/navigation/navigation";
 import Footer from "@/app/components/subscription/footer";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { dict as maiosDict } from "@/lib/i18n.maios";
 
-export default function MaiosPage() {
+  export default function MaiosPage() {
   const { lang } = useLang();
   const t = (maiosDict as any)[lang] ?? maiosDict.en;
 
+  const [heroVisible, setHeroVisible] = useState(false);
+
   useEffect(() => {
     document.documentElement.classList.add("enable-scroll");
-    return () => document.documentElement.classList.remove("enable-scroll");
+
+    const t1 = setTimeout(() => {
+      setHeroVisible(true);
+    }, 500);
+
+    return () => {
+      document.documentElement.classList.remove("enable-scroll");
+      clearTimeout(t1);
+    };
   }, []);
 
-  return (
+    return (
     <>
       <Navigation />
 
@@ -36,19 +45,24 @@ export default function MaiosPage() {
 
     {/* HERO */}
     <section className="pt-[120px] pb-[120px]">
+      <div className="page-center max-w-[820px]">
+        <h1 className="text-[clamp(32px,6vw,56px)] font-semibold tracking-tight">
+          {t.hero.title}
+        </h1>
 
-            <div className="page-center max-w-[820px]">
-              <h1 className="text-[clamp(32px,6vw,56px)] font-semibold tracking-tight">
-                {t.hero.title}
-              </h1>
-              <p className="mt-4 text-white/80 text-[clamp(18px,3vw,22px)]">
-                {t.hero.subtitle}
-              </p>
-              <p className="mt-6 text-white/60 max-w-[680px]">
-                {t.hero.intro}
-              </p>
-            </div>
-          </section>
+        {heroVisible && (
+          <>
+            <p className="mt-4 text-white/80 text-[clamp(18px,3vw,22px)]">
+              {t.hero.subtitle}
+            </p>
+            <p className="mt-6 text-white/60 max-w-[680px]">
+              {t.hero.intro}
+            </p>
+          </>
+        )}
+      </div>
+    </section>
+
  {/* BUFFER */}
     <div
       aria-hidden="true"
