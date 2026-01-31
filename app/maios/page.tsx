@@ -49,7 +49,11 @@ export default function MaiosPage() {
               </p>
             </div>
           </section>
-
+ {/* BUFFER */}
+    <div
+      aria-hidden="true"
+      style={{ height: "var(--h-gap-md)" }}
+    />
           {/* CLARIFICATION */}
           <section className="pt-[80px] pb-[80px]">
             <div className="page-center max-w-[760px]">
@@ -63,6 +67,11 @@ export default function MaiosPage() {
               </ul>
             </div>
           </section>
+          {/* BUFFER */}
+    <div
+      aria-hidden="true"
+      style={{ height: "var(--h-gap-md)" }}
+    />
 
           {/* PROBLEM STATEMENT */}
           <section className="pt-[100px] pb-[100px]">
@@ -80,6 +89,11 @@ export default function MaiosPage() {
               </div>
             </div>
           </section>
+          {/* BUFFER */}
+    <div
+      aria-hidden="true"
+      style={{ height: "var(--h-gap-md)" }}
+    />
 
           {/* PROBLEMS */}
           <section className="pt-[100px] pb-[100px]">
@@ -96,6 +110,11 @@ export default function MaiosPage() {
               </ul>
             </div>
           </section>
+          {/* BUFFER */}
+    <div
+      aria-hidden="true"
+      style={{ height: "var(--h-gap-md)" }}
+    />
 
           {/* WHAT MAIOS IS */}
           <section className="pt-[100px] pb-[100px]">
@@ -110,6 +129,11 @@ export default function MaiosPage() {
               </div>
             </div>
           </section>
+          {/* BUFFER */}
+    <div
+      aria-hidden="true"
+      style={{ height: "var(--h-gap-md)" }}
+    />
 
           {/* WHAT MAIOS IS NOT */}
           <section className="pt-[80px] pb-[80px]">
@@ -124,6 +148,11 @@ export default function MaiosPage() {
               </ul>
             </div>
           </section>
+          {/* BUFFER */}
+    <div
+      aria-hidden="true"
+      style={{ height: "var(--h-gap-md)" }}
+    />
 
           {/* AUDIENCE */}
           <section className="pt-[100px] pb-[100px]">
@@ -148,6 +177,11 @@ export default function MaiosPage() {
               </div>
             </div>
           </section>
+          {/* BUFFER */}
+    <div
+      aria-hidden="true"
+      style={{ height: "var(--h-gap-md)" }}
+    />
 
           {/* OFFERING */}
           <section className="pt-[120px] pb-[120px]">
@@ -175,6 +209,11 @@ export default function MaiosPage() {
               </div>
             </div>
           </section>
+          {/* BUFFER */}
+    <div
+      aria-hidden="true"
+      style={{ height: "var(--h-gap-md)" }}
+    />
 
           {/* PROOF */}
           <section className="pt-[100px] pb-[100px]">
@@ -189,6 +228,11 @@ export default function MaiosPage() {
               </div>
             </div>
           </section>
+          {/* BUFFER */}
+    <div
+      aria-hidden="true"
+      style={{ height: "var(--h-gap-md)" }}
+    />
 
           {/* CONSULTING */}
           <section className="pt-[100px] pb-[100px]">
@@ -203,6 +247,11 @@ export default function MaiosPage() {
               </div>
             </div>
           </section>
+          {/* BUFFER */}
+    <div
+      aria-hidden="true"
+      style={{ height: "var(--h-gap-md)" }}
+    />
 
           {/* CONTACT */}
           <section className="pt-[120px] pb-[120px]">
@@ -220,6 +269,11 @@ export default function MaiosPage() {
               </div>
             </div>
           </section>
+          {/* BUFFER */}
+    <div
+      aria-hidden="true"
+      style={{ height: "var(--h-gap-md)" }}
+    />
 
           {/* CLOSING */}
           <section className="pt-[80px] pb-[40px]">
@@ -231,6 +285,11 @@ export default function MaiosPage() {
           </section>
 
         </div>
+        {/* BUFFER */}
+    <div
+      aria-hidden="true"
+      style={{ height: "var(--h-gap-md)" }}
+    />
 
         <Footer />
       </main>
