@@ -1,112 +1,149 @@
 // app/maios/page.tsx
 "use client";
 
-import { useEffect, useState  } from "react";
+import { useEffect, useState } from "react";
 import Navigation from "@/app/components/navigation/navigation";
 import Footer from "@/app/components/subscription/footer";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { dict as maiosDict } from "@/lib/i18n.maios";
 
-  export default function MaiosPage() {
+export default function MaiosPage() {
   const { lang } = useLang();
   const t = (maiosDict as any)[lang] ?? maiosDict.en;
 
-  const [heroPhase, setHeroPhase] = useState<0 | 1 | 2>(0);
+  const sequence = [
+    { letter: "M", word: "Modular" },
+    { letter: "A", word: "Artificial" },
+    { letter: "I", word: "Intelligence" },
+    { letter: "O", word: "Operating" },
+    { letter: "S", word: "System" }
+  ];
 
-useEffect(() => {
-  document.documentElement.classList.add("enable-scroll");
+  const [step, setStep] = useState(0);
+  const [showClaim, setShowClaim] = useState(false);
 
-  const t1 = setTimeout(() => setHeroPhase(1), 300);
-  const t2 = setTimeout(() => setHeroPhase(2), 900);
+  useEffect(() => {
+    document.documentElement.classList.add("enable-scroll");
 
-  return () => {
-    document.documentElement.classList.remove("enable-scroll");
-    clearTimeout(t1);
-    clearTimeout(t2);
-  };
-}, []);
+    const timers: number[] = [];
 
-    return (
+    sequence.forEach((_, index) => {
+      timers.push(
+        window.setTimeout(() => {
+          setStep(index + 1);
+        }, index * 900)
+      );
+    });
+
+    timers.push(
+      window.setTimeout(() => {
+        setShowClaim(true);
+      }, sequence.length * 900 + 400)
+    );
+
+    return () => {
+      document.documentElement.classList.remove("enable-scroll");
+      timers.forEach(clearTimeout);
+    };
+  }, []);
+
+  return (
     <>
       <Navigation />
 
       <main
-  id="content"
-  role="main"
-  className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
->
-  <div className="px-[clamp(10px,4vw,90px)] pb-[clamp(40px,6vw,120px)]">
+        id="content"
+        role="main"
+        className="relative isolate z-10 min-h-dvh bg-transparent text-white antialiased selection:bg-white/20"
+      >
+        <div className="px-[clamp(10px,4vw,90px)] pb-[clamp(40px,6vw,120px)]">
 
-    {/* TOP SUPER BUFFER */}
-    <div
-      aria-hidden="true"
-      style={{ height: "var(--h-gap-md)" }}
-    />
+          {/* TOP SUPER BUFFER */}
+          <div aria-hidden="true" style={{ height: "var(--h-gap-md)" }} />
 
-    {/* HERO */}
-<section className="pt-[120px] pb-[120px]">
-  <div className="page-center max-w-[820px]">
+          {/* HERO */}
+          <section className="pt-[120px] pb-[120px]">
+            <div className="page-center max-w-[820px]">
 
-    <h1
-      className="
-        text-[clamp(32px,6vw,56px)]
-        font-semibold
-        tracking-tight
-        transition-all
-        duration-700
-        ease-out
-      "
-      style={{
-        opacity: heroPhase >= 1 ? 1 : 0,
-        transform: heroPhase >= 1 ? "translateY(0)" : "translateY(12px)"
-      }}
-    >
-      {t.hero.title}
-    </h1>
+              {/* Buchstabe */}
+              <div className="h-[70px] overflow-hidden">
+                <h1
+                  className="
+                    text-[clamp(40px,7vw,64px)]
+                    font-semibold
+                    tracking-tight
+                    transition-all
+                    duration-700
+                    ease-out
+                  "
+                  style={{
+                    opacity: step > 0 ? 1 : 0,
+                    transform: step > 0 ? "translateY(0)" : "translateY(14px)"
+                  }}
+                >
+                  {sequence[Math.max(step - 1, 0)]?.letter}
+                </h1>
+              </div>
 
-    <p
-      className="
-        mt-4
-        text-white/80
-        text-[clamp(18px,3vw,22px)]
-        transition-all
-        duration-700
-        ease-out
-      "
-      style={{
-        opacity: heroPhase >= 2 ? 1 : 0,
-        transform: heroPhase >= 2 ? "translateY(0)" : "translateY(10px)"
-      }}
-    >
-      {t.hero.subtitle}
-    </p>
+              {/* Begriff */}
+              <div className="h-[36px] overflow-hidden mt-2">
+                <p
+                  className="
+                    text-white/80
+                    text-[clamp(18px,3vw,22px)]
+                    transition-all
+                    duration-700
+                    ease-out
+                  "
+                  style={{
+                    opacity: step > 0 ? 1 : 0,
+                    transform: step > 0 ? "translateY(0)" : "translateY(10px)"
+                  }}
+                >
+                  {sequence[Math.max(step - 1, 0)]?.word}
+                </p>
+              </div>
 
-    <p
-      className="
-        mt-6
-        text-white/60
-        max-w-[680px]
-        transition-all
-        duration-700
-        ease-out
-      "
-      style={{
-        opacity: heroPhase >= 2 ? 1 : 0,
-        transform: heroPhase >= 2 ? "translateY(0)" : "translateY(10px)"
-      }}
-    >
-      {t.hero.intro}
-    </p>
+              {step === sequence.length && (
+                <h2
+                  className="
+                    mt-6
+                    text-white
+                    text-[clamp(22px,4vw,32px)]
+                    font-medium
+                    transition-opacity
+                    duration-700
+                  "
+                >
+                  MAIOS
+                </h2>
+              )}
 
-  </div>
-</section>
+              {showClaim && (
+                <p
+                  className="
+                    mt-4
+                    text-white/60
+                    max-w-[680px]
+                    transition-all
+                    duration-700
+                    ease-out
+                  "
+                  style={{
+                    opacity: showClaim ? 1 : 0,
+                    transform: showClaim ? "translateY(0)" : "translateY(10px)"
+                  }}
+                >
+                  {t.hero.intro}
+                </p>
+              )}
 
+            </div>
+          </section>
 
- {/* BUFFER */}
-    <div
-      aria-hidden="true"
-      style={{ height: "var(--h-gap-md)" }}
-    />
+          {/* BUFFER */}
+          <div aria-hidden="true" style={{ height: "var(--h-gap-md)" }} />
+
           {/* CLARIFICATION */}
           <section className="pt-[80px] pb-[80px]">
             <div className="page-center max-w-[760px]">
@@ -120,6 +157,9 @@ useEffect(() => {
               </ul>
             </div>
           </section>
+
+          
+          
           {/* BUFFER */}
     <div
       aria-hidden="true"
