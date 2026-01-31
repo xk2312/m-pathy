@@ -11,41 +11,44 @@ export default function MaiosPage() {
   const { lang } = useLang();
   const t = (maiosDict as any)[lang] ?? maiosDict.en;
 
-  const sequence = [
-    { letter: "M", word: "Modular" },
-    { letter: "A", word: "Artificial" },
-    { letter: "I", word: "Intelligence" },
-    { letter: "O", word: "Operating" },
-    { letter: "S", word: "System" }
-  ];
+  // Sequenzdefinition
+const sequence = [
+  { letter: "M", word: "Modular" },
+  { letter: "A", word: "Artificial" },
+  { letter: "I", word: "Intelligence" },
+  { letter: "O", word: "Operating" },
+  { letter: "S", word: "System" }
+];
 
-  const [step, setStep] = useState(0);
-  const [showClaim, setShowClaim] = useState(false);
+// progress = wie viele Elemente bereits „eingraviert“ sind
+const [progress, setProgress] = useState(0);
+const [showClaim, setShowClaim] = useState(false);
 
-  useEffect(() => {
-    document.documentElement.classList.add("enable-scroll");
+useEffect(() => {
+  document.documentElement.classList.add("enable-scroll");
 
-    const timers: number[] = [];
+  const timers: number[] = [];
 
-    sequence.forEach((_, index) => {
-      timers.push(
-        window.setTimeout(() => {
-          setStep(index + 1);
-        }, index * 900)
-      );
-    });
-
+  sequence.forEach((_, index) => {
     timers.push(
       window.setTimeout(() => {
-        setShowClaim(true);
-      }, sequence.length * 900 + 400)
+        setProgress(index + 1);
+      }, index * 900)
     );
+  });
 
-    return () => {
-      document.documentElement.classList.remove("enable-scroll");
-      timers.forEach(clearTimeout);
-    };
-  }, []);
+  timers.push(
+    window.setTimeout(() => {
+      setShowClaim(true);
+    }, sequence.length * 900 + 500)
+  );
+
+  return () => {
+    document.documentElement.classList.remove("enable-scroll");
+    timers.forEach(clearTimeout);
+  };
+}, []);
+
 
   return (
     <>
@@ -63,83 +66,58 @@ export default function MaiosPage() {
 
           {/* HERO */}
           <section className="pt-[120px] pb-[120px]">
-            <div className="page-center max-w-[820px]">
+  <div className="page-center max-w-[820px]">
 
-              {/* Buchstabe */}
-              <div className="h-[70px] overflow-hidden">
-                <h1
-                  className="
-                    text-[clamp(40px,7vw,64px)]
-                    font-semibold
-                    tracking-tight
-                    transition-all
-                    duration-700
-                    ease-out
-                  "
-                  style={{
-                    opacity: step > 0 ? 1 : 0,
-                    transform: step > 0 ? "translateY(0)" : "translateY(14px)"
-                  }}
-                >
-                  {sequence[Math.max(step - 1, 0)]?.letter}
-                </h1>
-              </div>
+    {/* HEADER WORD BUILD */}
+    <h1
+      className="
+        text-[clamp(40px,7vw,64px)]
+        font-semibold
+        tracking-tight
+        transition-all
+        duration-700
+        ease-out
+      "
+    >
+      {sequence.slice(0, progress).map(s => s.letter).join("")}
+    </h1>
 
-              {/* Begriff */}
-              <div className="h-[36px] overflow-hidden mt-2">
-                <p
-                  className="
-                    text-white/80
-                    text-[clamp(18px,3vw,22px)]
-                    transition-all
-                    duration-700
-                    ease-out
-                  "
-                  style={{
-                    opacity: step > 0 ? 1 : 0,
-                    transform: step > 0 ? "translateY(0)" : "translateY(10px)"
-                  }}
-                >
-                  {sequence[Math.max(step - 1, 0)]?.word}
-                </p>
-              </div>
+    {/* MEANING LINE BUILD */}
+    <p
+      className="
+        mt-3
+        text-white/80
+        text-[clamp(18px,3vw,22px)]
+        transition-all
+        duration-700
+        ease-out
+      "
+    >
+      {sequence.slice(0, progress).map(s => s.word).join(" ")}
+    </p>
 
-              {step === sequence.length && (
-                <h2
-                  className="
-                    mt-6
-                    text-white
-                    text-[clamp(22px,4vw,32px)]
-                    font-medium
-                    transition-opacity
-                    duration-700
-                  "
-                >
-                  MAIOS
-                </h2>
-              )}
+    {/* FINAL CLAIM */}
+    {showClaim && (
+      <p
+        className="
+          mt-6
+          text-white/60
+          max-w-[680px]
+          transition-all
+          duration-700
+          ease-out
+        "
+        style={{
+          opacity: showClaim ? 1 : 0,
+          transform: showClaim ? "translateY(0)" : "translateY(10px)"
+        }}
+      >
+        {t.hero.intro}
+      </p>
+    )}
 
-              {showClaim && (
-                <p
-                  className="
-                    mt-4
-                    text-white/60
-                    max-w-[680px]
-                    transition-all
-                    duration-700
-                    ease-out
-                  "
-                  style={{
-                    opacity: showClaim ? 1 : 0,
-                    transform: showClaim ? "translateY(0)" : "translateY(10px)"
-                  }}
-                >
-                  {t.hero.intro}
-                </p>
-              )}
-
-            </div>
-          </section>
+  </div>
+</section>
 
           {/* BUFFER */}
           <div aria-hidden="true" style={{ height: "var(--h-gap-md)" }} />
