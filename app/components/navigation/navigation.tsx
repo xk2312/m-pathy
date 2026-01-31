@@ -485,31 +485,37 @@ export default function Navigation() {
             className="flex items-center gap-5"
             style={isChatStageLayout ? { marginLeft: "-10px" } : undefined}
           >
-            <Link
-              href="/"
-              aria-label="Home"
-              className="inline-flex items-center"
-            >
-              <span
-                className="text-white/80 hover:text-white transition-colors"
-                style={{
-                  fontSize: "0.88rem",
-                  letterSpacing: "0.10em",
-                  textTransform: "none",
-                  fontWeight: 650,
-                  lineHeight: 1,
-                  paddingBottom: "2px",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                m-pathy
-              </span>
-            </Link>
-            <NavLink
-              href="/page2"
-              label={links.subscription}
-              active={isActive("/page2")}
-            />
+           <Link
+  href="/"
+  aria-label="Home"
+  className="inline-flex items-center"
+>
+  <span
+    className="text-white/80 hover:text-white transition-colors"
+    style={{
+      fontSize: "0.88rem",
+      letterSpacing: "0.10em",
+      textTransform: "none",
+      fontWeight: 650,
+      lineHeight: 1,
+      paddingBottom: "2px",
+      whiteSpace: "nowrap",
+    }}
+  >
+    m-pathy
+  </span>
+</Link>
+<NavLink
+  href="/page2"
+  label={links.subscription}
+  active={isActive("/page2")}
+/>
+<NavLink
+  href="/maios"
+  label="MAIOS"
+  active={isActive("/maios")}
+/>
+
           </div>
 
 
