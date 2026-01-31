@@ -71,34 +71,74 @@ useEffect(() => {
     {/* HEADER WORD BUILD */}
    <h1
   className="
+    flex
+    gap-[0.02em]
     text-[clamp(40px,7vw,64px)]
     font-semibold
     tracking-tight
-    transition-[clip-path]
-    duration-[700ms]
-    ease-[cubic-bezier(0.16,1,0.3,1)]
   "
-  style={{
-    clipPath: `inset(0 ${100 - progress * 20}% 0 0)`
-  }}
 >
-  {sequence.map(s => s.letter).join("")}
+  {sequence.slice(0, progress).map((item, index) => {
+    const isNewest = index === progress - 1;
+
+    return (
+      <span
+        key={index}
+        className="
+          inline-block
+          will-change-transform
+        "
+        style={{
+          transform: isNewest
+            ? "translateY(6px) scale(0.85)"
+            : "translateY(0) scale(1)",
+          animation: isNewest
+            ? "letter-in 520ms cubic-bezier(0.22,1,0.36,1) forwards"
+            : "none"
+        }}
+      >
+        {item.letter}
+      </span>
+    );
+  })}
 </h1>
 
 
     {/* MEANING LINE BUILD */}
-    <p
-      className="
-        mt-3
-        text-white/80
-        text-[clamp(18px,3vw,22px)]
-        transition-all
-        duration-700
-        ease-out
-      "
-    >
-      {sequence.slice(0, progress).map(s => s.word).join(" ")}
-    </p>
+    <h1
+  className="
+    flex
+    gap-[0.02em]
+    text-[clamp(40px,7vw,64px)]
+    font-semibold
+    tracking-tight
+  "
+>
+  {sequence.slice(0, progress).map((item, index) => {
+    const isNewest = index === progress - 1;
+
+    return (
+      <span
+        key={index}
+        className="
+          inline-block
+          will-change-transform
+        "
+        style={{
+          transform: isNewest
+            ? "translateY(6px) scale(0.85)"
+            : "translateY(0) scale(1)",
+          animation: isNewest
+            ? "letter-in 520ms cubic-bezier(0.22,1,0.36,1) forwards"
+            : "none"
+        }}
+      >
+        {item.letter}
+      </span>
+    );
+  })}
+</h1>
+
 
     {/* FINAL CLAIM */}
     {showClaim && (

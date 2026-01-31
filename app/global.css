@@ -1356,3 +1356,26 @@ div[data-convo="1"] { scrollbar-color: rgba(255,255,255,0.25) transparent;
 .markdown pre code.hljs .hljs-strong {
   font-weight: 700;
 }
+@keyframes letter-in {
+  0% {
+    transform: translateY(6px) scale(0.85);
+  }
+  60% {
+    transform: translateY(-1px) scale(1.06);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes word-in {
+  0% {
+    transform: translateY(4px) scale(0.96);
+  }
+  70% {
+    transform: translateY(0) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
