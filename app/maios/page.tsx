@@ -141,14 +141,35 @@ useEffect(() => {
       {t.clarification.body[0]}
     </p>
 
-    {/* SECONDARY STRUCTURE */}
-    <ul className="space-y-3 text-white/70">
+    {/* STRUCTURED BULLETS WITH ARROWS */}
+    <ul className="space-y-4">
       {t.clarification.body.slice(1, -1).map((line: string, i: number) => (
         <li
           key={i}
-          className="pl-4 border-l border-white/10"
+          className="flex items-start gap-3 text-white/70"
         >
-          {line}
+          {/* ARROW ICON */}
+          <span className="mt-[0.35em] flex-shrink-0 text-white/50">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14" />
+              <path d="M13 6l6 6-6 6" />
+            </svg>
+          </span>
+
+          {/* TEXT */}
+          <span className="leading-relaxed">
+            {line}
+          </span>
         </li>
       ))}
     </ul>
@@ -160,6 +181,7 @@ useEffect(() => {
 
   </div>
 </section>
+
 
 
           
