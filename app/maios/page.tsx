@@ -119,7 +119,7 @@ useEffect(() => {
   </div>
 </section>
 
-          {/* BUFFER */}
+          {/* Buffer */}
           <div aria-hidden="true" style={{ height: "var(--h-gap-md)" }} />
 
           {/* CLARIFICATION */}
