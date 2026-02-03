@@ -197,33 +197,33 @@ useEffect(() => {
   <div className="page-center max-w-[820px]">
 
     {/* SYSTEM TAG */}
-    <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
+    <div className="mb-4 text-xs uppercase tracking-wide text-white/40">
       Runtime reality
     </div>
 
     {/* TITLE */}
-    <h2 className="text-3xl font-semibold">
+    <h2 className="text-3xl font-semibold mb-4">
       {t.problem_statement.title}
     </h2>
 
-    {/* SUBTITLE AS CHALLENGE */}
-    <p className="mt-4 text-white/70 text-lg max-w-[620px]">
+    {/* SUBTITLE */}
+    <p className="text-white/65 text-lg mb-10">
       {t.problem_statement.subtitle}
     </p>
 
-    {/* SEPARATION */}
-    <div className="mt-10 h-px w-24 bg-white/10" />
+    {/* CONTEXT */}
+    <div className="space-y-4 text-white/70 max-w-[760px] mb-12">
+      {t.problem_statement.body.slice(0, 2).map((line: string, i: number) => (
+        <p key={i}>{line}</p>
+      ))}
+    </div>
 
-    {/* BODY AS SEQUENCE */}
-    <div className="mt-10 space-y-5 text-white/70 max-w-[720px]">
-      {t.problem_statement.body.map((line: string, i: number) => (
+    {/* JUDGMENT BLOCK */}
+    <div className="mt-12 border-l border-white/15 pl-6 space-y-4">
+      {t.problem_statement.body.slice(2).map((line: string, i: number) => (
         <p
           key={i}
-          className={
-            i >= t.problem_statement.body.length - 2
-              ? "text-white/85 font-medium"
-              : undefined
-          }
+          className="text-white/85 text-lg font-medium"
         >
           {line}
         </p>
@@ -232,6 +232,7 @@ useEffect(() => {
 
   </div>
 </section>
+
 
           {/* BUFFER */}
     <div
