@@ -214,47 +214,41 @@ useEffect(() => {
     {/* SEPARATION */}
     <div className="mt-10 h-px w-24 bg-white/10" />
 
-    {/* BODY AS DIRECTIONAL SEQUENCE */}
-    <div className="mt-10 space-y-6 max-w-[760px]">
-      {t.problem_statement.body.map((line: string, i: number) => {
-        const isJudgement = i >= t.problem_statement.body.length - 2;
+    {/* CONTEXT PARAGRAPHS */}
+    <div className="mt-10 space-y-5 text-white/70 max-w-[720px]">
+      {t.problem_statement.body.slice(0, 2).map((line: string, i: number) => (
+        <p key={i}>{line}</p>
+      ))}
+    </div>
 
-        return (
-          <div
-            key={i}
-            className="flex items-start gap-6"
-          >
-            {/* ARROW RAIL */}
-            <div className="pt-[0.45em] flex-shrink-0 text-white/40">
-              <svg
-                width="18"
-                height="12"
-                viewBox="0 0 24 12"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M0 6h20" />
-                <path d="M14 1l6 5-6 5" />
-              </svg>
-            </div>
-
-            {/* TEXT */}
-            <p
-              className={
-                isJudgement
-                  ? "text-white/85 font-medium text-lg leading-relaxed"
-                  : "text-white/70 leading-relaxed"
-              }
+    {/* JUDGEMENT BULLETS */}
+    <div className="mt-10 space-y-5 max-w-[720px]">
+      {t.problem_statement.body.slice(2).map((line: string, i: number) => (
+        <div key={i} className="flex items-start gap-6">
+          {/* ARROW */}
+          <div className="pt-[0.45em] flex-shrink-0 text-white/40">
+            <svg
+              width="18"
+              height="12"
+              viewBox="0 0 24 12"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
             >
-              {line}
-            </p>
+              <path d="M0 6h20" />
+              <path d="M14 1l6 5-6 5" />
+            </svg>
           </div>
-        );
-      })}
+
+          {/* TEXT */}
+          <p className="text-white/85 font-medium text-lg leading-relaxed">
+            {line}
+          </p>
+        </div>
+      ))}
     </div>
 
   </div>
