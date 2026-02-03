@@ -192,62 +192,70 @@ useEffect(() => {
       style={{ height: "var(--h-gap-md)" }}
     />
 
-         {/* CLARIFICATION */}
-<section className="pt-[100px] pb-[100px]">
-  <div className="page-center max-w-[760px]">
+         {/* PROBLEM STATEMENT */}
+<section className="pt-[120px] pb-[120px]">
+  <div className="page-center max-w-[820px]">
 
     {/* SYSTEM TAG */}
     <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-      System clarification layer
+      Runtime reality
     </div>
 
     {/* TITLE */}
-    <h2 className="text-2xl font-semibold mb-10">
-      {t.clarification.title}
+    <h2 className="text-3xl font-semibold">
+      {t.problem_statement.title}
     </h2>
 
-    {/* PRIMARY STATEMENT */}
-    <p className="text-white mb-10 text-[17px] leading-relaxed max-w-[720px]">
-      {t.clarification.body[0]}
+    {/* SUBTITLE AS CHALLENGE */}
+    <p className="mt-4 text-white/70 text-lg max-w-[620px]">
+      {t.problem_statement.subtitle}
     </p>
 
-    {/* DIRECTIONAL SEQUENCE */}
-    <div className="space-y-5 max-w-[760px]">
-      {t.clarification.body.slice(1, -1).map((line: string, i: number) => (
-        <div
-          key={i}
-          className="flex items-start gap-6 text-white/70"
-        >
-          {/* ARROW RAIL */}
-          <div className="pt-[0.45em] flex-shrink-0 text-white/40">
-            <svg
-              width="18"
-              height="12"
-              viewBox="0 0 24 12"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
+    {/* SEPARATION */}
+    <div className="mt-10 h-px w-24 bg-white/10" />
+
+    {/* BODY AS DIRECTIONAL SEQUENCE */}
+    <div className="mt-10 space-y-6 max-w-[760px]">
+      {t.problem_statement.body.map((line: string, i: number) => {
+        const isJudgement = i >= t.problem_statement.body.length - 2;
+
+        return (
+          <div
+            key={i}
+            className="flex items-start gap-6"
+          >
+            {/* ARROW RAIL */}
+            <div className="pt-[0.45em] flex-shrink-0 text-white/40">
+              <svg
+                width="18"
+                height="12"
+                viewBox="0 0 24 12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M0 6h20" />
+                <path d="M14 1l6 5-6 5" />
+              </svg>
+            </div>
+
+            {/* TEXT */}
+            <p
+              className={
+                isJudgement
+                  ? "text-white/85 font-medium text-lg leading-relaxed"
+                  : "text-white/70 leading-relaxed"
+              }
             >
-              <path d="M0 6h20" />
-              <path d="M14 1l6 5-6 5" />
-            </svg>
+              {line}
+            </p>
           </div>
-
-          {/* TEXT */}
-          <p className="leading-relaxed">
-            {line}
-          </p>
-        </div>
-      ))}
+        );
+      })}
     </div>
-
-    {/* FINAL ASSERTION */}
-    <p className="mt-12 text-white/90 font-medium max-w-[720px]">
-      {t.clarification.body[t.clarification.body.length - 1]}
-    </p>
 
   </div>
 </section>
