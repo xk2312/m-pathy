@@ -124,7 +124,7 @@ useEffect(() => {
 
           {/* CLARIFICATION */}
 <section className="pt-[100px] pb-[100px]">
-  <div className="page-center max-w-[760px]">
+  <div className="page-center max-w-[760px]"> 
 
     {/* SYSTEM TAG */}
     <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
