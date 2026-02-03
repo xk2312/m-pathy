@@ -119,7 +119,7 @@ useEffect(() => {
   </div>
 </section>
 
-          {/* Buffer */}
+          {/* BUFFER */}
           <div aria-hidden="true" style={{ height: "var(--h-gap-md)" }} />
 
           {/* CLARIFICATION */}
@@ -170,62 +170,143 @@ useEffect(() => {
       style={{ height: "var(--h-gap-md)" }}
     />
 
-          {/* PROBLEM STATEMENT */}
-          <section className="pt-[100px] pb-[100px]">
-            <div className="page-center max-w-[820px]">
-              <h2 className="text-2xl font-semibold">
-                {t.problem_statement.title}
-              </h2>
-              <p className="mt-2 text-white/60">
-                {t.problem_statement.subtitle}
-              </p>
-              <div className="mt-6 space-y-3 text-white/70">
-                {t.problem_statement.body.map((line: string, i: number) => (
-                  <p key={i}>{line}</p>
-                ))}
-              </div>
-            </div>
-          </section>
+         {/* PROBLEM STATEMENT */}
+<section className="pt-[120px] pb-[120px]">
+  <div className="page-center max-w-[820px]">
+
+    {/* SYSTEM TAG */}
+    <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
+      Runtime reality
+    </div>
+
+    {/* TITLE */}
+    <h2 className="text-3xl font-semibold">
+      {t.problem_statement.title}
+    </h2>
+
+    {/* SUBTITLE AS CHALLENGE */}
+    <p className="mt-4 text-white/70 text-lg max-w-[620px]">
+      {t.problem_statement.subtitle}
+    </p>
+
+    {/* SEPARATION */}
+    <div className="mt-10 h-px w-24 bg-white/10" />
+
+    {/* BODY AS SEQUENCE */}
+    <div className="mt-10 space-y-5 text-white/70 max-w-[720px]">
+      {t.problem_statement.body.map((line: string, i: number) => (
+        <p
+          key={i}
+          className={
+            i >= t.problem_statement.body.length - 2
+              ? "text-white/85 font-medium"
+              : undefined
+          }
+        >
+          {line}
+        </p>
+      ))}
+    </div>
+
+  </div>
+</section>
+
           {/* BUFFER */}
     <div
       aria-hidden="true"
       style={{ height: "var(--h-gap-md)" }}
     />
 
-          {/* PROBLEMS */}
-          <section className="pt-[100px] pb-[100px]">
-            <div className="page-center max-w-[820px]">
-              <h2 className="text-2xl font-semibold mb-8">
-                {t.problems.title}
-              </h2>
-              <ul className="space-y-4">
-                {t.problems.items.map((item: any, i: number) => (
-                  <li key={i} className="text-white/75">
-                    {item.title}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
+         {/* PROBLEMS */}
+<section className="pt-[120px] pb-[120px]">
+  <div className="page-center max-w-[820px]">
+
+    {/* SYSTEM TAG */}
+    <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
+      Structural failure patterns
+    </div>
+
+    {/* TITLE */}
+    <h2 className="text-3xl font-semibold mb-12">
+      {t.problems.title}
+    </h2>
+
+    {/* PROBLEM LIST AS ASSERTIONS */}
+    <ul className="space-y-6 max-w-[720px]">
+      {t.problems.items.map((item: any, i: number) => (
+        <li
+          key={i}
+          className="
+            text-white/75
+            pl-5
+            border-l
+            border-white/10
+            leading-relaxed
+          "
+        >
+          {item.title}
+        </li>
+      ))}
+    </ul>
+
+    {/* CLOSING SIGNAL */}
+    <p className="mt-12 text-white/50 text-sm max-w-[600px]">
+      These are not isolated issues. They are symptoms of missing inner system structure.
+    </p>
+
+  </div>
+</section>
+
           {/* BUFFER */}
     <div
       aria-hidden="true"
       style={{ height: "var(--h-gap-md)" }}
     />
 
-          {/* WHAT MAIOS IS */}
-          <section className="pt-[100px] pb-[100px]">
-            <div className="page-center max-w-[820px]">
-              <h2 className="text-2xl font-semibold mb-6">
-                {t.what_it_is.title}
-              </h2>
-              <div className="space-y-3 text-white/70">
-                {t.what_it_is.body.map((line: string, i: number) => (
-                  <p key={i}>{line}</p>
-                ))}
-              </div>
-            </div>
-          </section>
+         {/* WHAT MAIOS IS */}
+<section className="pt-[120px] pb-[120px]">
+  <div className="page-center max-w-[820px]">
+
+    {/* SYSTEM TAG */}
+    <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
+      System definition
+    </div>
+
+    {/* TITLE */}
+    <h2 className="text-3xl font-semibold mb-10">
+      {t.what_it_is.title}
+    </h2>
+
+    {/* PRIMARY DEFINITION */}
+    <p className="text-white text-lg leading-relaxed max-w-[720px] mb-10">
+      {t.what_it_is.body[0]}
+    </p>
+
+    {/* STRUCTURAL EXPLANATION */}
+    <div className="space-y-4 text-white/70 max-w-[720px]">
+      {t.what_it_is.body.slice(1, -2).map((line: string, i: number) => (
+        <p key={i}>{line}</p>
+      ))}
+    </div>
+
+    {/* SEPARATION */}
+    <div className="mt-10 h-px w-24 bg-white/10" />
+
+    {/* FINAL ASSERTIONS */}
+    <div className="mt-10 space-y-2">
+      {t.what_it_is.body.slice(-2).map((line: string, i: number) => (
+        <p
+          key={i}
+          className="text-white/90 font-medium"
+        >
+          {line}
+        </p>
+      ))}
+    </div>
+
+  </div>
+</section>
+
           {/* BUFFER */}
     <div
       aria-hidden="true"
@@ -233,47 +314,105 @@ useEffect(() => {
     />
 
           {/* WHAT MAIOS IS NOT */}
-          <section className="pt-[80px] pb-[80px]">
-            <div className="page-center max-w-[820px]">
-              <h2 className="text-xl font-semibold mb-6">
-                {t.what_it_is_not.title}
-              </h2>
-              <ul className="space-y-2 text-white/70">
-                {t.what_it_is_not.body.map((line: string, i: number) => (
-                  <li key={i}>{line}</li>
-                ))}
-              </ul>
-            </div>
-          </section>
+<section className="pt-[100px] pb-[100px]">
+  <div className="page-center max-w-[820px]">
+
+    {/* SYSTEM TAG */}
+    <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
+      Explicit exclusions
+    </div>
+
+    {/* TITLE */}
+    <h2 className="text-2xl font-semibold mb-10">
+      {t.what_it_is_not.title}
+    </h2>
+
+    {/* NEGATIVE BOUNDARIES */}
+    <ul className="space-y-4 max-w-[720px]">
+      {t.what_it_is_not.body.map((line: string, i: number) => (
+        <li
+          key={i}
+          className="
+            text-white/70
+            pl-5
+            border-l
+            border-white/10
+            leading-relaxed
+          "
+        >
+          {line}
+        </li>
+      ))}
+    </ul>
+
+    {/* CLOSING BOUNDARY STATEMENT */}
+    <p className="mt-12 text-white/85 font-medium max-w-[600px]">
+      These exclusions are intentional. They define the responsibility boundary of MAIOS.
+    </p>
+
+  </div>
+</section>
+
           {/* BUFFER */}
     <div
       aria-hidden="true"
       style={{ height: "var(--h-gap-md)" }}
     />
 
-          {/* AUDIENCE */}
-          <section className="pt-[100px] pb-[100px]">
-            <div className="page-center max-w-[820px]">
-              <h2 className="text-2xl font-semibold mb-6">
-                {t.audience.title}
-              </h2>
-              <div className="space-y-3 text-white/70">
-                {t.audience.body.map((line: string, i: number) => (
-                  <p key={i}>{line}</p>
-                ))}
-              </div>
-              <ul className="mt-6 space-y-2 text-white/65">
-                {t.audience.sectors.map((s: string, i: number) => (
-                  <li key={i}>{s}</li>
-                ))}
-              </ul>
-              <div className="mt-6 space-y-2 text-white/60">
-                {t.audience.footer.map((line: string, i: number) => (
-                  <p key={i}>{line}</p>
-                ))}
-              </div>
-            </div>
-          </section>
+         {/* AUDIENCE */}
+<section className="pt-[120px] pb-[120px]">
+  <div className="page-center max-w-[820px]">
+
+    {/* SYSTEM TAG */}
+    <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
+      Intended operating environments
+    </div>
+
+    {/* TITLE */}
+    <h2 className="text-3xl font-semibold mb-10">
+      {t.audience.title}
+    </h2>
+
+    {/* CONTEXT */}
+    <div className="space-y-4 text-white/70 max-w-[720px] mb-12">
+      {t.audience.body.map((line: string, i: number) => (
+        <p key={i}>{line}</p>
+      ))}
+    </div>
+
+    {/* SECTORS AS SCOPE */}
+    <div className="mb-12">
+      <div className="mb-4 text-sm uppercase tracking-wide text-white/40">
+        Typical domains
+      </div>
+      <ul className="space-y-3 max-w-[520px]">
+        {t.audience.sectors.map((s: string, i: number) => (
+          <li
+            key={i}
+            className="
+              text-white/70
+              pl-5
+              border-l
+              border-white/10
+              leading-relaxed
+            "
+          >
+            {s}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    {/* FOOTNOTE BOUNDARY */}
+    <div className="space-y-2 text-white/60 max-w-[640px]">
+      {t.audience.footer.map((line: string, i: number) => (
+        <p key={i}>{line}</p>
+      ))}
+    </div>
+
+  </div>
+</section>
+
           {/* BUFFER */}
     <div
       aria-hidden="true"
@@ -281,31 +420,65 @@ useEffect(() => {
     />
 
           {/* OFFERING */}
-          <section className="pt-[120px] pb-[120px]">
-            <div className="page-center max-w-[820px]">
-              <h2 className="text-2xl font-semibold mb-8">
-                {t.offering.title}
-              </h2>
+<section className="pt-[140px] pb-[140px]">
+  <div className="page-center max-w-[820px]">
 
-              <h3 className="text-xl font-semibold mb-4">
-                {t.offering.core.title}
-              </h3>
-              <div className="space-y-2 text-white/70 mb-10">
-                {t.offering.core.body.map((line: string, i: number) => (
-                  <p key={i}>{line}</p>
-                ))}
-              </div>
+    {/* SYSTEM TAG */}
+    <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
+      Delivery structure
+    </div>
 
-              <h3 className="text-xl font-semibold mb-4">
-                {t.offering.inventory.title}
-              </h3>
-              <div className="space-y-2 text-white/70">
-                {t.offering.inventory.body.map((line: string, i: number) => (
-                  <p key={i}>{line}</p>
-                ))}
-              </div>
-            </div>
-          </section>
+    {/* TITLE */}
+    <h2 className="text-3xl font-semibold mb-14">
+      {t.offering.title}
+    </h2>
+
+    {/* CORE OFFERING */}
+    <div className="mb-20 max-w-[720px]">
+      <div className="mb-4 text-sm uppercase tracking-wide text-white/40">
+        Core layer
+      </div>
+
+      <h3 className="text-2xl font-semibold mb-6">
+        {t.offering.core.title}
+      </h3>
+
+      <div className="space-y-4 text-white/70">
+        {t.offering.core.body.map((line: string, i: number) => (
+          <p
+            key={i}
+            className={
+              i === 0
+                ? "text-white/90 text-lg"
+                : undefined
+            }
+          >
+            {line}
+          </p>
+        ))}
+      </div>
+    </div>
+
+    {/* INVENTORY EXTENSION */}
+    <div className="max-w-[720px]">
+      <div className="mb-4 text-sm uppercase tracking-wide text-white/40">
+        System adaptation
+      </div>
+
+      <h3 className="text-2xl font-semibold mb-6">
+        {t.offering.inventory.title}
+      </h3>
+
+      <div className="space-y-4 text-white/70">
+        {t.offering.inventory.body.map((line: string, i: number) => (
+          <p key={i}>{line}</p>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</section>
+
           {/* BUFFER */}
     <div
       aria-hidden="true"
@@ -313,18 +486,41 @@ useEffect(() => {
     />
 
           {/* PROOF */}
-          <section className="pt-[100px] pb-[100px]">
-            <div className="page-center max-w-[820px]">
-              <h2 className="text-2xl font-semibold mb-6">
-                {t.proof.title}
-              </h2>
-              <div className="space-y-2 text-white/70">
-                {t.proof.body.map((line: string, i: number) => (
-                  <p key={i}>{line}</p>
-                ))}
-              </div>
-            </div>
-          </section>
+<section className="pt-[120px] pb-[120px]">
+  <div className="page-center max-w-[820px]">
+
+    {/* SYSTEM TAG */}
+    <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
+      Operational proof
+    </div>
+
+    {/* TITLE */}
+    <h2 className="text-3xl font-semibold mb-10">
+      {t.proof.title}
+    </h2>
+
+    {/* PRIMARY EVIDENCE */}
+    <p className="text-white/90 text-lg leading-relaxed max-w-[720px] mb-10">
+      {t.proof.body[0]}
+    </p>
+
+    {/* SUPPORTING FACTS */}
+    <div className="space-y-4 text-white/70 max-w-[720px]">
+      {t.proof.body.slice(1).map((line: string, i: number) => (
+        <p key={i}>{line}</p>
+      ))}
+    </div>
+
+    {/* EVIDENCE BOUNDARY */}
+    <div className="mt-12 pt-6 border-t border-white/10 max-w-[600px]">
+      <p className="text-white/60 text-sm">
+        Proof here refers to observable operation and verifiable system behavior, not certification or endorsement.
+      </p>
+    </div>
+
+  </div>
+</section>
+
           {/* BUFFER */}
     <div
       aria-hidden="true"
@@ -332,18 +528,49 @@ useEffect(() => {
     />
 
           {/* CONSULTING */}
-          <section className="pt-[100px] pb-[100px]">
-            <div className="page-center max-w-[820px]">
-              <h2 className="text-2xl font-semibold mb-6">
-                {t.consulting.title}
-              </h2>
-              <div className="space-y-2 text-white/70">
-                {t.consulting.body.map((line: string, i: number) => (
-                  <p key={i}>{line}</p>
-                ))}
-              </div>
-            </div>
-          </section>
+<section className="pt-[120px] pb-[120px]">
+  <div className="page-center max-w-[820px]">
+
+    {/* SYSTEM TAG */}
+    <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
+      Structural intervention
+    </div>
+
+    {/* TITLE */}
+    <h2 className="text-3xl font-semibold mb-10">
+      {t.consulting.title}
+    </h2>
+
+    {/* PRIMARY POSITIONING */}
+    <p className="text-white/90 text-lg leading-relaxed max-w-[720px] mb-10">
+      {t.consulting.body[0]}
+    </p>
+
+    {/* SCOPE DESCRIPTION */}
+    <div className="space-y-4 text-white/70 max-w-[720px]">
+      {t.consulting.body.slice(1, -2).map((line: string, i: number) => (
+        <p key={i}>{line}</p>
+      ))}
+    </div>
+
+    {/* SEPARATION */}
+    <div className="mt-12 h-px w-24 bg-white/10" />
+
+    {/* FINAL BOUNDARIES */}
+    <div className="mt-10 space-y-2">
+      {t.consulting.body.slice(-2).map((line: string, i: number) => (
+        <p
+          key={i}
+          className="text-white/85 font-medium"
+        >
+          {line}
+        </p>
+      ))}
+    </div>
+
+  </div>
+</section>
+
           {/* BUFFER */}
     <div
       aria-hidden="true"
@@ -351,21 +578,103 @@ useEffect(() => {
     />
 
           {/* CONTACT */}
-          <section className="pt-[120px] pb-[120px]">
-            <div className="page-center max-w-[720px]">
-              <h2 className="text-2xl font-semibold mb-4">
-                {t.contact.title}
-              </h2>
-              <p className="text-white/70 mb-8">
-                {t.contact.body[0]}
-              </p>
-              <div className="space-y-2 text-white/60 text-sm">
-                {t.contact.footer.map((line: string, i: number) => (
-                  <p key={i}>{line}</p>
-                ))}
-              </div>
-            </div>
-          </section>
+<section className="pt-[140px] pb-[140px]">
+  <div className="page-center max-w-[720px]">
+
+    {/* SYSTEM TAG */}
+    <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
+      Controlled system entry
+    </div>
+
+    {/* TITLE */}
+    <h2 className="text-3xl font-semibold mb-6">
+      {t.contact.title}
+    </h2>
+
+    {/* CONTEXT */}
+    <p className="text-white/70 mb-12 max-w-[560px]">
+      {t.contact.body[0]}
+    </p>
+
+    {/* FORM */}
+    <form
+      action="/api/contact"
+      method="post"
+      className="space-y-6 max-w-[560px]"
+    >
+      <div>
+        <label className="block text-sm text-white/60 mb-1">
+          {t.contact.fields[0]}
+        </label>
+        <input
+          name="type"
+          required
+          className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm text-white/60 mb-1">
+          {t.contact.fields[1]}
+        </label>
+        <textarea
+          name="message"
+          required
+          rows={5}
+          className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm text-white/60 mb-1">
+          {t.contact.fields[2]}
+        </label>
+        <input
+          type="email"
+          name="email"
+          required
+          className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm text-white/60 mb-1">
+          {t.contact.fields[3]}
+        </label>
+        <input
+          name="company"
+          className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm text-white/60 mb-1">
+          {t.contact.fields[4]}
+        </label>
+        <input
+          name="role"
+          className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
+        />
+      </div>
+
+      <button
+        type="submit"
+        className="mt-6 inline-flex items-center border border-white/20 px-6 py-2 text-white/80 hover:text-white hover:border-white/40 transition"
+      >
+        Send message
+      </button>
+    </form>
+
+    {/* FOOTNOTE */}
+    <div className="mt-12 space-y-2 text-white/60 text-sm max-w-[600px]">
+      {t.contact.footer.map((line: string, i: number) => (
+        <p key={i}>{line}</p>
+      ))}
+    </div>
+
+  </div>
+</section>
+
           {/* BUFFER */}
     <div
       aria-hidden="true"
@@ -373,13 +682,27 @@ useEffect(() => {
     />
 
           {/* CLOSING */}
-          <section className="pt-[80px] pb-[40px]">
-            <div className="page-center max-w-[720px] text-white/70">
-              {t.closing.body.map((line: string, i: number) => (
-                <p key={i}>{line}</p>
-              ))}
-            </div>
-          </section>
+<section className="pt-[120px] pb-[80px]">
+  <div className="page-center max-w-[720px]">
+
+    {/* FINAL SYSTEM MARK */}
+    <div className="mb-8 h-px w-24 bg-white/10" />
+
+    {/* CLOSING STATEMENTS */}
+    <div className="space-y-4 text-white/75 text-lg">
+      {t.closing.body.map((line: string, i: number) => (
+        <p
+          key={i}
+          className={i === t.closing.body.length - 1 ? "text-white/90 font-medium" : undefined}
+        >
+          {line}
+        </p>
+      ))}
+    </div>
+
+  </div>
+</section>
+
 
         </div>
         {/* BUFFER */}
