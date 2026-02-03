@@ -222,34 +222,38 @@ useEffect(() => {
     </div>
 
     {/* JUDGEMENT BULLETS */}
-    <div className="mt-10 space-y-5 max-w-[720px]">
-      {t.problem_statement.body.slice(2).map((line: string, i: number) => (
-        <div key={i} className="flex items-start gap-6">
-          {/* ARROW */}
-          <div className="pt-[0.45em] flex-shrink-0 text-white/40">
-            <svg
-              width="18"
-              height="12"
-              viewBox="0 0 24 12"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M0 6h20" />
-              <path d="M14 1l6 5-6 5" />
-            </svg>
-          </div>
+<div className="mt-10 space-y-6 max-w-[720px]">
+  {t.problem_statement.body.slice(2).map((line: string, i: number) => (
+    <div
+      key={i}
+      className="flex items-start gap-5"
+    >
+      {/* ARROW - CENTERED + SHORT */}
+      <div className="pt-[0.3em] flex-shrink-0 text-white/45">
+        <svg
+          width="14"
+          height="10"
+          viewBox="0 0 20 10"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M0 5h14" />
+          <path d="M10 1l4 4-4 4" />
+        </svg>
+      </div>
 
-          {/* TEXT */}
-          <p className="text-white/85 font-medium text-lg leading-relaxed">
-            {line}
-          </p>
-        </div>
-      ))}
+      {/* TEXT */}
+      <p className="text-white/85 font-medium text-lg leading-relaxed">
+        {line}
+      </p>
     </div>
+  ))}
+</div>
+
 
   </div>
 </section>
