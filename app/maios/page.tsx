@@ -226,7 +226,7 @@ useEffect(() => {
   {t.problem_statement.body.slice(2).map((line: string, i: number) => (
     <div key={i} className="flex items-start gap-4">
       {/* ARROW ICON */}
-      <span className="flex-shrink-0 text-white/50 translate-y-[4px]">
+      <span className="flex-shrink-0 text-white/50 translate-y-[7px]">
         <svg
           width="14"
           height="14"
