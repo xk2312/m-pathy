@@ -123,18 +123,44 @@ useEffect(() => {
           <div aria-hidden="true" style={{ height: "var(--h-gap-md)" }} />
 
           {/* CLARIFICATION */}
-          <section className="pt-[80px] pb-[80px]">
-            <div className="page-center max-w-[760px]">
-              <h2 className="text-xl font-semibold mb-6">
-                {t.clarification.title}
-              </h2>
-              <ul className="space-y-2 text-white/70">
-                {t.clarification.body.map((line: string, i: number) => (
-                  <li key={i}>{line}</li>
-                ))}
-              </ul>
-            </div>
-          </section>
+<section className="pt-[100px] pb-[100px]">
+  <div className="page-center max-w-[760px]">
+
+    {/* SYSTEM TAG */}
+    <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
+      System clarification layer
+    </div>
+
+    {/* TITLE */}
+    <h2 className="text-2xl font-semibold mb-10">
+      {t.clarification.title}
+    </h2>
+
+    {/* PRIMARY STATEMENT */}
+    <p className="text-white mb-8 text-[17px] leading-relaxed">
+      {t.clarification.body[0]}
+    </p>
+
+    {/* SECONDARY STRUCTURE */}
+    <ul className="space-y-3 text-white/70">
+      {t.clarification.body.slice(1, -1).map((line: string, i: number) => (
+        <li
+          key={i}
+          className="pl-4 border-l border-white/10"
+        >
+          {line}
+        </li>
+      ))}
+    </ul>
+
+    {/* FINAL ASSERTION */}
+    <p className="mt-10 text-white/85 font-medium">
+      {t.clarification.body[t.clarification.body.length - 1]}
+    </p>
+
+  </div>
+</section>
+
 
           
           
