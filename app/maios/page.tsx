@@ -321,23 +321,36 @@ useEffect(() => {
       {t.problems.title}
     </h2>
 
-    {/* PROBLEM LIST AS ASSERTIONS */}
-    <ul className="space-y-6 max-w-[720px]">
-      {t.problems.items.map((item: any, i: number) => (
-        <li
-          key={i}
-          className="
-            text-white/75
-            pl-5
-            border-l
-            border-white/10
-            leading-relaxed
-          "
+    {/* PROBLEM LIST AS ARROW BULLETS */}
+<div className="mt-10 space-y-6 max-w-[720px]">
+  {t.problems.items.map((item: any, i: number) => (
+    <div key={i} className="flex items-start gap-4">
+      {/* ARROW ICON */}
+      <span className="flex-shrink-0 text-white/50 translate-y-[7px]">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
         >
-          {item.title}
-        </li>
-      ))}
-    </ul>
+          <path d="M5 12h14" />
+          <path d="M13 6l6 6-6 6" />
+        </svg>
+      </span>
+
+      {/* TEXT */}
+      <p className="text-white/85 font-medium text-lg leading-relaxed">
+        {item.title}
+      </p>
+    </div>
+  ))}
+</div>
+
 
     {/* CLOSING SIGNAL */}
     <p className="mt-12 text-white/50 text-sm max-w-[600px]">
