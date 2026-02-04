@@ -10,6 +10,8 @@ import { usePathname } from "next/navigation";
 import MuTahLine from "@/app/components/MuTahLine";
 import MuTahSpiral from "@/app/components/MuTahSpiral";
 import MCoherenceField from "@/app/components/MCoherenceField";
+import MGovernanceField from "@/app/components/MGovernanceField";
+
 
 
 
@@ -309,11 +311,8 @@ useEffect(() => {
   </div>
 </section>
 
-          {/* BUFFER */}
-    <div
-      aria-hidden="true"
-      style={{ height: "var(--h-gap-md)" }}
-    />
+       {/* The problems MAIOS solves */}
+<MGovernanceField />
 
          {/* WHAT MAIOS IS */}
 <section className="pt-[120px] pb-[120px]">
