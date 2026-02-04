@@ -11,6 +11,8 @@ import MuTahLine from "@/app/components/MuTahLine";
 import MuTahSpiral from "@/app/components/MuTahSpiral";
 import MCoherenceField from "@/app/components/MCoherenceField";
 import MGovernanceField from "@/app/components/MGovernanceField";
+import ControlledSystemEntry from "@/app/components/ControlledSystemEntry";
+
 
 
 type VisibilityMountProps = {
@@ -684,7 +686,7 @@ useEffect(() => {
       <div className="space-y-6 max-w-[720px]">
   {t.offering.inventory.body.map((line: string, i: number) => (
     <div key={i} className="flex items-start gap-4">
-      
+
       {/* CONNECTION / MAPPING ICON */}
 <span className="flex-shrink-0 text-white/45 translate-y-[6px]">
   <svg
@@ -810,109 +812,16 @@ useEffect(() => {
   </div>
 </section>
 
-          {/* BUFFER */}
+                 {/* BUFFER */}
     <div
       aria-hidden="true"
       style={{ height: "var(--h-gap-md)" }}
     />
 
           {/* CONTACT */}
-<section className="pt-[140px] pb-[140px]">
-  <div className="page-center max-w-[720px]">
+          <ControlledSystemEntry />
 
-    {/* SYSTEM TAG */}
-    <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-      Controlled system entry
-    </div>
 
-    {/* TITLE */}
-    <h2 className="text-3xl font-semibold mb-6">
-      {t.contact.title}
-    </h2>
-
-    {/* CONTEXT */}
-    <p className="text-white/70 mb-12 max-w-[560px]">
-      {t.contact.body[0]}
-    </p>
-
-    {/* FORM */}
-    <form
-      action="/api/contact"
-      method="post"
-      className="space-y-6 max-w-[560px]"
-    >
-      <div>
-        <label className="block text-sm text-white/60 mb-1">
-          {t.contact.fields[0]}
-        </label>
-        <input
-          name="type"
-          required
-          className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm text-white/60 mb-1">
-          {t.contact.fields[1]}
-        </label>
-        <textarea
-          name="message"
-          required
-          rows={5}
-          className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm text-white/60 mb-1">
-          {t.contact.fields[2]}
-        </label>
-        <input
-          type="email"
-          name="email"
-          required
-          className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm text-white/60 mb-1">
-          {t.contact.fields[3]}
-        </label>
-        <input
-          name="company"
-          className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm text-white/60 mb-1">
-          {t.contact.fields[4]}
-        </label>
-        <input
-          name="role"
-          className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
-        />
-      </div>
-
-      <button
-        type="submit"
-        className="mt-6 inline-flex items-center border border-white/20 px-6 py-2 text-white/80 hover:text-white hover:border-white/40 transition"
-      >
-        Send message
-      </button>
-    </form>
-
-    {/* FOOTNOTE */}
-    <div className="mt-12 space-y-2 text-white/60 text-sm max-w-[600px]">
-      {t.contact.footer.map((line: string, i: number) => (
-        <p key={i}>{line}</p>
-      ))}
-    </div>
-
-  </div>
-</section>
 
           {/* BUFFER */}
     <div
