@@ -149,12 +149,25 @@ className="w-full bg-transparent border border-white/10 px-3 py-2 text-white foc
                 />
               </div>
 
-              <button
-                type="submit"
-className="mt-6 inline-flex items-center border border-white/20 px-6 py-2 text-white/80 hover:text-white hover:border-white/40 transition cursor-pointer"
-              >
-                Send message
-              </button>
+             <button
+  type="submit"
+  className="
+    mt-8
+    inline-flex items-center justify-center
+    px-6 py-3
+    border border-white/30
+    text-sm font-medium
+    text-white/85
+    hover:text-white
+    hover:border-white/50
+    focus:outline-none focus:ring-1 focus:ring-white/30
+    transition
+    cursor-pointer
+  "
+>
+  Send message
+</button>
+
             </form>
 
             <div className="mt-12 space-y-2 text-white/60 text-sm">
