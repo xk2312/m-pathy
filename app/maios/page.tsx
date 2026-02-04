@@ -117,87 +117,63 @@ useEffect(() => {
     )}
 
   </div>
-
-{/* BUFFER */}
-          <div aria-hidden="true" style={{ height: "var(--h-gap-md)" }} />
-
+  
 </section>
 
-{/* MAIOS SPATIAL INTERLUDE */}
-<section className="pt-[140px] pb-[140px] relative overflow-hidden">
-  <div className="page-center max-w-[1100px]">
+{/* MU TAH – NEAR EMPTY CANVAS */}
+<section className="pt-[160px] pb-[160px] relative overflow-hidden">
+  <div className="page-center max-w-[1200px]">
 
-    {/* LAYER 1: NEAR EMPTY CANVAS */}
-    <div className="relative h-[320px] mb-24">
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-[420px] h-[420px] rounded-full border border-white/10 animate-breathe" />
-      </div>
-    </div>
-
-    {/* LAYER 2: ORBITAL LINE */}
-    <div className="relative h-[260px] mb-24">
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="orbit">
-          <div className="orbit-line" />
-        </div>
-      </div>
-    </div>
-
-    {/* LAYER 3: LATTICE PARALLAX */}
-    <div className="relative h-[300px]">
-      <div className="absolute inset-0 grid grid-cols-6 grid-rows-3 gap-10 opacity-40">
-        {Array.from({ length: 18 }).map((_, i) => (
-          <div
-            key={i}
-            className="h-px bg-white/20 animate-lattice"
-            style={{ animationDelay: `${i * 120}ms` }}
-          />
-        ))}
-      </div>
+    <div className="relative h-[420px] flex items-center justify-center">
+      <div
+        id="mutah-circle"
+        className="w-[420px] h-[420px] rounded-full border border-white/10"
+      />
     </div>
 
   </div>
 
   <style jsx>{`
-    @keyframes breathe {
-      0% { transform: scale(0.98); opacity: 0.25; }
-      50% { transform: scale(1); opacity: 0.4; }
-      100% { transform: scale(0.98); opacity: 0.25; }
+    #mutah-circle {
+      opacity: 0;
+      transform: scale(0.985);
+      transition:
+        opacity 3.5s ease,
+        transform 6s ease;
     }
 
-    .animate-breathe {
-      animation: breathe 14s ease-in-out infinite;
-    }
-
-    .orbit {
-      position: relative;
-      width: 220px;
-      height: 220px;
-    }
-
-    .orbit-line {
-      position: absolute;
-      inset: 0;
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 50%;
-      animation: orbit 26s linear infinite;
-    }
-
-    @keyframes orbit {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes lattice {
-      0% { opacity: 0.15; }
-      50% { opacity: 0.4; }
-      100% { opacity: 0.15; }
-    }
-
-    .animate-lattice {
-      animation: lattice 18s ease-in-out infinite;
+    #mutah-circle.visible {
+      opacity: 0.35;
+      transform: scale(1);
     }
   `}</style>
+
+  <script
+    dangerouslySetInnerHTML={{
+      __html: `
+        (() => {
+          const circle = document.getElementById("mutah-circle");
+          if (!circle) return;
+
+          let activated = false;
+
+          const observer = new IntersectionObserver(
+            ([entry]) => {
+              if (entry.isIntersecting && !activated) {
+                activated = true;
+                setTimeout(() => {
+                  circle.classList.add("visible");
+                }, 600);
+              }
+            },
+            { threshold: 0.4 }
+          );
+
+          observer.observe(circle);
+        })();
+      `,
+    }}
+  />
 </section>
 
 
