@@ -9,6 +9,7 @@ import { dict as maiosDict } from "@/lib/i18n.maios";
 import { usePathname } from "next/navigation";
 import MuTahLine from "@/app/components/MuTahLine";
 import MuTahSpiral from "@/app/components/MuTahSpiral";
+import MOceanField from "@/app/components/MOceanField";
 
 
 
@@ -196,7 +197,7 @@ useEffect(() => {
 
   </div>
 </section>
-         
+
      <MuTahSpiral />
 
          {/* PROBLEM STATEMENT */}
@@ -265,11 +266,8 @@ useEffect(() => {
 
 
 
-          {/* BUFFER */}
-    <div
-      aria-hidden="true"
-      style={{ height: "var(--h-gap-md)" }}
-    />
+     <MOceanField />
+
 
          {/* PROBLEMS */}
 <section className="pt-[120px] pb-[120px]">
