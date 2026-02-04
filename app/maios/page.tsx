@@ -119,51 +119,38 @@ useEffect(() => {
   </div>
 </section>
 
-{/* MU TAH NEAR EMPTY CANVAS */}
+{/* M-INENT – ORBITAL LINE */}
 <section className="pt-[160px] pb-[160px] relative overflow-hidden">
   <div className="page-center max-w-[1200px]">
 
-    <div className="relative h-[460px] flex items-center justify-center">
+    <div className="relative h-[420px] flex items-center justify-center">
 
-      {/* Presence field */}
-      <div className="mutah-field" />
-
-      {/* Core form */}
-      <div className="mutah-core" />
+      {/* Invisible center */}
+      <div className="inent-orbit">
+        <div className="inent-line" />
+      </div>
 
     </div>
 
   </div>
 
   <style jsx>{`
-    .mutah-field {
-      position: absolute;
-      width: 560px;
-      height: 560px;
+    .inent-orbit {
+      position: relative;
+      width: 420px;
+      height: 420px;
       border-radius: 9999px;
-      background: conic-gradient(
-        from 0deg,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.02),
-        rgba(255,255,255,0.08)
-      );
-      filter: blur(18px);
-      animation:
-        mutah-rotate 48s linear infinite,
-        mutah-breathe 18s ease-in-out infinite;
-      opacity: 0.65;
     }
 
-    .mutah-core {
-      position: relative;
-      width: 340px;
-      height: 340px;
+    .inent-line {
+      position: absolute;
+      inset: 0;
       border-radius: 9999px;
       border: 1px solid rgba(255,255,255,0.35);
-      animation: mutah-core-breathe 14s ease-in-out infinite;
+      animation: inent-rotate 38s linear infinite;
     }
 
-    @keyframes mutah-rotate {
+    @keyframes inent-rotate {
       from {
         transform: rotate(0deg);
       }
@@ -171,35 +158,9 @@ useEffect(() => {
         transform: rotate(360deg);
       }
     }
-
-    @keyframes mutah-breathe {
-      0% {
-        transform: scale(0.97);
-      }
-      50% {
-        transform: scale(1.03);
-      }
-      100% {
-        transform: scale(0.97);
-      }
-    }
-
-    @keyframes mutah-core-breathe {
-      0% {
-        transform: scale(1);
-        opacity: 0.6;
-      }
-      50% {
-        transform: scale(1.02);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 0.6;
-      }
-    }
   `}</style>
 </section>
+
 
 
           {/* BUFFER */}
