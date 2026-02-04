@@ -119,13 +119,13 @@ useEffect(() => {
   </div>
 </section>
 
-{/* MU TAH – NEAR EMPTY CANVAS */}
+{/* MU TAH NEAR EMPTY CANVAS */}
 <section className="pt-[160px] pb-[160px] relative overflow-hidden">
   <div className="page-center max-w-[1200px]">
 
-    <div className="relative h-[420px] flex items-center justify-center">
+    <div className="relative h-[460px] flex items-center justify-center">
 
-      {/* Outer presence field */}
+      {/* Presence field */}
       <div className="mutah-field" />
 
       {/* Core form */}
@@ -138,54 +138,64 @@ useEffect(() => {
   <style jsx>{`
     .mutah-field {
       position: absolute;
-      width: 520px;
-      height: 520px;
+      width: 560px;
+      height: 560px;
       border-radius: 9999px;
-      background: radial-gradient(
-        circle,
-        rgba(255,255,255,0.06) 0%,
-        rgba(255,255,255,0.03) 35%,
-        rgba(255,255,255,0.01) 55%,
-        transparent 70%
+      background: conic-gradient(
+        from 0deg,
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.02),
+        rgba(255,255,255,0.08)
       );
-      animation: field-breathe 22s ease-in-out infinite;
+      filter: blur(18px);
+      animation:
+        mutah-rotate 48s linear infinite,
+        mutah-breathe 18s ease-in-out infinite;
+      opacity: 0.65;
     }
 
     .mutah-core {
-      width: 320px;
-      height: 320px;
+      position: relative;
+      width: 340px;
+      height: 340px;
       border-radius: 9999px;
-      border: 1px solid rgba(255,255,255,0.28);
-      animation: core-breathe 14s ease-in-out infinite;
+      border: 1px solid rgba(255,255,255,0.35);
+      animation: mutah-core-breathe 14s ease-in-out infinite;
     }
 
-    @keyframes field-breathe {
+    @keyframes mutah-rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes mutah-breathe {
       0% {
-        transform: scale(0.98);
-        opacity: 0.45;
+        transform: scale(0.97);
+      }
+      50% {
+        transform: scale(1.03);
+      }
+      100% {
+        transform: scale(0.97);
+      }
+    }
+
+    @keyframes mutah-core-breathe {
+      0% {
+        transform: scale(1);
+        opacity: 0.6;
       }
       50% {
         transform: scale(1.02);
-        opacity: 0.7;
-      }
-      100% {
-        transform: scale(0.98);
-        opacity: 0.45;
-      }
-    }
-
-    @keyframes core-breathe {
-      0% {
-        transform: scale(1);
-        opacity: 0.7;
-      }
-      50% {
-        transform: scale(1.015);
         opacity: 1;
       }
       100% {
         transform: scale(1);
-        opacity: 0.7;
+        opacity: 0.6;
       }
     }
   `}</style>
