@@ -1379,3 +1379,6 @@ div[data-convo="1"] { scrollbar-color: rgba(255,255,255,0.25) transparent;
     transform: translateY(0) scale(1);
   }
 }
+button.controlled-entry {
+  all: revert;
+}
