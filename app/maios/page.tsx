@@ -1,7 +1,7 @@
 // app/maios/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Navigation from "@/app/components/navigation/navigation";
 import Footer from "@/app/components/subscription/footer";
 import { useLang } from "@/app/providers/LanguageProvider";
@@ -10,6 +10,9 @@ import { dict as maiosDict } from "@/lib/i18n.maios";
 export default function MaiosPage() {
   const { lang } = useLang();
   const t = (maiosDict as any)[lang] ?? maiosDict.en;
+  
+const svgRef = useRef<SVGSVGElement | null>(null);
+const pathRef = useRef<SVGPathElement | null>(null);
 
   // Sequenzdefinition
 const sequence = [
@@ -119,46 +122,96 @@ useEffect(() => {
   </div>
 </section>
 
-{/* M-INENT – ORBITAL LINE */}
+{/* M-INENT – EMERGENT TEMPORAL LINE */}
 <section className="pt-[160px] pb-[160px] relative overflow-hidden">
   <div className="page-center max-w-[1200px]">
 
-    <div className="relative h-[420px] flex items-center justify-center">
+    <div className="relative h-[260px]">
+      <svg
+        ref={svgRef}
+        width="100%"
+        height="260"
+        viewBox="0 0 1200 260"
+        preserveAspectRatio="none"
+        className="overflow-visible"
+      >
+        <defs>
+          <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0)" />
+            <stop offset="20%" stopColor="rgba(180,200,255,0.35)" />
+            <stop offset="50%" stopColor="rgba(120,160,255,0.9)" />
+            <stop offset="80%" stopColor="rgba(180,200,255,0.35)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+          </linearGradient>
 
-      {/* Invisible center */}
-      <div className="inent-orbit">
-        <div className="inent-line" />
-      </div>
+          <filter id="softGlow">
+            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
 
+        <path
+          ref={pathRef}
+          d=""
+          fill="none"
+          stroke="url(#lineGradient)"
+          strokeWidth="2"
+          filter="url(#softGlow)"
+        />
+      </svg>
     </div>
 
   </div>
 
-  <style jsx>{`
-    .inent-orbit {
-      position: relative;
-      width: 420px;
-      height: 420px;
-      border-radius: 9999px;
-    }
+  <script
+    dangerouslySetInnerHTML={{
+      __html: `
+        (() => {
+          const svg = document.querySelector("svg");
+          const path = svg?.querySelector("path");
+          if (!path) return;
 
-    .inent-line {
-      position: absolute;
-      inset: 0;
-      border-radius: 9999px;
-      border: 1px solid rgba(255,255,255,0.35);
-      animation: inent-rotate 38s linear infinite;
-    }
+          let t = 0;
 
-    @keyframes inent-rotate {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
-      }
-    }
-  `}</style>
+          const points = 120;
+          const width = 1200;
+          const height = 260;
+          const centerY = height / 2;
+
+          function animate() {
+            t += 0.004;
+
+            let d = "M ";
+            for (let i = 0; i <= points; i++) {
+              const x = (i / points) * width;
+
+              const wave1 = Math.sin(i * 0.12 + t * 2);
+              const wave2 = Math.sin(i * 0.04 - t);
+              const morph = (Math.sin(t) + 1) / 2;
+
+              const amplitude =
+                6 + morph * 18;
+
+              const y =
+                centerY +
+                wave1 * amplitude +
+                wave2 * amplitude * 0.6;
+
+              d += \`\${x.toFixed(2)},\${y.toFixed(2)} \`;
+            }
+
+            path.setAttribute("d", d);
+            requestAnimationFrame(animate);
+          }
+
+          animate();
+        })();
+      `,
+    }}
+  />
 </section>
 
 
