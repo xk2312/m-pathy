@@ -63,7 +63,7 @@ export default function ControlledSystemEntry({
         <button
   type="button"
   onClick={() => setOpen(!open)}
-  className="mt-6 inline-flex items-center gap-2 text-sm text-white/60 hover:text-white/85 transition focus:outline-none"
+className="mt-6 inline-flex items-center gap-2 text-sm text-white/60 hover:text-white/85 transition focus:outline-none cursor-pointer"
   aria-expanded={open}
   aria-controls="controlled-system-entry-form"
 >
@@ -94,7 +94,7 @@ export default function ControlledSystemEntry({
   name="type"
   required
   defaultValue={messageType}
-  className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30 bg-black"
+className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30 bg-black cursor-pointer"
 >
   {MESSAGE_TYPE_ORDER.map((type) => (
     <option key={type} value={type}>
@@ -151,7 +151,7 @@ export default function ControlledSystemEntry({
 
               <button
                 type="submit"
-                className="mt-6 inline-flex items-center border border-white/20 px-6 py-2 text-white/80 hover:text-white hover:border-white/40 transition"
+className="mt-6 inline-flex items-center border border-white/20 px-6 py-2 text-white/80 hover:text-white hover:border-white/40 transition cursor-pointer"
               >
                 Send message
               </button>
