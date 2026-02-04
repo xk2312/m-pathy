@@ -32,6 +32,59 @@ const pathRef = useRef<SVGPathElement | null>(null);
 // progress = wie viele Elemente bereits „eingraviert“ sind
 const [progress, setProgress] = useState(0);
 const [showClaim, setShowClaim] = useState(false);
+useEffect(() => {
+  const path = pathRef.current;
+  if (!path) return;
+
+  let t = 0;
+  let raf: number;
+
+  const points = 240;
+  const width = 1200;
+  const height = 320;
+  const centerY = height / 2;
+
+  const animate = () => {
+    t += 0.0025;
+
+    let d = "M ";
+    for (let i = 0; i <= points; i++) {
+      const progress = i / points;
+      const x = progress * width;
+
+      const baseWave =
+        Math.sin(progress * 6 + t * 2) * 18;
+
+      const spiralStrength =
+        (Math.sin(t * 0.6) + 1) / 2;
+
+      const angle =
+        progress * Math.PI * 2 +
+        t * 0.8;
+
+      const radius =
+        spiralStrength * 80 * progress;
+
+      const spiralY =
+        Math.sin(angle) * radius * 0.35;
+
+      const y =
+        centerY +
+        baseWave +
+        spiralY;
+
+      d += `${x.toFixed(2)},${y.toFixed(2)} `;
+    }
+
+    path.setAttribute("d", d);
+    raf = requestAnimationFrame(animate);
+  };
+
+  animate();
+
+  return () => cancelAnimationFrame(raf);
+}, []);
+
 
 useEffect(() => {
   document.documentElement.classList.add("enable-scroll");
@@ -201,7 +254,6 @@ useEffect(() => {
      {/* PHASE-SHIFTED LINE SPIRAL */}
 <section className="pt-[160px] pb-[160px] relative overflow-hidden">
   <div className="page-center max-w-[1200px]">
-
     <div className="relative h-[320px]">
       <svg
         ref={svgRef}
@@ -239,67 +291,9 @@ useEffect(() => {
         />
       </svg>
     </div>
-
   </div>
-
-  <script
-    dangerouslySetInnerHTML={{
-      __html: `
-        (() => {
-          const svg = document.querySelector("svg");
-          const path = svg?.querySelector("path");
-          if (!path) return;
-
-          let t = 0;
-
-          const points = 240;
-          const width = 1200;
-          const height = 320;
-          const centerY = height / 2;
-          const centerX = width / 2;
-
-          function animate() {
-            t += 0.0025;
-
-            let d = "M ";
-            for (let i = 0; i <= points; i++) {
-              const progress = i / points;
-              const x = progress * width;
-
-              const baseWave =
-                Math.sin(progress * 6 + t * 2) * 18;
-
-              const spiralStrength =
-                (Math.sin(t * 0.6) + 1) / 2;
-
-              const angle =
-                progress * Math.PI * 2 +
-                t * 0.8;
-
-              const radius =
-                spiralStrength * 80 * progress;
-
-              const spiralY =
-                Math.sin(angle) * radius * 0.35;
-
-              const y =
-                centerY +
-                baseWave +
-                spiralY;
-
-              d += \`\${x.toFixed(2)},\${y.toFixed(2)} \`;
-            }
-
-            path.setAttribute("d", d);
-            requestAnimationFrame(animate);
-          }
-
-          animate();
-        })();
-      `,
-    }}
-  />
 </section>
+
 
 
          {/* PROBLEM STATEMENT */}
