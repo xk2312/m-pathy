@@ -70,7 +70,7 @@ export default function MGovernanceField() {
     // Visual tuning
     const lineCount = 14;
     const sampleCount = 180; // points along each polyline
-    const strokeBase = 1.6;
+    const strokeBase = 1.15;
 
     // Timing
     const spawnStaggerMs = 90;
