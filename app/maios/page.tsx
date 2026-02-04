@@ -527,33 +527,68 @@ useEffect(() => {
   </div>
 
   <div className="space-y-4 max-w-[520px]">
-    {t.audience.sectors.map((s: string, i: number) => (
-      <div key={i} className="flex items-start gap-4">
-        {/* ARROW ICON */}
-        <span className="flex-shrink-0 text-white/50 translate-y-[6px]">
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M5 12h14" />
-            <path d="M13 6l6 6-6 6" />
+  {t.audience.sectors.map((s: string, i: number) => (
+    <div key={i} className="flex items-start gap-4">
+      {/* DOMAIN ICON */}
+      <span className="flex-shrink-0 text-white/50 translate-y-[5px]">
+        {i === 0 && (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M12 21s-6-4.35-6-10a6 6 0 1 1 12 0c0 5.65-6 10-6 10z" />
+            <path d="M12 11v-3" />
+            <path d="M10.5 9.5h3" />
           </svg>
-        </span>
+        )}
 
-        {/* TEXT */}
-        <p className="text-white/75 leading-relaxed">
-          {s}
-        </p>
-      </div>
-    ))}
-  </div>
+        {i === 1 && (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M3 22h18" />
+            <path d="M6 18v-7" />
+            <path d="M10 18v-7" />
+            <path d="M14 18v-7" />
+            <path d="M18 18v-7" />
+            <path d="M3 11l9-7 9 7" />
+          </svg>
+        )}
+
+        {i === 2 && (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M12 3v3" />
+            <path d="M5.5 6h13" />
+            <path d="M6 6l1 14h10l1-14" />
+          </svg>
+        )}
+
+        {i === 3 && (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M2 7h20" />
+            <path d="M6 11h12" />
+            <path d="M6 15h12" />
+            <path d="M6 19h12" />
+          </svg>
+        )}
+
+        {i === 4 && (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M12 2l7 4v6c0 5-3.5 9-7 10-3.5-1-7-5-7-10V6l7-4z" />
+          </svg>
+        )}
+
+        {i === 5 && (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M7 7h10v10H7z" />
+          </svg>
+        )}
+      </span>
+
+      {/* TEXT */}
+      <p className="text-white/75 leading-relaxed">
+        {s}
+      </p>
+    </div>
+  ))}
+</div>
+
 </div>
 
 
