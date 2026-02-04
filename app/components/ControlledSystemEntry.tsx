@@ -90,12 +90,19 @@ export default function ControlledSystemEntry({
                 <label className="block text-sm text-white/60 mb-1">
                   {t.contact.fields[0]}
                 </label>
-                <input
-                  name="type"
-                  required
-                  defaultValue={messageType}
-                  className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
-                />
+               <select
+  name="type"
+  required
+  defaultValue={messageType}
+  className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30 bg-black"
+>
+  {MESSAGE_TYPE_ORDER.map((type) => (
+    <option key={type} value={type}>
+      {type.replace(/_/g, " ")}
+    </option>
+  ))}
+</select>
+
               </div>
 
               <div>
