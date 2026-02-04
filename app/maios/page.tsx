@@ -8,6 +8,8 @@ import { useLang } from "@/app/providers/LanguageProvider";
 import { dict as maiosDict } from "@/lib/i18n.maios";
 import { usePathname } from "next/navigation";
 import MuTahLine from "@/app/components/MuTahLine";
+import MuTahSpiral from "@/app/components/MuTahSpiral";
+
 
 
 export default function MaiosPage() {
@@ -32,55 +34,6 @@ const pathRef = useRef<SVGPathElement | null>(null);
 // progress = wie viele Elemente bereits „eingraviert“ sind
 const [progress, setProgress] = useState(0);
 const [showClaim, setShowClaim] = useState(false);
-
-useEffect(() => {
-  const path = pathRef.current;
-  if (!path) return;
-
-  let t = 0;
-  let raf: number;
-
-  const points = 360;
-  const width = 1200;
-  const height = 320;
-  const centerY = height / 2;
-
-  const animate = () => {
-    t += 0.002;
-
-    let d = "M ";
-
-    for (let i = 0; i <= points; i++) {
-      const p = i / points;
-
-      // horizontal progression (keeps MAIOS visual language)
-      const x = p * width;
-
-      // spiral mechanics
-      const angle = p * Math.PI * 6 + t * 1.2;
-      const radius =
-        12 +
-        70 * p * (0.5 + 0.5 * Math.sin(t * 0.7));
-
-      const spiralY = Math.sin(angle) * radius;
-      const spiralX = Math.cos(angle) * radius * 0.12;
-
-      // projection into calm horizontal flow
-      const y =
-        centerY +
-        spiralY;
-
-      d += `${(x + spiralX).toFixed(2)},${y.toFixed(2)} `;
-    }
-
-    path.setAttribute("d", d);
-    raf = requestAnimationFrame(animate);
-  };
-
-  animate();
-  return () => cancelAnimationFrame(raf);
-}, []);
-
 
 
 useEffect(() => {
@@ -243,55 +196,8 @@ useEffect(() => {
 
   </div>
 </section>
-
-
-
-          
-          
-     {/* PHASE-SHIFTED LINE SPIRAL */}
-<section className="pt-[160px] pb-[160px] relative overflow-hidden">
-  <div className="page-center max-w-[1200px]">
-    <div className="relative h-[320px]">
-      <svg
-        ref={svgRef}
-        width="100%"
-        height="320"
-        viewBox="0 0 1200 320"
-        preserveAspectRatio="none"
-        className="overflow-visible"
-      >
-        <defs>
-          <linearGradient id="phaseSpiralGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(255,255,255,0)" />
-            <stop offset="25%" stopColor="rgba(160,190,255,0.35)" />
-            <stop offset="50%" stopColor="rgba(120,160,255,0.9)" />
-            <stop offset="75%" stopColor="rgba(160,190,255,0.35)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-          </linearGradient>
-
-          <filter id="phaseGlow">
-            <feGaussianBlur stdDeviation="7" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        <path
-          ref={pathRef}
-          d=""
-          fill="none"
-          stroke="url(#phaseSpiralGradient)"
-          strokeWidth="2"
-          filter="url(#phaseGlow)"
-        />
-      </svg>
-    </div>
-  </div>
-</section>
-
-
+         
+     <MuTahSpiral />
 
          {/* PROBLEM STATEMENT */}
 <section className="pt-[120px] pb-[120px]">
