@@ -32,6 +32,7 @@ const pathRef = useRef<SVGPathElement | null>(null);
 // progress = wie viele Elemente bereits „eingraviert“ sind
 const [progress, setProgress] = useState(0);
 const [showClaim, setShowClaim] = useState(false);
+
 useEffect(() => {
   const path = pathRef.current;
   if (!path) return;
@@ -39,41 +40,37 @@ useEffect(() => {
   let t = 0;
   let raf: number;
 
-  const points = 240;
+  const points = 360;
   const width = 1200;
   const height = 320;
   const centerY = height / 2;
 
   const animate = () => {
-    t += 0.0025;
+    t += 0.002;
 
     let d = "M ";
+
     for (let i = 0; i <= points; i++) {
-      const progress = i / points;
-      const x = progress * width;
+      const p = i / points;
 
-      const baseWave =
-        Math.sin(progress * 6 + t * 2) * 18;
+      // horizontal progression (keeps MAIOS visual language)
+      const x = p * width;
 
-      const spiralStrength =
-        (Math.sin(t * 0.6) + 1) / 2;
-
-      const angle =
-        progress * Math.PI * 2 +
-        t * 0.8;
-
+      // spiral mechanics
+      const angle = p * Math.PI * 6 + t * 1.2;
       const radius =
-        spiralStrength * 80 * progress;
+        12 +
+        70 * p * (0.5 + 0.5 * Math.sin(t * 0.7));
 
-      const spiralY =
-        Math.sin(angle) * radius * 0.35;
+      const spiralY = Math.sin(angle) * radius;
+      const spiralX = Math.cos(angle) * radius * 0.12;
 
+      // projection into calm horizontal flow
       const y =
         centerY +
-        baseWave +
         spiralY;
 
-      d += `${x.toFixed(2)},${y.toFixed(2)} `;
+      d += `${(x + spiralX).toFixed(2)},${y.toFixed(2)} `;
     }
 
     path.setAttribute("d", d);
@@ -81,9 +78,9 @@ useEffect(() => {
   };
 
   animate();
-
   return () => cancelAnimationFrame(raf);
 }, []);
+
 
 
 useEffect(() => {
