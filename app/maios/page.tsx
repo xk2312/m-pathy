@@ -117,7 +117,6 @@ useEffect(() => {
     )}
 
   </div>
-  
 </section>
 
 {/* MU TAH – NEAR EMPTY CANVAS */}
@@ -125,55 +124,71 @@ useEffect(() => {
   <div className="page-center max-w-[1200px]">
 
     <div className="relative h-[420px] flex items-center justify-center">
-      <div
-        id="mutah-circle"
-        className="w-[420px] h-[420px] rounded-full border border-white/10"
-      />
+
+      {/* Outer presence field */}
+      <div className="mutah-field" />
+
+      {/* Core form */}
+      <div className="mutah-core" />
+
     </div>
 
   </div>
 
   <style jsx>{`
-    #mutah-circle {
-      opacity: 0;
-      transform: scale(0.985);
-      transition:
-        opacity 3.5s ease,
-        transform 6s ease;
+    .mutah-field {
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      border-radius: 9999px;
+      background: radial-gradient(
+        circle,
+        rgba(255,255,255,0.06) 0%,
+        rgba(255,255,255,0.03) 35%,
+        rgba(255,255,255,0.01) 55%,
+        transparent 70%
+      );
+      animation: field-breathe 22s ease-in-out infinite;
     }
 
-    #mutah-circle.visible {
-      opacity: 0.35;
-      transform: scale(1);
+    .mutah-core {
+      width: 320px;
+      height: 320px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      animation: core-breathe 14s ease-in-out infinite;
+    }
+
+    @keyframes field-breathe {
+      0% {
+        transform: scale(0.98);
+        opacity: 0.45;
+      }
+      50% {
+        transform: scale(1.02);
+        opacity: 0.7;
+      }
+      100% {
+        transform: scale(0.98);
+        opacity: 0.45;
+      }
+    }
+
+    @keyframes core-breathe {
+      0% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+      50% {
+        transform: scale(1.015);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
     }
   `}</style>
-
-  <script
-    dangerouslySetInnerHTML={{
-      __html: `
-        (() => {
-          const circle = document.getElementById("mutah-circle");
-          if (!circle) return;
-
-          let activated = false;
-
-          const observer = new IntersectionObserver(
-            ([entry]) => {
-              if (entry.isIntersecting && !activated) {
-                activated = true;
-                setTimeout(() => {
-                  circle.classList.add("visible");
-                }, 600);
-              }
-            },
-            { threshold: 0.4 }
-          );
-
-          observer.observe(circle);
-        })();
-      `,
-    }}
-  />
 </section>
 
 
