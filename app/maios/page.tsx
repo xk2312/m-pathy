@@ -640,23 +640,26 @@ useEffect(() => {
 <div className="space-y-6 max-w-[720px]">
   {t.offering.core.body.slice(1).map((line: string, i: number) => (
     <div key={i} className="flex items-start gap-4">
-      {/* ARROW ICON */}
-      <span className="flex-shrink-0 text-white/50 translate-y-[7px]">
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M5 12h14" />
-          <path d="M13 6l6 6-6 6" />
-        </svg>
-      </span>
+
+    {/* DOT MARKER */}
+<span className="flex-shrink-0 text-white/45 translate-y-[6px]">
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="9" />
+    <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" />
+  </svg>
+</span>
+
+
 
       {/* TEXT */}
       <p className="text-white/85 font-medium text-lg leading-relaxed">
@@ -681,23 +684,26 @@ useEffect(() => {
       <div className="space-y-6 max-w-[720px]">
   {t.offering.inventory.body.map((line: string, i: number) => (
     <div key={i} className="flex items-start gap-4">
-      {/* ARROW ICON */}
-      <span className="flex-shrink-0 text-white/50 translate-y-[7px]">
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M5 12h14" />
-          <path d="M13 6l6 6-6 6" />
-        </svg>
-      </span>
+      
+      {/* CONNECTION / MAPPING ICON */}
+<span className="flex-shrink-0 text-white/45 translate-y-[6px]">
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="6" cy="12" r="3" />
+    <circle cx="18" cy="12" r="3" />
+    <path d="M9 12h6" />
+  </svg>
+</span>
+
 
       {/* TEXT */}
       <p className="text-white/85 font-medium text-lg leading-relaxed">
