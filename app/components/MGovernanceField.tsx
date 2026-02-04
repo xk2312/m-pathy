@@ -76,7 +76,7 @@ export default function MGovernanceField() {
     const spawnStaggerMs = 90;
     const rejectHoldMs = 650;
     const retryDelayMs = 220;
-    const settleHoldMs = 1200;
+   
 
     // Deterministic acceptance: first 7 pass on attempt 1, rest rejected once, then pass.
     const passesOnFirstAttempt = new Set<number>(Array.from({ length: 7 }, (_, i) => i));
@@ -157,12 +157,13 @@ export default function MGovernanceField() {
 
     function colorFor(a: LineAgent, alpha: number) {
       // left is grey, accepted transitions toward white, with a calm cool tint
-      const grey = { r: 220, g: 225, b: 235 };
-      const white = { r: 255, g: 255, b: 255 };
+            const grey = { r: 170, g: 178, b: 196 };
+      const white = { r: 246, g: 248, b: 252 };
       const tint = { r: 120, g: 160, b: 255 };
 
-      const w = clamp01(a.whiteness);
+      const w = clamp01(a.whiteness) * 0.92;
       const t = clamp01(a.coherence);
+
 
       // mix: grey -> tinted -> white
       const midR = lerp(grey.r, tint.r, 0.28);
@@ -230,8 +231,7 @@ export default function MGovernanceField() {
     }
 
     // Simulation control
-    let allDoneAt: number | null = null;
-    let frozen = false;
+
 
     function step(now: number) {
       const elapsed = now - startTime;
@@ -269,133 +269,113 @@ export default function MGovernanceField() {
       ctx.setLineDash([]);
       ctx.restore();
 
-      // Update agents
-      if (!frozen) {
-        for (const a of agents) {
-          const spawnDelay = a.id * spawnStaggerMs;
-          if (elapsed < spawnDelay) continue;
+           // Update agents
+      for (const a of agents) {
+        const spawnDelay = a.id * spawnStaggerMs;
+        if (elapsed < spawnDelay) continue;
 
-          // Phase targets
-          if (a.state === "GROW_LEFT") {
-            a.xTarget = leftEnd;
-          } else if (a.state === "ACCEPTING") {
-            a.xTarget = W;
-          } else if (a.state === "REJECTING") {
-            a.xTarget = 0;
-          } else if (a.state === "RETRYING") {
-            a.xTarget = W;
-          } else if (a.state === "DONE") {
-            a.xTarget = W;
+        // Phase targets
+        if (a.state === "GROW_LEFT") {
+          a.xTarget = leftEnd;
+        } else if (a.state === "ACCEPTING") {
+          a.xTarget = W;
+        } else if (a.state === "REJECTING") {
+          a.xTarget = 0;
+        } else if (a.state === "RETRYING") {
+          a.xTarget = W;
+        } else if (a.state === "DONE") {
+          a.xTarget = W;
+        }
+
+        // State transitions
+        if (a.state === "GROW_LEFT") {
+          a.x = Math.min(a.x + a.speed, a.xTarget);
+
+          a.coherence = lerp(a.coherence, 0.0, 0.06);
+          a.whiteness = lerp(a.whiteness, 0.0, 0.06);
+
+          if (a.x >= leftEnd - 0.5) {
+            a.state = "GATE_CHECK";
           }
+        }
 
-          // State transitions
-          if (a.state === "GROW_LEFT") {
-            a.x = Math.min(a.x + a.speed, a.xTarget);
+        if (a.state === "GATE_CHECK") {
+          if (a.attempt === 1) {
+            const pass = passesOnFirstAttempt.has(a.id);
+            a.accepted = pass;
 
-            // chaos stays chaotic while growing
-            a.coherence = lerp(a.coherence, 0.0, 0.06);
+            if (pass) {
+              a.state = "ACCEPTING";
+            } else {
+              a.state = "REJECTING";
+              a.rejectedUntil = now + rejectHoldMs;
+            }
+          } else {
+            a.accepted = true;
+            a.state = "RETRYING";
+          }
+        }
+
+        if (a.state === "ACCEPTING") {
+          a.x = Math.min(a.x + a.speed * 1.15, a.xTarget);
+
+          const gateT = clamp01((a.x - gateStart) / Math.max(1, gateEnd - gateStart));
+          const cohTarget = 0.35 + 0.65 * easeInOut(gateT);
+          a.coherence = lerp(a.coherence, cohTarget, 0.07);
+
+          const whiteTarget = easeInOut(clamp01((a.x - gateStart) / (W - gateStart)));
+          a.whiteness = lerp(a.whiteness, whiteTarget, 0.06);
+
+          if (a.x >= W - 0.8) {
+            a.state = "DONE";
+            a.coherence = 1;
+            a.whiteness = 0.72;
+          }
+        }
+
+        if (a.state === "REJECTING") {
+          if (now < a.rejectedUntil) {
+            a.coherence = lerp(a.coherence, 0.08, 0.08);
+            a.whiteness = lerp(a.whiteness, 0.0, 0.08);
+          } else {
+            a.x = Math.max(a.x - a.speed * 1.35, 0);
+
+            a.coherence = lerp(a.coherence, 0.18, 0.06);
             a.whiteness = lerp(a.whiteness, 0.0, 0.06);
 
-            if (a.x >= leftEnd - 0.5) {
-              a.state = "GATE_CHECK";
+            if (a.x <= 0.8) {
+              a.attempt = 2;
+              a.rejectedUntil = now + retryDelayMs;
+              a.state = "GROW_LEFT";
+              a.x = 0;
             }
-          }
-
-          if (a.state === "GATE_CHECK") {
-            // Deterministic decision: attempt 1 only
-            if (a.attempt === 1) {
-              const pass = passesOnFirstAttempt.has(a.id);
-              a.accepted = pass;
-
-              if (pass) {
-                a.state = "ACCEPTING";
-              } else {
-                a.state = "REJECTING";
-                a.rejectedUntil = now + rejectHoldMs;
-              }
-            } else {
-              // attempt 2: always accept
-              a.accepted = true;
-              a.state = "RETRYING";
-            }
-          }
-
-          if (a.state === "ACCEPTING") {
-            // push through gate and right
-            a.x = Math.min(a.x + a.speed * 1.15, a.xTarget);
-
-            // coherence rises smoothly as it passes the gate
-            const gateT = clamp01((a.x - gateStart) / Math.max(1, gateEnd - gateStart));
-            const cohTarget = 0.35 + 0.65 * easeInOut(gateT);
-            a.coherence = lerp(a.coherence, cohTarget, 0.07);
-
-            const whiteTarget = easeInOut(clamp01((a.x - gateStart) / (W - gateStart)));
-            a.whiteness = lerp(a.whiteness, whiteTarget, 0.06);
-
-            if (a.x >= W - 0.8) {
-              a.state = "DONE";
-              a.coherence = 1;
-              a.whiteness = 1;
-            }
-          }
-
-          if (a.state === "REJECTING") {
-            // hold a moment (bounce) then return
-            if (now < a.rejectedUntil) {
-              // small visual tension: coherence dips slightly
-              a.coherence = lerp(a.coherence, 0.08, 0.08);
-              a.whiteness = lerp(a.whiteness, 0.0, 0.08);
-            } else {
-              // return to far left
-              a.x = Math.max(a.x - a.speed * 1.35, 0);
-
-              // chaos is damped on return
-              a.coherence = lerp(a.coherence, 0.18, 0.06);
-              a.whiteness = lerp(a.whiteness, 0.0, 0.06);
-
-              if (a.x <= 0.8) {
-                a.attempt = 2;
-                // short delay before retry to feel like governance loop
-                a.rejectedUntil = now + retryDelayMs;
-                a.state = "GROW_LEFT";
-                a.x = 0;
-              }
-            }
-          }
-
-          if (a.state === "RETRYING") {
-            a.x = Math.min(a.x + a.speed * 1.2, a.xTarget);
-
-            // second attempt is calmer sooner
-            const gateT = clamp01((a.x - gateStart) / Math.max(1, gateEnd - gateStart));
-            const cohTarget = 0.55 + 0.45 * easeInOut(gateT);
-            a.coherence = lerp(a.coherence, cohTarget, 0.08);
-
-            const whiteTarget = easeInOut(clamp01((a.x - gateStart) / (W - gateStart)));
-            a.whiteness = lerp(a.whiteness, whiteTarget, 0.07);
-
-            if (a.x >= W - 0.8) {
-              a.state = "DONE";
-              a.coherence = 1;
-              a.whiteness = 1;
-            }
-          }
-
-          if (a.state === "DONE") {
-            a.x = W;
-            a.coherence = 1;
-            a.whiteness = 1;
           }
         }
 
-        const doneCount = agents.filter((a) => a.state === "DONE").length;
-        if (doneCount === lineCount) {
-          if (allDoneAt === null) allDoneAt = now;
-          if (allDoneAt !== null && now - allDoneAt > settleHoldMs) {
-            frozen = true;
+        if (a.state === "RETRYING") {
+          a.x = Math.min(a.x + a.speed * 1.2, a.xTarget);
+
+          const gateT = clamp01((a.x - gateStart) / Math.max(1, gateEnd - gateStart));
+          const cohTarget = 0.55 + 0.45 * easeInOut(gateT);
+          a.coherence = lerp(a.coherence, cohTarget, 0.08);
+
+          const whiteTarget = easeInOut(clamp01((a.x - gateStart) / (W - gateStart)));
+          a.whiteness = lerp(a.whiteness, whiteTarget, 0.07);
+
+          if (a.x >= W - 0.8) {
+            a.state = "DONE";
+            a.coherence = 1;
+            a.whiteness = 0.78;
           }
+        }
+
+        if (a.state === "DONE") {
+          a.x = W;
+          a.coherence = 1;
+          a.whiteness = 0.78;
         }
       }
+
 
       // Draw agents
       const t = (now - startTime) * 0.001;
@@ -468,9 +448,8 @@ export default function MGovernanceField() {
 
       ctx.restore();
 
-      if (!frozen) {
-        raf = requestAnimationFrame(step);
-      }
+          raf = requestAnimationFrame(step);
+
     }
 
     raf = requestAnimationFrame(step);
