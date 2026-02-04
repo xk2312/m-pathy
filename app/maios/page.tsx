@@ -458,23 +458,23 @@ useEffect(() => {
 <div className="mt-10 space-y-6 max-w-[720px]">
   {t.what_it_is_not.body.map((line: string, i: number) => (
     <div key={i} className="flex items-start gap-4">
-      {/* ARROW ICON */}
-      <span className="flex-shrink-0 text-white/50 translate-y-[7px]">
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M5 12h14" />
-          <path d="M13 6l6 6-6 6" />
-        </svg>
-      </span>
+      <span className="flex-shrink-0 text-white/45 translate-y-[6px]">
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="9" />
+    <path d="M8 12h8" />
+  </svg>
+</span>
+
 
       {/* TEXT */}
       <p className="text-white/85 font-medium text-lg leading-relaxed">
