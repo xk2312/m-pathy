@@ -454,23 +454,36 @@ useEffect(() => {
       {t.what_it_is_not.title}
     </h2>
 
-    {/* NEGATIVE BOUNDARIES */}
-    <ul className="space-y-4 max-w-[720px]">
-      {t.what_it_is_not.body.map((line: string, i: number) => (
-        <li
-          key={i}
-          className="
-            text-white/70
-            pl-5
-            border-l
-            border-white/10
-            leading-relaxed
-          "
+   {/* NEGATIVE BOUNDARIES AS ARROW BULLETS */}
+<div className="mt-10 space-y-6 max-w-[720px]">
+  {t.what_it_is_not.body.map((line: string, i: number) => (
+    <div key={i} className="flex items-start gap-4">
+      {/* ARROW ICON */}
+      <span className="flex-shrink-0 text-white/50 translate-y-[7px]">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
         >
-          {line}
-        </li>
-      ))}
-    </ul>
+          <path d="M5 12h14" />
+          <path d="M13 6l6 6-6 6" />
+        </svg>
+      </span>
+
+      {/* TEXT */}
+      <p className="text-white/85 font-medium text-lg leading-relaxed">
+        {line}
+      </p>
+    </div>
+  ))}
+</div>
+
 
     {/* CLOSING BOUNDARY STATEMENT */}
     <p className="mt-12 text-white/85 font-medium max-w-[600px]">
@@ -508,27 +521,41 @@ useEffect(() => {
     </div>
 
     {/* SECTORS AS SCOPE */}
-    <div className="mb-12">
-      <div className="mb-4 text-sm uppercase tracking-wide text-white/40">
-        Typical domains
-      </div>
-      <ul className="space-y-3 max-w-[520px]">
-        {t.audience.sectors.map((s: string, i: number) => (
-          <li
-            key={i}
-            className="
-              text-white/70
-              pl-5
-              border-l
-              border-white/10
-              leading-relaxed
-            "
+<div className="mb-12">
+  <div className="mb-4 text-sm uppercase tracking-wide text-white/40">
+    Typical domains
+  </div>
+
+  <div className="space-y-4 max-w-[520px]">
+    {t.audience.sectors.map((s: string, i: number) => (
+      <div key={i} className="flex items-start gap-4">
+        {/* ARROW ICON */}
+        <span className="flex-shrink-0 text-white/50 translate-y-[6px]">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
           >
-            {s}
-          </li>
-        ))}
-      </ul>
-    </div>
+            <path d="M5 12h14" />
+            <path d="M13 6l6 6-6 6" />
+          </svg>
+        </span>
+
+        {/* TEXT */}
+        <p className="text-white/75 leading-relaxed">
+          {s}
+        </p>
+      </div>
+    ))}
+  </div>
+</div>
+
 
     {/* FOOTNOTE BOUNDARY */}
     <div className="space-y-2 text-white/60 max-w-[640px]">
@@ -570,20 +597,40 @@ useEffect(() => {
         {t.offering.core.title}
       </h3>
 
-      <div className="space-y-4 text-white/70">
-        {t.offering.core.body.map((line: string, i: number) => (
-          <p
-            key={i}
-            className={
-              i === 0
-                ? "text-white/90 text-lg"
-                : undefined
-            }
-          >
-            {line}
-          </p>
-        ))}
-      </div>
+      {/* CORE OFFERING BODY */}
+<p className="text-white/90 text-lg mb-6">
+  {t.offering.core.body[0]}
+</p>
+
+<div className="space-y-6 max-w-[720px]">
+  {t.offering.core.body.slice(1).map((line: string, i: number) => (
+    <div key={i} className="flex items-start gap-4">
+      {/* ARROW ICON */}
+      <span className="flex-shrink-0 text-white/50 translate-y-[7px]">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14" />
+          <path d="M13 6l6 6-6 6" />
+        </svg>
+      </span>
+
+      {/* TEXT */}
+      <p className="text-white/85 font-medium text-lg leading-relaxed">
+        {line}
+      </p>
+    </div>
+  ))}
+</div>
+
     </div>
 
     {/* INVENTORY EXTENSION */}
@@ -596,11 +643,35 @@ useEffect(() => {
         {t.offering.inventory.title}
       </h3>
 
-      <div className="space-y-4 text-white/70">
-        {t.offering.inventory.body.map((line: string, i: number) => (
-          <p key={i}>{line}</p>
-        ))}
-      </div>
+      <div className="space-y-6 max-w-[720px]">
+  {t.offering.inventory.body.map((line: string, i: number) => (
+    <div key={i} className="flex items-start gap-4">
+      {/* ARROW ICON */}
+      <span className="flex-shrink-0 text-white/50 translate-y-[7px]">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14" />
+          <path d="M13 6l6 6-6 6" />
+        </svg>
+      </span>
+
+      {/* TEXT */}
+      <p className="text-white/85 font-medium text-lg leading-relaxed">
+        {line}
+      </p>
+    </div>
+  ))}
+</div>
+
     </div>
 
   </div>
