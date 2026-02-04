@@ -347,11 +347,12 @@ useEffect(() => {
   </div>
 </section>
 
-       {/* The problems MAIOS solves */}
+      
 <VisibilityMount>
   <MGovernanceField />
 </VisibilityMount>
 
+          {/* The problems MAIOS solves */}
          {/* WHAT MAIOS IS */}
 <section className="pt-[120px] pb-[120px]">
   <div className="page-center max-w-[820px]">
@@ -371,12 +372,36 @@ useEffect(() => {
       {t.what_it_is.body[0]}
     </p>
 
-    {/* STRUCTURAL EXPLANATION */}
-    <div className="space-y-4 text-white/70 max-w-[720px]">
-      {t.what_it_is.body.slice(1, -2).map((line: string, i: number) => (
-        <p key={i}>{line}</p>
-      ))}
+   {/* STRUCTURAL EXPLANATION AS BULLETS */}
+<div className="mt-10 space-y-6 max-w-[720px]">
+  {t.what_it_is.body.slice(1, -2).map((line: string, i: number) => (
+    <div key={i} className="flex items-start gap-4">
+      {/* ARROW ICON */}
+      <span className="flex-shrink-0 text-white/50 translate-y-[7px]">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14" />
+          <path d="M13 6l6 6-6 6" />
+        </svg>
+      </span>
+
+      {/* TEXT */}
+      <p className="text-white/85 font-medium text-lg leading-relaxed">
+        {line}
+      </p>
     </div>
+  ))}
+</div>
+
 
     {/* SEPARATION */}
     <div className="mt-10 h-px w-24 bg-white/10" />
