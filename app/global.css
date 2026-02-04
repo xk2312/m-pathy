@@ -1381,4 +1381,5 @@ div[data-convo="1"] { scrollbar-color: rgba(255,255,255,0.25) transparent;
 }
 button.controlled-entry {
   all: revert;
+  cursor: pointer;
 }
