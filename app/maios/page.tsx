@@ -10,7 +10,7 @@ import { dict as maiosDict } from "@/lib/i18n.maios";
 export default function MaiosPage() {
   const { lang } = useLang();
   const t = (maiosDict as any)[lang] ?? maiosDict.en;
-  
+
 const svgRef = useRef<SVGSVGElement | null>(null);
 const pathRef = useRef<SVGPathElement | null>(null);
 
@@ -214,10 +214,6 @@ useEffect(() => {
   />
 </section>
 
-
-
-          {/* BUFFER */}
-          <div aria-hidden="true" style={{ height: "var(--h-gap-md)" }} />
 
           {/* CLARIFICATION */}
 <section className="pt-[100px] pb-[100px]">
