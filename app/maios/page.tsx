@@ -13,6 +13,37 @@ import MCoherenceField from "@/app/components/MCoherenceField";
 import MGovernanceField from "@/app/components/MGovernanceField";
 
 
+type VisibilityMountProps = {
+  children: React.ReactNode;
+};
+
+function VisibilityMount({ children }: VisibilityMountProps) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    if (!ref.current || mounted) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setMounted(true);
+          observer.disconnect();
+        }
+      },
+      {
+        root: null,
+        threshold: 0.25,
+      }
+    );
+
+    observer.observe(ref.current);
+
+    return () => observer.disconnect();
+  }, [mounted]);
+
+  return <div ref={ref}>{mounted ? children : null}</div>;
+}
 
 
 export default function MaiosPage() {
@@ -33,6 +64,10 @@ const sequence = [
 const svgRef = useRef<SVGSVGElement | null>(null);
 const pathRef = useRef<SVGPathElement | null>(null);
 
+const visibilitySections = [
+  { id: "coherence", component: <MCoherenceField /> },
+  { id: "governance", component: <MGovernanceField /> },
+];
 
 // progress = wie viele Elemente bereits „eingraviert“ sind
 const [progress, setProgress] = useState(0);
@@ -268,8 +303,9 @@ useEffect(() => {
 
 
 
-     <MCoherenceField/>
-
+<VisibilityMount>
+  <MCoherenceField />
+</VisibilityMount>
 
          {/* PROBLEMS */}
 <section className="pt-[120px] pb-[120px]">
@@ -312,7 +348,9 @@ useEffect(() => {
 </section>
 
        {/* The problems MAIOS solves */}
-<MGovernanceField />
+<VisibilityMount>
+  <MGovernanceField />
+</VisibilityMount>
 
          {/* WHAT MAIOS IS */}
 <section className="pt-[120px] pb-[120px]">
