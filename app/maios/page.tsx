@@ -9,7 +9,7 @@ import { dict as maiosDict } from "@/lib/i18n.maios";
 import { usePathname } from "next/navigation";
 import MuTahLine from "@/app/components/MuTahLine";
 import MuTahSpiral from "@/app/components/MuTahSpiral";
-import MOceanField from "@/app/components/MOceanField";
+import MCoherenceField from "@/app/components/MCoherenceField";
 
 
 
@@ -266,7 +266,7 @@ useEffect(() => {
 
 
 
-     <MOceanField />
+     <MCoherenceField/>
 
 
          {/* PROBLEMS */}
