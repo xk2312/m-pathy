@@ -1,7 +1,4 @@
 import { NextResponse } from "next/server";
-import { sendContactMail } from "@/lib/mail";
-import { insertContactMessage } from "@/lib/db";
-import { verifyTurnstileToken } from "@/lib/turnstile";
 
 export const runtime = "nodejs";
 
@@ -32,6 +29,11 @@ export async function POST(req: Request) {
       );
     }
 
+    // 🔽 Lazy imports (CRITICAL)
+    const { verifyTurnstileToken } = await import("@/lib/turnstile");
+    const { sendContactMail } = await import("@/lib/mail");
+    const { insertContactMessage } = await import("@/lib/db");
+
     const captchaValid = await verifyTurnstileToken(captcha_token);
     if (!captchaValid) {
       return NextResponse.json(
@@ -40,7 +42,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Mail ist HARD REQUIREMENT
     await sendContactMail({
       message_type,
       message,
@@ -50,7 +51,7 @@ export async function POST(req: Request) {
       source,
     });
 
-    // DB ist best-effort
+    // best effort DB
     insertContactMessage({
       message_type,
       message,
