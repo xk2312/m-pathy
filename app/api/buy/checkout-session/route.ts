@@ -5,11 +5,11 @@ import { cookies } from "next/headers";
 import { AUTH_COOKIE_NAME, verifySessionToken } from "@/lib/auth";
 
 // ENV laden (Dev: .env.payment, Prod: Deploy-Path)
-if (process.env.NODE_ENV === "production") {
-  dotenv.config({ path: "/srv/app/current/.env.production" });
-} else {
+if (process.env.NODE_ENV !== "production") {
   dotenv.config({ path: ".env.payment" });
 }
+// production: ENV wird von systemd geladen
+
 
 function env(name: string, fallback?: string) {
 

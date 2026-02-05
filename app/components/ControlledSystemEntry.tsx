@@ -182,6 +182,7 @@ className="w-full bg-transparent border border-white/10 px-3 py-2 text-white foc
 <div className="mt-6">
   <Turnstile
     siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+    
     onSuccess={(token) => setTurnstileToken(token)}
   />
 </div>
