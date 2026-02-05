@@ -7,6 +7,8 @@ import {
 } from "@/lib/auth";
 import { getPool } from "@/lib/ledger";
 
+export const runtime = "nodejs";
+
 // GET /auth/callback?token=...
 export async function GET(req: Request) {
   const url = new URL(req.url);
