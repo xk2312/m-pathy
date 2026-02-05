@@ -3,6 +3,8 @@ import { sendContactMail } from "@/lib/mail";
 import { insertContactMessage } from "@/lib/db";
 import { verifyTurnstileToken } from "@/lib/turnstile";
 
+export const runtime = "nodejs";
+
 export async function POST(req: Request) {
   try {
     if (req.headers.get("content-type") !== "application/json") {
