@@ -4,7 +4,20 @@ export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const contentType = req.headers.get("content-type") || "";
+    let body: any;
+
+    if (contentType.includes("application/json")) {
+      body = await req.json();
+    } else if (contentType.includes("application/x-www-form-urlencoded")) {
+      const form = await req.formData();
+      body = Object.fromEntries(form.entries());
+    } else {
+      return NextResponse.json(
+        { error: "unsupported_content_type" },
+        { status: 415 }
+      );
+    }
 
     const {
       message_type,
@@ -29,7 +42,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // 🔽 Lazy imports (CRITICAL)
     const { verifyTurnstileToken } = await import("@/lib/turnstile");
     const { sendContactMail } = await import("@/lib/mail");
     const { insertContactMessage } = await import("@/lib/db");
@@ -51,7 +63,6 @@ export async function POST(req: Request) {
       source,
     });
 
-    // best effort DB
     insertContactMessage({
       message_type,
       message,
@@ -63,14 +74,13 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ok: true });
   } catch (err) {
-  console.error("contact route failed", err);
-  return NextResponse.json(
-    {
-      error: "internal_error",
-      message: err instanceof Error ? err.message : "unknown",
-    },
-    { status: 500 }
-  );
-}
-
+    console.error("contact route failed", err);
+    return NextResponse.json(
+      {
+        error: "internal_error",
+        message: err instanceof Error ? err.message : "unknown",
+      },
+      { status: 500 }
+    );
+  }
 }
