@@ -74,13 +74,14 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error("contact route failed", err);
-    return NextResponse.json(
-      {
-        error: "internal_error",
-        message: err instanceof Error ? err.message : "unknown",
-      },
-      { status: 500 }
-    );
-  }
+  console.error("contact route failed", err);
+  return NextResponse.json(
+    {
+      error: "internal_error",
+      message: err instanceof Error ? err.message : "unknown",
+    },
+    { status: 500 }
+  );
+}
+
 }

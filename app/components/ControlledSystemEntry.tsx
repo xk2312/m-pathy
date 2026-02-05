@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
 import { dict as maiosDict } from "@/lib/i18n.maios";
+import Turnstile from "@/app/components/turnstile";
+
 
 export enum MessageType {
   ConsultingInquiry = "consulting_inquiry",
@@ -39,10 +41,42 @@ export default function ControlledSystemEntry({
 
   const [open, setOpen] = useState<boolean>(initialOpen);
   const [messageType] = useState<MessageType>(
+    
     MESSAGE_TYPE_ORDER.includes(defaultMessageType)
       ? defaultMessageType
       : DEFAULT_MESSAGE_TYPE
   );
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const formData = new FormData(form);
+
+  const payload = {
+    message_type: formData.get("type"),
+    message: formData.get("message"),
+    email: formData.get("email"),
+    company: formData.get("company"),
+    role: formData.get("role"),
+    source: "controlled-system-entry",
+    captcha_token: turnstileToken, // ← exakt DAS Token, das du vom Widget bekommst
+  };
+
+  const res = await fetch("/api/contact", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    console.error("contact submit failed", err);
+  }
+};
 
   return (
     <section className="pt-[140px] pb-[140px]">
@@ -81,11 +115,8 @@ className="mt-6 inline-flex items-center gap-2 text-sm text-white/60 hover:text-
 >
   <div className="max-w-[560px]">
 
-            <form
-              action="/api/contact"
-              method="post"
-              className="space-y-6"
-            >
+            <form onSubmit={handleSubmit} className="space-y-6">
+
               <div>
                 <label className="block text-sm text-white/60 mb-1">
                   {t.contact.fields[0]}
@@ -148,6 +179,12 @@ className="w-full bg-transparent border border-white/10 px-3 py-2 text-white foc
                   className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
                 />
               </div>
+<div className="mt-6">
+  <Turnstile
+    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+    onSuccess={(token) => setTurnstileToken(token)}
+  />
+</div>
 
              <button
   type="submit"
