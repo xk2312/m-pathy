@@ -7,26 +7,18 @@ export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
-    if (req.headers.get("content-type") !== "application/json") {
-      return NextResponse.json(
-        { error: "unsupported_content_type" },
-        { status: 415 }
-      );
-    }
-
     const body = await req.json();
 
     const {
       message_type,
       message,
       email,
-      company = null,
-      role = null,
+      company,
+      role,
       source,
       captcha_token,
     } = body || {};
 
-    // minimal validation
     if (
       !message_type ||
       !message ||
@@ -40,7 +32,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // captcha hard gate
     const captchaValid = await verifyTurnstileToken(captcha_token);
     if (!captchaValid) {
       return NextResponse.json(
@@ -49,41 +40,29 @@ export async function POST(req: Request) {
       );
     }
 
-    // primary channel: mail must succeed
-    try {
-      await sendContactMail({
-        message_type,
-        message,
-        email,
-        company,
-        role,
-        source,
-      });
-    } catch (mailErr) {
-      console.error("contact mail failed", mailErr);
-      return NextResponse.json(
-        { error: "mail_failed" },
-        { status: 500 }
-      );
-    }
+    // Mail ist HARD REQUIREMENT
+    await sendContactMail({
+      message_type,
+      message,
+      email,
+      company,
+      role,
+      source,
+    });
 
-    // secondary channel: db best effort
-    try {
-      insertContactMessage({
-        message_type,
-        message,
-        email,
-        company,
-        role,
-        source,
-      });
-    } catch (dbErr) {
-      console.warn("contact db insert failed", dbErr);
-    }
+    // DB ist best-effort
+    insertContactMessage({
+      message_type,
+      message,
+      email,
+      company,
+      role,
+      source,
+    }).catch(() => {});
 
     return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error("contact route crashed", err);
+    console.error("contact route failed", err);
     return NextResponse.json(
       { error: "internal_error" },
       { status: 500 }
