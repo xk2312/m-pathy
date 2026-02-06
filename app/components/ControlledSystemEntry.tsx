@@ -46,6 +46,9 @@ const [messageType] = useState<MessageType>(
     : DEFAULT_MESSAGE_TYPE
 );
 const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+const turnstileSiteKey =
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || null;
 const [submitResult, setSubmitResult] = useState<"idle" | "success" | "error">("idle");
 
 
@@ -201,12 +204,18 @@ className="w-full bg-transparent border border-white/10 px-3 py-2 text-white foc
                 />
               </div>
 <div className="mt-6">
-  <Turnstile
-    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-    
-    onSuccess={(token) => setTurnstileToken(token)}
-  />
+  {turnstileSiteKey ? (
+    <Turnstile
+      siteKey={turnstileSiteKey}
+      onSuccess={(token) => setTurnstileToken(token)}
+    />
+  ) : (
+    <p className="text-sm text-red-400">
+      Captcha configuration missing.
+    </p>
+  )}
 </div>
+
 
          <button
   type="submit"
