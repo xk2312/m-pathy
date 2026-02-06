@@ -16,17 +16,21 @@ declare global {
 export default function Turnstile({ siteKey, onSuccess }: TurnstileProps) {
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!ref.current) return;
+ useEffect(() => {
+  if (!ref.current) return;
+  if (!siteKey || typeof siteKey !== "string") return;
+
 
     const render = () => {
-      if (!window.turnstile) return;
+  if (!window.turnstile) return;
+  if (!siteKey || typeof siteKey !== "string") return;
 
-      window.turnstile.render(ref.current!, {
-        sitekey: siteKey,
-        callback: onSuccess,
-      });
-    };
+  window.turnstile.render(ref.current!, {
+    sitekey: siteKey,
+    callback: onSuccess,
+  });
+};
+
 
     if (window.turnstile) {
       render();
