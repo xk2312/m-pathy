@@ -54,14 +54,23 @@ export async function POST(req: Request) {
       );
     }
 
-    await sendContactMail({
-      message_type,
-      message,
-      email,
-      company,
-      role,
-      source,
-    });
+    let mailResult;
+    try {
+      mailResult = await sendContactMail({
+        message_type,
+        message,
+        email,
+        company,
+        role,
+        source,
+      });
+    } catch (mailError) {
+      console.error("contact mail failed", mailError);
+      return NextResponse.json(
+        { error: "mail_failed" },
+        { status: 502 }
+      );
+    }
 
     insertContactMessage({
       message_type,
@@ -72,16 +81,18 @@ export async function POST(req: Request) {
       source,
     }).catch(() => {});
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({
+      ok: true,
+      mail: "sent",
+    });
   } catch (err) {
-  console.error("contact route failed", err);
-  return NextResponse.json(
-    {
-      error: "internal_error",
-      message: err instanceof Error ? err.message : "unknown",
-    },
-    { status: 500 }
-  );
-}
-
+    console.error("contact route failed", err);
+    return NextResponse.json(
+      {
+        error: "internal_error",
+        message: err instanceof Error ? err.message : "unknown",
+      },
+      { status: 500 }
+    );
+  }
 }

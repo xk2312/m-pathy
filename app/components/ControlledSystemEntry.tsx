@@ -39,17 +39,25 @@ export default function ControlledSystemEntry({
   const safeLang = (lang in maiosDict ? lang : "en") as keyof typeof maiosDict;
   const t = maiosDict[safeLang];
 
-  const [open, setOpen] = useState<boolean>(initialOpen);
-  const [messageType] = useState<MessageType>(
-    
-    MESSAGE_TYPE_ORDER.includes(defaultMessageType)
-      ? defaultMessageType
-      : DEFAULT_MESSAGE_TYPE
-  );
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+ const [open, setOpen] = useState<boolean>(initialOpen);
+const [messageType] = useState<MessageType>(
+  MESSAGE_TYPE_ORDER.includes(defaultMessageType)
+    ? defaultMessageType
+    : DEFAULT_MESSAGE_TYPE
+);
+const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+const [submitResult, setSubmitResult] = useState<"idle" | "success" | "error">("idle");
+
 
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
+
+  if (!turnstileToken) {
+    setSubmitResult("error");
+    return;
+  }
+
+  setSubmitResult("idle");
 
   const form = e.currentTarget;
   const formData = new FormData(form);
@@ -61,7 +69,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     company: formData.get("company"),
     role: formData.get("role"),
     source: "controlled-system-entry",
-    captcha_token: turnstileToken, // ← exakt DAS Token, das du vom Widget bekommst
+    captcha_token: turnstileToken,
   };
 
   const res = await fetch("/api/contact", {
@@ -75,8 +83,21 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   if (!res.ok) {
     const err = await res.json();
     console.error("contact submit failed", err);
+    setSubmitResult("error");
+    return;
+  }
+
+  const data = await res.json();
+
+  if (data?.ok === true) {
+    form.reset();
+    setSubmitResult("success");
+  } else {
+    setSubmitResult("error");
   }
 };
+
+
 
   return (
     <section className="pt-[140px] pb-[140px]">
@@ -187,7 +208,7 @@ className="w-full bg-transparent border border-white/10 px-3 py-2 text-white foc
   />
 </div>
 
-             <button
+         <button
   type="submit"
   className="
     controlled-entry
@@ -206,6 +227,18 @@ className="w-full bg-transparent border border-white/10 px-3 py-2 text-white foc
 >
   Send message
 </button>
+
+{submitResult === "success" && (
+  <p className="mt-4 text-sm text-white/70">
+    Message sent successfully.
+  </p>
+)}
+
+{submitResult === "error" && (
+  <p className="mt-4 text-sm text-red-400">
+    Sending failed. Please try again.
+  </p>
+)}
 
 
 
