@@ -1,4 +1,4 @@
-// app/auth/callback/route.ts ❤️ DEBUG VERSION
+// app/auth/callback/route.ts ❤️ DEBUG BUILD
 import { NextResponse } from "next/server";
 import {
   AUTH_COOKIE_NAME,
@@ -9,29 +9,30 @@ import { getPool } from "@/lib/ledger";
 
 export const runtime = "nodejs";
 
+function log(step: string, data?: any) {
+  try {
+    console.log(`[auth/callback][${step}]`, data ?? "");
+  } catch {}
+}
+
 // GET /auth/callback?token=...
 export async function GET(req: Request) {
-  console.log("[auth/callback] HIT");
+  log("ENTER", { url: req.url });
 
   const url = new URL(req.url);
-  console.log("[auth/callback] url =", url.toString());
-
   const token = url.searchParams.get("token") || "";
-  console.log("[auth/callback] token present =", Boolean(token));
+  log("TOKEN_EXTRACTED", { hasToken: !!token });
 
   const base =
     process.env.NEXT_PUBLIC_BASE_URL ||
     process.env.MAGIC_LINK_BASE_URL ||
     url.origin;
 
-  console.log("[auth/callback] base url resolved =", base);
-  console.log("[auth/callback] ENV SNAPSHOT", {
-    NODE_ENV: process.env.NODE_ENV,
+  log("BASE_URL_RESOLVED", {
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
     MAGIC_LINK_BASE_URL: process.env.MAGIC_LINK_BASE_URL,
-    MAGIC_LINK_SECRET_PRESENT: Boolean(process.env.MAGIC_LINK_SECRET),
-    AUTH_SECRET_PRESENT: Boolean(process.env.AUTH_SECRET),
-    AUTH_COOKIE_NAME,
+    origin: url.origin,
+    base,
   });
 
   const successPath =
@@ -39,105 +40,102 @@ export async function GET(req: Request) {
   const errorPath =
     process.env.NEXT_PUBLIC_AUTH_ERROR_REDIRECT || "/page2?auth=error";
 
-  console.log("[auth/callback] successPath =", successPath);
-  console.log("[auth/callback] errorPath =", errorPath);
+  log("REDIRECT_PATHS", { successPath, errorPath });
 
   const toUrl = (path: string) => {
     try {
-      const u = new URL(path, base);
-      console.log("[auth/callback] redirect resolved =", u.toString());
-      return u;
-    } catch (err) {
-      console.error("[auth/callback] redirect URL build failed", err);
+      return new URL(path, base);
+    } catch (e) {
+      log("URL_BUILD_FAILED", { path, error: String(e) });
       return new URL(path, url.origin);
     }
   };
 
   try {
     if (!token) {
-      console.warn("[auth/callback] FAIL: missing token");
+      log("ABORT_NO_TOKEN");
       return NextResponse.redirect(toUrl(errorPath));
     }
 
-    console.log("[auth/callback] verifying magic link token");
+    log("VERIFY_MAGIC_LINK_START");
     const payload = verifyMagicLinkToken(token);
-
-    console.log("[auth/callback] token payload =", payload);
+    log("VERIFY_MAGIC_LINK_RESULT", payload);
 
     if (!payload) {
-      console.warn("[auth/callback] FAIL: invalid token payload");
+      log("ABORT_INVALID_TOKEN");
       return NextResponse.redirect(toUrl(errorPath));
     }
 
     const email = String(payload.email || "").trim().toLowerCase();
-    console.log("[auth/callback] email =", email);
+    log("EMAIL_PARSED", { email });
 
     if (!email) {
-      console.warn("[auth/callback] FAIL: empty email in payload");
+      log("ABORT_NO_EMAIL_IN_PAYLOAD", payload);
       return NextResponse.redirect(toUrl(errorPath));
     }
 
     let userId: number | null = null;
 
     try {
-      console.log("[auth/callback] connecting to DB");
+      log("DB_POOL_GET_START");
       const pool = await getPool();
+      log("DB_POOL_GET_OK");
 
-      console.log("[auth/callback] DB connected");
-
+      log("DB_USER_LOOKUP_START", { email });
       const existingUser = await pool.query(
         "SELECT id FROM users WHERE email = $1 LIMIT 1",
         [email]
       );
-
-      console.log(
-        "[auth/callback] user lookup rows =",
-        existingUser.rows.length
-      );
+      log("DB_USER_LOOKUP_RESULT", existingUser.rows);
 
       if (existingUser.rows.length > 0) {
         userId = existingUser.rows[0].id as number;
+        log("USER_FOUND", { userId });
       } else {
+        log("USER_CREATE_START");
         const insertedUser = await pool.query(
           "INSERT INTO users (email) VALUES ($1::citext) RETURNING id",
           [email]
         );
         userId = insertedUser.rows[0].id as number;
-        console.log("[auth/callback] user created id =", userId);
+        log("USER_CREATED", { userId });
       }
 
+      log("BALANCE_LOOKUP_START", { userId });
       const existingBalance = await pool.query(
         "SELECT user_id FROM balances WHERE user_id = $1 LIMIT 1",
         [userId]
       );
+      log("BALANCE_LOOKUP_RESULT", existingBalance.rows);
 
       if (existingBalance.rows.length === 0) {
+        log("BALANCE_CREATE_START");
         await pool.query(
           "INSERT INTO balances (user_id, tokens_left) VALUES ($1, 0)",
           [userId]
         );
-        console.log("[auth/callback] balance row created");
-      } else {
-        console.log("[auth/callback] balance row exists");
+        log("BALANCE_CREATED");
       }
     } catch (provisionErr) {
-      console.error(
-        "[auth/callback] FAIL: user provisioning error",
-        provisionErr
-      );
+      log("ABORT_PROVISIONING_ERROR", String(provisionErr));
       return NextResponse.redirect(toUrl(errorPath));
     }
 
-    console.log("[auth/callback] issuing session token", {
+    log("SESSION_CREATE_START", {
       email,
       userId,
+      AUTH_COOKIE_NAME,
+      NODE_ENV: process.env.NODE_ENV,
     });
 
-    const sessionToken = createSessionToken(email, userId ?? undefined);
-    console.log(
-      "[auth/callback] session token length =",
-      sessionToken.length
+    const sessionToken = createSessionToken(
+      payload.email,
+      userId ?? undefined
     );
+
+    log("SESSION_TOKEN_CREATED", {
+      tokenLength: sessionToken?.length,
+    });
 
     const res = NextResponse.redirect(toUrl(successPath));
 
@@ -151,11 +149,13 @@ export async function GET(req: Request) {
       maxAge: 60 * 60 * 24 * 30,
     });
 
-    console.log("[auth/callback] cookie set =", AUTH_COOKIE_NAME);
+    log("COOKIE_SET_AND_REDIRECT", {
+      redirect: toUrl(successPath).toString(),
+    });
 
     return res;
   } catch (err) {
-    console.error("[auth/callback] FATAL ERROR", err);
+    log("UNHANDLED_EXCEPTION", String(err));
     return NextResponse.redirect(toUrl(errorPath));
   }
 }
