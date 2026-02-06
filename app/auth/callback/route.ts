@@ -12,6 +12,24 @@ export const runtime = "nodejs";
 // GET /auth/callback?token=...
 export async function GET(req: Request) {
   const url = new URL(req.url);
+  console.log("[AUTH-CALLBACK][REQ]", {
+  href: url.href,
+  origin: url.origin,
+  host: url.host,
+  protocol: url.protocol,
+  headers: {
+    host: req.headers.get("host"),
+    x_forwarded_proto: req.headers.get("x-forwarded-proto"),
+    x_forwarded_host: req.headers.get("x-forwarded-host"),
+    cookie: req.headers.get("cookie"),
+  },
+  env: {
+    NODE_ENV: process.env.NODE_ENV,
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    MAGIC_LINK_BASE_URL: process.env.MAGIC_LINK_BASE_URL,
+  },
+});
+
   const token = url.searchParams.get("token") || "";
 
  // Basis-URL für Redirects (bevorzugt NEXT_PUBLIC_BASE_URL)
@@ -42,6 +60,12 @@ const base =
     }
 
     const payload = verifyMagicLinkToken(token);
+    console.log("[AUTH-CALLBACK][TOKEN]", {
+  token_present: Boolean(token),
+  payload_valid: Boolean(payload),
+  payload,
+});
+
     if (!payload) {
       console.warn("[auth/callback] Invalid token (no payload)");
       return NextResponse.redirect(toUrl(errorPath));
@@ -107,6 +131,15 @@ const base =
     );
 
     const res = NextResponse.redirect(toUrl(successPath));
+    console.log("[AUTH-CALLBACK][COOKIE-WILL-SET]", {
+  cookie_name: AUTH_COOKIE_NAME,
+  secure: true,
+  sameSite: "lax",
+  path: "/",
+  successPath,
+  redirect_target: toUrl(successPath).href,
+});
+
     res.cookies.set({
       name: AUTH_COOKIE_NAME,
       value: sessionToken,
@@ -116,6 +149,10 @@ const base =
       path: "/",
       maxAge: 60 * 60 * 24 * 30, // 30 Tage
     });
+console.log("[AUTH-CALLBACK][RESPONSE]", {
+  status: res.status,
+  headers: Array.from(res.headers.entries()),
+});
 
     return res;
   } catch (err) {
