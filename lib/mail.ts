@@ -1,5 +1,3 @@
-import { Resend } from "resend";
-
 type ContactMailPayload = {
   message_type: string;
   message: string;
@@ -9,16 +7,32 @@ type ContactMailPayload = {
   source: string;
 };
 
-if (!process.env.RESEND_API_KEY) {
-  console.error("mail: RESEND_API_KEY missing at module load");
-}
+type ResendClient = {
+  emails: {
+    send: (args: any) => Promise<any>;
+  };
+};
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resend: ResendClient | null = null;
 
-export async function sendContactMail(payload: ContactMailPayload) {
-  if (!process.env.RESEND_API_KEY) {
+async function getResendClient(): Promise<ResendClient> {
+  if (resend !== null) {
+    return resend;
+  }
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
     throw new Error("RESEND_API_KEY missing");
   }
+
+  const { Resend } = await import("resend");
+  resend = new Resend(apiKey) as ResendClient;
+  return resend;
+}
+
+
+export async function sendContactMail(payload: ContactMailPayload) {
+  const client = await getResendClient();
 
   const {
     message_type,
@@ -43,20 +57,23 @@ export async function sendContactMail(payload: ContactMailPayload) {
     .filter(Boolean)
     .join("\n");
 
-  console.info("mail: sending contact mail", {
-    message_type,
-    email,
-    source,
-  });
+  const from =
+    process.env.RESEND_FROM_EMAIL || "login@mail.m-pathy.ai";
 
-  const result = await resend.emails.send({
-    from: process.env.EMAIL_FROM || "no-reply@m-pathy.ai",
+  const result = await client.emails.send({
+    from,
     to: ["nabil_khayat@mac.com"],
     subject: `New contact message (${message_type})`,
     text,
   });
 
-  console.info("mail: send result", result);
+  if (result?.error) {
+    throw new Error(
+      typeof result.error === "string"
+        ? result.error
+        : result.error.message || "Resend send failed"
+    );
+  }
 
   return result;
 }
