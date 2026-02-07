@@ -12,7 +12,7 @@ import MuTahSpiral from "@/app/components/MuTahSpiral";
 import MCoherenceField from "@/app/components/MCoherenceField";
 import MGovernanceField from "@/app/components/MGovernanceField";
 import ControlledSystemEntry from "@/app/components/ControlledSystemEntry";
-  32
+
 
 
 type VisibilityMountProps = {
