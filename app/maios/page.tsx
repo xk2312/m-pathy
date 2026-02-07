@@ -1,10 +1,9 @@
-// app/maios/page.tsx
 "use client";
 
 import { useEffect, useState, useRef } from "react";
 import Navigation from "@/app/components/navigation/navigation";
 import Footer from "@/app/components/subscription/footer";
-import { useLang } from "@/app/providers/LanguageProvider";
+import { LanguageProvider, useLang } from "@/app/providers/LanguageProvider";
 import { dict as maiosDict } from "@/lib/i18n.maios";
 import { usePathname } from "next/navigation";
 import MuTahLine from "@/app/components/MuTahLine";
@@ -12,8 +11,6 @@ import MuTahSpiral from "@/app/components/MuTahSpiral";
 import MCoherenceField from "@/app/components/MCoherenceField";
 import MGovernanceField from "@/app/components/MGovernanceField";
 import ControlledSystemEntry from "@/app/components/ControlledSystemEntry";
-
-
 
 type VisibilityMountProps = {
   children: React.ReactNode;
@@ -47,33 +44,38 @@ function VisibilityMount({ children }: VisibilityMountProps) {
   return <div ref={ref}>{mounted ? children : null}</div>;
 }
 
-
 export default function MaiosPage() {
+  return (
+    <LanguageProvider dict={maiosDict as any}>
+      <MaiosPageInner />
+    </LanguageProvider>
+  );
+}
+
+
+function MaiosPageInner() {
   const { lang } = useLang();
   const t = (maiosDict as any)[lang] ?? maiosDict.en;
   const pathname = usePathname();
 
+  const sequence = [
+    { letter: "M", word: "Modular" },
+    { letter: "A", word: "Artificial" },
+    { letter: "I", word: "Intelligence" },
+    { letter: "O", word: "Operating" },
+    { letter: "S", word: "System" }
+  ];
 
-  // Sequenzdefinition
-const sequence = [
-  { letter: "M", word: "Modular" },
-  { letter: "A", word: "Artificial" },
-  { letter: "I", word: "Intelligence" },
-  { letter: "O", word: "Operating" },
-  { letter: "S", word: "System" }
-];
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const pathRef = useRef<SVGPathElement | null>(null);
 
-const svgRef = useRef<SVGSVGElement | null>(null);
-const pathRef = useRef<SVGPathElement | null>(null);
+  const visibilitySections = [
+    { id: "coherence", component: <MCoherenceField /> },
+    { id: "governance", component: <MGovernanceField /> },
+  ];
 
-const visibilitySections = [
-  { id: "coherence", component: <MCoherenceField /> },
-  { id: "governance", component: <MGovernanceField /> },
-];
-
-// progress = wie viele Elemente bereits „eingraviert“ sind
-const [progress, setProgress] = useState(0);
-const [showClaim, setShowClaim] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showClaim, setShowClaim] = useState(false);
 
 
 useEffect(() => {
