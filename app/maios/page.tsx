@@ -185,7 +185,7 @@ useEffect(() => {
 
     {/* SYSTEM TAG */}
     <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-  {t("maios.clarification.eyebrow")}
+  {t.clarification.eyebrow}
     </div>
 
     {/* TITLE */}
@@ -247,7 +247,7 @@ useEffect(() => {
 
     {/* SYSTEM TAG */}
     <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-{t("maios.section_labels.runtime")}
+{t.section_labels.runtime}
     </div>
 
     {/* TITLE */}
@@ -491,7 +491,7 @@ useEffect(() => {
 
     {/* CLOSING BOUNDARY STATEMENT */}
     <p className="mt-12 text-white/85 font-medium max-w-[600px]">
-{t.exclusions.explainer}
+{t.what_it_is_not.explainer}
     </p>
 
   </div>

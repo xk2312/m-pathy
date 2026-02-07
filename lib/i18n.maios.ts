@@ -34,7 +34,8 @@ en: {
       "m-pathy uses MAIOS.",
       "MAIOS exists independently of m-pathy.",
       "This page is about MAIOS."
-    ]
+    ],
+eyebrow: "System clarification layer"
   },
 
   problem_statement: {
@@ -258,7 +259,9 @@ de: {
       "m-pathy nutzt MAIOS.",
       "MAIOS existiert unabhängig von m-pathy.",
       "Diese Seite beschreibt MAIOS."
-    ]
+    ],
+    eyebrow: "Systemklärungsebene"
+
   },
 
   problem_statement: {
@@ -479,7 +482,9 @@ fr: {
       "m-pathy utilise MAIOS.",
       "MAIOS existe indépendamment de m-pathy.",
       "Cette page décrit MAIOS."
-    ]
+    ],
+    eyebrow: "Couche de clarification système"
+
   },
 
   problem_statement: {
@@ -690,7 +695,9 @@ es: {
       "m-pathy usa MAIOS.",
       "MAIOS existe de forma independiente de m-pathy.",
       "Esta página trata sobre MAIOS."
-    ]
+    ],
+    eyebrow: "Capa de clarificación del sistema"
+
   },
 
   problem_statement: {
@@ -902,7 +909,9 @@ it: {
       "m-pathy utilizza MAIOS.",
       "MAIOS esiste indipendentemente da m-pathy.",
       "Questa pagina descrive MAIOS."
-    ]
+    ],
+    eyebrow: "Livello di chiarificazione del sistema"
+
   },
 
   problem_statement: {
@@ -1114,7 +1123,9 @@ pt: {
       "m-pathy usa MAIOS.",
       "MAIOS existe de forma independente de m-pathy.",
       "Esta página é sobre MAIOS."
-    ]
+    ],
+    eyebrow: "Camada de clarificação do sistema"
+
   },
 
   problem_statement: {
@@ -1326,7 +1337,9 @@ nl: {
       "m-pathy gebruikt MAIOS.",
       "MAIOS bestaat los van m-pathy.",
       "Deze pagina gaat over MAIOS."
-    ]
+    ],
+    eyebrow: "Systeemverduidelijkingslaag"
+
   },
 
   problem_statement: {
@@ -1538,7 +1551,9 @@ ru: {
       "m-pathy использует MAIOS.",
       "MAIOS существует независимо от m-pathy.",
       "Эта страница о MAIOS."
-    ]
+    ],
+    eyebrow: "Слой системного разъяснения"
+
   },
 
   problem_statement: {
@@ -1750,7 +1765,9 @@ zh: {
       "m-pathy 使用 MAIOS。",
       "MAIOS 独立于 m-pathy 存在。",
       "本页面介绍 MAIOS。"
-    ]
+    ],
+    eyebrow: "系统澄清层"
+
   },
 
   problem_statement: {
@@ -1962,7 +1979,9 @@ ja: {
       "m-pathy は MAIOS を使用します。",
       "MAIOS は m-pathy と独立して存在します。",
       "本ページは MAIOS についてです。"
-    ]
+    ],
+    eyebrow: "システム明確化レイヤー"
+
   },
 
   problem_statement: {
@@ -2174,7 +2193,9 @@ ko: {
       "m-pathy는 MAIOS를 사용합니다.",
       "MAIOS는 m-pathy와 독립적으로 존재합니다.",
       "이 페이지는 MAIOS에 관한 내용입니다."
-    ]
+    ],
+    eyebrow: "시스템 명확화 레이어"
+
   },
 
   problem_statement: {
@@ -2386,7 +2407,9 @@ ar: {
       "m-pathy يستخدم MAIOS.",
       "MAIOS موجود بشكل مستقل عن m-pathy.",
       "هذه الصفحة عن MAIOS."
-    ]
+    ],
+    eyebrow: "طبقة توضيح النظام"
+
   },
 
   problem_statement: {
@@ -2598,7 +2621,9 @@ hi: {
       "m-pathy, MAIOS का उपयोग करता है।",
       "MAIOS, m-pathy से स्वतंत्र है।",
       "यह पेज MAIOS के बारे में है।"
-    ]
+    ],
+    eyebrow: "सिस्टम स्पष्टता परत"
+
   },
 
   problem_statement: {
