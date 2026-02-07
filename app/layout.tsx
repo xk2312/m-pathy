@@ -145,10 +145,11 @@ import "../styles/design.tokens.css"
 const inter = Inter({ subsets: ["latin"], display: "swap" })
 
 export const metadata: Metadata = {
-  title: "m-pathy – resonant creation",
-  description: "Create your reality with M",
+  title: "m-pathy",
+  description: "Professional AI workspace and governance infrastructure.",
   icons: { icon: "/favicon.png" },
 }
+
 
 export const viewport: Viewport = {
   width: "device-width",
