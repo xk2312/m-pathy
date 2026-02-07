@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useLang } from "@/app/providers/LanguageProvider";
+import { dict as maiosDict } from "@/lib/i18n.maios";
 import Turnstile from "@/app/components/turnstile";
-
 
 export enum MessageType {
   ConsultingInquiry = "consulting_inquiry",
@@ -34,91 +34,93 @@ export default function ControlledSystemEntry({
   initialOpen = false,
   defaultMessageType = DEFAULT_MESSAGE_TYPE,
 }: ControlledSystemEntryProps) {
-const { lang, t } = useLang();
+  const { lang } = useLang();
+  const t = (maiosDict as any)[lang] ?? maiosDict.en;
 
   const [open, setOpen] = useState<boolean>(initialOpen);
 
+
   const [messageType] = useState<MessageType>(
-    MESSAGE_TYPE_ORDER.includes(defaultMessageType)
-      ? defaultMessageType
-      : DEFAULT_MESSAGE_TYPE
-  );
+  MESSAGE_TYPE_ORDER.includes(defaultMessageType)
+    ? defaultMessageType
+    : DEFAULT_MESSAGE_TYPE
+);
 
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
-  const turnstileSiteKey =
-    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || null;
+const turnstileSiteKey =
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || null;
 
-  const [submitResult, setSubmitResult] = useState<
-    "idle" | "success" | "error"
-  >("idle");
+const [submitResult, setSubmitResult] = useState<
+  "idle" | "success" | "error"
+>("idle");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-    if (!turnstileToken) {
-      setSubmitResult("error");
-      return;
-    }
+  if (!turnstileToken) {
+    setSubmitResult("error");
+    return;
+  }
 
-    setSubmitResult("idle");
+  setSubmitResult("idle");
 
-    const form = e.currentTarget;
-    const formData = new FormData(form);
+  const form = e.currentTarget;
+  const formData = new FormData(form);
 
-    const payload = {
-      message_type: formData.get("type"),
-      message: formData.get("message"),
-      email: formData.get("email"),
-      company: formData.get("company"),
-      role: formData.get("role"),
-      source: "controlled-system-entry",
-      captcha_token: turnstileToken,
-    };
-
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!res.ok) {
-      const err = await res.json();
-      console.error("contact submit failed", err);
-      setSubmitResult("error");
-      return;
-    }
-
-    const data = await res.json();
-
-    if (data?.ok === true) {
-      form.reset();
-      setSubmitResult("success");
-    } else {
-      setSubmitResult("error");
-    }
+  const payload = {
+    message_type: formData.get("type"),
+    message: formData.get("message"),
+    email: formData.get("email"),
+    company: formData.get("company"),
+    role: formData.get("role"),
+    source: "controlled-system-entry",
+    captcha_token: turnstileToken,
   };
 
-  return (
-    <section className="pt-[140px] pb-[140px]">
-      <div className="page-center max-w-[720px]">
+  const res = await fetch("/api/contact", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
 
-        <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-  {t("maios.contact.eyebrow")}
-</div>
+  if (!res.ok) {
+    const err = await res.json();
+    console.error("contact submit failed", err);
+    setSubmitResult("error");
+    return;
+  }
 
-<h2 className="text-3xl font-semibold mb-6">
-  {t("maios.contact.title")}
-</h2>
+  const data = await res.json();
 
-<p className="text-white/70 mb-8 max-w-[560px]">
-  {t("maios.contact.body.0")}
-</p>
+  if (data?.ok === true) {
+    form.reset();
+    setSubmitResult("success");
+  } else {
+    setSubmitResult("error");
+  }
+};
+
+return (
+  <section className="pt-[140px] pb-[140px]">
+    <div className="page-center max-w-[720px]">
+
+      <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
+        {t.contact.eyebrow}
+      </div>
+
+      <h2 className="text-3xl font-semibold mb-6">
+        {t.contact.title}
+      </h2>
+
+      <p className="text-white/70 mb-8 max-w-[560px]">
+        {t.contact.body[0]}
+      </p>
 
 
-        <button
+<button
   type="button"
   onClick={() => setOpen(!open)}
   className="mt-6 inline-flex items-center gap-2 text-sm text-white/60 hover:text-white/85 transition focus:outline-none cursor-pointer"
@@ -127,9 +129,7 @@ const { lang, t } = useLang();
 >
   <span className="inline-block h-px w-6 bg-white/30" />
   <span>
-{open
-  ? t("maios.contact.toggle.close")
-  : t("maios.contact.toggle.open")}
+    {open ? t.contact.toggle.close : t.contact.toggle.open}
   </span>
 </button>
 
@@ -144,7 +144,7 @@ const { lang, t } = useLang();
 
       <div>
         <label className="block text-sm text-white/60 mb-1">
-{t("maios.contact.fields.0")}
+          {t.contact.fields[0]}
         </label>
         <select
           name="type"
@@ -154,59 +154,60 @@ const { lang, t } = useLang();
         >
           {MESSAGE_TYPE_ORDER.map((type) => (
             <option key={type} value={type}>
-{t(`maios.contact.messageTypes.${type}`)}
+              {t.contact.messageTypes[type]}
             </option>
           ))}
         </select>
       </div>
 
+
       <div>
-        <label className="block text-sm text-white/60 mb-1">
-{t("maios.contact.fields.1")}
-        </label>
-        <textarea
-          name="message"
-          required
-          rows={5}
-          placeholder={t("maios.contact.placeholders.message")}
-className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
-/>
+  <label className="block text-sm text-white/60 mb-1">
+    {t.contact.fields[1]}
+  </label>
+  <textarea
+    name="message"
+    required
+    rows={5}
+    placeholder={t.contact.placeholders.message}
+    className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
+  />
 </div>
 
 <div>
   <label className="block text-sm text-white/60 mb-1">
-    {t("maios.contact.fields.2")}
+    {t.contact.fields[2]}
   </label>
   <input
     type="email"
     name="email"
     required
-    placeholder={t("maios.contact.placeholders.email")}
+    placeholder={t.contact.placeholders.email}
     className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
   />
 </div>
 
 <div>
   <label className="block text-sm text-white/60 mb-1">
-    {t("maios.contact.fields.3")}
+    {t.contact.fields[3]}
   </label>
   <input
     name="company"
-    placeholder={t("maios.contact.placeholders.company")}
+    placeholder={t.contact.placeholders.company}
     className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
   />
 </div>
 
 <div>
   <label className="block text-sm text-white/60 mb-1">
-    {t("maios.contact.fields.4")}
+    {t.contact.fields[4]}
   </label>
 
-        <input
-          name="role"
-          placeholder={t("maios.contact.placeholders.role")}
-className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
-/>
+  <input
+    name="role"
+    placeholder={t.contact.placeholders.role}
+    className="w-full bg-transparent border border-white/10 px-3 py-2 text-white focus:outline-none focus:border-white/30"
+  />
 </div>
 
 <div className="mt-6">
@@ -217,7 +218,7 @@ className="w-full bg-transparent border border-white/10 px-3 py-2 text-white foc
     />
   ) : (
     <p className="text-sm text-red-400">
-      {t("maios.contact.feedback.captcha_missing")}
+      {t.contact.feedback.captcha_missing}
     </p>
   )}
 </div>
@@ -239,26 +240,27 @@ className="w-full bg-transparent border border-white/10 px-3 py-2 text-white foc
     cursor-pointer
   "
 >
-  {t("maios.contact.actions.submit")}
+  {t.contact.actions.submit}
 </button>
+
 
 {submitResult === "success" && (
   <p className="mt-4 text-sm text-white/70">
-    {t("maios.contact.feedback.success")}
+    {t.contact.feedback.success}
   </p>
 )}
 
 {submitResult === "error" && (
   <p className="mt-4 text-sm text-red-400">
-    {t("maios.contact.feedback.error")}
+    {t.contact.feedback.error}
   </p>
 )}
 
 </form>
 
 <div className="mt-12 space-y-2 text-white/60 text-sm">
-  {Array.from({ length: 3 }).map((_, i) => (
-    <p key={i}>{t(`maios.contact.footer.${i}`)}</p>
+  {t.contact.footer.map((line: string, i: number) => (
+    <p key={i}>{line}</p>
   ))}
 </div>
 
