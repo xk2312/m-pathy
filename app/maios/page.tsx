@@ -49,8 +49,14 @@ function VisibilityMount({ children }: VisibilityMountProps) {
 
 export default function MaiosPage() {
   const { tObj } = useLang();
-  const t = tObj;
   const pathname = usePathname();
+
+  if (!tObj) {
+    return null;
+  }
+
+  const t = tObj;
+
 
 
   // Sequenzdefinition
