@@ -5,7 +5,6 @@ import { useEffect, useState, useRef } from "react";
 import Navigation from "@/app/components/navigation/navigation";
 import Footer from "@/app/components/subscription/footer";
 import { useLang } from "@/app/providers/LanguageProvider";
-import { dict as maiosDict } from "@/lib/i18n.maios";
 import { usePathname } from "next/navigation";
 import MuTahLine from "@/app/components/MuTahLine";
 import MuTahSpiral from "@/app/components/MuTahSpiral";
@@ -49,8 +48,8 @@ function VisibilityMount({ children }: VisibilityMountProps) {
 
 
 export default function MaiosPage() {
-  const { lang } = useLang();
-  const t = (maiosDict as any)[lang] ?? maiosDict.en;
+  const { tObj } = useLang();
+  const t = tObj;
   const pathname = usePathname();
 
 
