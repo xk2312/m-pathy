@@ -190,10 +190,21 @@ const t = useMemo(() => {
 
 
 
-  const value = useMemo(
-    () => ({ lang, t, hint: langHint(lang), setLang }),
-    [lang, t]
-  );
+  const tObj = useMemo(() => {
+  // object-based dictionaries (e.g. MAIOS)
+  // lazy import or external injection expected
+  // fallback to en if missing
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const obj = (globalThis as any).__MAIOS_DICT__;
+  if (!obj) return null;
+  return obj[lang] ?? obj.en;
+}, [lang]);
+
+const value = useMemo(
+  () => ({ lang, t, tObj, hint: langHint(lang), setLang }),
+  [lang, t, tObj]
+);
+
 
   return (
     <LanguageCtx.Provider value={value}>
