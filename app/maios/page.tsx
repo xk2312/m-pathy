@@ -185,7 +185,7 @@ useEffect(() => {
 
     {/* SYSTEM TAG */}
     <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-      System clarification layer
+  {t("maios.clarification.eyebrow")}
     </div>
 
     {/* TITLE */}
@@ -247,7 +247,7 @@ useEffect(() => {
 
     {/* SYSTEM TAG */}
     <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-      Runtime reality
+{t("maios.section_labels.runtime")}
     </div>
 
     {/* TITLE */}
@@ -317,7 +317,7 @@ useEffect(() => {
 
     {/* SYSTEM TAG */}
     <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-      Structural failure patterns
+{t.section_labels.failure_patterns}
     </div>
 
     {/* TITLE */}
@@ -358,7 +358,7 @@ useEffect(() => {
 
     {/* CLOSING SIGNAL */}
     <p className="mt-12 text-white/50 text-sm max-w-[600px]">
-      These are not isolated issues. They are symptoms of missing inner system structure.
+{t.problem_statement.explainer}
     </p>
 
   </div>
@@ -376,7 +376,7 @@ useEffect(() => {
 
     {/* SYSTEM TAG */}
     <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-      System definition
+{t.section_labels.definition}
     </div>
 
     {/* TITLE */}
@@ -450,7 +450,7 @@ useEffect(() => {
 
     {/* SYSTEM TAG */}
     <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-      Explicit exclusions
+{t.section_labels.exclusions}
     </div>
 
     {/* TITLE */}
@@ -491,7 +491,7 @@ useEffect(() => {
 
     {/* CLOSING BOUNDARY STATEMENT */}
     <p className="mt-12 text-white/85 font-medium max-w-[600px]">
-      These exclusions are intentional. They define the responsibility boundary of MAIOS.
+{t.exclusions.explainer}
     </p>
 
   </div>
@@ -509,7 +509,7 @@ useEffect(() => {
 
     {/* SYSTEM TAG */}
     <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-      Intended operating environments
+{t.section_labels.environments}
     </div>
 
     {/* TITLE */}
@@ -527,7 +527,7 @@ useEffect(() => {
     {/* SECTORS AS SCOPE */}
 <div className="mb-12">
   <div className="mb-4 text-sm uppercase tracking-wide text-white/40">
-    Typical domains
+{t.section_labels.domains}
   </div>
 
   <div className="space-y-4 max-w-[520px]">
@@ -618,7 +618,7 @@ useEffect(() => {
 
     {/* SYSTEM TAG */}
     <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-      Delivery structure
+{t.section_labels.delivery}
     </div>
 
     {/* TITLE */}
@@ -629,7 +629,7 @@ useEffect(() => {
     {/* CORE OFFERING */}
     <div className="mb-20 max-w-[720px]">
       <div className="mb-4 text-sm uppercase tracking-wide text-white/40">
-        Core layer
+{t.section_labels.core}
       </div>
 
       <h3 className="text-2xl font-semibold mb-6">
@@ -678,7 +678,7 @@ useEffect(() => {
     {/* INVENTORY EXTENSION */}
     <div className="max-w-[720px]">
       <div className="mb-4 text-sm uppercase tracking-wide text-white/40">
-        System adaptation
+{t.section_labels.adaptation}
       </div>
 
       <h3 className="text-2xl font-semibold mb-6">
@@ -734,7 +734,7 @@ useEffect(() => {
 
     {/* SYSTEM TAG */}
     <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-      Operational proof
+{t.section_labels.proof}
     </div>
 
     {/* TITLE */}
@@ -757,7 +757,7 @@ useEffect(() => {
     {/* EVIDENCE BOUNDARY */}
     <div className="mt-12 pt-6 border-t border-white/10 max-w-[600px]">
       <p className="text-white/60 text-sm">
-        Proof here refers to observable operation and verifiable system behavior, not certification or endorsement.
+{t.proof.disclaimer}
       </p>
     </div>
 
@@ -776,7 +776,7 @@ useEffect(() => {
 
     {/* SYSTEM TAG */}
     <div className="mb-6 text-xs uppercase tracking-wide text-white/40">
-      Structural intervention
+{t.section_labels.intervention}
     </div>
 
     {/* TITLE */}
