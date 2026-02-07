@@ -76,7 +76,7 @@ eyebrow: "System clarification layer"
   },
 
   what_it_is_not: {
-    title: "What MAIOS is not",
+    title: "What MAIOS does not do",
     body: [
       "MAIOS does not store data.",
       "MAIOS does not persist telemetry.",
@@ -301,7 +301,7 @@ de: {
   },
 
   what_it_is_not: {
-    title: "Was MAIOS nicht ist",
+    title: "Was MAIOS nicht macht",
     body: [
       "MAIOS speichert keine Daten.",
       "MAIOS persistiert keine Telemetrie.",
@@ -524,7 +524,7 @@ fr: {
   },
 
   what_it_is_not: {
-    title: "Ce que MAIOS n’est pas",
+    title: "Ce que MAIOS ne fait pas",
     body: [
       "MAIOS ne stocke pas de données.",
       "MAIOS ne persiste pas la télémétrie.",
@@ -737,7 +737,7 @@ es: {
   },
 
   what_it_is_not: {
-    title: "Qué no es MAIOS",
+    title: "Lo que MAIOS no hace",
     body: [
       "MAIOS no almacena datos.",
       "MAIOS no persiste telemetría.",
@@ -951,7 +951,7 @@ it: {
   },
 
   what_it_is_not: {
-    title: "Cosa MAIOS non è",
+    title: "Cosa MAIOS non fa",
     body: [
       "MAIOS non archivia dati.",
       "MAIOS non persiste telemetria.",
@@ -1165,7 +1165,7 @@ pt: {
   },
 
   what_it_is_not: {
-    title: "O que MAIOS não é",
+    title: "O que MAIOS não faz",
     body: [
       "MAIOS não armazena dados.",
       "MAIOS não persiste telemetria.",
@@ -1379,7 +1379,7 @@ nl: {
   },
 
   what_it_is_not: {
-    title: "Wat MAIOS niet is",
+    title: "Wat MAIOS niet doet",
     body: [
       "MAIOS slaat geen data op.",
       "MAIOS bewaart geen telemetrie.",
@@ -1593,7 +1593,7 @@ ru: {
   },
 
   what_it_is_not: {
-    title: "Чем MAIOS не является",
+    title: "Что MAIOS не делает",
     body: [
       "MAIOS не хранит данные.",
       "MAIOS не сохраняет телеметрию.",
@@ -1807,7 +1807,7 @@ zh: {
   },
 
   what_it_is_not: {
-    title: "MAIOS 不是什么",
+    title: "MAIOS 不做什么",
     body: [
       "MAIOS 不存储数据。",
       "MAIOS 不持久化遥测。",
@@ -2021,7 +2021,7 @@ ja: {
   },
 
   what_it_is_not: {
-    title: "MAIOS ではないもの",
+    title: "MAIOS が行わないこと",
     body: [
       "MAIOS はデータを保存しません。",
       "MAIOS はテレメトリを永続化しません。",
@@ -2235,7 +2235,7 @@ ko: {
   },
 
   what_it_is_not: {
-    title: "MAIOS가 아닌 것",
+    title: "MAIOS가 하지 않는 것",
     body: [
       "MAIOS는 데이터를 저장하지 않습니다.",
       "MAIOS는 텔레메트리를 보존하지 않습니다.",
@@ -2449,7 +2449,7 @@ ar: {
   },
 
   what_it_is_not: {
-    title: "ما ليس MAIOS",
+    title: "ما لا يفعله MAIOS",
     body: [
       "MAIOS لا يخزن البيانات.",
       "MAIOS لا يحتفظ بالقياس عن بُعد.",
@@ -2663,7 +2663,7 @@ hi: {
   },
 
   what_it_is_not: {
-    title: "MAIOS क्या नहीं है",
+    title: "MAIOS क्या नहीं करता",
     body: [
       "MAIOS डेटा संग्रहित नहीं करता।",
       "MAIOS टेलीमेट्री को स्थायी नहीं करता।",
