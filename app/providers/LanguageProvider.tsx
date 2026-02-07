@@ -111,14 +111,17 @@ export type Lang = (typeof SUP)[number];
 const LanguageCtx = createContext<{
   lang: Lang;
   t: (k: string) => string;
+  tObj: any | null;
   hint: string;
   setLang: (l: Lang) => void;
 }>({
   lang: "en",
   t: (k) => k,
+  tObj: null,
   hint: "[Please answer in English.]",
   setLang: () => {},
 });
+
 
 export function LanguageProvider({
   dict,
