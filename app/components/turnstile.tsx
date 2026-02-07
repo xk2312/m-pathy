@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 type TurnstileProps = {
-  siteKey?: string;
+  siteKey: string;
   onSuccess: (token: string) => void;
 };
 
@@ -15,40 +15,39 @@ declare global {
 
 export default function Turnstile({ siteKey, onSuccess }: TurnstileProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const rendered = useRef(false);
 
   useEffect(() => {
     if (!ref.current) return;
-    if (!siteKey || typeof siteKey !== "string") return;
+    if (rendered.current) return;
 
     const render = () => {
       if (!window.turnstile) return;
-      if (!siteKey || typeof siteKey !== "string") return;
+      if (rendered.current) return;
 
-      window.turnstile.render(ref.current!, {
+      window.turnstile.render(ref.current, {
         sitekey: siteKey,
         callback: onSuccess,
       });
+
+      rendered.current = true;
     };
 
     if (window.turnstile) {
       render();
-      return;
+    } else {
+      if (!document.getElementById("turnstile-script")) {
+        const script = document.createElement("script");
+        script.id = "turnstile-script";
+        script.src =
+          "https://challenges.cloudflare.com/turnstile/v0/api.js";
+        script.async = true;
+        script.defer = true;
+        script.onload = render;
+        document.body.appendChild(script);
+      }
     }
-
-    const existing = document.getElementById("cf-turnstile-api");
-    if (existing) {
-      existing.addEventListener("load", render, { once: true });
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.id = "cf-turnstile-api";
-    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-    script.async = true;
-    script.defer = true;
-    script.onload = render;
-    document.body.appendChild(script);
-  }, [siteKey, onSuccess]);
+  }, [siteKey]);
 
   return <div ref={ref} />;
 }
