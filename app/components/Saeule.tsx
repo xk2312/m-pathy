@@ -1106,52 +1106,40 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
   aria-label={labelBuild}
   data-m-event="builder"
   data-m-label={labelBuild}
-  onClick={async () => {
-    emitStatus({ busy: true });
+onClick={() => {
+  try {
+    logEvent("cta_start_building_clicked", {});
+  } catch {}
 
+  const label = tr(
+    "startBuildingMsg",
+    "Let’s start building. What do you want to create?"
+  );
 
-              const prompt = tr(
-  "startBuildingMsg",
-  "Let’s start building. What do you want to create?"
-);
+  emitSystemMessage({
+    kind: "info",
+    text: label,
+    meta: { source: "descriptive-build" }
+  });
 
-try { 
-  logEvent("cta_start_building_clicked", {}); 
-} catch {}
+  emitStatus({ busy: false });
 
-// ▼ Overlay sofort schließen (ohne Bubble)
-try {
-  if (
-    typeof window !== "undefined" &&
-    (window.matchMedia?.("(max-width: 768px)").matches ||
-     /Mobi|Android/i.test(navigator.userAgent))
-  ) {
-    window.dispatchEvent(
-      new CustomEvent("mpathy:ui:overlay-close", {
-        detail: { reason: "expert-selected" },
-      })
-    );
-  }
-} catch {}
-// ▲ Ende Overlay-Close
-
-// Normale User-Nachricht im Chat anzeigen
-say(prompt);
-
-// Normaler Chat-Call
-const reply = await callChatAPI(prompt);
-
-const finalText =
-  reply && reply.length
-    ? reply
-    : tr(
-        "cta.fallback",
-        "All set - tell me what you want to build (app, flow, feature …)."
+  try {
+    if (
+      typeof window !== "undefined" &&
+      (window.matchMedia?.("(max-width: 768px)").matches ||
+        /Mobi|Android/i.test(navigator.userAgent))
+    ) {
+      window.dispatchEvent(
+        new CustomEvent("mpathy:ui:overlay-close", {
+          detail: { reason: "expert-selected" },
+        })
       );
+    }
+  } catch {}
+}}
 
-say(finalText);
 
-            }}
             className={styles.buttonPrimary}
             style={{ width: "100%", cursor: "pointer" }}
           >
