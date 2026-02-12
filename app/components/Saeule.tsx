@@ -1110,34 +1110,47 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
     emitStatus({ busy: true });
 
 
-              const prompt = buildButtonMsg(lang);
-              const q = prompt;
+              const prompt = tr(
+  "startBuildingMsg",
+  "Let’s start building. What do you want to create?"
+);
 
-              try { logEvent("cta_start_building_clicked", {}); } catch {}
+try { 
+  logEvent("cta_start_building_clicked", {}); 
+} catch {}
 
-              // ▼ Overlay sofort schließen (ohne Bubble)
-              try {
-                if (typeof window !== "undefined" &&
-                  (window.matchMedia?.("(max-width: 768px)").matches ||
-                   /Mobi|Android/i.test(navigator.userAgent))) {
-                  window.dispatchEvent(
-                    new CustomEvent("mpathy:ui:overlay-close", { detail: { reason: "expert-selected" } })
-                  );
-                }
-              } catch {}
-              // ▲ Ende Overlay-Close
+// ▼ Overlay sofort schließen (ohne Bubble)
+try {
+  if (
+    typeof window !== "undefined" &&
+    (window.matchMedia?.("(max-width: 768px)").matches ||
+     /Mobi|Android/i.test(navigator.userAgent))
+  ) {
+    window.dispatchEvent(
+      new CustomEvent("mpathy:ui:overlay-close", {
+        detail: { reason: "expert-selected" },
+      })
+    );
+  }
+} catch {}
+// ▲ Ende Overlay-Close
 
-              // kurze Echo-Info (dezent)
-              emitSystemMessage({ kind: "info", text: prompt, meta: { source: "cta" } });
+// Normale User-Nachricht im Chat anzeigen
+say(prompt);
 
-              // Chat-Aufruf + Reply ausgeben (einmalig)
-              const reply = await callChatAPI(q);
+// Normaler Chat-Call
+const reply = await callChatAPI(prompt);
 
-              const finalText = reply && reply.length
-                ? reply
-                : tr("cta.fallback", "All set - tell me what you want to build (app, flow, feature …).");
+const finalText =
+  reply && reply.length
+    ? reply
+    : tr(
+        "cta.fallback",
+        "All set - tell me what you want to build (app, flow, feature …)."
+      );
 
-              say(finalText);
+say(finalText);
+
             }}
             className={styles.buttonPrimary}
             style={{ width: "100%", cursor: "pointer" }}
