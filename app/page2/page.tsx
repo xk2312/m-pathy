@@ -603,18 +603,18 @@ function mdToHtml(src: string): string {
     }
   );
 
-  // 6) Absätze – Code-Platzhalter wieder einsetzen
-  const blocks = out.split(/\n{2,}/);
+    // 6) Code-Platzhalter global wieder einsetzen
+  const outWithCodes = out.replace(
+    /@@CODE_BLOCK_(\d+)@@/g,
+    (_m, i) => codeBlocks[Number(i)] ?? ""
+  );
+
+  // 7) Absätze
+  const blocks = outWithCodes.split(/\n{2,}/);
   const rendered = blocks
     .map((b) => {
       const t = b.trim();
       if (!t) return "";
-
-      const m = /^@@CODE_BLOCK_(\d+)@@$/.exec(t);
-      if (m) {
-        const idx = Number(m[1]);
-        return codeBlocks[idx] ?? "";
-      }
 
       if (
         /^<(h1|h2|h3|ul|ol|pre|blockquote|table|hr)\b/i.test(t) ||
@@ -623,12 +623,14 @@ function mdToHtml(src: string): string {
       ) {
         return t;
       }
+
       return `<p>${t}</p>`;
     })
     .join("\n");
 
   return rendered;
 }
+
 
 
 
