@@ -1125,7 +1125,7 @@ if (typeof setInput === "function") {
   setInput(label);
 }
 
-  try {
+  /*try {
     if (
       typeof window !== "undefined" &&
       (window.matchMedia?.("(max-width: 768px)").matches ||
@@ -1137,7 +1137,7 @@ if (typeof setInput === "function") {
         })
       );
     }
-  } catch {}
+  } catch {}*/
 }}
 
 
