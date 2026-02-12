@@ -701,7 +701,7 @@ async function callChatAPI(prompt: string): Promise<string | null> {
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "same-origin", // ← important: keep session cookies
+      credentials: "include", // ← important: keep session cookies
       body: JSON.stringify({
         messages: [{ role: "user", content: prompt, format: "markdown" }],
       }),
