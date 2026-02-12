@@ -1122,6 +1122,7 @@ onClick={() => {
 if (typeof setInput === "function") {
   setInput(label);
 }
+console.log("Saeule setInput:", setInput);
 
   try {
     if (

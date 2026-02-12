@@ -2880,6 +2880,7 @@ const withGate = (fn: () => void) => {
   onSystemMessage={systemSay}
   onClearChat={onClearChat}
   messages={messages}
+  setInput={setInput}  
 />
 
 

@@ -11,6 +11,7 @@ type Props = {
   onClearChat?: () => void;
   canClear?: boolean;
   messages: any[]; // ⬅︎ NEU: wird nur durchgereicht
+  setInput: (value: string) => void;
 };
 
 
