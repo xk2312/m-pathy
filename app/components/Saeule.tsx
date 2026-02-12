@@ -323,8 +323,10 @@ type Props = {
   onSystemMessage?: (content: string) => void;
   onClearChat?: () => void;
   canClear?: boolean;
-  messages: any[]; // ⬅️ NEU: explizite Datenwahrheit
+  messages: any[];
+  setInput: (value: string) => void;
 };
+
 
 
 
@@ -741,7 +743,9 @@ export default function Saeule({
   onClearChat,
   canClear,
   messages,
+  setInput,
 }: Props) {
+
 
   const [activeMode, setActiveMode] = useState<ModeId>(() => {
     try { return (localStorage.getItem("mode") as ModeId) || "M"; } catch { return "M"; }
@@ -1116,13 +1120,8 @@ onClick={() => {
     "Let’s start building. What do you want to create?"
   );
 
-  emitSystemMessage({
-    kind: "info",
-    text: label,
-    meta: { source: "descriptive-build" }
-  });
-
-  emitStatus({ busy: false });
+  // 🔥 Nur Prompt vorbefüllen — KEINE Chat-Bubble
+  setInput(label);
 
   try {
     if (
@@ -1138,6 +1137,8 @@ onClick={() => {
     }
   } catch {}
 }}
+
+
 
 
             className={styles.buttonPrimary}

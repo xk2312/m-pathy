@@ -28,6 +28,7 @@ type PromptRootProps = {
   withGate: (fn: () => void) => void;
   sendingRef: React.MutableRefObject<boolean>;
   onSendFromPrompt: (text: string) => void;
+  
   isMobile: boolean;
   onToggleSaeule?: () => void;                     // ★ NEU
 };
