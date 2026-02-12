@@ -324,7 +324,7 @@ type Props = {
   onClearChat?: () => void;
   canClear?: boolean;
   messages: any[];
-  setInput: (value: string) => void;
+  setInput?: (value: string) => void;
 };
 
 
@@ -1121,7 +1121,7 @@ onClick={() => {
   );
 
   // 🔥 Nur Prompt vorbefüllen — KEINE Chat-Bubble
-  setInput(label);
+setInput?.(label);
 
   try {
     if (
