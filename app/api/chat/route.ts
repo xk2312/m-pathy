@@ -324,6 +324,35 @@ function estimateTokensFromText(text: string): number {
   return approxTokens > 0 ? approxTokens : 1;
 }
 
+function isValidTelemetryBlock(text: string): boolean {
+  if (!text) return false;
+  if (!text.trim().startsWith("```")) return false;
+
+  const requiredFields = [
+    "⬡ System:",
+    "◈ Version:",
+    "◉ Telemetry Authority:",
+    "◎ Session Prompt Counter:",
+    "▶ Telemetry Order:",
+    "⧉ Telemetry Scope:",
+    "▣ Telemetry Mutability:",
+    "↯ Telemetry Failure Policy:",
+    "≈ Telemetry Source Separation:",
+    "▸ User Mode:",
+    "▸ System Mode:",
+    "▸ Effective Mode:",
+    "▸ Expert Status:",
+    "▸ Expert Type:",
+    "▸ Expert ID:",
+    "⚡ Drift Origin:",
+    "≈ Drift State:",
+    "▲ Drift Risk:"
+  ];
+
+  return requiredFields.every(field => text.includes(field));
+}
+
+
 // === POST-Handler (mit Gate + Backoff + FreeGate) ===
 export async function POST(req: NextRequest) {
 
@@ -559,12 +588,82 @@ if (balanceBefore <= 0) {
 
     const usage = data?.usage ?? null;
 
-    const content: string | undefined = data?.choices?.[0]?.message?.content;
+        let content: string | undefined = data?.choices?.[0]?.message?.content;
     if (!content) {
       return NextResponse.json({ error: "No message content" }, { status: 502 });
     }
 
+    // === TELEMETRY ENFORCEMENT ===
+    if (!isValidTelemetryBlock(content)) {
+      console.warn("[telemetry] invalid or missing block — retrying once");
+
+      const strictRetryPayload = {
+        messages: [
+          {
+            role: "system",
+            content:
+              "STRICT REISSUE: You must output a full telemetry block in canonical form BEFORE any content. All 18 fields are mandatory. No omission allowed."
+          },
+          ...messages
+        ],
+        temperature: 0,
+        max_tokens: MODEL_MAX_TOKENS,
+      };
+
+      const retryInit: RequestInit = {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "api-key": apiKey },
+        body: JSON.stringify(strictRetryPayload),
+      };
+
+      const retryResponse = await withGate(() =>
+        retryingFetch(buildAzureUrl(), retryInit, 5)
+      );
+
+      const retryData = await retryResponse.json();
+      const retryContent: string | undefined =
+        retryData?.choices?.[0]?.message?.content;
+
+      if (!retryResponse.ok || !retryContent || !isValidTelemetryBlock(retryContent)) {
+        console.error("[telemetry] enforcement failed after retry");
+
+        const telemetryBlockedMessages: Record<string, string> = {
+          en: "SYSTEM NOTICE: Telemetry validation failed. Output was blocked according to system policy. Please retry your request.",
+          de: "SYSTEM-HINWEIS: Die Telemetrieprüfung ist fehlgeschlagen. Die Ausgabe wurde gemäß Systemrichtlinie blockiert. Bitte wiederhole deine Anfrage.",
+          fr: "AVIS SYSTÈME : La validation de la télémétrie a échoué. La sortie a été bloquée conformément à la politique du système. Veuillez réessayer.",
+          es: "AVISO DEL SISTEMA: La validación de telemetría falló. La salida fue bloqueada según la política del sistema. Por favor, repite tu solicitud.",
+          it: "AVVISO DI SISTEMA: La validazione della telemetria è fallita. L'output è stato bloccato secondo la politica del sistema. Ripeti la richiesta.",
+          pt: "AVISO DO SISTEMA: A validação de telemetria falhou. A saída foi bloqueada conforme a política do sistema. Por favor, tente novamente.",
+          nl: "SYSTEEMBERICHT: Telemetrievalidatie mislukt. De uitvoer is geblokkeerd volgens het systeembeleid. Probeer het opnieuw.",
+          ru: "СИСТЕМНОЕ УВЕДОМЛЕНИЕ: Проверка телеметрии не удалась. Вывод был заблокирован в соответствии с политикой системы. Повторите запрос.",
+          zh: "系统提示：遥测验证失败。根据系统策略，输出已被阻止。请重新提交请求。",
+          ja: "システム通知：テレメトリ検証に失敗しました。システムポリシーに従い出力がブロックされました。再度お試しください。",
+          ko: "시스템 알림: 텔레메트리 검증에 실패했습니다. 시스템 정책에 따라 출력이 차단되었습니다. 다시 시도해 주세요.",
+          ar: "إشعار النظام: فشل التحقق من القياس عن بعد. تم حظر الإخراج وفقًا لسياسة النظام. يرجى إعادة المحاولة.",
+          hi: "सिस्टम सूचना: टेलीमेट्री सत्यापन विफल रहा। सिस्टम नीति के अनुसार आउटपुट अवरुद्ध कर दिया गया है। कृपया पुनः प्रयास करें।",
+        };
+
+        const safeLocale =
+          telemetryBlockedMessages[localeFromCookie] ? localeFromCookie : "en";
+
+        return NextResponse.json(
+          {
+            role: "assistant",
+            content: telemetryBlockedMessages[safeLocale],
+            status: "telemetry_blocked",
+            tokens_used: 0,
+            balance_after: balanceBefore ?? null,
+            triketon: null,
+          },
+          { status: 200 }
+        );
+      }
+
+      content = retryContent;
+    }
+
     let tokensUsed: number;
+
     if (usage && typeof usage.total_tokens === "number") {
       tokensUsed = usage.total_tokens;
     } else {
