@@ -222,6 +222,9 @@ import { verifyAndBumpFreegate } from "@/lib/freegate"; // FreeGate
 import { AUTH_COOKIE_NAME, verifySessionToken } from "@/lib/auth";
 import { debit } from "@/lib/ledger";
 import { getBalance } from "@/lib/ledger";
+import { cookies } from "next/headers";
+import crypto from "crypto";
+
 
 
 export const runtime = "nodejs"; // wir lesen Dateien ⇒ Node-Runtime
@@ -355,6 +358,27 @@ function isValidTelemetryBlock(text: string): boolean {
 
 // === POST-Handler (mit Gate + Backoff + FreeGate) ===
 export async function POST(req: NextRequest) {
+
+    const cookieStore = cookies();
+  const raw = cookieStore.get("mpathy_session")?.value;
+
+  let conversationId: string;
+  let serverCounter: number;
+
+  if (!raw) {
+    conversationId = crypto.randomUUID();
+    serverCounter = 1;
+  } else {
+    try {
+      const parsed = JSON.parse(raw);
+      conversationId = parsed.conversationId;
+      serverCounter = (parsed.counter ?? 0) + 1;
+    } catch {
+      conversationId = crypto.randomUUID();
+      serverCounter = 1;
+    }
+  }
+
 
   try {
     const body = (await req.json()) as ChatBody;
@@ -734,10 +758,11 @@ if (balanceBefore <= 0) {
 
       const seal = await new Promise<any>((resolve, reject) => {
         const p = spawn(
-          "python3",
-          ["-m", "triketon.triketon2048", "seal", content, "--json"],
-          { stdio: ["ignore", "pipe", "pipe"] }
-        );
+  "python3",
+  ["-m", "triketon.triketon2048", "seal", String(content), "--json"],
+  { stdio: ["ignore", "pipe", "pipe"] }
+);
+
 
 
         let out = "";
@@ -791,6 +816,7 @@ if (balanceBefore <= 0) {
       console.warn("[triketon] auto-anchor skipped", e);
     }
 
+
   const res = NextResponse.json(
   {
     role: "assistant",
@@ -803,6 +829,40 @@ if (balanceBefore <= 0) {
   },
   { status: 200 }
 );
+// ---- SESSION COUNTER (minimal & robust) ----
+
+const sessionRaw = req.cookies.get("mpathy_session")?.value;
+let sessionData: { conversationId: string; counter: number } | null = null;
+
+try {
+  if (sessionRaw) {
+    sessionData = JSON.parse(sessionRaw);
+  }
+} catch {
+  sessionData = null;
+}
+
+const conversationId =
+  sessionData?.conversationId ?? crypto.randomUUID();
+
+const serverCounter = (sessionData?.counter ?? 0) + 1;
+// === SERVER COUNTER AUTHORITY ===
+content = content.replace(
+  /◎ Session Prompt Counter:\s*\d+/,
+  `◎ Session Prompt Counter: ${serverCounter}`
+);
+
+res.cookies.set({
+  name: "mpathy_session",
+  value: JSON.stringify({
+    conversationId,
+    counter: serverCounter,
+  }),
+  httpOnly: true,
+  secure: true,
+  sameSite: "lax",
+  path: "/",
+});
 
 
     res.headers.set("X-Tokens-Delta", String(-tokenDelta));
