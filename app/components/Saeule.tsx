@@ -1121,7 +1121,9 @@ onClick={() => {
   );
 
   // 🔥 Nur Prompt vorbefüllen — KEINE Chat-Bubble
-setInput?.(label);
+if (typeof setInput === "function") {
+  setInput(label);
+}
 
   try {
     if (
