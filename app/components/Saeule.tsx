@@ -1108,8 +1108,6 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
           <button
   type="button"
   aria-label={labelBuild}
-  data-m-event="builder"
-  data-m-label={labelBuild}
 onClick={() => {
   try {
     logEvent("cta_start_building_clicked", {});
@@ -1125,7 +1123,7 @@ if (typeof setInput === "function") {
   setInput(label);
 }
 
-  /*try {
+  try {
     if (
       typeof window !== "undefined" &&
       (window.matchMedia?.("(max-width: 768px)").matches ||
@@ -1137,7 +1135,7 @@ if (typeof setInput === "function") {
         })
       );
     }
-  } catch {}*/
+  } catch {}
 }}
 
 
