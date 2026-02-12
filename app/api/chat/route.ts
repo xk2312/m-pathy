@@ -481,10 +481,14 @@ if (balanceBefore <= 0) {
           r.headers.set("X-Free-Remaining", String(freeRemaining));
           r.headers.set("X-Tokens-Delta", "0");
           r.headers.set("X-Tokens-Overdraw", "1");
-          if (cookie) {
-            r.headers.set(
-"Set-Cookie", cookie);
-          }
+            if (cookie) {
+      r.cookies.set({
+        name: cookie.split("=")[0],
+        value: cookie.split("=")[1]?.split(";")[0] ?? "",
+        path: "/",
+      });
+    }
+
           console.log("[chat] ledger blocked (insufficient tokens)", {
             sessionUserId,
             balanceBefore,
