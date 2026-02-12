@@ -51,7 +51,9 @@ export default function SidebarContainer({
   onClearChat,
   canClear,
   messages,
-}: Props) {
+  setInput,
+}: Props)
+ {
 
   // Breakpoint an page2/useBreakpoint angleichen:
   // Desktop = alles, was NICHT isMobile (>= 769px) ist
@@ -84,12 +86,14 @@ export default function SidebarContainer({
             flexDirection: "column",
           }}
         >
-          <Saeule
+         <Saeule
   onSystemMessage={onSystemMessage}
   onClearChat={onClearChat}
   canClear={canClear}
   messages={messages}
+  setInput={setInput}
 />
+
 
 
         </div>
