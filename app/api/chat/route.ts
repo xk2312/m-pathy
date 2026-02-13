@@ -332,27 +332,76 @@ function isValidTelemetryBlock(text: string): boolean {
   if (!text.trim().startsWith("```")) return false;
 
   const requiredFields = [
-    "⬡ System:",
-    "◈ Version:",
-    "◉ Telemetry Authority:",
-    "◎ Session Prompt Counter:",
-    "▶ Telemetry Order:",
-    "⧉ Telemetry Scope:",
-    "▣ Telemetry Mutability:",
-    "↯ Telemetry Failure Policy:",
-    "≈ Telemetry Source Separation:",
-    "▸ User Mode:",
-    "▸ System Mode:",
-    "▸ Effective Mode:",
-    "▸ Expert Status:",
-    "▸ Expert Type:",
-    "▸ Expert ID:",
+    "◆ System:",
+    "◇ Version:",
+    "⬢ Telemetry Authority:",
+
+    "● Session Prompt Counter:",
+    "■ Telemetry Order:",
+    "▣ Telemetry Scope:",
+    "□ Telemetry Mutability:",
+
+    "▪ Telemetry Failure Policy:",
+    "▦ Telemetry Source Separation:",
+
+    "◁ User Mode:",
+    "▷ System Mode:",
+    "◀ Effective Mode:",
+
+    "▲ Expert Status:",
+    "⬠ Expert Type:",
+    "⬣ Expert ID:",
+
     "⚡ Drift Origin:",
-    "≈ Drift State:",
-    "▲ Drift Risk:"
+    "▼ Drift State:",
+    "▶ Drift Risk:",
+
+    "⊞ Orchestration Mode:",
+    "→ Orchestration Authority:",
+    "⬡ Expert Configuration:",
+    "⬥ Complexity Level:",
+    "△ Council Final Status:",
+
+    "⌘ Expert Rights Profile:",
+    "⏳ Expert Rights Scope:",
+    "⛭ Expert Rights Source:",
+    "⛒ Analysis Container State:",
+    "☍ Expert Activation Count:",
+    "⎈ Council Decision ID:",
+    "☑ Council Rights Attestation:",
+
+    "✧ Council Decision Trace:",
+    "⧉ Domain Resolution Mode:",
+    "⌁ Container Transition Authority:"
   ];
 
-  return requiredFields.every(field => text.includes(field));
+  const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
+
+  // Extract only telemetry lines between first and second ```
+  const firstFence = lines.findIndex(l => l.startsWith("```"));
+  if (firstFence === -1) return false;
+
+  const secondFence = lines.findIndex(
+    (l, i) => i > firstFence && l.startsWith("```")
+  );
+  if (secondFence === -1) return false;
+
+  const telemetryLines = lines.slice(firstFence + 1, secondFence);
+
+  if (telemetryLines.length !== requiredFields.length) {
+    return false;
+  }
+
+  for (let i = 0; i < requiredFields.length; i++) {
+    const expected = requiredFields[i];
+    const line = telemetryLines[i];
+
+    if (!line.startsWith(expected)) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 
@@ -630,7 +679,7 @@ if (balanceBefore <= 0) {
           {
             role: "system",
             content:
-              "STRICT REISSUE: You must output a full telemetry block in canonical form BEFORE any content. All 18 fields are mandatory. No omission allowed."
+                   "STRICT REISSUE: You must output a full telemetry block in canonical form BEFORE any content. All 33 fields are mandatory. No omission allowed."
           },
           ...messages
         ],
@@ -852,8 +901,8 @@ const conversationId =
 const serverCounter = (sessionData?.counter ?? 0) + 1;
 // === SERVER COUNTER AUTHORITY ===
 content = content.replace(
-  /◎ Session Prompt Counter:\s*\d+/,
-  `◎ Session Prompt Counter: ${serverCounter}`
+  /● Session Prompt Counter:\s*\d+/,
+  `● Session Prompt Counter: ${serverCounter}`
 );
 
 res.cookies.set({
