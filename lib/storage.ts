@@ -80,6 +80,11 @@ export function writeLS<T>(key: MpathyNamespace, value: T): void {
     if (existingLS !== null) return;
   }
 
+  if (key === 'mpathy:archive:pairs:v1') {
+    const isEmptyPairs = Array.isArray(value) && value.length === 0
+    if (isEmptyPairs) return
+  }
+
   // 2. Sofortiger LocalStorage-Commit
   try {
     window.localStorage.setItem(key, JSON.stringify(value));
@@ -92,6 +97,7 @@ export function writeLS<T>(key: MpathyNamespace, value: T): void {
     console.error(`[Vault] ❌ Kritischer Spiegelungsfehler für ${key}:`, err);
   });
 }
+
 export function clearLS(key: MpathyNamespace): void {
   if (!hasLocalStorage()) return
   window.localStorage.removeItem(key)
@@ -193,4 +199,26 @@ export function readArchiveChatContext(): string | null {
 export function clearArchiveChatContext(): void {
   if (!hasSessionStorage()) return
   window.sessionStorage.removeItem(ARCHIVE_CHAT_CONTEXT_KEY)
+}
+
+export async function restoreTriketonFromVault(): Promise<void> {
+  if (typeof window === 'undefined') return
+  if (!hasLocalStorage()) return
+
+  const key = 'mpathy:triketon:v1'
+  const existing = window.localStorage.getItem(key)
+  if (existing) return
+
+  try {
+    const fromVault = await storageVault.get(key)
+    if (!Array.isArray(fromVault) || fromVault.length === 0) return
+
+    window.localStorage.setItem(key, JSON.stringify(fromVault))
+
+    window.dispatchEvent(
+      new CustomEvent('mpathy:triketon:ready')
+    )
+  } catch (e) {
+    console.error('[Storage] Restore Triketon failed', e)
+  }
 }

@@ -436,6 +436,10 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
     }
   }
 
+  if (pairs.length === 0) {
+    return pairs
+  }
+
   writeLS(PAIRS_KEY, pairs)
 
   // 🔔 notify UI that archive pairs changed
@@ -444,6 +448,7 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
   }
 
   return pairs
+
 }
 
 
