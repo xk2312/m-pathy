@@ -2,16 +2,16 @@ import { storageVault } from './storageVault';
 
 export type MpathyNamespace =
   | 'mpathy:chat:v1' // LS
+  | 'mpathy:chat:chain_id' // LS + IndexedDB (Chat-Anker)
   | 'mpathy:archive:v1' // -> IndexedDB
   | 'mpathy:archive:chat_map' // LS
   | 'mpathy:archive:chat_counter'
   | 'mpathy:archive:pairs:v1' // LS
-  | 'mpathy:context:upload' // ist akuell nicht zu sehen
+  | 'mpathy:context:upload' // ist aktuell nicht zu sehen
   | 'mpathy:verification:v1' // -> IndexedDB
   | 'mpathy:verification:reports:v1' // -> IndexedDB
   | 'mpathy:triketon:v1' // -> IndexedDB
   | 'mpathy:triketon:device_public_key_2048' // LS und IndexedDB
-
 
 export type MpathySessionNamespace =
   | 'mpathy:archive:selection:v1'
@@ -92,10 +92,25 @@ export function writeLS<T>(key: MpathyNamespace, value: T): void {
     console.warn(`[Storage] ⚠️ LS Limit erreicht für ${key}. Vault übernimmt.`);
   }
 
-  // 3. Radikale Spiegelung in den Vault (Immer & sofort)
-  storageVault.put(key, value).catch((err) => {
-    console.error(`[Vault] ❌ Kritischer Spiegelungsfehler für ${key}:`, err);
-  });
+    // 3. Deterministische Spiegelung nur für kanonische Persistenz-Namespaces
+  const CANONICAL_VAULT_KEYS: MpathyNamespace[] = [
+    'mpathy:chat:chain_id',
+    'mpathy:chat:v1',
+    'mpathy:triketon:device_public_key_2048',
+    'mpathy:triketon:v1',
+    'mpathy:archive:chat_counter',
+    'mpathy:archive:chat_map',
+    'mpathy:archive:pairs:v1',
+    'mpathy:archive:v1',
+    'mpathy:verification:reports:v1'
+  ];
+
+  if (CANONICAL_VAULT_KEYS.includes(key)) {
+    storageVault.put(key, value).catch((err) => {
+      console.error(`[Vault] ❌ Kritischer Spiegelungsfehler für ${key}:`, err);
+    });
+  }
+
 }
 
 export function clearLS(key: MpathyNamespace): void {
