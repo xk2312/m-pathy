@@ -59,6 +59,17 @@ export async function runTriketonSync(text: string): Promise<boolean> {
 
   const all = readLS<typeof entry[]>('mpathy:verification:sync' as any) || []
   all.unshift(entry)
-  writeLS('mpathy:verification:sync' as any, all.slice(0, 50))
+  
+  // ✅ FIX: Wir schreiben das gesamte Array 'all' zurück (History-Erhalt)
+  writeLS('mpathy:verification:sync' as any, all)
+  
+  // 🚀 TRIGGER: Heilung des Eintragungsbruchs
+  // Informiert das Archiv-System (ArchiveInit.tsx), dass neue valide Daten vorliegen.
+  // Dies eliminiert den Reload-Zwang.
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('mpathy:triketon:append'))
+    console.debug('[TriketonSync] 📡 Event dispatched: mpathy:triketon:append')
+  }
+  
   return verified
 }
