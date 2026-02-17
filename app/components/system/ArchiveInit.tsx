@@ -8,12 +8,15 @@ export default function ArchiveInit() {
   const didInit = useRef(false)
 
   useEffect(() => {
-    // 🔒 Initiale, einmalige Projektion
     if (!didInit.current) {
       didInit.current = true
-      syncArchiveFromTriketon()
-      syncArchivePairsFromTriketon()
+      // Wir geben dem System 100ms Zeit, um LS-Sperren nach dem Reset zu lösen
+      setTimeout(() => {
+        syncArchiveFromTriketon()
+        syncArchivePairsFromTriketon()
+      }, 100);
     }
+    // ...
 
     // 🔁 Re-Projektion bei Ledger-Append
     const onAppend = () => {

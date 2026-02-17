@@ -115,13 +115,20 @@ export function syncArchiveFromTriketon(): ArchivChat[] {
 
 const raw = (() => {
   try {
+    // Wir nutzen hier das Fenster zum Vault oder zumindest die robuste readLS
     const r = window.localStorage.getItem(TRIKETON_KEY)
-    return r ? JSON.parse(r) : []
+    return r ? JSON.parse(r) : null // null statt [] signalisiert "Fehlt noch"
   } catch {
-    return []
+    return null
   }
 })();  
 
+// ABBRUCH-BEDINGUNG: Wenn Triketon leer/null ist, darf die Projektion 
+// den bestehenden (vielleicht noch ladenden) Archiv-Stand nicht mit [] überschreiben.
+if (!raw || (Array.isArray(raw) && raw.length === 0)) {
+  console.debug('[Archive] 🛑 Projektion gestoppt: Triketon-Ledger ist leer.');
+  return []; 
+}
 const anchors: TriketonAnchor[] = Array.isArray(raw) ? (raw as TriketonAnchor[]) : []
 const byChain = new Map<string, TriketonAnchor[]>()
 
