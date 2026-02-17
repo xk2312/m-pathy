@@ -153,6 +153,8 @@
 import { generatePublicKey2048, computeTruthHash } from "@/lib/triketonVerify";
 import { syncArchiveFromTriketon } from "@/lib/archiveProjection";
 import { initArchiveVerifyListener } from "@/lib/archiveVerifyListener";
+import { writeLS, clearLS } from '@/lib/storage';
+import type { MpathyNamespace } from '@/lib/storage';
 
 // lib/chatStorage.ts
 // Eine Quelle der Wahrheit für Chat-Persistenz (localStorage)
@@ -358,7 +360,7 @@ export function clearChat(): void {
     if (typeof window === "undefined") return;
     const ls = window.localStorage;
     ls.removeItem(CHAT_STORAGE_KEY);
-    ls.removeItem("mpathy:chat:chain_id");
+clearLS("mpathy:chat:chain_id");
   } catch { /* ignore */ }
 }
 
@@ -378,7 +380,7 @@ export function hardClearChat(opts: { reload?: boolean } = { reload: true }): vo
     });
 
     ls.removeItem(CHAT_STORAGE_KEY);
-    ls.removeItem("mpathy:chat:chain_id");
+clearLS("mpathy:chat:chain_id");
     for (const k of LEGACY_KEYS) {
       ls.removeItem(k);
     }
@@ -509,8 +511,9 @@ const CHAT_CHAIN_KEY = "mpathy:chat:chain_id";
 let chainId = ls.getItem(CHAT_CHAIN_KEY);
 
 if (!chainId) {
-  chainId = `chat_${crypto.randomUUID()}`;
-  ls.setItem(CHAT_CHAIN_KEY, chainId);
+chainId = `chat_${crypto.randomUUID()}`;
+writeLS(CHAT_CHAIN_KEY as MpathyNamespace, chainId);
+
 }
 
 const lastInSameChain = [...ledger]

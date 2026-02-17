@@ -12,7 +12,20 @@ export type MpathyNamespace =
   | 'mpathy:verification:reports:v1' // -> IndexedDB
   | 'mpathy:triketon:v1' // -> IndexedDB
   | 'mpathy:triketon:device_public_key_2048' // LS und IndexedDB
-
+ 
+ 
+  // Deterministische Spiegelung nur für kanonische Persistenz-Namespaces
+  const CANONICAL_VAULT_KEYS: MpathyNamespace[] = [
+    'mpathy:chat:chain_id',
+    'mpathy:chat:v1',
+    'mpathy:triketon:device_public_key_2048',
+    'mpathy:triketon:v1',
+    'mpathy:archive:chat_counter',
+    'mpathy:archive:chat_map',
+    'mpathy:archive:pairs:v1',
+    'mpathy:archive:v1',
+    'mpathy:verification:reports:v1'
+  ];
 export type MpathySessionNamespace =
   | 'mpathy:archive:selection:v1'
   | 'mpathy:context:archive-chat:v1'
@@ -75,10 +88,14 @@ export function writeLS<T>(key: MpathyNamespace, value: T): void {
   if (typeof window === 'undefined' || !hasLocalStorage()) return;
 
   // 1. Triketon-Schutz (Legacy & Vault)
-  if (key === 'mpathy:triketon:v1') {
-    const existingLS = window.localStorage.getItem(key);
-    if (existingLS !== null) return;
+if (key === 'mpathy:triketon:v1') {
+  const existingLS = window.localStorage.getItem(key);
+  if (existingLS !== null) {
+    // LS darf nicht überschrieben werden
+    return;
   }
+}
+
 
   if (key === 'mpathy:archive:pairs:v1') {
     const isEmptyPairs = Array.isArray(value) && value.length === 0
@@ -91,19 +108,6 @@ export function writeLS<T>(key: MpathyNamespace, value: T): void {
   } catch (e) {
     console.warn(`[Storage] ⚠️ LS Limit erreicht für ${key}. Vault übernimmt.`);
   }
-
-    // 3. Deterministische Spiegelung nur für kanonische Persistenz-Namespaces
-  const CANONICAL_VAULT_KEYS: MpathyNamespace[] = [
-    'mpathy:chat:chain_id',
-    'mpathy:chat:v1',
-    'mpathy:triketon:device_public_key_2048',
-    'mpathy:triketon:v1',
-    'mpathy:archive:chat_counter',
-    'mpathy:archive:chat_map',
-    'mpathy:archive:pairs:v1',
-    'mpathy:archive:v1',
-    'mpathy:verification:reports:v1'
-  ];
 
   if (CANONICAL_VAULT_KEYS.includes(key)) {
     storageVault.put(key, value).catch((err) => {
@@ -228,7 +232,11 @@ export async function restoreTriketonFromVault(): Promise<void> {
     const fromVault = await storageVault.get(key)
     if (!Array.isArray(fromVault) || fromVault.length === 0) return
 
-    window.localStorage.setItem(key, JSON.stringify(fromVault))
+    writeLS(key, fromVault)
+
+window.dispatchEvent(
+  new CustomEvent('mpathy:triketon:ready')
+)
 
     window.dispatchEvent(
       new CustomEvent('mpathy:triketon:ready')
