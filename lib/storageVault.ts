@@ -60,18 +60,27 @@ export class StorageVault {
   async put(key: string, value: any): Promise<void> {
     const db = await this.dbPromise;
     return new Promise((resolve, reject) => {
+      // Wir explizit auf 'complete' der Transaktion warten, nicht nur auf das Request-Success
       const transaction = db.transaction([STORE_NAME], 'readwrite');
       const store = transaction.objectStore(STORE_NAME);
-      const request = store.put(value, key);
+      
+      // WICHTIG: Tiefenkopie des Objekts, um Referenz-Probleme bei asynchronen Schreibvorgängen zu vermeiden
+      const dataToSave = JSON.parse(JSON.stringify(value));
+      
+      const request = store.put(dataToSave, key);
 
-      request.onsuccess = () => {
-        console.debug(`[Vault] ✅ Persistiert: ${key}`);
+      transaction.oncomplete = () => {
+        console.debug(`[Vault] ✅ Transaction Complete: ${key}`);
         resolve();
       };
 
+      transaction.onerror = (event) => {
+        console.error(`[Vault] ❌ Transaction Error für ${key}:`, transaction.error);
+        reject(transaction.error);
+      };
+
       request.onerror = () => {
-        console.error(`[Vault] ❌ Fehler beim Schreiben von ${key}`);
-        reject();
+        console.error(`[Vault] ❌ Request Error für ${key}`);
       };
     });
   }
