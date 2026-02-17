@@ -57,30 +57,25 @@ export class StorageVault {
   /**
    * Speichert Daten (Master-Write)
    */
-  async put(key: string, value: any): Promise<void> {
+async put(key: string, value: any): Promise<void> {
     const db = await this.dbPromise;
     return new Promise((resolve, reject) => {
-      // Wir explizit auf 'complete' der Transaktion warten, nicht nur auf das Request-Success
       const transaction = db.transaction([STORE_NAME], 'readwrite');
       const store = transaction.objectStore(STORE_NAME);
       
-      // WICHTIG: Tiefenkopie des Objekts, um Referenz-Probleme bei asynchronen Schreibvorgängen zu vermeiden
+      // Wir erzwingen die Serialisierung, um sicherzustellen, dass der 
+      // aktuelle Snapshot des Objekts gespeichert wird.
       const dataToSave = JSON.parse(JSON.stringify(value));
-      
       const request = store.put(dataToSave, key);
 
       transaction.oncomplete = () => {
-        console.debug(`[Vault] ✅ Transaction Complete: ${key}`);
+        console.debug(`[Vault] 📥 Spiegelung erfolgreich: ${key}`);
         resolve();
       };
 
-      transaction.onerror = (event) => {
-        console.error(`[Vault] ❌ Transaction Error für ${key}:`, transaction.error);
+      transaction.onerror = () => {
+        console.error(`[Vault] ❌ Spiegelungsfehler: ${key}`, transaction.error);
         reject(transaction.error);
-      };
-
-      request.onerror = () => {
-        console.error(`[Vault] ❌ Request Error für ${key}`);
       };
     });
   }

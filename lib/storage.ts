@@ -1,10 +1,5 @@
 import { storageVault } from './storageVault';
 
-// Sofortiger Check der Speicher-Integrität beim Laden des Moduls
-if (typeof window !== 'undefined') {
-  migrateLSToVaultIfEmpty().catch(console.error);
-}
-
 export type MpathyNamespace =
   | 'mpathy:chat:v1' // LS
   | 'mpathy:archive:v1' // -> IndexedDB
@@ -77,37 +72,25 @@ export function readLS<T>(key: MpathyNamespace): T | null {
 }
 
 export function writeLS<T>(key: MpathyNamespace, value: T): void {
-  if (!hasLocalStorage()) return
+  if (typeof window === 'undefined' || !hasLocalStorage()) return;
 
-  // 1. Triketon-Schutzlogik (Hybrid)
-  // Wir prüfen den LS sofort (synchron).
+  // 1. Triketon-Schutz (Legacy & Vault)
   if (key === 'mpathy:triketon:v1') {
-    const existingLS = window.localStorage.getItem(key)
-    if (existingLS !== null) return
+    const existingLS = window.localStorage.getItem(key);
+    if (existingLS !== null) return;
   }
 
-  // 2. LocalStorage Schreibvorgang (Synchroner Cache)
+  // 2. Sofortiger LocalStorage-Commit
   try {
-    window.localStorage.setItem(key, JSON.stringify(value))
+    window.localStorage.setItem(key, JSON.stringify(value));
   } catch (e) {
     console.warn(`[Storage] ⚠️ LS Limit erreicht für ${key}. Vault übernimmt.`);
   }
 
-  // 3. Vault-Schreibvorgang (Asynchroner Master)
-  // Hier integrieren wir den zusätzlichen Schutz: 
-  // Falls es im Vault bereits existiert, überschreiben wir Triketon nicht.
-  if (key === 'mpathy:triketon:v1') {
-    storageVault.get(key).then((existingVault) => {
-      if (existingVault === undefined || existingVault === null) {
-        storageVault.put(key, value);
-      }
-    }).catch(err => console.error("[Vault] Triketon-Check failed", err));
-  } else {
-    // Alle anderen Keys werden einfach gespiegelt
-    storageVault.put(key, value).catch((err) => {
-      console.error(`[Vault] ❌ Spiegelungsfehler für ${key}:`, err)
-    });
-  }
+  // 3. Radikale Spiegelung in den Vault (Immer & sofort)
+  storageVault.put(key, value).catch((err) => {
+    console.error(`[Vault] ❌ Kritischer Spiegelungsfehler für ${key}:`, err);
+  });
 }
 export function clearLS(key: MpathyNamespace): void {
   if (!hasLocalStorage()) return
@@ -136,57 +119,6 @@ export function readSS<T>(key: MpathySessionNamespace): T | null {
     return JSON.parse(raw) as T
 } catch {
     return null
-  }
-}
-
-/**
- * MAIOS 2.1 - Smart Migration
- * Kopiert Daten vom LS in den Vault NUR DANN, wenn der Vault komplett leer ist.
- * Dies stellt sicher, dass die Migration nur einmalig (oder nach IDB-Clear) läuft.
- */
-export async function migrateLSToVaultIfEmpty(): Promise<void> {
-  if (typeof window === 'undefined') return;
-
-  try {
-    // 1. Check: Ist der Vault leer? (Wir prüfen Triketon oder die Existenz irgendeines Keys)
-    // Ein leerer Vault ist das Signal für eine notwendige Migration.
-    const triketonInVault = await storageVault.get('mpathy:triketon:v1');
-    
-    if (triketonInVault !== null && triketonInVault !== undefined) {
-      console.debug('[Vault] ✅ Daten vorhanden. Migration wird übersprungen.');
-      return;
-    }
-
-    console.info('[Vault] 🚛 Vault ist leer. Starte Migration von LS zu IDB...');
-    
-    let count = 0;
-    for (let i = 0; i < window.localStorage.length; i++) {
-      const key = window.localStorage.key(i);
-      
-      if (key && key.startsWith('mpathy:')) {
-        const raw = window.localStorage.getItem(key);
-        if (raw) {
-          try {
-            const parsed = JSON.parse(raw);
-            await storageVault.put(key, parsed);
-            count++;
-          } catch (e) {
-            // Falls JSON korrupt ist, als String speichern
-            await storageVault.put(key, raw);
-            count++;
-          }
-        }
-      }
-    }
-    
-    if (count > 0) {
-      console.info(`[Vault] ✅ Migration erfolgreich: ${count} Keys gesichert.`);
-    } else {
-      console.debug('[Vault] ℹ️ Keine mpathy-Daten im LocalStorage gefunden.');
-    }
-
-  } catch (err) {
-    console.error('[Vault] ❌ Migrations-Check fehlgeschlagen:', err);
   }
 }
 
