@@ -1,149 +1,21 @@
-/* ======================================================================
-   FILE INDEX - storage.ts
-   MODE: GranularFileIndexDeveloper · CodeForensik
-   SCOPE: LOCAL / SESSION STORAGE · ARCHIVE ↔ CHAT BRIDGE
-   STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)
-   ======================================================================
+import { storageVault } from './storageVault';
 
-   1. ROLLE DER DATEI
-   ----------------------------------------------------------------------
-   Diese Datei ist die **kanonische Storage-Abstraktion** für m-pathy.
-
-   Sie kapselt:
-   - LocalStorage (dauerhaft)
-   - SessionStorage (ephemer, flow-basiert)
-   - Namespace-Verträge (Typsicherheit)
-
-   → storage.ts ist die **Brücke zwischen ARCHIVE und CHAT**.
-
-
-   2. STORAGE-NAMESPACES (VERTRAG)
-   ----------------------------------------------------------------------
-   LocalStorage (MpathyNamespace):
-   - mpathy:chat:v1
-   - mpathy:archive:v1
-   - mpathy:archive:pairs:v1
-   - mpathy:context:upload
-   - mpathy:verification:*
-   - mpathy:triketon:v1 (append-only!)
-
-   SessionStorage (MpathySessionNamespace):
-   - mpathy:archive:selection:v1
-   - mpathy:context:archive-chat:v1
-
-   TODO-RELEVANZ:
-   - ToDo-Flow nutzt AUSSCHLIESSLICH
-     SessionStorage → archive-chat:v1
-   - Korrekte Wahl (kein Persist-Leak)
-
-
-   3. BASIS-PRIMITIVEN
-   ----------------------------------------------------------------------
-   readLS / writeLS / clearLS
-   readSS / writeSS / clearSS
-
-   Eigenschaften:
-   - Defensive Guards (hasLocalStorage / hasSessionStorage)
-   - JSON-Serialisierung
-   - Fail-Safe (null bei Fehler)
-
-   TODO-RELEVANZ:
-   - readSS / writeSS sind die
-     Low-Level-Grundlage des Flows
-
-
-   4. ARCHIVE SELECTION
-   ----------------------------------------------------------------------
-   readArchiveSelection()
-   writeArchiveSelection()
-   clearArchiveSelection()
-
-   Eigenschaften:
-   - Deduplication (pair_id)
-   - Deterministische Sortierung
-   - Session-only
-
-   TODO-RELEVANZ:
-   - Selection wird im ARCHIVE genutzt
-   - Muss NACH Erfolg gelöscht werden
-   - NICHT vor Chat-Erstellung
-
-
-   5. ARCHIVE → CHAT CONTEXT (KERNSTELLE)
-   ----------------------------------------------------------------------
-   const ARCHIVE_CHAT_CONTEXT_KEY =
-     'mpathy:context:archive-chat:v1'
-
-   Funktionen:
-   - writeArchiveChatContext(text)
-   - readArchiveChatContext()
-   - clearArchiveChatContext()
-
-   Bedeutung:
-   - Übergabe-Slot zwischen ARCHIVE und CHAT
-   - ONE-SHOT gedacht
-   - Session-lokal
-
-   TODO-RELEVANZ (MAXIMAL):
-   - writeArchiveChatContext():
-     → korrekt genutzt (Summary wird geschrieben)
-   - readArchiveChatContext():
-     → wird in page.tsx gelesen
-   - clearArchiveChatContext():
-     → MUSS nach erfolgreichem NEUEN Chat erfolgen
-     → darf NICHT bei Fehler ausgelöst werden
-
-
-   6. KEINE BUSINESS-LOGIK
-   ----------------------------------------------------------------------
-   WICHTIG:
-   - storage.ts enthält KEINE Flow-Logik
-   - KEINE Events
-   - KEINE UI
-   - KEINE API-Calls
-
-   TODO-RELEVANZ:
-   - Diese Datei wird NICHT umgebaut
-   - Sie ist der stabile Vertrag
-
-
-   7. FEHLERBILD (KANONISCH)
-   ----------------------------------------------------------------------
-   storage.ts verhält sich korrekt.
-
-   Der Fehler entsteht NICHT hier, sondern:
-   - writeArchiveChatContext() wird aufgerufen
-   - ABER der nächste Schritt (neuer Chat)
-     wird nicht ausgelöst
-   - clearArchiveChatContext() wird nie erreicht
-
-
-   8. ZUSAMMENFASSUNG (KANONISCH)
-   ----------------------------------------------------------------------
-   storage.ts ist STABIL und KORREKT.
-
-   Für die ToDos relevant:
-   - readArchiveChatContext()
-   - writeArchiveChatContext()
-   - clearArchiveChatContext()
-   - clearArchiveSelection()
-
-   → storage.ts definiert den Übergabevertrag,
-     nicht die Ausführung.
-
-   ====================================================================== */
+// Sofortiger Check der Speicher-Integrität beim Laden des Moduls
+if (typeof window !== 'undefined') {
+  migrateLSToVaultIfEmpty().catch(console.error);
+}
 
 export type MpathyNamespace =
-  | 'mpathy:chat:v1'
-  | 'mpathy:archive:v1'
-  | 'mpathy:archive:chat_map'
+  | 'mpathy:chat:v1' // LS
+  | 'mpathy:archive:v1' // -> IndexedDB
+  | 'mpathy:archive:chat_map' // LS
   | 'mpathy:archive:chat_counter'
-  | 'mpathy:archive:pairs:v1'
-  | 'mpathy:context:upload'
-  | 'mpathy:verification:v1'
-  | 'mpathy:verification:reports:v1'
-  | 'mpathy:triketon:v1'
-  | 'mpathy:triketon:device_public_key_2048'
+  | 'mpathy:archive:pairs:v1' // LS
+  | 'mpathy:context:upload' // ist akuell nicht zu sehen
+  | 'mpathy:verification:v1' // -> IndexedDB
+  | 'mpathy:verification:reports:v1' // -> IndexedDB
+  | 'mpathy:triketon:v1' // -> IndexedDB
+  | 'mpathy:triketon:device_public_key_2048' // LS und IndexedDB
 
 
 export type MpathySessionNamespace =
@@ -206,13 +78,37 @@ export function readLS<T>(key: MpathyNamespace): T | null {
 
 export function writeLS<T>(key: MpathyNamespace, value: T): void {
   if (!hasLocalStorage()) return
-  if (key === 'mpathy:triketon:v1') {
-    const existing = window.localStorage.getItem(key)
-    if (existing !== null) return
-  }
-  window.localStorage.setItem(key, JSON.stringify(value))
-}
 
+  // 1. Triketon-Schutzlogik (Hybrid)
+  // Wir prüfen den LS sofort (synchron).
+  if (key === 'mpathy:triketon:v1') {
+    const existingLS = window.localStorage.getItem(key)
+    if (existingLS !== null) return
+  }
+
+  // 2. LocalStorage Schreibvorgang (Synchroner Cache)
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value))
+  } catch (e) {
+    console.warn(`[Storage] ⚠️ LS Limit erreicht für ${key}. Vault übernimmt.`);
+  }
+
+  // 3. Vault-Schreibvorgang (Asynchroner Master)
+  // Hier integrieren wir den zusätzlichen Schutz: 
+  // Falls es im Vault bereits existiert, überschreiben wir Triketon nicht.
+  if (key === 'mpathy:triketon:v1') {
+    storageVault.get(key).then((existingVault) => {
+      if (existingVault === undefined || existingVault === null) {
+        storageVault.put(key, value);
+      }
+    }).catch(err => console.error("[Vault] Triketon-Check failed", err));
+  } else {
+    // Alle anderen Keys werden einfach gespiegelt
+    storageVault.put(key, value).catch((err) => {
+      console.error(`[Vault] ❌ Spiegelungsfehler für ${key}:`, err)
+    });
+  }
+}
 export function clearLS(key: MpathyNamespace): void {
   if (!hasLocalStorage()) return
   window.localStorage.removeItem(key)
@@ -238,8 +134,59 @@ export function readSS<T>(key: MpathySessionNamespace): T | null {
   if (!raw) return null
   try {
     return JSON.parse(raw) as T
-  } catch {
+} catch {
     return null
+  }
+}
+
+/**
+ * MAIOS 2.1 - Smart Migration
+ * Kopiert Daten vom LS in den Vault NUR DANN, wenn der Vault komplett leer ist.
+ * Dies stellt sicher, dass die Migration nur einmalig (oder nach IDB-Clear) läuft.
+ */
+export async function migrateLSToVaultIfEmpty(): Promise<void> {
+  if (typeof window === 'undefined') return;
+
+  try {
+    // 1. Check: Ist der Vault leer? (Wir prüfen Triketon oder die Existenz irgendeines Keys)
+    // Ein leerer Vault ist das Signal für eine notwendige Migration.
+    const triketonInVault = await storageVault.get('mpathy:triketon:v1');
+    
+    if (triketonInVault !== null && triketonInVault !== undefined) {
+      console.debug('[Vault] ✅ Daten vorhanden. Migration wird übersprungen.');
+      return;
+    }
+
+    console.info('[Vault] 🚛 Vault ist leer. Starte Migration von LS zu IDB...');
+    
+    let count = 0;
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const key = window.localStorage.key(i);
+      
+      if (key && key.startsWith('mpathy:')) {
+        const raw = window.localStorage.getItem(key);
+        if (raw) {
+          try {
+            const parsed = JSON.parse(raw);
+            await storageVault.put(key, parsed);
+            count++;
+          } catch (e) {
+            // Falls JSON korrupt ist, als String speichern
+            await storageVault.put(key, raw);
+            count++;
+          }
+        }
+      }
+    }
+    
+    if (count > 0) {
+      console.info(`[Vault] ✅ Migration erfolgreich: ${count} Keys gesichert.`);
+    } else {
+      console.debug('[Vault] ℹ️ Keine mpathy-Daten im LocalStorage gefunden.');
+    }
+
+  } catch (err) {
+    console.error('[Vault] ❌ Migrations-Check fehlgeschlagen:', err);
   }
 }
 
