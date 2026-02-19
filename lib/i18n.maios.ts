@@ -5,7 +5,7 @@ en: {
   hero: {
     title: "MAIOS",
     subtitle: "Modular Artificial Intelligence Operating System",
-    intro: "Inner infrastructure for governed AI systems"
+    intro: "Deterministic governance layer for AI systems operating under regulatory oversight"
   },
 
   section_labels: {
@@ -27,50 +27,50 @@ en: {
     title: "Important clarification",
     body: [
       "m-pathy is not MAIOS.",
-      "m-pathy is a professional AI workspace.",
-      "MAIOS is the inner operating system that governs how AI is allowed to reason.",
+      "m-pathy is a professional AI workspace implementation.",
+      "MAIOS is a deterministic governance layer that constrains how AI systems may generate outputs.",
       "What you see on m-pathy.ai is a client implementation.",
-      "What you read on this page is the system behind it.",
-      "m-pathy uses MAIOS.",
+      "What you read on this page describes the governance architecture.",
+      "m-pathy uses MAIOS as its governance layer.",
       "MAIOS exists independently of m-pathy.",
-      "This page is about MAIOS."
+      "This page describes MAIOS as an architectural control system."
     ],
-eyebrow: "System clarification layer"
+    eyebrow: "System clarification layer"
   },
 
   problem_statement: {
     title: "Your AI already makes decisions",
-    subtitle: "You just cannot defend how they were made.",
-    explainer: "These are not isolated issues. They are symptoms of missing inner system structure.",
+    subtitle: "You may not be able to provide technical evidence of how they were generated.",
+    explainer: "These conditions indicate missing runtime governance controls.",
 
     body: [
-      "AI outputs influence hiring, legal judgment, strategy, and risk every day.",
-      "Most organizations cannot explain under which system conditions these outputs were produced, which rules applied, or who was responsible.",
-      "This is not a model problem.",
-      "This is not a tooling problem.",
-      "This is an inner infrastructure problem."
+      "AI outputs influence hiring, legal assessment, strategy, and risk allocation.",
+      "Many organizations cannot document under which system state conditions outputs were generated, which execution constraints applied, or where responsibility was assigned.",
+      "This is not solely a model issue.",
+      "This is not solely a tooling issue.",
+      "It is a governance-layer architecture issue."
     ]
   },
 
   problems: {
-    title: "The problems MAIOS solves",
+    title: "The problems MAIOS addresses",
     items: [
-      { title: "We cannot explain our AI outputs when it matters", accordion: "explanation" },
-      { title: "Governance exists on paper, not in execution", accordion: "explanation" },
-      { title: "Responsibility inside AI systems is structurally unclear", accordion: "explanation" },
-      { title: "AI behavior drifts without visibility", accordion: "explanation" },
-      { title: "Expert reasoning and system behavior are mixed", accordion: "explanation" },
-      { title: "Telemetry is treated as logging, not as control", accordion: "explanation" }
+      { title: "Insufficient technical evidence of output generation conditions", accordion: "explanation" },
+      { title: "Governance policies defined without runtime enforcement", accordion: "explanation" },
+      { title: "Unclear responsibility boundaries within AI system execution", accordion: "explanation" },
+      { title: "Model behavior changes without traceable execution state documentation", accordion: "explanation" },
+      { title: "Mixing of domain reasoning and system control logic", accordion: "explanation" },
+      { title: "Logging without control-layer enforcement", accordion: "explanation" }
     ]
   },
 
   what_it_is: {
     title: "What MAIOS is",
     body: [
-      "MAIOS is an inner operating system that enforces how AI is allowed to reason before any output exists.",
-      "MAIOS governs how reasoning may start, under which modes behavior is framed, which experts may analyze, when governance is invoked, and whether an output is allowed to exist.",
-      "MAIOS does not replace your AI.",
-      "MAIOS governs your AI."
+      "MAIOS is a deterministic governance layer that enforces admissibility rules at runtime before outputs are released.",
+      "MAIOS defines execution constraints, telemetry contracts, governance triggers, and responsibility separation within a structured execution environment.",
+      "MAIOS does not replace underlying AI models.",
+      "MAIOS constrains how AI systems may generate outputs."
     ],
     accordion: "how MAIOS works internally"
   },
@@ -78,34 +78,33 @@ eyebrow: "System clarification layer"
   what_it_is_not: {
     title: "What MAIOS does not do",
     body: [
-      "MAIOS does not store data.",
-      "MAIOS does not persist telemetry.",
-      "MAIOS does not manage infrastructure.",
-      "MAIOS does not certify compliance.",
-      "MAIOS enforces admissible outputs.",
-      "Compliance happens in your system.",
-      ],
-      explainer: "These exclusions are intentional. They define the responsibility boundary of MAIOS."
-
+      "MAIOS does not store operational data.",
+      "MAIOS does not retain conversation content.",
+      "MAIOS does not manage infrastructure environments.",
+      "MAIOS does not provide regulatory certification.",
+      "MAIOS enforces runtime admissibility constraints.",
+      "Compliance determination remains the responsibility of the deploying organization."
+    ],
+    explainer: "These exclusions define the governance boundary of MAIOS."
   },
 
   audience: {
     title: "Who MAIOS is designed for",
     body: [
-      "MAIOS is designed for organizations operating in high risk and regulated AI environments.",
-      "This includes environments where AI outputs influence people’s rights, safety, access, or legal standing."
+      "MAIOS is designed for organizations deploying AI systems subject to regulatory oversight or high-risk classification.",
+      "This includes environments where AI outputs may affect legal standing, safety, rights, or access."
     ],
     sectors: [
       "Medical and healthcare systems",
       "Government and public sector institutions",
-      "Legal and judicial environments",
+      "Legal and judicial systems",
       "Financial services and insurance",
-      "Critical infrastructure and security domains",
-      "Enterprise organizations at scale"
+      "Critical infrastructure environments",
+      "Large-scale enterprise deployments"
     ],
     footer: [
       "MAIOS does not certify compliance.",
-      "MAIOS enables systems to operate in compliance."
+      "MAIOS provides architectural controls that may support compliant deployment."
     ],
     accordion: "sector specific depth"
   },
@@ -115,22 +114,22 @@ eyebrow: "System clarification layer"
     core: {
       title: "MAIOS Core",
       body: [
-        "MAIOS Core is the universal inner layer.",
-        "It provides deterministic system space, mandatory telemetry contract, output blocking execution rule, explicit start and completion logic, drift exposure, and responsibility separation.",
-        "MAIOS Core has no predefined agents.",
-        "MAIOS Core has no predefined experts.",
-        "MAIOS Core has no predefined governance models.",
-        "MAIOS Core is sufficient for small and mid sized organizations."
+        "MAIOS Core is the governance execution layer.",
+        "It provides deterministic runtime constraints, mandatory telemetry contracts, output blocking capability, explicit execution state exposure, and responsibility boundary separation.",
+        "MAIOS Core contains no predefined agents.",
+        "MAIOS Core contains no predefined domain experts.",
+        "MAIOS Core contains no predefined governance policies.",
+        "MAIOS Core defines execution structure, not application content."
       ]
     },
     inventory: {
       title: "MAIOS Inventory Mapping",
       body: [
-        "MAIOS Inventory Mapping adapts MAIOS to existing systems.",
-        "It declares existing agents, experts, and systems, binds them to MAIOS telemetry, and maps governance and responsibility structures.",
+        "MAIOS Inventory Mapping binds existing agents, systems, and reasoning domains to the MAIOS telemetry contract.",
+        "It maps execution components to governance and responsibility structures.",
         "MAIOS Inventory Mapping requires MAIOS Core.",
-        "MAIOS does not impose an inventory.",
-        "MAIOS references what already exists."
+        "MAIOS does not impose operational inventory changes.",
+        "MAIOS constrains what already exists within defined execution boundaries."
       ]
     },
     accordion: "implementation details"
@@ -140,21 +139,20 @@ eyebrow: "System clarification layer"
     title: "m-pathy as proof",
     body: [
       "m-pathy is a governed AI workspace built on MAIOS.",
-      "It demonstrates that governed AI infrastructure can be built, operated, and verified in production.",
-      "MAIOS works without m-pathy."
+      "It demonstrates observable runtime governance under defined constraints.",
+      "MAIOS can operate independently of m-pathy."
     ],
-      disclaimer: "Proof here refers to observable operation and verifiable system behavior, not certification or endorsement.",
-
+    disclaimer: "Proof refers to observable runtime behavior and defined governance mechanisms. It does not constitute certification or regulatory endorsement.",
     accordion: "archive, truth hash, sealing, chaining"
   },
 
   consulting: {
     title: "Implementation and governance consulting",
     body: [
-      "For organizations operating at scale or under regulation.",
-      "We support integration, inventory mapping, audit design, cryptographic sealing strategies, governance design, and preparation for audits and regulators.",
+      "For organizations operating at scale or under regulatory oversight.",
+      "We support governance-layer integration, telemetry design alignment, architectural mapping, and audit preparation.",
       "This is not onboarding.",
-      "This is inner infrastructure work."
+      "This is governance-layer integration work."
     ],
     accordion: "consulting scope"
   },
@@ -162,16 +160,13 @@ eyebrow: "System clarification layer"
   contact: {
     title: "Send us a message",
     eyebrow: "Controlled system entry",
-
     body: [
-      "Start a focused conversation about your system."
+      "Initiate a structured discussion about your AI system governance architecture."
     ],
-
     toggle: {
       open: "Open message form",
       close: "Close message form"
     },
-
     fields: [
       "Message type",
       "Message",
@@ -179,7 +174,6 @@ eyebrow: "System clarification layer"
       "Company (optional)",
       "Role (optional)"
     ],
-
     messageTypes: {
       consulting_inquiry: "Consulting inquiry",
       governance_assessment: "Governance assessment",
@@ -188,150 +182,145 @@ eyebrow: "System clarification layer"
       technical_question: "Technical question",
       support_or_other: "Support or other"
     },
-
     actions: {
       submit: "Send message"
     },
-
     feedback: {
       success: "Message sent successfully.",
       error: "Sending failed. Please try again.",
       captcha_missing: "Captcha configuration missing."
     },
-
     placeholders: {
-      message: "Describe your request",
+      message: "Describe your system and governance question",
       email: "you@example.com",
       company: "Company name",
       role: "Your role"
     },
-
     validation: {
       required: "This field is required.",
       email_invalid: "Please enter a valid email address."
     },
-
     footer: [
-      "Messages are sent by email and stored in our system.",
-      "No automated responses.",
+      "Messages are transmitted via email and processed within our operational environment.",
+      "No automated decision making.",
       "No marketing follow ups."
     ]
   },
 
   closing: {
     body: [
-      "m-pathy shows what is possible.",
-      "MAIOS makes it possible everywhere."
+      "m-pathy demonstrates governed AI execution in practice.",
+      "MAIOS provides architectural constraints for regulated AI deployment."
     ]
   }
-},
+}
+,
 
 de: {
   hero: {
     title: "MAIOS",
-    subtitle: "Modulares Betriebssystem für Künstliche Intelligenz",
-    intro: "Interne Infrastruktur für gesteuerte KI-Systeme"
+    subtitle: "Modulares Artificial Intelligence Operating System",
+    intro: "Deterministische Governance-Schicht für KI-Systeme unter regulatorischer Aufsicht"
   },
 
   section_labels: {
-    clarification: "Systemklärung",
+    clarification: "Systemklarstellung",
     runtime: "Laufzeitrealität",
-    failure_patterns: "Strukturelle Fehler",
+    failure_patterns: "Strukturelle Problemlagen",
     definition: "Systemdefinition",
-    exclusions: "Klare Abgrenzung",
-    environments: "Einsatzumgebungen",
+    exclusions: "Explizite Abgrenzungen",
+    environments: "Zielumgebungen",
     domains: "Typische Bereiche",
     delivery: "Leistungsstruktur",
-    core: "Kernschicht",
+    core: "Core-Schicht",
     adaptation: "Systemanpassung",
-    proof: "Betriebsnachweis",
-    intervention: "Struktureller Eingriff"
+    proof: "Operativer Nachweis",
+    intervention: "Strukturelle Intervention"
   },
 
   clarification: {
     title: "Wichtige Klarstellung",
     body: [
       "m-pathy ist nicht MAIOS.",
-      "m-pathy ist ein professioneller KI-Workspace.",
-      "MAIOS ist das interne Betriebssystem, das festlegt, wie KI denken darf.",
+      "m-pathy ist eine professionelle KI-Arbeitsumgebung.",
+      "MAIOS ist eine deterministische Governance-Schicht, die begrenzt, unter welchen Bedingungen KI-Systeme Ausgaben erzeugen dürfen.",
       "Was Sie auf m-pathy.ai sehen, ist eine Client-Implementierung.",
-      "Was Sie hier lesen, ist das System dahinter.",
-      "m-pathy nutzt MAIOS.",
+      "Diese Seite beschreibt die zugrunde liegende Governance-Architektur.",
+      "m-pathy nutzt MAIOS als Governance-Schicht.",
       "MAIOS existiert unabhängig von m-pathy.",
-      "Diese Seite beschreibt MAIOS."
+      "Diese Seite beschreibt MAIOS als architektonisches Kontrollsystem."
     ],
-    eyebrow: "Systemklärungsebene"
-
+    eyebrow: "Systemklarstellung"
   },
 
   problem_statement: {
     title: "Ihre KI trifft bereits Entscheidungen",
-    subtitle: "Sie können sie nur nicht verteidigen.",
-    explainer: "Das sind keine Einzelfälle, sondern Symptome fehlender innerer Systemstruktur.",
+    subtitle: "Möglicherweise können Sie keine technische Evidenz für deren Erzeugung vorlegen.",
+    explainer: "Diese Situation weist auf fehlende Laufzeit-Governance-Mechanismen hin.",
     body: [
-      "KI-Ausgaben beeinflussen täglich Einstellung, Recht, Strategie und Risiko.",
-      "Die meisten Organisationen können nicht erklären, unter welchen Systembedingungen diese Ergebnisse entstanden sind, welche Regeln galten oder wer verantwortlich war.",
-      "Das ist kein Modellproblem.",
-      "Das ist kein Tool-Problem.",
-      "Das ist ein Infrastrukturproblem."
+      "KI-Ausgaben beeinflussen Einstellungen, rechtliche Bewertungen, strategische Entscheidungen und Risikoverteilungen.",
+      "Viele Organisationen können nicht dokumentieren, unter welchen Systemzuständen eine Ausgabe erzeugt wurde, welche Regeln galten oder wo Verantwortung zugeordnet war.",
+      "Dies ist kein reines Modellproblem.",
+      "Dies ist kein reines Tooling-Problem.",
+      "Es ist ein architektonisches Governance-Problem."
     ]
   },
 
   problems: {
-    title: "Welche Probleme MAIOS löst",
+    title: "Die von MAIOS adressierten Problemlagen",
     items: [
-      { title: "KI-Ergebnisse sind nicht erklärbar, wenn es zählt", accordion: "explanation" },
-      { title: "Governance existiert auf Papier, nicht im Betrieb", accordion: "explanation" },
-      { title: "Verantwortung in KI-Systemen ist strukturell unklar", accordion: "explanation" },
-      { title: "KI-Verhalten driftet ohne Sichtbarkeit", accordion: "explanation" },
-      { title: "Expertenlogik und Systemverhalten vermischen sich", accordion: "explanation" },
-      { title: "Telemetrie wird geloggt statt gesteuert", accordion: "explanation" }
+      { title: "Unzureichende technische Nachvollziehbarkeit der Erzeugungsbedingungen von KI-Ausgaben", accordion: "explanation" },
+      { title: "Governance-Richtlinien ohne Laufzeit-Durchsetzung", accordion: "explanation" },
+      { title: "Unklare Verantwortlichkeitsgrenzen innerhalb der Systemausführung", accordion: "explanation" },
+      { title: "Verhaltensänderungen ohne dokumentierten Ausführungszustand", accordion: "explanation" },
+      { title: "Vermischung von Fachlogik und Systemkontrolllogik", accordion: "explanation" },
+      { title: "Protokollierung ohne durchsetzende Kontrollmechanismen", accordion: "explanation" }
     ]
   },
 
   what_it_is: {
     title: "Was MAIOS ist",
     body: [
-      "MAIOS ist ein internes Betriebssystem, das vorgibt, wie KI denken darf, bevor ein Ergebnis entsteht.",
-      "MAIOS steuert Startbedingungen, Modi, Expertenzugriff, Governance-Aufrufe und die Zulässigkeit von Ergebnissen.",
-      "MAIOS ersetzt Ihre KI nicht.",
-      "MAIOS steuert Ihre KI."
+      "MAIOS ist eine deterministische Governance-Schicht, die Zulässigkeitsregeln zur Laufzeit durchsetzt, bevor Ausgaben freigegeben werden.",
+      "MAIOS definiert Ausführungsrestriktionen, Telemetrie-Vertragsstrukturen, Governance-Trigger und Verantwortungsabgrenzungen innerhalb eines strukturierten Ausführungsraums.",
+      "MAIOS ersetzt keine zugrunde liegenden KI-Modelle.",
+      "MAIOS begrenzt, wie KI-Systeme Ausgaben erzeugen dürfen."
     ],
-    accordion: "interne Funktionsweise"
+    accordion: "Wie MAIOS intern arbeitet"
   },
 
   what_it_is_not: {
-    title: "Was MAIOS nicht macht",
+    title: "Was MAIOS nicht ist",
     body: [
-      "MAIOS speichert keine Daten.",
-      "MAIOS persistiert keine Telemetrie.",
+      "MAIOS speichert keine operativen Daten.",
+      "MAIOS speichert keine Gesprächsinhalte.",
       "MAIOS verwaltet keine Infrastruktur.",
-      "MAIOS zertifiziert keine Compliance.",
-      "MAIOS erzwingt nur zulässige Ausgaben.",
-      "Compliance entsteht im Zielsystem."
+      "MAIOS stellt keine regulatorische Zertifizierung dar.",
+      "MAIOS setzt Laufzeit-Zulässigkeitsregeln durch.",
+      "Die Beurteilung regulatorischer Konformität verbleibt vollständig bei der einsetzenden Organisation."
     ],
-    explainer: "Diese Abgrenzungen sind bewusst gewählt und definieren die Verantwortung von MAIOS."
+    explainer: "Diese Abgrenzungen definieren die Verantwortungsgrenze von MAIOS."
   },
 
   audience: {
-    title: "Für wen MAIOS entwickelt ist",
+    title: "Für wen MAIOS konzipiert ist",
     body: [
-      "MAIOS richtet sich an Organisationen in regulierten und risikoreichen KI-Umgebungen.",
-      "Dazu zählen Bereiche, in denen KI-Ergebnisse Rechte, Sicherheit oder rechtliche Stellung beeinflussen."
+      "MAIOS ist für Organisationen konzipiert, die KI-Systeme unter regulatorischer Aufsicht oder Hochrisikoklassifizierung einsetzen.",
+      "Dies betrifft Umgebungen, in denen KI-Ausgaben Auswirkungen auf Rechte, Sicherheit, Zugang oder rechtliche Stellung haben können."
     ],
     sectors: [
       "Medizin und Gesundheitswesen",
-      "Staat und öffentlicher Sektor",
-      "Recht und Justiz",
-      "Finanz- und Versicherungswesen",
-      "Kritische Infrastruktur und Sicherheit",
-      "Großorganisationen"
+      "Öffentlicher Sektor und staatliche Institutionen",
+      "Rechtliche und justizielle Systeme",
+      "Finanzdienstleistungen und Versicherungen",
+      "Kritische Infrastrukturen",
+      "Große Unternehmensumgebungen"
     ],
     footer: [
-      "MAIOS zertifiziert keine Compliance.",
-      "MAIOS ermöglicht konformen Betrieb."
+      "MAIOS zertifiziert keine Konformität.",
+      "MAIOS stellt architektonische Kontrollmechanismen bereit, die eine konforme Implementierung unterstützen können."
     ],
-    accordion: "branchenspezifische Details"
+    accordion: "Branchenspezifische Vertiefung"
   },
 
   offering: {
@@ -339,22 +328,22 @@ de: {
     core: {
       title: "MAIOS Core",
       body: [
-        "MAIOS Core ist die universelle innere Schicht.",
-        "Sie bietet deterministischen Systemraum, verpflichtende Telemetrie, Ergebnisblockierung, explizite Start- und Abschlusslogik, Drift-Sichtbarkeit und klare Verantwortlichkeiten.",
+        "MAIOS Core bildet die Governance-Ausführungsschicht.",
+        "Es stellt deterministische Laufzeitrestriktionen, verbindliche Telemetrie-Verträge, Blockiermechanismen vor Ausgabefreigabe, Offenlegung von Ausführungszuständen und klare Verantwortungsabgrenzungen bereit.",
         "MAIOS Core enthält keine vordefinierten Agenten.",
-        "MAIOS Core enthält keine vordefinierten Experten.",
-        "MAIOS Core enthält keine Governance-Modelle.",
-        "MAIOS Core reicht für kleine und mittlere Organisationen aus."
+        "MAIOS Core enthält keine vordefinierten Fach-Experten.",
+        "MAIOS Core enthält keine vordefinierten Governance-Modelle.",
+        "MAIOS Core definiert Ausführungsstruktur, nicht fachliche Inhalte."
       ]
     },
     inventory: {
       title: "MAIOS Inventory Mapping",
       body: [
-        "Inventory Mapping passt MAIOS an bestehende Systeme an.",
-        "Es erfasst Agenten, Experten und Systeme, bindet sie an Telemetrie und ordnet Governance- und Verantwortungsstrukturen zu.",
-        "Inventory Mapping setzt MAIOS Core voraus.",
-        "MAIOS erzwingt kein Inventar.",
-        "MAIOS referenziert Bestehendes."
+        "Inventory Mapping bindet bestehende Agenten, Systeme und Fachdomänen an den MAIOS-Telemetrie-Vertrag.",
+        "Es ordnet Systemkomponenten klar Governance- und Verantwortungsstrukturen zu.",
+        "MAIOS Inventory Mapping setzt MAIOS Core voraus.",
+        "MAIOS erzwingt keine inhaltliche Neudefinition bestehender Systeme.",
+        "MAIOS begrenzt deren Ausführung innerhalb definierter Governance-Rahmen."
       ]
     },
     accordion: "Implementierungsdetails"
@@ -363,46 +352,42 @@ de: {
   proof: {
     title: "m-pathy als Nachweis",
     body: [
-      "m-pathy ist ein gesteuerter KI-Workspace auf Basis von MAIOS.",
-      "Er zeigt, dass gesteuerte KI-Infrastruktur produktiv betrieben und überprüft werden kann.",
-      "MAIOS funktioniert auch ohne m-pathy."
+      "m-pathy ist eine produktive Implementierung von MAIOS.",
+      "Sie demonstriert beobachtbares Laufzeitverhalten unter definierten Governance-Restriktionen.",
+      "MAIOS ist nicht auf m-pathy beschränkt."
     ],
-    disclaimer: "Nachweis bezeichnet hier beobachtbaren Betrieb und überprüfbares Systemverhalten, keine Zertifizierung.",
+    disclaimer: "Der Begriff Nachweis bezieht sich auf beobachtbare Systemmechanismen. Er stellt keine Zertifizierung oder behördliche Anerkennung dar.",
     accordion: "Archiv, Truth-Hash, Versiegelung, Verkettung"
   },
 
   consulting: {
     title: "Implementierungs- und Governance-Beratung",
     body: [
-      "Für Organisationen im regulierten oder skalierenden Betrieb.",
-      "Wir unterstützen Integration, Inventory Mapping, Audit-Design, kryptografische Versiegelung, Governance-Struktur und Vorbereitung auf Prüfungen.",
-      "Das ist kein Onboarding.",
-      "Das ist interne Infrastrukturarbeit."
+      "Für Organisationen unter regulatorischer Aufsicht oder mit komplexen Systemlandschaften.",
+      "Wir unterstützen bei Governance-Integration, Telemetrie-Architektur, struktureller Systemabbildung, Audit-Vorbereitung und kryptographischer Integritätsstrategie.",
+      "Dies ist keine Produkt-Einführung.",
+      "Es ist Governance-Integration auf Systemebene."
     ],
-    accordion: "Leistungsumfang"
+    accordion: "Beratungsumfang"
   },
 
   contact: {
     title: "Nachricht senden",
     eyebrow: "Kontrollierter Systemzugang",
-
     body: [
-      "Starten Sie ein fokussiertes Gespräch über Ihr System."
+      "Initiieren Sie eine strukturierte Diskussion über die Governance-Architektur Ihres KI-Systems."
     ],
-
     toggle: {
-      open: "Formular öffnen",
-      close: "Formular schließen"
+      open: "Nachrichtenformular öffnen",
+      close: "Nachrichtenformular schließen"
     },
-
     fields: [
-      "Anfragetyp",
+      "Nachrichtentyp",
       "Nachricht",
       "E-Mail-Adresse",
       "Unternehmen (optional)",
       "Rolle (optional)"
     ],
-
     messageTypes: {
       consulting_inquiry: "Beratungsanfrage",
       governance_assessment: "Governance-Bewertung",
@@ -411,62 +396,58 @@ de: {
       technical_question: "Technische Frage",
       support_or_other: "Support oder Sonstiges"
     },
-
     actions: {
       submit: "Nachricht senden"
     },
-
     feedback: {
-      success: "Nachricht gesendet.",
-      error: "Senden fehlgeschlagen.",
+      success: "Nachricht erfolgreich gesendet.",
+      error: "Senden fehlgeschlagen. Bitte erneut versuchen.",
       captcha_missing: "Captcha-Konfiguration fehlt."
     },
-
     placeholders: {
-      message: "Beschreiben Sie Ihr Anliegen",
-      email: "sie@beispiel.de",
-      company: "Unternehmen",
+      message: "Beschreiben Sie Ihr System oder Ihre Governance-Frage",
+      email: "sie@example.com",
+      company: "Unternehmensname",
       role: "Ihre Rolle"
     },
-
     validation: {
-      required: "Pflichtfeld.",
-      email_invalid: "Ungültige E-Mail-Adresse."
+      required: "Dieses Feld ist erforderlich.",
+      email_invalid: "Bitte geben Sie eine gültige E-Mail-Adresse ein."
     },
-
     footer: [
-      "Nachrichten werden per E-Mail gesendet und intern gespeichert.",
-      "Keine automatischen Antworten.",
-      "Keine Marketing-Nachrichten."
+      "Nachrichten werden per E-Mail übermittelt und in unserer operativen Umgebung verarbeitet.",
+      "Keine automatisierten Entscheidungen.",
+      "Keine Marketing-Nachfassaktionen."
     ]
   },
 
   closing: {
     body: [
-      "m-pathy zeigt, was möglich ist.",
-      "MAIOS macht es überall möglich."
+      "m-pathy demonstriert regulierte KI-Ausführung in der Praxis.",
+      "MAIOS stellt architektonische Rahmenbedingungen für regulierte KI-Implementierungen bereit."
     ]
   }
-},
+}
+,
 
 fr: {
   hero: {
     title: "MAIOS",
-    subtitle: "Système d’exploitation modulaire pour l’IA",
-    intro: "Infrastructure interne pour des systèmes d’IA gouvernés"
+    subtitle: "Modular Artificial Intelligence Operating System",
+    intro: "Couche de gouvernance déterministe pour les systèmes d’IA soumis à une supervision réglementaire"
   },
 
   section_labels: {
-    clarification: "Clarification système",
+    clarification: "Clarification du système",
     runtime: "Réalité d’exécution",
     failure_patterns: "Défaillances structurelles",
     definition: "Définition du système",
     exclusions: "Exclusions explicites",
     environments: "Environnements cibles",
-    domains: "Domaines types",
-    delivery: "Structure de livraison",
-    core: "Couche cœur",
-    adaptation: "Adaptation système",
+    domains: "Domaines typiques",
+    delivery: "Structure de l’offre",
+    core: "Couche Core",
+    adaptation: "Adaptation du système",
     proof: "Preuve opérationnelle",
     intervention: "Intervention structurelle"
   },
@@ -475,86 +456,85 @@ fr: {
     title: "Clarification importante",
     body: [
       "m-pathy n’est pas MAIOS.",
-      "m-pathy est un espace de travail IA professionnel.",
-      "MAIOS est le système interne qui fixe comment l’IA peut raisonner.",
-      "Ce que vous voyez sur m-pathy.ai est une implémentation client.",
-      "Ce que vous lisez ici est le système sous-jacent.",
-      "m-pathy utilise MAIOS.",
+      "m-pathy est un espace de travail professionnel basé sur l’IA.",
+      "MAIOS est une couche de gouvernance déterministe qui encadre les conditions dans lesquelles les systèmes d’IA peuvent générer des sorties.",
+      "Ce que vous voyez sur m-pathy.ai est une implémentation cliente.",
+      "Cette page décrit l’architecture de gouvernance sous-jacente.",
+      "m-pathy utilise MAIOS comme couche de gouvernance.",
       "MAIOS existe indépendamment de m-pathy.",
-      "Cette page décrit MAIOS."
+      "Cette page décrit MAIOS comme un système de contrôle architectural."
     ],
-    eyebrow: "Couche de clarification système"
-
+    eyebrow: "Clarification du système"
   },
 
   problem_statement: {
     title: "Votre IA prend déjà des décisions",
-    subtitle: "Vous ne pouvez simplement pas les défendre.",
-    explainer: "Ce ne sont pas des cas isolés, mais des symptômes d’un manque de structure interne.",
+    subtitle: "Il se peut que vous ne puissiez pas fournir de preuves techniques sur la manière dont elles ont été générées.",
+    explainer: "Cette situation indique l’absence de mécanismes de gouvernance à l’exécution.",
     body: [
-      "Les sorties d’IA influencent chaque jour le recrutement, le droit, la stratégie et le risque.",
-      "La plupart des organisations ne peuvent pas expliquer les conditions système, les règles appliquées ou les responsabilités.",
-      "Ce n’est pas un problème de modèle.",
-      "Ce n’est pas un problème d’outillage.",
-      "C’est un problème d’infrastructure."
+      "Les sorties d’IA influencent le recrutement, l’évaluation juridique, la stratégie et l’allocation des risques.",
+      "De nombreuses organisations ne peuvent pas documenter dans quel état système une sortie a été produite, quelles contraintes d’exécution s’appliquaient ou où la responsabilité était attribuée.",
+      "Ce n’est pas uniquement un problème de modèle.",
+      "Ce n’est pas uniquement un problème d’outillage.",
+      "Il s’agit d’un problème d’architecture de gouvernance."
     ]
   },
 
   problems: {
-    title: "Les problèmes que MAIOS résout",
+    title: "Problématiques adressées par MAIOS",
     items: [
-      { title: "Résultats IA indéfendables quand cela compte", accordion: "explanation" },
-      { title: "La gouvernance existe sur le papier, pas en production", accordion: "explanation" },
-      { title: "Responsabilités internes structurellement floues", accordion: "explanation" },
-      { title: "Dérive du comportement IA sans visibilité", accordion: "explanation" },
-      { title: "Raisonnement expert et comportement système mélangés", accordion: "explanation" },
-      { title: "La télémétrie est journalisée au lieu d’être contrôlée", accordion: "explanation" }
+      { title: "Absence de preuve technique des conditions de génération des sorties", accordion: "explanation" },
+      { title: "Politiques de gouvernance sans application à l’exécution", accordion: "explanation" },
+      { title: "Frontières de responsabilité peu claires au sein de l’exécution du système", accordion: "explanation" },
+      { title: "Évolution du comportement du modèle sans documentation de l’état d’exécution", accordion: "explanation" },
+      { title: "Mélange entre logique métier et logique de contrôle système", accordion: "explanation" },
+      { title: "Journalisation sans mécanisme de contrôle effectif", accordion: "explanation" }
     ]
   },
 
   what_it_is: {
     title: "Ce qu’est MAIOS",
     body: [
-      "MAIOS est un système interne qui impose comment l’IA peut raisonner avant toute sortie.",
-      "MAIOS gouverne les conditions de départ, les modes, l’accès expert, les appels de gouvernance et l’admissibilité des sorties.",
-      "MAIOS ne remplace pas votre IA.",
-      "MAIOS gouverne votre IA."
+      "MAIOS est une couche de gouvernance déterministe qui applique des règles d’admissibilité à l’exécution avant la publication des sorties.",
+      "MAIOS définit des contraintes d’exécution, des contrats de télémétrie, des déclencheurs de gouvernance et des frontières de responsabilité dans un environnement d’exécution structuré.",
+      "MAIOS ne remplace pas les modèles d’IA sous-jacents.",
+      "MAIOS encadre la manière dont les systèmes d’IA peuvent générer des sorties."
     ],
-    accordion: "fonctionnement interne"
+    accordion: "Fonctionnement interne de MAIOS"
   },
 
   what_it_is_not: {
     title: "Ce que MAIOS ne fait pas",
     body: [
-      "MAIOS ne stocke pas de données.",
-      "MAIOS ne persiste pas la télémétrie.",
-      "MAIOS ne gère pas l’infrastructure.",
-      "MAIOS ne certifie pas la conformité.",
-      "MAIOS impose uniquement des sorties admissibles.",
-      "La conformité se fait dans votre système."
+      "MAIOS ne stocke pas de données opérationnelles.",
+      "MAIOS ne conserve pas le contenu des conversations.",
+      "MAIOS ne gère pas l’infrastructure technique.",
+      "MAIOS ne constitue pas une certification réglementaire.",
+      "MAIOS applique des contraintes d’admissibilité à l’exécution.",
+      "La détermination de la conformité réglementaire relève entièrement de l’organisation utilisatrice."
     ],
-    explainer: "Ces exclusions sont intentionnelles et définissent la frontière de responsabilité de MAIOS."
+    explainer: "Ces exclusions définissent la limite de responsabilité de MAIOS."
   },
 
   audience: {
-    title: "Pour qui MAIOS est conçu",
+    title: "À qui s’adresse MAIOS",
     body: [
-      "MAIOS s’adresse aux organisations en environnements IA à risque et réglementés.",
-      "Cela inclut les contextes où les sorties IA affectent les droits, la sécurité ou le statut légal."
+      "MAIOS est conçu pour les organisations déployant des systèmes d’IA soumis à une supervision réglementaire ou classés à haut risque.",
+      "Cela inclut les environnements où les sorties d’IA peuvent affecter des droits, la sécurité, l’accès ou la situation juridique des personnes."
     ],
     sectors: [
-      "Santé et médical",
-      "État et secteur public",
-      "Droit et justice",
-      "Finance et assurance",
-      "Infrastructures critiques et sécurité",
-      "Grandes organisations"
+      "Médecine et santé",
+      "Secteur public et institutions gouvernementales",
+      "Systèmes juridiques et judiciaires",
+      "Services financiers et assurances",
+      "Infrastructures critiques",
+      "Grandes organisations d’entreprise"
     ],
     footer: [
       "MAIOS ne certifie pas la conformité.",
-      "MAIOS permet un fonctionnement conforme."
+      "MAIOS fournit des mécanismes architecturaux pouvant soutenir un déploiement conforme."
     ],
-    accordion: "détails sectoriels"
+    accordion: "Approfondissement sectoriel"
   },
 
   offering: {
@@ -562,54 +542,54 @@ fr: {
     core: {
       title: "MAIOS Core",
       body: [
-        "MAIOS Core est la couche interne universelle.",
-        "Elle fournit un espace système déterministe, une télémétrie obligatoire, le blocage des sorties, une logique de début et de fin explicite, la visibilité de dérive et la séparation des responsabilités.",
-        "MAIOS Core n’inclut pas d’agents prédéfinis.",
-        "MAIOS Core n’inclut pas d’experts prédéfinis.",
-        "MAIOS Core n’inclut pas de modèles de gouvernance.",
-        "MAIOS Core suffit aux petites et moyennes organisations."
+        "MAIOS Core constitue la couche d’exécution de gouvernance.",
+        "Il fournit des contraintes déterministes à l’exécution, des contrats de télémétrie obligatoires, des mécanismes de blocage avant publication des sorties, une exposition explicite de l’état d’exécution et une séparation claire des responsabilités.",
+        "MAIOS Core ne contient aucun agent prédéfini.",
+        "MAIOS Core ne contient aucun expert métier prédéfini.",
+        "MAIOS Core ne contient aucun modèle de gouvernance prédéfini.",
+        "MAIOS Core définit une structure d’exécution et non du contenu applicatif."
       ]
     },
     inventory: {
       title: "MAIOS Inventory Mapping",
       body: [
-        "Inventory Mapping adapte MAIOS aux systèmes existants.",
-        "Il déclare agents, experts et systèmes, les lie à la télémétrie et cartographie gouvernance et responsabilités.",
-        "Inventory Mapping requiert MAIOS Core.",
-        "MAIOS n’impose pas d’inventaire.",
-        "MAIOS référence l’existant."
+        "Inventory Mapping relie les agents, systèmes et domaines existants au contrat de télémétrie MAIOS.",
+        "Il aligne les composants d’exécution avec des structures de gouvernance et de responsabilité définies.",
+        "MAIOS Inventory Mapping nécessite MAIOS Core.",
+        "MAIOS n’impose pas de redéfinition opérationnelle.",
+        "MAIOS encadre les systèmes existants dans des limites d’exécution définies."
       ]
     },
-    accordion: "détails d’implémentation"
+    accordion: "Détails d’implémentation"
   },
 
   proof: {
-    title: "m-pathy comme preuve",
+    title: "m-pathy comme démonstration",
     body: [
-      "m-pathy est un espace IA gouverné construit sur MAIOS.",
-      "Il montre qu’une infrastructure IA gouvernée peut être opérée et vérifiée en production.",
-      "MAIOS fonctionne sans m-pathy."
+      "m-pathy est une implémentation opérationnelle de MAIOS.",
+      "Elle démontre un comportement d’exécution observable sous des contraintes de gouvernance définies.",
+      "MAIOS peut fonctionner indépendamment de m-pathy."
     ],
-    disclaimer: "La preuve désigne ici un fonctionnement observable et un comportement système vérifiable, sans certification.",
-    accordion: "archive, truth hash, scellement, chaînage"
+    disclaimer: "Le terme démonstration se réfère à des mécanismes de gouvernance observables. Il ne constitue ni certification ni approbation réglementaire.",
+    accordion: "archive, empreinte cryptographique, scellement, chaînage"
   },
 
   consulting: {
     title: "Conseil en implémentation et gouvernance",
     body: [
-      "Pour les organisations à l’échelle ou sous réglementation.",
-      "Nous aidons à l’intégration, l’inventory mapping, la conception d’audit, le scellement cryptographique, la gouvernance et la préparation aux contrôles.",
-      "Ce n’est pas de l’onboarding.",
-      "C’est de l’infrastructure interne."
+      "Pour les organisations opérant sous supervision réglementaire ou dans des environnements complexes.",
+      "Nous accompagnons l’intégration de la couche de gouvernance, la conception de la télémétrie, la cartographie structurelle des systèmes et la préparation aux audits.",
+      "Il ne s’agit pas d’un simple déploiement produit.",
+      "Il s’agit d’une intégration de gouvernance au niveau architectural."
     ],
-    accordion: "périmètre du conseil"
+    accordion: "Périmètre de conseil"
   },
 
   contact: {
     title: "Envoyer un message",
     eyebrow: "Accès système contrôlé",
     body: [
-      "Démarrez une discussion ciblée sur votre système."
+      "Initiez une discussion structurée sur l’architecture de gouvernance de votre système d’IA."
     ],
     toggle: {
       open: "Ouvrir le formulaire",
@@ -631,54 +611,55 @@ fr: {
       support_or_other: "Support ou autre"
     },
     actions: {
-      submit: "Envoyer"
+      submit: "Envoyer le message"
     },
     feedback: {
-      success: "Message envoyé.",
-      error: "Échec de l’envoi.",
-      captcha_missing: "Configuration captcha manquante."
+      success: "Message envoyé avec succès.",
+      error: "Échec de l’envoi. Veuillez réessayer.",
+      captcha_missing: "Configuration Captcha manquante."
     },
     placeholders: {
-      message: "Décrivez votre demande",
-      email: "vous@exemple.fr",
-      company: "Entreprise",
+      message: "Décrivez votre système ou votre question de gouvernance",
+      email: "vous@example.com",
+      company: "Nom de l’entreprise",
       role: "Votre rôle"
     },
     validation: {
-      required: "Champ requis.",
-      email_invalid: "Adresse e-mail invalide."
+      required: "Ce champ est obligatoire.",
+      email_invalid: "Veuillez saisir une adresse e-mail valide."
     },
     footer: [
-      "Les messages sont envoyés par e-mail et stockés en interne.",
-      "Pas de réponses automatiques.",
-      "Pas de messages marketing."
+      "Les messages sont transmis par e-mail et traités dans notre environnement opérationnel.",
+      "Aucune décision automatisée.",
+      "Aucune relance marketing."
     ]
   },
 
   closing: {
     body: [
-      "m-pathy montre ce qui est possible.",
-      "MAIOS le rend possible partout."
+      "m-pathy démontre une exécution d’IA gouvernée en pratique.",
+      "MAIOS fournit un cadre architectural pour le déploiement d’IA dans des environnements réglementés."
     ]
   }
-},
+}
+,
 es: {
   hero: {
     title: "MAIOS",
-    subtitle: "Sistema Operativo Modular para IA",
-    intro: "Infraestructura interna para sistemas de IA gobernados"
+    subtitle: "Modular Artificial Intelligence Operating System",
+    intro: "Capa de gobernanza determinista para sistemas de IA sujetos a supervisión regulatoria"
   },
 
   section_labels: {
     clarification: "Aclaración del sistema",
     runtime: "Realidad de ejecución",
-    failure_patterns: "Fallos estructurales",
+    failure_patterns: "Fallas estructurales",
     definition: "Definición del sistema",
-    exclusions: "Exclusiones claras",
+    exclusions: "Exclusiones explícitas",
     environments: "Entornos previstos",
     domains: "Dominios típicos",
-    delivery: "Estructura de entrega",
-    core: "Capa núcleo",
+    delivery: "Estructura de la oferta",
+    core: "Capa Core",
     adaptation: "Adaptación del sistema",
     proof: "Prueba operativa",
     intervention: "Intervención estructural"
@@ -688,141 +669,140 @@ es: {
     title: "Aclaración importante",
     body: [
       "m-pathy no es MAIOS.",
-      "m-pathy es un espacio de trabajo profesional de IA.",
-      "MAIOS es el sistema interno que define cómo puede razonar la IA.",
+      "m-pathy es un espacio de trabajo profesional basado en IA.",
+      "MAIOS es una capa de gobernanza determinista que limita las condiciones bajo las cuales los sistemas de IA pueden generar resultados.",
       "Lo que ve en m-pathy.ai es una implementación cliente.",
-      "Lo que lee aquí es el sistema subyacente.",
-      "m-pathy usa MAIOS.",
-      "MAIOS existe de forma independiente de m-pathy.",
-      "Esta página trata sobre MAIOS."
+      "Esta página describe la arquitectura de gobernanza subyacente.",
+      "m-pathy utiliza MAIOS como capa de gobernanza.",
+      "MAIOS existe independientemente de m-pathy.",
+      "Esta página describe MAIOS como un sistema de control arquitectónico."
     ],
-    eyebrow: "Capa de clarificación del sistema"
-
+    eyebrow: "Aclaración del sistema"
   },
 
   problem_statement: {
-    title: "Su IA ya toma decisiones",
-    subtitle: "Pero no puede defender cómo se tomaron.",
-    explainer: "No son casos aislados, son síntomas de una estructura interna inexistente.",
+    title: "Su IA ya está tomando decisiones",
+    subtitle: "Es posible que no pueda aportar evidencia técnica sobre cómo fueron generadas.",
+    explainer: "Esta situación indica la ausencia de mecanismos de gobernanza en tiempo de ejecución.",
     body: [
-      "Las salidas de IA influyen a diario en contratación, derecho, estrategia y riesgo.",
-      "La mayoría de las organizaciones no puede explicar las condiciones del sistema, las reglas aplicadas o las responsabilidades.",
-      "No es un problema de modelo.",
-      "No es un problema de herramientas.",
-      "Es un problema de infraestructura."
+      "Los resultados de la IA influyen en contrataciones, evaluaciones jurídicas, estrategia y asignación de riesgos.",
+      "Muchas organizaciones no pueden documentar en qué estado del sistema se generó un resultado, qué restricciones de ejecución se aplicaban o dónde se asignó la responsabilidad.",
+      "No se trata únicamente de un problema del modelo.",
+      "No se trata únicamente de una cuestión de herramientas.",
+      "Es un problema de arquitectura de gobernanza."
     ]
   },
 
   problems: {
-    title: "Los problemas que MAIOS resuelve",
+    title: "Problemas que MAIOS aborda",
     items: [
-      { title: "Resultados de IA indefendibles cuando importa", accordion: "explanation" },
-      { title: "La gobernanza existe en papel, no en operación", accordion: "explanation" },
-      { title: "Responsabilidad interna estructuralmente difusa", accordion: "explanation" },
-      { title: "Deriva del comportamiento de la IA sin visibilidad", accordion: "explanation" },
-      { title: "Razonamiento experto y comportamiento del sistema mezclados", accordion: "explanation" },
-      { title: "La telemetría se registra en lugar de controlarse", accordion: "explanation" }
+      { title: "Falta de evidencia técnica sobre las condiciones de generación de los resultados", accordion: "explanation" },
+      { title: "Políticas de gobernanza definidas sin aplicación en tiempo de ejecución", accordion: "explanation" },
+      { title: "Límites de responsabilidad poco claros dentro de la ejecución del sistema", accordion: "explanation" },
+      { title: "Cambios en el comportamiento del modelo sin documentación del estado de ejecución", accordion: "explanation" },
+      { title: "Mezcla de lógica experta y lógica de control del sistema", accordion: "explanation" },
+      { title: "Registro de actividad sin mecanismos de control efectivos", accordion: "explanation" }
     ]
   },
 
   what_it_is: {
     title: "Qué es MAIOS",
     body: [
-      "MAIOS es un sistema operativo interno que impone cómo puede razonar la IA antes de generar resultados.",
-      "MAIOS gobierna condiciones de inicio, modos, acceso experto, activación de gobernanza y admisibilidad de resultados.",
-      "MAIOS no reemplaza su IA.",
-      "MAIOS gobierna su IA."
+      "MAIOS es una capa de gobernanza determinista que aplica reglas de admisibilidad en tiempo de ejecución antes de que los resultados sean publicados.",
+      "MAIOS define restricciones de ejecución, contratos de telemetría, activadores de gobernanza y límites de responsabilidad dentro de un entorno de ejecución estructurado.",
+      "MAIOS no sustituye los modelos de IA subyacentes.",
+      "MAIOS limita la forma en que los sistemas de IA pueden generar resultados."
     ],
-    accordion: "funcionamiento interno"
+    accordion: "Cómo funciona MAIOS internamente"
   },
 
   what_it_is_not: {
-    title: "Lo que MAIOS no hace",
+    title: "Qué no es MAIOS",
     body: [
-      "MAIOS no almacena datos.",
-      "MAIOS no persiste telemetría.",
-      "MAIOS no gestiona infraestructura.",
-      "MAIOS no certifica cumplimiento.",
-      "MAIOS solo impone salidas admisibles.",
-      "El cumplimiento ocurre en su sistema."
+      "MAIOS no almacena datos operativos.",
+      "MAIOS no conserva el contenido de las conversaciones.",
+      "MAIOS no gestiona la infraestructura técnica.",
+      "MAIOS no constituye una certificación regulatoria.",
+      "MAIOS aplica restricciones de admisibilidad en tiempo de ejecución.",
+      "La determinación del cumplimiento regulatorio recae exclusivamente en la organización que lo implementa."
     ],
-    explainer: "Estas exclusiones son intencionales y definen el límite de responsabilidad de MAIOS."
+    explainer: "Estas exclusiones definen el límite de responsabilidad de MAIOS."
   },
 
   audience: {
     title: "Para quién está diseñado MAIOS",
     body: [
-      "MAIOS está pensado para organizaciones en entornos de IA regulados y de alto riesgo.",
-      "Incluye contextos donde las salidas de IA afectan derechos, seguridad o estatus legal."
+      "MAIOS está diseñado para organizaciones que despliegan sistemas de IA sujetos a supervisión regulatoria o clasificación de alto riesgo.",
+      "Incluye entornos donde los resultados de la IA pueden afectar derechos, seguridad, acceso o situación jurídica."
     ],
     sectors: [
-      "Salud y sector médico",
-      "Gobierno y sector público",
-      "Derecho y justicia",
-      "Finanzas y seguros",
-      "Infraestructura crítica y seguridad",
-      "Grandes organizaciones"
+      "Medicina y sistemas sanitarios",
+      "Sector público e instituciones gubernamentales",
+      "Entornos jurídicos y judiciales",
+      "Servicios financieros y seguros",
+      "Infraestructuras críticas",
+      "Grandes organizaciones empresariales"
     ],
     footer: [
-      "MAIOS no certifica cumplimiento.",
-      "MAIOS permite operar de forma conforme."
+      "MAIOS no certifica el cumplimiento.",
+      "MAIOS proporciona mecanismos arquitectónicos que pueden apoyar un despliegue conforme."
     ],
-    accordion: "detalle por sector"
+    accordion: "Profundización sectorial"
   },
 
   offering: {
-    title: "La oferta de MAIOS",
+    title: "La oferta MAIOS",
     core: {
       title: "MAIOS Core",
       body: [
-        "MAIOS Core es la capa interna universal.",
-        "Proporciona espacio de sistema determinista, telemetría obligatoria, bloqueo de resultados, lógica explícita de inicio y cierre, visibilidad de deriva y separación de responsabilidades.",
-        "MAIOS Core no incluye agentes predefinidos.",
-        "MAIOS Core no incluye expertos predefinidos.",
-        "MAIOS Core no incluye modelos de gobernanza.",
-        "MAIOS Core es suficiente para organizaciones pequeñas y medianas."
+        "MAIOS Core constituye la capa de ejecución de gobernanza.",
+        "Proporciona restricciones deterministas en tiempo de ejecución, contratos de telemetría obligatorios, mecanismos de bloqueo antes de la publicación de resultados, exposición explícita del estado de ejecución y separación clara de responsabilidades.",
+        "MAIOS Core no contiene agentes predefinidos.",
+        "MAIOS Core no contiene expertos de dominio predefinidos.",
+        "MAIOS Core no contiene modelos de gobernanza predefinidos.",
+        "MAIOS Core define la estructura de ejecución, no el contenido funcional."
       ]
     },
     inventory: {
       title: "MAIOS Inventory Mapping",
       body: [
-        "Inventory Mapping adapta MAIOS a sistemas existentes.",
-        "Declara agentes, expertos y sistemas, los vincula a la telemetría y mapea gobernanza y responsabilidades.",
-        "Inventory Mapping requiere MAIOS Core.",
-        "MAIOS no impone inventarios.",
-        "MAIOS referencia lo existente."
+        "Inventory Mapping vincula agentes, sistemas y dominios existentes al contrato de telemetría de MAIOS.",
+        "Asocia los componentes de ejecución con estructuras claras de gobernanza y responsabilidad.",
+        "MAIOS Inventory Mapping requiere MAIOS Core.",
+        "MAIOS no impone redefiniciones operativas.",
+        "MAIOS limita la ejecución de sistemas existentes dentro de marcos de gobernanza definidos."
       ]
     },
-    accordion: "detalles de implementación"
+    accordion: "Detalles de implementación"
   },
 
   proof: {
-    title: "m-pathy como prueba",
+    title: "m-pathy como demostración",
     body: [
-      "m-pathy es un espacio de IA gobernado construido sobre MAIOS.",
-      "Demuestra que la infraestructura de IA gobernada puede operar y verificarse en producción.",
-      "MAIOS funciona sin m-pathy."
+      "m-pathy es una implementación operativa de MAIOS.",
+      "Demuestra un comportamiento de ejecución observable bajo restricciones de gobernanza definidas.",
+      "MAIOS puede operar independientemente de m-pathy."
     ],
-    disclaimer: "La prueba se refiere a operación observable y comportamiento verificable del sistema, no a certificación.",
-    accordion: "archivo, truth hash, sellado, encadenado"
+    disclaimer: "El término demostración se refiere a mecanismos de gobernanza observables. No constituye certificación ni aprobación regulatoria.",
+    accordion: "archivo, hash de veracidad, sellado, encadenamiento"
   },
 
   consulting: {
     title: "Consultoría de implementación y gobernanza",
     body: [
-      "Para organizaciones reguladas o a gran escala.",
-      "Apoyamos integración, inventory mapping, diseño de auditorías, sellado criptográfico, gobernanza y preparación regulatoria.",
-      "No es onboarding.",
-      "Es infraestructura interna."
+      "Para organizaciones que operan bajo supervisión regulatoria o en entornos complejos.",
+      "Apoyamos la integración de la capa de gobernanza, el diseño de telemetría, la cartografía estructural de sistemas y la preparación para auditorías.",
+      "No se trata de una simple implantación de producto.",
+      "Es integración de gobernanza a nivel arquitectónico."
     ],
-    accordion: "alcance de la consultoría"
+    accordion: "Alcance de consultoría"
   },
 
   contact: {
-    title: "Enviar mensaje",
+    title: "Enviar un mensaje",
     eyebrow: "Acceso controlado al sistema",
     body: [
-      "Inicie una conversación focalizada sobre su sistema."
+      "Inicie una conversación estructurada sobre la arquitectura de gobernanza de su sistema de IA."
     ],
     toggle: {
       open: "Abrir formulario",
@@ -838,61 +818,62 @@ es: {
     messageTypes: {
       consulting_inquiry: "Consulta de consultoría",
       governance_assessment: "Evaluación de gobernanza",
-      system_integration: "Integración de sistema",
+      system_integration: "Integración del sistema",
       audit_preparation: "Preparación de auditoría",
       technical_question: "Pregunta técnica",
       support_or_other: "Soporte u otro"
     },
     actions: {
-      submit: "Enviar"
+      submit: "Enviar mensaje"
     },
     feedback: {
-      success: "Mensaje enviado.",
-      error: "Error al enviar.",
-      captcha_missing: "Falta la configuración de captcha."
+      success: "Mensaje enviado correctamente.",
+      error: "Error al enviar. Inténtelo de nuevo.",
+      captcha_missing: "Falta configuración de Captcha."
     },
     placeholders: {
-      message: "Describa su solicitud",
-      email: "usted@ejemplo.es",
-      company: "Empresa",
+      message: "Describa su sistema o su cuestión de gobernanza",
+      email: "usted@ejemplo.com",
+      company: "Nombre de la empresa",
       role: "Su rol"
     },
     validation: {
-      required: "Campo obligatorio.",
-      email_invalid: "Correo electrónico no válido."
+      required: "Este campo es obligatorio.",
+      email_invalid: "Introduzca una dirección de correo válida."
     },
     footer: [
-      "Los mensajes se envían por correo y se almacenan internamente.",
-      "Sin respuestas automáticas.",
-      "Sin mensajes de marketing."
+      "Los mensajes se transmiten por correo electrónico y se procesan en nuestro entorno operativo.",
+      "Sin decisiones automatizadas.",
+      "Sin seguimientos de marketing."
     ]
   },
 
   closing: {
     body: [
-      "m-pathy muestra lo que es posible.",
-      "MAIOS lo hace posible en cualquier lugar."
+      "m-pathy demuestra la ejecución de IA gobernada en la práctica.",
+      "MAIOS proporciona un marco arquitectónico para el despliegue de IA en entornos regulados."
     ]
   }
-},
+}
+,
 
 it: {
   hero: {
     title: "MAIOS",
-    subtitle: "Sistema Operativo Modulare per l’IA",
-    intro: "Infrastruttura interna per sistemi di IA governati"
+    subtitle: "Modular Artificial Intelligence Operating System",
+    intro: "Livello di governance deterministica per sistemi di IA soggetti a supervisione normativa"
   },
 
   section_labels: {
-    clarification: "Chiarimento di sistema",
-    runtime: "Realtà operativa",
-    failure_patterns: "Errori strutturali",
+    clarification: "Chiarimento del sistema",
+    runtime: "Realtà di esecuzione",
+    failure_patterns: "Criticità strutturali",
     definition: "Definizione del sistema",
     exclusions: "Esclusioni esplicite",
-    environments: "Ambienti previsti",
+    environments: "Ambienti di riferimento",
     domains: "Ambiti tipici",
-    delivery: "Struttura di fornitura",
-    core: "Livello centrale",
+    delivery: "Struttura dell’offerta",
+    core: "Livello Core",
     adaptation: "Adattamento del sistema",
     proof: "Prova operativa",
     intervention: "Intervento strutturale"
@@ -902,86 +883,85 @@ it: {
     title: "Chiarimento importante",
     body: [
       "m-pathy non è MAIOS.",
-      "m-pathy è uno spazio di lavoro IA professionale.",
-      "MAIOS è il sistema interno che stabilisce come l’IA può ragionare.",
-      "Ciò che vedi su m-pathy.ai è un’implementazione client.",
-      "Ciò che leggi qui è il sistema sottostante.",
-      "m-pathy utilizza MAIOS.",
+      "m-pathy è uno spazio di lavoro professionale basato su IA.",
+      "MAIOS è un livello di governance deterministica che definisce e limita le condizioni in cui i sistemi di IA possono generare output.",
+      "Ciò che vede su m-pathy.ai è un’implementazione cliente.",
+      "Questa pagina descrive l’architettura di governance sottostante.",
+      "m-pathy utilizza MAIOS come livello di governance.",
       "MAIOS esiste indipendentemente da m-pathy.",
-      "Questa pagina descrive MAIOS."
+      "Questa pagina descrive MAIOS come sistema di controllo architetturale."
     ],
-    eyebrow: "Livello di chiarificazione del sistema"
-
+    eyebrow: "Chiarimento del sistema"
   },
 
   problem_statement: {
-    title: "La tua IA prende già decisioni",
-    subtitle: "Ma non puoi difendere come vengono prese.",
-    explainer: "Non sono casi isolati, ma sintomi di una struttura interna mancante.",
+    title: "La vostra IA prende già decisioni",
+    subtitle: "Potrebbe non essere possibile fornire evidenza tecnica su come sono state generate.",
+    explainer: "Questa situazione indica l’assenza di meccanismi di governance a livello di esecuzione.",
     body: [
-      "Gli output dell’IA influenzano ogni giorno assunzioni, diritto, strategia e rischio.",
-      "La maggior parte delle organizzazioni non sa spiegare condizioni di sistema, regole applicate o responsabilità.",
-      "Non è un problema di modello.",
-      "Non è un problema di strumenti.",
-      "È un problema di infrastruttura."
+      "Gli output dell’IA influenzano assunzioni, valutazioni legali, strategie e allocazioni del rischio.",
+      "Molte organizzazioni non sono in grado di documentare in quale stato del sistema sia stato generato un output, quali vincoli di esecuzione fossero applicati o dove fosse attribuita la responsabilità.",
+      "Non si tratta esclusivamente di un problema del modello.",
+      "Non si tratta esclusivamente di uno strumento.",
+      "È un problema di architettura di governance."
     ]
   },
 
   problems: {
-    title: "I problemi che MAIOS risolve",
+    title: "Problemi affrontati da MAIOS",
     items: [
-      { title: "Risultati IA indifendibili quando conta", accordion: "explanation" },
-      { title: "La governance esiste sulla carta, non nell’operatività", accordion: "explanation" },
-      { title: "Responsabilità interne strutturalmente poco chiare", accordion: "explanation" },
-      { title: "Deriva del comportamento IA senza visibilità", accordion: "explanation" },
-      { title: "Ragionamento esperto e comportamento di sistema mescolati", accordion: "explanation" },
-      { title: "La telemetria è registrata invece che controllata", accordion: "explanation" }
+      { title: "Assenza di evidenza tecnica sulle condizioni di generazione degli output", accordion: "explanation" },
+      { title: "Politiche di governance definite senza applicazione in fase di esecuzione", accordion: "explanation" },
+      { title: "Confini di responsabilità non chiari durante l’esecuzione del sistema", accordion: "explanation" },
+      { title: "Variazioni del comportamento del modello senza documentazione dello stato di esecuzione", accordion: "explanation" },
+      { title: "Mescolanza tra logica di dominio e logica di controllo del sistema", accordion: "explanation" },
+      { title: "Registrazione delle attività senza meccanismi di controllo effettivo", accordion: "explanation" }
     ]
   },
 
   what_it_is: {
     title: "Cos’è MAIOS",
     body: [
-      "MAIOS è un sistema operativo interno che impone come l’IA può ragionare prima di generare output.",
-      "MAIOS governa condizioni di avvio, modalità, accesso esperti, attivazione della governance e ammissibilità degli output.",
-      "MAIOS non sostituisce la tua IA.",
-      "MAIOS governa la tua IA."
+      "MAIOS è un livello di governance deterministica che applica regole di ammissibilità in fase di esecuzione prima del rilascio degli output.",
+      "MAIOS definisce vincoli di esecuzione, contratti di telemetria, trigger di governance e separazione delle responsabilità in un ambiente di esecuzione strutturato.",
+      "MAIOS non sostituisce i modelli di IA sottostanti.",
+      "MAIOS limita le modalità con cui i sistemi di IA possono generare output."
     ],
-    accordion: "funzionamento interno"
+    accordion: "Come funziona internamente MAIOS"
   },
 
   what_it_is_not: {
-    title: "Cosa MAIOS non fa",
+    title: "Cosa non è MAIOS",
     body: [
-      "MAIOS non archivia dati.",
-      "MAIOS non persiste telemetria.",
-      "MAIOS non gestisce infrastrutture.",
-      "MAIOS non certifica la conformità.",
-      "MAIOS impone solo output ammissibili.",
-      "La conformità avviene nel tuo sistema."
+      "MAIOS non memorizza dati operativi.",
+      "MAIOS non conserva il contenuto delle conversazioni.",
+      "MAIOS non gestisce l’infrastruttura tecnica.",
+      "MAIOS non costituisce una certificazione normativa.",
+      "MAIOS applica vincoli di ammissibilità in fase di esecuzione.",
+      "La determinazione della conformità normativa resta interamente a carico dell’organizzazione che implementa il sistema."
     ],
-    explainer: "Queste esclusioni sono intenzionali e definiscono il limite di responsabilità di MAIOS."
+    explainer: "Queste esclusioni definiscono il limite di responsabilità di MAIOS."
   },
 
   audience: {
     title: "Per chi è progettato MAIOS",
     body: [
-      "MAIOS è pensato per organizzazioni in ambienti IA regolamentati e ad alto rischio.",
-      "Include contesti in cui gli output IA influenzano diritti, sicurezza o status legale."
+      "MAIOS è progettato per organizzazioni che implementano sistemi di IA soggetti a supervisione normativa o classificazione ad alto rischio.",
+      "Include contesti in cui gli output dell’IA possono incidere su diritti, sicurezza, accesso o posizione giuridica."
     ],
     sectors: [
-      "Sanità e settore medico",
-      "Governo e settore pubblico",
-      "Diritto e giustizia",
-      "Finanza e assicurazioni",
-      "Infrastrutture critiche e sicurezza",
-      "Grandi organizzazioni"
+      "Sanità e sistemi medici",
+      "Settore pubblico e istituzioni governative",
+      "Ambiti legali e giudiziari",
+      "Servizi finanziari e assicurativi",
+      "Infrastrutture critiche",
+      "Grandi organizzazioni aziendali"
     ],
     footer: [
       "MAIOS non certifica la conformità.",
-      "MAIOS consente operazioni conformi."
+      "MAIOS fornisce meccanismi architetturali che possono supportare un’implementazione conforme."
     ],
-    accordion: "dettagli di settore"
+    accordion: "Approfondimento settoriale"
   },
 
   offering: {
@@ -989,339 +969,126 @@ it: {
     core: {
       title: "MAIOS Core",
       body: [
-        "MAIOS Core è il livello interno universale.",
-        "Fornisce spazio di sistema deterministico, telemetria obbligatoria, blocco degli output, logica esplicita di avvio e chiusura, visibilità della deriva e separazione delle responsabilità.",
-        "MAIOS Core non include agenti predefiniti.",
-        "MAIOS Core non include esperti predefiniti.",
-        "MAIOS Core non include modelli di governance.",
-        "MAIOS Core è sufficiente per organizzazioni piccole e medie."
+        "MAIOS Core costituisce il livello di esecuzione della governance.",
+        "Fornisce vincoli deterministici in fase di esecuzione, contratti di telemetria obbligatori, meccanismi di blocco prima del rilascio degli output, esposizione esplicita dello stato di esecuzione e chiara separazione delle responsabilità.",
+        "MAIOS Core non contiene agenti predefiniti.",
+        "MAIOS Core non contiene esperti di dominio predefiniti.",
+        "MAIOS Core non contiene modelli di governance predefiniti.",
+        "MAIOS Core definisce la struttura di esecuzione, non il contenuto applicativo."
       ]
     },
     inventory: {
       title: "MAIOS Inventory Mapping",
       body: [
-        "Inventory Mapping adatta MAIOS ai sistemi esistenti.",
-        "Dichiara agenti, esperti e sistemi, li collega alla telemetria e mappa governance e responsabilità.",
-        "Inventory Mapping richiede MAIOS Core.",
-        "MAIOS non impone inventari.",
-        "MAIOS fa riferimento all’esistente."
+        "Inventory Mapping collega agenti, sistemi e domini esistenti al contratto di telemetria MAIOS.",
+        "Associa i componenti di esecuzione a strutture definite di governance e responsabilità.",
+        "MAIOS Inventory Mapping richiede MAIOS Core.",
+        "MAIOS non impone ridefinizioni operative.",
+        "MAIOS limita l’esecuzione dei sistemi esistenti entro confini di governance definiti."
       ]
     },
-    accordion: "dettagli di implementazione"
+    accordion: "Dettagli di implementazione"
   },
 
   proof: {
-    title: "m-pathy come prova",
+    title: "m-pathy come dimostrazione",
     body: [
-      "m-pathy è uno spazio IA governato costruito su MAIOS.",
-      "Dimostra che un’infrastruttura IA governata può essere operativa e verificabile in produzione.",
-      "MAIOS funziona anche senza m-pathy."
+      "m-pathy è un’implementazione operativa di MAIOS.",
+      "Dimostra un comportamento di esecuzione osservabile sotto vincoli di governance definiti.",
+      "MAIOS può operare indipendentemente da m-pathy."
     ],
-    disclaimer: "La prova indica funzionamento osservabile e comportamento di sistema verificabile, non una certificazione.",
-    accordion: "archivio, truth hash, sigillatura, concatenamento"
+    disclaimer: "Il termine dimostrazione si riferisce a meccanismi di governance osservabili. Non costituisce certificazione o approvazione normativa.",
+    accordion: "archivio, hash di integrità, sigillatura, concatenazione"
   },
 
   consulting: {
-    title: "Consulenza di implementazione e governance",
+    title: "Consulenza per implementazione e governance",
     body: [
-      "Per organizzazioni regolamentate o su larga scala.",
-      "Supportiamo integrazione, inventory mapping, progettazione audit, sigillatura crittografica, governance e preparazione alle verifiche.",
-      "Non è onboarding.",
-      "È infrastruttura interna."
+      "Per organizzazioni soggette a supervisione normativa o con sistemi complessi.",
+      "Supportiamo l’integrazione del livello di governance, la progettazione della telemetria, la mappatura strutturale dei sistemi e la preparazione agli audit.",
+      "Non si tratta di una semplice attivazione di prodotto.",
+      "È integrazione della governance a livello architetturale."
     ],
-    accordion: "ambito della consulenza"
+    accordion: "Ambito della consulenza"
   },
 
   contact: {
-    title: "Invia messaggio",
-    eyebrow: "Accesso di sistema controllato",
+    title: "Invia un messaggio",
+    eyebrow: "Accesso controllato al sistema",
     body: [
-      "Avvia una conversazione mirata sul tuo sistema."
+      "Avvia una discussione strutturata sull’architettura di governance del tuo sistema di IA."
     ],
     toggle: {
-      open: "Apri modulo",
-      close: "Chiudi modulo"
+      open: "Apri modulo di contatto",
+      close: "Chiudi modulo di contatto"
     },
     fields: [
       "Tipo di messaggio",
       "Messaggio",
-      "Indirizzo email",
+      "Indirizzo e-mail",
       "Azienda (opzionale)",
       "Ruolo (opzionale)"
     ],
     messageTypes: {
       consulting_inquiry: "Richiesta di consulenza",
-      governance_assessment: "Valutazione governance",
-      system_integration: "Integrazione di sistema",
+      governance_assessment: "Valutazione della governance",
+      system_integration: "Integrazione del sistema",
       audit_preparation: "Preparazione audit",
       technical_question: "Domanda tecnica",
       support_or_other: "Supporto o altro"
     },
     actions: {
-      submit: "Invia"
+      submit: "Invia messaggio"
     },
     feedback: {
-      success: "Messaggio inviato.",
-      error: "Invio non riuscito.",
-      captcha_missing: "Configurazione captcha mancante."
+      success: "Messaggio inviato con successo.",
+      error: "Invio non riuscito. Riprova.",
+      captcha_missing: "Configurazione Captcha mancante."
     },
     placeholders: {
-      message: "Descrivi la richiesta",
-      email: "tuo@esempio.it",
-      company: "Azienda",
+      message: "Descrivi il tuo sistema o la tua richiesta di governance",
+      email: "tu@example.com",
+      company: "Nome dell’azienda",
       role: "Il tuo ruolo"
     },
     validation: {
-      required: "Campo obbligatorio.",
-      email_invalid: "Email non valida."
+      required: "Questo campo è obbligatorio.",
+      email_invalid: "Inserisci un indirizzo e-mail valido."
     },
     footer: [
-      "I messaggi vengono inviati via email e archiviati internamente.",
-      "Nessuna risposta automatica.",
-      "Nessun messaggio promozionale."
+      "I messaggi vengono trasmessi via e-mail ed elaborati nel nostro ambiente operativo.",
+      "Nessuna decisione automatizzata.",
+      "Nessun follow-up di marketing."
     ]
   },
 
   closing: {
     body: [
-      "m-pathy mostra ciò che è possibile.",
-      "MAIOS lo rende possibile ovunque."
+      "m-pathy dimostra l’esecuzione governata dell’IA nella pratica.",
+      "MAIOS fornisce un quadro architetturale per il deployment di IA in ambienti regolamentati."
     ]
   }
-},
-
-pt: {
-  hero: {
-    title: "MAIOS",
-    subtitle: "Sistema Operativo Modular para IA",
-    intro: "Infraestrutura interna para sistemas de IA governados"
-  },
-
-  section_labels: {
-    clarification: "Esclarecimento do sistema",
-    runtime: "Realidade de execução",
-    failure_patterns: "Falhas estruturais",
-    definition: "Definição do sistema",
-    exclusions: "Exclusões claras",
-    environments: "Ambientes previstos",
-    domains: "Domínios típicos",
-    delivery: "Estrutura de entrega",
-    core: "Camada central",
-    adaptation: "Adaptação do sistema",
-    proof: "Prova operacional",
-    intervention: "Intervenção estrutural"
-  },
-
-  clarification: {
-    title: "Esclarecimento importante",
-    body: [
-      "m-pathy não é MAIOS.",
-      "m-pathy é um workspace profissional de IA.",
-      "MAIOS é o sistema interno que define como a IA pode raciocinar.",
-      "O que você vê em m-pathy.ai é uma implementação cliente.",
-      "O que você lê aqui é o sistema subjacente.",
-      "m-pathy usa MAIOS.",
-      "MAIOS existe de forma independente de m-pathy.",
-      "Esta página é sobre MAIOS."
-    ],
-    eyebrow: "Camada de clarificação do sistema"
-
-  },
-
-  problem_statement: {
-    title: "Sua IA já toma decisões",
-    subtitle: "Você só não consegue defendê-las.",
-    explainer: "Não são casos isolados, são sintomas de falta de estrutura interna.",
-    body: [
-      "Saídas de IA influenciam diariamente contratação, direito, estratégia e risco.",
-      "A maioria das organizações não consegue explicar condições do sistema, regras aplicadas ou responsabilidades.",
-      "Não é um problema de modelo.",
-      "Não é um problema de ferramenta.",
-      "É um problema de infraestrutura."
-    ]
-  },
-
-  problems: {
-    title: "Os problemas que o MAIOS resolve",
-    items: [
-      { title: "Resultados de IA indefensáveis quando importa", accordion: "explanation" },
-      { title: "Governança existe no papel, não na operação", accordion: "explanation" },
-      { title: "Responsabilidade interna estruturalmente difusa", accordion: "explanation" },
-      { title: "Comportamento da IA deriva sem visibilidade", accordion: "explanation" },
-      { title: "Raciocínio especialista e comportamento do sistema misturados", accordion: "explanation" },
-      { title: "Telemetria é registrada em vez de controlada", accordion: "explanation" }
-    ]
-  },
-
-  what_it_is: {
-    title: "O que é MAIOS",
-    body: [
-      "MAIOS é um sistema operativo interno que impõe como a IA pode raciocinar antes de gerar resultados.",
-      "MAIOS governa condições de início, modos, acesso a especialistas, chamadas de governança e admissibilidade dos resultados.",
-      "MAIOS não substitui sua IA.",
-      "MAIOS governa sua IA."
-    ],
-    accordion: "funcionamento interno"
-  },
-
-  what_it_is_not: {
-    title: "O que MAIOS não faz",
-    body: [
-      "MAIOS não armazena dados.",
-      "MAIOS não persiste telemetria.",
-      "MAIOS não gerencia infraestrutura.",
-      "MAIOS não certifica conformidade.",
-      "MAIOS impõe apenas resultados admissíveis.",
-      "A conformidade ocorre no seu sistema."
-    ],
-    explainer: "Essas exclusões são intencionais e definem o limite de responsabilidade do MAIOS."
-  },
-
-  audience: {
-    title: "Para quem o MAIOS é projetado",
-    body: [
-      "MAIOS é projetado para organizações em ambientes de IA regulados e de alto risco.",
-      "Inclui contextos onde saídas de IA afetam direitos, segurança ou status legal."
-    ],
-    sectors: [
-      "Saúde e setor médico",
-      "Governo e setor público",
-      "Direito e justiça",
-      "Finanças e seguros",
-      "Infraestrutura crítica e segurança",
-      "Grandes organizações"
-    ],
-    footer: [
-      "MAIOS não certifica conformidade.",
-      "MAIOS permite operação conforme."
-    ],
-    accordion: "detalhes por setor"
-  },
-
-  offering: {
-    title: "A oferta MAIOS",
-    core: {
-      title: "MAIOS Core",
-      body: [
-        "MAIOS Core é a camada interna universal.",
-        "Fornece espaço de sistema determinístico, telemetria obrigatória, bloqueio de resultados, lógica explícita de início e fim, visibilidade de deriva e separação de responsabilidades.",
-        "MAIOS Core não inclui agentes predefinidos.",
-        "MAIOS Core não inclui especialistas predefinidos.",
-        "MAIOS Core não inclui modelos de governança.",
-        "MAIOS Core é suficiente para organizações pequenas e médias."
-      ]
-    },
-    inventory: {
-      title: "MAIOS Inventory Mapping",
-      body: [
-        "Inventory Mapping adapta o MAIOS a sistemas existentes.",
-        "Declara agentes, especialistas e sistemas, vincula à telemetria e mapeia governança e responsabilidades.",
-        "Inventory Mapping requer MAIOS Core.",
-        "MAIOS não impõe inventário.",
-        "MAIOS referencia o que já existe."
-      ]
-    },
-    accordion: "detalhes de implementação"
-  },
-
-  proof: {
-    title: "m-pathy como prova",
-    body: [
-      "m-pathy é um workspace de IA governado construído sobre MAIOS.",
-      "Demonstra que infraestrutura de IA governada pode operar e ser verificada em produção.",
-      "MAIOS funciona sem m-pathy."
-    ],
-    disclaimer: "Prova refere-se a operação observável e comportamento verificável do sistema, não certificação.",
-    accordion: "arquivo, truth hash, selagem, encadeamento"
-  },
-
-  consulting: {
-    title: "Consultoria de implementação e governança",
-    body: [
-      "Para organizações reguladas ou em escala.",
-      "Apoiamos integração, inventory mapping, desenho de auditoria, selagem criptográfica, governança e preparação regulatória.",
-      "Não é onboarding.",
-      "É infraestrutura interna."
-    ],
-    accordion: "escopo da consultoria"
-  },
-
-  contact: {
-    title: "Enviar mensagem",
-    eyebrow: "Acesso controlado ao sistema",
-    body: [
-      "Inicie uma conversa focada sobre seu sistema."
-    ],
-    toggle: {
-      open: "Abrir formulário",
-      close: "Fechar formulário"
-    },
-    fields: [
-      "Tipo de mensagem",
-      "Mensagem",
-      "E-mail",
-      "Empresa (opcional)",
-      "Cargo (opcional)"
-    ],
-    messageTypes: {
-      consulting_inquiry: "Consulta de consultoria",
-      governance_assessment: "Avaliação de governança",
-      system_integration: "Integração de sistema",
-      audit_preparation: "Preparação para auditoria",
-      technical_question: "Pergunta técnica",
-      support_or_other: "Suporte ou outro"
-    },
-    actions: {
-      submit: "Enviar"
-    },
-    feedback: {
-      success: "Mensagem enviada.",
-      error: "Falha ao enviar.",
-      captcha_missing: "Configuração de captcha ausente."
-    },
-    placeholders: {
-      message: "Descreva sua solicitação",
-      email: "voce@exemplo.pt",
-      company: "Empresa",
-      role: "Seu cargo"
-    },
-    validation: {
-      required: "Campo obrigatório.",
-      email_invalid: "E-mail inválido."
-    },
-    footer: [
-      "As mensagens são enviadas por e-mail e armazenadas internamente.",
-      "Sem respostas automáticas.",
-      "Sem mensagens de marketing."
-    ]
-  },
-
-  closing: {
-    body: [
-      "m-pathy mostra o que é possível.",
-      "MAIOS torna isso possível em qualquer lugar."
-    ]
-  }
-},
+}
+,
 
 nl: {
   hero: {
     title: "MAIOS",
-    subtitle: "Modulair Besturingssysteem voor AI",
-    intro: "Interne infrastructuur voor bestuurde AI-systemen"
+    subtitle: "Modular Artificial Intelligence Operating System",
+    intro: "Deterministische governancelaag voor AI-systemen onder regulatoir toezicht"
   },
 
   section_labels: {
     clarification: "Systeemverduidelijking",
-    runtime: "Runtime realiteit",
-    failure_patterns: "Structurele fouten",
+    runtime: "Uitvoeringsrealiteit",
+    failure_patterns: "Structurele tekortkomingen",
     definition: "Systeemdefinitie",
-    exclusions: "Expliciete uitsluitingen",
+    exclusions: "Expliciete afbakeningen",
     environments: "Beoogde omgevingen",
     domains: "Typische domeinen",
-    delivery: "Leveringsstructuur",
-    core: "Kernlaag",
-    adaptation: "Systeemanpassing",
+    delivery: "Structuur van het aanbod",
+    core: "Core-laag",
+    adaptation: "Systeemaanpassing",
     proof: "Operationeel bewijs",
     intervention: "Structurele interventie"
   },
@@ -1329,87 +1096,86 @@ nl: {
   clarification: {
     title: "Belangrijke verduidelijking",
     body: [
-      "m-pathy is geen MAIOS.",
-      "m-pathy is een professionele AI-workspace.",
-      "MAIOS is het interne systeem dat bepaalt hoe AI mag redeneren.",
-      "Wat u ziet op m-pathy.ai is een client-implementatie.",
-      "Wat u hier leest is het onderliggende systeem.",
-      "m-pathy gebruikt MAIOS.",
-      "MAIOS bestaat los van m-pathy.",
-      "Deze pagina gaat over MAIOS."
+      "m-pathy is niet MAIOS.",
+      "m-pathy is een professionele AI-werkruimte.",
+      "MAIOS is een deterministische governancelaag die vastlegt onder welke voorwaarden AI-systemen output mogen genereren.",
+      "Wat u op m-pathy.ai ziet, is een client-implementatie.",
+      "Deze pagina beschrijft de onderliggende governance-architectuur.",
+      "m-pathy maakt gebruik van MAIOS als governancelaag.",
+      "MAIOS bestaat onafhankelijk van m-pathy.",
+      "Deze pagina beschrijft MAIOS als een architectonisch controlesysteem."
     ],
-    eyebrow: "Systeemverduidelijkingslaag"
-
+    eyebrow: "Systeemverduidelijking"
   },
 
   problem_statement: {
     title: "Uw AI neemt al beslissingen",
-    subtitle: "Maar u kunt ze niet verantwoorden.",
-    explainer: "Dit zijn geen losse problemen, maar symptomen van ontbrekende interne structuur.",
+    subtitle: "Mogelijk kunt u geen technische bewijsvoering leveren over hoe deze zijn gegenereerd.",
+    explainer: "Deze situatie wijst op het ontbreken van governance-mechanismen op uitvoeringsniveau.",
     body: [
-      "AI-uitkomsten beïnvloeden dagelijks werving, recht, strategie en risico.",
-      "De meeste organisaties kunnen systeemcondities, toegepaste regels of verantwoordelijkheden niet uitleggen.",
-      "Dit is geen modelprobleem.",
-      "Dit is geen toolingprobleem.",
-      "Dit is een infrastructuurprobleem."
+      "AI-output beïnvloedt werving, juridische beoordelingen, strategie en risicotoewijzing.",
+      "Veel organisaties kunnen niet documenteren onder welke systeemstatus een output is gegenereerd, welke uitvoeringsbeperkingen golden of waar verantwoordelijkheid was toegewezen.",
+      "Dit is niet uitsluitend een modelprobleem.",
+      "Dit is niet uitsluitend een toolprobleem.",
+      "Het is een governance-architectuurprobleem."
     ]
   },
 
   problems: {
-    title: "De problemen die MAIOS oplost",
+    title: "Problemen die MAIOS adresseert",
     items: [
-      { title: "AI-uitkomsten zijn niet uitlegbaar wanneer het telt", accordion: "explanation" },
-      { title: "Governance bestaat op papier, niet in uitvoering", accordion: "explanation" },
-      { title: "Verantwoordelijkheid is intern structureel onduidelijk", accordion: "explanation" },
-      { title: "AI-gedrag drijft zonder zichtbaarheid", accordion: "explanation" },
-      { title: "Expertredenering en systeemgedrag lopen door elkaar", accordion: "explanation" },
-      { title: "Telemetrie is logging, geen sturing", accordion: "explanation" }
+      { title: "Ontbrekende technische onderbouwing van de omstandigheden waaronder output is gegenereerd", accordion: "explanation" },
+      { title: "Governancebeleid zonder handhaving tijdens uitvoering", accordion: "explanation" },
+      { title: "Onduidelijke verantwoordelijkheidsgrenzen binnen systeemuitvoering", accordion: "explanation" },
+      { title: "Veranderingen in modelgedrag zonder gedocumenteerde uitvoeringsstatus", accordion: "explanation" },
+      { title: "Vermenging van domeinlogica en systeemcontrolelogica", accordion: "explanation" },
+      { title: "Logging zonder afdwingbare controlemechanismen", accordion: "explanation" }
     ]
   },
 
   what_it_is: {
     title: "Wat MAIOS is",
     body: [
-      "MAIOS is een intern besturingssysteem dat afdwingt hoe AI mag redeneren vóór er output ontstaat.",
-      "MAIOS stuurt startcondities, modi, experttoegang, governance-activatie en outputtoelaatbaarheid.",
-      "MAIOS vervangt uw AI niet.",
-      "MAIOS bestuurt uw AI."
+      "MAIOS is een deterministische governancelaag die toelaatbaarheidsregels tijdens uitvoering afdwingt voordat output wordt vrijgegeven.",
+      "MAIOS definieert uitvoeringsbeperkingen, telemetriecontracten, governance-triggers en verantwoordelijkheidsafbakening binnen een gestructureerde uitvoeringsomgeving.",
+      "MAIOS vervangt geen onderliggende AI-modellen.",
+      "MAIOS beperkt hoe AI-systemen output mogen genereren."
     ],
-    accordion: "interne werking"
+    accordion: "Hoe MAIOS intern werkt"
   },
 
   what_it_is_not: {
-    title: "Wat MAIOS niet doet",
+    title: "Wat MAIOS niet is",
     body: [
-      "MAIOS slaat geen data op.",
-      "MAIOS bewaart geen telemetrie.",
-      "MAIOS beheert geen infrastructuur.",
-      "MAIOS certificeert geen compliance.",
-      "MAIOS dwingt alleen toegestane output af.",
-      "Compliance gebeurt in uw systeem."
+      "MAIOS slaat geen operationele gegevens op.",
+      "MAIOS bewaart geen gespreksinhoud.",
+      "MAIOS beheert geen technische infrastructuur.",
+      "MAIOS vormt geen regulatoire certificering.",
+      "MAIOS past uitvoeringsbeperkingen toe.",
+      "De vaststelling van naleving blijft volledig de verantwoordelijkheid van de implementerende organisatie."
     ],
-    explainer: "Deze uitsluitingen zijn bewust en bepalen de verantwoordelijkheidsgrens van MAIOS."
+    explainer: "Deze afbakeningen definiëren de verantwoordelijkheidsgrens van MAIOS."
   },
 
   audience: {
     title: "Voor wie MAIOS is ontworpen",
     body: [
-      "MAIOS is bedoeld voor organisaties in gereguleerde en risicovolle AI-omgevingen.",
-      "Dit omvat situaties waarin AI-output rechten, veiligheid of juridische status beïnvloedt."
+      "MAIOS is ontworpen voor organisaties die AI-systemen inzetten onder regulatoir toezicht of hoogrisicoclassificatie.",
+      "Dit betreft omgevingen waar AI-output invloed kan hebben op rechten, veiligheid, toegang of juridische positie."
     ],
     sectors: [
-      "Zorg en medische systemen",
-      "Overheid en publieke sector",
-      "Rechtspraak en juridische omgevingen",
+      "Medische en gezondheidszorgsystemen",
+      "Publieke sector en overheidsinstellingen",
+      "Juridische en rechterlijke omgevingen",
       "Financiële dienstverlening en verzekeringen",
-      "Kritieke infrastructuur en beveiliging",
-      "Grote organisaties"
+      "Kritieke infrastructuren",
+      "Grootschalige ondernemingen"
     ],
     footer: [
-      "MAIOS certificeert geen compliance.",
-      "MAIOS maakt compliant werken mogelijk."
+      "MAIOS certificeert geen naleving.",
+      "MAIOS biedt architecturale controlemechanismen die een conforme implementatie kunnen ondersteunen."
     ],
-    accordion: "sectorale verdieping"
+    accordion: "Sectorspecifieke verdieping"
   },
 
   offering: {
@@ -1417,213 +1183,213 @@ nl: {
     core: {
       title: "MAIOS Core",
       body: [
-        "MAIOS Core is de universele interne laag.",
-        "Het levert deterministische systeemruimte, verplichte telemetrie, outputblokkering, expliciete start- en eindlogica, driftzichtbaarheid en scheiding van verantwoordelijkheden.",
-        "MAIOS Core bevat geen vooraf gedefinieerde agents.",
-        "MAIOS Core bevat geen vooraf gedefinieerde experts.",
-        "MAIOS Core bevat geen governance-modellen.",
-        "MAIOS Core is voldoende voor kleine en middelgrote organisaties."
+        "MAIOS Core vormt de governance-uitvoeringslaag.",
+        "Het biedt deterministische uitvoeringsbeperkingen, verplichte telemetriecontracten, blokkeringsmechanismen vóór vrijgave van output, expliciete blootstelling van uitvoeringsstatus en duidelijke scheiding van verantwoordelijkheden.",
+        "MAIOS Core bevat geen vooraf gedefinieerde agenten.",
+        "MAIOS Core bevat geen vooraf gedefinieerde domeinexperts.",
+        "MAIOS Core bevat geen vooraf gedefinieerde governancemodellen.",
+        "MAIOS Core definieert uitvoeringsstructuur, niet inhoud."
       ]
     },
     inventory: {
       title: "MAIOS Inventory Mapping",
       body: [
-        "Inventory Mapping past MAIOS aan bestaande systemen aan.",
-        "Het declareert agents, experts en systemen en koppelt deze aan telemetrie en governance.",
-        "Inventory Mapping vereist MAIOS Core.",
-        "MAIOS legt geen inventaris op.",
-        "MAIOS verwijst naar wat al bestaat."
+        "Inventory Mapping koppelt bestaande agenten, systemen en domeinen aan het MAIOS-telemetriecontract.",
+        "Het verbindt uitvoeringscomponenten aan duidelijke governance- en verantwoordelijkheidsstructuren.",
+        "MAIOS Inventory Mapping vereist MAIOS Core.",
+        "MAIOS legt geen operationele herdefinitie op.",
+        "MAIOS begrenst bestaande systemen binnen vastgestelde governancekaders."
       ]
     },
-    accordion: "implementatiedetails"
+    accordion: "Implementatiedetails"
   },
 
   proof: {
-    title: "m-pathy als bewijs",
+    title: "m-pathy als demonstratie",
     body: [
-      "m-pathy is een bestuurde AI-workspace gebouwd op MAIOS.",
-      "Het toont dat bestuurde AI-infrastructuur operationeel en verifieerbaar kan zijn in productie.",
-      "MAIOS werkt ook zonder m-pathy."
+      "m-pathy is een operationele implementatie van MAIOS.",
+      "Het toont observeerbaar uitvoeringsgedrag onder gedefinieerde governancebeperkingen.",
+      "MAIOS kan onafhankelijk van m-pathy functioneren."
     ],
-    disclaimer: "Bewijs betekent hier observeerbare werking en verifieerbaar systeemgedrag, geen certificering.",
-    accordion: "archief, truth hash, verzegeling, koppeling"
+    disclaimer: "De term demonstratie verwijst naar observeerbare governancemechanismen. Dit vormt geen certificering of regulatoire goedkeuring.",
+    accordion: "archief, integriteitshash, verzegeling, ketenvorming"
   },
 
   consulting: {
-    title: "Implementatie- en governance-advies",
+    title: "Implementatie- en governanceadvies",
     body: [
-      "Voor organisaties onder regelgeving of op schaal.",
-      "Wij ondersteunen integratie, inventory mapping, auditontwerp, cryptografische verzegeling, governance en voorbereiding op toezichthouders.",
-      "Dit is geen onboarding.",
-      "Dit is interne infrastructuur."
+      "Voor organisaties onder regulatoir toezicht of met complexe systeemlandschappen.",
+      "Wij ondersteunen bij integratie van de governancelaag, telemetrieontwerp, structurele systeemkartering en auditvoorbereiding.",
+      "Dit is geen eenvoudige productimplementatie.",
+      "Het betreft governance-integratie op architectuurniveau."
     ],
-    accordion: "adviesbereik"
+    accordion: "Adviesomvang"
   },
 
   contact: {
-    title: "Bericht sturen",
-    eyebrow: "Gecontroleerde systeementree",
+    title: "Bericht verzenden",
+    eyebrow: "Gecontroleerde systeemtoegang",
     body: [
-      "Start een gerichte dialoog over uw systeem."
+      "Start een gestructureerd gesprek over de governance-architectuur van uw AI-systeem."
     ],
     toggle: {
       open: "Formulier openen",
       close: "Formulier sluiten"
     },
     fields: [
-      "Berichttype",
+      "Type bericht",
       "Bericht",
       "E-mailadres",
       "Bedrijf (optioneel)",
       "Rol (optioneel)"
     ],
     messageTypes: {
-      consulting_inquiry: "Consultaanvraag",
-      governance_assessment: "Governance-analyse",
+      consulting_inquiry: "Adviesaanvraag",
+      governance_assessment: "Governancebeoordeling",
       system_integration: "Systeemintegratie",
       audit_preparation: "Auditvoorbereiding",
       technical_question: "Technische vraag",
-      support_or_other: "Support of anders"
+      support_or_other: "Ondersteuning of anders"
     },
     actions: {
-      submit: "Versturen"
+      submit: "Bericht verzenden"
     },
     feedback: {
-      success: "Bericht verzonden.",
-      error: "Verzenden mislukt.",
+      success: "Bericht succesvol verzonden.",
+      error: "Verzenden mislukt. Probeer opnieuw.",
       captcha_missing: "Captcha-configuratie ontbreekt."
     },
     placeholders: {
-      message: "Beschrijf uw verzoek",
-      email: "u@voorbeeld.nl",
-      company: "Bedrijf",
+      message: "Beschrijf uw systeem of governancevraag",
+      email: "u@example.com",
+      company: "Bedrijfsnaam",
       role: "Uw rol"
     },
     validation: {
-      required: "Verplicht veld.",
-      email_invalid: "Ongeldig e-mailadres."
+      required: "Dit veld is verplicht.",
+      email_invalid: "Voer een geldig e-mailadres in."
     },
     footer: [
-      "Berichten worden per e-mail verzonden en intern opgeslagen.",
-      "Geen automatische antwoorden.",
-      "Geen marketingberichten."
+      "Berichten worden per e-mail verzonden en verwerkt binnen onze operationele omgeving.",
+      "Geen geautomatiseerde besluitvorming.",
+      "Geen marketingopvolging."
     ]
   },
 
   closing: {
     body: [
-      "m-pathy laat zien wat mogelijk is.",
-      "MAIOS maakt het overal mogelijk."
+      "m-pathy toont governancegestuurde AI-uitvoering in de praktijk.",
+      "MAIOS biedt een architecturaal kader voor AI-implementatie in gereguleerde omgevingen."
     ]
   }
-},
+}
+,
 
 ru: {
   hero: {
     title: "MAIOS",
-    subtitle: "Модульная операционная система ИИ",
-    intro: "Внутренняя инфраструктура для управляемых ИИ-систем"
+    subtitle: "Modular Artificial Intelligence Operating System",
+    intro: "Детерминированный уровень управления для систем ИИ, находящихся под регуляторным надзором"
   },
 
   section_labels: {
-    clarification: "Системное пояснение",
-    runtime: "Рабочая реальность",
-    failure_patterns: "Структурные сбои",
+    clarification: "Разъяснение системы",
+    runtime: "Реальность выполнения",
+    failure_patterns: "Структурные проблемы",
     definition: "Определение системы",
-    exclusions: "Явные исключения",
+    exclusions: "Явные ограничения",
     environments: "Целевые среды",
-    domains: "Типовые домены",
-    delivery: "Структура поставки",
-    core: "Ядро",
+    domains: "Типовые области",
+    delivery: "Структура предложения",
+    core: "Базовый уровень",
     adaptation: "Адаптация системы",
-    proof: "Операционное доказательство",
-    intervention: "Структурное вмешательство"
+    proof: "Операционное подтверждение",
+    intervention: "Структурное внедрение"
   },
 
   clarification: {
-    title: "Важное пояснение",
+    title: "Важное разъяснение",
     body: [
       "m-pathy — это не MAIOS.",
-      "m-pathy — профессиональное рабочее пространство ИИ.",
-      "MAIOS — внутренняя система, определяющая, как ИИ может рассуждать.",
-      "То, что вы видите на m-pathy.ai, — клиентская реализация.",
-      "То, что вы читаете здесь, — базовая система.",
-      "m-pathy использует MAIOS.",
+      "m-pathy — это профессиональная рабочая среда на основе ИИ.",
+      "MAIOS — это детерминированный уровень управления, который ограничивает условия, при которых системы ИИ могут генерировать результаты.",
+      "То, что вы видите на m-pathy.ai, является клиентской реализацией.",
+      "Эта страница описывает архитектуру управления, лежащую в основе системы.",
+      "m-pathy использует MAIOS как уровень управления.",
       "MAIOS существует независимо от m-pathy.",
-      "Эта страница о MAIOS."
+      "Эта страница описывает MAIOS как архитектурную систему контроля."
     ],
-    eyebrow: "Слой системного разъяснения"
-
+    eyebrow: "Разъяснение системы"
   },
 
   problem_statement: {
     title: "Ваш ИИ уже принимает решения",
-    subtitle: "Но вы не можете их обосновать.",
-    explainer: "Это не отдельные случаи, а симптомы отсутствия внутренней структуры.",
+    subtitle: "Возможно, вы не можете предоставить технические доказательства того, как они были сформированы.",
+    explainer: "Эта ситуация указывает на отсутствие механизмов управления на уровне выполнения.",
     body: [
-      "Результаты ИИ ежедневно влияют на найм, право, стратегию и риски.",
-      "Большинство организаций не может объяснить системные условия, правила или ответственность.",
-      "Это не проблема модели.",
-      "Это не проблема инструментов.",
-      "Это проблема инфраструктуры."
+      "Результаты работы ИИ влияют на найм персонала, юридические оценки, стратегические решения и распределение рисков.",
+      "Многие организации не могут документировать, в каком состоянии системы был сгенерирован результат, какие ограничения выполнения действовали и где была определена ответственность.",
+      "Это не только проблема модели.",
+      "Это не только проблема инструментов.",
+      "Это проблема архитектуры управления."
     ]
   },
 
   problems: {
     title: "Проблемы, которые решает MAIOS",
     items: [
-      { title: "Результаты ИИ невозможно объяснить, когда это важно", accordion: "explanation" },
-      { title: "Управление есть на бумаге, но не в работе", accordion: "explanation" },
-      { title: "Ответственность внутри систем структурно неясна", accordion: "explanation" },
-      { title: "Поведение ИИ дрейфует без видимости", accordion: "explanation" },
-      { title: "Экспертное мышление и системное поведение смешаны", accordion: "explanation" },
-      { title: "Телеметрия — это логирование, а не контроль", accordion: "explanation" }
+      { title: "Отсутствие технических доказательств условий генерации результатов", accordion: "explanation" },
+      { title: "Политики управления без применения на этапе выполнения", accordion: "explanation" },
+      { title: "Неясные границы ответственности внутри выполнения системы", accordion: "explanation" },
+      { title: "Изменения поведения модели без документированного состояния выполнения", accordion: "explanation" },
+      { title: "Смешение доменной логики и логики системного контроля", accordion: "explanation" },
+      { title: "Логирование без механизмов принудительного контроля", accordion: "explanation" }
     ]
   },
 
   what_it_is: {
     title: "Что такое MAIOS",
     body: [
-      "MAIOS — внутренняя операционная система, определяющая, как ИИ может рассуждать до появления вывода.",
-      "MAIOS управляет условиями старта, режимами, доступом экспертов, вызовом управления и допустимостью вывода.",
-      "MAIOS не заменяет ваш ИИ.",
-      "MAIOS управляет вашим ИИ."
+      "MAIOS — это детерминированный уровень управления, который применяет правила допустимости во время выполнения до публикации результатов.",
+      "MAIOS определяет ограничения выполнения, контракты телеметрии, триггеры управления и разграничение ответственности в структурированной среде выполнения.",
+      "MAIOS не заменяет базовые модели ИИ.",
+      "MAIOS ограничивает способы генерации результатов системами ИИ."
     ],
-    accordion: "внутренняя работа"
+    accordion: "Как MAIOS работает внутри"
   },
 
   what_it_is_not: {
-    title: "Что MAIOS не делает",
+    title: "Чем MAIOS не является",
     body: [
-      "MAIOS не хранит данные.",
-      "MAIOS не сохраняет телеметрию.",
-      "MAIOS не управляет инфраструктурой.",
-      "MAIOS не сертифицирует соответствие.",
-      "MAIOS допускает только разрешённые выводы.",
-      "Соответствие обеспечивается в вашей системе."
+      "MAIOS не хранит операционные данные.",
+      "MAIOS не сохраняет содержимое диалогов.",
+      "MAIOS не управляет технической инфраструктурой.",
+      "MAIOS не является регуляторной сертификацией.",
+      "MAIOS применяет ограничения допустимости на этапе выполнения.",
+      "Определение соответствия нормативным требованиям полностью остается за организацией, внедряющей систему."
     ],
-    explainer: "Эти исключения намеренны и определяют границу ответственности MAIOS."
+    explainer: "Эти ограничения определяют границы ответственности MAIOS."
   },
 
   audience: {
     title: "Для кого предназначен MAIOS",
     body: [
-      "MAIOS создан для организаций в регулируемых и высокорисковых ИИ-средах.",
-      "Это включает случаи, где выводы ИИ влияют на права, безопасность или юридический статус."
+      "MAIOS предназначен для организаций, внедряющих системы ИИ под регуляторным надзором или относящихся к категории высокого риска.",
+      "Это включает среды, где результаты ИИ могут влиять на права, безопасность, доступ или юридический статус."
     ],
     sectors: [
       "Медицина и здравоохранение",
-      "Государственный сектор",
-      "Право и судебные системы",
-      "Финансы и страхование",
-      "Критическая инфраструктура и безопасность",
-      "Крупные организации"
+      "Государственный сектор и государственные учреждения",
+      "Юридические и судебные системы",
+      "Финансовые услуги и страхование",
+      "Критическая инфраструктура",
+      "Крупные корпоративные организации"
     ],
     footer: [
       "MAIOS не сертифицирует соответствие.",
-      "MAIOS позволяет работать в соответствии."
+      "MAIOS предоставляет архитектурные механизмы контроля, которые могут поддерживать соответствующее внедрение."
     ],
-    accordion: "отраслевые детали"
+    accordion: "Отраслевое углубление"
   },
 
   offering: {
@@ -1631,54 +1397,54 @@ ru: {
     core: {
       title: "MAIOS Core",
       body: [
-        "MAIOS Core — универсальный внутренний слой.",
-        "Он обеспечивает детерминированное системное пространство, обязательную телеметрию, блокировку вывода, явную логику начала и завершения, видимость дрейфа и разделение ответственности.",
-        "MAIOS Core не содержит предустановленных агентов.",
-        "MAIOS Core не содержит предустановленных экспертов.",
-        "MAIOS Core не содержит моделей управления.",
-        "MAIOS Core достаточно для малых и средних организаций."
+        "MAIOS Core формирует уровень выполнения управления.",
+        "Он обеспечивает детерминированные ограничения выполнения, обязательные контракты телеметрии, механизмы блокировки до публикации результатов, явное раскрытие состояния выполнения и четкое разграничение ответственности.",
+        "MAIOS Core не содержит предопределенных агентов.",
+        "MAIOS Core не содержит предопределенных экспертов по доменам.",
+        "MAIOS Core не содержит предопределенных моделей управления.",
+        "MAIOS Core определяет структуру выполнения, а не прикладное содержание."
       ]
     },
     inventory: {
       title: "MAIOS Inventory Mapping",
       body: [
-        "Inventory Mapping адаптирует MAIOS к существующим системам.",
-        "Он описывает агентов, экспертов и системы, связывает их с телеметрией и управлением.",
-        "Inventory Mapping требует MAIOS Core.",
-        "MAIOS не навязывает инвентарь.",
-        "MAIOS ссылается на существующее."
+        "Inventory Mapping связывает существующие агенты, системы и домены с контрактом телеметрии MAIOS.",
+        "Он сопоставляет компоненты выполнения с четко определенными структурами управления и ответственности.",
+        "MAIOS Inventory Mapping требует MAIOS Core.",
+        "MAIOS не навязывает операционную переопределенность.",
+        "MAIOS ограничивает существующие системы в рамках установленных границ управления."
       ]
     },
-    accordion: "детали внедрения"
+    accordion: "Детали внедрения"
   },
 
   proof: {
-    title: "m-pathy как доказательство",
+    title: "m-pathy как демонстрация",
     body: [
-      "m-pathy — управляемое ИИ-пространство, построенное на MAIOS.",
-      "Оно показывает, что управляемая ИИ-инфраструктура может работать и проверяться в продакшене.",
-      "MAIOS работает и без m-pathy."
+      "m-pathy является операционной реализацией MAIOS.",
+      "Она демонстрирует наблюдаемое поведение выполнения при заданных ограничениях управления.",
+      "MAIOS может функционировать независимо от m-pathy."
     ],
-    disclaimer: "Под доказательством понимается наблюдаемая работа и проверяемое поведение системы, а не сертификация.",
-    accordion: "архив, truth hash, запечатывание, цепочка"
+    disclaimer: "Термин демонстрация относится к наблюдаемым механизмам управления. Он не означает сертификацию или регуляторное одобрение.",
+    accordion: "архив, хэш целостности, запечатывание, цепочка"
   },
 
   consulting: {
-    title: "Консалтинг по внедрению и управлению",
+    title: "Консультации по внедрению и управлению",
     body: [
-      "Для организаций под регулированием или в масштабе.",
-      "Мы помогаем с интеграцией, inventory mapping, проектированием аудита, криптографическим запечатыванием, управлением и подготовкой к проверкам.",
-      "Это не онбординг.",
-      "Это внутренняя инфраструктура."
+      "Для организаций, находящихся под регуляторным надзором или работающих в сложных системных средах.",
+      "Мы поддерживаем интеграцию уровня управления, проектирование телеметрии, структурное отображение систем и подготовку к аудиту.",
+      "Это не простое внедрение продукта.",
+      "Это интеграция управления на архитектурном уровне."
     ],
-    accordion: "объём консалтинга"
+    accordion: "Объем консультаций"
   },
 
   contact: {
     title: "Отправить сообщение",
-    eyebrow: "Контролируемый доступ",
+    eyebrow: "Контролируемый доступ к системе",
     body: [
-      "Начните целевой диалог о вашей системе."
+      "Начните структурированное обсуждение архитектуры управления вашей системой ИИ."
     ],
     toggle: {
       open: "Открыть форму",
@@ -1687,12 +1453,12 @@ ru: {
     fields: [
       "Тип сообщения",
       "Сообщение",
-      "Электронная почта",
+      "Адрес электронной почты",
       "Компания (необязательно)",
       "Роль (необязательно)"
     ],
     messageTypes: {
-      consulting_inquiry: "Консультационный запрос",
+      consulting_inquiry: "Запрос на консультацию",
       governance_assessment: "Оценка управления",
       system_integration: "Интеграция системы",
       audit_preparation: "Подготовка к аудиту",
@@ -1700,190 +1466,190 @@ ru: {
       support_or_other: "Поддержка или другое"
     },
     actions: {
-      submit: "Отправить"
+      submit: "Отправить сообщение"
     },
     feedback: {
-      success: "Сообщение отправлено.",
-      error: "Ошибка отправки.",
-      captcha_missing: "Отсутствует конфигурация captcha."
+      success: "Сообщение успешно отправлено.",
+      error: "Ошибка отправки. Пожалуйста, попробуйте снова.",
+      captcha_missing: "Отсутствует настройка Captcha."
     },
     placeholders: {
-      message: "Опишите запрос",
-      email: "you@example.ru",
-      company: "Компания",
+      message: "Опишите вашу систему или вопрос по управлению",
+      email: "вы@example.com",
+      company: "Название компании",
       role: "Ваша роль"
     },
     validation: {
-      required: "Обязательное поле.",
-      email_invalid: "Неверный email."
+      required: "Это поле обязательно.",
+      email_invalid: "Введите корректный адрес электронной почты."
     },
     footer: [
-      "Сообщения отправляются по email и хранятся внутри системы.",
-      "Без автоматических ответов.",
-      "Без маркетинговых сообщений."
+      "Сообщения передаются по электронной почте и обрабатываются в нашей операционной среде.",
+      "Без автоматизированного принятия решений.",
+      "Без маркетинговых последующих контактов."
     ]
   },
 
   closing: {
     body: [
-      "m-pathy показывает возможное.",
-      "MAIOS делает это возможным везде."
+      "m-pathy демонстрирует управляемое выполнение ИИ на практике.",
+      "MAIOS предоставляет архитектурную основу для внедрения ИИ в регулируемых средах."
     ]
   }
-},
+}
+,
 
 zh: {
   hero: {
     title: "MAIOS",
-    subtitle: "模块化人工智能操作系统",
-    intro: "受治理的 AI 系统内部基础设施"
+    subtitle: "Modular Artificial Intelligence Operating System",
+    intro: "面向受监管环境的确定性 AI 治理架构层"
   },
 
   section_labels: {
-    clarification: "系统澄清层",
+    clarification: "系统说明",
     runtime: "运行现实",
-    failure_patterns: "结构性故障",
+    failure_patterns: "结构性问题",
     definition: "系统定义",
-    exclusions: "明确排除",
-    environments: "目标环境",
+    exclusions: "明确边界",
+    environments: "适用环境",
     domains: "典型领域",
-    delivery: "交付结构",
+    delivery: "产品结构",
     core: "核心层",
     adaptation: "系统适配",
-    proof: "运行证明",
-    intervention: "结构干预"
+    proof: "运行验证",
+    intervention: "结构性实施"
   },
 
   clarification: {
-    title: "重要澄清",
+    title: "重要说明",
     body: [
       "m-pathy 不是 MAIOS。",
-      "m-pathy 是专业的 AI 工作空间。",
-      "MAIOS 是规定 AI 如何推理的内部系统。",
-      "你在 m-pathy.ai 看到的是客户端实现。",
-      "你在此阅读的是底层系统。",
-      "m-pathy 使用 MAIOS。",
-      "MAIOS 独立于 m-pathy 存在。",
-      "本页面介绍 MAIOS。"
+      "m-pathy 是一个专业的 AI 工作空间实现。",
+      "MAIOS 是一个确定性的治理架构层，用于限制 AI 系统在何种条件下可以生成输出。",
+      "您在 m-pathy.ai 上看到的是客户端实现。",
+      "本页面描述的是底层治理架构。",
+      "m-pathy 作为实现层使用 MAIOS。",
+      "MAIOS 可独立于 m-pathy 运行。",
+      "本页面描述的是 MAIOS 作为架构控制系统的定义。"
     ],
-    eyebrow: "系统澄清层"
-
+    eyebrow: "系统说明"
   },
 
   problem_statement: {
-    title: "你的 AI 已在做决定",
-    subtitle: "但你无法为其辩护。",
-    explainer: "这些不是孤立问题，而是缺失内部结构的症状。",
+    title: "您的 AI 已在做出决策",
+    subtitle: "但您可能无法提供其生成过程的技术证据。",
+    explainer: "这通常意味着缺乏运行层面的治理机制。",
     body: [
-      "AI 输出每天影响招聘、法律、战略和风险。",
-      "多数组织无法解释系统条件、适用规则或责任。",
-      "这不是模型问题。",
-      "这不是工具问题。",
-      "这是基础设施问题。"
+      "AI 输出正在影响招聘、法律评估、战略决策和风险分配。",
+      "许多组织无法说明输出生成时的系统状态、适用的执行约束或责任归属。",
+      "这不仅仅是模型问题。",
+      "这不仅仅是工具问题。",
+      "这是治理架构层的问题。"
     ]
   },
 
   problems: {
-    title: "MAIOS 解决的问题",
+    title: "MAIOS 所应对的问题",
     items: [
-      { title: "关键时刻无法解释 AI 输出", accordion: "explanation" },
-      { title: "治理停留在纸面，未落地", accordion: "explanation" },
-      { title: "系统内责任结构不清", accordion: "explanation" },
-      { title: "AI 行为无可见性地漂移", accordion: "explanation" },
-      { title: "专家推理与系统行为混杂", accordion: "explanation" },
-      { title: "遥测被当作日志而非控制", accordion: "explanation" }
+      { title: "缺乏输出生成条件的技术可追溯性", accordion: "explanation" },
+      { title: "存在治理政策但缺乏运行时执行机制", accordion: "explanation" },
+      { title: "系统执行过程中的责任边界不清晰", accordion: "explanation" },
+      { title: "模型行为变化缺乏运行状态记录", accordion: "explanation" },
+      { title: "领域逻辑与系统控制逻辑混合", accordion: "explanation" },
+      { title: "仅有日志记录而缺乏控制执行机制", accordion: "explanation" }
     ]
   },
 
   what_it_is: {
-    title: "什么是 MAIOS",
+    title: "MAIOS 是什么",
     body: [
-      "MAIOS 是在输出产生前约束 AI 推理方式的内部操作系统。",
-      "MAIOS 管理启动条件、模式、专家访问、治理触发与输出可用性。",
-      "MAIOS 不替代你的 AI。",
-      "MAIOS 约束你的 AI。"
+      "MAIOS 是一个确定性的治理层，在输出发布之前于运行阶段执行可接受性规则。",
+      "MAIOS 定义执行约束、遥测契约、治理触发机制以及责任分离，并在结构化执行环境中运行。",
+      "MAIOS 不替代底层 AI 模型。",
+      "MAIOS 约束 AI 系统生成输出的方式。"
     ],
-    accordion: "内部机制"
+    accordion: "MAIOS 的内部运行机制"
   },
 
   what_it_is_not: {
-    title: "MAIOS 不做什么",
+    title: "MAIOS 不是什么",
     body: [
-      "MAIOS 不存储数据。",
-      "MAIOS 不持久化遥测。",
-      "MAIOS 不管理基础设施。",
-      "MAIOS 不做合规认证。",
-      "MAIOS 仅强制可用输出。",
-      "合规发生在你的系统中。"
+      "MAIOS 不存储业务数据。",
+      "MAIOS 不保存对话内容。",
+      "MAIOS 不管理技术基础设施。",
+      "MAIOS 不构成监管认证。",
+      "MAIOS 执行运行时可接受性约束。",
+      "合规性判定完全由实施组织负责。"
     ],
-    explainer: "这些排除是有意为之，用于界定 MAIOS 的责任边界。"
+    explainer: "上述边界明确了 MAIOS 的责任范围。"
   },
 
   audience: {
-    title: "MAIOS 面向谁",
+    title: "MAIOS 适用于谁",
     body: [
-      "MAIOS 面向受监管和高风险的 AI 环境。",
-      "包括 AI 输出影响权利、安全或法律地位的场景。"
+      "MAIOS 面向在监管监督或高风险分类环境下部署 AI 系统的组织。",
+      "尤其适用于 AI 输出可能影响权利、安全、准入或法律地位的场景。"
     ],
     sectors: [
-      "医疗与健康",
-      "政府与公共部门",
-      "法律与司法",
-      "金融与保险",
-      "关键基础设施与安全",
-      "大型企业"
+      "医疗与健康系统",
+      "公共部门与政府机构",
+      "法律与司法系统",
+      "金融与保险服务",
+      "关键基础设施",
+      "大型企业环境"
     ],
     footer: [
-      "MAIOS 不做合规认证。",
-      "MAIOS 使系统具备合规能力。"
+      "MAIOS 不提供合规认证。",
+      "MAIOS 提供可支持合规部署的架构控制机制。"
     ],
-    accordion: "行业细分"
+    accordion: "行业深入说明"
   },
 
   offering: {
-    title: "MAIOS 提供内容",
+    title: "MAIOS 提供的内容",
     core: {
       title: "MAIOS Core",
       body: [
-        "MAIOS Core 是通用的内部核心层。",
-        "提供确定性系统空间、强制遥测、输出阻断、明确起止逻辑、漂移可见性与责任分离。",
-        "MAIOS Core 不包含预设代理。",
-        "MAIOS Core 不包含预设专家。",
-        "MAIOS Core 不包含治理模型。",
-        "MAIOS Core 适用于中小型组织。"
+        "MAIOS Core 构成治理执行层。",
+        "其提供确定性的运行约束、强制性遥测契约、输出发布前的阻断机制、执行状态暴露以及明确的责任分离。",
+        "MAIOS Core 不包含预定义代理。",
+        "MAIOS Core 不包含预定义领域专家。",
+        "MAIOS Core 不包含预定义治理模型。",
+        "MAIOS Core 定义执行结构，而非业务内容。"
       ]
     },
     inventory: {
       title: "MAIOS Inventory Mapping",
       body: [
-        "Inventory Mapping 将 MAIOS 适配到现有系统。",
-        "声明代理、专家与系统，并绑定遥测与治理结构。",
-        "Inventory Mapping 需要 MAIOS Core。",
-        "MAIOS 不强制清单。",
-        "MAIOS 引用既有要素。"
+        "Inventory Mapping 将现有代理、系统和领域映射到 MAIOS 遥测契约。",
+        "其将执行组件与清晰的治理与责任结构关联。",
+        "MAIOS Inventory Mapping 依赖 MAIOS Core。",
+        "MAIOS 不强制重构现有系统。",
+        "MAIOS 在既定治理边界内约束现有系统的执行方式。"
       ]
     },
     accordion: "实施细节"
   },
 
   proof: {
-    title: "以 m-pathy 为证明",
+    title: "m-pathy 作为示例",
     body: [
-      "m-pathy 是构建在 MAIOS 之上的受治理 AI 工作空间。",
-      "它证明受治理的 AI 基础设施可在生产中运行并验证。",
+      "m-pathy 是 MAIOS 的一个运行实现。",
+      "其展示了在既定治理约束下的可观察运行行为。",
       "MAIOS 可独立于 m-pathy 运行。"
     ],
-    disclaimer: "此处“证明”指可观察的运行与可验证的系统行为，不代表认证。",
-    accordion: "归档、truth hash、封存、链式"
+    disclaimer: "“示例”一词仅指可观察的治理机制，不构成认证或监管认可。",
+    accordion: "归档、完整性哈希、加密封存、链式结构"
   },
 
   consulting: {
     title: "实施与治理咨询",
     body: [
-      "面向受监管或规模化组织。",
-      "我们支持集成、inventory mapping、审计设计、加密封存、治理与监管准备。",
-      "这不是入门培训。",
-      "这是内部基础设施工作。"
+      "面向受监管环境或复杂系统架构的组织。",
+      "我们支持治理层集成、遥测设计、系统结构映射以及审计准备。",
+      "这不是简单的产品上线。",
+      "这是架构层面的治理集成。"
     ],
     accordion: "咨询范围"
   },
@@ -1892,7 +1658,7 @@ zh: {
     title: "发送消息",
     eyebrow: "受控系统入口",
     body: [
-      "就你的系统开启一段聚焦对话。"
+      "开启关于您 AI 治理架构的结构化讨论。"
     ],
     toggle: {
       open: "打开表单",
@@ -1900,7 +1666,7 @@ zh: {
     },
     fields: [
       "消息类型",
-      "消息",
+      "消息内容",
       "电子邮箱",
       "公司（可选）",
       "角色（可选）"
@@ -1914,199 +1680,199 @@ zh: {
       support_or_other: "支持或其他"
     },
     actions: {
-      submit: "发送"
+      submit: "发送消息"
     },
     feedback: {
-      success: "消息已发送。",
-      error: "发送失败。",
+      success: "消息发送成功。",
+      error: "发送失败，请重试。",
       captcha_missing: "缺少验证码配置。"
     },
     placeholders: {
-      message: "描述你的需求",
-      email: "you@example.cn",
-      company: "公司",
-      role: "你的角色"
+      message: "请描述您的系统或治理问题",
+      email: "you@example.com",
+      company: "公司名称",
+      role: "您的角色"
     },
     validation: {
-      required: "必填字段。",
-      email_invalid: "邮箱无效。"
+      required: "此字段为必填项。",
+      email_invalid: "请输入有效的电子邮箱地址。"
     },
     footer: [
-      "消息通过邮件发送并在系统内存储。",
-      "无自动回复。",
-      "无营销跟进。"
+      "消息通过电子邮件发送，并在我们的运行环境中处理。",
+      "不进行自动化决策。",
+      "不进行营销跟进。"
     ]
   },
 
   closing: {
     body: [
-      "m-pathy 展示可能性。",
-      "MAIOS 让它无处不在。"
+      "m-pathy 展示了受治理的 AI 运行实践。",
+      "MAIOS 为受监管环境中的 AI 部署提供架构基础。"
     ]
   }
-},
+}
+,
 
 ja: {
   hero: {
     title: "MAIOS",
-    subtitle: "モジュラーAIオペレーティングシステム",
-    intro: "統治されたAIシステムの内部基盤"
+    subtitle: "Modular Artificial Intelligence Operating System",
+    intro: "規制監督下にあるAIシステムのための決定論的ガバナンス層"
   },
 
   section_labels: {
-    clarification: "システム明確化",
-    runtime: "実行現実",
-    failure_patterns: "構造的失敗",
+    clarification: "システムの明確化",
+    runtime: "実行の現実",
+    failure_patterns: "構造的課題",
     definition: "システム定義",
-    exclusions: "明示的除外",
-    environments: "想定環境",
-    domains: "代表領域",
+    exclusions: "明示的な境界",
+    environments: "対象環境",
+    domains: "代表的な分野",
     delivery: "提供構造",
     core: "コア層",
     adaptation: "システム適応",
-    proof: "運用証明",
-    intervention: "構造介入"
+    proof: "運用上の実証",
+    intervention: "構造的導入"
   },
 
   clarification: {
     title: "重要な明確化",
     body: [
-      "m-pathy は MAIOS ではありません。",
-      "m-pathy はプロ向けAIワークスペースです。",
-      "MAIOS はAIの推論方法を規定する内部システムです。",
-      "m-pathy.ai に見えるのはクライアント実装です。",
-      "ここにあるのは基盤システムです。",
-      "m-pathy は MAIOS を使用します。",
-      "MAIOS は m-pathy と独立して存在します。",
-      "本ページは MAIOS についてです。"
+      "m-pathyはMAIOSではありません。",
+      "m-pathyは専門用途向けのAIワークスペースです。",
+      "MAIOSは、AIシステムがどの条件下で出力を生成できるかを制約する決定論的ガバナンス層です。",
+      "m-pathy.aiで表示されているものはクライアント実装です。",
+      "本ページはその基盤となるガバナンスアーキテクチャを説明します。",
+      "m-pathyはガバナンス層としてMAIOSを使用しています。",
+      "MAIOSはm-pathyとは独立して存在します。",
+      "本ページは、MAIOSをアーキテクチャ上の制御システムとして説明しています。"
     ],
-    eyebrow: "システム明確化レイヤー"
-
+    eyebrow: "システムの明確化"
   },
 
   problem_statement: {
-    title: "あなたのAIは既に判断している",
-    subtitle: "しかし説明できない。",
-    explainer: "これは個別問題ではなく、内部構造欠如の兆候です。",
+    title: "あなたのAIはすでに意思決定を行っています",
+    subtitle: "しかし、その生成過程に関する技術的証拠を提示できない場合があります。",
+    explainer: "これは実行レベルでのガバナンス機構の欠如を示しています。",
     body: [
-      "AI出力は採用、法務、戦略、リスクに日々影響します。",
-      "多くの組織は条件、規則、責任を説明できません。",
-      "モデルの問題ではありません。",
-      "ツールの問題でもありません。",
-      "内部基盤の問題です。"
+      "AIの出力は採用、法的判断、戦略策定、リスク配分に影響を与えています。",
+      "多くの組織は、どのシステム状態で出力が生成されたのか、どの実行制約が適用されたのか、どこに責任が割り当てられていたのかを文書化できていません。",
+      "これは単なるモデルの問題ではありません。",
+      "単なるツールの問題でもありません。",
+      "これはガバナンスアーキテクチャの問題です。"
     ]
   },
 
   problems: {
-    title: "MAIOS が解決する課題",
+    title: "MAIOSが対応する課題",
     items: [
-      { title: "重要時にAI出力を説明できない", accordion: "explanation" },
-      { title: "ガバナンスは文書のみで実行されない", accordion: "explanation" },
-      { title: "責任構造が不明確", accordion: "explanation" },
-      { title: "可視性なくAI挙動が漂流", accordion: "explanation" },
-      { title: "専門推論とシステム挙動が混在", accordion: "explanation" },
-      { title: "テレメトリが制御ではなく記録", accordion: "explanation" }
+      { title: "出力生成条件に関する技術的証拠の欠如", accordion: "explanation" },
+      { title: "実行時に適用されないガバナンスポリシー", accordion: "explanation" },
+      { title: "システム実行内での責任境界の不明確さ", accordion: "explanation" },
+      { title: "実行状態の記録なしに変化するモデル挙動", accordion: "explanation" },
+      { title: "専門ロジックとシステム制御ロジックの混在", accordion: "explanation" },
+      { title: "強制力のないログ記録", accordion: "explanation" }
     ]
   },
 
   what_it_is: {
-    title: "MAIOS とは",
+    title: "MAIOSとは何か",
     body: [
-      "MAIOS は出力前にAI推論を制約する内部OSです。",
-      "開始条件、モード、専門家アクセス、ガバナンス起動、出力可否を統制します。",
-      "MAIOS はAIを置き換えません。",
-      "MAIOS はAIを統治します。"
+      "MAIOSは、出力公開前に実行時の許容性ルールを適用する決定論的ガバナンス層です。",
+      "MAIOSは、実行制約、テレメトリ契約、ガバナンストリガー、責任分離を構造化された実行環境内で定義します。",
+      "MAIOSは基盤となるAIモデルを置き換えるものではありません。",
+      "MAIOSはAIシステムが出力を生成する方法を制約します。"
     ],
-    accordion: "内部動作"
+    accordion: "MAIOSの内部動作"
   },
 
   what_it_is_not: {
-    title: "MAIOS が行わないこと",
+    title: "MAIOSが行わないこと",
     body: [
-      "MAIOS はデータを保存しません。",
-      "MAIOS はテレメトリを永続化しません。",
-      "MAIOS はインフラを管理しません。",
-      "MAIOS は準拠を認証しません。",
-      "MAIOS は許容出力のみを強制します。",
-      "準拠はあなたのシステムで行われます。"
+      "MAIOSは運用データを保存しません。",
+      "MAIOSは会話内容を保持しません。",
+      "MAIOSは技術インフラを管理しません。",
+      "MAIOSは規制上の認証を提供しません。",
+      "MAIOSは実行時の許容性制約を適用します。",
+      "規制適合性の判断は導入組織の責任です。"
     ],
-    explainer: "これらの除外は意図的で、MAIOS の責任境界を定義します。"
+    explainer: "これらの境界は、MAIOSの責任範囲を定義します。"
   },
 
   audience: {
-    title: "MAIOS の対象",
+    title: "MAIOSの対象",
     body: [
-      "MAIOS は規制下・高リスクのAI環境向けです。",
-      "権利・安全・法的地位に影響する出力を含みます。"
+      "MAIOSは、規制監督下または高リスク分類に該当するAIシステムを導入する組織向けに設計されています。",
+      "特に、AI出力が権利、安全、アクセス、法的地位に影響を与える環境を対象とします。"
     ],
     sectors: [
       "医療・ヘルスケア",
-      "政府・公共部門",
-      "法務・司法",
-      "金融・保険",
-      "重要インフラ・セキュリティ",
-      "大規模企業"
+      "公共部門および政府機関",
+      "法務・司法分野",
+      "金融サービスおよび保険",
+      "重要インフラ",
+      "大規模企業環境"
     ],
     footer: [
-      "MAIOS は準拠を認証しません。",
-      "MAIOS は準拠運用を可能にします。"
+      "MAIOSは適合性を認証しません。",
+      "MAIOSは適合導入を支援するアーキテクチャ上の制御機構を提供します。"
     ],
     accordion: "分野別詳細"
   },
 
   offering: {
-    title: "MAIOS の提供内容",
+    title: "MAIOSの提供内容",
     core: {
       title: "MAIOS Core",
       body: [
-        "MAIOS Core は汎用の内部コア層です。",
-        "決定論的空間、必須テレメトリ、出力遮断、明確な開始・終了、漂流可視化、責任分離を提供します。",
-        "事前定義エージェントは含みません。",
-        "事前定義専門家は含みません。",
-        "ガバナンスモデルは含みません。",
-        "中小組織に十分です。"
+        "MAIOS Coreはガバナンス実行層を構成します。",
+        "決定論的実行制約、必須テレメトリ契約、出力公開前のブロック機構、実行状態の明示、責任分離を提供します。",
+        "MAIOS Coreには事前定義されたエージェントは含まれません。",
+        "MAIOS Coreには事前定義された専門家は含まれません。",
+        "MAIOS Coreには事前定義されたガバナンスモデルは含まれません。",
+        "MAIOS Coreはアプリケーション内容ではなく実行構造を定義します。"
       ]
     },
     inventory: {
       title: "MAIOS Inventory Mapping",
       body: [
-        "既存システムに MAIOS を適応します。",
-        "エージェント・専門家・システムを宣言し、テレメトリとガバナンスに結合します。",
-        "MAIOS Core が必要です。",
-        "在庫を強制しません。",
-        "既存要素を参照します。"
+        "Inventory Mappingは既存のエージェント、システム、分野をMAIOSテレメトリ契約に結び付けます。",
+        "実行コンポーネントを明確なガバナンスおよび責任構造に対応付けます。",
+        "MAIOS Inventory MappingにはMAIOS Coreが必要です。",
+        "MAIOSは運用再定義を強制しません。",
+        "MAIOSは既存システムを定義されたガバナンス境界内に制約します。"
       ]
     },
     accordion: "実装詳細"
   },
 
   proof: {
-    title: "m-pathy による証明",
+    title: "m-pathyによる実証",
     body: [
-      "m-pathy は MAIOS 上に構築された統治AIワークスペースです。",
-      "本番で運用・検証可能であることを示します。",
-      "MAIOS は m-pathy なしでも動作します。"
+      "m-pathyはMAIOSの運用実装です。",
+      "定義されたガバナンス制約下での観測可能な実行挙動を示します。",
+      "MAIOSはm-pathyとは独立して運用可能です。"
     ],
-    disclaimer: "証明は観測可能な運用と検証可能な挙動を指し、認証ではありません。",
-    accordion: "アーカイブ、truth hash、封印、連鎖"
+    disclaimer: "「実証」という表現は観測可能なガバナンス機構を指し、認証や規制承認を意味するものではありません。",
+    accordion: "アーカイブ、整合性ハッシュ、封印、チェーン構造"
   },
 
   consulting: {
-    title: "導入・ガバナンス支援",
+    title: "導入およびガバナンス支援",
     body: [
-      "規制下または大規模組織向け。",
-      "統合、inventory mapping、監査設計、暗号封印、ガバナンス、規制対応を支援します。",
-      "オンボーディングではありません。",
-      "内部基盤作業です。"
+      "規制監督下または複雑なシステム環境で運用する組織向けです。",
+      "ガバナンス層の統合、テレメトリ設計、システム構造マッピング、監査準備を支援します。",
+      "単なる製品導入ではありません。",
+      "これはアーキテクチャレベルでのガバナンス統合です。"
     ],
     accordion: "支援範囲"
   },
 
   contact: {
     title: "メッセージ送信",
-    eyebrow: "統制システム入口",
+    eyebrow: "制御されたシステムエントリー",
     body: [
-      "システムについて集中的に対話を始めます。"
+      "AIシステムのガバナンスアーキテクチャについて構造的な対話を開始してください。"
     ],
     toggle: {
       open: "フォームを開く",
@@ -2115,212 +1881,212 @@ ja: {
     fields: [
       "メッセージ種別",
       "メッセージ",
-      "メール",
-      "会社（任意）",
-      "役割（任意）"
+      "メールアドレス",
+      "会社名（任意）",
+      "役職（任意）"
     ],
     messageTypes: {
-      consulting_inquiry: "コンサル依頼",
+      consulting_inquiry: "コンサルティング問い合わせ",
       governance_assessment: "ガバナンス評価",
       system_integration: "システム統合",
       audit_preparation: "監査準備",
-      technical_question: "技術質問",
-      support_or_other: "サポート他"
+      technical_question: "技術的質問",
+      support_or_other: "サポートまたはその他"
     },
     actions: {
       submit: "送信"
     },
     feedback: {
-      success: "送信しました。",
-      error: "送信失敗。",
-      captcha_missing: "Captcha 設定不足。"
+      success: "メッセージが正常に送信されました。",
+      error: "送信に失敗しました。再度お試しください。",
+      captcha_missing: "Captcha設定がありません。"
     },
     placeholders: {
-      message: "要件を記述",
-      email: "you@example.jp",
-      company: "会社",
-      role: "役割"
+      message: "システムまたはガバナンスに関する内容を記載してください",
+      email: "you@example.com",
+      company: "会社名",
+      role: "あなたの役職"
     },
     validation: {
-      required: "必須項目です。",
-      email_invalid: "無効なメールです。"
+      required: "この項目は必須です。",
+      email_invalid: "有効なメールアドレスを入力してください。"
     },
     footer: [
-      "メッセージはメール送信され内部保存されます。",
-      "自動返信なし。",
-      "マーケ連絡なし。"
+      "メッセージは電子メールで送信され、当社の運用環境で処理されます。",
+      "自動意思決定は行いません。",
+      "マーケティング目的の追跡は行いません。"
     ]
   },
 
   closing: {
     body: [
-      "m-pathy は可能性を示す。",
-      "MAIOS はどこでも実現する。"
+      "m-pathyはガバナンス管理されたAI実行を実務で示しています。",
+      "MAIOSは規制環境におけるAI導入のためのアーキテクチャ基盤を提供します。"
     ]
   }
-},
+}
+,
 
 ko: {
   hero: {
     title: "MAIOS",
-    subtitle: "모듈형 AI 운영체제",
-    intro: "거버넌스 기반 AI 시스템을 위한 내부 인프라"
+    subtitle: "Modular Artificial Intelligence Operating System",
+    intro: "규제 감독 환경을 위한 결정론적 AI 거버넌스 계층"
   },
 
   section_labels: {
     clarification: "시스템 명확화",
     runtime: "실행 현실",
-    failure_patterns: "구조적 실패",
+    failure_patterns: "구조적 문제",
     definition: "시스템 정의",
-    exclusions: "명시적 제외",
-    environments: "의도된 환경",
-    domains: "대표 도메인",
-    delivery: "전달 구조",
-    core: "코어 레이어",
-    adaptation: "시스템 적응",
-    proof: "운영 증명",
-    intervention: "구조 개입"
+    exclusions: "명시적 경계",
+    environments: "적용 환경",
+    domains: "주요 분야",
+    delivery: "제공 구조",
+    core: "코어 계층",
+    adaptation: "시스템 적용",
+    proof: "운영 검증",
+    intervention: "구조적 도입"
   },
 
   clarification: {
     title: "중요한 명확화",
     body: [
       "m-pathy는 MAIOS가 아닙니다.",
-      "m-pathy는 전문 AI 워크스페이스입니다.",
-      "MAIOS는 AI가 어떻게 추론할 수 있는지 규정하는 내부 시스템입니다.",
+      "m-pathy는 전문 AI 워크스페이스 구현입니다.",
+      "MAIOS는 AI 시스템이 어떤 조건에서 출력을 생성할 수 있는지를 제한하는 결정론적 거버넌스 계층입니다.",
       "m-pathy.ai에서 보이는 것은 클라이언트 구현입니다.",
-      "여기서 읽는 것은 기반 시스템입니다.",
-      "m-pathy는 MAIOS를 사용합니다.",
+      "이 페이지는 그 기반이 되는 거버넌스 아키텍처를 설명합니다.",
+      "m-pathy는 거버넌스 계층으로 MAIOS를 사용합니다.",
       "MAIOS는 m-pathy와 독립적으로 존재합니다.",
-      "이 페이지는 MAIOS에 관한 내용입니다."
+      "이 페이지는 MAIOS를 아키텍처적 통제 시스템으로 설명합니다."
     ],
-    eyebrow: "시스템 명확화 레이어"
-
+    eyebrow: "시스템 명확화"
   },
 
   problem_statement: {
-    title: "당신의 AI는 이미 결정합니다",
-    subtitle: "하지만 그 근거를 설명할 수 없습니다.",
-    explainer: "이는 개별 문제가 아니라 내부 구조 부재의 증상입니다.",
+    title: "귀하의 AI는 이미 의사결정을 하고 있습니다",
+    subtitle: "그러나 그 생성 과정을 기술적으로 입증하지 못할 수 있습니다.",
+    explainer: "이는 실행 단계에서의 거버넌스 메커니즘 부재를 의미합니다.",
     body: [
-      "AI 출력은 매일 채용, 법무, 전략, 위험에 영향을 줍니다.",
-      "대부분의 조직은 시스템 조건, 적용 규칙, 책임을 설명하지 못합니다.",
-      "모델 문제가 아닙니다.",
-      "도구 문제가 아닙니다.",
-      "인프라 문제입니다."
+      "AI 출력은 채용, 법적 판단, 전략 수립, 위험 배분에 영향을 미칩니다.",
+      "많은 조직이 출력이 생성된 시스템 상태, 적용된 실행 제약, 책임이 어디에 있었는지를 문서화하지 못합니다.",
+      "이는 단순한 모델 문제만은 아닙니다.",
+      "도구의 문제만도 아닙니다.",
+      "이는 거버넌스 아키텍처의 문제입니다."
     ]
   },
 
   problems: {
-    title: "MAIOS가 해결하는 문제",
+    title: "MAIOS가 대응하는 문제",
     items: [
-      { title: "중요할 때 AI 출력을 설명할 수 없음", accordion: "explanation" },
-      { title: "거버넌스는 문서에만 있고 실행되지 않음", accordion: "explanation" },
-      { title: "시스템 내부 책임이 구조적으로 불명확", accordion: "explanation" },
-      { title: "가시성 없이 AI 동작이 드리프트", accordion: "explanation" },
-      { title: "전문가 추론과 시스템 동작이 혼재", accordion: "explanation" },
-      { title: "텔레메트리는 로그일 뿐 제어가 아님", accordion: "explanation" }
+      { title: "출력 생성 조건에 대한 기술적 추적성 부족", accordion: "explanation" },
+      { title: "실행 단계에서 적용되지 않는 거버넌스 정책", accordion: "explanation" },
+      { title: "시스템 실행 내 책임 경계의 불명확성", accordion: "explanation" },
+      { title: "실행 상태 기록 없이 발생하는 모델 동작 변화", accordion: "explanation" },
+      { title: "도메인 로직과 시스템 통제 로직의 혼합", accordion: "explanation" },
+      { title: "강제 메커니즘 없는 단순 로그 기록", accordion: "explanation" }
     ]
   },
 
   what_it_is: {
-    title: "MAIOS란",
+    title: "MAIOS란 무엇인가",
     body: [
-      "MAIOS는 출력 이전에 AI 추론 방식을 강제하는 내부 OS입니다.",
-      "시작 조건, 모드, 전문가 접근, 거버넌스 호출, 출력 허용을 통제합니다.",
-      "MAIOS는 AI를 대체하지 않습니다.",
-      "MAIOS는 AI를 통제합니다."
+      "MAIOS는 출력 공개 이전에 실행 단계에서 허용성 규칙을 적용하는 결정론적 거버넌스 계층입니다.",
+      "MAIOS는 실행 제약, 텔레메트리 계약, 거버넌스 트리거, 책임 분리를 구조화된 실행 환경에서 정의합니다.",
+      "MAIOS는 기본 AI 모델을 대체하지 않습니다.",
+      "MAIOS는 AI 시스템이 출력을 생성하는 방식을 제한합니다."
     ],
-    accordion: "내부 동작"
+    accordion: "MAIOS 내부 작동 방식"
   },
 
   what_it_is_not: {
     title: "MAIOS가 하지 않는 것",
     body: [
-      "MAIOS는 데이터를 저장하지 않습니다.",
-      "MAIOS는 텔레메트리를 보존하지 않습니다.",
-      "MAIOS는 인프라를 관리하지 않습니다.",
-      "MAIOS는 준수를 인증하지 않습니다.",
-      "MAIOS는 허용된 출력만 강제합니다.",
-      "준수는 귀하의 시스템에서 이루어집니다."
+      "MAIOS는 운영 데이터를 저장하지 않습니다.",
+      "MAIOS는 대화 내용을 보관하지 않습니다.",
+      "MAIOS는 기술 인프라를 관리하지 않습니다.",
+      "MAIOS는 규제 인증을 제공하지 않습니다.",
+      "MAIOS는 실행 단계의 허용성 제약을 적용합니다.",
+      "규제 적합성 판단은 전적으로 도입 조직의 책임입니다."
     ],
-    explainer: "이 제외는 의도적이며 MAIOS의 책임 경계를 정의합니다."
+    explainer: "이러한 경계는 MAIOS의 책임 범위를 정의합니다."
   },
 
   audience: {
-    title: "MAIOS 대상",
+    title: "MAIOS의 대상",
     body: [
-      "MAIOS는 규제 및 고위험 AI 환경을 위한 시스템입니다.",
-      "AI 출력이 권리, 안전, 법적 지위에 영향을 미치는 경우를 포함합니다."
+      "MAIOS는 규제 감독 하에 있거나 고위험 범주에 속하는 AI 시스템을 운영하는 조직을 위해 설계되었습니다.",
+      "특히 AI 출력이 권리, 안전, 접근성, 법적 지위에 영향을 미칠 수 있는 환경을 대상으로 합니다."
     ],
     sectors: [
-      "의료·헬스케어",
-      "정부·공공 부문",
-      "법률·사법",
-      "금융·보험",
-      "중요 인프라·보안",
-      "대규모 기업"
+      "의료 및 헬스케어",
+      "공공 부문 및 정부 기관",
+      "법률 및 사법 시스템",
+      "금융 서비스 및 보험",
+      "핵심 인프라",
+      "대규모 기업 환경"
     ],
     footer: [
-      "MAIOS는 준수를 인증하지 않습니다.",
-      "MAIOS는 준수 운영을 가능하게 합니다."
+      "MAIOS는 적합성을 인증하지 않습니다.",
+      "MAIOS는 적합한 구현을 지원할 수 있는 아키텍처적 통제 메커니즘을 제공합니다."
     ],
-    accordion: "산업별 상세"
+    accordion: "분야별 세부 내용"
   },
 
   offering: {
-    title: "MAIOS 제공",
+    title: "MAIOS 제공 구조",
     core: {
       title: "MAIOS Core",
       body: [
-        "MAIOS Core는 범용 내부 코어 레이어입니다.",
-        "결정적 시스템 공간, 필수 텔레메트리, 출력 차단, 명확한 시작·종료, 드리프트 가시성, 책임 분리를 제공합니다.",
-        "사전 정의 에이전트는 포함하지 않습니다.",
-        "사전 정의 전문가는 포함하지 않습니다.",
-        "거버넌스 모델은 포함하지 않습니다.",
-        "중소 조직에 충분합니다."
+        "MAIOS Core는 거버넌스 실행 계층을 구성합니다.",
+        "결정론적 실행 제약, 필수 텔레메트리 계약, 출력 공개 전 차단 메커니즘, 실행 상태 노출, 명확한 책임 분리를 제공합니다.",
+        "MAIOS Core에는 사전 정의된 에이전트가 없습니다.",
+        "MAIOS Core에는 사전 정의된 도메인 전문가가 없습니다.",
+        "MAIOS Core에는 사전 정의된 거버넌스 모델이 없습니다.",
+        "MAIOS Core는 응용 콘텐츠가 아니라 실행 구조를 정의합니다."
       ]
     },
     inventory: {
       title: "MAIOS Inventory Mapping",
       body: [
-        "기존 시스템에 MAIOS를 적용합니다.",
-        "에이전트·전문가·시스템을 선언하고 텔레메트리와 거버넌스를 연결합니다.",
-        "MAIOS Core가 필요합니다.",
-        "인벤토리를 강제하지 않습니다.",
-        "기존 요소를 참조합니다."
+        "Inventory Mapping은 기존 에이전트, 시스템, 도메인을 MAIOS 텔레메트리 계약에 연결합니다.",
+        "실행 구성 요소를 명확한 거버넌스 및 책임 구조에 매핑합니다.",
+        "MAIOS Inventory Mapping은 MAIOS Core를 필요로 합니다.",
+        "MAIOS는 운영 재정의를 강제하지 않습니다.",
+        "MAIOS는 기존 시스템을 정의된 거버넌스 경계 내에서 제한합니다."
       ]
     },
-    accordion: "구현 세부"
+    accordion: "구현 세부 사항"
   },
 
   proof: {
-    title: "m-pathy로 증명",
+    title: "m-pathy를 통한 시연",
     body: [
-      "m-pathy는 MAIOS 위에 구축된 거버넌스 AI 워크스페이스입니다.",
-      "운영 및 검증 가능한 거버넌스 AI 인프라를 보여줍니다.",
-      "MAIOS는 m-pathy 없이도 작동합니다."
+      "m-pathy는 MAIOS의 운영 구현입니다.",
+      "정의된 거버넌스 제약 하에서 관찰 가능한 실행 동작을 보여줍니다.",
+      "MAIOS는 m-pathy와 독립적으로 운영될 수 있습니다."
     ],
-    disclaimer: "여기서 증명은 관측 가능한 운영과 검증 가능한 시스템 동작을 의미하며 인증은 아닙니다.",
-    accordion: "아카이브, truth hash, 봉인, 체인"
+    disclaimer: "여기서 사용된 ‘시연’이라는 표현은 관찰 가능한 거버넌스 메커니즘을 의미하며, 인증이나 규제 승인으로 해석되어서는 안 됩니다.",
+    accordion: "아카이브, 무결성 해시, 암호 봉인, 체인 구조"
   },
 
   consulting: {
-    title: "구현·거버넌스 컨설팅",
+    title: "도입 및 거버넌스 자문",
     body: [
-      "규제 대상 또는 대규모 조직을 위해.",
-      "통합, inventory mapping, 감사 설계, 암호 봉인, 거버넌스, 규제 대비를 지원합니다.",
-      "온보딩이 아닙니다.",
-      "내부 인프라 작업입니다."
+      "규제 감독 하에 있거나 복잡한 시스템 환경을 운영하는 조직을 위한 서비스입니다.",
+      "거버넌스 계층 통합, 텔레메트리 설계, 시스템 구조 매핑, 감사 준비를 지원합니다.",
+      "이는 단순한 제품 온보딩이 아닙니다.",
+      "아키텍처 수준의 거버넌스 통합입니다."
     ],
-    accordion: "컨설팅 범위"
+    accordion: "자문 범위"
   },
 
   contact: {
     title: "메시지 보내기",
     eyebrow: "통제된 시스템 진입",
     body: [
-      "시스템에 대한 집중 대화를 시작하세요."
+      "귀하의 AI 거버넌스 아키텍처에 대해 구조화된 논의를 시작하십시오."
     ],
     toggle: {
       open: "양식 열기",
@@ -2329,67 +2095,68 @@ ko: {
     fields: [
       "메시지 유형",
       "메시지",
-      "이메일",
-      "회사(선택)",
-      "역할(선택)"
+      "이메일 주소",
+      "회사 (선택)",
+      "직무 (선택)"
     ],
     messageTypes: {
       consulting_inquiry: "컨설팅 문의",
       governance_assessment: "거버넌스 평가",
       system_integration: "시스템 통합",
       audit_preparation: "감사 준비",
-      technical_question: "기술 질문",
+      technical_question: "기술 문의",
       support_or_other: "지원 또는 기타"
     },
     actions: {
-      submit: "전송"
+      submit: "메시지 전송"
     },
     feedback: {
-      success: "메시지가 전송되었습니다.",
-      error: "전송 실패.",
-      captcha_missing: "Captcha 설정 누락."
+      success: "메시지가 성공적으로 전송되었습니다.",
+      error: "전송에 실패했습니다. 다시 시도하십시오.",
+      captcha_missing: "Captcha 설정이 누락되었습니다."
     },
     placeholders: {
-      message: "요청 설명",
-      email: "you@example.kr",
-      company: "회사",
-      role: "역할"
+      message: "시스템 또는 거버넌스 관련 내용을 설명해 주세요",
+      email: "you@example.com",
+      company: "회사명",
+      role: "직무"
     },
     validation: {
-      required: "필수 항목.",
-      email_invalid: "유효하지 않은 이메일."
+      required: "이 필드는 필수입니다.",
+      email_invalid: "유효한 이메일 주소를 입력하십시오."
     },
     footer: [
-      "메시지는 이메일로 전송되며 내부에 저장됩니다.",
-      "자동 응답 없음.",
-      "마케팅 연락 없음."
+      "메시지는 이메일을 통해 전송되며 당사의 운영 환경에서 처리됩니다.",
+      "자동화된 의사결정은 이루어지지 않습니다.",
+      "마케팅 후속 연락은 하지 않습니다."
     ]
   },
 
   closing: {
     body: [
-      "m-pathy는 가능성을 보여줍니다.",
-      "MAIOS는 어디서나 가능하게 합니다."
+      "m-pathy는 거버넌스 기반 AI 실행을 실제로 보여줍니다.",
+      "MAIOS는 규제 환경에서 AI 도입을 위한 아키텍처 기반을 제공합니다."
     ]
   }
-},
+}
+,
 
 ar: {
   hero: {
     title: "MAIOS",
-    subtitle: "نظام تشغيل معياري للذكاء الاصطناعي",
-    intro: "بنية داخلية لأنظمة ذكاء اصطناعي خاضعة للحوكمة"
+    subtitle: "Modular Artificial Intelligence Operating System",
+    intro: "طبقة حوكمة حتمية لأنظمة الذكاء الاصطناعي في البيئات الخاضعة للرقابة التنظيمية"
   },
 
   section_labels: {
     clarification: "توضيح النظام",
-    runtime: "واقع التشغيل",
-    failure_patterns: "إخفاقات هيكلية",
+    runtime: "واقع التنفيذ",
+    failure_patterns: "أنماط الفشل الهيكلية",
     definition: "تعريف النظام",
-    exclusions: "استبعادات صريحة",
-    environments: "بيئات مقصودة",
-    domains: "مجالات نموذجية",
-    delivery: "هيكل التسليم",
+    exclusions: "حدود صريحة",
+    environments: "بيئات التشغيل المستهدفة",
+    domains: "المجالات النموذجية",
+    delivery: "هيكل التقديم",
     core: "الطبقة الأساسية",
     adaptation: "تكييف النظام",
     proof: "إثبات تشغيلي",
@@ -2400,86 +2167,85 @@ ar: {
     title: "توضيح مهم",
     body: [
       "m-pathy ليس MAIOS.",
-      "m-pathy مساحة عمل احترافية للذكاء الاصطناعي.",
-      "MAIOS هو النظام الداخلي الذي يحدد كيف يمكن للذكاء الاصطناعي التفكير.",
-      "ما تراه على m-pathy.ai هو تنفيذ عميل.",
-      "ما تقرؤه هنا هو النظام الأساسي.",
-      "m-pathy يستخدم MAIOS.",
-      "MAIOS موجود بشكل مستقل عن m-pathy.",
-      "هذه الصفحة عن MAIOS."
+      "m-pathy هو مساحة عمل احترافية قائمة على الذكاء الاصطناعي.",
+      "MAIOS هو طبقة حوكمة حتمية تحدد الشروط التي يُسمح بموجبها لأنظمة الذكاء الاصطناعي بإنتاج المخرجات.",
+      "ما تراه على m-pathy.ai هو تنفيذ على مستوى العميل.",
+      "هذه الصفحة تصف البنية الحوكمية الكامنة وراء النظام.",
+      "يستخدم m-pathy MAIOS كطبقة حوكمة.",
+      "يوجد MAIOS بشكل مستقل عن m-pathy.",
+      "هذه الصفحة تصف MAIOS كنظام تحكم معماري."
     ],
-    eyebrow: "طبقة توضيح النظام"
-
+    eyebrow: "توضيح النظام"
   },
 
   problem_statement: {
-    title: "الذكاء الاصطناعي لديك يتخذ قرارات بالفعل",
-    subtitle: "لكن لا يمكنك الدفاع عنها.",
-    explainer: "هذه ليست حالات منفصلة، بل أعراض لغياب البنية الداخلية.",
+    title: "نظام الذكاء الاصطناعي لديك يتخذ قرارات بالفعل",
+    subtitle: "ولكن قد لا تتمكن من تقديم أدلة تقنية حول كيفية توليدها.",
+    explainer: "يشير ذلك إلى غياب آليات الحوكمة على مستوى التنفيذ.",
     body: [
-      "مخرجات الذكاء الاصطناعي تؤثر يوميًا على التوظيف والقانون والاستراتيجية والمخاطر.",
-      "معظم المؤسسات لا تستطيع شرح شروط النظام أو القواعد المطبقة أو المسؤوليات.",
-      "هذه ليست مشكلة نموذج.",
-      "هذه ليست مشكلة أدوات.",
-      "هذه مشكلة بنية تحتية."
+      "تؤثر مخرجات الذكاء الاصطناعي على التوظيف، والتقييمات القانونية، والاستراتيجية، وتوزيع المخاطر.",
+      "لا تستطيع العديد من المؤسسات توثيق حالة النظام التي تم فيها إنشاء المخرج، أو القيود التنفيذية المطبقة، أو موضع المسؤولية.",
+      "هذه ليست مجرد مشكلة نموذج.",
+      "وليست مجرد مشكلة أدوات.",
+      "إنها مشكلة في بنية الحوكمة."
     ]
   },
 
   problems: {
-    title: "المشكلات التي يحلها MAIOS",
+    title: "المشكلات التي يعالجها MAIOS",
     items: [
-      { title: "لا يمكن تفسير مخرجات الذكاء الاصطناعي عند الأهمية", accordion: "explanation" },
-      { title: "الحوكمة موجودة على الورق فقط", accordion: "explanation" },
-      { title: "المسؤولية الداخلية غير واضحة هيكليًا", accordion: "explanation" },
-      { title: "سلوك الذكاء الاصطناعي ينحرف دون رؤية", accordion: "explanation" },
-      { title: "اختلاط تفكير الخبراء بسلوك النظام", accordion: "explanation" },
-      { title: "القياس عن بُعد تسجيل لا تحكم", accordion: "explanation" }
+      { title: "غياب القابلية للتتبع التقني لشروط توليد المخرجات", accordion: "explanation" },
+      { title: "سياسات حوكمة دون تطبيق أثناء التنفيذ", accordion: "explanation" },
+      { title: "عدم وضوح حدود المسؤولية داخل التنفيذ النظامي", accordion: "explanation" },
+      { title: "تغير سلوك النموذج دون توثيق حالة التنفيذ", accordion: "explanation" },
+      { title: "خلط منطق المجال مع منطق التحكم النظامي", accordion: "explanation" },
+      { title: "تسجيل دون آليات تحكم قابلة للتنفيذ", accordion: "explanation" }
     ]
   },
 
   what_it_is: {
     title: "ما هو MAIOS",
     body: [
-      "MAIOS نظام تشغيل داخلي يفرض كيفية تفكير الذكاء الاصطناعي قبل أي مخرجات.",
-      "MAIOS يحكم شروط البدء، الأوضاع، وصول الخبراء، تفعيل الحوكمة، وقبول المخرجات.",
-      "MAIOS لا يستبدل الذكاء الاصطناعي لديك.",
-      "MAIOS يحكم الذكاء الاصطناعي لديك."
+      "MAIOS هو طبقة حوكمة حتمية تفرض قواعد القبول أثناء التنفيذ قبل إصدار أي مخرج.",
+      "يحدد MAIOS قيود التنفيذ، وعقود القياس عن بعد، ومحفزات الحوكمة، وفصل المسؤوليات داخل بيئة تنفيذ منظمة.",
+      "لا يستبدل MAIOS نماذج الذكاء الاصطناعي الأساسية.",
+      "يقيد MAIOS الطريقة التي يُسمح لأنظمة الذكاء الاصطناعي بإنتاج المخرجات بها."
     ],
-    accordion: "العمل الداخلي"
+    accordion: "آلية عمل MAIOS داخلياً"
   },
 
   what_it_is_not: {
-    title: "ما لا يفعله MAIOS",
+    title: "ما لا يقوم به MAIOS",
     body: [
-      "MAIOS لا يخزن البيانات.",
-      "MAIOS لا يحتفظ بالقياس عن بُعد.",
-      "MAIOS لا يدير البنية التحتية.",
-      "MAIOS لا يصادق على الامتثال.",
-      "MAIOS يفرض المخرجات المسموح بها فقط.",
-      "الامتثال يتم داخل نظامك."
+      "لا يقوم MAIOS بتخزين بيانات تشغيلية.",
+      "لا يحتفظ MAIOS بمحتوى المحادثات.",
+      "لا يدير MAIOS البنية التحتية التقنية.",
+      "لا يشكل MAIOS اعتماداً تنظيمياً.",
+      "يفرض MAIOS قيود القبول أثناء التنفيذ.",
+      "تظل مسؤولية تقييم الامتثال بالكامل على عاتق الجهة المنفذة."
     ],
-    explainer: "هذه الاستبعادات مقصودة وتحدد حدود مسؤولية MAIOS."
+    explainer: "تحدد هذه الحدود نطاق مسؤولية MAIOS."
   },
 
   audience: {
     title: "لمن صُمم MAIOS",
     body: [
-      "MAIOS مخصص للبيئات المنظمة وعالية المخاطر في الذكاء الاصطناعي.",
-      "يشمل الحالات التي تؤثر فيها مخرجات الذكاء الاصطناعي على الحقوق أو السلامة أو الوضع القانوني."
+      "صُمم MAIOS للمؤسسات التي تشغل أنظمة ذكاء اصطناعي تحت رقابة تنظيمية أو ضمن تصنيف عالي المخاطر.",
+      "يشمل ذلك البيئات التي قد تؤثر فيها مخرجات الذكاء الاصطناعي على الحقوق أو السلامة أو الوصول أو الوضع القانوني."
     ],
     sectors: [
-      "القطاع الطبي والرعاية الصحية",
-      "الحكومة والقطاع العام",
-      "القانون والعدالة",
-      "المال والتأمين",
-      "البنية التحتية الحرجة والأمن",
-      "المؤسسات الكبيرة"
+      "الأنظمة الطبية والرعاية الصحية",
+      "القطاع العام والمؤسسات الحكومية",
+      "البيئات القانونية والقضائية",
+      "الخدمات المالية والتأمين",
+      "البنية التحتية الحيوية",
+      "المؤسسات واسعة النطاق"
     ],
     footer: [
-      "MAIOS لا يصادق على الامتثال.",
-      "MAIOS يمكّن التشغيل المتوافق."
+      "لا يصادق MAIOS على الامتثال.",
+      "يوفر MAIOS آليات تحكم معمارية يمكن أن تدعم تنفيذاً متوافقاً."
     ],
-    accordion: "تفصيل القطاعات"
+    accordion: "تفصيل خاص بالقطاعات"
   },
 
   offering: {
@@ -2487,54 +2253,54 @@ ar: {
     core: {
       title: "MAIOS Core",
       body: [
-        "MAIOS Core هو الطبقة الداخلية العامة.",
-        "يوفر مساحة نظام حتمية، قياسًا إلزاميًا، حجب المخرجات، منطق بدء وإنهاء واضح، رؤية الانحراف، وفصل المسؤوليات.",
-        "MAIOS Core لا يتضمن وكلاء محددين مسبقًا.",
-        "MAIOS Core لا يتضمن خبراء محددين مسبقًا.",
-        "MAIOS Core لا يتضمن نماذج حوكمة.",
-        "MAIOS Core كافٍ للمؤسسات الصغيرة والمتوسطة."
+        "يشكل MAIOS Core طبقة تنفيذ الحوكمة.",
+        "يوفر قيود تنفيذ حتمية، وعقود قياس عن بعد إلزامية، وآليات حظر قبل إصدار المخرجات، وكشفاً صريحاً لحالة التنفيذ، وفصلاً واضحاً للمسؤوليات.",
+        "لا يحتوي MAIOS Core على وكلاء محددين مسبقاً.",
+        "لا يحتوي MAIOS Core على خبراء مجالات محددين مسبقاً.",
+        "لا يحتوي MAIOS Core على نماذج حوكمة محددة مسبقاً.",
+        "يحدد MAIOS Core بنية التنفيذ وليس المحتوى التطبيقي."
       ]
     },
     inventory: {
       title: "MAIOS Inventory Mapping",
       body: [
-        "Inventory Mapping يكيّف MAIOS مع الأنظمة القائمة.",
-        "يعلن الوكلاء والخبراء والأنظمة ويربطهم بالقياس والحوكمة.",
-        "يتطلب MAIOS Core.",
-        "MAIOS لا يفرض جردًا.",
-        "MAIOS يشير إلى القائم."
+        "يربط Inventory Mapping الوكلاء والأنظمة والمجالات القائمة بعقد القياس عن بعد الخاص بـ MAIOS.",
+        "يقوم بمواءمة مكونات التنفيذ مع هياكل حوكمة ومسؤولية واضحة.",
+        "يتطلب MAIOS Inventory Mapping وجود MAIOS Core.",
+        "لا يفرض MAIOS إعادة تعريف تشغيلية.",
+        "يقيد MAIOS الأنظمة القائمة ضمن حدود الحوكمة المحددة."
       ]
     },
     accordion: "تفاصيل التنفيذ"
   },
 
   proof: {
-    title: "m-pathy كإثبات",
+    title: "m-pathy كنموذج تشغيلي",
     body: [
-      "m-pathy مساحة عمل ذكاء اصطناعي خاضعة للحوكمة مبنية على MAIOS.",
-      "تُظهر أن بنية الذكاء الاصطناعي الخاضعة للحوكمة يمكن تشغيلها والتحقق منها في الإنتاج.",
-      "MAIOS يعمل بدون m-pathy."
+      "يعد m-pathy تنفيذاً تشغيلياً لـ MAIOS.",
+      "يعرض سلوك تنفيذ قابل للملاحظة ضمن قيود حوكمة محددة.",
+      "يمكن تشغيل MAIOS بشكل مستقل عن m-pathy."
     ],
-    disclaimer: "الإثبات هنا يعني تشغيلًا قابلًا للملاحظة وسلوكًا يمكن التحقق منه، وليس تصديقًا.",
-    accordion: "الأرشفة، truth hash، الختم، السلسلة"
+    disclaimer: "يشير مصطلح نموذج تشغيلي إلى آليات حوكمة قابلة للملاحظة ولا يمثل اعتماداً أو موافقة تنظيمية.",
+    accordion: "الأرشفة، تجزئة السلامة، الختم، السلسلة"
   },
 
   consulting: {
-    title: "استشارات التنفيذ والحوكمة",
+    title: "الاستشارات في التنفيذ والحوكمة",
     body: [
-      "للمؤسسات المنظمة أو واسعة النطاق.",
-      "ندعم التكامل، inventory mapping، تصميم التدقيق، الختم التشفيري، الحوكمة، والاستعداد التنظيمي.",
-      "هذا ليس إعدادًا أوليًا.",
-      "هذا عمل بنية داخلية."
+      "للمؤسسات العاملة تحت رقابة تنظيمية أو ضمن بيئات نظامية معقدة.",
+      "نقدم دعماً في دمج طبقة الحوكمة، وتصميم القياس عن بعد، ورسم خرائط البنية النظامية، والتحضير للتدقيق.",
+      "هذا ليس مجرد إطلاق منتج.",
+      "بل هو دمج حوكمة على مستوى معماري."
     ],
     accordion: "نطاق الاستشارات"
   },
 
   contact: {
     title: "إرسال رسالة",
-    eyebrow: "دخول نظام مضبوط",
+    eyebrow: "دخول نظامي مضبوط",
     body: [
-      "ابدأ حوارًا مركزًا حول نظامك."
+      "ابدأ نقاشاً منظماً حول بنية حوكمة نظام الذكاء الاصطناعي لديك."
     ],
     toggle: {
       open: "فتح النموذج",
@@ -2551,204 +2317,204 @@ ar: {
       consulting_inquiry: "طلب استشارة",
       governance_assessment: "تقييم الحوكمة",
       system_integration: "تكامل النظام",
-      audit_preparation: "تحضير التدقيق",
+      audit_preparation: "التحضير للتدقيق",
       technical_question: "سؤال تقني",
       support_or_other: "دعم أو غير ذلك"
     },
     actions: {
-      submit: "إرسال"
+      submit: "إرسال الرسالة"
     },
     feedback: {
-      success: "تم إرسال الرسالة.",
-      error: "فشل الإرسال.",
-      captcha_missing: "إعداد captcha مفقود."
+      success: "تم إرسال الرسالة بنجاح.",
+      error: "فشل الإرسال. يرجى المحاولة مرة أخرى.",
+      captcha_missing: "إعداد Captcha غير متوفر."
     },
     placeholders: {
-      message: "صف طلبك",
-      email: "you@example.ar",
-      company: "الشركة",
+      message: "يرجى وصف نظامك أو استفسارك المتعلق بالحوكمة",
+      email: "you@example.com",
+      company: "اسم الشركة",
       role: "الدور"
     },
     validation: {
-      required: "حقل مطلوب.",
-      email_invalid: "بريد إلكتروني غير صالح."
+      required: "هذا الحقل مطلوب.",
+      email_invalid: "يرجى إدخال بريد إلكتروني صالح."
     },
     footer: [
-      "تُرسل الرسائل عبر البريد الإلكتروني وتُخزن داخليًا.",
-      "لا ردود تلقائية.",
-      "لا متابعات تسويقية."
+      "يتم إرسال الرسائل عبر البريد الإلكتروني ومعالجتها ضمن بيئتنا التشغيلية.",
+      "لا يتم اتخاذ قرارات آلية.",
+      "لا توجد متابعات تسويقية."
     ]
   },
 
   closing: {
     body: [
-      "m-pathy يبيّن ما هو ممكن.",
-      "MAIOS يجعله ممكنًا في كل مكان."
+      "يعرض m-pathy تنفيذ ذكاء اصطناعي خاضع للحوكمة عملياً.",
+      "يوفر MAIOS إطاراً معمارياً لنشر الذكاء الاصطناعي في البيئات المنظمة."
     ]
   }
-},
+}
+,
 
 hi: {
   hero: {
     title: "MAIOS",
-    subtitle: "मॉड्यूलर एआई ऑपरेटिंग सिस्टम",
-    intro: "शासित एआई प्रणालियों के लिए आंतरिक अवसंरचना"
+    subtitle: "Modular Artificial Intelligence Operating System",
+    intro: "नियामक निगरानी वाले परिवेशों के लिए निर्धारक एआई गवर्नेंस स्तर"
   },
 
   section_labels: {
-    clarification: "सिस्टम स्पष्टता",
-    runtime: "रनटाइम वास्तविकता",
+    clarification: "सिस्टम स्पष्टिकरण",
+    runtime: "निष्पादन वास्तविकता",
     failure_patterns: "संरचनात्मक विफलताएँ",
     definition: "सिस्टम परिभाषा",
-    exclusions: "स्पष्ट अपवाद",
-    environments: "निर्धारित वातावरण",
-    domains: "सामान्य डोमेन",
-    delivery: "डिलीवरी संरचना",
-    core: "कोर परत",
+    exclusions: "स्पष्ट सीमाएँ",
+    environments: "लक्षित परिचालन परिवेश",
+    domains: "सामान्य क्षेत्र",
+    delivery: "प्रस्तुति संरचना",
+    core: "कोर स्तर",
     adaptation: "सिस्टम अनुकूलन",
-    proof: "संचालन प्रमाण",
-    intervention: "संरचनात्मक हस्तक्षेप"
+    proof: "परिचालन प्रमाण",
+    intervention: "संरचनात्मक कार्यान्वयन"
   },
 
   clarification: {
-    title: "महत्वपूर्ण स्पष्टता",
+    title: "महत्वपूर्ण स्पष्टिकरण",
     body: [
       "m-pathy, MAIOS नहीं है।",
-      "m-pathy एक पेशेवर एआई वर्कस्पेस है।",
-      "MAIOS वह आंतरिक सिस्टम है जो तय करता है कि एआई कैसे तर्क करेगा।",
-      "m-pathy.ai पर जो दिखता है, वह क्लाइंट इम्प्लीमेंटेशन है।",
-      "यहाँ जो पढ़ते हैं, वह मूल सिस्टम है।",
-      "m-pathy, MAIOS का उपयोग करता है।",
-      "MAIOS, m-pathy से स्वतंत्र है।",
-      "यह पेज MAIOS के बारे में है।"
+      "m-pathy एक पेशेवर एआई कार्यक्षेत्र है।",
+      "MAIOS एक निर्धारक गवर्नेंस स्तर है जो यह सीमित करता है कि एआई सिस्टम किन परिस्थितियों में आउटपुट उत्पन्न कर सकते हैं।",
+      "m-pathy.ai पर जो दिखता है वह क्लाइंट कार्यान्वयन है।",
+      "यह पृष्ठ उस आधारभूत गवर्नेंस आर्किटेक्चर का वर्णन करता है।",
+      "m-pathy, MAIOS को गवर्नेंस स्तर के रूप में उपयोग करता है।",
+      "MAIOS, m-pathy से स्वतंत्र रूप से अस्तित्व में है।",
+      "यह पृष्ठ MAIOS को एक आर्किटेक्चरल नियंत्रण प्रणाली के रूप में प्रस्तुत करता है।"
     ],
-    eyebrow: "सिस्टम स्पष्टता परत"
-
+    eyebrow: "सिस्टम स्पष्टिकरण"
   },
 
   problem_statement: {
-    title: "आपकी एआई पहले से निर्णय लेती है",
-    subtitle: "लेकिन आप उन्हें सही ठहरा नहीं सकते।",
-    explainer: "ये अलग-थलग समस्याएँ नहीं हैं, बल्कि आंतरिक संरचना की कमी के लक्षण हैं।",
+    title: "आपका एआई पहले से निर्णय ले रहा है",
+    subtitle: "परंतु आप उसके निर्माण की तकनीकी पुष्टि प्रदान नहीं कर सकते हो सकते हैं।",
+    explainer: "यह निष्पादन स्तर पर गवर्नेंस तंत्र की अनुपस्थिति को दर्शाता है।",
     body: [
-      "एआई आउटपुट रोज़ भर्ती, क़ानून, रणनीति और जोखिम को प्रभावित करते हैं।",
-      "अधिकांश संगठन सिस्टम स्थितियाँ, लागू नियम या ज़िम्मेदारी नहीं समझा पाते।",
-      "यह मॉडल की समस्या नहीं है।",
-      "यह टूल की समस्या नहीं है।",
-      "यह अवसंरचना की समस्या है।"
+      "एआई आउटपुट भर्ती, कानूनी मूल्यांकन, रणनीति और जोखिम वितरण को प्रभावित करते हैं।",
+      "कई संगठन यह दस्तावेज़ नहीं कर पाते कि आउटपुट किस सिस्टम अवस्था में उत्पन्न हुआ, कौन से निष्पादन प्रतिबंध लागू थे, या जिम्मेदारी कहाँ निर्धारित थी।",
+      "यह केवल मॉडल की समस्या नहीं है।",
+      "यह केवल उपकरणों की समस्या भी नहीं है।",
+      "यह गवर्नेंस आर्किटेक्चर की समस्या है।"
     ]
   },
 
   problems: {
-    title: "MAIOS जिन समस्याओं को हल करता है",
+    title: "MAIOS जिन समस्याओं को संबोधित करता है",
     items: [
-      { title: "ज़रूरत पड़ने पर एआई आउटपुट समझाए नहीं जा सकते", accordion: "explanation" },
-      { title: "गवर्नेंस काग़ज़ों में है, संचालन में नहीं", accordion: "explanation" },
-      { title: "सिस्टम के भीतर ज़िम्मेदारी संरचनात्मक रूप से अस्पष्ट", accordion: "explanation" },
-      { title: "बिना दृश्यता एआई व्यवहार में ड्रिफ्ट", accordion: "explanation" },
-      { title: "विशेषज्ञ तर्क और सिस्टम व्यवहार मिश्रित", accordion: "explanation" },
-      { title: "टेलीमेट्री लॉगिंग है, नियंत्रण नहीं", accordion: "explanation" }
+      { title: "आउटपुट निर्माण की परिस्थितियों की तकनीकी ट्रेसबिलिटी का अभाव", accordion: "explanation" },
+      { title: "ऐसी गवर्नेंस नीतियाँ जो निष्पादन के दौरान लागू नहीं होतीं", accordion: "explanation" },
+      { title: "सिस्टम निष्पादन में जिम्मेदारी की अस्पष्ट सीमाएँ", accordion: "explanation" },
+      { title: "निष्पादन अवस्था दर्ज किए बिना मॉडल व्यवहार में परिवर्तन", accordion: "explanation" },
+      { title: "डोमेन लॉजिक और सिस्टम नियंत्रण लॉजिक का मिश्रण", accordion: "explanation" },
+      { title: "लॉगिंग बिना लागू करने योग्य नियंत्रण तंत्र के", accordion: "explanation" }
     ]
   },
 
   what_it_is: {
     title: "MAIOS क्या है",
     body: [
-      "MAIOS एक आंतरिक ऑपरेटिंग सिस्टम है जो आउटपुट से पहले एआई तर्क को नियंत्रित करता है।",
-      "यह शुरुआत की शर्तें, मोड, विशेषज्ञ पहुँच, गवर्नेंस ट्रिगर और आउटपुट स्वीकार्यता तय करता है।",
-      "MAIOS आपकी एआई को बदलता नहीं है।",
-      "MAIOS आपकी एआई को शासित करता है।"
+      "MAIOS एक निर्धारक गवर्नेंस स्तर है जो आउटपुट जारी करने से पहले निष्पादन के दौरान स्वीकार्यता नियम लागू करता है।",
+      "MAIOS निष्पादन प्रतिबंध, टेलीमेट्री अनुबंध, गवर्नेंस ट्रिगर और जिम्मेदारी विभाजन को संरचित निष्पादन परिवेश में परिभाषित करता है।",
+      "MAIOS आधारभूत एआई मॉडलों को प्रतिस्थापित नहीं करता।",
+      "MAIOS यह सीमित करता है कि एआई सिस्टम आउटपुट कैसे उत्पन्न कर सकते हैं।"
     ],
-    accordion: "आंतरिक कार्यप्रणाली"
+    accordion: "MAIOS आंतरिक रूप से कैसे कार्य करता है"
   },
 
   what_it_is_not: {
     title: "MAIOS क्या नहीं करता",
     body: [
-      "MAIOS डेटा संग्रहित नहीं करता।",
-      "MAIOS टेलीमेट्री को स्थायी नहीं करता।",
-      "MAIOS अवसंरचना प्रबंधित नहीं करता।",
-      "MAIOS अनुपालन प्रमाणित नहीं करता।",
-      "MAIOS केवल अनुमत आउटपुट लागू करता है।",
-      "अनुपालन आपके सिस्टम में होता है।"
+      "MAIOS परिचालन डेटा संग्रहीत नहीं करता।",
+      "MAIOS वार्तालाप सामग्री संरक्षित नहीं करता।",
+      "MAIOS तकनीकी अवसंरचना का प्रबंधन नहीं करता।",
+      "MAIOS कोई नियामक प्रमाणन प्रदान नहीं करता।",
+      "MAIOS निष्पादन स्तर पर स्वीकार्यता प्रतिबंध लागू करता है।",
+      "अनुपालन का निर्धारण पूर्णतः कार्यान्वयन करने वाली संस्था की जिम्मेदारी है।"
     ],
-    explainer: "ये अपवाद जानबूझकर हैं और MAIOS की ज़िम्मेदारी सीमा तय करते हैं।"
+    explainer: "ये सीमाएँ MAIOS की जिम्मेदारी की परिधि को परिभाषित करती हैं।"
   },
 
   audience: {
     title: "MAIOS किसके लिए है",
     body: [
-      "MAIOS उच्च-जोखिम और विनियमित एआई वातावरण के लिए बनाया गया है।",
-      "जहाँ एआई आउटपुट अधिकार, सुरक्षा या कानूनी स्थिति को प्रभावित करते हैं।"
+      "MAIOS उन संगठनों के लिए डिज़ाइन किया गया है जो नियामक निगरानी या उच्च-जोखिम वर्गीकरण के अंतर्गत एआई सिस्टम संचालित करते हैं।",
+      "विशेष रूप से उन परिवेशों में जहाँ एआई आउटपुट अधिकारों, सुरक्षा, पहुँच या कानूनी स्थिति को प्रभावित कर सकते हैं।"
     ],
     sectors: [
-      "चिकित्सा और स्वास्थ्य",
-      "सरकार और सार्वजनिक क्षेत्र",
-      "क़ानून और न्याय",
-      "वित्त और बीमा",
-      "महत्वपूर्ण अवसंरचना और सुरक्षा",
-      "बड़े संगठन"
+      "चिकित्सा और स्वास्थ्य प्रणालियाँ",
+      "सार्वजनिक क्षेत्र और सरकारी संस्थान",
+      "कानूनी और न्यायिक परिवेश",
+      "वित्तीय सेवाएँ और बीमा",
+      "महत्वपूर्ण अवसंरचना",
+      "बड़े उद्यम परिवेश"
     ],
     footer: [
-      "MAIOS अनुपालन प्रमाणित नहीं करता।",
-      "MAIOS अनुपालन संचालन संभव बनाता है।"
+      "MAIOS अनुपालन का प्रमाणन नहीं करता।",
+      "MAIOS आर्किटेक्चरल नियंत्रण तंत्र प्रदान करता है जो अनुपालन कार्यान्वयन का समर्थन कर सकते हैं।"
     ],
-    accordion: "क्षेत्र विवरण"
+    accordion: "क्षेत्र-विशिष्ट विवरण"
   },
 
   offering: {
-    title: "MAIOS की पेशकश",
+    title: "MAIOS प्रस्ताव",
     core: {
       title: "MAIOS Core",
       body: [
-        "MAIOS Core सार्वभौमिक आंतरिक कोर परत है।",
-        "यह निर्धारक सिस्टम स्पेस, अनिवार्य टेलीमेट्री, आउटपुट ब्लॉकिंग, स्पष्ट शुरुआत-समापन, ड्रिफ्ट दृश्यता और ज़िम्मेदारी विभाजन देता है।",
-        "MAIOS Core में पूर्वनिर्धारित एजेंट नहीं हैं।",
-        "MAIOS Core में पूर्वनिर्धारित विशेषज्ञ नहीं हैं।",
-        "MAIOS Core में गवर्नेंस मॉडल नहीं हैं।",
-        "MAIOS Core छोटे और मध्यम संगठनों के लिए पर्याप्त है।"
+        "MAIOS Core गवर्नेंस निष्पादन स्तर बनाता है।",
+        "यह निर्धारक निष्पादन प्रतिबंध, अनिवार्य टेलीमेट्री अनुबंध, आउटपुट जारी करने से पहले अवरोध तंत्र, निष्पादन अवस्था की स्पष्टता और जिम्मेदारी विभाजन प्रदान करता है।",
+        "MAIOS Core में पूर्व-परिभाषित एजेंट शामिल नहीं हैं।",
+        "MAIOS Core में पूर्व-परिभाषित डोमेन विशेषज्ञ शामिल नहीं हैं।",
+        "MAIOS Core में पूर्व-परिभाषित गवर्नेंस मॉडल शामिल नहीं हैं।",
+        "MAIOS Core सामग्री नहीं बल्कि निष्पादन संरचना परिभाषित करता है।"
       ]
     },
     inventory: {
       title: "MAIOS Inventory Mapping",
       body: [
-        "Inventory Mapping मौजूदा सिस्टमों में MAIOS को अनुकूल करता है।",
-        "यह एजेंट, विशेषज्ञ और सिस्टम घोषित कर टेलीमेट्री व गवर्नेंस से जोड़ता है।",
-        "Inventory Mapping के लिए MAIOS Core आवश्यक है।",
-        "MAIOS इन्वेंटरी थोपता नहीं है।",
-        "MAIOS मौजूदा संरचना को संदर्भित करता है।"
+        "Inventory Mapping मौजूदा एजेंटों, सिस्टमों और डोमेनों को MAIOS टेलीमेट्री अनुबंध से जोड़ता है।",
+        "यह निष्पादन घटकों को स्पष्ट गवर्नेंस और जिम्मेदारी संरचनाओं से मैप करता है।",
+        "MAIOS Inventory Mapping के लिए MAIOS Core आवश्यक है।",
+        "MAIOS परिचालन पुनर्परिभाषा लागू नहीं करता।",
+        "MAIOS मौजूदा सिस्टमों को परिभाषित गवर्नेंस सीमाओं के भीतर सीमित करता है।"
       ]
     },
     accordion: "कार्यान्वयन विवरण"
   },
 
   proof: {
-    title: "m-pathy प्रमाण के रूप में",
+    title: "m-pathy एक परिचालन उदाहरण के रूप में",
     body: [
-      "m-pathy, MAIOS पर आधारित एक शासित एआई वर्कस्पेस है।",
-      "यह दिखाता है कि शासित एआई अवसंरचना उत्पादन में चल और सत्यापित हो सकती है।",
-      "MAIOS, m-pathy के बिना भी काम करता है।"
+      "m-pathy, MAIOS का एक परिचालन कार्यान्वयन है।",
+      "यह परिभाषित गवर्नेंस प्रतिबंधों के अंतर्गत अवलोकनीय निष्पादन व्यवहार प्रदर्शित करता है।",
+      "MAIOS, m-pathy से स्वतंत्र रूप से संचालित हो सकता है।"
     ],
-    disclaimer: "यहाँ प्रमाण का अर्थ दृश्य संचालन और सत्यापन योग्य सिस्टम व्यवहार है, प्रमाणन नहीं।",
-    accordion: "आर्काइव, truth hash, सीलिंग, चेनिंग"
+    disclaimer: "यहाँ 'उदाहरण' से आशय अवलोकनीय गवर्नेंस तंत्र से है। यह किसी प्रमाणन या नियामक स्वीकृति का संकेत नहीं देता।",
+    accordion: "आर्काइव, अखंडता हैश, सीलिंग, चेनिंग"
   },
 
   consulting: {
     title: "कार्यान्वयन और गवर्नेंस परामर्श",
     body: [
-      "विनियमित या बड़े संगठनों के लिए।",
-      "हम एकीकरण, inventory mapping, ऑडिट डिज़ाइन, क्रिप्टोग्राफ़िक सीलिंग, गवर्नेंस और नियामक तैयारी में सहायता करते हैं।",
-      "यह ऑनबोर्डिंग नहीं है।",
-      "यह आंतरिक अवसंरचना कार्य है।"
+      "नियामक निगरानी या जटिल सिस्टम परिवेश में संचालित संगठनों के लिए।",
+      "हम गवर्नेंस स्तर एकीकरण, टेलीमेट्री डिज़ाइन, सिस्टम मैपिंग और ऑडिट तैयारी में सहयोग करते हैं।",
+      "यह केवल उत्पाद ऑनबोर्डिंग नहीं है।",
+      "यह आर्किटेक्चर स्तर पर गवर्नेंस एकीकरण है।"
     ],
-    accordion: "परामर्श दायरा"
+    accordion: "परामर्श का दायरा"
   },
 
   contact: {
     title: "संदेश भेजें",
     eyebrow: "नियंत्रित सिस्टम प्रवेश",
     body: [
-      "अपने सिस्टम पर केंद्रित संवाद शुरू करें।"
+      "अपने एआई सिस्टम की गवर्नेंस संरचना पर एक संरचित चर्चा प्रारंभ करें।"
     ],
     toggle: {
       open: "फ़ॉर्म खोलें",
@@ -2757,7 +2523,7 @@ hi: {
     fields: [
       "संदेश प्रकार",
       "संदेश",
-      "ईमेल",
+      "ईमेल पता",
       "कंपनी (वैकल्पिक)",
       "भूमिका (वैकल्पिक)"
     ],
@@ -2770,35 +2536,36 @@ hi: {
       support_or_other: "सहायता या अन्य"
     },
     actions: {
-      submit: "भेजें"
+      submit: "संदेश भेजें"
     },
     feedback: {
-      success: "संदेश भेज दिया गया।",
-      error: "भेजना विफल।",
-      captcha_missing: "Captcha कॉन्फ़िगरेशन अनुपलब्ध।"
+      success: "संदेश सफलतापूर्वक भेजा गया।",
+      error: "भेजना विफल रहा। कृपया पुनः प्रयास करें।",
+      captcha_missing: "Captcha कॉन्फ़िगरेशन अनुपलब्ध है।"
     },
     placeholders: {
-      message: "अपना अनुरोध लिखें",
-      email: "you@example.in",
-      company: "कंपनी",
-      role: "भूमिका"
+      message: "कृपया अपने सिस्टम या गवर्नेंस प्रश्न का विवरण दें",
+      email: "you@example.com",
+      company: "कंपनी का नाम",
+      role: "आपकी भूमिका"
     },
     validation: {
-      required: "आवश्यक फ़ील्ड।",
-      email_invalid: "अमान्य ईमेल।"
+      required: "यह फ़ील्ड अनिवार्य है।",
+      email_invalid: "कृपया वैध ईमेल पता दर्ज करें।"
     },
     footer: [
-      "संदेश ईमेल द्वारा भेजे जाते हैं और आंतरिक रूप से संग्रहीत होते हैं।",
-      "कोई स्वचालित उत्तर नहीं।",
-      "कोई मार्केटिंग फॉलो-अप नहीं।"
+      "संदेश ईमेल के माध्यम से भेजे जाते हैं और हमारे परिचालन परिवेश में संसाधित होते हैं।",
+      "कोई स्वचालित निर्णय नहीं लिया जाता।",
+      "कोई विपणन अनुवर्ती संपर्क नहीं।"
     ]
   },
 
   closing: {
     body: [
-      "m-pathy दिखाता है कि क्या संभव है।",
-      "MAIOS इसे हर जगह संभव बनाता है।"
+      "m-pathy व्यवहार में गवर्नेंस-नियंत्रित एआई निष्पादन प्रदर्शित करता है।",
+      "MAIOS विनियमित परिवेशों में एआई कार्यान्वयन के लिए एक आर्किटेक्चरल आधार प्रदान करता है।"
     ]
   }
 }
+
 };
