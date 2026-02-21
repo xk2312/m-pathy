@@ -153,7 +153,7 @@
 import { generatePublicKey2048, computeTruthHash } from "@/lib/triketonVerify";
 import { syncArchiveFromTriketon } from "@/lib/archiveProjection";
 import { initArchiveVerifyListener } from "@/lib/archiveVerifyListener";
-import { writeLS, clearLS } from '@/lib/storage';
+import { writeLS, clearLS, readLS } from '@/lib/storage';
 import type { MpathyNamespace } from '@/lib/storage';
 
 // lib/chatStorage.ts
@@ -508,7 +508,7 @@ export async function appendTriketonLedgerEntry(
 // derive stable chain_id (one per chat, reset on clearChat/hardClearChat)
 const CHAT_CHAIN_KEY = "mpathy:chat:chain_id";
 
-let chainId = ls.getItem(CHAT_CHAIN_KEY);
+let chainId = readLS<string>(CHAT_CHAIN_KEY as MpathyNamespace);
 
 if (!chainId) {
 chainId = `chat_${crypto.randomUUID()}`;
