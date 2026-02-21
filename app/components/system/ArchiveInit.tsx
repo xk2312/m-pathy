@@ -57,7 +57,6 @@ export default function ArchiveInit() {
     }
 
     const onUpdated = () => {
-      if (!hasTriketon()) return
       runProjections()
     }
 
@@ -67,6 +66,7 @@ export default function ArchiveInit() {
       stopped = true
       window.removeEventListener('mpathy:triketon:updated', onUpdated)
     }
+
 
   }, [])
 
