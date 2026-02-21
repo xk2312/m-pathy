@@ -56,30 +56,18 @@ export default function ArchiveInit() {
       window.setTimeout(tick, 50)
     }
 
-    const onAppend = () => {
-      runProjections()
-    }
-
-    const onReady = () => {
-      runProjections()
-    }
-
-    const onStorage = (e: StorageEvent) => {
-      if (e.key !== TRIKETON_KEY) return
+    const onUpdated = () => {
       if (!hasTriketon()) return
       runProjections()
     }
 
-    window.addEventListener('mpathy:triketon:append', onAppend)
-    window.addEventListener('mpathy:triketon:ready', onReady)
-    window.addEventListener('storage', onStorage)
+    window.addEventListener('mpathy:triketon:updated', onUpdated)
 
     return () => {
       stopped = true
-      window.removeEventListener('mpathy:triketon:append', onAppend)
-      window.removeEventListener('mpathy:triketon:ready', onReady)
-      window.removeEventListener('storage', onStorage)
+      window.removeEventListener('mpathy:triketon:updated', onUpdated)
     }
+
   }, [])
 
   return null
