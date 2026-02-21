@@ -58,6 +58,19 @@ export default function ArchiveInit() {
 
     const onUpdated = () => {
       runProjections()
+
+      let attempts = 0
+      const maxAttempts = 10
+
+      const tick = () => {
+        if (stopped) return
+        attempts += 1
+        runProjections()
+        if (attempts >= maxAttempts) return
+        window.setTimeout(tick, 100)
+      }
+
+      window.setTimeout(tick, 100)
     }
 
     window.addEventListener('mpathy:triketon:updated', onUpdated)
@@ -66,6 +79,7 @@ export default function ArchiveInit() {
       stopped = true
       window.removeEventListener('mpathy:triketon:updated', onUpdated)
     }
+
 
 
   }, [])
