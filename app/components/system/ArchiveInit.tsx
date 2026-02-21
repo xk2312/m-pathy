@@ -2,8 +2,9 @@
 
 import { useEffect, useRef } from 'react'
 import { syncArchiveFromTriketon } from '@/lib/archiveProjection'
-import { syncArchivePairsFromTriketon } from '@/lib/archivePairProjection'
+import { syncArchivePairsFromTriketon, ensureLiveArchivePairProjection } from '@/lib/archivePairProjection'
 import { restoreTriketonFromVault } from '@/lib/storage'
+
 
 
 export default function ArchiveInit() {
@@ -11,6 +12,7 @@ export default function ArchiveInit() {
 
   useEffect(() => {
     restoreTriketonFromVault()
+    ensureLiveArchivePairProjection()
 
     const TRIKETON_KEY = 'mpathy:triketon:v1'
     let stopped = false
