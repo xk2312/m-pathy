@@ -97,10 +97,11 @@ if (key === 'mpathy:triketon:v1') {
 }
 
 
-  if (key === 'mpathy:archive:pairs:v1') {
-    const isEmptyPairs = Array.isArray(value) && value.length === 0
-    if (isEmptyPairs) return
-  }
+// archive:pairs must always be written (even empty) 
+// to guarantee deterministic hydration
+if (key === 'mpathy:archive:pairs:v1') {
+  // no early return
+}
 
   // 2. Sofortiger LocalStorage-Commit
   try {
@@ -238,9 +239,10 @@ window.dispatchEvent(
   new CustomEvent('mpathy:triketon:ready')
 )
 
-    window.dispatchEvent(
-      new CustomEvent('mpathy:triketon:ready')
-    )
+window.dispatchEvent(
+  new CustomEvent('mpathy:triketon:updated')
+)
+
   } catch (e) {
     console.error('[Storage] Restore Triketon failed', e)
   }
