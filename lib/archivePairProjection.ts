@@ -388,9 +388,11 @@ function extractTopKeywordsFromText(input: string, limit = 7): string[] {
  * - Order strictly by timestamp
  */
 export function syncArchivePairsFromTriketon(): ArchivePair[] {
-  const anchors = readFullTriketonLedger()
+  console.log('[PAIR TRACE] syncArchivePairsFromTriketon() ENTER')
 
-  // group by chain_id
+  const anchors = readFullTriketonLedger()
+  console.log('[PAIR TRACE] anchors count:', anchors.length)
+
   const byChain = new Map<string, TriketonAnchor[]>()
 
   for (const a of anchors) {
@@ -399,12 +401,16 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
     byChain.get(a.chain_id)!.push(a)
   }
 
+  console.log('[PAIR TRACE] chain count:', byChain.size)
+
   const pairs: ArchivePair[] = []
 
   for (const [chain_id, messages] of byChain.entries()) {
     const ordered = messages
       .filter((m) => m.role === 'user' || m.role === 'assistant')
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+
+    console.log('[PAIR TRACE] chain', chain_id, 'filtered messages:', ordered.length)
 
     for (let i = 0; i < ordered.length - 1; i++) {
       const current = ordered[i]
@@ -436,20 +442,26 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
     }
   }
 
+  console.log('[PAIR TRACE] pairs built:', pairs.length)
+
   if (pairs.length === 0) {
+    console.warn('[PAIR TRACE] EARLY RETURN – no pairs built')
     return pairs
   }
 
+  console.log('[PAIR TRACE] writing pairs to LS')
   writeLS(PAIRS_KEY, pairs)
 
-  // 🔔 notify UI that archive pairs changed
   if (typeof window !== 'undefined') {
+    console.log('[PAIR TRACE] dispatch archive:updated')
     window.dispatchEvent(new CustomEvent('mpathy:archive:updated'))
   }
 
-  return pairs
+  console.log('[PAIR TRACE] DONE')
 
+  return pairs
 }
+
 
 
 /**
