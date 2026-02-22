@@ -147,7 +147,8 @@ function resolveStrategy(key: string): VaultStrategy {
 function shouldHydrateToLS(key: string): boolean {
   return (
     key === 'mpathy:triketon:device_public_key_2048' ||
-    key === 'mpathy:archive:chat_counter'
+    key === 'mpathy:archive:chat_counter' ||
+    key === 'mpathy:archive:chat_map'
   );
 }
 
@@ -181,15 +182,47 @@ function writeLsRaw(key: string, value: unknown): void {
   }
 }
 
+
+
 export class StorageVault {
   private db: IDBDatabase | null = null;
   private dbPromise: Promise<IDBDatabase>;
 
-  constructor() {
-    this.dbPromise = this.initDB();
-    this.initTriketonMirror();
-    this.initHydrationBridge();
-  }
+ constructor() {
+  this.dbPromise = this.initDB();
+  this.initTriketonMirror();
+  this.initArchiveMirror();
+  this.initHydrationBridge();
+
+}
+
+private initArchiveMirror(): void {
+  if (typeof window === 'undefined') return;
+
+  window.addEventListener('mpathy:archive:updated', async () => {
+    try {
+      const keys = [
+        'mpathy:archive:v1',
+        'mpathy:archive:pairs:v1',
+        'mpathy:archive:chat_map',
+        'mpathy:archive:chat_counter'
+      ];
+
+      for (const key of keys) {
+        const raw = window.localStorage.getItem(key);
+        if (!raw) continue;
+
+        const parsed = safeJsonParse(raw);
+        if (parsed === null) continue;
+
+        await this.put(key, parsed);
+      }
+
+    } catch (err) {
+      console.error('[VaultMirror] Archive mirror failed:', err);
+    }
+  });
+}
 
   private initTriketonMirror(): void {
     if (typeof window === 'undefined') return;
@@ -342,11 +375,21 @@ export class StorageVault {
   if (
     key === 'mpathy:archive:v1' ||
     key === 'mpathy:archive:pairs:v1' ||
-    key === 'mpathy:archive:chat_map' ||
     key === 'mpathy:triketon:v1'
   ) {
     const next = applyStrategy(strategy, existing, incoming);
     await this.putInternal(key, next);
+    return;
+  }
+
+  // 3b️⃣ chat_map → IDB merge, aber LS darf bei Missing aus IDB wiederhergestellt werden
+  if (key === 'mpathy:archive:chat_map') {
+    const next = applyStrategy(strategy, existing, incoming);
+    await this.putInternal(key, next);
+
+    if (isLsMissingOrEmpty(key)) {
+      writeLsRaw(key, next);
+    }
     return;
   }
 
