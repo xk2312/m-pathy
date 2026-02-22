@@ -296,7 +296,7 @@ export function initChatStorage(): void {
 
     // --- Triketon Ledger (Genesis) ---
     if (!ls.getItem(TRIKETON_STORAGE_KEY)) {
-      writeLS(TRIKETON_STORAGE_KEY as MpathyNamespace, JSON.stringify([]));
+      ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify([]));
     }
 
     // --- Archive Verify Listener (Phase 2: Verify = Seal + Report) ---
@@ -531,7 +531,7 @@ const next: TriketonLedgerEntryV1 = {
 const nextLedger = [...ledger, next];
 
 // 6️⃣ WRITE (once)
-writeLS(TRIKETON_STORAGE_KEY as MpathyNamespace, JSON.stringify(nextLedger));
+ls.setItem(TRIKETON_STORAGE_KEY, JSON.stringify(nextLedger));
 
 // 🔔 EMIT: Triketon ledger updated (Archive live projection trigger)
 if (typeof window !== "undefined") {
@@ -584,7 +584,7 @@ export async function getOrCreateDevicePublicKey2048(
 ): Promise<string> {
   try {
     if (typeof window === "undefined") return "unknown";
-        const ls = window.localStorage;
+    const ls = window.localStorage;
     const DEVICE_KEY_2048 = "mpathy:triketon:device_public_key_2048";
 
     const existing = ls.getItem(DEVICE_KEY_2048);
