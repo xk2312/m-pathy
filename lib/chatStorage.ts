@@ -584,13 +584,14 @@ export async function getOrCreateDevicePublicKey2048(
 ): Promise<string> {
   try {
     if (typeof window === "undefined") return "unknown";
+        const ls = window.localStorage;
     const DEVICE_KEY_2048 = "mpathy:triketon:device_public_key_2048";
 
-    const existing = readLS<string>(DEVICE_KEY_2048 as MpathyNamespace);
+    const existing = ls.getItem(DEVICE_KEY_2048);
     if (existing && existing.trim().length > 0) return existing;
 
     const newKey = await generatePublicKey2048(truthHashHex);
-    writeLS(DEVICE_KEY_2048 as MpathyNamespace, newKey);
+    ls.setItem(DEVICE_KEY_2048, newKey);
     console.debug("[Triketon] persistent 2048-bit key created:", newKey);
     return newKey;
   } catch (err) {
