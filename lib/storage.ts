@@ -88,13 +88,13 @@ export function writeLS<T>(key: MpathyNamespace, value: T): void {
   if (typeof window === 'undefined' || !hasLocalStorage()) return;
 
   // 1. Triketon-Schutz (Legacy & Vault)
-if (key === 'mpathy:triketon:v1') {
-  const existingLS = window.localStorage.getItem(key);
-  if (existingLS !== null) {
+// if (key === 'mpathy:triketon:v1') {
+  // const existingLS = window.localStorage.getItem(key);
+  //if (existingLS !== null) {
     // LS darf nicht überschrieben werden
-    return;
-  }
-}
+    //return;
+  //}
+//}
 
 
 // archive:pairs must always be written (even empty) 
