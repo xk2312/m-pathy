@@ -146,12 +146,8 @@ function resolveStrategy(key: string): VaultStrategy {
 
 function shouldHydrateToLS(key: string): boolean {
   return (
-    key === 'mpathy:triketon:v1' ||
     key === 'mpathy:triketon:device_public_key_2048' ||
-    key === 'mpathy:archive:chat_counter' ||
-    key === 'mpathy:archive:chat_map' ||
-    key === 'mpathy:archive:pairs:v1' ||
-    key === 'mpathy:archive:v1'
+    key === 'mpathy:archive:chat_counter'
   );
 }
 
@@ -318,24 +314,56 @@ export class StorageVault {
     });
   }
 
-  async put(key: string, value: unknown): Promise<void> {
-    const strategy = resolveStrategy(key);
+ async put(key: string, value: unknown): Promise<void> {
+  const strategy = resolveStrategy(key);
 
-    const incoming = deepClone(value);
-    const existing = await this.getInternal(key);
+  const incoming = deepClone(value);
+  const existing = await this.getInternal(key);
 
-    const next = applyStrategy(strategy, existing, incoming);
+  // 1️⃣ chain_id → LS gewinnt immer
+  if (key === 'mpathy:chat:chain_id') {
+    await this.putInternal(key, incoming);
+    return;
+  }
 
-    if (strategy === 'singleton' && (existing !== undefined && existing !== null)) {
+  // 2️⃣ Singleton (Public Key)
+  if (strategy === 'singleton') {
+    if (existing !== undefined && existing !== null) {
+      if (isLsMissingOrEmpty(key)) {
+        writeLsRaw(key, existing);
+      }
       return;
     }
+    await this.putInternal(key, incoming);
+    return;
+  }
 
+  // 3️⃣ Archive & Ledger → nur LS → IDB Merge (keine LS Hydration)
+  if (
+    key === 'mpathy:archive:v1' ||
+    key === 'mpathy:archive:pairs:v1' ||
+    key === 'mpathy:archive:chat_map' ||
+    key === 'mpathy:triketon:v1'
+  ) {
+    const next = applyStrategy(strategy, existing, incoming);
+    await this.putInternal(key, next);
+    return;
+  }
+
+  // 4️⃣ chat_counter → max + Hydration erlaubt
+  if (key === 'mpathy:archive:chat_counter') {
+    const next = applyStrategy(strategy, existing, incoming);
     await this.putInternal(key, next);
 
-    if (shouldHydrateToLS(key) && isLsMissingOrEmpty(key)) {
+    if (isLsMissingOrEmpty(key)) {
       writeLsRaw(key, next);
     }
+    return;
   }
+
+  // Fallback
+  await this.putInternal(key, incoming);
+}
 
   async get(key: string): Promise<unknown> {
     return this.getInternal(key);
