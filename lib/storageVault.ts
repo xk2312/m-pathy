@@ -15,6 +15,42 @@ export class StorageVault {
 
   constructor() {
     this.dbPromise = this.initDB();
+    this.initTriketonMirror();
+  }
+
+  /**
+   * Non-invasive Triketon Mirror (LS → Vault)
+   */
+  private initTriketonMirror(): void {
+    if (typeof window === 'undefined') return;
+
+    window.addEventListener('mpathy:triketon:updated', async () => {
+      try {
+        // Ledger spiegeln
+        const rawLedger = window.localStorage.getItem('mpathy:triketon:v1');
+        if (rawLedger) {
+          const parsedLedger = JSON.parse(rawLedger);
+          if (Array.isArray(parsedLedger)) {
+            await this.put('mpathy:triketon:v1', parsedLedger);
+          }
+        }
+
+        // Device Key spiegeln
+        const deviceKey = window.localStorage.getItem(
+          'mpathy:triketon:device_public_key_2048'
+        );
+
+        if (deviceKey && deviceKey.trim().length > 0) {
+          await this.put(
+            'mpathy:triketon:device_public_key_2048',
+            deviceKey
+          );
+        }
+
+      } catch (err) {
+        console.error('[VaultMirror] ❌ Triketon mirror failed:', err);
+      }
+    });
   }
 
   /**
