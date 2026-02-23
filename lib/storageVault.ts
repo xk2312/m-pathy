@@ -83,11 +83,12 @@ function mergeByKey(
   }
 
   for (const item of b) {
-    if (!isRecord(item)) continue;
-    const k = keyOf(item);
-    if (!k) continue;
-    if (!map.has(k)) map.set(k, item);
-  }
+  if (!isRecord(item)) continue;
+  const k = keyOf(item);
+  if (!k) continue;
+
+  map.set(k, item); // incoming replaces existing
+}
 
   return Array.from(map.values());
 }
