@@ -393,14 +393,23 @@ private initArchiveMirror(): void {
     return;
   }
 
-  // 4️⃣ chat_counter → max + Hydration erlaubt
+  // 4️⃣ chat_counter → IDB ist Master und inkrementiert deterministisch
   if (key === 'mpathy:archive:chat_counter') {
-    const next = applyStrategy(strategy, existing, incoming);
-    await this.putInternal(key, next);
+    const existingNumber = asNumber(existing);
+    const incomingNumber = asNumber(incoming);
 
-    if (isLsMissingOrEmpty(key)) {
-      writeLsRaw(key, next);
+    let next: number;
+
+    if (existingNumber !== null) {
+      next = existingNumber + 1;
+    } else if (incomingNumber !== null) {
+      next = incomingNumber;
+    } else {
+      next = 1;
     }
+
+    await this.putInternal(key, next);
+    writeLsRaw(key, next);
     return;
   }
 
