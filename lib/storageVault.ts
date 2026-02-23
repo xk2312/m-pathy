@@ -395,25 +395,15 @@ private initArchiveMirror(): void {
 
    // 4️⃣ chat_counter → inkrementiere nur wenn LS fehlt, sonst nur absichern (max)
   if (key === 'mpathy:archive:chat_counter') {
-    const existingNumber = asNumber(existing);
-    const incomingNumber = asNumber(incoming);
+    const map = await this.getInternal('mpathy:archive:chat_map');
+    let next = 0;
 
-    const lsMissing = isLsMissingOrEmpty(key);
-
-    let next: number;
-
-    if (lsMissing) {
-      if (existingNumber !== null) next = existingNumber + 1;
-      else if (incomingNumber !== null) next = incomingNumber;
-      else next = 1;
-
-      await this.putInternal(key, next);
-      writeLsRaw(key, next);
-      return;
+    if (map && typeof map === 'object' && !Array.isArray(map)) {
+      next = Object.keys(map as Record<string, unknown>).length;
     }
 
-    next = applyStrategy('max_number', existing, incoming) as number;
     await this.putInternal(key, next);
+    writeLsRaw(key, next);
     return;
   }
 
