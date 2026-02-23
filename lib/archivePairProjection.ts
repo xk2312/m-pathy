@@ -444,22 +444,21 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
 
   console.log('[PAIR TRACE] pairs built:', pairs.length)
 
-  if (pairs.length === 0) {
-    console.warn('[PAIR TRACE] EARLY RETURN – no pairs built')
-    return pairs
-  }
+console.log('[PAIR TRACE] writing pairs to LS')
+writeLS(PAIRS_KEY, pairs)
 
-  console.log('[PAIR TRACE] writing pairs to LS')
-  writeLS(PAIRS_KEY, pairs)
+if (typeof window !== 'undefined') {
+  console.log('[PAIR TRACE] dispatch archive:updated')
+  window.dispatchEvent(new CustomEvent('mpathy:archive:updated'))
+}
 
-  if (typeof window !== 'undefined') {
-    console.log('[PAIR TRACE] dispatch archive:updated')
-    window.dispatchEvent(new CustomEvent('mpathy:archive:updated'))
-  }
+if (pairs.length === 0) {
+  console.warn('[PAIR TRACE] no pairs built (empty projection written)')
+}
 
-  console.log('[PAIR TRACE] DONE')
+console.log('[PAIR TRACE] DONE')
 
-  return pairs
+return pairs
 }
 
 
