@@ -393,23 +393,27 @@ private initArchiveMirror(): void {
     return;
   }
 
-  // 4️⃣ chat_counter → IDB ist Master und inkrementiert deterministisch
+   // 4️⃣ chat_counter → inkrementiere nur wenn LS fehlt, sonst nur absichern (max)
   if (key === 'mpathy:archive:chat_counter') {
     const existingNumber = asNumber(existing);
     const incomingNumber = asNumber(incoming);
 
+    const lsMissing = isLsMissingOrEmpty(key);
+
     let next: number;
 
-    if (existingNumber !== null) {
-      next = existingNumber + 1;
-    } else if (incomingNumber !== null) {
-      next = incomingNumber;
-    } else {
-      next = 1;
+    if (lsMissing) {
+      if (existingNumber !== null) next = existingNumber + 1;
+      else if (incomingNumber !== null) next = incomingNumber;
+      else next = 1;
+
+      await this.putInternal(key, next);
+      writeLsRaw(key, next);
+      return;
     }
 
+    next = applyStrategy('max_number', existing, incoming) as number;
     await this.putInternal(key, next);
-    writeLsRaw(key, next);
     return;
   }
 
