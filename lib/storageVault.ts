@@ -50,15 +50,21 @@ function asNumber(v: unknown): number | null {
 function getIdLike(obj: AnyRecord): string | null {
   const id = obj['id'];
   if (typeof id === 'string' && id.trim().length > 0) return id;
+
+  const pairId = obj['pair_id'];
+  if (typeof pairId === 'string' && pairId.trim().length > 0) return pairId;
+
   return null;
 }
 
 function getChatIdLike(obj: AnyRecord): string | null {
   const chatId = obj['chat_id'];
+
   if (typeof chatId === 'string' && chatId.trim().length > 0) return chatId;
+  if (typeof chatId === 'number' && Number.isFinite(chatId)) return String(chatId);
+
   return null;
 }
-
 function mergeByKey(
   existing: unknown,
   incoming: unknown,
