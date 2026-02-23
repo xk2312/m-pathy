@@ -200,6 +200,8 @@ private initArchiveMirror(): void {
   if (typeof window === 'undefined') return;
 
   window.addEventListener('mpathy:archive:updated', async () => {
+      console.log('[VAULT TRACE] archive:updated received');
+
     try {
       const keys = [
         'mpathy:archive:v1',
@@ -209,14 +211,18 @@ private initArchiveMirror(): void {
       ];
 
       for (const key of keys) {
-        const raw = window.localStorage.getItem(key);
-        if (!raw) continue;
+  const raw = window.localStorage.getItem(key);
+  console.log('[VAULT TRACE] LS raw', key, raw);
 
-        const parsed = safeJsonParse(raw);
-        if (parsed === null) continue;
+  if (!raw) continue;
 
-        await this.put(key, parsed);
-      }
+  const parsed = safeJsonParse(raw);
+  console.log('[VAULT TRACE] LS parsed', key, parsed);
+
+  if (parsed === null) continue;
+
+  await this.put(key, parsed);
+}
 
     } catch (err) {
       console.error('[VaultMirror] Archive mirror failed:', err);
@@ -333,12 +339,14 @@ private initArchiveMirror(): void {
       const store = transaction.objectStore(STORE_NAME);
 
       const dataToSave = deepClone(value);
-      store.put(dataToSave, key);
+      console.log('[VAULT TRACE] putInternal writing', key, dataToSave);
 
-      transaction.oncomplete = () => {
-        console.debug(`[Vault] Stored: ${key}`);
-        resolve();
-      };
+store.put(dataToSave, key);
+
+transaction.oncomplete = () => {
+  console.debug(`[Vault] Stored: ${key}`);
+  resolve();
+};
 
       transaction.onerror = () => {
         console.error(`[Vault] Store failed: ${key}`, transaction.error);
@@ -347,11 +355,15 @@ private initArchiveMirror(): void {
     });
   }
 
- async put(key: string, value: unknown): Promise<void> {
+async put(key: string, value: unknown): Promise<void> {
+  console.log('[VAULT TRACE] put() called', key, value);
+
   const strategy = resolveStrategy(key);
 
   const incoming = deepClone(value);
   const existing = await this.getInternal(key);
+
+  console.log('[VAULT TRACE] existing from IDB', key, existing);
 
   // 1️⃣ chain_id → LS gewinnt immer
   if (key === 'mpathy:chat:chain_id') {
@@ -377,13 +389,15 @@ private initArchiveMirror(): void {
     key === 'mpathy:archive:pairs:v1' ||
     key === 'mpathy:triketon:v1'
   ) {
-    let next;
+   let next;
 
 if (existing === undefined || existing === null) {
   next = incoming;
 } else {
   next = applyStrategy(strategy, existing, incoming);
 }
+
+console.log('[VAULT TRACE] final next', key, next);
 
 await this.putInternal(key, next);
 return;
