@@ -155,7 +155,8 @@ function shouldHydrateToLS(key: string): boolean {
   return (
     key === 'mpathy:triketon:device_public_key_2048' ||
     key === 'mpathy:archive:chat_counter' ||
-    key === 'mpathy:archive:chat_map'
+    key === 'mpathy:archive:chat_map' ||
+    key === 'mpathy:triketon:v1'
   );
 }
 
