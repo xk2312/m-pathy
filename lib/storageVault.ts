@@ -182,45 +182,100 @@ function writeLsRaw(key: string, value: unknown): void {
   }
 }
 
+
+
 export class StorageVault {
   private db: IDBDatabase | null = null;
   private dbPromise: Promise<IDBDatabase>;
-  private hydratedOnce = false;
-  private hydrationPromise: Promise<void> | null = null;
 
-  constructor() {
-    this.dbPromise = this.initDB();
+ constructor() {
+  this.dbPromise = this.initDB();
+  this.initTriketonMirror();
+  this.initArchiveMirror();
+  this.initHydrationBridge();
+
+}
+
+private initArchiveMirror(): void {
+  if (typeof window === 'undefined') return;
+
+  window.addEventListener('mpathy:archive:updated', async () => {
+    try {
+      const keys = [
+        'mpathy:archive:v1',
+        'mpathy:archive:pairs:v1',
+        'mpathy:archive:chat_map',
+        'mpathy:archive:chat_counter'
+      ];
+
+      for (const key of keys) {
+        const raw = window.localStorage.getItem(key);
+        if (!raw) continue;
+
+        const parsed = safeJsonParse(raw);
+        if (parsed === null) continue;
+
+        await this.put(key, parsed);
+      }
+
+    } catch (err) {
+      console.error('[VaultMirror] Archive mirror failed:', err);
+    }
+  });
+}
+
+  private initTriketonMirror(): void {
+    if (typeof window === 'undefined') return;
+
+    window.addEventListener('mpathy:triketon:updated', async () => {
+      try {
+        const rawLedger = window.localStorage.getItem('mpathy:triketon:v1');
+        if (rawLedger) {
+          const parsedLedger = safeJsonParse(rawLedger);
+          if (Array.isArray(parsedLedger)) {
+            await this.put('mpathy:triketon:v1', parsedLedger);
+          }
+        }
+
+        const deviceKey = window.localStorage.getItem('mpathy:triketon:device_public_key_2048');
+        if (deviceKey && deviceKey.trim().length > 0) {
+          await this.put('mpathy:triketon:device_public_key_2048', deviceKey.trim());
+        }
+      } catch (err) {
+        console.error('[VaultMirror] Triketon mirror failed:', err);
+      }
+    });
   }
 
-  private async ensureHydratedOnce(): Promise<void> {
+  private initHydrationBridge(): void {
     if (typeof window === 'undefined') return;
-    if (this.hydratedOnce) return;
 
-    if (!this.hydrationPromise) {
-      this.hydrationPromise = (async () => {
-        try {
-          const keys = [
-            'mpathy:triketon:device_public_key_2048',
-            'mpathy:archive:chat_counter',
-            'mpathy:archive:chat_map',
-          ];
+    const hydrateOnce = async (): Promise<void> => {
+      try {
+        const keys = [
+          'mpathy:triketon:v1',
+          'mpathy:triketon:device_public_key_2048',
+          'mpathy:archive:chat_counter',
+          'mpathy:archive:chat_map',
+          'mpathy:archive:pairs:v1',
+          'mpathy:archive:v1',
+        ];
 
-          for (const key of keys) {
-            if (!shouldHydrateToLS(key)) continue;
-            if (!isLsMissingOrEmpty(key)) continue;
+        for (const key of keys) {
+          if (!shouldHydrateToLS(key)) continue;
+          if (!isLsMissingOrEmpty(key)) continue;
 
-            const fromVault = await this.get(key);
-            if (fromVault === undefined || fromVault === null) continue;
+          const fromVault = await this.get(key);
+          if (fromVault === undefined || fromVault === null) continue;
 
-            writeLsRaw(key, fromVault);
-          }
-        } finally {
-          this.hydratedOnce = true;
+          writeLsRaw(key, fromVault);
         }
-      })();
-    }
+      } catch (e) {
+        console.warn('[Vault] Hydration bridge failed', e);
+      }
+    };
 
-    await this.hydrationPromise;
+    void hydrateOnce();
   }
 
   private initDB(): Promise<IDBDatabase> {
@@ -292,91 +347,70 @@ export class StorageVault {
     });
   }
 
-  async put(key: string, value: unknown): Promise<void> {
-    if (typeof window === 'undefined') return;
+ async put(key: string, value: unknown): Promise<void> {
+  const strategy = resolveStrategy(key);
 
-    await this.ensureHydratedOnce();
+  const incoming = deepClone(value);
+  const existing = await this.getInternal(key);
 
-    const strategy = resolveStrategy(key);
-
-    const incoming = deepClone(value);
-    const existing = await this.getInternal(key);
-
-    if (key === 'mpathy:chat:chain_id') {
-      await this.putInternal(key, incoming);
-      return;
-    }
-
-    if (strategy === 'singleton') {
-      if (existing !== undefined && existing !== null) {
-        if (isLsMissingOrEmpty(key)) {
-          writeLsRaw(key, existing);
-        }
-        return;
-      }
-      await this.putInternal(key, incoming);
-      return;
-    }
-
-    if (
-      key === 'mpathy:archive:v1' ||
-      key === 'mpathy:archive:pairs:v1' ||
-      key === 'mpathy:triketon:v1'
-    ) {
-      const next = applyStrategy(strategy, existing, incoming);
-      await this.putInternal(key, next);
-      return;
-    }
-
-    if (key === 'mpathy:archive:chat_map') {
-      const next = applyStrategy(strategy, existing, incoming);
-      await this.putInternal(key, next);
-
-      if (isLsMissingOrEmpty(key)) {
-        writeLsRaw(key, next);
-      }
-      return;
-    }
-
-    if (key === 'mpathy:archive:chat_counter') {
-      const next = applyStrategy(strategy, existing, incoming);
-      await this.putInternal(key, next);
-
-      if (isLsMissingOrEmpty(key)) {
-        writeLsRaw(key, next);
-      }
-      return;
-    }
-
+  // 1️⃣ chain_id → LS gewinnt immer
+  if (key === 'mpathy:chat:chain_id') {
     await this.putInternal(key, incoming);
+    return;
   }
 
+  // 2️⃣ Singleton (Public Key)
+  if (strategy === 'singleton') {
+    if (existing !== undefined && existing !== null) {
+      if (isLsMissingOrEmpty(key)) {
+        writeLsRaw(key, existing);
+      }
+      return;
+    }
+    await this.putInternal(key, incoming);
+    return;
+  }
+
+  // 3️⃣ Archive & Ledger → nur LS → IDB Merge (keine LS Hydration)
+  if (
+    key === 'mpathy:archive:v1' ||
+    key === 'mpathy:archive:pairs:v1' ||
+    key === 'mpathy:triketon:v1'
+  ) {
+    const next = applyStrategy(strategy, existing, incoming);
+    await this.putInternal(key, next);
+    return;
+  }
+
+  // 3b️⃣ chat_map → IDB merge, aber LS darf bei Missing aus IDB wiederhergestellt werden
+  if (key === 'mpathy:archive:chat_map') {
+    const next = applyStrategy(strategy, existing, incoming);
+    await this.putInternal(key, next);
+
+    if (isLsMissingOrEmpty(key)) {
+      writeLsRaw(key, next);
+    }
+    return;
+  }
+
+  // 4️⃣ chat_counter → max + Hydration erlaubt
+  if (key === 'mpathy:archive:chat_counter') {
+    const next = applyStrategy(strategy, existing, incoming);
+    await this.putInternal(key, next);
+
+    if (isLsMissingOrEmpty(key)) {
+      writeLsRaw(key, next);
+    }
+    return;
+  }
+
+  // Fallback
+  await this.putInternal(key, incoming);
+}
+
   async get(key: string): Promise<unknown> {
-    if (typeof window === 'undefined') return undefined;
-
-    await this.ensureHydratedOnce();
-
     return this.getInternal(key);
   }
 }
 
-let _vault: StorageVault | null = null;
-
-function getClientVault(): StorageVault | null {
-  if (typeof window === 'undefined') return null;
-  if (!_vault) _vault = new StorageVault();
-  return _vault;
-}
-
-export const storageVault = {
-  put: async (key: string, value: unknown): Promise<void> => {
-    const v = getClientVault();
-    if (!v) return;
-    await v.put(key, value);
-  },
-  get: async (key: string): Promise<unknown> => {
-    const v = getClientVault();
-    if (!v) return undefined;
-    return v.get(key);
-  },
-};
+export const storageVault = new StorageVault();
