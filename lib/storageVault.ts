@@ -377,9 +377,16 @@ private initArchiveMirror(): void {
     key === 'mpathy:archive:pairs:v1' ||
     key === 'mpathy:triketon:v1'
   ) {
-    const next = applyStrategy(strategy, existing, incoming);
-    await this.putInternal(key, next);
-    return;
+    let next;
+
+if (existing === undefined || existing === null) {
+  next = incoming;
+} else {
+  next = applyStrategy(strategy, existing, incoming);
+}
+
+await this.putInternal(key, next);
+return;
   }
 
   // 3b️⃣ chat_map → IDB merge, aber LS darf bei Missing aus IDB wiederhergestellt werden
