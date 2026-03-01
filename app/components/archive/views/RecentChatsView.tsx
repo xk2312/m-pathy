@@ -157,29 +157,32 @@ export default function RecentChatsView({
   const [chats, setChats] = useState<ChatDisplay[]>([])
 
   useEffect(() => {
-    const base = getRecentChats(1300)
+  const load = async () => {
+    const base = await getRecentChats(1300)
 
     const mapped = base
-  .map((chat) => {
-    const totalMessages = chat.messages?.length ?? 0
-    const pairCount = Math.floor(totalMessages / 2)
+      .map((chat) => {
+        const totalMessages = chat.messages?.length ?? 0
+        const pairCount = Math.floor(totalMessages / 2)
 
-    return {
-      chat_serial: chat.chat_serial,
-      keywords: chat.keywords ?? [],
-      messageCount: pairCount,
-      lastTimestamp: chat.last_timestamp,
-    }
-  })
-  .sort(
-    (a, b) =>
-      new Date(b.lastTimestamp).getTime() -
-      new Date(a.lastTimestamp).getTime()
-  )
+        return {
+          chat_serial: chat.chat_serial,
+          keywords: chat.keywords ?? [],
+          messageCount: pairCount,
+          lastTimestamp: chat.last_timestamp,
+        }
+      })
+      .sort(
+        (a, b) =>
+          new Date(b.lastTimestamp).getTime() -
+          new Date(a.lastTimestamp).getTime()
+      )
 
-setChats(mapped)
+    setChats(mapped)
+  }
 
-  }, [])
+  void load()
+}, [])
 
   return (
     <section className="flex flex-col gap-16">

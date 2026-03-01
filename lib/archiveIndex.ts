@@ -8,7 +8,7 @@ import {
   buildArchivChatsFromTriketon,
   syncArchiveFromTriketon,
 } from './archiveProjection'
-import { readLS } from './storage'
+import { storageVault } from './storageVault'
 
 const ARCHIVE_KEY = 'mpathy:archive:v1'
 
@@ -36,8 +36,8 @@ function isArchiveEntry(x: any): x is TArchiveEntry {
   )
 }
 
-function readArchiveChats(): ArchivChat[] {
-  const raw = readLS<unknown>(ARCHIVE_KEY)
+async function readArchiveChats(): Promise<ArchivChat[]> {
+  const raw = await storageVault.get(ARCHIVE_KEY)
 
   if (Array.isArray(raw) && raw.length > 0 && isArchivChat(raw[0])) {
     return raw as ArchivChat[]
@@ -53,7 +53,7 @@ function readArchiveChats(): ArchivChat[] {
 /**
  * Liefert die letzten archivierten Chats (read-only).
  */
-export function getRecentChats(limit = 13): {
+export async function getRecentChats(limit = 13): Promise<{
   chat_serial: number
   first_timestamp: string
   last_timestamp: string
@@ -63,11 +63,11 @@ export function getRecentChats(limit = 13): {
     timestamp: string
   }[]
   keywords: string[]
-}[] {
+}[]> {
 
   syncArchiveFromTriketon()
 
-  const chats = readArchiveChats()
+  const chats = await readArchiveChats()
   if (chats.length === 0) return []
 
   return chats.slice(0, limit).map((c: ArchivChat) => ({

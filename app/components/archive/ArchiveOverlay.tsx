@@ -333,8 +333,10 @@ useEffect(() => {
 
 
 
-  const resolveChainIdFromChatSerial = (chatSerial: string) => {
-  const chat = getRecentChats(13).find(
+const resolveChainIdFromChatSerial = async (chatSerial: string) => {
+  const chats = await getRecentChats(13)
+
+  const chat = chats.find(
     (c) => String(c.chat_serial) === chatSerial
   )
 
@@ -359,36 +361,37 @@ useEffect(() => {
 /* -------------------------------------------------------------- */
 
 useEffect(() => {
-  // 🔌 init bulk verify listener (EPIC 4 / T-09)
-  initArchiveVerifyListener()
+  const load = async () => {
+    initArchiveVerifyListener()
 
-  const base = getRecentChats(13)
+    const base = await getRecentChats(13)
 
-  const mapped = base.map((chat) => {
-  const totalMessages = chat.messages?.length ?? 0
-  const pairCount = Math.floor(totalMessages / 2)
+    const mapped = base.map((chat) => {
+      const totalMessages = chat.messages?.length ?? 0
+      const pairCount = Math.floor(totalMessages / 2)
 
-  return {
-    chat_serial: chat.chat_serial,
-    keywords: chat.keywords ?? [],
-    messageCount: pairCount,
-    lastTimestamp: chat.last_timestamp,
+      return {
+        chat_serial: chat.chat_serial,
+        keywords: chat.keywords ?? [],
+        messageCount: pairCount,
+        lastTimestamp: chat.last_timestamp,
+      }
+    })
+
+    setChats(mapped)
   }
-})
 
+  void load()
 
-  setChats(mapped)
-
-  // 🔒 hard block background (prompt, chat, scroll)
+  // 🔒 hard block background
   const originalOverflow = document.body.style.overflow
   document.body.style.overflow = 'hidden'
 
-  // ✅ hard-hide prompt while archive is mounted (no routing assumptions)
   const promptEl = document.querySelector('.prompt-root-scene') as HTMLElement | null
   const originalPromptDisplay = promptEl?.style.display
   if (promptEl) promptEl.style.display = 'none'
 
-    return () => {
+  return () => {
     document.body.style.overflow = originalOverflow
     if (promptEl) promptEl.style.display = originalPromptDisplay ?? ''
   }
@@ -756,14 +759,15 @@ className="
   }
   viewLabel={t('archive.viewChat')}
   keywordsLabel={t('archive.keywords')}
-  onOpenChat={(chatSerial: string) => {
-    const chainId =
-      resolveChainIdFromChatSerial(chatSerial)
-    if (chainId) {
-      setOpenChainId(chainId)
-      setChatView('detail')
-    }
-  }}
+  onOpenChat={async (chatSerial: string) => {
+  const chainId =
+    await resolveChainIdFromChatSerial(chatSerial)
+
+  if (chainId) {
+    setOpenChainId(chainId)
+    setChatView('detail')
+  }
+}}
 />
 
             )
@@ -776,14 +780,15 @@ className="
                 selection={selection}
                 addPair={addPair}
                 removePair={removePair}
-                onOpenChat={(chatSerial: string) => {
-                  const chainId =
-                    resolveChainIdFromChatSerial(chatSerial)
-                  if (chainId) {
-                    setOpenChainId(chainId)
-                    setChatView('detail')
-                  }
-                }}
+               onOpenChat={async (chatSerial: string) => {
+  const chainId =
+    await resolveChainIdFromChatSerial(chatSerial)
+
+  if (chainId) {
+    setOpenChainId(chainId)
+    setChatView('detail')
+  }
+}}
               />
             )
           }
