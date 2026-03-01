@@ -32,25 +32,30 @@ export default function ArchiveSearch() {
   >([])
 
   // Default view: recent chats with persisted keywords
-  useEffect(() => {
-    const base = getRecentChats(13)
-    setDefaultView(
-      base.map((c) => ({
-        chat_serial: c.chat_serial,
-        keywords: c.keywords,
-      })),
-    )
+   useEffect(() => {
+    const load = async () => {
+      const base = await getRecentChats(13)
+
+      setDefaultView(
+        base.map((c) => ({
+          chat_serial: c.chat_serial,
+          keywords: c.keywords,
+        })),
+      )
+    }
+
+    void load()
   }, [lang])
 
   // Search view: filter message refs (no content access)
   useEffect(() => {
-    const runSearch = throttle(() => {
+    const runSearch = throttle(async () => {
       if (query.length < 3) {
         setResults([])
         return
       }
 
-      const chats = getRecentChats(50)
+      const chats = await getRecentChats(50)
       const q = query.toLowerCase()
 
       const matches = chats.flatMap((chat) =>
