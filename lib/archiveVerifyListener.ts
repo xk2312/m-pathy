@@ -184,8 +184,8 @@ mpathy:archive:verify:success
 **Beides darf sich nicht berühren.**
 */
 
-import { readLS, writeLS } from '@/lib/storage'
 import { readArchiveSelection } from '@/lib/storage'
+import { storageVault } from '@/lib/storageVault'
 import type { ArchivePair } from '@/lib/storage'
 import type { TVerificationReport } from '@/lib/types'
 
@@ -211,11 +211,13 @@ function buildCanonicalTruthText(pairs: ArchivePair[]): string {
     .trim()
 }
 
-function persistReport(report: TVerificationReport) {
+async function persistReport(report: TVerificationReport) {
   const key = 'mpathy:verification:reports:v1'
-  const existing = readLS<TVerificationReport[]>(key) ?? []
-  writeLS(key, [...existing, report])
+  const existing =
+    ((await storageVault.get(key)) as TVerificationReport[] | undefined) ?? []
+  await storageVault.put(key, [...existing, report])
 }
+
 function resolveLang(): string {
   if (typeof document !== 'undefined' && document.documentElement.lang) {
     return document.documentElement.lang.split('-')[0]
@@ -354,9 +356,9 @@ export function initArchiveVerifyListener() {
     if (intent !== 'verify') return
 
     const selectionFromSS = readArchiveSelection().pairs ?? []
-    const selectionFromEvent = custom.detail?.pairs ?? []
-    const selection =
-      selectionFromSS.length > 0 ? selectionFromSS : selectionFromEvent
+const selectionFromEvent = custom.detail?.pairs ?? []
+const selection: ArchivePair[] =
+  selectionFromSS.length > 0 ? selectionFromSS : selectionFromEvent
 
     if (!selection || selection.length === 0) {
       window.dispatchEvent(
@@ -387,9 +389,11 @@ export function initArchiveVerifyListener() {
       return
     }
 
-   const publicKey = localStorage.getItem(
-  'mpathy:triketon:device_public_key_2048',
-)
+  const publicKey =
+  ((await storageVault.get(
+    'mpathy:triketon:device_public_key_2048',
+  )) as string | undefined) ??
+  localStorage.getItem('mpathy:triketon:device_public_key_2048')
 
 if (!publicKey || typeof publicKey !== 'string') {
   console.error(
@@ -397,7 +401,6 @@ if (!publicKey || typeof publicKey !== 'string') {
   )
   return
 }
-
 
 
     // 4. Send WRITE / SEAL request to server
@@ -508,8 +511,7 @@ const report: TVerificationReport = {
 }
 
 // Persist report (append-only)
-persistReport(report)
-
+await persistReport(report)
 // Notify UI
 window.dispatchEvent(
   new CustomEvent('mpathy:archive:verify:report', {
