@@ -2,7 +2,7 @@
 // GPTM-Galaxy+ · m-pathy Archive + Verification System v5
 // Archive Search - logic only (MEFL)
 
-import { readLS } from '@/lib/storage'
+import { storageVault } from '@/lib/storageVault'
 import { limitNodes } from '@/lib/performance'
 
 type TriketonAnchor = {
@@ -30,12 +30,13 @@ export type SearchResult = {
   }
 }
 
-export function runArchiveSearch(query: string): SearchResult[] {
-  if (query.length < 3) return []
+export async function runArchiveSearch(query: string): Promise<SearchResult[]> {  if (query.length < 3) return []
 
   const q = query.toLowerCase()
-  const anchors =
-    readLS<TriketonAnchor[]>('mpathy:triketon:v1') ?? []
+const anchors =
+  ((await storageVault.get('mpathy:triketon:v1')) as
+    | TriketonAnchor[]
+    | undefined) ?? []
 
   const results: SearchResult[] = []
 
@@ -73,11 +74,10 @@ export function runArchiveSearch(query: string): SearchResult[] {
   return limitNodes(results, 100)
 }
 
-export function getArchiveSearchPreview(query: string): string[] {
-  if (query.length < 3) return []
+export async function getArchiveSearchPreview(query: string): Promise<string[]> {  if (query.length < 3) return []
 
   const q = query.toLowerCase()
-  const results = runArchiveSearch(query)
+ const results = await runArchiveSearch(query)
 
   const out: string[] = []
   const seen = new Set<string>()

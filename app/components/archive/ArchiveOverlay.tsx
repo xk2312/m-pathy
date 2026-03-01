@@ -94,7 +94,7 @@ import SearchResultsView from './views/SearchResultsView'
 import RecentChatsView from './views/RecentChatsView'
 import EmptyStateView from './views/EmptyStateView'
 import ChatDetailView from './views/ChatDetailView'
-import { runArchiveSearch, getArchiveSearchPreview } from './ArchiveSearch'
+import { runArchiveSearch, getArchiveSearchPreview, type SearchResult } from './ArchiveSearch'
 import { initArchiveVerifyListener } from '@/lib/archiveVerifyListener'
 import ReportList from '@/components/reports/ReportList'
 import SystemSpinner from '@/components/system/SystemSpinner'
@@ -200,6 +200,8 @@ const [query, setQuery] = useState('')
 
 const [chats, setChats] = useState<ChatDisplay[]>([])
 const [openChainId, setOpenChainId] = useState<string | null>(null)
+const [searchPreview, setSearchPreview] = useState<string[]>([])
+const [searchResults, setSearchResults] = useState<SearchResult[]>([])
 
 
 
@@ -399,6 +401,30 @@ useEffect(() => {
     if (promptEl) promptEl.style.display = originalPromptDisplay ?? ''
   }
 }, [])
+
+useEffect(() => {
+  const run = async () => {
+    if (openChainId) {
+      setSearchPreview([])
+      setSearchResults([])
+      return
+    }
+
+    if (query.trim().length < 3) {
+      setSearchPreview([])
+      setSearchResults([])
+      return
+    }
+
+    const p = await getArchiveSearchPreview(query)
+    const r = await runArchiveSearch(query)
+
+    setSearchPreview(p)
+    setSearchResults(r)
+  }
+
+  void run()
+}, [query, openChainId])
 
 // (entfernt – ungültiger Scope, kein useEffect)
 
@@ -647,11 +673,7 @@ placeholder={t("archive.searchUserChats")}
 />
 
 
-   {query.length >= 3 && !openChainId && (() => {
-  const preview = getArchiveSearchPreview(query)
-
-  if (preview.length === 0) return null
-
+{query.length >= 3 && !openChainId && searchPreview.length > 0 && (() => {
   const q = query.trim()
   const qLower = q.toLowerCase()
 
@@ -665,7 +687,7 @@ placeholder={t("archive.searchUserChats")}
         text-xs
       "
     >
-      {preview.map((p, i) => {
+      {searchPreview.map((p: string, i: number) => {
         const pLower = p.toLowerCase()
         const idx = qLower.length > 0 ? pLower.indexOf(qLower) : -1
 
@@ -774,14 +796,13 @@ className="
 
             )
 
-          case 'search': {
-            const results = runArchiveSearch(query)
-            return (
-              <SearchResultsView
-                results={results}
-                selection={selection}
-                addPair={addPair}
-                removePair={removePair}
+         case 'search': {
+  return (
+    <SearchResultsView
+      results={searchResults}
+      selection={selection}
+      addPair={addPair}
+      removePair={removePair}
                   onOpenChat={async (chatSerial: string) => {
                   const chainId =
                     await resolveChainIdFromChatSerial(chatSerial)
