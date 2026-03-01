@@ -85,7 +85,8 @@ import React, { useEffect, useState } from 'react'
 import { LanguageProvider, useLanguage } from '@/app/providers/LanguageProvider'
 import { i18nArchive } from '@/lib/i18n.archive'
 import { getRecentChats } from '@/lib/archiveIndex'
-import { readLS, readSS, writeSS } from '@/lib/storage'
+import { readSS, writeSS } from '@/lib/storage'
+import { storageVault } from '@/lib/storageVault'
 import { Input } from '@/components/ui/Input'
 import { MessageSquare } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -333,7 +334,7 @@ useEffect(() => {
 
 
 
-const resolveChainIdFromChatSerial = async (chatSerial: string) => {
+  const resolveChainIdFromChatSerial = async (chatSerial: string) => {
   const chats = await getRecentChats(13)
 
   const chat = chats.find(
@@ -343,7 +344,9 @@ const resolveChainIdFromChatSerial = async (chatSerial: string) => {
   if (!chat) return null
 
   const anchors =
-    readLS<{ timestamp: string; chain_id: string }[]>('mpathy:triketon:v1') ?? []
+    ((await storageVault.get('mpathy:triketon:v1')) as
+      | { timestamp: string; chain_id: string }[]
+      | undefined) ?? []
 
   const start = Date.parse(chat.first_timestamp)
   const end = Date.parse(chat.last_timestamp)
@@ -759,15 +762,14 @@ className="
   }
   viewLabel={t('archive.viewChat')}
   keywordsLabel={t('archive.keywords')}
-  onOpenChat={async (chatSerial: string) => {
-  const chainId =
-    await resolveChainIdFromChatSerial(chatSerial)
-
-  if (chainId) {
-    setOpenChainId(chainId)
-    setChatView('detail')
-  }
-}}
+    onOpenChat={async (chatSerial: string) => {
+    const chainId =
+      await resolveChainIdFromChatSerial(chatSerial)
+    if (chainId) {
+      setOpenChainId(chainId)
+      setChatView('detail')
+    }
+  }}
 />
 
             )
@@ -780,15 +782,14 @@ className="
                 selection={selection}
                 addPair={addPair}
                 removePair={removePair}
-               onOpenChat={async (chatSerial: string) => {
-  const chainId =
-    await resolveChainIdFromChatSerial(chatSerial)
-
-  if (chainId) {
-    setOpenChainId(chainId)
-    setChatView('detail')
-  }
-}}
+                  onOpenChat={async (chatSerial: string) => {
+                  const chainId =
+                    await resolveChainIdFromChatSerial(chatSerial)
+                  if (chainId) {
+                    setOpenChainId(chainId)
+                    setChatView('detail')
+                  }
+                }}
               />
             )
           }
