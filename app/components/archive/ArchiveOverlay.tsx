@@ -404,12 +404,6 @@ useEffect(() => {
 
 useEffect(() => {
   const run = async () => {
-    if (openChainId) {
-      setSearchPreview([])
-      setSearchResults([])
-      return
-    }
-
     if (query.trim().length < 3) {
       setSearchPreview([])
       setSearchResults([])
@@ -424,7 +418,7 @@ useEffect(() => {
   }
 
   void run()
-}, [query, openChainId])
+}, [query])
 
 // (entfernt – ungültiger Scope, kein useEffect)
 
