@@ -131,7 +131,8 @@
 
 'use client'
 
-import { readLS } from '@/lib/storage'
+import { useEffect, useState } from 'react'
+import { storageVault } from '@/lib/storageVault'
 import type { ArchivePair } from '@/lib/storage'
 
 type TriketonAnchor = {
@@ -205,12 +206,24 @@ export default function ChatDetailView({
 
 
   const isSelected = (pair_id: string) =>
-    selection.some(p => p.pair_id === pair_id)
+  selection.some(p => p.pair_id === pair_id)
 
-  const anchors =
-    readLS<TriketonAnchor[]>('mpathy:triketon:v1') ?? []
+const [anchors, setAnchors] = useState<TriketonAnchor[]>([])
 
-  const pairs: MessagePair[] = []
+useEffect(() => {
+  const load = async () => {
+    const data =
+      (await storageVault.get('mpathy:triketon:v1')) as
+        | TriketonAnchor[]
+        | undefined
+
+    setAnchors(data ?? [])
+  }
+
+  void load()
+}, [])
+
+const pairs: MessagePair[] = []
 
   for (let i = 0; i < anchors.length - 1; i++) {
     const a = anchors[i]
