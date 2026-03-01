@@ -223,6 +223,15 @@ useEffect(() => {
   void load()
 }, [])
 
+if (!anchors.length) {
+  return (
+    <section className="flex flex-col gap-6">
+      <div className="text-sm text-white/50">
+        Loading…
+      </div>
+    </section>
+  )
+}
 const pairs: MessagePair[] = []
 
   for (let i = 0; i < anchors.length - 1; i++) {
