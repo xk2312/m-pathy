@@ -165,7 +165,7 @@ import { i18nArchive } from '@/lib/i18n.archive'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import ReportStatus from './ReportStatus'
-
+import { storageVault } from '@/lib/storageVault'
 export default function ReportList() {
   const { lang } = useLanguage()
   const t =
@@ -175,9 +175,8 @@ export default function ReportList() {
   const [reports, setReports] = useState<VerificationReport[]>([])
 
   React.useEffect(() => {
-    const readReports = (source?: string) => {
-      try {
-        const data = loadReports()
+const readReports = async (source?: string) => {      try {
+        const data = await loadReports()
         console.log('[ReportList] 🔍 readReports triggered from →', source ?? 'mount')
         console.log('[ReportList] 📦 loadReports() returned', Array.isArray(data) ? data.length : 'non-array', 'items')
         setReports(data)
@@ -206,15 +205,14 @@ export default function ReportList() {
 
   const [selected, setSelected] = useState<string | null>(null)
 
-  const handleDelete = (hash: string) => {
-    deleteReport(hash)
-    setReports(loadReports())
-    setSelected(null)
-  }
-
-  const handleDownload = (hash: string) => {
-    const r = getReport(hash)
-    if (!r) return
+  const handleDelete = async (hash: string) => {
+  await deleteReport(hash)
+  setReports(await loadReports())
+  setSelected(null)
+}
+const handleDownload = async (hash: string) => {
+  const r = await getReport(hash)
+  if (!r) return
 
     // Adapter: keep downloadVerificationReport() backwards compatible
     const legacy: VerificationReportLegacy = {
@@ -233,9 +231,6 @@ export default function ReportList() {
 
     downloadVerificationReport(legacy as any)
   }
-
-  const selectedReport: VerificationReport | null =
-    selected !== null ? getReport(selected) : null
 
   return (
     <div className="p-4 flex flex-col gap-4 text-primary">
@@ -256,8 +251,7 @@ export default function ReportList() {
   if (!r) return null
   const reportId = r.public_key ?? `report-${i}`
 
-const selectedReport: VerificationReport | null =
-  selected !== null ? getReport(selected) : null
+const selectedReport = null
 
 function exportReportAsText(r: VerificationReport) {
   const lines: string[] = []

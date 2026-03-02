@@ -156,7 +156,7 @@ function normalizeReport(r)
 */
 
 import type { VerificationReport as TVerificationReport } from './types'
-import { readLS, writeLS } from './storage'
+import { storageVault } from './storageVault'
 
 const KEY = 'mpathy:verification:reports:v1'
 
@@ -242,17 +242,19 @@ function normalizeReport(
   }
 }
 
-export function loadReports(): TVerificationReport[] {
+export async function loadReports(): Promise<TVerificationReport[]> {
   if (typeof window === 'undefined') return []
 
   try {
-    const stored = window.localStorage.getItem(KEY)
-    if (!stored) return []
+    const stored =
+      (await storageVault.get(KEY)) as
+        | LegacyVerificationReport[]
+        | Partial<TVerificationReport>[]
+        | undefined
 
-    const parsed = JSON.parse(stored)
-    if (!Array.isArray(parsed)) return []
+    if (!stored || !Array.isArray(stored)) return []
 
-    const normalized = parsed.map(normalizeReport)
+    const normalized = stored.map(normalizeReport)
     console.log(`[ArchiveVerify] ✅ loaded ${normalized.length} reports`)
     return normalized
   } catch (err) {
@@ -261,20 +263,23 @@ export function loadReports(): TVerificationReport[] {
   }
 }
 
-export function saveReport(report: TVerificationReport): void {
-  const all = loadReports()
+export async function saveReport(report: TVerificationReport): Promise<void> {
+  const all = await loadReports()
   const exists = all.some((r) => r.truth_hash === report.truth_hash)
+
   if (!exists) {
-    all.unshift(report)
-    writeLS(KEY, all.slice(0, 100))
+    const updated = [report, ...all].slice(0, 100)
+    await storageVault.put(KEY, updated)
   }
 }
 
-export function deleteReport(hash: string): void {
-  const all = loadReports().filter((r) => r.truth_hash !== hash)
-  writeLS(KEY, all)
+export async function deleteReport(hash: string): Promise<void> {
+  const all = await loadReports()
+  const filtered = all.filter((r) => r.truth_hash !== hash)
+  await storageVault.put(KEY, filtered)
 }
 
-export function getReport(hash: string): TVerificationReport | null {
-  return loadReports().find((r) => r.truth_hash === hash) || null
+export async function getReport(hash: string): Promise<TVerificationReport | null> {
+  const all = await loadReports()
+  return all.find((r) => r.truth_hash === hash) || null
 }
