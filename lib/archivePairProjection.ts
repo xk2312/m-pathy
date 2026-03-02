@@ -341,7 +341,7 @@ function readFullTriketonLedger(): TriketonAnchor[] {
   }
 }
 
-function extractTopKeywordsFromText(input: string, limit = 7): string[] {
+function extractTopKeywordsFromText(input: string, limit = 50): string[] {
   try {
     const text = (input || '')
       .toLowerCase()
@@ -420,7 +420,7 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
       if (next.role !== 'assistant') continue
 
       const combinedText = `${current.content}\n${next.content}`
-      const keywords = extractTopKeywordsFromText(combinedText, 7)
+      const keywords = extractTopKeywordsFromText(combinedText, 50)
 
       pairs.push({
         pair_id: `${current.truth_hash}→${next.truth_hash}`,

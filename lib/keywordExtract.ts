@@ -226,12 +226,25 @@ export function extractTopKeywords(
 }
 
 
-const text = normalize(
-  entries
-    .map(e => e.content)
-    .filter(isNaturalContent)
-    .join(' ')
-)
+const cleanedText = entries
+  .map(e => e.content)
+  .filter(isNaturalContent)
+  .map(content => {
+    // Entfernt alles bis zum ersten dreifachen Backtick oder bis zum ersten doppelten Zeilenumbruch
+    const splitByFence = content.split('```')
+    const main = splitByFence.length > 1 ? splitByFence[splitByFence.length - 1] : content
+
+    // Entfernt Telemetry-Header bis zur ersten Leerzeile
+    const parts = main.split(/\n\s*\n/)
+    if (parts.length > 1) {
+      return parts.slice(1).join(' ')
+    }
+
+    return main
+  })
+  .join(' ')
+
+const text = normalize(cleanedText)
   const tokens = text.split(' ').filter(Boolean)
 
   const freq = new Map<string, number>()
