@@ -33,39 +33,40 @@ export type SearchResult = {
 export async function runArchiveSearch(query: string): Promise<SearchResult[]> {  if (query.length < 3) return []
 
   const q = query.toLowerCase()
-const anchors =
-  ((await storageVault.get('mpathy:triketon:v1')) as
-    | TriketonAnchor[]
+const pairs =
+  ((await storageVault.get('mpathy:archive:pairs:v1')) as
+    | {
+        pair_id: string
+        chain_id: string
+        timestamp_start: string
+        timestamp_end: string
+        user: { content: string }
+        assistant: { content: string }
+      }[]
     | undefined) ?? []
-
   const results: SearchResult[] = []
 
-  for (let i = 0; i < anchors.length - 1; i++) {
-    const a = anchors[i]
-    const b = anchors[i + 1]
+  for (const p of pairs) {
+  const userText = p.user.content
+  const assistantText = p.assistant.content
 
-    if (a.chain_id !== b.chain_id) continue
-    if (a.role !== 'user') continue
-    if (b.role !== 'assistant') continue
-
-    const userMatch = a.content.toLowerCase().includes(q)
-    const assistantMatch = b.content.toLowerCase().includes(q)
+   const userMatch = userText.toLowerCase().includes(q)
+const assistantMatch = assistantText.toLowerCase().includes(q)
 
     if (!userMatch && !assistantMatch) continue
 
     results.push({
-      pair_id: `${a.chain_id}:${a.id}`,
-      chain_id: a.chain_id,
-      timestamp_start: a.timestamp,
-      timestamp_end: b.timestamp,
-      user: {
-        preview: a.content,
+  pair_id: p.pair_id,
+  chain_id: p.chain_id,
+  timestamp_start: p.timestamp_start,
+  timestamp_end: p.timestamp_end,
+  user: {
+    preview: userText,
         matched: userMatch,
         matched_keywords: userMatch ? [query] : [],
       },
       assistant: {
-        preview: b.content,
-        matched: assistantMatch,
+preview: assistantText,        matched: assistantMatch,
         matched_keywords: assistantMatch ? [query] : [],
       },
     })
