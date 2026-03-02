@@ -174,7 +174,7 @@ const byChain = new Map<string, TriketonAnchor[]>()
     content: m.content,
     verified: true,
   })) as any,
-  7,
+  50,
   lang,
 ),
 
