@@ -179,7 +179,7 @@ function isMeta(candidate: string): boolean {
  */
 export function extractTopKeywords(
   entries: TArchiveEntry[],
-  topN = 7,
+  topN = 50,
   lang = 'en',
 ): string[] {
   const stopwords = STOPWORDS_BY_LANG[lang] || STOPWORDS_BY_LANG.en
@@ -188,16 +188,35 @@ export function extractTopKeywords(
   const courtesy = COURTESY_BY_LANG[lang] || COURTESY_BY_LANG.en
   const requests = REQUEST_TOKENS_BY_LANG[lang] || REQUEST_TOKENS_BY_LANG.en
   const decorative = DECORATIVE_ADJ_BY_LANG[lang] || DECORATIVE_ADJ_BY_LANG.en
-function isNaturalContent(text: string): boolean {
+
+  function isNaturalContent(text: string): boolean {
   if (!text) return false
 
-  const t = text.toLowerCase()
+  const t = text.toLowerCase().trim()
 
-  // harte System-/Rollen-Indikatoren
+  // harte Role-Indikatoren
+  if (t.startsWith('role')) return false
   if (t.includes('role user')) return false
   if (t.includes('role assistant')) return false
   if (t.includes('role system')) return false
-  if (t.startsWith('role')) return false
+
+  // Telemetry-Header Blocker
+  const telemetryStarts = [
+    'system:',
+    'version:',
+    'telemetry',
+    'session',
+    'drift',
+    'council',
+    'expert',
+    'mode:',
+    'authority:',
+    'container',
+    'orchestration',
+    'complexity',
+  ]
+
+  if (telemetryStarts.some(k => t.startsWith(k))) return false
 
   // strukturierte Meta-/Debug-Formate
   if (/^\s*\{.*\}\s*$/.test(t)) return false
@@ -205,6 +224,7 @@ function isNaturalContent(text: string): boolean {
 
   return true
 }
+
 
 const text = normalize(
   entries
@@ -256,6 +276,6 @@ export function getChatKeywordClusters(
 ) {
   return groupedChats.map(chat => ({
     chat_serial: chat.chat_serial,
-    keywords: extractTopKeywords(chat.messages, 7, lang),
+    keywords: extractTopKeywords(chat.messages, 50, lang),
   }))
 }
