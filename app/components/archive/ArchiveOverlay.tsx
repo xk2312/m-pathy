@@ -755,11 +755,29 @@ className="
 <div className="flex-1 overflow-y-auto mt-[15px]">
 
   {/* REPORTS ROOT - ALWAYS OVERVIEW */}
-  {mode === 'reports' && (
-    <div className="reports-root">
+ {mode === 'reports' && (
+  <div className="reports-root">
+    {query.trim().length >= 3 ? (
+      <SearchResultsView
+        results={searchResults}
+        selection={selection}
+        addPair={addPair}
+        removePair={removePair}
+        onOpenChat={async (chatSerial: string) => {
+          const chainId =
+            await resolveChainIdFromChatSerial(chatSerial)
+          if (chainId) {
+            setOpenChainId(chainId)
+            setChatView('detail')
+            setMode('chat')
+          }
+        }}
+      />
+    ) : (
       <ReportList />
-    </div>
-  )}
+    )}
+  </div>
+)}
 
   {/* CHAT ROOT - INDEPENDENT */}
   {mode === 'chat' && (
