@@ -327,57 +327,169 @@ function estimateTokensFromText(text: string): number {
   return approxTokens > 0 ? approxTokens : 1;
 }
 
+const TELEMETRY_REQUIRED_FIELDS = [
+  "◆ System:",
+  "◇ Version:",
+  "⬢ Telemetry Authority:",
+
+  "● Session Prompt Counter:",
+  "■ Telemetry Order:",
+  "▣ Telemetry Scope:",
+  "□ Telemetry Mutability:",
+
+  "▪ Telemetry Failure Policy:",
+  "▦ Telemetry Source Separation:",
+
+  "◁ User Mode:",
+  "▷ System Mode:",
+  "◀ Effective Mode:",
+
+  "▲ Expert Status:",
+  "⬠ Expert Type:",
+  "⬣ Expert ID:",
+
+  "⚡ Drift Origin:",
+  "▼ Drift State:",
+  "▶ Drift Risk:",
+
+  "⊞ Orchestration Mode:",
+  "→ Orchestration Authority:",
+  "⬡ Expert Configuration:",
+  "⬥ Complexity Level:",
+  "△ Council Final Status:",
+
+  "⌘ Expert Rights Profile:",
+  "⏳ Expert Rights Scope:",
+  "⛭ Expert Rights Source:",
+  "⛒ Analysis Container State:",
+  "☍ Expert Activation Count:",
+  "⎈ Council Decision ID:",
+  "☑ Council Rights Attestation:",
+
+  "✧ Council Decision Trace:",
+  "⧉ Domain Resolution Mode:",
+  "⌁ Container Transition Authority:"
+];
+
+const TELEMETRY_FIELD_MAP: Record<string, string> = {
+  "System": "system",
+  "Version": "version",
+  "Telemetry Authority": "telemetryAuthority",
+  "Session Prompt Counter": "promptCounter",
+  "Telemetry Order": "telemetryOrder",
+  "Telemetry Scope": "telemetryScope",
+  "Telemetry Mutability": "telemetryMutability",
+  "Telemetry Failure Policy": "telemetryFailurePolicy",
+  "Telemetry Source Separation": "telemetrySourceSeparation",
+  "User Mode": "userMode",
+  "System Mode": "systemMode",
+  "Effective Mode": "effectiveMode",
+  "Expert Status": "expertStatus",
+  "Expert Type": "expertType",
+  "Expert ID": "expertId",
+  "Drift Origin": "driftOrigin",
+  "Drift State": "driftState",
+  "Drift Risk": "driftRisk",
+  "Orchestration Mode": "orchestrationMode",
+  "Orchestration Authority": "orchestrationAuthority",
+  "Expert Configuration": "expertConfiguration",
+  "Complexity Level": "complexityLevel",
+  "Council Final Status": "councilFinalStatus",
+  "Expert Rights Profile": "expertRightsProfile",
+  "Expert Rights Scope": "expertRightsScope",
+  "Expert Rights Source": "expertRightsSource",
+  "Analysis Container State": "analysisContainerState",
+  "Expert Activation Count": "expertActivationCount",
+  "Council Decision ID": "councilDecisionId",
+  "Council Rights Attestation": "councilRightsAttestation",
+  "Council Decision Trace": "councilDecisionTrace",
+  "Domain Resolution Mode": "domainResolutionMode",
+  "Container Transition Authority": "containerTransitionAuthority"
+};
+
+const COCKPIT_KEYS = new Set([
+  "system",
+  "version",
+  "promptCounter",
+  "driftState",
+  "effectiveMode",
+  "expertId"
+]);
+
+function extractTelemetryLines(text: string): string[] {
+  const lines = text.split("\n").map(l => l.trim());
+  const firstFence = lines.findIndex(l => l.startsWith("```"));
+  const secondFence = lines.findIndex(
+    (l, i) => i > firstFence && l.startsWith("```")
+  );
+
+  if (firstFence === -1 || secondFence === -1) {
+    throw new Error("Telemetry fences not found");
+  }
+
+  return lines.slice(firstFence + 1, secondFence);
+}
+
+function parseTelemetryBlock(text: string) {
+  const telemetryLines = extractTelemetryLines(text);
+
+  if (telemetryLines.length !== TELEMETRY_REQUIRED_FIELDS.length) {
+    throw new Error("Telemetry field count mismatch");
+  }
+
+  const cockpit: Record<string, string> = {};
+  const parsed: Record<string, string> = {};
+
+  for (let i = 0; i < TELEMETRY_REQUIRED_FIELDS.length; i++) {
+    const expectedPrefix = TELEMETRY_REQUIRED_FIELDS[i];
+    const line = telemetryLines[i];
+
+    if (!line.startsWith(expectedPrefix)) {
+      throw new Error(`Telemetry field mismatch at index ${i}`);
+    }
+
+    const labelWithSymbol = expectedPrefix.slice(0, -1);
+    const label = labelWithSymbol.replace(/^[^A-Za-z]+/, "").trim();
+    const value = line.slice(expectedPrefix.length).trim();
+
+    const mappedKey = TELEMETRY_FIELD_MAP[label];
+    if (!mappedKey) {
+      throw new Error(`Unmapped telemetry label: ${label}`);
+    }
+
+    if (COCKPIT_KEYS.has(mappedKey)) {
+      cockpit[mappedKey] = value;
+    } else {
+      parsed[mappedKey] = value;
+    }
+  }
+
+  return { cockpit, parsed };
+}
+
+function removeTelemetryBlock(text: string): string {
+  const lines = text.split("\n");
+  const firstFence = lines.findIndex(l => l.trim().startsWith("```"));
+  const secondFence = lines.findIndex(
+    (l, i) => i > firstFence && l.trim().startsWith("```")
+  );
+
+  if (firstFence === -1 || secondFence === -1) {
+    throw new Error("Telemetry fences not found for removal");
+  }
+
+  return [
+    ...lines.slice(0, firstFence),
+    ...lines.slice(secondFence + 1),
+  ].join("\n").trim();
+}
+
 function isValidTelemetryBlock(text: string): boolean {
   if (!text) return false;
   if (!text.trim().startsWith("```")) return false;
 
-  const requiredFields = [
-    "◆ System:",
-    "◇ Version:",
-    "⬢ Telemetry Authority:",
-
-    "● Session Prompt Counter:",
-    "■ Telemetry Order:",
-    "▣ Telemetry Scope:",
-    "□ Telemetry Mutability:",
-
-    "▪ Telemetry Failure Policy:",
-    "▦ Telemetry Source Separation:",
-
-    "◁ User Mode:",
-    "▷ System Mode:",
-    "◀ Effective Mode:",
-
-    "▲ Expert Status:",
-    "⬠ Expert Type:",
-    "⬣ Expert ID:",
-
-    "⚡ Drift Origin:",
-    "▼ Drift State:",
-    "▶ Drift Risk:",
-
-    "⊞ Orchestration Mode:",
-    "→ Orchestration Authority:",
-    "⬡ Expert Configuration:",
-    "⬥ Complexity Level:",
-    "△ Council Final Status:",
-
-    "⌘ Expert Rights Profile:",
-    "⏳ Expert Rights Scope:",
-    "⛭ Expert Rights Source:",
-    "⛒ Analysis Container State:",
-    "☍ Expert Activation Count:",
-    "⎈ Council Decision ID:",
-    "☑ Council Rights Attestation:",
-
-    "✧ Council Decision Trace:",
-    "⧉ Domain Resolution Mode:",
-    "⌁ Container Transition Authority:"
-  ];
-
   const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
 
-  // Extract only telemetry lines between first and second ```
   const firstFence = lines.findIndex(l => l.startsWith("```"));
   if (firstFence === -1) return false;
 
@@ -388,12 +500,12 @@ function isValidTelemetryBlock(text: string): boolean {
 
   const telemetryLines = lines.slice(firstFence + 1, secondFence);
 
-  if (telemetryLines.length !== requiredFields.length) {
+  if (telemetryLines.length !== TELEMETRY_REQUIRED_FIELDS.length) {
     return false;
   }
 
-  for (let i = 0; i < requiredFields.length; i++) {
-    const expected = requiredFields[i];
+  for (let i = 0; i < TELEMETRY_REQUIRED_FIELDS.length; i++) {
+    const expected = TELEMETRY_REQUIRED_FIELDS[i];
     const line = telemetryLines[i];
 
     if (!line.startsWith(expected)) {

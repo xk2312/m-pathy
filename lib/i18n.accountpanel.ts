@@ -91,7 +91,7 @@ de: {
     },
     info: {
       freegate:
-        "Du arbeitest im authentifizierten Modus. Die Nutzung wird gegen deine verfügbare Reasoning-Kapazität erfasst.",
+        "Sie arbeiten im authentifizierten Modus. Die Nutzung wird gegen Ihre verfügbare Reasoning-Kapazität erfasst.",
     },
     button: {
       logout: "Abmelden",
