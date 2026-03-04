@@ -868,11 +868,37 @@ function Bubble({
               <MessageBody msg={msg} />
             </div>
           </div>
-        ) : (
-          <div style={bubbleStyle}>
-            <MessageBody msg={msg} />
+       ) : (
+  <>
+    <div style={bubbleStyle}>
+      <MessageBody msg={msg} />
+    </div>
+
+    {msg.telemetry && (
+      <div
+        style={{
+          marginTop: 8,
+          padding: "8px 12px",
+          borderRadius: 12,
+          background: "rgba(15,23,42,0.6)",
+          fontSize: 11,
+          lineHeight: 1.5,
+          opacity: 0.9,
+        }}
+      >
+        <div style={{ fontWeight: 600, marginBottom: 4 }}>
+          Telemetry
+        </div>
+
+        {Object.entries(msg.telemetry.cockpit || {}).map(([k, v]) => (
+          <div key={k}>
+            <strong>{k}:</strong> {String(v)}
           </div>
-        )}
+        ))}
+      </div>
+    )}
+  </>
+)}
 
 {!isUser && (
           <div
