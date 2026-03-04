@@ -418,16 +418,27 @@ const COCKPIT_KEYS = new Set([
 
 function extractTelemetryLines(text: string): string[] {
   const lines = text.split("\n").map(l => l.trim());
-  const firstFence = lines.findIndex(l => l.startsWith("```"));
-  const secondFence = lines.findIndex(
-    (l, i) => i > firstFence && l.startsWith("```")
+
+  const startIndex = lines.findIndex(l =>
+    l.startsWith("◆ System:")
   );
 
-  if (firstFence === -1 || secondFence === -1) {
-    throw new Error("Telemetry fences not found");
+  if (startIndex === -1) {
+    throw new Error("Telemetry start field not found");
   }
 
-  return lines.slice(firstFence + 1, secondFence);
+  const expectedCount = TELEMETRY_REQUIRED_FIELDS.length;
+
+  const telemetryLines = lines.slice(
+    startIndex,
+    startIndex + expectedCount
+  );
+
+  if (telemetryLines.length !== expectedCount) {
+    throw new Error("Telemetry block truncated");
+  }
+
+  return telemetryLines;
 }
 
 function parseTelemetryBlock(text: string) {
