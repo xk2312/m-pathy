@@ -982,10 +982,26 @@ if (balanceBefore <= 0) {
     }
 
 
+  // === TELEMETRY STRUCTURING (POST-SEAL, PRE-RESPONSE) ===
+  let structuredTelemetry: { cockpit: Record<string, string>; parsed: Record<string, string> } | null = null;
+  let cleanedContent = content;
+
+  try {
+    structuredTelemetry = parseTelemetryBlock(content);
+    cleanedContent = removeTelemetryBlock(content);
+  } catch (err) {
+    console.error("[telemetry] structuring failed", err);
+    return NextResponse.json(
+      { error: "Telemetry structuring failed" },
+      { status: 500 }
+    );
+  }
+
   const res = NextResponse.json(
   {
     role: "assistant",
-    content,
+    content: cleanedContent,
+    telemetry: structuredTelemetry,
     status,
     tokens_used: TOKENS_USED,
     balance_after: balanceAfter,
