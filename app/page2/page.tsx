@@ -874,64 +874,98 @@ function Bubble({
       <MessageBody msg={msg} />
     </div>
 
-   {msg.telemetry && (
+  {msg.telemetry && (
   <>
-    {/* Telemetry Grid */}
+    {/* TELEMETRY GRID */}
     <div
       style={{
         marginTop: 8,
-        padding: "10px 14px",
-        borderRadius: 14,
+        padding: "14px 18px",
+        borderRadius: 16,
         background: "rgba(15,23,42,0.6)",
         fontSize: 11,
-        opacity: 0.95,
       }}
     >
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-          gap: 8,
+          gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+          gap: 14,
         }}
       >
-        {Object.entries(msg.telemetry.cockpit || {}).map(([k, v]) => (
-          <div key={k}>
-            <div
-              style={{
-                fontSize: 10,
-                opacity: 0.6,
-                textTransform: "uppercase",
-                letterSpacing: "0.04em",
-              }}
-            >
-              {k}
-            </div>
-            <div
-              style={{
-                fontWeight: 600,
-                fontSize: 12,
-              }}
-            >
-              {String(v)}
-            </div>
-          </div>
-        ))}
+        {/* ROW 1 – CORE META */}
+        {(["system","version","promptCounter","effectiveMode","driftState"] as const)
+          .map((key) => {
+            const value = msg.telemetry?.cockpit?.[key];
+            if (!value) return null;
+            return (
+              <div key={key}>
+                <div
+                  style={{
+                    fontSize: 10,
+                    opacity: 0.6,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                  }}
+                >
+                  {key}
+                </div>
+                <div
+                  style={{
+                    fontWeight: 600,
+                    fontSize: 13,
+                  }}
+                >
+                  {String(value)}
+                </div>
+              </div>
+            );
+          })}
       </div>
+
+      {/* ROW 2 – EXPERT FULL WIDTH */}
+      {msg.telemetry?.cockpit?.expertId && (
+        <div
+          style={{
+            marginTop: 16,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 10,
+              opacity: 0.6,
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              marginBottom: 6,
+            }}
+          >
+            expertId
+          </div>
+          <div
+            style={{
+              fontSize: 12,
+              fontWeight: 500,
+              lineHeight: 1.5,
+              wordBreak: "break-word",
+            }}
+          >
+            {msg.telemetry.cockpit.expertId}
+          </div>
+        </div>
+      )}
     </div>
 
-    {/* Accordion */}
+    {/* STRUCTURED ACCORDION */}
     <details
       style={{
-        marginTop: 6,
-        fontSize: 11,
-        opacity: 0.85,
+        marginTop: 8,
       }}
     >
       <summary
         style={{
           cursor: "pointer",
-          listStyle: "none",
-          outline: "none",
+          fontSize: 12,
+          opacity: 0.8,
         }}
       >
         Full Telemetry
@@ -939,16 +973,72 @@ function Bubble({
 
       <div
         style={{
-          marginTop: 6,
-          padding: "8px 12px",
-          borderRadius: 12,
+          marginTop: 12,
+          padding: "14px 18px",
+          borderRadius: 16,
           background: "rgba(15,23,42,0.4)",
-          whiteSpace: "pre-wrap",
-          fontFamily: "monospace",
-          fontSize: 10,
+          fontSize: 11,
         }}
       >
-        {JSON.stringify(msg.telemetry, null, 2)}
+        {/* Cockpit Section */}
+        <div style={{ marginBottom: 16 }}>
+          <div
+            style={{
+              fontSize: 10,
+              opacity: 0.6,
+              marginBottom: 8,
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+            }}
+          >
+            Cockpit
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: 8,
+            }}
+          >
+            {Object.entries(msg.telemetry.cockpit || {}).map(([k, v]) => (
+              <div key={k}>
+                <strong style={{ opacity: 0.7 }}>{k}</strong>
+                <div style={{ wordBreak: "break-word" }}>{String(v)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Parsed Section */}
+        <div>
+          <div
+            style={{
+              fontSize: 10,
+              opacity: 0.6,
+              marginBottom: 8,
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+            }}
+          >
+            Parsed
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: 8,
+            }}
+          >
+            {Object.entries(msg.telemetry.parsed || {}).map(([k, v]) => (
+              <div key={k}>
+                <strong style={{ opacity: 0.7 }}>{k}</strong>
+                <div style={{ wordBreak: "break-word" }}>{String(v)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </details>
   </>
