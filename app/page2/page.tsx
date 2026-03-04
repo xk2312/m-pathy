@@ -876,84 +876,58 @@ function Bubble({
 
   {msg.telemetry && (
   <>
-    {/* TELEMETRY GRID */}
-    <div
-      style={{
-        marginTop: 8,
-        padding: "14px 18px",
-        borderRadius: 16,
-        background: "rgba(15,23,42,0.6)",
-        fontSize: 11,
-      }}
-    >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
-          gap: 14,
-        }}
-      >
-        {/* ROW 1 – CORE META */}
-        {(["system","version","promptCounter","effectiveMode","driftState"] as const)
-          .map((key) => {
-            const value = msg.telemetry?.cockpit?.[key];
-            if (!value) return null;
-            return (
-              <div key={key}>
-                <div
-                  style={{
-                    fontSize: 10,
-                    opacity: 0.6,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.06em",
-                  }}
-                >
-                  {key}
-                </div>
-                <div
-                  style={{
-                    fontWeight: 600,
-                    fontSize: 13,
-                  }}
-                >
-                  {String(value)}
-                </div>
-              </div>
-            );
-          })}
-      </div>
-
-      {/* ROW 2 – EXPERT FULL WIDTH */}
-      {msg.telemetry?.cockpit?.expertId && (
-        <div
-          style={{
-            marginTop: 16,
-          }}
-        >
+ {/* TELEMETRY GRID */}
+<div
+  style={{
+    marginTop: 8,
+    padding: "16px 20px",
+    borderRadius: 16,
+    background: "rgba(15,23,42,0.6)",
+    fontSize: 11,
+  }}
+>
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+      gap: 18,
+    }}
+  >
+    {[
+      { key: "system", value: msg.telemetry?.cockpit?.system },
+      { key: "version", value: msg.telemetry?.cockpit?.version },
+      { key: "promptCounter", value: msg.telemetry?.cockpit?.promptCounter },
+      { key: "effectiveMode", value: msg.telemetry?.cockpit?.effectiveMode },
+      { key: "driftState", value: msg.telemetry?.cockpit?.driftState },
+      { key: "complexityLevel", value: msg.telemetry?.parsed?.complexityLevel },
+      { key: "driftRisk", value: msg.telemetry?.parsed?.driftRisk },
+      { key: "driftOrigin", value: msg.telemetry?.parsed?.driftOrigin },
+    ]
+      .filter(item => item.value !== undefined && item.value !== null)
+      .map(({ key, value }) => (
+        <div key={key}>
           <div
             style={{
               fontSize: 10,
               opacity: 0.6,
               textTransform: "uppercase",
               letterSpacing: "0.06em",
-              marginBottom: 6,
             }}
           >
-            expertId
+            {key}
           </div>
           <div
             style={{
-              fontSize: 12,
-              fontWeight: 500,
-              lineHeight: 1.5,
-              wordBreak: "break-word",
+              fontWeight: 600,
+              fontSize: 13,
             }}
           >
-            {msg.telemetry.cockpit.expertId}
+            {String(value)}
           </div>
         </div>
-      )}
-    </div>
+      ))}
+  </div>
+</div>
 
     {/* STRUCTURED ACCORDION */}
     <details
