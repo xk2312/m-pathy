@@ -417,7 +417,10 @@ const COCKPIT_KEYS = new Set([
 ]);
 
 function extractTelemetryLines(text: string): string[] {
-  const lines = text.split("\n").map(l => l.trim());
+  const lines = text
+    .split("\n")
+    .map(l => l.trim())
+    .filter(Boolean);
 
   const startIndex = lines.findIndex(l =>
     l.startsWith("◆ System:")
