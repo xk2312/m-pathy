@@ -1468,7 +1468,7 @@ useEffect(() => {
       void el.offsetHeight;                   // Reflow erzwingen
       el.style.overflow = prev || "auto";
     });
-  });
+    });
 }, []);
 
 // Chat State
@@ -1481,12 +1481,12 @@ const [messages, setMessages] = React.useState<any[]>(() => {
       ensureTriketonLedgerReady();
       verifyOrResetTriketonLedger();
     }
-  } catch (err) {
+   } catch (err) {
     console.warn("[L11] Ledger auto-verify failed:", err);
   }
 
-  const restored = loadChat();
-  return restored ?? [];
+const restored = loadChat();
+return restored ?? [];
 });
 
 // 🔑 Kanonische Triketon-Referenz (UI-only, kein Storage)

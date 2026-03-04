@@ -938,7 +938,7 @@ if (balanceBefore <= 0) {
       const seal = await new Promise<any>((resolve, reject) => {
         const p = spawn(
   "python3",
-  ["-m", "triketon.triketon2048", "seal", String(content), "--json"],
+  ["-m", "triketon.triketon2048", "seal", String(originalContent), "--json"],
   { stdio: ["ignore", "pipe", "pipe"] }
 );
 
@@ -997,12 +997,14 @@ if (balanceBefore <= 0) {
 
 
   // === TELEMETRY STRUCTURING (POST-SEAL, PRE-RESPONSE) ===
-  let structuredTelemetry: { cockpit: Record<string, string>; parsed: Record<string, string> } | null = null;
-  let cleanedContent = content;
+  const originalContent = content;
 
-  try {
-    structuredTelemetry = parseTelemetryBlock(content);
-    cleanedContent = removeTelemetryBlock(content);
+let structuredTelemetry: { cockpit: Record<string, string>; parsed: Record<string, string> } | null = null;
+let cleanedContent = content;
+
+try {
+  structuredTelemetry = parseTelemetryBlock(originalContent);
+  cleanedContent = removeTelemetryBlock(originalContent);
   } catch (err) {
     console.error("[telemetry] structuring failed", err);
     return NextResponse.json(
