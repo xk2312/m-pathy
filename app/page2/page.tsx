@@ -874,29 +874,85 @@ function Bubble({
       <MessageBody msg={msg} />
     </div>
 
-    {msg.telemetry && (
+   {msg.telemetry && (
+  <>
+    {/* Telemetry Grid */}
+    <div
+      style={{
+        marginTop: 8,
+        padding: "10px 14px",
+        borderRadius: 14,
+        background: "rgba(15,23,42,0.6)",
+        fontSize: 11,
+        opacity: 0.95,
+      }}
+    >
       <div
         style={{
-          marginTop: 8,
-          padding: "8px 12px",
-          borderRadius: 12,
-          background: "rgba(15,23,42,0.6)",
-          fontSize: 11,
-          lineHeight: 1.5,
-          opacity: 0.9,
+          display: "grid",
+          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+          gap: 8,
         }}
       >
-        <div style={{ fontWeight: 600, marginBottom: 4 }}>
-          Telemetry
-        </div>
-
         {Object.entries(msg.telemetry.cockpit || {}).map(([k, v]) => (
           <div key={k}>
-            <strong>{k}:</strong> {String(v)}
+            <div
+              style={{
+                fontSize: 10,
+                opacity: 0.6,
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+              }}
+            >
+              {k}
+            </div>
+            <div
+              style={{
+                fontWeight: 600,
+                fontSize: 12,
+              }}
+            >
+              {String(v)}
+            </div>
           </div>
         ))}
       </div>
-    )}
+    </div>
+
+    {/* Accordion */}
+    <details
+      style={{
+        marginTop: 6,
+        fontSize: 11,
+        opacity: 0.85,
+      }}
+    >
+      <summary
+        style={{
+          cursor: "pointer",
+          listStyle: "none",
+          outline: "none",
+        }}
+      >
+        Full Telemetry
+      </summary>
+
+      <div
+        style={{
+          marginTop: 6,
+          padding: "8px 12px",
+          borderRadius: 12,
+          background: "rgba(15,23,42,0.4)",
+          whiteSpace: "pre-wrap",
+          fontFamily: "monospace",
+          fontSize: 10,
+        }}
+      >
+        {JSON.stringify(msg.telemetry, null, 2)}
+      </div>
+    </details>
+  </>
+)}
   </>
 )}
 
