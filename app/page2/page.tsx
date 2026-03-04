@@ -2463,8 +2463,8 @@ return {
   format: assistant.format ?? "markdown",
   meta: { status, balanceAfter, tokensUsed },
   triketon,
-  telemetry,
-} as ChatMessage;
+  telemetry: data?.telemetry ?? undefined,
+} as any as ChatMessage;
 }
 
 
