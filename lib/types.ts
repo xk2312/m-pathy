@@ -157,6 +157,10 @@ export interface ChatMessage {
   format?: "plain" | "markdown" | "html" // erlaubt UI-Darstellung
   truth_hash?: string
   verified?: boolean
+  telemetry?: {
+  cockpit: Record<string, string>
+  parsed: Record<string, string>
+  }
 }
 
 

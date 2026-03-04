@@ -438,19 +438,11 @@ function loadMessages(): ChatMessage[] {
   }
 }
 
-import { writeLS } from '@/lib/storage'
-
 function saveMessages(messages: ReadonlyArray<ChatMessage>): void {
   if (typeof window === "undefined") return;
-
   try {
-    const payload = { messages, updatedAt: Date.now() };
-
-writeLS(LS_KEY as unknown as import('@/lib/storage').MpathyNamespace, payload);
-    window.dispatchEvent(new Event('mpathy:triketon:updated'));
-  } catch {
-    /* noop */
-  }
+    window.localStorage.setItem(LS_KEY, JSON.stringify({ messages, updatedAt: Date.now() }));
+  } catch { /* noop */ }
 }
   
 /* =======================================================================
@@ -611,18 +603,18 @@ function mdToHtml(src: string): string {
     }
   );
 
-  // 6) Absätze – Code-Platzhalter wieder einsetzen
-  const blocks = out.split(/\n{2,}/);
+    // 6) Code-Platzhalter global wieder einsetzen
+  const outWithCodes = out.replace(
+    /@@CODE_BLOCK_(\d+)@@/g,
+    (_m, i) => codeBlocks[Number(i)] ?? ""
+  );
+
+  // 7) Absätze
+  const blocks = outWithCodes.split(/\n{2,}/);
   const rendered = blocks
     .map((b) => {
       const t = b.trim();
       if (!t) return "";
-
-      const m = /^@@CODE_BLOCK_(\d+)@@$/.exec(t);
-      if (m) {
-        const idx = Number(m[1]);
-        return codeBlocks[idx] ?? "";
-      }
 
       if (
         /^<(h1|h2|h3|ul|ol|pre|blockquote|table|hr)\b/i.test(t) ||
@@ -631,12 +623,14 @@ function mdToHtml(src: string): string {
       ) {
         return t;
       }
+
       return `<p>${t}</p>`;
     })
     .join("\n");
 
   return rendered;
 }
+
 
 
 
@@ -2311,14 +2305,20 @@ if (busy) {
 
   void 0;
 
-  return {
-    id,
-    role: assistant.role ?? "assistant",
-    content: safeContent,
-    format: assistant.format ?? "markdown",
-    meta: { status, balanceAfter, tokensUsed },
-    triketon,
-  } as any as ChatMessage;
+ const telemetry =
+  data && typeof data.telemetry === "object"
+    ? data.telemetry
+    : undefined;
+
+return {
+  id,
+  role: assistant.role ?? "assistant",
+  content: safeContent,
+  format: assistant.format ?? "markdown",
+  meta: { status, balanceAfter, tokensUsed },
+  triketon,
+  telemetry,
+} as ChatMessage;
 }
 
 
