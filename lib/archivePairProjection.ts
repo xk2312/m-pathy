@@ -404,8 +404,7 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
 
   console.log('[PAIR TRACE] chain count:', byChain.size)
 
-  const pairs: ArchivePair[] = []
-
+const pairMap = new Map<string, ArchivePair>()
   for (const [chain_id, messages] of byChain.entries()) {
     const ordered = messages
       .filter((m) => m.role === 'user' || m.role === 'assistant')
@@ -423,30 +422,35 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
       const combinedText = `${current.content}\n${next.content}`
       const keywords = extractTopKeywordsFromText(combinedText, 50)
 
-      pairs.push({
-        pair_id: `${current.truth_hash}→${next.truth_hash}`,
-        chain_id,
-        user: {
-          id: current.id,
-          content: current.content,
-          timestamp: current.timestamp,
-          truth_hash: current.truth_hash,
-        },
-        assistant: {
-  id: next.id,
-  content: next.content,
-  timestamp: next.timestamp,
-  truth_hash: next.truth_hash,
-  telemetry: (next as any).telemetry ?? undefined,
-},
-        keywords,
-      })
+     const pair_id = `${current.truth_hash}→${next.truth_hash}`
+
+if (!pairMap.has(pair_id)) {
+  pairMap.set(pair_id, {
+    pair_id,
+    chain_id,
+    user: {
+      id: current.id,
+      content: current.content,
+      timestamp: current.timestamp,
+      truth_hash: current.truth_hash,
+    },
+    assistant: {
+      id: next.id,
+      content: next.content,
+      timestamp: next.timestamp,
+      truth_hash: next.truth_hash,
+      telemetry: (next as any).telemetry ?? undefined,
+    },
+    keywords,
+  })
+}
     }
   }
 
-  console.log('[PAIR TRACE] pairs built:', pairs.length)
+ const pairs = Array.from(pairMap.values())
 
-console.log('[PAIR TRACE] writing pairs to LS')
+console.log('[PAIR TRACE] pairs built:', pairs.length)
+
 writeLS(PAIRS_KEY, pairs)
 
 if (typeof window !== 'undefined') {
