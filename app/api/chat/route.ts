@@ -328,191 +328,67 @@ function estimateTokensFromText(text: string): number {
 }
 
 const TELEMETRY_REQUIRED_FIELDS = [
-  "◆ System:",
-  "◇ Version:",
-  "⬢ Telemetry Authority:",
+  "System:",
+  "Version:",
+  "Telemetry Authority:",
 
-  "● Session Prompt Counter:",
-  "■ Telemetry Order:",
-  "▣ Telemetry Scope:",
-  "□ Telemetry Mutability:",
+  "Session Prompt Counter:",
+  "Telemetry Order:",
+  "Telemetry Scope:",
+  "Telemetry Mutability:",
 
-  "▪ Telemetry Failure Policy:",
-  "▦ Telemetry Source Separation:",
+  "Telemetry Failure Policy:",
+  "Telemetry Source Separation:",
 
-  "◁ User Mode:",
-  "▷ System Mode:",
-  "◀ Effective Mode:",
+  "User Mode:",
+  "System Mode:",
+  "Effective Mode:",
 
-  "▲ Expert Status:",
-  "⬠ Expert Type:",
-  "⬣ Expert ID:",
+  "Expert Status:",
+  "Expert Type:",
+  "Expert ID:",
 
-  "⚡ Drift Origin:",
-  "▼ Drift State:",
-  "▶ Drift Risk:",
+  "Drift Origin:",
+  "Drift State:",
+  "Drift Risk:",
 
-  "⊞ Orchestration Mode:",
-  "→ Orchestration Authority:",
-  "⬡ Expert Configuration:",
-  "⬥ Complexity Level:",
-  "△ Council Final Status:",
+  "Orchestration Mode:",
+  "Orchestration Authority:",
+  "Expert Configuration:",
+  "Complexity Level:",
+  "Council Final Status:",
 
-  "⌘ Expert Rights Profile:",
-  "⏳ Expert Rights Scope:",
-  "⛭ Expert Rights Source:",
-  "⛒ Analysis Container State:",
-  "☍ Expert Activation Count:",
-  "⎈ Council Decision ID:",
-  "☑ Council Rights Attestation:",
+  "Expert Rights Profile:",
+  "Expert Rights Scope:",
+  "Expert Rights Source:",
+  "Analysis Container State:",
+  "Expert Activation Count:",
+  "Council Decision ID:",
+  "Council Rights Attestation:",
 
-  "✧ Council Decision Trace:",
-  "⧉ Domain Resolution Mode:",
-  "⌁ Container Transition Authority:"
+  "Council Decision Trace:",
+  "Domain Resolution Mode:",
+  "Container Transition Authority:"
 ];
 
-const TELEMETRY_FIELD_MAP: Record<string, string> = {
-  "System": "system",
-  "Version": "version",
-  "Telemetry Authority": "telemetryAuthority",
-  "Session Prompt Counter": "promptCounter",
-  "Telemetry Order": "telemetryOrder",
-  "Telemetry Scope": "telemetryScope",
-  "Telemetry Mutability": "telemetryMutability",
-  "Telemetry Failure Policy": "telemetryFailurePolicy",
-  "Telemetry Source Separation": "telemetrySourceSeparation",
-  "User Mode": "userMode",
-  "System Mode": "systemMode",
-  "Effective Mode": "effectiveMode",
-  "Expert Status": "expertStatus",
-  "Expert Type": "expertType",
-  "Expert ID": "expertId",
-  "Drift Origin": "driftOrigin",
-  "Drift State": "driftState",
-  "Drift Risk": "driftRisk",
-  "Orchestration Mode": "orchestrationMode",
-  "Orchestration Authority": "orchestrationAuthority",
-  "Expert Configuration": "expertConfiguration",
-  "Complexity Level": "complexityLevel",
-  "Council Final Status": "councilFinalStatus",
-  "Expert Rights Profile": "expertRightsProfile",
-  "Expert Rights Scope": "expertRightsScope",
-  "Expert Rights Source": "expertRightsSource",
-  "Analysis Container State": "analysisContainerState",
-  "Expert Activation Count": "expertActivationCount",
-  "Council Decision ID": "councilDecisionId",
-  "Council Rights Attestation": "councilRightsAttestation",
-  "Council Decision Trace": "councilDecisionTrace",
-  "Domain Resolution Mode": "domainResolutionMode",
-  "Container Transition Authority": "containerTransitionAuthority"
-};
+function isValidTelemetryBlock(text: string): boolean {
+  if (!text) return false;
 
-const COCKPIT_KEYS = new Set([
-  "system",
-  "version",
-  "promptCounter",
-  "driftState",
-  "effectiveMode",
-  "expertId"
-]);
-
-function extractTelemetryLines(text: string): string[] {
   const lines = text
     .split("\n")
     .map(l => l.trim())
     .filter(Boolean);
 
   const startIndex = lines.findIndex(l =>
-    l.startsWith("◆ System:")
+    l.startsWith("System:")
   );
 
-  if (startIndex === -1) {
-    throw new Error("Telemetry start field not found");
-  }
-
-  const expectedCount = TELEMETRY_REQUIRED_FIELDS.length;
+  if (startIndex === -1) return false;
 
   const telemetryLines = lines.slice(
     startIndex,
-    startIndex + expectedCount
+    startIndex + TELEMETRY_REQUIRED_FIELDS.length
   );
-
-  if (telemetryLines.length !== expectedCount) {
-    throw new Error("Telemetry block truncated");
-  }
-
-  return telemetryLines;
-}
-
-function parseTelemetryBlock(text: string) {
-  const telemetryLines = extractTelemetryLines(text);
-
-  if (telemetryLines.length !== TELEMETRY_REQUIRED_FIELDS.length) {
-    throw new Error("Telemetry field count mismatch");
-  }
-
-  const cockpit: Record<string, string> = {};
-  const parsed: Record<string, string> = {};
-
-  for (let i = 0; i < TELEMETRY_REQUIRED_FIELDS.length; i++) {
-    const expectedPrefix = TELEMETRY_REQUIRED_FIELDS[i];
-    const line = telemetryLines[i];
-
-    if (!line.startsWith(expectedPrefix)) {
-      throw new Error(`Telemetry field mismatch at index ${i}`);
-    }
-
-    const labelWithSymbol = expectedPrefix.slice(0, -1);
-    const label = labelWithSymbol.replace(/^[^A-Za-z]+/, "").trim();
-    const value = line.slice(expectedPrefix.length).trim();
-
-    const mappedKey = TELEMETRY_FIELD_MAP[label];
-    if (!mappedKey) {
-      throw new Error(`Unmapped telemetry label: ${label}`);
-    }
-
-    if (COCKPIT_KEYS.has(mappedKey)) {
-      cockpit[mappedKey] = value;
-    } else {
-      parsed[mappedKey] = value;
-    }
-  }
-
-  return { cockpit, parsed };
-}
-
-function removeTelemetryBlock(text: string): string {
-  const lines = text.split("\n");
-  const firstFence = lines.findIndex(l => l.trim().startsWith("```"));
-  const secondFence = lines.findIndex(
-    (l, i) => i > firstFence && l.trim().startsWith("```")
-  );
-
-  if (firstFence === -1 || secondFence === -1) {
-    throw new Error("Telemetry fences not found for removal");
-  }
-
-  return [
-    ...lines.slice(0, firstFence),
-    ...lines.slice(secondFence + 1),
-  ].join("\n").trim();
-}
-
-function isValidTelemetryBlock(text: string): boolean {
-  if (!text) return false;
-  if (!text.trim().startsWith("```")) return false;
-
-  const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
-
-  const firstFence = lines.findIndex(l => l.startsWith("```"));
-  if (firstFence === -1) return false;
-
-  const secondFence = lines.findIndex(
-    (l, i) => i > firstFence && l.startsWith("```")
-  );
-  if (secondFence === -1) return false;
-
-  const telemetryLines = lines.slice(firstFence + 1, secondFence);
 
   if (telemetryLines.length !== TELEMETRY_REQUIRED_FIELDS.length) {
     return false;
@@ -796,7 +672,7 @@ if (balanceBefore <= 0) {
       return NextResponse.json({ error: "No message content" }, { status: 502 });
     }
 
-    // === TELEMETRY ENFORCEMENT ===
+    // === TELEMETRY STRUCTURING ===
     if (!isValidTelemetryBlock(content)) {
       console.warn("[telemetry] invalid or missing block — retrying once");
 
@@ -938,7 +814,7 @@ if (balanceBefore <= 0) {
       const seal = await new Promise<any>((resolve, reject) => {
         const p = spawn(
   "python3",
-  ["-m", "triketon.triketon2048", "seal", String(originalContent), "--json"],
+  ["-m", "triketon.triketon2048", "seal", String(content), "--json"],
   { stdio: ["ignore", "pipe", "pipe"] }
 );
 
@@ -999,34 +875,19 @@ if (balanceBefore <= 0) {
   // === TELEMETRY STRUCTURING (POST-SEAL, PRE-RESPONSE) ===
   const originalContent = content;
 
-let structuredTelemetry: { cockpit: Record<string, string>; parsed: Record<string, string> } | null = null;
-let cleanedContent = content;
+  let structuredTelemetry: any = null;
+  let cleanedContent = content;
 
-try {
-  structuredTelemetry = parseTelemetryBlock(originalContent);
-  cleanedContent = removeTelemetryBlock(originalContent);
-  } catch (err) {
-    console.error("[telemetry] structuring failed", err);
+  if (!isValidTelemetryBlock(originalContent)) {
+    console.error("[telemetry] validation failed");
+
     return NextResponse.json(
-      { error: "Telemetry structuring failed" },
+      { error: "Telemetry validation failed" },
       { status: 500 }
     );
   }
 
-  const res = NextResponse.json(
-  {
-    role: "assistant",
-    content: cleanedContent,
-    telemetry: structuredTelemetry,
-    status,
-    tokens_used: TOKENS_USED,
-    balance_after: balanceAfter,
-    debug_usage: usage,
-    triketon: triketon ?? null,
-  },
-  { status: 200 }
-);
-// ---- SESSION COUNTER (minimal & robust) ----
+  // ---- SESSION COUNTER (minimal & robust) ----
 
 const sessionRaw = req.cookies.get("mpathy_session")?.value;
 let sessionData: { conversationId: string; counter: number } | null = null;
@@ -1043,10 +904,25 @@ const conversationId =
   sessionData?.conversationId ?? crypto.randomUUID();
 
 const serverCounter = (sessionData?.counter ?? 0) + 1;
-// === SERVER COUNTER AUTHORITY ===
+
 content = content.replace(
-  /● Session Prompt Counter:\s*\d+/,
-  `● Session Prompt Counter: ${serverCounter}`
+  /Session Prompt Counter:\s*\d+/,
+  `Session Prompt Counter: ${serverCounter}`
+);
+
+cleanedContent = content;
+const res = NextResponse.json(
+{
+  role: "assistant",
+  content: cleanedContent,
+  telemetry: structuredTelemetry,
+  status,
+  tokens_used: TOKENS_USED,
+  balance_after: balanceAfter,
+  debug_usage: usage,
+  triketon: triketon ?? null,
+},
+{ status: 200 }
 );
 
 res.cookies.set({

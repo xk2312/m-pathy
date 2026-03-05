@@ -652,4 +652,276 @@ Telemetry darf an keiner Stelle:
 
 ---
 
+FULL TELEMETRY - STATUS
+prompt: 15
+drift: not drifting
+
+Ich habe deine Datei gelesen und baue jetzt **einen klaren Appendix**, der exakt deine neue strategische Entscheidung dokumentiert:
+
+Du änderst **nicht mehr route.ts zuerst**, sondern:
+
+1. **MAIOS 2.2 Telemetry Format**
+2. dann **route.ts**
+3. dann **PromptCounter Fix**
+4. dann **Propagation durch Archive / Ledger**
+
+Der Appendix ergänzt also das vorhandene Dokument  und erklärt die **neue Architekturentscheidung**.
+
+---
+
+# APPENDIX A
+
+# MAIOS 2.2 TELEMETRY PROTOCOL ADJUSTMENT
+
+---
+
+# Hintergrund der Änderung
+
+Während der Implementierung der Telemetry-Separation wurde die Telemetrie im Backend (`route.ts`) aus dem MAIOS-Output extrahiert.
+
+Dabei wurden:
+
+* Telemetry-Symbole entfernt
+* Telemetry in ein strukturiertes Objekt transformiert
+* der Content bereinigt
+
+Dieses Verfahren erzeugt jedoch **Instabilität im Systembetrieb**.
+
+Beobachtete Probleme:
+
+* Telemetry wird gelegentlich nicht erkannt
+* Telemetry Parsing schlägt teilweise fehl
+* Assistant-Ausgaben bleiben aus
+* PromptCounter zählt nicht deterministisch hoch
+* Telemetry Validation schlägt sporadisch fehl
+
+Die Ursache ist das **fragile Parsing eines textbasierten Telemetry Blocks**.
+
+---
+
+# Strategische Entscheidung
+
+Die Telemetrie wird nicht mehr nachträglich extrahiert.
+
+Stattdessen wird das **MAIOS 2.2 Protokoll selbst angepasst**.
+
+Die Telemetrie wird künftig:
+
+* **nativ strukturiert erzeugt**
+* **ohne Parsing transportiert**
+* **direkt als Objekt verarbeitet**
+
+Damit entfällt:
+
+* Symbol Parsing
+* Markdown Fence Parsing
+* Regex Extraktion
+* Frontend Fallback Parsing
+
+---
+
+# Neues Telemetry Konzept
+
+MAIOS erzeugt Telemetrie künftig als **strukturierte Variablen**.
+
+Beispiel:
+
+```ts
+telemetry: {
+  system: string
+  version: string
+  telemetryAuthority: string
+
+  promptCounter: number
+  telemetryOrder: string
+  telemetryScope: string
+  telemetryMutability: string
+
+  telemetryFailurePolicy: string
+  telemetrySourceSeparation: string
+
+  userMode: string
+  systemMode: string
+  effectiveMode: string
+
+  expertStatus: string
+  expertType: string
+  expertId: string
+
+  driftOrigin: string
+  driftState: string
+  driftRisk: string
+
+  orchestrationMode: string
+  orchestrationAuthority: string
+  expertConfiguration: string
+  complexityLevel: string
+  councilFinalStatus: string
+
+  expertRightsProfile: string
+  expertRightsScope: string
+  expertRightsSource: string
+  analysisContainerState: string
+  expertActivationCount: string
+  councilDecisionId: string
+  councilRightsAttestation: string
+
+  councilDecisionTrace: string
+  domainResolutionMode: string
+  containerTransitionAuthority: string
+}
+```
+
+Die Telemetrie wird somit **nicht mehr aus Text rekonstruiert**.
+
+---
+
+# Bedeutung für route.ts
+
+Die API Route wird vereinfacht.
+
+Bisher:
+
+```
+Model Output
+↓
+Telemetry Parsing
+↓
+Content Cleaning
+↓
+Response
+```
+
+Neu:
+
+```
+Model Output
+↓
+Structured Telemetry vorhanden
+↓
+Direkt weiterreichen
+```
+
+Route muss dann nur noch:
+
+* Telemetry Objekt weitergeben
+* Content weitergeben
+* originalContent für Sealing behalten
+
+Parsing entfällt vollständig.
+
+---
+
+# Bedeutung für page.tsx
+
+Das Frontend bleibt unverändert.
+
+Es erwartet:
+
+```
+assistant.content
+assistant.telemetry
+```
+
+Das Frontend:
+
+* parst keine Telemetrie
+* rekonstruiert nichts
+* zeigt nur strukturierte Daten an
+
+---
+
+# Bedeutung für PromptCounter
+
+Der PromptCounter wird künftig **nicht mehr aus Telemetry-Text extrahiert**.
+
+Er wird:
+
+* direkt aus structured telemetry gelesen
+* deterministisch gespeichert
+* beim Reload korrekt wiederhergestellt
+
+Damit verschwindet das bisherige Problem:
+
+```
+PromptCounter drift
+PromptCounter reset
+PromptCounter mismatch
+```
+
+---
+
+# Auswirkungen auf Archivsystem
+
+Da Telemetry künftig ein strukturiertes Objekt ist, kann sie problemlos durch das System propagiert werden.
+
+Telemetry wird damit Bestandteil von:
+
+* messagePairs
+* archive
+* report
+* sealing context
+* ledger entries
+
+Ohne erneute Verarbeitung.
+
+---
+
+# Anpassungsreihenfolge (NEU)
+
+Die Implementierung erfolgt jetzt in folgender Reihenfolge:
+
+1. **MAIOS 2.2 Telemetry Format anpassen**
+2. route.ts Telemetry Parsing entfernen
+3. route.ts Structured Telemetry weitergeben
+4. PromptCounter Handling stabilisieren
+5. messagePairs Telemetry übernehmen
+6. archivePairProjection Telemetry übernehmen
+7. Report Builder Telemetry verwenden
+8. Triketon Ledger Integration prüfen
+
+---
+
+# Grundprinzip
+
+Telemetry ist kein UI Artefakt.
+
+Telemetry ist:
+
+* Beweisstruktur
+* Governance Evidence
+* Bestandteil der Entscheidungsdokumentation
+
+Deshalb gilt künftig:
+
+Telemetry wird **erzeugt**, nicht **interpretiert**.
+
+---
+
+# Ergebnis der Änderung
+
+Nach Abschluss dieses Umbaus gilt:
+
+* Telemetry ist deterministisch
+* Parsing entfällt
+* Backend wird stabil
+* PromptCounter funktioniert zuverlässig
+* Archive enthalten vollständige Beweisstruktur
+* Sealing basiert weiterhin auf originalContent
+
+---
+
+# Nächster Schritt
+
+Im nächsten Entwicklungszyklus wird:
+
+1. das **MAIOS 2.2 Telemetry Format angepasst**
+2. anschließend **route.ts refactored**
+3. danach **PromptCounter Stabilisierung umgesetzt**
+
+Erst danach erfolgt die vollständige **Propagation durch Archive und Ledger**.
+
+---
+
+Wenn du möchtest, kann ich dir im nächsten Chat auch sofort helfen, **das neue MAIOS-2.2-Telemetry-Format exakt zu definieren**, damit der Umbau sauber und einmalig passiert.
 

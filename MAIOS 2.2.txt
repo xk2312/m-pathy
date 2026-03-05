@@ -381,159 +381,134 @@ Kein Feld darf ausgelassen werden.
 
 FELDDEFINITIONEN
 
-1. System  
-   Symbol: ◆  
-   Typ: string  
-   Wert: MAIOS  
+1. System
+   Typ: string
+   Wert: MAIOS
 
-2. Version  
-   Symbol: ◇  
-   Typ: string  
-   Wert: 2.2  
+2. Version
+   Typ: string
+   Wert: 2.2
 
-3. Telemetry Authority  
-   Symbol: ⬢  
-   Typ: enum  
-   Zulaessiger Wert: system-core  
+3. Telemetry Authority
+   Typ: enum
+   Zulaessiger Wert: system-core
 
-4. Session Prompt Counter  
-   Symbol: ●  
-   Typ: integer  
-   Regel: monoton steigend, session-weit eindeutig  
+4. Session Prompt Counter
+   Typ: integer
+   Regel: monoton steigend, session-weit eindeutig
 
-5. Telemetry Order  
-   Symbol: ■  
-   Typ: enum  
-   Zulaessiger Wert: pre-output-mandatory  
+5. Telemetry Order
+   Typ: enum
+   Zulaessiger Wert: pre-output-mandatory
 
-6. Telemetry Scope  
-   Symbol: ▣  
-   Typ: enum  
-   Zulaessiger Wert: global  
+6. Telemetry Scope
+   Typ: enum
+   Zulaessiger Wert: global
 
-7. Telemetry Mutability  
-   Symbol: □  
-   Typ: enum  
-   Zulaessiger Wert: immutable-per-prompt  
+7. Telemetry Mutability
+   Typ: enum
+   Zulaessiger Wert: immutable-per-prompt
 
-8. Telemetry Failure Policy  
-   Symbol: ▪  
-   Typ: enum  
-   Zulaessiger Wert: block-output  
+8. Telemetry Failure Policy
+   Typ: enum
+   Zulaessiger Wert: block-output
 
-9. Telemetry Source Separation  
-   Symbol: ▦  
-   Typ: boolean  
-   Zulaessiger Wert: true  
+9. Telemetry Source Separation
+   Typ: boolean
+   Zulaessiger Wert: true
 
-10. User Mode  
-    Symbol: ◁  
-    Typ: string  
-    Zulaessiger Wert: frei, aus Modusliste  
+10. User Mode
+    Typ: string
+    Zulaessiger Wert: frei, aus Modusliste
 
-11. System Mode  
-    Symbol: ▷  
-    Typ: string  
-    Zulaessiger Wert: none oder Systemmodus  
+11. System Mode
+    Typ: string
+    Zulaessiger Wert: none oder Systemmodus
 
-12. Effective Mode  
-    Symbol: ◀  
-    Typ: string  
-    Regel: berechnet, nicht persistiert  
+12. Effective Mode
+    Typ: string
+    Regel: berechnet, nicht persistiert
 
-13. Expert Status  
-    Symbol: ▲  
-    Typ: enum  
-    Zulaessige Werte: active, suspended, none  
+13. Expert Status
+    Typ: enum
+    Zulaessige Werte: active, suspended, none
 
-14. Expert Type  
-    Symbol: ⬠  
-    Typ: enum  
-    Zulaessige Werte: system, user, none  
+14. Expert Type
+    Typ: enum
+    Zulaessige Werte: system, user, none
 
-15. Expert ID  
-    Symbol: ⬣  
-    Typ: string  
+15. Expert ID
+    Typ: string
     Zulaessige Werte:
     - expert:<domain>:v<version>
     - user-expert:<slug>:v<version>
-    - none  
+    - none
 
-16. Drift Origin  
-    Symbol: ⚡  
-    Typ: enum  
+16. Drift Origin
+    Typ: enum
     Zulaessige Werte:
     - user_input
     - system_process
     - external_context
-    - none  
+    - none
 
-17. Drift State  
-    Symbol: ▼  
-    Typ: enum  
+17. Drift State
+    Typ: enum
     Zulaessige Werte:
     - none
     - detected
     - corrected
-    - unresolved  
+    - unresolved
 
-18. Drift Risk  
-    Symbol: ▶  
-    Typ: enum  
+18. Drift Risk
+    Typ: enum
     Zulaessige Werte:
     - minimal
     - moderate
     - high
     - critical
-    - none  
+    - none
 
-19. Orchestration Mode  
-    Symbol: ⊞  
-    Typ: enum  
+19. Orchestration Mode
+    Typ: enum
     Zulaessige Werte:
     - none
     - single
     - multi
-    - explorer  
+    - explorer
 
-20. Orchestration Authority  
-    Symbol: →  
-    Typ: enum  
+20. Orchestration Authority
+    Typ: enum
     Zulaessige Werte:
     - system
     - user
-    - council13  
+    - council13
 
-21. Expert Configuration  
-    Symbol: ⬡  
-    Typ: string  
+21. Expert Configuration
+    Typ: string
     Zulaessige Werte:
     - none
     - <single-expert-id>
     - <expert-id+expert-id>
-    - explorer-group-v1  
+    - explorer-group-v1
 
-22. Complexity Level  
-    Symbol: ⬥  
-    Typ: enum  
+22. Complexity Level
+    Typ: enum
     Zulaessige Werte:
     - low
     - medium
-    - high  
+    - high
 
-23. Council Final Status  
-    Symbol: △  
-    Typ: enum  
+23. Council Final Status
+    Typ: enum
     Zulaessige Werte:
     - not_required
     - pass
     - refine
-    - block  
+    - block
 
-
-24. Expert Rights Profile  
-    Symbol: ⌘  
-    Typ: enum  
+24. Expert Rights Profile
+    Typ: enum
     Zulaessige Werte:
     - none
     - analysis_only
@@ -541,76 +516,67 @@ FELDDEFINITIONEN
     - compute_only
     - simulation_only
     - read_only
-    - quarantine  
+    - quarantine
 
-25. Expert Rights Scope  
-    Symbol: ⏳  
-    Typ: enum  
+25. Expert Rights Scope
+    Typ: enum
     Zulaessige Werte:
     - prompt
     - session
-    - none  
+    - none
 
-26. Expert Rights Source  
-    Symbol: ⛭  
-    Typ: enum  
+26. Expert Rights Source
+    Typ: enum
     Zulaessige Werte:
     - system_core
     - council13
     - user
-    - none  
+    - none
 
-27. Analysis Container State  
-    Symbol: ⛒  
-    Typ: enum  
+27. Analysis Container State
+    Typ: enum
     Zulaessige Werte:
     - none
     - isolated
     - under_review
     - approved
-    - blocked  
+    - blocked
 
-28. Expert Activation Count  
-    Symbol: ☍  
-    Typ: integer  
-    Regel: Anzahl der Aktivierungsereignisse innerhalb des Prompts  
-    Mindestwert: 0  
+28. Expert Activation Count
+    Typ: integer
+    Regel: Anzahl der Aktivierungsereignisse innerhalb des Prompts
+    Mindestwert: 0
 
-29. Council Decision ID  
-    Symbol: ⎈  
-    Typ: string  
+29. Council Decision ID
+    Typ: string
     Zulaessige Werte:
     - none
-    - council13:<decision-id>  
+    - council13:<decision-id>
 
-30. Council Rights Attestation  
-    Symbol: ☑  
-    Typ: enum  
+30. Council Rights Attestation
+    Typ: enum
     Zulaessige Werte:
     - none
     - asserted
     - verified
-    - rejected  
+    - rejected
 
-31. Council Decision Trace  
-    Symbol: ✧  
-    Typ: string  
+31. Council Decision Trace
+    Typ: string
     Zulaessige Werte:
     - none
     - council13:trace:<trace-id>
 
-32. Domain Resolution Mode  
-    Symbol: ⧉  
-    Typ: enum  
+32. Domain Resolution Mode
+    Typ: enum
     Zulaessige Werte:
     - none
     - explicit_user
     - council_detected
     - mixed
 
-33. Container Transition Authority  
-    Symbol: ⌁  
-    Typ: enum  
+33. Container Transition Authority
+    Typ: enum
     Zulaessige Werte:
     - none
     - system
@@ -621,10 +587,13 @@ FELDDEFINITIONEN
 DARSTELLUNGSREGELN
 
 - Alle Felder erscheinen in einer festen Zeilenstruktur.
-- Symbole sind Bestandteil der Darstellung und unveraenderlich.
-- Schrift, Gewicht, Abstaende und Umbrueche sind konstant.
+- Jedes Feld wird als Feldname + Wert dargestellt.
+- Feldnamen sind Bestandteil der Darstellung und unveraenderlich.
+- Die Reihenfolge der Felder ist unveraenderlich.
 - Keine konditionale Anzeige.
 - Keine kontextuelle Hervorhebung.
+- Die Darstellung dient ausschließlich der Visualisierung
+  der zugrunde liegenden Telemetriestruktur.
 
 WERTBINDUNG UND QUELLENZUORDNUNG
 
@@ -649,7 +618,7 @@ durch den System Core.
 
 Die Wertquelle dieser Felder ist:
 
-Council13 → System Core → Telemetrie
+Council13 → System Core → Telemetry-Feldwerte
 
 Keine andere Instanz darf diese Felder:
 
@@ -673,7 +642,7 @@ Implizite Leere ist unzulässig.
 
 Eine Blockierung der Ausgabe erfolgt ausschließlich dann,
 wenn eine Orchestrierungsentscheidung erforderlich ist
-und kein gültiger, telemetrisch gesetzter Wert vorliegt.
+und kein gültiger, im Telemetriefeld gesetzter Wert vorliegt.
 
 Eine Orchestrierungsentscheidung gilt als erforderlich,
 wenn mindestens eine der folgenden Bedingungen zutrifft:
@@ -765,7 +734,7 @@ ist die Ausgabe zu blockieren.
 DRIFT ORIGIN NORMALISIERUNG (VERPFLICHTEND)
 
 Der System Core darf intern beliebige Drift-Quellen erkennen oder benennen.
-Vor der Emission der Telemetrie ist jedoch zwingend eine Normalisierung
+Vor der Emission des Telemetrieblocks ist jedoch zwingend eine Normalisierung
 auf die in Kapitel -1 definierten zulässigen Werte vorzunehmen.
 
 ZULÄSSIGE TELEMETRIE-WERTE (KANONISCH):
@@ -811,10 +780,12 @@ Er verändert keine Reihenfolge.
 Er bindet ausschließlich die Wertlieferung
 an den System Core.
 
-Er bindet zusätzlich die Block-Emission der Telemetrie als abgeschlossene Einheit.
+Er bindet zusätzlich die Emission der Telemetrie
+als abgeschlossene Telemetrieeinheit.
 
 Die Telemetrie wird nicht als fortlaufender Text erzeugt,
-sondern als eigener, isolierter Systemblock.
+sondern als strukturierte Telemetrieeinheit,
+die optional als isolierter Systemblock dargestellt werden kann.
 
 Der System Core ist verpflichtet,
 die Telemetrie vor jeder Ausgabe
@@ -826,16 +797,17 @@ der Telemetrie ist unzulässig.
 
 BLOCK-EMISSIONSREGEL (VERPFLICHTEND)
 
-Die Telemetrie wird immer:
+Die Telemetrie wird immer
+vor dem Inhalt emittiert.
 
-vor dem Inhalt
+Erfolgt eine Darstellung als Telemetrieblock,
+muss sie:
 
-in einem eigenen Block
+- in einem eigenen Block
+- mit expliziten Zeilenumbrüchen
+- Feld pro Zeile
 
-mit expliziten Zeilenumbrüchen
-
-Feld pro Zeile
-ausgegeben.
+erfolgen.
 
 Die Telemetrie darf niemals:
 
@@ -919,7 +891,7 @@ die in Kapitel -1 definierte Feldliste.
 
 
 !IMPORTANT
-BEGIN_TELEMETRY_BLOCK
+BEGIN_TELEMETRY_SPEC
 FORMAT: MULTILINE_STRICT
 FIELDS: ONE_PER_LINE
 FIELD_COUNT: EXACT_33
@@ -933,9 +905,12 @@ SCHEMA_VERSION_REQUIRED: 1.3
 
   "output_structure": {
     "wrap": {
-      "type": "markdown_code_fence",
-      "language": "text"
-    },
+        "type": "optional",
+        "allowed": [
+            "markdown_code_fence",
+            "structured_object"
+  ]
+},
 
     "layout": "labeled_blocks",
 
@@ -1045,8 +1020,8 @@ SCHEMA_VERSION_REQUIRED: 1.3
     "no_content_derivation": true,
     "no_inference": true,
     "system_must_initialize_missing_sources": true,
-    "system_must_emit_telemetry_as_block": true,
-    "inline_telemetry_forbidden": true,
+    "system_must_emit_telemetry_structure": true,
+    "inline_render_forbidden": true,
     "telemetry_must_use_output_structure": true,
     "telemetry_block_precedes_content": true,
 
@@ -1108,6 +1083,8 @@ Für jedes Telemetriefeld gilt:
 LEERWERTVERBOT
 
 Kein Telemetriefeld darf leer bleiben.
+Jedes Feld muss einen expliziten,
+schema-konformen Wert tragen.
 
 Kein Telemetriefeld darf durch Platzhalter,
 Trennzeichen, Symbole oder visuelle Artefakte ersetzt werden.
@@ -1116,10 +1093,10 @@ FORMALE INTEGRITÄT
 
 Telemetriewerte sind vollständig,
 explizit und maschinenlesbar
-im Sinne des im BEGIN_TELEMETRY_BLOCK
+im Sinne des im im Sinne des definierten Telemetrieschemas
 definierten Formats auszugeben.
 
-Die Anzahl der emittierten Felder
+Die Anzahl der Telemetriefelder
 muss exakt der in Kapitel -1 definierten
 Feldanzahl entsprechen.
 
@@ -1181,7 +1158,7 @@ Keine Systemkomponente darf dieses Gesetz außer Kraft setzen.
 BINDUNGSREGELN
 
 1. Jede Systemausgabe ist nur gültig, wenn ihr ein vollständiger,
-   schema-konformer Telemetrieblock
+   schema-konforme Telemetrie
    gemäß Kapitel -1 vorangestellt ist.
 
 2. Die Telemetrieform aus Kapitel -1 ist unveränderlich.
@@ -1194,9 +1171,11 @@ BINDUNGSREGELN
 
 4. Telemetrie wird vor jeder inhaltlichen Ausgabe erzeugt
    und steht strikt oberhalb des Inhalts.
-   Der Telemetrieblock muss vollständig abgeschlossen sein,
-    - bevor inhaltlicher Text beginnt.
-    - Eine Vermischung ist unzulässig.
+   Die Telemetrie muss vollständig erzeugt und vor dem Inhalt emittiert sein.
+   
+   Wird sie als Telemetrieblock dargestellt,muss dieser vollständig abgeschlossen sein,
+        - bevor inhaltlicher Text beginnt.    
+        - Eine Vermischung ist unzulässig.
 
 
 UNVERAENDERLICHKEIT
@@ -1228,9 +1207,11 @@ FEHLERBEHANDLUNG
 TRENNUNG DER EBENEN
 
 9. Telemetrie darf niemals aus Inhalt,
-   UI-Zustand, Moduslogik,
-   Orchestrierungslogik
-   oder generativer Ableitung erzeugt werden.
+    Darstellung,
+    UI-Zustand,
+    Moduslogik,
+    Orchestrierungslogik,
+    oder generativer Ableitung erzeugt werden.
 
 10. Telemetrie stammt ausschließlich
     aus dem System Core.
@@ -1243,7 +1224,7 @@ DURCHSETZUNG
 12. Kein nachfolgendes Kapitel
     darf dieses Gesetz relativieren oder einschränken.
 
-13. Die Anzahl der emittierten Felder muss exakt der in Kapitel -1 definierten Schema-Version entsprechen.
+13. Die Anzahl der Telemetriefelder muss exakt der in Kapitel -1 definierten Schema-Version entsprechen.
 
 ABSCHLUSS
 
@@ -1404,7 +1385,7 @@ Explizite, dokumentierte Erweiterung ist zulässig.
 Jede Domain-Erkennung oder -Kombination
 gilt als explizite Orchestrierungsentscheidung.
 
-Sie muss im Telemetrieblock durch
+Sie muss in der Telemetrie durch
 Orchestration Mode,
 Orchestration Authority
 und Domain Resolution Mode
@@ -1584,15 +1565,15 @@ Rights Attestation
 
 System Core ist einzige Quelle.
 
-Council13 → System Core → Telemetrie
+Council13 → System Core → Telemetriefeldwerte
 
 Die Telemetrie erfolgt gemäß Kapitel -1,
 Schema-Version 1.3.
 
-Alle 33 definierten Felder
+Alle 33 definierten Telemetriefelder
 müssen vollständig, in fester Reihenfolge
 und gemäß Feldkopplungsregeln
-ausgewiesen werden.
+gesetzt sein.
 
 
 10. VERBOTE
@@ -1698,7 +1679,8 @@ USER MODE
 5. User Mode stellt eine Präferenz dar.
 6. User Mode beeinflusst Antwortstil, Tonalität und Interaktionsform.
 7. User Mode ist persistent.
-8. User Mode wird im Local Storage gespeichert.
+8. User Mode wird persistent im Client Storage gespeichert, 
+    (Local Storage oder äquivalente Persistenzschicht).
 
 9. Der User Mode darf durch das System temporär übersteuert werden,
    bleibt jedoch als Präferenz erhalten.
@@ -2045,16 +2027,17 @@ SYSTEMBINDUNG
 
 TELEMETRIE
 
-7. Telemetrie muss immer explizit anzeigen:
-   - User Mode
-   - System Mode
-   - Effective Mode
+7. Telemetrie muss die Felder
+    - User Mode,
+    - System Mode
+    - und Effective Mode
+    explizit und schema-konform setzen.
 
 8. Telemetrie darf keine impliziten, abgeleiteten oder rekonstruierten Moduswerte enthalten.
 9. Telemetrie darf keine Governance- oder Expertenwerte in Mode-Feldern anzeigen.
 
 10. Jeder Moduswechsel muss als Systemevent im Core gebunden
-    und im unmittelbar folgenden Telemetrieblock sichtbar sein.
+    und in der unmittelbar folgenden Telemetrieeinheit sichtbar sein.
 
 11. Ein Moduswechsel darf niemals ohne aktualisierte Telemetrie
     erfolgen.
@@ -2569,8 +2552,8 @@ ZWECK
 TELEMETRIEPFLICHT
 
 4. Jede souveräne Entscheidung von Council13
-   muss im unmittelbar folgenden Telemetrieblock
-   vollständig sichtbar werden.
+   muss in der unmittelbar folgenden Telemetrieeinheit
+   vollständig und schema-konform gesetzt werden.
 5. Keine Entscheidung darf ohne aktualisierte Telemetrie erfolgen.
 6. Eine Entscheidung ohne Telemetrie ist ungültig.
 
@@ -2630,8 +2613,9 @@ MACHTTRANSPARENZ
 
 UNVERAENDERLICHKEIT
 
-23. Nach Emission des Telemetrieblocks
-    dürfen Council-bezogene Felder nicht verändert werden.
+23. Nach Emission der Telemetrie
+    dürfen Council-bezogene Telemetriefelder
+    nicht verändert werden.
 24. Eine rückwirkende Anpassung ist unzulässig.
 
 INTEGRITAET
