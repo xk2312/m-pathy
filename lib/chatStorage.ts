@@ -191,6 +191,7 @@ export type ChatMessage = {
   content: string;
   ts?: number;
   triketon?: TriketonSeal;
+  telemetry?: any;
 };
 
 /** Versionierter Hauptschlüssel */
@@ -245,8 +246,14 @@ function normalizeMessage(x: any): ChatMessage | null {
           ? (crypto as any).randomUUID()
           : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
 
-  return { id, role, content, ts, triketon };
-
+return {
+  id,
+  role,
+  content,
+  ts,
+  triketon,
+  telemetry: typeof x.telemetry === "object" ? x.telemetry : undefined,
+};
 }
 
 function normalizeMessages(arr: unknown): ChatMessage[] {
