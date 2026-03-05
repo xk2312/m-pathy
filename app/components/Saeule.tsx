@@ -1641,7 +1641,7 @@ onClick={() => exportThread("json", messages)}
         <span className={styles.saeuleBottomNoteLabel}>
           Powered by MAIOS.
           TRIKETON-verified integrity.
-          100% privacy. Zero drift. Full autonomy.
+          100% privacy. Drift monitor. Full autonomy.
         </span>
       </div>
 
