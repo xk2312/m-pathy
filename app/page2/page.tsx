@@ -2602,10 +2602,11 @@ sendMessageLocal(injectedContext)
     setMessages((prev) => {
       const base = Array.isArray(prev) ? prev : [];
       const assistantMsg = {
-        ...assistant,
-        id: crypto.randomUUID(),
-        content: "",
-      };
+      ...assistant,
+      id: crypto.randomUUID(),
+      content: "",
+      telemetry: assistant.telemetry ?? undefined,
+    };
       return [...base, assistantMsg];
     });
 
@@ -2673,11 +2674,12 @@ sendMessageLocal(injectedContext)
 setMessages((prev) => {
   const base = Array.isArray(prev) ? prev : [];
 
-  const assistantMsg = {
-    ...assistant,
-    id: crypto.randomUUID(),
-    content: "",
-  };
+const assistantMsg = {
+  ...assistant,
+  id: crypto.randomUUID(),
+  content: "",
+  telemetry: assistant.telemetry ?? null,
+};
 
   const next = truncateMessages([
     ...base,
