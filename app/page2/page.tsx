@@ -2451,10 +2451,13 @@ if (busy) {
 
   void 0;
 
- const telemetry =
-  data && typeof data.telemetry === "object"
+const telemetry =
+  (data && typeof data.telemetry === "object"
     ? data.telemetry
-    : undefined;
+    : undefined) ??
+  (assistant && typeof (assistant as any).telemetry === "object"
+    ? (assistant as any).telemetry
+    : undefined);
 
 return {
   id,
@@ -2463,7 +2466,10 @@ return {
   format: assistant.format ?? "markdown",
   meta: { status, balanceAfter, tokensUsed },
   triketon,
-  telemetry: data?.telemetry ?? undefined,
+  telemetry:
+  data?.telemetry ??
+  (assistant as any)?.telemetry ??
+  undefined,
 } as any as ChatMessage;
 }
 
