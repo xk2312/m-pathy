@@ -876,7 +876,49 @@ if (balanceBefore <= 0) {
   const originalContent = content;
 
   let structuredTelemetry: any = null;
-  let cleanedContent = content;
+let cleanedContent = content;
+
+const lines = content.split("\n");
+
+const startIndex = lines.findIndex(l =>
+  l.trim().startsWith("System:")
+);
+
+if (startIndex !== -1) {
+  const telemetryLines = lines.slice(
+    startIndex,
+    startIndex + TELEMETRY_REQUIRED_FIELDS.length
+  );
+
+  const telemetryObj: Record<string, string> = {};
+
+  telemetryLines.forEach(line => {
+    const idx = line.indexOf(":");
+    if (idx === -1) return;
+
+    const key = line.slice(0, idx).trim();
+    const value = line.slice(idx + 1).trim();
+
+    telemetryObj[key] = value;
+  });
+
+  structuredTelemetry = {
+    cockpit: {
+      system: telemetryObj["System"] ?? "",
+      version: telemetryObj["Version"] ?? "",
+      promptCounter: telemetryObj["Session Prompt Counter"] ?? "",
+      driftState: telemetryObj["Drift State"] ?? "",
+      effectiveMode: telemetryObj["Effective Mode"] ?? "",
+      expertId: telemetryObj["Expert ID"] ?? "",
+    },
+    parsed: telemetryObj,
+  };
+
+  cleanedContent = [
+    ...lines.slice(0, startIndex),
+    ...lines.slice(startIndex + TELEMETRY_REQUIRED_FIELDS.length),
+  ].join("\n").trim();
+}
 
   if (!isValidTelemetryBlock(originalContent)) {
     console.error("[telemetry] validation failed");
