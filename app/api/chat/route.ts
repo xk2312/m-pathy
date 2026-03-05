@@ -873,10 +873,42 @@ if (balanceBefore <= 0) {
 
 
   // === TELEMETRY STRUCTURING (POST-SEAL, PRE-RESPONSE) ===
-  const originalContent = content;
-
-  let structuredTelemetry: any = null;
+let structuredTelemetry: any = null;
 let cleanedContent = content;
+
+if (!isValidTelemetryBlock(content)) {
+      console.error("[telemetry] validation failed");
+
+    return NextResponse.json(
+      { error: "Telemetry validation failed" },
+      { status: 500 }
+    );
+  }
+
+  // ---- SESSION COUNTER (minimal & robust) ----
+
+const sessionRaw = req.cookies.get("mpathy_session")?.value;
+let sessionData: { conversationId: string; counter: number } | null = null;
+
+try {
+  if (sessionRaw) {
+    sessionData = JSON.parse(sessionRaw);
+  }
+} catch {
+  sessionData = null;
+}
+
+const conversationId =
+  sessionData?.conversationId ?? crypto.randomUUID();
+
+const serverCounter = (sessionData?.counter ?? 0) + 1;
+
+content = content.replace(
+  /Session Prompt Counter:\s*\d+/,
+  `Session Prompt Counter: ${serverCounter}`
+);
+
+const ledgerContent = content;
 
 const lines = content.split("\n");
 
@@ -918,41 +950,9 @@ if (startIndex !== -1) {
     ...lines.slice(0, startIndex),
     ...lines.slice(startIndex + TELEMETRY_REQUIRED_FIELDS.length),
   ].join("\n").trim();
+} else {
+  cleanedContent = content;
 }
-
-  if (!isValidTelemetryBlock(originalContent)) {
-    console.error("[telemetry] validation failed");
-
-    return NextResponse.json(
-      { error: "Telemetry validation failed" },
-      { status: 500 }
-    );
-  }
-
-  // ---- SESSION COUNTER (minimal & robust) ----
-
-const sessionRaw = req.cookies.get("mpathy_session")?.value;
-let sessionData: { conversationId: string; counter: number } | null = null;
-
-try {
-  if (sessionRaw) {
-    sessionData = JSON.parse(sessionRaw);
-  }
-} catch {
-  sessionData = null;
-}
-
-const conversationId =
-  sessionData?.conversationId ?? crypto.randomUUID();
-
-const serverCounter = (sessionData?.counter ?? 0) + 1;
-
-content = content.replace(
-  /Session Prompt Counter:\s*\d+/,
-  `Session Prompt Counter: ${serverCounter}`
-);
-
-cleanedContent = content;
 const res = NextResponse.json(
 {
   role: "assistant",
