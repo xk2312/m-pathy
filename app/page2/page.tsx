@@ -904,28 +904,43 @@ function Bubble({
       { key: "driftOrigin", value: msg.telemetry?.parsed?.["Drift Origin"] },
           ]
       .filter(item => item.value !== undefined && item.value !== null)
-      .map(({ key, value }) => (
-        <div key={key}>
-          <div
-            style={{
-              fontSize: 10,
-              opacity: 0.6,
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-            }}
-          >
-            {key}
-          </div>
-          <div
-            style={{
-              fontWeight: 600,
-              fontSize: 13,
-            }}
-          >
-            {String(value)}
-          </div>
-        </div>
-      ))}
+      .map(({ key, value }) => {
+  const labelMap: Record<string, string> = {
+    system: "System",
+    version: "Version",
+    promptCounter: "Prompt#",
+    effectiveMode: "Mode",
+    complexityLevel: "Complexity",
+    driftState: "Drift",
+    driftRisk: "Risk",
+    driftOrigin: "Origin",
+  };
+
+  const label = labelMap[key] ?? key;
+
+  return (
+    <div key={key}>
+      <div
+        style={{
+          fontSize: 10,
+          opacity: 0.6,
+          textTransform: "uppercase",
+          letterSpacing: "0.06em",
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          fontWeight: 600,
+          fontSize: 13,
+        }}
+      >
+        {String(value)}
+      </div>
+    </div>
+  );
+})}
   </div>
 </div>
 
