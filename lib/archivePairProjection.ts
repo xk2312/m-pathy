@@ -266,6 +266,7 @@ type TriketonAnchor = {
   timestamp: string
   truth_hash: string
   chain_id?: string
+  telemetry?: any
 }
 
 /**
