@@ -935,16 +935,21 @@ if (startIndex !== -1) {
   });
 
   structuredTelemetry = {
-    cockpit: {
-      system: telemetryObj["System"] ?? "",
-      version: telemetryObj["Version"] ?? "",
-      promptCounter: telemetryObj["Session Prompt Counter"] ?? "",
-      driftState: telemetryObj["Drift State"] ?? "",
-      effectiveMode: telemetryObj["Effective Mode"] ?? "",
-      expertId: telemetryObj["Expert ID"] ?? "",
-    },
-    parsed: telemetryObj,
-  };
+  cockpit: {
+    system: telemetryObj["System"] ?? "",
+    version: telemetryObj["Version"] ?? "",
+    promptCounter: telemetryObj["Session Prompt Counter"] ?? "",
+    effectiveMode: telemetryObj["Effective Mode"] ?? "",
+
+    driftState: telemetryObj["Drift State"] ?? "",
+    driftRisk: telemetryObj["Drift Risk"] ?? "",
+    driftOrigin: telemetryObj["Drift Origin"] ?? "",
+    complexityLevel: telemetryObj["Complexity Level"] ?? "",
+
+    expertId: telemetryObj["Expert ID"] ?? "",
+  },
+  parsed: telemetryObj,
+};
 
   const firstFenceIndex = (() => {
     for (let i = startIndex; i >= 0; i--) {
