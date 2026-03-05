@@ -173,6 +173,10 @@ export interface ArchiveEntry {
   truth_hash: string
   public_key: string
   verified: boolean
+  telemetry?: {
+    cockpit: Record<string, string>
+    parsed: Record<string, string>
+  }
 }
 
 export interface ArchiveSelection {

@@ -27,6 +27,7 @@ type TriketonAnchor = {
   public_key?: string
   chain_id?: string | number
   origin_chat?: number
+  telemetry?: any
 }
 
 const TRIKETON_KEY = 'mpathy:triketon:v1'
@@ -91,16 +92,17 @@ function anchorsToArchiveEntries(anchors: TriketonAnchor[]): TArchiveEntry[] {
     const origin_chat = deriveOriginChat(a)
     if (!Number.isFinite(origin_chat) || origin_chat === 0) continue
 
-    entries.push({
-      id: a.id,
-      origin_chat,
-      role: a.role,
-      content: a.content,
-      timestamp: a.timestamp,
-      truth_hash: a.truth_hash,
-      public_key: typeof a.public_key === 'string' ? a.public_key : '',
-      verified: true,
-    })
+   entries.push({
+  id: a.id,
+  origin_chat,
+  role: a.role,
+  content: a.content,
+  timestamp: a.timestamp,
+  truth_hash: a.truth_hash,
+  public_key: typeof a.public_key === 'string' ? a.public_key : '',
+  verified: true,
+  telemetry: a.telemetry ?? undefined,
+})
   }
 
   return entries.sort((x, y) => new Date(x.timestamp).getTime() - new Date(y.timestamp).getTime())
@@ -178,12 +180,13 @@ const byChain = new Map<string, TriketonAnchor[]>()
   lang,
 ),
 
-      entries: ordered.map((m) => ({
-        id: m.id,
-        role: m.role as 'user' | 'assistant',
-        content: m.content,
-        timestamp: m.timestamp,
-      })),
+     entries: ordered.map((m) => ({
+  id: m.id,
+  role: m.role as 'user' | 'assistant',
+  content: m.content,
+  timestamp: m.timestamp,
+  telemetry: (m as any).telemetry ?? undefined,
+})),
     })
   }
 
