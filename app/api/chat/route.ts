@@ -434,6 +434,17 @@ export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as ChatBody;
 
+    const incomingConversationId =
+      typeof (body as any)?.conversationId === "string" &&
+      String((body as any).conversationId).trim().length > 0
+        ? String((body as any).conversationId).trim()
+        : null;
+
+    if (incomingConversationId && incomingConversationId !== conversationId) {
+      conversationId = incomingConversationId;
+      serverCounter = 1;
+    }
+
     if (!Array.isArray(body.messages)) {
       return NextResponse.json(
         { error: "`messages` must be an array of { role, content }" },
@@ -887,21 +898,8 @@ if (!isValidTelemetryBlock(content)) {
 
   // ---- SESSION COUNTER (minimal & robust) ----
 
-const sessionRaw = req.cookies.get("mpathy_session")?.value;
-let sessionData: { conversationId: string; counter: number } | null = null;
-
-try {
-  if (sessionRaw) {
-    sessionData = JSON.parse(sessionRaw);
-  }
-} catch {
-  sessionData = null;
-}
-
-const conversationId =
-  sessionData?.conversationId ?? crypto.randomUUID();
-
-const serverCounter = (sessionData?.counter ?? 0) + 1;
+// Session counter already calculated at request start
+// reuse existing serverCounter + conversationId
 
 content = content.replace(
   /Session Prompt Counter:\s*\d+/,

@@ -1067,9 +1067,14 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
       localStorage.removeItem("mpathy:thread:default");
 
     } catch {}
-    try {
-      localStorage.removeItem("expert");
-    } catch {}
+   try {
+  localStorage.removeItem("mpathy:thread:default");
+} catch {}
+
+try {
+  const newConversationId = crypto.randomUUID();
+  localStorage.setItem("mpathy:conversation:id", newConversationId);
+} catch {}
     try {
       localStorage.setItem("mode", "M");
     } catch {}
