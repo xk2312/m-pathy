@@ -898,11 +898,11 @@ function Bubble({
       { key: "version", value: msg.telemetry?.cockpit?.version },
       { key: "promptCounter", value: msg.telemetry?.cockpit?.promptCounter },
       { key: "effectiveMode", value: msg.telemetry?.cockpit?.effectiveMode },
+      { key: "complexityLevel", value: msg.telemetry?.parsed?.["Complexity Level"] },
       { key: "driftState", value: msg.telemetry?.cockpit?.driftState },
-      { key: "complexityLevel", value: msg.telemetry?.parsed?.complexityLevel },
-      { key: "driftRisk", value: msg.telemetry?.parsed?.driftRisk },
-      { key: "driftOrigin", value: msg.telemetry?.parsed?.driftOrigin },
-    ]
+      { key: "driftRisk", value: msg.telemetry?.parsed?.["Drift Risk"] },
+      { key: "driftOrigin", value: msg.telemetry?.parsed?.["Drift Origin"] },
+          ]
       .filter(item => item.value !== undefined && item.value !== null)
       .map(({ key, value }) => (
         <div key={key}>
