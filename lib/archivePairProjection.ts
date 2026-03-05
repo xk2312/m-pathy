@@ -281,11 +281,12 @@ export interface ArchivePair {
     truth_hash: string
   }
   assistant: {
-    id: string
-    content: string
-    timestamp: string
-    truth_hash: string
-  }
+  id: string
+  content: string
+  timestamp: string
+  truth_hash: string
+  telemetry?: any
+}
   keywords: string[]
 }
 
@@ -432,11 +433,12 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
           truth_hash: current.truth_hash,
         },
         assistant: {
-          id: next.id,
-          content: next.content,
-          timestamp: next.timestamp,
-          truth_hash: next.truth_hash,
-        },
+  id: next.id,
+  content: next.content,
+  timestamp: next.timestamp,
+  truth_hash: next.truth_hash,
+  telemetry: (next as any).telemetry ?? undefined,
+},
         keywords,
       })
     }
