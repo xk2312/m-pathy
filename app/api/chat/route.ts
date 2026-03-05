@@ -940,13 +940,12 @@ if (startIndex !== -1) {
     version: telemetryObj["Version"] ?? "",
     promptCounter: telemetryObj["Session Prompt Counter"] ?? "",
     effectiveMode: telemetryObj["Effective Mode"] ?? "",
-
+    
+    complexityLevel: telemetryObj["Complexity Level"] ?? "",
     driftState: telemetryObj["Drift State"] ?? "",
     driftRisk: telemetryObj["Drift Risk"] ?? "",
     driftOrigin: telemetryObj["Drift Origin"] ?? "",
-    complexityLevel: telemetryObj["Complexity Level"] ?? "",
-
-    expertId: telemetryObj["Expert ID"] ?? "",
+    
   },
   parsed: telemetryObj,
 };
