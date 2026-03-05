@@ -440,6 +440,7 @@ export type TriketonLedgerEntryV1 = {
   orbit_context: "chat";
   chain_id: string;
   chain_prev?: string;
+  telemetry?: any;
 };
 
 function isHex64(x: string): boolean {

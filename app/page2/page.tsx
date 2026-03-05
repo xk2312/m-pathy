@@ -2532,6 +2532,7 @@ appendTriketonLedgerEntry({
   version: "v1",
   orbit_context: "chat",
   chain_id: "local",
+  telemetry: userMsg?.telemetry ?? undefined,
 });
 
       console.debug("[TriketonLedger] user entry appended:", userMsg.content.slice(0, 30));
@@ -2756,16 +2757,17 @@ setMessages((prev) => {
 
   try {
     appendTriketonLedgerEntry({
-      id,
-      role: "assistant",
-      content: finalText,
-      truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
-      public_key: String(publicKey),
-      timestamp: new Date().toISOString(),
-      version: "v1",
-      orbit_context: "chat",
-      chain_id: "local",
-    });
+    id,
+    role: "assistant",
+    content: finalText,
+    truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
+    public_key: String(publicKey),
+    timestamp: new Date().toISOString(),
+    version: "v1",
+    orbit_context: "chat",
+    chain_id: "local",
+    telemetry: assistant?.telemetry ?? undefined,
+  });
   } catch (err) {
     console.warn("[TriketonLedger] assistant append failed:", err);
   }
