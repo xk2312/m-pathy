@@ -946,10 +946,32 @@ if (startIndex !== -1) {
     parsed: telemetryObj,
   };
 
-  cleanedContent = [
-    ...lines.slice(0, startIndex),
-    ...lines.slice(startIndex + TELEMETRY_REQUIRED_FIELDS.length),
-  ].join("\n").trim();
+  const firstFenceIndex = (() => {
+    for (let i = startIndex; i >= 0; i--) {
+      if (lines[i].trim().startsWith("```")) return i;
+    }
+    return -1;
+  })();
+
+  const secondFenceIndex = (() => {
+    const from = firstFenceIndex !== -1 ? firstFenceIndex + 1 : startIndex + 1;
+    for (let i = from; i < lines.length; i++) {
+      if (lines[i].trim().startsWith("```")) return i;
+    }
+    return -1;
+  })();
+
+  if (firstFenceIndex !== -1 && secondFenceIndex !== -1 && secondFenceIndex > firstFenceIndex) {
+    cleanedContent = [
+      ...lines.slice(0, firstFenceIndex),
+      ...lines.slice(secondFenceIndex + 1),
+    ].join("\n").trim();
+  } else {
+    cleanedContent = [
+      ...lines.slice(0, startIndex),
+      ...lines.slice(startIndex + TELEMETRY_REQUIRED_FIELDS.length),
+    ].join("\n").trim();
+  }
 } else {
   cleanedContent = content;
 }
