@@ -40,60 +40,89 @@ export default function TelemetryPanel({ telemetry }: Props) {
     <div className="mt-3 mb-4">
       {/* Cockpit */}
       <div className="rounded-2xl border border-white/10 bg-neutral-900/60 px-5 py-4 backdrop-blur-sm">
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
 
-          {/* System */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-white/50">System</span>
-            <span className="text-sm font-medium text-white">
-              {cockpit.system}
-            </span>
+        <div className="flex flex-col gap-y-3">
+
+          {/* Row 1 → Identity */}
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+
+            {/* System */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-white/50">System</span>
+              <span className="text-sm font-medium text-white">
+                {cockpit.system}
+              </span>
+            </div>
+
+            {/* Version */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-white/50">Version</span>
+              <span className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/80">
+                {cockpit.version}
+              </span>
+            </div>
+
+            {/* Prompt Counter */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-white/50">Prompt</span>
+              <span className="rounded-full bg-white/5 px-4 py-1 font-mono text-sm text-white">
+                {cockpit.promptCounter}
+              </span>
+            </div>
+
+            {/* Mode */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-white/50">Mode</span>
+              <span className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/80">
+                {cockpit.effectiveMode}
+              </span>
+            </div>
+
           </div>
 
-          {/* Version */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-white/50">Version</span>
-            <span className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/80">
-              {cockpit.version}
-            </span>
+          {/* Row 2 → Stability */}
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+
+            {/* Drift */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-white/50">Drift</span>
+              <span
+                className={`rounded-full border px-3 py-1 text-xs font-medium ${getDriftColor(
+                  cockpit.driftState
+                )}`}
+              >
+                {cockpit.driftState}
+              </span>
+            </div>
+
+            {/* Risk */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-white/50">Risk</span>
+              <span className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/80">
+                {parsed.driftRisk || "none"}
+              </span>
+            </div>
+
+            {/* Origin */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-white/50">Origin</span>
+              <span className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/80">
+                {parsed.driftOrigin || "none"}
+              </span>
+            </div>
+
+            {/* Complexity */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-white/50">Complexity</span>
+              <span className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/80">
+                {parsed.complexityLevel || "none"}
+              </span>
+            </div>
+
           </div>
 
-          {/* Prompt Counter */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-white/50">Prompt</span>
-            <span className="rounded-full bg-white/5 px-4 py-1 font-mono text-sm text-white">
-              {cockpit.promptCounter}
-            </span>
-          </div>
-
-          {/* Drift */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-white/50">Drift</span>
-            <span
-              className={`rounded-full border px-3 py-1 text-xs font-medium ${getDriftColor(
-                cockpit.driftState
-              )}`}
-            >
-              {cockpit.driftState}
-            </span>
-          </div>
-
-          {/* Effective Mode */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-white/50">Mode</span>
-            <span className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/80">
-              {cockpit.effectiveMode}
-            </span>
-          </div>
-
-          {/* Expert ID */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-white/50">Expert</span>
-            <span className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/80">
-              {cockpit.expertId || "none"}
-            </span>
-          </div>
         </div>
+
       </div>
 
       {/* Accordion */}
