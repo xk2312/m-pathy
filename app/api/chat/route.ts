@@ -413,44 +413,46 @@ export async function POST(req: NextRequest) {
     const cookieStore = cookies();
   const raw = cookieStore.get("mpathy_session")?.value;
 
-  let conversationId: string;
-  let serverCounter: number;
+ let conversationId: string;
+let serverCounter: number = 1;
 
-  if (!raw) {
+if (!raw) {
+  conversationId = crypto.randomUUID();
+} else {
+  try {
+    const parsed = JSON.parse(raw);
+    conversationId = parsed.conversationId;
+  } catch {
     conversationId = crypto.randomUUID();
-    serverCounter = 1;
-  } else {
-    try {
-      const parsed = JSON.parse(raw);
-      conversationId = parsed.conversationId;
-      serverCounter = (parsed.counter ?? 0) + 1;
-    } catch {
-      conversationId = crypto.randomUUID();
-      serverCounter = 1;
-    }
   }
+}
 
 
   try {
     const body = (await req.json()) as ChatBody;
 
     const incomingConversationId =
-      typeof (body as any)?.conversationId === "string" &&
-      String((body as any).conversationId).trim().length > 0
-        ? String((body as any).conversationId).trim()
-        : null;
+  typeof (body as any)?.conversationId === "string" &&
+  String((body as any).conversationId).trim().length > 0
+    ? String((body as any).conversationId).trim()
+    : null;
 
-    if (incomingConversationId && incomingConversationId !== conversationId) {
-      conversationId = incomingConversationId;
-      serverCounter = 1;
-    }
+if (incomingConversationId && incomingConversationId !== conversationId) {
+  conversationId = incomingConversationId;
+}
 
-    if (!Array.isArray(body.messages)) {
-      return NextResponse.json(
-        { error: "`messages` must be an array of { role, content }" },
-        { status: 400 }
-      );
-    }
+   if (!Array.isArray(body.messages)) {
+  return NextResponse.json(
+    { error: "`messages` must be an array of { role, content }" },
+    { status: 400 }
+  );
+}
+
+const userPromptCount = body.messages.filter(
+  (m: any) => m?.role === "user"
+).length;
+
+serverCounter = userPromptCount > 0 ? userPromptCount : 1;
 
 // - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
 
