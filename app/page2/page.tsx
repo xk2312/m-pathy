@@ -1123,7 +1123,7 @@ const payload = {
   role: (msg as any)?.role ?? "assistant",
   meta: (msg as any)?.meta ?? null,
   triketon: {
-    public_key: devicePublicKey ?? "",
+    public_key: (devicePublicKey ?? "").replace(/^"+|"+$/g, ""),
     truth_hash: ledgerTruthHash,
     timestamp:
       (msg as any)?.timestamp ??
