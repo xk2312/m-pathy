@@ -215,12 +215,13 @@ export async function getOrCreateDevicePublicKey2048(
       return existing; // ✅ reuse persistent key
     }
 
-    const newKey = await generatePublicKey2048(
-      truthHashHex ?? "0000000000000000000000000000000000000000000000000000000000000000",
-    );
-    ls.setItem(DEVICE_KEY, newKey);
-    console.debug("[Triketon] new device-bound key generated");
-    return newKey;
+   const newKey = (await generatePublicKey2048(
+  truthHashHex ?? "0000000000000000000000000000000000000000000000000000000000000000"
+)).replace(/^"+|"+$/g, "").trim();
+
+ls.setItem(DEVICE_KEY, newKey);
+console.debug("[Triketon] new device-bound key generated");
+return newKey;
   } catch (err) {
     console.error("[Triketon] device key init failed:", err);
     return "error_key";
