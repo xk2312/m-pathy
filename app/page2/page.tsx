@@ -204,8 +204,11 @@ import { useMobileViewport } from "@/lib/useMobileViewport";
 import { v4 as uuidv4 } from "uuid";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
 import { loadChat, saveChat, initChatStorage, hardClearChat, appendTriketonLedgerEntry, ensureTriketonLedgerReady, verifyOrResetTriketonLedger, } from '@/lib/chatStorage'
-import { computeTruthHash, normalizeForTruthHash } from "@/lib/triketonVerify";
-import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
+import {
+  computeTruthHash,
+  normalizeForTruthHash,
+  canonicalizeTruthState
+} from "@/lib/triketonVerify";import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
 import '@/lib/archiveChatPreparationListener'
 import type { ChatMessage, Role } from "@/lib/types";
 
@@ -2554,8 +2557,17 @@ appendTriketonLedgerEntry({
   id: crypto.randomUUID(),
   role: "user",
   content: userMsg.content,
-  truth_hash: computeTruthHash(normalizeForTruthHash(userMsg.content)),
-  public_key: "local_user",
+truth_hash: computeTruthHash(
+  canonicalizeTruthState({
+    role: userMsg.role,
+    content: userMsg.content,
+    timestamp: userMsg.timestamp,
+    public_key: (userMsg as any)?.public_key ?? "",    
+    chain_prev: (userMsg as any)?.chain_prev ?? "",
+    chain_id: (userMsg as any)?.chain_id ?? "", 
+    telemetry: userMsg.telemetry
+  })
+),  public_key: "local_user",
   timestamp: new Date().toISOString(),
   version: "v1",
   orbit_context: "chat",

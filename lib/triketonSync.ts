@@ -2,8 +2,11 @@
 // GPTM-Galaxy+ · m-pathy Archive + Verification System v5
 // Triketon Integration A – Seal ↔ Verify Sync (local ↔ server)
 
-import { computeTruthHash, normalizeForTruthHash } from './triketonVerify'
-import { readLS, writeLS } from './storage'
+import {
+  computeTruthHash,
+  normalizeForTruthHash,
+  canonicalizeTruthState
+} from "./triketonVerify";import { readLS, writeLS } from './storage'
 
 interface SyncPayload {
   public_key: string
@@ -16,15 +19,17 @@ interface SyncPayload {
  * Lokale Vorberechnung (Seal → TruthHash + PublicKey Fetch)
  */
 export function prepareSealPayload(text: string): SyncPayload {
-  const normalized = normalizeForTruthHash(text)
-  const truth_hash = computeTruthHash(normalized)
+  const truth_hash = computeTruthHash(
+  canonicalizeTruthState({
+    content: text
+  })
+)
   const public_key =
   (readLS<string>('mpathy:triketon:pubkey' as any) || 'unknown')
     .replace(/^"+|"+$/g, '')
     .replace(/^\\+|\\+$/g, '')
     .trim()
-  return { public_key, truth_hash, text: normalized, version: 'v1' }
-}
+    return { public_key, truth_hash, text, version: 'v1' }}
 
 /**
  * Sendet Seal an /api/triketon und gibt TRUE/FALSE-Verifikation zurück.
