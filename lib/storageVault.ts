@@ -361,9 +361,9 @@ store.put(dataToSave, key);
 
 transaction.oncomplete = () => {
   console.debug(`[Vault] Stored: ${key}`);
+  writeLsRaw(key, dataToSave);
   resolve();
 };
-
       transaction.onerror = () => {
         console.error(`[Vault] Store failed: ${key}`, transaction.error);
         reject(transaction.error);
@@ -400,24 +400,29 @@ async put(key: string, value: unknown): Promise<void> {
   }
 
   // 3️⃣ Archive & Ledger → nur LS → IDB Merge (keine LS Hydration)
-  if (
-    key === 'mpathy:archive:v1' ||
-    key === 'mpathy:archive:pairs:v1' ||
-    key === 'mpathy:triketon:v1'
-  ) {
-   let next;
+if (
+  key === 'mpathy:archive:v1' ||
+  key === 'mpathy:archive:pairs:v1' ||
+  key === 'mpathy:triketon:v1'
+) {
+  let next;
 
-if (existing === undefined || existing === null) {
-  next = incoming;
-} else {
-  next = applyStrategy(strategy, existing, incoming);
-}
-
-console.log('[VAULT TRACE] final next', key, next);
-
-await this.putInternal(key, next);
-return;
+  if (existing === undefined || existing === null) {
+    next = incoming;
+  } else {
+    next = applyStrategy(strategy, existing, incoming);
   }
+
+  console.log('[VAULT TRACE] final next', key, next);
+
+  await this.putInternal(key, next);
+
+  if (key === 'mpathy:triketon:v1') {
+    writeLsRaw(key, next);
+  }
+
+  return;
+}
 
   // 3b️⃣ chat_map → IDB merge, aber LS darf bei Missing aus IDB wiederhergestellt werden
   if (key === 'mpathy:archive:chat_map') {
