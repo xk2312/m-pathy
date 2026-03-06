@@ -19,7 +19,10 @@ export function prepareSealPayload(text: string): SyncPayload {
   const normalized = normalizeForTruthHash(text)
   const truth_hash = computeTruthHash(normalized)
   const public_key =
-    readLS<string>('mpathy:triketon:pubkey' as any) || 'unknown'
+  (readLS<string>('mpathy:triketon:pubkey' as any) || 'unknown')
+    .replace(/^"+|"+$/g, '')
+    .replace(/^\\+|\\+$/g, '')
+    .trim()
   return { public_key, truth_hash, text: normalized, version: 'v1' }
 }
 
