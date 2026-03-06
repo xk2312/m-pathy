@@ -130,8 +130,16 @@ export function canonicalizeTruthState(state: {  role?: string
  * computeTruthHash()
  * Deterministischer 32-Bit-Hash (kein Kryptohash, rein funktional).
  */
-export function computeTruthHash(text: string): string {
+export function computeTruthHash(
+  text: string,
+  previousHash?: string
+): string {
+
   const src = normalizeForTruthHash(text);
+
+  const payload = previousHash
+    ? `${previousHash}|${src}`
+    : src;
 
   function sha256(str: string): string {
     const utf8 = new TextEncoder().encode(str);
@@ -217,8 +225,8 @@ export function computeTruthHash(text: string): string {
       .join("");
   }
 
-  const hash = sha256(src);
-  return `T${hash}`;
+  const hash = sha256(payload);
+return `T${hash}`;
 }
 
 /**
