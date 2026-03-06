@@ -2789,7 +2789,7 @@ setMessages((prev) => {
     role: "assistant",
     content: finalText,
     truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
-    public_key: String(publicKey).replace(/^"+|"+$/g, "").trim(),  
+    public_key: String(publicKey ?? "").replace(/^"+|"+$/g, ""),
     timestamp: new Date().toISOString(),
     version: "v1",
     orbit_context: "chat",
