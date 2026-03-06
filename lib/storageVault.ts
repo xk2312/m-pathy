@@ -184,7 +184,12 @@ function isLsMissingOrEmpty(key: string): boolean {
 
 function writeLsRaw(key: string, value: unknown): void {
   try {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    const v =
+      typeof value === "string"
+        ? value
+        : JSON.stringify(value);
+
+    window.localStorage.setItem(key, v);
   } catch (e) {
     console.warn(`[Vault] LS write failed for ${key}`, e);
   }
