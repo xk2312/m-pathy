@@ -85,8 +85,28 @@ export function normalizeForTruthHash(text: string): string {
  * Erzeugt einen deterministischen String aus vollständigem Message-State
  * → Basis für state-bound truth hashing
  */
-export function canonicalizeTruthState(state: {
-  role?: string
+/**
+ * sortKeys()
+ * Recursively sorts object keys for deterministic JSON hashing.
+ */
+function sortKeys(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(sortKeys)
+  }
+
+  if (obj && typeof obj === "object") {
+    return Object.keys(obj)
+      .sort()
+      .reduce((result: any, key) => {
+        result[key] = sortKeys(obj[key])
+        return result
+      }, {})
+  }
+
+  return obj
+}
+
+export function canonicalizeTruthState(state: {  role?: string
   content?: string
   timestamp?: string
   public_key?: string
@@ -104,8 +124,7 @@ export function canonicalizeTruthState(state: {
     telemetry: state.telemetry ?? {}
   }
 
-  return JSON.stringify(canonical)
-}
+  return JSON.stringify(sortKeys(canonical))}
 
 /**
  * computeTruthHash()
