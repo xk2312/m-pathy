@@ -2543,6 +2543,13 @@ return {
 // Step L5 – Real TruthHash Injection (v1)
 // ------------------------------------------------------------
 
+
+const lastTruthHash =
+  messages.length > 0
+    ? (messages[messages.length - 1] as any)?.truth_hash
+    : undefined;
+
+
 appendTriketonLedgerEntry({
   id: crypto.randomUUID(),
   role: "user",
@@ -2553,9 +2560,9 @@ appendTriketonLedgerEntry({
   version: "v1",
   orbit_context: "chat",
   chain_id: "local",
+  chain_prev: lastTruthHash,
   telemetry: userMsg?.telemetry ?? undefined,
 });
-
       console.debug("[TriketonLedger] user entry appended:", userMsg.content.slice(0, 30));
     } catch (err) {
       console.warn("[TriketonLedger] user append failed:", err);
