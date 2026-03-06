@@ -361,7 +361,6 @@ store.put(dataToSave, key);
 
 transaction.oncomplete = () => {
   console.debug(`[Vault] Stored: ${key}`);
-  writeLsRaw(key, dataToSave);
   resolve();
 };
       transaction.onerror = () => {
