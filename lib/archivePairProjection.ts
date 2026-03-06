@@ -255,6 +255,7 @@
 
 
 import { writeLS } from './storage'
+import { normalizeTimestamp } from './time'
 
 /**
  * Triketon anchor (ledger entry)
@@ -408,8 +409,12 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
 const pairMap = new Map<string, ArchivePair>()
   for (const [chain_id, messages] of byChain.entries()) {
     const ordered = messages
-      .filter((m) => m.role === 'user' || m.role === 'assistant')
-      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+  .filter((m) => m.role === 'user' || m.role === 'assistant')
+  .map((m) => ({
+    ...m,
+    timestamp: normalizeTimestamp(m.timestamp),
+  }))
+  .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
 
     console.log('[PAIR TRACE] chain', chain_id, 'filtered messages:', ordered.length)
 

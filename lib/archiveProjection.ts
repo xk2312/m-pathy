@@ -4,6 +4,7 @@
 
 import { readLS, writeLS } from './storage'
 import { extractTopKeywords } from './keywordExtract'
+import { normalizeTimestamp } from './time'
 import type { TArchiveEntry } from './types'
 
 export interface ArchivChat {
@@ -105,8 +106,12 @@ function anchorsToArchiveEntries(anchors: TriketonAnchor[]): TArchiveEntry[] {
 })
   }
 
-  return entries.sort((x, y) => new Date(x.timestamp).getTime() - new Date(y.timestamp).getTime())
-}
+return entries
+  .map((e) => ({
+    ...e,
+    timestamp: normalizeTimestamp(e.timestamp),
+  }))
+  .sort((x, y) => new Date(x.timestamp).getTime() - new Date(y.timestamp).getTime())}
 
 /**
  * Persistenter Spiegel:
@@ -147,10 +152,10 @@ const byChain = new Map<string, TriketonAnchor[]>()
 
 
   const chains = Array.from(byChain.entries()).sort(
-    (a, b) =>
-      new Date(a[1][0].timestamp).getTime() -
-      new Date(b[1][0].timestamp).getTime(),
-  )
+  (a, b) =>
+    new Date(normalizeTimestamp(a[1][0].timestamp)).getTime() -
+    new Date(normalizeTimestamp(b[1][0].timestamp)).getTime(),
+)
 
   const chatMap: Record<string, number> = {}
   const chats: ArchivChat[] = []
@@ -161,9 +166,17 @@ const byChain = new Map<string, TriketonAnchor[]>()
     counter += 1
     chatMap[chainId] = counter
 
-    const ordered = messages
-      .filter((m) => m.role === 'user' || m.role === 'assistant')
-      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+   const ordered = messages
+  .filter((m) => m.role === 'user' || m.role === 'assistant')
+  .map((m) => ({
+    ...m,
+    timestamp: normalizeTimestamp(m.timestamp),
+  }))
+  .sort((a, b) => {
+  const ta = Date.parse(a.timestamp || "")
+  const tb = Date.parse(b.timestamp || "")
+  return (Number.isFinite(ta) ? ta : 0) - (Number.isFinite(tb) ? tb : 0)
+})
 
     if (ordered.length === 0) continue
 

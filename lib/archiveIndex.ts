@@ -9,6 +9,7 @@ import {
   syncArchiveFromTriketon,
 } from './archiveProjection'
 import { storageVault } from './storageVault'
+import { normalizeTimestamp } from './time'
 
 const ARCHIVE_KEY = 'mpathy:archive:v1'
 
@@ -71,11 +72,14 @@ export async function getRecentChats(limit = 13): Promise<{
   if (chats.length === 0) return []
 
   return chats.slice(0, limit).map((c: ArchivChat) => ({
-    chat_serial: c.chat_id,
-    first_timestamp: c.first_timestamp,
-    last_timestamp: c.last_timestamp,
-    messages: c.entries,
-    keywords: c.keywords,
-  }))
+  chat_serial: c.chat_id,
+  first_timestamp: normalizeTimestamp(c.first_timestamp),
+  last_timestamp: normalizeTimestamp(c.last_timestamp),
+  messages: c.entries.map((m) => ({
+    ...m,
+    timestamp: normalizeTimestamp(m.timestamp),
+  })),
+  keywords: c.keywords,
+}))
 }
 

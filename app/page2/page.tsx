@@ -2448,9 +2448,9 @@ if (busy) {
             (rawTriketon as any).truthHash ??
             '',
           timestamp:
-            (rawTriketon as any).timestamp ??
-            (rawTriketon as any).sealed_at ??
-            '',
+            (rawTriketon as any)?.timestamp ??
+            (rawTriketon as any)?.sealed_at ??
+            new Date().toISOString(),
           version: 'v1',
           hash_profile: 'TRIKETON_HASH_V1',
           key_profile: 'TRIKETON_KEY_V1',
