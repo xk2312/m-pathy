@@ -253,7 +253,10 @@ private initArchiveMirror(): void {
 
         const deviceKey = window.localStorage.getItem('mpathy:triketon:device_public_key_2048');
         if (deviceKey && deviceKey.trim().length > 0) {
-          await this.put('mpathy:triketon:device_public_key_2048', deviceKey.trim());
+          await this.put(
+          'mpathy:triketon:device_public_key_2048',
+          deviceKey.trim().replace(/^"+|"+$/g, "")
+        );
         }
       } catch (err) {
         console.error('[VaultMirror] Triketon mirror failed:', err);
