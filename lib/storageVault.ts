@@ -375,82 +375,44 @@ async put(key: string, value: unknown): Promise<void> {
   console.log('[VAULT TRACE] put() called', key, value);
 
   const strategy = resolveStrategy(key);
-
   const incoming = deepClone(value);
   const existing = await this.getInternal(key);
 
   console.log('[VAULT TRACE] existing from IDB', key, existing);
 
-  // 1️⃣ chain_id → LS gewinnt immer
-  if (key === 'mpathy:chat:chain_id') {
-    await this.putInternal(key, incoming);
+  let next: unknown = incoming;
+
+  if (key === 'mpathy:archive:chat_counter') {
+    const map = await this.getInternal('mpathy:archive:chat_map');
+    let derived = 0;
+
+    if (map && typeof map === 'object' && !Array.isArray(map)) {
+      derived = Object.keys(map as Record<string, unknown>).length;
+    }
+
+    next = derived;
+    await this.putInternal(key, next);
     return;
   }
 
-  // 2️⃣ Singleton (Public Key)
   if (strategy === 'singleton') {
     if (existing !== undefined && existing !== null) {
-      if (isLsMissingOrEmpty(key)) {
-        writeLsRaw(key, existing);
-      }
-      return;
+      next = existing;
+    } else {
+      next = incoming;
     }
-    await this.putInternal(key, incoming);
+
+    await this.putInternal(key, next);
     return;
   }
 
-  // 3️⃣ Archive & Ledger → nur LS → IDB Merge (keine LS Hydration)
-if (
-  key === 'mpathy:archive:v1' ||
-  key === 'mpathy:archive:pairs:v1' ||
-  key === 'mpathy:triketon:v1'
-) {
-  let next;
-
-  if (existing === undefined || existing === null) {
-    next = incoming;
-  } else {
+  if (existing !== undefined && existing !== null) {
     next = applyStrategy(strategy, existing, incoming);
   }
 
   console.log('[VAULT TRACE] final next', key, next);
 
   await this.putInternal(key, next);
-
-  if (key === 'mpathy:triketon:v1') {
-    writeLsRaw(key, next);
-  }
-
-  return;
-}
-
-  // 3b️⃣ chat_map → IDB merge, aber LS darf bei Missing aus IDB wiederhergestellt werden
-  if (key === 'mpathy:archive:chat_map') {
-    const next = applyStrategy(strategy, existing, incoming);
-    await this.putInternal(key, next);
-
-    if (isLsMissingOrEmpty(key)) {
-      writeLsRaw(key, next);
-    }
-    return;
-  }
-
-   // 4️⃣ chat_counter → inkrementiere nur wenn LS fehlt, sonst nur absichern (max)
-  if (key === 'mpathy:archive:chat_counter') {
-    const map = await this.getInternal('mpathy:archive:chat_map');
-    let next = 0;
-
-    if (map && typeof map === 'object' && !Array.isArray(map)) {
-      next = Object.keys(map as Record<string, unknown>).length;
-    }
-
-    await this.putInternal(key, next);
-    writeLsRaw(key, next);
-    return;
-  }
-
-  // Fallback
-  await this.putInternal(key, incoming);
 }
 
   async get(key: string): Promise<unknown> {
