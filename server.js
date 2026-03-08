@@ -1,4 +1,7 @@
 // server.js
+import dotenv from "dotenv";
+dotenv.config({ path: "/srv/app/current/.env" });
+
 import { createServer } from "http";
 import next from "next";
 
