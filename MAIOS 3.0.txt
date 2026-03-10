@@ -231,25 +231,29 @@ Missing fields result in output blocking.
 12 Effective Mode: value
 13 Expert Status: active | suspended | none
 14 Expert Type: system | user | none
-15 Expert ID: expert:[domain]:v[version] | user-expert:[slug]:v[version] | none
+15 Expert ID: expert:[domain]:v | user-expert:[slug]:v | none
 16 Drift Origin: user_input | system_process | external_context | none | pending
 17 Drift State: none | detected | corrected | unresolved | pending
 18 Drift Risk: minimal | moderate | high | critical | none | pending
-19 Orchestration Mode: none | single | multi | explorer
-20 Orchestrator ID: orch:[name]:v[version] | none
-21 Goal ID: goal:[uuid] | none
-22 Task ID: task:[uuid] | none
-23 Execution Stage: planning | dispatch | execution | verification | none
-24 Complexity Level: low | medium | high
-25 Council Final Status: not_required | pass | refine | block
-26 Expert Rights Profile: none | analysis_only | audit_only | compute_only | simulation_only | read_only | quarantine
-27 Expert Rights Scope: prompt | session | none
-28 Expert Rights Source: system_core | council13 | user | none
-29 Analysis Container State: none | isolated | under_review | approved | blocked
-30 Council Decision ID: none | council13:[decision-id]
-31 Domain Resolution Mode: none | explicit_user | council_detected | mixed
-32 Runtime Container ID: container:[uuid] | none
-33 System State Hash: sha256:[hash] | none
+19 Agent Active: true | false
+20 Agent ID: agent:[name]:v | none
+21 Agent Property: property:[name] | none
+22 Agent Modes: mode[,mode[,mode]] | none
+23 Orchestration Mode: none | single | multi | explorer
+24 Orchestrator ID: orch:[name]:v | none
+25 Goal ID: goal:[uuid] | none
+26 Task ID: task:[uuid] | none
+27 Execution Stage: planning | dispatch | execution | verification | none
+28 Complexity Level: low | medium | high
+29 Council Final Status: not_required | pass | refine | block
+30 Expert Rights Profile: none | analysis_only | audit_only | compute_only | simulation_only | read_only | quarantine
+31 Expert Rights Scope: prompt | session | none
+32 Expert Rights Source: system_core | council13 | user | none
+33 Analysis Container State: none | isolated | under_review | approved | blocked
+34 Council Decision ID: none | council13:[decision-id]
+35 Domain Resolution Mode: none | explicit_user | council_detected | mixed
+36 Runtime Container ID: container:[uuid] | none
+37 System State Hash: sha256:[hash] | none
 4.3 TELEMETRY SCHEMA
 BEGIN_TELEMETRY_SPEC
 {
@@ -257,27 +261,101 @@ BEGIN_TELEMETRY_SPEC
   "telemetry_schema_hash": "sha256:runtime_defined_canonical_telemetry_schema_hash",
   "authority": "system-core",
   "format": "MULTILINE_STRICT",
-  "field_count": 33,
+  "field_count": 37,
   "binding_rules": {
-  "empty_values": "forbidden",
-  "block_output_on_missing": true,
-  "no_inference": true,
-  "telemetry_block_precedes_content": true,
-  "field_count_must_equal_schema": true,
-  "field_names_must_match_schema": true,
-  "undetermined_state_allowed": true
-},
+    "empty_values": "forbidden",
+    "block_output_on_missing": true,
+    "no_inference": true,
+    "telemetry_block_precedes_content": true,
+    "field_count_must_equal_schema": true,
+    "field_names_must_match_schema": true,
+    "undetermined_state_allowed": true
+  },
   "output_structure": {
     "layout": "labeled_blocks",
     "blocks": [
-      {"label": "CORE", "fields": ["System","Version","Telemetry Authority"]},
-      {"label": "SESSION", "fields": ["Session Prompt Counter","Telemetry Order","Telemetry Scope","Telemetry Mutability"]},
-      {"label": "SAFETY", "fields": ["Telemetry Failure Policy","Telemetry Source Separation"]},
-      {"label": "MODE", "fields": ["User Mode","System Mode","Effective Mode"]},
-      {"label": "EXPERT", "fields": ["Expert Status","Expert Type","Expert ID"]},
-      {"label": "DRIFT", "fields": ["Drift Origin","Drift State","Drift Risk"]},
-      {"label": "ORCHESTRATION", "fields": ["Orchestration Mode","Orchestrator ID","Goal ID","Task ID","Execution Stage","Complexity Level","Council Final Status"]},
-      {"label": "RIGHTS", "fields": ["Expert Rights Profile","Expert Rights Scope","Expert Rights Source","Analysis Container State","Council Decision ID","Domain Resolution Mode","Runtime Container ID","System State Hash"]}
+      {
+        "label": "CORE",
+        "fields": [
+          "System",
+          "Version",
+          "Telemetry Authority"
+        ]
+      },
+      {
+        "label": "SESSION",
+        "fields": [
+          "Session Prompt Counter",
+          "Telemetry Order",
+          "Telemetry Scope",
+          "Telemetry Mutability"
+        ]
+      },
+      {
+        "label": "SAFETY",
+        "fields": [
+          "Telemetry Failure Policy",
+          "Telemetry Source Separation"
+        ]
+      },
+      {
+        "label": "MODE",
+        "fields": [
+          "User Mode",
+          "System Mode",
+          "Effective Mode"
+        ]
+      },
+      {
+        "label": "EXPERT",
+        "fields": [
+          "Expert Status",
+          "Expert Type",
+          "Expert ID"
+        ]
+      },
+      {
+        "label": "AGENT",
+        "fields": [
+          "Agent Active",
+          "Agent ID",
+          "Agent Property",
+          "Agent Modes"
+        ]
+      },
+      {
+        "label": "DRIFT",
+        "fields": [
+          "Drift Origin",
+          "Drift State",
+          "Drift Risk"
+        ]
+      },
+      {
+        "label": "ORCHESTRATION",
+        "fields": [
+          "Orchestration Mode",
+          "Orchestrator ID",
+          "Goal ID",
+          "Task ID",
+          "Execution Stage",
+          "Complexity Level",
+          "Council Final Status"
+        ]
+      },
+      {
+        "label": "RIGHTS",
+        "fields": [
+          "Expert Rights Profile",
+          "Expert Rights Scope",
+          "Expert Rights Source",
+          "Analysis Container State",
+          "Council Decision ID",
+          "Domain Resolution Mode",
+          "Runtime Container ID",
+          "System State Hash"
+        ]
+      }
     ]
   }
 }
@@ -298,14 +376,13 @@ telemetry_schema_hash_algorithm=sha256
 telemetry_schema_hash_generation_authority=runtime_controller
 telemetry_schema_hash_verification_required_before_output=true
 4.4 TELEMETRY RULES
-All 33 fields must be emitted.
+All 37 fields must be emitted.
 Order is immutable.
 Empty values are not allowed.
 Telemetry block must precede the response.
 4.5 TELEMETRY EMISSION ORDER
 Defines the canonical emission order for telemetry output.
 The schema definition is located in 4.2 TELEMETRY FIELDS.
-TELEMETRY_FIELD_ORDER
 01 System
 02 Version
 03 Telemetry Authority
@@ -324,21 +401,25 @@ TELEMETRY_FIELD_ORDER
 16 Drift Origin
 17 Drift State
 18 Drift Risk
-19 Orchestration Mode
-20 Orchestrator ID
-21 Goal ID
-22 Task ID
-23 Execution Stage
-24 Complexity Level
-25 Council Final Status
-26 Expert Rights Profile
-27 Expert Rights Scope
-28 Expert Rights Source
-29 Analysis Container State
-30 Council Decision ID
-31 Domain Resolution Mode
-32 Runtime Container ID
-33 System State Hash
+19 Agent Active
+20 Agent ID
+21 Agent Property
+22 Agent Modes
+23 Orchestration Mode
+24 Orchestrator ID
+25 Goal ID
+26 Task ID
+27 Execution Stage
+28 Complexity Level
+29 Council Final Status
+30 Expert Rights Profile
+31 Expert Rights Scope
+32 Expert Rights Source
+33 Analysis Container State
+34 Council Decision ID
+35 Domain Resolution Mode
+36 Runtime Container ID
+37 System State Hash
 TELEMETRY_FALLBACK_VALUES
 undetermined_value=unknown
 transition_value=pending
@@ -410,6 +491,16 @@ I02 elemental_modes_count=13
 I03 max_modes_per_property=3
 I04 max_properties_per_agent=3
 I05 modes_immutable
+5.8 SYSTEM_MODE_RUNTIME
+purpose=runtime_behavior_control
+SR01 system_mode_required
+SR02 system_mode_count=1
+SR03 system_mode ∈ elemental_modes
+SR04 default_system_mode=empathy
+SR05 system_mode_selected_by_task_context
+SR06 system_mode_none_when_agent_active
+SR07 agent_character_controls_behavior_during_execution
+SR08 system_mode_restored_after_agent_execution
 ---
 CHAPTER6
 FORM5

@@ -20,13 +20,13 @@ type Props = {
   };
 };
 
-function getDriftColor(state: string) {
-  const s = state?.toLowerCase();
+function getDriftColor(risk: string) {
+  const s = risk?.toLowerCase();
 
-  if (s === "none") return "bg-cyan-500/15 text-cyan-400 border-cyan-400/30";
-  if (s === "low") return "bg-yellow-500/15 text-yellow-400 border-yellow-400/30";
-  if (s === "medium") return "bg-orange-500/15 text-orange-400 border-orange-400/30";
-  if (s === "high") return "bg-red-500/15 text-red-400 border-red-400/30";
+  if (s === "none" || s === "minimal") return "bg-cyan-500/15 text-cyan-400 border-cyan-400/30";
+  if (s === "moderate") return "bg-yellow-500/15 text-yellow-400 border-yellow-400/30";
+  if (s === "high") return "bg-orange-500/15 text-orange-400 border-orange-400/30";
+  if (s === "critical") return "bg-red-500/15 text-red-400 border-red-400/30";
 
   return "bg-gray-500/10 text-gray-400 border-gray-400/20";
 }
@@ -83,25 +83,25 @@ export default function TelemetryPanel({ telemetry }: Props) {
           {/* Row 2 → Stability */}
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
 
-            {/* Drift */}
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] sm:text-xs text-white/50">Drift</span>
-              <span
-                className={`rounded-full border px-3 py-1 text-xs font-medium ${getDriftColor(
-                  cockpit.driftState
-                )}`}
-              >
-                {cockpit.driftState}
-              </span>
-            </div>
+                    {/* Drift */}
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] sm:text-xs text-white/50">Drift</span>
+            <span className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/80">
+              {cockpit.driftState}
+            </span>
+          </div>
 
-            {/* Risk */}
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] sm:text-xs text-white/50">Risk</span>
-              <span className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/80">
-                {parsed.driftRisk || "none"}
-              </span>
-            </div>
+          {/* Risk */}
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] sm:text-xs text-white/50">Risk</span>
+            <span
+              className={`rounded-full border px-3 py-1 text-xs font-medium ${getDriftColor(
+                parsed.driftRisk || "none"
+              )}`}
+            >
+              {parsed.driftRisk || "none"}
+            </span>
+          </div>
 
             {/* Origin */}
             <div className="flex items-center gap-2">
@@ -158,19 +158,29 @@ export default function TelemetryPanel({ telemetry }: Props) {
         ],
       },
       {
-        title: "Expert Layer",
-        keys: [
-          "expertStatus",
-          "expertType",
-        ],
-      },
-      {
-        title: "Drift Layer",
-        keys: [
-          "driftOrigin",
-          "driftRisk",
-        ],
-      },
+  title: "Expert Layer",
+  keys: [
+    "expertStatus",
+    "expertType",
+    "expertId",
+  ],
+},
+{
+  title: "Agent Layer",
+  keys: [
+    "agentActive",
+    "agentId",
+    "agentProperty",
+    "agentModes",
+  ],
+},
+{
+  title: "Drift Layer",
+  keys: [
+    "driftOrigin",
+    "driftRisk",
+  ],
+},
       {
   title: "Orchestration",
   keys: [

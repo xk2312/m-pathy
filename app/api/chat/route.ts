@@ -352,6 +352,11 @@ const TELEMETRY_REQUIRED_FIELDS = [
   "Drift State:",
   "Drift Risk:",
 
+  "Agent Active:",
+  "Agent ID:",
+  "Agent Property:",
+  "Agent Modes:",
+
   "Orchestration Mode:",
   "Orchestrator ID:",
   "Goal ID:",
@@ -693,7 +698,7 @@ if (balanceBefore <= 0) {
           {
             role: "system",
             content:
-                   "STRICT REISSUE: You must output a full telemetry block in canonical form BEFORE any content. All 33 fields are mandatory. No omission allowed."
+                   "STRICT REISSUE: You must output a full telemetry block in canonical form BEFORE any content. All 37 fields are mandatory. No omission allowed."
           },
           ...messages
         ],
