@@ -172,30 +172,30 @@ export default function TelemetryPanel({ telemetry }: Props) {
         ],
       },
       {
-        title: "Orchestration",
-        keys: [
-          "orchestrationMode",
-          "orchestrationAuthority",
-          "expertConfiguration",
-          "complexityLevel",
-          "councilFinalStatus",
-        ],
-      },
+  title: "Orchestration",
+  keys: [
+    "orchestrationMode",
+    "orchestratorId",
+    "goalId",
+    "taskId",
+    "executionStage",
+    "complexityLevel",
+    "councilFinalStatus",
+  ],
+},
       {
-        title: "Rights & Governance",
-        keys: [
-          "expertRightsProfile",
-          "expertRightsScope",
-          "expertRightsSource",
-          "analysisContainerState",
-          "expertActivationCount",
-          "councilDecisionId",
-          "councilRightsAttestation",
-          "councilDecisionTrace",
-          "domainResolutionMode",
-          "containerTransitionAuthority",
-        ],
-      },
+  title: "Rights & Governance",
+  keys: [
+    "expertRightsProfile",
+    "expertRightsScope",
+    "expertRightsSource",
+    "analysisContainerState",
+    "councilDecisionId",
+    "domainResolutionMode",
+    "runtimeContainerId",
+    "systemStateHash",
+  ],
+},
     ].map(group => (
       <div key={group.title} className="flex flex-col gap-y-3">
 

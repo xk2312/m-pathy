@@ -353,8 +353,10 @@ const TELEMETRY_REQUIRED_FIELDS = [
   "Drift Risk:",
 
   "Orchestration Mode:",
-  "Orchestration Authority:",
-  "Expert Configuration:",
+  "Orchestrator ID:",
+  "Goal ID:",
+  "Task ID:",
+  "Execution Stage:",
   "Complexity Level:",
   "Council Final Status:",
 
@@ -362,13 +364,10 @@ const TELEMETRY_REQUIRED_FIELDS = [
   "Expert Rights Scope:",
   "Expert Rights Source:",
   "Analysis Container State:",
-  "Expert Activation Count:",
   "Council Decision ID:",
-  "Council Rights Attestation:",
-
-  "Council Decision Trace:",
   "Domain Resolution Mode:",
-  "Container Transition Authority:"
+  "Runtime Container ID:",
+  "System State Hash:"
 ];
 
 function isValidTelemetryBlock(text: string): boolean {
