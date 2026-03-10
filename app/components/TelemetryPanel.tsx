@@ -23,10 +23,10 @@ type Props = {
 function getDriftColor(risk: string) {
   const s = risk?.toLowerCase();
 
-  if (s === "none" || s === "minimal") return "bg-cyan-500/15 text-cyan-400 border-cyan-400/30";
-  if (s === "moderate") return "bg-yellow-500/15 text-yellow-400 border-yellow-400/30";
-  if (s === "high") return "bg-orange-500/15 text-orange-400 border-orange-400/30";
-  if (s === "critical") return "bg-red-500/15 text-red-400 border-red-400/30";
+if (s === "none" || s === "minimal") return "bg-cyan-500/30 text-cyan-400 border-cyan-400/40";
+if (s === "moderate") return "bg-yellow-500/30 text-yellow-400 border-yellow-400/40";
+if (s === "high") return "bg-orange-500/30 text-orange-400 border-orange-400/40";
+if (s === "critical") return "bg-red-500/30 text-red-400 border-red-400/40";
 
   return "bg-gray-500/10 text-gray-400 border-gray-400/20";
 }
