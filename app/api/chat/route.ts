@@ -389,10 +389,11 @@ function isValidTelemetryBlock(text: string): boolean {
 
   if (startIndex === -1) return false;
 
-  const telemetryLines = lines.slice(
-    startIndex,
-    startIndex + TELEMETRY_REQUIRED_FIELDS.length
-  );
+  const telemetryLines = lines.slice(startIndex).filter(line =>
+  TELEMETRY_REQUIRED_FIELDS.some(field =>
+    line.startsWith(field)
+  )
+);
 
   if (telemetryLines.length !== TELEMETRY_REQUIRED_FIELDS.length) {
     return false;
@@ -914,26 +915,33 @@ content = content.replace(
 
 const ledgerContent = content;
 
-const lines = content.split("\n");
+const rawLines = content.split("\n");
+
+const lines = rawLines
+  .map(l => l.trim())
+  .filter(l => l.length > 0);
 
 const startIndex = lines.findIndex(l =>
-  l.trim().startsWith("System:")
+  l.startsWith("System:")
 );
 
 if (startIndex !== -1) {
-  const telemetryLines = lines.slice(
-    startIndex,
-    startIndex + TELEMETRY_REQUIRED_FIELDS.length
-  );
+ const telemetryLines = lines.slice(startIndex).filter(line =>
+  TELEMETRY_REQUIRED_FIELDS.some(field =>
+    line.startsWith(field)
+  )
+);
 
   const telemetryObj: Record<string, string> = {};
 
   telemetryLines.forEach(line => {
-    const idx = line.indexOf(":");
-    if (idx === -1) return;
+   const idx = line.indexOf(":");
+if (idx === -1) return;
 
-    const key = line.slice(0, idx).trim();
-    const value = line.slice(idx + 1).trim();
+const key = line.slice(0, idx).trim();
+const value = line.slice(idx + 1).trim();
+
+if (!key) return;
 
     telemetryObj[key] = value;
   });
@@ -970,10 +978,12 @@ if (startIndex !== -1) {
   })();
 
   if (firstFenceIndex !== -1 && secondFenceIndex !== -1 && secondFenceIndex > firstFenceIndex) {
-    cleanedContent = [
-      ...lines.slice(0, firstFenceIndex),
-      ...lines.slice(secondFenceIndex + 1),
-    ].join("\n").trim();
+    const telemetryEnd = startIndex + telemetryLines.length;
+
+cleanedContent = [
+  ...lines.slice(0, startIndex),
+  ...lines.slice(telemetryEnd),
+].join("\n").trim();
   } else {
     cleanedContent = [
       ...lines.slice(0, startIndex),

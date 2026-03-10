@@ -221,6 +221,13 @@ TELEMETRY
 Every response must emit a telemetry block.
 Format:
 FieldName: Value
+
+Telemetry block must contain exactly the fields defined in 4.2.
+The emission order must follow 4.5 TELEMETRY EMISSION ORDER.
+
+The telemetry block must be emitted as a contiguous block with no
+additional text between telemetry fields.
+
 The telemetry block always precedes the response.
 Missing fields result in output blocking.
 4.2 TELEMETRY FIELDS
@@ -384,9 +391,14 @@ telemetry_schema_hash_generation_authority=runtime_controller
 telemetry_schema_hash_verification_required_before_output=true
 4.4 TELEMETRY RULES
 All 37 fields must be emitted.
-Order is immutable.
+Order is immutable and must follow the canonical emission order
+defined in 4.5 TELEMETRY EMISSION ORDER.
+Each telemetry field must appear exactly once.
 Empty values are not allowed.
+Unknown values must use the fallback values defined in
+TELEMETRY_FALLBACK_VALUES.
 Telemetry block must precede the response.
+No additional lines may appear inside the telemetry block.
 4.5 TELEMETRY EMISSION ORDER
 Defines the canonical emission order for telemetry output.
 The schema definition is located in 4.2 TELEMETRY FIELDS.
@@ -439,6 +451,28 @@ telemetry_must_bind_runtime_attestation=true
 telemetry_runtime_container_id_must_match_attestation=true
 telemetry_system_state_hash_must_match_attestation=true
 telemetry_validation_failure_effect=output_blocked
+4.6 DRIFT EVALUATION
+Drift detection evaluates deviations between expected system
+behavior and observed conversation behavior.
+Drift Origin describes the source of deviation.
+user_input
+system_process
+external_context
+none
+pending
+Drift State describes the current drift status.
+none
+detected
+corrected
+unresolved
+pending
+Drift Risk describes the potential impact of the drift.
+minimal
+moderate
+high
+critical
+none
+pending
 ---
 CHAPTER5
 FORM4
@@ -510,6 +544,12 @@ multiple_modes_in_single_request_forbidden=true
 unknown_mode_request_effect=mode_rejected
 mode_activation_scope=session
 mode_persistence_until_new_request=true
+MODE_RUNTIME_AUTHORITY
+Mode persistence is controlled by the runtime session context.
+The LLM must not infer, modify or reset modes unless the user
+explicitly requests a mode change.
+If no runtime mode context is provided the system must use the
+default system mode defined in 5.8 SYSTEM_MODE_RUNTIME.
 5.7 INVARIANTS
 I01 modes_atomic
 I02 elemental_modes_count=13
