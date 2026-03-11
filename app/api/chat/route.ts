@@ -969,6 +969,11 @@ if (startIndex !== -1) {
   cleanedContent = content;
 }
 
+cleanedContent = cleanedContent
+  .replace(/^Telemetry Block\s*/i, "")
+  .replace(/^Explanation:\s*/i, "")
+  .trim();
+
 const res = NextResponse.json(
   {
     role: "assistant",
