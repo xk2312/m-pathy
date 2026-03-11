@@ -462,22 +462,27 @@ serverCounter = userPromptCount > 0 ? userPromptCount : 1;
 // - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
 
 // Session aus m_auth-Cookie lesen (falls vorhanden)
+
+// Raw Header weiterhin für FreeGate behalten
 const cookieHeader = req.headers.get("cookie") ?? null;
+
+// Next.js Cookie Store für zuverlässige Auth-Erkennung
+const cookieStore = cookies();
+const authCookie = cookieStore.get(AUTH_COOKIE_NAME)?.value ?? null;
 
 let sessionEmail: string | null = null;
 let sessionUserId: string | null = null;
-if (cookieHeader) {
-  const parts = cookieHeader.split(";").map((p) => p.trim());
-  const authPart = parts.find((p) => p.startsWith(`${AUTH_COOKIE_NAME}=`));
-  if (authPart) {
-    const raw = authPart.slice(AUTH_COOKIE_NAME.length + 1);
-    const payload = verifySessionToken(raw);
-    sessionEmail = payload?.email ?? null;
-    if (payload && (payload as any).id != null) {
-      sessionUserId = String((payload as any).id);
-    }
+
+if (authCookie) {
+  const payload = verifySessionToken(authCookie);
+
+  sessionEmail = payload?.email ?? null;
+
+  if (payload && (payload as any).id != null) {
+    sessionUserId = String((payload as any).id);
   }
 }
+
 const isAuthenticated = !!sessionEmail;
 
 if (!FG_SECRET) {
