@@ -296,7 +296,7 @@ function loadSystemPrompt(protocol = "GPTX") {
       if (process.env.NODE_ENV !== "production") {
         console.log("✅ SYSTEM PROMPT LOADED:", content.slice(0, 80));
       }
-      return `\`\`\`markdown\n${content.trim()}\n\`\`\``;
+      return content.trim();
     } else {
       console.warn("⚠️ Prompt-Datei nicht gefunden:", promptPath);
     }
@@ -890,21 +890,20 @@ if (balanceBefore <= 0) {
     }
 
 
-  // === TELEMETRY STRUCTURING (POST-SEAL, PRE-RESPONSE) ===
+// === TELEMETRY STRUCTURING (POST-SEAL, PRE-RESPONSE) ===
 let structuredTelemetry: any = null;
 let cleanedContent = content;
 
 if (!isValidTelemetryBlock(content)) {
-      console.error("[telemetry] validation failed");
+  console.error("[telemetry] validation failed");
 
-    return NextResponse.json(
-      { error: "Telemetry validation failed" },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(
+    { error: "Telemetry validation failed" },
+    { status: 500 }
+  );
+}
 
-  // ---- SESSION COUNTER (minimal & robust) ----
-
+// ---- SESSION COUNTER (minimal & robust) ----
 // Session counter already calculated at request start
 // reuse existing serverCounter + conversationId
 
@@ -915,96 +914,68 @@ content = content.replace(
 
 const ledgerContent = content;
 
-const rawLines = content.split("\n");
+const lines = content.split("\n");
 
-const lines = rawLines
-  .map(l => l.trim())
-  .filter(l => l.length > 0);
-
-const startIndex = lines.findIndex(l =>
+const startIndex = lines.findIndex((l) =>
   l.startsWith("System:")
 );
 
 if (startIndex !== -1) {
- const telemetryLines = lines.slice(startIndex).filter(line =>
-  TELEMETRY_REQUIRED_FIELDS.some(field =>
-    line.startsWith(field)
-  )
-);
+  const telemetryLines = lines.slice(
+    startIndex,
+    startIndex + TELEMETRY_REQUIRED_FIELDS.length
+  );
 
   const telemetryObj: Record<string, string> = {};
 
-  telemetryLines.forEach(line => {
-   const idx = line.indexOf(":");
-if (idx === -1) return;
+  telemetryLines.forEach((line) => {
+    const idx = line.indexOf(":");
+    if (idx === -1) return;
 
-const key = line.slice(0, idx).trim();
-const value = line.slice(idx + 1).trim();
+    const key = line.slice(0, idx).trim();
+    const value = line.slice(idx + 1).trim();
 
-if (!key) return;
+    if (!key) return;
 
     telemetryObj[key] = value;
   });
 
   structuredTelemetry = {
-  cockpit: {
-    system: telemetryObj["System"] ?? "",
-    version: telemetryObj["Version"] ?? "",
-    promptCounter: telemetryObj["Session Prompt Counter"] ?? "",
-    effectiveMode: telemetryObj["Effective Mode"] ?? "",
-    
-    complexityLevel: telemetryObj["Complexity Level"] ?? "",
-    driftState: telemetryObj["Drift State"] ?? "",
-    driftRisk: telemetryObj["Drift Risk"] ?? "",
-    driftOrigin: telemetryObj["Drift Origin"] ?? "",
-    
-  },
-  parsed: telemetryObj,
-};
+    cockpit: {
+      system: telemetryObj["System"] ?? "",
+      version: telemetryObj["Version"] ?? "",
+      promptCounter: telemetryObj["Session Prompt Counter"] ?? "",
+      effectiveMode: telemetryObj["Effective Mode"] ?? "",
+      complexityLevel: telemetryObj["Complexity Level"] ?? "",
+      driftState: telemetryObj["Drift State"] ?? "",
+      driftRisk: telemetryObj["Drift Risk"] ?? "",
+      driftOrigin: telemetryObj["Drift Origin"] ?? "",
+    },
+    parsed: telemetryObj,
+  };
 
-  const firstFenceIndex = (() => {
-    for (let i = startIndex; i >= 0; i--) {
-      if (lines[i].trim().startsWith("```")) return i;
-    }
-    return -1;
-  })();
+  const telemetryEnd = startIndex + TELEMETRY_REQUIRED_FIELDS.length;
 
-  const secondFenceIndex = (() => {
-    const from = firstFenceIndex !== -1 ? firstFenceIndex + 1 : startIndex + 1;
-    for (let i = from; i < lines.length; i++) {
-      if (lines[i].trim().startsWith("```")) return i;
-    }
-    return -1;
-  })();
-
-  if (firstFenceIndex !== -1 && secondFenceIndex !== -1 && secondFenceIndex > firstFenceIndex) {
-    const telemetryEnd = startIndex + telemetryLines.length;
-
-cleanedContent = [
-  ...lines.slice(0, startIndex),
-  ...lines.slice(telemetryEnd),
-].join("\n").trim();
-  } else {
-    cleanedContent = [
-      ...lines.slice(0, startIndex),
-      ...lines.slice(startIndex + TELEMETRY_REQUIRED_FIELDS.length),
-    ].join("\n").trim();
-  }
+  cleanedContent = [
+    ...lines.slice(0, startIndex),
+    ...lines.slice(telemetryEnd),
+  ].join("\n").trim();
 } else {
   cleanedContent = content;
 }
+
 const res = NextResponse.json(
-{
-  role: "assistant",
-  content: cleanedContent,
-  telemetry: structuredTelemetry,
-  status,
-  tokens_used: TOKENS_USED,
-  balance_after: balanceAfter,
-  debug_usage: usage,
-  triketon: triketon ?? null,
-},
-{ status: 200 }
+  {
+    role: "assistant",
+    content: cleanedContent,
+    telemetry: structuredTelemetry,
+    status,
+    tokens_used: TOKENS_USED,
+    balance_after: balanceAfter,
+    debug_usage: usage,
+    triketon: triketon ?? null,
+  },
+  { status: 200 }
 );
 
 res.cookies.set({
@@ -1019,16 +990,17 @@ res.cookies.set({
   path: "/",
 });
 
+res.headers.set("X-Tokens-Delta", String(-tokenDelta));
+res.headers.set("X-Free-Used", String(count));
+res.headers.set("X-Free-Limit", String(FREE_LIMIT));
+res.headers.set("X-Free-Remaining", String(freeRemaining));
+res.headers.set("X-Tokens-Overdraw", "0");
 
-    res.headers.set("X-Tokens-Delta", String(-tokenDelta));
-    res.headers.set("X-Free-Used", String(count));
-    res.headers.set("X-Free-Limit", String(FREE_LIMIT));
-    res.headers.set("X-Free-Remaining", String(freeRemaining));
-    res.headers.set("X-Tokens-Overdraw", "0");
-    if (cookie) {
-      res.headers.set("Set-Cookie", cookie);
-    }
-    return res;
+if (cookie) {
+  res.headers.set("Set-Cookie", cookie);
+}
+
+return res;
 
 
 
