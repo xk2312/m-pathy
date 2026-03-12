@@ -391,11 +391,9 @@ function extractTopKeywordsFromText(input: string, limit = 50): string[] {
  * - Order strictly by timestamp
  */
 export function syncArchivePairsFromTriketon(): ArchivePair[] {
-  console.log('[PAIR TRACE] syncArchivePairsFromTriketon() ENTER')
-
+/* trace removed */
   const anchors = readFullTriketonLedger()
-  console.log('[PAIR TRACE] anchors count:', anchors.length)
-
+/* trace removed */
   const byChain = new Map<string, TriketonAnchor[]>()
 
   for (const a of anchors) {
@@ -404,8 +402,7 @@ export function syncArchivePairsFromTriketon(): ArchivePair[] {
     byChain.get(a.chain_id)!.push(a)
   }
 
-  console.log('[PAIR TRACE] chain count:', byChain.size)
-
+/* trace removed */
 const pairMap = new Map<string, ArchivePair>()
   for (const [chain_id, messages] of byChain.entries()) {
     const ordered = messages
@@ -416,8 +413,7 @@ const pairMap = new Map<string, ArchivePair>()
   }))
   .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
 
-    console.log('[PAIR TRACE] chain', chain_id, 'filtered messages:', ordered.length)
-
+/* trace removed */
     for (let i = 0; i < ordered.length - 1; i++) {
       const current = ordered[i]
       const next = ordered[i + 1]
@@ -455,21 +451,17 @@ if (!pairMap.has(pair_id)) {
 
  const pairs = Array.from(pairMap.values())
 
-console.log('[PAIR TRACE] pairs built:', pairs.length)
-
+/* trace removed */
 writeLS(PAIRS_KEY, pairs)
 
 if (typeof window !== 'undefined') {
-  console.log('[PAIR TRACE] dispatch archive:updated')
-  window.dispatchEvent(new CustomEvent('mpathy:archive:updated'))
+/* trace removed */  window.dispatchEvent(new CustomEvent('mpathy:archive:updated'))
 }
 
 if (pairs.length === 0) {
-  console.warn('[PAIR TRACE] no pairs built (empty projection written)')
-}
+/* trace removed */}
 
-console.log('[PAIR TRACE] DONE')
-
+/* trace removed */
 return pairs
 }
 
