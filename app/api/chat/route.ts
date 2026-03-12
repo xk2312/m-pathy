@@ -258,6 +258,11 @@ const apiVersion = process.env.AZURE_OPENAI_API_VERSION ?? "";
 const MODEL_MAX_TOKENS = parseInt(process.env.MODEL_MAX_TOKENS ?? "512", 10);
 const GPTX_MAX_CHARS   = parseInt(process.env.GPTX_MAX_CHARS   ?? "32000", 10);
 
+console.log("ENV DEBUG");
+console.log("MODEL_MAX_TOKENS:", MODEL_MAX_TOKENS);
+console.log("GPTX_MAX_CHARS:", GPTX_MAX_CHARS);
+console.log("MAX_CONTEXT_MESSAGES:", process.env.MAX_CONTEXT_MESSAGES);
+
 // FreeGate-ENV
 const FREE_LIMIT   = parseInt(process.env.FREE_LIMIT ?? "9", 10);
 const FG_SECRET    = process.env.FREEGATE_SECRET || "";
@@ -677,7 +682,15 @@ if (balanceBefore <= 0) {
     };
 
     // Concurrency-Gate + Retry-After Backoff
-    const response = await withGate(() => retryingFetch(buildAzureUrl(), init, 5));
+    console.log("REQUEST DEBUG");
+const bodyString = init.body as string;
+console.log("BODY SIZE", bodyString.length);
+console.log("ENTER GATE");
+
+const response = await withGate(() => {
+  console.log("FETCH START");
+  return retryingFetch(buildAzureUrl(), init, 5);
+});
     const data = await response.json();
 
     if (!response.ok) {
