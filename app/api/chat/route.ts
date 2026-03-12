@@ -257,10 +257,12 @@ const apiVersion = process.env.AZURE_OPENAI_API_VERSION ?? "";
 // **Limits steuerbar per ENV**
 const MODEL_MAX_TOKENS = parseInt(process.env.MODEL_MAX_TOKENS ?? "512", 10);
 const GPTX_MAX_CHARS   = parseInt(process.env.GPTX_MAX_CHARS   ?? "32000", 10);
+const MAX_PAYLOAD_BYTES = parseInt(process.env.MAX_PAYLOAD_BYTES ?? "120000", 10);
 
 console.log("ENV DEBUG");
 console.log("MODEL_MAX_TOKENS:", MODEL_MAX_TOKENS);
 console.log("GPTX_MAX_CHARS:", GPTX_MAX_CHARS);
+console.log("MAX_PAYLOAD_BYTES:", MAX_PAYLOAD_BYTES);
 console.log("MAX_CONTEXT_MESSAGES:", process.env.MAX_CONTEXT_MESSAGES);
 
 // FreeGate-ENV
@@ -330,6 +332,12 @@ function estimateTokensFromText(text: string): number {
   if (!normalized) return 1;
   const approxTokens = Math.ceil(normalized.length / 4);
   return approxTokens > 0 ? approxTokens : 1;
+}
+
+function getMessagesCharCount(messages: ChatMessage[]): number {
+  return messages.reduce((sum, message) => {
+    return sum + String(message?.content ?? "").length;
+  }, 0);
 }
 
 const TELEMETRY_REQUIRED_FIELDS = [
@@ -683,8 +691,28 @@ if (balanceBefore <= 0) {
 
     // Concurrency-Gate + Retry-After Backoff
     console.log("REQUEST DEBUG");
-const bodyString = init.body as string;
-console.log("BODY SIZE", bodyString.length);
+const bodyString = String(init.body ?? "");
+const payloadBytes = Buffer.byteLength(bodyString, "utf8");
+const messageCount = messages.length;
+const messageChars = getMessagesCharCount(messages);
+
+console.log("CHAT_MESSAGE_COUNT", messageCount);
+console.log("CHAT_MESSAGE_CHARS", messageChars);
+console.log("CHAT_BODY_CHARS", bodyString.length);
+console.log("CHAT_PAYLOAD_BYTES", payloadBytes);
+console.log("CHAT_MAX_PAYLOAD_BYTES", MAX_PAYLOAD_BYTES);
+
+if (payloadBytes > MAX_PAYLOAD_BYTES) {
+  return NextResponse.json(
+    {
+      error: "Payload too large",
+      payload_bytes: payloadBytes,
+      max_payload_bytes: MAX_PAYLOAD_BYTES,
+    },
+    { status: 413 }
+  );
+}
+
 console.log("ENTER GATE");
 
 const response = await withGate(() => {
@@ -692,7 +720,6 @@ const response = await withGate(() => {
   return retryingFetch(buildAzureUrl(), init, 5);
 });
     const data = await response.json();
-
     if (!response.ok) {
       console.error("[AzureOpenAI Error]", response.status, data);
       return NextResponse.json(

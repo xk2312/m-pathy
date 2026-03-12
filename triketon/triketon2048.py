@@ -108,10 +108,13 @@ class TriketonSeal:
 def triketon_seal(
     text: str,
     *,
-    public_key: str,
+    public_key: str | None = None,
     deterministic: bool = False,
     seed: int | None = None,
 ) -> TriketonSeal:
+
+    if not public_key:
+        public_key = "TRIKETON_DEVICE_KEY_MISSING"
     """
     STEP 05: end-to-end seal (v1)
     - public_key MUST be provided externally (DeviceKey)
