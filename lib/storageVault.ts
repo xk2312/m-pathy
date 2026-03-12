@@ -191,8 +191,7 @@ function writeLsRaw(key: string, value: unknown): void {
 
     window.localStorage.setItem(key, v);
   } catch (e) {
-    console.warn(`[Vault] LS write failed for ${key}`, e);
-  }
+/* silent */  }
 }
 
 
@@ -213,8 +212,7 @@ private initArchiveMirror(): void {
   if (typeof window === 'undefined') return;
 
   window.addEventListener('mpathy:archive:updated', async () => {
-      console.log('[VAULT TRACE] archive:updated received');
-
+/* trace removed */
     try {
       const keys = [
         'mpathy:archive:v1',
@@ -225,13 +223,11 @@ private initArchiveMirror(): void {
 
       for (const key of keys) {
   const raw = window.localStorage.getItem(key);
-  console.log('[VAULT TRACE] LS raw', key, raw);
-
+/* trace removed */
   if (!raw) continue;
 
   const parsed = safeJsonParse(raw);
-  console.log('[VAULT TRACE] LS parsed', key, parsed);
-
+/* trace removed */
   if (parsed === null) continue;
 
   await this.put(key, parsed);
@@ -264,8 +260,7 @@ private initArchiveMirror(): void {
         );
         }
       } catch (err) {
-        console.error('[VaultMirror] Triketon mirror failed:', err);
-      }
+/* mirror error suppressed */      }
     });
   }
 
@@ -293,8 +288,7 @@ private initArchiveMirror(): void {
           writeLsRaw(key, fromVault);
         }
       } catch (e) {
-        console.warn('[Vault] Hydration bridge failed', e);
-      }
+/* silent */      }
     };
 
     void hydrateOnce();
@@ -302,8 +296,7 @@ private initArchiveMirror(): void {
 
   private initDB(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
-      console.debug('[Vault] Initializing native master ledger...');
-
+/* init silent */
       if (typeof window === 'undefined' || !window.indexedDB) {
         console.error('[Vault] IndexedDB not supported.');
         return reject('IndexedDB not supported');
@@ -315,20 +308,17 @@ private initArchiveMirror(): void {
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains(STORE_NAME)) {
           db.createObjectStore(STORE_NAME);
-          console.info(`[Vault] ObjectStore created: ${STORE_NAME}`);
-        }
+/* silent */        }
       };
 
       request.onsuccess = (event: Event) => {
         const db = (event.target as IDBOpenDBRequest).result;
         this.db = db;
-        console.debug('[Vault] Connected.');
-        resolve(db);
+/* silent */        resolve(db);
       };
 
       request.onerror = (event: Event) => {
-        console.error('[Vault] Open failed:', (event.target as IDBOpenDBRequest).error);
-        reject('DB Open Failed');
+/* suppressed */        reject('DB Open Failed');
       };
     });
   }
@@ -342,8 +332,7 @@ private initArchiveMirror(): void {
 
       request.onsuccess = () => resolve(request.result);
       request.onerror = () => {
-        console.error(`[Vault] Read failed: ${key}`);
-        reject();
+/* silent */        reject();
       };
     });
   }
@@ -355,30 +344,25 @@ private initArchiveMirror(): void {
       const store = transaction.objectStore(STORE_NAME);
 
       const dataToSave = deepClone(value);
-      console.log('[VAULT TRACE] putInternal writing', key, dataToSave);
-
+/* trace removed */
 store.put(dataToSave, key);
 
 transaction.oncomplete = () => {
-  console.debug(`[Vault] Stored: ${key}`);
-  resolve();
+/* silent */  resolve();
 };
       transaction.onerror = () => {
-        console.error(`[Vault] Store failed: ${key}`, transaction.error);
-        reject(transaction.error);
+/* suppressed */        reject(transaction.error);
       };
     });
   }
 
 async put(key: string, value: unknown): Promise<void> {
-  console.log('[VAULT TRACE] put() called', key, value);
-
+/* trace removed */
   const strategy = resolveStrategy(key);
   const incoming = deepClone(value);
   const existing = await this.getInternal(key);
 
-  console.log('[VAULT TRACE] existing from IDB', key, existing);
-
+/* trace removed */
   let next: unknown = incoming;
 
   if (key === 'mpathy:archive:chat_counter') {
@@ -409,8 +393,7 @@ async put(key: string, value: unknown): Promise<void> {
     next = applyStrategy(strategy, existing, incoming);
   }
 
-  console.log('[VAULT TRACE] final next', key, next);
-
+/* trace removed */
   await this.putInternal(key, next);
 }
 
