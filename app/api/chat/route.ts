@@ -698,6 +698,9 @@ if (balanceBefore <= 0) {
     // === TELEMETRY STRUCTURING ===
     if (!isValidTelemetryBlock(content)) {
       console.warn("[telemetry] invalid or missing block — retrying once");
+      console.error("----- TELEMETRY FIRST ATTEMPT START -----");
+      console.error(content);
+      console.error("----- TELEMETRY FIRST ATTEMPT END -----");
 
       const strictRetryPayload = {
         messages: [
@@ -728,6 +731,9 @@ if (balanceBefore <= 0) {
 
       if (!retryResponse.ok || !retryContent || !isValidTelemetryBlock(retryContent)) {
         console.error("[telemetry] enforcement failed after retry");
+        console.error("----- TELEMETRY RETRY ATTEMPT START -----");
+        console.error(retryContent ?? "[retryContent missing]");
+        console.error("----- TELEMETRY RETRY ATTEMPT END -----");
 
         const telemetryBlockedMessages: Record<string, string> = {
           en: "SYSTEM NOTICE: Telemetry validation failed. Output was blocked according to system policy. Please retry your request.",
@@ -901,11 +907,6 @@ let cleanedContent = content;
 
 if (!isValidTelemetryBlock(content)) {
   console.error("[telemetry] validation failed");
-
-  console.error("----- TELEMETRY DEBUG START -----");
-  console.error("Raw model output:");
-  console.error(content);
-  console.error("----- TELEMETRY DEBUG END -----");
 
   return NextResponse.json(
     { error: "Telemetry validation failed" },
