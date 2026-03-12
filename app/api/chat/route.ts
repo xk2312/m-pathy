@@ -677,11 +677,38 @@ if (balanceBefore <= 0) {
     
 
 
-    const payload = {
-      messages,
-      temperature: body.temperature ?? 0.7,
-      max_tokens: MODEL_MAX_TOKENS, // kleiner halten → weniger 429
-    };
+    const telemetrySystemPrompt = {
+  role: "system",
+  content: `
+You are running inside MAIOS.
+
+Every response MUST begin with a telemetry block.
+
+Required format:
+
+FULL TELEMETRY - STATUS
+Prompt: <number>
+Drift: <state>
+
+Rules:
+
+1. Telemetry MUST be the first lines of the response.
+2. No text may appear before telemetry.
+3. If telemetry is missing the response is invalid.
+4. After telemetry you may output the answer.
+
+Violation of this rule is a system error.
+`
+};
+
+const payload = {
+  messages: [
+    telemetrySystemPrompt,
+    ...messages
+  ],
+  temperature: 0.7,
+  max_tokens: MODEL_MAX_TOKENS,
+};
 
     const init: RequestInit = {
       method: "POST",
@@ -735,39 +762,43 @@ const response = await withGate(() => {
       return NextResponse.json({ error: "No message content" }, { status: 502 });
     }
 
-    // === TELEMETRY STRUCTURING ===
-    if (!isValidTelemetryBlock(content)) {
-      console.warn("[telemetry] invalid or missing block — retrying once");
-      console.error("----- TELEMETRY FIRST ATTEMPT START -----");
-      console.error(content);
-      console.error("----- TELEMETRY FIRST ATTEMPT END -----");
+  // === TELEMETRY STRUCTURING ===
+if (!isValidTelemetryBlock(content)) {
+  console.warn("[telemetry] invalid or missing block - retrying once");
+  console.error("----- TELEMETRY FIRST ATTEMPT START -----");
+  console.error(content);
+  console.error("----- TELEMETRY FIRST ATTEMPT END -----");
 
-      const strictRetryPayload = {
-        messages: [
-          {
-            role: "system",
-            content:
-                   "STRICT REISSUE: You must output a full telemetry block in canonical form BEFORE any content. All 37 fields are mandatory. No omission allowed."
-          },
-          ...messages
-        ],
-        temperature: 0,
-        max_tokens: MODEL_MAX_TOKENS,
-      };
+  const lastUserMessage = messages
+    .filter((m) => m.role === "user")
+    .slice(-1);
 
-      const retryInit: RequestInit = {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "api-key": apiKey },
-        body: JSON.stringify(strictRetryPayload),
-      };
+  const strictRetryPayload = {
+    messages: [
+      {
+        role: "system",
+        content:
+          "CRITICAL SYSTEM RULE: Output MUST start with telemetry block. No text before telemetry.",
+      },
+      ...lastUserMessage,
+    ],
+    temperature: 0,
+    max_tokens: MODEL_MAX_TOKENS,
+  };
 
-      const retryResponse = await withGate(() =>
-        retryingFetch(buildAzureUrl(), retryInit, 5)
-      );
+  const retryInit: RequestInit = {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "api-key": apiKey },
+    body: JSON.stringify(strictRetryPayload),
+  };
 
-      const retryData = await retryResponse.json();
-      const retryContent: string | undefined =
-        retryData?.choices?.[0]?.message?.content;
+  const retryResponse = await withGate(() =>
+    retryingFetch(buildAzureUrl(), retryInit, 5)
+  );
+
+  const retryData = await retryResponse.json();
+  const retryContent: string | undefined =
+    retryData?.choices?.[0]?.message?.content;
 
       if (!retryResponse.ok || !retryContent || !isValidTelemetryBlock(retryContent)) {
         console.error("[telemetry] enforcement failed after retry");
