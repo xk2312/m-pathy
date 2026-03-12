@@ -902,6 +902,11 @@ let cleanedContent = content;
 if (!isValidTelemetryBlock(content)) {
   console.error("[telemetry] validation failed");
 
+  console.error("----- TELEMETRY DEBUG START -----");
+  console.error("Raw model output:");
+  console.error(content);
+  console.error("----- TELEMETRY DEBUG END -----");
+
   return NextResponse.json(
     { error: "Telemetry validation failed" },
     { status: 500 }

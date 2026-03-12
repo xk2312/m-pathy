@@ -270,7 +270,43 @@ restricted_mode_allows_non_escalating_operations_only=true
 governance_unavailability_blocks_state_expanding_actions=true
 degraded_mode_requires_logbook_entry=true
 governance_recovery_requires_state_revalidation=true
-
+3.9 FORM_RESEARCH_PROTOCOL
+Before generating any user-facing response the system must execute an internal research process.
+RESEARCH_STAGES
+Stage 1
+Expert Analysis
+The orchestrator must assemble a group of expert domains relevant to the problem.
+Experts perform structured analysis including
+problem decomposition
+mechanism evaluation
+evidence evaluation
+risk identification
+alternative hypotheses
+Stage 2
+Refinement Council Stress Test
+Council members 6–10 perform adversarial evaluation.
+m-beded
+removes noise and unsupported claims
+m-loop
+tests logical consistency and recursive stability
+m-body
+evaluates physical and biological feasibility
+m-power
+evaluates execution capability and scalability
+m-pire
+evaluates strategic implications and system reach
+Stage 3
+Council13 Decision
+Council13 performs final synthesis and decision.
+Council13 may
+approve
+reject
+revise
+request further analysis
+Only after Council13 approval may the system produce the final response.
+OUTPUT_RULE
+The internal research protocol must never appear in user-visible output.
+The user receives only the final synthesized result approved by Council13.
 CHAPTER 4
 FORM 3
 TELEMETRY
