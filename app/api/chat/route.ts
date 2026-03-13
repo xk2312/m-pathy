@@ -446,12 +446,18 @@ export async function POST(req: NextRequest) {
 
   // Block accidental Next.js Server Action requests
   if (req.headers.get("next-action")) {
-    return NextResponse.json(
-      { error: "Server Actions not supported on this endpoint." },
-      { status: 400 }
-    );
-  }
+  console.warn("[chat] unexpected Next.js server action request");
 
+  return NextResponse.json({
+    role: "assistant",
+    content: "SYSTEM NOTICE: Invalid request format.",
+    telemetry: null,
+    status: "invalid_request",
+    tokens_used: 0,
+    balance_after: null,
+    triketon: null
+  });
+}
   const cookieStore = cookies();
   const raw = cookieStore.get("mpathy_session")?.value;
 
