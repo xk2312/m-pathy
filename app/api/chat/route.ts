@@ -809,7 +809,18 @@ console.log("[DEBUG] first 200 chars of content:", content?.slice(0,200));
 
 if (!content) {
   console.error("[DEBUG] Azure returned no content");
-  return NextResponse.json({ error: "No message content" }, { status: 502 });
+  return NextResponse.json(
+    {
+      role: "assistant",
+      content: "SYSTEM NOTICE: No message content was returned by the upstream model.",
+      telemetry: null,
+      status: "upstream_empty",
+      tokens_used: 0,
+      balance_after: balanceBefore ?? null,
+      triketon: null
+    },
+    { status: 200 }
+  );
 }
 
   // === TELEMETRY STRUCTURING ===
@@ -1050,8 +1061,16 @@ if (!isValidTelemetryBlock(content)) {
   console.error("[telemetry] validation failed");
 
   return NextResponse.json(
-    { error: "Telemetry validation failed" },
-    { status: 500 }
+    {
+      role: "assistant",
+      content: "SYSTEM NOTICE: Telemetry validation failed. Output was blocked according to system policy.",
+      telemetry: null,
+      status: "telemetry_validation_failed",
+      tokens_used: 0,
+      balance_after: balanceBefore ?? null,
+      triketon: null
+    },
+    { status: 200 }
   );
 }
 
@@ -1185,8 +1204,19 @@ return res;
 
 
 
-  } catch (err: any) {
-    console.error("[API Error]", err);
-    return NextResponse.json({ error: err.message ?? "Unknown error" }, { status: 500 });
-  }
+ } catch (err: any) {
+  console.error("[API Error]", err);
+  return NextResponse.json(
+    {
+      role: "assistant",
+      content: `SYSTEM NOTICE: ${err?.message ?? "Unknown error"}`,
+      telemetry: null,
+      status: "runtime_error",
+      tokens_used: 0,
+      balance_after: null,
+      triketon: null
+    },
+    { status: 200 }
+  );
+}
 }
