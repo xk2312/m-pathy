@@ -212,8 +212,6 @@ import {
 import '@/lib/archiveChatPreparationListener'
 import type { ChatMessage, Role } from "@/lib/types";
 
-const retryRef = useRef<boolean>(false);
-
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
 const persist = {
   save: saveChat,
@@ -1346,6 +1344,7 @@ function InputDock({
 
 export default function Page2() {
   // Persona/Theme
+  const retryRef = useRef<boolean>(false);
   const theme = useTheme("default");
   const activeTokens: Tokens = theme.tokens;
 
