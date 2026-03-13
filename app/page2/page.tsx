@@ -212,6 +212,7 @@ import {
 import '@/lib/archiveChatPreparationListener'
 import type { ChatMessage, Role } from "@/lib/types";
 
+const retryRef = useRef<boolean>(false);
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
 const persist = {
@@ -2850,22 +2851,50 @@ setMessages((prev) => {
           // UX-Hinweis darf niemals den Chat crashen
         }
       }
+} catch (err) {
 
-    } catch {
-      setMessages((prev) => {
-        const base = Array.isArray(prev) ? prev : [];
-        const next = truncateMessages([
-          ...base,
-          {
-            role: "assistant",
-            content: "⚠️ Send failed. Please retry.",
-            format: "markdown",
-          },
-        ]);
-        persistMessages(next);
-        return next;
-      });
-   } finally {
+  // 🔁 first failure → silent retry skip
+  if (!retryRef.current) {
+    retryRef.current = true;
+    return;
+  }
+
+  // 💬 second failure → human assistant message
+  setMessages((prev) => {
+    const base = Array.isArray(prev) ? prev : [];
+
+    const next = truncateMessages([
+      ...base,
+      {
+  role: "assistant",
+  content: (() => {
+    const messages: Record<string, string> = {
+      en: "The last message was not processed correctly. Please simply send the request again.",
+      de: "Die letzte Nachricht wurde nicht korrekt verarbeitet. Bitte die Anfrage einfach nochmal senden.",
+      fr: "Le dernier message n’a pas été traité correctement. Veuillez simplement renvoyer la demande.",
+      es: "El último mensaje no se procesó correctamente. Por favor, envíe la solicitud nuevamente.",
+      it: "L’ultimo messaggio non è stato elaborato correttamente. Si prega di inviare nuovamente la richiesta.",
+      pt: "A última mensagem não foi processada corretamente. Por favor, envie a solicitação novamente.",
+      nl: "Het laatste bericht is niet correct verwerkt. Stuur het verzoek eenvoudig opnieuw.",
+      ru: "Последнее сообщение было обработано некорректно. Пожалуйста, отправьте запрос ещё раз.",
+      zh: "上一条消息未被正确处理。请重新发送请求。",
+      ja: "直前のメッセージは正しく処理されませんでした。もう一度リクエストを送信してください。",
+      ko: "마지막 메시지가 올바르게 처리되지 않았습니다. 요청을 다시 보내 주세요.",
+      ar: "لم تتم معالجة الرسالة الأخيرة بشكل صحيح. يرجى إعادة إرسال الطلب.",
+      hi: "पिछला संदेश सही तरीके से संसाधित नहीं हो सका। कृपया अनुरोध दोबारा भेजें。",
+    };
+
+    return messages[locale as keyof typeof messages] || messages.en;
+  })(),
+  format: "markdown"
+}
+    ]);
+
+    persistMessages(next);
+    return next;
+  });
+
+} finally {
   setMessages((prev) => {
     if (!Array.isArray(prev) || prev.length === 0) return prev;
 
@@ -2878,8 +2907,9 @@ setMessages((prev) => {
     return prev;
   });
 
-  setLoading(false);
-  setMode("DEFAULT");
+  retryRef.current = false;
+setLoading(false);
+setMode("DEFAULT");
 }
 
   }, [messages, persistMessages]);
