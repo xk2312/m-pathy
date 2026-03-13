@@ -770,13 +770,27 @@ const response = await withGate(() => {
   return retryingFetch(buildAzureUrl(), init, 5);
 });
     const data = await response.json();
-    if (!response.ok) {
-      console.error("[AzureOpenAI Error]", response.status, data);
-      return NextResponse.json(
-        { error: data?.error?.message ?? `Upstream error ${response.status}` },
-        { status: response.status }
-      );
-    }
+   if (!response.ok) {
+  console.error("[AzureOpenAI Error]", response.status, data);
+
+  const safeMessage =
+    data?.error?.code === "content_filter"
+      ? "SYSTEM NOTICE: This request was blocked by the safety filter."
+      : data?.error?.message ?? `Upstream error ${response.status}`;
+
+  return NextResponse.json(
+    {
+      role: "assistant",
+      content: safeMessage,
+      telemetry: null,
+      status: "blocked",
+      tokens_used: 0,
+      balance_after: balanceBefore ?? null,
+      triketon: null
+    },
+    { status: 200 }
+  );
+}
 
     const usage = data?.usage ?? null;
 
