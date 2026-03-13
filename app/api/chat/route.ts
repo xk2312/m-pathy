@@ -446,18 +446,12 @@ export async function POST(req: NextRequest) {
 
   // Block accidental Next.js Server Action requests
   if (req.headers.get("next-action")) {
-  console.warn("[chat] unexpected Next.js server action request");
+    return NextResponse.json(
+      { error: "Server Actions not supported on this endpoint." },
+      { status: 400 }
+    );
+  }
 
-  return NextResponse.json({
-    role: "assistant",
-    content: "SYSTEM NOTICE: Invalid request format.",
-    telemetry: null,
-    status: "invalid_request",
-    tokens_used: 0,
-    balance_after: null,
-    triketon: null
-  });
-}
   const cookieStore = cookies();
   const raw = cookieStore.get("mpathy_session")?.value;
 
@@ -746,8 +740,7 @@ const payload = {
     };
 
     // Concurrency-Gate + Retry-After Backoff
-console.log("REQUEST DEBUG");
-
+    console.log("REQUEST DEBUG");
 const bodyString = String(init.body ?? "");
 const payloadBytes = Buffer.byteLength(bodyString, "utf8");
 const messageCount = messages.length;
@@ -776,73 +769,25 @@ const response = await withGate(() => {
   console.log("FETCH START");
   return retryingFetch(buildAzureUrl(), init, 5);
 });
+    const data = await response.json();
+    if (!response.ok) {
+      console.error("[AzureOpenAI Error]", response.status, data);
+      return NextResponse.json(
+        { error: data?.error?.message ?? `Upstream error ${response.status}` },
+        { status: response.status }
+      );
+    }
 
-let data: any = null;
+    const usage = data?.usage ?? null;
 
-/* ---------- ERROR PATH (Azure rejected request) ---------- */
-
-if (!response.ok) {
-  try {
-    data = await response.json();
-  } catch {
-    data = null;
-  }
-
-  console.error("[AzureOpenAI Error]", response.status, data);
-
-  const safeMessage =
-    data?.error?.code === "content_filter"
-      ? "SYSTEM NOTICE: This request was blocked by the safety filter."
-      : data?.error?.message ?? `Upstream error ${response.status}`;
-
-  return NextResponse.json(
-    {
-      role: "assistant",
-      content: safeMessage,
-      telemetry: null,
-      status: "blocked",
-      tokens_used: 0,
-      balance_after: balanceBefore ?? null,
-      triketon: null
-    },
-    { status: 200 }
-  );
-}
-
-/* ---------- SUCCESS PATH ---------- */
-
-data = await response.json();
-
-const usage = data?.usage ?? null;
-let content: string | undefined = data?.choices?.[0]?.message?.content;
-
-console.log("[DEBUG] Azure response received");
-console.log("[DEBUG] response.ok:", response.ok);
-console.log("[DEBUG] usage:", usage);
-console.log("[DEBUG] first 200 chars of content:", content?.slice(0,200));
-
-if (!content) {
-  console.error("[DEBUG] Azure returned no content");
-
-  return NextResponse.json(
-    {
-      role: "assistant",
-      content: "SYSTEM NOTICE: No message content was returned by the upstream model.",
-      telemetry: null,
-      status: "upstream_empty",
-      tokens_used: 0,
-      balance_after: balanceBefore ?? null,
-      triketon: null
-    },
-    { status: 200 }
-  );
-}
+        let content: string | undefined = data?.choices?.[0]?.message?.content;
+    if (!content) {
+      return NextResponse.json({ error: "No message content" }, { status: 502 });
+    }
 
   // === TELEMETRY STRUCTURING ===
-console.log("[DEBUG] Telemetry validation start");
-
 if (!isValidTelemetryBlock(content)) {
-  console.warn("[DEBUG] Telemetry invalid - entering retry path");  console.warn("[telemetry] invalid or missing block - retrying once");
+  console.warn("[telemetry] invalid or missing block - retrying once");
   console.error("----- TELEMETRY FIRST ATTEMPT START -----");
   console.error(content);
   console.error("----- TELEMETRY FIRST ATTEMPT END -----");
@@ -870,25 +815,13 @@ if (!isValidTelemetryBlock(content)) {
     body: JSON.stringify(strictRetryPayload),
   };
 
- const retryResponse = await withGate(() =>
-  retryingFetch(buildAzureUrl(), retryInit, 5)
-);
+  const retryResponse = await withGate(() =>
+    retryingFetch(buildAzureUrl(), retryInit, 5)
+  );
 
-console.log("[DEBUG] Retry response status:", retryResponse.status);
-
-  let retryData: any = null;
-
-try {
-  retryData = await retryResponse.json();
-} catch (err) {
-  console.error("[telemetry] retry response not valid JSON");
-}
-
-const retryContent: string | undefined =
-  retryData?.choices?.[0]?.message?.content;
-
-console.log("[DEBUG] Retry content exists:", !!retryContent);
-console.log("[DEBUG] Retry telemetry valid:", isValidTelemetryBlock(retryContent ?? ""));
+  const retryData = await retryResponse.json();
+  const retryContent: string | undefined =
+    retryData?.choices?.[0]?.message?.content;
 
       if (!retryResponse.ok || !retryContent || !isValidTelemetryBlock(retryContent)) {
         console.error("[telemetry] enforcement failed after retry");
@@ -915,21 +848,17 @@ console.log("[DEBUG] Retry telemetry valid:", isValidTelemetryBlock(retryContent
         const safeLocale =
           telemetryBlockedMessages[localeFromCookie] ? localeFromCookie : "en";
 
-       console.error("[DEBUG] TELEMETRY BLOCK RESPONSE TRIGGERED");
-console.error("[DEBUG] locale:", safeLocale);
-
-return NextResponse.json(
-{
-  role: "assistant",
-  content: telemetryBlockedMessages[safeLocale],
-  telemetry: null,
-  status: "telemetry_blocked",
-  tokens_used: 0,
-  balance_after: balanceBefore ?? null,
-  triketon: null
-},
-{ status: 200 }
-);
+        return NextResponse.json(
+          {
+            role: "assistant",
+            content: telemetryBlockedMessages[safeLocale],
+            status: "telemetry_blocked",
+            tokens_used: 0,
+            balance_after: balanceBefore ?? null,
+            triketon: null,
+          },
+          { status: 200 }
+        );
       }
 
       content = retryContent;
@@ -940,11 +869,9 @@ return NextResponse.json(
     if (usage && typeof usage.total_tokens === "number") {
       tokensUsed = usage.total_tokens;
     } else {
-const promptText = messages
-  .map((m) => (typeof m.content === "string" ? m.content : ""))
-  .join(" ");      
-const combinedText = `${promptText}\n${typeof content === "string" ? content : ""}`;      
-tokensUsed = estimateTokensFromText(combinedText);
+      const promptText = messages.map((m) => m.content).join(" ");
+      const combinedText = `${promptText}\n${content}`;
+      tokensUsed = estimateTokensFromText(combinedText);
     }
     const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, tokensUsed);
     let tokenDelta = TOKENS_USED;
@@ -1076,16 +1003,8 @@ if (!isValidTelemetryBlock(content)) {
   console.error("[telemetry] validation failed");
 
   return NextResponse.json(
-    {
-      role: "assistant",
-      content: "SYSTEM NOTICE: Telemetry validation failed. Output was blocked according to system policy.",
-      telemetry: null,
-      status: "telemetry_validation_failed",
-      tokens_used: 0,
-      balance_after: balanceBefore ?? null,
-      triketon: null
-    },
-    { status: 200 }
+    { error: "Telemetry validation failed" },
+    { status: 500 }
   );
 }
 
@@ -1155,28 +1074,8 @@ cleanedContent = cleanedContent
   .replace(/^Explanation:\s*/i, "")
   .trim();
 
-// === RESPONSE SCHEMA SAFETY GUARD ===
-if (!content || typeof content !== "string") {
-  return NextResponse.json(
-    {
-      role: "assistant",
-      content: "SYSTEM NOTICE: Response content missing.",
-      telemetry: null,
-      status: "system_error",
-      tokens_used: 0,
-      balance_after: balanceBefore ?? null,
-      triketon: null
-    },
-    { status: 200 }
-  );
-}
-
-console.log("[DEBUG] FINAL RESPONSE BUILD");
-console.log("[DEBUG] status:", status);
-console.log("[DEBUG] tokens_used:", TOKENS_USED);
-console.log("[DEBUG] balance_after:", balanceAfter);
-
-const res = NextResponse.json( {
+const res = NextResponse.json(
+  {
     role: "assistant",
     content: cleanedContent,
     telemetry: structuredTelemetry,
@@ -1202,7 +1101,6 @@ res.cookies.set({
 });
 
 res.headers.set("X-Tokens-Delta", String(-tokenDelta));
-res.headers.set("X-Response-Type", status);
 res.headers.set("X-Free-Used", String(count));
 res.headers.set("X-Free-Limit", String(FREE_LIMIT));
 res.headers.set("X-Free-Remaining", String(freeRemaining));
@@ -1212,26 +1110,14 @@ if (cookie) {
   res.headers.set("Set-Cookie", cookie);
 }
 
-console.log("[DEBUG] RESPONSE SENT TO CLIENT");
-
 return res;
 
 
 
 
- } catch (err: any) {
-  console.error("[API Error]", err);
-  return NextResponse.json(
-    {
-      role: "assistant",
-      content: `SYSTEM NOTICE: ${err?.message ?? "Unknown error"}`,
-      telemetry: null,
-      status: "runtime_error",
-      tokens_used: 0,
-      balance_after: null,
-      triketon: null
-    },
-    { status: 200 }
-  );
-}
+
+  } catch (err: any) {
+    console.error("[API Error]", err);
+    return NextResponse.json({ error: err.message ?? "Unknown error" }, { status: 500 });
+  }
 }
