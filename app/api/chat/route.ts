@@ -856,16 +856,19 @@ const retryContent: string | undefined =
           telemetryBlockedMessages[localeFromCookie] ? localeFromCookie : "en";
 
         return NextResponse.json(
-          {
-            role: "assistant",
-            content: telemetryBlockedMessages[safeLocale],
-            status: "telemetry_blocked",
-            tokens_used: 0,
-            balance_after: balanceBefore ?? null,
-            triketon: null,
-          },
-          { status: 200 }
-        );
+{
+  message: {
+    role: "assistant",
+    content: telemetryBlockedMessages[safeLocale],
+    format: "markdown"
+  },
+  status: "telemetry_blocked",
+  tokens_used: 0,
+  balance_after: balanceBefore ?? null,
+  triketon: null
+},
+{ status: 200 }
+);
       }
 
       content = retryContent;
