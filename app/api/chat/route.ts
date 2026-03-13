@@ -746,7 +746,8 @@ const payload = {
     };
 
     // Concurrency-Gate + Retry-After Backoff
-    console.log("REQUEST DEBUG");
+console.log("REQUEST DEBUG");
+
 const bodyString = String(init.body ?? "");
 const payloadBytes = Buffer.byteLength(bodyString, "utf8");
 const messageCount = messages.length;
@@ -775,8 +776,18 @@ const response = await withGate(() => {
   console.log("FETCH START");
   return retryingFetch(buildAzureUrl(), init, 5);
 });
-    const data = await response.json();
-   if (!response.ok) {
+
+let data: any = null;
+
+/* ---------- ERROR PATH (Azure rejected request) ---------- */
+
+if (!response.ok) {
+  try {
+    data = await response.json();
+  } catch {
+    data = null;
+  }
+
   console.error("[AzureOpenAI Error]", response.status, data);
 
   const safeMessage =
@@ -798,17 +809,21 @@ const response = await withGate(() => {
   );
 }
 
-    const usage = data?.usage ?? null;
+/* ---------- SUCCESS PATH ---------- */
 
-     let content: string | undefined = data?.choices?.[0]?.message?.content;
+data = await response.json();
+
+const usage = data?.usage ?? null;
+let content: string | undefined = data?.choices?.[0]?.message?.content;
 
 console.log("[DEBUG] Azure response received");
 console.log("[DEBUG] response.ok:", response.ok);
-console.log("[DEBUG] usage:", data?.usage);
+console.log("[DEBUG] usage:", usage);
 console.log("[DEBUG] first 200 chars of content:", content?.slice(0,200));
 
 if (!content) {
   console.error("[DEBUG] Azure returned no content");
+
   return NextResponse.json(
     {
       role: "assistant",
