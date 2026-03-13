@@ -819,9 +819,16 @@ if (!isValidTelemetryBlock(content)) {
     retryingFetch(buildAzureUrl(), retryInit, 5)
   );
 
-  const retryData = await retryResponse.json();
-  const retryContent: string | undefined =
-    retryData?.choices?.[0]?.message?.content;
+  let retryData: any = null;
+
+try {
+  retryData = await retryResponse.json();
+} catch (err) {
+  console.error("[telemetry] retry response not valid JSON");
+}
+
+const retryContent: string | undefined =
+  retryData?.choices?.[0]?.message?.content;
 
       if (!retryResponse.ok || !retryContent || !isValidTelemetryBlock(retryContent)) {
         console.error("[telemetry] enforcement failed after retry");
@@ -869,9 +876,11 @@ if (!isValidTelemetryBlock(content)) {
     if (usage && typeof usage.total_tokens === "number") {
       tokensUsed = usage.total_tokens;
     } else {
-      const promptText = messages.map((m) => m.content).join(" ");
-      const combinedText = `${promptText}\n${content}`;
-      tokensUsed = estimateTokensFromText(combinedText);
+const promptText = messages
+  .map((m) => (typeof m.content === "string" ? m.content : ""))
+  .join(" ");      
+const combinedText = `${promptText}\n${typeof content === "string" ? content : ""}`;      
+tokensUsed = estimateTokensFromText(combinedText);
     }
     const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, tokensUsed);
     let tokenDelta = TOKENS_USED;
