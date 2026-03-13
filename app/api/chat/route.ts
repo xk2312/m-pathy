@@ -780,14 +780,23 @@ const response = await withGate(() => {
 
     const usage = data?.usage ?? null;
 
-        let content: string | undefined = data?.choices?.[0]?.message?.content;
-    if (!content) {
-      return NextResponse.json({ error: "No message content" }, { status: 502 });
-    }
+     let content: string | undefined = data?.choices?.[0]?.message?.content;
+
+console.log("[DEBUG] Azure response received");
+console.log("[DEBUG] response.ok:", response.ok);
+console.log("[DEBUG] usage:", data?.usage);
+console.log("[DEBUG] first 200 chars of content:", content?.slice(0,200));
+
+if (!content) {
+  console.error("[DEBUG] Azure returned no content");
+  return NextResponse.json({ error: "No message content" }, { status: 502 });
+}
 
   // === TELEMETRY STRUCTURING ===
+console.log("[DEBUG] Telemetry validation start");
+
 if (!isValidTelemetryBlock(content)) {
-  console.warn("[telemetry] invalid or missing block - retrying once");
+  console.warn("[DEBUG] Telemetry invalid - entering retry path");  console.warn("[telemetry] invalid or missing block - retrying once");
   console.error("----- TELEMETRY FIRST ATTEMPT START -----");
   console.error(content);
   console.error("----- TELEMETRY FIRST ATTEMPT END -----");
@@ -815,9 +824,11 @@ if (!isValidTelemetryBlock(content)) {
     body: JSON.stringify(strictRetryPayload),
   };
 
-  const retryResponse = await withGate(() =>
-    retryingFetch(buildAzureUrl(), retryInit, 5)
-  );
+ const retryResponse = await withGate(() =>
+  retryingFetch(buildAzureUrl(), retryInit, 5)
+);
+
+console.log("[DEBUG] Retry response status:", retryResponse.status);
 
   let retryData: any = null;
 
@@ -829,6 +840,9 @@ try {
 
 const retryContent: string | undefined =
   retryData?.choices?.[0]?.message?.content;
+
+console.log("[DEBUG] Retry content exists:", !!retryContent);
+console.log("[DEBUG] Retry telemetry valid:", isValidTelemetryBlock(retryContent ?? ""));
 
       if (!retryResponse.ok || !retryContent || !isValidTelemetryBlock(retryContent)) {
         console.error("[telemetry] enforcement failed after retry");
@@ -855,7 +869,10 @@ const retryContent: string | undefined =
         const safeLocale =
           telemetryBlockedMessages[localeFromCookie] ? localeFromCookie : "en";
 
-        return NextResponse.json(
+       console.error("[DEBUG] TELEMETRY BLOCK RESPONSE TRIGGERED");
+console.error("[DEBUG] locale:", safeLocale);
+
+return NextResponse.json(
 {
   role: "assistant",
   content: telemetryBlockedMessages[safeLocale],
@@ -1100,7 +1117,12 @@ if (!content || typeof content !== "string") {
   );
 }
 
-const res = NextResponse.json(  {
+console.log("[DEBUG] FINAL RESPONSE BUILD");
+console.log("[DEBUG] status:", status);
+console.log("[DEBUG] tokens_used:", TOKENS_USED);
+console.log("[DEBUG] balance_after:", balanceAfter);
+
+const res = NextResponse.json( {
     role: "assistant",
     content: cleanedContent,
     telemetry: structuredTelemetry,
@@ -1136,8 +1158,9 @@ if (cookie) {
   res.headers.set("Set-Cookie", cookie);
 }
 
-return res;
+console.log("[DEBUG] RESPONSE SENT TO CLIENT");
 
+return res;
 
 
 
