@@ -402,23 +402,28 @@ function isValidTelemetryBlock(text: string): boolean {
 
   if (startIndex === -1) return false;
 
-  const telemetryLines = lines.slice(startIndex).filter(line =>
-  TELEMETRY_REQUIRED_FIELDS.some(field =>
-    line.startsWith(field)
-  )
-);
+  const telemetryLines = lines.slice(startIndex);
 
-  if (telemetryLines.length !== TELEMETRY_REQUIRED_FIELDS.length) {
+  const telemetryObj: Record<string, string> = {};
+
+  telemetryLines.forEach((line) => {
+    const idx = line.indexOf(":");
+    if (idx === -1) return;
+
+    const key = line.slice(0, idx + 1).trim();
+    const value = line.slice(idx + 1).trim();
+
+    telemetryObj[key] = value;
+  });
+
+  // Prüfe nur Pflichtfelder
+  const missing = TELEMETRY_REQUIRED_FIELDS.filter(
+    (field) => !(field in telemetryObj)
+  );
+
+  if (missing.length > 0) {
+    console.warn("[telemetry] missing fields:", missing);
     return false;
-  }
-
-  for (let i = 0; i < TELEMETRY_REQUIRED_FIELDS.length; i++) {
-    const expected = TELEMETRY_REQUIRED_FIELDS[i];
-    const line = telemetryLines[i];
-
-    if (!line.startsWith(expected)) {
-      return false;
-    }
   }
 
   return true;
@@ -428,23 +433,41 @@ function isValidTelemetryBlock(text: string): boolean {
 // === POST-Handler (mit Gate + Backoff + FreeGate) ===
 export async function POST(req: NextRequest) {
 
-    const cookieStore = cookies();
+  // === MEFL PATCH: HARD REQUEST CONTRACT ===
+  const contentType = req.headers.get("content-type") || "";
+
+  // Block non-JSON requests (FormData, Server Actions, etc.)
+  if (!contentType.includes("application/json")) {
+    return NextResponse.json(
+      { error: "Invalid request format. JSON required." },
+      { status: 415 }
+    );
+  }
+
+  // Block accidental Next.js Server Action requests
+  if (req.headers.get("next-action")) {
+    return NextResponse.json(
+      { error: "Server Actions not supported on this endpoint." },
+      { status: 400 }
+    );
+  }
+
+  const cookieStore = cookies();
   const raw = cookieStore.get("mpathy_session")?.value;
 
- let conversationId: string;
-let serverCounter: number = 1;
+  let conversationId: string;
+  let serverCounter: number = 1;
 
-if (!raw) {
-  conversationId = crypto.randomUUID();
-} else {
-  try {
-    const parsed = JSON.parse(raw);
-    conversationId = parsed.conversationId;
-  } catch {
+  if (!raw) {
     conversationId = crypto.randomUUID();
+  } else {
+    try {
+      const parsed = JSON.parse(raw);
+      conversationId = parsed.conversationId;
+    } catch {
+      conversationId = crypto.randomUUID();
+    }
   }
-}
-
 
   try {
     const body = (await req.json()) as ChatBody;
