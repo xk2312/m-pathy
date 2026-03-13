@@ -857,11 +857,9 @@ const retryContent: string | undefined =
 
         return NextResponse.json(
 {
-  message: {
-    role: "assistant",
-    content: telemetryBlockedMessages[safeLocale],
-    format: "markdown"
-  },
+  role: "assistant",
+  content: telemetryBlockedMessages[safeLocale],
+  telemetry: null,
   status: "telemetry_blocked",
   tokens_used: 0,
   balance_after: balanceBefore ?? null,
@@ -1086,8 +1084,23 @@ cleanedContent = cleanedContent
   .replace(/^Explanation:\s*/i, "")
   .trim();
 
-const res = NextResponse.json(
-  {
+// === RESPONSE SCHEMA SAFETY GUARD ===
+if (!content || typeof content !== "string") {
+  return NextResponse.json(
+    {
+      role: "assistant",
+      content: "SYSTEM NOTICE: Response content missing.",
+      telemetry: null,
+      status: "system_error",
+      tokens_used: 0,
+      balance_after: balanceBefore ?? null,
+      triketon: null
+    },
+    { status: 200 }
+  );
+}
+
+const res = NextResponse.json(  {
     role: "assistant",
     content: cleanedContent,
     telemetry: structuredTelemetry,
@@ -1113,6 +1126,7 @@ res.cookies.set({
 });
 
 res.headers.set("X-Tokens-Delta", String(-tokenDelta));
+res.headers.set("X-Response-Type", status);
 res.headers.set("X-Free-Used", String(count));
 res.headers.set("X-Free-Limit", String(FREE_LIMIT));
 res.headers.set("X-Free-Remaining", String(freeRemaining));
