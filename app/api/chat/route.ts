@@ -546,6 +546,8 @@ ${buildTelemetrySkeleton()}
 
 console.log("TELEMETRY SKELETON");
 console.log(buildTelemetrySkeleton());
+console.log("TELEMETRY_SKELETON_END");
+
 
 const payload = {
   messages: [
@@ -622,7 +624,11 @@ const response = await withGate(() => {
     }
 
   // === TELEMETRY STRUCTURING ===
-if (!isValidTelemetryBlock(content)) {
+const telemetryValid = isValidTelemetryBlock(content);
+
+console.log("TELEMETRY_VALIDATION_RESULT", telemetryValid);
+
+if (!telemetryValid) {
   console.warn("[telemetry] invalid or missing block - retrying once");
   console.error("----- TELEMETRY FIRST ATTEMPT START -----");
   console.error(content);
