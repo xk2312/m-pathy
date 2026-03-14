@@ -929,7 +929,7 @@ const envelope = extractTelemetryEnvelope(content ?? "");
 const telemetrySource = envelope.telemetryBlock ?? content;
 const lines = telemetrySource.split("\n");
 const startIndex = lines.findIndex((l) =>
-  l.startsWith("System:")
+  l.trim().startsWith("System:")
 );
 
 if (startIndex !== -1) {
@@ -941,7 +941,8 @@ if (startIndex !== -1) {
   const telemetryObj: Record<string, string> = {};
 
   telemetryLines.forEach((line) => {
-    const idx = line.indexOf(":");
+  const clean = line.trim();
+  const idx = clean.indexOf(":");
     if (idx === -1) return;
 
     const key = line.slice(0, idx).trim();
