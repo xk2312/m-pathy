@@ -2407,8 +2407,11 @@ if (busy) {
   }
 
   // 🔹 Kein Stream → Standardverhalten unverändert
-  const data = await res.json();
+const data = await res.json();
 
+if (data?.status === "send_failed") {
+  throw new Error("send_failed");
+}
   // FreeGate-Limit: Login erforderlich
   const loginText =
     t("gc_please_login_to_continue") || "Please log in to continue.";
