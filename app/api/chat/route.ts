@@ -835,12 +835,14 @@ const envelope = extractTelemetryEnvelope(content);
       });
     }
 
-    let triketon: any = null;
+  let triketon: any = null;
+const TRIKETON_ENABLED = process.env.TRIKETON_ENABLED === "true";
 
-    // HARD-ORDER GATE: DB write allowed only after client ledger truth is established
-    const clientLedgerAppendOk = true;
+// HARD-ORDER GATE
+const clientLedgerAppendOk = true;
 
-    try {
+if (TRIKETON_ENABLED) {
+  try {
       if (!clientLedgerAppendOk) {
         throw new Error("Client ledger append not confirmed - DB write blocked");
       }
@@ -904,9 +906,10 @@ const envelope = extractTelemetryEnvelope(content);
 
 
       }
-    } catch (e) {
-      console.warn("[triketon] auto-anchor skipped", e);
-    }
+     } catch (e) {
+    console.warn("[triketon] auto-anchor skipped", e);
+  }
+}
 
 
 // === TELEMETRY STRUCTURING (POST-SEAL, PRE-RESPONSE) ===
