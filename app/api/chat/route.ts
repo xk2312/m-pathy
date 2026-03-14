@@ -980,8 +980,7 @@ Do not add text outside the defined blocks.
 ${buildTelemetrySkeleton()}
 `,
     },
-    ...lastUserMessage,
-  ],
+...messages,  ],
   temperature: 0,
   max_tokens: MODEL_MAX_TOKENS,
 };
@@ -1038,25 +1037,9 @@ ${buildTelemetrySkeleton()}
         );
       }
 
-      const envelope = extractTelemetryEnvelope(retryContent);
+content = retryContent;
 
-if (!envelope.telemetryBlock || !envelope.contentBlock) {
-  console.error("[telemetry] envelope parsing failed");
-  console.error("----- ENVELOPE RAW START -----");
-  console.error(retryContent);
-  console.error("----- ENVELOPE RAW END -----");
-}
-
-content = envelope.contentBlock ?? retryContent;
-
-if (content) {
-  content = content
-    .replace(TELEMETRY_START_SENTINEL, "")
-    .replace(TELEMETRY_END_SENTINEL, "")
-    .replace(CONTENT_START_SENTINEL, "")
-    .replace(CONTENT_END_SENTINEL, "")
-    .trim();
-}
+const envelope = extractTelemetryEnvelope(content);
     }
 
     let tokensUsed: number;
@@ -1194,15 +1177,6 @@ if (content) {
 let structuredTelemetry: any = null;
 let cleanedContent = content;
 
-if (!isValidTelemetryBlock(content)) {
-  console.error("[telemetry] validation failed");
-
-  return NextResponse.json(
-    { error: "Telemetry validation failed" },
-    { status: 500 }
-  );
-}
-
 // ---- SESSION COUNTER (minimal & robust) ----
 // Session counter already calculated at request start
 // reuse existing serverCounter + conversationId
@@ -1214,8 +1188,9 @@ content = content.replace(
 
 const ledgerContent = content;
 
-const lines = content.split("\n");
-
+const envelope = extractTelemetryEnvelope(content ?? "");
+const telemetrySource = envelope.telemetryBlock ?? content;
+const lines = telemetrySource.split("\n");
 const startIndex = lines.findIndex((l) =>
   l.startsWith("System:")
 );
