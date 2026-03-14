@@ -139,17 +139,18 @@ export default function TelemetryPanel({ telemetry }: Props) {
   <div className="flex flex-col gap-y-6">
 
     {[
-  {
-    title: "Telemetry Core",
-    keys: [
-      "telemetryAuthority",
-      "telemetryOrder",
-      "telemetryScope",
-      "telemetryMutability",
-      "telemetryFailurePolicy",
-      "telemetrySourceSeparation",
-    ],
-  },
+ {
+  title: "Telemetry Core",
+  keys: [
+    "telemetryAuthority",
+    "sessionPromptCounter",
+    "telemetryOrder",
+    "telemetryScope",
+    "telemetryMutability",
+    "telemetryFailurePolicy",
+    "telemetrySourceSeparation",
+  ],
+},
   {
     title: "System",
     keys: [
@@ -203,19 +204,18 @@ export default function TelemetryPanel({ telemetry }: Props) {
     ],
   },
   {
-    title: "Rights & Governance",
-    keys: [
-      "expertRightsProfile",
-      "expertRightsScope",
-      "expertRightsSource",
-      "analysisContainerState",
-      "councilDecisionId",
-      "councilDecisionTrace",
-      "domainResolutionMode",
-      "runtimeContainerId",
-      "systemStateHash",
-    ],
-  },
+  title: "Rights & Governance",
+  keys: [
+    "expertRightsProfile",
+    "expertRightsScope",
+    "expertRightsSource",
+    "analysisContainerState",
+    "councilDecisionId",
+    "domainResolutionMode",
+    "runtimeContainerId",
+    "systemStateHash",
+  ],
+},
 ].map(group => (
       <div key={group.title} className="flex flex-col gap-y-3">
 
