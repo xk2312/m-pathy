@@ -65,7 +65,15 @@ interface ChatBody {
   locale?: string;
 }
 
-
+function findMarker(text: string, markers: string[]) {
+  for (const marker of markers) {
+    const index = text.indexOf(marker);
+    if (index !== -1) {
+      return { marker, index };
+    }
+  }
+  return null;
+}
 // === ENV-Check ===
 function assertEnv() {
   const missing: string[] = [];
@@ -159,23 +167,38 @@ const TELEMETRY_REQUIRED_FIELDS = [
   "Council Decision Trace:"
 ];
 
-const TELEMETRY_START_SENTINEL = "<<<MAIOS_TELEMETRY_START>>>";
-const TELEMETRY_END_SENTINEL = "<<<MAIOS_TELEMETRY_END>>>";
-const CONTENT_START_SENTINEL = "<<<MAIOS_CONTENT_START>>>";
-const CONTENT_END_SENTINEL = "<<<MAIOS_CONTENT_END>>>";
+const TELEMETRY_START_MARKERS = [
+  "<<<MAIOS_TELEMETRY_START>>>",
+  "TELEMETRY_START_SENTINEL"
+]
+
+const TELEMETRY_END_MARKERS = [
+  "<<<MAIOS_TELEMETRY_END>>>",
+  "TELEMETRY_END_SENTINEL"
+]
+
+const CONTENT_START_MARKERS = [
+  "<<<MAIOS_CONTENT_START>>>",
+  "CONTENT_START_SENTINEL"
+]
+
+const CONTENT_END_MARKERS = [
+  "<<<MAIOS_CONTENT_END>>>",
+  "CONTENT_END_SENTINEL"
+]
 
 function buildTelemetrySkeleton(): string {
   const telemetryFields = TELEMETRY_REQUIRED_FIELDS
-    .map((field) => `${field} <value>`)
+    .map((field) => `${field}`)
     .join("\n");
 
   return [
-    TELEMETRY_START_SENTINEL,
+    TELEMETRY_START_MARKERS[0],
     telemetryFields,
-    TELEMETRY_END_SENTINEL,
-    CONTENT_START_SENTINEL,
+    TELEMETRY_END_MARKERS[0],
+    CONTENT_START_MARKERS[0],
     "<assistant content>",
-    CONTENT_END_SENTINEL,
+    CONTENT_END_MARKERS[0],
   ].join("\n");
 }
 
@@ -187,24 +210,38 @@ function extractTelemetryEnvelope(text: string) {
     };
   }
 
-  const startTelemetry = text.indexOf(TELEMETRY_START_SENTINEL);
-  const endTelemetry = text.indexOf(TELEMETRY_END_SENTINEL);
+  const startTelemetry = findMarker(text, TELEMETRY_START_MARKERS);
+  const endTelemetry = findMarker(text, TELEMETRY_END_MARKERS);
 
-  const startContent = text.indexOf(CONTENT_START_SENTINEL);
-  const endContent = text.indexOf(CONTENT_END_SENTINEL);
+  const startContent = findMarker(text, CONTENT_START_MARKERS);
+  const endContent = findMarker(text, CONTENT_END_MARKERS);
 
   let telemetryBlock: string | null = null;
   let contentBlock: string | null = null;
 
-  if (startTelemetry !== -1 && endTelemetry !== -1 && endTelemetry > startTelemetry) {
+  if (
+    startTelemetry &&
+    endTelemetry &&
+    endTelemetry.index > startTelemetry.index
+  ) {
     telemetryBlock = text
-      .slice(startTelemetry + TELEMETRY_START_SENTINEL.length, endTelemetry)
+      .slice(
+        startTelemetry.index + startTelemetry.marker.length,
+        endTelemetry.index
+      )
       .trim();
   }
 
-  if (startContent !== -1 && endContent !== -1 && endContent > startContent) {
+  if (
+    startContent &&
+    endContent &&
+    endContent.index > startContent.index
+  ) {
     contentBlock = text
-      .slice(startContent + CONTENT_START_SENTINEL.length, endContent)
+      .slice(
+        startContent.index + startContent.marker.length,
+        endContent.index
+      )
       .trim();
   }
 
