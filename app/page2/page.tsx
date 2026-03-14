@@ -2410,7 +2410,7 @@ if (busy) {
 const data = await res.json();
 
 if (data?.status === "send_failed") {
-  throw new Error("send_failed");
+  data.content = "";
 }
   // FreeGate-Limit: Login erforderlich
   const loginText =
