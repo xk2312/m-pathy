@@ -1,342 +1,3 @@
-/*
-================================================
-CANONICAL FILE INDEX
-FILE: app/api/chat/route.ts
-SYSTEM: MAIOS / m-pathy
-================================================
-
-0. RUNTIME + ENVIRONMENT
-0.1 Node Runtime Declaration
-0.2 ENV Loading (dotenv, production/dev paths)
-0.3 Azure Environment Variables
-0.4 Runtime Limits
-    - MODEL_MAX_TOKENS
-    - GPTX_MAX_CHARS
-    - MAX_PAYLOAD_BYTES
-0.5 FreeGate Environment
-
-------------------------------------------------
-
-1. TYPE DEFINITIONS
-1.1 Role Type
-1.2 ChatMessage Interface
-1.3 ChatBody Interface
-
-------------------------------------------------
-
-2. ENVIRONMENT VALIDATION
-2.1 assertEnv()
-    Validates required Azure OpenAI environment variables
-
-------------------------------------------------
-
-3. SYSTEM PROMPT LOADER
-3.1 loadSystemPrompt(protocol)
-    Loads GPTX protocol prompt file
-    TELEMETRY INFLUENCE
-    System prompt may contain telemetry schema or telemetry rules
-
-------------------------------------------------
-
-4. AZURE CLIENT INFRASTRUCTURE
-
-4.1 buildAzureUrl()
-    Constructs Azure OpenAI endpoint
-
-4.2 estimateTokensFromText()
-    Fallback token estimation
-
-4.3 getMessagesCharCount()
-    Payload size estimator
-
-------------------------------------------------
-
-5. TELEMETRY CONFIGURATION
-
-5.1 TELEMETRY_REQUIRED_FIELDS
-    TELEMETRY CRITICAL
-
-    Canonical telemetry schema definition.
-    Defines the expected telemetry keys.
-
-    Used by:
-    - telemetry validation
-    - telemetry extraction
-    - telemetry parsing
-    - telemetry UI cockpit
-
-------------------------------------------------
-
-6. TELEMETRY VALIDATOR
-
-6.1 isValidTelemetryBlock(text)
-
-    TELEMETRY CRITICAL
-
-    Responsibilities
-    - Detect telemetry start
-    - Parse telemetry key:value pairs
-    - Validate required fields
-
-    Used in:
-
-    A. First telemetry enforcement
-    B. Retry decision
-    C. Post-seal validation
-    D. Response pipeline gate
-
-------------------------------------------------
-
-7. HTTP ENTRYPOINT
-
-7.1 POST(req: NextRequest)
-
-    Main runtime handler
-
-------------------------------------------------
-
-8. REQUEST CONTRACT HARDENING
-
-8.1 Content-Type validation
-8.2 Server Action blocking
-
-------------------------------------------------
-
-9. SESSION + CONVERSATION MANAGEMENT
-
-9.1 Cookie retrieval
-9.2 conversationId generation
-9.3 conversation override from body
-9.4 serverPromptCounter calculation
-
-    TELEMETRY INFLUENCE
-    Used later to override
-    "Session Prompt Counter"
-
-------------------------------------------------
-
-10. FREEGATE RATE CONTROL
-
-10.1 Session detection
-10.2 Guest request counting
-10.3 Free limit enforcement
-10.4 Checkout trigger
-
-------------------------------------------------
-
-11. LEDGER PRECHECK
-
-11.1 Token balance validation
-11.2 Insufficient token handling
-
-------------------------------------------------
-
-12. LOCALE RESOLUTION
-
-12.1 Cookie + body locale extraction
-12.2 Supported language mapping
-
-------------------------------------------------
-
-13. LANGUAGE GUARD
-
-13.1 Language enforcement system prompt
-
-    TELEMETRY INFLUENCE
-    Alters message stack order
-    and therefore affects model output structure
-
-------------------------------------------------
-
-14. SYSTEM PROMPT STACK
-
-14.1 loadSystemPrompt()
-14.2 message stack assembly
-
-    TELEMETRY INFLUENCE
-    Telemetry rules may exist in system prompt
-
-------------------------------------------------
-
-15. TELEMETRY SYSTEM PROMPT
-
-15.1 telemetrySystemPrompt
-
-    TELEMETRY CRITICAL
-
-    Forces model to output telemetry block.
-
-    Defines:
-    FULL TELEMETRY STATUS
-    Prompt
-    Drift
-
-    This is currently the main telemetry forcing mechanism.
-
-------------------------------------------------
-
-16. AZURE PAYLOAD CONSTRUCTION
-
-16.1 payload.messages
-16.2 temperature
-16.3 max_tokens
-
-    TELEMETRY INFLUENCE
-    telemetrySystemPrompt is injected here.
-
-------------------------------------------------
-
-17. PAYLOAD SIZE VALIDATION
-
-17.1 request payload measurement
-17.2 MAX_PAYLOAD_BYTES enforcement
-
-------------------------------------------------
-
-18. AZURE REQUEST EXECUTION
-
-18.1 concurrency gate
-18.2 retryingFetch()
-18.3 Azure response parsing
-
-------------------------------------------------
-
-19. RESPONSE EXTRACTION
-
-19.1 Extract assistant message content
-
-------------------------------------------------
-
-20. TELEMETRY ENFORCEMENT
-
-20.1 FIRST TELEMETRY CHECK
-
-    TELEMETRY CRITICAL
-
-    if (!isValidTelemetryBlock(content))
-
-    If telemetry missing:
-    - log
-    - retry request
-
-------------------------------------------------
-
-21. TELEMETRY RETRY MECHANISM
-
-21.1 strictRetryPayload
-
-    TELEMETRY CRITICAL
-
-    Retry request forcing telemetry.
-
-21.2 retryResponse execution
-
-21.3 retry validation
-
-    If retry fails → telemetry_blocked message
-
-------------------------------------------------
-
-22. TOKEN ACCOUNTING
-
-22.1 usage extraction
-22.2 fallback token estimation
-22.3 ledger debit
-
-------------------------------------------------
-
-23. TRIKETON SEALING
-
-23.1 content sealing via Python
-23.2 database anchoring
-23.3 public key + hash generation
-
-    TELEMETRY INFLUENCE
-    Telemetry block included in sealed content
-
-------------------------------------------------
-
-24. TELEMETRY STRUCTURING PIPELINE
-
-24.1 POST-SEAL TELEMETRY VALIDATION
-
-    TELEMETRY CRITICAL
-
-    Second telemetry validation gate.
-
-24.2 Session Prompt Counter Override
-
-    TELEMETRY CRITICAL
-
-    Server replaces model counter
-    with serverCounter.
-
-------------------------------------------------
-
-25. TELEMETRY PARSER
-
-25.1 telemetry block extraction
-25.2 telemetry object creation
-25.3 cockpit telemetry mapping
-
-    TELEMETRY CRITICAL
-
-    Produces structured telemetry
-    returned to UI.
-
-------------------------------------------------
-
-26. TELEMETRY CLEANUP
-
-26.1 remove telemetry from assistant message
-26.2 sanitize prefixes
-26.3 generate cleanedContent
-
-------------------------------------------------
-
-27. FINAL RESPONSE ASSEMBLY
-
-27.1 response payload
-    role
-    content
-    telemetry
-    status
-    tokens_used
-    triketon
-
-------------------------------------------------
-
-28. SESSION COOKIE UPDATE
-
-28.1 mpahy_session cookie write
-28.2 conversationId persistence
-28.3 counter persistence
-
-------------------------------------------------
-
-29. RESPONSE HEADERS
-
-29.1 token delta
-29.2 freegate headers
-
-------------------------------------------------
-
-30. FINAL RESPONSE RETURN
-
-30.1 NextResponse.json()
-
-------------------------------------------------
-
-31. GLOBAL ERROR HANDLER
-
-31.1 catch block
-31.2 API error response
-
-================================================
-END OF CANONICAL INDEX
-================================================
-*/
-
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
@@ -585,9 +246,11 @@ function isValidTelemetryBlock(text: string): boolean {
   );
 
   if (missing.length > 0) {
-    console.warn("[telemetry] missing fields:", missing);
-    return false;
-  }
+  console.warn("[telemetry] missing fields:", missing);
+  console.log("[telemetry] parsed telemetry object:", telemetryObj);
+  console.log("[telemetry] original text:", text);
+  return false;
+}
 
   return true;
 }
@@ -927,6 +590,8 @@ const response = await withGate(() => {
   return retryingFetch(buildAzureUrl(), init, 5);
 });
     const data = await response.json();
+    console.log("AZURE RAW RESPONSE");
+    console.log(JSON.stringify(data, null, 2));
     if (!response.ok) {
   console.error("[AzureOpenAI Error]", response.status, data);
 
@@ -946,6 +611,9 @@ const response = await withGate(() => {
     const usage = data?.usage ?? null;
 
         let content: string | undefined = data?.choices?.[0]?.message?.content;
+        console.log("MODEL CONTENT START");
+        console.log(content);
+        console.log("MODEL CONTENT END");
     if (!content) {
       return NextResponse.json({ error: "No message content" }, { status: 502 });
     }
@@ -991,13 +659,23 @@ ${buildTelemetrySkeleton()}
     body: JSON.stringify(strictRetryPayload),
   };
 
-  const retryResponse = await withGate(() =>
-    retryingFetch(buildAzureUrl(), retryInit, 5)
-  );
+  console.log("TELEMETRY RETRY TRIGGERED");
 
-  const retryData = await retryResponse.json();
-  const retryContent: string | undefined =
-    retryData?.choices?.[0]?.message?.content;
+const retryResponse = await withGate(() =>
+  retryingFetch(buildAzureUrl(), retryInit, 5)
+);
+
+const retryData = await retryResponse.json();
+
+console.log("RETRY RAW RESPONSE");
+console.log(JSON.stringify(retryData, null, 2));
+
+const retryContent: string | undefined =
+  retryData?.choices?.[0]?.message?.content;
+
+console.log("RETRY CONTENT START");
+console.log(retryContent);
+console.log("RETRY CONTENT END");
 
       if (!retryResponse.ok || !retryContent || !isValidTelemetryBlock(retryContent)) {
         console.error("[telemetry] enforcement failed after retry");
@@ -1187,7 +865,8 @@ content = content.replace(
 );
 
 const ledgerContent = content;
-
+console.log("FINAL CONTENT BEFORE TELEMETRY PARSE");
+console.log(content);
 const envelope = extractTelemetryEnvelope(content ?? "");
 const telemetrySource = envelope.telemetryBlock ?? content;
 const lines = telemetrySource.split("\n");
