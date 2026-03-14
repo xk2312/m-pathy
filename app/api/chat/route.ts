@@ -527,28 +527,29 @@ if (balanceBefore <= 0) {
 
 
     const telemetrySystemPrompt = {
-      role: "system",
-      content: `
-    You are running inside MAIOS.
+  role: "system",
+  content: `
+You are running inside MAIOS.
 
-    Every response MUST follow the exact output structure below.
+Every response MUST follow the exact output structure below.
 
-    Fill the values for each telemetry field.
+Fill the values for each telemetry field.
 
-    Do NOT change the markers.
-    Do NOT translate telemetry field names.
-    Do NOT add extra lines inside the telemetry block.
-    Do NOT place text outside the defined blocks.
+Do NOT change the markers.
+Do NOT translate telemetry field names.
+Do NOT add extra lines inside the telemetry block.
+Do NOT place text outside the defined blocks.
 
-    ${buildTelemetrySkeleton()}
-    `
-    };
+${buildTelemetrySkeleton()}
+`
+};
+
 console.log("TELEMETRY SKELETON");
 console.log(buildTelemetrySkeleton());
+
 const payload = {
   messages: [
     telemetrySystemPrompt,
-    
     ...messages
   ],
   temperature: 0.7,
