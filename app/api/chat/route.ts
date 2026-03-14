@@ -143,24 +143,19 @@ const TELEMETRY_REQUIRED_FIELDS = [
   "Telemetry Mutability:",
   "Telemetry Failure Policy:",
   "Telemetry Source Separation:",
-
   "User Mode:",
   "System Mode:",
   "Effective Mode:",
-
   "Expert Status:",
   "Expert Type:",
   "Expert ID:",
-
   "Agent Active:",
   "Agent ID:",
   "Agent Property:",
   "Agent Modes:",
-
-  "Drift State:",
   "Drift Origin:",
+  "Drift State:",
   "Drift Risk:",
-
   "Orchestration Mode:",
   "Orchestrator ID:",
   "Goal ID:",
@@ -168,7 +163,6 @@ const TELEMETRY_REQUIRED_FIELDS = [
   "Execution Stage:",
   "Complexity Level:",
   "Council Final Status:",
-
   "Expert Rights Profile:",
   "Expert Rights Scope:",
   "Expert Rights Source:",
