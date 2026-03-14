@@ -143,28 +143,41 @@ const TELEMETRY_REQUIRED_FIELDS = [
   "Telemetry Mutability:",
   "Telemetry Failure Policy:",
   "Telemetry Source Separation:",
+
   "User Mode:",
   "System Mode:",
   "Effective Mode:",
+
   "Expert Status:",
   "Expert Type:",
   "Expert ID:",
-  "Drift Origin:",
+
+  "Agent Active:",
+  "Agent ID:",
+  "Agent Property:",
+  "Agent Modes:",
+
   "Drift State:",
+  "Drift Origin:",
   "Drift Risk:",
+
   "Orchestration Mode:",
-  "Orchestration Authority:",
-  "Expert Configuration:",
+  "Orchestrator ID:",
+  "Goal ID:",
+  "Task ID:",
+  "Execution Stage:",
   "Complexity Level:",
   "Council Final Status:",
+
   "Expert Rights Profile:",
   "Expert Rights Scope:",
   "Expert Rights Source:",
   "Analysis Container State:",
-  "Expert Activation Count:",
   "Council Decision ID:",
-  "Council Rights Attestation:",
-  "Council Decision Trace:"
+  "Council Decision Trace:",
+  "Domain Resolution Mode:",
+  "Runtime Container ID:",
+  "System State Hash:"
 ];
 
 const TELEMETRY_START_MARKERS = [

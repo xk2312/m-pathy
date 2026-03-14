@@ -139,74 +139,84 @@ export default function TelemetryPanel({ telemetry }: Props) {
   <div className="flex flex-col gap-y-6">
 
     {[
-      {
-        title: "Telemetry Core",
-        keys: [
-          "telemetryAuthority",
-          "telemetryOrder",
-          "telemetryScope",
-          "telemetryMutability",
-          "telemetryFailurePolicy",
-          "telemetrySourceSeparation",
-        ],
-      },
-      {
-        title: "Mode Layer",
-        keys: [
-          "userMode",
-          "systemMode",
-        ],
-      },
-      {
-  title: "Expert Layer",
-  keys: [
-    "expertStatus",
-    "expertType",
-    "expertId",
-  ],
-},
-{
-  title: "Agent Layer",
-  keys: [
-    "agentActive",
-    "agentId",
-    "agentProperty",
-    "agentModes",
-  ],
-},
-{
-  title: "Drift Layer",
-  keys: [
-    "driftOrigin",
-    "driftRisk",
-  ],
-},
-      {
-  title: "Orchestration",
-  keys: [
-    "orchestrationMode",
-    "orchestratorId",
-    "goalId",
-    "taskId",
-    "executionStage",
-    "complexityLevel",
-    "councilFinalStatus",
-  ],
-},
-      {
-  title: "Rights & Governance",
-  keys: [
-    "expertRightsProfile",
-    "expertRightsScope",
-    "expertRightsSource",
-    "analysisContainerState",
-    "councilDecisionId",
-    "domainResolutionMode",
-    "runtimeContainerId",
-    "systemStateHash",
-  ],
-},
-    ].map(group => (
+  {
+    title: "Telemetry Core",
+    keys: [
+      "telemetryAuthority",
+      "telemetryOrder",
+      "telemetryScope",
+      "telemetryMutability",
+      "telemetryFailurePolicy",
+      "telemetrySourceSeparation",
+    ],
+  },
+  {
+    title: "System",
+    keys: [
+      "system",
+      "version",
+    ],
+  },
+  {
+    title: "Mode Layer",
+    keys: [
+      "userMode",
+      "systemMode",
+      "effectiveMode",
+    ],
+  },
+  {
+    title: "Expert Layer",
+    keys: [
+      "expertStatus",
+      "expertType",
+      "expertId",
+    ],
+  },
+  {
+    title: "Agent Layer",
+    keys: [
+      "agentActive",
+      "agentId",
+      "agentProperty",
+      "agentModes",
+    ],
+  },
+  {
+    title: "Drift Layer",
+    keys: [
+      "driftState",
+      "driftOrigin",
+      "driftRisk",
+    ],
+  },
+  {
+    title: "Orchestration",
+    keys: [
+      "orchestrationMode",
+      "orchestratorId",
+      "goalId",
+      "taskId",
+      "executionStage",
+      "complexityLevel",
+      "councilFinalStatus",
+    ],
+  },
+  {
+    title: "Rights & Governance",
+    keys: [
+      "expertRightsProfile",
+      "expertRightsScope",
+      "expertRightsSource",
+      "analysisContainerState",
+      "councilDecisionId",
+      "councilDecisionTrace",
+      "domainResolutionMode",
+      "runtimeContainerId",
+      "systemStateHash",
+    ],
+  },
+].map(group => (
       <div key={group.title} className="flex flex-col gap-y-3">
 
         <div className="px-1 text-xs font-medium uppercase tracking-wide text-white/40">
