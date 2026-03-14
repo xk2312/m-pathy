@@ -174,7 +174,6 @@ const TELEMETRY_REQUIRED_FIELDS = [
   "Expert Rights Source:",
   "Analysis Container State:",
   "Council Decision ID:",
-  "Council Decision Trace:",
   "Domain Resolution Mode:",
   "Runtime Container ID:",
   "System State Hash:"
