@@ -543,10 +543,12 @@ if (balanceBefore <= 0) {
     ${buildTelemetrySkeleton()}
     `
     };
-
+console.log("TELEMETRY SKELETON");
+console.log(buildTelemetrySkeleton());
 const payload = {
   messages: [
     telemetrySystemPrompt,
+    
     ...messages
   ],
   temperature: 0.7,
