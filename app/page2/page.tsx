@@ -2857,8 +2857,7 @@ setMessages((prev) => {
       }
 } catch (err) {
 
-  // 🔁 first failure → silent retry skip
-  if (!retryRef.current) {
+  if ((err as Error)?.message !== "send_failed" && !retryRef.current) {
     retryRef.current = true;
     return;
   }
