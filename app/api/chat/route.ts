@@ -771,12 +771,20 @@ const response = await withGate(() => {
 });
     const data = await response.json();
     if (!response.ok) {
-      console.error("[AzureOpenAI Error]", response.status, data);
-      return NextResponse.json(
-        { error: data?.error?.message ?? `Upstream error ${response.status}` },
-        { status: response.status }
-      );
-    }
+  console.error("[AzureOpenAI Error]", response.status, data);
+
+  return NextResponse.json(
+    {
+      role: "assistant",
+      content: "send_failed",
+      status: "send_failed",
+      tokens_used: 0,
+      balance_after: balanceBefore ?? null,
+      triketon: null
+    },
+    { status: 200 }
+  );
+}
 
     const usage = data?.usage ?? null;
 
