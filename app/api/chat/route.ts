@@ -284,7 +284,7 @@ function isValidTelemetryBlock(text: string): boolean {
     const idx = line.indexOf(":");
     if (idx === -1) continue;
 
-    const key = line.slice(0, idx + 1).trim();
+const key = line.slice(0, idx).trim();
     const value = line.slice(idx + 1).trim();
 
     telemetryObj[key] = value;
