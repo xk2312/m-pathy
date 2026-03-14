@@ -1,217 +1,341 @@
-/* ======================================================================
-   FILE INDEX - app/api/chat/route.ts
-   MODE: GranularFileIndexDeveloper · CodeForensik
-   SCOPE: CHAT API · SUMMARY · CONTINUATION · LEDGER · FREEGATE
-   STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)
-   ======================================================================
+/*
+================================================
+CANONICAL FILE INDEX
+FILE: app/api/chat/route.ts
+SYSTEM: MAIOS / m-pathy
+================================================
 
-   1. ROLLE DER DATEI
-   ----------------------------------------------------------------------
-   Diese Datei ist der ZENTRALE Chat-API-Endpunkt:
-   POST /api/chat
+0. RUNTIME + ENVIRONMENT
+0.1 Node Runtime Declaration
+0.2 ENV Loading (dotenv, production/dev paths)
+0.3 Azure Environment Variables
+0.4 Runtime Limits
+    - MODEL_MAX_TOKENS
+    - GPTX_MAX_CHARS
+    - MAX_PAYLOAD_BYTES
+0.5 FreeGate Environment
 
-   Sie verarbeitet:
-   - normale Chat-Nachrichten
-   - Summary-Anfragen
-   - Continuation-Anfragen
-   - FreeGate / Auth / Ledger
-   - Triketon-Seal & DB-Anker
+------------------------------------------------
 
-   → Alle ARCHIVE-Flows laufen letztlich HIER durch.
+1. TYPE DEFINITIONS
+1.1 Role Type
+1.2 ChatMessage Interface
+1.3 ChatBody Interface
 
+------------------------------------------------
 
-   2. INPUT-VERTRAG (REQUEST BODY)
-   ----------------------------------------------------------------------
-   interface ChatBody {
-     messages: { role: "system" | "user" | "assistant"; content: string }[]
-     temperature?: number
-     protocol?: string
-     locale?: string
-   }
+2. ENVIRONMENT VALIDATION
+2.1 assertEnv()
+    Validates required Azure OpenAI environment variables
 
-   VALIDIERUNG:
-   - messages MUSS Array sein
-   - sonst: 400 Bad Request
+------------------------------------------------
 
-   TODO-RELEVANZ:
-   - ARCHIVE-Continuation sendet messages korrekt,
-     erhält aber dennoch 400
-   - Ursache liegt NICHT an der Grundstruktur,
-     sondern an vorgelagerten Gates (siehe unten)
+3. SYSTEM PROMPT LOADER
+3.1 loadSystemPrompt(protocol)
+    Loads GPTX protocol prompt file
+    TELEMETRY INFLUENCE
+    System prompt may contain telemetry schema or telemetry rules
 
+------------------------------------------------
 
-   3. FREEGATE / AUTH / LOGIN-GATE
-   ----------------------------------------------------------------------
-   - verifyAndBumpFreegate()
-   - AUTH_COOKIE_NAME
-   - verifySessionToken()
+4. AZURE CLIENT INFRASTRUCTURE
 
-   MÖGLICHE RESPONSES:
-   - 401 → free_limit_reached / needs_login
-   - 402 → insufficient_tokens (Ledger)
+4.1 buildAzureUrl()
+    Constructs Azure OpenAI endpoint
 
-   KRITISCHE BEOBACHTUNG:
-   - CONTINUATION schlägt mit 400 fehl
-   - NICHT mit 401 oder 402
-   → Fehler kommt NICHT direkt aus FreeGate/Ledger-Return,
-     sondern tiefer im Flow
+4.2 estimateTokensFromText()
+    Fallback token estimation
 
+4.3 getMessagesCharCount()
+    Payload size estimator
 
-   4. LEDGER-PRECHECK
-   ----------------------------------------------------------------------
-   if (isAuthenticated && sessionUserId) {
-     balanceBefore = await getBalance(...)
-     if (balanceBefore <= 0) → return 402
-   }
+------------------------------------------------
 
-   TODO-RELEVANZ:
-   - Summary-Call verbraucht Tokens
-   - Continuation-Call verbraucht erneut Tokens
-   - Wenn Balance <= 0 nach Summary:
-     → Continuation wird BLOCKIERT
+5. TELEMETRY CONFIGURATION
 
-   ABER:
-   - Blockade würde 402 liefern
-   - Tatsächlich kommt 400
-   → Ledger ist NICHT die unmittelbare Fehlerquelle,
-     aber relevant für den neuen Flow
+5.1 TELEMETRY_REQUIRED_FIELDS
+    TELEMETRY CRITICAL
 
+    Canonical telemetry schema definition.
+    Defines the expected telemetry keys.
 
-   5. SYSTEMPROMPT + LANGUAGE GUARD
-   ----------------------------------------------------------------------
-   - loadSystemPrompt(protocol)
-   - languageGuard (system role)
+    Used by:
+    - telemetry validation
+    - telemetry extraction
+    - telemetry parsing
+    - telemetry UI cockpit
 
-   RESULTIERENDE MESSAGE-REIHENFOLGE:
-   [
-     system (Prompt aus GPTX.txt),
-     system (Language Override),
-     ...body.messages
-   ]
+------------------------------------------------
 
-   TODO-RELEVANZ:
-   - ARCHIVE-CONTINUATION fügt eigene SYSTEM_MESSAGE hinzu
-   - Das führt zu MEHREREN system-Rollen hintereinander
-   - Kann Kontext aufblasen, aber KEIN formaler Fehler
+6. TELEMETRY VALIDATOR
 
+6.1 isValidTelemetryBlock(text)
 
-   6. PAYLOAD ZU AZURE OPENAI
-   ----------------------------------------------------------------------
-   payload = {
-     messages,
-     temperature,
-     max_tokens: MODEL_MAX_TOKENS
-   }
+    TELEMETRY CRITICAL
 
-   Limits:
-   - MODEL_MAX_TOKENS (default 512)
-   - GPTX_MAX_CHARS (default 32000)
+    Responsibilities
+    - Detect telemetry start
+    - Parse telemetry key:value pairs
+    - Validate required fields
 
-   KRITISCHE STELLE:
-   - Summary-Länge: ~2911 chars
-   - SYSTEM_CONTINUATION_HEADER + Summary
-   - Kombination kann Token-Limit überschreiten
+    Used in:
 
-   → Azure kann mit 400 reagieren,
-     wenn Request intern invalid wird
+    A. First telemetry enforcement
+    B. Retry decision
+    C. Post-seal validation
+    D. Response pipeline gate
 
+------------------------------------------------
 
-   7. AZURE RESPONSE HANDLING
-   ----------------------------------------------------------------------
-   - response.ok === false
-     → return NextResponse.json({ error }, status)
+7. HTTP ENTRYPOINT
 
-   WICHTIG:
-   - Dieser 400 wird DIREKT an den Client weitergereicht
-   - archiveChatPreparationListener sieht:
-     CONTINUATION_REQUEST_FAILED
+7.1 POST(req: NextRequest)
 
+    Main runtime handler
 
-   8. TOKEN-ABRECHNUNG
-   ----------------------------------------------------------------------
-   - usage.total_tokens ODER Fallback-Schätzung
-   - debit(sessionUserId, amount)
+------------------------------------------------
 
-   TODO-RELEVANZ:
-   - Continuation ist ein ZWEITER kostenpflichtiger Call
-   - Neuer Flow soll das vermeiden,
-     indem Summary als USER-Message
-     im NEUEN Chat verwendet wird
+8. REQUEST CONTRACT HARDENING
 
+8.1 Content-Type validation
+8.2 Server Action blocking
 
-   9. TRIKETON-SEAL & DB-ANCHOR
-   ----------------------------------------------------------------------
-   - Python subprocess: triketon2048 seal
-   - DB INSERT in triketon_anchors
+------------------------------------------------
 
-   OUTPUT:
-   triketon = {
-     publicKey,
-     truthHash,
-     timestamp,
-     version,
-     ...
-   }
+9. SESSION + CONVERSATION MANAGEMENT
 
-   TODO-RELEVANZ:
-   - Triketon wird IMMER erzeugt,
-     wenn content existiert
-   - Neuer Chat-Flow MUSS diesen Pfad nutzen,
-     nicht umgehen
+9.1 Cookie retrieval
+9.2 conversationId generation
+9.3 conversation override from body
+9.4 serverPromptCounter calculation
 
+    TELEMETRY INFLUENCE
+    Used later to override
+    "Session Prompt Counter"
 
-   10. RESPONSE-STRUKTUR (SUCCESS)
-   ----------------------------------------------------------------------
-   Status: 200
-   Body:
-   {
-     role: "assistant",
-     content,
-     status,
-     tokens_used,
-     balance_after,
-     triketon
-   }
+------------------------------------------------
 
-   HEADERS:
-   - X-Tokens-Delta
-   - X-Free-Remaining
-   - Set-Cookie (optional)
+10. FREEGATE RATE CONTROL
 
-   TODO-RELEVANZ:
-   - Diese Antwort ist die,
-     die im NEUEN Chat gerendert werden soll
+10.1 Session detection
+10.2 Guest request counting
+10.3 Free limit enforcement
+10.4 Checkout trigger
 
+------------------------------------------------
 
-   11. FEHLERBILD (KANONISCH)
-   ----------------------------------------------------------------------
-   - Summary-Call: OK
-   - Continuation-Call: 400
-   - Ursache:
-     - zweiter API-Call
-     - hoher Kontext
-     - Azure Reject
-     - Flow bleibt im ARCHIVE hängen
+11. LEDGER PRECHECK
 
-   → Der API-Endpunkt funktioniert korrekt.
-     Der FEHLER liegt in der ARCHITEKTUR DES FLOWS,
-     nicht in dieser Datei.
+11.1 Token balance validation
+11.2 Insufficient token handling
 
+------------------------------------------------
 
-   12. ZUSAMMENFASSUNG (KANONISCH)
-   ----------------------------------------------------------------------
-   - route.ts ist stabil
-   - Erwartet reguläre Chat-Nachrichten
-   - Verrechnet Tokens + Ledger korrekt
-   - Triketon-Seal ist korrekt angebunden
+12. LOCALE RESOLUTION
 
-   → Für die ToDos relevant:
-     - API darf NUR EINMAL aufgerufen werden
-     - Summary muss als USER-Message
-       in einen NEUEN Chat eingespeist werden
-     - Kein separater Continuation-Call mehr
+12.1 Cookie + body locale extraction
+12.2 Supported language mapping
 
-   ====================================================================== */
+------------------------------------------------
+
+13. LANGUAGE GUARD
+
+13.1 Language enforcement system prompt
+
+    TELEMETRY INFLUENCE
+    Alters message stack order
+    and therefore affects model output structure
+
+------------------------------------------------
+
+14. SYSTEM PROMPT STACK
+
+14.1 loadSystemPrompt()
+14.2 message stack assembly
+
+    TELEMETRY INFLUENCE
+    Telemetry rules may exist in system prompt
+
+------------------------------------------------
+
+15. TELEMETRY SYSTEM PROMPT
+
+15.1 telemetrySystemPrompt
+
+    TELEMETRY CRITICAL
+
+    Forces model to output telemetry block.
+
+    Defines:
+    FULL TELEMETRY STATUS
+    Prompt
+    Drift
+
+    This is currently the main telemetry forcing mechanism.
+
+------------------------------------------------
+
+16. AZURE PAYLOAD CONSTRUCTION
+
+16.1 payload.messages
+16.2 temperature
+16.3 max_tokens
+
+    TELEMETRY INFLUENCE
+    telemetrySystemPrompt is injected here.
+
+------------------------------------------------
+
+17. PAYLOAD SIZE VALIDATION
+
+17.1 request payload measurement
+17.2 MAX_PAYLOAD_BYTES enforcement
+
+------------------------------------------------
+
+18. AZURE REQUEST EXECUTION
+
+18.1 concurrency gate
+18.2 retryingFetch()
+18.3 Azure response parsing
+
+------------------------------------------------
+
+19. RESPONSE EXTRACTION
+
+19.1 Extract assistant message content
+
+------------------------------------------------
+
+20. TELEMETRY ENFORCEMENT
+
+20.1 FIRST TELEMETRY CHECK
+
+    TELEMETRY CRITICAL
+
+    if (!isValidTelemetryBlock(content))
+
+    If telemetry missing:
+    - log
+    - retry request
+
+------------------------------------------------
+
+21. TELEMETRY RETRY MECHANISM
+
+21.1 strictRetryPayload
+
+    TELEMETRY CRITICAL
+
+    Retry request forcing telemetry.
+
+21.2 retryResponse execution
+
+21.3 retry validation
+
+    If retry fails → telemetry_blocked message
+
+------------------------------------------------
+
+22. TOKEN ACCOUNTING
+
+22.1 usage extraction
+22.2 fallback token estimation
+22.3 ledger debit
+
+------------------------------------------------
+
+23. TRIKETON SEALING
+
+23.1 content sealing via Python
+23.2 database anchoring
+23.3 public key + hash generation
+
+    TELEMETRY INFLUENCE
+    Telemetry block included in sealed content
+
+------------------------------------------------
+
+24. TELEMETRY STRUCTURING PIPELINE
+
+24.1 POST-SEAL TELEMETRY VALIDATION
+
+    TELEMETRY CRITICAL
+
+    Second telemetry validation gate.
+
+24.2 Session Prompt Counter Override
+
+    TELEMETRY CRITICAL
+
+    Server replaces model counter
+    with serverCounter.
+
+------------------------------------------------
+
+25. TELEMETRY PARSER
+
+25.1 telemetry block extraction
+25.2 telemetry object creation
+25.3 cockpit telemetry mapping
+
+    TELEMETRY CRITICAL
+
+    Produces structured telemetry
+    returned to UI.
+
+------------------------------------------------
+
+26. TELEMETRY CLEANUP
+
+26.1 remove telemetry from assistant message
+26.2 sanitize prefixes
+26.3 generate cleanedContent
+
+------------------------------------------------
+
+27. FINAL RESPONSE ASSEMBLY
+
+27.1 response payload
+    role
+    content
+    telemetry
+    status
+    tokens_used
+    triketon
+
+------------------------------------------------
+
+28. SESSION COOKIE UPDATE
+
+28.1 mpahy_session cookie write
+28.2 conversationId persistence
+28.3 counter persistence
+
+------------------------------------------------
+
+29. RESPONSE HEADERS
+
+29.1 token delta
+29.2 freegate headers
+
+------------------------------------------------
+
+30. FINAL RESPONSE RETURN
+
+30.1 NextResponse.json()
+
+------------------------------------------------
+
+31. GLOBAL ERROR HANDLER
+
+31.1 catch block
+31.2 API error response
+
+================================================
+END OF CANONICAL INDEX
+================================================
+*/
 
 import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
@@ -344,79 +468,118 @@ const TELEMETRY_REQUIRED_FIELDS = [
   "System:",
   "Version:",
   "Telemetry Authority:",
-
   "Session Prompt Counter:",
   "Telemetry Order:",
   "Telemetry Scope:",
   "Telemetry Mutability:",
-
   "Telemetry Failure Policy:",
   "Telemetry Source Separation:",
-
   "User Mode:",
   "System Mode:",
   "Effective Mode:",
-
   "Expert Status:",
   "Expert Type:",
   "Expert ID:",
-
   "Drift Origin:",
   "Drift State:",
   "Drift Risk:",
-
-  "Agent Active:",
-  "Agent ID:",
-  "Agent Property:",
-  "Agent Modes:",
-
   "Orchestration Mode:",
-  "Orchestrator ID:",
-  "Goal ID:",
-  "Task ID:",
-  "Execution Stage:",
+  "Orchestration Authority:",
+  "Expert Configuration:",
   "Complexity Level:",
   "Council Final Status:",
-
   "Expert Rights Profile:",
   "Expert Rights Scope:",
   "Expert Rights Source:",
   "Analysis Container State:",
+  "Expert Activation Count:",
   "Council Decision ID:",
-  "Domain Resolution Mode:",
-  "Runtime Container ID:",
-  "System State Hash:"
+  "Council Rights Attestation:",
+  "Council Decision Trace:"
 ];
+
+const TELEMETRY_START_SENTINEL = "<<<MAIOS_TELEMETRY_START>>>";
+const TELEMETRY_END_SENTINEL = "<<<MAIOS_TELEMETRY_END>>>";
+const CONTENT_START_SENTINEL = "<<<MAIOS_CONTENT_START>>>";
+const CONTENT_END_SENTINEL = "<<<MAIOS_CONTENT_END>>>";
+
+function buildTelemetrySkeleton(): string {
+  const telemetryFields = TELEMETRY_REQUIRED_FIELDS
+    .map((field) => `${field} <value>`)
+    .join("\n");
+
+  return [
+    TELEMETRY_START_SENTINEL,
+    telemetryFields,
+    TELEMETRY_END_SENTINEL,
+    CONTENT_START_SENTINEL,
+    "<assistant content>",
+    CONTENT_END_SENTINEL,
+  ].join("\n");
+}
+
+function extractTelemetryEnvelope(text: string) {
+  if (!text) {
+    return {
+      telemetryBlock: null,
+      contentBlock: null,
+    };
+  }
+
+  const startTelemetry = text.indexOf(TELEMETRY_START_SENTINEL);
+  const endTelemetry = text.indexOf(TELEMETRY_END_SENTINEL);
+
+  const startContent = text.indexOf(CONTENT_START_SENTINEL);
+  const endContent = text.indexOf(CONTENT_END_SENTINEL);
+
+  let telemetryBlock: string | null = null;
+  let contentBlock: string | null = null;
+
+  if (startTelemetry !== -1 && endTelemetry !== -1 && endTelemetry > startTelemetry) {
+    telemetryBlock = text
+      .slice(startTelemetry + TELEMETRY_START_SENTINEL.length, endTelemetry)
+      .trim();
+  }
+
+  if (startContent !== -1 && endContent !== -1 && endContent > startContent) {
+    contentBlock = text
+      .slice(startContent + CONTENT_START_SENTINEL.length, endContent)
+      .trim();
+  }
+
+  return {
+    telemetryBlock,
+    contentBlock,
+  };
+}
 
 function isValidTelemetryBlock(text: string): boolean {
   if (!text) return false;
 
-  const lines = text
+  const { telemetryBlock } = extractTelemetryEnvelope(text);
+
+  if (!telemetryBlock) {
+    console.warn("[telemetry] envelope missing");
+    return false;
+  }
+
+  const lines = telemetryBlock
     .split("\n")
     .map(l => l.trim())
     .filter(Boolean);
 
-  const startIndex = lines.findIndex(l =>
-    l.startsWith("System:")
-  );
-
-  if (startIndex === -1) return false;
-
-  const telemetryLines = lines.slice(startIndex);
-
   const telemetryObj: Record<string, string> = {};
 
-  telemetryLines.forEach((line) => {
+  for (const line of lines) {
     const idx = line.indexOf(":");
-    if (idx === -1) return;
+    if (idx === -1) continue;
 
     const key = line.slice(0, idx + 1).trim();
     const value = line.slice(idx + 1).trim();
 
     telemetryObj[key] = value;
-  });
+  }
 
-  // Prüfe nur Pflichtfelder
   const missing = TELEMETRY_REQUIRED_FIELDS.filter(
     (field) => !(field in telemetryObj)
   );
@@ -701,28 +864,22 @@ if (balanceBefore <= 0) {
 
 
     const telemetrySystemPrompt = {
-  role: "system",
-  content: `
-You are running inside MAIOS.
+      role: "system",
+      content: `
+    You are running inside MAIOS.
 
-Every response MUST begin with a telemetry block.
+    Every response MUST follow the exact output structure below.
 
-Required format:
+    Fill the values for each telemetry field.
 
-FULL TELEMETRY - STATUS
-Prompt: <number>
-Drift: <state>
+    Do NOT change the markers.
+    Do NOT translate telemetry field names.
+    Do NOT add extra lines inside the telemetry block.
+    Do NOT place text outside the defined blocks.
 
-Rules:
-
-1. Telemetry MUST be the first lines of the response.
-2. No text may appear before telemetry.
-3. If telemetry is missing the response is invalid.
-4. After telemetry you may output the answer.
-
-Violation of this rule is a system error.
-`
-};
+    ${buildTelemetrySkeleton()}
+    `
+    };
 
 const payload = {
   messages: [
@@ -804,18 +961,30 @@ if (!isValidTelemetryBlock(content)) {
     .filter((m) => m.role === "user")
     .slice(-1);
 
-  const strictRetryPayload = {
-    messages: [
-      {
-        role: "system",
-        content:
-          "CRITICAL SYSTEM RULE: Output MUST start with telemetry block. No text before telemetry.",
-      },
-      ...lastUserMessage,
-    ],
-    temperature: 0,
-    max_tokens: MODEL_MAX_TOKENS,
-  };
+ const strictRetryPayload = {
+  messages: [
+    {
+      role: "system",
+      content: `
+You are running inside MAIOS.
+
+The previous response violated the telemetry rules.
+
+You MUST follow the exact output structure below.
+
+Fill the telemetry values correctly.
+
+Do not modify markers.
+Do not add text outside the defined blocks.
+
+${buildTelemetrySkeleton()}
+`,
+    },
+    ...lastUserMessage,
+  ],
+  temperature: 0,
+  max_tokens: MODEL_MAX_TOKENS,
+};
 
   const retryInit: RequestInit = {
     method: "POST",
@@ -869,7 +1038,25 @@ if (!isValidTelemetryBlock(content)) {
         );
       }
 
-      content = retryContent;
+      const envelope = extractTelemetryEnvelope(retryContent);
+
+if (!envelope.telemetryBlock || !envelope.contentBlock) {
+  console.error("[telemetry] envelope parsing failed");
+  console.error("----- ENVELOPE RAW START -----");
+  console.error(retryContent);
+  console.error("----- ENVELOPE RAW END -----");
+}
+
+content = envelope.contentBlock ?? retryContent;
+
+if (content) {
+  content = content
+    .replace(TELEMETRY_START_SENTINEL, "")
+    .replace(TELEMETRY_END_SENTINEL, "")
+    .replace(CONTENT_START_SENTINEL, "")
+    .replace(CONTENT_END_SENTINEL, "")
+    .trim();
+}
     }
 
     let tokensUsed: number;
