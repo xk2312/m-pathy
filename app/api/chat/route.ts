@@ -678,105 +678,11 @@ const telemetryValid = isValidTelemetryBlock(content);
 console.log("TELEMETRY_VALIDATION_RESULT", telemetryValid);
 
 if (!telemetryValid) {
-  console.warn("[telemetry] invalid or missing block - retrying once");
+  console.warn("[telemetry] invalid or missing block - server fallback");
   console.error("----- TELEMETRY FIRST ATTEMPT START -----");
   console.error(content);
   console.error("----- TELEMETRY FIRST ATTEMPT END -----");
-
-  const lastUserMessage = messages
-    .filter((m) => m.role === "user")
-    .slice(-1);
-
- const strictRetryPayload = {
-  messages: [
-    {
-      role: "system",
-      content: `
-You are running inside MAIOS.
-
-The previous response violated the telemetry rules.
-
-You MUST follow the exact output structure below.
-
-Fill the telemetry values correctly.
-
-Do not modify markers.
-Do not add text outside the defined blocks.
-
-${buildTelemetrySkeleton()}
-`,
-    },
-...messages,  ],
-  temperature: 0,
-  max_tokens: MODEL_MAX_TOKENS,
-};
-
-  const retryInit: RequestInit = {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "api-key": apiKey },
-    body: JSON.stringify(strictRetryPayload),
-  };
-
-  console.log("TELEMETRY RETRY TRIGGERED");
-
-const retryResponse = await withGate(() =>
-  retryingFetch(buildAzureUrl(), retryInit, 5)
-);
-
-const retryData = await retryResponse.json();
-
-console.log("RETRY RAW RESPONSE");
-console.log(JSON.stringify(retryData, null, 2));
-
-const retryContent: string | undefined =
-  retryData?.choices?.[0]?.message?.content;
-
-console.log("RETRY CONTENT START");
-console.log(retryContent);
-console.log("RETRY CONTENT END");
-
-      if (!retryResponse.ok || !retryContent || !isValidTelemetryBlock(retryContent)) {
-        console.error("[telemetry] enforcement failed after retry");
-        console.error("----- TELEMETRY RETRY ATTEMPT START -----");
-        console.error(retryContent ?? "[retryContent missing]");
-        console.error("----- TELEMETRY RETRY ATTEMPT END -----");
-
-        const telemetryBlockedMessages: Record<string, string> = {
-          en: "SYSTEM NOTICE: Telemetry validation failed. Output was blocked according to system policy. Please retry your request.",
-          de: "SYSTEM-HINWEIS: Die Telemetrieprüfung ist fehlgeschlagen. Die Ausgabe wurde gemäß Systemrichtlinie blockiert. Bitte wiederhole deine Anfrage.",
-          fr: "AVIS SYSTÈME : La validation de la télémétrie a échoué. La sortie a été bloquée conformément à la politique du système. Veuillez réessayer.",
-          es: "AVISO DEL SISTEMA: La validación de telemetría falló. La salida fue bloqueada según la política del sistema. Por favor, repite tu solicitud.",
-          it: "AVVISO DI SISTEMA: La validazione della telemetria è fallita. L'output è stato bloccato secondo la politica del sistema. Ripeti la richiesta.",
-          pt: "AVISO DO SISTEMA: A validação de telemetria falhou. A saída foi bloqueada conforme a política do sistema. Por favor, tente novamente.",
-          nl: "SYSTEEMBERICHT: Telemetrievalidatie mislukt. De uitvoer is geblokkeerd volgens het systeembeleid. Probeer het opnieuw.",
-          ru: "СИСТЕМНОЕ УВЕДОМЛЕНИЕ: Проверка телеметрии не удалась. Вывод был заблокирован в соответствии с политикой системы. Повторите запрос.",
-          zh: "系统提示：遥测验证失败。根据系统策略，输出已被阻止。请重新提交请求。",
-          ja: "システム通知：テレメトリ検証に失敗しました。システムポリシーに従い出力がブロックされました。再度お試しください。",
-          ko: "시스템 알림: 텔레메트리 검증에 실패했습니다. 시스템 정책에 따라 출력이 차단되었습니다. 다시 시도해 주세요.",
-          ar: "إشعار النظام: فشل التحقق من القياس عن بعد. تم حظر الإخراج وفقًا لسياسة النظام. يرجى إعادة المحاولة.",
-          hi: "सिस्टम सूचना: टेलीमेट्री सत्यापन विफल रहा। सिस्टम नीति के अनुसार आउटपुट अवरुद्ध कर दिया गया है। कृपया पुनः प्रयास करें।",
-        };
-
-        const safeLocale =
-          telemetryBlockedMessages[localeFromCookie] ? localeFromCookie : "en";
-
-        return NextResponse.json(
-          {
-            role: "assistant",
-            content: telemetryBlockedMessages[safeLocale],
-            status: "telemetry_blocked",
-            tokens_used: 0,
-            balance_after: balanceBefore ?? null,
-            triketon: null,
-          },
-          { status: 200 }
-        );
-      }
-
-content = retryContent;
-
-const envelope = extractTelemetryEnvelope(content);
-    }
+}
 
     let tokensUsed: number;
 
@@ -912,6 +818,48 @@ if (TRIKETON_ENABLED) {
 }
 
 
+function buildServerTelemetryParsed(promptCounter: number): Record<string, string> {
+  return {
+    "System": "MAIOS",
+    "Version": "3.0",
+    "Telemetry Authority": "server",
+    "Session Prompt Counter": String(promptCounter),
+    "Telemetry Order": "server-fallback",
+    "Telemetry Scope": "global",
+    "Telemetry Mutability": "immutable-per-prompt",
+    "Telemetry Failure Policy": "server-fallback",
+    "Telemetry Source Separation": "true",
+    "User Mode": "pending",
+    "System Mode": "pending",
+    "Effective Mode": "pending",
+    "Expert Status": "pending",
+    "Expert Type": "pending",
+    "Expert ID": "pending",
+    "Drift Origin": "model_missing",
+    "Drift State": "pending",
+    "Drift Risk": "pending",
+    "Agent Active": "pending",
+    "Agent ID": "pending",
+    "Agent Property": "pending",
+    "Agent Modes": "pending",
+    "Orchestration Mode": "pending",
+    "Orchestrator ID": "pending",
+    "Goal ID": "pending",
+    "Task ID": "pending",
+    "Execution Stage": "pending",
+    "Complexity Level": "pending",
+    "Council Final Status": "pending",
+    "Expert Rights Profile": "pending",
+    "Expert Rights Scope": "pending",
+    "Expert Rights Source": "pending",
+    "Analysis Container State": "pending",
+    "Council Decision ID": "pending",
+    "Domain Resolution Mode": "pending",
+    "Runtime Container ID": "pending",
+    "System State Hash": "pending"
+  };
+}
+
 // === TELEMETRY STRUCTURING (POST-SEAL, PRE-RESPONSE) ===
 let structuredTelemetry: any = null;
 let cleanedContent = content;
@@ -1001,20 +949,22 @@ console.log("[TRACE] telemetry object built", {
   });
 
 } else {
-  console.log("[TRACE] telemetry missing → server fallback");
+  console.log("[TRACE] telemetry missing -> server fallback");
+
+  const telemetryObj = buildServerTelemetryParsed(serverCounter);
 
   structuredTelemetry = {
     cockpit: {
-      system: "MAIOS",
-      version: "3.0",
-      promptCounter: String(serverCounter),
-      effectiveMode: "unknown",
-      complexityLevel: "unknown",
-      driftState: "unknown",
-      driftRisk: "unknown",
-      driftOrigin: "model_missing"
+      system: telemetryObj["System"] ?? "",
+      version: telemetryObj["Version"] ?? "",
+      promptCounter: telemetryObj["Session Prompt Counter"] ?? "",
+      effectiveMode: telemetryObj["Effective Mode"] ?? "",
+      complexityLevel: telemetryObj["Complexity Level"] ?? "",
+      driftState: telemetryObj["Drift State"] ?? "",
+      driftRisk: telemetryObj["Drift Risk"] ?? "",
+      driftOrigin: telemetryObj["Drift Origin"] ?? "",
     },
-    parsed: {}
+    parsed: telemetryObj,
   };
 
   cleanedContent = content;
