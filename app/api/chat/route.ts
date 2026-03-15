@@ -618,9 +618,19 @@ ${message.content}
   };
 }
 
-    const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
+    function serializeTelemetryBlock(t: Record<string, string>): string {
+  const lines = Object.entries(t).map(([k, v]) => `${k}: ${v}`);
+  return [
+    "<<<MAIOS_TELEMETRY_START>>>",
+    ...lines,
+    "<<<MAIOS_TELEMETRY_END>>>"
+  ].join("\n");
+}
+
+const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
 
 // rebuild messages so assistant telemetry is restored
+// (assistant messages may contain telemetry envelopes)
 const rebuiltMessages = body.messages.map(rebuildAssistantEnvelope);
 
 // find last assistant telemetry state
