@@ -1013,7 +1013,7 @@ console.log("[TRACE_CONTENT_STAGE_3_BEFORE_REPLACE]", {
 cleanedContent = cleanedContent
   .replace(/^Telemetry Block\s*/i, "")
   .replace(/^Explanation:\s*/i, "")
-  .trim();
+  .trimEnd() + "\n";
 
 console.log("[TRACE_CONTENT_STAGE_4_AFTER_REPLACE]", {
   length: cleanedContent?.length,

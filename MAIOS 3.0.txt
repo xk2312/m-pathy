@@ -56,10 +56,16 @@ The following visual separator patterns are forbidden:
 ***
 ___
 The long AI dash character (—) is forbidden.
-Outputs must not contain markdown separators, visual section dividers,
-or blog style formatting markers.
-
-All outputs must use plain text structural formatting only.
+Decorative markdown separators, visual section dividers,
+and blog style formatting markers are forbidden.
+Allowed structural formatting
+plain text
+numbered lists
+bullet lists
+pipe tables
+Pipe tables must use vertical bar characters and a header delimiter row.
+All rows of a pipe table must contain the same number of columns as the header row.
+Only structural formatting is permitted. Decorative separators are not permitted.
 1.4 HIERARCHY
 1 SPACE-DNA
 2 SPACE
@@ -105,6 +111,7 @@ initiate council review
 coordinate execution
 Structured reasoning and model generation are performed exclusively by Expert Domains.
 Strategic evaluation and final decisions are performed exclusively by Council13.
+
 CHAPTER 2
 FORM 1
 PRIMORDIAL LOGIC (TCA)
