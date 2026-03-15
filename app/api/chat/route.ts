@@ -824,39 +824,39 @@ function buildServerTelemetryParsed(promptCounter: number): Record<string, strin
     "Version": "3.0",
     "Telemetry Authority": "server",
     "Session Prompt Counter": String(promptCounter),
-    "Telemetry Order": "server-fallback",
+    "Telemetry Order": "server-authoritative",
     "Telemetry Scope": "global",
     "Telemetry Mutability": "immutable-per-prompt",
     "Telemetry Failure Policy": "server-fallback",
     "Telemetry Source Separation": "true",
-    "User Mode": "pending",
-    "System Mode": "pending",
-    "Effective Mode": "pending",
-    "Expert Status": "pending",
-    "Expert Type": "pending",
-    "Expert ID": "pending",
+    "User Mode": "unknown",
+    "System Mode": "none",
+    "Effective Mode": "unknown",
+    "Expert Status": "none",
+    "Expert Type": "none",
+    "Expert ID": "none",
     "Drift Origin": "model_missing",
-    "Drift State": "pending",
-    "Drift Risk": "pending",
-    "Agent Active": "pending",
-    "Agent ID": "pending",
-    "Agent Property": "pending",
-    "Agent Modes": "pending",
-    "Orchestration Mode": "pending",
-    "Orchestrator ID": "pending",
-    "Goal ID": "pending",
-    "Task ID": "pending",
-    "Execution Stage": "pending",
-    "Complexity Level": "pending",
-    "Council Final Status": "pending",
-    "Expert Rights Profile": "pending",
-    "Expert Rights Scope": "pending",
-    "Expert Rights Source": "pending",
-    "Analysis Container State": "pending",
-    "Council Decision ID": "pending",
-    "Domain Resolution Mode": "pending",
-    "Runtime Container ID": "pending",
-    "System State Hash": "pending"
+    "Drift State": "none",
+    "Drift Risk": "none",
+    "Agent Active": "false",
+    "Agent ID": "none",
+    "Agent Property": "none",
+    "Agent Modes": "none",
+    "Orchestration Mode": "none",
+    "Orchestrator ID": "none",
+    "Goal ID": "none",
+    "Task ID": "none",
+    "Execution Stage": "none",
+    "Complexity Level": "medium",
+    "Council Final Status": "not_required",
+    "Expert Rights Profile": "none",
+    "Expert Rights Scope": "none",
+    "Expert Rights Source": "system_core",
+    "Analysis Container State": "none",
+    "Council Decision ID": "none",
+    "Domain Resolution Mode": "none",
+    "Runtime Container ID": "none",
+    "System State Hash": "none"
   };
 }
 
@@ -905,30 +905,58 @@ for (let i = startIndex; i < lines.length; i++) {
 
   telemetryLines.push(line);
 }
-  const telemetryObj: Record<string, string> = {};
+const serverDefaults = buildServerTelemetryParsed(serverCounter);
+const parsedTelemetry: Record<string, string> = {};
 
-  telemetryLines.forEach((line) => {
+telemetryLines.forEach((line) => {
   const clean = line.trim();
   const idx = clean.indexOf(":");
-    if (idx === -1) return;
+  if (idx === -1) return;
 
-    const key = line.slice(0, idx).trim();
-    const value = line.slice(idx + 1).trim();
+  const key = clean.slice(0, idx).trim();
+  const value = clean.slice(idx + 1).trim();
 
-    if (!key) return;
+  if (!key) return;
 
-    telemetryObj[key] = value;
+  parsedTelemetry[key] = value;
+});
+
+const telemetryFieldCount = Object.keys(parsedTelemetry).length;
+
+let telemetryObj: Record<string, string>;
+
+if (telemetryFieldCount >= 37) {
+  telemetryObj = {
+    ...serverDefaults,
+    ...parsedTelemetry,
+  };
+} else {
+  console.warn("[telemetry] incomplete model telemetry -> server fallback", {
+    telemetryFieldCount,
   });
+
+  telemetryObj = serverDefaults;
+}
+const userMode = telemetryObj["User Mode"] ?? "unknown";
+const systemMode = telemetryObj["System Mode"] ?? "none";
+
+const effectiveMode =
+  systemMode !== "none" && systemMode !== "unknown"
+    ? systemMode
+    : userMode;
+
+telemetryObj["Effective Mode"] = effectiveMode;
+
 structuredTelemetry = {
   cockpit: {
-    system: telemetryObj["System"] ?? "",
-    version: telemetryObj["Version"] ?? "",
-    promptCounter: telemetryObj["Session Prompt Counter"] ?? "",
-    effectiveMode: telemetryObj["Effective Mode"] ?? "",
-    complexityLevel: telemetryObj["Complexity Level"] ?? "",
-    driftState: telemetryObj["Drift State"] ?? "",
-    driftRisk: telemetryObj["Drift Risk"] ?? "",
-    driftOrigin: telemetryObj["Drift Origin"] ?? "",
+    system: telemetryObj["System"] || "MAIOS",
+    version: telemetryObj["Version"] || "3.0",
+    promptCounter: telemetryObj["Session Prompt Counter"] || String(serverCounter),
+    effectiveMode: telemetryObj["Effective Mode"] || "unknown",
+    complexityLevel: telemetryObj["Complexity Level"] || "medium",
+    driftState: telemetryObj["Drift State"] || "none",
+    driftRisk: telemetryObj["Drift Risk"] || "none",
+    driftOrigin: telemetryObj["Drift Origin"] || "none",
   },
   parsed: telemetryObj,
 };
@@ -952,6 +980,16 @@ console.log("[TRACE] telemetry object built", {
   console.log("[TRACE] telemetry missing -> server fallback");
 
   const telemetryObj = buildServerTelemetryParsed(serverCounter);
+
+  const userMode = telemetryObj["User Mode"] ?? "unknown";
+  const systemMode = telemetryObj["System Mode"] ?? "none";
+
+  const effectiveMode =
+    systemMode !== "none" && systemMode !== "unknown"
+      ? systemMode
+      : userMode;
+
+  telemetryObj["Effective Mode"] = effectiveMode;
 
   structuredTelemetry = {
     cockpit: {
