@@ -928,6 +928,11 @@ content = content.replace(
 const ledgerContent = content;
 console.log("FINAL CONTENT BEFORE TELEMETRY PARSE");
 console.log(content);
+
+console.log("[TRACE_CONTENT_STAGE_1]", {
+  length: content?.length,
+  preview: content?.slice(0,120)
+});
 const envelope = extractTelemetryEnvelope(content ?? "");
 console.log("[TRACE] envelope extracted", {
   hasTelemetryBlock: !!envelope.telemetryBlock,
@@ -986,14 +991,35 @@ console.log("[TRACE] telemetry object built", {
     ...lines.slice(0, startIndex),
     ...lines.slice(telemetryEnd),
   ].join("\n").trim();
+
+  console.log("[TRACE_CONTENT_STAGE_2_AFTER_TELEMETRY_STRIP]", {
+    length: cleanedContent?.length,
+    preview: cleanedContent?.slice(0,120)
+  });
+
 } else {
   cleanedContent = content;
+
+  console.log("[TRACE_CONTENT_STAGE_2_AFTER_TELEMETRY_STRIP_ELSE]", {
+    length: cleanedContent?.length,
+    preview: cleanedContent?.slice(0,120)
+  });
 }
+
+console.log("[TRACE_CONTENT_STAGE_3_BEFORE_REPLACE]", {
+  length: cleanedContent?.length,
+  preview: cleanedContent?.slice(0,120)
+});
 
 cleanedContent = cleanedContent
   .replace(/^Telemetry Block\s*/i, "")
   .replace(/^Explanation:\s*/i, "")
   .trim();
+
+console.log("[TRACE_CONTENT_STAGE_4_AFTER_REPLACE]", {
+  length: cleanedContent?.length,
+  preview: cleanedContent?.slice(0,120)
+});
 
  console.log("[TRACE] response payload", {
   role: "assistant",
