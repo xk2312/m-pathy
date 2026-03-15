@@ -939,7 +939,7 @@ console.log("[TRACE] envelope extracted", {
   hasContentBlock: !!envelope.contentBlock,
 });
 
-const telemetrySource = envelope.telemetryBlock ?? content;
+const telemetrySource = content;
 const lines = telemetrySource.split("\n");
 const startIndex = lines.findIndex((l) =>
   l.trim().startsWith("System:")
