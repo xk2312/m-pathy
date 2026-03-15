@@ -925,7 +925,7 @@ let cleanedContent = content;
 // reuse existing serverCounter + conversationId
 
 content = content.replace(
-  /Session Prompt Counter:\s*\d+/,
+  /Session Prompt Counter:\s*.*/,
   `Session Prompt Counter: ${serverCounter}`
 );
 
