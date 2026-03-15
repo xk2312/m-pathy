@@ -619,14 +619,45 @@ ${message.content}
 }
 
     const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
+
+// rebuild messages so assistant telemetry is restored
+const rebuiltMessages = body.messages.map(rebuildAssistantEnvelope);
+
+// find last assistant telemetry state
+let lastTelemetrySystemMessage: ChatMessage | null = null;
+
+for (let i = rebuiltMessages.length - 1; i >= 0; i--) {
+  const m = rebuiltMessages[i];
+  if (m.role === "assistant" && typeof m.content === "string") {
+    const start = m.content.indexOf("<<<MAIOS_TELEMETRY_START>>>");
+    const end = m.content.indexOf("<<<MAIOS_TELEMETRY_END>>>");
+    if (start !== -1 && end !== -1) {
+      const telemetryBlock = m.content.slice(start, end + "<<<MAIOS_TELEMETRY_END>>>".length);
+
+      lastTelemetrySystemMessage = {
+        role: "system",
+        content:
+          "LAST TELEMETRY STATE\n" +
+          "This is the previous MAIOS runtime state. Continue from it.\n\n" +
+          telemetryBlock,
+      };
+      break;
+    }
+  }
+}
+
 const messages: ChatMessage[] = systemPrompt
   ? [
       { role: "system", content: systemPrompt },
+      ...(lastTelemetrySystemMessage ? [lastTelemetrySystemMessage] : []),
       languageGuard,
-      ...body.messages.map(rebuildAssistantEnvelope),
+      ...rebuiltMessages,
     ]
-  : [languageGuard, ...body.messages.map(rebuildAssistantEnvelope)];
-
+  : [
+      ...(lastTelemetrySystemMessage ? [lastTelemetrySystemMessage] : []),
+      languageGuard,
+      ...rebuiltMessages,
+    ];
 
     
 
