@@ -987,10 +987,9 @@ console.log("[TRACE] telemetry object built", {
 
   const telemetryEnd = startIndex + TELEMETRY_REQUIRED_FIELDS.length;
 
-  cleanedContent = [
-    ...lines.slice(0, startIndex),
-    ...lines.slice(telemetryEnd),
-  ].join("\n").trim();
+  cleanedContent =
+  envelope.contentBlock ??
+  content;
 
   console.log("[TRACE_CONTENT_STAGE_2_AFTER_TELEMETRY_STRIP]", {
     length: cleanedContent?.length,
