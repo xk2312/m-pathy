@@ -995,6 +995,12 @@ cleanedContent = cleanedContent
   .replace(/^Explanation:\s*/i, "")
   .trim();
 
+ console.log("[TRACE] response payload", {
+  role: "assistant",
+  contentLength: cleanedContent?.length,
+  hasTelemetry: !!structuredTelemetry
+});
+
 const res = NextResponse.json(
   {
     role: "assistant",
