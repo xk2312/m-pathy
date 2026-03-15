@@ -562,14 +562,70 @@ if (balanceBefore <= 0) {
       };
     })();
 
+    function rebuildAssistantEnvelope(message: ChatMessage): ChatMessage {
+  if (message.role !== "assistant") return message;
+
+  if (message.content.includes("<<<MAIOS_TELEMETRY_START>>>")) {
+    return message;
+  }
+
+  const telemetryStub = `<<<MAIOS_TELEMETRY_START>>>
+System: MAIOS
+Version: 3.0
+Telemetry Authority: system-core
+Session Prompt Counter: unknown
+Telemetry Order: pre-output-mandatory
+Telemetry Scope: global
+Telemetry Mutability: immutable-per-prompt
+Telemetry Failure Policy: block-output
+Telemetry Source Separation: true
+User Mode: none
+System Mode: none
+Effective Mode: none
+Expert Status: none
+Expert Type: none
+Expert ID: none
+Drift Origin: none
+Drift State: none
+Drift Risk: none
+Agent Active: false
+Agent ID: none
+Agent Property: none
+Agent Modes: none
+Orchestration Mode: none
+Orchestrator ID: none
+Goal ID: none
+Task ID: none
+Execution Stage: none
+Complexity Level: low
+Council Final Status: not_required
+Expert Rights Profile: none
+Expert Rights Scope: none
+Expert Rights Source: none
+Analysis Container State: none
+Council Decision ID: none
+Domain Resolution Mode: none
+Runtime Container ID: none
+System State Hash: none
+<<<MAIOS_TELEMETRY_END>>>
+<<<MAIOS_CONTENT_START>>>
+${message.content}
+<<<MAIOS_CONTENT_END>>>`;
+
+  return {
+    role: "assistant",
+    content: telemetryStub,
+  };
+}
+
     const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
-    const messages: ChatMessage[] = systemPrompt
-      ? [
-          { role: "system", content: systemPrompt },
-          languageGuard,
-          ...body.messages,
-        ]
-      : [languageGuard, ...body.messages];
+const messages: ChatMessage[] = systemPrompt
+  ? [
+      { role: "system", content: systemPrompt },
+      languageGuard,
+      ...body.messages.map(rebuildAssistantEnvelope),
+    ]
+  : [languageGuard, ...body.messages.map(rebuildAssistantEnvelope)];
 
 
     
