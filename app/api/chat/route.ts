@@ -929,11 +929,18 @@ const ledgerContent = content;
 console.log("FINAL CONTENT BEFORE TELEMETRY PARSE");
 console.log(content);
 const envelope = extractTelemetryEnvelope(content ?? "");
+console.log("[TRACE] envelope extracted", {
+  hasTelemetryBlock: !!envelope.telemetryBlock,
+  hasContentBlock: !!envelope.contentBlock,
+});
+
 const telemetrySource = envelope.telemetryBlock ?? content;
 const lines = telemetrySource.split("\n");
 const startIndex = lines.findIndex((l) =>
   l.trim().startsWith("System:")
 );
+
+console.log("[TRACE] telemetry start index", startIndex);
 
 if (startIndex !== -1) {
   const telemetryLines = lines.slice(
@@ -955,20 +962,23 @@ if (startIndex !== -1) {
 
     telemetryObj[key] = value;
   });
+structuredTelemetry = {
+  cockpit: {
+    system: telemetryObj["System"] ?? "",
+    version: telemetryObj["Version"] ?? "",
+    promptCounter: telemetryObj["Session Prompt Counter"] ?? "",
+    effectiveMode: telemetryObj["Effective Mode"] ?? "",
+    complexityLevel: telemetryObj["Complexity Level"] ?? "",
+    driftState: telemetryObj["Drift State"] ?? "",
+    driftRisk: telemetryObj["Drift Risk"] ?? "",
+    driftOrigin: telemetryObj["Drift Origin"] ?? "",
+  },
+  parsed: telemetryObj,
+};
 
-  structuredTelemetry = {
-    cockpit: {
-      system: telemetryObj["System"] ?? "",
-      version: telemetryObj["Version"] ?? "",
-      promptCounter: telemetryObj["Session Prompt Counter"] ?? "",
-      effectiveMode: telemetryObj["Effective Mode"] ?? "",
-      complexityLevel: telemetryObj["Complexity Level"] ?? "",
-      driftState: telemetryObj["Drift State"] ?? "",
-      driftRisk: telemetryObj["Drift Risk"] ?? "",
-      driftOrigin: telemetryObj["Drift Origin"] ?? "",
-    },
-    parsed: telemetryObj,
-  };
+console.log("[TRACE] telemetry object built", {
+  fieldCount: Object.keys(telemetryObj).length,
+});
 
   const telemetryEnd = startIndex + TELEMETRY_REQUIRED_FIELDS.length;
 
