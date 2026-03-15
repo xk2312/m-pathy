@@ -942,17 +942,21 @@ console.log("[TRACE] envelope extracted", {
 const telemetrySource = content;
 const lines = telemetrySource.split("\n");
 const startIndex = lines.findIndex((l) =>
-  l.trim().startsWith("System:")
+  /^System\s*:/.test(l.trim())
 );
-
 console.log("[TRACE] telemetry start index", startIndex);
 
 if (startIndex !== -1) {
-  const telemetryLines = lines.slice(
-    startIndex,
-    startIndex + TELEMETRY_REQUIRED_FIELDS.length
-  );
+  const telemetryLines = [];
 
+for (let i = startIndex; i < lines.length; i++) {
+  const line = lines[i].trim();
+
+  if (!line) break;
+  if (!line.includes(":")) break;
+
+  telemetryLines.push(line);
+}
   const telemetryObj: Record<string, string> = {};
 
   telemetryLines.forEach((line) => {
@@ -997,6 +1001,22 @@ console.log("[TRACE] telemetry object built", {
   });
 
 } else {
+  console.log("[TRACE] telemetry missing → server fallback");
+
+  structuredTelemetry = {
+    cockpit: {
+      system: "MAIOS",
+      version: "3.0",
+      promptCounter: String(serverCounter),
+      effectiveMode: "unknown",
+      complexityLevel: "unknown",
+      driftState: "unknown",
+      driftRisk: "unknown",
+      driftOrigin: "model_missing"
+    },
+    parsed: {}
+  };
+
   cleanedContent = content;
 
   console.log("[TRACE_CONTENT_STAGE_2_AFTER_TELEMETRY_STRIP_ELSE]", {
