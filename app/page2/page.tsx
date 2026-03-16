@@ -641,54 +641,100 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
   const rawContent = String(msg.content ?? "");
 
   const splitTelemetryFromContent = React.useMemo(() => {
-    const lines = rawContent.replace(/\r\n/g, "\n").split("\n");
+    const text = rawContent.trimStart();
 
-    const irssFields = [
-      "system",
-      "version",
-      "session_prompt_counter",
-      "mode",
-      "mode_source",
-      "complexity_level",
-      "expert_names",
-      "drift_origin",
-      "drift_state",
-      "drift_risk",
-    ];
-
-    let endIndex = -1;
-
-    for (let i = 0; i < lines.length; i++) {
-      const trimmed = lines[i].trim();
-
-      if (!trimmed) {
-        endIndex = i;
-        break;
-      }
-
-      const match = trimmed.match(/^"([^"]+)"\s*:/);
-      if (!match) break;
-
-      const key = match[1];
-      if (!irssFields.includes(key)) break;
-
-      endIndex = i + 1;
-    }
-
-    if (endIndex <= 0) {
+    if (!text.startsWith("{")) {
       return {
         visibleContent: rawContent,
         telemetryBlock: "",
       };
     }
 
-    const telemetryBlock = lines.slice(0, endIndex).join("\n").trim();
-    const visibleContent = lines.slice(endIndex).join("\n").trim();
+    let depth = 0;
+    let inString = false;
+    let escaped = false;
+    let endIndex = -1;
 
-    return {
-      visibleContent,
-      telemetryBlock,
-    };
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+
+      if (inString) {
+        if (escaped) {
+          escaped = false;
+          continue;
+        }
+        if (ch === "\\") {
+          escaped = true;
+          continue;
+        }
+        if (ch === '"') {
+          inString = false;
+        }
+        continue;
+      }
+
+      if (ch === '"') {
+        inString = true;
+        continue;
+      }
+
+      if (ch === "{") {
+        depth += 1;
+        continue;
+      }
+
+      if (ch === "}") {
+        depth -= 1;
+        if (depth === 0) {
+          endIndex = i + 1;
+          break;
+        }
+      }
+    }
+
+    if (endIndex === -1) {
+      return {
+        visibleContent: rawContent,
+        telemetryBlock: "",
+      };
+    }
+
+    const candidate = text.slice(0, endIndex).trim();
+    const remainder = text.slice(endIndex).trimStart();
+
+    try {
+      const parsed = JSON.parse(candidate);
+
+      const irss = parsed?.irss;
+      const looksLikeIrss =
+        irss &&
+        typeof irss === "object" &&
+        !Array.isArray(irss) &&
+        (
+          "system" in irss ||
+          "version" in irss ||
+          "session_prompt_counter" in irss ||
+          "mode" in irss ||
+          "drift_state" in irss
+        );
+
+      if (!looksLikeIrss) {
+        return {
+          visibleContent: rawContent,
+          telemetryBlock: "",
+        };
+      }
+
+      return {
+        visibleContent: remainder,
+        telemetryBlock: JSON.stringify(parsed, null, 2),
+      };
+    } catch {
+      return {
+        visibleContent: rawContent,
+        telemetryBlock: "",
+      };
+    }
   }, [rawContent]);
 
   const visibleContent = splitTelemetryFromContent.visibleContent;
@@ -818,6 +864,7 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
               background: "rgba(15,23,42,0.4)",
               fontSize: 11,
               lineHeight: 1.55,
+              whiteSpace: "pre-wrap",
             }}
           />
         </details>
