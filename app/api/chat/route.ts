@@ -395,8 +395,42 @@ const messages: ChatMessage[] = systemPrompt
       ...body.messages,
     ];
 
-  const payload = {
+ const irssRuntimePrompt = {
+  role: "system",
+  content: [
+    "Emit every response in exactly this order:",
+    "1. First, output one valid IRSS JSON block.",
+    "2. Then output one blank line.",
+    "3. Then output the normal response content.",
+    "",
+    "The IRSS block must be the first emitted output.",
+    "Do not place any text before it.",
+    "Do not wrap the IRSS block in markdown fences.",
+    "Do not rename keys.",
+    "Do not omit keys.",
+    "Use exactly this JSON shape:",
+    "{",
+    '  "irss": {',
+    '    "system": "MGPS",',
+    '    "version": "1.1.1",',
+    '    "session_prompt_counter": "<fill>",',
+    '    "mode": "<fill>",',
+    '    "mode_source": "<fill>",',
+    '    "complexity_level": "<fill>",',
+    '    "expert_names": "<fill>",',
+    '    "drift_origin": "<fill>",',
+    '    "drift_state": "<fill>",',
+    '    "drift_risk": "<fill>"',
+    "  }",
+    "}",
+    "",
+    "After the IRSS JSON block, continue with the normal answer in the same language as the user."
+  ].join("\n"),
+};
+
+const payload = {
   messages: [
+    irssRuntimePrompt,
     ...messages
   ],
   temperature: 0.7,
