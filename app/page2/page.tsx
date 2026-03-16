@@ -638,8 +638,64 @@ function mdToHtml(src: string): string {
 
 /** Body einer Nachricht: entscheidet Markdown vs. Plaintext + Syntax-Highlighting */
 function MessageBody({ msg }: { msg: ChatMessage }) {
+  const rawContent = String(msg.content ?? "");
+
+  const splitTelemetryFromContent = React.useMemo(() => {
+    const lines = rawContent.replace(/\r\n/g, "\n").split("\n");
+
+    const irssFields = [
+      "system",
+      "version",
+      "session_prompt_counter",
+      "mode",
+      "mode_source",
+      "complexity_level",
+      "expert_names",
+      "drift_origin",
+      "drift_state",
+      "drift_risk",
+    ];
+
+    let endIndex = -1;
+
+    for (let i = 0; i < lines.length; i++) {
+      const trimmed = lines[i].trim();
+
+      if (!trimmed) {
+        endIndex = i;
+        break;
+      }
+
+      const match = trimmed.match(/^"([^"]+)"\s*:/);
+      if (!match) break;
+
+      const key = match[1];
+      if (!irssFields.includes(key)) break;
+
+      endIndex = i + 1;
+    }
+
+    if (endIndex <= 0) {
+      return {
+        visibleContent: rawContent,
+        telemetryBlock: "",
+      };
+    }
+
+    const telemetryBlock = lines.slice(0, endIndex).join("\n").trim();
+    const visibleContent = lines.slice(endIndex).join("\n").trim();
+
+    return {
+      visibleContent,
+      telemetryBlock,
+    };
+  }, [rawContent]);
+
+  const visibleContent = splitTelemetryFromContent.visibleContent;
+  const telemetryBlock = splitTelemetryFromContent.telemetryBlock;
   const isMd = (msg as any).format === "markdown";
-  const html = isMd ? mdToHtml(String(msg.content ?? "")) : null;
+  const html = isMd ? mdToHtml(visibleContent) : null;
+  const telemetryHtml = telemetryBlock ? mdToHtml("```json\n" + telemetryBlock + "\n```") : null;
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
   const onRootClick = React.useCallback(
@@ -696,7 +752,7 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
     if (!containerRef.current) return;
     try {
       const nodes = containerRef.current.querySelectorAll("pre code");
-     nodes.forEach((el) => {
+      nodes.forEach((el) => {
         const codeEl = el as HTMLElement;
         if (codeEl.dataset.hljs) return;
 
@@ -718,31 +774,57 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
 
         codeEl.dataset.hljs = "1";
       });
-
     } catch {
-      // niemals die App crashen lassen
     }
-  }, [html]);
-
-  if (isMd) {
-    return (
-      <div
-        ref={containerRef}
-        className="markdown"
-        dangerouslySetInnerHTML={{ __html: html ?? "" }}
-        style={{ lineHeight: 1.55 }}
-        onClick={onRootClick}
-      />
-    );
-  }
+  }, [html, telemetryHtml]);
 
   return (
     <div ref={containerRef} style={{ lineHeight: 1.55 }} onClick={onRootClick}>
-      {String(msg.content ?? "")}
+      {isMd ? (
+        <div
+          className="markdown"
+          dangerouslySetInnerHTML={{ __html: html ?? "" }}
+          style={{ lineHeight: 1.55 }}
+        />
+      ) : (
+        <div style={{ lineHeight: 1.55 }}>
+          {visibleContent}
+        </div>
+      )}
+
+      {!!telemetryBlock && (
+        <details
+          style={{
+            marginTop: 10,
+          }}
+        >
+          <summary
+            style={{
+              cursor: "pointer",
+              fontSize: 12,
+              opacity: 0.8,
+            }}
+          >
+            Telemetry
+          </summary>
+
+          <div
+            className="markdown"
+            dangerouslySetInnerHTML={{ __html: telemetryHtml ?? "" }}
+            style={{
+              marginTop: 12,
+              padding: "14px 18px",
+              borderRadius: 16,
+              background: "rgba(15,23,42,0.4)",
+              fontSize: 11,
+              lineHeight: 1.55,
+            }}
+          />
+        </details>
+      )}
     </div>
   );
 }
-
 
 /** Sprechblase mit M-Avatar für Assistant + Copy-Button */
 function Bubble({
@@ -876,164 +958,7 @@ function Bubble({
       <MessageBody msg={msg} />
     </div>
 
-  {msg.telemetry && (
-  <>
- {/* TELEMETRY GRID */}
-<div
-  style={{
-    marginTop: 8,
-    padding: "16px 20px",
-    borderRadius: 16,
-    background: "rgba(15,23,42,0.6)",
-    fontSize: 11,
-  }}
->
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-      gap: 18,
-    }}
-  >
-    {[
-      { key: "system", value: msg.telemetry?.cockpit?.system },
-      { key: "version", value: msg.telemetry?.cockpit?.version },
-      { key: "promptCounter", value: msg.telemetry?.cockpit?.promptCounter },
-      { key: "effectiveMode", value: msg.telemetry?.cockpit?.effectiveMode },
-      { key: "complexityLevel", value: msg.telemetry?.parsed?.["Complexity Level"] },
-      { key: "driftState", value: msg.telemetry?.cockpit?.driftState },
-      { key: "driftRisk", value: msg.telemetry?.parsed?.["Drift Risk"] },
-      { key: "driftOrigin", value: msg.telemetry?.parsed?.["Drift Origin"] },
-          ]
-      .filter(item => item.value !== undefined && item.value !== null)
-      .map(({ key, value }) => {
-  const labelMap: Record<string, string> = {
-    system: "System",
-    version: "Version",
-    promptCounter: "Prompt#",
-    effectiveMode: "Mode",
-    complexityLevel: "Complexity",
-    driftState: "Drift",
-    driftRisk: "Risk",
-    driftOrigin: "Origin",
-  };
 
-  const label = labelMap[key] ?? key;
-
-  return (
-    <div key={key}>
-      <div
-        style={{
-          fontSize: 10,
-          opacity: 0.6,
-          textTransform: "uppercase",
-          letterSpacing: "0.06em",
-        }}
-      >
-        {label}
-      </div>
-      <div
-        style={{
-          fontWeight: 600,
-          fontSize: 13,
-        }}
-      >
-        {String(value)}
-      </div>
-    </div>
-  );
-})}
-  </div>
-</div>
-
-    {/* STRUCTURED ACCORDION */}
-    <details
-      style={{
-        marginTop: 8,
-      }}
-    >
-      <summary
-        style={{
-          cursor: "pointer",
-          fontSize: 12,
-          opacity: 0.8,
-        }}
-      >
-        Full Telemetry
-      </summary>
-
-      <div
-        style={{
-          marginTop: 12,
-          padding: "14px 18px",
-          borderRadius: 16,
-          background: "rgba(15,23,42,0.4)",
-          fontSize: 11,
-        }}
-      >
-        {/* Cockpit Section */}
-        <div style={{ marginBottom: 16 }}>
-          <div
-            style={{
-              fontSize: 10,
-              opacity: 0.6,
-              marginBottom: 8,
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-            }}
-          >
-            Cockpit
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: 8,
-            }}
-          >
-            {Object.entries(msg.telemetry.cockpit || {}).map(([k, v]) => (
-              <div key={k}>
-                <strong style={{ opacity: 0.7 }}>{k}</strong>
-                <div style={{ wordBreak: "break-word" }}>{String(v)}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Parsed Section */}
-        <div>
-          <div
-            style={{
-              fontSize: 10,
-              opacity: 0.6,
-              marginBottom: 8,
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-            }}
-          >
-            Parsed
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: 8,
-            }}
-          >
-            {Object.entries(msg.telemetry.parsed || {}).map(([k, v]) => (
-              <div key={k}>
-                <strong style={{ opacity: 0.7 }}>{k}</strong>
-                <div style={{ wordBreak: "break-word" }}>{String(v)}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </details>
-  </>
-)}
   </>
 )}
 
@@ -2474,14 +2399,6 @@ if (data?.status === "send_failed") {
 
   void 0;
 
-const telemetry =
-  (data && typeof data.telemetry === "object"
-    ? data.telemetry
-    : undefined) ??
-  (assistant && typeof (assistant as any).telemetry === "object"
-    ? (assistant as any).telemetry
-    : undefined);
-
 return {
   id,
   role: assistant.role ?? "assistant",
@@ -2489,10 +2406,6 @@ return {
   format: assistant.format ?? "markdown",
   meta: { status, balanceAfter, tokensUsed },
   triketon,
-  telemetry:
-  data?.telemetry ??
-  (assistant as any)?.telemetry ??
-  undefined,
 } as any as ChatMessage;
 }
 
@@ -2569,8 +2482,7 @@ truth_hash: computeTruthHash(
     timestamp: userMsg.timestamp,
     public_key: (userMsg as any)?.public_key ?? "",    
     chain_prev: (userMsg as any)?.chain_prev ?? "",
-    chain_id: (userMsg as any)?.chain_id ?? "", 
-    telemetry: userMsg.telemetry
+    chain_id: (userMsg as any)?.chain_id ?? ""
   })
 ),  public_key: "local_user",
   timestamp: new Date().toISOString(),
@@ -2578,7 +2490,6 @@ truth_hash: computeTruthHash(
   orbit_context: "chat",
   chain_id: "local",
   chain_prev: lastTruthHash,
-  telemetry: userMsg?.telemetry ?? undefined,
 });
       console.debug("[TriketonLedger] user entry appended:", userMsg.content.slice(0, 30));
     } catch (err) {
@@ -2647,11 +2558,10 @@ sendMessageLocal(injectedContext)
     // 1️⃣ Leere Assistant-Bubble anhängen
     setMessages((prev) => {
       const base = Array.isArray(prev) ? prev : [];
-      const assistantMsg = {
+            const assistantMsg = {
       ...assistant,
       id: crypto.randomUUID(),
       content: "",
-      telemetry: assistant.telemetry ?? undefined,
     };
       return [...base, assistantMsg];
     });
@@ -2724,7 +2634,6 @@ const assistantMsg = {
   ...assistant,
   id: crypto.randomUUID(),
   content: "",
-  telemetry: assistant.telemetry ?? null,
 };
 
   const next = truncateMessages([
@@ -2811,7 +2720,6 @@ setMessages((prev) => {
     version: "v1",
     orbit_context: "chat",
     chain_id: "local",
-    telemetry: assistant?.telemetry ?? undefined,
   });
   } catch (err) {
     console.warn("[TriketonLedger] assistant append failed:", err);

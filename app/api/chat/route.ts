@@ -10,8 +10,6 @@ import { getBalance } from "@/lib/ledger";
 import { cookies } from "next/headers";
 import crypto from "crypto";
 
-
-
 export const runtime = "nodejs"; // wir lesen Dateien ⇒ Node-Runtime
 
 // === 0.1: ENV laden ===
@@ -65,15 +63,6 @@ interface ChatBody {
   locale?: string;
 }
 
-function findMarker(text: string, markers: string[]) {
-  for (const marker of markers) {
-    const index = text.indexOf(marker);
-    if (index !== -1) {
-      return { marker, index };
-    }
-  }
-  return null;
-}
 // === ENV-Check ===
 function assertEnv() {
   const missing: string[] = [];
@@ -133,176 +122,7 @@ function getMessagesCharCount(messages: ChatMessage[]): number {
   }, 0);
 }
 
-const TELEMETRY_REQUIRED_FIELDS = [
-  "System",
-  "Version",
-  "Telemetry Authority",
-  "Session Prompt Counter",
-  "Telemetry Order",
-  "Telemetry Scope",
-  "Telemetry Mutability",
-  "Telemetry Failure Policy",
-  "Telemetry Source Separation",
 
-  "User Mode",
-  "System Mode",
-  "Effective Mode",
-
-  "Expert Status",
-  "Expert Type",
-  "Expert ID",
-
-  "Drift Origin",
-  "Drift State",
-  "Drift Risk",
-
-  "Agent Active",
-  "Agent ID",
-  "Agent Property",
-  "Agent Modes",
-
-  "Orchestration Mode",
-  "Orchestrator ID",
-  "Goal ID",
-  "Task ID",
-  "Execution Stage",
-  "Complexity Level",
-  "Council Final Status",
-
-  "Expert Rights Profile",
-  "Expert Rights Scope",
-  "Expert Rights Source",
-  "Analysis Container State",
-  "Council Decision ID",
-  "Domain Resolution Mode",
-  "Runtime Container ID",
-  "System State Hash"
-];
-
-const TELEMETRY_START_MARKERS = [
-  "<<<MAIOS_TELEMETRY_START>>>",
-  "TELEMETRY_START_SENTINEL"
-]
-
-const TELEMETRY_END_MARKERS = [
-  "<<<MAIOS_TELEMETRY_END>>>",
-  "TELEMETRY_END_SENTINEL"
-]
-
-const CONTENT_START_MARKERS = [
-  "<<<MAIOS_CONTENT_START>>>",
-  "CONTENT_START_SENTINEL"
-]
-
-const CONTENT_END_MARKERS = [
-  "<<<MAIOS_CONTENT_END>>>",
-  "CONTENT_END_SENTINEL"
-]
-
-function buildTelemetrySkeleton(): string {
-  const telemetryFields = TELEMETRY_REQUIRED_FIELDS
-    .map((field) => `${field}`)
-    .join("\n");
-
-  return [
-    TELEMETRY_START_MARKERS[0],
-    telemetryFields,
-    TELEMETRY_END_MARKERS[0],
-    CONTENT_START_MARKERS[0],
-    "<assistant content>",
-    CONTENT_END_MARKERS[0],
-  ].join("\n");
-}
-
-function extractTelemetryEnvelope(text: string) {
-  if (!text) {
-    return {
-      telemetryBlock: null,
-      contentBlock: null,
-    };
-  }
-
-  const startTelemetry = findMarker(text, TELEMETRY_START_MARKERS);
-  const endTelemetry = findMarker(text, TELEMETRY_END_MARKERS);
-
-  const startContent = findMarker(text, CONTENT_START_MARKERS);
-  const endContent = findMarker(text, CONTENT_END_MARKERS);
-
-  let telemetryBlock: string | null = null;
-  let contentBlock: string | null = null;
-
-  if (
-    startTelemetry &&
-    endTelemetry &&
-    endTelemetry.index > startTelemetry.index
-  ) {
-    telemetryBlock = text
-      .slice(
-        startTelemetry.index + startTelemetry.marker.length,
-        endTelemetry.index
-      )
-      .trim();
-  }
-
-  if (
-    startContent &&
-    endContent &&
-    endContent.index > startContent.index
-  ) {
-    contentBlock = text
-      .slice(
-        startContent.index + startContent.marker.length,
-        endContent.index
-      )
-      .trim();
-  }
-
-  return {
-    telemetryBlock,
-    contentBlock,
-  };
-}
-
-function isValidTelemetryBlock(text: string): boolean {
-  if (!text) return false;
-
-  const { telemetryBlock } = extractTelemetryEnvelope(text);
-
-  if (!telemetryBlock) {
-    console.warn("[telemetry] envelope missing");
-    return false;
-  }
-
-  const lines = telemetryBlock
-    .split("\n")
-    .map(l => l.trim())
-    .filter(Boolean);
-
-  const telemetryObj: Record<string, string> = {};
-
-  for (const line of lines) {
-    const idx = line.indexOf(":");
-    if (idx === -1) continue;
-
-const key = line.slice(0, idx).trim();
-    const value = line.slice(idx + 1).trim();
-
-    telemetryObj[key] = value;
-  }
-
-  const missing = TELEMETRY_REQUIRED_FIELDS.filter(
-    (field) => !(field in telemetryObj)
-  );
-
-  if (missing.length > 0) {
-  console.warn("[telemetry] missing fields:", missing);
-  console.log("[telemetry] parsed telemetry object:", telemetryObj);
-  console.log("[telemetry] original text:", text);
-  return false;
-}
-
-  return true;
-}
 
 
 // === POST-Handler (mit Gate + Backoff + FreeGate) ===
@@ -562,142 +382,21 @@ if (balanceBefore <= 0) {
       };
     })();
 
-    function rebuildAssistantEnvelope(message: ChatMessage): ChatMessage {
-  if (message.role !== "assistant") return message;
-
-  if (message.content.includes("<<<MAIOS_TELEMETRY_START>>>")) {
-    return message;
-  }
-
-  const telemetryStub = `<<<MAIOS_TELEMETRY_START>>>
-System: MAIOS
-Version: 3.0
-Telemetry Authority: system-core
-Session Prompt Counter: unknown
-Telemetry Order: pre-output-mandatory
-Telemetry Scope: global
-Telemetry Mutability: immutable-per-prompt
-Telemetry Failure Policy: block-output
-Telemetry Source Separation: true
-User Mode: none
-System Mode: none
-Effective Mode: none
-Expert Status: none
-Expert Type: none
-Expert ID: none
-Drift Origin: none
-Drift State: none
-Drift Risk: none
-Agent Active: false
-Agent ID: none
-Agent Property: none
-Agent Modes: none
-Orchestration Mode: none
-Orchestrator ID: none
-Goal ID: none
-Task ID: none
-Execution Stage: none
-Complexity Level: low
-Council Final Status: not_required
-Expert Rights Profile: none
-Expert Rights Scope: none
-Expert Rights Source: none
-Analysis Container State: none
-Council Decision ID: none
-Domain Resolution Mode: none
-Runtime Container ID: none
-System State Hash: none
-<<<MAIOS_TELEMETRY_END>>>
-<<<MAIOS_CONTENT_START>>>
-${message.content}
-<<<MAIOS_CONTENT_END>>>`;
-
-  return {
-    role: "assistant",
-    content: telemetryStub,
-  };
-}
-
-    function serializeTelemetryBlock(t: Record<string, string>): string {
-  const lines = Object.entries(t).map(([k, v]) => `${k}: ${v}`);
-  return [
-    "<<<MAIOS_TELEMETRY_START>>>",
-    ...lines,
-    "<<<MAIOS_TELEMETRY_END>>>"
-  ].join("\n");
-}
-
 const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
-
-// rebuild messages so assistant telemetry is restored
-// (assistant messages may contain telemetry envelopes)
-const rebuiltMessages = body.messages.map(rebuildAssistantEnvelope);
-
-// find last assistant telemetry state
-let lastTelemetrySystemMessage: ChatMessage | null = null;
-
-for (let i = rebuiltMessages.length - 1; i >= 0; i--) {
-  const m = rebuiltMessages[i];
-  if (m.role === "assistant" && typeof m.content === "string") {
-    const start = m.content.indexOf("<<<MAIOS_TELEMETRY_START>>>");
-    const end = m.content.indexOf("<<<MAIOS_TELEMETRY_END>>>");
-    if (start !== -1 && end !== -1) {
-      const telemetryBlock = m.content.slice(start, end + "<<<MAIOS_TELEMETRY_END>>>".length);
-
-      lastTelemetrySystemMessage = {
-        role: "system",
-        content:
-          "LAST TELEMETRY STATE\n" +
-          "This is the previous MAIOS runtime state. Continue from it.\n\n" +
-          telemetryBlock,
-      };
-      break;
-    }
-  }
-}
 
 const messages: ChatMessage[] = systemPrompt
   ? [
       { role: "system", content: systemPrompt },
-      ...(lastTelemetrySystemMessage ? [lastTelemetrySystemMessage] : []),
       languageGuard,
-      ...rebuiltMessages,
+      ...body.messages,
     ]
   : [
-      ...(lastTelemetrySystemMessage ? [lastTelemetrySystemMessage] : []),
       languageGuard,
-      ...rebuiltMessages,
+      ...body.messages,
     ];
 
-    
-
-
-    const telemetrySystemPrompt = {
-  role: "system",
-  content: `
-You are running inside MAIOS.
-
-Every response MUST follow the exact output structure below.
-
-Fill the values for each telemetry field.
-
-Do NOT change the markers.
-Do NOT translate telemetry field names.
-Do NOT add extra lines inside the telemetry block.
-Do NOT place text outside the defined blocks.
-
-${buildTelemetrySkeleton()}
-`
-};
-
-console.log("TELEMETRY SKELETON");
-console.log(buildTelemetrySkeleton());
-console.log("TELEMETRY_SKELETON_END");
-
-
-const payload = {
+  const payload = {
   messages: [
-    telemetrySystemPrompt,
     ...messages
   ],
   temperature: 0.7,
@@ -769,17 +468,7 @@ const response = await withGate(() => {
       return NextResponse.json({ error: "No message content" }, { status: 502 });
     }
 
-  // === TELEMETRY STRUCTURING ===
-const telemetryValid = isValidTelemetryBlock(content);
 
-console.log("TELEMETRY_VALIDATION_RESULT", telemetryValid);
-
-if (!telemetryValid) {
-  console.warn("[telemetry] invalid or missing block - server fallback");
-  console.error("----- TELEMETRY FIRST ATTEMPT START -----");
-  console.error(content);
-  console.error("----- TELEMETRY FIRST ATTEMPT END -----");
-}
 
     let tokensUsed: number;
 
@@ -914,53 +603,6 @@ if (TRIKETON_ENABLED) {
   }
 }
 
-
-function buildServerTelemetryParsed(promptCounter: number): Record<string, string> {
-  return {
-    "System": "MAIOS",
-    "Version": "3.0",
-    "Telemetry Authority": "server",
-    "Session Prompt Counter": String(promptCounter),
-    "Telemetry Order": "server-authoritative",
-    "Telemetry Scope": "global",
-    "Telemetry Mutability": "immutable-per-prompt",
-    "Telemetry Failure Policy": "server-fallback",
-    "Telemetry Source Separation": "true",
-    "User Mode": "unknown",
-    "System Mode": "none",
-    "Effective Mode": "unknown",
-    "Expert Status": "none",
-    "Expert Type": "none",
-    "Expert ID": "none",
-    "Drift Origin": "model_missing",
-    "Drift State": "none",
-    "Drift Risk": "none",
-    "Agent Active": "false",
-    "Agent ID": "none",
-    "Agent Property": "none",
-    "Agent Modes": "none",
-    "Orchestration Mode": "none",
-    "Orchestrator ID": "none",
-    "Goal ID": "none",
-    "Task ID": "none",
-    "Execution Stage": "none",
-    "Complexity Level": "medium",
-    "Council Final Status": "not_required",
-    "Expert Rights Profile": "none",
-    "Expert Rights Scope": "none",
-    "Expert Rights Source": "system_core",
-    "Analysis Container State": "none",
-    "Council Decision ID": "none",
-    "Domain Resolution Mode": "none",
-    "Runtime Container ID": "none",
-    "System State Hash": "none"
-  };
-}
-
-// === TELEMETRY STRUCTURING (POST-SEAL, PRE-RESPONSE) ===
-let structuredTelemetry: any = null;
-let cleanedContent = content;
-
 // ---- SESSION COUNTER (minimal & robust) ----
 // Session counter already calculated at request start
 // reuse existing serverCounter + conversationId
@@ -970,172 +612,10 @@ content = content.replace(
   `Session Prompt Counter: ${serverCounter}`
 );
 
-const ledgerContent = content;
-console.log("FINAL CONTENT BEFORE TELEMETRY PARSE");
-console.log(content);
-
-console.log("[TRACE_CONTENT_STAGE_1]", {
-  length: content?.length,
-  preview: content?.slice(0,120)
-});
-const envelope = extractTelemetryEnvelope(content ?? "");
-console.log("[TRACE] envelope extracted", {
-  hasTelemetryBlock: !!envelope.telemetryBlock,
-  hasContentBlock: !!envelope.contentBlock,
-});
-
-const telemetrySource = content;
-const lines = telemetrySource.split("\n");
-const startIndex = lines.findIndex((l) =>
-  /^System\s*:/.test(l.trim())
-);
-console.log("[TRACE] telemetry start index", startIndex);
-
-if (startIndex !== -1) {
-  const telemetryLines = [];
-
-for (let i = startIndex; i < lines.length; i++) {
-  const line = lines[i].trim();
-
-  if (!line) break;
-  if (!line.includes(":")) break;
-
-  telemetryLines.push(line);
-}
-const serverDefaults = buildServerTelemetryParsed(serverCounter);
-const parsedTelemetry: Record<string, string> = {};
-
-telemetryLines.forEach((line) => {
-  const clean = line.trim();
-  const idx = clean.indexOf(":");
-  if (idx === -1) return;
-
-  const key = clean.slice(0, idx).trim();
-  const value = clean.slice(idx + 1).trim();
-
-  if (!key) return;
-
-  parsedTelemetry[key] = value;
-});
-
-const telemetryFieldCount = Object.keys(parsedTelemetry).length;
-
-let telemetryObj: Record<string, string>;
-
-if (telemetryFieldCount >= 37) {
-  telemetryObj = {
-    ...serverDefaults,
-    ...parsedTelemetry,
-  };
-} else {
-  console.warn("[telemetry] incomplete model telemetry -> server fallback", {
-    telemetryFieldCount,
-  });
-
-  telemetryObj = serverDefaults;
-}
-const userMode = telemetryObj["User Mode"] ?? "unknown";
-const systemMode = telemetryObj["System Mode"] ?? "none";
-
-const effectiveMode =
-  systemMode !== "none" && systemMode !== "unknown"
-    ? systemMode
-    : userMode;
-
-telemetryObj["Effective Mode"] = effectiveMode;
-
-structuredTelemetry = {
-  cockpit: {
-    system: telemetryObj["System"] || "MAIOS",
-    version: telemetryObj["Version"] || "3.0",
-    promptCounter: telemetryObj["Session Prompt Counter"] || String(serverCounter),
-    effectiveMode: telemetryObj["Effective Mode"] || "unknown",
-    complexityLevel: telemetryObj["Complexity Level"] || "medium",
-    driftState: telemetryObj["Drift State"] || "none",
-    driftRisk: telemetryObj["Drift Risk"] || "none",
-    driftOrigin: telemetryObj["Drift Origin"] || "none",
-  },
-  parsed: telemetryObj,
-};
-
-console.log("[TRACE] telemetry object built", {
-  fieldCount: Object.keys(telemetryObj).length,
-});
-
-  const telemetryEnd = startIndex + TELEMETRY_REQUIRED_FIELDS.length;
-
-  cleanedContent =
-  envelope.contentBlock ??
-  content;
-
-  console.log("[TRACE_CONTENT_STAGE_2_AFTER_TELEMETRY_STRIP]", {
-    length: cleanedContent?.length,
-    preview: cleanedContent?.slice(0,120)
-  });
-
-} else {
-  console.log("[TRACE] telemetry missing -> server fallback");
-
-  const telemetryObj = buildServerTelemetryParsed(serverCounter);
-
-  const userMode = telemetryObj["User Mode"] ?? "unknown";
-  const systemMode = telemetryObj["System Mode"] ?? "none";
-
-  const effectiveMode =
-    systemMode !== "none" && systemMode !== "unknown"
-      ? systemMode
-      : userMode;
-
-  telemetryObj["Effective Mode"] = effectiveMode;
-
-  structuredTelemetry = {
-    cockpit: {
-      system: telemetryObj["System"] ?? "",
-      version: telemetryObj["Version"] ?? "",
-      promptCounter: telemetryObj["Session Prompt Counter"] ?? "",
-      effectiveMode: telemetryObj["Effective Mode"] ?? "",
-      complexityLevel: telemetryObj["Complexity Level"] ?? "",
-      driftState: telemetryObj["Drift State"] ?? "",
-      driftRisk: telemetryObj["Drift Risk"] ?? "",
-      driftOrigin: telemetryObj["Drift Origin"] ?? "",
-    },
-    parsed: telemetryObj,
-  };
-
-  cleanedContent = content;
-
-  console.log("[TRACE_CONTENT_STAGE_2_AFTER_TELEMETRY_STRIP_ELSE]", {
-    length: cleanedContent?.length,
-    preview: cleanedContent?.slice(0,120)
-  });
-}
-
-console.log("[TRACE_CONTENT_STAGE_3_BEFORE_REPLACE]", {
-  length: cleanedContent?.length,
-  preview: cleanedContent?.slice(0,120)
-});
-
-cleanedContent = cleanedContent
-  .replace(/^Telemetry Block\s*/i, "")
-  .replace(/^Explanation:\s*/i, "")
-  .trimEnd() + "\n";
-
-console.log("[TRACE_CONTENT_STAGE_4_AFTER_REPLACE]", {
-  length: cleanedContent?.length,
-  preview: cleanedContent?.slice(0,120)
-});
-
- console.log("[TRACE] response payload", {
-  role: "assistant",
-  contentLength: cleanedContent?.length,
-  hasTelemetry: !!structuredTelemetry
-});
-
 const res = NextResponse.json(
   {
     role: "assistant",
-    content: cleanedContent,
-    telemetry: structuredTelemetry,
+    content,
     status,
     tokens_used: TOKENS_USED,
     balance_after: balanceAfter,
@@ -1168,10 +648,6 @@ if (cookie) {
 }
 
 return res;
-
-
-
-
 
   } catch (err: any) {
     console.error("[API Error]", err);
