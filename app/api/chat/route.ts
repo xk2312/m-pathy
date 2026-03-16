@@ -39,7 +39,7 @@ const apiVersion = process.env.AZURE_OPENAI_API_VERSION ?? "";
 
 // **Limits steuerbar per ENV**
 const MODEL_MAX_TOKENS = parseInt(process.env.MODEL_MAX_TOKENS ?? "512", 10);
-const GPTX_MAX_CHARS   = parseInt(process.env.GPTX_MAX_CHARS   ?? "32000", 10);
+const GPTX_MAX_CHARS = parseInt(process.env.GPTX_MAX_CHARS ?? "32000", 10);
 const MAX_PAYLOAD_BYTES = parseInt(process.env.MAX_PAYLOAD_BYTES ?? "120000", 10);
 
 console.log("ENV DEBUG");
@@ -412,7 +412,7 @@ const messages: ChatMessage[] = systemPrompt
     "{",
     '  "irss": {',
     '    "system": "MGPS",',
-    '    "version": "1.1.1",',
+    '    "version": "1.0",',
     '    "session_prompt_counter": "<fill>",',
     '    "mode": "<fill>",',
     '    "mode_source": "<fill>",',
