@@ -411,7 +411,7 @@ END OF INDEX
   box-sizing: border-box;
   align-self: stretch;
 
-  padding: 18px 30px 30px 34px;
+  padding: 18px 30px 30px 40px;
 
   /* 🧩 Fix: Innenradius leicht reduziert, kein Text-Clipping */
   border-radius: clamp(12px, 1.2vw, 22px);
