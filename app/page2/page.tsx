@@ -1635,6 +1635,7 @@ useEffect(() => {
 const [loading, setLoading] = useState(false);
 
 const [stickToBottom, setStickToBottom] = useState(true);
+const pendingAutoScrollRef = useRef(false);
 
 const [balance, setBalance] = useState<number | null>(null);
 
@@ -2011,28 +2012,8 @@ const systemSay = useCallback((content: string, opts?: { gc?: boolean }) => {
     return next;
   });
 
-  // ▼ immer ans Ende scrollen – Desktop sofort, Mobile mit kurzem Settle
-  const scrollToBottom = () => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        if (isMobile && endRef.current) {
-          // iOS/Mobile: stabil gegen Keyboard/visualViewport-Jank
-          endRef.current.scrollIntoView({ block: "end" });
-        } else {
-          const el = convoRef.current as HTMLDivElement | null;
-          if (el) el.scrollTop = el.scrollHeight;
-        }
-        setStickToBottom(true);
-      });
-    });
-  };
-
-  // Mobile kurz „settlen“ lassen, Desktop sofort
-  if (isMobile) {
-    setTimeout(scrollToBottom, 90); // 60–120ms sweet spot
-  } else {
-    scrollToBottom();
-  }
+  pendingAutoScrollRef.current = true;
+  setStickToBottom(true);
 
   // ▼ Antwort ist da → Puls beenden (deine bestehende Logik)
   setLoading(false);
@@ -2080,13 +2061,8 @@ if (busy) {
 
 
       if (wasAtEnd) {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            const el = convoRef.current as HTMLDivElement | null;
-            if (el) el.scrollTop = el.scrollHeight;
-            setStickToBottom(true);
-          });
-        });
+        pendingAutoScrollRef.current = true;
+        setStickToBottom(true);
       }
       return;
     }
@@ -2134,13 +2110,10 @@ if (busy) {
       try { setLoading(false); } catch {}
     }
 
-    requestAnimationFrame(() => {
-  requestAnimationFrame(() => {
-    const el = convoRef.current as HTMLDivElement | null;
-    if (el) el.scrollTop = el.scrollHeight;
-    setStickToBottom(true);
-  });
-});
+    if (wasAtEnd) {
+      pendingAutoScrollRef.current = true;
+      setStickToBottom(true);
+    }
 
   };
 
@@ -2150,13 +2123,24 @@ if (busy) {
 
 
   // ===============================================================
-  // Autosrollen ans Ende, wenn am Bottom
+  // Einmaliges Autosrollen ans Ende pro neuer Assistant-Message
   // ===============================================================
   useEffect(() => {
     const el = convoRef.current as HTMLDivElement | null;
-    if (!el || !stickToBottom) return;
-    requestAnimationFrame(() => { el.scrollTop = el.scrollHeight; });
-  }, [messages, dockH, stickToBottom]);
+    if (!el || !stickToBottom || !pendingAutoScrollRef.current) return;
+
+    pendingAutoScrollRef.current = false;
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (isMobile && endRef.current) {
+          endRef.current.scrollIntoView({ block: "end" });
+        } else {
+          el.scrollTop = el.scrollHeight;
+        }
+      });
+    });
+  }, [messages, dockH, stickToBottom, isMobile]);
 
   // ===============================================================
   // Scroll-Listener zur Bottom-Erkennung
@@ -2610,6 +2594,8 @@ sendMessageLocal(injectedContext)
       id: crypto.randomUUID(),
       content: "",
     };
+      pendingAutoScrollRef.current = true;
+      setStickToBottom(true);
       return [...base, assistantMsg];
     });
 
@@ -2682,6 +2668,9 @@ const assistantMsg = {
   id: crypto.randomUUID(),
   content: "",
 };
+
+  pendingAutoScrollRef.current = true;
+  setStickToBottom(true);
 
   const next = truncateMessages([
     ...base,
