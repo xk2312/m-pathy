@@ -851,7 +851,7 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
               opacity: 0.8,
             }}
           >
-            Telemetry
+            IRSS (Inverted Runtime System Scan)
           </summary>
 
           <div
