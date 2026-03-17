@@ -389,8 +389,8 @@ END OF INDEX
     margin-left: 6px;     /* Send-Orb näher an den Text */
   }
 
-    .prompt-input {
-    padding: 16px 20px 26px 24px;
+   .prompt-input {
+    padding: 16px 20px 26px 28px;
   }
 }
 
