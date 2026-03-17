@@ -389,8 +389,8 @@ END OF INDEX
     margin-left: 6px;     /* Send-Orb näher an den Text */
   }
 
-   .prompt-input {
-    padding: 16px 20px 26px 28px;
+    .prompt-input {
+    padding: 16px 20px 30px 34px;
   }
 }
 
@@ -411,7 +411,7 @@ END OF INDEX
   box-sizing: border-box;
   align-self: stretch;
 
-  padding: 18px 30px 30px 40px;
+  padding: 18px 30px 34px 46px;
 
   /* 🧩 Fix: Innenradius leicht reduziert, kein Text-Clipping */
   border-radius: clamp(12px, 1.2vw, 22px);
