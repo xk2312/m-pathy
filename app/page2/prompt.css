@@ -303,7 +303,7 @@ END OF INDEX
 .prompt-shell {
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 8px;
 
   width: 100%;
@@ -311,6 +311,7 @@ END OF INDEX
   margin-inline: auto;
 
   padding: 21.8px 21.8px; /* Hier wird die Pillengröße im Chat eingestellt */
+  overflow: hidden;
 
 
   border-radius: var(--prompt-radius, 999px);
@@ -389,7 +390,7 @@ END OF INDEX
   }
 
   .prompt-input {
-    padding-inline: 10px; /* etwas schmaler, mehr Netto-Breite */
+    padding: 14px 12px 18px;
   }
 }
 
@@ -406,8 +407,11 @@ END OF INDEX
   min-height: 52px;
   max-height: 40vh;
   resize: none;
+  overflow-y: auto;
+  box-sizing: border-box;
+  align-self: stretch;
 
-  padding: 14px 18px;
+  padding: 14px 18px 20px;
 
   /* 🧩 Fix: Innenradius leicht reduziert, kein Text-Clipping */
   border-radius: clamp(12px, 1.2vw, 22px);
@@ -417,6 +421,7 @@ END OF INDEX
 
   color: var(--prompt-text, #e6f0f3);
   font: inherit;
+  line-height: 1.5;
 
   outline: none;
 }
