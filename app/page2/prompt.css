@@ -389,9 +389,10 @@ END OF INDEX
     margin-left: 6px;     /* Send-Orb näher an den Text */
   }
 
-  .prompt-input {
+    .prompt-input {
     padding: 16px 20px 26px 24px;
   }
+}
 
 
 /* =============================================================
@@ -665,4 +666,3 @@ END OF INDEX
   }
 }
 
-}
