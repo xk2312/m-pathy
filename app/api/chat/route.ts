@@ -610,8 +610,23 @@ const response = await withGate(() => {
         console.log(content);
         console.log("MODEL CONTENT END");
     if (!content) {
-      return NextResponse.json({ error: "No message content" }, { status: 502 });
-    }
+  return NextResponse.json({ error: "No message content" }, { status: 502 });
+}
+
+// === M13 EXECUTION SWITCH ===
+try {
+  const parsed = JSON.parse(content);
+
+  if (parsed && typeof parsed.action === "string") {
+    console.log("[M13] EXECUTION MODE TRIGGERED");
+
+    return handleExecution(req, {
+      messages: [{ role: "assistant", content }]
+    });
+  }
+} catch {
+  // not JSON → continue normal flow
+}
 
 
 
