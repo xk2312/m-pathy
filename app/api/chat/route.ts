@@ -642,11 +642,11 @@ const response = await withGate(() => {
 try {
   const parsed = JSON.parse(content);
 
-  if (parsed && typeof parsed.action === "string") {
-    console.log("[M13] EXECUTION MODE TRIGGERED");
+  if (parsed && parsed.handoff && typeof parsed.handoff.command === "string") {
+    console.log("[M13] EXECUTION MODE TRIGGERED (HANDOFF)");
 
     return handleExecution(req, {
-      messages: [{ role: "assistant", content }]
+      messages: [{ role: "assistant", content: JSON.stringify(parsed.handoff) }]
     });
   }
 } catch {
