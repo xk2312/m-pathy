@@ -164,8 +164,86 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  try {
-    const body = (await req.json()) as ChatBody;
+ try {
+  const body = (await req.json()) as ChatBody;
+
+  async function handleExecution(req: NextRequest, body: any) {
+    try {
+      const last = body.messages?.[body.messages.length - 1];
+      const parsed = JSON.parse(last.content);
+
+      console.log("[M13] ACTION:", parsed.action, "TARGET:", parsed.target);
+      if (parsed.action === "load_registry") {
+      console.log("[M13] LOAD REGISTRY");
+        return NextResponse.json({
+          status: "ok",
+          data: {
+            entries: [
+              {
+                id: "linkedin_post_screener",
+                type: "extension",
+                name: "LinkedIn Post Screener"
+              }
+            ]
+          },
+          extension_loaded: null
+        });
+      }
+
+if (parsed.action === "load_extension") {
+  console.log("[M13] LOAD EXTENSION:", parsed.target);        
+  if (parsed.target !== "linkedin_post_screener") {
+          return NextResponse.json({
+            status: "unknown_target",
+            data: null,
+            extension_loaded: null
+          }, { status: 400 });
+        }
+
+        return NextResponse.json({
+          status: "ok",
+          data: {
+            id: "linkedin_post_screener",
+            capabilities: [
+              "summarize",
+              "extract_claims",
+              "detect_blindspots",
+              "generate_comment"
+            ]
+          },
+          extension_loaded: "linkedin_post_screener"
+        });
+      }
+
+      return NextResponse.json({
+        status: "invalid_handoff",
+        data: null,
+        extension_loaded: null
+      }, { status: 400 });
+
+    } catch {
+      console.log("[M13] INVALID HANDOFF");
+
+return NextResponse.json({
+  status: "invalid_handoff",
+        data: null,
+        extension_loaded: null
+      }, { status: 400 });
+    }
+  }
+
+  function isHandoffRequest(messages: ChatMessage[]): boolean {
+    if (!messages || messages.length === 0) return false;
+      const last = messages[messages.length - 1];
+      if (!last || last.role !== "assistant") return false;
+
+      try {
+        const parsed = JSON.parse(last.content);
+        return typeof parsed.action === "string" && typeof parsed.target === "string";
+      } catch {
+        return false;
+      }
+    }
 
     const incomingConversationId =
   typeof (body as any)?.conversationId === "string" &&
@@ -177,11 +255,17 @@ if (incomingConversationId && incomingConversationId !== conversationId) {
   conversationId = incomingConversationId;
 }
 
-   if (!Array.isArray(body.messages)) {
+if (!Array.isArray(body.messages)) {
   return NextResponse.json(
     { error: "`messages` must be an array of { role, content }" },
     { status: 400 }
   );
+}
+
+if (isHandoffRequest(body.messages)) {
+  console.log("[M13] HANDOFF DETECTED");
+
+  return handleExecution(req, body);
 }
 
 const userPromptCount = body.messages.filter(
@@ -394,6 +478,10 @@ const messages: ChatMessage[] = systemPrompt
       languageGuard,
       ...body.messages,
     ];
+
+if (isHandoffRequest(body.messages)) {
+  return handleExecution(req, body);
+}
 
  const irssRuntimePrompt = {
   role: "system",

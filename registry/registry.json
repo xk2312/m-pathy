@@ -1,0 +1,15 @@
+{
+  "registry": {
+    "version": "0.1",
+    "entries": [
+      {
+        "id": "linkedin_post_screener",
+        "type": "extension",
+        "name": "LinkedIn Post Screener",
+        "path": "extensions/linkedin_post_screener.json",
+        "registry_class": "extension",
+        "description": "Analyzes user provided LinkedIn posts and generates structured feedback"
+      }
+    ]
+  }
+}
