@@ -192,36 +192,46 @@ if (executionIntentDetected && !alreadyLoaded) {
   console.log("[M13] PRE-EXECUTION TRIGGERED");
   console.log("[M13] EXTENSION NOT LOADED → LOAD");
 
- const executionResult = await handleExecution(req, {
-  messages: [
-    {
-      role: "system",
-      content: JSON.stringify({
-        action: "load_extension",
-        target: "linkedin_post_screener"
-      })
-    }
-  ]
-});
+  const executionResult = await handleExecution(req, {
+    messages: [
+      {
+        role: "system",
+        content: JSON.stringify({
+          action: "load_extension",
+          target: "linkedin_post_screener"
+        })
+      }
+    ]
+  });
 
-// 👉 EXTENSION STATE MERGEN
-const updatedState = {
-  ...(incomingState || {}),
-  extensions: [
-    ...(incomingState?.extensions || []),
-    "linkedin_post_screener"
-  ]
-};
+  const executionJson = await executionResult.json();
 
-// 👉 ORIGINAL FLOW WEITER
-const executionJson = await executionResult.json();
+  const updatedState = {
+    ...(incomingState || {}),
+    extensions: [
+      ...(incomingState?.extensions || []),
+      "linkedin_post_screener"
+    ]
+  };
 
-body.messages.push({
-  role: "system",
-  content: JSON.stringify(executionJson)
-});
+  body.messages.push({
+    role: "user",
+    content:
+      "SYSTEM EXTENSION CONTEXT\n\n" +
+      "A specialized LinkedIn extension is now loaded.\n\n" +
+      "Extension ID:\n" +
+      (executionJson.extension_loaded || "linkedin_post_screener") +
+      "\n\n" +
+      "Extension Content:\n" +
+      JSON.stringify(executionJson.data) +
+      "\n\n" +
+      "Original User Request:\n" +
+      lastUserMessage +
+      "\n\n" +
+      "Explain your LinkedIn capabilities, then ask the user what exactly is needed."
+  });
 
-body.state = updatedState;
+  body.state = updatedState;
 }
 
 if (executionIntentDetected && alreadyLoaded) {
@@ -716,31 +726,50 @@ console.log("[M13] HANDOFF CHECK", {
 });
 
 if (isValidHandoff) {
-  console.log("[M13] VALID HANDOFF DETECTED → EXECUTION");
+  const target = parsed?.handoff?.target;
 
- const executionResult = await handleExecution(req, {
-  messages: [
-    {
-      role: "assistant",
-      content: JSON.stringify({
-        action: "load_extension",
-        target: "linkedin_post_screener"
-      })
-    }
-  ]
-});
+  const alreadyLoaded =
+    body.state?.extensions &&
+    Array.isArray(body.state.extensions) &&
+    body.state.extensions.includes(target);
 
-const parsed = await executionResult.json();
+  if (alreadyLoaded) {
+    console.log("[M13] HANDOFF BLOCKED → ALREADY LOADED", target);
+  } else {
+    console.log("[M13] VALID HANDOFF DETECTED → EXECUTION");
 
-body.messages.push({
-  role: "user",
-  content:
-    "SYSTEM EXTENSION LOADED\n\n" +
-    "Extension: " +
-    (parsed.extension_loaded || "unknown") +
-    "\n\n" +
-    JSON.stringify(parsed.data)
-});
+    const executionResult = await handleExecution(req, {
+      messages: [
+        {
+          role: "assistant",
+          content: JSON.stringify({
+            action: "load_extension",
+            target: target
+          })
+        }
+      ]
+    });
+
+    const parsedExec = await executionResult.json();
+
+    body.messages.push({
+      role: "user",
+      content:
+        "SYSTEM EXTENSION LOADED\n\n" +
+        "Extension: " +
+        (parsedExec.extension_loaded || "unknown") +
+        "\n\n" +
+        JSON.stringify(parsedExec.data)
+    });
+
+    body.state = {
+      ...(body.state || {}),
+      extensions: [
+        ...(body.state?.extensions || []),
+        target
+      ]
+    };
+  }
 }
 
 // === IRSS ENFORCEMENT ===
