@@ -2160,13 +2160,19 @@ if (busy) {
   // ===============================================================
   // Lokale Chat-Sendefunktion (ruft echte API)
   // ===============================================================
- async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
+const [systemState, setSystemState] = useState<any>(null);
+
+async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
     const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "same-origin",
-      body: JSON.stringify({ messages: context, locale: getLocale() }),
-    });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  credentials: "same-origin",
+  body: JSON.stringify({
+  messages: context,
+  locale: getLocale(),
+  state: systemState
+}),
+});
 
     // === GC Step 5 – FreeGate/Balance Gates → Login oder Stripe Checkout ===
     if (res.status === 401) {
@@ -2362,10 +2368,14 @@ if (busy) {
     return assistantMsg;
   }
 
- // 🔹 Kein Stream → Standardverhalten unverändert
-const data = await res.json();
+ const data = await res.json();
 
 console.log("[M13][FRONTEND] RAW RESPONSE", data);
+
+if (data?.state) {
+  console.log("[M13][FRONTEND] STATE RECEIVED", data.state);
+  setSystemState(data.state);
+}
 console.log("[M13][FRONTEND] TYPE", typeof data);
 console.log("[M13][FRONTEND] KEYS", data ? Object.keys(data) : null);
 
@@ -2398,7 +2408,6 @@ if (data?.status === "success" && data?.data) {
     format: "markdown",
   } as ChatMessage;
 }
-
 
 // FreeGate-Limit: Login erforderlich
 const loginText =

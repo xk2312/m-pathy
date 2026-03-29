@@ -62,6 +62,7 @@ interface ChatBody {
   temperature?: number;
   protocol?: string;
   locale?: string;
+  state?: any;
 }
 
 // === ENV-Check ===
@@ -172,6 +173,7 @@ try {
 
 // === PRE-EXECUTION GATE ===
 const lastUserMessage = body.messages?.[body.messages.length - 1]?.content ?? "";
+const incomingState = body.state || {};
 
 const executionIntentDetected =
   typeof lastUserMessage === "string" &&
@@ -181,8 +183,14 @@ const executionIntentDetected =
     lastUserMessage.toLowerCase().includes("campaign")
   );
 
-if (executionIntentDetected) {
+const alreadyLoaded =
+  incomingState?.extensions &&
+  Array.isArray(incomingState.extensions) &&
+  incomingState.extensions.includes("linkedin_post_screener");
+
+if (executionIntentDetected && !alreadyLoaded) {
   console.log("[M13] PRE-EXECUTION TRIGGERED");
+  console.log("[M13] EXTENSION NOT LOADED → LOAD");
 
   return handleExecution(req, {
     messages: [
@@ -195,6 +203,10 @@ if (executionIntentDetected) {
       }
     ]
   });
+}
+
+if (executionIntentDetected && alreadyLoaded) {
+  console.log("[M13] EXTENSION ALREADY LOADED → SKIP");
 }
 
 async function handleExecution(req: NextRequest, body: any) {
@@ -239,10 +251,17 @@ const extensionData = JSON.parse(fileContent);
 console.log("[M13] EXTENSION LOADED SUCCESS:", entry.id);
 console.log("[M13] EXTENSION DATA KEYS:", Object.keys(extensionData || {}));
 
+const extensionsLoaded = [entry.id];
+
+console.log("[M13] STATE EXTENSIONS_LOADED:", extensionsLoaded);
+
 return NextResponse.json({
   status: "success",
   data: extensionData,
   extension_loaded: entry.id,
+  state: {
+    extensions_loaded: extensionsLoaded
+  },
   message: "Extension " + entry.id + " loaded successfully"
 });
       }
