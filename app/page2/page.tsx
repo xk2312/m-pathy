@@ -2365,22 +2365,38 @@ if (busy) {
   // 🔹 Kein Stream → Standardverhalten unverändert
 const data = await res.json();
 
+console.log("[M13][FRONTEND] RAW RESPONSE", data);
+
 if (data?.status === "send_failed") {
   throw new Error("send_failed");
 }
 
 
-// FreeGate-Limit: Login erforderlich
-  const loginText =
-    t("gc_please_login_to_continue") || "Please log in to continue.";
+// 🔴 EXECUTION MODE HANDLING
+if (data?.status === "success" && data?.data) {
+  console.log("[M13][FRONTEND] EXECUTION MODE DETECTED");
+  console.log("[M13][FRONTEND] EXTENSION", data.extension_loaded);
+  console.log("[M13][FRONTEND] PAYLOAD", data.data);
 
-  if (data && data.status === "free_limit_reached") {
-    return {
-      role: "assistant",
-      content: loginText,
-      format: "markdown",
-    } as ChatMessage;
-  }
+ return {
+  role: "assistant",
+  content: "```json\n" + JSON.stringify(data.data, null, 2) + "\n```",
+  format: "markdown"
+} as ChatMessage;
+}
+
+
+// FreeGate-Limit: Login erforderlich
+const loginText =
+  t("gc_please_login_to_continue") || "Please log in to continue.";
+
+if (data && data.status === "free_limit_reached") {
+  return {
+    role: "assistant",
+    content: loginText,
+    format: "markdown",
+  } as ChatMessage;
+}
 
   const assistant = data.assistant ?? data;
   const content = assistant.content ?? "";
