@@ -236,10 +236,14 @@ console.log("[M13] FILE PATH:", filePath);
 const fileContent = fs.readFileSync(filePath, "utf-8");
 const extensionData = JSON.parse(fileContent);
 
+console.log("[M13] EXTENSION LOADED SUCCESS:", entry.id);
+console.log("[M13] EXTENSION DATA KEYS:", Object.keys(extensionData || {}));
+
 return NextResponse.json({
-  status: "ok",
+  status: "success",
   data: extensionData,
-  extension_loaded: entry.id
+  extension_loaded: entry.id,
+  message: "Extension " + entry.id + " loaded successfully"
 });
       }
 

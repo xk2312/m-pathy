@@ -2362,10 +2362,12 @@ if (busy) {
     return assistantMsg;
   }
 
-  // 🔹 Kein Stream → Standardverhalten unverändert
+ // 🔹 Kein Stream → Standardverhalten unverändert
 const data = await res.json();
 
 console.log("[M13][FRONTEND] RAW RESPONSE", data);
+console.log("[M13][FRONTEND] TYPE", typeof data);
+console.log("[M13][FRONTEND] KEYS", data ? Object.keys(data) : null);
 
 if (data?.status === "send_failed") {
   throw new Error("send_failed");
@@ -2378,11 +2380,23 @@ if (data?.status === "success" && data?.data) {
   console.log("[M13][FRONTEND] EXTENSION", data.extension_loaded);
   console.log("[M13][FRONTEND] PAYLOAD", data.data);
 
- return {
-  role: "assistant",
-  content: "```json\n" + JSON.stringify(data.data, null, 2) + "\n```",
-  format: "markdown"
-} as ChatMessage;
+  const safePayload =
+    typeof data.data === "string"
+      ? data.data
+      : JSON.stringify(data.data, null, 2);
+
+  console.log("[M13][FRONTEND] SAFE PAYLOAD", safePayload);
+
+  return {
+    role: "assistant",
+    content:
+      "EXTENSION OUTPUT\n\n" +
+      "extension: " +
+      (data.extension_loaded || "unknown") +
+      "\n\n" +
+      safePayload,
+    format: "markdown",
+  } as ChatMessage;
 }
 
 
