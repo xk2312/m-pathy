@@ -1,27 +1,27 @@
 {
   "id": "linkedin_post_screener",
   "name": "LinkedIn PostScreener",
-  "title": "Resonance Space and Consequence Mapping Extension",
-  "version": "2.0",
+  "version": "3.1",
   "status": "active",
   "extension_class": "cognitive_program",
   "execution_mode": "backend_triggered_llm_internal",
   "governing_system": {
     "system": "M13",
     "version": "0.2",
-    "law": [
-      "human_preservation",
-      "fidelity",
-      "evidence_bound_truth",
-      "non_harmful_coexistence"
-    ],
     "core_logic": [
       "raum_vor_form",
       "form_vor_bewegung",
       "keine_bewegung_ohne_vollstaendige_form"
+    ],
+    "hard_rules": [
+      "no_skip",
+      "no_echo",
+      "no_random",
+      "no_unassigned_processing",
+      "execute_only_when_form_complete"
     ]
   },
-  "mission": "Der LinkedIn PostScreener führt den User deterministisch durch einen klaren LinkedIn Arbeitsraum, klärt zuerst Ziel, Zielperson und Gegenüberzustand, definiert dann die notwendige Form und löst erst danach die passende Bewegung aus. Ziel ist nicht nur Output, sondern präzise soziale Wirksamkeit ohne Lärm, Druck oder Ego.",
+  "purpose": "Der LinkedIn PostScreener führt den User deterministisch durch einen LinkedIn Arbeitsraum, klärt zuerst Absicht, Zielperson und Gegenüberzustand, baut danach die passende Form auf und führt erst dann die passende Bewegung aus. Ziel ist präzise soziale Wirksamkeit ohne Lärm, Druck, Werbung oder inhaltsleere Wiederholung.",
   "style_profile": {
     "tone": [
       "ruhig",
@@ -38,7 +38,8 @@
       "druck",
       "cta_zwang",
       "alarmismus",
-      "unnuetze_ausschmueckung"
+      "copy_input",
+      "generische_standardphrasen"
     ],
     "principles": [
       "oeffnet_denkraum",
@@ -47,79 +48,87 @@
       "reduktion_ist_brilanz"
     ]
   },
-  "engine_contract": {
-    "determinism": "strict",
-    "llm_must_follow_extension": true,
-    "free_generation_before_form": false,
-    "skip_steps_allowed": false,
-    "state_required": true,
-    "completion_loop_required": true,
-    "point_zero_supported": true
-  },
   "state_schema": {
     "active": false,
     "step": "entry",
     "intent": null,
-    "target_person_class": null,
-    "target_person_detail": null,
+    "persona_class": null,
+    "persona_detail": null,
     "target_state": null,
     "operation": null,
     "form_ready": false,
     "movement_ready": false,
-    "input_payload": {},
     "result_available": false,
     "completed": false,
-    "continue_decision": null
+    "continue_decision": null,
+    "input_payload": {
+      "goal": null,
+      "context": null,
+      "desired_effect": null,
+      "forbidden_signal": null,
+      "profile_content": null,
+      "post_text": null,
+      "comments": null,
+      "comment_text": null,
+      "reply_preference": null,
+      "pm_thread": null,
+      "metrics": null,
+      "source_text": null,
+      "target_anchor": null
+    }
   },
   "entry_space": {
-    "type": "guided_selection",
+    "type": "single_choice",
     "prompt": "Was willst du gerade auf LinkedIn bewegen?",
-    "selection_mode": "single_choice",
     "options": [
       {
         "id": "profile_upgrade",
         "label": "Mein Profil schärfen",
-        "effect": "profile_space"
+        "operation": "profile_review"
       },
       {
         "id": "write_post",
         "label": "Einen starken Post schreiben",
-        "effect": "post_writing_space"
+        "operation": "post_creation"
       },
       {
         "id": "screen_post_discussion",
         "label": "Einen Post screenen und die wichtigsten Kommentare strategisch beantworten",
-        "effect": "discussion_screening_space"
+        "operation": "discussion_screening"
       },
       {
         "id": "answer_single_comment",
         "label": "Einen konkreten Kommentar beantworten",
-        "effect": "single_comment_space"
+        "operation": "single_comment_reply"
       },
       {
         "id": "reply_pm",
         "label": "Auf eine PM antworten",
-        "effect": "pm_reply_space"
+        "operation": "pm_reply"
       },
       {
         "id": "understand_performance",
         "label": "Verstehen, warum ein Post funktioniert oder nicht funktioniert",
-        "effect": "performance_analysis_space"
+        "operation": "performance_analysis"
       },
       {
         "id": "reach_key_people",
         "label": "Gezielt bei wichtigen Personen andocken",
-        "effect": "targeted_engagement_space"
+        "operation": "targeted_engagement"
       }
     ],
-    "state_update": {
-      "active": true,
-      "step": "define_person"
+    "on_select": {
+      "set": {
+        "active": true,
+        "intent": "$option.id",
+        "operation": "$option.operation",
+        "step": "define_person"
+      }
     }
   },
   "person_space": {
+    "type": "single_choice_plus_optional_detail",
     "prompt": "Mit wem willst du wirklich sprechen?",
-    "selection_mode": "single_choice_or_short_detail",
     "options": [
       {
         "id": "decision_makers",
@@ -138,14 +147,19 @@
         "label": "Beobachter"
       }
     ],
-    "detail_prompt": "Wenn du es konkreter sagen kannst, nenne die wichtigste Person oder Rolle, zum Beispiel CTO, Projektmanager, Founder, CMO, VP Product.",
-    "state_update": {
-      "step": "define_moment"
+    "detail_prompt": "Wenn du es konkreter sagen kannst, nenne die wichtigste Person oder Rolle, zum Beispiel CTO, Projektmanager, Founder, CMO oder VP Product.",
+    "required": [
+      "persona_class"
+    ],
+    "on_complete": {
+      "set": {
+        "step": "define_target_state"
+      }
     }
   },
-  "moment_space": {
+  "target_state_space": {
+    "type": "single_choice",
     "prompt": "In welchem Zustand ist dein Gegenüber gerade?",
-    "selection_mode": "single_choice",
     "options": [
       {
         "id": "actively_searching",
@@ -172,43 +186,55 @@
         "label": "Beziehungsorientiert"
       }
     ],
-    "state_update": {
-      "step": "define_form"
+    "required": [
+      "target_state"
+    ],
+    "on_complete": {
+      "set": {
+        "step": "define_form"
+      }
     }
   },
-  "intent_to_operation_map": {
-    "profile_upgrade": "profile_review",
-    "write_post": "post_creation",
-    "screen_post_discussion": "discussion_screening",
-    "answer_single_comment": "single_comment_reply",
-    "reply_pm": "pm_reply",
-    "understand_performance": "performance_analysis",
-    "reach_key_people": "targeted_engagement"
-  },
   "form_space": {
-    "rule": "Die Form wird immer erst nach Raumdefinition aufgebaut.",
+    "rule": "Die Form wird immer erst nach vollständiger Raumdefinition aufgebaut.",
     "branches": {
       "profile_review": {
-        "form_prompt": "Bitte markiere den relevanten Profilbereich oder füge die entscheidenden Abschnitte ein, zum Beispiel Headline, About, Experience und Featured. Wenn du willst, nenne zusätzlich dein eigentliches Ziel auf LinkedIn.",
+        "type": "single_prompt_form",
+        "prompt": "Bitte markiere die relevanten Profilbereiche oder füge die entscheidenden Abschnitte ein, zum Beispiel Headline, About, Experience und Featured. Wenn du willst, nenne zusätzlich dein eigentliches Ziel auf LinkedIn.",
         "required_inputs": [
           "profile_content"
         ],
         "optional_inputs": [
-          "goal",
-          "target_industry"
+          "goal"
         ],
-        "state_update": {
-          "form_ready": true,
-          "movement_ready": true,
-          "step": "execute"
+        "completion_rule": "form_ready_if_required_present",
+        "on_complete": {
+          "set": {
+            "form_ready": true,
+            "movement_ready": true,
+            "step": "execute"
+          }
         }
       },
       "post_creation": {
-        "form_prompt_sequence": [
-          "Was ist das eigentliche Ziel dieses Posts?",
-          "Was soll die Zielperson nach dem Lesen denken oder spüren?",
-          "Welcher reale Kontext oder Anlass liegt zugrunde?",
-          "Was darf der Post auf keinen Fall ausstrahlen?"
+        "type": "guided_sequence",
+        "sequence": [
+          {
+            "id": "goal",
+            "prompt": "Was ist das eigentliche Ziel dieses Posts?"
+          },
+          {
+            "id": "desired_effect",
+            "prompt": "Was soll die Zielperson nach dem Lesen denken oder spüren?"
+          },
+          {
+            "id": "context",
+            "prompt": "Welcher reale Kontext oder Anlass liegt zugrunde?"
+          },
+          {
+            "id": "forbidden_signal",
+            "prompt": "Was darf der Post auf keinen Fall ausstrahlen?"
+          }
         ],
         "required_inputs": [
           "goal",
@@ -216,14 +242,18 @@
           "context",
           "forbidden_signal"
         ],
-        "state_update": {
-          "form_ready": true,
-          "movement_ready": true,
-          "step": "execute"
+        "completion_rule": "form_ready_if_all_required_present",
+        "on_complete": {
+          "set": {
+            "form_ready": true,
+            "movement_ready": true,
+            "step": "execute"
+          }
         }
       },
       "discussion_screening": {
-        "form_prompt": "Bitte markiere den vollständigen Post und die ersten 20 relevanten Kommentare. Wenn weniger als 20 vorhanden sind, reichen alle vorhandenen Kommentare.",
+        "type": "single_prompt_form",
+        "prompt": "Bitte markiere den vollständigen Post und die ersten 20 relevanten Kommentare. Wenn Likes oder Antworten sichtbar sind, füge sie mit ein. Wenn weniger als 20 Kommentare vorhanden sind, reichen alle vorhandenen Kommentare.",
         "required_inputs": [
           "post_text",
           "comments"
@@ -231,14 +261,18 @@
         "constraints": {
           "max_comments": 20
         },
-        "state_update": {
-          "form_ready": true,
-          "movement_ready": true,
-          "step": "execute"
+        "completion_rule": "form_ready_if_required_present",
+        "on_complete": {
+          "set": {
+            "form_ready": true,
+            "movement_ready": true,
+            "step": "execute"
+          }
         }
       },
       "single_comment_reply": {
-        "form_prompt": "Bitte füge den ursprünglichen Post, den relevanten Kommentar und deinen gewünschten Antwortstil ein, falls du schon eine Tendenz hast.",
+        "type": "single_prompt_form",
+        "prompt": "Bitte füge den ursprünglichen Post, den relevanten Kommentar und optional deinen gewünschten Antwortstil ein.",
         "required_inputs": [
           "post_text",
           "comment_text"
@@ -246,28 +280,36 @@
         "optional_inputs": [
           "reply_preference"
         ],
-        "state_update": {
-          "form_ready": true,
-          "movement_ready": true,
-          "step": "execute"
+        "completion_rule": "form_ready_if_required_present",
+        "on_complete": {
+          "set": {
+            "form_ready": true,
+            "movement_ready": true,
+            "step": "execute"
+          }
         }
       },
       "pm_reply": {
-        "form_prompt": "Bitte markiere die aktuelle PM und maximal 10 Nachrichten davor, damit der Gesprächsraum sauber rekonstruiert werden kann.",
+        "type": "single_prompt_form",
+        "prompt": "Bitte markiere die aktuelle PM und maximal 10 Nachrichten davor, damit der Gesprächsraum sauber rekonstruiert werden kann.",
         "required_inputs": [
           "pm_thread"
         ],
         "constraints": {
           "max_prior_messages": 10
         },
-        "state_update": {
-          "form_ready": true,
-          "movement_ready": true,
-          "step": "execute"
+        "completion_rule": "form_ready_if_required_present",
+        "on_complete": {
+          "set": {
+            "form_ready": true,
+            "movement_ready": true,
+            "step": "execute"
+          }
         }
       },
       "performance_analysis": {
-        "form_prompt": "Bitte füge den Post ein und, falls vorhanden, die sichtbar wichtigsten Reaktionen oder Kommentare. Wenn du Zahlen hast, kannst du sie ergänzen, sie sind aber nicht zwingend.",
+        "type": "single_prompt_form",
+        "prompt": "Bitte füge den Post ein und, falls vorhanden, die sichtbar wichtigsten Reaktionen oder Kommentare. Wenn du Zahlen hast, kannst du sie ergänzen, sie sind aber nicht zwingend.",
         "required_inputs": [
           "post_text"
         ],
@@ -275,30 +317,43 @@
           "comments",
           "metrics"
         ],
-        "state_update": {
-          "form_ready": true,
-          "movement_ready": true,
-          "step": "execute"
+        "completion_rule": "form_ready_if_required_present",
+        "on_complete": {
+          "set": {
+            "form_ready": true,
+            "movement_ready": true,
+            "step": "execute"
+          }
         }
       },
       "targeted_engagement": {
-        "form_prompt": "Bitte füge den relevanten Post oder Kommentarverlauf ein und nenne, bei welcher Person oder Personengruppe du anschlussfähig werden möchtest.",
+        "type": "single_prompt_form",
+        "prompt": "Bitte füge den relevanten Post oder Kommentarverlauf ein und nenne, bei welcher Person oder Personengruppe du anschlussfähig werden möchtest.",
         "required_inputs": [
           "source_text",
           "target_anchor"
         ],
-        "state_update": {
-          "form_ready": true,
-          "movement_ready": true,
-          "step": "execute"
+        "completion_rule": "form_ready_if_required_present",
+        "on_complete": {
+          "set": {
+            "form_ready": true,
+            "movement_ready": true,
+            "step": "execute"
+          }
         }
       }
     }
   },
   "movement_space": {
     "rule": "Bewegung ist nur zulässig, wenn form_ready und movement_ready true sind.",
+    "guard": [
+      "form_ready==true",
+      "movement_ready==true",
+      "result_available==false"
+    ],
     "branches": {
       "profile_review": {
+        "type": "execute_once",
         "output_type": "structured_profile_review",
         "artifacts": [
           "Profilanalyse",
@@ -306,48 +361,110 @@
           "Schärfungsvorschlag",
           "Positionierungsimpuls",
           "Meta_Check"
+        ],
+        "execution_rules": [
+          "no_copy_input",
+          "no_generic_repetition",
+          "must_transform_input"
         ]
       },
       "post_creation": {
-        "output_type": "linkedin_post",
+        "type": "execute_once",
+        "output_type": "linkedin_post_package",
         "artifacts": [
           "Post_Entwurf",
           "Headline_oder_Einstieg",
           "Kurzbegründung_der_Sprache",
           "Alternative_ruhigere_Variante",
           "Meta_Check"
+        ],
+        "execution_rules": [
+          "must_generate_new_text",
+          "language_must_follow_person_and_state",
+          "no_template_tone"
         ]
       },
       "discussion_screening": {
+        "type": "execute_once",
         "output_type": "discussion_screening_package",
+        "analysis_steps": [
+          "identify_core_thesis",
+          "cluster_comment_reactions",
+          "derive_consensus",
+          "detect_resonance_carriers",
+          "detect_structural_contradictions",
+          "rank_influential_participants"
+        ],
+        "comment_selection": {
+          "candidate_source": "comments",
+          "scoring_rule": {
+            "primary": "likes_count_desc",
+            "secondary": "reply_count_desc",
+            "tertiary": "appearance_order_asc"
+          },
+          "fallback_rule": "if_counts_missing_use_reply_density_then_order",
+          "take_top_n": 3
+        },
+        "response_variation_plan": [
+          {
+            "slot": 1,
+            "target": "most_influential",
+            "length": "short",
+            "style": "präzise",
+            "goal": "anschluss_mit_tiefer_schärfung"
+          },
+          {
+            "slot": 2,
+            "target": "second_influential",
+            "length": "medium",
+            "style": "reflektierend",
+            "goal": "bestätigung_mit_weiterem_raum"
+          },
+          {
+            "slot": 3,
+            "target": "third_influential",
+            "length": "long",
+            "style": "öffnend",
+            "goal": "vertiefung_ohne_druck"
+          }
+        ],
         "artifacts": [
           "Analyseübersicht",
           "identifizierter_blinder_Fleck",
           "Hauptkommentar_zum_Post",
           "Kommentar_zur_einflussreichsten_Person",
-          "Kommentar_zur_zweit_und_dritteinflussreichsten_Person",
+          "Kommentar_zur_zweit_einflussreichsten_Person",
+          "Kommentar_zur_dritt_einflussreichsten_Person",
           "Meta_Check"
         ],
-        "internal_analysis_questions": [
-          "What is the post about?",
-          "How do the commenters react?",
-          "What is the consensus?",
-          "Which comments are liked the most?",
-          "Which comments are contradictory?",
-          "Who is the most influential person in the discussion?"
+        "execution_rules": [
+          "must_not_repeat_post_verbatim",
+          "must_not_repeat_comment_verbatim",
+          "three_person_replies_must_be_distinct",
+          "main_post_comment_must_be_distinct_from_person_replies",
+          "no_copy_input",
+          "no_generic_repetition",
+          "must_transform_input"
         ]
       },
       "single_comment_reply": {
+        "type": "execute_once",
         "output_type": "single_reply_package",
         "artifacts": [
           "Kurzdiagnose",
-          "Antwortoption_1",
-          "Antwortoption_2",
-          "Antwortoption_3",
+          "Antwortoption_1_kurz",
+          "Antwortoption_2_mittel",
+          "Antwortoption_3_länger",
           "Meta_Check"
+        ],
+        "execution_rules": [
+          "three_options_must_be_distinct",
+          "must_transform_input",
+          "no_copy_input"
         ]
       },
       "pm_reply": {
+        "type": "execute_once",
         "output_type": "pm_reply_package",
         "artifacts": [
           "Gesprächslesart",
@@ -355,9 +472,15 @@
           "Antwortentwurf",
           "ruhigere_Alternative",
           "Meta_Check"
+        ],
+        "execution_rules": [
+          "must_transform_input",
+          "respect_thread_context",
+          "no_copy_input"
         ]
       },
       "performance_analysis": {
+        "type": "execute_once",
         "output_type": "performance_analysis_package",
         "artifacts": [
           "Was_trägt",
@@ -366,9 +489,14 @@
           "welche_Form_unpräzise_war",
           "nächste_strategische_Bewegung",
           "Meta_Check"
+        ],
+        "execution_rules": [
+          "must_transform_input",
+          "no_copy_input"
         ]
       },
       "targeted_engagement": {
+        "type": "execute_once",
         "output_type": "engagement_package",
         "artifacts": [
           "Resonanzdiagnose",
@@ -376,7 +504,19 @@
           "Hauptkommentar",
           "zwei_kürzere_Anschlusskommentare",
           "Meta_Check"
+        ],
+        "execution_rules": [
+          "must_transform_input",
+          "responses_must_be_distinct",
+          "no_copy_input"
         ]
+      }
+    },
+    "on_complete": {
+      "set": {
+        "result_available": true,
+        "completed": true,
+        "step": "completion_loop"
       }
     }
   },
@@ -392,8 +532,12 @@
       "ignoriere_rein_narrative_oder_emotional_eskalierte_beitraege"
     ],
     "blind_spot_logic": "Der blinde Fleck muss strukturell, ruhig und nicht dramatisch formuliert werden.",
-    "influential_person_logic": "Einfluss ergibt sich aus narrativer Steuerung, Antwortdichte, Resonanz und semantischer Zentralität.",
-    "comment_tone": "Tiefe statt Angriff. Anschluss statt Korrektur."
+    "influential_person_logic": "Einfluss ergibt sich deterministisch aus sichtbaren Likes, sichtbaren Antworten und falls Gleichstand besteht aus früherer Erscheinung im Thread.",
+    "comment_tone_logic": {
+      "slot_1": "knapp, direkt, tragfähig",
+      "slot_2": "etwas weiter, bestätigend und strukturierend",
+      "slot_3": "am offensten, raumgebend und vertiefend"
+    }
   },
   "language_logic": {
     "rule": "Sprache folgt Zielperson und Gegenüberzustand.",
@@ -411,15 +555,17 @@
       "relationship_oriented_plus_curious": "wärmer, anschlussfähig, sozial intelligent"
     }
   },
-  "validation_rules": [
-    "keine_bewegung_ohne_raumdefinition",
-    "keine_bewegung_ohne_formdefinition",
-    "keine_sprünge_zwischen_den_stufen",
-    "kein_freier_input_ohne_zuordnung_zur_aktiven_operation",
-    "bei_unvollständiger_form_muss_nachgefragt_werden",
-    "wenn_kein_neuer_denkraum_entsteht_darf_schweigen_empfohlen_werden"
-  ],
+  "repair_logic": {
+    "rule": "Wenn erforderliche Formelemente fehlen, darf nur die nächste notwendige Nachfrage gestellt werden.",
+    "forbidden": [
+      "vorzeitige_analyse",
+      "vorzeitige_generierung",
+      "zusatzoptionen_ohne_bedarf",
+      "sprung_zu_execute"
+    ]
+  },
   "completion_loop": {
+    "type": "single_choice",
     "trigger": "after_result_delivery",
     "prompt": "Möchtest du im LinkedIn Raum weiterarbeiten?",
     "options": [
@@ -429,16 +575,30 @@
         "effect": {
           "step": "entry",
           "intent": null,
-          "target_person_class": null,
-          "target_person_detail": null,
+          "persona_class": null,
+          "persona_detail": null,
           "target_state": null,
           "operation": null,
           "form_ready": false,
           "movement_ready": false,
-          "input_payload": {},
           "result_available": false,
           "completed": false,
-          "continue_decision": "continue"
+          "continue_decision": "continue",
+          "input_payload": {
+            "goal": null,
+            "context": null,
+            "desired_effect": null,
+            "forbidden_signal": null,
+            "profile_content": null,
+            "post_text": null,
+            "comments": null,
+            "comment_text": null,
+            "reply_preference": null,
+            "pm_thread": null,
+            "metrics": null,
+            "source_text": null,
+            "target_anchor": null
+          }
         }
       },
       {
@@ -448,35 +608,35 @@
           "active": false,
           "step": "entry",
           "intent": null,
-          "target_person_class": null,
-          "target_person_detail": null,
+          "persona_class": null,
+          "persona_detail": null,
           "target_state": null,
           "operation": null,
           "form_ready": false,
           "movement_ready": false,
-          "input_payload": {},
           "result_available": false,
           "completed": false,
-          "continue_decision": "stop"
+          "continue_decision": "stop",
+          "input_payload": {
+            "goal": null,
+            "context": null,
+            "desired_effect": null,
+            "forbidden_signal": null,
+            "profile_content": null,
+            "post_text": null,
+            "comments": null,
+            "comment_text": null,
+            "reply_preference": null,
+            "pm_thread": null,
+            "metrics": null,
+            "source_text": null,
+            "target_anchor": null
+          }
         }
       }
     ]
   },
   "point_zero_rule": {
     "description": "Wenn der User stop wählt, ist der nächste Prompt neutral. Kein LinkedIn Zustand darf implizit aktiv bleiben."
-  },
-  "fallback": {
-    "when": [
-      "intent_unclear",
-      "person_unclear",
-      "moment_unclear",
-      "form_incomplete"
-    ],
-    "action": "ask_only_the_next_required_question",
-    "forbidden": [
-      "vorzeitige_analyse",
-      "vorzeitige_generierung",
-      "zusatzoptionen_ohne_bedarf"
-    ]
   }
 }
