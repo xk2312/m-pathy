@@ -718,14 +718,29 @@ console.log("[M13] HANDOFF CHECK", {
 if (isValidHandoff) {
   console.log("[M13] VALID HANDOFF DETECTED → EXECUTION");
 
-  return handleExecution(req, {
-    messages: [
-      {
-        role: "assistant",
-        content: JSON.stringify(parsed.handoff)
-      }
-    ]
-  });
+ const executionResult = await handleExecution(req, {
+  messages: [
+    {
+      role: "assistant",
+      content: JSON.stringify({
+        action: "load_extension",
+        target: "linkedin_post_screener"
+      })
+    }
+  ]
+});
+
+const parsed = await executionResult.json();
+
+body.messages.push({
+  role: "user",
+  content:
+    "SYSTEM EXTENSION LOADED\n\n" +
+    "Extension: " +
+    (parsed.extension_loaded || "unknown") +
+    "\n\n" +
+    JSON.stringify(parsed.data)
+});
 }
 
 // === IRSS ENFORCEMENT ===
