@@ -192,17 +192,36 @@ if (executionIntentDetected && !alreadyLoaded) {
   console.log("[M13] PRE-EXECUTION TRIGGERED");
   console.log("[M13] EXTENSION NOT LOADED → LOAD");
 
-  return handleExecution(req, {
-    messages: [
-      {
-        role: "assistant",
-        content: JSON.stringify({
-          action: "load_extension",
-          target: "linkedin_post_screener"
-        })
-      }
-    ]
-  });
+ const executionResult = await handleExecution(req, {
+  messages: [
+    {
+      role: "system",
+      content: JSON.stringify({
+        action: "load_extension",
+        target: "linkedin_post_screener"
+      })
+    }
+  ]
+});
+
+// 👉 EXTENSION STATE MERGEN
+const updatedState = {
+  ...(incomingState || {}),
+  extensions: [
+    ...(incomingState?.extensions || []),
+    "linkedin_post_screener"
+  ]
+};
+
+// 👉 ORIGINAL FLOW WEITER
+const executionJson = await executionResult.json();
+
+body.messages.push({
+  role: "system",
+  content: JSON.stringify(executionJson)
+});
+
+body.state = updatedState;
 }
 
 if (executionIntentDetected && alreadyLoaded) {
