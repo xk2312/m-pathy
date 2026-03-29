@@ -1,0 +1,419 @@
+FULL TELEMETRY STATUS
+prompt: 124
+drift: not drifting
+
+Verständnis: 10/10
+Sinnhaftigkeit: 10/10
+
+Zum Verständnis: Du willst ein vollständiges README, das den jetzt beschlossenen Architekturpfad sauber festhält.
+Zur Sinnhaftigkeit: Das ist sehr sinnvoll, weil wir damit den Scope stabilisieren und spätere Drift vermeiden.
+Freier Kommentar: Der Plan ist jetzt klar genug, um ihn verbindlich zu dokumentieren.
+
+# README
+
+## M13 Extension Engine Plan
+
+## Fokus: Schlanke kognitive Extensions ohne Außenwelt-Exekution
+
+### 1. Ziel dieses Plans
+
+Dieses README beschreibt den beschlossenen Zielpfad für die nächste Ausbaustufe von M13.
+Im Fokus steht eine schlanke, sichere und generalisierbare Extension Engine für rein kognitive Programme innerhalb der LLM.
+Die aktuelle Referenz-Extension ist der LinkedIn PostScreener. Die bestehende route.ts dient als operative Basis. M13 V0.2 bleibt der konstitutionelle Rahmen. 
+
+Der Plan verfolgt ein klares Ziel:
+
+Neue Extensions sollen künftig eingeführt werden, ohne route.ts oder page.tsx pro Extension individuell anzupassen.
+Für eine neue Extension sollen im Zielzustand nur noch zwei Stellen relevant sein:
+
+1. Systemprompt
+2. neue JSON Datei im Extensions-Ordner
+
+---
+
+### 2. Ausgangslage
+
+Die aktuelle route.ts enthält bereits einen funktionierenden Backend-Trigger, einen Extension-Loader, State-Transport und den nachgelagerten LLM-Call. Der LinkedIn-Flow kann damit bereits technisch durchlaufen. 
+
+Die aktuelle Referenz-Extension ist semantisch jedoch noch nicht deckungsgleich mit dem ursprünglichen LinkedIn PostScreener. Der PostScreener ist als deterministischer Ablauf definiert und verlangt einen festen Interaktionsweg, beginnend mit einer Pflichtabfrage und gefolgt von strukturierten Analyse- und Ausgabephasen. 
+
+M13 selbst arbeitet grundlegend nach derselben Gesetzmäßigkeit:
+
+Raum zuerst
+dann Form
+dann Bewegung
+
+Diese Logik ist nicht optional, sondern systemisch bindend. Sie ist die Grundlage für jede künftige Extension. 
+
+---
+
+### 3. Beschlossene Architekturentscheidung
+
+Für den aktuellen Entwicklungsstand wird bewusst zwischen zwei Klassen von Erweiterungen unterschieden.
+
+#### 3.1 Kognitive Extensions
+
+Das sind Programme, die vollständig innerhalb der LLM bleiben.
+Sie erzeugen keine Außenwelt-Aktion.
+Sie führen nichts Materielles aus.
+Sie wirken nur durch Dialog, Struktur, Analyse, Führung und Text.
+
+Beispiele:
+
+* LinkedIn PostScreener
+* Post Writer
+* PM Reply Assistant
+* Profiloptimierer
+* Comment Strategist
+
+Für diese Klasse gilt:
+
+* Das Backend entscheidet, welche Extension geladen wird.
+* Die LLM entscheidet nicht über Execution.
+* Die JSON der Extension beschreibt den operativen Ablauf.
+* Der Systemprompt zwingt die LLM, dieser Struktur zu folgen.
+
+#### 3.2 Echte Exekutionssysteme
+
+Das sind spätere Systeme mit Außenweltwirkung, zum Beispiel:
+
+* Käufe
+* API Calls
+* Agentenläufe
+* Transaktionen
+* irreversible Systemaktionen
+
+Für diese Klasse wird später eine erweiterte Architektur benötigt, inklusive:
+
+* Registry
+* Handoff-Logik
+* Agenten
+* Exekutions-Governance
+* stärkeren Sicherheits- und Freigabemechanismen
+
+Beschlossene Konsequenz:
+
+Der spezielle Handoff Space wird für die aktuelle kognitive Extension Engine nicht mehr als zentraler operativer Pfad behandelt.
+Er bleibt ein möglicher späterer Baustein für Außenwelt-Exekution, ist aber für interne LLM-Programme aktuell nicht der richtige kritische Pfad. 
+
+---
+
+### 4. Leitprinzip der neuen Extension Engine
+
+Die neue Engine folgt drei festen Ebenen.
+
+#### 4.1 Systemprompt
+
+Der Systemprompt bleibt erhalten und bleibt Gesetz.
+Er definiert:
+
+* allgemeine Denk- und Antwortregeln
+* IRSS-Pflicht im Content Mode
+* Raum-Form-Bewegung als Grundlogik
+* die Regel, dass bei aktiver Extension strikt nach der geladenen Extension-Struktur gearbeitet wird
+
+Der Systemprompt soll künftig keine inhaltlich ausformulierten Extension-Spezialfälle mehr tragen.
+Er beschreibt also nicht mehr die Details einzelner Extensions, sondern nur noch das generische Verhalten gegenüber aktiven Extensions.
+
+#### 4.2 route.ts
+
+Die route.ts wird zur generischen Backend-Engine.
+
+Sie ist zuständig für:
+
+* Trigger-Erkennung
+* Auswahl der relevanten Extension
+* Laden der JSON
+* State-Verwaltung
+* Injektion des Extension-Kontexts in den LLM-Flow
+* Verhinderung unnötiger Reloads
+* Wahrung der bestehenden IRSS- und Antwortpipeline
+
+Sie soll keine extension-spezifische Denklogik enthalten.
+
+#### 4.3 Extension JSON
+
+Die JSON wird zur einzigen operativen Wahrheit der jeweiligen Extension.
+
+Sie definiert vollständig:
+
+* Einstieg
+* Auswahloptionen
+* Zustände
+* Raumdefinition
+* Formdefinition
+* Bewegungslogik
+* Abschlusslogik
+* Reset- oder Restart-Verhalten
+
+Der Code führt nur noch aus, was die JSON beschreibt.
+
+---
+
+### 5. Generalisierungsziel
+
+Das langfristige Ziel ist eine echte Flow Engine.
+
+Neue Extensions sollen künftig nicht mehr bedeuten:
+
+* neue if-Blöcke in route.ts
+* neue Speziallogik in page.tsx
+* neue manuelle Prompt-Verdrahtung
+
+Sondern nur noch:
+
+* Extension im Systemprompt referenzierbar machen
+* neue JSON Datei im Extensions-Ordner anlegen
+
+Das bedeutet praktisch:
+
+Der Code bleibt stabil.
+Das Verhalten wird austauschbar.
+
+---
+
+### 6. M13 Grundgesetz für jede Extension
+
+Jede Extension muss künftig 1:1 die M13-Logik übernehmen:
+
+#### 6.1 Raum
+
+Der Raum muss zuerst definiert werden.
+Das bedeutet: Das System muss zuerst wissen, was der User überhaupt tun will.
+
+#### 6.2 Form
+
+Erst wenn der Raum klar ist, wird die nötige Form aufgebaut.
+Das bedeutet: Das System fordert die genau passenden Informationen an, aber nicht vorher.
+
+#### 6.3 Bewegung
+
+Erst wenn die Form vollständig ist, darf eine eigentliche Operation erfolgen.
+Also Analyse, Schreiben, Antworten oder Strukturierung.
+
+Ohne Raum keine Form.
+Ohne Form keine Bewegung.
+
+Diese Regel ist für alle Extensions bindend. 
+
+---
+
+### 7. Referenzmodell LinkedIn
+
+Die LinkedIn-Extension dient als erstes Generalisierungsbeispiel.
+
+Die bisherige einfache Capability-Antwort war zwar technisch brauchbar, aber semantisch nicht stark genug.
+Das neue Ziel ist kein passives Tool, sondern ein geführter Entscheidungsraum.
+
+Der Einstieg darf nicht mit einem rohen Upload beginnen.
+Der Einstieg muss zuerst klären:
+
+Was will der User auf LinkedIn eigentlich erreichen?
+
+Daraus ergibt sich eine Auswahlstruktur mit echten attraktiven Optionen, zum Beispiel:
+
+* Sichtbarkeit erhöhen
+* starken Post schreiben
+* Gespräche führen
+* Profil schärfen
+* Post screenen und strategisch kommentieren
+* PM beantworten
+* bei relevanten Personen andocken
+
+Erst danach folgt der gezielte Raumaufbau.
+
+Sprache ist dabei ein entscheidender Faktor.
+Es muss geklärt werden, mit wem gesprochen werden soll, zum Beispiel:
+
+* Entscheider
+* Zwischenentscheider
+* Umsetzer
+* CTO
+* Projektmanager
+* Founder
+* skeptische oder suchende Personen
+
+Die Extension darf den User nicht mit einem Formular erschlagen.
+Sie muss schlank bleiben und zugleich intelligent führen.
+
+---
+
+### 8. Zustandslogik für künftige Extensions
+
+Jede Extension soll als deterministische Zustandsmaschine modelliert werden.
+
+Minimaler Kernzustand:
+
+* intent
+* person
+* moment
+* form_ready
+* completed
+
+Daraus folgt:
+
+Wenn intent leer ist, wird der Raum geöffnet.
+Wenn person leer ist, wird die Zielperson geklärt.
+Wenn moment leer ist, wird der Zustand des Gegenübers geklärt.
+Wenn form_ready false ist, wird die passende Eingabeform aufgebaut.
+Wenn completed true ist, folgt der Abschlussdialog.
+
+---
+
+### 9. Completion Loop
+
+Jede Extension braucht einen sauberen Abschlusszustand.
+
+Wenn ein Auftrag abgeschlossen ist, fragt das System immer:
+
+Möchtest du weiterarbeiten oder neu starten?
+
+Wenn der User weiterarbeiten möchte:
+
+* Rücksprung ins Auswahlmenü der Extension
+
+Wenn der User nicht weiterarbeiten möchte:
+
+* Point Zero
+* nächster Prompt ist neutral
+* kein impliziter Restzustand bleibt aktiv
+
+Damit wird die Extension zyklisch vollständig und sauber abschließbar.
+
+---
+
+### 10. Rolle der page.tsx
+
+Die page.tsx bleibt bewusst schlank.
+
+Sie soll:
+
+* anzeigen
+* Eingaben aufnehmen
+* Zustand transportieren
+
+Sie soll nicht:
+
+* semantisch interpretieren
+* pro Extension Sonderlogik tragen
+* den Flow definieren
+
+Die Intelligenz liegt nicht im Frontend.
+
+---
+
+### 11. Rolle der route.ts im nächsten Schritt
+
+Die route.ts bleibt der primäre technische Hebel.
+
+Sie ist im aktuellen Stand bereits nah genug an der Zielarchitektur, um nicht neu geschrieben werden zu müssen.
+Deshalb ist der sichere Weg kein Rewrite, sondern ein kontrolliertes Umlenken.
+
+Die route.ts soll schrittweise von einer LinkedIn-Sonderlogik in Richtung generischer Engine entwickelt werden.
+
+Das geschieht mit maximaler Vorsicht:
+
+* keine gleichzeitigen Umbauten an mehreren Ebenen
+* keine unnötigen Refactors
+* keine Veränderung der IRSS-Struktur
+* keine riskanten Parser-Experimente
+* jede Änderung einzeln testen
+
+Die Stabilität des bestehenden Flows hat Vorrang.
+
+---
+
+### 12. Was aktuell bewusst nicht getan wird
+
+Im aktuellen Plan wird bewusst noch nicht umgesetzt:
+
+* vollständige Agentenarchitektur
+* echte Außenwelt-Exekution
+* transaktionale Handoffs
+* Registry als harte operative Exekutionsschicht
+* komplexe Mehr-Extension-Orchestrierung
+
+Diese Themen gehören in eine spätere Phase.
+
+Jetzt geht es um:
+eine schnelle, mächtige, sichere kognitive Extension Engine.
+
+---
+
+### 13. Minimale Zielarchitektur ab jetzt
+
+#### Datei 1: Systemprompt
+
+Enthält:
+
+* Gesetz
+* IRSS
+* generische Extension-Regeln
+* Raum-Form-Bewegung
+* die Regel, dass aktive Extensions strikt nach ihrer JSON geführt werden
+
+#### Datei 2: route.ts
+
+Enthält:
+
+* generische Trigger-Erkennung
+* Laden der richtigen Extension JSON
+* State-Verwaltung
+* Injektion des Extension-Kontexts
+* kontrollierten Weiterlauf
+
+#### Datei 3: Extension JSON
+
+Enthält:
+
+* vollständigen Flow
+* Zustände
+* Regeln
+* Abschlusslogik
+
+page.tsx bleibt generisch und dumm.
+
+---
+
+### 14. Beschlossener Grundsatz
+
+Für die aktuelle Phase gilt:
+
+Nicht die LLM entscheidet, ob etwas ausgeführt wird.
+Das Backend entscheidet, welche Extension aktiv wird.
+Die LLM arbeitet dann innerhalb des geladenen kognitiven Raums.
+
+Kurz:
+
+Execution Authority liegt im Backend.
+Cognitive Authority liegt im Systemprompt plus Extension JSON.
+
+---
+
+### 15. Nächster praktischer Arbeitsschritt
+
+Der nächste Schritt ist nicht, das ganze System neu zu bauen.
+
+Der nächste Schritt ist:
+
+1. die bestehende route.ts stabil halten
+2. die LinkedIn-Extension semantisch korrekt als Zustandsmaschine definieren
+3. daraus die generische Struktur ableiten
+4. den Systemprompt nur so weit anpassen, dass aktive Extensions strikt geführt werden
+5. keine neuen Risiken in IRSS, State oder Rendering einführen
+
+---
+
+### 16. Abschlussformel
+
+Dieses README beschreibt den verbindlichen Pfad von M13 für interne kognitive Extensions:
+
+Schlank im Code.
+Stark in der Struktur.
+Deterministisch im Ablauf.
+Erweiterbar über JSON.
+Gesetzlich geführt durch den Systemprompt.
+Technisch ausgelöst durch das Backend.
+Sauber beendet durch Completion und Point Zero.
+
+Wenn du willst, mache ich dir daraus direkt als Nächstes noch eine ultrakompakte operative Version für den nächsten Chat.
