@@ -170,7 +170,34 @@ export async function POST(req: NextRequest) {
 try {
   const body = (await req.json()) as ChatBody;
 
-  async function handleExecution(req: NextRequest, body: any) {
+// === PRE-EXECUTION GATE ===
+const lastUserMessage = body.messages?.[body.messages.length - 1]?.content ?? "";
+
+const executionIntentDetected =
+  typeof lastUserMessage === "string" &&
+  (
+    lastUserMessage.toLowerCase().includes("linkedin") ||
+    lastUserMessage.toLowerCase().includes("post") ||
+    lastUserMessage.toLowerCase().includes("campaign")
+  );
+
+if (executionIntentDetected) {
+  console.log("[M13] PRE-EXECUTION TRIGGERED");
+
+  return handleExecution(req, {
+    messages: [
+      {
+        role: "assistant",
+        content: JSON.stringify({
+          action: "load_extension",
+          target: "linkedin_post_screener"
+        })
+      }
+    ]
+  });
+}
+
+async function handleExecution(req: NextRequest, body: any) {
     try {
       const last = body.messages?.[body.messages.length - 1];
       const parsed = JSON.parse(last.content);
@@ -613,40 +640,110 @@ const response = await withGate(() => {
 }
 
 // === M13 EXECUTION SWITCH ===
+console.log("[M13] RAW CONTENT START");
+console.log(content);
+console.log("[M13] RAW CONTENT END");
+
+let parsed: any = null;
+let isJson = false;
+
 try {
-  const parsed = JSON.parse(content);
-
-  if (parsed && parsed.handoff && typeof parsed.handoff.command === "string") {
-    console.log("[M13] EXECUTION MODE TRIGGERED (HANDOFF)");
-
-    return handleExecution(req, {
-      messages: [{ role: "assistant", content: JSON.stringify(parsed.handoff) }]
-    });
-  }
-} catch {
-  // not JSON → continue normal flow
+  parsed = JSON.parse(content);
+  isJson = typeof parsed === "object" && parsed !== null;
+  console.log("[M13] JSON PARSE SUCCESS", { isJson, parsed });
+} catch (err) {
+  console.log("[M13] JSON PARSE FAILED");
 }
 
+// === HANDOFF VALIDATION ===
+const isValidHandoff =
+  isJson &&
+  parsed.handoff &&
+  typeof parsed.handoff === "object" &&
+  typeof parsed.handoff.command === "string" &&
+  typeof parsed.handoff.target === "string" &&
+  typeof parsed.handoff.payload === "object";
 
+console.log("[M13] HANDOFF CHECK", {
+  isJson,
+  hasHandoff: !!parsed?.handoff,
+  command: parsed?.handoff?.command,
+  target: parsed?.handoff?.target,
+  hasPayload: typeof parsed?.handoff?.payload === "object",
+  isValidHandoff
+});
 
-    let tokensUsed: number;
+if (isValidHandoff) {
+  console.log("[M13] VALID HANDOFF DETECTED → EXECUTION");
 
-    if (usage && typeof usage.total_tokens === "number") {
-      tokensUsed = usage.total_tokens;
-    } else {
-      const promptText = messages.map((m) => m.content).join(" ");
-      const combinedText = `${promptText}\n${content}`;
-      tokensUsed = estimateTokensFromText(combinedText);
-    }
-    const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, tokensUsed);
-    let tokenDelta = TOKENS_USED;
+  return handleExecution(req, {
+    messages: [
+      {
+        role: "assistant",
+        content: JSON.stringify(parsed.handoff)
+      }
+    ]
+  });
+}
 
-    console.log("[chat] ledger gate", {
-      isAuthenticated,
-      sessionEmail,
-      sessionUserId,
-      tokensUsed: TOKENS_USED,
-    });
+// === IRSS ENFORCEMENT ===
+const hasHandoffMarker = content.includes('"handoff"');
+const hasIrssMarker =
+  content.includes('"irss"') ||
+  content.includes("Session Prompt Counter:");
+
+console.log("[M13] IRSS CHECK", {
+  hasHandoffMarker,
+  hasIrssMarker
+});
+
+// MIXED OUTPUT BLOCK
+if (hasHandoffMarker && hasIrssMarker) {
+  console.error("[M13] INVALID MIXED OUTPUT DETECTED");
+  return NextResponse.json(
+    { error: "Invalid mixed output (handoff + IRSS)" },
+    { status: 500 }
+  );
+}
+
+// CONTENT MODE WITHOUT IRSS BLOCK
+if (!hasHandoffMarker && !hasIrssMarker) {
+  console.error("[M13] IRSS MISSING IN CONTENT MODE");
+  return NextResponse.json(
+    { error: "IRSS missing in content mode" },
+    { status: 500 }
+  );
+}
+
+console.log("[M13] CONTENT MODE VALID → CONTINUE");
+
+// === TOKEN HANDLING ===
+let tokensUsed: number;
+
+if (usage && typeof usage.total_tokens === "number") {
+  tokensUsed = usage.total_tokens;
+  console.log("[M13] TOKENS FROM USAGE", { tokensUsed });
+} else {
+  const promptText = messages.map((m) => m.content).join(" ");
+  const combinedText = `${promptText}\n${content}`;
+  tokensUsed = estimateTokensFromText(combinedText);
+  console.log("[M13] TOKENS ESTIMATED", { tokensUsed });
+}
+
+const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, tokensUsed);
+let tokenDelta = TOKENS_USED;
+
+console.log("[M13] FINAL TOKEN STATE", {
+  TOKENS_USED,
+  tokenDelta
+});
+
+console.log("[chat] ledger gate", {
+  isAuthenticated,
+  sessionEmail,
+  sessionUserId,
+  tokensUsed: TOKENS_USED,
+});
 
     if (isAuthenticated && sessionUserId) {
       try {
