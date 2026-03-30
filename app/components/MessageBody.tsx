@@ -18,7 +18,7 @@ export type MessageFormat = 'plain' | 'markdown' | 'html' | 'auto';
 
 export type ChatMessage = {
   role: MessageRole;
-  content: string;
+  content: string | any;
   format?: MessageFormat;
   meta?: Record<string, unknown>;
 };
@@ -44,28 +44,31 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
   const isAssistant = msg.role === 'assistant';
 
   // Versuch → renderMessage(), Fallback → Plaintext
-  let node: ReactNode;
-  try {
-    if (isAssistant && effectiveFmt === 'plain') {
-      node = (
-        <span
-          style={{
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word',
-          }}
-        >
-          <ColdReveal key={msg.content.length} text={msg.content} />
-        </span>
-      );
-    } else {
-      node = renderMessage({
-        role: msg.role,
-        content: msg.content,
-        format: effectiveFmt,
-        meta: msg.meta,
-      });
-    }
-  } catch (err) {
+ let node: ReactNode;
+try {
+  if (typeof msg.content === "object" && msg.content !== null) {
+    const c = msg.content;
+
+    node = (
+      <div>
+        {c.greeting && <p>{c.greeting}</p>}
+        {c.description && <p>{c.description}</p>}
+        {c.options_intro && <p>{c.options_intro}</p>}
+
+        {Array.isArray(c.options) && (
+          <ul style={{ paddingLeft: 20, marginTop: 10 }}>
+            {c.options.map((item: string, i: number) => (
+              <li key={i} style={{ marginBottom: 6 }}>
+                {item}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {c.cta && <p style={{ marginTop: 12 }}>{c.cta}</p>}
+      </div>
+    );
+  } else if (isAssistant && effectiveFmt === 'plain') {
     node = (
       <span
         style={{
@@ -73,9 +76,28 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
           wordBreak: 'break-word',
         }}
       >
-        {msg.content}
+        <ColdReveal key={msg.content.length} text={msg.content} />
       </span>
     );
+  } else {
+    node = renderMessage({
+      role: msg.role,
+      content: msg.content,
+      format: effectiveFmt,
+      meta: msg.meta,
+    });
+  }
+} catch (err) {
+  node = (
+    <span
+      style={{
+        whiteSpace: 'pre-wrap',
+        wordBreak: 'break-word',
+      }}
+    >
+      {typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content)}
+    </span>
+  );
     if (process.env.NODE_ENV !== 'production') {
       console.warn('[MessageBody] renderMessage failed → fallback to plain', err);
     }
