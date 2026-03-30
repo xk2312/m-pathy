@@ -1,120 +1,125 @@
 {
   "id": "linkedin_copilot",
-  "name": "LinkedIn Copilot",
+  "version": "2.0",
   "entry": "start",
+  "archive": {},
   "steps": {
     "start": {
-      "type": "message",
+      "type": "selection",
       "language": "dynamic",
       "content": {
         "greeting": "Willkommen bei LinkedIn Copilot.",
-        "description": "LinkedIn Copilot hilft dir dabei dein LinkedIn Profil auf Vordermann zu bringen und genau die User erreichen, auf die du abzielst.",
+        "description": "LinkedIn Copilot hilft dir dabei dein LinkedIn Profil auf Vordermann zu bringen und genau die User zu erreichen, auf die du abzielst.",
         "options_intro": "Dir stehen folgende Workflows zur Verfügung:",
         "options": [
-          "1. Einen Post entwickeln, der auf deine Zielgruppe und dein Ziel ausgerichtet ist.",
-          "2. Eine Postkampagne mit 3 Posts entwickeln, die sich auf dein Ziel zuspitzen.",
-          "3. Einen Post analysieren und 1 Kommentar zum Post + 3 Kommentare zu Kommentaren entwickeln.",
-          "4. Deine Info im Profil anpassen.",
-          "5. Deine Profilheader anpassen.",
-          "6. Eine Private Message verfassen.",
-          "7. Eine Private Message beantworten.",
-          "8. Einen Kurztext für eine Vernetzungsanfrage entwickeln."
+          "1. Post entwickeln",
+          "2. Postkampagne entwickeln",
+          "3. Post analysieren",
+          "4. Profilinfo anpassen",
+          "5. Profilheader anpassen",
+          "6. Private Message verfassen",
+          "7. Private Message beantworten",
+          "8. Vernetzungsanfrage Text"
         ],
-        "cta": "Bitte wähle den Workflow und gib mir die Nummer."
+        "cta": "Bitte gib die Nummer ein."
       },
-      "next": "await_selection"
-    },
-    "await_selection": {
-      "type": "input",
-      "expected": "number",
       "next_map": {
-        "1": "workflow_post_single",
-        "2": "workflow_post_campaign",
-        "3": "workflow_post_analysis",
-        "4": "workflow_profile_info",
-        "5": "workflow_profile_header",
-        "6": "workflow_private_message_create",
-        "7": "workflow_private_message_reply",
-        "8": "workflow_connection_text"
+        "1": "wps_s1",
+        "2": "wpc_entry",
+        "3": "wpa_entry",
+        "4": "wpi_entry",
+        "5": "wph_entry",
+        "6": "wpmc_entry",
+        "7": "wpmr_entry",
+        "8": "wct_entry"
       }
     },
-    "workflow_post_single": {
-      "entry": "s1",
-      "steps": {
-        "s1": {
-          "q": "Zielgruppe Alter?",
-          "o": { "a": "20-40", "b": "40-60", "c": "60+" },
-          "k": "age",
-          "n": "s2"
+
+    "wps_s1": {
+      "type": "question",
+      "q": "Zielgruppe Alter?",
+      "options": {
+        "a": "20-40",
+        "b": "40-60",
+        "c": "60+"
+      },
+      "key": "age",
+      "next": "wps_s2"
+    },
+
+    "wps_s2": {
+      "type": "question",
+      "q": "Beruf der Zielgruppe (1 Begriff)",
+      "input": "short_text",
+      "key": "job",
+      "next": "wps_s3"
+    },
+
+    "wps_s3": {
+      "type": "question",
+      "q": "Ziel des Posts?",
+      "options": {
+        "a": "Meinungsführerschaft",
+        "b": "Kaufbereitschaft",
+        "c": "Direkte Bewerbung"
+      },
+      "key": "goal",
+      "next": "wps_s4"
+    },
+
+    "wps_s4": {
+      "type": "question",
+      "q": "Format?",
+      "options": {
+        "a": "Sachlich",
+        "b": "Storytelling",
+        "c": "Meinung",
+        "d": "Provokativ",
+        "e": "Lehrreich"
+      },
+      "key": "format",
+      "next": "wps_s5"
+    },
+
+    "wps_s5": {
+      "type": "question",
+      "q": "Ansprache?",
+      "options": {
+        "a": "Du",
+        "b": "Sie",
+        "c": "Automatisch"
+      },
+      "key": "tone",
+      "next": "wps_final"
+    },
+
+    "wps_final": {
+      "type": "action",
+      "action": "generate_post",
+      "input_keys": ["age", "job", "goal", "format", "tone"],
+      "rules": {
+        "cta": {
+          "required": true,
+          "type": "question",
+          "style": "engaging"
         },
-        "s2": {
-          "q": "Beruf der Zielgruppe (1 Begriff)",
-          "t": "short_text",
-          "k": "job",
-          "n": "s3"
+        "hashtags": {
+          "count": 3,
+          "position": "end"
         },
-        "s3": {
-          "q": "Ziel des Posts?",
-          "o": {
-            "a": "Meinungsführerschaft",
-            "b": "Kaufbereitschaft",
-            "c": "Direkte Bewerbung"
-          },
-          "k": "goal",
-          "n": "s4"
+        "story": {
+          "arc_required": true
         },
-        "s4": {
-          "q": "Format?",
-          "o": {
-            "a": "Sachlich",
-            "b": "Storytelling",
-            "c": "Meinung",
-            "d": "Provokativ",
-            "e": "Lehrreich"
-          },
-          "k": "format",
-          "n": "s5"
-        },
-        "s5": {
-          "q": "Ansprache?",
-          "o": {
-            "a": "Du",
-            "b": "Sie",
-            "c": "Automatisch"
-          },
-          "k": "tone",
-          "n": "s6"
-        },
-        "s6": {
-          "type": "action",
-          "a": "generate_post",
-          "map": {
-            "age": "age",
-            "job": "job",
-            "goal": "goal",
-            "format": "format",
-            "tone": "tone"
-          },
-          "rules": {
-            "cta": {
-              "required": true,
-              "type": "question",
-              "style": "engaging"
-            },
-            "hashtags": {
-              "count": 3,
-              "position": "end"
-            },
-            "story": {
-              "arc_required": true
-            },
-            "language": {
-              "adaptive_tone": true
-            }
-          },
-          "n": "end"
+        "language": {
+          "adaptive_tone": true,
+          "backend_controlled": true
         }
-      }
+      },
+      "next": "end"
+    },
+
+    "end": {
+      "type": "terminal"
     }
   }
 }

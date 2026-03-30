@@ -195,29 +195,50 @@ if (entry) {
   const extensionData = JSON.parse(fileContent);
 
   body.messages[body.messages.length - 1] = {
-    role: "user",
-    content:
-  "SYSTEM EXTENSION ACTIVATED\n\n" +
-  "You are now running the following extension:\n\n" +
-  JSON.stringify(extensionData, null, 2) +
-  "\n\n" +
-  "Follow the extension strictly.\n" +
-  "Execute its flow step by step.\n" +
-  "Do not deviate.\n\n" +
-  "User command:\n" +
-  lastUserMessage
-  };
+  role: "user",
+  content: lastUserMessage
+};
 
-  body.state = {
+body.state = {
   ...(body.state || {}),
   extensions: [entry.id],
-  step: "start"
+  step: body.state?.step ?? extensionData.entry
 };
 console.log("[M13] COMMAND EXECUTED:", entry.id);
 
-const currentStep = body.state?.step ?? "start";
+const lastInput = String(lastUserMessage).trim();
+
+if (body.state?.step && extensionData?.steps?.[body.state.step]?.next_map) {
+  const map = extensionData.steps[body.state.step].next_map;
+  if (map[lastInput]) {
+    body.state.step = map[lastInput];
+  }
+}
+
+const currentStep = body.state?.step ?? extensionData.entry;
 
 const stepConfig = extensionData?.steps?.[currentStep];
+
+let generatedOutput = "";
+
+if (stepConfig?.type === "message") {
+  const c = stepConfig.content;
+
+  generatedOutput =
+    (c.greeting ? c.greeting + "\n\n" : "") +
+    (c.description ? c.description + "\n\n" : "") +
+    (c.options_intro ? c.options_intro + "\n\n" : "") +
+    (Array.isArray(c.options) ? c.options.map((o: string) => "- " + o).join("\n") + "\n\n" : "") +
+    (c.cta ? c.cta : "");
+
+} else if (stepConfig?.type === "input") {
+  generatedOutput = "Bitte gib deine Auswahl ein.";
+}
+
+body.messages[body.messages.length - 1] = {
+  role: "user",
+  content: generatedOutput
+};
 
 if (stepConfig?.next) {
   body.state.step = stepConfig.next;
