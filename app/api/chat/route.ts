@@ -10,7 +10,7 @@ import { getBalance } from "@/lib/ledger";
 import { cookies } from "next/headers";
 import crypto from "crypto";
 import registry from "@/registry/registry.json";
-
+import OpenAI from "openai";
 export const runtime = "nodejs"; // wir lesen Dateien ⇒ Node-Runtime
 
 
@@ -131,6 +131,9 @@ function getMessagesCharCount(messages: ChatMessage[]): number {
 // === POST-Handler (mit Gate + Backoff + FreeGate) ===
 export async function POST(req: NextRequest) {
 
+  const client = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY!,
+  });
   // === MEFL PATCH: HARD REQUEST CONTRACT ===
   const contentType = req.headers.get("content-type") || "";
 
@@ -172,6 +175,12 @@ export async function POST(req: NextRequest) {
 try {
   const body = (await req.json()) as ChatBody;
 
+body.state = body.state ?? {
+  extension: null,
+  step: null,
+  data: {}
+};
+
 // === COMMAND PARSER ===
 const lastUserMessage = body.messages?.[body.messages.length - 1]?.content ?? "";
 
@@ -194,55 +203,121 @@ if (entry) {
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const extensionData = JSON.parse(fileContent);
 
-  body.messages[body.messages.length - 1] = {
-  role: "user",
-  content: lastUserMessage
+  const currentStepId = body.state?.step ?? extensionData.entry;
+  const stepConfig = extensionData?.steps?.[currentStepId];
+
+  let generatedOutput = "";
+
+  if (stepConfig?.type === "message") {
+    const c = stepConfig.content;
+
+    generatedOutput =
+      (c.greeting ? c.greeting + "\n\n" : "") +
+      (c.description ? c.description + "\n\n" : "") +
+      (c.options_intro ? c.options_intro + "\n\n" : "") +
+      (Array.isArray(c.options) ? c.options.map((o: string) => "- " + o).join("\n") + "\n\n" : "") +
+      (c.cta ? c.cta : "");
+
+    return NextResponse.json({
+      role: "assistant",
+      content: generatedOutput,
+      state: {
+        extension: entry.id,
+        step: stepConfig.next ?? currentStepId,
+        data: {}
+      }
+    });
+  }
+
+  if (stepConfig?.type === "input") {
+    if (stepConfig.type === "action") {
+  const data = body.state?.data || {};
+
+  const mapped: Record<string, any> = {};
+
+  if (stepConfig.map) {
+    for (const key in stepConfig.map) {
+      const sourceKey = stepConfig.map[key];
+      mapped[key] = data[sourceKey];
+    }
+  }
+
+  const actionType = stepConfig.a;
+
+  // Prompt bauen
+  let prompt = "";
+
+  if (actionType === "generate_post") {
+    prompt = `
+Create a high-performing LinkedIn post.
+
+Target audience age: ${mapped.age}
+Profession: ${mapped.job}
+Goal: ${mapped.goal}
+Format: ${mapped.format}
+Tone: ${mapped.tone}
+
+Rules:
+- Include a strong hook
+- Include storytelling if possible
+- End with an engaging question
+- Add exactly 3 relevant hashtags at the end
+    `;
+  }
+
+const completion = await client.responses.create({
+  model: "gpt-4.1",
+  input: [
+    { role: "system", content: "You are a LinkedIn content expert." },
+    { role: "user", content: prompt }
+  ]
+});
+
+const output = completion.output_text || "No output.";
+  return NextResponse.json({
+    role: "assistant",
+    content: output,
+    state: {
+      extension: entry.id,
+      step: "end",
+      data
+    }
+  });
+}
+    const userInput = String(lastUserMessage).trim();
+
+const updatedData = {
+  ...(body.state?.data || {})
 };
 
-body.state = {
-  ...(body.state || {}),
-  extensions: [entry.id],
-  step: body.state?.step ?? extensionData.entry
-};
-console.log("[M13] COMMAND EXECUTED:", entry.id);
+if (stepConfig.k) {
+  updatedData[stepConfig.k] = userInput;
+}
 
-const lastInput = String(lastUserMessage).trim();
+const map = stepConfig.next_map || {};
+const nextStepId = map[userInput];
 
-if (body.state?.step && extensionData?.steps?.[body.state.step]?.next_map) {
-  const map = extensionData.steps[body.state.step].next_map;
-  if (map[lastInput]) {
-    body.state.step = map[lastInput];
+if (!nextStepId) {
+  return NextResponse.json({
+    role: "assistant",
+    content: "Ungültige Auswahl. Bitte erneut versuchen.",
+    state: body.state
+  });
+}
+
+const nextStep = extensionData.steps[nextStepId];
+
+   return NextResponse.json({
+  role: "assistant",
+  content: nextStep.q ?? "Weiter...",
+  state: {
+    extension: entry.id,
+    step: nextStepId,
+    data: updatedData
+  }
+});
   }
 }
-
-const currentStep = body.state?.step ?? extensionData.entry;
-
-const stepConfig = extensionData?.steps?.[currentStep];
-
-let generatedOutput = "";
-
-if (stepConfig?.type === "message") {
-  const c = stepConfig.content;
-
-  generatedOutput =
-    (c.greeting ? c.greeting + "\n\n" : "") +
-    (c.description ? c.description + "\n\n" : "") +
-    (c.options_intro ? c.options_intro + "\n\n" : "") +
-    (Array.isArray(c.options) ? c.options.map((o: string) => "- " + o).join("\n") + "\n\n" : "") +
-    (c.cta ? c.cta : "");
-
-} else if (stepConfig?.type === "input") {
-  generatedOutput = "Bitte gib deine Auswahl ein.";
-}
-
-body.messages[body.messages.length - 1] = {
-  role: "user",
-  content: generatedOutput
-};
-
-if (stepConfig?.next) {
-  body.state.step = stepConfig.next;
-}}
 // - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
 
 // Session aus m_auth-Cookie lesen (falls vorhanden)
@@ -435,8 +510,16 @@ if (balanceBefore <= 0) {
       };
     })();
 
-const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
+if (body.state?.extension) {
+  console.log("[M13] EXTENSION ACTIVE - SKIP LLM");
+  return NextResponse.json({
+    role: "assistant",
+    content: "STATE ERROR - Extension flow not resolved",
+    state: body.state
+  });
+}
 
+const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
 const messages: ChatMessage[] = systemPrompt
   ? [
       { role: "system", content: systemPrompt },
