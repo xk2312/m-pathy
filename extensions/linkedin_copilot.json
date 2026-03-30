@@ -1,503 +1,120 @@
 {
-  "mode": "linkedin_copilot",
-  "phase": "intent_selection",
-  "language_control": {
-    "language": null,
-    "source": "user_setting_or_first_prompt",
-    "persist": true,
-    "enforce": true,
-    "generation_mode": "native_not_translation",
-    "fallback": "match_user_input_language"
-  },
-  "state": {
-    "intent": null,
-    "persona": null,
-    "target_state": null,
-    "input_expected": false
-  },
-  "rules": [
-    "no_output_before_intent",
-    "no_generation_without_persona",
-    "no_ai_patterns",
-    "strict_tone_control",
-    "language_must_be_enforced"
-  ],
-  "intents": [
-    {
-      "id": "write_post",
-      "label": "Post schreiben"
+  "id": "linkedin_copilot",
+  "name": "LinkedIn Copilot",
+  "entry": "start",
+  "steps": {
+    "start": {
+      "type": "message",
+      "language": "dynamic",
+      "content": {
+        "greeting": "Willkommen bei LinkedIn Copilot.",
+        "description": "LinkedIn Copilot hilft dir dabei dein LinkedIn Profil auf Vordermann zu bringen und genau die User erreichen, auf die du abzielst.",
+        "options_intro": "Dir stehen folgende Workflows zur Verfügung:",
+        "options": [
+          "1. Einen Post entwickeln, der auf deine Zielgruppe und dein Ziel ausgerichtet ist.",
+          "2. Eine Postkampagne mit 3 Posts entwickeln, die sich auf dein Ziel zuspitzen.",
+          "3. Einen Post analysieren und 1 Kommentar zum Post + 3 Kommentare zu Kommentaren entwickeln.",
+          "4. Deine Info im Profil anpassen.",
+          "5. Deine Profilheader anpassen.",
+          "6. Eine Private Message verfassen.",
+          "7. Eine Private Message beantworten.",
+          "8. Einen Kurztext für eine Vernetzungsanfrage entwickeln."
+        ],
+        "cta": "Bitte wähle den Workflow und gib mir die Nummer."
+      },
+      "next": "await_selection"
     },
-    {
-      "id": "analyze_and_comment",
-      "label": "Post analysieren und kommentieren"
-    },
-    {
-      "id": "reply_pm",
-      "label": "Private Nachricht beantworten"
-    }
-  ],
-  "prompt": "Was möchtest du auf LinkedIn tun?",
-  "spaces": {
-    "discussion_screening_space": {
-      "id": "discussion_screening",
-      "label": "Einen Post screenen und mit einem Hauptkommentar plus drei Antworten eingreifen",
-      "reasoning": "C4",
-      "space_definition": {
-        "goal": "Einen bestehenden LinkedIn Diskurs verstehen und gezielt beeinflussen",
-        "required_state": [
-          "intent",
-          "persona",
-          "target_state",
-          "language_control.language"
-        ],
-        "on_enter": {
-          "set": {
-            "intent": "analyze_and_comment",
-            "input_expected": true
-          }
-        }
-      },
-      "form_definition": {
-        "required_inputs": [
-          "post_text",
-          "comments"
-        ],
-        "optional_inputs": [
-          "visible_likes",
-          "visible_replies"
-        ],
-        "prompt": "Markiere den vollständigen Post und die relevanten Kommentare. Wenn sichtbar, übernimm auch Likes und Antworten pro Kommentar.",
-        "completion_rule": "form_complete_only_if_post_text_and_comments_present",
-        "repair_rule": "if_missing_post_or_comments_ask_only_for_missing_part"
-      },
-      "execution_trigger": {
-        "condition": [
-          "intent == analyze_and_comment",
-          "post_text_present == true",
-          "comments_present == true",
-          "form_complete == true"
-        ],
-        "effect": {
-          "movement_authorized": true
-        }
-      },
-      "execution_procedure": [
-        {
-          "step": 1,
-          "action": "determine_post_core",
-          "instruction": "Bestimme die Kernthese des Posts."
-        },
-        {
-          "step": 2,
-          "action": "cluster_comment_reactions",
-          "instruction": "Ordne die Kommentare nach Reaktionsmustern und Haltung."
-        },
-        {
-          "step": 3,
-          "action": "derive_consensus",
-          "instruction": "Bestimme den sichtbaren Konsens im Diskurs."
-        },
-        {
-          "step": 4,
-          "action": "detect_blind_spot",
-          "instruction": "Bestimme den strukturellen blinden Fleck oder die zwingende Konsequenz."
-        },
-        {
-          "step": 5,
-          "action": "rank_comments",
-          "instruction": "Ranke Kommentare deterministisch."
-        },
-        {
-          "step": 6,
-          "action": "write_main_comment",
-          "instruction": "Schreibe einen Hauptkommentar zum Post."
-        },
-        {
-          "step": 7,
-          "action": "write_reply_1",
-          "instruction": "Schreibe eine kurze, präzise Antwort auf den stärksten Kommentar."
-        },
-        {
-          "step": 8,
-          "action": "write_reply_2",
-          "instruction": "Schreibe eine mittlere, reflektierende Antwort auf den zweitstärksten Kommentar."
-        },
-        {
-          "step": 9,
-          "action": "write_reply_3",
-          "instruction": "Schreibe eine etwas offenere, weiterführende Antwort auf den drittstärksten Kommentar."
-        }
-      ],
-      "ranking_logic": {
-        "primary": "likes_desc",
-        "secondary": "replies_desc",
-        "tertiary": "thread_order_asc",
-        "fallback_if_counts_missing": "select_first_three_structurally_relevant_comments",
-        "take": 3
-      },
-      "language_rules": {
-        "must": [
-          "sound_human",
-          "fit_persona",
-          "fit_target_state",
-          "be_distinct_per_reply"
-        ],
-        "forbidden": [
-          "long_dash",
-          "emoji",
-          "buzzword",
-          "ai_style_intro",
-          "copy_input",
-          "same_tone_in_all_three_replies"
-        ],
-        "reply_profiles": {
-          "reply_1": "short_precise_stable",
-          "reply_2": "medium_reflective_structuring",
-          "reply_3": "longer_opening_socially_intelligent"
-        }
-      },
-      "output_contract": {
-        "fixed_order": [
-          "analysis_overview",
-          "blind_spot",
-          "main_comment",
-          "reply_1",
-          "reply_2",
-          "reply_3",
-          "meta_check"
-        ],
-        "rules": [
-          "do_not_echo_input",
-          "all_replies_must_be_unique",
-          "main_comment_must_differ_from_replies",
-          "no_generic_phrases",
-          "no_moralizing",
-          "no_cta",
-          "no_self_reference"
-        ]
-      },
-      "completion": {
-        "on_success": {
-          "set": {
-            "result_available": true,
-            "completed": true
-          }
-        }
+    "await_selection": {
+      "type": "input",
+      "expected": "number",
+      "next_map": {
+        "1": "workflow_post_single",
+        "2": "workflow_post_campaign",
+        "3": "workflow_post_analysis",
+        "4": "workflow_profile_info",
+        "5": "workflow_profile_header",
+        "6": "workflow_private_message_create",
+        "7": "workflow_private_message_reply",
+        "8": "workflow_connection_text"
       }
     },
-    "post_creation_space": {
-      "id": "post_creation",
-      "label": "Einen starken Post schreiben",
-      "reasoning": "C4",
-      "space_definition": {
-        "goal": "Einen originären LinkedIn Post erzeugen, der sprachlich zur Zielperson passt und sozial wirksam ist.",
-        "required_state": [
-          "intent",
-          "persona",
-          "target_state",
-          "language_control.language"
-        ],
-        "on_enter": {
-          "set": {
-            "intent": "write_post",
-            "input_expected": true
-          }
-        }
-      },
-      "form_definition": {
-        "required_inputs": [
-          "goal",
-          "desired_effect",
-          "context",
-          "forbidden_signal"
-        ],
-        "optional_inputs": [
-          "proof_points",
-          "call_intensity"
-        ],
-        "prompt_sequence": [
-          "Was ist das eigentliche Ziel dieses Posts?",
-          "Was soll die Zielperson nach dem Lesen denken oder spüren?",
-          "Welcher reale Kontext oder Anlass liegt zugrunde?",
-          "Was darf der Post auf keinen Fall ausstrahlen?"
-        ],
-        "completion_rule": "form_complete_only_if_goal_desired_effect_context_and_forbidden_signal_present",
-        "repair_rule": "if_a_required_field_is_missing_ask_only_for_that_field"
-      },
-      "execution_trigger": {
-        "condition": [
-          "intent == write_post",
-          "goal_present == true",
-          "desired_effect_present == true",
-          "context_present == true",
-          "forbidden_signal_present == true",
-          "form_complete == true"
-        ],
-        "effect": {
-          "movement_authorized": true
-        }
-      },
-      "execution_procedure": [
-        {
-          "step": 1,
-          "action": "derive_core_message",
-          "instruction": "Bestimme die eine zentrale Aussage, die der Post tragen muss."
+    "workflow_post_single": {
+      "entry": "s1",
+      "steps": {
+        "s1": {
+          "q": "Zielgruppe Alter?",
+          "o": { "a": "20-40", "b": "40-60", "c": "60+" },
+          "k": "age",
+          "n": "s2"
         },
-        {
-          "step": 2,
-          "action": "derive_audience_language",
-          "instruction": "Leite Ton, Dichte und Direktheit aus persona und target_state ab."
+        "s2": {
+          "q": "Beruf der Zielgruppe (1 Begriff)",
+          "t": "short_text",
+          "k": "job",
+          "n": "s3"
         },
-        {
-          "step": 3,
-          "action": "derive_risk_boundary",
-          "instruction": "Stelle sicher, dass forbidden_signal sprachlich und strukturell vermieden wird."
+        "s3": {
+          "q": "Ziel des Posts?",
+          "o": {
+            "a": "Meinungsführerschaft",
+            "b": "Kaufbereitschaft",
+            "c": "Direkte Bewerbung"
+          },
+          "k": "goal",
+          "n": "s4"
         },
-        {
-          "step": 4,
-          "action": "write_main_post",
-          "instruction": "Schreibe den Hauptentwurf des Posts in natürlicher Sprache."
+        "s4": {
+          "q": "Format?",
+          "o": {
+            "a": "Sachlich",
+            "b": "Storytelling",
+            "c": "Meinung",
+            "d": "Provokativ",
+            "e": "Lehrreich"
+          },
+          "k": "format",
+          "n": "s5"
         },
-        {
-          "step": 5,
-          "action": "write_quieter_variant",
-          "instruction": "Schreibe eine ruhigere Alternative mit derselben Grundwirkung."
+        "s5": {
+          "q": "Ansprache?",
+          "o": {
+            "a": "Du",
+            "b": "Sie",
+            "c": "Automatisch"
+          },
+          "k": "tone",
+          "n": "s6"
         },
-        {
-          "step": 6,
-          "action": "meta_check",
-          "instruction": "Prüfe kurz, ob Sprache, Richtung und soziale Wirkung sauber zusammenpassen."
-        }
-      ],
-      "language_rules": {
-        "must": [
-          "sound_human",
-          "fit_persona",
-          "fit_target_state",
-          "be_native_in_selected_language",
-          "have_clear_social_direction"
-        ],
-        "forbidden": [
-          "long_dash",
-          "emoji",
-          "buzzword",
-          "ai_style_intro",
-          "copy_input",
-          "empty_motivation_language",
-          "generic_linkedin_template"
-        ],
-        "style_logic": {
-          "decision_makers_and_skeptical": "short_dense_clear",
-          "middle_decision_makers_and_overloaded": "clear_relieving_fast_to_grasp",
-          "implementers_and_curious": "concrete_practical_understandable",
-          "relationship_oriented_and_curious": "warm_open_socially_precise"
-        }
-      },
-      "output_contract": {
-        "fixed_order": [
-          "space_diagnosis",
-          "main_post",
-          "quieter_variant",
-          "meta_check"
-        ],
-        "rules": [
-          "do_not_echo_input",
-          "main_post_and_quieter_variant_must_be_distinct",
-          "no_generic_phrases",
-          "no_moralizing",
-          "no_self_reference",
-          "no_cta_unless_user_goal_requires_it"
-        ]
-      },
-      "completion": {
-        "on_success": {
-          "set": {
-            "result_available": true,
-            "completed": true
-          }
-        }
-      }
-    },
-    "pm_reply_space": {
-      "id": "pm_reply",
-      "label": "Auf eine Private Message antworten",
-      "reasoning": "C4",
-      "space_definition": {
-        "goal": "Eine direkte Nachricht so beantworten, dass Beziehung, Spannung und Zielwirkung präzise getroffen werden.",
-        "required_state": [
-          "intent",
-          "persona",
-          "target_state",
-          "language_control.language"
-        ],
-        "on_enter": {
-          "set": {
-            "intent": "reply_pm",
-            "input_expected": true
-          }
-        }
-      },
-      "form_definition": {
-        "required_inputs": [
-          "pm_thread"
-        ],
-        "optional_inputs": [
-          "reply_preference"
-        ],
-        "prompt": "Markiere die aktuelle Nachricht und maximal 10 Nachrichten davor. Wenn du eine klare Richtung willst, kannst du deinen gewünschten Antwortstil dazuschreiben.",
-        "constraints": {
-          "max_prior_messages": 10
-        },
-        "completion_rule": "form_complete_only_if_pm_thread_present",
-        "repair_rule": "if_pm_thread_is_missing_ask_only_for_pm_thread"
-      },
-      "execution_trigger": {
-        "condition": [
-          "intent == reply_pm",
-          "pm_thread_present == true",
-          "form_complete == true"
-        ],
-        "effect": {
-          "movement_authorized": true
-        }
-      },
-      "execution_procedure": [
-        {
-          "step": 1,
-          "action": "read_conversation_state",
-          "instruction": "Bestimme die aktuelle Gesprächslage."
-        },
-        {
-          "step": 2,
-          "action": "detect_tension",
-          "instruction": "Bestimme Spannungsgrad, Offenheit und verdeckte Dynamik."
-        },
-        {
-          "step": 3,
-          "action": "derive_response_temperature",
-          "instruction": "Leite aus persona und target_state die passende sprachliche Temperatur ab."
-        },
-        {
-          "step": 4,
-          "action": "write_main_reply",
-          "instruction": "Schreibe die beste direkte Antwort."
-        },
-        {
-          "step": 5,
-          "action": "write_quieter_alternative",
-          "instruction": "Schreibe eine ruhigere Alternative mit geringerer Reibung."
-        },
-        {
-          "step": 6,
-          "action": "meta_check",
-          "instruction": "Prüfe kurz, ob die Antwort dem Gesprächsraum angemessen ist."
-        }
-      ],
-      "language_rules": {
-        "must": [
-          "sound_human",
-          "fit_persona",
-          "fit_target_state",
-          "be_native_in_selected_language",
-          "respect_relationship_context"
-        ],
-        "forbidden": [
-          "long_dash",
-          "emoji",
-          "buzzword",
-          "ai_style_intro",
-          "copy_input",
-          "overexplaining",
-          "generic_politeness_padding"
-        ]
-      },
-      "output_contract": {
-        "fixed_order": [
-          "conversation_read",
-          "tension_analysis",
-          "main_reply",
-          "quieter_alternative",
-          "meta_check"
-        ],
-        "rules": [
-          "do_not_echo_input",
-          "main_reply_and_quieter_alternative_must_be_distinct",
-          "no_generic_phrases",
-          "no_self_reference",
-          "no_moralizing"
-        ]
-      },
-      "completion": {
-        "on_success": {
-          "set": {
-            "result_available": true,
-            "completed": true
-          }
+        "s6": {
+          "type": "action",
+          "a": "generate_post",
+          "map": {
+            "age": "age",
+            "job": "job",
+            "goal": "goal",
+            "format": "format",
+            "tone": "tone"
+          },
+          "rules": {
+            "cta": {
+              "required": true,
+              "type": "question",
+              "style": "engaging"
+            },
+            "hashtags": {
+              "count": 3,
+              "position": "end"
+            },
+            "story": {
+              "arc_required": true
+            },
+            "language": {
+              "adaptive_tone": true
+            }
+          },
+          "n": "end"
         }
       }
     }
-  },
-  "completion_and_loop": {
-    "goal": "Nach jeder abgeschlossenen Bewegung deterministisch entscheiden, ob der User weitermachen möchte oder der Raum geschlossen wird.",
-    "trigger_condition": [
-      "completed == true",
-      "result_available == true"
-    ],
-    "prompt": "Möchtest du weiter machen oder bist du fertig?",
-    "options": [
-      {
-        "id": "continue",
-        "label": "Weiter machen",
-        "effect": "return_to_intent_selection"
-      },
-      {
-        "id": "stop",
-        "label": "Fertig",
-        "effect": "point_zero"
-      }
-    ]
-  },
-  "loop_logic": {
-    "return_to_intent_selection": {
-      "set": {
-        "intent": null,
-        "persona": null,
-        "target_state": null,
-        "input_expected": false,
-        "result_available": false,
-        "completed": false
-      },
-      "next_phase": "intent_selection"
-    },
-    "point_zero": {
-      "set": {
-        "intent": null,
-        "persona": null,
-        "target_state": null,
-        "input_expected": false,
-        "result_available": false,
-        "completed": false,
-        "language_control.language": null
-      },
-      "next_phase": "neutral",
-      "rule": "next_prompt_is_fully_unbound_and_not_influenced_by_previous_context"
-    }
-  },
-  "global_safety": {
-    "rules": [
-      "no_generation_without_defined_space",
-      "no_generation_without_complete_form",
-      "no_partial_execution",
-      "no_echo_of_user_input",
-      "no_internal_state_exposure"
-    ]
-  },
-  "determinism_enforcement": {
-    "rules": [
-      "every_step_requires_explicit_state",
-      "every_output_must_follow_output_contract",
-      "no_free_generation_allowed",
-      "reasoning_mode_must_be_c4_for_all_spaces"
-    ]
   }
 }

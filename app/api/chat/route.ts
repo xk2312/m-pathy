@@ -209,12 +209,19 @@ if (entry) {
   };
 
   body.state = {
-    ...(body.state || {}),
-    extensions: [entry.id]
-  };
+  ...(body.state || {}),
+  extensions: [entry.id],
+  step: "start"
+};
+console.log("[M13] COMMAND EXECUTED:", entry.id);
 
-  console.log("[M13] COMMAND EXECUTED:", entry.id);
-}
+const currentStep = body.state?.step ?? "start";
+
+const stepConfig = extensionData?.steps?.[currentStep];
+
+if (stepConfig?.next) {
+  body.state.step = stepConfig.next;
+}}
 // - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
 
 // Session aus m_auth-Cookie lesen (falls vorhanden)
