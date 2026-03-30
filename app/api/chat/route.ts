@@ -11,6 +11,8 @@ import { cookies } from "next/headers";
 import crypto from "crypto";
 import registry from "@/registry/registry.json";
 
+const sessionStore = new Map<string, any>();
+
 export const runtime = "nodejs"; // wir lesen Dateien ⇒ Node-Runtime
 
 
@@ -186,93 +188,178 @@ const normalizedCommand = String(lastUserMessage)
   .replace(/\s+/g, " ")
   .trim();
 
-const entry = registry.registry.entries.find((e: any) => {
-  const registryCommand = String(e?.command ?? "")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim();
+let entry = null;
 
-  console.log("[M13][ENTRY CHECK]", {
-    registryCommand,
-    normalizedCommand
+if (!body.state?.extensions?.length) {
+  entry = registry.registry.entries.find((e: any) => {
+    const registryCommand = String(e?.command ?? "")
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .trim();
+
+    console.log("[M13][ENTRY CHECK]", {
+      registryCommand,
+      normalizedCommand
+    });
+
+    return registryCommand === normalizedCommand;
   });
-
-  return registryCommand === normalizedCommand;
-});
+}
 
 console.log("[M13][ENTRY RESULT]", {
   found: !!entry,
   entryId: entry?.id || null
 });
 
-if (entry) {
-  console.log("[M13] COMMAND EXECUTED:", entry.id);
-  console.log("[M13][DEBUG] RAW USER INPUT:", lastUserMessage);
-  console.log("[M13][DEBUG] NORMALIZED COMMAND:", normalizedCommand);
+let extensionData = null;
+// EXTENSION START
+if (!body.state?.extensions?.length && entry) {
+  console.log("[M13][ENGINE START]", entry.id);
+
   const filePath = path.join(process.cwd(), entry.path);
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const extensionData = JSON.parse(fileContent);
+
+  body.state = {
+    ...(body.state || {}),
+    extensions: [entry.id],
+    step: extensionData.entry
+  };
+}
+
+// EXTENSION FORTSETZEN
+if (body.state?.extensions?.length) {
+  const activeExtensionId = body.state.extensions[0];
+
+  const activeEntry = registry.registry.entries.find((e: any) => e.id === activeExtensionId);
+
+  if (activeEntry) {
+    const filePath = path.join(process.cwd(), activeEntry.path);
+    const fileContent = fs.readFileSync(filePath, "utf-8");
+    extensionData = JSON.parse(fileContent);
+
+    console.log("[M13][ENGINE CONTINUE]", {
+      id: activeEntry.id,
+      step: body.state?.step ?? null
+    });
+
+    console.log("[M13][EXTENSION LOADED]", {
+      id: extensionData?.id,
+      entry: extensionData?.entry,
+      steps: Object.keys(extensionData?.steps || {})
+    });
+  }
+}
+
+// NEUE EXTENSION STARTEN
+if (!extensionData && entry) {
+  console.log("[M13] COMMAND EXECUTED:", entry.id);
+  console.log("[M13][DEBUG] RAW USER INPUT:", lastUserMessage);
+  console.log("[M13][DEBUG] NORMALIZED COMMAND:", normalizedCommand);
+
+  const filePath = path.join(process.cwd(), entry.path);
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  extensionData = JSON.parse(fileContent);
 
   console.log("[M13][EXTENSION LOADED]", {
     id: extensionData?.id,
     entry: extensionData?.entry,
     steps: Object.keys(extensionData?.steps || {})
   });
-    body.messages[body.messages.length - 1] = {
-    role: "user",
-    content: lastUserMessage
+
+  body.state = {
+    ...(body.state || {}),
+    extensions: [entry.id],
+    step: body.state?.step ?? extensionData.entry
   };
+}
 
-body.state = {
-  ...(body.state || {}),
-  extensions: [entry.id],
-  step: body.state?.step ?? extensionData.entry
-};
-console.log("[M13] COMMAND EXECUTED:", entry.id);
-
+if (extensionData) {
 const lastInput = String(lastUserMessage).trim();
 
-if (body.state?.step && extensionData?.steps?.[body.state.step]?.next_map) {
-  const map = extensionData.steps[body.state.step].next_map;
+let currentStep = body.state?.step ?? extensionData.entry;
+const currentStepConfig = extensionData?.steps?.[currentStep];
+
+if (currentStep && currentStepConfig?.next_map) {
+  const map = currentStepConfig.next_map;
+
   if (map[lastInput]) {
-  console.log("[M13][STEP TRANSITION]", {
-    input: lastInput,
-    from: body.state.step,
-    to: map[lastInput]
+    const nextStepId = map[lastInput];
+
+    console.log("[M13][STEP TRANSITION]", {
+      input: lastInput,
+      from: currentStep,
+      to: nextStepId
+    });
+
+    if (currentStepConfig?.key) {
+      const value =
+        currentStepConfig.options && currentStepConfig.options[lastInput]
+          ? currentStepConfig.options[lastInput]
+          : lastInput;
+
+      body.state.data = {
+        ...(body.state.data || {}),
+        [currentStepConfig.key]: value
+      };
+
+      console.log("[M13][STATE WRITE]", {
+        key: currentStepConfig.key,
+        value,
+        fullState: body.state.data
+      });
+    }
+
+    currentStep = nextStepId;
+    body.state.step = currentStep;
+
+  } else {
+    console.log("[M13][STEP TRANSITION FAILED]", {
+      input: lastInput,
+      available: Object.keys(map)
+    });
+  }
+}
+
+// FALLBACK: HIERARCHISCHER PATH (z.B. 2 → 2.4 → 2.4.1)
+if (!extensionData?.steps?.[currentStep]) {
+  const parts = String(currentStep).split(".");
+
+  while (parts.length > 1) {
+    parts.pop();
+    const fallbackStep = parts.join(".");
+
+    if (extensionData?.steps?.[fallbackStep]) {
+      console.log("[M13][STEP FALLBACK]", {
+        from: currentStep,
+        to: fallbackStep
+      });
+
+      currentStep = fallbackStep;
+      break;
+    }
+  }
+}
+
+// FINAL VALIDATION
+if (!extensionData?.steps?.[currentStep]) {
+  console.log("[M13][STEP INVALID RESET]", {
+    step: currentStep,
+    fallback: extensionData.entry
   });
 
-  body.state.step = map[lastInput];
-} else {
-  console.log("[M13][STEP TRANSITION FAILED]", {
-    input: lastInput,
-    available: Object.keys(map)
-  });
-}
-const prevStep = extensionData?.steps?.[body.state.step];
-
-if (prevStep?.key) {
-  const value =
-    prevStep.options && prevStep.options[lastInput]
-      ? prevStep.options[lastInput]
-      : lastInput;
-
-  body.state.data = {
-    ...(body.state.data || {}),
-    [prevStep.key]: value
-  };
-
-  console.log("[M13][STATE WRITE]", {
-    key: prevStep.key,
-    value,
-    fullState: body.state.data
-  });
+  currentStep = extensionData.entry;
 }
 
-}
-
-const currentStep = body.state?.step ?? extensionData.entry;
+// STATE UPDATE
+body.state.step = currentStep;
 
 const stepConfig = extensionData?.steps?.[currentStep];
+
+console.log("[M13][STEP FINAL]", {
+  step: currentStep,
+  type: stepConfig?.type
+});
 
 console.log("[M13][STEP LOAD]", {
   step: currentStep,
@@ -319,28 +406,21 @@ if (stepConfig?.type === "question") {
 if (stepConfig?.type === "action") {
   const data = body.state?.data || {};
 
-  console.log("[M13][ACTION START]", {
+  console.log("[M13][ACTION READY]", {
     step: currentStep,
     data
   });
 
-  const prompt =
-    "LinkedIn Post:\n\n" +
-    "Age: " + data.age + "\n" +
-    "Job: " + data.job + "\n" +
-    "Goal: " + data.goal + "\n" +
-    "Format: " + data.format + "\n" +
-    "Tone: " + data.tone + "\n\n" +
-    "Write a high-quality LinkedIn post.";
-
-  console.log("[M13][PROMPT BUILT]", prompt);
-
   return NextResponse.json({
-    role: "assistant",
-    content: prompt,
+    role: "system",
+    content: JSON.stringify({
+      action: stepConfig.action,
+      data
+    }),
     state: body.state,
     meta: {
-      action: "generate_post_ready"
+      action: stepConfig.action,
+      status: "engine_complete"
     }
   }, { status: 200 });
 }}
