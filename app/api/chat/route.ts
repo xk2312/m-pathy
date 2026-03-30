@@ -200,59 +200,55 @@ if (entry) {
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const extensionData = JSON.parse(fileContent);
 
-  const currentStepId = body.state?.step ?? extensionData.entry;
-  const stepConfig = extensionData?.steps?.[currentStepId];
+  body.messages[body.messages.length - 1] = {
+  role: "user",
+  content: lastUserMessage
+};
 
-  let generatedOutput = "";
+body.state = {
+  ...(body.state || {}),
+  extensions: [entry.id],
+  step: body.state?.step ?? extensionData.entry
+};
+console.log("[M13] COMMAND EXECUTED:", entry.id);
 
-  if (stepConfig?.type === "message") {
-    const c = stepConfig.content;
+const lastInput = String(lastUserMessage).trim();
 
-    generatedOutput =
-      (c.greeting ? c.greeting + "\n\n" : "") +
-      (c.description ? c.description + "\n\n" : "") +
-      (c.options_intro ? c.options_intro + "\n\n" : "") +
-      (Array.isArray(c.options) ? c.options.map((o: string) => "- " + o).join("\n") + "\n\n" : "") +
-      (c.cta ? c.cta : "");
-
-    return NextResponse.json({
-      role: "assistant",
-      content: generatedOutput,
-      state: {
-        extension: entry.id,
-        step: stepConfig.next ?? currentStepId,
-        data: {}
-      }
-    });
-  }
-
-  if (stepConfig?.type === "input") {
-    const userInput = String(lastUserMessage).trim();
-
-    const map = stepConfig.next_map || {};
-    const nextStepId = map[userInput];
-
-    if (!nextStepId) {
-      return NextResponse.json({
-        role: "assistant",
-        content: "Ungültige Auswahl. Bitte erneut versuchen.",
-        state: body.state
-      });
-    }
-
-    const nextStep = extensionData.steps[nextStepId];
-
-    return NextResponse.json({
-      role: "assistant",
-      content: nextStep.q ?? "Weiter...",
-      state: {
-        ...body.state,
-        extension: entry.id,
-        step: nextStepId
-      }
-    });
+if (body.state?.step && extensionData?.steps?.[body.state.step]?.next_map) {
+  const map = extensionData.steps[body.state.step].next_map;
+  if (map[lastInput]) {
+    body.state.step = map[lastInput];
   }
 }
+
+const currentStep = body.state?.step ?? extensionData.entry;
+
+const stepConfig = extensionData?.steps?.[currentStep];
+
+let generatedOutput = "";
+
+if (stepConfig?.type === "message") {
+  const c = stepConfig.content;
+
+  generatedOutput =
+    (c.greeting ? c.greeting + "\n\n" : "") +
+    (c.description ? c.description + "\n\n" : "") +
+    (c.options_intro ? c.options_intro + "\n\n" : "") +
+    (Array.isArray(c.options) ? c.options.map((o: string) => "- " + o).join("\n") + "\n\n" : "") +
+    (c.cta ? c.cta : "");
+
+} else if (stepConfig?.type === "input") {
+  generatedOutput = "Bitte gib deine Auswahl ein.";
+}
+
+body.messages[body.messages.length - 1] = {
+  role: "user",
+  content: generatedOutput
+};
+
+if (stepConfig?.next) {
+  body.state.step = stepConfig.next;
+}}
 // - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
 
 // Session aus m_auth-Cookie lesen (falls vorhanden)
