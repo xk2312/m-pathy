@@ -44,20 +44,32 @@ export default function MessageBody({ msg, className }: MessageBodyProps) {
   const isAssistant = msg.role === 'assistant';
 
   // Versuch → renderMessage(), Fallback → Plaintext
- let node: ReactNode;
+let node: ReactNode;
 try {
-  if (typeof msg.content === "object" && msg.content !== null) {
-    const c = msg.content;
+  if (
+    typeof msg.content === "object" &&
+    msg.content !== null &&
+    !Array.isArray(msg.content)
+  ) {
+    const c = msg.content as {
+      greeting?: string;
+      description?: string;
+      options_intro?: string;
+      options?: string[];
+      cta?: string;
+    };
 
     node = (
       <div>
         {c.greeting && <p>{c.greeting}</p>}
+
         {c.description && <p>{c.description}</p>}
+
         {c.options_intro && <p>{c.options_intro}</p>}
 
         {Array.isArray(c.options) && (
           <ul style={{ paddingLeft: 20, marginTop: 10 }}>
-            {c.options.map((item: string, i: number) => (
+            {c.options.map((item, i) => (
               <li key={i} style={{ marginBottom: 6 }}>
                 {item}
               </li>
@@ -68,7 +80,7 @@ try {
         {c.cta && <p style={{ marginTop: 12 }}>{c.cta}</p>}
       </div>
     );
-  } else if (isAssistant && effectiveFmt === 'plain') {
+  } else if (isAssistant && effectiveFmt === 'plain' && typeof msg.content === "string") {
     node = (
       <span
         style={{
@@ -95,7 +107,9 @@ try {
         wordBreak: 'break-word',
       }}
     >
-      {typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content)}
+      {typeof msg.content === "string"
+        ? msg.content
+        : JSON.stringify(msg.content)}
     </span>
   );
     if (process.env.NODE_ENV !== 'production') {
