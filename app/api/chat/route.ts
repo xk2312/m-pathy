@@ -10,6 +10,7 @@ import { getBalance } from "@/lib/ledger";
 import { cookies } from "next/headers";
 import crypto from "crypto";
 import registry from "@/registry/registry.json";
+
 export const runtime = "nodejs"; // wir lesen Dateien ⇒ Node-Runtime
 
 
@@ -171,170 +172,43 @@ export async function POST(req: NextRequest) {
 try {
   const body = (await req.json()) as ChatBody;
 
-// === PRE-EXECUTION GATE ===
+// === COMMAND PARSER ===
 const lastUserMessage = body.messages?.[body.messages.length - 1]?.content ?? "";
-const incomingState = body.state || {};
 
-const executionIntentDetected =
-  typeof lastUserMessage === "string" &&
-  (
-    lastUserMessage.toLowerCase().includes("linkedin") ||
-    lastUserMessage.toLowerCase().includes("post") ||
-    lastUserMessage.toLowerCase().includes("campaign")
-  );
+const normalizedCommand = String(lastUserMessage)
+  .toLowerCase()
+  .replace(/\s+/g, " ")
+  .trim();
 
-const alreadyLoaded =
-  incomingState?.extensions &&
-  Array.isArray(incomingState.extensions) &&
-  incomingState.extensions.includes("linkedin_post_screener");
+const entry = registry.registry.entries.find((e: any) => {
+  const registryCommand = String(e?.command ?? "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
 
-if (executionIntentDetected && !alreadyLoaded) {
-  console.log("[M13] PRE-EXECUTION TRIGGERED");
-  console.log("[M13] EXTENSION NOT LOADED → LOAD");
+  return registryCommand === normalizedCommand;
+});
 
-  const executionResult = await handleExecution(req, {
-    messages: [
-      {
-        role: "system",
-        content: JSON.stringify({
-          action: "load_extension",
-          target: "linkedin_post_screener"
-        })
-      }
-    ]
-  });
+if (entry) {
+  const filePath = path.join(process.cwd(), entry.path);
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const extensionData = JSON.parse(fileContent);
 
-  const executionJson = await executionResult.json();
-
-  const updatedState = {
-    ...(incomingState || {}),
-    extensions: [
-      ...(incomingState?.extensions || []),
-      "linkedin_post_screener"
-    ]
-  };
-
-  body.messages.push({
+  body.messages[body.messages.length - 1] = {
     role: "user",
     content:
-      "SYSTEM EXTENSION CONTEXT\n\n" +
-      "A specialized LinkedIn extension is now loaded.\n\n" +
-      "Extension ID:\n" +
-      (executionJson.extension_loaded || "linkedin_post_screener") +
+      extensionData.entry +
       "\n\n" +
-      "Extension Content:\n" +
-      JSON.stringify(executionJson.data) +
-      "\n\n" +
-      "Original User Request:\n" +
-      lastUserMessage +
-      "\n\n" +
-      "Explain your LinkedIn capabilities, then ask the user what exactly is needed."
-  });
+      lastUserMessage
+  };
 
-  body.state = updatedState;
+  body.state = {
+    ...(body.state || {}),
+    extensions: [entry.id]
+  };
+
+  console.log("[M13] COMMAND EXECUTED:", entry.id);
 }
-
-if (executionIntentDetected && alreadyLoaded) {
-  console.log("[M13] EXTENSION ALREADY LOADED → SKIP");
-}
-
-async function handleExecution(req: NextRequest, body: any) {
-    try {
-      const last = body.messages?.[body.messages.length - 1];
-      const parsed = JSON.parse(last.content);
-
-      console.log("[M13] ACTION:", parsed.action, "TARGET:", parsed.target);
-
-      if (parsed.action === "load_registry") {
-        console.log("[M13] LOAD REGISTRY");
-
-        return NextResponse.json({
-          status: "ok",
-          data: registry.registry,
-          extension_loaded: null
-        });
-      }
-
-      if (parsed.action === "load_extension") {
-        console.log("[M13] LOAD EXTENSION:", parsed.target);
-
-        const entry = registry.registry.entries.find(
-          (e: any) => e.id === parsed.target
-        );
-
-        if (!entry) {
-          return NextResponse.json({
-            status: "invalid_target",
-            data: null,
-            extension_loaded: null
-          }, { status: 400 });
-        }
-
-const filePath = path.join(process.cwd(), entry.path);
-
-console.log("[M13] FILE PATH:", filePath);
-
-const fileContent = fs.readFileSync(filePath, "utf-8");
-const extensionData = JSON.parse(fileContent);
-
-console.log("[M13] EXTENSION LOADED SUCCESS:", entry.id);
-console.log("[M13] EXTENSION DATA KEYS:", Object.keys(extensionData || {}));
-
-const extensionsLoaded = [entry.id];
-
-console.log("[M13] STATE EXTENSIONS_LOADED:", extensionsLoaded);
-
-return NextResponse.json({
-  status: "success",
-  data: extensionData,
-  extension_loaded: entry.id,
-  state: {
-    extensions_loaded: extensionsLoaded
-  },
-  message: "Extension " + entry.id + " loaded successfully"
-});
-      }
-
-      return NextResponse.json({
-        status: "invalid_handoff",
-        data: null,
-        extension_loaded: null
-      }, { status: 400 });
-
-    } catch {
-      console.log("[M13] INVALID HANDOFF");
-
-      return NextResponse.json({
-        status: "invalid_handoff",
-        data: null,
-        extension_loaded: null
-      }, { status: 400 });
-    }
-  }
-
-    const incomingConversationId =
-  typeof (body as any)?.conversationId === "string" &&
-  String((body as any).conversationId).trim().length > 0
-    ? String((body as any).conversationId).trim()
-    : null;
-
-if (incomingConversationId && incomingConversationId !== conversationId) {
-  conversationId = incomingConversationId;
-}
-
-if (!Array.isArray(body.messages)) {
-  return NextResponse.json(
-    { error: "`messages` must be an array of { role, content }" },
-    { status: 400 }
-  );
-}
-
-const userPromptCount = body.messages.filter(
-  (m: any) => m?.role === "user"
-).length;
-
-serverCounter = userPromptCount > 0 ? userPromptCount : 1;
-
 // - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
 
 // Session aus m_auth-Cookie lesen (falls vorhanden)
@@ -543,55 +417,17 @@ const messages: ChatMessage[] = systemPrompt
  const irssRuntimePrompt = {
   role: "system",
   content: [
-    "Two response modes exist:",
-    "1. Content Mode",
-    "2. Execution Mode",
-    "",
-    "Content Mode rules:",
-    "Before emitting any IRSS, evaluate whether the request requires an extension.",
-    "If an extension is required:",
-    "- Do not emit IRSS",
-    "- Do not emit natural language",
-    "- Emit only a valid handoff JSON",
-    "",
-    "If no extension is required:",
+    "Emit every response in exactly this order:",
     "1. First, output one valid IRSS JSON block.",
     "2. Then output one blank line.",
     "3. Then output the normal response content.",
     "",
-    "Execution Mode rules:",
-    "If the response is a handoff or execution request, do NOT output IRSS.",
-    "Instead, output ONLY a valid JSON object representing the execution.",
-    "No additional text is allowed.",
-    "",
-    "Handoff JSON rules for Execution Mode:",
-    "Use exactly this JSON shape:",
-    "{",
-    '  "handoff": {',
-    '    "system": "M13",',
-    '    "version": "0.2",',
-    '    "session_prompt_counter": "<fill>",',
-    '    "orchestrator_id": "<fill>",',
-    '    "command": "<fill>",',
-    '    "target": "<extension_id>",',
-    '    "payload": {',
-    '      "<key>": "<value>"',
-    "    }",
-    "  }",
-    "}",
-    "",
-    "All fields must be filled with valid values.",
-    "Do not invent values.",
-    "Do not leave placeholders.",
-    "Do not output any text outside this JSON.",
-    "",
-    "IRSS rules for Content Mode:",
-    "The IRSS block must be the first emitted output.",
-    "Do not place any text before it.",
-    "Do not wrap the IRSS block in markdown fences.",
-    "Do not rename keys.",
-    "Do not omit keys.",
-    "Use exactly this JSON shape:",
+    "Rules:",
+    "- Do not omit IRSS.",
+    "- Do not place any text before IRSS.",
+    "- Do not output any handoff.",
+    "- Always continue with normal content after IRSS.",
+    "IRSS must use exactly this structure:",
     "{",
     '  "irss": {',
     '    "system": "M13",',
@@ -609,10 +445,6 @@ const messages: ChatMessage[] = systemPrompt
     '    "drift_risk": "none|low|medium|high"',
     "  }",
     "}",
-    "",
-    "Arrays must contain only valid identifiers or be empty [].",
-    "Do not invent values.",
-    "Do not leave placeholders.",
     "",
     "After the IRSS JSON block, continue with the normal answer in the same language as the user."
   ].join("\n"),
@@ -691,109 +523,17 @@ const response = await withGate(() => {
   return NextResponse.json({ error: "No message content" }, { status: 502 });
 }
 
-// === M13 EXECUTION SWITCH ===
-console.log("[M13] RAW CONTENT START");
-console.log(content);
-console.log("[M13] RAW CONTENT END");
-
-let parsed: any = null;
-let isJson = false;
-
-try {
-  parsed = JSON.parse(content);
-  isJson = typeof parsed === "object" && parsed !== null;
-  console.log("[M13] JSON PARSE SUCCESS", { isJson, parsed });
-} catch (err) {
-  console.log("[M13] JSON PARSE FAILED");
-}
-
-// === HANDOFF VALIDATION ===
-const isValidHandoff =
-  isJson &&
-  parsed.handoff &&
-  typeof parsed.handoff === "object" &&
-  typeof parsed.handoff.command === "string" &&
-  typeof parsed.handoff.target === "string" &&
-  typeof parsed.handoff.payload === "object";
-
-console.log("[M13] HANDOFF CHECK", {
-  isJson,
-  hasHandoff: !!parsed?.handoff,
-  command: parsed?.handoff?.command,
-  target: parsed?.handoff?.target,
-  hasPayload: typeof parsed?.handoff?.payload === "object",
-  isValidHandoff
-});
-
-if (isValidHandoff) {
-  const target = parsed?.handoff?.target;
-
-  const alreadyLoaded =
-    body.state?.extensions &&
-    Array.isArray(body.state.extensions) &&
-    body.state.extensions.includes(target);
-
-  if (alreadyLoaded) {
-    console.log("[M13] HANDOFF BLOCKED → ALREADY LOADED", target);
-  } else {
-    console.log("[M13] VALID HANDOFF DETECTED → EXECUTION");
-
-    const executionResult = await handleExecution(req, {
-      messages: [
-        {
-          role: "assistant",
-          content: JSON.stringify({
-            action: "load_extension",
-            target: target
-          })
-        }
-      ]
-    });
-
-    const parsedExec = await executionResult.json();
-
-    body.messages.push({
-      role: "user",
-      content:
-        "SYSTEM EXTENSION LOADED\n\n" +
-        "Extension: " +
-        (parsedExec.extension_loaded || "unknown") +
-        "\n\n" +
-        JSON.stringify(parsedExec.data)
-    });
-
-    body.state = {
-      ...(body.state || {}),
-      extensions: [
-        ...(body.state?.extensions || []),
-        target
-      ]
-    };
-  }
-}
-
 // === IRSS ENFORCEMENT ===
-const hasHandoffMarker = content.includes('"handoff"');
 const hasIrssMarker =
   content.includes('"irss"') ||
   content.includes("Session Prompt Counter:");
 
 console.log("[M13] IRSS CHECK", {
-  hasHandoffMarker,
   hasIrssMarker
 });
 
-// MIXED OUTPUT BLOCK
-if (hasHandoffMarker && hasIrssMarker) {
-  console.error("[M13] INVALID MIXED OUTPUT DETECTED");
-  return NextResponse.json(
-    { error: "Invalid mixed output (handoff + IRSS)" },
-    { status: 500 }
-  );
-}
-
-// CONTENT MODE WITHOUT IRSS BLOCK
-if (!hasHandoffMarker && !hasIrssMarker) {
+// IRSS MISSING BLOCK
+if (!hasIrssMarker) {
   console.error("[M13] IRSS MISSING IN CONTENT MODE");
   return NextResponse.json(
     { error: "IRSS missing in content mode" },
@@ -801,8 +541,7 @@ if (!hasHandoffMarker && !hasIrssMarker) {
   );
 }
 
-console.log("[M13] CONTENT MODE VALID → CONTINUE");
-
+console.log("[M13] CONTENT VALID → CONTINUE");
 // === TOKEN HANDLING ===
 let tokensUsed: number;
 

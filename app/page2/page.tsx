@@ -2383,32 +2383,6 @@ if (data?.status === "send_failed") {
   throw new Error("send_failed");
 }
 
-
-// 🔴 EXECUTION MODE HANDLING
-if (data?.status === "success" && data?.data) {
-  console.log("[M13][FRONTEND] EXECUTION MODE DETECTED");
-  console.log("[M13][FRONTEND] EXTENSION", data.extension_loaded);
-  console.log("[M13][FRONTEND] PAYLOAD", data.data);
-
-  const safePayload =
-    typeof data.data === "string"
-      ? data.data
-      : JSON.stringify(data.data, null, 2);
-
-  console.log("[M13][FRONTEND] SAFE PAYLOAD", safePayload);
-
-  return {
-    role: "assistant",
-    content:
-      "EXTENSION OUTPUT\n\n" +
-      "extension: " +
-      (data.extension_loaded || "unknown") +
-      "\n\n" +
-      safePayload,
-    format: "markdown",
-  } as ChatMessage;
-}
-
 // FreeGate-Limit: Login erforderlich
 const loginText =
   t("gc_please_login_to_continue") || "Please log in to continue.";
