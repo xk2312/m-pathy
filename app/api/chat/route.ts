@@ -335,12 +335,14 @@ if (stepConfig?.type === "action") {
 
   console.log("[M13][PROMPT BUILT]", prompt);
 
-  body.messages = [
-    {
-      role: "user",
-      content: prompt
+  return NextResponse.json({
+    role: "assistant",
+    content: prompt,
+    state: body.state,
+    meta: {
+      action: "generate_post_ready"
     }
-  ];
+  }, { status: 200 });
 }}
 // - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
 
