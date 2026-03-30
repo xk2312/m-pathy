@@ -10,7 +10,7 @@ import { getBalance } from "@/lib/ledger";
 import { cookies } from "next/headers";
 import crypto from "crypto";
 import registry from "@/registry/registry.json";
-import OpenAI from "openai";
+
 export const runtime = "nodejs"; // wir lesen Dateien ⇒ Node-Runtime
 
 
@@ -131,9 +131,6 @@ function getMessagesCharCount(messages: ChatMessage[]): number {
 // === POST-Handler (mit Gate + Backoff + FreeGate) ===
 export async function POST(req: NextRequest) {
 
-  const client = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY!,
-  });
   // === MEFL PATCH: HARD REQUEST CONTRACT ===
   const contentType = req.headers.get("content-type") || "";
 
@@ -230,60 +227,7 @@ if (entry) {
   }
 
   if (stepConfig?.type === "input") {
-    if (stepConfig.type === "action") {
-  const data = body.state?.data || {};
-
-  const mapped: Record<string, any> = {};
-
-  if (stepConfig.map) {
-    for (const key in stepConfig.map) {
-      const sourceKey = stepConfig.map[key];
-      mapped[key] = data[sourceKey];
-    }
-  }
-
-  const actionType = stepConfig.a;
-
-  // Prompt bauen
-  let prompt = "";
-
-  if (actionType === "generate_post") {
-    prompt = `
-Create a high-performing LinkedIn post.
-
-Target audience age: ${mapped.age}
-Profession: ${mapped.job}
-Goal: ${mapped.goal}
-Format: ${mapped.format}
-Tone: ${mapped.tone}
-
-Rules:
-- Include a strong hook
-- Include storytelling if possible
-- End with an engaging question
-- Add exactly 3 relevant hashtags at the end
-    `;
-  }
-
-const completion = await client.responses.create({
-  model: "gpt-4.1",
-  input: [
-    { role: "system", content: "You are a LinkedIn content expert." },
-    { role: "user", content: prompt }
-  ]
-});
-
-const output = completion.output_text || "No output.";
-  return NextResponse.json({
-    role: "assistant",
-    content: output,
-    state: {
-      extension: entry.id,
-      step: "end",
-      data
-    }
-  });
-}
+    
     const userInput = String(lastUserMessage).trim();
 
 const updatedData = {
