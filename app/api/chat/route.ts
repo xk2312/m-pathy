@@ -192,18 +192,36 @@ const entry = registry.registry.entries.find((e: any) => {
     .replace(/\s+/g, " ")
     .trim();
 
+  console.log("[M13][ENTRY CHECK]", {
+    registryCommand,
+    normalizedCommand
+  });
+
   return registryCommand === normalizedCommand;
 });
 
+console.log("[M13][ENTRY RESULT]", {
+  found: !!entry,
+  entryId: entry?.id || null
+});
+
 if (entry) {
+  console.log("[M13] COMMAND EXECUTED:", entry.id);
+  console.log("[M13][DEBUG] RAW USER INPUT:", lastUserMessage);
+  console.log("[M13][DEBUG] NORMALIZED COMMAND:", normalizedCommand);
   const filePath = path.join(process.cwd(), entry.path);
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const extensionData = JSON.parse(fileContent);
 
-  body.messages[body.messages.length - 1] = {
-  role: "user",
-  content: lastUserMessage
-};
+  console.log("[M13][EXTENSION LOADED]", {
+    id: extensionData?.id,
+    entry: extensionData?.entry,
+    steps: Object.keys(extensionData?.steps || {})
+  });
+    body.messages[body.messages.length - 1] = {
+    role: "user",
+    content: lastUserMessage
+  };
 
 body.state = {
   ...(body.state || {}),
@@ -217,17 +235,54 @@ const lastInput = String(lastUserMessage).trim();
 if (body.state?.step && extensionData?.steps?.[body.state.step]?.next_map) {
   const map = extensionData.steps[body.state.step].next_map;
   if (map[lastInput]) {
-    body.state.step = map[lastInput];
-  }
+  console.log("[M13][STEP TRANSITION]", {
+    input: lastInput,
+    from: body.state.step,
+    to: map[lastInput]
+  });
+
+  body.state.step = map[lastInput];
+} else {
+  console.log("[M13][STEP TRANSITION FAILED]", {
+    input: lastInput,
+    available: Object.keys(map)
+  });
+}
+const prevStep = extensionData?.steps?.[body.state.step];
+
+if (prevStep?.key) {
+  const value =
+    prevStep.options && prevStep.options[lastInput]
+      ? prevStep.options[lastInput]
+      : lastInput;
+
+  body.state.data = {
+    ...(body.state.data || {}),
+    [prevStep.key]: value
+  };
+
+  console.log("[M13][STATE WRITE]", {
+    key: prevStep.key,
+    value,
+    fullState: body.state.data
+  });
+}
+
 }
 
 const currentStep = body.state?.step ?? extensionData.entry;
 
 const stepConfig = extensionData?.steps?.[currentStep];
 
+console.log("[M13][STEP LOAD]", {
+  step: currentStep,
+  type: stepConfig?.type,
+  exists: !!stepConfig
+});
+
 let generatedOutput = "";
 
-if (stepConfig?.type === "message") {
+if (stepConfig?.type === "message" || stepConfig?.type === "selection") {
   const c = stepConfig.content;
 
   generatedOutput =
@@ -237,17 +292,55 @@ if (stepConfig?.type === "message") {
     (Array.isArray(c.options) ? c.options.map((o: string) => "- " + o).join("\n") + "\n\n" : "") +
     (c.cta ? c.cta : "");
 
-} else if (stepConfig?.type === "input") {
-  generatedOutput = "Bitte gib deine Auswahl ein.";
+  return NextResponse.json({
+    role: "assistant",
+    content: generatedOutput,
+    state: body.state
+  }, { status: 200 });
 }
 
-body.messages[body.messages.length - 1] = {
-  role: "user",
-  content: generatedOutput
-};
+if (stepConfig?.type === "question") {
+  generatedOutput = stepConfig.q;
 
-if (stepConfig?.next) {
-  body.state.step = stepConfig.next;
+  if (stepConfig.options) {
+    generatedOutput += "\n\n" +
+      Object.entries(stepConfig.options)
+        .map(([k, v]) => `${k}. ${v}`)
+        .join("\n");
+  }
+
+  return NextResponse.json({
+    role: "assistant",
+    content: generatedOutput,
+    state: body.state
+  }, { status: 200 });
+}
+
+if (stepConfig?.type === "action") {
+  const data = body.state?.data || {};
+
+  console.log("[M13][ACTION START]", {
+    step: currentStep,
+    data
+  });
+
+  const prompt =
+    "LinkedIn Post:\n\n" +
+    "Age: " + data.age + "\n" +
+    "Job: " + data.job + "\n" +
+    "Goal: " + data.goal + "\n" +
+    "Format: " + data.format + "\n" +
+    "Tone: " + data.tone + "\n\n" +
+    "Write a high-quality LinkedIn post.";
+
+  console.log("[M13][PROMPT BUILT]", prompt);
+
+  body.messages = [
+    {
+      role: "user",
+      content: prompt
+    }
+  ];
 }}
 // - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
 
