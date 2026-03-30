@@ -284,41 +284,54 @@ if (currentStep && currentStepConfig?.next_map) {
   const map = currentStepConfig.next_map;
 
   if (map[lastInput]) {
-    const nextStepId = map[lastInput];
+  const nextStepId = map[lastInput];
 
-    console.log("[M13][STEP TRANSITION]", {
-      input: lastInput,
-      from: currentStep,
-      to: nextStepId
-    });
+  console.log("[M13][STEP TRANSITION]", {
+    input: lastInput,
+    from: currentStep,
+    to: nextStepId
+  });
+
+  if (currentStepConfig?.key) {
+    const value =
+      currentStepConfig.options && currentStepConfig.options[lastInput]
+        ? currentStepConfig.options[lastInput]
+        : lastInput;
+
+    body.state.data = {
+      ...(body.state.data || {}),
+      [currentStepConfig.key]: value
+    };
+  }
+
+  currentStep = nextStepId;
+  body.state.step = currentStep;
+
+} else {
+  console.log("[M13][STEP TRANSITION FAILED]", {
+    input: lastInput,
+    available: Object.keys(map)
+  });
+
+  // 🔥 NEU: QUESTION FALLBACK
+  if (currentStepConfig?.type === "question" && currentStepConfig?.next) {
 
     if (currentStepConfig?.key) {
-      const value =
-        currentStepConfig.options && currentStepConfig.options[lastInput]
-          ? currentStepConfig.options[lastInput]
-          : lastInput;
-
       body.state.data = {
         ...(body.state.data || {}),
-        [currentStepConfig.key]: value
+        [currentStepConfig.key]: lastInput
       };
-
-      console.log("[M13][STATE WRITE]", {
-        key: currentStepConfig.key,
-        value,
-        fullState: body.state.data
-      });
     }
 
-    currentStep = nextStepId;
-    body.state.step = currentStep;
-
-  } else {
-    console.log("[M13][STEP TRANSITION FAILED]", {
-      input: lastInput,
-      available: Object.keys(map)
+    console.log("[M13][QUESTION AUTO TRANSITION]", {
+      from: currentStep,
+      to: currentStepConfig.next
     });
+
+    currentStep = currentStepConfig.next;
+    body.state.step = currentStep;
   }
+}
 }
 
 // FALLBACK: HIERARCHISCHER PATH (z.B. 2 → 2.4 → 2.4.1)

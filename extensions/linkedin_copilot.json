@@ -1,99 +1,125 @@
 {
   "id": "linkedin_copilot",
-  "version": "2.0",
-  "entry": "start",
-  "archive": {},
+  "version": "3.0",
+  "entry": "1",
   "steps": {
-    "start": {
+
+    "1": {
       "type": "selection",
       "language": "dynamic",
       "content": {
-        "greeting": "Willkommen bei LinkedIn Copilot.",
-        "description": "LinkedIn Copilot hilft dir dabei dein LinkedIn Profil auf Vordermann zu bringen und genau die User zu erreichen, auf die du abzielst.",
-        "options_intro": "Dir stehen folgende Workflows zur Verfügung:",
-        "options": [
-          "1. Post entwickeln",
-          "2. Postkampagne entwickeln",
-          "3. Post analysieren",
-          "4. Profilinfo anpassen",
-          "5. Profilheader anpassen",
-          "6. Private Message verfassen",
-          "7. Private Message beantworten",
-          "8. Vernetzungsanfrage Text"
-        ],
-        "cta": "Bitte gib die Nummer ein."
+        "greeting": "Welcome to LinkedIn Copilot.",
+        "description": "Optimize your LinkedIn profile and reach the exact audience you are targeting.",
+        "options": {
+          "1": "Create a post",
+          "2": "Create a post campaign",
+          "3": "Analyze a post",
+          "4": "Optimize profile info",
+          "5": "Optimize profile header",
+          "6": "Write a private message",
+          "7": "Reply to a private message",
+          "8": "Connection request message"
+        }
       },
       "next_map": {
-        "1": "wps_s1",
-        "2": "wpc_entry",
-        "3": "wpa_entry",
-        "4": "wpi_entry",
-        "5": "wph_entry",
-        "6": "wpmc_entry",
-        "7": "wpmr_entry",
-        "8": "wct_entry"
+        "1": "1.1",
+        "2": "2.1",
+        "3": "3.1",
+        "4": "4.1",
+        "5": "5.1",
+        "6": "6.1",
+        "7": "7.1",
+        "8": "8.1"
       }
     },
 
-    "wps_s1": {
-      "type": "question",
-      "q": "Zielgruppe Alter?",
-      "options": {
-        "a": "20-40",
-        "b": "40-60",
-        "c": "60+"
+    "1.1": {
+      "type": "selection",
+      "content": {
+        "q": "Target audience age?",
+        "options": {
+          "1": "20-40",
+          "2": "40-60",
+          "3": "60+"
+        }
       },
       "key": "age",
-      "next": "wps_s2"
+      "next_map": {
+        "1": "1.2",
+        "2": "1.2",
+        "3": "1.2"
+      }
     },
 
-    "wps_s2": {
+    "1.2": {
       "type": "question",
-      "q": "Beruf der Zielgruppe (1 Begriff)",
+      "content": {
+        "q": "Profession of the target audience (one word)"
+      },
       "input": "short_text",
       "key": "job",
-      "next": "wps_s3"
+      "next": "1.3"
     },
 
-    "wps_s3": {
-      "type": "question",
-      "q": "Ziel des Posts?",
-      "options": {
-        "a": "Meinungsführerschaft",
-        "b": "Kaufbereitschaft",
-        "c": "Direkte Bewerbung"
+    "1.3": {
+      "type": "selection",
+      "content": {
+        "q": "Goal of the post?",
+        "options": {
+          "1": "Thought leadership",
+          "2": "Purchase intent",
+          "3": "Direct application"
+        }
       },
       "key": "goal",
-      "next": "wps_s4"
+      "next_map": {
+        "1": "1.4",
+        "2": "1.4",
+        "3": "1.4"
+      }
     },
 
-    "wps_s4": {
-      "type": "question",
-      "q": "Format?",
-      "options": {
-        "a": "Sachlich",
-        "b": "Storytelling",
-        "c": "Meinung",
-        "d": "Provokativ",
-        "e": "Lehrreich"
+    "1.4": {
+      "type": "selection",
+      "content": {
+        "q": "Content format?",
+        "options": {
+          "1": "Formal",
+          "2": "Storytelling",
+          "3": "Opinion",
+          "4": "Provocative",
+          "5": "Educational"
+        }
       },
       "key": "format",
-      "next": "wps_s5"
+      "next_map": {
+        "1": "1.5",
+        "2": "1.5",
+        "3": "1.5",
+        "4": "1.5",
+        "5": "1.5"
+      }
     },
 
-    "wps_s5": {
-      "type": "question",
-      "q": "Ansprache?",
-      "options": {
-        "a": "Du",
-        "b": "Sie",
-        "c": "Automatisch"
+    "1.5": {
+      "type": "selection",
+      "content": {
+        "q": "Tone of address?",
+        "options": {
+          "1": "Informal (you)",
+          "2": "Formal (you)",
+          "3": "Automatic"
+        }
       },
       "key": "tone",
-      "next": "wps_final"
+      "next_map": {
+        "1": "1.6",
+        "2": "1.6",
+        "3": "1.6"
+      }
     },
 
-    "wps_final": {
+    "1.6": {
       "type": "action",
       "action": "generate_post",
       "input_keys": ["age", "job", "goal", "format", "tone"],
@@ -121,5 +147,6 @@
     "end": {
       "type": "terminal"
     }
+
   }
 }
