@@ -227,39 +227,30 @@ if (entry) {
   }
 
   if (stepConfig?.type === "input") {
-    
     const userInput = String(lastUserMessage).trim();
 
-const updatedData = {
-  ...(body.state?.data || {})
-};
+    const map = stepConfig.next_map || {};
+    const nextStepId = map[userInput];
 
-if (stepConfig.k) {
-  updatedData[stepConfig.k] = userInput;
-}
+    if (!nextStepId) {
+      return NextResponse.json({
+        role: "assistant",
+        content: "Ungültige Auswahl. Bitte erneut versuchen.",
+        state: body.state
+      });
+    }
 
-const map = stepConfig.next_map || {};
-const nextStepId = map[userInput];
+    const nextStep = extensionData.steps[nextStepId];
 
-if (!nextStepId) {
-  return NextResponse.json({
-    role: "assistant",
-    content: "Ungültige Auswahl. Bitte erneut versuchen.",
-    state: body.state
-  });
-}
-
-const nextStep = extensionData.steps[nextStepId];
-
-   return NextResponse.json({
-  role: "assistant",
-  content: nextStep.q ?? "Weiter...",
-  state: {
-    extension: entry.id,
-    step: nextStepId,
-    data: updatedData
-  }
-});
+    return NextResponse.json({
+      role: "assistant",
+      content: nextStep.q ?? "Weiter...",
+      state: {
+        ...body.state,
+        extension: entry.id,
+        step: nextStepId
+      }
+    });
   }
 }
 // - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
@@ -454,16 +445,8 @@ if (balanceBefore <= 0) {
       };
     })();
 
-if (body.state?.extension) {
-  console.log("[M13] EXTENSION ACTIVE - SKIP LLM");
-  return NextResponse.json({
-    role: "assistant",
-    content: "STATE ERROR - Extension flow not resolved",
-    state: body.state
-  });
-}
-
 const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
+
 const messages: ChatMessage[] = systemPrompt
   ? [
       { role: "system", content: systemPrompt },
