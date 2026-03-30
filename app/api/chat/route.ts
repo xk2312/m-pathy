@@ -197,9 +197,15 @@ if (entry) {
   body.messages[body.messages.length - 1] = {
     role: "user",
     content:
-      extensionData.entry +
-      "\n\n" +
-      lastUserMessage
+  "SYSTEM EXTENSION ACTIVATED\n\n" +
+  "You are now running the following extension:\n\n" +
+  JSON.stringify(extensionData, null, 2) +
+  "\n\n" +
+  "Follow the extension strictly.\n" +
+  "Execute its flow step by step.\n" +
+  "Do not deviate.\n\n" +
+  "User command:\n" +
+  lastUserMessage
   };
 
   body.state = {
