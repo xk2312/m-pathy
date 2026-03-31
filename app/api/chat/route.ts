@@ -483,6 +483,13 @@ if (payloadBytes > MAX_PAYLOAD_BYTES) {
 
 console.log("ENTER GATE");
 
+if (engineResult.active) {
+  return NextResponse.json({
+    message: engineResult.step,
+    state: engineResult.state
+  });
+}
+
 const response = await withGate(() => {
   console.log("FETCH START");
   return retryingFetch(buildAzureUrl(), init, 5);
@@ -693,13 +700,6 @@ res.headers.set("X-Tokens-Overdraw", "0");
 
 if (cookie) {
   res.headers.set("Set-Cookie", cookie);
-}
-
-if (engineResult.active) {
-  return NextResponse.json({
-    message: engineResult.step,
-    state: engineResult.state
-  });
 }
 
 return res;
