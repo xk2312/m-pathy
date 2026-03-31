@@ -5,17 +5,18 @@
   "steps": {
 
     "1": {
-      "type": "selection",
-      "language": "dynamic",
-      "content": {
-        "greeting": "Welcome to the LCIS Engine.",
-        "description": "Build your LinkedIn Collective Intelligence Score and generate a high-impact B2B report.",
-        "options": {
-          "1": "Start LCIS Analysis"
-        }
-      },
-      "next": "1.1"
-    },
+  "type": "selection",
+  "language": "dynamic",
+  "content": {
+    "greeting": "Welcome to the LCIS Engine.",
+    "description": "Build your LinkedIn Collective Intelligence Score.",
+    "options": {
+      "1": "Start LCIS Analysis"
+    }
+  },
+  "key": "entry",
+  "next": "1.1"
+},
 
     "1.1": {
       "type": "selection",
