@@ -181,6 +181,15 @@ const engineResult = runEngine({
   registry
 })
 
+if (engineResult.active) {
+  body.messages.push({
+    role: "user",
+    content: JSON.stringify(engineResult.step)
+  })
+
+  ;(body as any).state = engineResult.state
+}
+
 console.log("[ENGINE RESULT AFTER RUN]", engineResult);
 
 const incomingConversationId =
