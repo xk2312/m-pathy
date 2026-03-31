@@ -690,6 +690,7 @@ const res = NextResponse.json(
     balance_after: balanceAfter,
     debug_usage: usage,
     triketon: triketon ?? null,
+    state: engineResult.state
   },
   { status: 200 }
 );
