@@ -695,6 +695,13 @@ if (cookie) {
   res.headers.set("Set-Cookie", cookie);
 }
 
+if (engineResult.active) {
+  return NextResponse.json({
+    message: engineResult.step,
+    state: engineResult.state
+  });
+}
+
 return res;
 
   } catch (err: any) {
