@@ -462,9 +462,23 @@ const irssRuntimePrompt = {
   ].join("\n"),
 };
 
+const extensionsLoaded =
+  engineResult.active && engineResult.extensionId
+    ? [engineResult.extensionId]
+    : [];
+
+const irssContextPrompt: ChatMessage = {
+  role: "system",
+  content:
+    `IRSS RUNTIME CONTEXT:\n` +
+    `extensions_loaded=${JSON.stringify(extensionsLoaded)}\n` +
+    `Use this value exactly in the IRSS JSON.`
+};
+
 const payload = {
   messages: [
     irssRuntimePrompt,
+    irssContextPrompt,
     ...messages
   ],
   temperature: 0.7,
