@@ -19,6 +19,15 @@
         "path": "extensions/lcis_engine.json",
         "registry_class": "extension",
         "description": "Builds a LinkedIn Collective Intelligence Score and generates a structured multi-part B2B report"
+      },
+      {
+        "id": "kson_engine",
+        "type": "extension",
+        "name": "KSON Engine",
+        "command": "echo kson engine",
+        "path": "extensions/kson_engine.json",
+        "registry_class": "extension",
+        "description": "Generates a deep 13-vector energy profile using deterministic user input and produces a multi-output heavy expansion personality report"
       }
     ]
   }

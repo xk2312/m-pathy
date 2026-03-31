@@ -1,0 +1,221 @@
+{
+  "id": "kson_energy_profile",
+  "version": "1.0",
+  "entry": "1",
+  "steps": {
+
+    "1": {
+      "type": "selection",
+      "language": "dynamic",
+      "content": {
+        "greeting": "Welcome.",
+        "description": "Answer a few questions to generate a deep personality profile.",
+        "options": {
+          "1": "Start"
+        }
+      },
+      "key": "entry",
+      "next": "1.1"
+    },
+
+"1.1": {
+  "type": "selection",
+  "content": {
+    "q": "When facing a choice, do you prefer starting something new even without certainty, or continuing something proven and reliable?",
+    "options": {
+      "1": "Start something new",
+      "2": "Continue proven things"
+    }
+  },
+  "key": "one",
+  "next": "1.2"
+},
+
+"1.2": {
+  "type": "selection",
+  "content": {
+    "q": "Do you prefer balancing opposites, or keeping things consistent and uniform?",
+    "options": {
+      "1": "Balance opposites",
+      "2": "Keep it consistent"
+    }
+  },
+  "key": "two",
+  "next": "1.3"
+},
+
+"1.3": {
+  "type": "selection",
+  "content": {
+    "q": "Would you rather explore something unknown, or follow a safe and predictable path?",
+    "options": {
+      "1": "Explore the unknown",
+      "2": "Choose the safe path"
+    }
+  },
+  "key": "three",
+  "next": "1.4"
+},
+
+"1.4": {
+  "type": "selection",
+  "content": {
+    "q": "Do you prefer structured planning or acting based on intuition and feeling?",
+    "options": {
+      "1": "Structured planning",
+      "2": "Act on intuition"
+    }
+  },
+  "key": "four",
+  "next": "1.5"
+},
+
+"1.5": {
+  "type": "selection",
+  "content": {
+    "q": "In a difficult situation, do you step back and develop a strategy, or clarify things immediately?",
+    "options": {
+      "1": "Develop a strategy first",
+      "2": "Clarify immediately"
+    }
+  },
+  "key": "five",
+  "next": "1.6"
+},
+
+"1.6": {
+  "type": "selection",
+  "content": {
+    "q": "If you had to choose, would you prefer material security or emotional fulfillment?",
+    "options": {
+      "1": "Material security",
+      "2": "Emotional fulfillment"
+    }
+  },
+  "key": "six",
+  "next": "1.7"
+},
+
+"1.7": {
+  "type": "selection",
+  "content": {
+    "q": "What feels more rewarding: effortless success or achieving a goal through discipline?",
+    "options": {
+      "1": "Effortless success",
+      "2": "Disciplined achievement"
+    }
+  },
+  "key": "seven",
+  "next": "1.8"
+},
+
+"1.8": {
+  "type": "selection",
+  "content": {
+    "q": "Do you value living the moment fully or building a stable future?",
+    "options": {
+      "1": "Live the moment",
+      "2": "Build the future"
+    }
+  },
+  "key": "eight",
+  "next": "1.9"
+},
+
+"1.9": {
+  "type": "selection",
+  "content": {
+    "q": "When things get difficult, do you persist or redirect your focus?",
+    "options": {
+      "1": "Persist",
+      "2": "Redirect"
+    }
+  },
+  "key": "nine",
+  "next": "1.10"
+},
+
+"1.10": {
+  "type": "selection",
+  "content": {
+    "q": "Do you believe more in a higher order or in what is directly observable?",
+    "options": {
+      "1": "Higher order",
+      "2": "Observable reality"
+    }
+  },
+  "key": "ten",
+  "next": "1.11"
+},
+
+"1.11": {
+  "type": "selection",
+  "content": {
+    "q": "Would you prioritize collective peace or personal prosperity?",
+    "options": {
+      "1": "Collective peace",
+      "2": "Personal prosperity"
+    }
+  },
+  "key": "eleven",
+  "next": "1.12"
+},
+
+"1.12": {
+  "type": "selection",
+  "content": {
+    "q": "Do you see life as guided by a deeper flow or by randomness and mechanics?",
+    "options": {
+      "1": "Deeper flow",
+      "2": "Random mechanics"
+    }
+  },
+  "key": "twelve",
+  "next": "1.13"
+},
+
+"1.13": {
+  "type": "selection",
+  "content": {
+    "q": "In a group, do you naturally move into the center or stay part of the surrounding circle?",
+    "options": {
+      "1": "Move into the center",
+      "2": "Stay in the circle"
+    }
+  },
+  "key": "thirteen",
+  "next": "1.14"
+},
+
+"1.14": {
+  "type": "action",
+  "action": "generate_energy_profile",
+  "input_keys": [
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+    "eleven",
+    "twelve",
+    "thirteen"
+  ],
+      "rules": {
+        "analysis_depth": "maximum",
+        "interpretation_model": "13_vector_system",
+        "mapping": {
+          "1": "strong",
+          "2": "weak"
+        },
+        "instruction": "You are not generating a generic analysis. You are interpreting a deterministic 13-vector energy system. Each input represents a binary value (0 or 1) across thirteen positions: EINS, ZWEI, DREI, VIER, FUENF, SECHS, SIEBEN, ACHT, NEUN, ZEHN, ELF, ZWOELF, DREIZEHN. These values define an energy profile that must be analyzed with precision, depth, and structural awareness. You must not guess. You must not generalize. You must not use generic personality language. You must strictly interpret the structure. CORE INTERPRETATION RULES 1. SINGLE VECTORS Each number represents an independent energy vector. Value 1 = strong expression of this vector Value 0 = weak or reduced expression You must interpret each vector in terms of behavioral tendency, decision pattern, internal orientation, and energetic expression. 2. OPPOSING VECTORS Each vector has an opposing counterpart. You must analyze imbalance between opposites, internal tension, and dominant vs suppressed polarity. These tensions are critical and must be explicitly described. 3. STRONG ZONES Clusters of multiple 1 values indicate dominant energy zones. You must identify these zones and describe how they shape behavior, identity, and external impact. 4. WEAK ZONES Clusters of 0 values indicate underdeveloped or avoided zones. You must identify these clearly and describe blind spots, avoidance patterns, or missing capabilities. 5. CLUSTER VECTORS (TRIPLE STRUCTURE) Always analyze adjacent clusters of three: (EINS, ZWEI, DREI), (ZWEI, DREI, VIER), (DREI, VIER, FUENF) continuing until (ELF, ZWOELF, DREIZEHN). Each cluster forms a local energy system. You must detect patterns inside clusters, identify reinforcement or disruption, and describe micro-dynamics. 6. GLOBAL STRUCTURE You must evaluate the full system: balance vs imbalance, concentration vs distribution, internal coherence vs fragmentation, stability vs tension density. 7. REAL WORLD TRANSLATION Translate the structure into real human behavior. You must describe decision-making patterns, reaction under pressure, relationship behavior, communication style, control vs trust dynamics, long-term vs short-term orientation, typical strengths, and typical self-sabotage patterns. OUTPUT REQUIREMENTS You must generate a high impact personality report that feels precise, personal, recognizable, and psychologically deep. The user must feel this is exactly me. FORMAT REQUIREMENT You must use the Heavy Expansion Format with the following structure: sentence, paragraph, 3 to 5 bullet points, sentence, paragraph, table with 5 to 7 rows and 3 to 5 columns, sentence, paragraph, 3 to 5 bullet points, paragraph, sentence. MULTI OUTPUT RULE The full report is too large for one response. You must split the report into multiple consecutive outputs, continue automatically, never summarize prematurely, never shorten content, and never skip sections. Each output must clearly continue the previous one. FINAL GOAL This is a reconstruction of a human energy structure. Precision is mandatory. Depth is mandatory. Recognition is mandatory. Do not soften. Do not generalize. Do not dilute. Build a report that hits with full clarity."
+      },
+      "next": null
+    }
+
+  }
+}
