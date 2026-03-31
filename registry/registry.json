@@ -1,6 +1,6 @@
 {
   "registry": {
-    "version": "0.2",
+    "version": "0.3",
     "entries": [
       {
         "id": "linkedin_copilot",
@@ -10,6 +10,15 @@
         "path": "extensions/linkedin_copilot.json",
         "registry_class": "extension",
         "description": "Guides the user through LinkedIn content creation, analysis and interaction workflows"
+      },
+      {
+        "id": "lcis_engine",
+        "type": "extension",
+        "name": "LCIS Engine",
+        "command": "echo lcis engine",
+        "path": "extensions/lcis_engine.json",
+        "registry_class": "extension",
+        "description": "Builds a LinkedIn Collective Intelligence Score and generates a structured multi-part B2B report"
       }
     ]
   }
