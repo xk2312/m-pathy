@@ -2368,7 +2368,7 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
     return assistantMsg;
   }
 
- const data = await res.json();
+const data = await res.json();
 
 console.log("[M13][FRONTEND] RAW RESPONSE", data);
 
@@ -2376,11 +2376,25 @@ if (data?.state) {
   console.log("[M13][FRONTEND] STATE RECEIVED", data.state);
   setSystemState(data.state);
 }
-console.log("[M13][FRONTEND] TYPE", typeof data);
-console.log("[M13][FRONTEND] KEYS", data ? Object.keys(data) : null);
 
 if (data?.status === "send_failed") {
   throw new Error("send_failed");
+}
+
+// 🔥 ENGINE RESPONSE HANDLING
+if (data?.message) {
+  return {
+    id:
+      typeof crypto !== 'undefined' &&
+      typeof (crypto as any).randomUUID === 'function'
+        ? (crypto as any).randomUUID()
+        : `${Date.now()}_${Math.random().toString(16).slice(2)}`,
+    role: "assistant",
+    content: typeof data.message === "string"
+      ? data.message
+      : JSON.stringify(data.message, null, 2),
+    format: "markdown"
+  };
 }
 
 // FreeGate-Limit: Login erforderlich
