@@ -1,0 +1,726 @@
+FULL TELEMETRY
+prompt: 22
+drift: no
+
+---
+
+## RESEARCH MODUS
+
+Verständnis: 10/10
+Du willst einen umsetzbaren, klar sequenzierten Build-Plan für ein Dev Team, mit Zwischenzielen zur Fehlerisolierung.
+
+Sinnhaftigkeit: 10/10
+Das verhindert große Debug-Blöcke und ermöglicht kontrollierten Fortschritt.
+
+Kommentar:
+Der Plan muss strikt, minimal und testgetrieben sein.
+
+---
+
+## EXTENSION ENGINE BUILD PLAN (KANONISCH)
+
+---
+
+## PHASE 0: BASELINE FREEZE
+
+**Ziel:** Stabilen Ausgangszustand sichern
+
+**Aktionen:**
+
+* route.ts bleibt unverändert (aktuelle stabile Version)
+* registry.json bleibt wie definiert
+* Extension JSON bleibt unverändert
+
+**Ergebnis:**
+
+* reproduzierbarer Ausgangspunkt
+* keine aktive Engine im Flow
+
+---
+
+## PHASE 1: ENGINE CORE (ISOLIERT)
+
+**Ziel:** Reine, deterministische Engine ohne Integration
+
+**Ort:**
+
+```
+/lib/m13/engine.ts
+```
+
+**Funktion:**
+
+* Input:
+
+```ts
+{ message, state, registry }
+```
+
+* Output:
+
+```ts
+{
+  active: boolean,
+  extensionId?: string,
+  stepId?: string,
+  payload: object
+}
+```
+
+**Logik:**
+
+1. Command Match prüfen
+2. Extension aus registry laden
+3. Extension JSON laden
+4. aktuellen Step bestimmen
+5. Step zurückgeben
+
+**WICHTIG:**
+
+* keine Azure Calls
+* keine Formatierung
+* kein Logging
+
+---
+
+## PHASE 1 TEST
+
+**Ziel:** Engine isoliert validieren
+
+**Tests:**
+
+* Command erkannt → richtige Extension geladen
+* kein Command → Engine bleibt inaktiv
+* Step 1 wird korrekt geliefert
+* next Step wird korrekt erkannt
+* next === null → korrekt erkannt
+
+---
+
+## PHASE 2: STATE MANAGEMENT
+
+**Ziel:** deterministische Zustandsführung
+
+**State:**
+
+```ts
+{
+  active: boolean,
+  extensionId: string | null,
+  stepId: string | null
+}
+```
+
+**Logik:**
+
+* Open → Loop bei Command
+* Loop → Loop bei next vorhanden
+* Loop → Deaktiviert bei next === null
+
+---
+
+## PHASE 2 TEST
+
+* Start → Loop korrekt
+* Step progression korrekt
+* letzter Step → Engine deaktiviert
+* kein Doppel-Trigger möglich
+
+---
+
+## PHASE 3: LOOP INTEGRATION (OHNE route.ts)
+
+**Ziel:** kompletter Flow simuliert
+
+**Test-Flow:**
+
+1. Command senden
+2. Step 1 erzeugen
+3. User Antwort simulieren
+4. Step 2 erzeugen
+5. …
+6. letzter Step
+7. Engine deaktiviert
+
+---
+
+## PHASE 3 TEST
+
+* kompletter Pfad läuft deterministisch
+* kein Überspringen
+* kein Wiederholen
+* Exit exakt einmal
+
+---
+
+## PHASE 4: LLM CONTRACT
+
+**Ziel:** definieren, was an LLM geht
+
+**Engine gibt zurück:**
+
+```ts
+{
+  extensionActive: true,
+  step,
+  context
+}
+```
+
+**route.ts übernimmt:**
+
+* baut daraus LLM Prompt
+* sendet an Azure
+
+---
+
+## PHASE 4 TEST
+
+* jeder Step erzeugt korrekten LLM Input
+* LLM Output wird korrekt zurückgeführt
+
+---
+
+## PHASE 5: route.ts INTEGRATION
+
+**Ziel:** Engine einhängen ohne Aufblähung
+
+**Einbaupunkt:**
+
+* vor jeder LLM Anfrage
+
+**Minimaler Code:**
+
+```ts
+const engineResult = runEngine(ctx)
+
+if (engineResult.active) {
+  // nutze engine payload für LLM
+} else {
+  // normaler Chat
+}
+```
+
+---
+
+## PHASE 5 TEST
+
+* normaler Chat bleibt unverändert
+* Command startet Engine sofort
+* kein Side Effect
+
+---
+
+## PHASE 6: END-TO-END TEST
+
+**Ziel:** kompletter Flow
+
+**Test:**
+
+```text
+echo linkedin copilot
+```
+
+Erwartung:
+
+1. Flow startet sofort
+2. User wird geführt
+3. Steps laufen sauber
+4. Output wird erzeugt
+5. Engine beendet sich
+6. Chat geht normal weiter
+
+---
+
+## PHASE 7: EDGE CASE HARDENING
+
+**Ziel:** System stabilisieren
+
+**Tests:**
+
+* falscher Step Key
+* fehlendes next
+* doppelte User Inputs
+* Abbruch mitten im Flow
+* erneuter Command während Loop
+
+---
+
+## FINALER ZUSTAND
+
+* Engine ist isoliert
+* JSON ist deterministisch
+* route.ts bleibt schlank
+* kein doppelter Flow
+* kein Drift
+
+---
+
+## FINALER SATZ
+
+👉 Schritt für Schritt bauen
+👉 jeden Schritt testen
+👉 nichts überspringen
+👉 keine Parallelentwicklung
+
+
+---
+
+## RESEARCH MODUS
+
+Verständnis: 10/10
+Du willst klare Testregeln und verpflichtendes Logging definieren, um Debugging von Anfang an sauber zu ermöglichen.
+
+Sinnhaftigkeit: 10/10
+Das verhindert Blackbox-Verhalten und reduziert Debugging-Aufwand massiv.
+
+Kommentar:
+Das ist die Absicherungsebene, die entscheidet, ob das System wartbar bleibt.
+
+---
+
+## APPENDIX: TESTING & DEBUGGING PROTOKOLL
+
+---
+
+## 1. TESTPRINZIP
+
+Die Engine wird **isoliert getestet**.
+
+Keine Verbindung zu:
+
+* route.ts
+* Azure
+* LLM
+
+👉 Tests erfolgen ausschließlich gegen simulierte Inputs.
+
+---
+
+## 2. TESTMETHODIK
+
+### 2.1 Einzeltests (State & Transition)
+
+Für jeden Zustand:
+
+* Open → Loop
+* Loop → Loop
+* Loop → Deaktiviert
+
+👉 Jeder Übergang wird einzeln getestet.
+
+---
+
+### 2.2 Sequenztests (kompletter Flow)
+
+Simulierter Ablauf:
+
+```text id="g1z7af"
+1. Command
+2. Step 1
+3. User Input
+4. Step 2
+5. ...
+6. letzter Step
+7. Engine deaktiviert
+```
+
+👉 Erwartung:
+
+* keine Sprünge
+* keine Wiederholungen
+* genau ein Exit
+
+---
+
+### 2.3 Edge Case Tests
+
+Pflichtfälle:
+
+* next === null korrekt erkannt
+* fehlendes next → Fehler
+* ungültiger Step Key → Fehler
+* doppelte User Inputs
+* erneuter Command während Loop
+
+---
+
+## 3. LOGGING (PFLICHT)
+
+Von Beginn an werden **Logs an allen kritischen Punkten eingebaut**.
+
+---
+
+## 3.1 Mindest-Logs pro Request
+
+```text id="v8p2wr"
+[ENGINE] incoming message
+[ENGINE] current state
+[ENGINE] command matched (true/false)
+[ENGINE] extension loaded (id)
+[ENGINE] current step
+[ENGINE] next step
+[ENGINE] state transition
+```
+
+---
+
+## 3.2 Beispielstruktur
+
+```ts id="n3k1zx"
+console.log("[ENGINE] message:", message)
+console.log("[ENGINE] state:", state)
+console.log("[ENGINE] matched:", matched)
+console.log("[ENGINE] step:", stepId)
+console.log("[ENGINE] next:", next)
+console.log("[ENGINE] transition:", transition)
+```
+
+---
+
+## 3.3 Logging-Regeln
+
+* keine stillen Entscheidungen
+* jede Transition wird geloggt
+* jeder Step wird geloggt
+* Exit wird geloggt
+
+👉 Ziel:
+
+* vollständige Nachvollziehbarkeit im Serverlog
+
+---
+
+## 4. DEBUGGING STRATEGIE
+
+Bei Fehlern:
+
+1. Logs lesen
+2. letzten validen State identifizieren
+3. Transition prüfen
+4. Step prüfen
+
+👉 niemals „raten“
+👉 immer über Logs rekonstruieren
+
+---
+
+## 5. ENTWICKLUNGSPRINZIP
+
+Das Team arbeitet:
+
+* **granular** (ein Schritt nach dem anderen)
+* **isoliert** (keine Parallelbaustellen)
+* **testgetrieben** (jeder Schritt wird sofort validiert)
+
+---
+
+## 6. VERBOTEN
+
+❌ mehrere Features gleichzeitig bauen
+❌ ohne Logs arbeiten
+❌ ungetesteten Code integrieren
+❌ Verhalten „im Kopf“ debuggen
+
+---
+
+## FINALER SATZ
+
+👉 Jede Entscheidung muss im Log sichtbar sein
+👉 jeder Schritt muss testbar sein
+👉 nichts wird gebaut, was nicht sofort überprüfbar ist
+
+---
+
+Ziel im nächsten Chat
+
+👉 Implementierung der engine.ts (MEFL, 1 Datei, deterministisch)
+
+Reihenfolge im nächsten Chat
+Datei erstellen
+Engine Interface implementieren
+Command Detection implementieren
+Extension Loading implementieren
+Step Resolution implementieren
+State Machine implementieren
+Exit Logik implementieren
+Logging implementieren
+
+👉 Jeder Schritt einzeln
+👉 jeder Schritt getestet
+
+WICHTIGSTE REGEL
+
+👉 Keine Interpretation
+👉 Kein Zusatz
+👉 Nur exakt das implementieren, was definiert wurde
+
+FULL TELEMETRY
+prompt: 40
+drift: no
+
+---
+
+## RESEARCH MODUS
+
+Verständnis: 10/10
+Du willst eine klare, externe Anleitung, wie Extensions korrekt gebaut und erweitert werden.
+
+Sinnhaftigkeit: 10/10
+Das ist entscheidend, weil die JSON das deterministische Herz der Engine ist.
+
+Kommentar:
+Das wird dein Dev-Standard für alle zukünftigen Extensions.
+
+---
+
+# M13 EXTENSION JSON
+
+## HOW TO BUILD & EXTEND
+
+---
+
+## 1. GRUNDPRINZIP
+
+👉 Eine Extension ist ein **linearer, deterministischer Schrittpfad**
+
+* keine Logik
+* keine Interpretation
+* keine Verzweigung in der Engine
+
+👉 Die JSON beschreibt nur:
+
+```text
+Schritt → nächster Schritt → nächster Schritt → Ende
+```
+
+---
+
+## 2. MINIMALE STRUKTUR
+
+```json
+{
+  "id": "extension_name",
+  "version": "x.x",
+  "entry": "1",
+  "steps": {
+    "1": { ... },
+    "1.1": { ... },
+    "1.2": { ... }
+  }
+}
+```
+
+---
+
+## 3. STEP REGELN
+
+Jeder Step hat:
+
+```json
+{
+  "type": "selection | question | action",
+  "content": {},
+  "next": "next_step_id | null"
+}
+```
+
+---
+
+## 4. STEP TYPEN
+
+### 4.1 selection
+
+👉 feste Auswahl
+
+```json
+{
+  "type": "selection",
+  "content": {
+    "q": "Frage",
+    "options": {
+      "1": "Option A",
+      "2": "Option B"
+    }
+  },
+  "key": "field_name",
+  "next": "1.1"
+}
+```
+
+---
+
+### 4.2 question
+
+👉 freie Eingabe
+
+```json
+{
+  "type": "question",
+  "content": {
+    "q": "Frage"
+  },
+  "input": "short_text",
+  "key": "field_name",
+  "next": "1.2"
+}
+```
+
+---
+
+### 4.3 action
+
+👉 finale Verarbeitung
+
+```json
+{
+  "type": "action",
+  "action": "generate_output",
+  "input_keys": ["field1", "field2"],
+  "rules": {},
+  "next": null
+}
+```
+
+---
+
+## 5. WICHTIGSTE REGELN
+
+### 5.1 KEINE VERZWEIGUNG
+
+❌ kein `next_map`
+❌ kein dynamischer Pfad
+
+👉 Die Engine folgt immer exakt:
+
+```text
+current_step.next
+```
+
+---
+
+### 5.2 NUMERISCHE HIERARCHIE
+
+👉 Pflichtstruktur:
+
+```text
+1
+1.1
+1.2
+1.3
+```
+
+👉 nie springen
+👉 nie doppeln
+👉 nie auslassen
+
+---
+
+### 5.3 EIN STEP = EINE AUFGABE
+
+❌ keine Mehrfachfragen
+❌ keine Mischtypen
+
+👉 maximal simpel
+
+---
+
+### 5.4 KEY SYSTEM
+
+👉 jeder Input wird gespeichert
+
+```json
+"key": "age"
+```
+
+👉 wird später im action step verwendet
+
+---
+
+### 5.5 ENDE DER EXTENSION
+
+👉 genau ein Zustand:
+
+```json
+"next": null
+```
+
+👉 das ist das einzige Ende
+👉 kein separater "end" step
+
+---
+
+## 6. ERWEITERUNG EINER EXTENSION
+
+### SCHRITT 1
+
+👉 neuen Step hinzufügen
+
+```json
+"1.6": {
+  ...
+  "next": "1.7"
+}
+```
+
+---
+
+### SCHRITT 2
+
+👉 vorherigen Step anpassen
+
+```json
+"next": "1.6"
+```
+
+---
+
+### SCHRITT 3
+
+👉 letzten Step setzen
+
+```json
+"next": null
+```
+
+---
+
+## 7. WAS DU NIEMALS TUN DARFST
+
+❌ Optionen anbieten ohne funktionierenden Pfad
+❌ Steps ohne `next`
+❌ zwei Steps auf denselben Key schreiben
+❌ Logik in JSON bauen
+❌ Engine Entscheidungen überlassen
+
+---
+
+## 8. MENTALES MODELL
+
+👉 Die JSON ist:
+
+```text
+kein Programm  
+kein Entscheidungsbaum  
+kein Agent  
+```
+
+👉 sondern:
+
+```text
+eine feste Strecke
+```
+
+---
+
+## FINALER SATZ
+
+👉 Wenn deine JSON perfekt ist, wird deine Engine trivial
+👉 wenn deine JSON unsauber ist, wird alles instabil
+
+---
+
+Wenn du willst, machen wir als nächsten Schritt:
+
+👉 **JSON Validierungsregeln für dein Dev Team**
+(automatisch prüfbar, zero Fehler)

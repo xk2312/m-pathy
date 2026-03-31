@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { runEngine } from "@/lib/m13/engine";
+import registry from "@/registry/registry.json";
 import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
@@ -9,12 +11,8 @@ import { debit } from "@/lib/ledger";
 import { getBalance } from "@/lib/ledger";
 import { cookies } from "next/headers";
 import crypto from "crypto";
-import registry from "@/registry/registry.json";
-
-const sessionStore = new Map<string, any>();
 
 export const runtime = "nodejs"; // wir lesen Dateien ⇒ Node-Runtime
-
 
 // === 0.1: ENV laden ===
 if (process.env.NODE_ENV === "production") {
@@ -65,7 +63,6 @@ interface ChatBody {
   temperature?: number;
   protocol?: string;
   locale?: string;
-  state?: any;
 }
 
 // === ENV-Check ===
@@ -169,274 +166,32 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  try {
+    const body = (await req.json()) as ChatBody;
 
+    const incomingConversationId =
+  typeof (body as any)?.conversationId === "string" &&
+  String((body as any).conversationId).trim().length > 0
+    ? String((body as any).conversationId).trim()
+    : null;
 
-try {
-  const body = (await req.json()) as ChatBody;
-
-body.state = body.state ?? {
-  extension: null,
-  step: null,
-  data: {}
-};
-
-// === COMMAND PARSER ===
-const lastUserMessage = body.messages?.[body.messages.length - 1]?.content ?? "";
-
-const normalizedCommand = String(lastUserMessage)
-  .toLowerCase()
-  .replace(/\s+/g, " ")
-  .trim();
-
-let entry = null;
-
-if (!body.state?.extensions?.length) {
-  entry = registry.registry.entries.find((e: any) => {
-    const registryCommand = String(e?.command ?? "")
-      .toLowerCase()
-      .replace(/\s+/g, " ")
-      .trim();
-
-    console.log("[M13][ENTRY CHECK]", {
-      registryCommand,
-      normalizedCommand
-    });
-
-    return registryCommand === normalizedCommand;
-  });
+if (incomingConversationId && incomingConversationId !== conversationId) {
+  conversationId = incomingConversationId;
 }
 
-console.log("[M13][ENTRY RESULT]", {
-  found: !!entry,
-  entryId: entry?.id || null
-});
-
-let extensionData = null;
-// EXTENSION START
-if (!body.state?.extensions?.length && entry) {
-  console.log("[M13][ENGINE START]", entry.id);
-
-  const filePath = path.join(process.cwd(), entry.path);
-  const fileContent = fs.readFileSync(filePath, "utf-8");
-  const extensionData = JSON.parse(fileContent);
-
-  body.state = {
-    ...(body.state || {}),
-    extensions: [entry.id],
-    step: extensionData.entry
-  };
+   if (!Array.isArray(body.messages)) {
+  return NextResponse.json(
+    { error: "`messages` must be an array of { role, content }" },
+    { status: 400 }
+  );
 }
 
-// EXTENSION FORTSETZEN
-if (body.state?.extensions?.length) {
-  const activeExtensionId = body.state.extensions[0];
+const userPromptCount = body.messages.filter(
+  (m: any) => m?.role === "user"
+).length;
 
-  const activeEntry = registry.registry.entries.find((e: any) => e.id === activeExtensionId);
+serverCounter = userPromptCount > 0 ? userPromptCount : 1;
 
-  if (activeEntry) {
-    const filePath = path.join(process.cwd(), activeEntry.path);
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-    extensionData = JSON.parse(fileContent);
-
-    console.log("[M13][ENGINE CONTINUE]", {
-      id: activeEntry.id,
-      step: body.state?.step ?? null
-    });
-
-    console.log("[M13][EXTENSION LOADED]", {
-      id: extensionData?.id,
-      entry: extensionData?.entry,
-      steps: Object.keys(extensionData?.steps || {})
-    });
-  }
-}
-
-// NEUE EXTENSION STARTEN
-if (!extensionData && entry) {
-  console.log("[M13] COMMAND EXECUTED:", entry.id);
-  console.log("[M13][DEBUG] RAW USER INPUT:", lastUserMessage);
-  console.log("[M13][DEBUG] NORMALIZED COMMAND:", normalizedCommand);
-
-  const filePath = path.join(process.cwd(), entry.path);
-  const fileContent = fs.readFileSync(filePath, "utf-8");
-  extensionData = JSON.parse(fileContent);
-
-  console.log("[M13][EXTENSION LOADED]", {
-    id: extensionData?.id,
-    entry: extensionData?.entry,
-    steps: Object.keys(extensionData?.steps || {})
-  });
-
-  body.state = {
-    ...(body.state || {}),
-    extensions: [entry.id],
-    step: body.state?.step ?? extensionData.entry
-  };
-}
-
-if (extensionData) {
-const lastInput = String(lastUserMessage).trim();
-
-let currentStep = body.state?.step ?? extensionData.entry;
-const currentStepConfig = extensionData?.steps?.[currentStep];
-
-if (currentStep && currentStepConfig?.next_map) {
-  const map = currentStepConfig.next_map;
-
-  if (map[lastInput]) {
-  const nextStepId = map[lastInput];
-
-  console.log("[M13][STEP TRANSITION]", {
-    input: lastInput,
-    from: currentStep,
-    to: nextStepId
-  });
-
-  if (currentStepConfig?.key) {
-    const value =
-      currentStepConfig.options && currentStepConfig.options[lastInput]
-        ? currentStepConfig.options[lastInput]
-        : lastInput;
-
-    body.state.data = {
-      ...(body.state.data || {}),
-      [currentStepConfig.key]: value
-    };
-  }
-
-  currentStep = nextStepId;
-  body.state.step = currentStep;
-
-} else {
-  console.log("[M13][STEP TRANSITION FAILED]", {
-    input: lastInput,
-    available: Object.keys(map)
-  });
-
-  // 🔥 NEU: QUESTION FALLBACK
-  if (currentStepConfig?.type === "question" && currentStepConfig?.next) {
-
-    if (currentStepConfig?.key) {
-      body.state.data = {
-        ...(body.state.data || {}),
-        [currentStepConfig.key]: lastInput
-      };
-    }
-
-    console.log("[M13][QUESTION AUTO TRANSITION]", {
-      from: currentStep,
-      to: currentStepConfig.next
-    });
-
-    currentStep = currentStepConfig.next;
-    body.state.step = currentStep;
-  }
-}
-}
-
-// FALLBACK: HIERARCHISCHER PATH (z.B. 2 → 2.4 → 2.4.1)
-if (!extensionData?.steps?.[currentStep]) {
-  const parts = String(currentStep).split(".");
-
-  while (parts.length > 1) {
-    parts.pop();
-    const fallbackStep = parts.join(".");
-
-    if (extensionData?.steps?.[fallbackStep]) {
-      console.log("[M13][STEP FALLBACK]", {
-        from: currentStep,
-        to: fallbackStep
-      });
-
-      currentStep = fallbackStep;
-      break;
-    }
-  }
-}
-
-// FINAL VALIDATION
-if (!extensionData?.steps?.[currentStep]) {
-  console.log("[M13][STEP INVALID RESET]", {
-    step: currentStep,
-    fallback: extensionData.entry
-  });
-
-  currentStep = extensionData.entry;
-}
-
-// STATE UPDATE
-body.state.step = currentStep;
-
-const stepConfig = extensionData?.steps?.[currentStep];
-
-console.log("[M13][STEP FINAL]", {
-  step: currentStep,
-  type: stepConfig?.type
-});
-
-console.log("[M13][STEP LOAD]", {
-  step: currentStep,
-  type: stepConfig?.type,
-  exists: !!stepConfig
-});
-
-let generatedOutput = "";
-
-if (stepConfig?.type === "message" || stepConfig?.type === "selection") {
-  const c = stepConfig.content;
-
-  generatedOutput =
-    (c.greeting ? c.greeting + "\n\n" : "") +
-    (c.description ? c.description + "\n\n" : "") +
-    (c.options_intro ? c.options_intro + "\n\n" : "") +
-    (Array.isArray(c.options) ? c.options.map((o: string) => "- " + o).join("\n") + "\n\n" : "") +
-    (c.cta ? c.cta : "");
-
-  return NextResponse.json({
-    role: "assistant",
-    content: generatedOutput,
-    state: body.state
-  }, { status: 200 });
-}
-
-if (stepConfig?.type === "question") {
-  generatedOutput = stepConfig.q;
-
-  if (stepConfig.options) {
-    generatedOutput += "\n\n" +
-      Object.entries(stepConfig.options)
-        .map(([k, v]) => `${k}. ${v}`)
-        .join("\n");
-  }
-
-  return NextResponse.json({
-    role: "assistant",
-    content: generatedOutput,
-    state: body.state
-  }, { status: 200 });
-}
-
-if (stepConfig?.type === "action") {
-  const data = body.state?.data || {};
-
-  console.log("[M13][ACTION READY]", {
-    step: currentStep,
-    data
-  });
-
-  return NextResponse.json({
-    role: "system",
-    content: JSON.stringify({
-      action: stepConfig.action,
-      data
-    }),
-    state: body.state,
-    meta: {
-      action: stepConfig.action,
-      status: "engine_complete"
-    }
-  }, { status: 200 });
-}}
 // - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
 
 // Session aus m_auth-Cookie lesen (falls vorhanden)
@@ -650,33 +405,31 @@ const messages: ChatMessage[] = systemPrompt
     "2. Then output one blank line.",
     "3. Then output the normal response content.",
     "",
-    "Rules:",
-    "- Do not omit IRSS.",
-    "- Do not place any text before IRSS.",
-    "- Do not output any handoff.",
-    "- Always continue with normal content after IRSS.",
-    "IRSS must use exactly this structure:",
+    "The IRSS block must be the first emitted output.",
+    "Do not place any text before it.",
+    "Do not wrap the IRSS block in markdown fences.",
+    "Do not rename keys.",
+    "Do not omit keys.",
+    "Use exactly this JSON shape:",
     "{",
     '  "irss": {',
-    '    "system": "M13",',
-    '    "version": "0.2",',
+    '    "system": "MGPS",',
+    '    "version": "1.0",',
     '    "session_prompt_counter": "<fill>",',
-    '    "orchestrator_id": "<fill>",',
-    '    "command": "<fill>",',
-    '    "agent_id": "<fill>",',
-    '    "action": "<fill>",',
-    '    "extensions_loaded": [],',
-    '    "complexity_level": "C1|C2|C3|C4|C5|C6",',
-    '    "domains": [],',
-    '    "drift_origin": "none|ambiguous_input|missing_context|missing_evidence|conflicting_signals|invalid_structure|unsupported_inference",',
-    '    "drift_state": "none|detected",',
-    '    "drift_risk": "none|low|medium|high"',
+    '    "mode": "<fill>",',
+    '    "mode_source": "<fill>",',
+    '    "complexity_level": "<fill>",',
+    '    "expert_names": "<fill>",',
+    '    "drift_origin": "<fill>",',
+    '    "drift_state": "<fill>",',
+    '    "drift_risk": "<fill>"',
     "  }",
     "}",
     "",
     "After the IRSS JSON block, continue with the normal answer in the same language as the user."
   ].join("\n"),
 };
+
 const payload = {
   messages: [
     irssRuntimePrompt,
@@ -748,55 +501,29 @@ const response = await withGate(() => {
         console.log(content);
         console.log("MODEL CONTENT END");
     if (!content) {
-  return NextResponse.json({ error: "No message content" }, { status: 502 });
-}
+      return NextResponse.json({ error: "No message content" }, { status: 502 });
+    }
 
-// === IRSS ENFORCEMENT ===
-const hasIrssMarker =
-  content.includes('"irss"') ||
-  content.includes("Session Prompt Counter:");
 
-console.log("[M13] IRSS CHECK", {
-  hasIrssMarker
-});
 
-// IRSS MISSING BLOCK
-if (!hasIrssMarker) {
-  console.error("[M13] IRSS MISSING IN CONTENT MODE");
-  return NextResponse.json(
-    { error: "IRSS missing in content mode" },
-    { status: 500 }
-  );
-}
+    let tokensUsed: number;
 
-console.log("[M13] CONTENT VALID → CONTINUE");
-// === TOKEN HANDLING ===
-let tokensUsed: number;
+    if (usage && typeof usage.total_tokens === "number") {
+      tokensUsed = usage.total_tokens;
+    } else {
+      const promptText = messages.map((m) => m.content).join(" ");
+      const combinedText = `${promptText}\n${content}`;
+      tokensUsed = estimateTokensFromText(combinedText);
+    }
+    const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, tokensUsed);
+    let tokenDelta = TOKENS_USED;
 
-if (usage && typeof usage.total_tokens === "number") {
-  tokensUsed = usage.total_tokens;
-  console.log("[M13] TOKENS FROM USAGE", { tokensUsed });
-} else {
-  const promptText = messages.map((m) => m.content).join(" ");
-  const combinedText = `${promptText}\n${content}`;
-  tokensUsed = estimateTokensFromText(combinedText);
-  console.log("[M13] TOKENS ESTIMATED", { tokensUsed });
-}
-
-const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, tokensUsed);
-let tokenDelta = TOKENS_USED;
-
-console.log("[M13] FINAL TOKEN STATE", {
-  TOKENS_USED,
-  tokenDelta
-});
-
-console.log("[chat] ledger gate", {
-  isAuthenticated,
-  sessionEmail,
-  sessionUserId,
-  tokensUsed: TOKENS_USED,
-});
+    console.log("[chat] ledger gate", {
+      isAuthenticated,
+      sessionEmail,
+      sessionUserId,
+      tokensUsed: TOKENS_USED,
+    });
 
     if (isAuthenticated && sessionUserId) {
       try {
