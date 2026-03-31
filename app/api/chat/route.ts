@@ -181,15 +181,6 @@ const engineResult = runEngine({
   registry
 })
 
-if (engineResult.active) {
-  body.messages.push({
-    role: "user",
-    content: JSON.stringify(engineResult.step)
-  })
-
-  ;(body as any).state = engineResult.state
-}
-
 console.log("[ENGINE RESULT AFTER RUN]", engineResult);
 
 const incomingConversationId =
@@ -409,14 +400,23 @@ if (balanceBefore <= 0) {
 
 const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
 
+const engineMessage: ChatMessage | null = engineResult.active
+  ? {
+      role: "user" as const,
+      content: JSON.stringify(engineResult.step)
+    }
+  : null;
+
 const messages: ChatMessage[] = systemPrompt
   ? [
       { role: "system", content: systemPrompt },
       languageGuard,
+      ...(engineMessage ? [engineMessage] : []),
       ...body.messages,
     ]
   : [
       languageGuard,
+      ...(engineMessage ? [engineMessage] : []),
       ...body.messages,
     ];
 
