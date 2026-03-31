@@ -169,7 +169,19 @@ export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as ChatBody;
 
-    const incomingConversationId =
+const lastMessage = body.messages?.[body.messages.length - 1]?.content || ""
+
+const engineResult = runEngine({
+  message: lastMessage,
+  state: (body as any).state || {
+    active: false,
+    extensionId: null,
+    stepId: null
+  },
+  registry
+})
+
+const incomingConversationId =
   typeof (body as any)?.conversationId === "string" &&
   String((body as any).conversationId).trim().length > 0
     ? String((body as any).conversationId).trim()
