@@ -411,16 +411,16 @@ const messages: ChatMessage[] = systemPrompt
   ? [
       { role: "system", content: systemPrompt },
       languageGuard,
-      ...(engineMessage ? [engineMessage] : []),
       ...body.messages,
+      ...(engineMessage ? [engineMessage] : []),
     ]
   : [
       languageGuard,
-      ...(engineMessage ? [engineMessage] : []),
       ...body.messages,
+      ...(engineMessage ? [engineMessage] : []),
     ];
 
- const irssRuntimePrompt = {
+const irssRuntimePrompt = {
   role: "system",
   content: [
     "Emit every response in exactly this order:",
@@ -436,18 +436,27 @@ const messages: ChatMessage[] = systemPrompt
     "Use exactly this JSON shape:",
     "{",
     '  "irss": {',
-    '    "system": "MGPS",',
-    '    "version": "1.0",',
-    '    "session_prompt_counter": "<fill>",',
-    '    "mode": "<fill>",',
-    '    "mode_source": "<fill>",',
-    '    "complexity_level": "<fill>",',
-    '    "expert_names": "<fill>",',
-    '    "drift_origin": "<fill>",',
-    '    "drift_state": "<fill>",',
-    '    "drift_risk": "<fill>"',
+    '    "system": "M13",',
+    '    "version": "0.1",',
+    '    "session_prompt_counter": "<integer>",',
+    '    "orchestrator_id": "<string>",',
+    '    "command": "<string>",',
+    '    "agent_id": "<string>",',
+    '    "action": "<string>",',
+    '    "extensions_loaded": ["<string>"],',
+    '    "complexity_level": "C1|C2|C3|C4|C5|C6",',
+    '    "domains": ["<string>"],',
+    '    "drift_origin": "<string>",',
+    '    "drift_state": "none|detected",',
+    '    "drift_risk": "low|medium|high"',
     "  }",
     "}",
+    "",
+    "All fields are mandatory.",
+    "Use valid values only.",
+    "session_prompt_counter must be a positive integer.",
+    "extensions_loaded must be an array.",
+    "domains must be an array.",
     "",
     "After the IRSS JSON block, continue with the normal answer in the same language as the user."
   ].join("\n"),
@@ -494,13 +503,6 @@ if (payloadBytes > MAX_PAYLOAD_BYTES) {
 
 console.log("ENTER GATE");
 console.log("[ENGINE RESULT BEFORE GATE]", engineResult);
-
-if (engineResult.active) {
-  return NextResponse.json({
-    message: engineResult.step,
-    state: engineResult.state
-  });
-}
 
 const response = await withGate(() => {
   console.log("FETCH START");
