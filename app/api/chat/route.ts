@@ -181,6 +181,8 @@ const engineResult = runEngine({
   registry
 })
 
+console.log("[ENGINE RESULT AFTER RUN]", engineResult);
+
 const incomingConversationId =
   typeof (body as any)?.conversationId === "string" &&
   String((body as any).conversationId).trim().length > 0
@@ -482,6 +484,7 @@ if (payloadBytes > MAX_PAYLOAD_BYTES) {
 }
 
 console.log("ENTER GATE");
+console.log("[ENGINE RESULT BEFORE GATE]", engineResult);
 
 if (engineResult.active) {
   return NextResponse.json({
