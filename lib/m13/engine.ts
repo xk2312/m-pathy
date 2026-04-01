@@ -6,6 +6,7 @@ export type EngineState = {
   extensionId: string | null
   stepId: string | null
   answers?: Record<string, string>
+lastInput?: string
 }
 
 export type EngineContext = {
@@ -74,8 +75,19 @@ export function runEngine(ctx: EngineContext): EngineResult {
       }
     }
 
-    const answers = state.answers ?? {}
-    const nextAnswers = { ...answers }
+   const answers = state.answers ?? {}
+const nextAnswers = { ...answers }
+
+// === INPUT CONSUMPTION GUARD ===
+if (state.stepId === ctx.state.stepId && state.lastInput === message) {
+  return {
+    active: true,
+    state,
+    extensionId: state.extensionId,
+    stepId: state.stepId,
+    step: extension.steps[state.stepId]
+  }
+}
 
     if (currentStep.type === "selection") {
       const options = currentStep.content?.options ?? {}
