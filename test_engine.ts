@@ -18,8 +18,7 @@ let res1 = runEngine({
 
 console.log("STEP 1:", res1)
 
-state = res1.state
-
+state = res1.state ?? state
 // NEXT
 let res2 = runEngine({
   message: "1",
@@ -29,8 +28,7 @@ let res2 = runEngine({
 
 console.log("STEP 2:", res2)
 
-state = res2.state
-
+state = res2.state ?? state
 // NEXT
 let res3 = runEngine({
   message: "2",

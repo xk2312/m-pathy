@@ -15,10 +15,15 @@ export type EngineContext = {
 
 export type EngineResult = {
   active: boolean
-  state: EngineState
-  extensionId: string | null
-  stepId: string | null
-  step: any | null
+  state?: EngineState
+  extensionId?: string | null
+  stepId?: string | null
+  step?: any | null
+  action?: string
+  payload?: {
+    input_keys: string[]
+    rules: any
+  }
 }
 
 export function runEngine(ctx: EngineContext): EngineResult {
@@ -55,24 +60,41 @@ export function runEngine(ctx: EngineContext): EngineResult {
     const raw = fs.readFileSync(extensionPath, "utf-8")
     const extension = JSON.parse(raw)
 
-    const currentStep = extension.steps[state.stepId]
+    let currentStep = extension.steps[state.stepId]
 
-    if (!currentStep) {
-      console.error("[ENGINE][ERROR] step not found:", state.stepId)
-      return {
-        active: false,
-        state: {
-          active: false,
-          extensionId: null,
-          stepId: null
-        },
-        extensionId: null,
-        stepId: null,
-        step: null
-      }
+if (!currentStep) {
+  console.error("[ENGINE][ERROR] step not found, resetting to entry:", state.stepId)
+  const fallbackId = extension.entry
+  currentStep = extension.steps[fallbackId]
+
+  return {
+    active: true,
+    state: {
+      active: true,
+      extensionId: state.extensionId,
+      stepId: fallbackId
+    },
+    extensionId: state.extensionId,
+    stepId: fallbackId,
+    step: currentStep
+  }
+}
+
+    if (currentStep.type === "selection") {
+  const input = String(message).trim()
+  if (!currentStep.content?.options?.[input]) {
+    console.error("[ENGINE][ERROR] invalid input for step:", state.stepId, "input:", input)
+    return {
+      active: true,
+      state,
+      extensionId: state.extensionId,
+      stepId: state.stepId,
+      step: currentStep
     }
+  }
+}
 
-    const next = currentStep.next
+const next = currentStep.next
 
     if (next === undefined) {
       console.error("[ENGINE][ERROR] next missing in step:", state.stepId)
@@ -89,20 +111,32 @@ export function runEngine(ctx: EngineContext): EngineResult {
       }
     }
 
-    if (next === null) {
-      console.log("[ENGINE] exit reached at step:", state.stepId)
-      return {
-        active: false,
-        state: {
-          active: false,
-          extensionId: null,
-          stepId: null
-        },
-        extensionId: null,
-        stepId: null,
-        step: currentStep
+  if (next === null) {
+  console.log("[ENGINE] exit reached at step:", state.stepId)
+
+  if (currentStep.type === "action") {
+    return {
+      active: false,
+      action: currentStep.action,
+      payload: {
+        input_keys: currentStep.input_keys || [],
+        rules: currentStep.rules || {}
       }
     }
+  }
+
+  return {
+    active: false,
+    state: {
+      active: false,
+      extensionId: null,
+      stepId: null
+    },
+    extensionId: null,
+    stepId: null,
+    step: currentStep
+  }
+}
 
     const nextStep = extension.steps[next]
 
@@ -155,10 +189,21 @@ export function runEngine(ctx: EngineContext): EngineResult {
   const raw = fs.readFileSync(extensionPath, "utf-8")
   const extension = JSON.parse(raw)
 
-  const firstStepId = extension.entry
-  const firstStep = extension.steps[firstStepId]
+ const firstStepId = extension.entry
+const firstStep = extension.steps[firstStepId]
 
-  console.log("[ENGINE] first step:", firstStepId)
+if (!firstStep) {
+  console.error("[ENGINE][ERROR] invalid entry step:", firstStepId)
+  return {
+    active: false,
+    state,
+    extensionId: null,
+    stepId: null,
+    step: null
+  }
+}
+
+console.log("[ENGINE] first step:", firstStepId)
 
   return {
     active: true,
