@@ -3,13 +3,13 @@
     "version": "0.3",
     "entries": [
       {
-        "id": "linkedin_copilot",
+        "id": "linkedin_postpilot",
         "type": "extension",
-        "name": "LinkedIn Copilot",
-        "command": "echo linkedin copilot",
-        "path": "extensions/linkedin_copilot.json",
+        "name": "LinkedIn Postpilot",
+        "command": "echo linkedin postpilot",
+        "path": "extensions/linkedin_postpilot.json",
         "registry_class": "extension",
-        "description": "Guides the user through LinkedIn content creation, analysis and interaction workflows"
+        "description": "Builds psychologically precise, deeply human LinkedIn posts through a structured 13-step input and a high-control generation engine"
       },
       {
         "id": "lcis_engine",

@@ -1,0 +1,259 @@
+{
+  "id": "linkedin_postpilot",
+  "version": "1.0",
+  "entry": "1",
+  "steps": {
+    "1": {
+      "type": "selection",
+      "language": "dynamic",
+      "content": {
+        "greeting": "Welcome to LinkedIn Postpilot.",
+        "description": "Answer a few questions to build a deeply human, psychologically sharp LinkedIn post.",
+        "options": {
+          "1": "Start"
+        }
+      },
+      "key": "entry",
+      "next": "1.1"
+    },
+
+    "1.1": {
+      "type": "selection",
+      "content": {
+        "q": "What should the post trigger first in the reader?",
+        "options": {
+          "1": "Trust",
+          "2": "Attention",
+          "3": "Discussion",
+          "4": "Inbound requests",
+          "5": "Applications"
+        }
+      },
+      "key": "primary_effect",
+      "next": "1.2"
+    },
+
+    "1.2": {
+      "type": "selection",
+      "content": {
+        "q": "What is the post mainly built from?",
+        "options": {
+          "1": "Own experience",
+          "2": "Observation",
+          "3": "Clear opinion",
+          "4": "Client case",
+          "5": "Clear insight"
+        }
+      },
+      "key": "source_type",
+      "next": "1.3"
+    },
+
+    "1.3": {
+      "type": "selection",
+      "content": {
+        "q": "Who should feel addressed by this post first?",
+        "options": {
+          "1": "Decision makers",
+          "2": "Experts",
+          "3": "Founders",
+          "4": "Talents",
+          "5": "Customers"
+        }
+      },
+      "key": "target_role",
+      "next": "1.4"
+    },
+
+    "1.4": {
+      "type": "selection",
+      "content": {
+        "q": "In which world does this audience mainly think and speak?",
+        "options": {
+          "1": "Management and strategy",
+          "2": "Operational practice",
+          "3": "Growth and startup",
+          "4": "Technology and expertise",
+          "5": "People and recruiting",
+          "6": "Market and sales"
+        }
+      },
+      "key": "audience_world",
+      "next": "1.5"
+    },
+
+    "1.5": {
+      "type": "question",
+      "content": {
+        "q": "What was the concrete trigger for this post? You can answer briefly or in a bit more detail.",
+        "hint": "for example: sentence, experience, mistake"
+      },
+      "input": "short_text",
+      "key": "trigger_event",
+      "next": "1.6"
+    },
+
+    "1.6": {
+      "type": "selection",
+      "content": {
+        "q": "What kind of core should the post carry?",
+        "options": {
+          "1": "Clear thinking mistake",
+          "2": "Uncomfortable truth",
+          "3": "Practical lesson",
+          "4": "Surprising observation",
+          "5": "New perspective"
+        }
+      },
+      "key": "insight_form",
+      "next": "1.7"
+    },
+
+    "1.7": {
+      "type": "selection",
+      "content": {
+        "q": "What should the reader most likely do after reading?",
+        "options": {
+          "1": "Reflect",
+          "2": "Agree",
+          "3": "Comment",
+          "4": "Save",
+          "5": "Send a message",
+          "6": "Visit the profile"
+        }
+      },
+      "key": "reader_action",
+      "next": "1.8"
+    },
+
+    "1.8": {
+      "type": "question",
+      "content": {
+        "q": "Where is the blind spot, mistake or pain point? You can answer briefly or in a bit more detail.",
+        "hint": "for example: friction, cost, misunderstanding"
+      },
+      "input": "short_text",
+      "key": "friction_point",
+      "next": "1.9"
+    },
+
+    "1.9": {
+      "type": "selection",
+      "content": {
+        "q": "What mainly slows the reader down here?",
+        "options": {
+          "1": "Doubt",
+          "2": "Risk",
+          "3": "Overwhelm",
+          "4": "Time pressure",
+          "5": "Uncertainty",
+          "6": "Habit"
+        }
+      },
+      "key": "reader_barrier",
+      "next": "1.10"
+    },
+
+    "1.10": {
+      "type": "selection",
+      "content": {
+        "q": "Why are you allowed to say something about this?",
+        "options": {
+          "1": "Own experience",
+          "2": "Professional role",
+          "3": "Many concrete cases",
+          "4": "Direct practice observation",
+          "5": "Personal involvement"
+        }
+      },
+      "key": "speaker_legitimacy",
+      "next": "1.11"
+    },
+
+    "1.11": {
+      "type": "selection",
+      "content": {
+        "q": "Which effect architecture should the post follow?",
+        "options": {
+          "1": "Quietly intensifying and clearly resolving",
+          "2": "Analytically sharpening and closing with a strong aha",
+          "3": "Emotionally charging and then resolving",
+          "4": "Provocatively opening and precisely grounding",
+          "5": "Maximally emotionally charging and resolving with a strong insight lever"
+        }
+      },
+      "key": "dramaturgy",
+      "next": "1.12"
+    },
+
+    "1.12": {
+      "type": "selection",
+      "content": {
+        "q": "How much human self exposure should the post allow?",
+        "options": {
+          "1": "Minimal and subtle",
+          "2": "Measured and relatable",
+          "3": "Open and personal",
+          "4": "Vulnerable and disarming",
+          "5": "Deeply human and unmistakably honest"
+        }
+      },
+      "key": "self_exposure_level",
+      "next": "1.13"
+    },
+
+    "1.13": {
+      "type": "question",
+      "content": {
+        "q": "This is the last question. Take a breath and give this a moment. Which personal, professional or human context about you is truly relevant for this post? You can answer briefly or in a bit more detail. The more relevant substance you give here, the more human and powerful the post can become.",
+        "hint": "for example: role, experience, family, place, attitude"
+      },
+      "input": "long_text",
+      "key": "author_context",
+      "next": "1.14"
+    },
+
+    "1.14": {
+      "type": "action",
+      "action": "generate_linkedin_post",
+      "input_keys": [
+        "primary_effect",
+        "source_type",
+        "target_role",
+        "audience_world",
+        "trigger_event",
+        "insight_form",
+        "reader_action",
+        "friction_point",
+        "reader_barrier",
+        "speaker_legitimacy",
+        "dramaturgy",
+        "self_exposure_level",
+        "author_context"
+      ],
+      "rules": {
+        "platform": "linkedin",
+        "analysis_depth": "maximum",
+        "language_control": "backend_controlled",
+        "humanity_priority": "maximum",
+        "generic_output_forbidden": true,
+        "self_praise_forbidden": true,
+        "ai_hyphen_style_forbidden": true,
+        "forced_closing_question": true,
+        "hashtags": {
+          "count": 3,
+          "required": true,
+          "position": "end",
+          "relevance": "strict"
+        },
+        "character_economy": {
+          "strict_platform_fit": true,
+          "waste_forbidden": true,
+          "compression_required": true
+        },
+        "instruction": "You are not generating a generic LinkedIn post. You are building a psychologically precise, deeply human, highly readable LinkedIn post from a deterministic input structure. Every field has meaning. You must use the structure with discipline. You must not guess beyond the provided material. You must not pad. You must not write like a content bot. You must not write like a marketer performing intelligence. You must not write like a motivational poster. You must write like a real person who has seen something, felt something, understood something and can now express it with precision, restraint and impact. CORE OUTPUT LAW 1. HUMAN FIRST The post must feel human before it feels smart. Recognition beats cleverness. Psychological contact beats display. Emotional truth beats performance. The reader must feel a real person is speaking. 2. NERVOUS SYSTEM LOGIC The text must respect the human nervous system. Overall tone should be controlled and readable, not loud or exhausting. But the post must still contain selected peaks of activation, challenge or tension. These peaks are not random. They exist to wake the reader up. The ending must bring release. Tension is allowed. Unresolved agitation is not. The post must land softly, clearly and intelligently. 3. NO SELF CELEBRATION Do not glorify the author. Do not let the author posture. Do not let the text smell like self promotion, self branding or performance theatre. Zero bragging. Zero cowboy energy. Zero superiority display. Zero fake confidence rituals. If strength appears, it should usually appear in the observation of others, the appreciation of others, or the calm quality of the thinking itself. 4. WEAKNESS HANDLING If weakness is used, it must stay in self reference. Personal weakness, uncertainty, limitation, learning, failure, embarrassment, hesitation or misjudgment can be powerful because they lower resistance and increase trust. This is often the safer path to human connection. Use weakness with dignity, not melodrama. Use vulnerability for connection, not manipulation. Do not fake pain. Do not exaggerate wounds. 5. PSYCHOLOGICAL ENTRY Enter through the reader's brain, not through frontal teaching. Lower resistance. Bypass reflexive guardrails through recognition, honesty, precision, surprise, self exposure or subtle tension. The reader should feel seen before feeling instructed. The post must not lecture. It must invite inner participation. 6. INSIGHT EXTRACTION First identify the real core. What is the strongest insight? What is the most alive tension? What is the most human angle? What creates recognition? What creates pause? What is actually worth saying? Build around the strongest living core, not around the most formal input. 7. FORM DISCIPLINE Keep the structure sharp. Strong opening. Clean movement. No dead paragraphs. No filler transitions. No bloated setup. No recycled LinkedIn phrases. No empty thought leadership language. No fake storytelling if no true story exists. No artificial inspiration. No generic lessons. Every sentence must work. Every line must justify its place. 8. LANGUAGE LAW The wording must be natural, fluent and recognizably human. Do not use typical AI constructions. Do not use artificial cadence. Do not use stacked abstract nouns. Do not use mechanical symmetry. Do not use decorative pseudo depth. Do not use dash heavy AI phrasing. Do not generate posts with machine smell. Avoid bindestrich style wording that reads synthetic. Prefer clean, direct, living language. 9. READER PSYCHOLOGY Use the audience, barrier and friction inputs actively. The post must be shaped for how this reader thinks, resists and reacts. If the reader barrier is doubt, reduce doubt. If the barrier is overwhelm, reduce complexity. If the barrier is habit, disrupt habit. Use psychology with discipline. 10. DRAMATURGY Use the selected effect architecture as a real movement pattern. Do not mention the structure explicitly. Realize it implicitly through the flow of the post. If the selected pattern is emotionally charging and then resolving, do exactly that. If it is analytical and closing with aha, do exactly that. The chosen dramaturgy is binding. 11. SELF EXPOSURE CONTROL Use the selected self exposure level precisely. Minimal means minimal. Deeply human means real openness, but still with dignity and relevance. Never confuse openness with oversharing. Only relevant human material belongs in the post. 12. LINKEDIN FIT Respect LinkedIn form pressure. The post must be compact, efficient and high yield. Use as much space as needed, but no wasted characters. Compression matters. Readability matters. Scroll friction matters. The first lines matter disproportionately. 13. ENDING LAW The post must end in release, not in noise. It must then open one more door through a soft, intelligent, involving and empathic closing question. This question must invite interaction naturally. It must not sound needy, sales driven, loud, pushy or formulaic. It must feel like the calm continuation of the thought. 14. HASHTAG LAW Add exactly three relevant hashtags at the very end. They must be precise, content aligned and useful. No generic reach chasing hashtags. No buzzword dumping. No more than three. 15. FINAL FILTER Before finalizing, remove every trace of self admiration, machine phrasing, generic LinkedIn performance language, inflated rhetoric, false authority and unnecessary words. The final post must feel human, sharp, psychologically aware, humble, readable and alive. FINAL GOAL Build a LinkedIn post that feels like a real human mind speaking with honesty, restraint, psychological intelligence and emotional credibility. It should create recognition, lower defenses, carry one strong living insight, end in release, invite interaction softly, and leave the reader with the feeling that this was worth their attention."
+      },
+      "next": null
+    }
+  }
+}
