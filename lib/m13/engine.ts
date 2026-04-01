@@ -5,6 +5,7 @@ export type EngineState = {
   active: boolean
   extensionId: string | null
   stepId: string | null
+  answers?: Record<string, string>
 }
 
 export type EngineContext = {
@@ -64,11 +65,59 @@ export function runEngine(ctx: EngineContext): EngineResult {
         state: {
           active: false,
           extensionId: null,
-          stepId: null
+          stepId: null,
+          answers: {}
         },
         extensionId: null,
         stepId: null,
         step: null
+      }
+    }
+
+    const answers = state.answers ?? {}
+    const nextAnswers = { ...answers }
+
+    if (currentStep.type === "selection") {
+      const options = currentStep.content?.options ?? {}
+      if (!message || !options[message]) {
+        console.error("[ENGINE][ERROR] invalid selection input:", message)
+        return {
+          active: true,
+          state: {
+            active: true,
+            extensionId: state.extensionId,
+            stepId: state.stepId,
+            answers
+          },
+          extensionId: state.extensionId,
+          stepId: state.stepId,
+          step: currentStep
+        }
+      }
+      if (currentStep.key) {
+        nextAnswers[currentStep.key] = options[message]
+      }
+    }
+
+    if (currentStep.type === "question") {
+      const trimmedMessage = message.trim()
+      if (!trimmedMessage || trimmedMessage.toLowerCase() === "weiter") {
+        console.error("[ENGINE][ERROR] invalid question input:", message)
+        return {
+          active: true,
+          state: {
+            active: true,
+            extensionId: state.extensionId,
+            stepId: state.stepId,
+            answers
+          },
+          extensionId: state.extensionId,
+          stepId: state.stepId,
+          step: currentStep
+        }
+      }
+      if (currentStep.key) {
+        nextAnswers[currentStep.key] = trimmedMessage
       }
     }
 
@@ -81,7 +130,8 @@ export function runEngine(ctx: EngineContext): EngineResult {
         state: {
           active: false,
           extensionId: null,
-          stepId: null
+          stepId: null,
+          answers: {}
         },
         extensionId: null,
         stepId: null,
@@ -96,7 +146,8 @@ export function runEngine(ctx: EngineContext): EngineResult {
         state: {
           active: false,
           extensionId: null,
-          stepId: null
+          stepId: null,
+          answers: {}
         },
         extensionId: null,
         stepId: null,
@@ -113,11 +164,33 @@ export function runEngine(ctx: EngineContext): EngineResult {
         state: {
           active: false,
           extensionId: null,
-          stepId: null
+          stepId: null,
+          answers: {}
         },
         extensionId: null,
         stepId: null,
         step: null
+      }
+    }
+
+    if (nextStep.type === "action") {
+      const requiredKeys = nextStep.input_keys ?? []
+      const missingKeys = requiredKeys.filter((key: string) => !nextAnswers[key])
+
+      if (missingKeys.length > 0) {
+        console.error("[ENGINE][ERROR] missing action inputs:", missingKeys)
+        return {
+          active: true,
+          state: {
+            active: true,
+            extensionId: state.extensionId,
+            stepId: state.stepId,
+            answers: nextAnswers
+          },
+          extensionId: state.extensionId,
+          stepId: state.stepId,
+          step: currentStep
+        }
       }
     }
 
@@ -126,7 +199,8 @@ export function runEngine(ctx: EngineContext): EngineResult {
       state: {
         active: true,
         extensionId: state.extensionId,
-        stepId: next
+        stepId: next,
+        answers: nextAnswers
       },
       extensionId: state.extensionId,
       stepId: next,
@@ -160,12 +234,13 @@ export function runEngine(ctx: EngineContext): EngineResult {
 
   console.log("[ENGINE] first step:", firstStepId)
 
-  return {
+   return {
     active: true,
     state: {
       active: true,
       extensionId: matched.id,
-      stepId: firstStepId
+      stepId: firstStepId,
+      answers: {}
     },
     extensionId: matched.id,
     stepId: firstStepId,
