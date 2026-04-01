@@ -81,16 +81,25 @@ if (!currentStep) {
 }
 
     if (currentStep.type === "selection") {
-  const input = String(message).trim()
-  if (!currentStep.content?.options?.[input]) {
-    console.error("[ENGINE][ERROR] invalid input for step:", state.stepId, "input:", input)
-    return {
-      active: true,
-      state,
-      extensionId: state.extensionId,
-      stepId: state.stepId,
-      step: currentStep
-    }
+  const raw = String(message).trim()
+
+const options = currentStep.content?.options || {}
+
+const isValid =
+  options[raw] !== undefined ||
+  options[String(raw)] !== undefined ||
+  options[Number(raw)] !== undefined
+
+if (!isValid) {
+console.error("[ENGINE][ERROR] invalid input for step:", state.stepId, "input:", raw);
+
+return {
+  active: true,
+  state,
+  extensionId: state.extensionId,
+  stepId: state.stepId,
+  step: currentStep
+}
   }
 }
 
