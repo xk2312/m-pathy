@@ -169,8 +169,13 @@ export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as ChatBody;
 
-const lastMessage = body.messages?.[body.messages.length - 1]?.content || ""
+const lastMessageRaw = body.messages?.[body.messages.length - 1]?.content || ""
 
+const lastMessage = String(lastMessageRaw)
+  .replace(/["']/g, "")
+  .replace(/\s+/g, " ")
+  .trim()
+  
 const engineResult = runEngine({
   message: lastMessage,
   state: (body as any).state || {
