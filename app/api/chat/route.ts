@@ -200,11 +200,15 @@ if (incomingConversationId && incomingConversationId !== conversationId) {
   );
 }
 
-const userPromptCount = body.messages.filter((m: any) => {
-  if (m?.role !== "user") return false;
+const previousCounter =
+  raw ? JSON.parse(raw)?.counter ?? 0 : 0;
 
-  const content = String(m?.content ?? "").trim();
+const isRealUserPrompt = (() => {
+  const last = body.messages?.[body.messages.length - 1];
 
+  if (!last || last.role !== "user") return false;
+
+  const content = String(last.content ?? "").trim();
   if (!content) return false;
 
   try {
@@ -218,13 +222,14 @@ const userPromptCount = body.messages.filter((m: any) => {
     ) {
       return false;
     }
-  } catch {
-  }
+  } catch {}
 
   return true;
-}).length;
+})();
 
-serverCounter = userPromptCount > 0 ? userPromptCount : 1;
+serverCounter = isRealUserPrompt
+  ? previousCounter + 1
+  : previousCounter;
 
 // - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
 
