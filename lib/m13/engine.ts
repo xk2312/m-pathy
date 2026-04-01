@@ -5,8 +5,6 @@ export type EngineState = {
   active: boolean
   extensionId: string | null
   stepId: string | null
-  answers?: Record<string, string>
-lastInput?: string
 }
 
 export type EngineContext = {
@@ -66,70 +64,11 @@ export function runEngine(ctx: EngineContext): EngineResult {
         state: {
           active: false,
           extensionId: null,
-          stepId: null,
-          answers: {}
+          stepId: null
         },
         extensionId: null,
         stepId: null,
         step: null
-      }
-    }
-
-   const answers = state.answers ?? {}
-const nextAnswers = { ...answers }
-
-// === INPUT CONSUMPTION GUARD ===
-if (state.stepId === ctx.state.stepId && state.lastInput === message) {
-  return {
-    active: true,
-    state,
-    extensionId: state.extensionId,
-    stepId: state.stepId,
-    step: extension.steps[state.stepId]
-  }
-}
-
-    if (currentStep.type === "selection") {
-      const options = currentStep.content?.options ?? {}
-      if (!message || !options[message]) {
-        console.error("[ENGINE][ERROR] invalid selection input:", message)
-        return {
-          active: true,
-          state: {
-            active: true,
-            extensionId: state.extensionId,
-            stepId: state.stepId,
-            answers
-          },
-          extensionId: state.extensionId,
-          stepId: state.stepId,
-          step: currentStep
-        }
-      }
-      if (currentStep.key) {
-        nextAnswers[currentStep.key] = options[message]
-      }
-    }
-
-    if (currentStep.type === "question") {
-      const trimmedMessage = message.trim()
-      if (!trimmedMessage || trimmedMessage.toLowerCase() === "weiter") {
-        console.error("[ENGINE][ERROR] invalid question input:", message)
-        return {
-          active: true,
-          state: {
-            active: true,
-            extensionId: state.extensionId,
-            stepId: state.stepId,
-            answers
-          },
-          extensionId: state.extensionId,
-          stepId: state.stepId,
-          step: currentStep
-        }
-      }
-      if (currentStep.key) {
-        nextAnswers[currentStep.key] = trimmedMessage
       }
     }
 
@@ -142,8 +81,7 @@ if (state.stepId === ctx.state.stepId && state.lastInput === message) {
         state: {
           active: false,
           extensionId: null,
-          stepId: null,
-          answers: {}
+          stepId: null
         },
         extensionId: null,
         stepId: null,
@@ -158,8 +96,7 @@ if (state.stepId === ctx.state.stepId && state.lastInput === message) {
         state: {
           active: false,
           extensionId: null,
-          stepId: null,
-          answers: {}
+          stepId: null
         },
         extensionId: null,
         stepId: null,
@@ -176,33 +113,11 @@ if (state.stepId === ctx.state.stepId && state.lastInput === message) {
         state: {
           active: false,
           extensionId: null,
-          stepId: null,
-          answers: {}
+          stepId: null
         },
         extensionId: null,
         stepId: null,
         step: null
-      }
-    }
-
-    if (nextStep.type === "action") {
-      const requiredKeys = nextStep.input_keys ?? []
-      const missingKeys = requiredKeys.filter((key: string) => !nextAnswers[key])
-
-      if (missingKeys.length > 0) {
-        console.error("[ENGINE][ERROR] missing action inputs:", missingKeys)
-        return {
-          active: true,
-          state: {
-            active: true,
-            extensionId: state.extensionId,
-            stepId: state.stepId,
-            answers: nextAnswers
-          },
-          extensionId: state.extensionId,
-          stepId: state.stepId,
-          step: currentStep
-        }
       }
     }
 
@@ -211,8 +126,7 @@ if (state.stepId === ctx.state.stepId && state.lastInput === message) {
       state: {
         active: true,
         extensionId: state.extensionId,
-        stepId: next,
-        answers: nextAnswers
+        stepId: next
       },
       extensionId: state.extensionId,
       stepId: next,
@@ -246,13 +160,12 @@ if (state.stepId === ctx.state.stepId && state.lastInput === message) {
 
   console.log("[ENGINE] first step:", firstStepId)
 
-   return {
+  return {
     active: true,
     state: {
       active: true,
       extensionId: matched.id,
-      stepId: firstStepId,
-      answers: {}
+      stepId: firstStepId
     },
     extensionId: matched.id,
     stepId: firstStepId,
