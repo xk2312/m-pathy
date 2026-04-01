@@ -200,9 +200,29 @@ if (incomingConversationId && incomingConversationId !== conversationId) {
   );
 }
 
-const userPromptCount = body.messages.filter(
-  (m: any) => m?.role === "user"
-).length;
+const userPromptCount = body.messages.filter((m: any) => {
+  if (m?.role !== "user") return false;
+
+  const content = String(m?.content ?? "").trim();
+
+  if (!content) return false;
+
+  try {
+    const parsed = JSON.parse(content);
+
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      typeof parsed.type === "string" &&
+      Object.prototype.hasOwnProperty.call(parsed, "next")
+    ) {
+      return false;
+    }
+  } catch {
+  }
+
+  return true;
+}).length;
 
 serverCounter = userPromptCount > 0 ? userPromptCount : 1;
 
