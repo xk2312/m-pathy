@@ -6,7 +6,7 @@
         "id": "linkedin_postpilot",
         "type": "extension",
         "name": "LinkedIn Postpilot",
-        "command": "echo linkedin postpilot",
+        "command": "echo-linkedin-postpilot",
         "path": "extensions/linkedin_postpilot.json",
         "registry_class": "extension",
         "description": "Builds psychologically precise, deeply human LinkedIn posts through a structured 13-step input and a high-control generation engine"
