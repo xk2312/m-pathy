@@ -5,6 +5,7 @@ export type EngineState = {
   active: boolean
   extensionId: string | null
   stepId: string | null
+  language?: string
 }
 
 export type EngineContext = {
@@ -30,8 +31,31 @@ export type EngineResult = {
 export function runEngine(ctx: EngineContext): EngineResult {
   const { message, state, registry } = ctx
 
-  console.log("[ENGINE] incoming message:", message)
-  console.log("[ENGINE] current state:", state)
+const detectLanguage = (text: string) => {
+  if (!text) return undefined
+  const lower = text.toLowerCase()
+
+  if (/[äöüß]/.test(lower)) return "de"
+  if (/[éèêëàâîïôûùç]/.test(lower)) return "fr"
+  if (/[áéíóúñ]/.test(lower)) return "es"
+  if (/[àèéìíîòóù]/.test(lower)) return "it"
+  if (/[ãõáéíóúç]/.test(lower)) return "pt"
+  if (/[ij]/.test(lower) && /\b(de|het|een)\b/.test(lower)) return "nl"
+
+  if (/[а-я]/.test(lower)) return "ru"
+  if (/[一-龯]/.test(lower)) return "zh"
+  if (/[ぁ-んァ-ン]/.test(lower)) return "ja"
+  if (/[가-힣]/.test(lower)) return "ko"
+  if (/[ء-ي]/.test(lower)) return "ar"
+  if (/[०-९]/.test(lower)) return "hi"
+
+  return "en"
+}
+
+const language = state.language ?? detectLanguage(message)
+
+console.log("[ENGINE] incoming message:", message)
+console.log("[ENGINE] current state:", state)
 
   const entries = registry?.registry?.entries || []
 
@@ -49,7 +73,9 @@ export function runEngine(ctx: EngineContext): EngineResult {
         state: {
           active: false,
           extensionId: null,
-          stepId: null
+          stepId: null,
+          language
+
         },
         extensionId: null,
         stepId: null,
@@ -73,7 +99,8 @@ if (!currentStep) {
     state: {
       active: true,
       extensionId: state.extensionId,
-      stepId: fallbackId
+      stepId: fallbackId,
+      language
     },
     extensionId: state.extensionId,
     stepId: fallbackId,
@@ -97,7 +124,10 @@ console.error("[ENGINE][ERROR] invalid input for step:", state.stepId, "input:",
 
 return {
   active: true,
-  state,
+  state: {
+  ...state,
+  language
+},
   extensionId: state.extensionId,
   stepId: state.stepId,
   step: currentStep,
@@ -115,7 +145,9 @@ const next = currentStep.next
         state: {
           active: false,
           extensionId: null,
-          stepId: null
+          stepId: null,
+          language
+
         },
         extensionId: null,
         stepId: null,
@@ -142,7 +174,9 @@ const next = currentStep.next
     state: {
       active: false,
       extensionId: null,
-      stepId: null
+      stepId: null,
+      language
+
     },
     extensionId: null,
     stepId: null,
@@ -159,7 +193,9 @@ const next = currentStep.next
         state: {
           active: false,
           extensionId: null,
-          stepId: null
+          stepId: null,
+          language
+
         },
         extensionId: null,
         stepId: null,
@@ -172,7 +208,9 @@ const next = currentStep.next
       state: {
         active: true,
         extensionId: state.extensionId,
-        stepId: next
+        stepId: next,
+        language
+
       },
       extensionId: state.extensionId,
       stepId: next,
@@ -189,7 +227,10 @@ const next = currentStep.next
     console.log("[ENGINE] no command match")
     return {
       active: false,
-      state,
+      state: {
+        ...state,
+        language
+      },
       extensionId: null,
       stepId: null,
       step: null
@@ -209,7 +250,10 @@ if (!firstStep) {
   console.error("[ENGINE][ERROR] invalid entry step:", firstStepId)
   return {
     active: false,
-    state,
+    state: {
+      ...state,
+      language
+    },
     extensionId: null,
     stepId: null,
     step: null
@@ -223,7 +267,9 @@ console.log("[ENGINE] first step:", firstStepId)
     state: {
       active: true,
       extensionId: matched.id,
-      stepId: firstStepId
+      stepId: firstStepId,
+      language
+
     },
     extensionId: matched.id,
     stepId: firstStepId,

@@ -13,7 +13,7 @@
     "1": {
       "type": "selection",
       "content": {
-        "q": "Start the AI risk assessment?",
+        "q": "Start?",
         "options": {
           "1": "Start"
         }
