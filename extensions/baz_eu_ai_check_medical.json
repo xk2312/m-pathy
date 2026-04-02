@@ -7,8 +7,7 @@
       "type": "selection",
       "language": "dynamic",
       "content": {
-        "greeting": "Welcome.",
-        "description": "Answer a few questions to assess your current AI risk exposure in the context of medical practice operations, the EU AI Act, data protection, and IP leakage.",
+        "q": "Start the AI risk assessment?",
         "options": {
           "1": "Start"
         }
