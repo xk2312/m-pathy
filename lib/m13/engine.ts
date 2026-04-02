@@ -19,6 +19,7 @@ export type EngineResult = {
   extensionId?: string | null
   stepId?: string | null
   step?: any | null
+  instruction?: string | null
   action?: string
   payload?: {
     input_keys: string[]
@@ -76,7 +77,8 @@ if (!currentStep) {
     },
     extensionId: state.extensionId,
     stepId: fallbackId,
-    step: currentStep
+    step: currentStep,
+    instruction: currentStep.instruction || null
   }
 }
 
@@ -98,7 +100,8 @@ return {
   state,
   extensionId: state.extensionId,
   stepId: state.stepId,
-  step: currentStep
+  step: currentStep,
+  instruction: currentStep.instruction || null
 }
   }
 }
@@ -173,7 +176,8 @@ const next = currentStep.next
       },
       extensionId: state.extensionId,
       stepId: next,
-      step: nextStep
+      step: nextStep,
+      instruction: nextStep.instruction || null
     }
   }
 
@@ -223,6 +227,7 @@ console.log("[ENGINE] first step:", firstStepId)
     },
     extensionId: matched.id,
     stepId: firstStepId,
-    step: firstStep
+    step: firstStep,
+    instruction: firstStep.instruction || null
   }
 }
