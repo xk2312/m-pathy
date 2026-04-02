@@ -12,6 +12,15 @@
         "description": "Builds psychologically precise, deeply human LinkedIn posts through a structured 13-step input and a high-control generation engine"
       },
       {
+        "id": "baz_eu_ai_check_medical",
+        "type": "extension",
+        "name": "BAZ EU AI Check Medical",
+        "command": "echo-baz-eu-ai-check-medical",
+        "path": "extensions/baz_eu_ai_check_medical.json",
+        "registry_class": "extension",
+        "description": "Evaluates AI risk exposure for medical practices based on 13 structured questions aligned with the EU AI Act, focusing on IP leakage, patient data protection, and real-world operational risks, and generates a professional, medically contextualized risk report"
+      },
+      {
         "id": "lcis_engine",
         "type": "extension",
         "name": "LCIS Engine",
