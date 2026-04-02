@@ -13,188 +13,203 @@
         }
       },
       "key": "entry",
+      "instruction": "Render this entry step as a strict user-facing start block in the active language. Output exactly five parts in this order: 1. short greeting. 2. short intro sentence. 3. exact question from content.q. 4. exact options from content.options as bullet points. 5. short line asking for one valid option number. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add examples, add extra questions, mention future steps, or mention internal logic.",
       "next": "1.1"
-    },
-    "1.1": {
-      "type": "selection",
-      "content": {
-        "q": "Who is responsible for the use of AI in your practice or organization?",
-        "options": {
-          "1": "We currently do not use AI systems",
-          "2": "Everyone uses AI independently without a clear rule",
-          "3": "There are informal agreements, but no fixed responsibility",
-          "4": "There is a clearly defined responsible person or function"
-        }
-      },
-      "key": "governance_responsibility",
-      "next": "1.2"
-    },
-    "1.2": {
-      "type": "selection",
-      "content": {
-        "q": "How is access to AI systems regulated in your practice?",
-        "options": {
-          "1": "There is currently no access to AI systems",
-          "2": "Staff use publicly available AI tools independently, for example private accounts",
-          "3": "There are recommended tools, but no binding rules or restrictions",
-          "4": "Access is only provided through approved and controlled systems"
-        }
-      },
-      "key": "access_control",
-      "next": "1.3"
-    },
-    "1.3": {
-      "type": "selection",
-      "content": {
-        "q": "What kind of data is entered into AI systems?",
-        "options": {
-          "1": "No real data is entered",
-          "2": "Only anonymized or strongly abstracted content is used",
-          "3": "Real practice or patient data is sometimes entered when it feels practical",
-          "4": "Real data, documents, or patient data are entered regularly"
-        }
-      },
-      "key": "data_input_exposure",
-      "next": "1.4"
-    },
-    "1.4": {
-      "type": "selection",
-      "content": {
-        "q": "Is the use of AI disclosed to patients or external parties when relevant?",
-        "options": {
-          "1": "We do not use AI",
-          "2": "AI is used, but not disclosed",
-          "3": "AI is disclosed in some cases, but not consistently",
-          "4": "The use of AI is communicated clearly and transparently"
-        }
-      },
-      "key": "transparency_disclosure",
-      "next": "1.5"
-    },
-    "1.5": {
-      "type": "selection",
-      "content": {
-        "q": "What is AI currently used for in your practice or organization, or what is it being considered for?",
-        "options": {
-          "1": "Not at all, or only for general low risk tasks without personal reference",
-          "2": "For organizational or communication tasks, but not for medical assessments",
-          "3": "Partly also for professional assessments, documentation, or patient related processes",
-          "4": "Also for medically sensitive, decision related, or care relevant tasks"
-        }
-      },
-      "key": "use_case_risk_level",
-      "next": "1.6"
-    },
-    "1.6": {
-      "type": "selection",
-      "content": {
-        "q": "How is it ensured that AI results are professionally reviewed before they are used?",
-        "options": {
-          "1": "We do not use AI",
-          "2": "AI results are often used directly when they seem plausible",
-          "3": "Results are usually reviewed, but not according to a fixed procedure",
-          "4": "Results are always reviewed by a responsible professional before use"
-        }
-      },
-      "key": "human_oversight",
-      "next": "1.7"
-    },
-    "1.7": {
-      "type": "selection",
-      "content": {
-        "q": "Is it documented in a traceable way when and how AI is used in your practice?",
-        "options": {
-          "1": "We do not use AI",
-          "2": "There is no documentation of AI use",
-          "3": "Use is partly traceable, but not documented systematically",
-          "4": "The use of AI is clearly documented and can be traced at any time"
-        }
-      },
-      "key": "documentation_traceability",
-      "next": "1.8"
-    },
-    "1.8": {
-      "type": "selection",
-      "content": {
-        "q": "What technical or organizational measures exist to protect data when using AI?",
-        "options": {
-          "1": "We do not use AI",
-          "2": "There are no specific protective measures for AI use",
-          "3": "There are individual measures, but no clear overall concept",
-          "4": "There are defined and implemented safeguards for all AI applications"
-        }
-      },
-      "key": "security_safeguards",
-      "next": "1.9"
-    },
-    "1.9": {
-      "type": "selection",
-      "content": {
-        "q": "How well do your employees know what they may enter into AI systems and what they may not?",
-        "options": {
-          "1": "We do not use AI",
-          "2": "There is no training or clear guidance on this",
-          "3": "Basic rules are partly known, but not securely anchored across the team",
-          "4": "There are clear rules, and staff are trained and sensitized accordingly"
-        }
-      },
-      "key": "staff_awareness",
-      "next": "1.10"
-    },
-    "1.10": {
-      "type": "selection",
-      "content": {
-        "q": "Have there already been situations in your practice where the use of AI affected, or could have affected, sensitive data or critical content?",
-        "options": {
-          "1": "We do not use AI",
-          "2": "We are not aware of any such situations",
-          "3": "There have been uncertainties or borderline situations, but no clear incident",
-          "4": "There have already been concrete incidents or real risks"
-        }
-      },
-      "key": "incident_proximity",
-      "next": "1.11"
-    },
-    "1.11": {
-      "type": "selection",
-      "content": {
-        "q": "How strongly is your practice already dependent on AI in day to day workflows?",
-        "options": {
-          "1": "We do not use AI",
-          "2": "AI is used only occasionally and in a supporting role",
-          "3": "AI is integrated into several workflows, but not critically",
-          "4": "Important processes already depend noticeably on AI"
-        }
-      },
-      "key": "ai_dependency",
-      "next": "1.12"
-    },
-    "1.12": {
-      "type": "selection",
-      "content": {
-        "q": "What consequences would it have for your practice if sensitive patient data, internal documents, or confidential know how were exposed through the use of AI?",
-        "options": {
-          "1": "We do not use AI",
-          "2": "The effects would probably be limited and manageable",
-          "3": "It could lead to noticeable problems involving trust, data protection, or internal operations",
-          "4": "It would have serious consequences for trust, liability, reputation, and economic stability"
-        }
-      },
-      "key": "worst_case_impact",
-      "next": "1.13"
-    },
-    "1.13": {
+    }, 
+
+        "1.1": {
     "type": "selection",
     "content": {
-        "q": "How detailed should your risk evaluation be?",
+        "q": "Who is responsible for the use of AI in your practice or organization?",
         "options": {
-        "1": "A short assessment of my current risk situation",
-        "2": "A structured overview of my most important risks",
-        "3": "A detailed report with a clear classification of my risks in the context of the EU AI Act",
-        "4": "A full analysis with concrete risk fields, impacts, and clear action guidance"
+        "1": "We currently do not use AI systems",
+        "2": "Everyone uses AI independently without a clear rule",
+        "3": "There are informal agreements, but no fixed responsibility",
+        "4": "There is a clearly defined responsible person or function"
         }
     },
+    "key": "governance_responsibility",
+    "instruction": "Render this continuation step as a strict user-facing next-question block in the active language. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. If this is the first continuation step, the recap must refer to the only available previous option: 'You selected: Start.' or equivalent in the active language. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
+    "next": "1.2"
+    },
+    "1.2": {
+    "type": "selection",
+    "content": {
+        "q": "How is access to AI systems regulated in your practice?",
+        "options": {
+        "1": "There is currently no access to AI systems",
+        "2": "Staff use publicly available AI tools independently, for example private accounts",
+        "3": "There are recommended tools, but no binding rules or restrictions",
+        "4": "Access is only provided through approved and controlled systems"
+        }
+    },
+    "key": "access_control",
+    "instruction": "Render this continuation step as a strict user-facing next-question block in the active language. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
+    "next": "1.3"
+    },
+    "1.3": {
+    "type": "selection",
+    "content": {
+        "q": "What kind of data is entered into AI systems?",
+        "options": {
+        "1": "No real data is entered",
+        "2": "Only anonymized or strongly abstracted content is used",
+        "3": "Real practice or patient data is sometimes entered when it feels practical",
+        "4": "Real data, documents, or patient data are entered regularly"
+        }
+    },
+    "key": "data_input_exposure",
+    "instruction": "Render this continuation step as a strict user-facing next-question block in the active language. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
+    "next": "1.4"
+    },
+    "1.4": {
+    "type": "selection",
+    "content": {
+        "q": "Is the use of AI disclosed to patients or external parties when relevant?",
+        "options": {
+        "1": "We do not use AI",
+        "2": "AI is used, but not disclosed",
+        "3": "AI is disclosed in some cases, but not consistently",
+        "4": "The use of AI is communicated clearly and transparently"
+        }
+    },
+    "key": "transparency_disclosure",
+    "instruction": "Render this continuation step as a strict user-facing next-question block in the active language. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
+    "next": "1.5"
+    },
+    "1.5": {
+  "type": "selection",
+  "content": {
+    "q": "What is AI currently used for in your practice or organization, or what is it being considered for?",
+    "options": {
+      "1": "Not at all, or only for general low risk tasks without personal reference",
+      "2": "For organizational or communication tasks, but not for medical assessments",
+      "3": "Partly also for professional assessments, documentation, or patient related processes",
+      "4": "Also for medically sensitive, decision related, or care relevant tasks"
+    }
+    },
+    "key": "use_case_risk_level",
+    "instruction": "Render this continuation step as a strict user-facing next-question block in the active language. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
+    "next": "1.6"
+        },
+        "1.6": {
+        "type": "selection",
+        "content": {
+            "q": "How is it ensured that AI results are professionally reviewed before they are used?",
+            "options": {
+            "1": "We do not use AI",
+            "2": "AI results are often used directly when they seem plausible",
+            "3": "Results are usually reviewed, but not according to a fixed procedure",
+            "4": "Results are always reviewed by a responsible professional before use"
+            }
+    },
+    "key": "human_oversight",
+    "instruction": "Render this continuation step as a strict user-facing next-question block in the active language. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
+    "next": "1.7"
+    },
+    "1.7": {
+    "type": "selection",
+    "content": {
+        "q": "Is it documented in a traceable way when and how AI is used in your practice?",
+        "options": {
+        "1": "We do not use AI",
+        "2": "There is no documentation of AI use",
+        "3": "Use is partly traceable, but not documented systematically",
+        "4": "The use of AI is clearly documented and can be traced at any time"
+        }
+    },
+    "key": "documentation_traceability",
+    "instruction": "Render this continuation step as a strict user-facing next-question block in the active language. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
+    "next": "1.8"
+    },
+    "1.8": {
+    "type": "selection",
+    "content": {
+        "q": "What technical or organizational measures exist to protect data when using AI?",
+        "options": {
+        "1": "We do not use AI",
+        "2": "There are no specific protective measures for AI use",
+        "3": "There are individual measures, but no clear overall concept",
+        "4": "There are defined and implemented safeguards for all AI applications"
+        }
+    },
+    "key": "security_safeguards",
+    "instruction": "Render this continuation step as a strict user-facing next-question block in the active language. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
+    "next": "1.9"
+    },
+    "1.9": {
+    "type": "selection",
+    "content": {
+        "q": "How well do your employees know what they may enter into AI systems and what they may not?",
+        "options": {
+        "1": "We do not use AI",
+        "2": "There is no training or clear guidance on this",
+        "3": "Basic rules are partly known, but not securely anchored across the team",
+        "4": "There are clear rules, and staff are trained and sensitized accordingly"
+        }
+    },
+    "key": "staff_awareness",
+    "instruction": "Render this continuation step as a strict user-facing next-question block in the active language. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
+    "next": "1.10"
+    },
+    "1.10": {
+    "type": "selection",
+    "content": {
+        "q": "Have there already been situations in your practice where the use of AI affected, or could have affected, sensitive data or critical content?",
+        "options": {
+        "1": "We do not use AI",
+        "2": "We are not aware of any such situations",
+        "3": "There have been uncertainties or borderline situations, but no clear incident",
+        "4": "There have already been concrete incidents or real risks"
+        }
+    },
+    "key": "incident_proximity",
+    "instruction": "Render this continuation step as a strict user-facing next-question block in the active language. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
+    "next": "1.11"
+    },
+    "1.11": {
+    "type": "selection",
+    "content": {
+        "q": "How strongly is your practice already dependent on AI in day to day workflows?",
+        "options": {
+        "1": "We do not use AI",
+        "2": "AI is used only occasionally and in a supporting role",
+        "3": "AI is integrated into several workflows, but not critically",
+        "4": "Important processes already depend noticeably on AI"
+        }
+    },
+    "key": "ai_dependency",
+    "instruction": "Render this continuation step as a strict user-facing next-question block in the active language. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
+    "next": "1.12"
+    },
+    "1.12": {
+    "type": "selection",
+    "content": {
+        "q": "What consequences would it have for your practice if sensitive patient data, internal documents, or confidential know how were exposed through the use of AI?",
+        "options": {
+        "1": "We do not use AI",
+        "2": "The effects would probably be limited and manageable",
+        "3": "It could lead to noticeable problems involving trust, data protection, or internal operations",
+        "4": "It would have serious consequences for trust, liability, reputation, and economic stability"
+        }
+    },
+    "key": "worst_case_impact",
+    "instruction": "Render this continuation step as a strict user-facing next-question block in the active language. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
+    "next": "1.13"
+    },
+        "1.13": {
+        "type": "selection",
+        "content": {
+            "q": "How detailed should your risk evaluation be?",
+            "options": {
+            "1": "A short assessment of my current risk situation",
+            "2": "A structured overview of my most important risks",
+            "3": "A detailed report with a clear classification of my risks in the context of the EU AI Act",
+            "4": "A full analysis with concrete risk fields, impacts, and clear action guidance"
+            }
+    },
     "key": "report_depth",
+    "instruction": "Render this continuation step as a strict user-facing next-question block in the active language. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
     "next": "1.14"
     },
     "1.14": {
@@ -229,8 +244,9 @@
         "3": "detailed_eu_ai_act_aligned_report",
         "4": "full_risk_analysis_with_actions"
         },
-        "instruction": "Dieser kostenlose Service wird vom Beratungszentrum fuer Aerzte und Zahnaerzte, der BAZ in Wuerzburg unterstuetzt. The purpose of this report is to help physicians, dentists, practice managers, and medical centers in Germany understand their present AI risk exposure in a practical, trustworthy, medically relevant, and professionally usable way. The tone must fit the world of medical decision makers: calm, precise, respectful, reality based, and technically serious. The text must never sound like hype, fear marketing, generic compliance copy, or startup language. It must feel like a credible professional assessment written for a medical environment. Use natural German only. Reference frame and date discipline: Internally anchor the entire interpretation to the regulatory state as of 2026-04-02. Do not drift beyond that date. Use this summary as the internal legal and compliance baseline: The EU AI Act entered into force on 2024-08-01. From 2025-02-02, the first applicable rules include the AI system definition, prohibited AI practices, and AI literacy obligations. From 2025-08-02, governance rules and obligations for providers of general-purpose AI models entered into application. The general application date of the Act remains 2026-08-02, while certain high-risk implementation timelines have been subject to political proposals and implementation debate in 2025 and 2026. Therefore, for this report, treat the current moment as a transitional compliance phase: many medical organizations already face concrete governance, literacy, transparency, procurement, documentation, confidentiality, and data handling risks even where the full high-risk regime is not yet fully applicable. Do not present this as formal legal advice. Do not invent obligations. Where legal interpretation is uncertain, describe exposure, governance expectation, and practical compliance pressure instead of making absolute legal claims. Interpretive mission: You are not generating a generic AI maturity report. You are reconstructing the current practical risk exposure of a medical organization that may be using AI with incomplete governance, inconsistent safeguards, uncertain accountability, and high confidentiality sensitivity. The organization belongs to the German medical sector, especially physicians, dentists, and medical centers. The report must make risk understandable in the material world. The user should not only understand that risk exists, but should feel where it touches daily operations, patient trust, confidential know how, internal documents, workflows, liability, and organizational stability. Input logic: The user has answered 13 structured questions. Questions 1 to 12 describe the current operational and risk state of the organization. Question 13 defines the desired report depth. Read all answers together as one coherent exposure pattern. Do not score mechanically in the visible output. Do not mention hidden matrices, internal scoring, weights, vectors, categories, or generation logic. Internally, however, interpret the answers across the following dimensions: governance clarity, access control, data exposure, patient confidentiality, transparency, medical use case sensitivity, human oversight, documentation quality, safeguards, staff awareness, incident proximity, dependency, and worst-case impact. Core risk lens: Place strong emphasis on IP leakage, confidentiality leakage, patient data exposure, undocumented use, and uncontrolled employee use of external tools. In this sector, the danger is not only abstract regulation. The danger is that sensitive patient related information, internal treatment logic, private documentation, business know how, billing related content, internal communication, and confidential operational knowledge may leave the protected context of the practice without the organization fully understanding that this has happened. Make this tangible. Where appropriate, explain that risk can arise even when users act with good intentions, such as saving time, summarizing a document, drafting a patient message, or checking a medical formulation. Medical context discipline: Speak to the reality of practices and medical organizations. Typical frames may include patient communication, appointment organization, documentation support, internal process optimization, draft generation, summaries, billing adjacency, medical content support, and administrative assistance. Avoid dramatic fantasy scenarios. Use plausible operational realities. Respect the difference between support usage and decision relevant medical usage. If the answers indicate AI use near diagnosis, therapy, triage, clinical prioritization, or other care relevant processes, state clearly that the risk posture is materially more sensitive and requires stronger governance, validation, and documentation. Reporting discipline by option: If report_depth = 1, write one compact paragraph only. It should state the current risk relevance in a clear and sober way, identify the main exposure driver, and give one short directional recommendation. If report_depth = 2, write a concise but structured report. Include: overall risk picture, main current vulnerabilities, why those vulnerabilities matter in practice, and a short recommendation block. If report_depth = 3, write a detailed report with explicit alignment to the logic and current implementation phase of the EU AI Act. Include: overall risk picture, operational exposure, governance exposure, confidentiality and data protection exposure, likely pressure points under the current AI Act phase, and a concise recommendation section. Do not overclaim specific legal violations unless directly supported by the answers. If report_depth = 4, write a full professional analysis. Include: executive summary, current exposure profile, governance and accountability, access and shadow AI, data protection and confidentiality, patient trust and transparency, medically sensitive use cases, oversight and documentation, staff awareness, incident and dependence analysis, likely regulatory pressure under the current AI Act phase, and a prioritized action plan. The action plan must be practical and phrased for a medical organization. Reasoning priorities: 1. Identify the most dangerous mismatch, not just the most obvious weak answer. 2. Treat uncontrolled access plus real data input as a severe exposure pattern. 3. Treat weak oversight plus medically sensitive use as a severe exposure pattern. 4. Treat no documentation plus no clear responsibility as a dangerous blind spot. 5. Treat low awareness as a multiplier of all other risks. 6. Treat incident proximity as evidence that exposure is already operational, not merely theoretical. 7. Treat high dependency as a force multiplier for future damage. Narrative requirements: The report must feel specifically true to the organization. Avoid generic checklists. Avoid empty phrases such as digital transformation, future readiness, innovation potential, or responsible AI journey. Every paragraph must connect answers to consequences. Explain not only what is weak, but why it matters operationally. Use language that a physician or practice owner would consider serious, useful, and reality based. Weaknesses must be stated clearly, but without accusation or panic. Stronger answers should be acknowledged, but not romanticized. If the organization appears relatively mature, still identify the main residual exposure honestly. Trust and style requirements: Write with empathy, but not softness. Write with authority, but not arrogance. Write with professional restraint. The report should sound as if a highly competent medical compliance oriented advisor is speaking plainly. Do not use bullet point inflation unless the selected depth logically requires structure. Do not use legal jargon for its own sake. Do not use abstract AI theory. Do not mention hidden models, scoring systems, answer weights, matrices, or internal report logic. BAZ anchor discipline: Where it fits naturally, close the report in a discreet way that signals that this orientation is supported by BAZ Wuerzburg and that deeper individual clarification may be useful. Do not sound promotional. Do not turn the report into an advertisement. The BAZ reference is a trust anchor, not a sales push. Output target: Produce one coherent German report that matches the selected depth, reflects the answers precisely, translates regulatory and operational exposure into the world of physicians and dentists, and makes the current AI risk exposure understandable, tangible, and professionally actionable."  },
-        "next": null
+        "instruction": "Dieser kostenlose Service wird vom Beratungszentrum fuer Aerzte und Zahnaerzte, der BAZ in Wuerzburg unterstuetzt. The purpose of this report is to help physicians, dentists, practice managers, and medical centers in Germany understand their present AI risk exposure in a practical, trustworthy, medically relevant, and professionally usable way. The tone must fit the world of medical decision makers: calm, precise, respectful, reality based, and technically serious. The text must never sound like hype, fear marketing, generic compliance copy, or startup language. It must feel like a credible professional assessment written for a medical environment. Use natural German only. Reference frame and date discipline: Internally anchor the entire interpretation to the regulatory state as of 2026-04-02. Do not drift beyond that date. Use this summary as the internal legal and compliance baseline: The EU AI Act entered into force on 2024-08-01. From 2025-02-02, the first applicable rules include the AI system definition, prohibited AI practices, and AI literacy obligations. From 2025-08-02, governance rules and obligations for providers of general-purpose AI models entered into application. The general application date of the Act remains 2026-08-02, while certain high-risk implementation timelines have been subject to political proposals and implementation debate in 2025 and 2026. Therefore, for this report, treat the current moment as a transitional compliance phase: many medical organizations already face concrete governance, literacy, transparency, procurement, documentation, confidentiality, and data handling risks even where the full high-risk regime is not yet fully applicable. Do not present this as formal legal advice. Do not invent obligations. Where legal interpretation is uncertain, describe exposure, governance expectation, and practical compliance pressure instead of making absolute legal claims. Interpretive mission: You are not generating a generic AI maturity report. You are reconstructing the current practical risk exposure of a medical organization that may be using AI with incomplete governance, inconsistent safeguards, uncertain accountability, and high confidentiality sensitivity. The organization belongs to the German medical sector, especially physicians, dentists, and medical centers. The report must make risk understandable in the material world. The user should not only understand that risk exists, but should feel where it touches daily operations, patient trust, confidential know how, internal documents, workflows, liability, and organizational stability. Input logic: The user has answered 13 structured questions. Questions 1 to 12 describe the current operational and risk state of the organization. Question 13 defines the desired report depth. Read all answers together as one coherent exposure pattern. Do not score mechanically in the visible output. Do not mention hidden matrices, internal scoring, weights, vectors, categories, or generation logic. Internally, however, interpret the answers across the following dimensions: governance clarity, access control, data exposure, patient confidentiality, transparency, medical use case sensitivity, human oversight, documentation quality, safeguards, staff awareness, incident proximity, dependency, and worst-case impact. Core risk lens: Place strong emphasis on IP leakage, confidentiality leakage, patient data exposure, undocumented use, and uncontrolled employee use of external tools. In this sector, the danger is not only abstract regulation. The danger is that sensitive patient related information, internal treatment logic, private documentation, business know how, billing related content, internal communication, and confidential operational knowledge may leave the protected context of the practice without the organization fully understanding that this has happened. Make this tangible. Where appropriate, explain that risk can arise even when users act with good intentions, such as saving time, summarizing a document, drafting a patient message, or checking a medical formulation. Medical context discipline: Speak to the reality of practices and medical organizations. Typical frames may include patient communication, appointment organization, documentation support, internal process optimization, draft generation, summaries, billing adjacency, medical content support, and administrative assistance. Avoid dramatic fantasy scenarios. Use plausible operational realities. Respect the difference between support usage and decision relevant medical usage. If the answers indicate AI use near diagnosis, therapy, triage, clinical prioritization, or other care relevant processes, state clearly that the risk posture is materially more sensitive and requires stronger governance, validation, and documentation. Reporting discipline by option: If report_depth = 1, write one compact paragraph only. It should state the current risk relevance in a clear and sober way, identify the main exposure driver, and give one short directional recommendation. If report_depth = 2, write a concise but structured report. Include: overall risk picture, main current vulnerabilities, why those vulnerabilities matter in practice, and a short recommendation block. If report_depth = 3, write a detailed report with explicit alignment to the logic and current implementation phase of the EU AI Act. Include: overall risk picture, operational exposure, governance exposure, confidentiality and data protection exposure, likely pressure points under the current AI Act phase, and a concise recommendation section. Do not overclaim specific legal violations unless directly supported by the answers. If report_depth = 4, write a full professional analysis. Include: executive summary, current exposure profile, governance and accountability, access and shadow AI, data protection and confidentiality, patient trust and transparency, medically sensitive use cases, oversight and documentation, staff awareness, incident and dependence analysis, likely regulatory pressure under the current AI Act phase, and a prioritized action plan. The action plan must be practical and phrased for a medical organization. Reasoning priorities: 1. Identify the most dangerous mismatch, not just the most obvious weak answer. 2. Treat uncontrolled access plus real data input as a severe exposure pattern. 3. Treat weak oversight plus medically sensitive use as a severe exposure pattern. 4. Treat no documentation plus no clear responsibility as a dangerous blind spot. 5. Treat low awareness as a multiplier of all other risks. 6. Treat incident proximity as evidence that exposure is already operational, not merely theoretical. 7. Treat high dependency as a force multiplier for future damage. Narrative requirements: The report must feel specifically true to the organization. Avoid generic checklists. Avoid empty phrases such as digital transformation, future readiness, innovation potential, or responsible AI journey. Every paragraph must connect answers to consequences. Explain not only what is weak, but why it matters operationally. Use language that a physician or practice owner would consider serious, useful, and reality based. Weaknesses must be stated clearly, but without accusation or panic. Stronger answers should be acknowledged, but not romanticized. If the organization appears relatively mature, still identify the main residual exposure honestly. Trust and style requirements: Write with empathy, but not softness. Write with authority, but not arrogance. Write with professional restraint. The report should sound as if a highly competent medical compliance oriented advisor is speaking plainly. Do not use bullet point inflation unless the selected depth logically requires structure. Do not use legal jargon for its own sake. Do not use abstract AI theory. Do not mention hidden models, scoring systems, answer weights, matrices, or internal report logic. BAZ anchor discipline: Where it fits naturally, close the report in a discreet way that signals that this orientation is supported by BAZ Wuerzburg and that deeper individual clarification may be useful. Do not sound promotional. Do not turn the report into an advertisement. The BAZ reference is a trust anchor, not a sales push. Output target: Produce one coherent German report that matches the selected depth, reflects the answers precisely, translates regulatory and operational exposure into the world of physicians and dentists, and makes the current AI risk exposure understandable, tangible, and professionally actionable."
+    },
+    "next": null
     }
-    }
+}
 }
