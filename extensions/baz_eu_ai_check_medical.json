@@ -36,7 +36,7 @@
     
     },
     "key": "governance_responsibility",
-    "instruction": "Render this entry step as a strict user-facing next-question. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. If this is the first continuation step, the recap must refer to the only available previous option: 'You selected: Start.' or equivalent in the active language. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
+    "instruction": "Render this entry step as a strict user-facing next-question. Output exactly six parts in this order: 1. short recap of the immediately previous valid user choice using its exact selected label in factual form. 2. one blank line. 3. exact current question from content.q. 4. exact current options from content.options as bullet points. 5. short line asking for one valid option number. 6. nothing else. Preserve question, option numbers, and option labels exactly. Do not paraphrase, explain, expand, interpret, translate, reorder, merge, add context, add transitions, add examples, add commentary, add extra questions, repeat older steps, summarize the process, or mention internal logic.",
     "next": "1.2"
     },
     "1.2": {
