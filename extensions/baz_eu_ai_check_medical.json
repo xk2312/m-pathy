@@ -28,9 +28,9 @@
   "content": {
     "q": "Who is responsible for the use of AI in your practice or organization?",
     "options": {
-      "1": "Option 1: Everyone uses AI independently without a clear rule",
-      "2": "Option 2: There are informal agreements, but no fixed responsibility",
-      "3": "Option 3: There is a clearly defined responsible person or function"
+      "1": "Everyone uses AI independently without a clear rule",
+      "2": "There are informal agreements, but no fixed responsibility",
+      "3": "There is a clearly defined responsible person or function"
     }
   },
   "key": "governance_responsibility",
