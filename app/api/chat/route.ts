@@ -441,20 +441,22 @@ const engineMessage: ChatMessage | null = engineResult.active
         };
       }
 
-      const q = step?.content?.q || "";
+     const instruction = step?.instruction || "";
 
-      const options =
-        step?.content?.renderedOptions ||
-        (step?.content?.options && typeof step.content.options === "object"
-          ? Object.entries(step.content.options)
-              .map(([key, value]) => `• ${key}: ${value}`)
-              .join("\n")
-          : "");
+const q = step?.content?.q || "";
 
-      return {
-        role: "user" as const,
-        content: [q, options].filter(Boolean).join("\n\n")
-      };
+const options =
+  step?.content?.renderedOptions ||
+  (step?.content?.options && typeof step.content.options === "object"
+    ? Object.entries(step.content.options)
+        .map(([key, value]) => `• ${key}: ${value}`)
+        .join("\n")
+    : "");
+
+return {
+  role: "user" as const,
+  content: [instruction, q, options].filter(Boolean).join("\n\n")
+};
     })()
   : null;
 const messages: ChatMessage[] = systemPrompt
