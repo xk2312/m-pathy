@@ -34,8 +34,8 @@
     }
   },
   "key": "governance_responsibility",
-  "instruction": "Render the options from content.options as separate sentences in an extra line. important! Never render two bullets in one Line. NEVER. Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
-  "next": "1.2"
+  "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 Options in one paragraph. Render this step as a user-facing next-question. Render the options from content.options as separate lines. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
+   "next": "1.2"
 },
     "1.2": {
     "type": "selection",
@@ -48,7 +48,7 @@
         }
     },
     "key": "access_control",
-  "instruction": "Render the options from content.options as separate sentences in an extra line. important! Never render two bullets in one Line. NEVER. Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
+  "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 Options in one paragraph. Render this step as a user-facing next-question. Render the options from content.options as separate lines. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
     "next": "1.3"
     },
     "1.3": {
@@ -62,7 +62,7 @@
         }
     },
     "key": "data_input_exposure",
-  "instruction": "Render the options from content.options as separate sentences in an extra line. important! Never render two bullets in one Line. NEVER. Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
+  "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 Options in one paragraph. Render this step as a user-facing next-question. Render the options from content.options as separate lines. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
     "next": "1.4"
     },
     "1.4": {
@@ -76,7 +76,7 @@
         }
     },
     "key": "transparency_disclosure",
-  "instruction": "Render the options from content.options as separate sentences in an extra line. important! Never render two bullets in one Line. NEVER. Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
+  "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 Options in one paragraph. Render this step as a user-facing next-question. Render the options from content.options as separate lines. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
     "next": "1.5"
     },
     "1.5": {
@@ -91,7 +91,7 @@
     }
     },
     "key": "use_case_risk_level",
-  "instruction": "Render the options from content.options as separate sentences in an extra line. important! Never render two bullets in one Line. NEVER. Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
+  "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 Options in one paragraph. Render this step as a user-facing next-question. Render the options from content.options as separate lines. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
     "next": "1.6"
         },
         "1.6": {
@@ -105,7 +105,7 @@
             }
     },
     "key": "human_oversight",
-  "instruction": "Render the options from content.options as separate sentences in an extra line. important! Never render two bullets in one Line. NEVER. Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
+  "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 Options in one paragraph. Render this step as a user-facing next-question. Render the options from content.options as separate lines. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
     "next": "1.7"
     },
     "1.7": {
@@ -119,7 +119,7 @@
         }
     },
     "key": "documentation_traceability",
-  "instruction": "Render the options from content.options as separate sentences in an extra line. important! Never render two bullets in one Line. NEVER. Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
+  "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 Options in one paragraph. Render this step as a user-facing next-question. Render the options from content.options as separate lines. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
     "next": "1.8" 
     },
     "1.8": {
@@ -133,7 +133,7 @@
         }
     },
     "key": "security_safeguards",
-  "instruction": "Render the options from content.options as separate sentences in an extra line. important! Never render two bullets in one Line. NEVER. Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
+  "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 Options in one paragraph. Render this step as a user-facing next-question. Render the options from content.options as separate lines. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
     "next": "1.9"
     },
     "1.9": {
@@ -147,7 +147,7 @@
         }
     },
     "key": "staff_awareness",
-  "instruction": "Render the options from content.options as separate sentences in an extra line. important! Never render two bullets in one Line. NEVER. Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
+  "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 Options in one paragraph. Render this step as a user-facing next-question. Render the options from content.options as separate lines. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
     "next": "1.10"
     },
     "1.10": {
@@ -161,7 +161,7 @@
         }
     },
     "key": "incident_proximity",
-  "instruction": "Render the options from content.options as separate sentences in an extra line. important! Never render two bullets in one Line. NEVER. Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
+  "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 Options in one paragraph. Render this step as a user-facing next-question. Render the options from content.options as separate lines. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
     "next": "1.11"
     },
     "1.11": {
@@ -175,7 +175,7 @@
         }
     },
     "key": "ai_dependency",
-  "instruction": "Render the options from content.options as separate sentences in an extra line. important! Never render two bullets in one Line. NEVER. Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
+  "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 Options in one paragraph. Render this step as a user-facing next-question. Render the options from content.options as separate lines. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
     "next": "1.12"
     },
     "1.12": {
@@ -189,7 +189,7 @@
         }
     },
     "key": "worst_case_impact",
-  "instruction": "Render the options from content.options as separate sentences in an extra line. important! Never render two bullets in one Line. NEVER. Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
+  "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 Options in one paragraph. Render this step as a user-facing next-question. Render the options from content.options as separate lines. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
     "next": "1.13"
     },
      "1.13": {
@@ -205,7 +205,7 @@
   }
 },
     "key": "report_depth",
-  "instruction": "Render the options from content.options as separate sentences in an extra line. important! Never render two bullets in one Line. NEVER. Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
+  "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 Options in one paragraph. Render this step as a user-facing next-question. Render the options from content.options as separate lines. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Use the effective conversation language for the entire output.",
     "next": "1.14"
     },
     "1.14": {
