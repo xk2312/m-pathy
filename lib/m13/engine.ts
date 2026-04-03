@@ -203,20 +203,36 @@ const next = currentStep.next
       }
     }
 
-    return {
-      active: true,
-      state: {
-        active: true,
-        extensionId: state.extensionId,
-        stepId: next,
-        language
+    let stepWithRender = nextStep
 
-      },
-      extensionId: state.extensionId,
-      stepId: next,
-      step: nextStep,
-      instruction: nextStep.instruction || null
+if (nextStep?.content?.options && typeof nextStep.content.options === "object") {
+  const renderedOptions = Object.entries(nextStep.content.options)
+    .map(([id, label]) => `• ${id}: ${label}`)
+    .join("\n")
+
+  stepWithRender = {
+    ...nextStep,
+    content: {
+      ...nextStep.content,
+      renderedOptions
     }
+  }
+}
+
+return {
+  active: true,
+  state: {
+    active: true,
+    extensionId: state.extensionId,
+    stepId: next,
+    language
+
+  },
+  extensionId: state.extensionId,
+  stepId: next,
+  step: stepWithRender,
+  instruction: nextStep.instruction || null
+}
   }
 
   const matched = entries.find(
@@ -261,19 +277,34 @@ if (!firstStep) {
 }
 
 console.log("[ENGINE] first step:", firstStepId)
+let firstStepWithRender = firstStep
 
-  return {
+if (firstStep?.content?.options && typeof firstStep.content.options === "object") {
+  const renderedOptions = Object.entries(firstStep.content.options)
+    .map(([id, label]) => `• ${id}: ${label}`)
+    .join("\n")
+
+  firstStepWithRender = {
+    ...firstStep,
+    content: {
+      ...firstStep.content,
+      renderedOptions
+    }
+  }
+}
+
+return {
+  active: true,
+  state: {
     active: true,
-    state: {
-      active: true,
-      extensionId: matched.id,
-      stepId: firstStepId,
-      language
-
-    },
     extensionId: matched.id,
     stepId: firstStepId,
-    step: firstStep,
-    instruction: firstStep.instruction || null
-  }
+    language
+
+  },
+  extensionId: matched.id,
+  stepId: firstStepId,
+  step: firstStepWithRender,
+  instruction: firstStep.instruction || null
+}
 }
