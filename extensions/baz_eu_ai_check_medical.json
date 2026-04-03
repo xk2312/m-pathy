@@ -24,19 +24,19 @@
     },
 
     "1.1": {
-      "type": "selection",
-      "content": {
-        "q": "Who is responsible for the use of AI in your practice or organization?",
-        "options": {
-          "1": "Everyone uses AI independently without a clear rule",
-          "2": "There are informal agreements, but no fixed responsibility",
-          "3": "There is a clearly defined responsible person or function"
-        }
-    
-    },
-    "key": "governance_responsibility",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Render the options as a numbered list. For each option start a new line and write exactly: <number>. <label> and insert a line break after each option. Do not combine options in one line. Use the effective conversation language for the entire output.",
-    "next": "1.2"},
+  "type": "selection",
+  "content": {
+    "q": "Who is responsible for the use of AI in your practice or organization?",
+    "options": {
+      "1": "Option 1: Everyone uses AI independently without a clear rule",
+      "2": "Option 2: There are informal agreements, but no fixed responsibility",
+      "3": "Option 3: There is a clearly defined responsible person or function"
+    }
+  },
+  "key": "governance_responsibility",
+  "instruction": "Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Render the options from content.options as separate lines. Do not combine multiple options into one line. Use the effective conversation language for the entire output.",
+  "next": "1.2"
+},
     "1.2": {
     "type": "selection",
     "content": {
