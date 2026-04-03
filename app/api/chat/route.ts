@@ -434,35 +434,29 @@ const engineMessage: ChatMessage | null = engineResult.active
   ? (() => {
       const step = engineResult.step;
 
-      if (
-        step &&
-        step.content &&
-        step.content.options &&
-        typeof step.content.options === "object"
-      ) {
-        const options = Object.entries(step.content.options)
-          .map(([key, value]) => `• ${key}: ${value}`)
-          .join("\n");
-
+      if (!step) {
         return {
           role: "user" as const,
-          content: JSON.stringify({
-            ...step,
-            content: {
-              ...step.content,
-              options_rendered: options
-            }
-          })
+          content: ""
         };
       }
 
+      const q = step?.content?.q || "";
+
+      const options =
+        step?.content?.renderedOptions ||
+        (step?.content?.options && typeof step.content.options === "object"
+          ? Object.entries(step.content.options)
+              .map(([key, value]) => `• ${key}: ${value}`)
+              .join("\n")
+          : "");
+
       return {
         role: "user" as const,
-        content: JSON.stringify(step)
+        content: [q, options].filter(Boolean).join("\n\n")
       };
     })()
   : null;
-
 const messages: ChatMessage[] = systemPrompt
   ? [
       { role: "system", content: systemPrompt },
