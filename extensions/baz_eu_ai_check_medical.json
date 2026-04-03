@@ -35,7 +35,7 @@
     
     },
     "key": "governance_responsibility",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Render the options from content.options as bullet points, each option on its own line starting with '• <number>:'. Do not combine or inline options. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Always render the options from content.options as separate bullet points. Each option must be on its own line starting with '• <number>:'. Never use preformatted options. Never combine options into a single line. Language rule: use the effective conversation language for the entire output.",
     "next": "1.2"},
     "1.2": {
     "type": "selection",
@@ -48,7 +48,7 @@
         }
     },
     "key": "access_control",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Render the options from content.options as bullet points, each option on its own line starting with '• <number>:'. Do not combine or inline options. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. Always render the options from content.options as separate bullet points. Each option must be on its own line starting with '• <number>:'. Never use preformatted options. Never combine options into a single line. Language rule: use the effective conversation language for the entire output.",
     "next": "1.3"
     },
     "1.3": {
