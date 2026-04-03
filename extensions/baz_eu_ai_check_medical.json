@@ -35,7 +35,7 @@
     
     },
     "key": "governance_responsibility",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 short recap of the immediately previous valid user choice using its exact selected label, 2 one blank line, 3 the current question, 4 the options block, 5 one short line asking for one valid option number. OPTIONS BLOCK RULE: use content.renderedOptions exactly as provided. Do not modify, reformat, split, merge, translate, or regenerate it. Do not create bullet points yourself. Do not reconstruct options from content.options. Always display content.renderedOptions as the single source of truth. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Execution logic: first convert content.options into discrete independent items, each key-value pair is one option. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. OPTIONS BLOCK RULE: each option must be on its own line, each line must start with '• <number>:' followed by the label, never combine options, never inline, never render as paragraph. Layout overrides preservation. Language rule: use the effective conversation language for the entire output.",
     "next": "1.2"},
     "1.2": {
     "type": "selection",
@@ -48,7 +48,7 @@
         }
     },
     "key": "access_control",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 short recap of the immediately previous valid user choice using its exact selected label, 2 one blank line, 3 the current question, 4 the options block, 5 one short line asking for one valid option number. OPTIONS BLOCK RULE: use content.renderedOptions exactly as provided. Do not modify, reformat, split, merge, translate, or regenerate it. Do not create bullet points yourself. Do not reconstruct options from content.options. Always display content.renderedOptions as the single source of truth. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Execution logic: first convert content.options into discrete independent items, each key-value pair is one option. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. OPTIONS BLOCK RULE: each option must be on its own line, each line must start with '• <number>:' followed by the label, never combine options, never inline, never render as paragraph. Layout overrides preservation. Language rule: use the effective conversation language for the entire output.",
     "next": "1.3"
     },
     "1.3": {
@@ -62,7 +62,7 @@
         }
     },
     "key": "data_input_exposure",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 short recap of the immediately previous valid user choice using its exact selected label, 2 one blank line, 3 the current question, 4 the options block, 5 one short line asking for one valid option number. OPTIONS BLOCK RULE: use content.renderedOptions exactly as provided. Do not modify, reformat, split, merge, translate, or regenerate it. Do not create bullet points yourself. Do not reconstruct options from content.options. Always display content.renderedOptions as the single source of truth. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Execution logic: first convert content.options into discrete independent items, each key-value pair is one option. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. OPTIONS BLOCK RULE: each option must be on its own line, each line must start with '• <number>:' followed by the label, never combine options, never inline, never render as paragraph. Layout overrides preservation. Language rule: use the effective conversation language for the entire output.",
     "next": "1.4"
     },
     "1.4": {
@@ -76,7 +76,7 @@
         }
     },
     "key": "transparency_disclosure",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 short recap of the immediately previous valid user choice using its exact selected label, 2 one blank line, 3 the current question, 4 the options block, 5 one short line asking for one valid option number. OPTIONS BLOCK RULE: use content.renderedOptions exactly as provided. Do not modify, reformat, split, merge, translate, or regenerate it. Do not create bullet points yourself. Do not reconstruct options from content.options. Always display content.renderedOptions as the single source of truth. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Execution logic: first convert content.options into discrete independent items, each key-value pair is one option. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. OPTIONS BLOCK RULE: each option must be on its own line, each line must start with '• <number>:' followed by the label, never combine options, never inline, never render as paragraph. Layout overrides preservation. Language rule: use the effective conversation language for the entire output.",
     "next": "1.5"
     },
     "1.5": {
@@ -91,7 +91,7 @@
     }
     },
     "key": "use_case_risk_level",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 short recap of the immediately previous valid user choice using its exact selected label, 2 one blank line, 3 the current question, 4 the options block, 5 one short line asking for one valid option number. OPTIONS BLOCK RULE: use content.renderedOptions exactly as provided. Do not modify, reformat, split, merge, translate, or regenerate it. Do not create bullet points yourself. Do not reconstruct options from content.options. Always display content.renderedOptions as the single source of truth. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Execution logic: first convert content.options into discrete independent items, each key-value pair is one option. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. OPTIONS BLOCK RULE: each option must be on its own line, each line must start with '• <number>:' followed by the label, never combine options, never inline, never render as paragraph. Layout overrides preservation. Language rule: use the effective conversation language for the entire output.",
     "next": "1.6"
         },
         "1.6": {
@@ -105,7 +105,7 @@
             }
     },
     "key": "human_oversight",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 short recap of the immediately previous valid user choice using its exact selected label, 2 one blank line, 3 the current question, 4 the options block, 5 one short line asking for one valid option number. OPTIONS BLOCK RULE: use content.renderedOptions exactly as provided. Do not modify, reformat, split, merge, translate, or regenerate it. Do not create bullet points yourself. Do not reconstruct options from content.options. Always display content.renderedOptions as the single source of truth. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Execution logic: first convert content.options into discrete independent items, each key-value pair is one option. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. OPTIONS BLOCK RULE: each option must be on its own line, each line must start with '• <number>:' followed by the label, never combine options, never inline, never render as paragraph. Layout overrides preservation. Language rule: use the effective conversation language for the entire output.",
     "next": "1.7"
     },
     "1.7": {
@@ -119,7 +119,7 @@
         }
     },
     "key": "documentation_traceability",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 short recap of the immediately previous valid user choice using its exact selected label, 2 one blank line, 3 the current question, 4 the options block, 5 one short line asking for one valid option number. OPTIONS BLOCK RULE: use content.renderedOptions exactly as provided. Do not modify, reformat, split, merge, translate, or regenerate it. Do not create bullet points yourself. Do not reconstruct options from content.options. Always display content.renderedOptions as the single source of truth. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Execution logic: first convert content.options into discrete independent items, each key-value pair is one option. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. OPTIONS BLOCK RULE: each option must be on its own line, each line must start with '• <number>:' followed by the label, never combine options, never inline, never render as paragraph. Layout overrides preservation. Language rule: use the effective conversation language for the entire output.",
     "next": "1.8" 
     },
     "1.8": {
@@ -133,7 +133,7 @@
         }
     },
     "key": "security_safeguards",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 short recap of the immediately previous valid user choice using its exact selected label, 2 one blank line, 3 the current question, 4 the options block, 5 one short line asking for one valid option number. OPTIONS BLOCK RULE: use content.renderedOptions exactly as provided. Do not modify, reformat, split, merge, translate, or regenerate it. Do not create bullet points yourself. Do not reconstruct options from content.options. Always display content.renderedOptions as the single source of truth. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Execution logic: first convert content.options into discrete independent items, each key-value pair is one option. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. OPTIONS BLOCK RULE: each option must be on its own line, each line must start with '• <number>:' followed by the label, never combine options, never inline, never render as paragraph. Layout overrides preservation. Language rule: use the effective conversation language for the entire output.",
     "next": "1.9"
     },
     "1.9": {
@@ -147,7 +147,7 @@
         }
     },
     "key": "staff_awareness",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 short recap of the immediately previous valid user choice using its exact selected label, 2 one blank line, 3 the current question, 4 the options block, 5 one short line asking for one valid option number. OPTIONS BLOCK RULE: use content.renderedOptions exactly as provided. Do not modify, reformat, split, merge, translate, or regenerate it. Do not create bullet points yourself. Do not reconstruct options from content.options. Always display content.renderedOptions as the single source of truth. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Execution logic: first convert content.options into discrete independent items, each key-value pair is one option. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. OPTIONS BLOCK RULE: each option must be on its own line, each line must start with '• <number>:' followed by the label, never combine options, never inline, never render as paragraph. Layout overrides preservation. Language rule: use the effective conversation language for the entire output.",
     "next": "1.10"
     },
     "1.10": {
@@ -161,7 +161,7 @@
         }
     },
     "key": "incident_proximity",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 short recap of the immediately previous valid user choice using its exact selected label, 2 one blank line, 3 the current question, 4 the options block, 5 one short line asking for one valid option number. OPTIONS BLOCK RULE: use content.renderedOptions exactly as provided. Do not modify, reformat, split, merge, translate, or regenerate it. Do not create bullet points yourself. Do not reconstruct options from content.options. Always display content.renderedOptions as the single source of truth. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Execution logic: first convert content.options into discrete independent items, each key-value pair is one option. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. OPTIONS BLOCK RULE: each option must be on its own line, each line must start with '• <number>:' followed by the label, never combine options, never inline, never render as paragraph. Layout overrides preservation. Language rule: use the effective conversation language for the entire output.",
     "next": "1.11"
     },
     "1.11": {
@@ -175,7 +175,7 @@
         }
     },
     "key": "ai_dependency",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 short recap of the immediately previous valid user choice using its exact selected label, 2 one blank line, 3 the current question, 4 the options block, 5 one short line asking for one valid option number. OPTIONS BLOCK RULE: use content.renderedOptions exactly as provided. Do not modify, reformat, split, merge, translate, or regenerate it. Do not create bullet points yourself. Do not reconstruct options from content.options. Always display content.renderedOptions as the single source of truth. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Execution logic: first convert content.options into discrete independent items, each key-value pair is one option. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. OPTIONS BLOCK RULE: each option must be on its own line, each line must start with '• <number>:' followed by the label, never combine options, never inline, never render as paragraph. Layout overrides preservation. Language rule: use the effective conversation language for the entire output.",
     "next": "1.12"
     },
     "1.12": {
@@ -189,7 +189,7 @@
         }
     },
     "key": "worst_case_impact",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 short recap of the immediately previous valid user choice using its exact selected label, 2 one blank line, 3 the current question, 4 the options block, 5 one short line asking for one valid option number. OPTIONS BLOCK RULE: use content.renderedOptions exactly as provided. Do not modify, reformat, split, merge, translate, or regenerate it. Do not create bullet points yourself. Do not reconstruct options from content.options. Always display content.renderedOptions as the single source of truth. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Execution logic: first convert content.options into discrete independent items, each key-value pair is one option. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. OPTIONS BLOCK RULE: each option must be on its own line, each line must start with '• <number>:' followed by the label, never combine options, never inline, never render as paragraph. Layout overrides preservation. Language rule: use the effective conversation language for the entire output.",
     "next": "1.13"
     },
      "1.13": {
@@ -205,7 +205,7 @@
   }
 },
     "key": "report_depth",
-    "instruction": "Render this step as a user-facing next-question. Output order: 1 short recap of the immediately previous valid user choice using its exact selected label, 2 one blank line, 3 the current question, 4 the options block, 5 one short line asking for one valid option number. OPTIONS BLOCK RULE: use content.renderedOptions exactly as provided. Do not modify, reformat, split, merge, translate, or regenerate it. Do not create bullet points yourself. Do not reconstruct options from content.options. Always display content.renderedOptions as the single source of truth. Language rule: use the effective conversation language for the entire output.",
+    "instruction": "Render this step as a user-facing next-question. Execution logic: first convert content.options into discrete independent items, each key-value pair is one option. Output order: 1 recap of previous choice, 2 blank line, 3 current question, 4 options block, 5 short request for one valid option number. OPTIONS BLOCK RULE: each option must be on its own line, each line must start with '• <number>:' followed by the label, never combine options, never inline, never render as paragraph. Layout overrides preservation. Language rule: use the effective conversation language for the entire output.",
     "next": "1.14"
     },
     "1.14": {
