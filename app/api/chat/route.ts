@@ -431,10 +431,36 @@ if (balanceBefore <= 0) {
 const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
 
 const engineMessage: ChatMessage | null = engineResult.active
-  ? {
-      role: "user" as const,
-      content: JSON.stringify(engineResult.step)
-    }
+  ? (() => {
+      const step = engineResult.step;
+
+      if (
+        step &&
+        step.content &&
+        step.content.options &&
+        typeof step.content.options === "object"
+      ) {
+        const options = Object.entries(step.content.options)
+          .map(([key, value]) => `• ${key}: ${value}`)
+          .join("\n");
+
+        return {
+          role: "user" as const,
+          content: JSON.stringify({
+            ...step,
+            content: {
+              ...step.content,
+              options_rendered: options
+            }
+          })
+        };
+      }
+
+      return {
+        role: "user" as const,
+        content: JSON.stringify(step)
+      };
+    })()
   : null;
 
 const messages: ChatMessage[] = systemPrompt
