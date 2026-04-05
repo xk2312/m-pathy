@@ -156,8 +156,10 @@ if (currentStep.key) {
   return obj;
 };
 
+
+
 const updatedData = setNestedValue(
-  { ...collectedData },
+  { ...(state as any).collectedData },
   currentStep.key,
   message
 );
