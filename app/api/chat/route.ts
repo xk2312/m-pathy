@@ -189,7 +189,7 @@ const engineResult = runEngine({
 console.log("[ENGINE RESULT AFTER RUN]", engineResult);
 
 // === EXECUTION GATE ===
-if (engineResult.step?.type === "action") {
+if (engineResult.step?.type === "execution") {
 
   const { execSync } = require("child_process");
 
