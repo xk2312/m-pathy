@@ -1,6 +1,7 @@
 #!/bin/bash
 
-RUN_PATH=$1
+BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
+RUN_PATH="$BASE_DIR/../$1"
 
 if [ -z "$RUN_PATH" ]; then
   echo "Usage: ./run.sh runs/<run_name>"
@@ -18,8 +19,7 @@ run_step () {
   echo "STEP START: $STEP_NAME"
   START_TIME=$(date +%s)
 
-  python $SCRIPT $RUN_PATH
-
+  python3 "$BASE_DIR/$SCRIPT" "$RUN_PATH"
   END_TIME=$(date +%s)
   DURATION=$((END_TIME - START_TIME))
 
