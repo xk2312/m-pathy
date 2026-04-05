@@ -206,44 +206,23 @@ if (engineResult.step?.type === "execution") {
     shellOutput = err?.stdout || "Execution failed.";
   }
 
-  const enrichment = engineResult.step?.output_enrichment || {};
+let parsed: any = null;
 
-  const hiddenPrompt = `
-DATEN:
-${shellOutput}
+try {
+  parsed = JSON.parse(shellOutput);
+} catch (e) {
+  console.error("[EXECUTION PARSE ERROR]", e);
+}
 
-AUFGABE:
-Erstelle einen strukturierten, professionellen Versicherungsbericht.
+const content =
+  parsed?.final_text_with_questions ||
+  "Execution completed, but no formatted output was returned.";
 
-Am Ende ergänze folgende Fragen:
-${(enrichment.append_questions || []).join("\n")}
-  `.trim();
-
-  const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
-
-  const finalMessages = [
-    { role: "system", content: systemPrompt || "" },
-    { role: "user", content: hiddenPrompt }
-  ];
-
-  const finalRes = await fetch(buildAzureUrl(), {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "api-key": apiKey },
-    body: JSON.stringify({
-      messages: finalMessages,
-      temperature: 0.7,
-      max_tokens: MODEL_MAX_TOKENS
-    })
-  });
-
-  const finalData = await finalRes.json();
-  const content = finalData?.choices?.[0]?.message?.content;
-
-  return NextResponse.json({
-    role: "assistant",
-    content,
-    state: { active: false, extensionId: null, stepId: null }
-  });
+return NextResponse.json({
+  role: "assistant",
+  content,
+  state: { active: false, extensionId: null, stepId: null }
+});
 }
 const incomingConversationId =
   typeof (body as any)?.conversationId === "string" &&
