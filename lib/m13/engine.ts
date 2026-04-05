@@ -6,8 +6,8 @@ export type EngineState = {
   extensionId: string | null
   stepId: string | null
   language?: string
+  collectedData?: any
 }
-
 export type EngineContext = {
   message: string
   state: EngineState
@@ -26,6 +26,7 @@ export type EngineResult = {
     input_keys: string[]
     rules: any
   }
+  collectedData?: any
 }
 
 export function runEngine(ctx: EngineContext): EngineResult {
@@ -219,14 +220,16 @@ if (nextStep?.content?.options && typeof nextStep.content.options === "object") 
   }
 }
 
+const collectedData = (state as any)?.collectedData || {};
+
 return {
   active: true,
   state: {
     active: true,
     extensionId: state.extensionId,
     stepId: next,
-    language
-
+    language,
+    collectedData
   },
   extensionId: state.extensionId,
   stepId: next,

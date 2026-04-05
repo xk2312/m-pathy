@@ -195,6 +195,46 @@ if (engineResult.step?.type === "execution") {
 
   let shellOutput = "";
 
+const fs = require("fs");
+
+const runPath = path.join(
+  process.cwd(),
+  "app",
+  "doctors-advisor",
+  "execution-space",
+  "runs",
+  "test_run"
+);
+
+const inputPath = path.join(runPath, "01_input.json");
+
+const collectedData = engineResult?.collectedData || {};
+
+if (!fs.existsSync(runPath)) {
+  fs.mkdirSync(runPath, { recursive: true });
+}
+
+let baseInput = {};
+
+if (fs.existsSync(inputPath)) {
+  try {
+    baseInput = JSON.parse(fs.readFileSync(inputPath, "utf-8"));
+  } catch {
+    baseInput = {};
+  }
+}
+
+const mergedInput = {
+  ...baseInput,
+  ...collectedData
+};
+
+fs.writeFileSync(
+  inputPath,
+  JSON.stringify(mergedInput, null, 2),
+  "utf-8"
+);
+
 try {
   const path = require("path");
 
@@ -207,6 +247,10 @@ const scriptPath = path.join(
   "run.sh"
 );
 
+if (!require("fs").existsSync(scriptPath)) {
+  throw new Error(`run.sh not found at ${scriptPath}`);
+}
+
 shellOutput = execSync(`bash ${scriptPath} runs/test_run`, {
   cwd: process.cwd(),
     encoding: "utf-8",
@@ -215,22 +259,22 @@ shellOutput = execSync(`bash ${scriptPath} runs/test_run`, {
 
   const match = shellOutput.match(/###JSON_START###([\s\S]*?)###JSON_END###/);
 
-  if (!match) {
-    console.error("RAW OUTPUT:", shellOutput);
-    throw new Error("No JSON boundaries found");
+if (!match) {
+  console.error("RAW OUTPUT:", shellOutput);
+  throw new Error("No JSON boundaries found");
+}
+
+const json = JSON.parse(match[1]);
+
+return NextResponse.json({
+  role: "assistant",
+  content: json.final_text_with_questions,
+  state: {
+    active: false,
+    extensionId: null,
+    stepId: null
   }
-
-  const json = JSON.parse(match[1]);
-
-  return NextResponse.json({
-    role: "assistant",
-    content: json.final_text_with_questions,
-    state: {
-      active: false,
-      extensionId: null,
-      stepId: null
-    }
-  });
+});
   } catch (err: any) {
     console.error("[SHELL ERROR]", err);
     shellOutput = err?.stdout || "Execution failed.";
