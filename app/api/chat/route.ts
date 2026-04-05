@@ -209,7 +209,15 @@ if (engineResult.step?.type === "execution") {
 let parsed: any = null;
 
 try {
-  parsed = JSON.parse(shellOutput);
+  const jsonStart = shellOutput.indexOf("{");
+  const jsonEnd = shellOutput.lastIndexOf("}");
+
+  if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+    const jsonString = shellOutput.slice(jsonStart, jsonEnd + 1);
+    parsed = JSON.parse(jsonString);
+  } else {
+    console.error("[EXECUTION PARSE ERROR] No JSON boundaries found");
+  }
 } catch (e) {
   console.error("[EXECUTION PARSE ERROR]", e);
 }
