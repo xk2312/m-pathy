@@ -31,6 +31,18 @@ export type EngineResult = {
 export function runEngine(ctx: EngineContext): EngineResult {
   const { message, state, registry } = ctx
 
+  const collected: Record<string, any> = {}
+
+  const setDeep = (obj: any, path: string, value: any) => {
+    const keys = path.split(".")
+    let current = obj
+    for (let i = 0; i < keys.length - 1; i++) {
+      if (!current[keys[i]]) current[keys[i]] = {}
+      current = current[keys[i]]
+    }
+    current[keys[keys.length - 1]] = value
+  }
+
 const detectLanguage = (text: string) => {
   if (!text) return undefined
   const lower = text.toLowerCase()
@@ -109,7 +121,14 @@ if (!currentStep) {
   }
 }
 
-    if (currentStep.type === "selection") {
+    if (currentStep.type === "input") {
+  const value = String(message).trim()
+  if (currentStep.key) {
+    setDeep(collected, currentStep.key, value)
+  }
+}
+
+if (currentStep.type === "selection") {
   const raw = String(message).trim()
 
 const options = currentStep.content?.options || {}
@@ -136,6 +155,63 @@ return {
   }
 }
 
+if (currentStep.type === "execution") {
+  try {
+    const inputPath = path.join(process.cwd(), "run/01_input.json")
+    fs.writeFileSync(inputPath, JSON.stringify(collected, null, 2), "utf-8")
+
+    const { execSync } = require("child_process")
+    execSync("bash run.sh", { stdio: "inherit" })
+
+    const outputPath = path.join(process.cwd(), "run/08_c6_challenge1.json")
+    const rawOutput = fs.readFileSync(outputPath, "utf-8")
+    const parsed = JSON.parse(rawOutput)
+
+    const result = parsed?.response_after || ""
+
+    const questions = [
+      "Welche der identifizierten Risiken ist aus Ihrer Sicht aktuell am kritischsten für Ihre Einrichtung?",
+      "Bestehen für diese Bereiche bereits konkrete Absicherungen oder gibt es hier noch Lücken?",
+      "Wünschen Sie eine gezielte Einordnung, wie diese Risiken typischerweise in der Sachversicherung strukturiert abgesichert werden?"
+    ]
+
+    const finalText = result + "\n\n" + questions.map((q, i) => `${i + 1}. ${q}`).join("\n")
+
+    return {
+      active: false,
+      state: {
+        active: false,
+        extensionId: null,
+        stepId: null,
+        language
+      },
+      extensionId: null,
+      stepId: null,
+      step: null,
+      instruction: null,
+      action: "final_output",
+      payload: {
+        input_keys: [],
+        rules: { output: finalText }
+      }
+    }
+  } catch (err) {
+    console.error("[ENGINE][ERROR] execution failed:", err)
+    return {
+      active: false,
+      state: {
+        active: false,
+        extensionId: null,
+        stepId: null,
+        language
+      },
+      extensionId: null,
+      stepId: null,
+      step: null
+    }
+  }
+}
+
 const next = currentStep.next
 
     if (next === undefined) {
@@ -159,15 +235,20 @@ const next = currentStep.next
   console.log("[ENGINE] exit reached at step:", state.stepId)
 
   if (currentStep.type === "action") {
-    return {
-      active: false,
-      action: currentStep.action,
-      payload: {
-        input_keys: currentStep.input_keys || [],
-        rules: currentStep.rules || {}
-      }
-    }
+  return {
+    active: true,
+    state: {
+      active: true,
+      extensionId: state.extensionId,
+      stepId: currentStep.next,
+      language
+    },
+    extensionId: state.extensionId,
+    stepId: currentStep.next,
+    step: extension.steps[currentStep.next],
+    instruction: extension.steps[currentStep.next]?.instruction || null
   }
+}
 
   return {
     active: false,

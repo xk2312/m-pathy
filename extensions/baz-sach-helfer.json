@@ -1,0 +1,130 @@
+{
+  "id": "baz_sach_helfer",
+  "version": "1.0",
+
+  "entry": "1",
+
+  "steps": {
+    "1": {
+      "type": "selection",
+      "content": {
+        "q": "Möchten Sie die Datenerfassung für eine erste sachversicherungsbezogene Einschätzung starten?",
+        "options": {
+          "1": "Ja, Datenerfassung starten"
+        }
+      },
+      "key": "entry",
+      "instruction": "Begrüße den Nutzer ruhig, professionell und vertrauenswürdig. Erkläre danach in genau drei kurzen Sätzen den Nutzen des Tools: Es unterstützt Arztpraxen, MVZs und Kliniken dabei, zentrale Standort- und Objektdaten strukturiert zu erfassen, damit eine erste sachversicherungsbezogene Einschätzung vorbereitet werden kann. Mache klar, dass nun die erforderlichen Grunddaten der Einrichtung abgefragt werden. Vermeide Marketing-Sprache, Übertreibung, technische Erklärungen und interne Logik. Stelle danach die Frage aus content.q. Gib die Option aus content.options als Bullet Point aus. Fordere den Nutzer am Ende auf, nur mit der gültigen Zahl zu antworten.",
+      "next": "1.1"
+    },
+
+    "1.1": {
+      "type": "input",
+      "content": {
+        "q": "Wie heißt die Einrichtung?"
+      },
+      "key": "practice.name",
+      "instruction": "Stelle die Frage klar und knapp. Erwarte eine kurze Texteingabe.",
+      "next": "1.2"
+    },
+
+    "1.2": {
+      "type": "input",
+      "content": {
+        "q": "Welche Fachrichtung hat die Einrichtung?"
+      },
+      "key": "practice.specialization",
+      "instruction": "Stelle die Frage klar und knapp. Beispiele: Zahnarzt, Dermatologie, MVZ, Klinik.",
+      "next": "1.3"
+    },
+
+    "1.3": {
+      "type": "input",
+      "content": {
+        "q": "Straße und Hausnummer?"
+      },
+      "key": "practice.address.street",
+      "instruction": "Stelle die Frage klar und knapp.",
+      "next": "1.4"
+    },
+
+    "1.4": {
+      "type": "input",
+      "content": {
+        "q": "Postleitzahl?"
+      },
+      "key": "practice.address.postal_code",
+      "instruction": "Erwarte nur die Postleitzahl als kurze Eingabe.",
+      "next": "1.5"
+    },
+
+    "1.5": {
+      "type": "input",
+      "content": {
+        "q": "Ort?"
+      },
+      "key": "practice.address.city",
+      "instruction": "Stelle die Frage klar und knapp.",
+      "next": "1.6"
+    },
+
+    "1.6": {
+      "type": "input",
+      "content": {
+        "q": "Land?"
+      },
+      "key": "practice.address.country",
+      "instruction": "Standardmäßig Deutschland, falls nichts anderes angegeben wird.",
+      "next": "1.7"
+    },
+
+    "1.7": {
+      "type": "action",
+      "action": "build_practice_payload",
+      "input_keys": [
+        "practice.name",
+        "practice.specialization",
+        "practice.address.street",
+        "practice.address.postal_code",
+        "practice.address.city",
+        "practice.address.country"
+      ],
+      "rules": {
+        "output": "practice_object",
+        "schema": {
+          "practice": {
+            "name": "string",
+            "specialization": "string",
+            "address": {
+              "street": "string",
+              "postal_code": "string",
+              "city": "string",
+              "country": "string"
+            }
+          }
+        }
+      },
+      "next": "1.8"
+    },
+
+   "1.8": {
+    "type": "execution",
+    "action": "run_sachversicherung_pipeline",
+    "output_enrichment": {
+        "append_questions": [
+        "Welche der identifizierten Risiken ist aus Ihrer Sicht aktuell am kritischsten für Ihre Einrichtung?",
+        "Bestehen für diese Bereiche bereits konkrete Absicherungen oder gibt es hier noch Lücken?",
+        "Wünschen Sie eine gezielte Einordnung, wie diese Risiken typischerweise in der Sachversicherung strukturiert abgesichert werden?"
+        ]
+    },
+    "next": null
+    },
+
+    "2.1": {
+      "type": "action",
+      "action": "return_execution_result",
+      "instruction": "Gib das berechnete Ergebnis direkt und unverändert an den Nutzer zurück.",
+      "next": null
+    }
+  }
+}

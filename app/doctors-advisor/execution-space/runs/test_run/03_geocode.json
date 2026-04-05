@@ -1,0 +1,21 @@
+{
+  "lat": 48.139462,
+  "lon": 11.5760445,
+  "display_name": "Maje, 46, Theatinerstraße, Kreuzviertel, Altstadt-Lehel, München, Bayern, 80333, Deutschland",
+  "address": {
+    "shop": "Maje",
+    "house_number": "46",
+    "road": "Theatinerstraße",
+    "quarter": "Kreuzviertel",
+    "suburb": "Altstadt-Lehel",
+    "city": "München",
+    "state": "Bayern",
+    "ISO3166-2-lvl4": "DE-BY",
+    "postcode": "80333",
+    "country": "Deutschland",
+    "country_code": "de"
+  },
+  "category": null,
+  "type": "clothes",
+  "importance": 8.462272068355866e-05
+}

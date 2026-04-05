@@ -1,0 +1,13 @@
+{
+  "coordinates": {
+    "lat": 48.139462,
+    "lon": 11.5760445
+  },
+  "location": {
+    "city": "München",
+    "state": "Bayern",
+    "postcode": "80333",
+    "country": "Deutschland",
+    "country_code": "de"
+  }
+}

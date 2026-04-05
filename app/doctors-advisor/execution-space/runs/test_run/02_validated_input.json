@@ -1,0 +1,12 @@
+{
+  "practice": {
+    "name": "Zentrum für Private Zahnheilkunde",
+    "specialization": "Zahnarzt",
+    "address": {
+      "street": "Theatinerstraße 46",
+      "postal_code": "80333",
+      "city": "München",
+      "country": "Deutschland"
+    }
+  }
+}

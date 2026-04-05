@@ -11,6 +11,15 @@
         "registry_class": "extension",
         "description": "Builds psychologically precise, deeply human LinkedIn posts through a structured 13-step input and a high-control generation engine"
       },
+        {
+        "id": "baz_sach_helfer",
+        "type": "extension",
+        "name": "Sachversicherungs-Analyse für medizinische Einrichtungen",
+        "command": "echo-baz-sach-helfer",
+        "path": "extensions/baz_sach_helfer.json",
+        "registry_class": "extension",
+        "description": "Erfasst strukturierte Standort- und Objektdaten von Arztpraxen, MVZs und Kliniken und erzeugt darauf basierend eine erste sachversicherungsbezogene Risikoeinschätzung mit anschlussfähigen Beratungsfragen"
+      },
       {
         "id": "baz_eu_ai_check_medical",
         "type": "extension",
