@@ -214,24 +214,9 @@ if (!fs.existsSync(runPath)) {
   fs.mkdirSync(runPath, { recursive: true });
 }
 
-let baseInput = {};
-
-if (fs.existsSync(inputPath)) {
-  try {
-    baseInput = JSON.parse(fs.readFileSync(inputPath, "utf-8"));
-  } catch {
-    baseInput = {};
-  }
-}
-
-const mergedInput = {
-  ...baseInput,
-  ...collectedData
-};
-
 fs.writeFileSync(
   inputPath,
-  JSON.stringify(mergedInput, null, 2),
+  JSON.stringify(collectedData, null, 2),
   "utf-8"
 );
 

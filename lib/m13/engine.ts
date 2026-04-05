@@ -137,8 +137,35 @@ return {
   }
 }
 
-const next = currentStep.next
+const collectedData = (state as any)?.collectedData || {};
 
+if (currentStep.key) {
+  const setNestedValue = (obj: any, path: string, value: any) => {
+  const keys = path.split(".");
+  let current = obj;
+
+  keys.forEach((key, index) => {
+    if (index === keys.length - 1) {
+      current[key] = value;
+    } else {
+      if (!current[key]) current[key] = {};
+      current = current[key];
+    }
+  });
+
+  return obj;
+};
+
+const updatedData = setNestedValue(
+  { ...collectedData },
+  currentStep.key,
+  message
+);
+
+(state as any).collectedData = updatedData;
+}
+
+const next = currentStep.next
     if (next === undefined) {
       console.error("[ENGINE][ERROR] next missing in step:", state.stepId)
       return {
@@ -220,8 +247,6 @@ if (nextStep?.content?.options && typeof nextStep.content.options === "object") 
   }
 }
 
-const collectedData = (state as any)?.collectedData || {};
-
 return {
   active: true,
   state: {
@@ -229,7 +254,7 @@ return {
     extensionId: state.extensionId,
     stepId: next,
     language,
-    collectedData
+    collectedData: (state as any).collectedData
   },
   extensionId: state.extensionId,
   stepId: next,
