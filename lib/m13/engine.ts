@@ -5,7 +5,7 @@ export type EngineState = {
   active: boolean
   extensionId: string | null
   stepId: string | null
-  language?: string
+  collected?: Record<string, any>
 }
 
 export type EngineContext = {
@@ -31,8 +31,7 @@ export type EngineResult = {
 export function runEngine(ctx: EngineContext): EngineResult {
   const { message, state, registry } = ctx
 
-  const collected: Record<string, any> = {}
-
+const collected = state.collected || {}
   const setDeep = (obj: any, path: string, value: any) => {
     const keys = path.split(".")
     let current = obj
@@ -64,8 +63,7 @@ const detectLanguage = (text: string) => {
   return "en"
 }
 
-const language = state.language ?? detectLanguage(message)
-
+const language = detectLanguage(message)
 console.log("[ENGINE] incoming message:", message)
 console.log("[ENGINE] current state:", state)
 
@@ -86,8 +84,7 @@ console.log("[ENGINE] current state:", state)
           active: false,
           extensionId: null,
           stepId: null,
-          language
-
+          collected: state.collected
         },
         extensionId: null,
         stepId: null,
@@ -107,25 +104,25 @@ if (!currentStep) {
   currentStep = extension.steps[fallbackId]
 
   return {
+  active: true,
+  state: {
     active: true,
-    state: {
-      active: true,
-      extensionId: state.extensionId,
-      stepId: fallbackId,
-      language
-    },
     extensionId: state.extensionId,
     stepId: fallbackId,
-    step: currentStep,
-    instruction: currentStep.instruction || null
-  }
+    collected: state.collected
+  },
+  extensionId: state.extensionId,
+  stepId: fallbackId,
+  step: extension.steps[fallbackId],
+  instruction: extension.steps[fallbackId]?.instruction || null
+}
 }
 
     if (currentStep.type === "input") {
   const value = String(message).trim()
   if (currentStep.key) {
-    setDeep(collected, currentStep.key, value)
-  }
+setDeep(collected, currentStep.key, value)
+state.collected = collected  }
 }
 
 if (currentStep.type === "selection") {
@@ -145,7 +142,7 @@ return {
   active: true,
   state: {
   ...state,
-  language
+  collected: state.collected
 },
   extensionId: state.extensionId,
   stepId: state.stepId,
@@ -158,8 +155,7 @@ return {
 if (currentStep.type === "execution") {
   try {
     const inputPath = path.join(process.cwd(), "run/01_input.json")
-    fs.writeFileSync(inputPath, JSON.stringify(collected, null, 2), "utf-8")
-
+fs.writeFileSync(inputPath, JSON.stringify(state.collected || {}, null, 2), "utf-8")
     const { execSync } = require("child_process")
     execSync("bash run.sh", { stdio: "inherit" })
 
@@ -183,7 +179,8 @@ if (currentStep.type === "execution") {
         active: false,
         extensionId: null,
         stepId: null,
-        language
+        collected: state.collected
+
       },
       extensionId: null,
       stepId: null,
@@ -203,7 +200,8 @@ if (currentStep.type === "execution") {
         active: false,
         extensionId: null,
         stepId: null,
-        language
+        collected: state.collected
+
       },
       extensionId: null,
       stepId: null,
@@ -222,7 +220,8 @@ const next = currentStep.next
           active: false,
           extensionId: null,
           stepId: null,
-          language
+          collected: state.collected
+
 
         },
         extensionId: null,
@@ -234,14 +233,16 @@ const next = currentStep.next
   if (next === null) {
   console.log("[ENGINE] exit reached at step:", state.stepId)
 
-  if (currentStep.type === "action") {
+if (currentStep.type === "action") {
+  state.collected = collected
+
   return {
     active: true,
     state: {
       active: true,
       extensionId: state.extensionId,
       stepId: currentStep.next,
-      language
+      collected,
     },
     extensionId: state.extensionId,
     stepId: currentStep.next,
@@ -256,7 +257,8 @@ const next = currentStep.next
       active: false,
       extensionId: null,
       stepId: null,
-      language
+      collected: state.collected
+
 
     },
     extensionId: null,
@@ -275,7 +277,8 @@ const next = currentStep.next
           active: false,
           extensionId: null,
           stepId: null,
-          language
+          collected: state.collected
+
 
         },
         extensionId: null,
@@ -306,7 +309,8 @@ return {
     active: true,
     extensionId: state.extensionId,
     stepId: next,
-    language
+    collected: state.collected
+
 
   },
   extensionId: state.extensionId,
@@ -326,7 +330,8 @@ return {
       active: false,
       state: {
         ...state,
-        language
+        collected: state.collected
+
       },
       extensionId: null,
       stepId: null,
@@ -349,7 +354,8 @@ if (!firstStep) {
     active: false,
     state: {
       ...state,
-      language
+      collected: state.collected
+
     },
     extensionId: null,
     stepId: null,
@@ -380,7 +386,8 @@ return {
     active: true,
     extensionId: matched.id,
     stepId: firstStepId,
-    language
+    collected: state.collected
+
 
   },
   extensionId: matched.id,
