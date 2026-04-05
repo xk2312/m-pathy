@@ -46,7 +46,16 @@
         "path": "extensions/kson_engine.json",
         "registry_class": "extension",
         "description": "Generates a deep 13-vector energy profile using deterministic user input and produces a multi-output heavy expansion personality report"
+      },
+      {
+        "id": "run_sachversicherung_pipeline",
+        "type": "execution",
+        "name": "Sachversicherung Pipeline",
+        "command": "run_sachversicherung_pipeline",
+        "path": "execution-space/bin/run.sh",
+        "registry_class": "execution",
+        "description": "Runs the full sachversicherung analysis pipeline and produces final JSON output"
       }
-    ]
-  }
-}
+          ]
+        }
+      }
