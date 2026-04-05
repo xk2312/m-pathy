@@ -326,12 +326,12 @@ if (firstStep?.content?.options && typeof firstStep.content.options === "object"
 return {
   active: true,
   state: {
-    active: true,
-    extensionId: matched.id,
-    stepId: firstStepId,
-    language
-
-  },
+  active: true,
+  extensionId: matched.id,
+  stepId: firstStepId,
+  language,
+  collectedData: {}
+},
   extensionId: matched.id,
   stepId: firstStepId,
   step: firstStepWithRender,

@@ -197,13 +197,15 @@ if (engineResult.step?.type === "execution") {
 
 const fs = require("fs");
 
+const runId = `${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
+
 const runPath = path.join(
   process.cwd(),
   "app",
   "doctors-advisor",
   "execution-space",
   "runs",
-  "test_run"
+  runId
 );
 
 const inputPath = path.join(runPath, "01_input.json");
@@ -236,20 +238,31 @@ if (!require("fs").existsSync(scriptPath)) {
   throw new Error(`run.sh not found at ${scriptPath}`);
 }
 
-shellOutput = execSync(`bash ${scriptPath} runs/test_run`, {
+shellOutput = execSync(`bash ${scriptPath} ${runPath}`, {
   cwd: process.cwd(),
-    encoding: "utf-8",
-    maxBuffer: 1024 * 1024 * 10
-  });
+  encoding: "utf-8",
+  maxBuffer: 1024 * 1024 * 10
+});
 
   const match = shellOutput.match(/###JSON_START###([\s\S]*?)###JSON_END###/);
 
 if (!match) {
   console.error("RAW OUTPUT:", shellOutput);
-  throw new Error("No JSON boundaries found");
+
+  return NextResponse.json({
+    role: "assistant",
+    content: "Execution failed during validation. Please check input.",
+    state: { active: false, extensionId: null, stepId: null }
+  });
 }
 
 const json = JSON.parse(match[1]);
+
+setTimeout(() => {
+  try {
+    require("fs").rmSync(runPath, { recursive: true, force: true });
+  } catch {}
+}, 5000);
 
 return NextResponse.json({
   role: "assistant",
@@ -262,8 +275,7 @@ return NextResponse.json({
 });
   } catch (err: any) {
     console.error("[SHELL ERROR]", err);
-    shellOutput = err?.stdout || "Execution failed.";
-  }
+    throw new Error("Execution Pipeline failed before producing output");  }
 
 let parsed: any = null;
 
