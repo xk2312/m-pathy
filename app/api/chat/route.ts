@@ -197,10 +197,10 @@ if (engineResult.step?.type === "execution") {
 
   try {
     execSync("bash ./execution-space/bin/run.sh runs/test_run", {
-  cwd: process.cwd(),
-      encoding: "utf-8",
-      maxBuffer: 1024 * 1024 * 10
-    });
+  cwd: process.cwd() + "/app/doctors-advisor",
+  encoding: "utf-8",
+  maxBuffer: 1024 * 1024 * 10
+});
   } catch (err: any) {
     console.error("[SHELL ERROR]", err);
     shellOutput = err?.stdout || "Execution failed.";
