@@ -37,5 +37,6 @@ run_step "FirstCall" "steps/FirstCallPY.py"
 run_step "C6Challenge1" "steps/C6Challenge1PY.py"
 run_step "FinalizeOutput" "steps/FinalizeOutputPY.py"
 
-echo ""
-echo "Execution complete."
+echo "###JSON_START###"
+cat "$RUN_PATH/10_finalize_output.json"
+echo "###JSON_END###"
