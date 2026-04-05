@@ -16,7 +16,7 @@
         "type": "extension",
         "name": "Sachversicherungs-Analyse für medizinische Einrichtungen",
         "command": "echo-baz-sach-helfer",
-        "path": "extensions/bazsach_helfer.json",
+        "path": "extensions/baz_sach_helfer.json",
         "registry_class": "extension",
         "description": "Erfasst strukturierte Standort- und Objektdaten von Arztpraxen, MVZs und Kliniken und erzeugt darauf basierend eine erste sachversicherungsbezogene Risikoeinschätzung mit anschlussfähigen Beratungsfragen"
       },
