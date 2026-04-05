@@ -195,12 +195,31 @@ if (engineResult.step?.type === "execution") {
 
   let shellOutput = "";
 
-  try {
-    execSync("bash ./execution-space/bin/run.sh runs/test_run", {
-  cwd: process.cwd() + "/app/doctors-advisor",
-  encoding: "utf-8",
-  maxBuffer: 1024 * 1024 * 10
-});
+try {
+  shellOutput = execSync("bash ./execution-space/bin/run.sh runs/test_run", {
+    cwd: process.cwd(),
+    encoding: "utf-8",
+    maxBuffer: 1024 * 1024 * 10
+  });
+
+  const match = shellOutput.match(/###JSON_START###([\s\S]*?)###JSON_END###/);
+
+  if (!match) {
+    console.error("RAW OUTPUT:", shellOutput);
+    throw new Error("No JSON boundaries found");
+  }
+
+  const json = JSON.parse(match[1]);
+
+  return NextResponse.json({
+    role: "assistant",
+    content: json.final_text_with_questions,
+    state: {
+      active: false,
+      extensionId: null,
+      stepId: null
+    }
+  });
   } catch (err: any) {
     console.error("[SHELL ERROR]", err);
     shellOutput = err?.stdout || "Execution failed.";
