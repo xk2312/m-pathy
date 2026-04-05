@@ -196,8 +196,19 @@ if (engineResult.step?.type === "execution") {
   let shellOutput = "";
 
 try {
-  shellOutput = execSync("bash ./execution-space/bin/run.sh runs/test_run", {
-    cwd: process.cwd(),
+  const path = require("path");
+
+const scriptPath = path.join(
+  process.cwd(),
+  "app",
+  "doctors-advisor",
+  "execution-space",
+  "bin",
+  "run.sh"
+);
+
+shellOutput = execSync(`bash ${scriptPath} runs/test_run`, {
+  cwd: process.cwd(),
     encoding: "utf-8",
     maxBuffer: 1024 * 1024 * 10
   });
