@@ -196,8 +196,8 @@ if (engineResult.step?.type === "execution") {
   let shellOutput = "";
 
   try {
-    shellOutput = execSync("bash run.sh", {
-      cwd: process.cwd(),
+    execSync("bash ./execution-space/bin/run.sh runs/test_run", {
+  cwd: process.cwd(),
       encoding: "utf-8",
       maxBuffer: 1024 * 1024 * 10
     });
