@@ -188,6 +188,63 @@ const engineResult = runEngine({
 
 console.log("[ENGINE RESULT AFTER RUN]", engineResult);
 
+// === EXECUTION GATE ===
+if (engineResult.step?.type === "action") {
+
+  const { execSync } = require("child_process");
+
+  let shellOutput = "";
+
+  try {
+    shellOutput = execSync("bash run.sh", {
+      cwd: process.cwd(),
+      encoding: "utf-8",
+      maxBuffer: 1024 * 1024 * 10
+    });
+  } catch (err: any) {
+    console.error("[SHELL ERROR]", err);
+    shellOutput = err?.stdout || "Execution failed.";
+  }
+
+  const enrichment = engineResult.step?.output_enrichment || {};
+
+  const hiddenPrompt = `
+DATEN:
+${shellOutput}
+
+AUFGABE:
+Erstelle einen strukturierten, professionellen Versicherungsbericht.
+
+Am Ende ergänze folgende Fragen:
+${(enrichment.append_questions || []).join("\n")}
+  `.trim();
+
+  const systemPrompt = loadSystemPrompt(body.protocol ?? "GPTX");
+
+  const finalMessages = [
+    { role: "system", content: systemPrompt || "" },
+    { role: "user", content: hiddenPrompt }
+  ];
+
+  const finalRes = await fetch(buildAzureUrl(), {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "api-key": apiKey },
+    body: JSON.stringify({
+      messages: finalMessages,
+      temperature: 0.7,
+      max_tokens: MODEL_MAX_TOKENS
+    })
+  });
+
+  const finalData = await finalRes.json();
+  const content = finalData?.choices?.[0]?.message?.content;
+
+  return NextResponse.json({
+    role: "assistant",
+    content,
+    state: { active: false, extensionId: null, stepId: null }
+  });
+}
 const incomingConversationId =
   typeof (body as any)?.conversationId === "string" &&
   String((body as any).conversationId).trim().length > 0

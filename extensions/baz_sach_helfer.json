@@ -12,7 +12,7 @@
         }
       },
       "key": "entry",
-      "instruction": "Begrüße den Nutzer ruhig und professionell. Erkläre in drei kurzen Sätzen den Nutzen: strukturierte Erfassung von Praxis- und Standortdaten zur Ableitung sachversicherungsrelevanter Risiken. Vermeide Marketing-Sprache. Stelle danach die Frage und fordere zur Eingabe der Zahl auf.",
+      "instruction": "Begrüße den Nutzer ruhig und professionell. Erkläre in drei kurzen Sätzen den Nutzen: strukturierte Erfassung von Praxis- und Standortdaten zur Ableitung sachversicherungsrelevanter Risiken. Stelle danach die Frage und fordere zur Eingabe der Zahl auf.",
       "next": "1.1"
     },
     "1.1": {
@@ -21,7 +21,7 @@
         "q": "Wie heißt die Einrichtung?"
       },
       "key": "practice.name",
-      "instruction": "Stelle die Frage klar und knapp. Erwarte eine kurze Texteingabe.",
+      "instruction": "Stelle die Frage klar und knapp.",
       "next": "1.2"
     },
     "1.2": {
@@ -30,7 +30,7 @@
         "q": "Welche Fachrichtung hat die Einrichtung?"
       },
       "key": "practice.specialization",
-      "instruction": "Stelle die Frage klar und knapp. Beispiele: Zahnarzt, Dermatologie, MVZ, Klinik.",
+      "instruction": "Beispiele: Zahnarzt, Dermatologie, MVZ, Klinik.",
       "next": "1.3"
     },
     "1.3": {
@@ -39,7 +39,7 @@
         "q": "Straße und Hausnummer?"
       },
       "key": "practice.address.street",
-      "instruction": "Stelle die Frage klar und knapp.",
+      "instruction": "",
       "next": "1.4"
     },
     "1.4": {
@@ -48,7 +48,7 @@
         "q": "Postleitzahl?"
       },
       "key": "practice.address.postal_code",
-      "instruction": "Erwarte nur die Postleitzahl.",
+      "instruction": "Nur die Postleitzahl eingeben.",
       "next": "1.5"
     },
     "1.5": {
@@ -57,7 +57,7 @@
         "q": "Ort?"
       },
       "key": "practice.address.city",
-      "instruction": "Stelle die Frage klar und knapp.",
+      "instruction": "",
       "next": "1.6"
     },
     "1.6": {
@@ -66,7 +66,7 @@
         "q": "Land?"
       },
       "key": "practice.address.country",
-      "instruction": "Standardmäßig Deutschland, falls nichts anderes angegeben wird.",
+      "instruction": "Falls nicht angegeben, wird Deutschland angenommen.",
       "next": "1.7"
     },
     "1.7": {
