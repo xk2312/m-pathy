@@ -9,8 +9,11 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-RUN_PATH="$BASE_DIR/$1"
-
+if [[ "$1" = /* ]]; then
+  RUN_PATH="$1"
+else
+  RUN_PATH="$BASE_DIR/$1"
+fi
 echo "Starting Execution Pipeline..."
 
 run_step () {
