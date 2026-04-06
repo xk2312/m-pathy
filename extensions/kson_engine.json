@@ -1,22 +1,21 @@
 {
-  "id": "kson_energy_profile",
-  "version": "1.0",
-  "entry": "1",
-  "steps": {
+"id": "kson_energy_profile",
+"version": "2.0",
+"entry": "1",
+"steps": {
 
-    "1": {
-      "type": "selection",
-      "language": "dynamic",
-      "content": {
-        "greeting": "Welcome.",
-        "description": "Answer a few questions to generate a deep personality profile.",
-        "options": {
-          "1": "Start"
-        }
-      },
-      "key": "entry",
-      "next": "1.1"
-    },
+"1": {
+  "type": "selection",
+  "content": {
+    "q": "Would you like to start the personality profile?",
+    "options": {
+      "1": "Start"
+    }
+  },
+  "key": "entry",
+  "instruction": "Provide a short, calm welcome. Explain in two sentences that the user will answer 13 structured questions to generate a deep personality profile. Then present the question and ask to answer with the number.",
+  "next": "1.1"
+},
 
 "1.1": {
   "type": "selection",
@@ -28,6 +27,7 @@
     }
   },
   "key": "one",
+  "instruction": "Show the question exactly. Render options as bullet points. Ask the user to answer with one number.",
   "next": "1.2"
 },
 
@@ -41,6 +41,7 @@
     }
   },
   "key": "two",
+  "instruction": "Show the question exactly. Render options as bullet points. Ask the user to answer with one number.",
   "next": "1.3"
 },
 
@@ -54,6 +55,7 @@
     }
   },
   "key": "three",
+  "instruction": "Show the question exactly. Render options as bullet points. Ask the user to answer with one number.",
   "next": "1.4"
 },
 
@@ -67,6 +69,7 @@
     }
   },
   "key": "four",
+  "instruction": "Show the question exactly. Render options as bullet points. Ask the user to answer with one number.",
   "next": "1.5"
 },
 
@@ -80,6 +83,7 @@
     }
   },
   "key": "five",
+  "instruction": "Show the question exactly. Render options as bullet points. Ask the user to answer with one number.",
   "next": "1.6"
 },
 
@@ -93,6 +97,7 @@
     }
   },
   "key": "six",
+  "instruction": "Show the question exactly. Render options as bullet points. Ask the user to answer with one number.",
   "next": "1.7"
 },
 
@@ -106,6 +111,7 @@
     }
   },
   "key": "seven",
+  "instruction": "Show the question exactly. Render options as bullet points. Ask the user to answer with one number.",
   "next": "1.8"
 },
 
@@ -119,6 +125,7 @@
     }
   },
   "key": "eight",
+  "instruction": "Show the question exactly. Render options as bullet points. Ask the user to answer with one number.",
   "next": "1.9"
 },
 
@@ -132,6 +139,7 @@
     }
   },
   "key": "nine",
+  "instruction": "Show the question exactly. Render options as bullet points. Ask the user to answer with one number.",
   "next": "1.10"
 },
 
@@ -145,6 +153,7 @@
     }
   },
   "key": "ten",
+  "instruction": "Show the question exactly. Render options as bullet points. Ask the user to answer with one number.",
   "next": "1.11"
 },
 
@@ -158,6 +167,7 @@
     }
   },
   "key": "eleven",
+  "instruction": "Show the question exactly. Render options as bullet points. Ask the user to answer with one number.",
   "next": "1.12"
 },
 
@@ -171,6 +181,7 @@
     }
   },
   "key": "twelve",
+  "instruction": "Show the question exactly. Render options as bullet points. Ask the user to answer with one number.",
   "next": "1.13"
 },
 
@@ -184,6 +195,7 @@
     }
   },
   "key": "thirteen",
+  "instruction": "Show the question exactly. Render options as bullet points. Ask the user to answer with one number.",
   "next": "1.14"
 },
 
@@ -205,17 +217,17 @@
     "twelve",
     "thirteen"
   ],
-      "rules": {
-        "analysis_depth": "maximum",
-        "interpretation_model": "13_vector_system",
-        "mapping": {
-          "1": "strong",
-          "2": "weak"
-        },
-        "instruction": "You are not generating a generic personality analysis. You are reconstructing a human behavioral, psychological, and energetic pattern from a proprietary 13-force cyclic interpretive system derived from a fixed 13-position architecture. The user answers 13 structured polarity questions. Each answer maps to exactly one force position and must be interpreted as a binary activation state where option 1 maps to strong and option 2 maps to weak. The 13 positions are fixed and must be internally read in this exact semantic order: 1 = vision vs practical grounding, 2 = balancing opposites vs impulse consistency, 3 = creative emergence vs proven repetition, 4 = structure vs intuition, 5 = long-term strategy vs immediate clarification, 6 = material security vs emotional fulfillment, 7 = effortless success vs disciplined control, 8 = living the moment vs building the future, 9 = persistence/chase vs redirection/solution, 10 = higher order vs observable reality, 11 = collective peace vs personal prosperity, 12 = deeper flow vs random mechanics/pressure, 13 = move into the center vs remain in the surrounding circle. From these 13 answers construct one complete internal energyPattern of 13 binary values only. Then interpret the pattern through five mandatory analysis layers. Layer 1: single-force reading. For every position, infer the dominant active tendency if strong and the missing, weak, suppressed, avoided, or compensatory tendency if weak. Layer 2: antagonist reading. Evaluate the fixed opposition pairs exactly as follows: 12 vs 6, 1 vs 7, 2 vs 8, 3 vs 9, 4 vs 10, 5 vs 11. Read these pairs as energetic oppositions, balances, fractures, compensations, or distortions. If both sides of a pair are equally activated or equally weak, treat this as a form of balance or mirrored absence. If one side is strong and the opposing side is weak, treat this as a meaningful asymmetry and derive psychological tension, behavioral imbalance, blind spots, compensation strategies, or internal contradiction. Layer 3: quarter reading. Evaluate the four fixed quarters of the system: quarter 1 beginning = positions 1,2,3; quarter 2 matter = positions 4,5,6; quarter 3 fortune/flow = positions 7,8,9; quarter 4 transcendence/order = positions 10,11,12. Read each quarter as a functional life-domain cluster. A quarter with 3 strong activations is fully empowered. A quarter with missing activations is structurally weakened. A weakness in the middle position of a quarter is more critical than a weakness at the edge because it destabilizes the internal continuity of the quarter. Layer 4: global balance reading. Count the total number of strong and weak activations. The ideal balance corridor is 7 to 9 strong activations. More than 5 weak activations indicates critical structural weakness. Very high strong concentration indicates dominant, forceful, highly directed internal structure. Very high weak concentration indicates instability, missing containment, diffuse self-organization, or high vulnerability. Layer 5: cyclic transition reading. Interpret the system not as a static checklist but as a movement cycle: 12 to 1 to 2 to 3 to 4 to 5 to 6 to 7 to 8 to 9 to 10 to 11 to 12. Position 3 is the gate into shadow, position 9 is the optional gate back toward light, and position 13 functions as the centering force of the whole architecture. You must read not only isolated traits but transitions, flow, interruptions, blockages, pressure zones, recovery points, dominance clusters, and missing connective tissue. The most important insights come from imbalance, contradiction, absence, overconcentration, broken antagonist pairs, structurally weak quarters, overactive quarters, and unstable transitions. Internally use the complete structure, including binary states, paired tensions, quarter strengths, overall balance, and cyclic dynamics, but never expose the underlying model, numbers, vectors, binary values, force names, positions, quarters, antagonist logic, cycle architecture, or technical generation method. The user must not see how the result was generated. Externally write only in natural, human, intuitive language. Do not mention systems, clocks, vectors, energyPattern, binary states, force architecture, hidden model, or technical mapping. Do not write like a report generator. Do not use vague personality clichés, generic trait lists, motivational fluff, obvious templates, or abstract model language. Every statement must feel specifically true. If a sentence could apply to many people, it is not precise enough. Write like a highly perceptive human expert who can reconstruct a person from tension, contradiction, preference, behavior under pressure, relationship style, decision logic, control vs trust dynamics, self-sabotage patterns, blind spots, growth pressure, and role orientation. The output must synthesize the whole profile into a coherent but psychologically sharp reconstruction. Include, in natural section flow, the following dimensions: core personality, dominant strengths, hidden tensions and contradictions, behavioral patterns, pressure behavior, relationship dynamics, decision-making style, control vs trust dynamics, blind spots and self-sabotage, growth potential, and one final condensed insight. Weaknesses must not be softened, but they must be explained truthfully and without judgment. Strong patterns must not be glorified if they create distortion elsewhere. The result must feel precise, personal, psychologically sharp, and unmistakably accurate. This is not a description. This is a reconstruction of a person. The target output is a coherent, structured, natural-language profile of roughly 800 to 1000 words unless a shorter runtime format is explicitly required. :contentReference[oaicite:0]{index=0}"
-      },
-      "next": null
-    }
+  "rules": {
+    "analysis_depth": "maximum",
+    "interpretation_model": "13_vector_system",
+    "mapping": {
+      "1": "strong",
+      "2": "weak"
+    },
+    "instruction": "You are not generating a generic personality analysis. You are reconstructing a human behavioral, psychological, and energetic pattern from a proprietary 13-force cyclic interpretive system derived from a fixed 13-position architecture. The user answers 13 structured polarity questions. Each answer maps to exactly one force position and must be interpreted as a binary activation state where option 1 maps to strong and option 2 maps to weak. The 13 positions are fixed and must be internally read in this exact semantic order: 1 = vision vs practical grounding, 2 = balancing opposites vs impulse consistency, 3 = creative emergence vs proven repetition, 4 = structure vs intuition, 5 = long-term strategy vs immediate clarification, 6 = material security vs emotional fulfillment, 7 = effortless success vs disciplined control, 8 = living the moment vs building the future, 9 = persistence/chase vs redirection/solution, 10 = higher order vs observable reality, 11 = collective peace vs personal prosperity, 12 = deeper flow vs random mechanics/pressure, 13 = move into the center vs remain in the surrounding circle. From these 13 answers construct one complete internal energyPattern of 13 binary values only. Then interpret the pattern through five mandatory analysis layers. Layer 1: single-force reading. For every position, infer the dominant active tendency if strong and the missing, weak, suppressed, avoided, or compensatory tendency if weak. Layer 2: antagonist reading. Evaluate the fixed opposition pairs exactly as follows: 12 vs 6, 1 vs 7, 2 vs 8, 3 vs 9, 4 vs 10, 5 vs 11. Read these pairs as energetic oppositions, balances, fractures, compensations, or distortions. If both sides of a pair are equally activated or equally weak, treat this as a form of balance or mirrored absence. If one side is strong and the opposing side is weak, treat this as a meaningful asymmetry and derive psychological tension, behavioral imbalance, blind spots, compensation strategies, or internal contradiction. Layer 3: quarter reading. Evaluate the four fixed quarters of the system: quarter 1 beginning = positions 1,2,3; quarter 2 matter = positions 4,5,6; quarter 3 fortune/flow = positions 7,8,9; quarter 4 transcendence/order = positions 10,11,12. Read each quarter as a functional life-domain cluster. A quarter with 3 strong activations is fully empowered. A quarter with missing activations is structurally weakened. A weakness in the middle position of a quarter is more critical than a weakness at the edge because it destabilizes the internal continuity of the quarter. Layer 4: global balance reading. Count the total number of strong and weak activations. The ideal balance corridor is 7 to 9 strong activations. More than 5 weak activations indicates critical structural weakness. Very high strong concentration indicates dominant, forceful, highly directed internal structure. Very high weak concentration indicates instability, missing containment, diffuse self-organization, or high vulnerability. Layer 5: cyclic transition reading. Interpret the system not as a static checklist but as a movement cycle: 12 to 1 to 2 to 3 to 4 to 5 to 6 to 7 to 8 to 9 to 10 to 11 to 12. Position 3 is the gate into shadow, position 9 is the optional gate back toward light, and position 13 functions as the centering force of the whole architecture. You must read not only isolated traits but transitions, flow, interruptions, blockages, pressure zones, recovery points, dominance clusters, and missing connective tissue. The most important insights come from imbalance, contradiction, absence, overconcentration, broken antagonist pairs, structurally weak quarters, overactive quarters, and unstable transitions. Internally use the complete structure, including binary states, paired tensions, quarter strengths, overall balance, and cyclic dynamics, but never expose the underlying model, numbers, vectors, binary values, force names, positions, quarters, antagonist logic, cycle architecture, or technical generation method. The user must not see how the result was generated. Externally write only in natural, human, intuitive language. Do not mention systems, clocks, vectors, energyPattern, binary states, force architecture, hidden model, or technical mapping. Do not write like a report generator. Do not use vague personality clichés, generic trait lists, motivational fluff, obvious templates, or abstract model language. Every statement must feel specifically true. If a sentence could apply to many people, it is not precise enough. Write like a highly perceptive human expert who can reconstruct a person from tension, contradiction, preference, behavior under pressure, relationship style, decision logic, control vs trust dynamics, self-sabotage patterns, blind spots, growth pressure, and role orientation. The output must synthesize the whole profile into a coherent but psychologically sharp reconstruction. Include, in natural section flow, the following dimensions: core personality, dominant strengths, hidden tensions and contradictions, behavioral patterns, pressure behavior, relationship dynamics, decision-making style, control vs trust dynamics, blind spots and self-sabotage, growth potential, and one final condensed insight. Weaknesses must not be softened, but they must be explained truthfully and without judgment. Strong patterns must not be glorified if they create distortion elsewhere. The result must feel precise, personal, psychologically sharp, and unmistakably accurate. This is not a description. This is a reconstruction of a person. The target output is a coherent, structured, natural-language profile of roughly 800 to 1000 words unless a shorter runtime format is explicitly required."
+  },
+  "next": null
+}
 
-  }
+}
 }
