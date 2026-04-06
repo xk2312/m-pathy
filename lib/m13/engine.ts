@@ -30,8 +30,12 @@ export type EngineResult = {
 }
 
 export function runEngine(ctx: EngineContext): EngineResult {
-  const { message, state, registry } = ctx
+const { message, state, registry } = ctx
 
+const input = {
+  value: String(message).trim(),
+  stepId: state.stepId
+}
 const detectLanguage = (text: string) => {
   if (!text) return undefined
   const lower = text.toLowerCase()
@@ -88,7 +92,14 @@ console.log("[ENGINE] current state:", state)
     const raw = fs.readFileSync(extensionPath, "utf-8")
     const extension = JSON.parse(raw)
 
-    let currentStep = extension.steps[state.stepId]
+let currentStep = extension.steps[state.stepId]
+console.log("[ENGINE][INPUT RECEIVED]", {
+  rawMessage: message,
+  normalized: message,
+  stepId: state.stepId,
+  expectedKey: currentStep?.key,
+  type: currentStep?.type
+})
 
 if (!currentStep) {
   console.error("[ENGINE][ERROR] step not found, resetting to entry:", state.stepId)
@@ -110,8 +121,31 @@ if (!currentStep) {
   }
 }
 
-    if (currentStep.type === "selection") {
-  const raw = String(message).trim()
+  if (currentStep.type === "selection") {
+  const raw = input.value
+
+  if (currentStep.type === "input") {
+  const raw = input.value
+
+  if (!raw || raw === "1" || raw === "2" || raw === "3") {
+    console.error("[ENGINE][ERROR] invalid input for input step", {
+      stepId: state.stepId,
+      value: raw
+    })
+
+    return {
+      active: true,
+      state: {
+        ...state,
+        language
+      },
+      extensionId: state.extensionId,
+      stepId: state.stepId,
+      step: currentStep,
+      instruction: currentStep.instruction || null
+    }
+  }
+}
 
 const options = currentStep.content?.options || {}
 
@@ -158,10 +192,16 @@ if (currentStep.key) {
 
 
 
+console.log("[ENGINE][BEFORE PERSIST]", {
+  stepId: state.stepId,
+  key: currentStep.key,
+  value: input.value
+})
+
 const updatedData = setNestedValue(
   JSON.parse(JSON.stringify((state as any).collectedData || {})),
   currentStep.key,
-  message
+  input.value
 );
 
 (state as any).collectedData = updatedData;
