@@ -159,14 +159,15 @@ if (currentStep.key) {
 
 
 const updatedData = setNestedValue(
-  { ...(state as any).collectedData },
+  JSON.parse(JSON.stringify((state as any).collectedData || {})),
   currentStep.key,
   message
 );
 
 (state as any).collectedData = updatedData;
 }
-
+console.log("[ENGINE][PERSIST AFTER STEP]", currentStep.key);
+console.log(JSON.stringify((state as any).collectedData, null, 2));
 const next = currentStep.next
     if (next === undefined) {
       console.error("[ENGINE][ERROR] next missing in step:", state.stepId)
@@ -261,7 +262,8 @@ return {
   extensionId: state.extensionId,
   stepId: next,
   step: stepWithRender,
-  instruction: nextStep.instruction || null
+  instruction: nextStep.instruction || null,
+  collectedData: (state as any).collectedData
 }
   }
 
