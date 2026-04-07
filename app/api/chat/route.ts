@@ -249,11 +249,14 @@ shellOutput = execSync(`bash ${scriptPath} ${runPath}`, {
 if (!match) {
   console.error("RAW OUTPUT:", shellOutput);
 
-  return NextResponse.json({
-    role: "assistant",
-    content: "Execution failed during validation. Please check input.",
-    state: { active: false, extensionId: null, stepId: null }
-  });
+  const logs = shellOutput.split("\n").filter(Boolean);
+
+return NextResponse.json({
+  role: "assistant",
+  content: "Execution failed during validation. Please check input.",
+  logs,
+  state: { active: false, extensionId: null, stepId: null }
+});
 }
 
 const json = JSON.parse(match[1]);
@@ -264,9 +267,15 @@ setTimeout(() => {
   } catch {}
 }, 5000);
 
+const logs = shellOutput.split("\n").filter(Boolean);
+
+const stepMapping = json.stepMapping || {};
+
 return NextResponse.json({
   role: "assistant",
   content: json.final_text_with_questions,
+  logs,
+  stepMapping,
   state: {
     active: false,
     extensionId: null,
@@ -297,9 +306,12 @@ const content =
   parsed?.final_text_with_questions ||
   "Execution completed, but no formatted output was returned.";
 
+const logs = shellOutput.split("\n").filter(Boolean);
+
 return NextResponse.json({
   role: "assistant",
   content,
+  logs,
   state: { active: false, extensionId: null, stepId: null }
 });
 }

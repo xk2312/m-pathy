@@ -188,6 +188,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef, useCallback, useMemo, FormEvent } from "react";
+import ExecutionBar from "@/components/ExecutionBar";
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import Image from "next/image";
 import hljs from "highlight.js";
@@ -2161,8 +2162,24 @@ if (busy) {
   // Lokale Chat-Sendefunktion (ruft echte API)
   // ===============================================================
 const [systemState, setSystemState] = useState<any>(null);
+const [logs, setLogs] = useState<string[]>([]);
+const [executionState, setExecutionState] = useState<string | null>(null);
+const [progress, setProgress] = useState<number>(0);
+const [visible, setVisible] = useState<boolean>(false);
 
 async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
+      setExecutionState("initializing");
+      setProgress(0);
+      setVisible(true);
+
+      const startTime = Date.now();
+
+      const progressInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const next = Math.min(80, (elapsed / 20000) * 80);
+      setProgress(next);
+    }, 100);
+
     const res = await fetch("/api/chat", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
@@ -2370,11 +2387,32 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
 
 const data = await res.json();
 
+clearInterval(progressInterval);
+setProgress(100);
+
+setTimeout(() => {
+  setVisible(false);
+}, 400);
+
 console.log("[M13][FRONTEND] RAW RESPONSE", data);
 
 if (data?.state) {
   console.log("[M13][FRONTEND] STATE RECEIVED", data.state);
   setSystemState(data.state);
+}
+
+if (data?.logs) {
+  setLogs(data.logs);
+
+  const joinedLogs = data.logs.join("\n");
+
+  if (data?.stepMapping) {
+    for (const key in data.stepMapping) {
+      if (joinedLogs.includes(`STEP START: ${key}`)) {
+        setExecutionState(data.stepMapping[key]);
+      }
+    }
+  }
 }
 
 if (data?.status === "send_failed") {
@@ -3335,6 +3373,12 @@ const withGate = (fn: () => void) => {
       </div>
     )}
 
+
+<ExecutionBar
+  state={executionState}
+  progress={progress}
+  visible={visible}
+/>
 
 </main>
 
