@@ -1,13 +1,7 @@
 {
   "id": "baz_sach_helfer",
   "version": "1.0",
-  "stepMapping": {
-    "ReverseGeocode": "validating_location",
-    "FirstCall": "ai_analysis",
-    "C6Challenge1": "refining",
-    "FinalizeOutput": "finalizing"
-},
-"entry": "1",     
+  "entry": "1",
   "steps": {
     "1": {
       "type": "selection",
