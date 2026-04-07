@@ -2409,7 +2409,9 @@ if (data?.logs) {
   if (data?.stepMapping) {
     for (const key in data.stepMapping) {
       if (joinedLogs.includes(`STEP START: ${key}`)) {
-        setExecutionState(data.stepMapping[key]);
+        const mapping = data.stepMapping[key];
+        setExecutionState(mapping.state);
+        setProgress(mapping.progress);
       }
     }
   }
