@@ -2170,7 +2170,6 @@ const [visible, setVisible] = useState<boolean>(false);
 async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
       setExecutionState("initializing");
       setProgress(0);
-      setVisible(true);
 
       const startTime = Date.now();
 
@@ -2403,6 +2402,7 @@ if (data?.state) {
 
 if (data?.logs) {
   setLogs(data.logs);
+  setVisible(true);
 
   const joinedLogs = data.logs.join("\n");
 
@@ -2420,8 +2420,10 @@ if (data?.status === "send_failed") {
 }
 
 // 🔥 ENGINE RESPONSE HANDLING
+let assistantMsg: ChatMessage | null = null;
+
 if (data?.message) {
-  return {
+  assistantMsg = {
     id:
       typeof crypto !== 'undefined' &&
       typeof (crypto as any).randomUUID === 'function'
