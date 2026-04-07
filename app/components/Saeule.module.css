@@ -746,12 +746,6 @@
   display: inline-flex;
 }
 
-
-/* Varianten bleiben als semantische Klassen bestehen – ohne eigene Farben */
-.buttonPrimary { }
-.buttonSolid { }
-.buttonGhostPrimary { }
-
 /* Hover: graue Pille auf #1E2024 */
 .button:hover,
 .buttonPrimary:hover,

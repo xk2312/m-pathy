@@ -1,7 +1,11 @@
 "use client";
 
 type Props = {
-  onClearChat: () => void;
+  onClearChat?: () => void;
+  onSystemMessage?: any;
+  messages?: any[];
+  setInput?: (value: string) => void;
+  canClear?: boolean;
 };
 
 export default function Saeule({ onClearChat }: Props) {
@@ -36,7 +40,7 @@ export default function Saeule({ onClearChat }: Props) {
         {/* New Chat */}
         <button
           title="New chat"
-          onClick={onClearChat}
+          onClick={() => onClearChat?.()}
           className="opacity-60 hover:opacity-100 transition"
         >
           ✨
