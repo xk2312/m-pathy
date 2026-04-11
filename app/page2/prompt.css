@@ -177,22 +177,7 @@ END OF INDEX
 
 /* Starship Horizon – feine Lichtkante über dem Dock */
 #m-input-dock.prompt-root::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 0;
-  transform: translate(-50%, -18px);
-  width: min(960px, 86vw);
-  height: 1px;
-  border-radius: 999px;
-  background: radial-gradient(
-    circle at center,
-    rgba(148,163,184,0.9),
-    rgba(148,163,184,0)
-  );
-  opacity: 0.55;
-  pointer-events: none;
-  filter: blur(4px);
+  display: none;
 }
 
 /* PreChat: lift prompt into the golden band (all layouts) */
@@ -337,30 +322,13 @@ END OF INDEX
 }
 /* Starship Floor – horizontale Lichtfläche unter der Pille */
 .prompt-shell::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -20px;
-  transform: translateX(-50%);
-  width: 70%;
-  height: 44px;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(148,163,184,0.28),
-    rgba(15,23,42,0) 65%
-  );
-  opacity: 0.55;
-  pointer-events: none;
-  filter: blur(18px);
+  display: none;
 }
 
 /* Fokuszustand – das ganze Raumschiff leuchtet */
 .prompt-shell:focus-within {
-  border-color: var(--prompt-focus-color, rgba(226,232,240,0.95));
-  box-shadow:
-    0 0 0 1px var(--prompt-focus-color, rgba(226,232,240,0.95)),
-    0 0 40px rgba(15,23,42,0.9);
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: none;
 }
 
 .prompt-shell {
