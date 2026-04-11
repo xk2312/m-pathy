@@ -368,16 +368,16 @@ export default function LanguageSwitcher() {
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-label={ariaLabels.select_label}
-          className="inline-flex cursor-pointer items-center justify-center rounded-full border px-3 gap-1 text-xs uppercase tracking-wide text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+          className="flex cursor-pointer items-center justify-center px-3 gap-1 text-xs uppercase tracking-wide text-white/70 hover:text-white focus-visible:outline-none"
           style={{
 
             height: "var(--nav-tail-height)",
-            background: "var(--nav-tail-bg)",
-            borderColor: "var(--nav-tail-border)",
+            background: "transparent",
+            border: "none",
             paddingInline: "var(--nav-padding-inline)",
-            transition: reducedMotion
-              ? "none"
-              : "background-color var(--nav-motion-fast), opacity var(--nav-motion-fast), transform var(--nav-motion-fast)",
+            cursor: "pointer",
+            transition:
+              "opacity var(--nav-motion-fast), transform var(--nav-motion-fast)",
           }}
         >
           <span className="text-base leading-none">{active.flag}</span>

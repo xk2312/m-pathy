@@ -294,8 +294,7 @@ export default function Navigation() {
               <button
               type="button"
               aria-label={loginLabel}
-              className="inline-flex items-center justify-center rounded-full border border-white/20 h-8 text-[0.78rem] tracking-[0.08em] uppercase text-white/75 hover:text-white hover:border-white/60 hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-300/60 focus:ring-offset-0 disabled:opacity-60"
-              style={{
+              className="inline-flex items-center justify-center h-8 text-[0.78rem] tracking-[0.08em] uppercase text-white/60 hover:text-white transition-colors focus:outline-none disabled:opacity-60"              style={{
                 paddingInline: "var(--nav-button-pad-inline)",
                 cursor: "pointer",
               }}
