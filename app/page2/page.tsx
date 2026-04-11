@@ -3221,12 +3221,11 @@ const withGate = (fn: () => void) => {
     {/* Mobile Overlay / Onboarding */}
     {isMobile && (
   <MobileOverlay
-    open={overlayOpen}
-    onClose={() => setOverlayOpen(false)}
-    onSystemMessage={systemSay}
-    onClearChat={onClearChat}
-    messages={messages}
-  />
+  open={overlayOpen}
+  onClose={() => setOverlayOpen(false)}
+  onClearChat={onClearChat}
+  messages={messages}
+/>
 )}
 
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
