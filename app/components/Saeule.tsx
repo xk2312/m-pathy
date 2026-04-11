@@ -1,17 +1,24 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Saeule.module.css";
 import { buildChatExport, chatExportToCSV } from "@/lib/exportChat";
+import { loadInitialSystemState } from "@/lib/system/initialLoad";
+import { saveUserActivationState } from "@/lib/db/userActivationState";
+import registry from "@/registry/registry.json";
+import { wallIcons } from "@/components/icons/wallIcons";
 
 type Props = {
   onClearChat?: () => void;
   messages: any[];
 };
 
+type State = Awaited<ReturnType<typeof loadInitialSystemState>>;
+
 export default function Saeule({
   onClearChat,
   messages,
 }: Props) {
+  const [state, setState] = useState<State | null>(null);
 
 // Exportiert den aktuellen Chat-Thread als JSON oder CSV
 const exportThread = (format: "json" | "csv", messages: any[]) => {
@@ -65,6 +72,10 @@ const exportThread = (format: "json" | "csv", messages: any[]) => {
   };
 
 useEffect(() => {
+  loadInitialSystemState().then(setState);
+}, []);
+
+useEffect(() => {
   function handleCommand(e: any) {
     const cmd = e.detail?.command;
 
@@ -92,20 +103,80 @@ useEffect(() => {
   };
 }, [messages]);
 
+if (!state) return null;
+
 return (
   <aside
     className={styles.saeule}
     aria-label="Column - Controls & Selection"
     data-test="saeule"
   >
-    <button
+    {state.isOnboardingRequired ? (
+      <button
       className={styles.onboardingButton}
       onClick={() => {
-        console.log("Onboarding start");
-      }}
+      window.dispatchEvent(
+        new CustomEvent("mpathy:command", {
+          detail: { command: "onboarding" }
+        })
+      );
+    }}
     >
-      Start Onboarding
-    </button>
+  Start Onboarding
+</button>
+    ) : (
+      state.activation.items
+        .sort((a, b) => a.order - b.order)
+        .map((item) => {
+          const entry = registry.registry.entries.find(
+            (e: any) => e.id === item.id
+          );
+
+          if (!entry) return null;
+
+          const isLocked =
+            state.onboardingStatus !== "completed" && item.id !== "onboarding";
+
+          return (
+            <button
+          key={item.id}
+          className={`${styles.wallItem} ${
+            state.activation.activeApp === item.id ? styles.active : ""
+          } ${isLocked ? styles.locked : ""}`}
+          onClick={async () => {
+            if (!state) return;
+
+            const isLocked =
+              state.onboardingStatus !== "completed" && item.id !== "onboarding";
+
+            if (isLocked) return;
+
+            const updatedActivation = {
+              ...state.activation,
+              activeApp: item.id
+            };
+
+            await saveUserActivationState(updatedActivation);
+
+            setState({
+              ...state,
+              activation: updatedActivation
+            });
+
+            window.dispatchEvent(
+              new CustomEvent("mpathy:command", {
+                detail: { command: entry.command || item.id }
+              })
+            );
+          }}
+        >
+            <span className={styles.iconBox}>
+            {wallIcons[item.id] || null}
+        </span>
+          </button>
+        );
+        })
+    )}
   </aside>
 );
 }

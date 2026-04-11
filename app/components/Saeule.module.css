@@ -80,3 +80,11 @@
   box-shadow:
     0 0 0 2px rgba(83,233,253,0.6);
 }
+
+.active {
+  background: rgba(255,255,255,0.05);
+}
+.locked {
+  opacity: 0.35;
+  pointer-events: none;
+}
