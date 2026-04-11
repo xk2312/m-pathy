@@ -39,25 +39,27 @@
 
 .onboardingButton {
   width: 100%;
-  padding: 14px 16px;
+  padding: 12px 14px;
 
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.08);
 
-  background: #1E2024;
+  background: rgba(30,32,36,0.6);
 
-  color: #f5f6f7;
+  color: rgba(245,246,247,0.75);
   font-weight: 500;
-  font-size: 16px;
+  font-size: 15px;
 
   cursor: pointer;
 
   text-align: center;
 
+  opacity: 0.85;
+
   transition:
-    transform 120ms ease,
-    border-color 120ms ease,
-    box-shadow 120ms ease;
+    opacity 120ms ease,
+    background-color 120ms ease,
+    border-color 120ms ease;
 }
 
 .onboardingButton:hover {
