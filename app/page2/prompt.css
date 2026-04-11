@@ -162,12 +162,7 @@ END OF INDEX
 
 /* Chat-Mode: Dock teilt den dunklen Chat-Hintergrund (nicht transparent) */
 #m-input-dock.prompt-root[data-mode="chat"] {
-  background: linear-gradient(
-    180deg,
-    #05070b 0%,
-    #030509 55%,
-    #000000 100%
-  );
+  background: var(--chat-bg);
 }
 /* Doorman/PreChat: vollständig transparent halten */
 #m-input-dock.prompt-root[data-mode="doorman"] {
