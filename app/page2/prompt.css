@@ -295,14 +295,13 @@ END OF INDEX
 
 
   border-radius: var(--prompt-radius, 999px);
-  background: var(--prompt-bg, rgba(15,23,42,0.96));
+  background: #1E2024;
 
-  border: 1px solid var(--prompt-border, rgba(148,163,184,0.55));
-  box-shadow: var(--prompt-shadow, 0 18px 50px rgba(15,23,42,0.95));
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: none;
 
   transition:
     border-color 160ms cubic-bezier(0.2,0.6,0.2,1),
-    box-shadow 160ms cubic-bezier(0.2,0.6,0.2,1),
     background-color 160ms cubic-bezier(0.2,0.6,0.2,1);
 }
 
