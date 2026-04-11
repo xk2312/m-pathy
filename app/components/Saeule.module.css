@@ -1,9 +1,8 @@
 .saeule {
   position: fixed;
-
   top: 0;
   left: 0;
-  bottom: 0;
+  height: 100vh;
 
   width: 260px;
 
@@ -14,7 +13,6 @@
   padding: 16px;
 
   background: #0c0c0c;
-  margin-right: 0;
 
   z-index: 20;
 }
