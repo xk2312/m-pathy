@@ -1,53 +1,32 @@
-/* =========================================================
-   SÄULE – MINIMAL CLEAN VERSION
-   Only: Container + Button System
-   ========================================================= */
-
-/* Container */
 .saeule {
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 16px;
-  width: var(--saeule-w);
-  background: #1E2024;
-  color: #F5F6F7;
-}
 
-/* Base Button */
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
-  min-height: 40px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: rgba(226, 232, 240, 0.96);
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
+  height: 100%;
+
+  box-sizing: border-box;
+}
+
+.button {
+  width: 100%;
+  padding: 10px 14px;
+
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+
+  background: rgba(255,255,255,0.03);
+  color: #f5f6f7;
+
   cursor: pointer;
-  transition: background-color 0.16s ease, border-color 0.16s ease;
+  text-align: left;
+
+  transition: all 120ms ease;
 }
 
-/* Hover */
 .button:hover {
-  background-color: #2C2C2C;
-  border-color: #2C2C2C;
-}
-
-/* Focus */
-.button:focus-visible {
-  outline: 2px solid rgba(248, 250, 252, 0.8);
-  outline-offset: 2px;
-}
-
-/* Optional Icon */
-.simbaIcon {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.2);
 }
