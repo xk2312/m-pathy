@@ -34,3 +34,58 @@
   background: rgba(255,255,255,0.08);
   border-color: rgba(255,255,255,0.2);
 }
+
+.onboardingButton {
+  width: 100%;
+  padding: 12px 16px;
+
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+
+  background: linear-gradient(
+    135deg,
+    rgba(94,66,133,0.25),
+    rgba(83,233,253,0.15)
+  );
+
+  color: #f5f6f7;
+  font-weight: 500;
+
+  cursor: pointer;
+  text-align: left;
+
+  backdrop-filter: blur(6px);
+
+  transition:
+    transform 120ms ease,
+    background 120ms ease,
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.onboardingButton:hover {
+  transform: translateY(-1px);
+
+  border-color: rgba(83,233,253,0.4);
+
+  background: linear-gradient(
+    135deg,
+    rgba(106,74,151,0.35),
+    rgba(83,233,253,0.25)
+  );
+
+  box-shadow:
+    0 0 0 1px rgba(83,233,253,0.15),
+    0 8px 20px rgba(0,0,0,0.35);
+}
+
+.onboardingButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.onboardingButton:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(83,233,253,0.6);
+}
