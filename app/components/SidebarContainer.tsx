@@ -66,12 +66,15 @@ export default function SidebarContainer({
       data-test="sidebar-container"
       /* KEIN display: contents – Containing-Block bleibt stabil */
       style={{
-        cursor: "pointer",
-        pointerEvents: "auto",
-        height: "100%",              // ← Säule darf volle Rail-Höhe einnehmen
-        display: "flex",
-        flexDirection: "column",
-      }}
+  cursor: "pointer",
+  pointerEvents: "auto",
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+
+  width: "260px",
+  flex: "0 0 260px",
+}}
     >
 
        {isDesktop ? (
