@@ -1,4 +1,4 @@
-import { getDB, STORES } from "./indexedDB";
+import { getDB, STORES } from "@/lib/indexedDB";
 
 export type UserProfile = {
   id: "user_profile";
