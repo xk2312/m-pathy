@@ -1,6 +1,6 @@
 /* ===== Base ========================================================== */
 .bg {
-  background: radial-gradient(circle at center, #0d1b1e, #000);
+  background: #121418;  
   color: white;
   font-family: system-ui, sans-serif;
 }
