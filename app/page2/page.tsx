@@ -2909,18 +2909,10 @@ const bg0 = color.bg0 ?? "#000000";
 const bg1 = color.bg1 ?? "#0c0f12";
 const textColor = color.text ?? "#E6F0F3";
 
-// Seitenstil (radial + linear) – neutral, nur Grau/Schwarz
 const pageStyle: React.CSSProperties = {
   minHeight: "100dvh",
   color: textColor,
-  background: [
-    // sanfte Vignette oben
-    "radial-gradient(110rem 70rem at 50% 0%, rgba(24, 27, 33, 0.85), transparent 60%)",
-    // sanfte Vignette unten
-    "radial-gradient(110rem 70rem at 50% 100%, rgba(8, 10, 14, 0.95), transparent 65%)",
-    // Grundverlauf: nur bg1 → bg0 → tiefes Schwarz
-    `linear-gradient(180deg, ${bg1}, ${bg0} 60%, #000000 100%)`,
-  ].join(", "),
+  background: "var(--chat-bg)",
 };
 
 
