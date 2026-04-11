@@ -71,9 +71,6 @@ export default function SidebarContainer({
   height: "100%",
   display: "flex",
   flexDirection: "column",
-
-  width: "260px",
-  flex: "0 0 260px",
 }}
     >
 
