@@ -1413,4 +1413,6 @@
   --prompt-orb-shadow: 0 0 42px rgba(253,224,171,0.55);
 }
 
-
+:root {
+  --chat-bg: #121418;
+}
