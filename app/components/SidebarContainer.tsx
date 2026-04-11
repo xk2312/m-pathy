@@ -86,14 +86,10 @@ export default function SidebarContainer({
             flexDirection: "column",
           }}
         >
-         <Saeule
-  onSystemMessage={onSystemMessage}
+ <Saeule
   onClearChat={onClearChat}
-  canClear={canClear}
   messages={messages}
-  setInput={setInput}
 />
-
 
 
         </div>
