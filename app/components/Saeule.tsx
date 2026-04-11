@@ -97,6 +97,15 @@ return (
     className={styles.saeule}
     aria-label="Column - Controls & Selection"
     data-test="saeule"
-  />
+  >
+    <button
+      className={styles.onboardingButton}
+      onClick={() => {
+        console.log("Onboarding start");
+      }}
+    >
+      Start Onboarding
+    </button>
+  </aside>
 );
 }
