@@ -1,8 +1,6 @@
 .saeule {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
+  position: relative;
+  height: 100%;
 
   width: 260px;
 
@@ -13,8 +11,6 @@
   padding: 16px;
 
   background: #0c0c0c;
-
-  z-index: 20;
 }
 
 .button {
