@@ -1,0 +1,293 @@
+# README
+
+## M13 und m-pathy
+
+### Ein deterministisches KI-Betriebssystem für strukturierte Analyse, sichere Nutzerführung und reale Backend-Ausführung
+
+## 1. Executive Summary
+
+m-pathy ist kein gewöhnlicher Chatbot und auch kein autonomer Agent im üblichen Sinn. Das System verbindet eine verfassungsartige Denk- und Gültigkeitsordnung namens **M13** mit einer deterministischen Workflow-Engine, deklarativen Fachmodulen, einem klaren Routing-System und einer optionalen Backend-Ausführung über eine lineare Execution Pipeline. Das Ergebnis ist ein KI-System, das nicht nur antwortet, sondern strukturierte Prozesse kontrolliert durchführt, Eingaben sauber erhebt, Zustände nachvollziehbar verwaltet, Ergebnisse reproduzierbar erzeugt und bei Bedarf reale Verarbeitungsschritte im Backend ausführt. 
+
+Für Investoren ist der entscheidende Punkt: m-pathy baut nicht auf die Idee eines frei agierenden Modells, das Entscheidungen selbst trifft, sondern auf ein **kontrolliertes, zustandsbasiertes und deklarativ programmierbares Betriebssystem für KI-Prozesse**. Damit adressiert das System ein Kernproblem der aktuellen KI-Landschaft: Viele KI-Produkte sind beeindruckend in der Demo, aber schwer kontrollierbar, schwer überprüfbar und schwer in reale Prozesse einzubetten. m-pathy geht den entgegengesetzten Weg. Es maximiert nicht Freiheit, sondern **Beherrschbarkeit, Nachvollziehbarkeit und fachliche Einbettung**.
+
+Dieses Dokument beschreibt das System als Ganzes, seine Architektur, seine Bestandteile, seine Marktlogik und seine Bedeutung aus Investorensicht.
+
+---
+
+## 2. Was m-pathy als Ganzes ist
+
+m-pathy ist am treffendsten als **deterministisches KI-Betriebssystem** zu beschreiben.
+
+Der Begriff ist hier bewusst gewählt. Ein normales KI-Produkt besteht häufig aus einer UI, einem LLM-Aufruf und etwas Business Logic. m-pathy geht deutlich weiter. Das System hat:
+
+* eine übergeordnete Verfassungs- und Entscheidungsordnung
+* einen zentralen Orchestrator
+* eine deterministische Zustandsmaschine
+* ein Registry-basiertes Routing
+* deklarative Fachmodule
+* eine dateibasierte Execution-Ebene
+* eine kontrollierte Modellintegration
+* sowie zusätzliche Kontrollschichten für Session, Ledger, Limits, IRSS und Anchoring 
+
+Damit ist m-pathy kein einzelnes Tool, sondern eine Plattformarchitektur, auf der verschiedene Anwendungen als gesteuerte KI-Prozesse laufen können.
+
+---
+
+## 3. Die Grundidee hinter dem System
+
+Die Grundidee ist einfach und wirtschaftlich stark:
+
+**Das Modell soll Sprache und Analyse liefern, aber nicht den Ablauf kontrollieren.**
+
+Stattdessen übernimmt m-pathy die Kontrolle über:
+
+* wann ein Prozess beginnt
+* welche Eingaben zulässig sind
+* wie sie gespeichert werden
+* wann ein nächster Schritt freigegeben wird
+* wann das Modell sprechen darf
+* wann eine reale Backend-Ausführung stattfindet
+* und in welchem strukturellen und rechtlichen Rahmen ein Output gültig ist
+
+Das macht das System besonders interessant für Anwendungsfelder, in denen freie Modellantworten allein nicht genügen. Dazu gehören strukturierte Beratung, risikonahe B2B-Prozesse, regulierte Kontexte, kontrollierte Erhebung, nachvollziehbare Analysepfade und hybride Workflows aus Sprache und realer Verarbeitung.
+
+---
+
+## 4. M13: die Verfassung des Systems
+
+Im Kern von m-pathy steht **M13**. M13 ist kein gewöhnlicher Prompt, sondern eine formale Systemordnung. In M13 werden Spaces definiert, die festlegen, wie das System denkt, klassifiziert, strukturiert, freigibt und begrenzt. Zu diesen Spaces gehören unter anderem Property Space, Type Space, Role Space, Domain Space, Thought Space, KPI Space, User Space, Law Space, Language Space, Format Space, IRSS Space und Extension Execution Space. Darüber steht der System Kernel als minimale, aber zentrale Entscheidungsinstanz. 
+
+### 4.1 Warum M13 wichtig ist
+
+Viele KI-Systeme arbeiten mit Stilregeln oder allgemeinen Policies. M13 geht weiter. Es bildet einen **geordneten Denk- und Gültigkeitsrahmen**, in dem jede Antwort nicht nur sprachlich, sondern strukturell bewertet werden kann.
+
+Beispiele:
+
+* Der **Thought Space** definiert verschiedene Verarbeitungstiefen von C1 bis C6. Das erlaubt eine explizite Steuerung der Denktiefe statt bloßer Temperatur- oder Tokensteuerung. 
+* Der **KPI Space** unterscheidet zwischen Kern-KPIs des Systems und extensionspezifischen KPIs. Damit können interne Bewertungslogik und externe Reporting-Logik sauber getrennt werden. 
+* Der **User Space** regelt Autorisierung und Scope. Dadurch wird verhindert, dass das System über die zulässige Reichweite hinaus eskaliert. 
+* Der **Law Space** verankert menschliche Schonung, Fidelity, evidenzgebundene Wahrheit und nicht-schädliche Koexistenz als Gültigkeitsrahmen. 
+* Der **Format Space** legt strukturierte Ausgabeformen fest und enthält inzwischen auch deterministische Rendering-Regeln. 
+* Der **IRSS Space** erzwingt eine sichtbare Entscheidungsspur pro Content-Response. Dadurch wird ein Teil des internen Entscheidungssurfaces nach außen rekonstruierbar. 
+* Der **Extension Execution Space** definiert strenge Regeln für aktive Extension-Flows, etwa dass ein Input genau einem Step gehört, nicht wiederverwendet werden darf und das System während aktiver nicht-finaler Schritte keinen freien Content erzeugen darf. 
+
+### 4.2 Der System Kernel
+
+Der System Kernel ist die zentrale Minimalinstanz von M13. Er steht außerhalb der Spaces, liest sie, verändert sie aber nicht. Seine Aufgabe ist es, den gültigen Antwortzustand des Systems zu bestimmen. Er koordiniert Achsen wie IRSS, Tiefe, Domäne, Drift, Autorisierung, Recht, Format, Scope, KPI und Sprache. Besonders wichtig ist, dass der Kernel die freie Content-Freigabe blockiert, solange eine nicht-finale Extension aktiv ist. 
+
+Aus Investorensicht ist das relevant, weil M13 aus einem LLM-gestützten Produkt ein **governed system** macht. Es ist eine Schicht, die Vertrauen, Disziplin, Nachvollziehbarkeit und Skalierbarkeit fördert.
+
+---
+
+## 5. Der Systemprompt: die ausführbare Sprache von M13
+
+M13 allein als Dokument wäre noch kein operatives System. Wirksam wird es durch den Systemprompt, der in `route.ts` geladen und in den Modellaufruf injiziert wird. `route.ts` nutzt `loadSystemPrompt()`, lädt die entsprechende Prompt-Datei, begrenzt sie über ein Hardcap und setzt sie als Systemnachricht in den Message Stack. Zusätzlich werden Sprachwächter, IRSS-Runtime-Regeln und Extension-Kontext eingebracht. 
+
+Der Systemprompt ist damit die **ausführbare Verfassungssprache**. Er transportiert die Ordnungslogik von M13 in den konkreten Modellaufruf und macht aus abstrakten Systemregeln operative Verhaltensvorgaben.
+
+---
+
+## 6. route.ts: der Orchestrator
+
+`route.ts` ist die zentrale API-Laufzeit des Systems. Hier treffen alle wesentlichen Ströme zusammen.
+
+### 6.1 Hauptaufgaben von route.ts
+
+`route.ts` übernimmt unter anderem:
+
+* JSON Request Contract Enforcement
+* Session Handling
+* Prompt Counter Management
+* Aufruf der Engine
+* Einbindung von Registry und Extensions
+* Sprachsteuerung über Body und Cookies
+* Aufbau des finalen Message Stacks
+* Einbettung von IRSS Runtime Prompt und IRSS Context Prompt
+* Azure OpenAI Request
+* Token- und Ledger-Logik
+* FreeGate für Gäste
+* Triketon-Anchoring
+* Execution Gate für Backend-Pipelines
+* finale Antwortausgabe inkl. State-Rückgabe 
+
+### 6.2 Warum route.ts strategisch wichtig ist
+
+`route.ts` ist nicht nur eine API-Datei. Sie ist der **operative Dirigent** des Systems. Ohne sie gäbe es kein abgestimmtes Zusammenspiel zwischen Modell, Engine, Session, Sprache, Kostenkontrolle und realer Execution.
+
+Aus Investorensicht ist route.ts der Punkt, an dem man sieht, dass m-pathy nicht als lose Sammlung von Skripten gebaut ist, sondern als zusammenhängendes System mit zentraler Steuerinstanz.
+
+---
+
+## 7. engine.ts: die deterministische Zustandsmaschine
+
+Die Engine ist der Ablaufkern des Systems. `engine.ts` nimmt Nutzereingabe, aktuellen Zustand und Registry entgegen und entscheidet, welcher Schritt der Extension gerade aktiv ist, ob ein Command neu aktiviert wird, wie Daten gespeichert werden und wann ein finaler Zustand erreicht ist. 
+
+### 7.1 Was die Engine konkret macht
+
+Die Engine:
+
+* erkennt neue Commands über die Registry
+* aktiviert eine Extension
+* lädt deren JSON-Datei
+* setzt den ersten Step
+* validiert bei laufender Extension die aktuelle Eingabe
+* persistiert strukturierte Daten in `collectedData`
+* berechnet `next`
+* rendert Selection-Optionen in ein sichtbares Format
+* und beendet den Flow nur dann als Action, wenn ein finaler Step mit `next: null` erreicht ist 
+
+### 7.2 Warum das wichtig ist
+
+Viele KI-Systeme delegieren Ablaufentscheidungen implizit an das Modell. m-pathy tut das nicht. Die Engine ist eine **echte Zustandsmaschine**. Das ist aus Investorensicht wichtig, weil dies Folgendes verbessert:
+
+* Reproduzierbarkeit
+* Debuggability
+* Verlässlichkeit
+* Fachlogik-Trennung
+* Skalierbarkeit auf neue Extensions
+
+Die Engine ist damit kein Prompt-Helfer, sondern ein echter **Determinismus-Kern**.
+
+---
+
+## 8. registry.json: das Routing-Verzeichnis
+
+Die Registry ist das Adressbuch des Systems. In `registry.json` wird festgelegt, welcher Command welche Extension oder welches Execution Target aktiviert. Beispiele sind `echo-linkedin-postpilot`, `echo-baz-sach-helfer`, `echo-baz-eu-ai-check-medical`, `echo-lcis-engine`, `echo-kson-engine` und `run_sachversicherung_pipeline`. 
+
+### 8.1 Die Rolle der Registry
+
+Die Registry macht zwei Dinge:
+
+Erstens trennt sie die Aktivierungslogik von der Engine-Logik. Die Engine muss nicht "wissen", welche Extensions existieren; sie fragt die Registry.
+
+Zweitens schafft sie ein **sauberes Adressierungssystem**. Dadurch können neue Fachmodule ergänzt werden, ohne die Kernlogik des Systems umzuschreiben.
+
+Aus Plattformperspektive ist die Registry ein entscheidender Enabler für Modularität.
+
+---
+
+## 9. Extensions: die fachlichen Programme
+
+Extensions sind deklarative JSON-Programme, die komplette KI-Prozesse beschreiben. Sie definieren Entry, Steps, Keys, Instructions, Übergänge und finale Actions oder Executions. Ein gutes Beispiel ist `baz_sach_helfer.json`, das einen Flow aus Startfrage, mehreren Eingabeschritten und einem finalen Execution-Step beschreibt. 
+
+### 9.1 Warum Extensions strategisch stark sind
+
+Die Fachlogik liegt nicht im Code der Engine, sondern in den deklarativen Modulen. Das bringt mehrere Vorteile:
+
+* Fachprozesse können schneller gebaut und geändert werden
+* neue Anwendungen lassen sich ergänzen, ohne die Systemmitte zu destabilisieren
+* die Grenze zwischen Plattform und Fachanwendung bleibt sauber
+* unterschiedliche Branchen- oder Use-Case-Logiken können koexistieren
+
+Für Investoren ist das ein starkes Signal, weil es m-pathy von einem Einzelprodukt in Richtung **programmierbare KI-Plattform** verschiebt.
+
+---
+
+## 10. Der Execution Space: reale Backend-Ausführung
+
+Nicht jeder Flow endet mit einem bloßen Text. Über den Execution Space kann m-pathy reale, mehrstufige Backend-Verarbeitungen ausführen. `run.sh` zeigt eine lineare Pipeline über mehrere Python-Skripte: ValidateInput, Geocode, ReverseGeocode, Regionalatlas, BasePrompt, FirstCall, C6Challenge1 und FinalizeOutput. Die Pipeline ist dateibasiert und liefert am Ende einen finalen JSON-Block zurück, der von `route.ts` geparst und an den Nutzer ausgegeben wird. 
+
+### 10.1 Beispielhafter realer Lauf
+
+Der hochgeladene reale Output zeigt genau diese Kette:
+
+* `01_input.json` enthält die strukturierten Eingabedaten der Praxis. 
+* `02_validated_input.json` bestätigt diese Daten. 
+* `03_geocode.json` enthält Koordinaten und Geocode-Details. 
+* `04_reverse_geocode.json` normalisiert die Ortsdaten. 
+* `05_regionalatlas.json` ergänzt den regionalen Kontext. 
+* `06_base_prompt.json` baut daraus einen fachlichen Prompt für den Beratungsfall. 
+* `07_first_call_output.json` enthält die erste LLM-Antwort auf Basis des Base Prompts. 
+* `08_c6_challenge1.json` enthält eine korrigierende Challenge-Stufe zur Verdichtung und Datenstrenge. 
+* `10_finalize_output.json` enthält die finale, für den Nutzer sichtbare Antwort inklusive Anschlussfragen. 
+
+### 10.2 Warum das bedeutend ist
+
+Diese Ausführung zeigt, dass m-pathy nicht nur "spricht", sondern **strukturierte, reproduzierbare Verarbeitungsketten** fahren kann. Die LLM ist dabei nur ein Teil der Kette, nicht die ganze Kette.
+
+Aus Investorensicht ist das wertvoll, weil es den Schritt vom Textsystem zum **operational AI system** markiert.
+
+---
+
+## 11. Das Zusammenspiel als Symphonie
+
+Wenn man alles zusammen betrachtet, ergibt sich eine sehr klare Gesamtfigur:
+
+M13 ist die **Verfassung**. 
+Der Systemprompt ist die **aussprechbare Verfassungssprache**. 
+`route.ts` ist der **Dirigent**. 
+`engine.ts` ist das **metronomische Ablaufwerk**. 
+`registry.json` ist das **Verzeichnis der aufrufbaren Partituren**. 
+Die Extensions sind die **fachlichen Partituren**. 
+Die LLM ist das **Sprach- und Interpretationsinstrument**. 
+Der Execution Space ist die **materielle Bühne**, auf der reale Prozesse ablaufen. 
+
+Als Ganzes ist m-pathy damit ein **verfassungsgebundenes, zustandsgetriebenes, deklarativ programmierbares KI-Betriebssystem**.
+
+---
+
+## 12. Wofür das System eingesetzt werden kann
+
+Die aktuelle Architektur eignet sich besonders für Anwendungsfälle, in denen freie KI-Antworten allein nicht ausreichen.
+
+Dazu zählen etwa:
+
+* strukturierte Beratungs- und Analyseprozesse
+* geführte B2B-Diagnostik
+* Risiko- und Compliance-nahe Assessments
+* KI-gestützte Fachreports
+* hybride Prozesse aus Erhebung, Verarbeitung und textlicher Verdichtung
+* kontrollierte Nutzerführung in sensiblen Entscheidungsfeldern
+* lokale oder teil-lokale Systeme mit Privacy- und Audit-Bezug
+
+Die bereits vorhandenen Extensions zeigen diese Richtung sehr gut: LinkedIn Postpilot, Sachversicherungs-Analyse, medizinischer EU AI Check, LCIS und KSON sind keine zufälligen Gimmicks, sondern Belege dafür, dass dieselbe Plattform sehr unterschiedliche strukturierte KI-Prozesse tragen kann. 
+
+---
+
+## 13. Warum das aus Investorensicht attraktiv ist
+
+### 13.1 Kontrollierbarkeit statt nur Demo-Effekt
+
+Der Markt ist voll von KI-Demos, aber arm an KI-Systemen, die in reale Prozesse sauber eingebettet werden können. m-pathy adressiert genau diese Lücke.
+
+### 13.2 Plattform statt Einzelfeature
+
+Die Architektur ist modular und erweiterbar. Neue Extensions können als deklarative Programme ergänzt werden. Das schafft Plattformlogik statt Featurelogik.
+
+### 13.3 Hohe Anschlussfähigkeit
+
+Durch die Trennung von Orchestrierung, Ablauf, Fachlogik und Execution kann das System verschiedene Branchen und Use Cases bedienen, ohne den Kern umzubauen.
+
+### 13.4 Deterministische Governance
+
+M13 gibt dem System einen ungewöhnlich starken Governance-Charakter. Das erhöht die Glaubwürdigkeit für B2B, kontrollierte Prozesse und risikonahe Anwendungen.
+
+### 13.5 Hybridfähigkeit
+
+m-pathy verbindet Sprach-KI mit realer Backend-Ausführung. Das ist strategisch stärker als reine Content-Systeme.
+
+---
+
+## 14. Worin sich m-pathy von Standard-Agentensystemen unterscheidet
+
+m-pathy ist nicht auf freie Modellautonomie gebaut. Stattdessen arbeitet es mit:
+
+* deterministischer Schrittführung
+* deklarativen Fachmodulen
+* expliziter Zustandsverwaltung
+* kontrollierter Modellfreigabe
+* dateibasierter realer Verarbeitung
+* sichtbarer Entscheidungsspur über IRSS
+* und einer formalen Verfassungslogik in M13
+
+Dadurch entsteht ein System, das näher an einem **operating layer for applied AI** liegt als an einem klassischen Chat- oder Agentenprodukt.
+
+---
+
+## 15. Zusammenfassung
+
+m-pathy ist ein **deterministisches KI-Betriebssystem**, das strukturierte Nutzerführung, kontrollierte Analyse und optionale reale Backend-Ausführung in einer gemeinsamen Architektur zusammenführt. M13 liefert die Verfassung, der Systemprompt macht sie operativ, route.ts dirigiert die Laufzeit, engine.ts steuert die Zustandslogik, registry.json adressiert die Module, Extensions definieren die fachlichen Programme und der Execution Space bringt das System in die reale Verarbeitung. 
+
+Das Ergebnis ist kein Chatbot und kein frei laufender Agent, sondern eine **governed AI platform** für kontrollierte, nachvollziehbare und erweiterbare KI-Prozesse.
+
+Wenn du willst, formatiere ich das im nächsten Schritt als echte Investor-README mit Titelseite, Positioning, Marktthese und Architekturdiagramm in Textform.

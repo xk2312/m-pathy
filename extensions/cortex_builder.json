@@ -1,0 +1,98 @@
+{
+  "id": "cortex_builder",
+  "version": "1.0",
+  "entry": "1",
+  "steps": {
+    "1": {
+      "type": "selection",
+      "language": "dynamic",
+      "content": {
+        "q": "Was möchtest du in deinem Cortex tun?",
+        "options": {
+          "1": "Neuen Bereich anlegen und ein Originaldokument als Genesis hinzufügen",
+          "2": "Bestehenden Bereich nutzen und ein Originaldokument als Genesis hinzufügen"
+        }
+      },
+      "key": "cortex.area_mode",
+      "instruction": "Begrüße den Nutzer ruhig und professionell. Erkläre in genau drei kurzen Sätzen, dass CortexBuilder ein Originaldokument als Genesis in den Cortex aufnimmt, lokal verankert und für spätere strukturierte Verarbeitung vorbereitet. Stelle danach exakt die Frage aus content.q. Gib die beiden Optionen exakt wieder, jede Option in einer eigenen Zeile im Format '<nummer>: <label>'. Fordere den Nutzer am Ende auf, nur mit einer gültigen Zahl zu antworten. Keine zusätzlichen Beispiele. Keine freien Ergänzungen. Keine Umformulierungen der Labels.",
+      "next_map": {
+        "1": "1.1",
+        "2": "1.2"
+      }
+    },
+    "1.1": {
+      "type": "input",
+      "language": "dynamic",
+      "content": {
+        "q": "Wie soll der neue Bereich in deinem Cortex heißen?"
+      },
+      "key": "cortex.area_name_custom",
+      "instruction": "Stelle exakt die Frage aus content.q. Bitte den Nutzer in einem kurzen Satz um einen klaren, knappen Bereichsnamen. Keine Beispiele. Keine Zusatzfragen. Kein Fließtext vor oder nach der Frage.",
+      "next": "1.3"
+    },
+    "1.2": {
+      "type": "selection",
+      "language": "dynamic",
+      "content": {
+        "q": "Wähle den Bereich aus, in dem das Originaldokument als Genesis verankert werden soll.",
+        "options": {
+          "1": "Regeln, Tabellen und Definitionen",
+          "2": "Studien, Berichte und Quellen",
+          "3": "Experimente, Mitschriften und Erfahrungen",
+          "4": "Korrespondenzen, Arztbriefe und Fallmaterial",
+          "5": "Hypothesen, Entwürfe und Projektgedanken"
+        }
+      },
+      "key": "cortex.area_name_selected",
+      "instruction": "Render diesen Schritt als strikte Auswahl. Stelle exakt die Frage aus content.q. Gib exakt diese fünf Bereiche wieder, jede Option in einer eigenen Zeile im Format '<nummer>: <label>'. Erfinde keine weiteren Bereiche. Erkläre die Bereiche nicht. Fordere den Nutzer am Ende auf, nur mit einer gültigen Zahl zu antworten.",
+      "next": "1.3"
+    },
+    "1.3": {
+      "type": "input",
+      "language": "dynamic",
+      "content": {
+        "q": "Wie soll das Originaldokument im Cortex benannt werden?"
+      },
+      "key": "genesis.document_label",
+      "instruction": "Stelle exakt die Frage aus content.q. Bitte den Nutzer in einem kurzen Satz um eine klare interne Bezeichnung für das Originaldokument. Keine Beispiele. Keine Zusatzfragen. Keine freie Erläuterung.",
+      "next": "1.4"
+    },
+    "1.4": {
+      "type": "selection",
+      "language": "dynamic",
+      "content": {
+        "q": "Bist du bereit, jetzt das Originaldokument lokal in deinen Cortex zu laden?",
+        "options": {
+          "1": "Ja, Genesis Upload vorbereiten"
+        }
+      },
+      "key": "genesis.upload_confirmed",
+      "instruction": "Erkläre in genau zwei kurzen Sätzen, dass das Originaldokument unverändert lokal gespeichert wird und als Genesis dauerhaft im Cortex erhalten bleibt. Stelle danach exakt die Frage aus content.q. Gib die eine Option exakt im Format '1: Ja, Genesis Upload vorbereiten' aus. Fordere den Nutzer am Ende auf, nur mit der Zahl 1 zu antworten. Keine weiteren Hinweise.",
+      "next": "1.5"
+    },
+    "1.5": {
+      "type": "action",
+      "language": "dynamic",
+      "action": "prepare_cortex_genesis_upload",
+      "input_keys": [
+        "cortex.area_mode",
+        "cortex.area_name_custom",
+        "cortex.area_name_selected",
+        "genesis.document_label",
+        "genesis.upload_confirmed"
+      ],
+      "rules": {
+        "workflow": "cortex_builder_genesis",
+        "storage_policy": "local_only",
+        "target_system": "user_cortex",
+        "requires_original_document": true,
+        "requires_area_binding": true,
+        "requires_document_label": true,
+        "next_expected_ui_action": "open_local_file_picker",
+        "genesis_object_type": "original_document",
+        "post_success_state": "genesis_loaded_into_indexdb"
+      },
+      "next": null
+    }
+  }
+}

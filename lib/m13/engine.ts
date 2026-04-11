@@ -208,23 +208,29 @@ const updatedData = setNestedValue(
 }
 console.log("[ENGINE][PERSIST AFTER STEP]", currentStep.key);
 console.log(JSON.stringify((state as any).collectedData, null, 2));
-const next = currentStep.next
-    if (next === undefined) {
-      console.error("[ENGINE][ERROR] next missing in step:", state.stepId)
-      return {
-        active: false,
-        state: {
-          active: false,
-          extensionId: null,
-          stepId: null,
-          language
+let next = currentStep.next
 
-        },
-        extensionId: null,
-        stepId: null,
-        step: null
-      }
-    }
+const userInput = input?.value?.trim()
+
+if (currentStep.next_map && userInput && currentStep.next_map[userInput]) {
+  next = currentStep.next_map[userInput]
+}
+
+if (next === undefined) {
+  console.error("[ENGINE][ERROR] next missing in step:", state.stepId)
+  return {
+    active: false,
+    state: {
+      active: false,
+      extensionId: null,
+      stepId: null,
+      language
+    },
+    extensionId: null,
+    stepId: null,
+    step: null
+  }
+}
 
   if (next === null) {
   console.log("[ENGINE] exit reached at step:", state.stepId)
