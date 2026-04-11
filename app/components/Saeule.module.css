@@ -12,6 +12,8 @@
   padding: 16px;
 
   background: #0c0c0c;
+
+  padding-top: 12vh;
 }
 
 .button {
@@ -37,7 +39,7 @@
 
 .onboardingButton {
   width: 100%;
-  padding: 12px 16px;
+  padding: 14px 16px;
 
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,0.1);
@@ -46,6 +48,7 @@
 
   color: #f5f6f7;
   font-weight: 500;
+  font-size: 16px;
 
   cursor: pointer;
 
