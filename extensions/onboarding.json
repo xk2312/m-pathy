@@ -24,8 +24,8 @@
         }
       },
       "key": "user.tone",
-      "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 options in one paragraph. Accept only 1 or 2.",
-      "next": "1.3"
+        "instruction": "Render this step as a user-facing next question. First render the full text from content.q exactly as provided. Do not shorten, summarize, or rewrite it. After that, render the options from content.options. For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 options in one paragraph. Finally, ask the user to select 1 or 2.",
+        "next": "1.3"
       }
     },
 
@@ -35,7 +35,7 @@
         "q": "Then let us use a formal/personal tone here.\n\nHow may I address you? Please enter your name."
       },
       "key": "user.name",
-      "instruction": "Use the selected tone (formal or personal) based on stored preference. Accept any non-empty text and store exactly.",
+        "instruction": "Render this step as a user-facing next question. First render the full text from content.q exactly as provided. Do not shorten, summarize, or rewrite it. Use the appropriate formal or personal tone of the active language in the way the question is presented. Then wait for the user's input. Accept any non-empty text and store it exactly as entered.",
       "next": "1.4"
     },
 
