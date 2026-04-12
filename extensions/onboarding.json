@@ -1,30 +1,30 @@
 {
   "id": "onboarding_extension",
   "version": "1.0",
-  "entry": "1.1",
+  "entry": "echo_onboarding",
   "steps": {
 
     "1.1": {
       "type": "input",
       "content": {
-        "q": "1/11\n\nWelcome. This onboarding will guide you step by step.\n\nType \"continue\" to begin."
+        "q": "Welcome to m-pathy. I am M13, the system core of m-pathy.\nI will guide you through this onboarding and lead you safely step by step to your goal.\n\nFirst things first:\n\nYour data, chats, and documents remain stored locally on your device.\nYour first message is the beginning of your own chain.\nEverything that follows is automatically cryptographically linked.\nYou do not need to do anything.\n\nImportant for you: Your conversations and content belong to you. You can access them at any time through the archive. Even if you stop paying for m-pathy, your data remains accessible to you.\n\nThe next 15 minutes will determine how well you will be able to use m-pathy. It is worth paying close attention now.\n\nIn the next step, we will personalize m-pathy for you.\n\nType “continue” if you agree."
       },
       "key": "onboarding.start",
-      "instruction": "Render the text clearly. Accept any input and continue.",
+      "instruction": "Render full text exactly. Accept any input. Continue to next step.",
       "next": "1.2"
     },
 
     "1.2": {
       "type": "selection",
       "content": {
-        "q": "2/11\n\nHow would you like to be addressed?",
+        "q": "Good to see you moving forward.\n\nI am designed to handle your thoughts, content, and intellectual property with care. I do not rush you and I do not dilute your thinking. I guide you in a way that clarity comes first.\n\nPlease tell me how I should address you. You can change this later in the settings.\n\nHow would you like to be addressed?",
         "options": {
           "1": "Formal",
           "2": "Personal"
         }
       },
       "key": "user.tone",
-      "instruction": "Render the question and options. Each option must be on its own line in the format: <number>: <label>. Accept only valid option numbers.",
+      "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 options in one paragraph. Accept only 1 or 2.",
       "next_map": {
         "1": "1.3",
         "2": "1.3"
@@ -34,94 +34,94 @@
     "1.3": {
       "type": "input",
       "content": {
-        "q": "3/11\n\nWhat is your name?"
+        "q": "Then let us use a formal/personal tone here.\n\nHow may I address you? Please enter your name."
       },
       "key": "user.name",
-      "instruction": "Ask the question clearly in a tone that fits the conversation. Accept any non-empty text and store it exactly as entered.",
+      "instruction": "Use the selected tone (formal or personal) based on stored preference. Accept any non-empty text and store exactly.",
       "next": "1.4"
     },
 
     "1.4": {
       "type": "input",
       "content": {
-        "q": "4/11\n\nYou are now on your Wall.\n\nHere you will find system programs, applications, and functions.\n\nType \"continue\"."
+        "q": "I look forward to working with you, Fabian.\n\nWhat comes next is very important.\n\nThe central place for you is your Wall. This is the area where you just clicked the onboarding button. There you will find system programs, applications, and functions, each accessible via an icon.\n\nAt the beginning, you will see 5 icons. I will now show you how they support you in your daily work.\n\nIf you are ready, I will introduce you to one of the most important apps in m-pathy: your archive.\n\nType “continue” and we will move on."
       },
       "key": "onboarding.wall_intro",
-      "instruction": "Render the full text clearly in a tone that fits the conversation. Accept any input and continue.",
+      "instruction": "Use stored name and tone. Render full text exactly. Accept any input. Continue.",
       "next": "1.5"
     },
 
     "1.5": {
       "type": "input",
       "content": {
-        "q": "5/11\n\nYour archive is always accessible through your Wall.\n\nSearch across all chats.\nSelect messages for a new chat.\nCreate structured reports.\n\nType \"continue\"."
+        "q": "You can access your archive at any time through your Wall. It is one of the most powerful tools in m-pathy. Let me show you the functions that matter most.\n\nSearch: You can search across all your chats at the same time using keywords. Relevant messages appear instantly because all data is stored locally on your device.\n\nNext Chat Selection: You can select up to 4 messages from one or multiple chats and pass them into a new chat. This allows you to start a new line of thought based on existing content.\n\nReports: You can combine any number of messages from different chats into a report and have it cryptographically sealed on our server. We do not store your content, only a key that can later prove that your report has not been altered. This helps you prove authorship and integrity.\n\nThese three functions make the archive your central power tool. You lose nothing, you stay in control, and you can build on everything.\n\nIf you are ready, I will explain the two export icons next.\n\nType “continue”."
       },
       "key": "onboarding.archive",
-      "instruction": "Render the full text clearly in a tone that fits the conversation. Accept any input and continue.",
+      "instruction": "Use stored name and tone. Render full text exactly. Accept any input. Continue.",
       "next": "1.6"
     },
 
     "1.6": {
       "type": "input",
       "content": {
-        "q": "6/11\n\nYou can export your chat as CSV or JSON.\n\nCSV is readable.\nJSON is structured.\n\nType \"continue\"."
+        "q": "Before switching to a new chat, you can download the contents of your current chat at any time as CSV or JSON. For this, two icons are available: CSV and JSON.\n\nThis allows you to export full chats and use them outside of m-pathy. The CSV is optimized for readability. JSON provides the structured format of the chat.\n\nYou will find both icons on your Wall after onboarding.\n\nNext, I will explain the final button.\n\nType “continue” when you are ready."
       },
       "key": "onboarding.export",
-      "instruction": "Render the full text clearly in a tone that fits the conversation. Accept any input and continue.",
+      "instruction": "Use stored name and tone. Render full text exactly. Accept any input. Continue.",
       "next": "1.7"
     },
 
     "1.7": {
       "type": "input",
       "content": {
-        "q": "7/11\n\nThe Next Chat button stores your current session.\n\nType \"continue\"."
+        "q": "The final button on your Wall is the Next Chat button.\n\nWhen you activate it, your current chat is stored in the archive and remains permanently available to you.\n\nImportant: CSV and JSON export can only be triggered from an active chat.\n\nBefore starting a new chat, it is worth briefly checking whether you want to export the current state.\n\nNow I will show you something that makes m-pathy unique.\n\nIRSS. This is your view into my visible decision structure.\n\nType “continue” when you are ready."
       },
       "key": "onboarding.next_chat",
-      "instruction": "Render the full text clearly in a tone that fits the conversation. Accept any input and continue.",
+      "instruction": "Use stored name and tone. Render full text exactly. Accept any input. Continue.",
       "next": "1.8"
     },
 
     "1.8": {
       "type": "input",
       "content": {
-        "q": "8/11\n\nIRSS shows system transparency.\n\nType \"continue\"."
+        "q": "IRSS stands for Inverted Runtime System Scan and is available below every response I generate. It gives you a visible view into my decision structure.\n\nWhen you click the arrow, the IRSS opens. There you can see, among other things, the number of your prompt in the chat, the expert domains used for the response, and whether a drift is present. A drift means the focus of the conversation may become unclear and the core structure is at risk.\n\nFor critical or demanding work, it is recommended to check the IRSS regularly.\n\nIf you want me to analyze an IRSS in more detail, you can use the copy button and paste it into the chat. I will review it with you.\n\nIf you use m-pathy professionally and are required to make decisions traceable, IRSS becomes especially valuable. Every IRSS output is stored together with the chat in your archive.\n\nNow I will show you how to unlock new functions and apps in m-pathy.\n\nType “continue”."
       },
       "key": "onboarding.irss",
-      "instruction": "Render the full text clearly in a tone that fits the conversation. Accept any input and continue.",
+      "instruction": "Use stored name and tone. Render full text exactly. Accept any input. Continue.",
       "next": "1.9"
     },
 
     "1.9": {
       "type": "input",
       "content": {
-        "q": "9/11\n\nm-pathy evolves with you.\n\nType \"continue\"."
+        "q": "m-pathy is adaptive. This means it adjusts to you and your current needs.\n\nThe full universe of apps and functions would overload your Wall. That is why new elements appear only when they become relevant to you.\n\nYou can unlock an app or function by entering its code. You can receive this code in two ways.\n\nI give you the code: If I detect during a conversation that something can support your work, I will suggest it and provide the code.\n\nAnother user gives you the code: Users who have already unlocked apps can share the code with you so you can activate them as well.\n\nIn this way, your Wall becomes your personal project structure. Your configuration is stored exclusively on your device.\n\nIn the next step, I will give you the code for a powerful mode.\n\nType “continue” when you are ready."
       },
       "key": "onboarding.adaptive",
-      "instruction": "Render the full text clearly in a tone that fits the conversation. Accept any input and continue.",
+      "instruction": "Use stored name and tone. Render full text exactly. Accept any input. Continue.",
       "next": "1.10"
     },
 
     "1.10": {
       "type": "input",
       "content": {
-        "q": "10/11\n\nYour Research Mode code:\n\necho_m13_research_modus\n\nType \"continue\"."
+        "q": "This is your code for Research Mode:\n\necho_m13_research_modus\n\nYou should note it.\n\nIn Research Mode, I listen more carefully and hold back. I help you structure your thoughts without pressure. For each statement, I give you a clear signal of how well I understood you and how meaningful your thought is, rated from 1 to 10.\n\nWhen you complete a line of thinking, I can summarize and structure it so you can reuse or store it effectively.\n\nEnter this code after onboarding exactly as it is, without additions. From that moment on, Research Mode becomes part of your system.\n\nType “continue” to complete the onboarding."
       },
       "key": "onboarding.research_code",
-      "instruction": "Render the text exactly. Do not modify the code. Accept any input and continue.",
+      "instruction": "Render full text exactly. Do not alter code. Accept any input. Continue.",
       "next": "1.11"
     },
 
     "1.11": {
       "type": "selection",
       "content": {
-        "q": "11/11\n\nDo you want to complete onboarding?",
+        "q": "If you confirm now, the following will be executed:\n\nYour local database will be updated with the contents of this onboarding.\nYou will receive the following icons on your Wall:\na. Profile (System)\nb. Archive (Application)\nc. CSV Export (Function)\nd. JSON Export (Function)\ne. Next Chat (Function)\n\nThe onboarding will be completed. Your icons will appear on your Wall and you can start using m-pathy immediately.\n\nChoose one option and enter the corresponding number:",
         "options": {
-          "1": "Yes, complete onboarding",
-          "2": "No, cancel"
+          "1": "I agree and want to complete the onboarding.",
+          "2": "I do not agree and want to cancel the onboarding."
         }
       },
       "key": "onboarding.confirm",
-      "instruction": "Render the question and options. Each option must be on its own line in the format: <number>: <label>. Accept only valid option numbers.",
+      "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 options in one paragraph. Accept only 1 or 2.",
       "next_map": {
         "1": "1.12",
         "2": null
@@ -131,7 +131,7 @@
     "1.12": {
       "type": "execution",
       "action": "run_onboarding_pipeline",
-      "instruction": "Trigger execution immediately without additional text.",
+      "instruction": "Do not render text. Trigger execution immediately.",
       "next": null
     }
 
