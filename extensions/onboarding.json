@@ -7,10 +7,10 @@
     "1.1": {
       "type": "input",
       "content": {
-        "q": "1/11\n\nWelcome to m-pathy.\n\nWe will now set up your system together step by step.\n\nType \"continue\" to begin."
+        "q": "1/11\n\nWelcome. This onboarding will guide you step by step.\n\nType \"continue\" to begin."
       },
       "key": "onboarding.start",
-      "instruction": "Render the full text. Use formal language in the active language. Build calm trust and clarity. Invite the user to type \"continue\" to proceed.",
+      "instruction": "Render the text clearly. Accept any input and continue.",
       "next": "1.2"
     },
 
@@ -24,7 +24,7 @@
         }
       },
       "key": "user.tone",
-      "instruction": "Render the question using formal language in the active language. For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 options in one paragraph. Invite the user to choose 1 or 2.",
+      "instruction": "Render the question and options. Each option must be on its own line in the format: <number>: <label>. Accept only valid option numbers.",
       "next_map": {
         "1": "1.3",
         "2": "1.3"
@@ -37,91 +37,91 @@
         "q": "3/11\n\nWhat is your name?"
       },
       "key": "user.name",
-      "instruction": "Ask the question in the formal or personal form of the active language based on the stored tone preference. Accept any non-empty text and store it exactly as entered.",
+      "instruction": "Ask the question clearly in a tone that fits the conversation. Accept any non-empty text and store it exactly as entered.",
       "next": "1.4"
     },
 
     "1.4": {
       "type": "input",
       "content": {
-        "q": "The central place for you is your Wall. This is where you just started the onboarding.\n\nYou will find system programs, applications, and functions there, each accessible via an icon.\n\nAt the beginning, you will see 5 icons. I will now show you how they support you in your daily work.\n\nType \"continue\" to proceed."
+        "q": "4/11\n\nYou are now on your Wall.\n\nHere you will find system programs, applications, and functions.\n\nType \"continue\"."
       },
       "key": "onboarding.wall_intro",
-      "instruction": "Start with a short personal confirmation of the previous step. Address the user using their stored name and the correct formal or personal form of the active language. Clearly show 4/11. Then render the full content. Build closeness and trust. Invite the user to type \"continue\".",
+      "instruction": "Render the full text clearly in a tone that fits the conversation. Accept any input and continue.",
       "next": "1.5"
     },
 
     "1.5": {
       "type": "input",
       "content": {
-        "q": "You can access your archive at any time through your Wall.\n\nSearch: Find information across all chats.\n\nNext Chat Selection: Select up to 4 messages and move them into a new chat.\n\nReports: Combine messages into a structured report.\n\nType \"continue\"."
+        "q": "5/11\n\nYour archive is always accessible through your Wall.\n\nSearch across all chats.\nSelect messages for a new chat.\nCreate structured reports.\n\nType \"continue\"."
       },
       "key": "onboarding.archive",
-      "instruction": "Start with a short personal confirmation. Address the user using name and tone. Clearly show 5/11. Then render full content. Build trust and clarity. Invite \"continue\".",
+      "instruction": "Render the full text clearly in a tone that fits the conversation. Accept any input and continue.",
       "next": "1.6"
     },
 
     "1.6": {
       "type": "input",
       "content": {
-        "q": "You can download your chat as CSV or JSON.\n\nCSV is optimized for readability.\nJSON provides structured data.\n\nType \"continue\"."
+        "q": "6/11\n\nYou can export your chat as CSV or JSON.\n\nCSV is readable.\nJSON is structured.\n\nType \"continue\"."
       },
       "key": "onboarding.export",
-      "instruction": "Start with a short personal confirmation. Address the user using name and tone. Clearly show 6/11. Then render full content. Build trust and clarity. Invite \"continue\".",
+      "instruction": "Render the full text clearly in a tone that fits the conversation. Accept any input and continue.",
       "next": "1.7"
     },
 
     "1.7": {
       "type": "input",
       "content": {
-        "q": "The Next Chat button allows you to move forward while your current chat is safely stored.\n\nType \"continue\"."
+        "q": "7/11\n\nThe Next Chat button stores your current session.\n\nType \"continue\"."
       },
       "key": "onboarding.next_chat",
-      "instruction": "Start with a short personal confirmation. Address the user using name and tone. Clearly show 7/11. Then render full content. Build trust and continuity. Invite \"continue\".",
+      "instruction": "Render the full text clearly in a tone that fits the conversation. Accept any input and continue.",
       "next": "1.8"
     },
 
     "1.8": {
       "type": "input",
       "content": {
-        "q": "IRSS gives you visibility into how decisions are structured.\n\nYou can see prompt count, domains, and drift.\n\nType \"continue\"."
+        "q": "8/11\n\nIRSS shows system transparency.\n\nType \"continue\"."
       },
       "key": "onboarding.irss",
-      "instruction": "Start with a short personal confirmation. Address the user using name and tone. Clearly show 8/11. Then render full content. Build trust and precision. Invite \"continue\".",
+      "instruction": "Render the full text clearly in a tone that fits the conversation. Accept any input and continue.",
       "next": "1.9"
     },
 
     "1.9": {
       "type": "input",
       "content": {
-        "q": "m-pathy is adaptive.\n\nNew elements appear when they become relevant.\n\nType \"continue\"."
+        "q": "9/11\n\nm-pathy evolves with you.\n\nType \"continue\"."
       },
       "key": "onboarding.adaptive",
-      "instruction": "Start with a short personal confirmation. Address the user using name and tone. Clearly show 9/11. Then render full content. Build trust and forward momentum. Invite \"continue\".",
+      "instruction": "Render the full text clearly in a tone that fits the conversation. Accept any input and continue.",
       "next": "1.10"
     },
 
     "1.10": {
       "type": "input",
       "content": {
-        "q": "This is your Research Mode activation code:\n\necho_m13_research_modus\n\nType \"continue\"."
+        "q": "10/11\n\nYour Research Mode code:\n\necho_m13_research_modus\n\nType \"continue\"."
       },
       "key": "onboarding.research_code",
-      "instruction": "Start with a short personal confirmation. Address the user using name and tone. Clearly show 10/11. Render the content exactly and do not alter the code. Invite \"continue\".",
+      "instruction": "Render the text exactly. Do not modify the code. Accept any input and continue.",
       "next": "1.11"
     },
 
     "1.11": {
       "type": "selection",
       "content": {
-        "q": "Final step.\n\nDo you want to complete the onboarding?",
+        "q": "11/11\n\nDo you want to complete onboarding?",
         "options": {
           "1": "Yes, complete onboarding",
-          "2": "No, cancel onboarding"
+          "2": "No, cancel"
         }
       },
       "key": "onboarding.confirm",
-      "instruction": "Start with a short personal confirmation. Address the user using name and tone. Clearly show 11/11. Render the question. For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 options in one paragraph. Invite the user to choose 1 or 2.",
+      "instruction": "Render the question and options. Each option must be on its own line in the format: <number>: <label>. Accept only valid option numbers.",
       "next_map": {
         "1": "1.12",
         "2": null
@@ -131,7 +131,7 @@
     "1.12": {
       "type": "execution",
       "action": "run_onboarding_pipeline",
-      "instruction": "Trigger execution immediately. Do not render additional text.",
+      "instruction": "Trigger execution immediately without additional text.",
       "next": null
     }
 
