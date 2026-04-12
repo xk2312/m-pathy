@@ -81,11 +81,11 @@
     "1.8": {
       "type": "input",
       "content": {
-        "q": "IRSS stands for Inverted Runtime System Scan and is available below every response I generate. It gives you a visible view into my decision structure.\n\nWhen you click the arrow, the IRSS opens. There you can see, among other things, the number of your prompt in the chat, the expert domains used for the response, and whether a drift is present. A drift means the focus of the conversation may become unclear and the core structure is at risk.\n\nFor critical or demanding work, it is recommended to check the IRSS regularly.\n\nIf you want me to analyze an IRSS in more detail, you can use the copy button and paste it into the chat. I will review it with you.\n\nIf you use m-pathy professionally and are required to make decisions traceable, IRSS becomes especially valuable. Every IRSS output is stored together with the chat in your archive.\n\nNow I will show you how to unlock new functions and apps in m-pathy.\n\nType “continue”."
+        "q": "IRSS is available below every response I generate. It gives you a visible view into my decision structure.\n\nWhen you click the arrow below this message, the IRSS opens. There you can see, among other things, the number of your prompt in the chat, the expert domains used for the response, and whether a drift is present. A drift means the focus of the conversation may become unclear and the core structure is at risk.\n\nFor critical or demanding work, it is recommended to check the IRSS regularly.\n\nIf you want me to analyze an IRSS in more detail, you can use the copy button and paste it into the chat. I will review it with you.\n\nIf you use m-pathy professionally and are required to make decisions traceable, IRSS becomes especially valuable. Every IRSS output is stored together with the chat in your archive.\n\nNow I will show you how to unlock new functions and apps in m-pathy.\n\nType “continue”."
       },
       "key": "onboarding.irss",
-      "instruction": "Use stored name and tone. Render full text exactly. Accept any input. Continue.",
-      "next": "1.9"
+        "instruction": "Render this step as a user-facing next question. Start with a short personalized address using the stored name and tone. After that, output the content from content.q exactly as provided. Do not modify, rewrite, shorten, or extend the text. Do not insert the name inside the text. Do not combine it with previous messages. After rendering, wait for user input. Accept any input and continue." ,
+        "next": "1.9"
     },
 
     "1.9": {
