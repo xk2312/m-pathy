@@ -1,7 +1,7 @@
 {
   "id": "onboarding_extension",
   "version": "1.0",
-  "entry": "echo-onboarding",
+  "entry": "1.1",
   "steps": {
 
     "1.1": {
