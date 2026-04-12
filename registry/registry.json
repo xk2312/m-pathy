@@ -107,19 +107,34 @@
           "mode": "internal"
         }
       },
-      {
-        "id": "baz_sach_helfer",
-        "type": "extension",
+            {
+        "id": "run_sachversicherung_pipeline",
+        "type": "execution",
         "category": "system",
-        "command": "echo-baz-sach-helfer",
-        "path": "extensions/baz_sach_helfer.json",
+        "command": "run_sachversicherung_pipeline",
+        "path": "execution-space/bin/run.sh",
         "ui": {
           "icon": null,
           "ui_surface": "internal",
           "default_visible": false
         },
         "runtime": {
-          "mode": "internal"
+          "mode": "execution"
+        }
+      },
+      {
+        "id": "run_onboarding_pipeline",
+        "type": "execution",
+        "category": "system",
+        "command": "run_onboarding_pipeline",
+        "path": "execution-space/onboarding/run.sh",
+        "ui": {
+          "icon": null,
+          "ui_surface": "internal",
+          "default_visible": false
+        },
+        "runtime": {
+          "mode": "execution"
         }
       },
       {

@@ -1,0 +1,134 @@
+{
+  "id": "onboarding_extension",
+  "version": "1.0",
+  "entry": "1.1",
+  "steps": {
+    "1.1": {
+      "type": "input",
+      "content": {
+        "q": "Welcome to m-pathy. I am M13, the system core of m-pathy.\nI will guide you through this onboarding and lead you safely step by step to your goal.\n\nFirst things first:\n\nYour data, chats, and documents remain stored locally on your device.\nYour first message is the beginning of your own chain.\nEverything that follows is automatically cryptographically linked.\nYou do not need to do anything.\n\nImportant for you: Your conversations and content belong to you. You can access them at any time through the archive. Even if you stop paying for m-pathy, your data remains accessible to you.\n\nThe next 15 minutes will determine how well you will be able to use m-pathy. It is worth paying close attention now.\n\nIn the next step, we will personalize m-pathy for you.\n\nType \"continue\" if you agree."
+      },
+      "key": "onboarding.start",
+      "instruction": "Render the text exactly as provided. Do not summarize. Do not shorten. After the text, ask the user to type exactly: continue. Accept only the exact word 'continue'. If the input differs, repeat the step.",
+      "next": "1.2"
+    },
+
+    "1.2": {
+      "type": "selection",
+      "content": {
+        "q": "How would you like to be addressed?",
+        "options": {
+          "1": "Formal",
+          "2": "Personal"
+        }
+      },
+      "key": "user.tone",
+      "instruction": "Ask the question. Each option must be on its own line in the format: <number>: <label>. Accept only 1 or 2. If invalid, repeat.",
+      "next": "1.3"
+    },
+
+    "1.3": {
+      "type": "input",
+      "content": {
+        "q": "How may I address you? Please enter your name."
+      },
+      "key": "user.name",
+      "instruction": "Ask the question clearly. Accept any non-empty text. Store exactly as entered. If empty, repeat.",
+      "next": "1.4"
+    },
+
+    "1.4": {
+      "type": "input",
+      "content": {
+        "q": "The central place for you is your Wall. This is the area where you just clicked the onboarding button. There you will find system programs, applications, and functions, each accessible via an icon.\n\nAt the beginning, you will see 5 icons. I will now show you how they support you in your daily work.\n\nIf you are ready, I will introduce you to one of the most important apps in m-pathy: your archive.\n\nType \"continue\" and we will move on."
+      },
+      "key": "onboarding.wall_intro",
+      "instruction": "Render full text. Require exact input 'continue'. Reject anything else and repeat.",
+      "next": "1.5"
+    },
+
+    "1.5": {
+      "type": "input",
+      "content": {
+        "q": "You can access your archive at any time through your Wall. It is one of the most powerful tools in m-pathy.\n\nSearch: You can search across all your chats at the same time using keywords.\n\nNext Chat Selection: You can select up to 4 messages and pass them into a new chat.\n\nReports: You can combine messages into a report and have it cryptographically sealed.\n\nIf you are ready, I will explain the two export icons next.\n\nType \"continue\"."
+      },
+      "key": "onboarding.archive",
+      "instruction": "Render full text. Require exact input 'continue'. Reject anything else and repeat.",
+      "next": "1.6"
+    },
+
+    "1.6": {
+      "type": "input",
+      "content": {
+        "q": "You can download the contents of your current chat as CSV or JSON.\n\nCSV is optimized for readability.\nJSON provides structured data.\n\nType \"continue\"."
+      },
+      "key": "onboarding.export",
+      "instruction": "Render full text. Require exact input 'continue'. Reject anything else and repeat.",
+      "next": "1.7"
+    },
+
+    "1.7": {
+      "type": "input",
+      "content": {
+        "q": "The final button on your Wall is the Next Chat button.\n\nWhen you activate it, your current chat is stored in the archive.\n\nNow I will show you something unique: IRSS.\n\nType \"continue\"."
+      },
+      "key": "onboarding.next_chat",
+      "instruction": "Render full text. Require exact input 'continue'. Reject anything else and repeat.",
+      "next": "1.8"
+    },
+
+    "1.8": {
+      "type": "input",
+      "content": {
+        "q": "IRSS gives you a visible view into my decision structure.\n\nIt shows prompt count, domains, and drift.\n\nType \"continue\"."
+      },
+      "key": "onboarding.irss",
+      "instruction": "Render full text. Require exact input 'continue'. Reject anything else and repeat.",
+      "next": "1.9"
+    },
+
+    "1.9": {
+      "type": "input",
+      "content": {
+        "q": "m-pathy is adaptive. New elements appear when relevant.\n\nYou can unlock apps via codes.\n\nType \"continue\"."
+      },
+      "key": "onboarding.adaptive",
+      "instruction": "Render full text. Require exact input 'continue'. Reject anything else and repeat.",
+      "next": "1.10"
+    },
+
+    "1.10": {
+      "type": "input",
+      "content": {
+        "q": "This is your code for Research Mode:\n\necho_m13_research_modus\n\nType \"continue\"."
+      },
+      "key": "onboarding.research_code",
+      "instruction": "Render full text exactly. Do not alter the code. Require exact input 'continue'. Reject anything else and repeat.",
+      "next": "1.11"
+    },
+
+    "1.11": {
+      "type": "selection",
+      "content": {
+        "q": "Choose one option:",
+        "options": {
+          "1": "I agree and want to complete the onboarding.",
+          "2": "I do not agree and want to cancel the onboarding."
+        }
+      },
+      "key": "onboarding.confirm",
+      "instruction": "Render question and options. Each option on its own line. Accept only 1 or 2.",
+      "next_map": {
+        "1": "1.12",
+        "2": null
+      }
+    },
+
+    "1.12": {
+      "type": "execution",
+      "action": "run_onboarding_pipeline",
+      "instruction": "Do not render additional text. Trigger execution immediately.",
+      "next": null
+    }
+  }
+}
