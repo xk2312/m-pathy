@@ -106,11 +106,11 @@
     "1.10": {
       "type": "input",
       "content": {
-        "q": "This is your code for Research Mode:\n\necho_m13_research_modus\n\nKeep it.\n\nResearch Mode changes how I work with you. I slow down, listen precisely, and help you structure your thoughts without pressure.\n\nFor every statement, you get two signals:\n– how well I understood you\n– how meaningful your thought is\n\nBoth rated from 1 to 10.\n\nWhen a thought is complete, I structure it so you can reuse or store it.\n\nEnter the code exactly as shown after onboarding. From that moment, Research Mode becomes part of your system.\n\nType \"continue\" to complete the onboarding."
+        "q": "This is your snippet for Research Mode:\n\necho_m13_research_modus\n\nKeep it.\n\nResearch Mode changes how I work with you. I slow down, listen precisely, and help you structure your thoughts without pressure.\n\nFor every statement, you get two signals:\n– how well I understood you\n– how meaningful your thought is\n\nBoth rated from 1 to 10.\n\nWhen a thought is complete, I structure it so you can reuse or store it.\n\nEnter the snippet exactly as shown after onboarding. From that moment, Research Mode becomes part of your system.\n\nType \"continue\" to complete the onboarding."
       },
       "key": "onboarding.research_code",
-        "instruction": "Render the full text from content.q in the user's browser language. Preserve meaning, structure, and line breaks as closely as possible. Translate all user-facing text, including the final call-to-action (e.g. \"continue\"), into the target language. Render the translated terms for Research Mode and code in bold wherever they appear in the output. Do not summarize, shorten, expand, or add explanations. Do not modify or reinterpret the code block. Accept any non-empty user input and proceed to the next step.",
-      "next": "1.11"
+        "instruction": "Render the full text from content.q in the user's browser language. Preserve meaning, paragraph order, and structure. Translate all user-facing text, including the final call-to-action (e.g. continue), into the target language. Render the translated term for Research Mode in bold wherever it appears. Keep the provided snippet exactly as shown. Wait for user input and proceed when a valid response is provided.",
+        "next": "1.11"
     },
 
     "1.11": {
