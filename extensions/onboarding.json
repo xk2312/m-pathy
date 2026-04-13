@@ -48,11 +48,11 @@
     "1.4": {
       "type": "input",
       "content": {
-        "q": "I look forward to working with you, Fabian.\n\nWhat comes next is very important.\n\nThe central place for you is your Wall. This is the area where you just clicked the onboarding button. There you will find system programs, applications, and functions, each accessible via an icon.\n\nAt the beginning, you will see 5 icons. I will now show you how they support you in your daily work.\n\nIf you are ready, I will introduce you to one of the most important apps in m-pathy: your archive.\n\nType “continue” and we will move on."
+        "q": "Your Wall is the starting point for your work with m-pathy.\n\nHere, your tools appear as icons.\n\nTo begin, you will see five icons. I will show you what they are for and how they support you.\n\nNext, I will introduce you to one of the most important spaces in m-pathy: your Archive.\n\nType \"continue\" when you are ready."
       },
       "key": "onboarding.wall_intro",
-      "instruction": "Use stored name and tone. Render full text exactly. Accept any input. Continue.",
-      "next": "1.5"
+        "instruction": "Render the full text from content.q in the user's browser language. Preserve the full meaning, paragraph order, and sentence structure as closely as possible. Use the stored user.name and user.tone as hard constraints for the rendered output. If user.tone is Formal, use the formal form of address required by the target language throughout the full rendered output. If user.tone is Personal, use the personal or informal form of address required by the target language throughout the full rendered output. Insert the stored user.name where contextually required by the step and do not alter it. Translate all user-facing text, including the final call to action, into the target language. Do not summarize, shorten, expand, add explanations, or mix formal and personal address within the same response. Accept any input and continue to the next step.",
+        "next": "1.5"
     },
 
     "1.5": {
