@@ -1383,21 +1383,3 @@ button.controlled-entry {
   all: revert;
   cursor: pointer;
 }
-.m13-mark {
-  width: 22px;
-  height: 22px;
-  flex: 0 0 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.m13-mark img {
-  display: block;
-  width: 22px;
-  height: 22px;
-  filter:
-    drop-shadow(0 0 3px rgba(135, 93, 194, 0.42))
-    drop-shadow(0 0 7px rgba(94, 66, 133, 0.34))
-    drop-shadow(0 0 14px rgba(94, 66, 133, 0.20));
-}

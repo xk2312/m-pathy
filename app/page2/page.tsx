@@ -964,8 +964,8 @@ function Bubble({
     >
       {!isUser && (
         <Image
-          src="/pictures/m.svg"
-          alt="M"
+          src="/pictures/m13.png"
+          alt="M13"
           width={22}
           height={22}
           style={{
