@@ -24,14 +24,14 @@
     "1.2": {
       "type": "selection",
       "content": {
-        "q": "Good to see you moving forward.\n\nI am designed to handle your thoughts, content, and intellectual property with care. I do not rush you and I do not dilute your thinking. I guide you in a way that clarity comes first.\n\nPlease tell me how I should address you. You can change this later in the settings.\n\nHow would you like to be addressed?",
+        "q": "How would you like to be addressed?\n\nYou can change this anytime.",        
         "options": {
           "1": "Formal",
           "2": "Personal"
         }
       },
       "key": "user.tone",
-        "instruction": "Render this step as a user-facing next question. First render the full text from content.q exactly as provided. Do not shorten, summarize, or rewrite it. After that, render the options from content.options. For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 options in one paragraph. Finally, ask the user to select 1 or 2.",
+        "instruction": "Render the full text from content.q in the user's browser language. Preserve the full meaning, paragraph order, and sentence structure as closely as possible. After that, render the options from content.options in the same language. For each option, start a new paragraph and write: <number>: <translated label>. It is forbidden to write 2 options in one paragraph. Finally, ask the user in the same language to choose 1 or 2. Do not summarize, shorten, expand, personalize, or add explanations.",
         "next": "1.3"
     },
 
