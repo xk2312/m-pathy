@@ -962,67 +962,21 @@ function Bubble({
         paddingInline: isNarrowAssistant ? ASSISTANT_SIDE_PADDING : 0,
       }}
     >
-
-
       {!isUser && (
-        <div
+        <Image
+          src="/pictures/m13.png"
+          alt="M13"
+          width={22}
+          height={22}
           style={{
             marginTop: isNarrowAssistant ? 0 : 6,
             marginBottom: isNarrowAssistant ? 8 : 0,
             flex: "0 0 22px",
             alignSelf: isNarrowAssistant ? "flex-start" : "auto",
+            filter:
+              "drop-shadow(0 0 3px rgba(135, 93, 194, 0.45)) drop-shadow(0 0 8px rgba(94, 66, 133, 0.35)) drop-shadow(0 0 16px rgba(94, 66, 133, 0.25))",
           }}
-        >
-
-          
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 144 144"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ display: "block", overflow: "visible" }}
-          >
-            <defs>
-              <filter id="m13-glow-1" x="-120%" y="-120%" width="340%" height="340%">
-                <feGaussianBlur stdDeviation="8" />
-              </filter>
-              <filter id="m13-glow-2" x="-160%" y="-160%" width="420%" height="420%">
-                <feGaussianBlur stdDeviation="16" />
-              </filter>
-            </defs>
-
-            <path
-              d="M36 110 V34 M108 110 V34 M36 34 L72 84 L108 34"
-              fill="none"
-              stroke="#5E4285"
-              strokeWidth="10"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              opacity="0.35"
-              filter="url(#m13-glow-2)"
-            />
-
-            <path
-              d="M36 110 V34 M108 110 V34 M36 34 L72 84 L108 34"
-              fill="none"
-              stroke="#875DC2"
-              strokeWidth="7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              opacity="0.6"
-              filter="url(#m13-glow-1)"
-            />
-
-            <path
-              d="M36 110 V34 M108 110 V34 M36 34 L72 84 L108 34"
-              fill="none"
-              stroke="#F5F6F7"
-              strokeWidth="5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
+        />
       )}
       <div
         style={{
@@ -1032,7 +986,6 @@ function Bubble({
           width: "auto",
         }}
       >
-
         {isUser ? (
           // Inline-Block-Container: begrenzt die User-Bubble auf 60vw / 382px
           <div
