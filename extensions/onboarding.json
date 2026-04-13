@@ -116,14 +116,14 @@
     "1.11": {
       "type": "selection",
       "content": {
-        "q": "If you confirm now, the following will be executed:\n\nYour local database will be updated with the contents of this onboarding.\nYou will receive the following icons on your Wall:\na. Profile (System)\nb. Archive (Application)\nc. CSV Export (Function)\nd. JSON Export (Function)\ne. Next Chat (Function)\n\nThe onboarding will be completed. Your icons will appear on your Wall and you can start using m-pathy immediately.\n\nChoose one option and enter the corresponding number:",
+        "q": "If you confirm now, your onboarding is complete.\n\nEverything from this onboarding will be stored in your local database.\n\nYou will receive the following icons on your Wall:\na. Profile (System)\nb. Archive (Application)\nc. CSV Export (Function)\nd. JSON Export (Function)\ne. Next Chat (Function)\n\nYou can start using m-pathy immediately.\n\nChoose one option and enter the number.",
         "options": {
           "1": "I agree and want to complete the onboarding.",
           "2": "I do not agree and want to cancel the onboarding."
         }
       },
       "key": "onboarding.confirm",
-      "instruction": "For each option you must start a new paragraph and write: <number>: <label>. It is forbidden to write 2 options in one paragraph. Accept only 1 or 2.",
+        "instruction": "Render the full text from content.q in the user's browser language. Preserve the full meaning, paragraph order, and sentence structure as closely as possible. After that, render the options from content.options in the same language. For each option, start a new paragraph and write: <number>: <translated label>. It is forbidden to write 2 options in one paragraph. Render the translated phrase for onboarding is complete in bold wherever it appears in the output. Finally, ask the user in the same language to choose 1 or 2. Do not summarize, shorten, expand, personalize, or add explanations.",
       "next": "1.12"
     },
 
