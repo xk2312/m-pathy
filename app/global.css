@@ -1384,34 +1384,20 @@ button.controlled-entry {
   cursor: pointer;
 }
 .m13-mark {
-  position: relative;
   width: 22px;
   height: 22px;
+  flex: 0 0 22px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-.m13-mark::before {
-  content: "";
-  position: absolute;
-  inset: 50%;
-  width: 42px;
-  height: 42px;
-  transform: translate(-50%, -50%);
-  border-radius: 999px;
-  background: radial-gradient(
-    circle,
-    rgba(135, 93, 194, 0.28) 0%,
-    rgba(94, 66, 133, 0.18) 35%,
-    rgba(94, 66, 133, 0.08) 55%,
-    rgba(94, 66, 133, 0) 75%
-  );
-  filter: blur(10px);
-  pointer-events: none;
-}
-
 .m13-mark img {
-  position: relative;
-  z-index: 1;
+  display: block;
+  width: 22px;
+  height: 22px;
+  filter:
+    drop-shadow(0 0 3px rgba(135, 93, 194, 0.42))
+    drop-shadow(0 0 7px rgba(94, 66, 133, 0.34))
+    drop-shadow(0 0 14px rgba(94, 66, 133, 0.20));
 }

@@ -963,22 +963,20 @@ function Bubble({
       }}
     >
       {!isUser && (
-        <div
-  className="m13-mark"
-  style={{
-    marginTop: isNarrowAssistant ? 0 : 6,
-    marginBottom: isNarrowAssistant ? 8 : 0,
-    flex: "0 0 22px",
-    alignSelf: isNarrowAssistant ? "flex-start" : "auto",
-  }}
->
-  <Image
-    src="/pictures/m.svg"
-    alt="M"
-    width={22}
-    height={22}
-  />
-</div>
+        <Image
+          src="/pictures/m.svg"
+          alt="M"
+          width={22}
+          height={22}
+          style={{
+            marginTop: isNarrowAssistant ? 0 : 6,
+            marginBottom: isNarrowAssistant ? 8 : 0,
+            flex: "0 0 22px",
+            alignSelf: isNarrowAssistant ? "flex-start" : "auto",
+            filter:
+              "drop-shadow(0 0 3px rgba(135, 93, 194, 0.45)) drop-shadow(0 0 8px rgba(94, 66, 133, 0.35)) drop-shadow(0 0 16px rgba(94, 66, 133, 0.25))",
+          }}
+        />
       )}
       <div
         style={{
