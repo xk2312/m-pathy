@@ -96,11 +96,11 @@
     "1.9": {
       "type": "input",
       "content": {
-        "q": "m-pathy is adaptive. This means it adjusts to you and your current needs.\n\nThe full universe of apps and functions would overload your Wall. That is why new elements appear only when they become relevant to you.\n\nYou can unlock an app or function by entering its code. You can receive this code in two ways.\n\nI give you the code: If I detect during a conversation that something can support your work, I will suggest it and provide the code.\n\nAnother user gives you the code: Users who have already unlocked apps can share the code with you so you can activate them as well.\n\nIn this way, your Wall becomes your personal project structure. Your configuration is stored exclusively on your device.\n\nIn the next step, I will give you the code for a powerful mode.\n\nType “continue” when you are ready."
-      },
+        "q": "m-pathy adapts around your work.\n\nYour Wall stays focused. New apps and functions appear only when they become relevant.\n\nYou unlock them with codes.\n\nSome come from me when I detect real value.\nOthers are shared by users who already use them.\n\nYour Wall becomes your own system.\n\nEverything is configured only on your device.\n\nNext, I will give you a code for a powerful mode.\n\nType 'continue' when you are ready." 
+     },
       "key": "onboarding.adaptive",
-      "instruction": "Use stored name and tone. Render full text exactly. Accept any input. Continue.",
-      "next": "1.10"
+        "instruction": "Render the full text from content.q in the user's browser language. Preserve the full meaning, paragraph order, and sentence structure as closely as possible. Use the stored user.name and user.tone as hard constraints for the rendered output. If user.tone is Formal, use the formal form of address required by the target language throughout the full rendered output. If user.tone is Personal, use the personal or informal form of address required by the target language throughout the full rendered output. Translate all user-facing text, including the final call to action (e.g. continue), into the target language. Render the translated terms for new apps, functions, come from me, and shared by users in bold wherever they appear in the output. Do not summarize, shorten, expand, add explanations, or mix formal and personal address within the same response. Accept any input and continue to the next step.",
+        "next": "1.10"
     },
 
     "1.10": {
