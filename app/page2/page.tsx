@@ -2352,12 +2352,6 @@ function typewriter() {
     return;
   }
 
-  window.dispatchEvent(
-    new CustomEvent("mpathy:stream:delta", {
-  detail: { text: renderQueue.slice(0, 3) }
-})
-);
-
 const SPEED = 5;
 
 function typewriter() {
@@ -2379,17 +2373,16 @@ function typewriter() {
   requestAnimationFrame(typewriter);
 }   }
 
-    if (token) {
-      fullContent += token;
-      assistantMsg.content = fullContent;
+   if (token) {
+  fullContent += token;
 
-      renderQueue += token;
+  renderQueue += token;
 
-      if (!isRendering) {
-        isRendering = true;
-        typewriter();
-      }
-    }
+  if (!isRendering) {
+    isRendering = true;
+    typewriter();
+  }
+}
         } catch {
           /* ignore partial fragments */
         }
