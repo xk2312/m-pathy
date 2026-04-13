@@ -77,11 +77,10 @@
     "1.7": {
       "type": "input",
       "content": {
-        "q": "The final button on your Wall is the Next Chat button.\n\nWhen you activate it, your current chat is stored in the archive and remains permanently available to you.\n\nImportant: CSV and JSON export can only be triggered from an active chat.\n\nBefore starting a new chat, it is worth briefly checking whether you want to export the current state.\n\nNow I will show you something that makes m-pathy unique.\n\nIRSS. This is your view into my visible decision structure.\n\nType “continue” when you are ready."
-      },
-      "key": "onboarding.next_chat",
-      "instruction": "Use stored name and tone. Render full text exactly. Accept any input. Continue.",
-      "next": "1.8"
+        "q": "Before you move on, one thing matters.\n\nThe Next Chat button closes your current chat, stores it safely in your Archive, and opens a new one.\n\nNothing is lost. Everything stays accessible.\n\nExports only work while a chat is active.\n\nIf something matters, export it before you move on.\n\nNow I will show you what makes m-pathy different.\n\nIRSS makes every decision traceable.\n\nType \"continue\" when you are ready."      },
+        "key": "onboarding.next_chat",
+        "instruction": "Render the full text from content.q in the user's browser language. Preserve the full meaning, paragraph order, and sentence structure as closely as possible. Use the stored user.name and user.tone as hard constraints for the rendered output. If user.tone is Formal, use the formal form of address required by the target language throughout the full rendered output. If user.tone is Personal, use the personal or informal form of address required by the target language throughout the full rendered output. Translate all user-facing text, including the final call to action, into the target language. Render the translated terms for current chat, CSV, JSON, and IRSS in bold wherever they appear in the output. Do not summarize, shorten, expand, add explanations, or mix formal and personal address within the same response. Accept any input and continue to the next step.",
+        "next": "1.8"
     },
 
     "1.8": {
