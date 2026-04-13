@@ -58,11 +58,11 @@
     "1.5": {
       "type": "input",
       "content": {
-        "q": "You can access your archive at any time through your Wall. It is one of the most powerful tools in m-pathy. Let me show you the functions that matter most.\n\nSearch: You can search across all your chats at the same time using keywords. Relevant messages appear instantly because all data is stored locally on your device.\n\nNext Chat Selection: You can select up to 4 messages from one or multiple chats and pass them into a new chat. This allows you to start a new line of thought based on existing content.\n\nReports: You can combine any number of messages from different chats into a report and have it cryptographically sealed on our server. We do not store your content, only a key that can later prove that your report has not been altered. This helps you prove authorship and integrity.\n\nThese three functions make the archive your central power tool. You lose nothing, you stay in control, and you can build on everything.\n\nIf you are ready, I will explain the two export icons next.\n\nType “continue”."
+        "q": "Your Archive is where your work stops getting lost.\n\nIt brings back what matters, lets you continue thinking without breaking your flow, and turns your ideas into structured results you can rely on.\n\nSearch finds what you need in milliseconds.\n\nNext chat selection lets your thoughts move forward without starting over.\n\nReports let you combine, structure, and secure your work while keeping full ownership.\n\nNothing disappears.\nEverything builds.\n\nNext, I will show you the two export icons.\n\nType \"continue\" when you are ready."
       },
       "key": "onboarding.archive",
-      "instruction": "Use stored name and tone. Render full text exactly. Accept any input. Continue.",
-      "next": "1.6"
+        "instruction": "Render the full text from content.q in the user's browser language. Preserve the full meaning, paragraph order, and sentence structure as closely as possible. Use the stored user.name and user.tone as hard constraints for the rendered output. If user.tone is Formal, use the formal form of address required by the target language throughout the full rendered output. If user.tone is Personal, use the personal or informal form of address required by the target language throughout the full rendered output. Translate all user-facing text, including the final call to action, into the target language. Render the translated names of the Archive functions Search, Next chat selection, and Reports in bold wherever they appear in the output. Do not summarize, shorten, expand, add explanations, or mix formal and personal address within the same response. Accept any input and continue to the next step.",      
+        "next": "1.6"
     },
 
     "1.6": {
