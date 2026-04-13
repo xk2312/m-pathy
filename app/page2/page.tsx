@@ -2358,9 +2358,7 @@ function typewriter() {
 })
 );
 
-renderQueue = renderQueue.slice(3);
-
-const SPEED = 50;
+const SPEED = 5;
 
 function typewriter() {
   if (!renderQueue.length) {
@@ -2368,16 +2366,18 @@ function typewriter() {
     return;
   }
 
+  const chunk = renderQueue.slice(0, SPEED);
+
   window.dispatchEvent(
     new CustomEvent("mpathy:stream:delta", {
-      detail: { text: renderQueue.slice(0, SPEED) }
+      detail: { text: chunk }
     })
   );
 
   renderQueue = renderQueue.slice(SPEED);
 
   requestAnimationFrame(typewriter);
-}    }
+}   }
 
     if (token) {
       fullContent += token;
