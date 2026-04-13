@@ -1,22 +1,10 @@
 <!-- public/pictures/m.svg -->
 <svg width="144" height="144" viewBox="0 0 144 144" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="M">
-  <defs>
-    <!-- Subtle Aura (weaker, wider) -->
-    <radialGradient id="aura" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#875DC2" stop-opacity="0.06"/>
-      <stop offset="100%" stop-color="#5E4285" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-
-  <!-- Aura Field -->
-  <circle cx="72" cy="72" r="72" fill="url(#aura)" />
-
-  <!-- M Shape (more precise, less soft) -->
   <g transform="translate(0,-2)">
-    <path 
-      d="M36 110 V34 
-         M108 110 V34 
-         M36 34 L72 84 L108 34" 
+    <path
+      d="M36 110 V34
+         M108 110 V34
+         M36 34 L72 84 L108 34"
       fill="none"
       stroke="#F5F6F7"
       stroke-width="5"

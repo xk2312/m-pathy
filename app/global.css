@@ -1383,3 +1383,35 @@ button.controlled-entry {
   all: revert;
   cursor: pointer;
 }
+.m13-mark {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.m13-mark::before {
+  content: "";
+  position: absolute;
+  inset: 50%;
+  width: 42px;
+  height: 42px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    rgba(135, 93, 194, 0.28) 0%,
+    rgba(94, 66, 133, 0.18) 35%,
+    rgba(94, 66, 133, 0.08) 55%,
+    rgba(94, 66, 133, 0) 75%
+  );
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.m13-mark img {
+  position: relative;
+  z-index: 1;
+}
