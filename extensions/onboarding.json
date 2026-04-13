@@ -68,11 +68,10 @@
     "1.6": {
       "type": "input",
       "content": {
-        "q": "Before switching to a new chat, you can download the contents of your current chat at any time as CSV or JSON. For this, two icons are available: CSV and JSON.\n\nThis allows you to export full chats and use them outside of m-pathy. The CSV is optimized for readability. JSON provides the structured format of the chat.\n\nYou will find both icons on your Wall after onboarding.\n\nNext, I will explain the final button.\n\nType “continue” when you are ready."
-      },
-      "key": "onboarding.export",
-      "instruction": "Use stored name and tone. Render full text exactly. Accept any input. Continue.",
-      "next": "1.7"
+        "q": "Everything you create here stays yours.\n\nWhen you need it, you can export your chat instantly.\n\nCSV is for reading and sharing.\nJSON is for keeping everything exactly as it is.\n\nBoth options will be on your Wall.\n\nNext, I will show you the final button.\n\nType 'continue' when you are ready."      },
+        "key": "onboarding.export",
+        "instruction": "Render the full text from content.q in the user's browser language. Preserve the full meaning, paragraph order, and sentence structure as closely as possible. Use the stored user.name and user.tone as hard constraints for the rendered output. If user.tone is Formal, use the formal form of address required by the target language throughout the full rendered output. If user.tone is Personal, use the personal or informal form of address required by the target language throughout the full rendered output. Translate all user-facing text, including the final call to action, into the target language. Render the translated names of the export functions CSV and JSON in bold wherever they appear in the output. Do not summarize, shorten, expand, add explanations, or mix formal and personal address within the same response. Accept any input and continue to the next step.",
+        "next": "1.7"
     },
 
     "1.7": {
