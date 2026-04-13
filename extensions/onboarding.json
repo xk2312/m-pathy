@@ -7,7 +7,7 @@
     "1.1": {
       "type": "input",
       "content": {
-        "q": "Welcome to m-pathy. I am M13, the system core of m-pathy.\nI will guide you through this onboarding and lead you safely step by step to your goal.\n\nFirst things first:\n\nYour data, chats, and documents remain stored locally on your device.\nYour first message is the beginning of your own chain.\nEverything that follows is automatically cryptographically linked.\nYou do not need to do anything.\n\nImportant for you: Your conversations and content belong to you. You can access them at any time through the archive. Even if you stop paying for m-pathy, your data remains accessible to you.\n\nThe next 15 minutes will determine how well you will be able to use m-pathy. It is worth paying close attention now.\n\nIn the next step, we will personalize m-pathy for you.\n\nType “continue” if you agree."
+        "q": "Welcome to m-pathy.\n\nEverything here begins with you and remains under your control.\n\nYour data, chats, and documents stay stored locally on your device.\nYour first message begins your own chain.\nEverything that follows is permanently linked to it.\n\nYour conversations and content belong to you.\nYou can access them at any time through the archive.\nEven if you stop paying for m-pathy, your data remains accessible to you.\n\nFrom here, I will guide you step by step and shape m-pathy around you.\n\nType “continue” when you are ready to begin."
       },
       "key": "onboarding.start",
       "instruction": "Render full text exactly. Accept any input. Continue to next step.",
