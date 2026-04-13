@@ -147,7 +147,7 @@ const inter = Inter({ subsets: ["latin"], display: "swap" })
 export const metadata: Metadata = {
   title: "m-pathy",
   description: "Professional AI workspace and governance infrastructure.",
-  icons: { icon: "/favicon.ico" },
+  icons: { icon: "/favicon.png" },
 }
 
 
