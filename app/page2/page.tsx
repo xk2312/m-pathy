@@ -2360,8 +2360,24 @@ function typewriter() {
 
 renderQueue = renderQueue.slice(3);
 
+const SPEED = 50;
+
+function typewriter() {
+  if (!renderQueue.length) {
+    isRendering = false;
+    return;
+  }
+
+  window.dispatchEvent(
+    new CustomEvent("mpathy:stream:delta", {
+      detail: { text: renderQueue.slice(0, SPEED) }
+    })
+  );
+
+  renderQueue = renderQueue.slice(SPEED);
+
   requestAnimationFrame(typewriter);
-    }
+}    }
 
     if (token) {
       fullContent += token;
