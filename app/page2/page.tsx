@@ -2354,11 +2354,11 @@ function typewriter() {
 
   window.dispatchEvent(
     new CustomEvent("mpathy:stream:delta", {
-      detail: { text: renderQueue[0] }
-    })
-  );
+  detail: { text: renderQueue.slice(0, 3) }
+})
+);
 
-  renderQueue = renderQueue.slice(1);
+renderQueue = renderQueue.slice(3);
 
   requestAnimationFrame(typewriter);
     }
