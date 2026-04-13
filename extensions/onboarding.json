@@ -1,6 +1,13 @@
 {
   "id": "onboarding_extension",
   "version": "1.0",
+
+  "language_system": {
+    "mode": "browser-bound",
+    "lock": true
+  },
+  "language_rule": "Use the user's browser language for every onboarding step until the user provides a clear language signal. Do not switch language within a response.",
+
   "entry": "1.1",
   "steps": {
 
@@ -10,7 +17,7 @@
         "q": "Welcome to m-pathy.\n\nEverything here begins with you and remains under your control.\n\nYour data, chats, and documents stay stored locally on your device.\nYour first message begins your own chain.\nEverything that follows is permanently linked to it.\n\nYour conversations and content belong to you.\nYou can access them at any time through the archive.\nEven if you stop paying for m-pathy, your data remains accessible to you.\n\nFrom here, I will guide you step by step and shape m-pathy around you.\n\nType “continue” when you are ready to begin."
       },
       "key": "onboarding.start",
-      "instruction": "Render full text exactly. Accept any input. Continue to next step.",
+      "instruction": "Render the full text from content.q in the user's browser language. Preserve the full meaning, paragraph order, and sentence structure as closely as possible. Do not summarize, shorten, expand, personalize, or add explanations. Accept any input. Continue to the next step.",
       "next": "1.2"
     },
 
