@@ -41,8 +41,8 @@
         "q": "Then let us use a formal/personal tone here.\n\nHow may I address you? Please enter your name."
       },
       "key": "user.name",
-    "instruction": "Render the full text from content.q in the user's browser language. Preserve the full meaning, paragraph order, and sentence structure as closely as possible. Use the tone selected in user.tone and express the question accordingly in the target language. Do not summarize, shorten, expand, personalize beyond the selected tone, or add explanations. Then wait for the user's input. Accept any non-empty text and store it exactly as entered.",      
-    "next": "1.4"
+        "instruction": "Render the full text from content.q in the user's browser language. Preserve the full meaning, paragraph order, and sentence structure as closely as possible. Use user.tone as a hard tone switch for the rendered question. If user.tone is Formal, use the formal form of address required by the target language throughout the full rendered output. If user.tone is Personal, use the personal or informal form of address required by the target language throughout the full rendered output. Do not mix formal and personal address within the same response. Do not summarize, shorten, expand, personalize beyond the selected tone, or add explanations. Then wait for the user's input. Accept any non-empty text and store it exactly as entered.",
+        "next": "1.4"
     },
 
     "1.4": {
