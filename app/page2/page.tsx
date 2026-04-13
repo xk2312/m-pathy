@@ -966,8 +966,8 @@ function Bubble({
         <Image
           src="/pictures/m13.png"
           alt="M13"
-          width={22}
-          height={22}
+          width={50}
+          height={50}
           style={{
             marginTop: isNarrowAssistant ? 0 : 6,
             marginBottom: isNarrowAssistant ? 8 : 0,
