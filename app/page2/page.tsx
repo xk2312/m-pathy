@@ -333,16 +333,7 @@ const LABELS: Record<string, Record<MEvent, string>> = {
   
   const PERSONAS: Record<string, { theme: keyof typeof THEMES }> = {
     default: { theme: "m_default" },
-  };
-  
-  // (optional, wenn in dieser Datei genutzt; sonst komplett entfernen)
-  const COUNCIL_COMMANDS: Record<string, string> = {
-    LUX: "INIT LUX-Anchor",
-    JURAXY: "INITIATE JURAXY-1/13",
-    DATAMASTER: "START DataMaster Session",
-    CHEMOMASTER: "START ChemoMaster 2.0 Loop",
-    SHADOWMASTER: "TRIGGER_SHADOW_ANALYSIS",
-  };  
+  }; 
 
   // Assistant-Layout: 640px Spalte + 13px Padding bei schmalen Viewports
   const ASSISTANT_MAX_WIDTH = 640;
@@ -2352,14 +2343,37 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
         try {
           const json = JSON.parse(trimmed.replace(/^data:\s*/, ""));
           const token = json?.choices?.[0]?.delta?.content ?? "";
-          if (token) {
-            fullContent += token;
-            assistantMsg.content = fullContent;
+          let renderQueue = "";
+let isRendering = false;
 
-            window.dispatchEvent(
-              new CustomEvent("mpathy:stream:delta", { detail: { text: token } })
-            );
-          }
+function typewriter() {
+  if (!renderQueue.length) {
+    isRendering = false;
+    return;
+  }
+
+  window.dispatchEvent(
+    new CustomEvent("mpathy:stream:delta", {
+      detail: { text: renderQueue[0] }
+    })
+  );
+
+  renderQueue = renderQueue.slice(1);
+
+  requestAnimationFrame(typewriter);
+    }
+
+    if (token) {
+      fullContent += token;
+      assistantMsg.content = fullContent;
+
+      renderQueue += token;
+
+      if (!isRendering) {
+        isRendering = true;
+        typewriter();
+      }
+    }
         } catch {
           /* ignore partial fragments */
         }
