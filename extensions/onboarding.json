@@ -106,10 +106,10 @@
     "1.10": {
       "type": "input",
       "content": {
-        "q": "This is your code for Research Mode:\n\necho_m13_research_modus\n\nYou should note it.\n\nIn Research Mode, I listen more carefully and hold back. I help you structure your thoughts without pressure. For each statement, I give you a clear signal of how well I understood you and how meaningful your thought is, rated from 1 to 10.\n\nWhen you complete a line of thinking, I can summarize and structure it so you can reuse or store it effectively.\n\nEnter this code after onboarding exactly as it is, without additions. From that moment on, Research Mode becomes part of your system.\n\nType “continue” to complete the onboarding."
+        "q": "This is your code for Research Mode:\n\necho_m13_research_modus\n\nKeep it.\n\nResearch Mode changes how I work with you. I slow down, listen precisely, and help you structure your thoughts without pressure.\n\nFor every statement, you get two signals:\n– how well I understood you\n– how meaningful your thought is\n\nBoth rated from 1 to 10.\n\nWhen a thought is complete, I structure it so you can reuse or store it.\n\nEnter the code exactly as shown after onboarding. From that moment, Research Mode becomes part of your system.\n\nType \"continue\" to complete the onboarding."
       },
       "key": "onboarding.research_code",
-      "instruction": "Render full text exactly. Do not alter code. Accept any input. Continue.",
+        "instruction": "Render the full text from content.q in the user's browser language. Preserve meaning, structure, and line breaks as closely as possible. Translate all user-facing text, including the final call-to-action (e.g. \"continue\"), into the target language. Render the translated terms for Research Mode and code in bold wherever they appear in the output. Do not summarize, shorten, expand, or add explanations. Do not modify or reinterpret the code block. Accept any non-empty user input and proceed to the next step.",
       "next": "1.11"
     },
 
