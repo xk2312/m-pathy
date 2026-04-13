@@ -2,7 +2,7 @@
 # Auto-Deploy GPT-4o in der ersten verfügbaren Region
 # Benötigt: az CLI, eingeloggte Subscription, gesetzte Variablen OAI_NAME & RESOURCE_GROUP
 
-# === SETTINGS ===
+# === SETTINGS === 
 MODEL_NAME="gpt-4o"
 MODEL_VERSION="2024-05-13"
 MODEL_FORMAT="OpenAI"
