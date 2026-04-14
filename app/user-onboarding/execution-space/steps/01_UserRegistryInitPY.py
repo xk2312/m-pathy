@@ -2,9 +2,15 @@
 
 import json
 import os
+import sys
 from datetime import UTC, datetime
 
-RUN_DIR = os.environ.get("RUN_DIR", "execution-space/runs/test_run")
+if len(sys.argv) < 2:
+    print("Missing run_path")
+    exit(1)
+
+RUN_DIR = sys.argv[1]
+os.makedirs(RUN_DIR, exist_ok=True)
 
 INPUT_PATH = os.path.join(RUN_DIR, "01_input.json")
 OUTPUT_PATH = os.path.join(RUN_DIR, "01_user_registry.json")
