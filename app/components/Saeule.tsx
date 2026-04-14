@@ -33,27 +33,19 @@ const ICON_MAP: Record<string, JSX.Element> = {
   const [items, setItems] = useState<string[]>([]);
 
 useEffect(() => {
-  async function init() {
-    let stored = null;
+  function handleRegistryUpdate(e: any) {
+    const registry = e.detail?.user_registry;
 
-    try {
-      const raw = localStorage.getItem("mpathy:user_registry");
-      if (raw) stored = JSON.parse(raw);
-    } catch {}
-
-    const result = await runExecution(stored);
-
-    setItems(result.items || []);
-
-    try {
-      localStorage.setItem(
-        "mpathy:user_registry",
-        JSON.stringify(result)
-      );
-    } catch {}
+    if (registry?.items) {
+      setItems(registry.items);
+    }
   }
 
-  init();
+  window.addEventListener("mpathy:registry:update", handleRegistryUpdate);
+
+  return () => {
+    window.removeEventListener("mpathy:registry:update", handleRegistryUpdate);
+  };
 }, []);
 
 useEffect(() => {

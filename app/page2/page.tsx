@@ -1571,7 +1571,37 @@ useEffect(() => {
   };
 }, [handleArchivePrepared]);
 
+useEffect(() => {
+  async function loadUserRegistry() {
+    try {
+      const dbRequest = indexedDB.open("Triketon", 1);
 
+      dbRequest.onsuccess = function () {
+        const db = dbRequest.result;
+        const tx = db.transaction("keyval", "readonly");
+        const store = tx.objectStore("keyval");
+
+        const getRequest = store.get("user_registry");
+
+        getRequest.onsuccess = function () {
+          const user_registry = getRequest.result;
+
+          if (user_registry?.items) {
+            window.dispatchEvent(
+              new CustomEvent("mpathy:registry:update", {
+                detail: { user_registry }
+              })
+            );
+          }
+        };
+      };
+    } catch (err) {
+      console.error("INDEXDB LOAD FAILED", err);
+    }
+  }
+
+  loadUserRegistry();
+}, []);
 // GC Step 12 – Combined paid=1 handler (Balance + Success + URL cleanup + Autofocus)
 useEffect(() => {
   if (typeof window === "undefined") return;
@@ -2408,6 +2438,15 @@ if (data?.status === "send_failed") {
 
 // 🔥 ENGINE RESPONSE HANDLING
 if (data?.message) {
+
+  if (data.user_registry) {
+    window.dispatchEvent(
+      new CustomEvent("mpathy:registry:update", {
+        detail: { user_registry: data.user_registry }
+      })
+    );
+  }
+
   return {
     id:
       typeof crypto !== 'undefined' &&
