@@ -1,78 +1,59 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "./Saeule.module.css";
-import { buildChatExport, chatExportToCSV } from "@/lib/exportChat";
-import { loadInitialSystemState } from "@/lib/system/initialLoad";
-import { saveUserActivationState } from "@/lib/db/userActivationState";
 import registry from "@/registry/registry.json";
-import { wallIcons } from "@/components/icons/wallIcons";
+import ArchiveIcon from "@/components/icons/wall/archive";
+import SettingsIcon from "@/components/icons/wall/settings";
+import NewChatIcon from "@/components/icons/wall/new_chat";
+import CsvDownloadIcon from "@/components/icons/wall/csv_download";
+import JsonDownloadIcon from "@/components/icons/wall/json_download";
+import { runNewChat } from "@/app/functions/system/newChat";
+import { openArchive } from "@/app/functions/system/openArchive";
+import { runCsvDownload } from "@/app/functions/download/csvDownload";
+import { runJsonDownload } from "@/app/functions/download/jsonDownload";
+import { runExecution } from "@/lib/system/runExecution";
 
 type Props = {
   onClearChat?: () => void;
   messages: any[];
 };
 
-type State = Awaited<ReturnType<typeof loadInitialSystemState>>;
-
 export default function Saeule({
   onClearChat,
   messages,
 }: Props) {
-  const [state, setState] = useState<State | null>(null);
 
-// Exportiert den aktuellen Chat-Thread als JSON oder CSV
-const exportThread = (format: "json" | "csv", messages: any[]) => {
-  try {
-    const exportObj = buildChatExport(messages);
-
-    let blob: Blob;
-    let extension: "json" | "csv" = format;
-
-    if (format === "csv") {
-      const csv = chatExportToCSV(exportObj);
-      const utf8BOM = "\uFEFF"; // Excel/Numbers safe
-      blob = new Blob([utf8BOM + csv], {
-        type: "text/csv;charset=utf-8",
-      });
-    } else {
-      const pretty = JSON.stringify(exportObj, null, 2);
-      blob = new Blob([pretty], {
-        type: "application/json",
-      });
-    }
-
-    const href = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    const date = new Date().toISOString().slice(0, 10);
-
-    link.href = href;
-    link.download = `mpathy-chat-${date}.${extension}`;
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(href);
-  } catch {
-    // Export-Fehler bleiben still – der User verliert nichts
-  }
+const ICON_MAP: Record<string, JSX.Element> = {
+  archive: <ArchiveIcon />,
+  settings: <SettingsIcon />,
+  new_chat: <NewChatIcon />,
+  csv_download: <CsvDownloadIcon />,
+  json_download: <JsonDownloadIcon />,
 };
-
-
-  const handleDeleteImmediate = () => {
-    try {
-      localStorage.removeItem("mpathy:thread:default");
-    } catch {}
-
-    try {
-      const newConversationId = crypto.randomUUID();
-      localStorage.setItem("mpathy:conversation:id", newConversationId);
-    } catch {}
-
-    onClearChat?.();
-  };
+  const [items, setItems] = useState<string[]>([]);
 
 useEffect(() => {
-  loadInitialSystemState().then(setState);
+  async function init() {
+    let stored = null;
+
+    try {
+      const raw = localStorage.getItem("mpathy:user_registry");
+      if (raw) stored = JSON.parse(raw);
+    } catch {}
+
+    const result = await runExecution(stored);
+
+    setItems(result.items || []);
+
+    try {
+      localStorage.setItem(
+        "mpathy:user_registry",
+        JSON.stringify(result)
+      );
+    } catch {}
+  }
+
+  init();
 }, []);
 
 useEffect(() => {
@@ -80,19 +61,19 @@ useEffect(() => {
     const cmd = e.detail?.command;
 
     if (cmd === "archive") {
-      window.dispatchEvent(new CustomEvent("mpathy:archive:open"));
+      openArchive();
     }
 
     if (cmd === "export_csv") {
-      exportThread("csv", messages || []);
+      runCsvDownload(messages || []);
     }
 
     if (cmd === "export_json") {
-      exportThread("json", messages || []);
+      runJsonDownload(messages || []);
     }
 
     if (cmd === "new_chat") {
-      handleDeleteImmediate();
+      runNewChat(onClearChat);
     }
   }
 
@@ -101,17 +82,34 @@ useEffect(() => {
   return () => {
     window.removeEventListener("mpathy:command", handleCommand);
   };
-}, [messages]);
+}, [messages, onClearChat]);
 
-if (!state) return null;
 
+const CATEGORY_ORDER = ["system", "applications", "functions"];
+const wallEntries = items
+  .map((id: string) =>
+    registry.registry.entries.find((e: any) => e.id === id)
+  )
+  .filter(
+    (entry: any) =>
+      entry &&
+      entry.state === "active" &&
+      entry.ui?.ui_surface === "wall"
+  );
+
+const grouped = CATEGORY_ORDER.reduce((acc: any, category) => {
+  acc[category] = wallEntries.filter(
+    (entry: any) => entry.category === category
+  );
+  return acc;
+}, {});
 return (
   <aside
     className={styles.saeule}
     aria-label="Column - Controls & Selection"
     data-test="saeule"
   >
-    {state.isOnboardingRequired ? (
+    {false ? (
       <button
       className={styles.onboardingButton}
       onClick={() => {
@@ -125,57 +123,35 @@ return (
   Start Onboarding
 </button>
     ) : (
-      state.activation.items
-        .sort((a, b) => a.order - b.order)
-        .map((item) => {
-          const entry = registry.registry.entries.find(
-            (e: any) => e.id === item.id
-          );
+      CATEGORY_ORDER.map((category) => {
+        const entries = grouped[category];
 
-          if (!entry) return null;
+        if (!entries || entries.length === 0) return null;
 
-          const isLocked =
-            state.onboardingStatus !== "completed" && item.id !== "onboarding";
+        return (
+          <React.Fragment key={category}>
+            <div className={styles.sectionTitle}>
+              {category}
+            </div>
 
-          return (
-            <button
-          key={item.id}
-          className={`${styles.wallItem} ${
-            state.activation.activeApp === item.id ? styles.active : ""
-          } ${isLocked ? styles.locked : ""}`}
-          onClick={async () => {
-            if (!state) return;
-
-            const isLocked =
-              state.onboardingStatus !== "completed" && item.id !== "onboarding";
-
-            if (isLocked) return;
-
-            const updatedActivation = {
-              ...state.activation,
-              activeApp: item.id
-            };
-
-            await saveUserActivationState(updatedActivation);
-
-            setState({
-              ...state,
-              activation: updatedActivation
-            });
-
-            window.dispatchEvent(
-              new CustomEvent("mpathy:command", {
-                detail: { command: entry.command || item.id }
-              })
-            );
-          }}
-        >
-            <span className={styles.iconBox}>
-            {wallIcons[item.id] || null}
-        </span>
-          </button>
+            {entries.map((entry: any) => (
+              <button
+                key={entry.id}
+                className={styles.wallItem}
+                onClick={() => {
+                  window.dispatchEvent(
+                    new CustomEvent("mpathy:command", {
+                    detail: { command: entry.command || entry.id }                    })
+                  );
+                }}
+              >
+                <span className={styles.iconBox}>
+                {ICON_MAP[entry.id] || null}                </span>
+              </button>
+            ))}
+          </React.Fragment>
         );
-        })
+      })
     )}
   </aside>
 );

@@ -216,11 +216,20 @@ if (!fs.existsSync(runPath)) {
   fs.mkdirSync(runPath, { recursive: true });
 }
 
+const inputPayload = collectedData?.user_registry
+  ? { user_registry: collectedData.user_registry }
+  : {};
+
 fs.writeFileSync(
   inputPath,
-  JSON.stringify(collectedData, null, 2),
+  JSON.stringify(inputPayload, null, 2),
   "utf-8"
 );
+
+console.log("STEP 0 INPUT PAYLOAD:");
+console.log(JSON.stringify(inputPayload, null, 2));
+
+console.log("STEP 0 FILE WRITTEN:", inputPath);
 
 try {
   const path = require("path");
@@ -238,14 +247,17 @@ if (!require("fs").existsSync(scriptPath)) {
   throw new Error(`run.sh not found at ${scriptPath}`);
 }
 
+console.log("STEP 1 STARTING CHAIN:", scriptPath, "RUN:", runPath);
+
 shellOutput = execSync(`bash ${scriptPath} ${runPath}`, {
   cwd: process.cwd(),
   encoding: "utf-8",
   maxBuffer: 1024 * 1024 * 10
 });
 
-  const match = shellOutput.match(/###JSON_START###([\s\S]*?)###JSON_END###/);
+console.log("STEP 2 CHAIN FINISHED");
 
+const match = shellOutput.match(/###JSON_START###([\s\S]*?)###JSON_END###/);
 if (!match) {
   console.error("RAW OUTPUT:", shellOutput);
 
@@ -256,8 +268,10 @@ if (!match) {
   });
 }
 
-const json = JSON.parse(match[1]);
+console.log("STEP 3 RAW MATCHED JSON:");
+console.log(match[1]);
 
+const json = JSON.parse(match[1]);
 setTimeout(() => {
   try {
     require("fs").rmSync(runPath, { recursive: true, force: true });

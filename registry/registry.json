@@ -3,200 +3,252 @@
     "version": "1.0",
     "entries": [
       {
-        "id": "onboarding_extension",
-        "type": "extension",
-        "category": "system",
-        "command": "echo-onboarding",
-        "path": "extensions/onboarding.json",
-        "ui": {
-          "icon": null,
-          "ui_surface": "internal",
-          "default_visible": false
-        },
-        "runtime": {
-          "mode": "internal"
-        }
-      },
+  "id": "onboarding_extension",
+  "type": "extension",
+  "category": "system",
+
+  "state": "active",
+
+  "command": "echo-onboarding",
+  "path": "extensions/onboarding.json",
+
+  "ui": {
+    "icon": null,
+    "ui_surface": "internal"
+  },
+
+  "runtime": {
+    "mode": "internal"
+  }
+},
+{
+  "id": "settings",
+  "type": "program",
+  "category": "system",
+
+  "state": "active",
+
+  "command": "open_settings",
+  "path": null,
+
+  "ui": {
+    "icon": "settings",
+    "ui_surface": "wall"
+  },
+
+  "runtime": {
+    "mode": "ui"
+  }
+},
+{
+  "id": "archive",
+  "type": "program",
+  "category": "system",
+
+  "state": "active",
+
+  "command": "open_archive",
+  "path": null,
+
+  "ui": {
+    "icon": "archive",
+    "ui_surface": "wall"
+  },
+
+  "runtime": {
+    "mode": "ui"
+  }
+},
+{
+  "id": "new_chat",
+  "type": "function",
+  "category": "functions",
+
+  "state": "active",
+
+  "command": "new_chat",
+  "path": "functions/system/newChat.ts",
+
+  "ui": {
+    "icon": "new_chat",
+    "ui_surface": "wall"
+  },
+
+  "runtime": {
+    "mode": "ui"
+  }
+},
       {
-        "id": "settings",
-        "type": "program",
-        "category": "system",
-        "command": null,
-        "path": null,
-        "ui": {
-          "icon": "settings",
-          "ui_surface": "wall",
-          "default_visible": false
-        },
-        "runtime": {
-          "mode": "ui"
-        }
-      },
+  "id": "csv_download",
+  "type": "function",
+  "category": "functions",
+
+  "state": "active",
+
+  "command": "export_csv",
+  "path": "functions/export/csvExport.ts",
+
+  "ui": {
+    "icon": "csv_download",
+    "ui_surface": "wall"
+  },
+
+  "runtime": {
+    "mode": "ui"
+  }
+},
+{
+  "id": "json_download",
+  "type": "function",
+  "category": "functions",
+
+  "state": "active",
+
+  "command": "export_json",
+  "path": "functions/export/jsonExport.ts",
+
+  "ui": {
+    "icon": "json_download",
+    "ui_surface": "wall"
+  },
+
+  "runtime": {
+    "mode": "ui"
+  }
+},
+{
+  "id": "linkedin_postpilot",
+  "type": "extension",
+  "category": "system",
+
+  "state": "active",
+
+  "command": "echo-linkedin-postpilot",
+  "path": "extensions/linkedin_postpilot.json",
+
+  "ui": {
+    "icon": null,
+    "ui_surface": "internal"
+  },
+
+  "runtime": {
+    "mode": "internal"
+  }
+},
+{
+  "id": "run_sachversicherung_pipeline",
+  "type": "execution",
+  "category": "system",
+
+  "state": "active",
+
+  "command": "run_sachversicherung_pipeline",
+  "path": "execution-space/bin/run.sh",
+
+  "ui": {
+    "icon": null,
+    "ui_surface": "internal"
+  },
+
+  "runtime": {
+    "mode": "execution"
+  }
+},
       {
-        "id": "archive",
-        "type": "program",
-        "category": "system",
-        "command": null,
-        "path": null,
-        "ui": {
-          "icon": "archive",
-          "ui_surface": "wall",
-          "default_visible": false
-        },
-        "runtime": {
-          "mode": "ui"
-        }
-      },
-      {
-        "id": "new_chat",
-        "type": "function",
-        "category": "functions",
-        "command": "new_chat",
-        "path": null,
-        "ui": {
-          "icon": "plus",
-          "ui_surface": "wall",
-          "default_visible": false
-        },
-        "runtime": {
-          "mode": "ui"
-        }
-      },
-      {
-        "id": "csv_export",
-        "type": "function",
-        "category": "functions",
-        "command": "export_csv",
-        "path": null,
-        "ui": {
-          "icon": "download",
-          "ui_surface": "wall",
-          "default_visible": false
-        },
-        "runtime": {
-          "mode": "ui"
-        }
-      },
-      {
-        "id": "json_export",
-        "type": "function",
-        "category": "functions",
-        "command": "export_json",
-        "path": null,
-        "ui": {
-          "icon": "code",
-          "ui_surface": "wall",
-          "default_visible": false
-        },
-        "runtime": {
-          "mode": "ui"
-        }
-      },
-      {
-        "id": "linkedin_postpilot",
-        "type": "extension",
-        "category": "system",
-        "command": "echo-linkedin-postpilot",
-        "path": "extensions/linkedin_postpilot.json",
-        "ui": {
-          "icon": null,
-          "ui_surface": "internal",
-          "default_visible": false
-        },
-        "runtime": {
-          "mode": "internal"
-        }
-      },
-            {
-        "id": "run_sachversicherung_pipeline",
-        "type": "execution",
-        "category": "system",
-        "command": "run_sachversicherung_pipeline",
-        "path": "execution-space/bin/run.sh",
-        "ui": {
-          "icon": null,
-          "ui_surface": "internal",
-          "default_visible": false
-        },
-        "runtime": {
-          "mode": "execution"
-        }
-      },
-      {
-        "id": "run_onboarding_pipeline",
-        "type": "execution",
-        "category": "system",
-        "command": "run_onboarding_pipeline",
-        "path": "execution-space/onboarding/run.sh",
-        "ui": {
-          "icon": null,
-          "ui_surface": "internal",
-          "default_visible": false
-        },
-        "runtime": {
-          "mode": "execution"
-        }
-      },
-      {
-        "id": "baz_eu_ai_check_medical",
-        "type": "extension",
-        "category": "system",
-        "command": "echo-baz-eu-ai-check-medical",
-        "path": "extensions/baz_eu_ai_check_medical.json",
-        "ui": {
-          "icon": null,
-          "ui_surface": "internal",
-          "default_visible": false
-        },
-        "runtime": {
-          "mode": "internal"
-        }
-      },
-      {
-        "id": "lcis_engine",
-        "type": "extension",
-        "category": "system",
-        "command": "echo-lcis-engine",
-        "path": "extensions/lcis_engine.json",
-        "ui": {
-          "icon": null,
-          "ui_surface": "internal",
-          "default_visible": false
-        },
-        "runtime": {
-          "mode": "internal"
-        }
-      },
-      {
-        "id": "kson_engine",
-        "type": "extension",
-        "category": "system",
-        "command": "echo-kson-engine",
-        "path": "extensions/kson_engine.json",
-        "ui": {
-          "icon": null,
-          "ui_surface": "internal",
-          "default_visible": false
-        },
-        "runtime": {
-          "mode": "internal"
-        }
-      },
-      {
-        "id": "run_sachversicherung_pipeline",
-        "type": "execution",
-        "category": "system",
-        "command": "run_sachversicherung_pipeline",
-        "path": "execution-space/bin/run.sh",
-        "ui": {
-          "icon": null,
-          "ui_surface": "internal",
-          "default_visible": false
-        },
-        "runtime": {
-          "mode": "execution"
-        }
-      }
+  "id": "run_onboarding_pipeline",
+  "type": "execution",
+  "category": "system",
+
+  "state": "active",
+
+  "command": "run_onboarding_pipeline",
+  "path": "execution-space/onboarding/run.sh",
+
+  "ui": {
+    "icon": null,
+    "ui_surface": "internal"
+  },
+
+  "runtime": {
+    "mode": "execution"
+  }
+},
+{
+  "id": "baz_eu_ai_check_medical",
+  "type": "extension",
+  "category": "system",
+
+  "state": "active",
+
+  "command": "echo-baz-eu-ai-check-medical",
+  "path": "extensions/baz_eu_ai_check_medical.json",
+
+  "ui": {
+    "icon": null,
+    "ui_surface": "internal"
+  },
+
+  "runtime": {
+    "mode": "internal"
+  }
+},
+{
+  "id": "lcis_engine",
+  "type": "extension",
+  "category": "system",
+
+  "state": "active",
+
+  "command": "echo-lcis-engine",
+  "path": "extensions/lcis_engine.json",
+
+  "ui": {
+    "icon": null,
+    "ui_surface": "internal"
+  },
+
+  "runtime": {
+    "mode": "internal"
+  }
+},
+{
+  "id": "kson_engine",
+  "type": "extension",
+  "category": "system",
+
+  "state": "active",
+
+  "command": "echo-kson-engine",
+  "path": "extensions/kson_engine.json",
+
+  "ui": {
+    "icon": null,
+    "ui_surface": "internal"
+  },
+
+  "runtime": {
+    "mode": "internal"
+  }
+},
+{
+  "id": "run_sachversicherung_pipeline",
+  "type": "execution",
+  "category": "system",
+
+  "state": "active",
+
+  "command": "run_sachversicherung_pipeline",
+  "path": "execution-space/bin/run.sh",
+
+  "ui": {
+    "icon": null,
+    "ui_surface": "internal"
+  },
+
+  "runtime": {
+    "mode": "execution"
+  }
+}
     ]
   }
 }
