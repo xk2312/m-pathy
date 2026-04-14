@@ -85,7 +85,7 @@
 
   "state": "active",
 
-  "command": "export_csv",
+  "command": "csv_download",
   "path": "functions/download/csvDownload.ts",      
   "ui": {
     "icon": "csv_download",
@@ -103,7 +103,7 @@
 
   "state": "active",
 
-  "command": "export_json",
+  "command": "json_download",
 "path": "functions/download/jsonDownload.ts",
   "ui": {
     "icon": "json_download",
