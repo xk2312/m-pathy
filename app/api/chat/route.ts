@@ -197,13 +197,28 @@ if (engineResult.step?.type === "execution") {
 
 const fs = require("fs");
 
+const path = require("path");
+
 const runId = `${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
+
+const registry = require("@/registry/registry.json");
+
+const action = engineResult?.step?.action;
+
+const executionEntry = registry.registry.entries.find(
+  (e: any) => e.type === "execution" && e.id === action
+);
+
+if (!executionEntry) {
+  throw new Error(`No execution entry found for action: ${action}`);
+}
+const executionBasePath = executionEntry.path
+  .replace("/bin/run.sh", "")
+  .replace(/\/+$/, "");
 
 const runPath = path.join(
   process.cwd(),
-  "app",
-  "doctors-advisor",
-  "execution-space",
+  executionBasePath,
   "runs",
   runId
 );
@@ -237,14 +252,7 @@ console.log("STEP 0 FILE WRITTEN:", inputPath);
 try {
   const path = require("path");
 
-const scriptPath = path.join(
-  process.cwd(),
-  "app",
-  "doctors-advisor",
-  "execution-space",
-  "bin",
-  "run.sh"
-);
+const scriptPath = path.join(process.cwd(), executionEntry.path);
 
 if (!require("fs").existsSync(scriptPath)) {
   throw new Error(`run.sh not found at ${scriptPath}`);

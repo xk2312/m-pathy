@@ -143,7 +143,7 @@
   "state": "active",
 
   "command": "run_sachversicherung_pipeline",
-  "path": "execution-space/bin/run.sh",
+  "path": "app/doctors-advisor/execution-space/bin/run.sh",
 
   "ui": {
     "icon": null,
@@ -162,7 +162,7 @@
   "state": "active",
 
   "command": "run_onboarding_pipeline",
-  "path": "execution-space/onboarding/run.sh",
+  "path": "app/user-onboarding/execution-space/bin/run.sh",
 
   "ui": {
     "icon": null,
@@ -238,7 +238,7 @@
   "state": "active",
 
   "command": "run_sachversicherung_pipeline",
-  "path": "execution-space/bin/run.sh",
+  "path": "app/doctors-advisor/execution-space/bin/run.sh",
 
   "ui": {
     "icon": null,
