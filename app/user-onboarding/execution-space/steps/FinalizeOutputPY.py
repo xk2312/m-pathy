@@ -35,15 +35,15 @@ def main():
 
     # 🔥 USER REGISTRY (DEIN SYSTEM STATE)
     user_registry = {
-        "items": [
-            "settings",
-            "archive",
-            "new_chat",
-            "csv_export",
-            "json_export"
-        ],
-        "updated_at": datetime.utcnow().isoformat()
-    }
+    "items": [
+        "settings",
+        "archive",
+        "new_chat",
+        "csv_download",
+        "json_download"
+    ],
+    "updated_at": datetime.utcnow().isoformat()
+}
 
     # 🔥 FINAL TEXT (UI + USER GUIDANCE)
     final_text = """
