@@ -109,20 +109,20 @@ return (
     aria-label="Column - Controls & Selection"
     data-test="saeule"
   >
-    {false ? (
-      <button
-      className={styles.onboardingButton}
-      onClick={() => {
+    {items.length === 0 ? (
+  <button
+    className={styles.onboardingButton}
+    onClick={() => {
       window.dispatchEvent(
         new CustomEvent("mpathy:command", {
           detail: { command: "onboarding" }
         })
       );
     }}
-    >
-  Start Onboarding
-</button>
-    ) : (
+  >
+    Start Onboarding
+  </button>
+) : (
       CATEGORY_ORDER.map((category) => {
         const entries = grouped[category];
 
