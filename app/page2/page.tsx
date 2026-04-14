@@ -2490,18 +2490,21 @@ if (data?.message) {
     console.log("[M13][FRONTEND] DISPATCH DONE");
   }
 
-  return {
+   return {
     id:
       typeof crypto !== 'undefined' &&
       typeof (crypto as any).randomUUID === 'function'
         ? (crypto as any).randomUUID()
         : `${Date.now()}_${Math.random().toString(16).slice(2)}`,
-    role: "assistant",
+    role:
+      data?.handoff_mode === "execution_user_injection"
+        ? "user"
+        : "assistant",
     content: typeof data.message === "string"
       ? data.message
       : JSON.stringify(data.message, null, 2),
     format: "markdown"
-  };
+  } as any as ChatMessage;
 }
 
 // FreeGate-Limit: Login erforderlich
@@ -2787,8 +2790,7 @@ sendMessageLocal(injectedContext)
   const { context: outgoing, used } = withArchiveInjection(optimistic);
 
   console.info("[CHAT][P3][B2] sending normal chat message");
-  const assistant = await sendMessageLocal(outgoing);
-
+  let assistant = await sendMessageLocal(outgoing);
   if (used) {
     console.info("[CHAT][P3][B3] injection used, clearing archive context");
     clearArchiveChatContext();
@@ -2797,6 +2799,34 @@ sendMessageLocal(injectedContext)
   if (assistant.content === t("gc_please_login_to_continue")) {
     console.warn("[CHAT][P3][B4] login required response detected");
     return;
+  }
+
+
+  if (
+    assistant.role === "user" &&
+    (assistant as any)?.meta?.handoff_mode === "execution_user_injection"
+  ) {
+    console.log("[M13][FRONTEND] EXECUTION USER INJECTION DETECTED");
+
+    const injectedUserMessage = {
+      ...assistant,
+      id: crypto.randomUUID(),
+    };
+
+    setMessages((prev) => {
+      const base = Array.isArray(prev) ? prev : [];
+      const next = truncateMessages([
+        ...base,
+        injectedUserMessage,
+      ]);
+      persistMessages(next);
+      return next;
+    });
+
+    pendingAutoScrollRef.current = true;
+    setStickToBottom(true);
+
+    assistant = await sendMessageLocal([injectedUserMessage]);
   }
 
 

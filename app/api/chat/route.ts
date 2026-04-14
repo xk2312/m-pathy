@@ -308,6 +308,10 @@ setTimeout(() => {
 const executionResponse = {
   role: "assistant",
   content: json.final_text_with_questions,
+  message: json.final_text_with_questions,
+  handoff_mode: "execution_user_injection",
+  user_registry: json?.user_registry ?? null,
+  meta: json?.meta ?? null,
   state: {
     active: false,
     extensionId: null,
@@ -323,6 +327,12 @@ console.log(
 console.log(
   "[M13][ROUTE][EXECUTION] RESPONSE HAS user_registry",
   Object.prototype.hasOwnProperty.call(executionResponse, "user_registry")
+);
+console.log(
+  "[M13][ROUTE][EXECUTION] RESPONSE user_registry.items",
+  Array.isArray(executionResponse?.user_registry?.items)
+    ? executionResponse.user_registry.items
+    : null
 );
 
 return NextResponse.json(executionResponse);
