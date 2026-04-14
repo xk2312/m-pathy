@@ -2440,6 +2440,13 @@ if (data?.status === "send_failed") {
 if (data?.message) {
 
   if (data.user_registry) {
+    try {
+      localStorage.setItem(
+        "mpathy:user_registry",
+        JSON.stringify(data.user_registry)
+      );
+    } catch {}
+
     window.dispatchEvent(
       new CustomEvent("mpathy:registry:update", {
         detail: { user_registry: data.user_registry }

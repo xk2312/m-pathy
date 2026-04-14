@@ -30,8 +30,22 @@ const ICON_MAP: Record<string, JSX.Element> = {
   csv_download: <CsvDownloadIcon />,
   json_download: <JsonDownloadIcon />,
 };
-  const [items, setItems] = useState<string[]>([]);
+const [items, setItems] = useState<string[]>([]);
 
+// 🔥 1. Initial Load aus localStorage
+useEffect(() => {
+  try {
+    const stored = localStorage.getItem("mpathy:user_registry");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed?.items) {
+        setItems(parsed.items);
+      }
+    }
+  } catch {}
+}, []);
+
+// 🔥 2. Live Updates via Event
 useEffect(() => {
   function handleRegistryUpdate(e: any) {
     const registry = e.detail?.user_registry;
@@ -48,33 +62,7 @@ useEffect(() => {
   };
 }, []);
 
-useEffect(() => {
-  function handleCommand(e: any) {
-    const cmd = e.detail?.command;
 
-    if (cmd === "archive") {
-      openArchive();
-    }
-
-    if (cmd === "export_csv") {
-      runCsvDownload(messages || []);
-    }
-
-    if (cmd === "export_json") {
-      runJsonDownload(messages || []);
-    }
-
-    if (cmd === "new_chat") {
-      runNewChat(onClearChat);
-    }
-  }
-
-  window.addEventListener("mpathy:command", handleCommand);
-
-  return () => {
-    window.removeEventListener("mpathy:command", handleCommand);
-  };
-}, [messages, onClearChat]);
 
 
 const CATEGORY_ORDER = ["system", "applications", "functions"];
@@ -127,16 +115,19 @@ return (
             </div>
 
             {entries.map((entry: any) => (
-              <button
-                key={entry.id}
-                className={styles.wallItem}
-                onClick={() => {
-                  window.dispatchEvent(
-                    new CustomEvent("mpathy:command", {
-                    detail: { command: entry.command || entry.id }                    })
-                  );
-                }}
-              >
+  <button
+    key={entry.id}
+    className={styles.wallItem}
+    onClick={() => {
+      if (entry?.runtime?.mode === "ui" && entry?.path) {
+        import(`@/app/${entry.path}`).then((mod) => {
+          if (typeof mod.default === "function") {
+            mod.default({ messages, onClearChat });
+          }
+        });
+      }
+    }}
+  >
                 <span className={styles.iconBox}>
                 {ICON_MAP[entry.id] || null}                </span>
               </button>
