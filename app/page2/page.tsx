@@ -1574,9 +1574,11 @@ useEffect(() => {
 useEffect(() => {
   async function loadUserRegistry() {
     try {
+      console.log("[M13][FRONTEND][REGISTRY_BOOT] START");
       const dbRequest = indexedDB.open("Triketon", 1);
 
       dbRequest.onsuccess = function () {
+        console.log("[M13][FRONTEND][REGISTRY_BOOT] INDEXEDDB OPEN SUCCESS");
         const db = dbRequest.result;
         const tx = db.transaction("keyval", "readonly");
         const store = tx.objectStore("keyval");
@@ -1586,12 +1588,22 @@ useEffect(() => {
         getRequest.onsuccess = function () {
           const user_registry = getRequest.result;
 
+          console.log("[M13][FRONTEND][REGISTRY_BOOT] INDEXEDDB user_registry", user_registry ?? null);
+          console.log(
+            "[M13][FRONTEND][REGISTRY_BOOT] INDEXEDDB user_registry.items",
+            Array.isArray(user_registry?.items) ? user_registry.items : null
+          );
+
           if (user_registry?.items) {
+            console.log("[M13][FRONTEND][REGISTRY_BOOT] DISPATCHING mpathy:registry:update FROM INDEXEDDB");
             window.dispatchEvent(
               new CustomEvent("mpathy:registry:update", {
                 detail: { user_registry }
               })
             );
+            console.log("[M13][FRONTEND][REGISTRY_BOOT] DISPATCH DONE");
+          } else {
+            console.log("[M13][FRONTEND][REGISTRY_BOOT] NO user_registry.items FOUND IN INDEXEDDB");
           }
         };
       };
@@ -2426,32 +2438,56 @@ function typewriter() {
 const data = await res.json();
 
 console.log("[M13][FRONTEND] RAW RESPONSE", data);
+console.log("[M13][FRONTEND] RAW RESPONSE KEYS", Object.keys(data || {}));
+console.log("[M13][FRONTEND] HAS data.message", !!data?.message);
+console.log("[M13][FRONTEND] HAS data.content", !!data?.content);
+console.log("[M13][FRONTEND] HAS data.user_registry", !!data?.user_registry);
+console.log("[M13][FRONTEND] data.user_registry VALUE", data?.user_registry ?? null);
+console.log(
+  "[M13][FRONTEND] data.user_registry.items",
+  Array.isArray(data?.user_registry?.items) ? data.user_registry.items : null
+);
 
 if (data?.state) {
   console.log("[M13][FRONTEND] STATE RECEIVED", data.state);
   setSystemState(data.state);
 }
-
 if (data?.status === "send_failed") {
   throw new Error("send_failed");
 }
 
 // 🔥 ENGINE RESPONSE HANDLING
+console.log("[M13][FRONTEND] PRE MESSAGE BRANCH CHECK", {
+  hasMessage: !!data?.message,
+  hasContent: !!data?.content,
+  hasUserRegistry: !!data?.user_registry,
+});
+
 if (data?.message) {
+  console.log("[M13][FRONTEND] ENTERED data.message BRANCH");
 
   if (data.user_registry) {
+    console.log("[M13][FRONTEND] ENTERED data.user_registry BRANCH");
+    console.log("[M13][FRONTEND] WRITING localStorage key", "mpathy:user_registry");
+    console.log("[M13][FRONTEND] WRITING user_registry VALUE", data.user_registry);
+
     try {
       localStorage.setItem(
         "mpathy:user_registry",
         JSON.stringify(data.user_registry)
       );
-    } catch {}
+      console.log("[M13][FRONTEND] localStorage WRITE OK");
+    } catch (err) {
+      console.error("[M13][FRONTEND] localStorage WRITE FAILED", err);
+    }
 
+    console.log("[M13][FRONTEND] DISPATCHING mpathy:registry:update");
     window.dispatchEvent(
       new CustomEvent("mpathy:registry:update", {
         detail: { user_registry: data.user_registry }
       })
     );
+    console.log("[M13][FRONTEND] DISPATCH DONE");
   }
 
   return {
@@ -2479,6 +2515,13 @@ if (data && data.status === "free_limit_reached") {
     format: "markdown",
   } as ChatMessage;
 }
+
+  console.log("[M13][FRONTEND] ENTERING FALLBACK RESPONSE PATH");
+  console.log("[M13][FRONTEND] FALLBACK data.user_registry", data?.user_registry ?? null);
+  console.log(
+    "[M13][FRONTEND] FALLBACK data.user_registry.items",
+    Array.isArray(data?.user_registry?.items) ? data.user_registry.items : null
+  );
 
   const assistant = data.assistant ?? data;
   const content = assistant.content ?? "";

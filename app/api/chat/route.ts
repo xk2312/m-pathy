@@ -270,7 +270,8 @@ console.log("STEP 2 CHAIN FINISHED");
 
 const match = shellOutput.match(/###JSON_START###([\s\S]*?)###JSON_END###/);
 if (!match) {
-  console.error("RAW OUTPUT:", shellOutput);
+  console.error("[M13][ROUTE][EXECUTION] JSON MARKER MATCH FAILED");
+  console.error("[M13][ROUTE][EXECUTION] RAW OUTPUT:", shellOutput);
 
   return NextResponse.json({
     role: "assistant",
@@ -283,13 +284,28 @@ console.log("STEP 3 RAW MATCHED JSON:");
 console.log(match[1]);
 
 const json = JSON.parse(match[1]);
+
+console.log("[M13][ROUTE][EXECUTION] PARSED JSON KEYS", Object.keys(json || {}));
+console.log("[M13][ROUTE][EXECUTION] HAS user_registry", !!json?.user_registry);
+console.log("[M13][ROUTE][EXECUTION] user_registry VALUE", json?.user_registry ?? null);
+console.log(
+  "[M13][ROUTE][EXECUTION] user_registry.items",
+  Array.isArray(json?.user_registry?.items) ? json.user_registry.items : null
+);
+console.log(
+  "[M13][ROUTE][EXECUTION] final_text_with_questions length",
+  typeof json?.final_text_with_questions === "string"
+    ? json.final_text_with_questions.length
+    : null
+);
+
 setTimeout(() => {
   try {
     require("fs").rmSync(runPath, { recursive: true, force: true });
   } catch {}
 }, 5000);
 
-return NextResponse.json({
+const executionResponse = {
   role: "assistant",
   content: json.final_text_with_questions,
   state: {
@@ -297,9 +313,25 @@ return NextResponse.json({
     extensionId: null,
     stepId: null
   }
-});
+};
+
+console.log("[M13][ROUTE][EXECUTION] RESPONSE PAYLOAD", executionResponse);
+console.log(
+  "[M13][ROUTE][EXECUTION] RESPONSE KEYS",
+  Object.keys(executionResponse || {})
+);
+console.log(
+  "[M13][ROUTE][EXECUTION] RESPONSE HAS user_registry",
+  Object.prototype.hasOwnProperty.call(executionResponse, "user_registry")
+);
+
+return NextResponse.json(executionResponse);
   } catch (err: any) {
     console.error("[SHELL ERROR]", err);
+    console.error("[M13][ROUTE][EXECUTION] SHELL ERROR MESSAGE", err?.message ?? null);
+    console.error("[M13][ROUTE][EXECUTION] RUN PATH", runPath);
+    console.error("[M13][ROUTE][EXECUTION] INPUT PATH", inputPath);
+    console.error("[M13][ROUTE][EXECUTION] ACTION", action);
     throw new Error("Execution Pipeline failed before producing output");  }
 
 let parsed: any = null;
