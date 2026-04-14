@@ -216,9 +216,12 @@ if (!fs.existsSync(runPath)) {
   fs.mkdirSync(runPath, { recursive: true });
 }
 
-const inputPayload = collectedData?.user_registry
-  ? { user_registry: collectedData.user_registry }
-  : {};
+const inputPayload =
+  collectedData?.user_registry
+    ? { user_registry: collectedData.user_registry }
+    : Object.keys(collectedData).length > 0
+      ? collectedData
+      : {};
 
 fs.writeFileSync(
   inputPath,
