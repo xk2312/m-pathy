@@ -88,3 +88,56 @@
   opacity: 0.35;
   pointer-events: none;
 }
+.wallItem {
+  width: 100%;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding: 0 12px;
+
+  border-radius: 10px;
+  border: 1px solid transparent;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  transition:
+    background 120ms ease,
+    border-color 120ms ease;
+}
+
+.wallItem:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.08);
+}
+
+.iconBox {
+  width: 18px;
+  height: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+.iconBox svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sectionTitle {
+  font-size: 12px;
+  color: rgba(245,246,247,0.5);
+
+  margin-top: 12px;
+  margin-bottom: 4px;
+
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
