@@ -94,18 +94,19 @@ export default function Saeule({ onClearChat, messages }: Props) {
             <React.Fragment key={category}>
               <div className={styles.sectionTitle}>{category}</div>
 
-              {entries.map((entry: any) => (
-                <button
-                  key={entry.id}
-                  className={styles.wallItem}
-                  onClick={() => {
-                    window.dispatchEvent(
-                      new CustomEvent("mpathy:command", {
-                        detail: { command: entry.command },
-                      })
-                    );
-                  }}
-                >
+              {entries.map((entry: any, index: number) => (
+              <button
+                key={entry.id}
+                className={`${styles.wallItem} ${styles["m13-enter"]}`}
+                style={{ animationDelay: `${index * 100}ms` }}
+                onClick={() => {
+                  window.dispatchEvent(
+                    new CustomEvent("mpathy:command", {
+                      detail: { command: entry.command },
+                    })
+                  );
+                }}
+              >
                   <span className={styles.iconBox}>
                     {ICON_REGISTRY[entry.id] || null}
                   </span>
