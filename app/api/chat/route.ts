@@ -973,11 +973,13 @@ const res = NextResponse.json(
           updated_at: executionArtifact?.meta?.timestamp ?? null
         }
       : null,
-    state: {
+    state: executionArtifact
+  ? {
       active: false,
       extensionId: null,
       stepId: null
     }
+  : engineResult.state
   },
   { status: 200 }
 );
