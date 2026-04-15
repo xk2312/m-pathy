@@ -2862,13 +2862,19 @@ if (
     });
 
     assistant = await sendMessageLocal(
-      [injectedUserMessage],
-      {
-        active: false,
-        extensionId: null,
-        stepId: null,
-      }
-    );   console.log("[M13][HANDOFF][SECOND_CALL][AFTER]", {
+  [
+    {
+      role: "user",
+      content: String(injectedUserMessage.content ?? ""),
+      format: "markdown",
+    },
+  ],
+  {
+    active: false,
+    extensionId: null,
+    stepId: null,
+  }
+);   console.log("[M13][HANDOFF][SECOND_CALL][AFTER]", {
       role: assistant?.role ?? null,
       contentLength: String(assistant?.content ?? "").length,
       contentPreview: String(assistant?.content ?? "").slice(0, 120),
