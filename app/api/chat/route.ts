@@ -368,10 +368,11 @@ const previousCounter =
   raw ? JSON.parse(raw)?.counter ?? 0 : 0;
 
 // HARD GUARD: prevent double counting in same request chain
-const lastUserContent =
-  lastMessageObj?.role === "user"
-    ? String(lastMessageObj?.content ?? "").trim()
-    : "";
+const lastRealUserMessage = [...(body.messages ?? [])]
+  .reverse()
+  .find((m) => m?.role === "user");
+
+const lastUserContent = String(lastRealUserMessage?.content ?? "").trim();
 
 const requestId = crypto
   .createHash("sha1")
