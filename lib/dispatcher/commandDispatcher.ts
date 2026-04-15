@@ -34,7 +34,28 @@ async function executeCommand(command: string) {
   return;
 }
 
-    const mod = await import(`../../${entry.path}`);const fn = mod?.default;
+let mod;
+
+switch (entry.path) {
+  case "functions/system/newChat":
+    mod = await import("@/app/functions/system/newChat");
+    break;
+
+  case "functions/system/openArchive":
+    mod = await import("@/app/functions/system/openArchive");
+    break;
+
+  case "functions/download/csvDownload":
+    mod = await import("@/app/functions/download/csvDownload");
+    break;
+
+  case "functions/download/jsonDownload":
+    mod = await import("@/app/functions/download/jsonDownload");
+    break;
+
+  default:
+    throw new Error(`Unknown function path: ${entry.path}`);
+}   const fn = mod?.default;
 
     if (typeof fn !== "function") {
       console.error(
