@@ -973,7 +973,6 @@ res.cookies.set({
   value: JSON.stringify({
   conversationId,
   counter: serverCounter,
-  lastRequestId: requestId,
 }),
   httpOnly: true,
   secure: true,
