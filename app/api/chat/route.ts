@@ -179,19 +179,6 @@ export async function POST(req: NextRequest) {
     );
 
 const lastMessageObj = body.messages?.[body.messages.length - 1];
-const lastMessageMeta =
-  lastMessageObj && typeof lastMessageObj === "object"
-    ? (lastMessageObj as any).meta
-    : null;
-
-if (lastMessageMeta?.handoff_mode === "execution_user_injection") {
-  console.log("[M13][ROUTE] BLOCKED SYSTEM MESSAGE LOOP");
-  return NextResponse.json({
-    role: "assistant",
-    content: "",
-    state: { active: false, extensionId: null, stepId: null }
-  });
-}
 
 const lastMessageRaw = lastMessageObj?.content || "";
 const lastMessage = String(lastMessageRaw)
@@ -337,37 +324,20 @@ setTimeout(() => {
   } catch {}
 }, 5000);
 
-const executionResponse = {
-  role: "assistant",
-  content: json.final_text_with_questions,
-  message: json.final_text_with_questions,
-  handoff_mode: "execution_user_injection",
-  user_registry: json?.user_registry ?? null,
-  meta: json?.meta ?? null,
-  state: {
-    active: false,
-    extensionId: null,
-    stepId: null
-  }
-};
+const isLLMArtifact = json?.artifact_type === "llm_render_payload";
 
-console.log("[M13][ROUTE][EXECUTION] RESPONSE PAYLOAD", executionResponse);
-console.log(
-  "[M13][ROUTE][EXECUTION] RESPONSE KEYS",
-  Object.keys(executionResponse || {})
-);
-console.log(
-  "[M13][ROUTE][EXECUTION] RESPONSE HAS user_registry",
-  Object.prototype.hasOwnProperty.call(executionResponse, "user_registry")
-);
-console.log(
-  "[M13][ROUTE][EXECUTION] RESPONSE user_registry.items",
-  Array.isArray(executionResponse?.user_registry?.items)
-    ? executionResponse.user_registry.items
-    : null
-);
+if (isLLMArtifact) {
+  console.log("[M13][ROUTE][EXECUTION] LLM ARTIFACT DETECTED");
 
-return NextResponse.json(executionResponse);
+  (global as any).__m13ExecutionArtifact = {
+    content: json?.content ?? {},
+    data: json?.data ?? {},
+    meta: json?.meta ?? {}
+  };
+} else {
+  throw new Error("Execution returned no supported output artifact");
+}
+
   } catch (err: any) {
     console.error("[SHELL ERROR]", err);
     console.error("[M13][ROUTE][EXECUTION] SHELL ERROR MESSAGE", err?.message ?? null);
@@ -376,31 +346,6 @@ return NextResponse.json(executionResponse);
     console.error("[M13][ROUTE][EXECUTION] ACTION", action);
     throw new Error("Execution Pipeline failed before producing output");  }
 
-let parsed: any = null;
-
-try {
-  const jsonStart = shellOutput.indexOf("{");
-  const jsonEnd = shellOutput.lastIndexOf("}");
-
-  if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
-    const jsonString = shellOutput.slice(jsonStart, jsonEnd + 1);
-    parsed = JSON.parse(jsonString);
-  } else {
-    console.error("[EXECUTION PARSE ERROR] No JSON boundaries found");
-  }
-} catch (e) {
-  console.error("[EXECUTION PARSE ERROR]", e);
-}
-
-const content =
-  parsed?.final_text_with_questions ||
-  "Execution completed, but no formatted output was returned.";
-
-return NextResponse.json({
-  role: "assistant",
-  content,
-  state: { active: false, extensionId: null, stepId: null }
-});
 }
 const incomingConversationId =
   typeof (body as any)?.conversationId === "string" &&
@@ -674,26 +619,15 @@ const engineMessage: ChatMessage | null = engineResult.active
     })()
   : null;
 
-const resetContext = (body as any)?.resetContext === true;
+const messageCore: ChatMessage[] = body.messages;
 
-const messageCore: ChatMessage[] = resetContext
-  ? body.messages.slice(-1)
-  : body.messages;
+const executionArtifact =
+  typeof (global as any).__m13ExecutionArtifact === "object" &&
+  (global as any).__m13ExecutionArtifact !== null
+    ? (global as any).__m13ExecutionArtifact
+    : null;
 
-const messages: ChatMessage[] = systemPrompt
-  ? [
-      { role: "system", content: systemPrompt },
-      languageGuard,
-      ...messageCore,
-      ...(resetContext ? [] : (engineMessage ? [engineMessage] : [])),
-    ]
-  : [
-      languageGuard,
-      ...messageCore,
-      ...(resetContext ? [] : (engineMessage ? [engineMessage] : [])),
-    ];
-
-const irssRuntimePrompt = {
+const irssRuntimePrompt: ChatMessage = {
   role: "system",
   content: [
     "Respond with an IRSS JSON block followed by the answer.",
@@ -748,43 +682,74 @@ const irssContextPrompt: ChatMessage = {
     `Use this value exactly in the IRSS JSON.`
 };
 
-const handoffRenderPrompt: ChatMessage = {
-  role: "system",
-  content: [
-    "Render the user content in the target language only.",
-    `Target language: ${localeFromCookie}.`,
-    "Preserve meaning.",
-    "Do not add explanations.",
-    "Do not add metadata.",
-    "Do not output JSON.",
-  ].join("\n"),
+const messages: ChatMessage[] = executionArtifact
+  ? (
+    systemPrompt
+      ? [
+          { role: "system", content: systemPrompt },
+          languageGuard,
+          {
+            role: "user",
+            content: [
+              String(executionArtifact?.content?.q ?? "").trim(),
+              "",
+              "DATA:",
+              JSON.stringify(executionArtifact?.data ?? {}, null, 2),
+              "",
+              "META:",
+              JSON.stringify(executionArtifact?.meta ?? {}, null, 2)
+            ].join("\n")
+          }
+        ]
+      : [
+          languageGuard,
+          {
+            role: "user",
+            content: [
+              String(executionArtifact?.content?.q ?? "").trim(),
+              "",
+              "DATA:",
+              JSON.stringify(executionArtifact?.data ?? {}, null, 2),
+              "",
+              "META:",
+              JSON.stringify(executionArtifact?.meta ?? {}, null, 2)
+            ].join("\n")
+          }
+        ]
+  )
+  : (
+      systemPrompt
+        ? [
+            { role: "system", content: systemPrompt },
+            languageGuard,
+            ...messageCore,
+            ...(engineMessage ? [engineMessage] : []),
+          ]
+        : [
+            languageGuard,
+            ...messageCore,
+            ...(engineMessage ? [engineMessage] : []),
+          ]
+    );
+
+
+
+
+    const payload = {
+  messages: [
+    irssRuntimePrompt,
+    irssContextPrompt,
+    ...messages
+  ],
+  temperature: 0.7,
+  max_tokens: MODEL_MAX_TOKENS,
 };
 
-const payload = resetContext
-  ? {
-      messages: [
-        handoffRenderPrompt,
-        ...messageCore
-      ],
-      temperature: 0.2,
-      max_tokens: MODEL_MAX_TOKENS,
-    }
-  : {
-      messages: [
-        irssRuntimePrompt,
-        irssContextPrompt,
-        ...messages
-      ],
-      temperature: 0.7,
-      max_tokens: MODEL_MAX_TOKENS,
-    };
-
-    const init: RequestInit = {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "api-key": apiKey },
-      body: JSON.stringify(payload),
-    };
-
+const init: RequestInit = {
+  method: "POST",
+  headers: { "Content-Type": "application/json", "api-key": apiKey },
+  body: JSON.stringify(payload),
+};
     // Concurrency-Gate + Retry-After Backoff
     console.log("REQUEST DEBUG");
 const bodyString = String(init.body ?? "");
@@ -817,6 +782,10 @@ const response = await withGate(() => {
   return retryingFetch(buildAzureUrl(), init, 5);
 });
     const data = await response.json();
+
+if ((global as any).__m13ExecutionArtifact) {
+  delete (global as any).__m13ExecutionArtifact;
+}
     console.log("AZURE RAW RESPONSE");
     console.log(JSON.stringify(data, null, 2));
     if (!response.ok) {
@@ -998,7 +967,17 @@ const res = NextResponse.json(
     balance_after: balanceAfter,
     debug_usage: usage,
     triketon: triketon ?? null,
-    state: engineResult.state
+    user_registry: executionArtifact?.data?.available_items
+      ? {
+          items: executionArtifact.data.available_items,
+          updated_at: executionArtifact?.meta?.timestamp ?? null
+        }
+      : null,
+    state: {
+      active: false,
+      extensionId: null,
+      stepId: null
+    }
   },
   { status: 200 }
 );

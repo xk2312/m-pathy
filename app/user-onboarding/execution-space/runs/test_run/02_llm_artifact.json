@@ -1,0 +1,23 @@
+{
+  "artifact_type": "llm_render_payload",
+  "artifact_version": "1.0",
+  "render_target": "onboarding_complete",
+  "content": {
+    "q": "Render the onboarding completion message for the user. Inform the user that the system is now ready, the workspace has been initialized, and the available tools can be used. Mention that deeper analysis can be activated using the provided command."
+  },
+  "data": {
+    "user_registry_ref": "01_user_registry.json",
+    "available_items": [
+      "settings",
+      "archive",
+      "new_chat",
+      "csv_download",
+      "json_download"
+    ],
+    "research_command": "echo-m13-research-modus"
+  },
+  "meta": {
+    "stage": "onboarding_complete",
+    "timestamp": "2026-04-15T15:38:35.680921+00:00"
+  }
+}

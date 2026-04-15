@@ -51,6 +51,9 @@ def main():
         "artifact_type": "llm_render_payload",
         "artifact_version": "1.0",
         "render_target": "onboarding_complete",
+        "content": {
+            "q": "Render the onboarding completion message for the user. Inform the user that the system is now ready, the workspace has been initialized, and the available tools can be used. Mention that deeper analysis can be activated using the provided command."
+        },
         "data": {
             "user_registry_ref": "01_user_registry.json",
             "available_items": items,
