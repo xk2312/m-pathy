@@ -51,9 +51,7 @@ Your system is now ready.
 
 Your workspace has been initialized and your tools are available on the left.
 
-To activate deeper analysis immediately, type:
-
-echo-m13-research-modus
+You can start deeper analysis at any time using the available research features in your workspace.
 """.strip()
 
     output = {

@@ -227,25 +227,6 @@
   "runtime": {
     "mode": "internal"
   }
-},
-{
-  "id": "run_sachversicherung_pipeline",
-  "type": "execution",
-  "category": "system",
-
-  "state": "active",
-
-  "command": "run_sachversicherung_pipeline",
-  "path": "app/doctors-advisor/execution-space/bin/run.sh",
-
-  "ui": {
-    "icon": null,
-    "ui_surface": "internal"
-  },
-
-  "runtime": {
-    "mode": "execution"
-  }
 }
     ]
   }
