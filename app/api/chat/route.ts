@@ -367,6 +367,17 @@ if (incomingConversationId && incomingConversationId !== conversationId) {
 const previousCounter =
   raw ? JSON.parse(raw)?.counter ?? 0 : 0;
 
+// HARD GUARD: prevent double counting in same request chain
+const requestId = crypto
+  .createHash("sha1")
+  .update(JSON.stringify(body.messages ?? []))
+  .digest("hex");
+
+const lastRequestId =
+  raw ? JSON.parse(raw)?.lastRequestId ?? null : null;
+
+const isDuplicateRequest = lastRequestId === requestId;
+
 const isRealUserPrompt = (() => {
   const last = body.messages?.[body.messages.length - 1];
 
@@ -391,9 +402,10 @@ const isRealUserPrompt = (() => {
   return true;
 })();
 
-serverCounter = isRealUserPrompt
-  ? previousCounter + 1
-  : previousCounter;
+serverCounter =
+  isRealUserPrompt && !isDuplicateRequest
+    ? previousCounter + 1
+    : previousCounter;
 
 // - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
 
@@ -953,6 +965,15 @@ if (TRIKETON_ENABLED) {
 // Session counter already calculated at request start
 // reuse existing serverCounter + conversationId
 
+// ---- IRSS COUNTER HARD OVERRIDE ----
+
+// Replace IRSS JSON field
+content = content.replace(
+  /"session_prompt_counter"\s*:\s*"?\d+"?/,
+  `"session_prompt_counter": ${serverCounter}`
+);
+
+// Replace visible counter fallback
 content = content.replace(
   /Session Prompt Counter:\s*.*/,
   `Session Prompt Counter: ${serverCounter}`
@@ -988,9 +1009,10 @@ const res = NextResponse.json(
 res.cookies.set({
   name: "mpathy_session",
   value: JSON.stringify({
-    conversationId,
-    counter: serverCounter,
-  }),
+  conversationId,
+  counter: serverCounter,
+  lastRequestId: requestId,
+}),
   httpOnly: true,
   secure: true,
   sameSite: "lax",
