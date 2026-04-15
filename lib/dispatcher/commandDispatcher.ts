@@ -29,9 +29,13 @@ async function executeCommand(command: string) {
     }
 
     // 👉 dynamischer Import
-    const mod = await import(`@/${entry.path}`);
+    if (!entry.path || typeof entry.path !== "string") {
+  console.warn("[Dispatcher] Skipping command without path:", command);
+  return;
+}
 
-    const fn = mod?.default;
+const mod = await import(`@/${entry.path}`);
+const fn = mod?.default;
 
     if (typeof fn !== "function") {
       console.error(
