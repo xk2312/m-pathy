@@ -12,7 +12,7 @@ en: {
 },
 
 de: {
-  "prompt.doorman.main": "Ich bin Nichts",
+  "prompt.doorman.main": "Ich bin Nichts,",
   "prompt.doorman.sub": "damit ich Alles werden kann.",
 },
 

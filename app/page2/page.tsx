@@ -2820,14 +2820,12 @@ sendMessageLocal(injectedContext)
     roleIsUser: assistant.role === "user",
     handoffMode: (assistant as any)?.meta?.handoff_mode ?? null,
     willInject:
-      assistant.role === "user" &&
-      (assistant as any)?.meta?.handoff_mode === "execution_user_injection",
+  (assistant as any)?.handoff_mode === "execution_user_injection",
   });
 
   if (
-    assistant.role === "user" &&
-    (assistant as any)?.meta?.handoff_mode === "execution_user_injection"
-  ) {
+  (assistant as any)?.handoff_mode === "execution_user_injection"
+) {
     console.log("[M13][FRONTEND] EXECUTION USER INJECTION DETECTED");
 
      const injectedUserMessage = {
