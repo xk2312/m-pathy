@@ -39,11 +39,10 @@ run_step () {
   echo "----------------------------------------"
 }
 
-# 🔥 NUR DIE RELEVANTEN STEPS
 run_step "UserRegistryInit" "steps/01_UserRegistryInitPY.py"
 run_step "FinalizeOutput" "steps/FinalizeOutputPY.py"
 
-FINAL_JSON="$RUN_PATH/10_finalize_output.json"
+FINAL_JSON="$RUN_PATH/02_llm_artifact.json"
 
 if [ ! -f "$FINAL_JSON" ]; then
   echo "[ERROR] Final output missing"
