@@ -200,7 +200,7 @@ import MobileOverlay from "../components/MobileOverlay";
 import { PromptRoot } from "./PromptRoot";
 import { getLocale, setLocale, t } from "@/lib/i18n";
 import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
-import { useMobileViewport } from "@/lib/useMobileViewport";
+import HiddenPromptBridge from "@/components/system/HiddenPromptBridge";import { useMobileViewport } from "@/lib/useMobileViewport";
 import { v4 as uuidv4 } from "uuid";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
 import { loadChat, saveChat, initChatStorage, hardClearChat, appendTriketonLedgerEntry, ensureTriketonLedgerReady, verifyOrResetTriketonLedger, } from '@/lib/chatStorage'
@@ -2625,8 +2625,48 @@ return {
   // ===============================================================
   // Prompt-Handler – sendet Text aus Eingabefeld 
   // ===============================================================
-  const onSendFromPrompt = useCallback(async (text: string) => {
-    const trimmed = (text ?? "").trim();
+  const onHiddenPrompt = useCallback(async (text: string) => {
+    const trimmed = String(text ?? "").trim();
+    if (!trimmed) return;
+
+    setLoading(true);
+    setMode("THINKING");
+
+    try {
+      const assistant = await sendMessageLocal(
+        [{ role: "user", content: trimmed, format: "markdown" }],
+        {
+          active: false,
+          extensionId: null,
+          stepId: null,
+        },
+        {
+          resetContext: true,
+        }
+      );
+
+      setMessages((prev) => {
+        const base = Array.isArray(prev) ? prev : [];
+        const next = truncateMessages([
+          ...base,
+          {
+            ...assistant,
+            id: crypto.randomUUID(),
+          },
+        ]);
+        persistMessages(next);
+        return next;
+      });
+
+      pendingAutoScrollRef.current = true;
+      setStickToBottom(true);
+    } finally {
+      setLoading(false);
+      setMode("DEFAULT");
+    }
+  }, [persistMessages]);
+
+  const onSendFromPrompt = useCallback(async (text: string) => {    const trimmed = (text ?? "").trim();
     if (!trimmed) return;
 
     // Debug ohne Console: /debug storage zeigt Key-Existenz + Länge (ohne Inhalte)
@@ -3440,8 +3480,8 @@ const withGate = (fn: () => void) => {
 />
 )}
 
+    <HiddenPromptBridge onHiddenPrompt={onHiddenPrompt} />
     <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
-
     {triketonOpen && (
       <div
         role="dialog"

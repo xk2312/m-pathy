@@ -76,8 +76,8 @@ export default function Saeule({ onClearChat, messages }: Props) {
           className={styles.onboardingButton}
           onClick={() => {
             window.dispatchEvent(
-              new CustomEvent("mpathy:command", {
-                detail: { command: "onboarding" },
+              new CustomEvent("mpathy:hidden-prompt", {
+                detail: { prompt: "echo-onboarding" },
               })
             );
           }}
