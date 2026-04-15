@@ -42,9 +42,9 @@
   padding: 14px 16px;
 
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(135,93,194,0.38);
 
-  background: #1E2024;
+  background: #5E4285;
 
   color: #f5f6f7;
   font-weight: 500;
@@ -55,30 +55,32 @@
   text-align: center;
 
   transition:
-    transform 120ms ease,
-    border-color 120ms ease,
-    box-shadow 120ms ease;
+    transform 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .onboardingButton:hover {
   transform: translateY(-1px);
 
-  border-color: rgba(255,255,255,0.18);
+  background: #6A4A97;
+  border-color: rgba(135,93,194,0.5);
 
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.04),
-    0 6px 16px rgba(0,0,0,0.4);
+    0 6px 16px rgba(0,0,0,0.28);
 }
 
 .onboardingButton:active {
   transform: translateY(0);
+  background: #5E4285;
   box-shadow: none;
 }
 
 .onboardingButton:focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 2px rgba(83,233,253,0.6);
+    0 0 0 2px rgba(135,93,194,0.42);
 }
 
 .active {
