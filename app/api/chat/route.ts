@@ -364,14 +364,19 @@ if (incomingConversationId && incomingConversationId !== conversationId) {
   );
 }
 
+let sessionData: any = {};
+
+try {
+  sessionData = raw ? JSON.parse(raw) : {};
+} catch {
+  sessionData = {};
+}
+
 const previousCounter =
-  raw ? JSON.parse(raw)?.counter ?? 0 : 0;
+  typeof sessionData?.counter === "number" ? sessionData.counter : 0;
 
 // STABLE: every request = one increment
 serverCounter = previousCounter + 1;
-// - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
-
-// Session aus m_auth-Cookie lesen (falls vorhanden)
 
 // Raw Header weiterhin für FreeGate behalten
 const cookieHeader = req.headers.get("cookie") ?? null;
@@ -987,7 +992,7 @@ res.headers.set("X-Free-Remaining", String(freeRemaining));
 res.headers.set("X-Tokens-Overdraw", "0");
 
 if (cookie) {
-  res.headers.set("Set-Cookie", cookie);
+  res.headers.append("Set-Cookie", cookie);
 }
 
 return res;
