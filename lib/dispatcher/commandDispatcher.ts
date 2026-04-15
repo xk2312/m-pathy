@@ -34,8 +34,7 @@ async function executeCommand(command: string) {
   return;
 }
 
-const mod = await import(`@/${entry.path}`);
-const fn = mod?.default;
+    const mod = await import(`../../${entry.path}`);const fn = mod?.default;
 
     if (typeof fn !== "function") {
       console.error(
