@@ -169,6 +169,15 @@ export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as ChatBody;
 
+    console.log("[M13][ROUTE][BODY] RAW STATE", (body as any)?.state ?? null);
+    console.log("[M13][ROUTE][BODY] RAW MESSAGES COUNT", Array.isArray(body.messages) ? body.messages.length : null);
+    console.log(
+      "[M13][ROUTE][BODY] RAW LAST MESSAGE",
+      Array.isArray(body.messages) && body.messages.length > 0
+        ? body.messages[body.messages.length - 1]
+        : null
+    );
+
 const lastMessageRaw = body.messages?.[body.messages.length - 1]?.content || ""
 
 const lastMessage = String(lastMessageRaw)
@@ -176,17 +185,26 @@ const lastMessage = String(lastMessageRaw)
   .replace(/\s+/g, " ")
   .trim()
   
-const engineResult = runEngine({
-  message: lastMessage,
-  state: (body as any).state || {
+const engineInputState =
+  (body as any).state || {
     active: false,
     extensionId: null,
     stepId: null
-  },
+  };
+
+console.log("[M13][ROUTE][ENGINE] INPUT MESSAGE", lastMessage);
+console.log("[M13][ROUTE][ENGINE] INPUT STATE", engineInputState);
+
+const engineResult = runEngine({
+  message: lastMessage,
+  state: engineInputState,
   registry
 })
 
 console.log("[ENGINE RESULT AFTER RUN]", engineResult);
+console.log("[M13][ROUTE][ENGINE] OUTPUT STATE", engineResult?.state ?? null);
+console.log("[M13][ROUTE][ENGINE] OUTPUT STEP ID", engineResult?.stepId ?? null);
+console.log("[M13][ROUTE][ENGINE] OUTPUT ACTIVE", engineResult?.active ?? null);
 
 // === EXECUTION GATE ===
 if (engineResult.step?.type === "execution") {
