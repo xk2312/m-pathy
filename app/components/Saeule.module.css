@@ -37,7 +37,51 @@
   border-color: rgba(255,255,255,0.2);
 }
 
-.onboardingButton {
+.onboardingButton {.onboardingButton {
+  width: 100%;
+  padding: 14px 16px;
+
+  border-radius: 999px;
+  border: 1px solid rgba(135,93,194,0.38);
+
+  background: #4A3568;
+
+  color: #f5f6f7;
+  font-weight: 500;
+  font-size: 16px;
+
+  cursor: pointer;
+
+  text-align: center;
+
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.onboardingButton:hover {
+  transform: translateY(-1px);
+
+  background: #5A3F7C;
+  border-color: rgba(135,93,194,0.5);
+
+  box-shadow:
+    0 6px 16px rgba(0,0,0,0.28);
+}
+
+.onboardingButton:active {
+  transform: translateY(0);
+  background: #4A3568;
+  box-shadow: none;
+}
+
+.onboardingButton:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(135,93,194,0.42);
+}
   width: 100%;
   padding: 14px 16px;
 
