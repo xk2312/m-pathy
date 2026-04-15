@@ -2490,7 +2490,7 @@ if (data?.message) {
     console.log("[M13][FRONTEND] DISPATCH DONE");
   }
 
-   return {
+  return {
     id:
       typeof crypto !== 'undefined' &&
       typeof (crypto as any).randomUUID === 'function'
@@ -2503,8 +2503,11 @@ if (data?.message) {
     content: typeof data.message === "string"
       ? data.message
       : JSON.stringify(data.message, null, 2),
-    format: "markdown"
-  } as any as ChatMessage;
+    format: "markdown",
+    meta: {
+      handoff_mode: data?.handoff_mode ?? null
+    }
+  } as any;
 }
 
 // FreeGate-Limit: Login erforderlich
