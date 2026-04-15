@@ -655,42 +655,49 @@ const engineMessage: ChatMessage | null = engineResult.active
         };
       }
 
-     const instruction = step?.instruction || "";
+      const instruction = step?.instruction || "";
 
-const q = step?.content?.q || "";
+      const q = step?.content?.q || "";
 
-const options =
-  step?.content?.renderedOptions ||
-  (step?.content?.options && typeof step.content.options === "object"
-    ? Object.entries(step.content.options)
-        .map(([key, value]) => `• ${key}: ${value}`)
-        .join("\n")
-    : "");
+      const options =
+        step?.content?.renderedOptions ||
+        (step?.content?.options && typeof step.content.options === "object"
+          ? Object.entries(step.content.options)
+              .map(([key, value]) => `• ${key}: ${value}`)
+              .join("\n")
+          : "");
 
-return {
-  role: "user" as const,
-  content: [instruction, q, options].filter(Boolean).join("\n\n")
-};
+      return {
+        role: "user" as const,
+        content: [instruction, q, options].filter(Boolean).join("\n\n")
+      };
     })()
   : null;
+
+const resetContext = (body as any)?.resetContext === true;
+
+const messageCore: ChatMessage[] = resetContext
+  ? body.messages.slice(-1)
+  : body.messages;
+
 const messages: ChatMessage[] = systemPrompt
   ? [
       { role: "system", content: systemPrompt },
       languageGuard,
-      ...body.messages,
-      ...(engineMessage ? [engineMessage] : []),
+      ...messageCore,
+      ...(resetContext ? [] : (engineMessage ? [engineMessage] : [])),
     ]
   : [
       languageGuard,
-      ...body.messages,
-      ...(engineMessage ? [engineMessage] : []),
+      ...messageCore,
+      ...(resetContext ? [] : (engineMessage ? [engineMessage] : [])),
     ];
 
 const irssRuntimePrompt = {
   role: "system",
   content: [
-    "Emit every response in exactly this order:",
-    "1. First, output one valid IRSS JSON block.",
+    "Respond with an IRSS JSON block followed by the answer.",
+    "Ensure the JSON is valid.",
     "2. Then output one blank line.",
     "3. Then output the normal response content.",
     "",

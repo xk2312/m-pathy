@@ -2199,7 +2199,8 @@ const [systemState, setSystemState] = useState<any>(null);
 
 async function sendMessageLocal(
   context: ChatMessage[],
-  stateOverride?: any
+  stateOverride?: any,
+  options?: { resetContext?: boolean }
 ): Promise<ChatMessage> {
     const effectiveState =
       stateOverride !== undefined ? stateOverride : systemState;
@@ -2211,7 +2212,8 @@ async function sendMessageLocal(
   body: JSON.stringify({
   messages: context,
   locale: getLocale(),
-  state: effectiveState
+  state: effectiveState,
+  resetContext: options?.resetContext === true
 }),
 });
 
