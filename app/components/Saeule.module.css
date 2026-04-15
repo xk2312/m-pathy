@@ -171,7 +171,7 @@
 
 /* aktiviert nach mount */
 .wallItem.m13-enter {
-  animation: m13-slide-in 280ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: m13-slide-in 540ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Glow Impuls */
@@ -183,12 +183,13 @@
 
   background: radial-gradient(
     circle at 20% 50%,
-    rgba(83,233,253,0.25),
-    transparent 60%
+    rgba(135,93,194,0.22),
+    rgba(94,66,133,0.14) 38%,
+    transparent 68%
   );
 
   opacity: 0;
-  animation: m13-glow 220ms ease-out forwards;
+  animation: m13-glow 420ms ease-out forwards;
   pointer-events: none;
 }
 
