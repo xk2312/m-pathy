@@ -2812,19 +2812,19 @@ sendMessageLocal(injectedContext)
   }
 
   if (assistant.content === t("gc_please_login_to_continue")) {
-    console.warn("[CHAT][P3][B4] login required response detected");
-    return;
-  }
+  console.warn("[CHAT][P3][B4] login required response detected");
+  return;
+}
 
-  console.log("[M13][HANDOFF][CHECK]", {
-    roleIsUser: assistant.role === "user",
-    handoffMode: (assistant as any)?.meta?.handoff_mode ?? null,
-    willInject:
-  (assistant as any)?.handoff_mode === "execution_user_injection",
-  });
+console.log("[M13][HANDOFF][CHECK]", {
+  roleIsUser: assistant.role === "user",
+  handoffMode: (assistant as any)?.meta?.handoff_mode ?? null,
+  willInject:
+    (assistant as any)?.meta?.handoff_mode === "execution_user_injection",
+});
 
-  if (
-  (assistant as any)?.handoff_mode === "execution_user_injection"
+if (
+  (assistant as any)?.meta?.handoff_mode === "execution_user_injection"
 ) {
     console.log("[M13][FRONTEND] EXECUTION USER INJECTION DETECTED");
 
