@@ -968,11 +968,11 @@ const res = NextResponse.json(
     debug_usage: usage,
     triketon: triketon ?? null,
     user_registry: executionArtifact?.data?.available_items
-      ? {
-          items: executionArtifact.data.available_items,
-          updated_at: executionArtifact?.meta?.timestamp ?? null
-        }
-      : null,
+  ? {
+      items: executionArtifact.data.available_items,
+      updated_at: executionArtifact?.meta?.timestamp ?? null
+    }
+  : engineResult?.collectedData?.user_registry ?? null,
     state: executionArtifact
   ? {
       active: false,
