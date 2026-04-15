@@ -2502,10 +2502,7 @@ if (data?.message) {
       typeof (crypto as any).randomUUID === 'function'
         ? (crypto as any).randomUUID()
         : `${Date.now()}_${Math.random().toString(16).slice(2)}`,
-    role:
-      data?.handoff_mode === "execution_user_injection"
-        ? "user"
-        : "assistant",
+    role: "assistant",
     content: typeof data.message === "string"
       ? data.message
       : JSON.stringify(data.message, null, 2),
