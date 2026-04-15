@@ -1,7 +1,7 @@
 import json
 import sys
 import os
-from datetime import datetime
+from datetime import datetime, UTC
 
 
 def write_error(run_path, message):
@@ -28,38 +28,37 @@ def main():
 
     run_path = sys.argv[1]
 
-    output_path = os.path.join(run_path, "10_finalize_output.json")
+    output_path = os.path.join(run_path, "02_llm_artifact.json")
+    user_registry_path = os.path.join(run_path, "01_user_registry.json")
 
     start_time = datetime.now()
     print(f"[START] FinalizeOutputPY at {start_time.strftime('%H:%M:%S')}")
 
-    # 🔥 USER REGISTRY (DEIN SYSTEM STATE)
-    user_registry = {
-    "items": [
-        "settings",
-        "archive",
-        "new_chat",
-        "csv_download",
-        "json_download"
-    ],
-    "updated_at": datetime.utcnow().isoformat()
-}
+    if not os.path.exists(user_registry_path):
+        write_error(run_path, f"Missing user registry artifact: {user_registry_path}")
 
-    # 🔥 FINAL TEXT (UI + USER GUIDANCE)
-    final_text = """
-Your system is now ready.
+    try:
+        with open(user_registry_path, "r", encoding="utf-8") as f:
+            user_registry = json.load(f)
+    except Exception as e:
+        write_error(run_path, f"Failed to read user registry artifact: {e}")
 
-Your workspace has been initialized and your tools are available on the left.
-
-You can start deeper analysis at any time using the available research features in your workspace.
-""".strip()
+    items = user_registry.get("items", [])
+    if not isinstance(items, list):
+        write_error(run_path, "Invalid user registry artifact: items must be a list")
 
     output = {
-        "final_text_with_questions": final_text,
-        "user_registry": user_registry,
+        "artifact_type": "llm_render_payload",
+        "artifact_version": "1.0",
+        "render_target": "onboarding_complete",
+        "data": {
+            "user_registry_ref": "01_user_registry.json",
+            "available_items": items,
+            "research_command": "echo-m13-research-modus"
+        },
         "meta": {
             "stage": "onboarding_complete",
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.now(UTC).isoformat()
         }
     }
 
