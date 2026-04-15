@@ -211,6 +211,7 @@ import {
 } from "@/lib/triketonVerify";import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
 import '@/lib/archiveChatPreparationListener'
 import type { ChatMessage, Role } from "@/lib/types";
+import { initCommandDispatcher } from "@/lib/dispatcher/commandDispatcher";
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
 const persist = {
@@ -1455,6 +1456,7 @@ useEffect(() => {
 }, []);
 
 // Chat State
+// Chat State
 const [messages, setMessages] = React.useState<any[]>(() => {
   initChatStorage();
 
@@ -1471,6 +1473,16 @@ const [messages, setMessages] = React.useState<any[]>(() => {
 const restored = loadChat();
 return restored ?? [];
 });
+
+useEffect(() => {
+  if (typeof window === "undefined") return;
+  initCommandDispatcher();
+}, []);
+
+useEffect(() => {
+  if (typeof window === "undefined") return;
+  (window as any).__m13Messages = Array.isArray(messages) ? messages : [];
+}, [messages]);
 
 // 🔑 Kanonische Triketon-Referenz (UI-only, kein Storage)
 const [activeTriketonMessageId, setActiveTriketonMessageId] =

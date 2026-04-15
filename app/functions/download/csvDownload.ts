@@ -1,7 +1,12 @@
 import { buildChatExport, chatExportToCSV } from "@/lib/exportChat";
 
-export function runCsvDownload(messages: any[]) {
+export default function runCsvDownload() {
   try {
+    const messages =
+      typeof window !== "undefined" && Array.isArray((window as any).__m13Messages)
+        ? (window as any).__m13Messages
+        : [];
+
     const exportObj = buildChatExport(messages);
     const csv = chatExportToCSV(exportObj);
     const utf8BOM = "\uFEFF";

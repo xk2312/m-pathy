@@ -1,4 +1,4 @@
-export function runNewChat(onClearChat?: () => void) {
+export default function runNewChat() {
   try {
     localStorage.removeItem("mpathy:thread:default");
   } catch {}
@@ -8,5 +8,5 @@ export function runNewChat(onClearChat?: () => void) {
     localStorage.setItem("mpathy:conversation:id", newConversationId);
   } catch {}
 
-  onClearChat?.();
+  window.dispatchEvent(new CustomEvent("mpathy:new-chat"));
 }
