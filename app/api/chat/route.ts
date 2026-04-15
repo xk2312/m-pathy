@@ -367,52 +367,8 @@ if (incomingConversationId && incomingConversationId !== conversationId) {
 const previousCounter =
   raw ? JSON.parse(raw)?.counter ?? 0 : 0;
 
-// HARD GUARD: prevent double counting in same request chain
-const lastRealUserMessage = [...(body.messages ?? [])]
-  .reverse()
-  .find((m) => m?.role === "user");
-
-const lastUserContent = String(lastRealUserMessage?.content ?? "").trim();
-
-const requestId = crypto
-  .createHash("sha1")
-  .update(lastUserContent)
-  .digest("hex");
-
-const lastRequestId =
-  raw ? JSON.parse(raw)?.lastRequestId ?? null : null;
-
-const isDuplicateRequest = lastRequestId === requestId;
-
-const isRealUserPrompt = (() => {
-  const last = body.messages?.[body.messages.length - 1];
-
-  if (!last || last.role !== "user") return false;
-
-  const content = String(last.content ?? "").trim();
-  if (!content) return false;
-
-  try {
-    const parsed = JSON.parse(content);
-
-    if (
-      parsed &&
-      typeof parsed === "object" &&
-      typeof parsed.type === "string" &&
-      Object.prototype.hasOwnProperty.call(parsed, "next")
-    ) {
-      return false;
-    }
-  } catch {}
-
-  return true;
-})();
-
-serverCounter =
-  isRealUserPrompt && !isDuplicateRequest
-    ? previousCounter + 1
-    : previousCounter;
-
+// STABLE: every request = one increment
+serverCounter = previousCounter + 1;
 // - FreeGate (BS13/7: jetzt *mit* 402 + Checkout) -
 
 // Session aus m_auth-Cookie lesen (falls vorhanden)
