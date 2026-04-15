@@ -2197,7 +2197,13 @@ if (busy) {
   // ===============================================================
 const [systemState, setSystemState] = useState<any>(null);
 
-async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
+async function sendMessageLocal(
+  context: ChatMessage[],
+  stateOverride?: any
+): Promise<ChatMessage> {
+    const effectiveState =
+      stateOverride !== undefined ? stateOverride : systemState;
+
     const res = await fetch("/api/chat", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
@@ -2205,7 +2211,7 @@ async function sendMessageLocal(context: ChatMessage[]): Promise<ChatMessage> {
   body: JSON.stringify({
   messages: context,
   locale: getLocale(),
-  state: systemState
+  state: effectiveState
 }),
 });
 
@@ -2854,8 +2860,20 @@ sendMessageLocal(injectedContext)
     setStickToBottom(true);
 
     console.log("[M13][HANDOFF][SECOND_CALL][BEFORE]");
-    assistant = await sendMessageLocal([injectedUserMessage]);
-    console.log("[M13][HANDOFF][SECOND_CALL][AFTER]", {
+       console.log("[M13][HANDOFF][SECOND_CALL][STATE_OVERRIDE]", {
+      active: false,
+      extensionId: null,
+      stepId: null,
+    });
+
+    assistant = await sendMessageLocal(
+      [injectedUserMessage],
+      {
+        active: false,
+        extensionId: null,
+        stepId: null,
+      }
+    );   console.log("[M13][HANDOFF][SECOND_CALL][AFTER]", {
       role: assistant?.role ?? null,
       contentLength: String(assistant?.content ?? "").length,
       contentPreview: String(assistant?.content ?? "").slice(0, 120),
