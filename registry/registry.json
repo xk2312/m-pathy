@@ -25,17 +25,14 @@
   "id": "settings",
   "type": "program",
   "category": "system",
-
   "state": "active",
-
   "command": "open_settings",
   "path": null,
-
   "ui": {
     "icon": "settings",
+    "label": "Settings",
     "ui_surface": "wall"
   },
-
   "runtime": {
     "mode": "ui"
   }
@@ -44,17 +41,14 @@
   "id": "archive",
   "type": "program",
   "category": "system",
-
   "state": "active",
-
   "command": "open_archive",
   "path": null,
-
   "ui": {
     "icon": "archive",
+    "label": "Archive",
     "ui_surface": "wall"
   },
-
   "runtime": {
     "mode": "ui"
   }
@@ -63,35 +57,30 @@
   "id": "new_chat",
   "type": "function",
   "category": "functions",
-
   "state": "active",
-
   "command": "new_chat",
   "path": "functions/system/newChat.ts",
-
   "ui": {
     "icon": "new_chat",
+    "label": "New Chat",
     "ui_surface": "wall"
   },
-
   "runtime": {
     "mode": "ui"
   }
 },
-      {
+{
   "id": "csv_download",
   "type": "function",
   "category": "functions",
-
   "state": "active",
-
   "command": "csv_download",
-  "path": "functions/download/csvDownload.ts",      
+  "path": "functions/download/csvDownload.ts",
   "ui": {
     "icon": "csv_download",
+    "label": "Download CSV",
     "ui_surface": "wall"
   },
-
   "runtime": {
     "mode": "ui"
   }
@@ -100,16 +89,14 @@
   "id": "json_download",
   "type": "function",
   "category": "functions",
-
   "state": "active",
-
   "command": "json_download",
-"path": "functions/download/jsonDownload.ts",
+  "path": "functions/download/jsonDownload.ts",
   "ui": {
     "icon": "json_download",
+    "label": "Download JSON",
     "ui_surface": "wall"
   },
-
   "runtime": {
     "mode": "ui"
   }

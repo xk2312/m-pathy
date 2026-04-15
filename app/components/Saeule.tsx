@@ -109,6 +109,9 @@ export default function Saeule({ onClearChat, messages }: Props) {
                   <span className={styles.iconBox}>
                     {ICON_REGISTRY[entry.id] || null}
                   </span>
+                  <span className={styles.label}>
+                    {entry.ui?.label ?? entry.id}
+                  </span>
                 </button>
               ))}
             </React.Fragment>
