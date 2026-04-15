@@ -139,6 +139,7 @@ import Providers from "./providers"
 import LangAttrUpdater from "./components/LangAttrUpdater"
 import ArchiveInit from "./components/system/ArchiveInit"
 import ArchiveTrigger from "@/components/archive/ArchiveTrigger"
+import CommandDispatcherInit from "@/components/system/CommandDispatcherInit"
 import AppGate from "./components/system/AppGate" // 👈 NEU
 import "../styles/design.tokens.css"
 
@@ -181,11 +182,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <LangAttrUpdater />
         <ArchiveInit />
         <ArchiveTrigger />
+<CommandDispatcherInit />
 
-        {/* 🧠 App-Gate entscheidet clientseitig */}
-        <Providers>
-          <AppGate>{children}</AppGate>
-        </Providers>
+{/* 🧠 App-Gate entscheidet clientseitig */}
+<Providers>
+  <AppGate>{children}</AppGate>
+</Providers>
 
         {/* 🪟 Overlays */}
         <div id="overlay-root" />
