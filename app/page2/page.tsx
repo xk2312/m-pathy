@@ -1575,13 +1575,21 @@ useEffect(() => {
     handleArchivePrepared
   );
 
+  const handleNewChat = () => {
+    console.info("[M13][EVENT] new chat received → clearing UI");
+    onClearChat();
+  };
+
+  window.addEventListener("mpathy:new-chat", handleNewChat);
+
   return () => {
     window.removeEventListener(
       "mpathy:archive:prepared",
       handleArchivePrepared
     );
+    window.removeEventListener("mpathy:new-chat", handleNewChat);
   };
-}, [handleArchivePrepared]);
+}, [handleArchivePrepared, onClearChat]);
 
 useEffect(() => {
   async function loadUserRegistry() {
