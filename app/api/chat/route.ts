@@ -962,6 +962,7 @@ const res = NextResponse.json(
   {
     role: "assistant",
     content,
+    message: content,
     status,
     tokens_used: TOKENS_USED,
     balance_after: balanceAfter,
