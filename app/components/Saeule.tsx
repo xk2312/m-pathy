@@ -98,7 +98,7 @@ export default function Saeule({ onClearChat, messages }: Props) {
               <button
                 key={entry.id}
                 className={`${styles.wallItem} ${styles["m13-enter"]}`}
-                style={{ animationDelay: `${index * 318}ms` }}
+                style={{ animationDelay: `${index * 500}ms` }}
                 onClick={() => {
                   window.dispatchEvent(
                     new CustomEvent("mpathy:command", {
