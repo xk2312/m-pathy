@@ -178,8 +178,22 @@ export async function POST(req: NextRequest) {
         : null
     );
 
-const lastMessageRaw = body.messages?.[body.messages.length - 1]?.content || ""
+const lastMessageObj = body.messages?.[body.messages.length - 1];
+const lastMessageMeta =
+  lastMessageObj && typeof lastMessageObj === "object"
+    ? (lastMessageObj as any).meta
+    : null;
 
+if (lastMessageMeta?.handoff_mode === "execution_user_injection") {
+  console.log("[M13][ROUTE] BLOCKED SYSTEM MESSAGE LOOP");
+  return NextResponse.json({
+    role: "assistant",
+    content: "",
+    state: { active: false, extensionId: null, stepId: null }
+  });
+}
+
+const lastMessageRaw = lastMessageObj?.content || "";
 const lastMessage = String(lastMessageRaw)
   .replace(/["']/g, "")
   .replace(/\s+/g, " ")
