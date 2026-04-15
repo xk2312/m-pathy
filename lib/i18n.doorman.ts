@@ -7,13 +7,13 @@ type DictRoot = Record<string, any>;
 export const doormanDict = {
 
 en: {
-  "prompt.doorman.main": "This workspace is governed, verifiable,",
-  "prompt.doorman.sub": "and built for accountability.",
+  "prompt.doorman.main": "I am Nothing,",
+  "prompt.doorman.sub": "to become Everything for you.",
 },
 
 de: {
-  "prompt.doorman.main": "Dieser Arbeitsraum ist reguliert und überprüfbar,",
-  "prompt.doorman.sub": "gebaut für Nachvollziehbarkeit und Verantwortung.",
+  "prompt.doorman.main": "Ich bin Nichts",
+  "prompt.doorman.sub": "damit ich Alles werden kann.",
 },
 
 fr: {
