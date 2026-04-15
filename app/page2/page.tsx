@@ -2830,7 +2830,7 @@ if (
 ) {
     console.log("[M13][FRONTEND] EXECUTION USER INJECTION DETECTED");
 
-     const injectedUserMessage = {
+    const injectedUserMessage = {
       ...assistant,
       id: crypto.randomUUID(),
     };
@@ -2843,40 +2843,32 @@ if (
       injectedUserMessage,
     });
 
-    setMessages((prev) => {
-      const base = Array.isArray(prev) ? prev : [];
-      const next = truncateMessages([
-        ...base,
-        injectedUserMessage,
-      ]);
-      persistMessages(next);
-      return next;
-    });
-
-    pendingAutoScrollRef.current = true;
-    setStickToBottom(true);
-
     console.log("[M13][HANDOFF][SECOND_CALL][BEFORE]");
-       console.log("[M13][HANDOFF][SECOND_CALL][STATE_OVERRIDE]", {
+    console.log("[M13][HANDOFF][SECOND_CALL][STATE_OVERRIDE]", {
       active: false,
       extensionId: null,
       stepId: null,
     });
 
     assistant = await sendMessageLocal(
-  [
-    {
-      role: "user",
-      content: String(injectedUserMessage.content ?? ""),
-      format: "markdown",
-    },
-  ],
-  {
-    active: false,
-    extensionId: null,
-    stepId: null,
-  }
-);   console.log("[M13][HANDOFF][SECOND_CALL][AFTER]", {
+      [
+        {
+          role: "user",
+          content: String(injectedUserMessage.content ?? ""),
+          format: "markdown",
+        },
+      ],
+      {
+        active: false,
+        extensionId: null,
+        stepId: null,
+      },
+      {
+        resetContext: true,
+      }
+    );
+
+    console.log("[M13][HANDOFF][SECOND_CALL][AFTER]", {
       role: assistant?.role ?? null,
       contentLength: String(assistant?.content ?? "").length,
       contentPreview: String(assistant?.content ?? "").slice(0, 120),

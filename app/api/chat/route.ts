@@ -748,15 +748,36 @@ const irssContextPrompt: ChatMessage = {
     `Use this value exactly in the IRSS JSON.`
 };
 
-const payload = {
-  messages: [
-    irssRuntimePrompt,
-    irssContextPrompt,
-    ...messages
-  ],
-  temperature: 0.7,
-  max_tokens: MODEL_MAX_TOKENS,
+const handoffRenderPrompt: ChatMessage = {
+  role: "system",
+  content: [
+    "Render the user content in the target language only.",
+    `Target language: ${localeFromCookie}.`,
+    "Preserve meaning.",
+    "Do not add explanations.",
+    "Do not add metadata.",
+    "Do not output JSON.",
+  ].join("\n"),
 };
+
+const payload = resetContext
+  ? {
+      messages: [
+        handoffRenderPrompt,
+        ...messageCore
+      ],
+      temperature: 0.2,
+      max_tokens: MODEL_MAX_TOKENS,
+    }
+  : {
+      messages: [
+        irssRuntimePrompt,
+        irssContextPrompt,
+        ...messages
+      ],
+      temperature: 0.7,
+      max_tokens: MODEL_MAX_TOKENS,
+    };
 
     const init: RequestInit = {
       method: "POST",
