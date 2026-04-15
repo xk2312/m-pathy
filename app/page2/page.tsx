@@ -2794,6 +2794,15 @@ sendMessageLocal(injectedContext)
 
   console.info("[CHAT][P3][B2] sending normal chat message");
   let assistant = await sendMessageLocal(outgoing);
+
+  console.log("[M13][HANDOFF][FIRST_RETURN]", {
+    role: assistant?.role ?? null,
+    contentLength: String(assistant?.content ?? "").length,
+    contentPreview: String(assistant?.content ?? "").slice(0, 120),
+    handoff_mode: (assistant as any)?.meta?.handoff_mode ?? null,
+    assistant,
+  });
+
   if (used) {
     console.info("[CHAT][P3][B3] injection used, clearing archive context");
     clearArchiveChatContext();
@@ -2804,6 +2813,13 @@ sendMessageLocal(injectedContext)
     return;
   }
 
+  console.log("[M13][HANDOFF][CHECK]", {
+    roleIsUser: assistant.role === "user",
+    handoffMode: (assistant as any)?.meta?.handoff_mode ?? null,
+    willInject:
+      assistant.role === "user" &&
+      (assistant as any)?.meta?.handoff_mode === "execution_user_injection",
+  });
 
   if (
     assistant.role === "user" &&
@@ -2811,10 +2827,18 @@ sendMessageLocal(injectedContext)
   ) {
     console.log("[M13][FRONTEND] EXECUTION USER INJECTION DETECTED");
 
-    const injectedUserMessage = {
+     const injectedUserMessage = {
       ...assistant,
       id: crypto.randomUUID(),
     };
+
+    console.log("[M13][HANDOFF][INJECTED_USER_MESSAGE]", {
+      role: injectedUserMessage?.role ?? null,
+      contentLength: String(injectedUserMessage?.content ?? "").length,
+      contentPreview: String(injectedUserMessage?.content ?? "").slice(0, 120),
+      handoff_mode: (injectedUserMessage as any)?.meta?.handoff_mode ?? null,
+      injectedUserMessage,
+    });
 
     setMessages((prev) => {
       const base = Array.isArray(prev) ? prev : [];
@@ -2829,11 +2853,27 @@ sendMessageLocal(injectedContext)
     pendingAutoScrollRef.current = true;
     setStickToBottom(true);
 
+    console.log("[M13][HANDOFF][SECOND_CALL][BEFORE]");
     assistant = await sendMessageLocal([injectedUserMessage]);
+    console.log("[M13][HANDOFF][SECOND_CALL][AFTER]", {
+      role: assistant?.role ?? null,
+      contentLength: String(assistant?.content ?? "").length,
+      contentPreview: String(assistant?.content ?? "").slice(0, 120),
+      handoff_mode: (assistant as any)?.meta?.handoff_mode ?? null,
+      assistant,
+    });
   }
 
 
 // 1) Leere Assistant-Bubble anhängen
+console.log("[M13][HANDOFF][PLACEHOLDER_APPEND]", {
+  role: assistant?.role ?? null,
+  contentLength: String(assistant?.content ?? "").length,
+  contentPreview: String(assistant?.content ?? "").slice(0, 120),
+  handoff_mode: (assistant as any)?.meta?.handoff_mode ?? null,
+  assistant,
+});
+
 setMessages((prev) => {
   const base = Array.isArray(prev) ? prev : [];
 
