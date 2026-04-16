@@ -145,26 +145,24 @@ body {
   overscroll-behavior: auto !important;
 }
 
-/* ===== Code Block / IRSS Styling ==================================== */
+/* ===== MARKDOWN / IRSS CODE BLOCK FIX ================================ */
 
-pre {
+:global(pre),
+:global(code),
+:global(.markdown pre),
+:global(.markdown code) {
   background: #080808 !important;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 16px;
+  box-shadow: none !important;
+}
+
+:global(pre) {
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 14px !important;
+  padding: 16px !important;
   overflow-x: auto;
 }
 
-code {
-  background: transparent !important;
-  color: #F5F6F7;
-  font-family: monospace;
-}
-
-/* Optional: wenn IRSS Wrapper existiert */
-.irssBlock {
-  background: #080808;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
-  padding: 20px;
+:global(code) {
+  color: #F5F6F7 !important;
+  font-family: monospace !important;
 }
