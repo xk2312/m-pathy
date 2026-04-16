@@ -22,6 +22,8 @@ const [items, setItems] = useState<any[]>(() => {
   }
 });
 
+const [isClient, setIsClient] = useState(false);
+
   // 🔥 1. Initial Load
 useEffect(() => {
   try {
@@ -33,6 +35,8 @@ useEffect(() => {
       }
     }
   } catch {}
+
+  setIsClient(true);
 }, []);
 
   // 🔥 2. Live Updates
@@ -74,6 +78,8 @@ useEffect(() => {
     );
     return acc;
   }, {});
+
+    if (!isClient) return null;
 
   return (
     <aside
