@@ -10,20 +10,30 @@ type Props = {
 };
 
 export default function Saeule({ onClearChat, messages }: Props) {
-  const [items, setItems] = useState<string[]>([]);
+const [items, setItems] = useState<any[]>(() => {
+  try {
+    if (typeof window === "undefined") return [];
+    const stored = localStorage.getItem("mpathy:user_registry");
+    if (!stored) return [];
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed?.items) ? parsed.items : [];
+  } catch {
+    return [];
+  }
+});
 
   // 🔥 1. Initial Load
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("mpathy:user_registry");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed?.items) {
-          setItems(parsed.items);
-        }
+useEffect(() => {
+  try {
+    const stored = localStorage.getItem("mpathy:user_registry");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed?.items) {
+        setItems(parsed.items);
       }
-    } catch {}
-  }, []);
+    }
+  } catch {}
+}, []);
 
   // 🔥 2. Live Updates
   useEffect(() => {
@@ -70,9 +80,8 @@ export default function Saeule({ onClearChat, messages }: Props) {
       className={styles.saeule}
       aria-label="Column - Controls & Selection"
       data-test="saeule"
-    >
-      {items.length === 0 ? (
-        <button
+       >
+{items.length === 0 ? (        <button
           className={styles.onboardingButton}
           onClick={() => {
             window.dispatchEvent(
