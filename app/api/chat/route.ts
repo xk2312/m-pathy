@@ -353,8 +353,11 @@ const incomingConversationId =
     ? String((body as any).conversationId).trim()
     : null;
 
-if (incomingConversationId && incomingConversationId !== conversationId) {
-  conversationId = incomingConversationId;
+const isNewConversation =
+  !!incomingConversationId && incomingConversationId !== conversationId;
+
+if (isNewConversation) {
+  conversationId = incomingConversationId!;
 }
 
    if (!Array.isArray(body.messages)) {
@@ -373,7 +376,11 @@ try {
 }
 
 const previousCounter =
-  typeof sessionData?.counter === "number" ? sessionData.counter : 0;
+  isNewConversation
+    ? 0
+    : typeof sessionData?.counter === "number"
+      ? sessionData.counter
+      : 0;
 
 // STABLE: every request = one increment
 serverCounter = previousCounter + 1;
