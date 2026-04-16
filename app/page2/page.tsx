@@ -2225,6 +2225,9 @@ async function sendMessageLocal(
     const effectiveState =
       stateOverride !== undefined ? stateOverride : systemState;
 
+    const conversationId =
+      localStorage.getItem("mpathy:conversation:id") || crypto.randomUUID();
+
     const res = await fetch("/api/chat", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
@@ -2233,7 +2236,8 @@ async function sendMessageLocal(
   messages: context,
   locale: getLocale(),
   state: effectiveState,
-  resetContext: options?.resetContext === true
+  resetContext: options?.resetContext === true,
+  conversationId
 }),
 });
 
