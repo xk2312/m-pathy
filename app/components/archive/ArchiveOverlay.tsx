@@ -407,7 +407,7 @@ useEffect(() => {
 <header className="pb-4 flex flex-col gap-4 mt-[32px]">
 
  <div className="flex items-center gap-3">
-  <ArchiveIcon className="w-6 h-6 text-[#875DC2]" />
+  <ArchiveIcon className="w-10 h-10 text-[#875DC2]" />
   <h1 className="text-3xl font-medium tracking-tight">
     {t("archive.title")}
   </h1>
