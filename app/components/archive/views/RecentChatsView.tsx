@@ -199,7 +199,6 @@ export default function RecentChatsView({
       rounded-xl
       px-8
       py-7
-      -mx-4
       cursor-pointer
       transition
       bg-surface-1
