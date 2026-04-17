@@ -817,13 +817,28 @@ if ((global as any).__m13ExecutionArtifact) {
 
     let tokensUsed: number;
 
-    if (usage && typeof usage.total_tokens === "number") {
-      tokensUsed = usage.total_tokens;
-    } else {
-      const promptText = messages.map((m) => m.content).join(" ");
-      const combinedText = `${promptText}\n${content}`;
-      tokensUsed = estimateTokensFromText(combinedText);
-    }
+   if (usage) {
+  const promptTokens = usage.prompt_tokens ?? 0;
+  const cachedTokens =
+    usage.prompt_tokens_details?.cached_tokens ?? 0;
+  const completionTokens = usage.completion_tokens ?? 0;
+
+  const realPromptTokens = Math.max(0, promptTokens - cachedTokens);
+
+  tokensUsed = realPromptTokens + completionTokens;
+
+  console.log("[TOKENS][RAW]", {
+    promptTokens,
+    cachedTokens,
+    completionTokens,
+    realPromptTokens,
+    final: tokensUsed,
+  });
+} else {
+  const promptText = messages.map((m) => m.content).join(" ");
+  const combinedText = `${promptText}\n${content}`;
+  tokensUsed = estimateTokensFromText(combinedText);
+}
     const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, tokensUsed);
     let tokenDelta = TOKENS_USED;
 
