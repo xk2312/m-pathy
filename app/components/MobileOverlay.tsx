@@ -91,7 +91,7 @@ export default function MobileOverlay({
           height: "100dvh",
           width: "100dvw",
           // gleicher Raum wie Chat/Navi
-          background: "#080808",
+          background: "#0c0c0c",
           // flach: keine harte Kante, kein Card-Schatten
           borderRight: "none",
 
@@ -112,7 +112,7 @@ export default function MobileOverlay({
             alignItems: "center",
             justifyContent: "space-between",
             marginBottom: 8,
-            background: "#080808",          
+            background: "#0c0c0c",          
           }}
         >
                    <button
