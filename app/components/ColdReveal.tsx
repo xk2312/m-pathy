@@ -40,7 +40,7 @@ function tokenize(text: string): Token[] {
 export default function ColdReveal({
   text,
   baseDelay = 0,
-  letterDelay = 0.02,
+  letterDelay = 0.01,
   className,
 }: ColdRevealProps) {
 const isIRSS = text.includes('"system"') && text.includes('"irss"');
@@ -77,7 +77,7 @@ return (
                   animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
                   transition={{
                     delay,
-                    duration: 0.28,
+                    duration: 0.18,
                     ease: "easeOut",
                   }}
                   style={{
