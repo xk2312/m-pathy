@@ -367,7 +367,8 @@ useEffect(() => {
     via-[#0C0C0C]
     to-[#080808]
     text-text-primary
-    overflow-hidden
+    overflow-y-auto
+    overflow-x-hidden    
     pr-[30px]
     pb-[30px]
     pl-[30px]
