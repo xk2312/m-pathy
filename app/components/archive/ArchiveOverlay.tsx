@@ -17,6 +17,7 @@ import { runArchiveSearch, getArchiveSearchPreview, type SearchResult } from './
 import { initArchiveVerifyListener } from '@/lib/archiveVerifyListener'
 import ReportList from '@/components/reports/ReportList'
 import SystemSpinner from '@/components/system/SystemSpinner'
+import ArchiveIcon from "@/components/icons/wall/archive"
 
 function flattenI18n(obj: any, prefix = ''): Record<string, string> {
   const out: Record<string, string> = {}
@@ -405,9 +406,12 @@ useEffect(() => {
 {/* ====================================================== */}
 <header className="pb-4 flex flex-col gap-4 mt-[32px]">
 
+ <div className="flex items-center gap-3">
+  <ArchiveIcon className="w-6 h-6 text-[#875DC2]" />
   <h1 className="text-3xl font-medium tracking-tight">
-{t("archive.title")}
+    {t("archive.title")}
   </h1>
+</div>
 
   <div className="flex gap-4 text-sm">
     <button
