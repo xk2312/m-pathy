@@ -83,23 +83,38 @@ try {
     );
 } else if (isAssistant && effectiveFmt === 'plain' && typeof msg.content === "string") {
   const raw = msg.content || "";
-  const irssIndex = raw.indexOf('"system"');
 
-  // 👉 IRSS erkannt → nichts hier rendern
-  if (irssIndex !== -1) {
-    node = null;
-  } else {
-    node = (
-      <span
-        style={{
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-word',
-        }}
-      >
-        <ColdReveal key={raw.length} text={raw} />
-      </span>
-    );
+  let cleaned = raw;
+
+  if (cleaned.trimStart().startsWith('{"irss"')) {
+    let depth = 0;
+    let end = 0;
+
+    for (let i = 0; i < cleaned.length; i++) {
+      const char = cleaned[i];
+
+      if (char === "{") depth++;
+      if (char === "}") depth--;
+
+      if (depth === 0) {
+        end = i + 1;
+        break;
+      }
+    }
+
+    cleaned = cleaned.slice(end).trim();
   }
+
+  node = (
+    <span
+      style={{
+        whiteSpace: 'pre-wrap',
+        wordBreak: 'break-word',
+      }}
+    >
+      <ColdReveal key={cleaned.length} text={cleaned} />
+    </span>
+  );
 } else {
     node = renderMessage({
       role: msg.role,
