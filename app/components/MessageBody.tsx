@@ -80,18 +80,31 @@ try {
         {c.cta && <p style={{ marginTop: 12 }}>{c.cta}</p>}
       </div>
     );
-  } else if (isAssistant && effectiveFmt === 'plain' && typeof msg.content === "string") {
-    node = (
-      <span
-        style={{
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-word',
-        }}
-      >
-        <ColdReveal key={msg.content.length} text={msg.content} />
-      </span>
-    );
-  } else {
+ } else if (isAssistant && effectiveFmt === 'plain' && typeof msg.content === "string") {
+  const raw = msg.content || "";
+  const irssIndex = raw.indexOf('"system"'); // stabiler IRSS Startanker
+
+  let contentPart = raw;
+  let irssPart = "";
+
+  if (irssIndex !== -1) {
+    contentPart = raw.slice(0, irssIndex).trim();
+    irssPart = raw.slice(irssIndex).trim();
+  }
+
+  node = (
+    <span
+      style={{
+        whiteSpace: 'pre-wrap',
+        wordBreak: 'break-word',
+      }}
+    >
+      {contentPart && (
+        <ColdReveal key={contentPart.length} text={contentPart} />
+      )}
+    </span>
+  );
+} else {
     node = renderMessage({
       role: msg.role,
       content: msg.content,
@@ -231,3 +244,4 @@ try {
     </div>
   );
 }
+

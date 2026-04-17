@@ -43,12 +43,22 @@ export default function ColdReveal({
   letterDelay = 0.02,
   className,
 }: ColdRevealProps) {
-  const tokens = useMemo(() => tokenize(text), [text]);
+const isIRSS = text.includes('"system"') && text.includes('"irss"');
 
+const tokens = useMemo(() => {
+  if (isIRSS) {
+    return [{ type: "word", value: text }];
+  }
+  return tokenize(text);
+}, [text, isIRSS]);
   let globalIndex = 0;
 
-  return (
-    <span className={className} aria-label={text}>
+  if (isIRSS) {
+  return <span className={className}>{text}</span>;
+}
+
+return (
+  <span className={className} aria-label={text}>
       {tokens.map((tok, i) => {
         if (tok.type === "space") {
           return <span key={`s-${i}`}>{tok.value}</span>;
