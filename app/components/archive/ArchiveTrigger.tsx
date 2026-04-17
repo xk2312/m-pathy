@@ -34,8 +34,7 @@ export default function ArchiveTrigger() {
     <>
       {open &&
         createPortal(
-          <div className="fixed inset-0 z-50 bg-black/60">
-            <div className="absolute inset-4 bg-surface1 rounded-xl overflow-hidden">
+              <div className="fixed inset-0 z-50 bg-black/60 flex items-start justify-center pt-[64px]">            <div className="absolute inset-4 bg-surface1 rounded-xl overflow-hidden">
               <button
                 onClick={() =>
                   window.dispatchEvent(
