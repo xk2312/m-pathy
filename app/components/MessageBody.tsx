@@ -21,6 +21,7 @@ export type ChatMessage = {
   content: string | any;
   format?: MessageFormat;
   meta?: Record<string, unknown>;
+  irss?: string; // 👈 hinzufügen
 };
 
 export type MessageBodyProps = {
@@ -80,30 +81,25 @@ try {
         {c.cta && <p style={{ marginTop: 12 }}>{c.cta}</p>}
       </div>
     );
- } else if (isAssistant && effectiveFmt === 'plain' && typeof msg.content === "string") {
+} else if (isAssistant && effectiveFmt === 'plain' && typeof msg.content === "string") {
   const raw = msg.content || "";
-  const irssIndex = raw.indexOf('"system"'); // stabiler IRSS Startanker
+  const irssIndex = raw.indexOf('"system"');
 
-  let contentPart = raw;
-  let irssPart = "";
-
+  // 👉 IRSS erkannt → nichts hier rendern
   if (irssIndex !== -1) {
-    contentPart = raw.slice(0, irssIndex).trim();
-    irssPart = raw.slice(irssIndex).trim();
+    node = null;
+  } else {
+    node = (
+      <span
+        style={{
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+        }}
+      >
+        <ColdReveal key={raw.length} text={raw} />
+      </span>
+    );
   }
-
-  node = (
-    <span
-      style={{
-        whiteSpace: 'pre-wrap',
-        wordBreak: 'break-word',
-      }}
-    >
-      {contentPart && (
-        <ColdReveal key={contentPart.length} text={contentPart} />
-      )}
-    </span>
-  );
 } else {
     node = renderMessage({
       role: msg.role,

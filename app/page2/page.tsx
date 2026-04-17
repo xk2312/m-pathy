@@ -871,7 +871,7 @@ function Bubble({
   tokens,
   onOpenTriketon,
 }: {
-  msg: ChatMessage;
+  msg: ChatMessage & { irss?: string | null };
   tokens: Tokens;
   onOpenTriketon?: (payload: any) => void;
 }) {
@@ -1189,10 +1189,28 @@ function Conversation({
   style={{ paddingBottom: padBottom, marginBottom: 0 }}
   /* === EINFÜGEN ENDE ======================================= */
 >
-  {messages.map((m, i) => (
-    <Bubble key={i} msg={m} tokens={tokens} onOpenTriketon={onOpenTriketon} />
-  ))}
+{messages.map((m, i) => {
+  const raw = typeof m.content === "string" ? m.content : "";
 
+  const irssIndex = raw.indexOf('"system"');
+
+  let content = m.content;
+  let irss = null;
+
+  if (irssIndex !== -1) {
+    content = raw.slice(0, irssIndex).trim();
+    irss = raw.slice(irssIndex).trim();
+  }
+
+  return (
+    <Bubble
+      key={i}
+      msg={{ ...m, content, irss }}
+      tokens={tokens}
+      onOpenTriketon={onOpenTriketon}
+    />
+  );
+})}
     <div className="chat-end-spacer" style={{ height: padBottom }} aria-hidden />
 </section>
   );
