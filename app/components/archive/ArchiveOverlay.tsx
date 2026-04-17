@@ -1,84 +1,3 @@
-/* ===========================================================
-   INVENTUS · ARCHIVE OVERLAY – I18N INDEX
-   ===========================================================
-
-   🧭 Ziel:
-   Vollständiger Index aller Textstellen mit Übersetzungsbedarf
-   + Fehleranalyse, warum aktuell die Texte nicht geladen werden.
-
-   -----------------------------------------------------------
-   🗂️ 1.  Übersetzungsquellen
-   -----------------------------------------------------------
-   - t("archive.title")
-   - t("archive.introText")
-   - t("archive.modes.chat")
-   - t("archive.modes.reports")
-   - t("archive.searchUserChats")
-   - t("archive.selectionStatus")
-   - t("archive.verify")
-   - t("archive.addToChat")
-   - t("archive.tooMany")
-   - t("overlay.close")
-   - t("overlay.preparing")
-
-   -----------------------------------------------------------
-   ⚠️ 2.  Fehlersignatur
-   -----------------------------------------------------------
-   Symptom:  Auf der Oberfläche werden Schlüssel selbst angezeigt
-             (z. B. „archive.title“ statt „Archiv“).
-
-   Ursache:  Der LanguageProvider übergibt t() korrekt,
-             aber getActiveDict(lang) liefert KEINE verschachtelte
-             Struktur, sondern eine reine Lookup-Funktion.
-             ArchiveOverlay ruft t("archive.xxx") korrekt auf,
-             aber i18nArchive wird nicht in getActiveDict()
-             eingeschlossen, weil das Archiv-Dictionary getrennt
-             vom UI-Dictionary geladen wird.
-
-   Effekt:   t() findet nur UI-Keys (dict), nicht archive/report.
-
-   -----------------------------------------------------------
-   🧩 3.  Fehlerquelle im Code
-   -----------------------------------------------------------
-   Datei:  lib/i18n.ts
-   Funktion: getActiveDict(lang)
-   → enthält zwar das Mapping für archive / report,
-     aber ArchiveOverlay greift über useLanguage()
-     auf den Provider zu, der nur dict, nicht i18nArchive,
-     injiziert.
-
-   -----------------------------------------------------------
-   🔧 4.  Lösungspfad (Council-13-konform)
-   -----------------------------------------------------------
-   ✅ Variante A (sauberste):
-      - Im LanguageProvider zusätzlich i18nArchive als dict
-        in getActiveDict übergeben:
-          const { t } = getActiveDict(lang)
-        → sicherstellen, dass i18nArchive global importiert ist
-        → exportiere t(), das Archive- und UI-Keys versteht.
-
-   ✅ Variante B (lokal im Overlay):
-      - Direkt importieren:
-          import { i18nArchive } from "@/lib/i18n.archive"
-          import { useLanguage } from "@/app/providers/LanguageProvider"
-        Dann:
-          const { lang } = useLanguage()
-          const t = i18nArchive[lang] || i18nArchive.en
-        → Aufrufe:
-          {t.archive.title}
-          {t.archive.modes.chat}
-
-   -----------------------------------------------------------
-   🧪 5.  Empfehlung
-   -----------------------------------------------------------
-   - Prüfe, ob getActiveDict(lang) das Objekt i18nArchive[lang]
-     wirklich zurückgibt (nicht nur die t-Funktion).
-   - Wenn nein → Council-entscheid Variante B implementieren.
-   - Danach „archive.xxx“ verschwindet, alle Labels laden.
-
-   =========================================================== */
-
-
 'use client'
 
 import React, { useEffect, useState } from 'react'
@@ -480,8 +399,8 @@ useEffect(() => {
       {/* ========================================================== */}
 {/* CONTENT FRAME - FULL BLEED                                 */}
 {/* ========================================================== */}
-<div className="w-full h-full flex flex-col">
-
+<div className="w-full flex flex-col">
+  
   <div
     className="
       w-full
