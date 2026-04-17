@@ -1192,8 +1192,7 @@ function Conversation({
 {messages.map((m, i) => {
   const raw = typeof m.content === "string" ? m.content : "";
 
-  const irssIndex = raw.indexOf('"system"');
-
+const irssIndex = raw.indexOf('{"irss"');
   let content = m.content;
   let irss = null;
 
