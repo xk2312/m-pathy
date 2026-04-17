@@ -197,7 +197,7 @@ export default function RecentChatsView({
     className="
       group
       rounded-xl
-      px-8
+      px-0
       py-7
       cursor-pointer
       transition
