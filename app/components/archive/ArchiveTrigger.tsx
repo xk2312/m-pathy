@@ -34,7 +34,9 @@ return (
   <>
     {open &&
       createPortal(
-        <ArchiveUIFinish />,
+        <div className="fixed inset-0 z-[2147483647]">
+          <ArchiveUIFinish />
+        </div>,
         document.body
       )}
   </>
