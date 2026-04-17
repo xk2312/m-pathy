@@ -152,19 +152,23 @@ export async function POST(req: NextRequest) {
   const cookieStore = cookies();
   const raw = cookieStore.get("mpathy_session")?.value;
 
-  let conversationId: string;
-  let serverCounter: number = 1;
+ let conversationId: string;
+let serverCounter: number = 1;
 
-  if (!raw) {
+if (!raw) {
+  conversationId = crypto.randomUUID();
+  serverCounter = 1;
+} else {
+  try {
+    const parsed = JSON.parse(raw);
+    conversationId = parsed.conversationId;
+    const prevCounter = Number(parsed.counter) || 0;
+    serverCounter = prevCounter + 1;
+  } catch {
     conversationId = crypto.randomUUID();
-  } else {
-    try {
-      const parsed = JSON.parse(raw);
-      conversationId = parsed.conversationId;
-    } catch {
-      conversationId = crypto.randomUUID();
-    }
+    serverCounter = 1;
   }
+}
 
   try {
     const body = (await req.json()) as ChatBody;
@@ -402,7 +406,7 @@ if (authCookie) {
 
   if (payload && (payload as any).id != null) {
     sessionUserId = String((payload as any).id);
-  }
+  }406
 }
 
 const isAuthenticated = !!sessionEmail;
