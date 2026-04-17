@@ -813,7 +813,46 @@ if ((global as any).__m13ExecutionArtifact) {
       return NextResponse.json({ error: "No message content" }, { status: 502 });
     }
 
+    const rawContent = content;
 
+    let irssPayload: any = null;
+    let irssContent = "";
+    let renderContent = rawContent;
+
+    if (typeof rawContent === "string" && rawContent.trim().startsWith("{")) {
+      let depth = 0;
+      let endIndex = -1;
+
+      for (let i = 0; i < rawContent.length; i++) {
+        const char = rawContent[i];
+
+        if (char === "{") depth++;
+        if (char === "}") depth--;
+
+        if (depth === 0) {
+          endIndex = i;
+          break;
+        }
+      }
+
+      if (endIndex !== -1) {
+        const candidateIrss = rawContent.slice(0, endIndex + 1);
+        const candidateRender = rawContent.slice(endIndex + 1).trim();
+
+        try {
+          const parsed = JSON.parse(candidateIrss);
+          if (parsed && typeof parsed === "object" && parsed.irss) {
+            irssPayload = parsed.irss;
+            irssContent = candidateIrss;
+            renderContent = candidateRender;
+          }
+        } catch {
+          irssPayload = null;
+          irssContent = "";
+          renderContent = rawContent;
+        }
+      }
+    }
 
     let tokensUsed: number;
 
@@ -836,7 +875,7 @@ if ((global as any).__m13ExecutionArtifact) {
   });
 } else {
   const promptText = messages.map((m) => m.content).join(" ");
-  const combinedText = `${promptText}\n${content}`;
+  const combinedText = `${promptText}\n${rawContent}`;
   tokensUsed = estimateTokensFromText(combinedText);
 }
     const TOKENS_USED = Math.min(MODEL_MAX_TOKENS, tokensUsed);
@@ -887,123 +926,167 @@ if ((global as any).__m13ExecutionArtifact) {
       });
     }
 
-  let triketon: any = null;
+ let triketon: any = null;
 const TRIKETON_ENABLED = process.env.TRIKETON_ENABLED === "true";
 
 // HARD-ORDER GATE
 const clientLedgerAppendOk = true;
 
-if (TRIKETON_ENABLED) {
-  try {
-      if (!clientLedgerAppendOk) {
-        throw new Error("Client ledger append not confirmed - DB write blocked");
-      }
+console.log("[IRSS][SPLIT][START]", {
+  hasIrssContent: !!irssContent,
+  hasIrssPayload: !!irssPayload,
+});
 
-      const { spawn } = await import("child_process");
-      const { getPool } = await import("@/lib/ledger");
+if (irssContent) {
+  console.log("[IRSS][COUNTER][BEFORE]", irssContent);
 
-      const seal = await new Promise<any>((resolve, reject) => {
-        const p = spawn(
-  "python3",
-  ["-m", "triketon.triketon2048", "seal", String(content), "--json"],
-  { stdio: ["ignore", "pipe", "pipe"] }
-);
+  irssContent = irssContent.replace(
+    /"session_prompt_counter"\s*:\s*"?\d+"?/,
+    `"session_prompt_counter": ${serverCounter}`
+  );
 
-
-
-        let out = "";
-        let err = "";
-
-        p.stdout.on("data", (d) => (out += d.toString()));
-        p.stderr.on("data", (d) => (err += d.toString()));
-
-        p.on("close", (code) => {
-          if (code !== 0) return reject(new Error(err || "triketon seal failed"));
-          resolve(JSON.parse(out));
-        });
-      });
-
-      if (seal?.public_key && seal?.timestamp) {
-        const pool = await getPool();
-        const { createHash } = await import("crypto");
-
-        const normalized = content
-          .normalize("NFKC")
-          .replace(/\s+/g, " ")
-          .trim();
-
-        const dbTruthHash = createHash("sha256")
-          .update(normalized, "utf8")
-          .digest("hex");
-
-        await pool.query(
-          `INSERT INTO triketon_anchors
-           (public_key, truth_hash, timestamp, orbit_context)
-           VALUES ($1, $2, $3, 'chat')
-           ON CONFLICT (public_key, truth_hash) DO NOTHING`,
-          [seal.public_key, dbTruthHash, seal.timestamp]
-        );
-
-        const { computeClientTruthHash } = await import("@/lib/triketon2048/hashClient");
-
-        triketon = {
-          publicKey: seal.public_key,
-          truthHash: computeClientTruthHash(content), // CLIENT DECOY
-          timestamp: seal.timestamp,
-          version: seal.version ?? "v1",
-          hashProfile: "CLIENT_DECOY_V1",
-          keyProfile: seal.key_profile ?? "TRIKETON_KEY_V1",
-          anchorStatus: "anchored",
-        };
-
-
-      }
-     } catch (e) {
-    console.warn("[triketon] auto-anchor skipped", e);
+  if (irssPayload) {
+    irssPayload.session_prompt_counter = serverCounter;
   }
+
+  console.log("[IRSS][COUNTER][AFTER]", irssContent);
+} else {
+  console.log("[IRSS][FALLBACK][NO IRSS FOUND]");
+
+  rawContent.replace(
+    /"session_prompt_counter"\s*:\s*"?\d+"?/,
+    `"session_prompt_counter": ${serverCounter}`
+  );
 }
 
-// ---- SESSION COUNTER (minimal & robust) ----
-// Session counter already calculated at request start
-// reuse existing serverCounter + conversationId
+console.log("[RENDER][BEFORE]", renderContent);
 
-// ---- IRSS COUNTER HARD OVERRIDE ----
-
-// Replace IRSS JSON field
-content = content.replace(
-  /"session_prompt_counter"\s*:\s*"?\d+"?/,
-  `"session_prompt_counter": ${serverCounter}`
-);
-
-// Replace visible counter fallback
-content = content.replace(
+renderContent = renderContent.replace(
   /Session Prompt Counter:\s*.*/,
   `Session Prompt Counter: ${serverCounter}`
 );
 
+console.log("[RENDER][AFTER]", renderContent);
+
+const ledgerContent = irssContent
+  ? `${irssContent}\n\n${renderContent}`.trim()
+  : rawContent.replace(
+      /Session Prompt Counter:\s*.*/,
+      `Session Prompt Counter: ${serverCounter}`
+    );
+
+console.log("[LEDGER][CONTENT]", {
+  length: ledgerContent.length,
+  preview: ledgerContent.slice(0, 200),
+});
+
+if (TRIKETON_ENABLED) {
+  try {
+    if (!clientLedgerAppendOk) {
+      throw new Error("Client ledger append not confirmed - DB write blocked");
+    }
+
+    console.log("[TRIKETON][START]");
+
+    const { spawn } = await import("child_process");
+    const { getPool } = await import("@/lib/ledger");
+
+    const seal = await new Promise<any>((resolve, reject) => {
+      const p = spawn(
+        "python3",
+        ["-m", "triketon.triketon2048", "seal", String(ledgerContent), "--json"],
+        { stdio: ["ignore", "pipe", "pipe"] }
+      );
+
+      let out = "";
+      let err = "";
+
+      p.stdout.on("data", (d) => (out += d.toString()));
+      p.stderr.on("data", (d) => (err += d.toString()));
+
+      p.on("close", (code) => {
+        if (code !== 0) {
+          console.error("[TRIKETON][ERROR]", err);
+          return reject(new Error(err || "triketon seal failed"));
+        }
+        console.log("[TRIKETON][RAW OUTPUT]", out);
+        resolve(JSON.parse(out));
+      });
+    });
+
+    console.log("[TRIKETON][SEAL]", seal);
+
+    if (seal?.public_key && seal?.timestamp) {
+      const pool = await getPool();
+      const { createHash } = await import("crypto");
+
+      const normalized = ledgerContent
+        .normalize("NFKC")
+        .replace(/\s+/g, " ")
+        .trim();
+
+      const dbTruthHash = createHash("sha256")
+        .update(normalized, "utf8")
+        .digest("hex");
+
+      console.log("[TRIKETON][HASH]", dbTruthHash);
+
+      await pool.query(
+        `INSERT INTO triketon_anchors
+         (public_key, truth_hash, timestamp, orbit_context)
+         VALUES ($1, $2, $3, 'chat')
+         ON CONFLICT (public_key, truth_hash) DO NOTHING`,
+        [seal.public_key, dbTruthHash, seal.timestamp]
+      );
+
+      const { computeClientTruthHash } = await import("@/lib/triketon2048/hashClient");
+
+      triketon = {
+        publicKey: seal.public_key,
+        truthHash: computeClientTruthHash(ledgerContent),
+        timestamp: seal.timestamp,
+        version: seal.version ?? "v1",
+        hashProfile: "CLIENT_DECOY_V1",
+        keyProfile: seal.key_profile ?? "TRIKETON_KEY_V1",
+        anchorStatus: "anchored",
+      };
+
+      console.log("[TRIKETON][FINAL]", triketon);
+    }
+  } catch (e) {
+    console.warn("[triketon] auto-anchor skipped", e);
+  }
+}
+
+console.log("[RESPONSE][FINAL]", {
+  renderLength: renderContent.length,
+  hasIrss: !!irssPayload,
+});
+
 const res = NextResponse.json(
   {
     role: "assistant",
-    content,
-    message: content,
+    content: renderContent,
+    message: renderContent,
+    irss: irssPayload ?? null,
     status,
     tokens_used: TOKENS_USED,
     balance_after: balanceAfter,
     debug_usage: usage,
     triketon: triketon ?? null,
     user_registry: executionArtifact?.data?.available_items
-  ? {
-      items: executionArtifact.data.available_items,
-      updated_at: executionArtifact?.meta?.timestamp ?? null
-    }
-  : engineResult?.collectedData?.user_registry ?? null,
+      ? {
+          items: executionArtifact.data.available_items,
+          updated_at: executionArtifact?.meta?.timestamp ?? null
+        }
+      : engineResult?.collectedData?.user_registry ?? null,
     state: executionArtifact
-  ? {
-      active: false,
-      extensionId: null,
-      stepId: null
-    }
-  : engineResult.state
+      ? {
+          active: false,
+          extensionId: null,
+          stepId: null
+        }
+      : engineResult.state
   },
   { status: 200 }
 );
