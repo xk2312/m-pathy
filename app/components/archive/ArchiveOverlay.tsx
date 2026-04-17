@@ -399,9 +399,9 @@ useEffect(() => {
 {/* ========================================================== */}
 {/* CONTENT FRAME - FULL BLEED                                 */}
 {/* ========================================================== */}
-<div className="w-full h-full flex flex-col px-4 md:px-0">
+<div className="w-full h-full flex flex-col">
 
-<div className="w-full max-w-[920px] mx-auto flex flex-col relative px-[12px] md:px-[30px]">
+<div className="w-full max-w-[920px] mx-auto flex flex-col relative px-[24px] md:px-[30px]">
   
 {/* ====================================================== */}
 {/* HEADER - ORIENTATION                                   */}
