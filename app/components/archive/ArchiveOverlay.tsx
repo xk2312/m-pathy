@@ -528,7 +528,7 @@ hover:text-[#6A4A97]
     {/* ====================================================== */}
     {/* SEARCH + CLOSE                                         */}
     {/* ====================================================== */}
-    <section
+<section
   className="
     w-full
     bg-[#0C0C0C]
@@ -536,8 +536,6 @@ hover:text-[#6A4A97]
     px-6
     py-4
     relative
-    mx-[8px]
-    md:mx-0
   "
 >
 <Input
