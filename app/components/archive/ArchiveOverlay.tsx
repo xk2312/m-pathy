@@ -394,17 +394,17 @@ useEffect(() => {
     </div>
   )}
 
-      {/* ========================================================== */}
+{/* ========================================================== */}
 {/* CONTENT FRAME - FULL BLEED                                 */}
 {/* ========================================================== */}
-<div className="w-full flex flex-col">
+<div className="w-full h-full flex flex-col px-4 md:px-0">
 
 <div className="w-full max-w-[920px] mx-auto flex flex-col relative">
 {/* ====================================================== */}
 {/* HEADER - ORIENTATION                                   */}
 {/* ====================================================== */}
 <header className="pb-4 flex flex-col gap-4 mt-[32px]">
-  
+
   <h1 className="text-3xl font-medium tracking-tight">
 {t("archive.title")}
   </h1>
@@ -471,8 +471,8 @@ useEffect(() => {
         className="
           text-sm
           font-medium
-          text-cyan-400
-          hover:text-cyan-300
+text-[#875DC2]
+hover:text-[#6A4A97]
           transition
         "
       >
@@ -557,8 +557,7 @@ placeholder={t("archive.searchUserChats")}
     text-base
     placeholder:text-text-muted
     focus-visible:ring-2
-    focus-visible:ring-cyan-500
-  "
+focus-visible:ring-[#875DC2]  "
 />
 
 
