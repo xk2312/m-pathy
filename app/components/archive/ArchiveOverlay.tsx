@@ -403,14 +403,8 @@ useEffect(() => {
 {/* ====================================================== */}
 {/* HEADER - ORIENTATION                                   */}
 {/* ====================================================== */}
-<header
-  className="
-    pb-4
-    flex
-    flex-col
-    gap-4
-  "
->
+<header className="pb-4 flex flex-col gap-4 mt-[32px]">
+  
   <h1 className="text-3xl font-medium tracking-tight">
 {t("archive.title")}
   </h1>
