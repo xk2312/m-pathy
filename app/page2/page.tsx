@@ -2239,7 +2239,7 @@ async function sendMessageLocal(
     const res = await fetch("/api/chat", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  credentials: "same-origin",
+  credentials: "include",
   body: JSON.stringify({
   messages: context,
   locale: getLocale(),
