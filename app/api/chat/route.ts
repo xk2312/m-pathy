@@ -629,16 +629,22 @@ const executionArtifact =
 const irssRuntimePrompt: ChatMessage = {
   role: "system",
   content: [
-    "Respond with an IRSS JSON block followed by the answer.",
-    "Ensure the JSON is valid.",
-    "2. Then output one blank line.",
-    "3. Then output the normal response content.",
+    "IRSS output protocol is mandatory for every reply.",
+    "A valid reply has exactly two parts in this order:",
+    "1. a valid IRSS JSON object as the very first output",
+    "2. exactly one blank line",
+    "3. the normal answer in the user's language",
     "",
-    "The IRSS block must be the first emitted output.",
+    "Any reply that starts with plain text is invalid.",
+    "Any reply that omits the IRSS JSON object is invalid.",
+    "This rule applies to every turn, including greetings, short answers, identity questions, confirmations, clarifications, and casual chat.",
+    "",
+    "Output the IRSS JSON object first.",
     "Do not place any text before it.",
-    "Do not wrap the IRSS block in markdown fences.",
+    "Do not wrap it in markdown fences.",
     "Do not rename keys.",
     "Do not omit keys.",
+    "",
     "Use exactly this JSON shape:",
     "{",
     '  "irss": {',
@@ -659,12 +665,9 @@ const irssRuntimePrompt: ChatMessage = {
     "}",
     "",
     "All fields are mandatory.",
-    "Use valid values only.",
     "session_prompt_counter must be a positive integer.",
     "extensions_loaded must be an array.",
-    "domains must be an array.",
-    "",
-    "After the IRSS JSON block, continue with the normal answer in the same language as the user."
+    "domains must be an array."
   ].join("\n"),
 };
 
@@ -813,7 +816,7 @@ if ((global as any).__m13ExecutionArtifact) {
       return NextResponse.json({ error: "No message content" }, { status: 502 });
     }
 
-    const rawContent = content;
+  const rawContent = content;
 
     let irssPayload: any = null;
     let irssContent = "";
@@ -853,6 +856,39 @@ if ((global as any).__m13ExecutionArtifact) {
         }
       }
     }
+
+    if (!irssPayload) {
+      console.warn("[IRSS][FALLBACK][APPLIED]", {
+        reason: "model_response_without_irss",
+        session_prompt_counter: serverCounter,
+        preview: String(rawContent).slice(0, 200),
+      });
+
+      irssPayload = {
+        system: "M13",
+        version: "0.1",
+        session_prompt_counter: serverCounter,
+        orchestrator_id: "server_fallback",
+        command: "missing_irss",
+        agent_id: "fallback",
+        action: "model_response_without_irss",
+        extensions_loaded: Array.isArray(extensionsLoaded) ? extensionsLoaded : [],
+        complexity_level: "C1",
+        domains: [],
+        drift_origin: "missing_irss",
+        drift_state: "detected",
+        drift_risk: "high",
+      };
+
+      irssContent = JSON.stringify({ irss: irssPayload }, null, 2);
+      renderContent = rawContent;
+    }
+
+    console.log("[IRSS][POST-SPLIT][STATE]", {
+      hasIrssPayload: !!irssPayload,
+      hasIrssContent: !!irssContent,
+      renderLength: typeof renderContent === "string" ? renderContent.length : 0,
+    });
 
     let tokensUsed: number;
 
