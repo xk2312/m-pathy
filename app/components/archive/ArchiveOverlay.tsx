@@ -416,8 +416,7 @@ useEffect(() => {
         setChatView('recent')
         setOpenChainId(null)
       }}
-      className={`${mode === 'chat' ? 'text-cyan-400' : 'text-text-secondary'} cursor-pointer`}
-    >
+className={`${mode === 'chat' ? '!text-[#875DC2]' : 'text-text-secondary'} cursor-pointer`}    >
 {t("archive.modes.chat")}
     </button>
 
