@@ -2533,7 +2533,7 @@ if (data?.message) {
     );
     console.log("[M13][FRONTEND] DISPATCH DONE");
   }
-
+console.log("[M13][FRONTEND] IRSS FIELD", data?.irss ?? null);
   return {
     id:
       typeof crypto !== 'undefined' &&
@@ -2545,6 +2545,7 @@ if (data?.message) {
       ? data.message
       : JSON.stringify(data.message, null, 2),
     format: "markdown",
+    irss: data?.irss ?? null,
     meta: {
       handoff_mode: data?.handoff_mode ?? null
     }
