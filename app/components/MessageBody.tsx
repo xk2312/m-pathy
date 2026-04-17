@@ -84,26 +84,14 @@ try {
 } else if (isAssistant && effectiveFmt === 'plain' && typeof msg.content === "string") {
   const raw = msg.content || "";
 
-  let cleaned = raw;
+let cleaned = raw;
 
-  if (cleaned.trimStart().startsWith('{"irss"')) {
-    let depth = 0;
-    let end = 0;
+// 👉 Finde erstes echtes Textzeichen nach JSON
+const firstTextIndex = raw.search(/[A-Za-zÄÖÜäöü0-9]/);
 
-    for (let i = 0; i < cleaned.length; i++) {
-      const char = cleaned[i];
-
-      if (char === "{") depth++;
-      if (char === "}") depth--;
-
-      if (depth === 0) {
-        end = i + 1;
-        break;
-      }
-    }
-
-    cleaned = cleaned.slice(end).trim();
-  }
+if (firstTextIndex > 0) {
+  cleaned = raw.slice(firstTextIndex).trim();
+}
 
   node = (
     <span
