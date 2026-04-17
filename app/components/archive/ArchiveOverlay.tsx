@@ -359,16 +359,14 @@ useEffect(() => {
     /* ============================================================ */
 <div
   className="
-    fixed
-    inset-0
-    z-[2147483647]
+    w-full
+    h-full
     bg-gradient-to-b
     from-[#121418]
     via-[#0C0C0C]
     to-[#080808]
     text-text-primary
     overflow-hidden
-    pt-[64px]
     pr-[30px]
     pb-[30px]
     pl-[30px]
@@ -400,7 +398,7 @@ useEffect(() => {
 {/* CONTENT FRAME - FULL BLEED                                 */}
 {/* ========================================================== */}
 <div className="w-full flex flex-col">
-  
+
   <div
     className="
       w-full
