@@ -1190,36 +1190,16 @@ function Conversation({
   /* === EINFÜGEN ENDE ======================================= */
 >
 {messages.map((m, i) => {
-  const raw = typeof m.content === "string" ? m.content : "";
 
-const irssIndex = raw.indexOf('{"irss"');
-  let content = m.content;
-  let irss = null;
 
- if (irssIndex !== -1) {
-  const afterIrss = raw.slice(irssIndex);
-
-  // 👉 finde ENDE des IRSS JSON Blocks
-  const match = afterIrss.match(/^\s*\{[\s\S]*?\}\s*/);
-
-  if (match) {
-    irss = match[0].trim();
-    content = afterIrss.slice(match[0].length).trim();
-  } else {
-    // fallback (falls JSON nicht sauber matcht)
-    irss = afterIrss.trim();
-    content = "";
-  }
-}
-
-  return (
-    <Bubble
-      key={i}
-      msg={{ ...m, content, irss }}
-      tokens={tokens}
-      onOpenTriketon={onOpenTriketon}
-    />
-  );
+return (
+  <Bubble
+    key={i}
+    msg={m}
+    tokens={tokens}
+    onOpenTriketon={onOpenTriketon}
+  />
+);
 })}
     <div className="chat-end-spacer" style={{ height: padBottom }} aria-hidden />
 </section>
