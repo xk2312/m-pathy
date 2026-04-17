@@ -151,7 +151,7 @@ export async function POST(req: NextRequest) {
 
   const cookieStore = cookies();
   const raw = cookieStore.get("mpathy_session")?.value;
-
+console.log("[SESSION][RAW COOKIE STRING]", raw);
  let conversationId: string;
 let serverCounter: number = 1;
 
@@ -161,9 +161,18 @@ if (!raw) {
 } else {
   try {
     const parsed = JSON.parse(raw);
-    conversationId = parsed.conversationId;
-    const prevCounter = Number(parsed.counter) || 0;
-    serverCounter = prevCounter + 1;
+
+console.log("[SESSION][PARSED COOKIE]", parsed);
+
+conversationId = parsed.conversationId;
+
+const prevCounter = Number(parsed.counter) || 0;
+
+console.log("[SESSION][PREV COUNTER]", prevCounter);
+
+serverCounter = prevCounter + 1;
+
+console.log("[SESSION][NEW COUNTER]", serverCounter);
   } catch {
     conversationId = crypto.randomUUID();
     serverCounter = 1;
@@ -983,15 +992,18 @@ const res = NextResponse.json(
   },
   { status: 200 }
 );
-
+console.log("[SESSION][SET COOKIE]", {
+  conversationId,
+  serverCounter
+});
 res.cookies.set({
   name: "mpathy_session",
   value: JSON.stringify({
-  conversationId,
-  counter: serverCounter,
-}),
+    conversationId,
+    counter: serverCounter,
+  }),
   httpOnly: true,
-  secure: true,
+  secure: process.env.NODE_ENV === "production",
   sameSite: "lax",
   path: "/",
 });
