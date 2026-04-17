@@ -1198,8 +1198,8 @@ div[data-convo="1"] { scrollbar-color: rgba(255,255,255,0.25) transparent;
   margin: 1.4rem 0;
   padding: 0.9rem 0.95rem 0.95rem;
   border-radius: 0.9rem;
-  background: rgba(15, 23, 42, 0.98);
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #080808;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
   overflow: hidden;
 }
@@ -1234,13 +1234,9 @@ div[data-convo="1"] { scrollbar-color: rgba(255,255,255,0.25) transparent;
   right: 0.55rem;
   padding: 0.15rem 0.6rem;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: linear-gradient(
-    135deg,
-    rgba(15, 23, 42, 0.98),
-    rgba(15, 23, 42, 0.92)
-  );
-  color: #e5f2ff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(8, 8, 8, 0.96);
+  color: #f5f6f7;
   font-size: 0.72rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
