@@ -330,12 +330,6 @@ useEffect(() => {
 }, [mode])
 
 
-
-
-
-
-
-
   const resolveChainIdFromChatSerial = async (chatSerial: string) => {
   const chats = await getRecentChats(13)
 
@@ -455,6 +449,7 @@ useEffect(() => {
     to-[#080808]
     text-text-primary
     overflow-hidden
+    pt-[64px]
     pr-[30px]
     pb-[30px]
     pl-[30px]
