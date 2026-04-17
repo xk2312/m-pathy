@@ -2233,8 +2233,12 @@ async function sendMessageLocal(
     const effectiveState =
       stateOverride !== undefined ? stateOverride : systemState;
 
-    const conversationId =
-      localStorage.getItem("mpathy:conversation:id") || crypto.randomUUID();
+   let conversationId = localStorage.getItem("mpathy:conversation:id");
+
+if (!conversationId) {
+  conversationId = crypto.randomUUID();
+  localStorage.setItem("mpathy:conversation:id", conversationId);
+}
 
     const res = await fetch("/api/chat", {
   method: "POST",
