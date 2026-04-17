@@ -729,12 +729,20 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
     }
   }, [rawContent]);
 
-  const visibleContent = splitTelemetryFromContent.visibleContent;
-  const telemetryBlock = splitTelemetryFromContent.telemetryBlock;
+ const visibleContent = splitTelemetryFromContent.visibleContent;
+  const telemetryBlock =
+    (msg as any)?.irss != null
+      ? JSON.stringify((msg as any).irss, null, 2)
+      : splitTelemetryFromContent.telemetryBlock;
   const isMd = (msg as any).format === "markdown";
   const html = isMd ? mdToHtml(visibleContent) : null;
   const telemetryHtml = telemetryBlock ? mdToHtml("```json\n" + telemetryBlock + "\n```") : null;
   const containerRef = React.useRef<HTMLDivElement | null>(null);
+
+  console.log("[M13][MESSAGEBODY] IRSS SOURCE", {
+    hasMsgIrss: !!(msg as any)?.irss,
+    hasTelemetryBlock: !!telemetryBlock,
+  });
 
   const onRootClick = React.useCallback(
     async (e: React.MouseEvent<HTMLDivElement>) => {
