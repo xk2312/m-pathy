@@ -140,8 +140,13 @@ return (
   }`}
 >
   <div className="max-w-[560px]">
-    <form onSubmit={handleSubmit} className="space-y-6">
-
+<form
+  onSubmit={(e) => {
+    e.preventDefault();
+    handleSubmit(e);
+  }}
+  className="space-y-6"
+>
       <div>
         <label className="block text-sm text-white/60 mb-1">
           {t.contact.fields[0]}
