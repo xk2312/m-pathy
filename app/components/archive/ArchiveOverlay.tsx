@@ -399,17 +399,7 @@ useEffect(() => {
 {/* ========================================================== */}
 <div className="w-full flex flex-col">
 
-  <div
-    className="
-      w-full
-      max-w-[920px]
-      mx-auto
-      flex
-      flex-col
-      h-full
-      relative
-    "
-  >
+ <div className="w-full max-w-[920px] mx-auto flex flex-col h-full relative pt-[24px]">
 
 {/* ====================================================== */}
 {/* HEADER - ORIENTATION                                   */}
