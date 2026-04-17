@@ -651,7 +651,7 @@ className="
 {/* ====================================================== */}
 {/* BODY                                                   */}
 {/* ====================================================== */}
-<div className="flex-1 min-h-0 overflow-y-auto mt-[15px] px-[10px] bg-red-500/20">
+<div className="flex-1 min-h-0 overflow-y-auto mt-[15px] px-[10px]">
 
   {/* REPORTS ROOT - ALWAYS OVERVIEW */}
  {mode === 'reports' && (
