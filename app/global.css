@@ -1235,8 +1235,8 @@ div[data-convo="1"] { scrollbar-color: rgba(255,255,255,0.25) transparent;
   padding: 0.15rem 0.6rem;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(8, 8, 8, 0.96);
-  color: #f5f6f7;
+  background: #080808;  color: #f5f6f7;
+  backdrop-filter: blur(6px);
   font-size: 0.72rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1251,9 +1251,11 @@ div[data-convo="1"] { scrollbar-color: rgba(255,255,255,0.25) transparent;
 .md-code-copy:hover {
   opacity: 1;
   transform: translateY(-1px);
-  border-color: rgba(56, 189, 248, 0.9);
-}
 
+  background: #6A4A97;
+  border-color: #875DC2;
+  color: #ffffff;
+}
 /* Copy-Button direkt am Codeblock */
 .md-code-copy[data-copied="true"]::after {
   content: " Copied";

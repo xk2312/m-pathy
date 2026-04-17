@@ -855,18 +855,18 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
           </summary>
 
           <div
-            className="markdown"
-            dangerouslySetInnerHTML={{ __html: telemetryHtml ?? "" }}
-            style={{
-              marginTop: 12,
-              padding: "14px 18px",
-              borderRadius: 16,
-              background: "rgba(15,23,42,0.4)",
-              fontSize: 11,
-              lineHeight: 1.55,
-              whiteSpace: "pre-wrap",
-            }}
-          />
+  className="markdown"
+  dangerouslySetInnerHTML={{ __html: telemetryHtml ?? "" }}
+  style={{
+    marginTop: 12,
+    padding: 0,
+    borderRadius: 0,
+    background: "transparent",
+    fontSize: 11,
+    lineHeight: 1.55,
+    whiteSpace: "pre-wrap",
+  }}
+/>
         </details>
       )}
     </div>
