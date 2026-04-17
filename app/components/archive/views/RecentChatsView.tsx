@@ -209,8 +209,8 @@ export default function RecentChatsView({
     }}
   >
 
-          <div className="flex gap-2">
-            <div className="pt-1 text-text-muted group-hover:text-text-secondary transition">
+              <div className="flex items-start gap-3">
+              <div className="pt-1 text-text-muted group-hover:text-text-secondary transition">
               <MessageSquare size={18} />
             </div>
 
