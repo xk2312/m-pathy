@@ -426,8 +426,8 @@ className={`${mode === 'chat' ? '!text-[#875DC2]' : 'text-text-secondary'} curso
     </button>
 
     <button
-      onClick={() => setMode('reports')}
-      className={`${mode === 'reports' ? 'text-cyan-400' : 'text-text-secondary'} cursor-pointer`}
+  onClick={() => setMode('reports')}
+  className={`${mode === 'reports' ? 'text-[#875DC2]' : 'text-text-secondary'} cursor-pointer`}
     >
 {t("archive.modes.reports")}
     </button>
@@ -508,7 +508,7 @@ hover:text-[#6A4A97]
     ${
       selection.length > 4 || isPreparing
         ? 'text-text-muted cursor-not-allowed'
-        : 'text-cyan-400 hover:text-cyan-300'
+        : 'text-[#875DC2] hover:text-[#6A4A97]'
     }
   `}
 >
@@ -602,11 +602,11 @@ focus-visible:ring-[#875DC2]  "
             {idx >= 0 ? (
               <>
                 <span className="text-text-secondary">{before}</span>
-                <span className="text-cyan-400">{hit}</span>
+                <span className="text-[#875DC2]">{hit}</span>         
                 <span className="text-text-secondary">{after}</span>
               </>
             ) : (
-              <span className="text-cyan-400">{hit}</span>
+                <span className="text-[#875DC2]">{hit}</span>
             )}
           </span>
         )
