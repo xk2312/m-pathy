@@ -10,12 +10,16 @@ import { restoreTriketonFromVault } from '@/lib/storage'
 export default function ArchiveInit() {
   const didInit = useRef(false)
 
-  useEffect(() => {
-    restoreTriketonFromVault()
-    ensureLiveArchivePairProjection()
+useEffect(() => {
+  restoreTriketonFromVault()
 
-    const TRIKETON_KEY = 'mpathy:triketon:v1'
-    let stopped = false
+  // 🔴 DELAY verhindert Multi-Tab Race
+ const t = setTimeout(() => {
+  ensureLiveArchivePairProjection()
+}, 40)
+
+const TRIKETON_KEY = 'mpathy:triketon:v1'
+let stopped = false
 
     const hasTriketon = (): boolean => {
       try {
@@ -78,9 +82,10 @@ export default function ArchiveInit() {
     window.addEventListener('mpathy:triketon:updated', onUpdated)
 
     return () => {
-      stopped = true
-      window.removeEventListener('mpathy:triketon:updated', onUpdated)
-    }
+  clearTimeout(t)
+  stopped = true
+  window.removeEventListener('mpathy:triketon:updated', onUpdated)
+}
 
 
 

@@ -449,19 +449,32 @@ if (!pairMap.has(pair_id)) {
     }
   }
 
- const pairs = Array.from(pairMap.values())
+const pairs = Array.from(pairMap.values())
 
-/* trace removed */
-writeLS(PAIRS_KEY, pairs)
-
-if (typeof window !== 'undefined') {
-/* trace removed */  window.dispatchEvent(new CustomEvent('mpathy:archive:updated'))
+// 🔴 GUARD: niemals leeren Zustand persistieren
+if (!Array.isArray(pairs) || pairs.length === 0) {
+  return pairs
 }
 
-if (pairs.length === 0) {
-/* trace removed */}
+// 🔴 OPTIONAL HARD GUARD: instabile timestamps blocken
+const hasInvalid = pairs.some(
+  (p) =>
+    !p.user?.timestamp ||
+    !p.assistant?.timestamp
+)
 
-/* trace removed */
+if (hasInvalid) {
+  return pairs
+}
+
+// ✅ WRITE nur bei stabilem Zustand
+writeLS(PAIRS_KEY, pairs)
+
+// ✅ EVENT erst nach stabilem Write
+if (typeof window !== 'undefined') {
+  window.dispatchEvent(new CustomEvent('mpathy:archive:updated'))
+}
+
 return pairs
 }
 

@@ -203,17 +203,35 @@ const byChain = new Map<string, TriketonAnchor[]>()
     })
   }
 
-  writeLS(CHAT_MAP_KEY, chatMap)
-  writeLS(CHAT_COUNTER_KEY, counter)
-  writeLS(ARCHIVE_KEY, chats)
-
-  // 🔔 notify UI that archive projection changed
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('mpathy:archive:updated'))
-  }
-
+// 🔴 GUARD: keine leeren Chats persistieren
+if (!Array.isArray(chats) || chats.length === 0) {
   return chats
 }
+
+// 🔴 HARD GUARD: keine instabilen timestamps zulassen
+const hasInvalid = chats.some(
+  (c) =>
+    !c.first_timestamp ||
+    !c.last_timestamp ||
+    c.entries.some((e) => !e.timestamp)
+)
+
+if (hasInvalid) {
+  return chats
+}
+
+// ✅ WRITE nur bei stabilem Zustand
+writeLS(CHAT_MAP_KEY, chatMap)
+writeLS(CHAT_COUNTER_KEY, counter)
+writeLS(ARCHIVE_KEY, chats)
+
+// ✅ EVENT erst nach stabilem Write
+if (typeof window !== 'undefined') {
+  window.dispatchEvent(new CustomEvent('mpathy:archive:updated'))
+}
+
+return chats
+}  
 
 
 

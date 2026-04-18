@@ -2778,13 +2778,34 @@ truth_hash: computeTruthHash(
 if (last && (last as any).id === (userMsg as any).id) return; // Duplicate-Guard
 
 
-      const enriched = {
-        ...ledger[ledger.length - 1],
-        chat_serial: chatSerial,
-        msg_number: msgNumber,
-      };
+    const base = ledger[ledger.length - 1] || {}
 
-      ledger[ledger.length - 1] = enriched;
+const enriched = {
+  id: base.id,
+  role: base.role,
+  content: base.content,
+  truth_hash: base.truth_hash,
+  chain_id: base.chain_id,
+
+  // 🔴 HARD GUARANTEE
+  timestamp:
+    typeof base.timestamp === "string" && base.timestamp.length > 0
+      ? base.timestamp
+      : new Date().toISOString(),
+
+  chat_serial: chatSerial,
+  msg_number: msgNumber,
+}
+
+ledger[ledger.length - 1] = enriched
+
+// 🔴 ATOMIC WRITE
+window.localStorage.setItem("mpathy:triketon:v1", JSON.stringify(ledger))
+
+// 🔴 DELAYED TRIGGER (Race Fix)
+setTimeout(() => {
+  window.dispatchEvent(new Event("mpathy:triketon:updated"))
+}, 20)
 
       console.debug(`[TriketonLedger] numbered #${msgNumber} (chat ${chatSerial})`);
     } catch (err) {
