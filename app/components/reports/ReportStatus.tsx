@@ -98,19 +98,5 @@ export default function ReportStatus({ report }: ReportStatusProps) {
     }
   }, [report])
 
-  return (
-    <div className="flex items-center gap-2 text-sm mt-2">
-      {verified === null && (
-        <span className="text-muted animate-pulse">{t.loading}</span>
-      )}
-      {verified === true && (
-        <span className="text-cyan-400 font-medium">
-          🟢 {t.success} ({t.verifyChat})
-        </span>
-      )}
-      {verified === false && (
-        <span className="text-secondary font-medium">⚪︎ {t.fail}</span>
-      )}
-    </div>
-  )
+  return null
 }
