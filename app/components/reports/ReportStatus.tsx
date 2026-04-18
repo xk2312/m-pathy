@@ -202,7 +202,10 @@ export default function ReportStatus({ report }: ReportStatusProps) {
         })
 
         const data = (await res.json()) as VerifyResponse
-        const ok = res.ok && data?.result === 'TRUE'
+        const ok =
+        res.ok &&
+        typeof data?.result !== 'undefined' &&
+        String(data.result).toLowerCase() === 'true'
         if (!cancelled) setVerified(ok)
       } catch {
         if (!cancelled) setVerified(false)
