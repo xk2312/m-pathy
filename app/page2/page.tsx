@@ -2524,10 +2524,39 @@ if (data?.message) {
     console.log("[M13][FRONTEND] WRITING user_registry VALUE", data.user_registry);
 
     try {
-      localStorage.setItem(
-        "mpathy:user_registry",
-        JSON.stringify(data.user_registry)
-      );
+     try {
+  const dbRequest = indexedDB.open("MpathyRuntime", 1);
+
+  dbRequest.onupgradeneeded = function () {
+    const db = dbRequest.result;
+    if (!db.objectStoreNames.contains("user")) {
+      db.createObjectStore("user");
+    }
+  };
+
+  dbRequest.onsuccess = function () {
+    const db = dbRequest.result;
+    const tx = db.transaction("user", "readwrite");
+    const store = tx.objectStore("user");
+
+    store.put(data.user_registry, "registry");
+
+    tx.oncomplete = function () {
+      console.log("[M13][INDEXEDDB] WRITE COMPLETE");
+    };
+
+    tx.onerror = function (err) {
+      console.error("[M13][INDEXEDDB] TX ERROR", err);
+    };
+  };
+
+  dbRequest.onerror = function (err) {
+    console.error("[M13][INDEXEDDB] OPEN ERROR", err);
+  };
+
+} catch (err) {
+  console.error("[M13][FRONTEND] INDEXEDDB WRITE FAILED", err);
+}
       console.log("[M13][FRONTEND] localStorage WRITE OK");
     } catch (err) {
       console.error("[M13][FRONTEND] localStorage WRITE FAILED", err);
