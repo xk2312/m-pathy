@@ -10,34 +10,99 @@ type Props = {
 };
 
 export default function Saeule({ onClearChat, messages }: Props) {
-const [items, setItems] = useState<any[]>(() => {
-  try {
-    if (typeof window === "undefined") return [];
-    const stored = localStorage.getItem("mpathy:user_registry");
-    if (!stored) return [];
-    const parsed = JSON.parse(stored);
-    return Array.isArray(parsed?.items) ? parsed.items : [];
-  } catch {
-    return [];
-  }
-});
-
+const [items, setItems] = useState<any[]>([]);
 const [isClient, setIsClient] = useState(false);
 
   // 🔥 1. Initial Load
 useEffect(() => {
   try {
-    const stored = localStorage.getItem("mpathy:user_registry");
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (parsed?.items) {
-        setItems(parsed.items);
+    console.log("[M13][SAEULE] BOOT START");
+
+    const dbRequest = indexedDB.open("MpathyRuntime", 1);
+
+    dbRequest.onupgradeneeded = function () {
+      const db = dbRequest.result;
+      console.log("[M13][SAEULE] DB UPGRADE");
+      if (!db.objectStoreNames.contains("user")) {
+        db.createObjectStore("user");
       }
-    }
-  } catch {}
+    };
+
+    dbRequest.onsuccess = function () {
+      console.log("[M13][SAEULE] DB OPEN SUCCESS");
+
+      const db = dbRequest.result;
+      const tx = db.transaction("user", "readonly");
+      const store = tx.objectStore("user");
+
+      const getRequest = store.get("registry");
+
+      getRequest.onsuccess = function () {
+        const user_registry = getRequest.result;
+
+        console.log("[M13][SAEULE] DB RESULT", user_registry);
+
+        if (user_registry?.items) {
+          console.log("[M13][SAEULE] SET ITEMS", user_registry.items);
+          setItems(user_registry.items);
+        } else {
+          console.log("[M13][SAEULE] NO ITEMS FOUND");
+        }
+      };
+
+      getRequest.onerror = function (err) {
+        console.error("[M13][SAEULE] READ ERROR", err);
+      };
+
+      tx.oncomplete = function () {
+        console.log("[M13][SAEULE] TX COMPLETE");
+      };
+
+      tx.onerror = function (err) {
+        console.error("[M13][SAEULE] TX ERROR", err);
+      };
+    };
+
+    dbRequest.onerror = function (err) {
+      console.error("[M13][SAEULE] DB OPEN ERROR", err);
+    };
+
+  } catch (err) {
+    console.error("[M13][SAEULE] BOOT FAILED", err);
+  }
 
   setIsClient(true);
 }, []);
+
+useEffect(() => {
+  function handleRegistryUpdate(event: any) {
+    try {
+      console.log("[M13][SAEULE] EVENT RECEIVED", event.detail);
+
+      const user_registry = event?.detail?.user_registry;
+
+      if (user_registry?.items) {
+        console.log("[M13][SAEULE] EVENT SET ITEMS", user_registry.items);
+        setItems(user_registry.items);
+      } else {
+        console.log("[M13][SAEULE] EVENT NO ITEMS");
+      }
+
+    } catch (err) {
+      console.error("[M13][SAEULE] EVENT ERROR", err);
+    }
+  }
+
+  console.log("[M13][SAEULE] EVENT LISTENER REGISTER");
+  window.addEventListener("mpathy:registry:update", handleRegistryUpdate);
+
+  return () => {
+    console.log("[M13][SAEULE] EVENT LISTENER CLEANUP");
+    window.removeEventListener("mpathy:registry:update", handleRegistryUpdate);
+  };
+}, []);
+
+
 
   // 🔥 2. Live Updates
   useEffect(() => {
