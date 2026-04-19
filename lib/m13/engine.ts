@@ -232,8 +232,41 @@ if (next === undefined) {
   }
 }
 
-  if (next === null) {
+ if (next === null) {
   console.log("[ENGINE] exit reached at step:", state.stepId)
+
+  // 🔥 PERSIST MAPPING (FINAL EXIT POINT)
+  if (currentStep?.persist && (state as any).collectedData) {
+    try {
+      console.log("[M13][ENGINE][PERSIST] START", currentStep.persist);
+
+      for (const targetPath in currentStep.persist) {
+        const sourceKey = currentStep.persist[targetPath];
+        const value = (state as any).collectedData[sourceKey];
+
+        if (value === undefined) continue;
+
+        const parts = targetPath.split(".");
+        let cursor = (state as any).collectedData;
+
+        for (let i = 0; i < parts.length - 1; i++) {
+          if (!cursor[parts[i]]) cursor[parts[i]] = {};
+          cursor = cursor[parts[i]];
+        }
+
+        cursor[parts[parts.length - 1]] = value;
+
+        console.log("[M13][ENGINE][PERSIST] MAPPED", {
+          from: sourceKey,
+          to: targetPath,
+          value
+        });
+      }
+
+    } catch (err) {
+      console.error("[M13][ENGINE][PERSIST] ERROR", err);
+    }
+  }
 
   if (currentStep.type === "action") {
     return {
@@ -253,11 +286,11 @@ if (next === undefined) {
       extensionId: null,
       stepId: null,
       language
-
     },
     extensionId: null,
     stepId: null,
-    step: currentStep
+    step: currentStep,
+    collectedData: (state as any).collectedData
   }
 }
 

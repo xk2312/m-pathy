@@ -128,11 +128,15 @@
     },
 
     "1.12": {
-      "type": "execution",
-      "action": "run_onboarding_pipeline",
-      "instruction": "Do not render text. Trigger execution immediately.",
-      "next": null
-    }
+  "type": "execution",
+  "action": "run_onboarding_pipeline",
+  "persist": {
+    "user_registry.profile.name": "user.name",
+    "user_registry.profile.tone": "user.tone"
+  },
+  "instruction": "Do not render text. Trigger execution immediately.",
+  "next": null
+}
 
   }
 }
