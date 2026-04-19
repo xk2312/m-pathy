@@ -281,6 +281,8 @@ console.log(JSON.stringify(inputPayload, null, 2));
 
 console.log("STEP 0 FILE WRITTEN:", inputPath);
 
+console.log("[M13][ROUTE][INPUT PAYLOAD FINAL]");
+console.log(JSON.stringify(inputPayload, null, 2));
 try {
   const path = require("path");
 

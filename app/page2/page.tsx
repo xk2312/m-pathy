@@ -2524,7 +2524,9 @@ if (data?.message) {
     console.log("[M13][FRONTEND] WRITING user_registry VALUE", data.user_registry);
 
     try {
-     try {
+    console.log("[M13][FRONTEND] BEFORE INDEXEDDB WRITE", data.user_registry);
+
+try {
   const dbRequest = indexedDB.open("MpathyRuntime", 1);
 
   dbRequest.onupgradeneeded = function () {
@@ -2539,8 +2541,15 @@ if (data?.message) {
     const tx = db.transaction("user", "readwrite");
     const store = tx.objectStore("user");
 
-    store.put(data.user_registry, "registry");
+store.put(data.user_registry, "registry");
 
+tx.oncomplete = function () {
+  console.log("[M13][INDEXEDDB] WRITE COMPLETE", data.user_registry);
+};
+
+tx.onerror = function (err) {
+  console.error("[M13][INDEXEDDB] TX ERROR", err);
+};
     tx.oncomplete = function () {
       console.log("[M13][INDEXEDDB] WRITE COMPLETE");
     };

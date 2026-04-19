@@ -279,6 +279,9 @@ if (next === undefined) {
     }
   }
 
+  console.log("[M13][ENGINE][FINAL COLLECTED DATA]");
+  console.log(JSON.stringify((state as any).collectedData, null, 2));
+
   return {
     active: false,
     state: {
@@ -292,7 +295,7 @@ if (next === undefined) {
     step: currentStep,
     collectedData: (state as any).collectedData
   }
-}
+  }
 
     const nextStep = extension.steps[next]
 
