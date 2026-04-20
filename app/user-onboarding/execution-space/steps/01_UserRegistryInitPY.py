@@ -78,7 +78,12 @@ def main():
     input_data = load_json(INPUT_PATH)
 
     if input_data is None:
-        user_registry = build_initial_registry(registry)
+    user_registry = build_initial_registry(registry)
+else:
+    existing_registry = input_data.get("user_registry")
+
+    if existing_registry:
+        base_registry = existing_registry
     else:
         base_registry = build_initial_registry(registry)
         user = input_data.get("user", {})
