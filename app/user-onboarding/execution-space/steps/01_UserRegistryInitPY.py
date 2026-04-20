@@ -18,6 +18,7 @@ OUTPUT_PATH = os.path.join(RUN_DIR, "01_user_registry.json")
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
 REGISTRY_PATH = os.path.join(BASE_DIR, "registry", "registry.json")
 
+
 def load_json(path):
     if not os.path.exists(path):
         return None
@@ -78,14 +79,15 @@ def main():
     input_data = load_json(INPUT_PATH)
 
     if input_data is None:
-    user_registry = build_initial_registry(registry)
-else:
-    existing_registry = input_data.get("user_registry")
-
-    if existing_registry:
-        base_registry = existing_registry
+        user_registry = build_initial_registry(registry)
     else:
-        base_registry = build_initial_registry(registry)
+        existing_registry = input_data.get("user_registry")
+
+        if existing_registry:
+            base_registry = existing_registry
+        else:
+            base_registry = build_initial_registry(registry)
+
         user = input_data.get("user", {})
 
         base_registry["profile"] = {
@@ -99,7 +101,7 @@ else:
 
         base_registry["infrastructure"] = {
             "server": user.get("server"),
-            "status": user.get("status")
+            "status": user.get("status") or "none"
         }
 
         user_registry = repair_registry(base_registry, registry)
