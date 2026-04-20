@@ -242,34 +242,83 @@ if (currentStep.type === "execution" && currentStep.persist) {
   }
 }
 
-let next = currentStep.next
+let next
 
 const userInput = input?.value?.trim()
 
-if (currentStep.next_map && userInput && currentStep.next_map[userInput]) {
-  next = currentStep.next_map[userInput]
-}
+console.log("[ENGINE][ROUTING][START]", {
+  stepId: state.stepId,
+  type: currentStep.type,
+  input: userInput
+})
 
-if (next === undefined) {
-  console.error("[ENGINE][ERROR] next missing in step:", state.stepId)
-  return {
-    active: false,
-    state: {
+if (currentStep.type === "selection") {
+  if (currentStep.next_map) {
+    console.log("[ENGINE][ROUTING] using next_map")
+
+    if (userInput in currentStep.next_map) {
+      next = currentStep.next_map[userInput]
+
+      console.log("[ENGINE][ROUTING] next_map hit", {
+        input: userInput,
+        resolvedNext: next
+      })
+
+    } else {
+      console.error("[ENGINE][ERROR] invalid selection:", userInput)
+
+      console.log("[ENGINE][ROUTING] available options:", Object.keys(currentStep.next_map))
+
+      return {
+        active: true,
+        state: {
+          ...state,
+          language
+        },
+        extensionId: state.extensionId,
+        stepId: state.stepId,
+        step: currentStep,
+        instruction: currentStep.instruction || null
+      }
+    }
+
+  } else if (currentStep.next !== undefined) {
+    console.log("[ENGINE][ROUTING] fallback to next")
+
+    next = currentStep.next
+
+  } else {
+    console.error("[ENGINE][ERROR] no routing defined for selection step:", state.stepId)
+
+    return {
       active: false,
+      state: {
+        active: false,
+        extensionId: null,
+        stepId: null,
+        language
+      },
       extensionId: null,
       stepId: null,
-      language
-    },
-    extensionId: null,
-    stepId: null,
-    step: null
+      step: null
+    }
   }
+
+} else {
+  console.log("[ENGINE][ROUTING] non-selection step → using next")
+
+  next = currentStep.next
 }
 
- if (next === null) {
-  console.log("[ENGINE] exit reached at step:", state.stepId)
-
-
+console.log("[ENGINE][ROUTING][RESOLVED]", {
+  stepId: state.stepId,
+  next
+})
+if (next === null) {
+  console.log("[ENGINE][ROUTING][EXIT]", {
+    stepId: state.stepId
+  })
+}
   if (currentStep.type === "action") {
     return {
       active: false,
@@ -279,7 +328,7 @@ if (next === undefined) {
         rules: currentStep.rules || {}
       }
     }
-  }
+  
 
   console.log("[M13][ENGINE][FINAL COLLECTED DATA]");
   console.log(JSON.stringify((state as any).collectedData, null, 2));
