@@ -93,11 +93,19 @@ def main():
         }
 
         base_registry["infrastructure"] = {
-            "server": user.get("server")
+            "server": user.get("server"),
+            "status": ""
         }
 
-        user_registry = repair_registry(base_registry, registry)
+user_registry = repair_registry(base_registry, registry)
 
+if "infrastructure" not in user_registry:
+    user_registry["infrastructure"] = {
+        "server": None,
+        "status": ""
+    }
+elif "status" not in user_registry["infrastructure"]:
+    user_registry["infrastructure"]["status"] = ""
     save_json(OUTPUT_PATH, user_registry)
 
     print("STEP 01 COMPLETE: user_registry initialized")
