@@ -268,8 +268,16 @@ try {
   }
 
   if (body?.public_key) {
-    collectedData.user.public_key = body.public_key;
-  }
+  collectedData.user.public_key = body.public_key;
+}
+
+// 🔥 Merge user → user_registry if exists
+if (collectedData.user_registry && collectedData.user) {
+  collectedData.user_registry = {
+    ...collectedData.user_registry,
+    ...collectedData.user
+  };
+}
   // 🌐 Ensure server field always exists
   if (!collectedData.user.server) {
     collectedData.user.server = null;
