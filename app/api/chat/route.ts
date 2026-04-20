@@ -271,14 +271,10 @@ try {
   collectedData.user.public_key = body.public_key;
 }
 
- // 🌐 Ensure server field always exists
-if (collectedData.user && collectedData.user.server === undefined) {
-  collectedData.user.server = null;
-}
-
-if (collectedData.user && collectedData.user.status === undefined) {
-  collectedData.user.status = "none";
-}
+  // 🌐 Ensure server field always exists
+  if (!collectedData.user.server) {
+    collectedData.user.server = null;
+  }
   } catch (e) {
     console.warn("[M13][ROUTE][PUBLIC KEY INJECTION FAILED]", e);
   }
@@ -287,10 +283,12 @@ if (!fs.existsSync(runPath)) {
   fs.mkdirSync(runPath, { recursive: true });
 }
 
-const inputPayload = {
-  user: collectedData.user || {},
-  user_registry: collectedData.user_registry || null
-};
+const inputPayload =
+  collectedData?.user_registry
+    ? { user_registry: collectedData.user_registry }
+    : Object.keys(collectedData).length > 0
+      ? collectedData
+      : {};
 
 fs.writeFileSync(
   inputPath,
