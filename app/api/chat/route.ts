@@ -275,6 +275,10 @@ try {
 if (collectedData.user && collectedData.user.server === undefined) {
   collectedData.user.server = null;
 }
+
+if (collectedData.user && collectedData.user.status === undefined) {
+  collectedData.user.status = "none";
+}
   } catch (e) {
     console.warn("[M13][ROUTE][PUBLIC KEY INJECTION FAILED]", e);
   }
