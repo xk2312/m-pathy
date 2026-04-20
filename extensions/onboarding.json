@@ -138,7 +138,7 @@
   "user_registry.profile.tone": "user.tone",
   "user_registry.security.public_key": "user.public_key",
   "user_registry.infrastructure.server": "user.server",
-  "user_registry.infrastructure.status": ""
+  "user_registry.infrastructure.status": "user.status"
   },
   "instruction": "Do not render text. Trigger execution immediately.",
   "next": null
