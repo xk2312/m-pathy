@@ -48,17 +48,6 @@ def build_initial_registry(registry):
             "created_at": datetime.now(UTC).isoformat(),
             "updated_at": datetime.now(UTC).isoformat()
         },
-        "profile": {
-            "name": None,
-            "tone": None
-        },
-        "security": {
-            "public_key": None
-        },
-        "infrastructure": {
-            "server": None,
-            "status": ""
-        },
         "items": wall_ids
     }
 
@@ -90,16 +79,22 @@ def main():
 
     if input_data is None:
         user_registry = build_initial_registry(registry)
-        else:
+    else:
         base_registry = build_initial_registry(registry)
         user = input_data.get("user", {})
 
-        base_registry["profile"]["name"] = user.get("name")
-        base_registry["profile"]["tone"] = user.get("tone")
+        base_registry["profile"] = {
+            "name": user.get("name"),
+            "tone": user.get("tone")
+        }
 
-        base_registry["security"]["public_key"] = user.get("public_key")
+        base_registry["security"] = {
+            "public_key": user.get("public_key")
+        }
 
-        base_registry["infrastructure"]["server"] = user.get("server")
+        base_registry["infrastructure"] = {
+            "server": user.get("server")
+        }
 
         user_registry = repair_registry(base_registry, registry)
 
