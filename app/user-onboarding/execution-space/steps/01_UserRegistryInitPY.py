@@ -77,15 +77,28 @@ def main():
 
     input_data = load_json(INPUT_PATH)
 
-    if input_data is None or "user_registry" not in input_data:
-        user_registry = build_initial_registry(registry)
-    else:
-        user_registry = input_data["user_registry"]
+if input_data is None:
+    user_registry = build_initial_registry(registry)
+else:
+    base_registry = build_initial_registry(registry)
 
-        if not user_registry.get("meta", {}).get("initialized"):
-            user_registry = build_initial_registry(registry)
-        else:
-            user_registry = repair_registry(user_registry, registry)
+    # 🔐 Merge user data into registry
+    user = input_data.get("user", {})
+
+    base_registry["profile"] = {
+        "name": user.get("name"),
+        "tone": user.get("tone")
+    }
+
+    base_registry["security"] = {
+        "public_key": user.get("public_key")
+    }
+
+    base_registry["infrastructure"] = {
+        "server": user.get("server")
+    }
+
+    user_registry = repair_registry(base_registry, registry)
 
     save_json(OUTPUT_PATH, user_registry)
 
