@@ -92,10 +92,10 @@ def main():
             "public_key": user.get("public_key")
         }
 
-        base_registry["infrastructure"] = {
-            "server": user.get("server")
+               base_registry["infrastructure"] = {
+            "server": user.get("server"),
+            "status": ""
         }
-
         user_registry = repair_registry(base_registry, registry)
 
     save_json(OUTPUT_PATH, user_registry)
