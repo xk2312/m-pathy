@@ -1144,7 +1144,22 @@ const res = NextResponse.json(
     debug_usage: usage,
     triketon: triketon ?? null,
   user_registry:
-  executionArtifact?.data?.user_registry ?? null,
+  engineResult?.collectedData?.user
+    ? {
+        profile: {
+          name: engineResult.collectedData.user.name ?? null,
+          tone: engineResult.collectedData.user.tone ?? null
+        },
+        security: {
+          public_key: engineResult.collectedData.user.public_key ?? null
+        },
+        infrastructure: {
+          server: engineResult.collectedData.user.server ?? null
+        },
+        items: executionArtifact?.data?.available_items ?? [],
+        updated_at: executionArtifact?.meta?.timestamp ?? null
+      }
+    : null,
     state: executionArtifact
       ? {
           active: false,
