@@ -40,7 +40,7 @@
 {
   "id": "archive",
   "type": "function",
-  "category": "functions",
+  "category": "system",
   "state": "active",
   "command": "open_archive",
   "path": "functions/system/openArchive",
@@ -56,7 +56,7 @@
 {
   "id": "new_chat",
   "type": "function",
-  "category": "functions",
+  "category": "system",
   "state": "active",
   "command": "new_chat",
   "path": "functions/system/newChat",
@@ -72,7 +72,7 @@
 {
   "id": "csv_download",
   "type": "function",
-  "category": "functions",
+  "category": "system",
   "state": "active",
   "command": "csv_download",
   "path": "functions/download/csvDownload",
@@ -88,7 +88,7 @@
 {
   "id": "json_download",
   "type": "function",
-  "category": "functions",
+  "category": "system",
   "state": "active",
   "command": "json_download",
   "path": "functions/download/jsonDownload",

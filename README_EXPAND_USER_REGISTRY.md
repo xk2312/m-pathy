@@ -1,179 +1,313 @@
-# README_EXPAND_USER_REGISTRY.md
+# README_M13_ENGINE_AND_EXTENSIONS.md
 
 ## 🧠 Purpose
 
-This document describes the **user registry persistence system** in M13.
-It defines how onboarding data is collected, transformed, executed, and stored.
+This document explains the **current state of the M13 Engine and Extension system**.
 
-It also defines **how to safely extend the system** (e.g. adding public key, settings, etc.).
+It is designed for developers who need to:
+
+* understand how the Engine works
+* build or extend Extensions
+* work with routing and execution
+* safely extend the user registry
+
+This is a **source-of-truth document** for the current architecture.
 
 ---
 
-# 🧩 SYSTEM OVERVIEW
+# 🧩 SYSTEM ARCHITECTURE
 
-The system is split into three strict layers:
+M13 is built as a **strictly separated 3-layer system**:
 
-### 1. Engine (Data Collection)
+### 1. Engine (Control Layer)
 
-* Collects structured user input
-* Stores data in `collectedData`
-* Does NOT write files
-* Does NOT transform semantics
+* Processes steps
+* Stores all data in `collectedData`
+* Controls flow (routing)
+* DOES NOT persist to DB or files
 
-### 2. Execution (Shell Pipeline)
+---
 
+### 2. Execution (Persistence Layer)
+
+* Runs via shell (`run.sh`)
 * Receives `01_input.json`
-* Creates system artifacts (e.g. `01_user_registry.json`)
-* Owns all file persistence
+* Creates artifacts (e.g. `01_user_registry.json`)
+* Owns ALL file persistence
+
+---
 
 ### 3. Route (Bridge Layer)
 
-* Connects Engine → Execution → Frontend
-* Builds final `user_registry`
-* Sends structured data to UI
+* Connects Engine ↔ Execution ↔ Frontend
+* Builds final response
+* Merges execution artifacts into API response
 
 ---
 
-# 🔄 CURRENT DATA FLOW
+# 🔄 REAL DATA FLOW (CURRENT)
 
 ```
-Onboarding Extension (Step 1.12)
+Extension (Step)
         ↓
-engine.ts → collectedData.user
+engine.ts → collectedData
         ↓
 route.ts → 01_input.json
         ↓
 run.sh → Python steps
         ↓
-01_user_registry.json
+Artifacts (e.g. 01_user_registry.json)
         ↓
-route.ts (merge layer)
+route.ts (merge)
         ↓
-Frontend (IndexedDB)
+API response
+        ↓
+Frontend → IndexedDB
 ```
 
 ---
 
-# 📁 INVOLVED FILES
+# ⚙️ ENGINE – CURRENT LOGIC
 
-## 🔹 Extension
-
-```
-/extensions/onboarding_extension.json
-```
-
-Relevant:
-
-* Step `1.12`
-* Contains `persist` mapping
-
----
-
-## 🔹 Engine
+File:
 
 ```
 /lib/m13/engine.ts
 ```
 
-Responsibility:
+---
 
-* Maintains `collectedData`
-* Passes data forward
-* DOES NOT persist to DB or files
+## 🔹 Core Responsibilities
+
+* Maintain `state`
+* Maintain `collectedData`
+* Process steps deterministically
+* Resolve next step
 
 ---
 
-## 🔹 Route
-
-```
-/app/api/chat/route.ts
-```
-
-Critical responsibilities:
-
-### 1. Input creation
+## 🔹 Step Types
 
 ```ts
-const inputPayload = ...
-fs.writeFileSync("01_input.json")
+selection
+question (legacy)
+action
+execution
 ```
 
-### 2. Execution trigger
+---
+
+## 🔹 Data Handling
+
+### Standard Steps
 
 ```ts
-execSync("run.sh")
+key → stored in collectedData
 ```
 
-### 3. Artifact parsing
+Example:
 
 ```ts
-const executionArtifact = ...
+"key": "user.name"
 ```
 
-### 4. Final merge (IMPORTANT)
+---
+
+### Execution Steps
+
+Use `persist` mapping:
+
+```json
+"persist": {
+  "user_registry.profile.name": "user.name"
+}
+```
+
+Engine does NOT write this.
+
+It only ensures the data exists in `collectedData`.
+
+---
+
+# 🔀 ROUTING LOGIC (CRITICAL)
+
+---
+
+## 1. Non-selection steps
 
 ```ts
-user_registry = {
-  profile: { name, tone },
-  items: [...],
-  updated_at: ...
+next = currentStep.next
+```
+
+---
+
+## 2. Selection – Linear
+
+```json
+"next": "1.12"
+```
+
+→ every option leads to same step
+
+---
+
+## 3. Selection – Branching
+
+```json
+"next_map": {
+  "1": "1.12",
+  "2": null
 }
 ```
 
 ---
 
-## 🔹 Execution Space
+### Behavior
 
-### Shell
+| Input     | Result        |
+| --------- | ------------- |
+| valid key | mapped step   |
+| `null`    | explicit exit |
+| invalid   | error + stay  |
 
-```
-/app/user-onboarding/execution-space/bin/run.sh
-```
+---
 
-### Steps
+## 🔥 IMPORTANT RULE
 
-```
-/app/user-onboarding/execution-space/steps/
-```
-
-Important:
-
-* `01_UserRegistryInitPY.py`
-* `FinalizeOutputPY.py`
-
-### Output
-
-```
-/runs/<run_id>/01_user_registry.json
+```text
+next_map overrides next
 ```
 
 ---
 
-## 🔹 Frontend
+## 🛑 EXIT LOGIC
 
-### Storage / Sync
-
-```
-/app/page.tsx
-/app/components/... (Saeule, Archive, etc.)
+```json
+"2": null
 ```
 
-### IndexedDB
+means:
 
-```
-Triketon DB
-Key: "registry"
+* Engine stops
+* Flow ends intentionally
+* NOT an error
+
+---
+
+# 🌳 MULTI-PATH ARCHITECTURE (NEW CAPABILITY)
+
+Selections are now **routing nodes**, not just UI choices.
+
+Example:
+
+```json
+"1.11": {
+  "type": "selection",
+  "next_map": {
+    "1": "1.11.1",
+    "2": "1.11.2"
+  }
+}
 ```
 
 ---
 
-# 🧾 CURRENT STRUCTURE
+### This enables:
+
+* fully independent paths
+* separate execution chains
+* tree-like structures
+
+---
+
+### Mental Model
+
+```
+Root
+ ├── Path A → Execution A
+ └── Path B → Execution B
+```
+
+---
+
+# 📁 EXTENSION RULES (MANDATORY)
+
+---
+
+## 1. Selection Types
+
+### Use `next` when:
+
+* all options share same path
+
+---
+
+### Use `next_map` when:
+
+* options lead to different paths
+* cancellation exists
+* logic differs per choice
+
+---
+
+## 2. NEVER create ambiguity
+
+❌ invalid:
+
+```json
+"next": "1.12",
+"next_map": { "1": "1.13" }
+```
+
+---
+
+## 3. Selection = routing node
+
+Not just UI.
+
+---
+
+## 4. Step IDs
+
+Recommended:
+
+```text
+1.11 → 1.11.1 → 1.11.2
+```
+
+NOT:
+
+```text
+1 → 2 → 3 → random jumps
+```
+
+---
+
+## 5. Each branch may have its own:
+
+* flow
+* execution
+* end state
+
+---
+
+# 🧾 USER REGISTRY – CURRENT STATE
+
+---
+
+## Structure
 
 ```json
 {
   "profile": {
     "name": "M",
     "tone": "2"
+  },
+  "security": {
+    "public_key": "..."
+  },
+  "infrastructure": {
+    "server": null
   },
   "items": [
     "settings",
@@ -188,9 +322,9 @@ Key: "registry"
 
 ---
 
-# ⚠️ IMPORTANT ARCHITECTURE RULES
+## ⚠️ IMPORTANT
 
-### 1. DO NOT store semantic values in DB
+### DO NOT store semantic values
 
 ```json
 ❌ "tone": "personal"
@@ -199,136 +333,184 @@ Key: "registry"
 
 ---
 
-### 2. DO NOT write inside engine
-
-Engine = logic only
+# 🔄 USER REGISTRY FLOW (REAL)
 
 ---
 
-### 3. ALL persistence happens in execution layer
+## 1. Frontend
+
+* collects `public_key`
+* sends via request
 
 ---
 
-### 4. Route is the ONLY merge point
+## 2. route.ts
+
+* injects into `collectedData.user`
 
 ---
 
-### 5. LLM NEVER receives raw codes
+## 3. Engine
 
-Mapping happens before injection:
+* passes data forward
+
+---
+
+## 4. Execution
+
+* creates `01_user_registry.json`
+
+---
+
+## 5. Route merge
 
 ```ts
-"2" → "personal"
+user_registry = executionArtifact.data.user_registry
 ```
 
 ---
 
-# 🚀 HOW TO EXTEND USER REGISTRY
+## 6. Frontend
 
-## Example: Add Public Key
+```ts
+window.dispatchEvent("mpathy:registry:update")
+```
 
 ---
 
-## STEP 1 → Extend Extension (Step 1.12)
+## 7. IndexedDB
+
+* stores final state
+
+---
+
+# ⚠️ CRITICAL RULES
+
+---
+
+## 1. Engine NEVER writes files
+
+---
+
+## 2. Execution OWNS persistence
+
+---
+
+## 3. Route is ONLY merge point
+
+---
+
+## 4. Extensions DEFINE structure
+
+---
+
+## 5. LLM NEVER sees raw codes
+
+Mapping happens before rendering
+
+---
+
+# 🧠 LESSONS LEARNED
+
+---
+
+## ❌ Wrong assumptions (past)
+
+* Engine persists → false
+* Route can fake structure → dangerous
+* Selection always linear → false
+
+---
+
+## ✅ Truth
+
+* Engine = state machine
+* Execution = truth layer
+* Route = translator
+* Selection = router
+
+---
+
+## 🔥 Key Insight
+
+The system is **declarative**:
+
+```text
+Extension defines reality
+Engine executes it
+Execution materializes it
+Route exposes it
+```
+
+---
+
+# 🚀 HOW TO EXTEND SYSTEM
+
+---
+
+## Example: Add new field
+
+---
+
+### Step 1 → Extension
 
 ```json
 "persist": {
-  "user_registry.profile.name": "user.name",
-  "user_registry.profile.tone": "user.tone",
   "user_registry.security.public_key": "user.public_key"
 }
 ```
 
 ---
 
-## STEP 2 → Ensure collectedData contains value
-
-Example:
+### Step 2 → Ensure collectedData
 
 ```ts
-collectedData.user.public_key = "abc123"
+collectedData.user.public_key
 ```
 
 ---
 
-## STEP 3 → Execution layer automatically receives it
+### Step 3 → Execution
 
-No change required if generic
-
----
-
-## STEP 4 → Route merge (if needed)
-
-If structure changes:
-
-```ts
-profile: { ... },
-security: { public_key }
-```
+No change if generic
 
 ---
 
-## RESULT
+### Step 4 → Route
 
-```json
-{
-  "profile": {
-    "name": "M",
-    "tone": "2"
-  },
-  "security": {
-    "public_key": "abc123"
-  }
-}
-```
+Only if structure changes
 
 ---
 
-# 🧠 DESIGN PRINCIPLE
-
-👉 Extensions DEFINE data
-👉 Engine PASSES data
-👉 Execution BUILDS artifacts
-👉 Route MERGES truth
+# 🧭 FINAL STATUS
 
 ---
 
-# 🔥 CORE INSIGHT
-
-The system is **declarative**:
-
-You do NOT change logic
-You EXTEND mappings
-
----
-
-# 🧾 SUMMARY
-
-* user_registry is now fully functional
-* onboarding data is persisted
-* architecture is cleanly separated
-* extension system is scalable
-* future fields can be added via `persist`
+✅ Engine supports branching
+✅ Clean routing logic established
+✅ User registry fully integrated
+✅ Execution stable
+✅ Frontend sync working
 
 ---
 
-# 🧭 NEXT POSSIBLE EXTENSIONS
+# 🧱 FOUNDATION COMPLETE
 
-* public_key
-* user roles
-* permissions
-* feature flags
-* subscription state
-* audit identifiers
+This system is now:
 
-All via:
-
-```
-persist → extension → execution → route merge
-```
+* deterministic
+* extensible
+* branch-capable
+* production-ready
 
 ---
 
-# ✅ STATUS
+**Next evolution (only when needed):**
 
-System is stable and ready for extension.
+* recursive flows
+* reusable subflows
+* dynamic routing conditions
+
+---
+
+End of document.
