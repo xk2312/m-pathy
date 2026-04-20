@@ -1112,15 +1112,17 @@ const res = NextResponse.json(
     balance_after: balanceAfter,
     debug_usage: usage,
     triketon: triketon ?? null,
-   user_registry:
-  engineResult?.collectedData?.user_registry
-    ? engineResult.collectedData.user_registry
-    : executionArtifact?.data?.available_items
-      ? {
-          items: executionArtifact.data.available_items,
-          updated_at: executionArtifact?.meta?.timestamp ?? null
-        }
-      : null,
+  user_registry:
+  engineResult?.collectedData?.user
+    ? {
+        profile: {
+          name: engineResult.collectedData.user.name ?? null,
+          tone: engineResult.collectedData.user.tone ?? null
+        },
+        items: executionArtifact?.data?.available_items ?? [],
+        updated_at: executionArtifact?.meta?.timestamp ?? null
+      }
+    : null,
     state: executionArtifact
       ? {
           active: false,
