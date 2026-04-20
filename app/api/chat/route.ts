@@ -327,6 +327,10 @@ shellOutput = execSync(`bash ${scriptPath} ${runPath}`, {
   maxBuffer: 1024 * 1024 * 10
 });
 
+console.log("RAW SHELL OUTPUT START");
+console.log(shellOutput);
+console.log("RAW SHELL OUTPUT END");
+
 console.log("STEP 2 CHAIN FINISHED");
 
 const match = shellOutput.match(/###JSON_START###([\s\S]*?)###JSON_END###/);
