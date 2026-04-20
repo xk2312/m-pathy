@@ -180,7 +180,9 @@ console.log("[SESSION][NEW COUNTER]", serverCounter);
 }
 
   try {
-    const body = (await req.json()) as ChatBody;
+    const body = (await req.json()) as ChatBody & {
+      public_key?: string;
+    };
 
     console.log("[M13][ROUTE][BODY] RAW STATE", (body as any)?.state ?? null);
     console.log("[M13][ROUTE][BODY] RAW MESSAGES COUNT", Array.isArray(body.messages) ? body.messages.length : null);
@@ -258,6 +260,23 @@ const runPath = path.join(
 const inputPath = path.join(runPath, "01_input.json");
 
 const collectedData = engineResult?.collectedData || {};
+
+// 🔐 Inject public_key from request body
+try {
+  if (!collectedData.user) {
+    collectedData.user = {};
+  }
+
+  if (body?.public_key) {
+    collectedData.user.public_key = body.public_key;
+  }
+  // 🌐 Ensure server field always exists
+  if (!collectedData.user.server) {
+    collectedData.user.server = null;
+  }
+  } catch (e) {
+    console.warn("[M13][ROUTE][PUBLIC KEY INJECTION FAILED]", e);
+  }
 
 if (!fs.existsSync(runPath)) {
   fs.mkdirSync(runPath, { recursive: true });

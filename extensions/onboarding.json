@@ -131,8 +131,10 @@
   "type": "execution",
   "action": "run_onboarding_pipeline",
   "persist": {
-    "user_registry.profile.name": "user.name",
-    "user_registry.profile.tone": "user.tone"
+  "user_registry.profile.name": "user.name",
+  "user_registry.profile.tone": "user.tone",
+  "user_registry.security.public_key": "user.public_key",
+  "user_registry.infrastructure.server": "user.server"
   },
   "instruction": "Do not render text. Trigger execution immediately.",
   "next": null

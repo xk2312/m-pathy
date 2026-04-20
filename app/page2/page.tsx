@@ -2248,17 +2248,23 @@ if (!conversationId) {
   localStorage.setItem("mpathy:conversation:id", conversationId);
 }
 
-    const res = await fetch("/api/chat", {
+const publicKey =
+  typeof window !== "undefined"
+    ? localStorage.getItem("mpathy:triketon:device_public_key_2048")
+    : null;
+
+const res = await fetch("/api/chat", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   credentials: "include",
   body: JSON.stringify({
-  messages: context,
-  locale: getLocale(),
-  state: effectiveState,
-  resetContext: options?.resetContext === true,
-  conversationId
-}),
+    messages: context,
+    locale: getLocale(),
+    state: effectiveState,
+    resetContext: options?.resetContext === true,
+    conversationId,
+    public_key: publicKey
+  }),
 });
 
     // === GC Step 5 – FreeGate/Balance Gates → Login oder Stripe Checkout ===
