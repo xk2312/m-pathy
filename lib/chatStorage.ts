@@ -435,11 +435,11 @@ function isArchiveEntry(x: unknown): x is TriketonArchiveEntry {
 
 
 
-// Expanded Ledger: every message (user + assistant) is permanently appended
 export type TriketonLedgerEntryV1 = {
   id: string;
   role: "user" | "assistant" | "system";
   content: string;
+  irss?: any;
   truth_hash: string;
   public_key: string;
   timestamp: string;
