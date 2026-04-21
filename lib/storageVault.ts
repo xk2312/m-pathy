@@ -389,12 +389,37 @@ async put(key: string, value: unknown): Promise<void> {
     return;
   }
 
-  if (existing !== undefined && existing !== null) {
-    next = applyStrategy(strategy, existing, incoming);
-  }
+  // 🔴 IRSS INJECTION (nur für Triketon Ledger)
+if (key === 'mpathy:triketon:v1' && Array.isArray(incoming)) {
+  const __irss = (window as any).__M13_LAST_IRSS__ ?? null;
 
-/* trace removed */
-  await this.putInternal(key, next);
+  if (__irss) {
+    incoming.forEach((entry: any) => {
+      if (
+        entry &&
+        typeof entry === 'object' &&
+        entry.role === 'assistant' &&
+        typeof entry.content === 'string' &&
+        !entry.content.trimStart().startsWith('{')
+      ) {
+        entry.content =
+          JSON.stringify({ irss: __irss }, null, 2) +
+          "\n\n" +
+          entry.content;
+      }
+    });
+
+    console.log('[IRSS][VAULT][INJECTED]', {
+      entries: incoming.length,
+    });
+  }
+}
+
+if (existing !== undefined && existing !== null) {
+  next = applyStrategy(strategy, existing, incoming);
+}
+
+await this.putInternal(key, next);
 }
 
   async get(key: string): Promise<unknown> {
