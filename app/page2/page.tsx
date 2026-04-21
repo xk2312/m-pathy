@@ -2683,11 +2683,67 @@ if (data && data.status === "free_limit_reached") {
     Array.isArray(data?.user_registry?.items) ? data.user_registry.items : null
   );
 
-  const assistant = data.assistant ?? data;
-  const content = assistant.content ?? "";
+ const assistant = data.assistant ?? data;
+const content = assistant.content ?? "";
 
-  const safeContent =
-    content.trim().length > 0 ? content : loginText;
+// 🔴 NEU: IRSS sofort extrahieren (FRÜHER FIX)
+try {
+  const text = typeof content === "string" ? content.trimStart() : "";
+
+  if (text.startsWith("{")) {
+    let depth = 0;
+    let inString = false;
+    let escaped = false;
+    let endIndex = -1;
+
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+
+      if (inString) {
+        if (escaped) {
+          escaped = false;
+        } else if (char === "\\") {
+          escaped = true;
+        } else if (char === '"') {
+          inString = false;
+        }
+        continue;
+      }
+
+      if (char === '"') {
+        inString = true;
+        continue;
+      }
+
+      if (char === "{") depth++;
+      if (char === "}") depth--;
+
+      if (depth === 0) {
+        endIndex = i + 1;
+        break;
+      }
+    }
+
+    if (endIndex !== -1) {
+      const candidate = text.slice(0, endIndex).trim();
+      const parsed = JSON.parse(candidate);
+      const irss = parsed?.irss;
+
+      if (irss && typeof irss === "object") {
+        (window as any).__M13_LAST_IRSS__ = irss;
+
+        console.log("[IRSS][EARLY_CAPTURE][SET]", {
+          keys: Object.keys(irss),
+        });
+      }
+    }
+  }
+} catch (err) {
+  console.warn("[IRSS][EARLY_CAPTURE][FAILED]", err);
+}
+
+const safeContent =
+  content.trim().length > 0 ? content : loginText;
 
   const status =
     data && typeof data.status === 'string' ? data.status : 'ok';
