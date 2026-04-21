@@ -1781,15 +1781,63 @@ const PRICE_1M = process.env.NEXT_PUBLIC_STRIPE_PRICE_1M as string | undefined;
 // Alias für bestehende Stellen im Code:
 const persistMessages = (arr: any[]) => {
   if (!Array.isArray(arr)) return;
-  const normalized = arr.map((m) => ({
-    id:
-      typeof m.id === "string" && m.id.length
-        ? m.id
-        : (typeof crypto !== "undefined" && (crypto as any).randomUUID)
-          ? (crypto as any).randomUUID()
-          : uuidv4(),
-    ...m,
-  }));
+  const __irss = (window as any).__M13_LAST_IRSS__ ?? null;
+
+  console.log("[TRIKETON][WRITE_B][START]", {
+    hasIRSS: !!__irss,
+    count: arr.length,
+  });
+
+  const normalized = arr.map((m) => {
+    const base = {
+      id:
+        typeof m.id === "string" && m.id.length
+          ? m.id
+          : (typeof crypto !== "undefined" && (crypto as any).randomUUID)
+            ? (crypto as any).randomUUID()
+            : uuidv4(),
+      ...m,
+    };
+
+    if (
+      base.role === "assistant" &&
+      typeof base.content === "string" &&
+      __irss &&
+      !base.content.trimStart().startsWith('{')
+    ) {
+      const nextContent =
+        JSON.stringify({ irss: __irss }, null, 2) +
+        "\n\n" +
+        base.content;
+
+      console.log("[TRIKETON][WRITE_B][TRANSFORM]", {
+        hasIRSS: true,
+        preview: nextContent.slice(0, 120),
+      });
+
+      return {
+        ...base,
+        content: nextContent,
+      };
+    }
+
+    if (base.role === "assistant") {
+      console.log("[TRIKETON][WRITE_B][SKIPPED]", {
+        hasIRSS: !!__irss,
+        reason: !__irss
+          ? "no_irss"
+          : "already_has_irss_or_invalid_content",
+        preview: String(base.content).slice(0, 120),
+      });
+    }
+
+    return base;
+  });
+
+  console.log("[TRIKETON][WRITE_B][FINAL_PAYLOAD]", {
+    preview: JSON.stringify(normalized).slice(0, 200),
+  });
+
   saveChat(normalized);
 };
 // ── M-Flow Overlay (1. Frame: eventLabel)
@@ -3136,20 +3184,42 @@ setMessages((prev) => {
 
   try {
       // 🔴 NEU: IRSS aus Split holen (falls vorhanden)
-  const __irss = (window as any).__M13_LAST_IRSS__ ?? null;
-  console.log("[IRSS][LEDGER][USING]", {
-  exists: !!__irss,
-  keys: __irss ? Object.keys(__irss) : null,
-  preview: __irss ? JSON.stringify(__irss).slice(0, 120) : null,
+const __irss = (window as any).__M13_LAST_IRSS__ ?? null;
+
+console.log("[IRSS][LEDGER][USING]", {
+exists: !!__irss,
+keys: __irss ? Object.keys(__irss) : null,
+preview: __irss ? JSON.stringify(__irss).slice(0, 120) : null,
+});
+
+// 🔴 NEU: Zustand von finalText
+console.log("[LEDGER][TEXT][RAW]", {
+length: finalText.length,
+startsWithBrace: finalText.trimStart().startsWith("{"),
+preview: finalText.slice(0, 120),
+});
+
+// 🔴 NEU: Ergebnis der Kombination (ohne Variable einzuführen)
+console.log("[LEDGER][TEXT][COMBINED_CHECK]", {
+willInjectIRSS: !!__irss,
+combinedPreview: __irss
+  ? (JSON.stringify({ irss: __irss }, null, 2) + "\n\n" + finalText).slice(0, 160)
+  : finalText.slice(0, 160),
 });
 
 console.log("[LEDGER][FINAL CONTENT PREVIEW]", {
-  hasIRSS: !!__irss,
-  preview: __irss
-    ? JSON.stringify({ irss: __irss }).slice(0, 120) + "..."
-    : finalText.slice(0, 120),
+hasIRSS: !!__irss,
+preview: __irss
+  ? JSON.stringify({ irss: __irss }).slice(0, 120) + "..."
+  : finalText.slice(0, 120),
 });
-  appendTriketonLedgerEntry({
+
+// 🔴 NEU: Marker vor Write
+console.log("[TRIKETON][WRITE_A][BEFORE_APPEND]", {
+hasIRSS: !!__irss,
+});
+
+appendTriketonLedgerEntry({
     id,
     role: "assistant",
     content: __irss
