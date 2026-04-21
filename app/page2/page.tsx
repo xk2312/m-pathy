@@ -697,7 +697,19 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
     try {
       const parsed = JSON.parse(candidate);
 
-      const irss = parsed?.irss;
+const irss = parsed?.irss;
+
+// 🔴 NEU: IRSS für Ledger persistieren (UI-unabhängig)
+try {
+  if (irss && typeof irss === "object") {
+    (window as any).__M13_LAST_IRSS__ = irss;
+    console.log("[IRSS][SPLIT][CAPTURED]", {
+  exists: !!irss,
+  keys: irss ? Object.keys(irss) : null,
+  preview: irss ? JSON.stringify(irss).slice(0, 120) : null,
+});
+  }
+} catch {}
       const looksLikeIrss =
         irss &&
         typeof irss === "object" &&
@@ -3123,10 +3135,26 @@ setMessages((prev) => {
     "local_assistant";
 
   try {
-    appendTriketonLedgerEntry({
+      // 🔴 NEU: IRSS aus Split holen (falls vorhanden)
+  const __irss = (window as any).__M13_LAST_IRSS__ ?? null;
+  console.log("[IRSS][LEDGER][USING]", {
+  exists: !!__irss,
+  keys: __irss ? Object.keys(__irss) : null,
+  preview: __irss ? JSON.stringify(__irss).slice(0, 120) : null,
+});
+
+console.log("[LEDGER][FINAL CONTENT PREVIEW]", {
+  hasIRSS: !!__irss,
+  preview: __irss
+    ? JSON.stringify({ irss: __irss }).slice(0, 120) + "..."
+    : finalText.slice(0, 120),
+});
+  appendTriketonLedgerEntry({
     id,
     role: "assistant",
-    content: finalText,
+    content: __irss
+    ? JSON.stringify({ irss: __irss }, null, 2) + "\n\n" + finalText
+    : finalText,
     truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
     public_key: String(publicKey ?? "").replace(/^"+|"+$/g, ""),
     timestamp: new Date().toISOString(),
