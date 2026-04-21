@@ -3289,8 +3289,10 @@ hasIRSS: !!__irss,
 appendTriketonLedgerEntry({
   id,
   role: "assistant",
-  content: finalText,
-  irss: __irss ?? null,
+  content: __irss
+    ? JSON.stringify({ irss: __irss }, null, 2) + "\n\n" + finalText
+    : finalText,
+  irss: __irss,
   truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
   public_key: String(publicKey ?? "").replace(/^"+|"+$/g, ""),
   timestamp: new Date().toISOString(),
