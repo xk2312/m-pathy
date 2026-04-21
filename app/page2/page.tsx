@@ -3287,18 +3287,17 @@ hasIRSS: !!__irss,
 });
 
 appendTriketonLedgerEntry({
-    id,
-    role: "assistant",
-    content: __irss
-    ? JSON.stringify({ irss: __irss }, null, 2) + "\n\n" + finalText
-    : finalText,
-    truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
-    public_key: String(publicKey ?? "").replace(/^"+|"+$/g, ""),
-    timestamp: new Date().toISOString(),
-    version: "v1",
-    orbit_context: "chat",
-    chain_id: "local",
-  });
+  id,
+  role: "assistant",
+  content: finalText,
+  irss: __irss ?? null,
+  truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
+  public_key: String(publicKey ?? "").replace(/^"+|"+$/g, ""),
+  timestamp: new Date().toISOString(),
+  version: "v1",
+  orbit_context: "chat",
+  chain_id: "local",
+});
   } catch (err) {
     console.warn("[TriketonLedger] assistant append failed:", err);
   }
