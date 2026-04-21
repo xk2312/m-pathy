@@ -2898,8 +2898,13 @@ const lastTruthHash =
     ? (messages[messages.length - 1] as any)?.truth_hash
     : undefined;
 
-    const __irss = (window as any).__M13_LAST_IRSS__ ?? null;
+const __irss = (window as any).__M13_LAST_IRSS__ ?? null;
 
+console.log("[IRSS][PERSIST][CHECK]", {
+  exists: !!__irss,
+  keys: __irss && typeof __irss === "object" ? Object.keys(__irss) : null,
+  preview: __irss ? JSON.stringify(__irss).slice(0, 120) : null,
+});
 console.log("[IRSS][FRONTEND][BEFORE WRITE]", {
   hasIRSS: !!__irss,
   irssPreview: __irss ? JSON.stringify(__irss).slice(0, 120) : null
