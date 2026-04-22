@@ -635,11 +635,12 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
   const splitTelemetryFromContent = React.useMemo(() => {
     const text = rawContent.trimStart();
 
-    if (!text.startsWith("{")) {
-      return {
-        visibleContent: rawContent,
-        telemetryBlock: "",
-      };
+if (!text.startsWith("{") || !text.includes('"irss"')) {      
+  
+  return {
+  visibleContent: rawContent,
+  irss: null,
+};
     }
 
     let depth = 0;
@@ -695,9 +696,15 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
     const remainder = text.slice(endIndex).trimStart();
 
     try {
-      const parsed = JSON.parse(candidate);
+let parsed = null;
 
-const irss = parsed?.irss;
+try {
+  parsed = JSON.parse(candidate);
+} catch {}
+
+const irss =
+  parsed?.irss ??
+  (parsed && parsed.system ? parsed : null);
 
 // 🔴 NEU: IRSS für Ledger persistieren (UI-unabhängig)
 try {
@@ -743,11 +750,7 @@ return {
 
  const visibleContent = splitTelemetryFromContent.visibleContent;
 
-const irss =
-  (msg as any)?.irss ??
-  splitTelemetryFromContent.irss ??
-  null;
-
+const irss = (msg as any)?.irss ?? null;
 const isMd = (msg as any).format === "markdown";
 const html = isMd ? mdToHtml(visibleContent) : null;
 
@@ -2761,8 +2764,20 @@ try {
 
     if (endIndex !== -1) {
       const candidate = text.slice(0, endIndex).trim();
-      const parsed = JSON.parse(candidate);
-      const irss = parsed?.irss;
+      let parsed = null;
+
+try {
+  parsed = JSON.parse(candidate);
+} catch {}
+
+const irss =
+  parsed?.irss ??
+  (parsed && parsed.system ? parsed : null);
+
+// 👉 HIER ENTSCHEIDEND
+if (irss && typeof irss === "object") {
+  (window as any).__M13_LAST_IRSS__ = irss;
+}
 
       if (irss && typeof irss === "object") {
         (window as any).__M13_LAST_IRSS__ = irss;
