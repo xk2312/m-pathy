@@ -1632,7 +1632,7 @@ useEffect(() => {
   async function loadUserRegistry() {
     try {
       console.log("[M13][FRONTEND][REGISTRY_BOOT] START");
-      const dbRequest = indexedDB.open("Triketon", 2);
+      const dbRequest = indexedDB.open("Triketon", 1);
 
 dbRequest.onupgradeneeded = function () {
   const db = dbRequest.result;
