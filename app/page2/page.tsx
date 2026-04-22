@@ -1,189 +1,4 @@
-/* ======================================================================
-   FILE INDEX - page.tsx  (Chat Page / Page2)
-   MODE: GranularFileIndexDeveloper · CodeForensik
-   SCOPE: CHAT RUNTIME · ARCHIVE INJECTION · API SEND · UI RESET
-   STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)
-   ======================================================================
 
-   0. EINORDNUNG (SYSTEMISCH)
-   ----------------------------------------------------------------------
-   Diese Datei ist der ZENTRALE Chat-Raum.
-   Alles, was am Ende als „neuer Chat“ sichtbar wird,
-   MUSS hier korrekt ankommen.
-
-   → page.tsx ist der ENDKNOTEN des Archive-Flows.
-
-
-   1. RELEVANTE IMPORTS (ARCHIVE)
-   ----------------------------------------------------------------------
-   import '@/lib/archiveChatPreparationListener'
-   import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
-
-   Bedeutung:
-   - archiveChatPreparationListener wird hier global registriert
-   - page.tsx ist Empfänger des vorbereiteten Archive-Kontexts
-
-   TODO-RELEVANZ:
-   - Archive-Flow endet HIER
-   - Fehlerfreier Übergang muss hier finalisiert werden
-
-
-   2. ARCHIVE CONTEXT INJECTION (KERNLOGIK)
-   ----------------------------------------------------------------------
-   function withArchiveInjection(ctx: ChatMessage[])
-
-   Ablauf:
-   - liest aus SessionStorage:
-     `mpathy:context:archive-chat:v1`
-   - erzeugt SYSTEM-Nachricht:
-     role: "system"
-     content: `ARCHIVE CONTEXT\n\n${injected}`
-   - injiziert diese Nachricht VOR bestehendem Context
-
-   Rückgabe:
-   {
-     context: ChatMessage[]
-     used: boolean
-   }
-
-   TODO-RELEVANZ (HOCH):
-   - Aktuell wird Archive-Context
-     als SYSTEM-Nachricht injiziert
-   - ToDo verlangt:
-     → erneutes Senden als USER-Nachricht
-     → NICHT im bestehenden Chat rendern
-
-
-   3. CLEAR NACH VERWENDUNG
-   ----------------------------------------------------------------------
-   Im Sendeflow:
-   if (used) {
-     clearArchiveChatContext();
-   }
-
-   Bedeutung:
-   - Archive-Context ist ONE-SHOT
-   - Wird nach erstem API-Call gelöscht
-
-   TODO-RELEVANZ:
-   - Zeitpunkt des Clear ist kritisch
-   - Bei neuem Flow muss sichergestellt sein,
-     dass Clear NACH erfolgreichem neuen Chat erfolgt
-
-
-   4. API SEND (NORMALE CHAT-LOGIK)
-   ----------------------------------------------------------------------
-   async function sendMessageLocal(context: ChatMessage[])
-
-   Eigenschaften:
-   - POST /api/chat
-   - credentials: same-origin
-   - messages = context
-   - locale wird mitgesendet
-
-   Status:
-   - Diese Funktion ist KORREKT
-   - Sie ist der gewünschte Zielpfad
-     für den neuen Archive-Flow
-
-   TODO-RELEVANZ:
-   - Archive-Zusammenfassung MUSS hier landen
-   - Es darf KEIN Sonder-Continuation-Call existieren
-
-
-   5. PROMPT HANDLER (USER SEND)
-   ----------------------------------------------------------------------
-   const onSendFromPrompt = useCallback(async (text: string) => { ... })
-
-   Ablauf:
-   - User-Message wird erzeugt
-   - optimistic UI update
-   - Ledger Append (User)
-   - withArchiveInjection(optimistic)
-   - sendMessageLocal(outgoing)
-
-   TODO-RELEVANZ (MAXIMAL):
-   - Dieser Handler ist der IDEALE Ort,
-     um Archive-Summary als USER-Message
-     in einen NEUEN Chat einzuspeisen
-   - Aktuell wird er nur bei manuellem Prompt genutzt
-
-
-   6. CHAT STATE & PERSISTENZ
-   ----------------------------------------------------------------------
-   const [messages, setMessages]
-   persistMessages()
-   hardClearChat()
-
-   Bedeutung:
-   - messages = aktueller Chat
-   - hardClearChat löscht Storage + reload
-
-   TODO-RELEVANZ:
-   - Für neuen Archive-Chat:
-     → alter Chat muss verlassen/gelöscht werden
-     → neuer Chat beginnt leer + injizierter User-Message
-
-
-   7. LOADING / SPINNER-STATE
-   ----------------------------------------------------------------------
-   const [loading, setLoading]
-
-   Steuerung:
-   - true beim Senden
-   - false bei Antwort oder Fehler
-
-   TODO-RELEVANZ:
-   - ARCHIVE-SPINNER ist NICHT dieser loading-State
-   - ABER: neuer Chat muss loading korrekt setzen,
-     sonst bleibt UI inkonsistent
-
-
-   8. ARCHIVE-SEITIGE EVENTS (INDIREKT)
-   ----------------------------------------------------------------------
-   page.tsx hört NICHT direkt auf:
-   - mpathy:archive:start-chat
-   - mpathy:archive:close
-
-   Diese Events werden:
-   - vom archiveChatPreparationListener verarbeitet
-   - page.tsx reagiert nur indirekt über Storage
-
-   TODO-RELEVANZ:
-   - saubere Trennung:
-     Listener → Storage
-     Page → liest Storage → API
-
-
-   9. ZIELARCHITEKTUR (IMPLIZIT ABLEITBAR)
-   ----------------------------------------------------------------------
-   - page.tsx ist der EINZIGE Ort,
-     an dem ein neuer Chat sichtbar entsteht
-   - Alles andere (Archive, Listener, Spinner)
-     sind nur Vorstufen
-
-   TODO-RELEVANZ:
-   - ToDo-Umsetzung MUSS hier enden
-   - Kein UI-Code im Listener
-   - Kein API-Code im ArchiveOverlay
-
-
-   10. ZUSAMMENFASSUNG (KANONISCH)
-   ----------------------------------------------------------------------
-   page.tsx:
-   - besitzt korrekte Chat-API-Anbindung
-   - besitzt Archive-Context-Injection
-   - besitzt vollständige Ledger-Integration
-   - ist der korrekte Endpunkt für den neuen Flow
-
-   KRITISCHE STELLEN FÜR ToDos:
-   - withArchiveInjection()
-   - onSendFromPrompt()
-   - clearArchiveChatContext()
-   - hardClearChat()
-   - sendMessageLocal()
-
-   ====================================================================== */
 
 "use client";
 
@@ -1012,25 +827,17 @@ function Bubble({
 )}
 
 {!isUser && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginTop: 4,
-              gap: 8,
-            }}
-          >
-            {(() => {
-  const [copied, setCopied] = useState(false);
-
-  return (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "flex-end",
+      marginTop: 4,
+      gap: 8,
+    }}
+  >
     <button
       type="button"
-      onClick={() => {
-        handleCopyAnswer();
-        setCopied(true);
-        window.setTimeout(() => setCopied(false), 5000);
-      }}
+      onClick={handleCopyAnswer}
       aria-label="Copy answer"
       style={{
         border: "none",
@@ -1039,128 +846,77 @@ function Bubble({
         fontSize: 11,
         letterSpacing: "0.06em",
         textTransform: "uppercase",
-        background: copied
-          ? "rgba(34,211,238,0.18)"
-          : "rgba(15,23,42,0.85)",
-        color: copied
-          ? tokens.color.cyan ?? "#22d3ee"
-          : tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
+        background: "rgba(15,23,42,0.85)",
+        color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
         cursor: "pointer",
         opacity: 0.9,
-        transition: "background 160ms ease, color 160ms ease, opacity 160ms ease",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.opacity = "1";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.opacity = copied ? "0.9" : "0.85";
       }}
     >
-      ⧉ {copied ? "Copied" : "Copy"}
+      ⧉ Copy
     </button>
-  );
-})()}
 
+    <button
+      type="button"
+      onClick={() => {
+        const devicePublicKey =
+          localStorage.getItem("mpathy:triketon:device_public_key_2048");
 
-              <button
-                type="button"
-                onClick={() => {
-                function getTriketonLedgerEntryByMessageId(messageId: string) {
-  try {
-    const raw = localStorage.getItem("mpathy:triketon:v1");
-    if (!raw) return null;
+        let ledgerTruthHash = "";
+        try {
+          const raw = localStorage.getItem("mpathy:triketon:v1");
+          if (raw) {
+            const entries = JSON.parse(raw);
+            const match = Array.isArray(entries)
+              ? entries.find((e) => e?.id === (msg as any)?.id)
+              : null;
+            ledgerTruthHash = match?.truth_hash ?? "";
+          }
+        } catch {}
 
-    const entries = JSON.parse(raw);
-    if (!Array.isArray(entries)) return null;
+        const payload = {
+          id: (msg as any)?.id ?? "",
+          role: (msg as any)?.role ?? "assistant",
+          meta: (msg as any)?.meta ?? null,
+          triketon: {
+            public_key: (devicePublicKey ?? "").replace(/^"+|"+$/g, ""),
+            truth_hash: ledgerTruthHash,
+            timestamp:
+              (msg as any)?.timestamp ??
+              new Date().toISOString(),
+            version: "v1",
+          },
+        };
 
-    return entries.find((e) => e?.id === messageId) ?? null;
-  } catch {
-    return null;
-  }
-}
-
-const devicePublicKey =
-  localStorage.getItem("mpathy:triketon:device_public_key_2048");
-
-let ledgerTruthHash = "";
-try {
-  const raw = localStorage.getItem("mpathy:triketon:v1");
-  if (raw) {
-    const entries = JSON.parse(raw);
-    const match = Array.isArray(entries)
-      ? entries.find(e => e?.id === (msg as any)?.id)
-      : null;
-    ledgerTruthHash = match?.truth_hash ?? "";
-  }
-} catch {}
-
-const payload = {
-  id: (msg as any)?.id ?? "",
-  role: (msg as any)?.role ?? "assistant",
-  meta: (msg as any)?.meta ?? null,
-  triketon: {
-    public_key: (devicePublicKey ?? "").replace(/^"+|"+$/g, ""),
-    truth_hash: ledgerTruthHash,
-    timestamp:
-      (msg as any)?.timestamp ??
-      new Date().toISOString(),
-    version: "v1",
-  },
-};
-
-onOpenTriketon?.(payload);
-
-
-
-          // 🔍 TRIKETON OVERLAY DEBUG - BEGIN
-          console.group("[TriketonOverlay] open");
-          console.log("raw msg:", msg);
-          console.log("msg.triketon:", (msg as any)?.triketon);
-          console.log("msg.truth_hash:", (msg as any)?.truth_hash);
-          console.log("msg.public_key:", (msg as any)?.public_key);
-          console.log("msg.timestamp:", (msg as any)?.timestamp);
-          console.log("final payload:", payload);
-          console.log("payload.triketon:", payload.triketon);
-          console.groupEnd();
-          // 🔍 TRIKETON OVERLAY DEBUG - END
-
-          onOpenTriketon?.(payload);
-
-          onOpenTriketon?.(payload);
-
-                }}
-                onMouseEnter={() => setTriketonHover(true)}
-                onMouseLeave={() => setTriketonHover(false)}
-                aria-label="Triketon2048"
-                style={{
-                  border: `1px solid ${
-                    triketonHover
-                      ? tokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"
-                      : tokens.color.glassBorder ?? "rgba(255,255,255,0.12)"
-                  }`,
-                  borderRadius: 999,
-                  padding: "2px 10px",
-                  fontSize: 11,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  background: triketonHover
-                    ? tokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"
-                    : "rgba(15,23,42,0.65)",
-                  color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
-                  cursor: "pointer",
-                  opacity: 0.92,
-                  pointerEvents: "auto",
-                  transition: "background 180ms ease, border-color 180ms ease, opacity 180ms ease",
-                }}
-                title="Triketon2048"
-              >
-                Triketon2048
-              </button>
-
-
-
-          </div>
-        )}
+        onOpenTriketon?.(payload);
+      }}
+      onMouseEnter={() => setTriketonHover(true)}
+      onMouseLeave={() => setTriketonHover(false)}
+      aria-label="Triketon2048"
+      style={{
+        border: `1px solid ${
+          triketonHover
+            ? tokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"
+            : tokens.color.glassBorder ?? "rgba(255,255,255,0.12)"
+        }`,
+        borderRadius: 999,
+        padding: "2px 10px",
+        fontSize: 11,
+        letterSpacing: "0.06em",
+        textTransform: "uppercase",
+        background: triketonHover
+          ? tokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"
+          : "rgba(15,23,42,0.65)",
+        color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
+        cursor: "pointer",
+        opacity: 0.92,
+        pointerEvents: "auto",
+      }}
+      title="Triketon2048"
+    >
+      Triketon2048
+    </button>
+  </div>
+)}
 
       </div>
     </div>
