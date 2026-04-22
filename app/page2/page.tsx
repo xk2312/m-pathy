@@ -1813,7 +1813,7 @@ const persistMessages = (arr: any[]) => {
   irss: m?.irss ?? (window as any).__M13_LAST_IRSS__ ?? null,
 };
 
-const messageIrss = m?.irss ?? null;
+const messageIrss = m?.irss ?? (window as any).__M13_LAST_IRSS__ ?? null;
 
 console.log("[STEP 3][PER MESSAGE]", {
   role: m.role,
