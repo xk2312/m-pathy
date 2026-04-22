@@ -17,8 +17,9 @@ export interface ChatMessage {
   telemetry?: {
   cockpit: Record<string, string>
   parsed: Record<string, string>
-  }
+  irss?: any
 }
+  }
 
 
 export interface ArchiveEntry {
