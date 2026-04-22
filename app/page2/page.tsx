@@ -2875,8 +2875,10 @@ setMessages((prev) => {
 });
 
 // 2️⃣ Text progressiv aufbauen
-const fullText = String(assistant?.content ?? "");
-const CHUNK_SIZE = 2;
+const fullText =
+  typeof assistant?.content === "string"
+    ? assistant.content.replace(/^\{[\s\S]*?\}\s*/, "")
+    : "";const CHUNK_SIZE = 2;
 const TICK_MS = 16;
 let firstChunkRendered = false;
 
