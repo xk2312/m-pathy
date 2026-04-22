@@ -263,26 +263,66 @@ export function truncateMessages(
 /** Speichert Messages defensiv in localStorage */
 export function saveMessages(messages: ChatMessage[]): void {
   const store = safeStorage();
-  if (!store) return;
+  if (!store) {
+    console.log("[PERSIST][SKIP] no storage available");
+    return;
+  }
+
   try {
+    console.log("[PERSIST][INPUT]", {
+      count: Array.isArray(messages) ? messages.length : 0,
+      preview: Array.isArray(messages)
+        ? messages.slice(-2)
+        : null,
+    });
+
     const safe = Array.isArray(messages)
       ? messages
-          .filter(isValid)
-          .map((m) => ({
-            role: m.role,
-            content: m.content ?? "",
-            format:
-              m.format === "markdown" || m.format === "plain" || m.format === "html"
-                ? m.format
-                : "markdown",
-          }))
+          .filter((m) => {
+            const valid = isValid(m);
+            if (!valid) {
+              console.warn("[PERSIST][INVALID MESSAGE]", m);
+            }
+            return valid;
+          })
+          .map((m, i) => {
+            const mapped = {
+              role: m.role,
+              content: m.content ?? "",
+              irss: (m as any).irss ?? null,
+              format:
+                m.format === "markdown" ||
+                m.format === "plain" ||
+                m.format === "html"
+                  ? m.format
+                  : "markdown",
+            };
+
+            console.log("[PERSIST][MAP]", {
+              index: i,
+              hasIrssBefore: !!(m as any).irss,
+              hasIrssAfter: !!mapped.irss,
+              irssPreview: mapped.irss
+                ? JSON.stringify(mapped.irss).slice(0, 120)
+                : null,
+            });
+
+            return mapped;
+          })
       : [];
+
+    console.log("[PERSIST][FINAL PAYLOAD]", {
+      count: safe.length,
+      preview: safe.slice(-2),
+    });
+
     store.setItem(STORAGE_KEYS[0], JSON.stringify(safe));
-  } catch {
-    // niemals crashen
+
+    console.log("[PERSIST][WRITE DONE]");
+  } catch (err) {
+    console.error("[PERSIST][ERROR]", err);
   }
 }
-
 /** Lädt Messages defensiv aus localStorage */
 export function loadMessages(): ChatMessage[] {
   const store = safeStorage();
