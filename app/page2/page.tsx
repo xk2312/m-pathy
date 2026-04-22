@@ -827,17 +827,25 @@ function Bubble({
 )}
 
 {!isUser && (
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "flex-end",
-      marginTop: 4,
-      gap: 8,
-    }}
-  >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: 4,
+              gap: 8,
+            }}
+          >
+            {(() => {
+  const [copied, setCopied] = useState(false);
+
+  return (
     <button
       type="button"
-      onClick={handleCopyAnswer}
+      onClick={() => {
+        handleCopyAnswer();
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 5000);
+      }}
       aria-label="Copy answer"
       style={{
         border: "none",
@@ -846,77 +854,128 @@ function Bubble({
         fontSize: 11,
         letterSpacing: "0.06em",
         textTransform: "uppercase",
-        background: "rgba(15,23,42,0.85)",
-        color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
+        background: copied
+          ? "rgba(34,211,238,0.18)"
+          : "rgba(15,23,42,0.85)",
+        color: copied
+          ? tokens.color.cyan ?? "#22d3ee"
+          : tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
         cursor: "pointer",
         opacity: 0.9,
+        transition: "background 160ms ease, color 160ms ease, opacity 160ms ease",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.opacity = "1";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.opacity = copied ? "0.9" : "0.85";
       }}
     >
-      ⧉ Copy
+      ⧉ {copied ? "Copied" : "Copy"}
     </button>
+  );
+})()}
 
-    <button
-      type="button"
-      onClick={() => {
-        const devicePublicKey =
-          localStorage.getItem("mpathy:triketon:device_public_key_2048");
 
-        let ledgerTruthHash = "";
-        try {
-          const raw = localStorage.getItem("mpathy:triketon:v1");
-          if (raw) {
-            const entries = JSON.parse(raw);
-            const match = Array.isArray(entries)
-              ? entries.find((e) => e?.id === (msg as any)?.id)
-              : null;
-            ledgerTruthHash = match?.truth_hash ?? "";
-          }
-        } catch {}
+              <button
+                type="button"
+                onClick={() => {
+                function getTriketonLedgerEntryByMessageId(messageId: string) {
+  try {
+    const raw = localStorage.getItem("mpathy:triketon:v1");
+    if (!raw) return null;
 
-        const payload = {
-          id: (msg as any)?.id ?? "",
-          role: (msg as any)?.role ?? "assistant",
-          meta: (msg as any)?.meta ?? null,
-          triketon: {
-            public_key: (devicePublicKey ?? "").replace(/^"+|"+$/g, ""),
-            truth_hash: ledgerTruthHash,
-            timestamp:
-              (msg as any)?.timestamp ??
-              new Date().toISOString(),
-            version: "v1",
-          },
-        };
+    const entries = JSON.parse(raw);
+    if (!Array.isArray(entries)) return null;
 
-        onOpenTriketon?.(payload);
-      }}
-      onMouseEnter={() => setTriketonHover(true)}
-      onMouseLeave={() => setTriketonHover(false)}
-      aria-label="Triketon2048"
-      style={{
-        border: `1px solid ${
-          triketonHover
-            ? tokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"
-            : tokens.color.glassBorder ?? "rgba(255,255,255,0.12)"
-        }`,
-        borderRadius: 999,
-        padding: "2px 10px",
-        fontSize: 11,
-        letterSpacing: "0.06em",
-        textTransform: "uppercase",
-        background: triketonHover
-          ? tokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"
-          : "rgba(15,23,42,0.65)",
-        color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
-        cursor: "pointer",
-        opacity: 0.92,
-        pointerEvents: "auto",
-      }}
-      title="Triketon2048"
-    >
-      Triketon2048
-    </button>
-  </div>
-)}
+    return entries.find((e) => e?.id === messageId) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+const devicePublicKey =
+  localStorage.getItem("mpathy:triketon:device_public_key_2048");
+
+let ledgerTruthHash = "";
+try {
+  const raw = localStorage.getItem("mpathy:triketon:v1");
+  if (raw) {
+    const entries = JSON.parse(raw);
+    const match = Array.isArray(entries)
+      ? entries.find(e => e?.id === (msg as any)?.id)
+      : null;
+    ledgerTruthHash = match?.truth_hash ?? "";
+  }
+} catch {}
+
+const payload = {
+  id: (msg as any)?.id ?? "",
+  role: (msg as any)?.role ?? "assistant",
+  meta: (msg as any)?.meta ?? null,
+  triketon: {
+    public_key: (devicePublicKey ?? "").replace(/^"+|"+$/g, ""),
+    truth_hash: ledgerTruthHash,
+    timestamp:
+      (msg as any)?.timestamp ??
+      new Date().toISOString(),
+    version: "v1",
+  },
+};
+
+onOpenTriketon?.(payload);
+
+
+
+          // 🔍 TRIKETON OVERLAY DEBUG - BEGIN
+          console.group("[TriketonOverlay] open");
+          console.log("raw msg:", msg);
+          console.log("msg.triketon:", (msg as any)?.triketon);
+          console.log("msg.truth_hash:", (msg as any)?.truth_hash);
+          console.log("msg.public_key:", (msg as any)?.public_key);
+          console.log("msg.timestamp:", (msg as any)?.timestamp);
+          console.log("final payload:", payload);
+          console.log("payload.triketon:", payload.triketon);
+          console.groupEnd();
+          // 🔍 TRIKETON OVERLAY DEBUG - END
+
+          onOpenTriketon?.(payload);
+
+          onOpenTriketon?.(payload);
+
+                }}
+                onMouseEnter={() => setTriketonHover(true)}
+                onMouseLeave={() => setTriketonHover(false)}
+                aria-label="Triketon2048"
+                style={{
+                  border: `1px solid ${
+                    triketonHover
+                      ? tokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"
+                      : tokens.color.glassBorder ?? "rgba(255,255,255,0.12)"
+                  }`,
+                  borderRadius: 999,
+                  padding: "2px 10px",
+                  fontSize: 11,
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  background: triketonHover
+                    ? tokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"
+                    : "rgba(15,23,42,0.65)",
+                  color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
+                  cursor: "pointer",
+                  opacity: 0.92,
+                  pointerEvents: "auto",
+                  transition: "background 180ms ease, border-color 180ms ease, opacity 180ms ease",
+                }}
+                title="Triketon2048"
+              >
+                Triketon2048
+              </button>
+
+
+
+          </div>
+        )}
 
       </div>
     </div>
@@ -2086,34 +2145,16 @@ const res = await fetch("/api/chat", {
     public_key: publicKey
   }),
 });
-const cloned = res.clone();
-
 let __irss: any = null;
 
 try {
-  const rawText = await cloned.text();
-
-  const splitIndex = rawText.indexOf("}\n\n");
-
-  if (splitIndex !== -1) {
-    const irssBlock = rawText.slice(0, splitIndex + 1);
-
-    const parsed = JSON.parse(irssBlock);
-
-    __irss = parsed?.irss ?? null;
-
-    console.log("[IRSS][CLIENT][EXTRACTED]", __irss);
-  } else {
-    console.warn("[IRSS][CLIENT][NO SPLIT FOUND]");
-  }
-} catch (e) {
-  console.warn("[IRSS][CLIENT][PARSE FAILED]", e);
-}
-
-try {
-  const json = await cloned.json();
+  const json = await res.json();
   __irss = json?.irss ?? null;
-} catch {}
+
+  console.log("[IRSS][CLIENT][JSON]", __irss);
+} catch (e) {
+  console.warn("[IRSS][CLIENT][JSON FAILED]", e);
+}
     // === GC Step 5 – FreeGate/Balance Gates → Login oder Stripe Checkout ===
     if (res.status === 401) {
       try {
