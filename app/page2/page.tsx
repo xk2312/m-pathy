@@ -2335,6 +2335,26 @@ const cloned = res.clone();
 let __irss: any = null;
 
 try {
+  const rawText = await cloned.text();
+
+  const splitIndex = rawText.indexOf("}\n\n");
+
+  if (splitIndex !== -1) {
+    const irssBlock = rawText.slice(0, splitIndex + 1);
+
+    const parsed = JSON.parse(irssBlock);
+
+    __irss = parsed?.irss ?? null;
+
+    console.log("[IRSS][CLIENT][EXTRACTED]", __irss);
+  } else {
+    console.warn("[IRSS][CLIENT][NO SPLIT FOUND]");
+  }
+} catch (e) {
+  console.warn("[IRSS][CLIENT][PARSE FAILED]", e);
+}
+
+try {
   const json = await cloned.json();
   __irss = json?.irss ?? null;
 } catch {}
