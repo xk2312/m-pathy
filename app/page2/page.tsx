@@ -1799,16 +1799,18 @@ const persistMessages = (arr: any[]) => {
       ...m,
     };
 
-    if (
-      base.role === "assistant" &&
-      typeof base.content === "string" &&
-      __irss &&
-      !base.content.trimStart().startsWith('{')
-    ) {
-      const nextContent =
-        JSON.stringify({ irss: __irss }, null, 2) +
-        "\n\n" +
-        base.content;
+    const messageIrss = m?.irss ?? null;
+
+if (
+  base.role === "assistant" &&
+  typeof base.content === "string" &&
+  messageIrss &&
+  !base.content.trimStart().startsWith('{')
+) {
+  const nextContent =
+    JSON.stringify({ irss: messageIrss }, null, 2) +
+    "\n\n" +
+    base.content;
 
       console.log("[TRIKETON][WRITE_B][TRANSFORM]", {
         hasIRSS: true,
@@ -3240,8 +3242,7 @@ setMessages((prev) => {
 
   try {
       // 🔴 NEU: IRSS aus Split holen (falls vorhanden)
-const __irss = (window as any).__M13_LAST_IRSS__ ?? null;
-
+const __irss = null;
 console.log("[IRSS][LEDGER][USING]", {
 exists: !!__irss,
 keys: __irss ? Object.keys(__irss) : null,
