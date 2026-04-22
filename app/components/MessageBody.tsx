@@ -17,11 +17,14 @@ export type MessageRole = 'user' | 'assistant' | 'system';
 export type MessageFormat = 'plain' | 'markdown' | 'html' | 'auto';
 
 export type ChatMessage = {
-  role: MessageRole;
-  content: string | any;
-  format?: MessageFormat;
+  id?: string;
+  role: "system" | "user" | "assistant";
+  content: string;
+  format?: "markdown" | "plain" | "html";
+  irss?: any;
   meta?: Record<string, unknown>;
-  irss?: string; // 👈 hinzufügen
+  ts?: number;
+  triketon?: any; // 👈 DAS HINZUFÜGEN
 };
 
 export type MessageBodyProps = {

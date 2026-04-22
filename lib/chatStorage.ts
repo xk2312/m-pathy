@@ -186,12 +186,14 @@ export type TriketonArchiveEntry = {
 
 
 export type ChatMessage = {
-  id: string;
+  id?: string;
   role: "system" | "user" | "assistant";
   content: string;
+  format?: "markdown" | "plain" | "html";
+  irss?: any;
+  meta?: Record<string, unknown>;
   ts?: number;
-  triketon?: TriketonSeal;
-  telemetry?: any;
+  triketon?: any; // 👈 DAS HINZUFÜGEN
 };
 
 /** Versionierter Hauptschlüssel */
@@ -252,7 +254,6 @@ return {
   content,
   ts,
   triketon,
-  telemetry: typeof x.telemetry === "object" ? x.telemetry : undefined,
 };
 }
 

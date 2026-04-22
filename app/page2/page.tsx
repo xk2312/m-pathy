@@ -1573,9 +1573,24 @@ const handleArchivePrepared = useCallback(() => {
 
   // 🚀 Assistant-Antwort asynchron laden und hinzufügen
   sendMessageLocal([userMessage])
-    .then((assistant) => {
-      setMessages((prev) => [...prev, assistant]);
-    })
+  .then((assistant) => {
+const safeAssistant = {
+  role: "assistant",
+  content: typeof assistant?.content === "string" ? assistant.content : "",
+  irss:
+    assistant && typeof assistant === "object" && "irss" in assistant
+      ? (assistant as any).irss
+      : null,
+  format:
+    assistant && typeof assistant === "object" && "format" in assistant
+      ? (assistant as any).format
+      : "markdown",
+};
+
+  console.log("[PAGE][ASSISTANT MESSAGE]", safeAssistant);
+
+  setMessages((prev) => [...prev, safeAssistant]);
+})
     .finally(() => {
       setLoading(false);
       clearArchiveChatContext();

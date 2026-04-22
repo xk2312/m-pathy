@@ -216,9 +216,14 @@
 
 
 export type ChatMessage = {
+  id?: string;
   role: "system" | "user" | "assistant";
   content: string;
-  format?: "plain" | "markdown" | "html";
+  format?: "markdown" | "plain" | "html";
+  irss?: any;
+  meta?: Record<string, unknown>;
+  ts?: number;
+  triketon?: any; // 👈 DAS HINZUFÜGEN
 };
 
 // stabiler Key + alte Keys für Migration
