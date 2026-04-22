@@ -1031,12 +1031,12 @@ renderContent = renderContent.replace(
 
 console.log("[RENDER][AFTER]", renderContent);
 
-const ledgerContent = irssContent
-  ? `${irssContent}\n\n${renderContent}`.trim()
-  : rawContent.replace(
-      /Session Prompt Counter:\s*.*/,
-      `Session Prompt Counter: ${serverCounter}`
-    );
+const ledgerPayload = {
+  content: renderContent,
+  irss: irssPayload ?? null
+};
+
+const ledgerContent = JSON.stringify(ledgerPayload);
 
 console.log("[LEDGER][CONTENT]", {
   length: ledgerContent.length,
