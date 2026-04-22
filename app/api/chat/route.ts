@@ -950,43 +950,44 @@ if ((global as any).__m13ExecutionArtifact) {
       tokensUsed: TOKENS_USED,
     });
 
-    if (isAuthenticated && sessionUserId) {
-      try {
-        let amountToDebit = TOKENS_USED;
-        if (
-          balanceBefore != null &&
-          balanceBefore > 0 &&
-          balanceBefore < TOKENS_USED
-        ) {
-          amountToDebit = balanceBefore;
-        }
-
-        const newBalance = await debit(sessionUserId, amountToDebit);
-        balanceAfter = newBalance;
-        tokenDelta = amountToDebit;
-        console.log("[chat] ledger debit ok", {
-          sessionUserId,
-          balanceBefore,
-          balanceAfter,
-          tokensUsed: TOKENS_USED,
-          amountToDebit,
-        });
-        if (balanceBefore != null && balanceBefore > 0 && balanceAfter <= 0) {
-          status = "depleted_now";
-        }
-      } catch (err) {
-        console.error("[chat] ledger debit failed", {
-          sessionUserId,
-          TOKENS_USED,
-          err,
-        });
-      }
-    } else {
-      console.log("[chat] ledger skipped", {
-        isAuthenticated,
-        sessionUserId,
-      });
+  try {
+  if (isAuthenticated && sessionUserId) {
+    let amountToDebit = TOKENS_USED;
+    if (
+      balanceBefore != null &&
+      balanceBefore > 0 &&
+      balanceBefore < TOKENS_USED
+    ) {
+      amountToDebit = balanceBefore;
     }
+
+    const newBalance = await debit(sessionUserId, amountToDebit);
+    balanceAfter = newBalance;
+    tokenDelta = amountToDebit;
+    console.log("[chat] ledger debit ok", {
+      sessionUserId,
+      balanceBefore,
+      balanceAfter,
+      tokensUsed: TOKENS_USED,
+      amountToDebit,
+    });
+
+    if (balanceBefore != null && balanceBefore > 0 && balanceAfter <= 0) {
+      status = "depleted_now";
+    }
+  } else {
+    console.log("[chat] ledger debit skipped (no auth)", {
+      isAuthenticated,
+      sessionUserId,
+    });
+  }
+} catch (err) {
+  console.error("[chat] ledger debit failed", {
+    sessionUserId,
+    TOKENS_USED,
+    err,
+  });
+}
 
  let triketon: any = null;
 const TRIKETON_ENABLED = process.env.TRIKETON_ENABLED === "true";
