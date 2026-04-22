@@ -1381,3 +1381,19 @@ button.controlled-entry {
   all: revert;
   cursor: pointer;
 }
+.hljs {
+  background: transparent;
+  color: #e6edf3;
+}
+
+.hljs-keyword { color: #ff7b72; }
+.hljs-string { color: #a5d6ff; }
+.hljs-number { color: #79c0ff; }
+.hljs-comment { color: #8b949e; }
+.hljs-title { color: #d2a8ff; }
+.hljs-variable { color: #ffa657; }
+
+.markdown pre code.hljs {
+background: transparent;
+color: #e6edf3;
+}

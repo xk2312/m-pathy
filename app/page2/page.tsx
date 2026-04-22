@@ -38,47 +38,6 @@ const persist = {
 type ColorTokens = { bg0?: string; bg1?: string; text?: string };
 type ThemeTokens = { color?: ColorTokens; [k: string]: any };
 
-/* =======================================================================
-   [ANCHOR:I18N] - Sprachlabels für Button-Events
-   ======================================================================= */
-
-
-// Typdefinition für alle Events, die M ansteuern kann
-type MEvent = "builder" | "onboarding" | "expert" | "mode";
-
-// Übersetzungen pro Sprache
-const LABELS: Record<string, Record<MEvent, string>> = {
-  en: {
-    builder: "Builder",
-    onboarding: "Onboarding",
-    expert: "Expert",
-    mode: "Mode",
-  },
-  de: {
-    builder: "Bauen",
-    onboarding: "Onboarding",
-    expert: "Experte",
-    mode: "Modus",
-  },
-  fr: {
-    builder: "Créer",
-    onboarding: "Démarrage",
-    expert: "Expert",
-    mode: "Mode",
-  },
-  es: {
-    builder: "Construir",
-    onboarding: "Inicio",
-    expert: "Experto",
-    mode: "Modo",
-  },
-  it: {
-    builder: "Costruire",
-    onboarding: "Avvio",
-    expert: "Esperto",
-    mode: "Modalità",
-  },
-};
 
 /* =======================================================================
    [ANCHOR:CONFIG] - Design Tokens, Themes, Personas, System Prompt
@@ -438,9 +397,6 @@ function mdToHtml(src: string): string {
   return rendered;
 }
 
-
-
-
 /** Body einer Nachricht: entscheidet Markdown vs. Plaintext + Syntax-Highlighting */
 function MessageBody({ msg }: { msg: ChatMessage }) {
   const rawContent = String(msg.content ?? "");
@@ -728,9 +684,6 @@ function Bubble({
   };
 
 
-
-
-
   // Assistant links: offene Spalte, viewport-gesteuert
   const assistantStyle: React.CSSProperties = {
     maxWidth: isNarrowAssistant
@@ -873,105 +826,6 @@ function Bubble({
     </button>
   );
 })()}
-
-
-              <button
-                type="button"
-                onClick={() => {
-                function getTriketonLedgerEntryByMessageId(messageId: string) {
-  try {
-    const raw = localStorage.getItem("mpathy:triketon:v1");
-    if (!raw) return null;
-
-    const entries = JSON.parse(raw);
-    if (!Array.isArray(entries)) return null;
-
-    return entries.find((e) => e?.id === messageId) ?? null;
-  } catch {
-    return null;
-  }
-}
-
-const devicePublicKey =
-  localStorage.getItem("mpathy:triketon:device_public_key_2048");
-
-let ledgerTruthHash = "";
-try {
-  const raw = localStorage.getItem("mpathy:triketon:v1");
-  if (raw) {
-    const entries = JSON.parse(raw);
-    const match = Array.isArray(entries)
-      ? entries.find(e => e?.id === (msg as any)?.id)
-      : null;
-    ledgerTruthHash = match?.truth_hash ?? "";
-  }
-} catch {}
-
-const payload = {
-  id: (msg as any)?.id ?? "",
-  role: (msg as any)?.role ?? "assistant",
-  meta: (msg as any)?.meta ?? null,
-  triketon: {
-    public_key: (devicePublicKey ?? "").replace(/^"+|"+$/g, ""),
-    truth_hash: ledgerTruthHash,
-    timestamp:
-      (msg as any)?.timestamp ??
-      new Date().toISOString(),
-    version: "v1",
-  },
-};
-
-onOpenTriketon?.(payload);
-
-
-
-          // 🔍 TRIKETON OVERLAY DEBUG - BEGIN
-          console.group("[TriketonOverlay] open");
-          console.log("raw msg:", msg);
-          console.log("msg.triketon:", (msg as any)?.triketon);
-          console.log("msg.truth_hash:", (msg as any)?.truth_hash);
-          console.log("msg.public_key:", (msg as any)?.public_key);
-          console.log("msg.timestamp:", (msg as any)?.timestamp);
-          console.log("final payload:", payload);
-          console.log("payload.triketon:", payload.triketon);
-          console.groupEnd();
-          // 🔍 TRIKETON OVERLAY DEBUG - END
-
-          onOpenTriketon?.(payload);
-
-          onOpenTriketon?.(payload);
-
-                }}
-                onMouseEnter={() => setTriketonHover(true)}
-                onMouseLeave={() => setTriketonHover(false)}
-                aria-label="Triketon2048"
-                style={{
-                  border: `1px solid ${
-                    triketonHover
-                      ? tokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"
-                      : tokens.color.glassBorder ?? "rgba(255,255,255,0.12)"
-                  }`,
-                  borderRadius: 999,
-                  padding: "2px 10px",
-                  fontSize: 11,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  background: triketonHover
-                    ? tokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"
-                    : "rgba(15,23,42,0.65)",
-                  color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
-                  cursor: "pointer",
-                  opacity: 0.92,
-                  pointerEvents: "auto",
-                  transition: "background 180ms ease, border-color 180ms ease, opacity 180ms ease",
-                }}
-                title="Triketon2048"
-              >
-                Triketon2048
-              </button>
-
-
-
           </div>
         )}
 
@@ -1688,8 +1542,8 @@ useEffect(() => {
 }, []);
 
 // Labels (du hast LABELS am [ANCHOR:I18N], wir nutzen es hier nur)
-const getLabel = (evt: MEvent) =>
-  (LABELS[locale] && LABELS[locale][evt]) || LABELS.en[evt];
+const getLabel = (evt: MEvent) => evt;
+
 
 
 
