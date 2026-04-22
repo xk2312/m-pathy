@@ -1033,9 +1033,15 @@ console.log("[RENDER][AFTER]", renderContent);
 
 const ledgerPayload = {
   content: renderContent,
-  irss: irssPayload ?? null
+  irss: irssPayload && typeof irssPayload === "object"
+    ? irssPayload
+    : null
 };
-
+console.log("[LEDGER][IRSS CHECK]", {
+  exists: !!irssPayload,
+  type: typeof irssPayload,
+  value: irssPayload
+});
 const ledgerContent = JSON.stringify(ledgerPayload);
 
 console.log("[LEDGER][CONTENT]", {
