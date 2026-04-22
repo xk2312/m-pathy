@@ -697,19 +697,7 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
     try {
       const parsed = JSON.parse(candidate);
 
-const irss = parsed?.irss;
-
-// 🔴 NEU: IRSS für Ledger persistieren (UI-unabhängig)
-try {
-  if (irss && typeof irss === "object") {
-    (window as any).__M13_LAST_IRSS__ = irss;
-    console.log("[IRSS][SPLIT][CAPTURED]", {
-  exists: !!irss,
-  keys: irss ? Object.keys(irss) : null,
-  preview: irss ? JSON.stringify(irss).slice(0, 120) : null,
-});
-  }
-} catch {}
+      const irss = parsed?.irss;
       const looksLikeIrss =
         irss &&
         typeof irss === "object" &&
@@ -2314,6 +2302,7 @@ const publicKey =
     : null;
 
 const res = await fetch("/api/chat", {
+  
   method: "POST",
   headers: { "Content-Type": "application/json" },
   credentials: "include",
@@ -2326,7 +2315,14 @@ const res = await fetch("/api/chat", {
     public_key: publicKey
   }),
 });
+const cloned = res.clone();
 
+let __irss: any = null;
+
+try {
+  const json = await cloned.json();
+  __irss = json?.irss ?? null;
+} catch {}
     // === GC Step 5 – FreeGate/Balance Gates → Login oder Stripe Checkout ===
     if (res.status === 401) {
       try {
@@ -2549,9 +2545,17 @@ function typewriter() {
       }
     }
 
-    assistantMsg.content = fullContent.trim();
+   assistantMsg.content = fullContent.trim();
+    assistantMsg.telemetry = {
+      ...(assistantMsg.telemetry ?? { cockpit: {}, parsed: {} }),
+      irss: __irss
+    };
     return assistantMsg;
-  }
+      }
+      console.log("[M13][STREAM][IRSS]", {
+  exists: !!__irss,
+  keys: __irss ? Object.keys(__irss) : null,
+});
 
 const data = await res.json();
 
@@ -3289,9 +3293,7 @@ hasIRSS: !!__irss,
 appendTriketonLedgerEntry({
   id,
   role: "assistant",
-  content: __irss
-    ? JSON.stringify({ irss: __irss }, null, 2) + "\n\n" + finalText
-    : finalText,
+  content: finalText,
   irss: __irss,
   truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
   public_key: String(publicKey ?? "").replace(/^"+|"+$/g, ""),
