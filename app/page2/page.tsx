@@ -1629,13 +1629,20 @@ useEffect(() => {
   async function loadUserRegistry() {
     try {
       console.log("[M13][FRONTEND][REGISTRY_BOOT] START");
-      const dbRequest = indexedDB.open("Triketon", 1);
+      const dbRequest = indexedDB.open("Triketon", 2);
 
-      dbRequest.onsuccess = function () {
-        console.log("[M13][FRONTEND][REGISTRY_BOOT] INDEXEDDB OPEN SUCCESS");
-        const db = dbRequest.result;
-        const tx = db.transaction("keyval", "readonly");
-        const store = tx.objectStore("keyval");
+dbRequest.onupgradeneeded = function () {
+  const db = dbRequest.result;
+
+  if (!db.objectStoreNames.contains("keyval")) {
+    db.createObjectStore("keyval");
+  }
+};
+
+dbRequest.onsuccess = function () {
+  const db = dbRequest.result;
+  const tx = db.transaction("keyval", "readonly");
+  const store = tx.objectStore("keyval");
 
         const getRequest = store.get("user_registry");
 
@@ -2606,9 +2613,13 @@ try {
 dbRequest.onupgradeneeded = function () {
   const db = dbRequest.result;
 
-  if (!db.objectStoreNames.contains("user")) {
-    db.createObjectStore("user");
-  }
+ if (!db.objectStoreNames.contains("user")) {
+  db.createObjectStore("user");
+}
+
+if (!db.objectStoreNames.contains("triketon")) {
+  db.createObjectStore("triketon");
+}
 };
 
   dbRequest.onsuccess = function () {
