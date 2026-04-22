@@ -1794,32 +1794,38 @@ const PRICE_1M = process.env.NEXT_PUBLIC_STRIPE_PRICE_1M as string | undefined;
 // Alias für bestehende Stellen im Code:
 const persistMessages = (arr: any[]) => {
   if (!Array.isArray(arr)) return;
-  const __irss = (window as any).__M13_LAST_IRSS__ ?? null;
-
   console.log("[TRIKETON][WRITE_B][START]", {
-    hasIRSS: !!__irss,
-    count: arr.length,
-  });
+  count: arr.length,
+});
 
   const normalized = arr.map((m) => {
-    const base = {
-      id:
-        typeof m.id === "string" && m.id.length
-          ? m.id
-          : (typeof crypto !== "undefined" && (crypto as any).randomUUID)
-            ? (crypto as any).randomUUID()
-            : uuidv4(),
-      ...m,
-    };
+  const base = {
+  id:
+    typeof m.id === "string" && m.id.length
+      ? m.id
+      : (typeof crypto !== "undefined" && (crypto as any).randomUUID)
+        ? (crypto as any).randomUUID()
+        : uuidv4(),
 
-    const messageIrss = m?.irss ?? null;
+  role: m.role,
+  content: m.content,
+  format: m.format,
+  irss: m?.irss ?? (window as any).__M13_LAST_IRSS__ ?? null,
+};
 
+const messageIrss = m?.irss ?? null;
+
+console.log("[STEP 3][PER MESSAGE]", {
+  role: m.role,
+  has_irss_field: "irss" in m,
+  irss_value: m.irss ?? null,
+  preview: String(m.content).slice(0, 80),
+});
 if (
   base.role === "assistant" &&
   typeof base.content === "string" &&
   messageIrss &&
-  !base.content.trimStart().startsWith('{')
-) {
+!base.content.trimStart().startsWith('{"irss"')) {
   const nextContent =
     JSON.stringify({ irss: messageIrss }, null, 2) +
     "\n\n" +
@@ -1837,14 +1843,14 @@ if (
     }
 
     if (base.role === "assistant") {
-      console.log("[TRIKETON][WRITE_B][SKIPPED]", {
-        hasIRSS: !!__irss,
-        reason: !__irss
-          ? "no_irss"
-          : "already_has_irss_or_invalid_content",
-        preview: String(base.content).slice(0, 120),
-      });
-    }
+  console.log("[TRIKETON][WRITE_B][SKIPPED]", {
+    hasIRSS: !!messageIrss,
+    reason: !messageIrss
+      ? "no_irss"
+      : "already_has_irss_or_invalid_content",
+    preview: String(base.content).slice(0, 120),
+  });
+}
 
     return base;
   });
@@ -2495,12 +2501,14 @@ const res = await fetch("/api/chat", {
         ? (crypto as any).randomUUID()
         : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
 
-    const assistantMsg: ChatMessage = {
-      id,
-      role: "assistant",
-      content: "",
-      format: "markdown",
-    };
+  const assistantMsg = {
+  id,
+  role: "assistant",
+  content: "",
+  format: "markdown",
+} as any;
+
+console.log("[STEP 2][ASSISTANT_MSG][IRSS]", assistantMsg.irss);
 
     while (true) {
       const { done, value } = await reader.read();
@@ -2665,23 +2673,30 @@ tx.onerror = function (err) {
     );
     console.log("[M13][FRONTEND] DISPATCH DONE");
   }
-console.log("[M13][FRONTEND] IRSS FIELD", data?.irss ?? null);
-  return {
-    id:
-      typeof crypto !== 'undefined' &&
-      typeof (crypto as any).randomUUID === 'function'
-        ? (crypto as any).randomUUID()
-        : `${Date.now()}_${Math.random().toString(16).slice(2)}`,
-    role: "assistant",
-    content: typeof data.message === "string"
+const backendIrss = data?.irss ?? null;
+
+console.log("[STEP 1][API][IRSS]", backendIrss);
+
+// nur Cache setzen, keinen Scope zerstören
+(window as any).__M13_LAST_IRSS__ = backendIrss;
+
+return {
+  id:
+    typeof crypto !== "undefined" &&
+    typeof (crypto as any).randomUUID === "function"
+      ? (crypto as any).randomUUID()
+      : `${Date.now()}_${Math.random().toString(16).slice(2)}`,
+  role: "assistant",
+  content:
+    typeof data.message === "string"
       ? data.message
       : JSON.stringify(data.message, null, 2),
-    format: "markdown",
-    irss: data?.irss ?? null,
-    meta: {
-      handoff_mode: data?.handoff_mode ?? null
-    }
-  } as any;
+  format: "markdown",
+  irss: backendIrss,
+  meta: {
+    handoff_mode: data?.handoff_mode ?? null,
+  },
+} as any;
 }
 
 // FreeGate-Limit: Login erforderlich
@@ -3260,8 +3275,11 @@ setMessages((prev) => {
 
   try {
       // 🔴 NEU: IRSS aus Split holen (falls vorhanden)
-const __irss = null;
-console.log("[IRSS][LEDGER][USING]", {
+const __irss =
+  (assistant as any)?.irss ??
+  (window as any).__M13_LAST_IRSS__ ??
+  null;
+  console.log("[IRSS][LEDGER][USING]", {
 exists: !!__irss,
 keys: __irss ? Object.keys(__irss) : null,
 preview: __irss ? JSON.stringify(__irss).slice(0, 120) : null,
@@ -3383,7 +3401,8 @@ appendTriketonLedgerEntry({
 
     return messages[locale as keyof typeof messages] || messages.en;
   })(),
-  format: "markdown"
+  format: "markdown",
+  irss: (window as any).__M13_LAST_IRSS__ ?? null
 }
     ]);
 
