@@ -5,8 +5,14 @@ import React, { useCallback } from "react";
 import { motion } from "framer-motion";
 import { usePromptStateMachine } from "@/app/chat/hooks/usePromptStateMachine";
 import { PromptShell } from "@/app/components/prompt/PromptShell";
+import VoiaBloom from "@/app/components/StarField"; // Starfield-Overlay
 import "./prompt.css";
 
+
+type FooterStatus = {
+  modeLabel?: string;
+  expertLabel?: string;
+};
 
 type PromptRootProps = {
   t: (key: string) => string;
@@ -18,6 +24,7 @@ type PromptRootProps = {
   padBottom: number;
   setPadBottom: (value: number) => void;
   compactStatus: boolean;
+  footerStatus: FooterStatus;
   withGate: (fn: () => void) => void;
   sendingRef: React.MutableRefObject<boolean>;
   onSendFromPrompt: (text: string) => void;
@@ -37,11 +44,12 @@ export function PromptRoot({
   padBottom,
   setPadBottom,
   compactStatus: _compactStatus,
+  footerStatus,
   withGate,
   sendingRef,
   onSendFromPrompt,
   isMobile,
-  onToggleSaeule,
+  onToggleSaeule,               // ← NEU sauber destrukturiert
 }: PromptRootProps) {
 
   const snapshot = usePromptStateMachine({
@@ -56,6 +64,9 @@ export function PromptRoot({
       : snapshot.isSendBlocked
       ? "thinking"
       : "ready";
+
+  const hasFooterStatus =
+    !!footerStatus?.modeLabel || !!footerStatus?.expertLabel;
 
   const updateDockHeight = useCallback(() => {
     try {
@@ -120,6 +131,24 @@ export function PromptRoot({
       data-layout={layoutVariant}
       data-prompt-state={visualState}
     >
+      {/* ModeLine */}
+            {hasFooterStatus && (
+        <div className="prompt-mode-line">
+          {footerStatus?.modeLabel && (
+            <span className="prompt-mode-line-mode">
+              {footerStatus.modeLabel}
+            </span>
+          )}
+          {footerStatus?.modeLabel && footerStatus?.expertLabel && (
+            <span className="prompt-mode-line-separator"> • </span>
+          )}
+          {footerStatus?.expertLabel && (
+            <span className="prompt-mode-line-expert">
+              {footerStatus.expertLabel}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* ⭐ NEW: DOORMAN inside PromptDockCluster */}
       {!hasMessages && (

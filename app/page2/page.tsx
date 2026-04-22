@@ -1,3 +1,190 @@
+/* ======================================================================
+   FILE INDEX - page.tsx  (Chat Page / Page2)
+   MODE: GranularFileIndexDeveloper · CodeForensik
+   SCOPE: CHAT RUNTIME · ARCHIVE INJECTION · API SEND · UI RESET
+   STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)
+   ======================================================================
+
+   0. EINORDNUNG (SYSTEMISCH)
+   ----------------------------------------------------------------------
+   Diese Datei ist der ZENTRALE Chat-Raum.
+   Alles, was am Ende als „neuer Chat“ sichtbar wird,
+   MUSS hier korrekt ankommen.
+
+   → page.tsx ist der ENDKNOTEN des Archive-Flows.
+
+
+   1. RELEVANTE IMPORTS (ARCHIVE)
+   ----------------------------------------------------------------------
+   import '@/lib/archiveChatPreparationListener'
+   import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
+
+   Bedeutung:
+   - archiveChatPreparationListener wird hier global registriert
+   - page.tsx ist Empfänger des vorbereiteten Archive-Kontexts
+
+   TODO-RELEVANZ:
+   - Archive-Flow endet HIER
+   - Fehlerfreier Übergang muss hier finalisiert werden
+
+
+   2. ARCHIVE CONTEXT INJECTION (KERNLOGIK)
+   ----------------------------------------------------------------------
+   function withArchiveInjection(ctx: ChatMessage[])
+
+   Ablauf:
+   - liest aus SessionStorage:
+     `mpathy:context:archive-chat:v1`
+   - erzeugt SYSTEM-Nachricht:
+     role: "system"
+     content: `ARCHIVE CONTEXT\n\n${injected}`
+   - injiziert diese Nachricht VOR bestehendem Context
+
+   Rückgabe:
+   {
+     context: ChatMessage[]
+     used: boolean
+   }
+
+   TODO-RELEVANZ (HOCH):
+   - Aktuell wird Archive-Context
+     als SYSTEM-Nachricht injiziert
+   - ToDo verlangt:
+     → erneutes Senden als USER-Nachricht
+     → NICHT im bestehenden Chat rendern
+
+
+   3. CLEAR NACH VERWENDUNG
+   ----------------------------------------------------------------------
+   Im Sendeflow:
+   if (used) {
+     clearArchiveChatContext();
+   }
+
+   Bedeutung:
+   - Archive-Context ist ONE-SHOT
+   - Wird nach erstem API-Call gelöscht
+
+   TODO-RELEVANZ:
+   - Zeitpunkt des Clear ist kritisch
+   - Bei neuem Flow muss sichergestellt sein,
+     dass Clear NACH erfolgreichem neuen Chat erfolgt
+
+
+   4. API SEND (NORMALE CHAT-LOGIK)
+   ----------------------------------------------------------------------
+   async function sendMessageLocal(context: ChatMessage[])
+
+   Eigenschaften:
+   - POST /api/chat
+   - credentials: same-origin
+   - messages = context
+   - locale wird mitgesendet
+
+   Status:
+   - Diese Funktion ist KORREKT
+   - Sie ist der gewünschte Zielpfad
+     für den neuen Archive-Flow
+
+   TODO-RELEVANZ:
+   - Archive-Zusammenfassung MUSS hier landen
+   - Es darf KEIN Sonder-Continuation-Call existieren
+
+
+   5. PROMPT HANDLER (USER SEND)
+   ----------------------------------------------------------------------
+   const onSendFromPrompt = useCallback(async (text: string) => { ... })
+
+   Ablauf:
+   - User-Message wird erzeugt
+   - optimistic UI update
+   - Ledger Append (User)
+   - withArchiveInjection(optimistic)
+   - sendMessageLocal(outgoing)
+
+   TODO-RELEVANZ (MAXIMAL):
+   - Dieser Handler ist der IDEALE Ort,
+     um Archive-Summary als USER-Message
+     in einen NEUEN Chat einzuspeisen
+   - Aktuell wird er nur bei manuellem Prompt genutzt
+
+
+   6. CHAT STATE & PERSISTENZ
+   ----------------------------------------------------------------------
+   const [messages, setMessages]
+   persistMessages()
+   hardClearChat()
+
+   Bedeutung:
+   - messages = aktueller Chat
+   - hardClearChat löscht Storage + reload
+
+   TODO-RELEVANZ:
+   - Für neuen Archive-Chat:
+     → alter Chat muss verlassen/gelöscht werden
+     → neuer Chat beginnt leer + injizierter User-Message
+
+
+   7. LOADING / SPINNER-STATE
+   ----------------------------------------------------------------------
+   const [loading, setLoading]
+
+   Steuerung:
+   - true beim Senden
+   - false bei Antwort oder Fehler
+
+   TODO-RELEVANZ:
+   - ARCHIVE-SPINNER ist NICHT dieser loading-State
+   - ABER: neuer Chat muss loading korrekt setzen,
+     sonst bleibt UI inkonsistent
+
+
+   8. ARCHIVE-SEITIGE EVENTS (INDIREKT)
+   ----------------------------------------------------------------------
+   page.tsx hört NICHT direkt auf:
+   - mpathy:archive:start-chat
+   - mpathy:archive:close
+
+   Diese Events werden:
+   - vom archiveChatPreparationListener verarbeitet
+   - page.tsx reagiert nur indirekt über Storage
+
+   TODO-RELEVANZ:
+   - saubere Trennung:
+     Listener → Storage
+     Page → liest Storage → API
+
+
+   9. ZIELARCHITEKTUR (IMPLIZIT ABLEITBAR)
+   ----------------------------------------------------------------------
+   - page.tsx ist der EINZIGE Ort,
+     an dem ein neuer Chat sichtbar entsteht
+   - Alles andere (Archive, Listener, Spinner)
+     sind nur Vorstufen
+
+   TODO-RELEVANZ:
+   - ToDo-Umsetzung MUSS hier enden
+   - Kein UI-Code im Listener
+   - Kein API-Code im ArchiveOverlay
+
+
+   10. ZUSAMMENFASSUNG (KANONISCH)
+   ----------------------------------------------------------------------
+   page.tsx:
+   - besitzt korrekte Chat-API-Anbindung
+   - besitzt Archive-Context-Injection
+   - besitzt vollständige Ledger-Integration
+   - ist der korrekte Endpunkt für den neuen Flow
+
+   KRITISCHE STELLEN FÜR ToDos:
+   - withArchiveInjection()
+   - onSendFromPrompt()
+   - clearArchiveChatContext()
+   - hardClearChat()
+   - sendMessageLocal()
+
+   ====================================================================== */
+
 "use client";
 
 import React, { useEffect, useState, useRef, useCallback, useMemo, FormEvent } from "react";
@@ -12,6 +199,7 @@ import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
 import { PromptRoot } from "./PromptRoot";
 import { getLocale, setLocale, t } from "@/lib/i18n";
+import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import HiddenPromptBridge from "@/components/system/HiddenPromptBridge";import { useMobileViewport } from "@/lib/useMobileViewport";
 import { v4 as uuidv4 } from "uuid";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
@@ -37,6 +225,47 @@ const persist = {
 type ColorTokens = { bg0?: string; bg1?: string; text?: string };
 type ThemeTokens = { color?: ColorTokens; [k: string]: any };
 
+/* =======================================================================
+   [ANCHOR:I18N] - Sprachlabels für Button-Events
+   ======================================================================= */
+
+
+// Typdefinition für alle Events, die M ansteuern kann
+type MEvent = "builder" | "onboarding" | "expert" | "mode";
+
+// Übersetzungen pro Sprache
+const LABELS: Record<string, Record<MEvent, string>> = {
+  en: {
+    builder: "Builder",
+    onboarding: "Onboarding",
+    expert: "Expert",
+    mode: "Mode",
+  },
+  de: {
+    builder: "Bauen",
+    onboarding: "Onboarding",
+    expert: "Experte",
+    mode: "Modus",
+  },
+  fr: {
+    builder: "Créer",
+    onboarding: "Démarrage",
+    expert: "Expert",
+    mode: "Mode",
+  },
+  es: {
+    builder: "Construir",
+    onboarding: "Inicio",
+    expert: "Experto",
+    mode: "Modo",
+  },
+  it: {
+    builder: "Costruire",
+    onboarding: "Avvio",
+    expert: "Esperto",
+    mode: "Modalità",
+  },
+};
 
 /* =======================================================================
    [ANCHOR:CONFIG] - Design Tokens, Themes, Personas, System Prompt
@@ -396,6 +625,9 @@ function mdToHtml(src: string): string {
   return rendered;
 }
 
+
+
+
 /** Body einer Nachricht: entscheidet Markdown vs. Plaintext + Syntax-Highlighting */
 function MessageBody({ msg }: { msg: ChatMessage }) {
   const rawContent = String(msg.content ?? "");
@@ -465,7 +697,19 @@ function MessageBody({ msg }: { msg: ChatMessage }) {
     try {
       const parsed = JSON.parse(candidate);
 
-      const irss = parsed?.irss;
+const irss = parsed?.irss;
+
+// 🔴 NEU: IRSS für Ledger persistieren (UI-unabhängig)
+try {
+  if (irss && typeof irss === "object") {
+    (window as any).__M13_LAST_IRSS__ = irss;
+    console.log("[IRSS][SPLIT][CAPTURED]", {
+  exists: !!irss,
+  keys: irss ? Object.keys(irss) : null,
+  preview: irss ? JSON.stringify(irss).slice(0, 120) : null,
+});
+  }
+} catch {}
       const looksLikeIrss =
         irss &&
         typeof irss === "object" &&
@@ -683,6 +927,9 @@ function Bubble({
   };
 
 
+
+
+
   // Assistant links: offene Spalte, viewport-gesteuert
   const assistantStyle: React.CSSProperties = {
     maxWidth: isNarrowAssistant
@@ -825,6 +1072,105 @@ function Bubble({
     </button>
   );
 })()}
+
+
+              <button
+                type="button"
+                onClick={() => {
+                function getTriketonLedgerEntryByMessageId(messageId: string) {
+  try {
+    const raw = localStorage.getItem("mpathy:triketon:v1");
+    if (!raw) return null;
+
+    const entries = JSON.parse(raw);
+    if (!Array.isArray(entries)) return null;
+
+    return entries.find((e) => e?.id === messageId) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+const devicePublicKey =
+  localStorage.getItem("mpathy:triketon:device_public_key_2048");
+
+let ledgerTruthHash = "";
+try {
+  const raw = localStorage.getItem("mpathy:triketon:v1");
+  if (raw) {
+    const entries = JSON.parse(raw);
+    const match = Array.isArray(entries)
+      ? entries.find(e => e?.id === (msg as any)?.id)
+      : null;
+    ledgerTruthHash = match?.truth_hash ?? "";
+  }
+} catch {}
+
+const payload = {
+  id: (msg as any)?.id ?? "",
+  role: (msg as any)?.role ?? "assistant",
+  meta: (msg as any)?.meta ?? null,
+  triketon: {
+    public_key: (devicePublicKey ?? "").replace(/^"+|"+$/g, ""),
+    truth_hash: ledgerTruthHash,
+    timestamp:
+      (msg as any)?.timestamp ??
+      new Date().toISOString(),
+    version: "v1",
+  },
+};
+
+onOpenTriketon?.(payload);
+
+
+
+          // 🔍 TRIKETON OVERLAY DEBUG - BEGIN
+          console.group("[TriketonOverlay] open");
+          console.log("raw msg:", msg);
+          console.log("msg.triketon:", (msg as any)?.triketon);
+          console.log("msg.truth_hash:", (msg as any)?.truth_hash);
+          console.log("msg.public_key:", (msg as any)?.public_key);
+          console.log("msg.timestamp:", (msg as any)?.timestamp);
+          console.log("final payload:", payload);
+          console.log("payload.triketon:", payload.triketon);
+          console.groupEnd();
+          // 🔍 TRIKETON OVERLAY DEBUG - END
+
+          onOpenTriketon?.(payload);
+
+          onOpenTriketon?.(payload);
+
+                }}
+                onMouseEnter={() => setTriketonHover(true)}
+                onMouseLeave={() => setTriketonHover(false)}
+                aria-label="Triketon2048"
+                style={{
+                  border: `1px solid ${
+                    triketonHover
+                      ? tokens.color.cyanBorder ?? "rgba(34,211,238,0.28)"
+                      : tokens.color.glassBorder ?? "rgba(255,255,255,0.12)"
+                  }`,
+                  borderRadius: 999,
+                  padding: "2px 10px",
+                  fontSize: 11,
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  background: triketonHover
+                    ? tokens.color.cyanGlass ?? "rgba(34,211,238,0.12)"
+                    : "rgba(15,23,42,0.65)",
+                  color: tokens.color.textMuted ?? "rgba(226,232,240,0.8)",
+                  cursor: "pointer",
+                  opacity: 0.92,
+                  pointerEvents: "auto",
+                  transition: "background 180ms ease, border-color 180ms ease, opacity 180ms ease",
+                }}
+                title="Triketon2048"
+              >
+                Triketon2048
+              </button>
+
+
+
           </div>
         )}
 
@@ -1005,7 +1351,7 @@ useEffect(() => {
     if (fired) return;
     fired = true;
     raf1 = requestAnimationFrame(() => {
-    raf2 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
         const el = convoRef.current as HTMLDivElement | null;
         if (!el) return;
         const prev = el.style.overflow;
@@ -1239,24 +1585,9 @@ const handleArchivePrepared = useCallback(() => {
 
   // 🚀 Assistant-Antwort asynchron laden und hinzufügen
   sendMessageLocal([userMessage])
-  .then((assistant) => {
-const safeAssistant = {
-  role: "assistant",
-  content: typeof assistant?.content === "string" ? assistant.content : "",
-  irss:
-    assistant && typeof assistant === "object" && "irss" in assistant
-      ? (assistant as any).irss
-      : null,
-  format:
-    assistant && typeof assistant === "object" && "format" in assistant
-      ? (assistant as any).format
-      : "markdown",
-};
-
-  console.log("[PAGE][ASSISTANT MESSAGE]", safeAssistant);
-
-  setMessages((prev) => [...prev, safeAssistant]);
-})
+    .then((assistant) => {
+      setMessages((prev) => [...prev, assistant]);
+    })
     .finally(() => {
       setLoading(false);
       clearArchiveChatContext();
@@ -1289,7 +1620,7 @@ useEffect(() => {
 }, [handleArchivePrepared, onClearChat]);
 
 useEffect(() => {
-  function loadUserRegistry() {
+  async function loadUserRegistry() {
     try {
       console.log("[M13][FRONTEND][REGISTRY_BOOT] START");
       const dbRequest = indexedDB.open("Triketon", 1);
@@ -1397,6 +1728,45 @@ const [balance, setBalance] = useState<number | null>(null);
 
 const [mode, setMode] = useState<string>("DEFAULT");
 
+const [triketonOpen, setTriketonOpen] = useState(false);
+const [triketonPayload, setTriketonPayload] = useState<any>(null);
+const [triketonPinned, setTriketonPinned] = useState(false);
+const triketonCloseTimerRef = useRef<number | null>(null);
+
+const openTriketon = useCallback((payload: any) => {
+  if (triketonCloseTimerRef.current != null) {
+    window.clearTimeout(triketonCloseTimerRef.current);
+    triketonCloseTimerRef.current = null;
+  }
+  setTriketonPayload(payload ?? null);
+  setTriketonOpen(true);
+}, []);
+
+const closeTriketon = useCallback(() => {
+  if (triketonCloseTimerRef.current != null) {
+    window.clearTimeout(triketonCloseTimerRef.current);
+    triketonCloseTimerRef.current = null;
+  }
+  setTriketonOpen(false);
+  setTriketonPayload(null);
+  setTriketonPinned(false);
+}, []);
+
+const scheduleCloseTriketon = useCallback(() => {
+  if (triketonPinned) return;
+  if (triketonCloseTimerRef.current != null) {
+    window.clearTimeout(triketonCloseTimerRef.current);
+  }
+  triketonCloseTimerRef.current = window.setTimeout(() => {
+    setTriketonOpen(false);
+    setTriketonPayload(null);
+  }, 120);
+}, [triketonPinned]);
+
+
+useEffect(() => {
+  return () => {};
+}, []);
 
 
 // Preis-ID aus ENV für den Client (nur ID, kein Secret)
@@ -1470,6 +1840,9 @@ const persistMessages = (arr: any[]) => {
 
   saveChat(normalized);
 };
+// ── M-Flow Overlay (1. Frame: eventLabel)
+type MEvent = "builder" | "onboarding" | "expert" | "mode";
+const [frameText, setFrameText] = useState<string | null>(null);
 
 // "de" | "en" | "fr" | ... – folgt dem zentralen Sprachkern
 const [locale, setLocaleState] = useState<string>(() => getLocale());
@@ -1498,7 +1871,9 @@ useEffect(() => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
 
-
+// Labels (du hast LABELS am [ANCHOR:I18N], wir nutzen es hier nur)
+const getLabel = (evt: MEvent) =>
+  (LABELS[locale] && LABELS[locale][evt]) || LABELS.en[evt];
 
 
 
@@ -1516,7 +1891,19 @@ const slug = (s: string) =>
     .replace(/\s+/g, "-");                             // words -> slug
 
 // --- localized labels for known modes ---
+const MODE_LABELS: Record<string, Record<string, string>> = {
+  en: { calm:"Calm", truth:"Truth", oracle:"Oracle", balance:"Balance", power:"Power", loop:"Loop", body:"Body", ocean:"Ocean", minimal:"Minimal" },
+  de: { calm:"Ruhe", truth:"Wahrheit", oracle:"Orakel", balance:"Balance", power:"Kraft", loop:"Schleife", body:"Körper", ocean:"Ozean", minimal:"Minimal" },
+  fr: { calm:"Calme", truth:"Vérité", oracle:"Oracle", balance:"Équilibre", power:"Puissance", loop:"Boucle", body:"Corps", ocean:"Océan", minimal:"Minimal" },
+  es: { calm:"Calma", truth:"Verdad", oracle:"Oráculo", balance:"Equilibrio", power:"Poder", loop:"Bucle", body:"Cuerpo", ocean:"Océano", minimal:"Minimal" },
+  it: { calm:"Calma", truth:"Verità", oracle:"Oracolo", balance:"Equilibrio", power:"Potenza", loop:"Loop", body:"Corpo", ocean:"Oceano", minimal:"Minimo" },
+};
 
+const tMode = (raw: string) => {
+  const key = slug(raw);                        // "Calm", "CALM", etc. -> "calm"
+  const table = MODE_LABELS[locale] || MODE_LABELS.en;
+  return table[key] || cap(raw);                // fallback: raw pretty-cased
+};
 
 // Minimal-Provider-Dict nur für Navigation/LanguageSwitcher auf der Chat-Seite.
 // Wir brauchen hier KEINE echten Texte, weil page2 keine useLang().t()-Lookups macht.
@@ -1538,9 +1925,204 @@ const NAV_PROVIDER_DICT: Record<string, Record<string, string>> = {
 };
 
 // UI-zentrale Routine: eventLabel → READY
-const runMFlow = useCallback(async () => {
-  // deprecated – no-op
+const runMFlow = useCallback(async (evt: MEvent, labelOverride?: string) => {
+  // Prefix nach Browsersprache
+  const LOAD_PREFIX: Record<string, string> = { en: "Load", de: "Lade", fr: "Charger", es: "Cargar", it: "Carica" };
+  const prefix = LOAD_PREFIX[locale] ?? LOAD_PREFIX.en;
+
+  const baseLabel = (() => {
+    // Fallbacks für reine Events
+    if (!labelOverride) {
+      if (evt === "builder")      return getLabel("builder");      // z. B. „Bauen“
+      if (evt === "onboarding")   return getLabel("onboarding");
+      if (evt === "mode")         return getLabel("mode");
+      if (evt === "expert")       return getLabel("expert");
+    }
+    return labelOverride!.trim();
+  })();
+
+  // „Load …“ bzw. Sonderfall „set default“
+  const frame = (evt === "mode" && /^default$/i.test(baseLabel))
+    ? (locale === "de" ? "Setze Default" : "Set default")
+    : `${prefix} ${baseLabel}`;
+
+  // 1) Frame 1 (Text) + Denken starten
+  setFrameText(frame);
+  try { setLoading(true); } catch {}
+
+  // 2) Frame sichtbar halten
+  await new Promise(r => setTimeout(r, 900));
+
+  // 3) Ausblenden Frame 1, M denkt noch
+  setFrameText(null);
+  await new Promise(r => setTimeout(r, 700));
+
+  // 4) READY (LogoM übernimmt die Ready-Phase, wenn loading=false)
+  try { setLoading(false); } catch {}
+}, [locale, setLoading]);
+
+
+/* -----------------------------------------------------------------------
+   Sehr defensive Browser-Hooks (nur Client, mit Try/Catch & harten Guards)
+   ----------------------------------------------------------------------- */
+
+// Globale Click-Delegation: startet M-Flow inkl. konkretem Label (Mode/Expert)
+useEffect(() => {
+  function onGlobalClick(e: MouseEvent) {
+    const el = (e.target as HTMLElement)?.closest?.("[data-m-event]") as HTMLElement | null;
+    if (!el) return;
+
+    const evt = el.getAttribute("data-m-event") as MEvent | null;
+    if (!evt) return;
+
+    // Label nur von genau diesem Element ableiten (kein Fallback/Text-Scan)
+    const raw =
+      el.getAttribute("data-m-label") ||
+      el.getAttribute("aria-label") ||
+      el.textContent ||
+      "";
+    const label = evt === "mode" ? tMode(raw) : (evt === "expert" ? cap(raw) : undefined);
+
+    runMFlow(evt, label);
+  }
+
+  document.addEventListener("click", onGlobalClick);
+  return () => document.removeEventListener("click", onGlobalClick);
+}, [runMFlow, locale]);
+
+  // ▼ Auswahl-Delegation (Dropdowns/Listboxen/Comboboxen → Label an runMFlow)
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const onChange = (e: Event) => {
+      const el = e.target as HTMLElement | null;
+      if (!el) return;
+
+      // Nur echte Auswahlen mit change-Event
+      if (!el.matches("select,[role='listbox'],[role='combobox']")) return;
+
+
+      const host = (el.closest("[data-m-event]") as HTMLElement) || (el as any);
+      const evt = host.getAttribute("data-m-event") as MEvent | null;
+      if (!evt) return;
+
+      let label = "";
+      if ((el as HTMLSelectElement).selectedOptions?.length) {
+        label = (el as HTMLSelectElement).selectedOptions[0].textContent?.trim() || "";
+      } else {
+        label = host.getAttribute("data-m-label") || host.textContent?.trim() || "";
+      }
+      runMFlow(evt, label || undefined);
+    };
+
+    document.addEventListener("change", onChange);
+    return () => document.removeEventListener("change", onChange);
+  }, [runMFlow]);
+
+  // Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof document === "undefined") return;
+    // … (dein Auto-Tagging Code folgt hier)
+  }, []);
+
+
+// Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
+useEffect(() => {
+  // SSR-Schutz
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+
+  const MAP: Record<string, MEvent> = {
+    "jetzt bauen": "builder",
+    "builder": "builder",
+    "onboarding": "onboarding",
+    "start onboarding": "onboarding",
+    "expert": "expert",
+    "experte": "expert",
+    "mode": "mode",
+    "modus": "mode",
+  };
+
+  const norm = (s: string) => (s || "").trim().toLowerCase();
+
+  // Helper: für mode/expert sichtbaren Namen als data-m-label setzen
+  const ensureLabel = (el: HTMLElement) => {
+    const evtType = el.getAttribute("data-m-event");
+    if ((evtType === "mode" || evtType === "expert") && !el.hasAttribute("data-m-label")) {
+      const raw =
+        (el.textContent ||
+          el.getAttribute("aria-label") ||
+          el.getAttribute("title") ||
+          "")!.trim();
+      if (raw) el.setAttribute("data-m-label", raw);
+    }
+  };
+
+  // nach initialem Paint (vermeidet SSR/CSR-Mismatch)
+  let id = 0;
+  id = window.requestAnimationFrame(() => {
+    try {
+      const candidates = Array.from(
+        document.querySelectorAll<HTMLElement>('button, a, [role="button"], [data-action]')
+      );
+
+      for (const el of candidates) {
+        try {
+          if (el.hasAttribute("data-m-event")) {
+            ensureLabel(el);
+            continue;
+          }
+
+          const txt = norm(
+            el.textContent ||
+              el.getAttribute("aria-label") ||
+              el.getAttribute("title") ||
+              ""
+          );
+          if (!txt) continue;
+
+          // exakter Treffer
+          if (MAP[txt]) {
+            el.setAttribute("data-m-event", String(MAP[txt]));
+            ensureLabel(el);
+            continue;
+          }
+
+          // Teiltreffer (z. B. "jetzt bauen!")
+          const hit = Object.keys(MAP).find((key) => txt.includes(key));
+          if (hit) {
+            el.setAttribute("data-m-event", String(MAP[hit as keyof typeof MAP]));
+            ensureLabel(el);
+          }
+        } catch {
+          // einzelnen Problem-Knoten ignorieren
+        }
+      }
+    } catch {
+      // niemals die App crashen lassen
+    }
+  });
+
+  return () => {
+    if (id) window.cancelAnimationFrame(id);
+  };
 }, []);
+
+const withArchiveInjection = (ctx: ChatMessage[]) => {
+  const injected = readArchiveChatContext();
+  if (!injected) return { context: ctx, used: false };
+
+  const systemMsg: ChatMessage = {
+    role: "system",
+    content: `ARCHIVE CONTEXT\n\n${injected}`,
+    format: "markdown",
+  };
+
+  return { context: [systemMsg, ...(Array.isArray(ctx) ? ctx : [])], used: true };
+};
+
+// GC: Marker für temporäre System-Toasts (Golden Conversion)
+const GC_MARKER = "[[gc-toast]]";
+
 
 // ===============================================================
 // Systemmeldung (für Säule / Overlay / Onboarding)
@@ -1549,7 +2131,8 @@ const systemSay = useCallback((content: string, opts?: { gc?: boolean }) => {
   if (!content) return;
 
   const isGc = !!opts?.gc;
-  const tagged = content;
+  const tagged = isGc ? `${GC_MARKER}${content}` : content;
+
   setMessages((prev) => {
     const base = Array.isArray(prev) ? prev : [];
     const next = truncateMessages([
@@ -1571,7 +2154,105 @@ const systemSay = useCallback((content: string, opts?: { gc?: boolean }) => {
 
 }, [persistMessages]);
 
-  
+
+
+  // Footer-Status (nur Anzeige in der Statusleiste, keine Bubble)
+const [footerStatus, setFooterStatus] = useState<{ modeLabel: string; expertLabel: string }>({
+  modeLabel: "-",
+  expertLabel: "-",
+});
+
+
+  // ===============================================================
+// BRIDGE - Saeule → Chat (Event → echte Nachricht)
+// ===============================================================
+useEffect(() => {
+  const onSystem = (e: Event) => {
+    const detail = (e as CustomEvent).detail ?? {};
+    const text: string = detail.text ?? "";
+    const kind: string = detail.kind ?? "info";
+    const meta = detail.meta ?? {};
+
+    const wasAtEnd = stickToBottom;
+
+    // 1) Footer-Status aktualisieren
+    if (kind === "status") {
+      const modeLabel = meta.modeLabel ?? detail.modeLabel;
+      const expertLabel = meta.expertLabel ?? detail.expertLabel;
+      setFooterStatus((s) => ({
+        modeLabel: typeof modeLabel === "string" && modeLabel.length ? modeLabel : s.modeLabel,
+        expertLabel: typeof expertLabel === "string" && expertLabel.length ? expertLabel : s.expertLabel,
+      }));
+
+      // Puls NUR starten, wenn explizit busy:true gesetzt ist
+const busy = (meta?.busy ?? (detail as any)?.busy) === true;
+if (busy) {
+  try { setLoading(true); } catch {}
+}
+
+
+      if (wasAtEnd) {
+        pendingAutoScrollRef.current = true;
+        setStickToBottom(true);
+      }
+      return;
+    }
+
+    // 2) Initialer System-/Mode-Bubble: Puls EIN
+   if (kind === "mode") {
+  // Nur updaten, wenn eindeutig ein Moduswechsel signalisiert wird
+  const hasModeId =
+    typeof (meta?.modeId ?? (detail as any)?.modeId) === "string";
+
+  if (hasModeId) {
+    const modeLabel =
+      (meta?.label ?? meta?.modeLabel ?? (detail as any)?.modeLabel) as
+        | string
+        | undefined;
+    if (modeLabel && modeLabel.length) {
+      setFooterStatus((s) => ({ ...s, modeLabel }));
+    }
+  }
+
+  // Denken beginnt beim Moduswechsel
+  try { setLoading(true); } catch {}
+}
+
+
+    // 3) Falls eine Antwort signalisiert wird (reply/info), Puls AUS - auch wenn kein Text kommt
+    if (kind === "reply" || kind === "info") {
+      try { setLoading(false); } catch {}
+    }
+
+    // 4) Ohne Text keine Bubble anhängen (aber der obige loading-Fix greift bereits)
+    if (!text) return;
+
+    // 5) Sichtbare Bubble anhängen
+    setMessages((prev) => {
+      const role: Role = kind === "mode" ? "system" : "assistant";
+      const msg: ChatMessage = { role, content: text, format: "markdown" };
+      const next = truncateMessages([...(Array.isArray(prev) ? prev : []), msg]);
+      persistMessages(next);
+      return next;
+    });
+
+    // 6) Bei jeder sichtbaren Nicht-"mode"-Antwort sicherheitshalber Puls AUS
+    if (kind !== "mode") {
+      try { setLoading(false); } catch {}
+    }
+
+    if (wasAtEnd) {
+      pendingAutoScrollRef.current = true;
+      setStickToBottom(true);
+    }
+
+  };
+
+  window.addEventListener("mpathy:system-message" as any, onSystem as any);
+  return () => window.removeEventListener("mpathy:system-message" as any, onSystem as any);
+}, [persistMessages, stickToBottom]);
+
+
   // ===============================================================
   // Einmaliges Autosrollen ans Ende pro neuer Assistant-Message
   // ===============================================================
@@ -1597,38 +2278,6 @@ const systemSay = useCallback((content: string, opts?: { gc?: boolean }) => {
   // ===============================================================
   useEffect(() => {
     const el = convoRef.current as HTMLDivElement | null;
-
-// ===============================================================
-// STREAM LISTENER (mpathy:stream:delta → UI)
-// ===============================================================
-useEffect(() => {
-  let buffer = "";
-
-  const handler = (e: any) => {
-    const text = e?.detail?.text ?? "";
-    if (!text) return;
-
-    buffer += text;
-
-    setMessages((prev) => {
-      const next = [...prev];
-      const last = next[next.length - 1];
-
-      if (last && last.role === "assistant") {
-        last.content = buffer;
-      }
-
-      return [...next];
-    });
-  };
-
-  window.addEventListener("mpathy:stream:delta", handler);
-
-  return () => {
-    window.removeEventListener("mpathy:stream:delta", handler);
-  };
-}, []);
-
     if (!el) return;
     const onScroll = () => {
       const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
@@ -1665,7 +2314,6 @@ const publicKey =
     : null;
 
 const res = await fetch("/api/chat", {
-  
   method: "POST",
   headers: { "Content-Type": "application/json" },
   credentials: "include",
@@ -1678,34 +2326,7 @@ const res = await fetch("/api/chat", {
     public_key: publicKey
   }),
 });
-const cloned = res.clone();
 
-let __irss: any = null;
-
-try {
-  const rawText = await cloned.text();
-
-  const splitIndex = rawText.indexOf("}\n\n");
-
-  if (splitIndex !== -1) {
-    const irssBlock = rawText.slice(0, splitIndex + 1);
-
-    const parsed = JSON.parse(irssBlock);
-
-    __irss = parsed?.irss ?? null;
-
-    console.log("[IRSS][CLIENT][EXTRACTED]", __irss);
-  } else {
-    console.warn("[IRSS][CLIENT][NO SPLIT FOUND]");
-  }
-} catch (e) {
-  console.warn("[IRSS][CLIENT][PARSE FAILED]", e);
-}
-
-try {
-  const json = await cloned.json();
-  __irss = json?.irss ?? null;
-} catch {}
     // === GC Step 5 – FreeGate/Balance Gates → Login oder Stripe Checkout ===
     if (res.status === 401) {
       try {
@@ -1882,14 +2503,45 @@ try {
         try {
           const json = JSON.parse(trimmed.replace(/^data:\s*/, ""));
           const token = json?.choices?.[0]?.delta?.content ?? "";
-          if (token) {
-  fullContent += token;
+          let renderQueue = "";
+let isRendering = false;
+
+function typewriter() {
+  if (!renderQueue.length) {
+    isRendering = false;
+    return;
+  }
+
+const SPEED = 5;
+
+function typewriter() {
+  if (!renderQueue.length) {
+    isRendering = false;
+    return;
+  }
+
+  const chunk = renderQueue.slice(0, SPEED);
 
   window.dispatchEvent(
     new CustomEvent("mpathy:stream:delta", {
-      detail: { text: token }
+      detail: { text: chunk }
     })
   );
+
+  renderQueue = renderQueue.slice(SPEED);
+
+  requestAnimationFrame(typewriter);
+}   }
+
+   if (token) {
+  fullContent += token;
+
+  renderQueue += token;
+
+  if (!isRendering) {
+    isRendering = true;
+    typewriter();
+  }
 }
         } catch {
           /* ignore partial fragments */
@@ -1897,17 +2549,9 @@ try {
       }
     }
 
-   assistantMsg.content = fullContent.trim();
-    assistantMsg.telemetry = {
-      ...(assistantMsg.telemetry ?? { cockpit: {}, parsed: {} }),
-      irss: __irss
-    };
+    assistantMsg.content = fullContent.trim();
     return assistantMsg;
-      }
-      console.log("[M13][STREAM][IRSS]", {
-  exists: !!__irss,
-  keys: __irss ? Object.keys(__irss) : null,
-});
+  }
 
 const data = await res.json();
 
@@ -2254,17 +2898,6 @@ const lastTruthHash =
     ? (messages[messages.length - 1] as any)?.truth_hash
     : undefined;
 
-const __irss = (window as any).__M13_LAST_IRSS__ ?? null;
-
-console.log("[IRSS][PERSIST][CHECK]", {
-  exists: !!__irss,
-  keys: __irss && typeof __irss === "object" ? Object.keys(__irss) : null,
-  preview: __irss ? JSON.stringify(__irss).slice(0, 120) : null,
-});
-console.log("[IRSS][FRONTEND][BEFORE WRITE]", {
-  hasIRSS: !!__irss,
-  irssPreview: __irss ? JSON.stringify(__irss).slice(0, 120) : null
-});
 
 appendTriketonLedgerEntry({
   id: crypto.randomUUID(),
@@ -2428,8 +3061,8 @@ sendMessageLocal(injectedContext)
 
 
   console.info("[CHAT][P3][B1] no archive summary, fallback to injection");
-  const outgoing = optimistic;
-  const used = false;
+  const { context: outgoing, used } = withArchiveInjection(optimistic);
+
   console.info("[CHAT][P3][B2] sending normal chat message");
   let assistant = await sendMessageLocal(outgoing);
 
@@ -2643,17 +3276,18 @@ hasIRSS: !!__irss,
 });
 
 appendTriketonLedgerEntry({
-  id,
-  role: "assistant",
-  content: finalText,
-  irss: __irss,
-  truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
-  public_key: String(publicKey ?? "").replace(/^"+|"+$/g, ""),
-  timestamp: new Date().toISOString(),
-  version: "v1",
-  orbit_context: "chat",
-  chain_id: "local",
-});
+    id,
+    role: "assistant",
+    content: __irss
+    ? JSON.stringify({ irss: __irss }, null, 2) + "\n\n" + finalText
+    : finalText,
+    truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
+    public_key: String(publicKey ?? "").replace(/^"+|"+$/g, ""),
+    timestamp: new Date().toISOString(),
+    version: "v1",
+    orbit_context: "chat",
+    chain_id: "local",
+  });
   } catch (err) {
     console.warn("[TriketonLedger] assistant append failed:", err);
   }
@@ -3016,6 +3650,7 @@ const withGate = (fn: () => void) => {
                 tokens={activeTokens}
                 padBottom={`${padBottom}px`}
                 scrollRef={convoRef as any}
+                onOpenTriketon={openTriketon}
               />
 
 
@@ -3064,6 +3699,7 @@ const withGate = (fn: () => void) => {
   padBottom={padBottom}
   setPadBottom={setPadBottom}
   compactStatus={compactStatus}
+  footerStatus={footerStatus}
   withGate={withGate}
   sendingRef={sendingRef}
   onSendFromPrompt={onSendFromPrompt}
@@ -3088,7 +3724,112 @@ const withGate = (fn: () => void) => {
 />
 )}
 
-    <HiddenPromptBridge onHiddenPrompt={onHiddenPrompt} />  
+    <HiddenPromptBridge onHiddenPrompt={onHiddenPrompt} />
+    <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
+    {triketonOpen && (
+      <div
+        role="dialog"
+        aria-modal="true"
+        onClick={closeTriketon}
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 9999,
+          background: "rgba(0,0,0,0.62)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 16,
+        }}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            width: "min(720px, 100%)",
+            borderRadius: TOKENS.radius.lg,
+            background: "rgba(15,23,42,0.92)",
+            border: `1px solid ${TOKENS.color.glassBorder}`,
+            boxShadow: TOKENS.shadow.soft,
+            padding: 20,
+            color: TOKENS.color.text,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12 }}>
+            <div style={{ fontSize: 20, fontWeight: 650, letterSpacing: "-0.02em" }}>
+              {t("triketon.overlay.title")}
+            </div>
+            <button
+              type="button"
+              onClick={closeTriketon}
+              style={{
+                border: "none",
+                borderRadius: 999,
+                padding: "6px 10px",
+                fontSize: 12,
+                background: "rgba(148,163,184,0.12)",
+                color: "rgba(226,232,240,0.9)",
+                cursor: "pointer",
+              }}
+            >
+              Close
+            </button>
+          </div>
+
+          <div style={{ marginTop: 10, fontSize: 13, lineHeight: 1.5, color: TOKENS.color.textMuted }}>
+            {t("triketon.overlay.intro")}
+            <br />
+            {t("triketon.overlay.explainer")}
+            <br />
+            {t("triketon.overlay.ownership")}
+          </div>
+
+          <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
+            <div style={{ padding: 12, borderRadius: TOKENS.radius.md, background: "rgba(2,6,23,0.35)", border: `1px solid ${TOKENS.color.glassBorder}` }}>
+              <div style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.75 }}>
+                {t("triketon.overlay.data.public_key")}
+              </div>
+              <div style={{ marginTop: 6, fontSize: 12, wordBreak: "break-all" }}>
+                {triketonPayload?.triketon?.public_key ?? ""}
+              </div>
+            </div>
+
+            <div style={{ padding: 12, borderRadius: TOKENS.radius.md, background: "rgba(2,6,23,0.35)", border: `1px solid ${TOKENS.color.glassBorder}` }}>
+              <div style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.75 }}>
+                {t("triketon.overlay.data.truth_hash")}
+              </div>
+              <div style={{ marginTop: 6, fontSize: 12, wordBreak: "break-all" }}>
+                {triketonPayload?.triketon?.truth_hash ?? ""}
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <div style={{ padding: 12, borderRadius: TOKENS.radius.md, background: "rgba(2,6,23,0.35)", border: `1px solid ${TOKENS.color.glassBorder}` }}>
+                <div style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.75 }}>
+                  {t("triketon.overlay.data.timestamp")}
+                </div>
+                <div style={{ marginTop: 6, fontSize: 12, wordBreak: "break-all" }}>
+                  {triketonPayload?.triketon?.timestamp ?? ""}
+                </div>
+              </div>
+
+              <div style={{ padding: 12, borderRadius: TOKENS.radius.md, background: "rgba(2,6,23,0.35)", border: `1px solid ${TOKENS.color.glassBorder}` }}>
+                <div style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.75 }}>
+                  Meta
+                </div>
+                <pre style={{ marginTop: 8, fontSize: 12, whiteSpace: "pre-wrap", wordBreak: "break-word", color: "rgba(226,232,240,0.85)" }}>
+{JSON.stringify({ id: triketonPayload?.id ?? "", meta: triketonPayload?.meta ?? null }, null, 2)}
+                </pre>
+              </div>
+            </div>
+
+            <div style={{ marginTop: 6, fontSize: 12, color: TOKENS.color.textMuted }}>
+              {t("triketon.overlay.closing")}
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+
 
 </main>
 
