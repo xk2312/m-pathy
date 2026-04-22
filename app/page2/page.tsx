@@ -723,38 +723,44 @@ try {
         );
 
       if (!looksLikeIrss) {
-        return {
-          visibleContent: rawContent,
-          telemetryBlock: "",
-        };
-      }
+  return {
+    visibleContent: rawContent,
+    irss: null,
+  };
+}
 
-      return {
-        visibleContent: remainder,
-        telemetryBlock: JSON.stringify(parsed, null, 2),
-      };
-    } catch {
-      return {
-        visibleContent: rawContent,
-        telemetryBlock: "",
-      };
-    }
+return {
+  visibleContent: remainder,
+  irss: irss,
+};
+} catch {
+return {
+  visibleContent: rawContent,
+  irss: null,
+};
+}
   }, [rawContent]);
 
  const visibleContent = splitTelemetryFromContent.visibleContent;
-  const telemetryBlock =
-    (msg as any)?.irss != null
-      ? JSON.stringify((msg as any).irss, null, 2)
-      : splitTelemetryFromContent.telemetryBlock;
-  const isMd = (msg as any).format === "markdown";
-  const html = isMd ? mdToHtml(visibleContent) : null;
-  const telemetryHtml = telemetryBlock ? mdToHtml("```json\n" + telemetryBlock + "\n```") : null;
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-  console.log("[M13][MESSAGEBODY] IRSS SOURCE", {
-    hasMsgIrss: !!(msg as any)?.irss,
-    hasTelemetryBlock: !!telemetryBlock,
-  });
+const irss =
+  (msg as any)?.irss ??
+  splitTelemetryFromContent.irss ??
+  null;
+
+const isMd = (msg as any).format === "markdown";
+const html = isMd ? mdToHtml(visibleContent) : null;
+
+const telemetryHtml = irss
+  ? mdToHtml("```json\n" + JSON.stringify(irss, null, 2) + "\n```")
+  : null;
+
+const containerRef = React.useRef<HTMLDivElement | null>(null);
+
+console.log("[M13][MESSAGEBODY] IRSS SOURCE", {
+  hasMsgIrss: !!(msg as any)?.irss,
+  hasSplitIrss: !!splitTelemetryFromContent.irss,
+});
 
   const onRootClick = React.useCallback(
     async (e: React.MouseEvent<HTMLDivElement>) => {
@@ -850,7 +856,7 @@ try {
         </div>
       )}
 
-      {!!telemetryBlock && (
+      {!!irss && (
         <details
           style={{
             marginTop: 10,
@@ -2595,14 +2601,15 @@ if (data?.message) {
     console.log("[M13][FRONTEND] BEFORE INDEXEDDB WRITE", data.user_registry);
 
 try {
-  const dbRequest = indexedDB.open("MpathyRuntime", 1);
+  const dbRequest = indexedDB.open("MpathyRuntime", 2);
 
-  dbRequest.onupgradeneeded = function () {
-    const db = dbRequest.result;
-    if (!db.objectStoreNames.contains("user")) {
-      db.createObjectStore("user");
-    }
-  };
+dbRequest.onupgradeneeded = function () {
+  const db = dbRequest.result;
+
+  if (!db.objectStoreNames.contains("user")) {
+    db.createObjectStore("user");
+  }
+};
 
   dbRequest.onsuccess = function () {
     const db = dbRequest.result;
