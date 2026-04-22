@@ -12,7 +12,6 @@ import SidebarContainer from "../components/SidebarContainer";
 import MobileOverlay from "../components/MobileOverlay";
 import { PromptRoot } from "./PromptRoot";
 import { getLocale, setLocale, t } from "@/lib/i18n";
-import OnboardingWatcher from "@/components/onboarding/OnboardingWatcher";
 import HiddenPromptBridge from "@/components/system/HiddenPromptBridge";import { useMobileViewport } from "@/lib/useMobileViewport";
 import { v4 as uuidv4 } from "uuid";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
@@ -1006,7 +1005,7 @@ useEffect(() => {
     if (fired) return;
     fired = true;
     raf1 = requestAnimationFrame(() => {
-      raf2 = requestAnimationFrame(() => {
+    raf2 = requestAnimationFrame(() => {
         const el = convoRef.current as HTMLDivElement | null;
         if (!el) return;
         const prev = el.style.overflow;
@@ -1290,7 +1289,7 @@ useEffect(() => {
 }, [handleArchivePrepared, onClearChat]);
 
 useEffect(() => {
-  async function loadUserRegistry() {
+  function loadUserRegistry() {
     try {
       console.log("[M13][FRONTEND][REGISTRY_BOOT] START");
       const dbRequest = indexedDB.open("Triketon", 1);
@@ -1398,45 +1397,6 @@ const [balance, setBalance] = useState<number | null>(null);
 
 const [mode, setMode] = useState<string>("DEFAULT");
 
-const [triketonOpen, setTriketonOpen] = useState(false);
-const [triketonPayload, setTriketonPayload] = useState<any>(null);
-const [triketonPinned, setTriketonPinned] = useState(false);
-const triketonCloseTimerRef = useRef<number | null>(null);
-
-const openTriketon = useCallback((payload: any) => {
-  if (triketonCloseTimerRef.current != null) {
-    window.clearTimeout(triketonCloseTimerRef.current);
-    triketonCloseTimerRef.current = null;
-  }
-  setTriketonPayload(payload ?? null);
-  setTriketonOpen(true);
-}, []);
-
-const closeTriketon = useCallback(() => {
-  if (triketonCloseTimerRef.current != null) {
-    window.clearTimeout(triketonCloseTimerRef.current);
-    triketonCloseTimerRef.current = null;
-  }
-  setTriketonOpen(false);
-  setTriketonPayload(null);
-  setTriketonPinned(false);
-}, []);
-
-const scheduleCloseTriketon = useCallback(() => {
-  if (triketonPinned) return;
-  if (triketonCloseTimerRef.current != null) {
-    window.clearTimeout(triketonCloseTimerRef.current);
-  }
-  triketonCloseTimerRef.current = window.setTimeout(() => {
-    setTriketonOpen(false);
-    setTriketonPayload(null);
-  }, 120);
-}, [triketonPinned]);
-
-
-useEffect(() => {
-  return () => {};
-}, []);
 
 
 // Preis-ID aus ENV für den Client (nur ID, kein Secret)
@@ -1510,9 +1470,6 @@ const persistMessages = (arr: any[]) => {
 
   saveChat(normalized);
 };
-// ── M-Flow Overlay (1. Frame: eventLabel)
-type MEvent = "builder" | "onboarding" | "expert" | "mode";
-const [frameText, setFrameText] = useState<string | null>(null);
 
 // "de" | "en" | "fr" | ... – folgt dem zentralen Sprachkern
 const [locale, setLocaleState] = useState<string>(() => getLocale());
@@ -1541,8 +1498,6 @@ useEffect(() => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
 
-// Labels (du hast LABELS am [ANCHOR:I18N], wir nutzen es hier nur)
-const getLabel = (evt: MEvent) => evt;
 
 
 
@@ -1561,19 +1516,7 @@ const slug = (s: string) =>
     .replace(/\s+/g, "-");                             // words -> slug
 
 // --- localized labels for known modes ---
-const MODE_LABELS: Record<string, Record<string, string>> = {
-  en: { calm:"Calm", truth:"Truth", oracle:"Oracle", balance:"Balance", power:"Power", loop:"Loop", body:"Body", ocean:"Ocean", minimal:"Minimal" },
-  de: { calm:"Ruhe", truth:"Wahrheit", oracle:"Orakel", balance:"Balance", power:"Kraft", loop:"Schleife", body:"Körper", ocean:"Ozean", minimal:"Minimal" },
-  fr: { calm:"Calme", truth:"Vérité", oracle:"Oracle", balance:"Équilibre", power:"Puissance", loop:"Boucle", body:"Corps", ocean:"Océan", minimal:"Minimal" },
-  es: { calm:"Calma", truth:"Verdad", oracle:"Oráculo", balance:"Equilibrio", power:"Poder", loop:"Bucle", body:"Cuerpo", ocean:"Océano", minimal:"Minimal" },
-  it: { calm:"Calma", truth:"Verità", oracle:"Oracolo", balance:"Equilibrio", power:"Potenza", loop:"Loop", body:"Corpo", ocean:"Oceano", minimal:"Minimo" },
-};
 
-const tMode = (raw: string) => {
-  const key = slug(raw);                        // "Calm", "CALM", etc. -> "calm"
-  const table = MODE_LABELS[locale] || MODE_LABELS.en;
-  return table[key] || cap(raw);                // fallback: raw pretty-cased
-};
 
 // Minimal-Provider-Dict nur für Navigation/LanguageSwitcher auf der Chat-Seite.
 // Wir brauchen hier KEINE echten Texte, weil page2 keine useLang().t()-Lookups macht.
@@ -1595,204 +1538,9 @@ const NAV_PROVIDER_DICT: Record<string, Record<string, string>> = {
 };
 
 // UI-zentrale Routine: eventLabel → READY
-const runMFlow = useCallback(async (evt: MEvent, labelOverride?: string) => {
-  // Prefix nach Browsersprache
-  const LOAD_PREFIX: Record<string, string> = { en: "Load", de: "Lade", fr: "Charger", es: "Cargar", it: "Carica" };
-  const prefix = LOAD_PREFIX[locale] ?? LOAD_PREFIX.en;
-
-  const baseLabel = (() => {
-    // Fallbacks für reine Events
-    if (!labelOverride) {
-      if (evt === "builder")      return getLabel("builder");      // z. B. „Bauen“
-      if (evt === "onboarding")   return getLabel("onboarding");
-      if (evt === "mode")         return getLabel("mode");
-      if (evt === "expert")       return getLabel("expert");
-    }
-    return labelOverride!.trim();
-  })();
-
-  // „Load …“ bzw. Sonderfall „set default“
-  const frame = (evt === "mode" && /^default$/i.test(baseLabel))
-    ? (locale === "de" ? "Setze Default" : "Set default")
-    : `${prefix} ${baseLabel}`;
-
-  // 1) Frame 1 (Text) + Denken starten
-  setFrameText(frame);
-  try { setLoading(true); } catch {}
-
-  // 2) Frame sichtbar halten
-  await new Promise(r => setTimeout(r, 900));
-
-  // 3) Ausblenden Frame 1, M denkt noch
-  setFrameText(null);
-  await new Promise(r => setTimeout(r, 700));
-
-  // 4) READY (LogoM übernimmt die Ready-Phase, wenn loading=false)
-  try { setLoading(false); } catch {}
-}, [locale, setLoading]);
-
-
-/* -----------------------------------------------------------------------
-   Sehr defensive Browser-Hooks (nur Client, mit Try/Catch & harten Guards)
-   ----------------------------------------------------------------------- */
-
-// Globale Click-Delegation: startet M-Flow inkl. konkretem Label (Mode/Expert)
-useEffect(() => {
-  function onGlobalClick(e: MouseEvent) {
-    const el = (e.target as HTMLElement)?.closest?.("[data-m-event]") as HTMLElement | null;
-    if (!el) return;
-
-    const evt = el.getAttribute("data-m-event") as MEvent | null;
-    if (!evt) return;
-
-    // Label nur von genau diesem Element ableiten (kein Fallback/Text-Scan)
-    const raw =
-      el.getAttribute("data-m-label") ||
-      el.getAttribute("aria-label") ||
-      el.textContent ||
-      "";
-    const label = evt === "mode" ? tMode(raw) : (evt === "expert" ? cap(raw) : undefined);
-
-    runMFlow(evt, label);
-  }
-
-  document.addEventListener("click", onGlobalClick);
-  return () => document.removeEventListener("click", onGlobalClick);
-}, [runMFlow, locale]);
-
-  // ▼ Auswahl-Delegation (Dropdowns/Listboxen/Comboboxen → Label an runMFlow)
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-
-    const onChange = (e: Event) => {
-      const el = e.target as HTMLElement | null;
-      if (!el) return;
-
-      // Nur echte Auswahlen mit change-Event
-      if (!el.matches("select,[role='listbox'],[role='combobox']")) return;
-
-
-      const host = (el.closest("[data-m-event]") as HTMLElement) || (el as any);
-      const evt = host.getAttribute("data-m-event") as MEvent | null;
-      if (!evt) return;
-
-      let label = "";
-      if ((el as HTMLSelectElement).selectedOptions?.length) {
-        label = (el as HTMLSelectElement).selectedOptions[0].textContent?.trim() || "";
-      } else {
-        label = host.getAttribute("data-m-label") || host.textContent?.trim() || "";
-      }
-      runMFlow(evt, label || undefined);
-    };
-
-    document.addEventListener("change", onChange);
-    return () => document.removeEventListener("change", onChange);
-  }, [runMFlow]);
-
-  // Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
-  useEffect(() => {
-    if (typeof window === "undefined" || typeof document === "undefined") return;
-    // … (dein Auto-Tagging Code folgt hier)
-  }, []);
-
-
-// Auto-Tagging: finde gängige Buttons/Links & vergebe data-m-event (einmalig)
-useEffect(() => {
-  // SSR-Schutz
-  if (typeof window === "undefined" || typeof document === "undefined") return;
-
-  const MAP: Record<string, MEvent> = {
-    "jetzt bauen": "builder",
-    "builder": "builder",
-    "onboarding": "onboarding",
-    "start onboarding": "onboarding",
-    "expert": "expert",
-    "experte": "expert",
-    "mode": "mode",
-    "modus": "mode",
-  };
-
-  const norm = (s: string) => (s || "").trim().toLowerCase();
-
-  // Helper: für mode/expert sichtbaren Namen als data-m-label setzen
-  const ensureLabel = (el: HTMLElement) => {
-    const evtType = el.getAttribute("data-m-event");
-    if ((evtType === "mode" || evtType === "expert") && !el.hasAttribute("data-m-label")) {
-      const raw =
-        (el.textContent ||
-          el.getAttribute("aria-label") ||
-          el.getAttribute("title") ||
-          "")!.trim();
-      if (raw) el.setAttribute("data-m-label", raw);
-    }
-  };
-
-  // nach initialem Paint (vermeidet SSR/CSR-Mismatch)
-  let id = 0;
-  id = window.requestAnimationFrame(() => {
-    try {
-      const candidates = Array.from(
-        document.querySelectorAll<HTMLElement>('button, a, [role="button"], [data-action]')
-      );
-
-      for (const el of candidates) {
-        try {
-          if (el.hasAttribute("data-m-event")) {
-            ensureLabel(el);
-            continue;
-          }
-
-          const txt = norm(
-            el.textContent ||
-              el.getAttribute("aria-label") ||
-              el.getAttribute("title") ||
-              ""
-          );
-          if (!txt) continue;
-
-          // exakter Treffer
-          if (MAP[txt]) {
-            el.setAttribute("data-m-event", String(MAP[txt]));
-            ensureLabel(el);
-            continue;
-          }
-
-          // Teiltreffer (z. B. "jetzt bauen!")
-          const hit = Object.keys(MAP).find((key) => txt.includes(key));
-          if (hit) {
-            el.setAttribute("data-m-event", String(MAP[hit as keyof typeof MAP]));
-            ensureLabel(el);
-          }
-        } catch {
-          // einzelnen Problem-Knoten ignorieren
-        }
-      }
-    } catch {
-      // niemals die App crashen lassen
-    }
-  });
-
-  return () => {
-    if (id) window.cancelAnimationFrame(id);
-  };
+const runMFlow = useCallback(async () => {
+  // deprecated – no-op
 }, []);
-
-const withArchiveInjection = (ctx: ChatMessage[]) => {
-  const injected = readArchiveChatContext();
-  if (!injected) return { context: ctx, used: false };
-
-  const systemMsg: ChatMessage = {
-    role: "system",
-    content: `ARCHIVE CONTEXT\n\n${injected}`,
-    format: "markdown",
-  };
-
-  return { context: [systemMsg, ...(Array.isArray(ctx) ? ctx : [])], used: true };
-};
-
-// GC: Marker für temporäre System-Toasts (Golden Conversion)
-const GC_MARKER = "[[gc-toast]]";
-
 
 // ===============================================================
 // Systemmeldung (für Säule / Overlay / Onboarding)
@@ -1801,8 +1549,7 @@ const systemSay = useCallback((content: string, opts?: { gc?: boolean }) => {
   if (!content) return;
 
   const isGc = !!opts?.gc;
-  const tagged = isGc ? `${GC_MARKER}${content}` : content;
-
+  const tagged = content;
   setMessages((prev) => {
     const base = Array.isArray(prev) ? prev : [];
     const next = truncateMessages([
@@ -1824,105 +1571,7 @@ const systemSay = useCallback((content: string, opts?: { gc?: boolean }) => {
 
 }, [persistMessages]);
 
-
-
-  // Footer-Status (nur Anzeige in der Statusleiste, keine Bubble)
-const [footerStatus, setFooterStatus] = useState<{ modeLabel: string; expertLabel: string }>({
-  modeLabel: "-",
-  expertLabel: "-",
-});
-
-
-  // ===============================================================
-// BRIDGE - Saeule → Chat (Event → echte Nachricht)
-// ===============================================================
-useEffect(() => {
-  const onSystem = (e: Event) => {
-    const detail = (e as CustomEvent).detail ?? {};
-    const text: string = detail.text ?? "";
-    const kind: string = detail.kind ?? "info";
-    const meta = detail.meta ?? {};
-
-    const wasAtEnd = stickToBottom;
-
-    // 1) Footer-Status aktualisieren
-    if (kind === "status") {
-      const modeLabel = meta.modeLabel ?? detail.modeLabel;
-      const expertLabel = meta.expertLabel ?? detail.expertLabel;
-      setFooterStatus((s) => ({
-        modeLabel: typeof modeLabel === "string" && modeLabel.length ? modeLabel : s.modeLabel,
-        expertLabel: typeof expertLabel === "string" && expertLabel.length ? expertLabel : s.expertLabel,
-      }));
-
-      // Puls NUR starten, wenn explizit busy:true gesetzt ist
-const busy = (meta?.busy ?? (detail as any)?.busy) === true;
-if (busy) {
-  try { setLoading(true); } catch {}
-}
-
-
-      if (wasAtEnd) {
-        pendingAutoScrollRef.current = true;
-        setStickToBottom(true);
-      }
-      return;
-    }
-
-    // 2) Initialer System-/Mode-Bubble: Puls EIN
-   if (kind === "mode") {
-  // Nur updaten, wenn eindeutig ein Moduswechsel signalisiert wird
-  const hasModeId =
-    typeof (meta?.modeId ?? (detail as any)?.modeId) === "string";
-
-  if (hasModeId) {
-    const modeLabel =
-      (meta?.label ?? meta?.modeLabel ?? (detail as any)?.modeLabel) as
-        | string
-        | undefined;
-    if (modeLabel && modeLabel.length) {
-      setFooterStatus((s) => ({ ...s, modeLabel }));
-    }
-  }
-
-  // Denken beginnt beim Moduswechsel
-  try { setLoading(true); } catch {}
-}
-
-
-    // 3) Falls eine Antwort signalisiert wird (reply/info), Puls AUS - auch wenn kein Text kommt
-    if (kind === "reply" || kind === "info") {
-      try { setLoading(false); } catch {}
-    }
-
-    // 4) Ohne Text keine Bubble anhängen (aber der obige loading-Fix greift bereits)
-    if (!text) return;
-
-    // 5) Sichtbare Bubble anhängen
-    setMessages((prev) => {
-      const role: Role = kind === "mode" ? "system" : "assistant";
-      const msg: ChatMessage = { role, content: text, format: "markdown" };
-      const next = truncateMessages([...(Array.isArray(prev) ? prev : []), msg]);
-      persistMessages(next);
-      return next;
-    });
-
-    // 6) Bei jeder sichtbaren Nicht-"mode"-Antwort sicherheitshalber Puls AUS
-    if (kind !== "mode") {
-      try { setLoading(false); } catch {}
-    }
-
-    if (wasAtEnd) {
-      pendingAutoScrollRef.current = true;
-      setStickToBottom(true);
-    }
-
-  };
-
-  window.addEventListener("mpathy:system-message" as any, onSystem as any);
-  return () => window.removeEventListener("mpathy:system-message" as any, onSystem as any);
-}, [persistMessages, stickToBottom]);
-
-
+  
   // ===============================================================
   // Einmaliges Autosrollen ans Ende pro neuer Assistant-Message
   // ===============================================================
@@ -1948,6 +1597,38 @@ if (busy) {
   // ===============================================================
   useEffect(() => {
     const el = convoRef.current as HTMLDivElement | null;
+
+// ===============================================================
+// STREAM LISTENER (mpathy:stream:delta → UI)
+// ===============================================================
+useEffect(() => {
+  let buffer = "";
+
+  const handler = (e: any) => {
+    const text = e?.detail?.text ?? "";
+    if (!text) return;
+
+    buffer += text;
+
+    setMessages((prev) => {
+      const next = [...prev];
+      const last = next[next.length - 1];
+
+      if (last && last.role === "assistant") {
+        last.content = buffer;
+      }
+
+      return [...next];
+    });
+  };
+
+  window.addEventListener("mpathy:stream:delta", handler);
+
+  return () => {
+    window.removeEventListener("mpathy:stream:delta", handler);
+  };
+}, []);
+
     if (!el) return;
     const onScroll = () => {
       const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
@@ -2201,45 +1882,14 @@ try {
         try {
           const json = JSON.parse(trimmed.replace(/^data:\s*/, ""));
           const token = json?.choices?.[0]?.delta?.content ?? "";
-          let renderQueue = "";
-let isRendering = false;
-
-function typewriter() {
-  if (!renderQueue.length) {
-    isRendering = false;
-    return;
-  }
-
-const SPEED = 5;
-
-function typewriter() {
-  if (!renderQueue.length) {
-    isRendering = false;
-    return;
-  }
-
-  const chunk = renderQueue.slice(0, SPEED);
+          if (token) {
+  fullContent += token;
 
   window.dispatchEvent(
     new CustomEvent("mpathy:stream:delta", {
-      detail: { text: chunk }
+      detail: { text: token }
     })
   );
-
-  renderQueue = renderQueue.slice(SPEED);
-
-  requestAnimationFrame(typewriter);
-}   }
-
-   if (token) {
-  fullContent += token;
-
-  renderQueue += token;
-
-  if (!isRendering) {
-    isRendering = true;
-    typewriter();
-  }
 }
         } catch {
           /* ignore partial fragments */
@@ -2778,8 +2428,8 @@ sendMessageLocal(injectedContext)
 
 
   console.info("[CHAT][P3][B1] no archive summary, fallback to injection");
-  const { context: outgoing, used } = withArchiveInjection(optimistic);
-
+  const outgoing = optimistic;
+  const used = false;
   console.info("[CHAT][P3][B2] sending normal chat message");
   let assistant = await sendMessageLocal(outgoing);
 
@@ -3366,7 +3016,6 @@ const withGate = (fn: () => void) => {
                 tokens={activeTokens}
                 padBottom={`${padBottom}px`}
                 scrollRef={convoRef as any}
-                onOpenTriketon={openTriketon}
               />
 
 
@@ -3415,7 +3064,6 @@ const withGate = (fn: () => void) => {
   padBottom={padBottom}
   setPadBottom={setPadBottom}
   compactStatus={compactStatus}
-  footerStatus={footerStatus}
   withGate={withGate}
   sendingRef={sendingRef}
   onSendFromPrompt={onSendFromPrompt}
@@ -3440,112 +3088,7 @@ const withGate = (fn: () => void) => {
 />
 )}
 
-    <HiddenPromptBridge onHiddenPrompt={onHiddenPrompt} />
-    <OnboardingWatcher active={mode === "ONBOARDING"} onSystemMessage={systemSay} />
-    {triketonOpen && (
-      <div
-        role="dialog"
-        aria-modal="true"
-        onClick={closeTriketon}
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 9999,
-          background: "rgba(0,0,0,0.62)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 16,
-        }}
-      >
-        <div
-          onClick={(e) => e.stopPropagation()}
-          style={{
-            width: "min(720px, 100%)",
-            borderRadius: TOKENS.radius.lg,
-            background: "rgba(15,23,42,0.92)",
-            border: `1px solid ${TOKENS.color.glassBorder}`,
-            boxShadow: TOKENS.shadow.soft,
-            padding: 20,
-            color: TOKENS.color.text,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12 }}>
-            <div style={{ fontSize: 20, fontWeight: 650, letterSpacing: "-0.02em" }}>
-              {t("triketon.overlay.title")}
-            </div>
-            <button
-              type="button"
-              onClick={closeTriketon}
-              style={{
-                border: "none",
-                borderRadius: 999,
-                padding: "6px 10px",
-                fontSize: 12,
-                background: "rgba(148,163,184,0.12)",
-                color: "rgba(226,232,240,0.9)",
-                cursor: "pointer",
-              }}
-            >
-              Close
-            </button>
-          </div>
-
-          <div style={{ marginTop: 10, fontSize: 13, lineHeight: 1.5, color: TOKENS.color.textMuted }}>
-            {t("triketon.overlay.intro")}
-            <br />
-            {t("triketon.overlay.explainer")}
-            <br />
-            {t("triketon.overlay.ownership")}
-          </div>
-
-          <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
-            <div style={{ padding: 12, borderRadius: TOKENS.radius.md, background: "rgba(2,6,23,0.35)", border: `1px solid ${TOKENS.color.glassBorder}` }}>
-              <div style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.75 }}>
-                {t("triketon.overlay.data.public_key")}
-              </div>
-              <div style={{ marginTop: 6, fontSize: 12, wordBreak: "break-all" }}>
-                {triketonPayload?.triketon?.public_key ?? ""}
-              </div>
-            </div>
-
-            <div style={{ padding: 12, borderRadius: TOKENS.radius.md, background: "rgba(2,6,23,0.35)", border: `1px solid ${TOKENS.color.glassBorder}` }}>
-              <div style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.75 }}>
-                {t("triketon.overlay.data.truth_hash")}
-              </div>
-              <div style={{ marginTop: 6, fontSize: 12, wordBreak: "break-all" }}>
-                {triketonPayload?.triketon?.truth_hash ?? ""}
-              </div>
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              <div style={{ padding: 12, borderRadius: TOKENS.radius.md, background: "rgba(2,6,23,0.35)", border: `1px solid ${TOKENS.color.glassBorder}` }}>
-                <div style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.75 }}>
-                  {t("triketon.overlay.data.timestamp")}
-                </div>
-                <div style={{ marginTop: 6, fontSize: 12, wordBreak: "break-all" }}>
-                  {triketonPayload?.triketon?.timestamp ?? ""}
-                </div>
-              </div>
-
-              <div style={{ padding: 12, borderRadius: TOKENS.radius.md, background: "rgba(2,6,23,0.35)", border: `1px solid ${TOKENS.color.glassBorder}` }}>
-                <div style={{ fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", opacity: 0.75 }}>
-                  Meta
-                </div>
-                <pre style={{ marginTop: 8, fontSize: 12, whiteSpace: "pre-wrap", wordBreak: "break-word", color: "rgba(226,232,240,0.85)" }}>
-{JSON.stringify({ id: triketonPayload?.id ?? "", meta: triketonPayload?.meta ?? null }, null, 2)}
-                </pre>
-              </div>
-            </div>
-
-            <div style={{ marginTop: 6, fontSize: 12, color: TOKENS.color.textMuted }}>
-              {t("triketon.overlay.closing")}
-            </div>
-          </div>
-        </div>
-      </div>
-    )}
-
+    <HiddenPromptBridge onHiddenPrompt={onHiddenPrompt} />  
 
 </main>
 
