@@ -1,4 +1,4 @@
-import type { ChatMessage as ChatMessageV1 } from '@/lib/chatStorage'
+import type { ChatMessage as ChatMessageV1 } from '@/lib/types'
 import type { ChatMessage as ChatMessageV2 } from '@/lib/types'
 
 export function mapChatV1ToV2(
