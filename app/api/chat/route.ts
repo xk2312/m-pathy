@@ -852,7 +852,6 @@ if ((global as any).__m13ExecutionArtifact) {
   const rawContent = content;
 
     let irssPayload: any = null;
-    let irssContent = "";
     let renderContent = rawContent;
 
     if (typeof rawContent === "string" && rawContent.trim().startsWith("{")) {
@@ -879,12 +878,10 @@ if ((global as any).__m13ExecutionArtifact) {
           const parsed = JSON.parse(candidateIrss);
           if (parsed && typeof parsed === "object" && parsed.irss) {
             irssPayload = parsed.irss;
-            irssContent = candidateIrss;
             renderContent = candidateRender;
           }
         } catch {
           irssPayload = null;
-          irssContent = "";
           renderContent = rawContent;
         }
       }
@@ -917,10 +914,9 @@ if ((global as any).__m13ExecutionArtifact) {
 }
 
     console.log("[IRSS][POST-SPLIT][STATE]", {
-      hasIrssPayload: !!irssPayload,
-      hasIrssContent: !!irssContent,
-      renderLength: typeof renderContent === "string" ? renderContent.length : 0,
-    });
+  hasIrssPayload: !!irssPayload,
+  renderLength: typeof renderContent === "string" ? renderContent.length : 0,
+});
 
     let tokensUsed: number;
 
@@ -1001,30 +997,17 @@ const TRIKETON_ENABLED = process.env.TRIKETON_ENABLED === "true";
 const clientLedgerAppendOk = true;
 
 console.log("[IRSS][SPLIT][START]", {
-  hasIrssContent: !!irssContent,
   hasIrssPayload: !!irssPayload,
 });
 
-if (irssContent) {
-  console.log("[IRSS][COUNTER][BEFORE]", irssContent);
+if (irssPayload) {
+  console.log("[IRSS][COUNTER][BEFORE]", irssPayload);
 
-  irssContent = irssContent.replace(
-    /"session_prompt_counter"\s*:\s*"?\d+"?/,
-    `"session_prompt_counter": ${serverCounter}`
-  );
+  irssPayload.session_prompt_counter = serverCounter;
 
-  if (irssPayload) {
-    irssPayload.session_prompt_counter = serverCounter;
-  }
-
-  console.log("[IRSS][COUNTER][AFTER]", irssContent);
+  console.log("[IRSS][COUNTER][AFTER]", irssPayload);
 } else {
   console.log("[IRSS][FALLBACK][NO IRSS FOUND]");
-
-  rawContent.replace(
-    /"session_prompt_counter"\s*:\s*"?\d+"?/,
-    `"session_prompt_counter": ${serverCounter}`
-  );
 }
 
 console.log("[RENDER][BEFORE]", renderContent);
@@ -1036,12 +1019,7 @@ renderContent = renderContent.replace(
 
 console.log("[RENDER][AFTER]", renderContent);
 
-const ledgerContent = irssContent
-  ? `${irssContent}\n\n${renderContent}`.trim()
-  : rawContent.replace(
-      /Session Prompt Counter:\s*.*/,
-      `Session Prompt Counter: ${serverCounter}`
-    );
+const ledgerContent = renderContent;
 
 console.log("[LEDGER][CONTENT]", {
   length: ledgerContent.length,
