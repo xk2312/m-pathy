@@ -151,10 +151,10 @@
    ====================================================================== */
 
 import { generatePublicKey2048, computeTruthHash } from "@/lib/triketonVerify";
-import { syncArchiveFromTriketon } from "@/lib/archiveProjection";
 import { initArchiveVerifyListener } from "@/lib/archiveVerifyListener";
 import { writeLS, clearLS, readLS } from '@/lib/storage';
 import type { MpathyNamespace } from '@/lib/storage';
+import type { ChatMessage } from "@/lib/types";
 
 // lib/chatStorage.ts
 // Eine Quelle der Wahrheit für Chat-Persistenz (localStorage)
@@ -181,17 +181,6 @@ export type TriketonArchiveEntry = {
   message_id: string; // stabile Referenz zur Chat-Message
   ref: { ts?: number; idx?: number };
   content: string; // Klartext-Antwort (nur im User-LS, nicht auf Server)
-};
-
-
-
-export type ChatMessage = {
-  id: string;
-  role: "system" | "user" | "assistant";
-  content: string;
-  ts?: number;
-  triketon?: TriketonSeal;
-  telemetry?: any;
 };
 
 /** Versionierter Hauptschlüssel */

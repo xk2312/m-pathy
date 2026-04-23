@@ -138,30 +138,28 @@
    ❌ Keine Seiteneffekte
 
    ====================================================================== */
-
-
-
-export type Role = 'user' | 'assistant' | 'system'
+import type { TriketonSeal } from "@/lib/chatStorage";export type Role = 'user' | 'assistant' | 'system'
 
 /* ──────────────────────────────────────────────
    Core
 ────────────────────────────────────────────── */
 
-export interface ChatMessage {
-  id?: string                  // 🪶 lokal generiert (crypto.randomUUID)
-  chat_serial?: number          // optional bis Ledger zuweist
-  msg_number?: number           // optional bis persistiert
-  role: Role                    // unverändert
-  content: string               // unverändert
-  timestamp?: string            // optional, da im Archiv-Flow generiert
-  format?: "plain" | "markdown" | "html" // erlaubt UI-Darstellung
-  truth_hash?: string
-  verified?: boolean
-  telemetry?: {
-  cockpit: Record<string, string>
-  parsed: Record<string, string>
-  }
-}
+export type ChatMessage = {
+  id?: string;
+  chat_serial?: number;
+  msg_number?: number;
+  role: "system" | "user" | "assistant";
+  content: string | any;
+  timestamp?: string;
+  format?: "plain" | "markdown" | "html";
+  truth_hash?: string;
+  verified?: boolean;
+  ts?: number;
+  meta?: Record<string, unknown>;
+  irss?: any;
+  triketon?: TriketonSeal;
+  telemetry?: any;
+};
 
 
 export interface ArchiveEntry {
@@ -318,3 +316,4 @@ export type {
   VerificationReportBase as TVerificationReportBase,
   VerificationReportLegacy as TVerificationReportLegacy,
 }
+

@@ -2297,12 +2297,12 @@ const res = await fetch("/api/chat", {
         : `${Date.now()}_${Math.random().toString(16).slice(2)}`;
 
     const assistantMsg: ChatMessage = {
-      id,
-      role: "assistant",
-      content: "",
-      format: "markdown",
-    };
-
+    id,
+    role: "assistant",
+    content: "",
+    format: "markdown",
+    irss: null,
+  };
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -2366,6 +2366,7 @@ function typewriter() {
     }
 
     assistantMsg.content = fullContent.trim();
+    // IRSS wird im Streaming NICHT gesetzt (kommt später aus JSON)
     return assistantMsg;
   }
 

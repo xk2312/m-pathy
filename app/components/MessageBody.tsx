@@ -5,7 +5,7 @@ import ColdReveal from './ColdReveal';
 // NOTE: Diese Datei ist der Orchestrator (Controller) für die Nachrichten-Inhaltsdarstellung.
 // Sie entscheidet pro Nachricht, WIE gerendert wird (plain/markdown/html),
 // ruft die Renderer-Registry auf und kapselt einen sicheren Fallback.
-
+import type { ChatMessage } from "@/lib/types";
 import { renderMessage } from '../renderers/registry';
 import { defaultRenderer } from '../config/features';
 import hljs from 'highlight.js';
@@ -15,14 +15,6 @@ import hljs from 'highlight.js';
    ============================================================ */
 export type MessageRole = 'user' | 'assistant' | 'system';
 export type MessageFormat = 'plain' | 'markdown' | 'html' | 'auto';
-
-export type ChatMessage = {
-  role: MessageRole;
-  content: string | any;
-  format?: MessageFormat;
-  meta?: Record<string, unknown>;
-  irss?: string; // 👈 hinzufügen
-};
 
 export type MessageBodyProps = {
   msg: ChatMessage;

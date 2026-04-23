@@ -214,12 +214,7 @@
  * =====================================================================
  */
 
-
-export type ChatMessage = {
-  role: "system" | "user" | "assistant";
-  content: string;
-  format?: "plain" | "markdown" | "html";
-};
+import type { ChatMessage } from "@/lib/types";
 
 // stabiler Key + alte Keys für Migration
 const STORAGE_KEYS = ["m_chat_messages_v1", "m.chat.v1", "messages"];
