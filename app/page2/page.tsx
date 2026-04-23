@@ -2555,6 +2555,7 @@ return {
   meta: { status, balanceAfter, tokensUsed },
   triketon,
 } as any as ChatMessage;
+}
 
 
 // ⬆️ Diese schließende Klammer beendet die Message-Builder-Funktion sauber.
