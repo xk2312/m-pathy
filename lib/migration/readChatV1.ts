@@ -3,8 +3,7 @@
 // Phase B · Baby-Step B1
 // Read-only Zugriff auf mpathy:chat:v1 (keine Mutation)
 
-import type { ChatMessage } from '@/lib/chatStorage'
-
+import type { ChatMessage } from '@/lib/types'
 export function readChatV1(): ChatMessage[] {
   try {
     if (typeof window === 'undefined') return []

@@ -144,6 +144,7 @@ import type { TriketonSeal } from "@/lib/chatStorage";export type Role = 'user' 
    Core
 ────────────────────────────────────────────── */
 
+//Dies Types wurden Global ersetzt für type ChatMessage in PromtShell.tsx, MessageBody.tsx und chatStorage.ts
 export type ChatMessage = {
   id?: string;
   chat_serial?: number;
