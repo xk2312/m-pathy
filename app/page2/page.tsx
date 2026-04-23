@@ -2463,10 +2463,12 @@ tx.onerror = function (err) {
     console.log("[M13][FRONTEND] DISPATCH DONE");
   }
 console.log("[M13][FRONTEND] IRSS FIELD", data?.irss ?? null);
- const rawMessage =
-  typeof data.message === "string"
+const rawMessage =
+  typeof data?.message === "string"
     ? data.message
-    : JSON.stringify(data.message, null, 2);
+    : typeof data?.choices?.[0]?.message?.content === "string"
+      ? data.choices[0].message.content
+      : JSON.stringify(data?.choices?.[0]?.message?.content ?? "", null, 2);
 
 let extractedIrss: any = data?.irss ?? null;
 let cleanMessage = rawMessage;
