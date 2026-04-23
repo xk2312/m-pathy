@@ -241,7 +241,7 @@ return {
   content,
   ts,
   triketon,
-  telemetry: typeof x.telemetry === "object" ? x.telemetry : undefined,
+  irss: typeof x.irss === "object" ? x.irss : undefined,
 };
 }
 
@@ -436,7 +436,21 @@ export type TriketonLedgerEntryV1 = {
   orbit_context: "chat";
   chain_id: string;
   chain_prev?: string;
-  telemetry?: any;
+  irss?: {
+  system: string;
+  version: string;
+  session_prompt_counter: number;
+  orchestrator_id: string;
+  command: string;
+  agent_id: string;
+  action: string;
+  extensions_loaded: string[];
+  complexity_level: "C1" | "C2" | "C3" | "C4" | "C5" | "C6";
+  domains: string[];
+  drift_origin: string;
+  drift_state: "none" | "detected";
+  drift_risk: "low" | "medium" | "high";
+};
 };
 
 function isHex64(x: string): boolean {
