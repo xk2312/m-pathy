@@ -201,22 +201,18 @@ export function extractTopKeywords(
   if (t.includes('role system')) return false
 
   // Telemetry-Header Blocker
-  const telemetryStarts = [
-    'system:',
-    'version:',
-    'telemetry',
-    'session',
-    'drift',
-    'council',
-    'expert',
-    'mode:',
-    'authority:',
-    'container',
-    'orchestration',
-    'complexity',
-  ]
+ const irssStarts = [
+  '{',
+]
 
-  if (telemetryStarts.some(k => t.startsWith(k))) return false
+if (irssStarts.some(k => t.startsWith(k))) {
+  try {
+    const parsed = JSON.parse(t)
+    if (parsed && typeof parsed === 'object' && parsed.irss) {
+      return false
+    }
+  } catch {}
+}
 
   // strukturierte Meta-/Debug-Formate
   if (/^\s*\{.*\}\s*$/.test(t)) return false

@@ -106,13 +106,52 @@ function sortKeys(obj: any): any {
   return obj
 }
 
-export function canonicalizeTruthState(state: {  role?: string
+type IRSS = {
+  system: string
+  version: string
+  session_prompt_counter: number
+  orchestrator_id: string
+  command: string
+  agent_id: string
+  action: string
+  extensions_loaded: string[]
+  complexity_level: string
+  domains: string[]
+  drift_origin: string
+  drift_state: string
+  drift_risk: string
+}
+
+function canonicalizeIRSS(irss: any): IRSS {
+  return {
+    system: String(irss?.system ?? ""),
+    version: String(irss?.version ?? ""),
+    session_prompt_counter: Number(irss?.session_prompt_counter ?? 0),
+    orchestrator_id: String(irss?.orchestrator_id ?? ""),
+    command: String(irss?.command ?? ""),
+    agent_id: String(irss?.agent_id ?? ""),
+    action: String(irss?.action ?? ""),
+    extensions_loaded: Array.isArray(irss?.extensions_loaded)
+      ? irss.extensions_loaded.map(String)
+      : [],
+    complexity_level: String(irss?.complexity_level ?? ""),
+    domains: Array.isArray(irss?.domains)
+      ? irss.domains.map(String)
+      : [],
+    drift_origin: String(irss?.drift_origin ?? ""),
+    drift_state: String(irss?.drift_state ?? ""),
+    drift_risk: String(irss?.drift_risk ?? ""),
+  }
+}
+
+export function canonicalizeTruthState(state: {
+  role?: string
   content?: string
   timestamp?: string
   public_key?: string
   chain_prev?: string
   chain_id?: string
-  telemetry?: any
+  irss?: any
 }) {
   const canonical = {
     role: state.role ?? "",
@@ -121,10 +160,11 @@ export function canonicalizeTruthState(state: {  role?: string
     public_key: state.public_key ?? "",
     chain_prev: state.chain_prev ?? "",
     chain_id: state.chain_id ?? "",
-    telemetry: state.telemetry ?? {}
+    irss: canonicalizeIRSS(state.irss ?? {})
   }
 
-  return JSON.stringify(sortKeys(canonical))}
+  return JSON.stringify(sortKeys(canonical))
+}
 
 /**
  * computeTruthHash()
