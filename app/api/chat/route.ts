@@ -891,31 +891,30 @@ if ((global as any).__m13ExecutionArtifact) {
     }
 
     if (!irssPayload) {
-      console.warn("[IRSS][FALLBACK][APPLIED]", {
-        reason: "model_response_without_irss",
-        session_prompt_counter: serverCounter,
-        preview: String(rawContent).slice(0, 200),
-      });
+  console.warn("[IRSS][FALLBACK][APPLIED]", {
+    reason: "model_response_without_irss",
+    session_prompt_counter: serverCounter,
+    preview: String(rawContent).slice(0, 200),
+  });
 
-      irssPayload = {
-        system: "M13",
-        version: "0.1",
-        session_prompt_counter: serverCounter,
-        orchestrator_id: "server_fallback",
-        command: "missing_irss",
-        agent_id: "fallback",
-        action: "model_response_without_irss",
-        extensions_loaded: Array.isArray(extensionsLoaded) ? extensionsLoaded : [],
-        complexity_level: "C1",
-        domains: [],
-        drift_origin: "missing_irss",
-        drift_state: "detected",
-        drift_risk: "high",
-      };
+  irssPayload = {
+    system: "M13",
+    version: "0.1",
+    session_prompt_counter: serverCounter,
+    orchestrator_id: "server_fallback",
+    command: "missing_irss",
+    agent_id: "fallback",
+    action: "model_response_without_irss",
+    extensions_loaded: Array.isArray(extensionsLoaded) ? extensionsLoaded : [],
+    complexity_level: "C1",
+    domains: [],
+    drift_origin: "missing_irss",
+    drift_state: "detected",
+    drift_risk: "high",
+  };
 
-      irssContent = JSON.stringify({ irss: irssPayload }, null, 2);
-      renderContent = rawContent;
-    }
+  renderContent = rawContent;
+}
 
     console.log("[IRSS][POST-SPLIT][STATE]", {
       hasIrssPayload: !!irssPayload,
