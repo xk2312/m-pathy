@@ -2463,18 +2463,38 @@ tx.onerror = function (err) {
     console.log("[M13][FRONTEND] DISPATCH DONE");
   }
 console.log("[M13][FRONTEND] IRSS FIELD", data?.irss ?? null);
-  return {
+ const rawMessage =
+  typeof data.message === "string"
+    ? data.message
+    : JSON.stringify(data.message, null, 2);
+
+let extractedIrss: any = data?.irss ?? null;
+let cleanMessage = rawMessage;
+
+try {
+  const match = rawMessage.match(/^\s*\{\s*"irss"\s*:\s*(\{[\s\S]*?\})\s*\}\s*/);
+
+  if (match) {
+    const parsed = JSON.parse(match[0]);
+    if (parsed?.irss) {
+      extractedIrss = parsed.irss;
+      cleanMessage = rawMessage.slice(match[0].length).trim();
+    }
+  }
+} catch {
+  // ignore parse failure and keep raw message
+}
+
+return {
     id:
       typeof crypto !== 'undefined' &&
       typeof (crypto as any).randomUUID === 'function'
         ? (crypto as any).randomUUID()
         : `${Date.now()}_${Math.random().toString(16).slice(2)}`,
     role: "assistant",
-    content: typeof data.message === "string"
-      ? data.message
-      : JSON.stringify(data.message, null, 2),
+    content: cleanMessage,
     format: "markdown",
-    irss: data?.irss ?? null,
+    irss: extractedIrss,
     meta: {
       handoff_mode: data?.handoff_mode ?? null
     }
