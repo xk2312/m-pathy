@@ -1,187 +1,62 @@
 /* ======================================================================
-   FILE INDEX - page.tsx  (Chat Page / Page2)
+   FILE INDEX - page2_page_tsx.tsx (Chat Page / Page2)
    MODE: GranularFileIndexDeveloper · CodeForensik
    SCOPE: CHAT RUNTIME · ARCHIVE INJECTION · API SEND · UI RESET
-   STATUS: IST-ZUSTAND (KANONISCH, OHNE INTERPRETATION)
+   STATUS: AKTUALISIERT · KANONISCH
    ======================================================================
 
    0. EINORDNUNG (SYSTEMISCH)
    ----------------------------------------------------------------------
-   Diese Datei ist der ZENTRALE Chat-Raum.
-   Alles, was am Ende als „neuer Chat“ sichtbar wird,
-   MUSS hier korrekt ankommen.
+   - ZENTRALER Chat-Raum (Endknoten des Archive-Flows).
+   - Zuständig für die Transformation von Archive-Kontext in einen aktiven Chat.
 
-   → page.tsx ist der ENDKNOTEN des Archive-Flows.
-
-
-   1. RELEVANTE IMPORTS (ARCHIVE)
+   1. ARCHIVE-INTEGRATION (LISTENER & STORAGE)
    ----------------------------------------------------------------------
-   import '@/lib/archiveChatPreparationListener'
-   import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
+   - Abhängigkeit: '@/lib/archiveChatPreparationListener' (globale Registrierung).
+   - Persistence: readArchiveChatContext(), clearArchiveChatContext().
+   - Prozess: `page2` agiert als Consumer des über Archive-Events vorbereiteten Context-States.
 
-   Bedeutung:
-   - archiveChatPreparationListener wird hier global registriert
-   - page.tsx ist Empfänger des vorbereiteten Archive-Kontexts
-
-   TODO-RELEVANZ:
-   - Archive-Flow endet HIER
-   - Fehlerfreier Übergang muss hier finalisiert werden
-
-
-   2. ARCHIVE CONTEXT INJECTION (KERNLOGIK)
+   2. ARCHIVE CONTEXT INJECTION (LOGIK-KERN)
    ----------------------------------------------------------------------
-   function withArchiveInjection(ctx: ChatMessage[])
+   - Funktion: `withArchiveInjection(ctx: ChatMessage[])`
+   - Modus: Transformiert archivierte Daten in injizierbare Chat-Nachrichten.
+   - ToDo-Fokus: Umstellung von SYSTEM-Injection auf USER-Summary-Injection zur sauberen Kontext-Trennung.
 
-   Ablauf:
-   - liest aus SessionStorage:
-     `mpathy:context:archive-chat:v1`
-   - erzeugt SYSTEM-Nachricht:
-     role: "system"
-     content: `ARCHIVE CONTEXT\n\n${injected}`
-   - injiziert diese Nachricht VOR bestehendem Context
-
-   Rückgabe:
-   {
-     context: ChatMessage[]
-     used: boolean
-   }
-
-   TODO-RELEVANZ (HOCH):
-   - Aktuell wird Archive-Context
-     als SYSTEM-Nachricht injiziert
-   - ToDo verlangt:
-     → erneutes Senden als USER-Nachricht
-     → NICHT im bestehenden Chat rendern
-
-
-   3. CLEAR NACH VERWENDUNG
+   3. PERSISTENZ & LIFECYCLE (STATE)
    ----------------------------------------------------------------------
-   Im Sendeflow:
-   if (used) {
-     clearArchiveChatContext();
-   }
+   - Hooks: [messages, setMessages], [loading, setLoading].
+   - Cleanup: hardClearChat() (Löschung Storage + Reload).
+   - Synchronisation: appendTriketonLedgerEntry() (Triketon-Integrität bei jedem Message-Push).
 
-   Bedeutung:
-   - Archive-Context ist ONE-SHOT
-   - Wird nach erstem API-Call gelöscht
-
-   TODO-RELEVANZ:
-   - Zeitpunkt des Clear ist kritisch
-   - Bei neuem Flow muss sichergestellt sein,
-     dass Clear NACH erfolgreichem neuen Chat erfolgt
-
-
-   4. API SEND (NORMALE CHAT-LOGIK)
+   4. API-KOMMUNIKATION & SEND-FLOW
    ----------------------------------------------------------------------
-   async function sendMessageLocal(context: ChatMessage[])
+   - Funktion: `sendMessageLocal(context: ChatMessage[])`
+   - Dispatcher: initCommandDispatcher() (Befehls-Steuerung).
+   - Prozess: POST /api/chat mit lokaler Locale-Anbindung.
+   - Ziel: Einziger Einstiegspunkt für API-Calls; Archive-Injektion muss HIER finalisiert werden.
 
-   Eigenschaften:
-   - POST /api/chat
-   - credentials: same-origin
-   - messages = context
-   - locale wird mitgesendet
-
-   Status:
-   - Diese Funktion ist KORREKT
-   - Sie ist der gewünschte Zielpfad
-     für den neuen Archive-Flow
-
-   TODO-RELEVANZ:
-   - Archive-Zusammenfassung MUSS hier landen
-   - Es darf KEIN Sonder-Continuation-Call existieren
-
-
-   5. PROMPT HANDLER (USER SEND)
+   5. INTERAKTION (USER-SEND / PROMPT-HANDLER)
    ----------------------------------------------------------------------
-   const onSendFromPrompt = useCallback(async (text: string) => { ... })
+   - Handler: `onSendFromPrompt` (Optimistic UI -> Ledger-Append -> Injection -> API-Send).
+   - Rolle: IDEALER Punkt für den Übergang von Archiv-Summary zu frischem Chat-State.
 
-   Ablauf:
-   - User-Message wird erzeugt
-   - optimistic UI update
-   - Ledger Append (User)
-   - withArchiveInjection(optimistic)
-   - sendMessageLocal(outgoing)
-
-   TODO-RELEVANZ (MAXIMAL):
-   - Dieser Handler ist der IDEALE Ort,
-     um Archive-Summary als USER-Message
-     in einen NEUEN Chat einzuspeisen
-   - Aktuell wird er nur bei manuellem Prompt genutzt
-
-
-   6. CHAT STATE & PERSISTENZ
+   6. UI-SHELL & RESPONSIVE CONTEXT
    ----------------------------------------------------------------------
-   const [messages, setMessages]
-   persistMessages()
-   hardClearChat()
+   - Komponenten: Navigation, SidebarContainer, MobileOverlay, PromptRoot.
+   - Onboarding: OnboardingWatcher, HiddenPromptBridge.
+   - Responsivität: useMobileViewport-Check.
 
-   Bedeutung:
-   - messages = aktueller Chat
-   - hardClearChat löscht Storage + reload
-
-   TODO-RELEVANZ:
-   - Für neuen Archive-Chat:
-     → alter Chat muss verlassen/gelöscht werden
-     → neuer Chat beginnt leer + injizierter User-Message
-
-
-   7. LOADING / SPINNER-STATE
+   7. TRYKETON-VERIFIZIERUNG (TRUTH-LAYER)
    ----------------------------------------------------------------------
-   const [loading, setLoading]
+   - Module: `triketonVerify` (computeTruthHash, normalizeForTruthHash).
+   - Zweck: Wahrheits-Hashing und Ledger-Validierung bei State-Änderung.
 
-   Steuerung:
-   - true beim Senden
-   - false bei Antwort oder Fehler
-
-   TODO-RELEVANZ:
-   - ARCHIVE-SPINNER ist NICHT dieser loading-State
-   - ABER: neuer Chat muss loading korrekt setzen,
-     sonst bleibt UI inkonsistent
-
-
-   8. ARCHIVE-SEITIGE EVENTS (INDIREKT)
+   8. KRITISCHE KNOTENPUNKTE (ToDo-RELEVANZ)
    ----------------------------------------------------------------------
-   page.tsx hört NICHT direkt auf:
-   - mpathy:archive:start-chat
-   - mpathy:archive:close
-
-   Diese Events werden:
-   - vom archiveChatPreparationListener verarbeitet
-   - page.tsx reagiert nur indirekt über Storage
-
-   TODO-RELEVANZ:
-   - saubere Trennung:
-     Listener → Storage
-     Page → liest Storage → API
-
-
-   9. ZIELARCHITEKTUR (IMPLIZIT ABLEITBAR)
-   ----------------------------------------------------------------------
-   - page.tsx ist der EINZIGE Ort,
-     an dem ein neuer Chat sichtbar entsteht
-   - Alles andere (Archive, Listener, Spinner)
-     sind nur Vorstufen
-
-   TODO-RELEVANZ:
-   - ToDo-Umsetzung MUSS hier enden
-   - Kein UI-Code im Listener
-   - Kein API-Code im ArchiveOverlay
-
-
-   10. ZUSAMMENFASSUNG (KANONISCH)
-   ----------------------------------------------------------------------
-   page.tsx:
-   - besitzt korrekte Chat-API-Anbindung
-   - besitzt Archive-Context-Injection
-   - besitzt vollständige Ledger-Integration
-   - ist der korrekte Endpunkt für den neuen Flow
-
-   KRITISCHE STELLEN FÜR ToDos:
-   - withArchiveInjection()
-   - onSendFromPrompt()
-   - clearArchiveChatContext()
-   - hardClearChat()
-   - sendMessageLocal()
+   - `withArchiveInjection()`: Logik-Shift zu User-Message.
+   - `onSendFromPrompt()`: Timing der Summary-Einspeisung.
+   - `clearArchiveChatContext()`: Sicherstellung der Unidirektionalität nach API-Call.
+   - `sendMessageLocal()`: Strikte Einhaltung der Chat-Konstanz.
 
    ====================================================================== */
 
@@ -2676,10 +2551,10 @@ return {
   role: assistant.role ?? "assistant",
   content: safeContent,
   format: assistant.format ?? "markdown",
+  irss: data?.irss ?? null,
   meta: { status, balanceAfter, tokensUsed },
   triketon,
 } as any as ChatMessage;
-}
 
 
 // ⬆️ Diese schließende Klammer beendet die Message-Builder-Funktion sauber.
