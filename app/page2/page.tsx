@@ -506,248 +506,92 @@ function mdToHtml(src: string): string {
 /** Body einer Nachricht: entscheidet Markdown vs. Plaintext + Syntax-Highlighting */
 function MessageBody({ msg }: { msg: ChatMessage }) {
   const rawContent = String(msg.content ?? "");
+const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-  const splitTelemetryFromContent = React.useMemo(() => {
-    const text = rawContent.trimStart();
+const visibleContent = String(msg.content ?? "");
+const isMd = (msg as any).format === "markdown";
+const html = isMd ? mdToHtml(visibleContent) : null;
+const irss = msg.irss;
 
-    if (!text.startsWith("{")) {
-      return {
-        visibleContent: rawContent,
-        telemetryBlock: "",
-      };
-    }
-
-    let depth = 0;
-    let inString = false;
-    let escaped = false;
-    let endIndex = -1;
-
-    for (let i = 0; i < text.length; i++) {
-      const ch = text[i];
-
-      if (inString) {
-        if (escaped) {
-          escaped = false;
-          continue;
-        }
-        if (ch === "\\") {
-          escaped = true;
-          continue;
-        }
-        if (ch === '"') {
-          inString = false;
-        }
-        continue;
-      }
-
-      if (ch === '"') {
-        inString = true;
-        continue;
-      }
-
-      if (ch === "{") {
-        depth += 1;
-        continue;
-      }
-
-      if (ch === "}") {
-        depth -= 1;
-        if (depth === 0) {
-          endIndex = i + 1;
-          break;
-        }
-      }
-    }
-
-    if (endIndex === -1) {
-      return {
-        visibleContent: rawContent,
-        telemetryBlock: "",
-      };
-    }
-
-    const candidate = text.slice(0, endIndex).trim();
-    const remainder = text.slice(endIndex).trimStart();
-
-    try {
-      const parsed = JSON.parse(candidate);
-
-      const irss = parsed?.irss;
-      const looksLikeIrss =
-        irss &&
-        typeof irss === "object" &&
-        !Array.isArray(irss) &&
-        (
-          "system" in irss ||
-          "version" in irss ||
-          "session_prompt_counter" in irss ||
-          "mode" in irss ||
-          "drift_state" in irss
-        );
-
-      if (!looksLikeIrss) {
-        return {
-          visibleContent: rawContent,
-          telemetryBlock: "",
-        };
-      }
-
-      return {
-        visibleContent: remainder,
-        telemetryBlock: JSON.stringify(parsed, null, 2),
-      };
-    } catch {
-      return {
-        visibleContent: rawContent,
-        telemetryBlock: "",
-      };
-    }
-  }, [rawContent]);
-
- const visibleContent = splitTelemetryFromContent.visibleContent;
-  const telemetryBlock =
-    (msg as any)?.irss != null
-      ? JSON.stringify((msg as any).irss, null, 2)
-      : splitTelemetryFromContent.telemetryBlock;
-  const isMd = (msg as any).format === "markdown";
-  const html = isMd ? mdToHtml(visibleContent) : null;
-  const telemetryHtml = telemetryBlock ? mdToHtml("```json\n" + telemetryBlock + "\n```") : null;
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
-
-  console.log("[M13][MESSAGEBODY] IRSS SOURCE", {
-    hasMsgIrss: !!(msg as any)?.irss,
-    hasTelemetryBlock: !!telemetryBlock,
-  });
-
-  const onRootClick = React.useCallback(
-    async (e: React.MouseEvent<HTMLDivElement>) => {
-      const target = e.target as HTMLElement | null;
-      const btn = target?.closest?.('[data-copy-code="true"]') as HTMLElement | null;
-      if (!btn) return;
-
-      e.preventDefault();
-      e.stopPropagation();
-
-      const block =
-        (btn.closest?.(".md-code-block") as HTMLElement | null) ??
-        (btn.closest?.(".md-code") as HTMLElement | null);
-
-      const codeEl = block?.querySelector?.("pre code") as HTMLElement | null;
-      const text = (codeEl?.textContent ?? "").trimEnd();
-      if (!text) return;
-
-      try {
-        await navigator.clipboard.writeText(text);
-        btn.setAttribute("data-copied", "true");
-        window.setTimeout(() => {
-          try {
-            btn.removeAttribute("data-copied");
-          } catch {}
-        }, 900);
-      } catch {
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        ta.style.position = "fixed";
-        ta.style.left = "-9999px";
-        ta.style.top = "0";
-        document.body.appendChild(ta);
-        ta.focus();
-        ta.select();
-        try {
-          document.execCommand("copy");
-        } catch {}
-        document.body.removeChild(ta);
-
-        btn.setAttribute("data-copied", "true");
-        window.setTimeout(() => {
-          try {
-            btn.removeAttribute("data-copied");
-          } catch {}
-        }, 900);
-      }
-    },
-    []
-  );
 
   React.useEffect(() => {
-    if (!containerRef.current) return;
-    try {
-      const nodes = containerRef.current.querySelectorAll("pre code");
-      nodes.forEach((el) => {
-        const codeEl = el as HTMLElement;
-        if (codeEl.dataset.hljs) return;
+  if (!containerRef.current) return;
+  try {
+    const nodes = containerRef.current.querySelectorAll("pre code");
+    nodes.forEach((el) => {
+      const codeEl = el as HTMLElement;
+      if (codeEl.dataset.hljs) return;
 
-        const cls = codeEl.className || "";
-        const m = cls.match(/\blanguage-([a-z0-9_-]+)\b/i);
-        const lang = m ? m[1].toLowerCase() : "";
-        const raw = codeEl.textContent ?? "";
+      const cls = codeEl.className || "";
+      const m = cls.match(/\blanguage-([a-z0-9_-]+)\b/i);
+      const lang = m ? m[1].toLowerCase() : "";
+      const raw = codeEl.textContent ?? "";
 
-        try {
-          if (lang && hljs.getLanguage(lang)) {
-            codeEl.innerHTML = hljs.highlight(raw, { language: lang, ignoreIllegals: true }).value;
-          } else {
-            codeEl.innerHTML = hljs.highlightAuto(raw).value;
-          }
-          codeEl.classList.add("hljs");
-        } catch {
-          try { hljs.highlightElement(codeEl); } catch {}
+      try {
+        if (lang && hljs.getLanguage(lang)) {
+          codeEl.innerHTML = hljs.highlight(raw, {
+            language: lang,
+            ignoreIllegals: true,
+          }).value;
+        } else {
+          codeEl.innerHTML = hljs.highlightAuto(raw).value;
         }
+        codeEl.classList.add("hljs");
+      } catch {
+        try {
+          hljs.highlightElement(codeEl);
+        } catch {}
+      }
 
-        codeEl.dataset.hljs = "1";
-      });
-    } catch {
-    }
-  }, [html, telemetryHtml]);
+      codeEl.dataset.hljs = "1";
+    });
+  } catch {}
+}, [html]);
 
-  return (
-    <div ref={containerRef} style={{ lineHeight: 1.55 }} onClick={onRootClick}>
-      {isMd ? (
-        <div
-          className="markdown"
-          dangerouslySetInnerHTML={{ __html: html ?? "" }}
-          style={{ lineHeight: 1.55 }}
-        />
-      ) : (
-        <div style={{ lineHeight: 1.55 }}>
-          {visibleContent}
-        </div>
-      )}
+return (
+  <div
+    ref={containerRef}
+    style={{ lineHeight: 1.55 }}
+  >
+    {isMd ? (
+      <div
+        className="markdown"
+        dangerouslySetInnerHTML={{ __html: html ?? "" }}
+        style={{ lineHeight: 1.55 }}
+      />
+    ) : (
+      <div style={{ lineHeight: 1.55 }}>
+        {visibleContent}
+      </div>
+    )}
 
-      {!!telemetryBlock && (
-        <details
+    {!!irss && (
+      <details style={{ marginTop: 10 }}>
+        <summary
           style={{
-            marginTop: 10,
+            cursor: "pointer",
+            fontSize: 12,
+            opacity: 0.8,
           }}
         >
-          <summary
-            style={{
-              cursor: "pointer",
-              fontSize: 12,
-              opacity: 0.8,
-            }}
-          >
-            IRSS (Inverted Runtime System Scan)
-          </summary>
+          IRSS (Inverted Runtime System Scan)
+        </summary>
 
-          <div
-  className="markdown"
-  dangerouslySetInnerHTML={{ __html: telemetryHtml ?? "" }}
-  style={{
-    marginTop: 12,
-    padding: 0,
-    borderRadius: 0,
-    background: "transparent",
-    fontSize: 11,
-    lineHeight: 1.55,
-    whiteSpace: "pre-wrap",
-  }}
-/>
-        </details>
-      )}
-    </div>
-  );
+        <pre
+          style={{
+            marginTop: 12,
+            fontSize: 11,
+            lineHeight: 1.55,
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          {JSON.stringify(irss, null, 2)}
+        </pre>
+      </details>
+    )}
+  </div>
+);
 }
-
 /** Sprechblase mit M-Avatar für Assistant + Copy-Button */
 function Bubble({
   msg,

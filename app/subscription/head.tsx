@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "m-pathy | Professional AI Workspace under Governance",
     description:
-      "Operate AI in a controlled system space. m-pathy provides governance-first AI usage with explicit system states, telemetry, and verifiable control. Built on MAIOS.",
+      "Operate AI in a controlled system space. m-pathy provides governance-first AI usage with explicit system states, IRSS, and verifiable control. Built on MAIOS.",
     url: "https://m-pathy.ai/subscription",
     siteName: "m-pathy.ai",
     type: "website",
