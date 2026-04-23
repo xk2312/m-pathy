@@ -1399,6 +1399,7 @@ const onClearChat = React.useCallback(() => {
 useEffect(() => {
   if (clearingRef.current) return;
   if (Array.isArray(messages)) {
+    console.log("[DEBUG BEFORE SAVE]", messages);
     saveChat(messages);
   }
 }, [messages]);
