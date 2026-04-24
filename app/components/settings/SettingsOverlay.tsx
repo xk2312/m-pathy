@@ -42,24 +42,53 @@ function warn(...args: any[]) {
  */
 
 async function loadUserRegistry(): Promise<UserRegistry | null> {
-  log("LOAD → start");
+  log("LOAD → start (IndexedDB)");
 
-  try {
-    const raw = localStorage.getItem("mpathy:user_registry");
+  return new Promise((resolve) => {
+    try {
+      const request = indexedDB.open("MpathyRuntime", 1);
 
-    if (!raw) {
-      warn("LOAD → no registry found");
-      return null;
+      request.onerror = (err) => {
+        warn("LOAD → DB open failed", err);
+        resolve(null);
+      };
+
+      request.onsuccess = () => {
+        const db = request.result;
+
+        if (!db.objectStoreNames.contains("user")) {
+          warn("LOAD → objectStore 'user' missing");
+          resolve(null);
+          return;
+        }
+
+        const tx = db.transaction("user", "readonly");
+        const store = tx.objectStore("user");
+        const getReq = store.get("registry");
+
+        getReq.onerror = (err) => {
+          warn("LOAD → get failed", err);
+          resolve(null);
+        };
+
+        getReq.onsuccess = () => {
+          const data = getReq.result;
+
+          if (!data) {
+            warn("LOAD → no registry found in IndexedDB");
+            resolve(null);
+            return;
+          }
+
+          log("LOAD → success (IndexedDB)", data);
+          resolve(data);
+        };
+      };
+    } catch (err) {
+      warn("LOAD → unexpected error", err);
+      resolve(null);
     }
-
-    const parsed = JSON.parse(raw);
-    log("LOAD → success", parsed);
-
-    return parsed;
-  } catch (err) {
-    warn("LOAD → failed", err);
-    return null;
-  }
+  });
 }
 
 async function saveUserRegistry(registry: UserRegistry) {
