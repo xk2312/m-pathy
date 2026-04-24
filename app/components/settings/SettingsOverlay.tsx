@@ -240,10 +240,10 @@ const COLOR = {
 
 return createPortal(
   <div
-    className={`fixed inset-0 z-[9999] flex items-start justify-center ${COLOR.bg} ${SPACING.rootX}`}
+    className={`fixed inset-0 z-[9999] flex items-start justify-center ${COLOR.bg}`}
   >
     <div
-      className={`w-full max-w-2xl ${SPACING.panelTop} ${COLOR.surface} rounded-2xl ${SPACING.panelX} ${SPACING.panelY}`}
+      className={`w-full max-w-2xl mx-auto ${SPACING.panelTop} ${COLOR.surface} rounded-2xl px-8 py-8`}
     >
       
       {/* ================= HEADER ================= */}
@@ -331,7 +331,7 @@ return createPortal(
 
 
 {/* ================= ACTIONS ================= */}
-<div className={`flex gap-3 ${SPACING.footerTop}`}>
+<div className={`flex items-center gap-3 ${SPACING.footerTop}`}>
   
   <button
   onClick={handleSave}
