@@ -66,7 +66,6 @@ import React, { useEffect, useState, useRef, useCallback, useMemo, FormEvent } f
 import { LanguageProvider } from "@/app/providers/LanguageProvider";
 import Image from "next/image";
 import hljs from "highlight.js";
-
 import Navigation from "@/app/components/navigation/navigation";
 // import MessageInput from "../components/MessageInput";
 // import Saeule from "../components/Saeule";
@@ -79,11 +78,8 @@ import HiddenPromptBridge from "@/components/system/HiddenPromptBridge";import {
 import { v4 as uuidv4 } from "uuid";
 // ⬇︎ Einheitlicher Persistenzpfad: localStorage-basiert
 import { loadChat, saveChat, initChatStorage, hardClearChat, appendTriketonLedgerEntry, ensureTriketonLedgerReady, verifyOrResetTriketonLedger, } from '@/lib/chatStorage'
-import {
-  computeTruthHash,
-  normalizeForTruthHash,
-  canonicalizeTruthState
-} from "@/lib/triketonVerify";import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
+import { computeTruthHash, normalizeForTruthHash, canonicalizeTruthState} from "@/lib/triketonVerify";
+import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
 import '@/lib/archiveChatPreparationListener'
 import type { ChatMessage, Role } from "@/lib/types";
 import { initCommandDispatcher } from "@/lib/dispatcher/commandDispatcher";
@@ -2872,7 +2868,15 @@ setMessages((prev) => {
     role: "assistant",
     content: finalText,
     irss: (last as any)?.irss ?? (assistant as any)?.irss ?? undefined,
-    truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
+    truth_hash: computeTruthHash(
+      canonicalizeTruthState({
+        role: "assistant",
+        content: finalText,
+        irss: (last as any)?.irss ?? (assistant as any)?.irss ?? undefined,
+        public_key: String(publicKey ?? "").replace(/^"+|"+$/g, ""),
+        chain_id: "local",
+      })
+    ),
     public_key: String(publicKey ?? "").replace(/^"+|"+$/g, ""),
     timestamp: new Date().toISOString(),
     version: "v1",
