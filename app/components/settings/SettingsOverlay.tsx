@@ -246,14 +246,16 @@ return createPortal(
       zIndex: 9999,
       display: "flex",
       justifyContent: "center",
-      alignItems: "flex-start",
+      alignItems: "center",
       background: "#080808",
-      paddingTop: "80px",
+      padding: "24px",
+      overflowY: "auto",
     }}
   >
     <div
       style={{
-        width: "640px",
+        width: "100%",
+        maxWidth: "640px",
         background: "#121418",
         borderRadius: "20px",
         padding: "32px",
