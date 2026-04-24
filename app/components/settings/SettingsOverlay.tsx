@@ -210,7 +210,7 @@ function handleCommand(event: any) {
 // =========================
 
 const SPACING = {
-  overlayRoot: "px-[13px] lg:px-[30px]",
+  overlayRoot: "px-3 lg:px-8",
   overlayTop: "mt-28",
   containerPadding: "py-8",
   headerBottom: "mb-8",
@@ -237,7 +237,7 @@ return createPortal(
       className={`
         w-full max-w-2xl
         ${SPACING.overlayTop}
-        bg-[#0C0C0C]
+        bg-neutral-900
         rounded-2xl
         ${SPACING.containerPadding}
       `}
@@ -278,8 +278,8 @@ return createPortal(
           </div>
 
           <div className={SPACING.inputGap}>
-        <div className="h-10 bg-neutral-800/60 rounded-md" />            
-        <div className="h-10 bg-neutral-800/60 rounded-md" />
+        <div className="h-10 bg-neutral-800 rounded-md" />            
+        <div className="h-10 bg-neutral-800 rounded-md" />
           </div>
         </div>
 
@@ -336,15 +336,14 @@ return createPortal(
         
        <button
   onClick={handleSave}
-  className="px-[22px] py-[13px] bg-white text-black rounded-md cursor-pointer"
+  className="px-6 py-3 bg-white text-black rounded-md cursor-pointer"
 >
   Save
 </button>
 
 <button
   onClick={handleClose}
-  className="px-[22px] py-[13px] border border-white text-white rounded-md cursor-pointer"
->
+className="px-6 py-3 bg-white text-black rounded-md cursor-pointer">
   Cancel
 </button>
 
