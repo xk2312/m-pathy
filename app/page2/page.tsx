@@ -2871,6 +2871,7 @@ setMessages((prev) => {
     id,
     role: "assistant",
     content: finalText,
+    irss: (last as any)?.irss ?? (assistant as any)?.irss ?? undefined,
     truth_hash: computeTruthHash(normalizeForTruthHash(finalText)),
     public_key: String(publicKey ?? "").replace(/^"+|"+$/g, ""),
     timestamp: new Date().toISOString(),
