@@ -2863,16 +2863,18 @@ setMessages((prev) => {
     "local_assistant";
 
   try {
-    appendTriketonLedgerEntry({
+  const irssPayload = (last as any)?.irss ?? (assistant as any)?.irss ?? undefined;
+
+  appendTriketonLedgerEntry({
     id,
     role: "assistant",
     content: finalText,
-    irss: (last as any)?.irss ?? (assistant as any)?.irss ?? undefined,
+    irss: irssPayload,
     truth_hash: computeTruthHash(
       canonicalizeTruthState({
         role: "assistant",
         content: finalText,
-        irss: (last as any)?.irss ?? (assistant as any)?.irss ?? undefined,
+        irss: irssPayload,
         public_key: String(publicKey ?? "").replace(/^"+|"+$/g, ""),
         chain_id: "local",
       })
@@ -2883,11 +2885,29 @@ setMessages((prev) => {
     orbit_context: "chat",
     chain_id: "local",
   });
-  } catch (err) {
-    console.warn("[TriketonLedger] assistant append failed:", err);
-  }
 
-  return prev;
+  const ledger = JSON.parse(localStorage.getItem("mpathy:triketon:v1") || "[]");
+  const entry = ledger[ledger.length - 1];
+
+  console.log(
+    "[TRUTH OK]",
+    entry.truth_hash === computeTruthHash(
+      canonicalizeTruthState({
+        role: entry.role,
+        content: entry.content,
+        irss: entry.irss,
+        public_key: entry.public_key,
+        chain_id: entry.chain_id,
+        chain_prev: entry.chain_prev
+      })
+    )
+  );
+
+} catch (err) {
+  console.warn("[TriketonLedger] assistant append failed:", err);
+}
+
+return prev;
 });
 
 
