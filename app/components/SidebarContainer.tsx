@@ -87,13 +87,10 @@ export default function SidebarContainer({
             flexDirection: "column",
           }}
         >
- <Saeule
+<Saeule
   onClearChat={onClearChat}
   messages={messages}
 />
-
-{/* 🔥 SETTINGS OVERLAY MOUNT */}
-<SettingsOverlay />
 
 
         </div>
@@ -111,6 +108,9 @@ export default function SidebarContainer({
           }}
         />
       )}
+
+      <SettingsOverlay />
+
     </aside>
   );
 }
