@@ -210,16 +210,67 @@ function handleCommand(event: any) {
 // =========================
 
 const SPACING = {
-  overlayRoot: "px-3 lg:px-8",
-  overlayTop: "mt-28",
-  containerPadding: "py-8",
-  headerBottom: "mb-8",
-  sectionGap: "space-y-12",
-  sectionInner: "space-y-4",
-  inputGap: "space-y-3",
-  actionsTop: "mt-10"
+  rootX: "px-4 sm:px-6 lg:px-8",
+  panelTop: "mt-20 sm:mt-24",
+  panelX: "px-6 sm:px-8",
+  panelY: "py-7 sm:py-8",
+  headerBottom: "mb-7",
+  bodyGap: "space-y-8",
+  sectionGap: "space-y-3",
+  fieldGap: "space-y-3",
+  dangerTop: "pt-6",
+  debugTop: "mt-8",
+  footerTop: "mt-8"
+};
+const COLOR = {
+  bg: "bg-[#080808]",
+  surface: "bg-[#121418]",
+  surface2: "bg-[#1E2024]",
+  border: "border-[rgba(255,255,255,0.10)]",
+
+  textPrimary: "text-[#F5F6F7]",
+  textSecondary: "text-[rgba(245,246,247,0.72)]",
+  textMuted: "text-[rgba(245,246,247,0.52)]",
+
+  accent: "text-[#53E9FD]",
+  danger: "${COLOR.danger}"
 };
 
+const UI = {
+  buttonPrimary: `
+    px-6 py-3
+    rounded-lg
+    bg-[#53E9FD]
+    text-black
+    font-medium
+    transition
+    hover:opacity-90
+    active:scale-[0.98]
+  `,
+
+  buttonSecondary: `
+    px-6 py-3
+    rounded-lg
+    border border-[rgba(255,255,255,0.10)]
+    text-[#F5F6F7]
+    bg-transparent
+    transition
+    hover:bg-white/5
+    active:scale-[0.98]
+  `,
+
+  input: `
+    h-11
+    px-4
+    rounded-md
+    bg-[#1E2024]
+    text-[#F5F6F7]
+    border border-transparent
+    focus:border-[#53E9FD]
+    outline-none
+    w-full
+  `
+};
 // =========================
 // RENDER
 // =========================
@@ -229,18 +280,16 @@ return createPortal(
     className={`
       fixed inset-0 z-[9999]
       flex items-start justify-center
-      bg-black
-      ${SPACING.overlayRoot}
-    `}
+${COLOR.bg}
+${SPACING.rootX}    `}
   >
     <div
       className={`
         w-full max-w-2xl
-        ${SPACING.overlayTop}
-        bg-neutral-900
+${SPACING.panelTop}        ${COLOR.surface}
         rounded-2xl
-        ${SPACING.containerPadding}
-      `}
+${SPACING.panelX}
+${SPACING.panelY}      `}
     >
       
       {/* ================= HEADER ================= */}
@@ -252,7 +301,7 @@ return createPortal(
       <SettingsIcon />
     </div>
 
-    <h2 className="text-white text-xl font-medium">
+    <h2 className="${COLOR.textPrimary} text-xl font-medium">
       Settings
     </h2>
   </div>
@@ -260,7 +309,7 @@ return createPortal(
   {/* RIGHT: CLOSE */}
   <button
     onClick={handleClose}
-    className="text-neutral-400 hover:text-white transition cursor-pointer"
+    className="${COLOR.textSecondary} hover:${COLOR.textPrimary} transition cursor-pointer"
   >
     ✕
   </button>
@@ -269,54 +318,52 @@ return createPortal(
 
 
       {/* ================= CONTENT ================= */}
-      <div className={SPACING.sectionGap}>
-
+<div className={SPACING.bodyGap}>
         {/* GENERAL (placeholder) */}
-        <div className={SPACING.sectionInner}>
-          <div className="text-sm text-neutral-400 uppercase tracking-wide">
+<div className={SPACING.sectionGap}>
+            <div className="text-sm ${COLOR.textSecondary} uppercase tracking-wide">
             General
           </div>
 
-          <div className={SPACING.inputGap}>
-        <div className="h-10 bg-neutral-800 rounded-md" />            
-        <div className="h-10 bg-neutral-800 rounded-md" />
+<div className={SPACING.bodyGap}>
+          <div className="h-10 ${COLOR.surface2} rounded-md" />            
+        <div className="h-10 ${COLOR.surface2} rounded-md" />
           </div>
         </div>
 
 
         {/* SECURITY (placeholder) */}
-        <div className={SPACING.sectionInner}>
-          <div className="text-sm text-neutral-400 uppercase tracking-wide">
+<div className={SPACING.sectionGap}>
+            <div className="text-sm ${COLOR.textSecondary} uppercase tracking-wide">
             Security
           </div>
 
-          <div className={SPACING.inputGap}>
-            <div className="h-10 bg-neutral-800 rounded-md" />
+<div className={SPACING.fieldGap}>
+              <div className="h-10 ${COLOR.surface2} rounded-md" />
           </div>
         </div>
 
 
         {/* INFRASTRUCTURE (placeholder) */}
-        <div className={SPACING.sectionInner}>
-          <div className="text-sm text-neutral-400 uppercase tracking-wide">
+<div className={SPACING.sectionGap}>
+            <div className="text-sm ${COLOR.textSecondary} uppercase tracking-wide">
             Infrastructure
           </div>
 
-          <div className={SPACING.inputGap}>
-            <div className="h-10 bg-neutral-800 rounded-md" />
-            <div className="h-10 bg-neutral-800 rounded-md" />
+<div className={SPACING.fieldGap}>
+              <div className="h-10 ${COLOR.surface2} rounded-md" />
+            <div className="h-10 ${COLOR.surface2} rounded-md" />
           </div>
         </div>
 
 
         {/* DANGER ZONE (placeholder) */}
-        <div className={`${SPACING.sectionInner} pt-6 border-t border-neutral-800`}>
-          <div className="text-sm text-red-400 uppercase tracking-wide">
+<div className={`${SPACING.sectionGap} ${SPACING.dangerTop} border-t ${COLOR.border}`}>          <div className="text-sm ${COLOR.danger} uppercase tracking-wide">
             Danger Zone
           </div>
 
-          <div className={SPACING.inputGap}>
-            <div className="h-10 bg-neutral-800 rounded-md" />
+<div className={SPACING.fieldGap}>
+              <div className="h-10 ${COLOR.surface2} rounded-md" />
           </div>
         </div>
 
@@ -324,26 +371,25 @@ return createPortal(
 
 
       {/* ================= DEBUG ================= */}
-      <div className="mt-10">
-        <pre className="text-xs text-neutral-500 overflow-auto max-h-64">
+<div className={SPACING.debugTop}>        <pre className="text-xs ${COLOR.textMuted} overflow-auto max-h-64">
           {JSON.stringify(draft, null, 2)}
         </pre>
       </div>
 
 
       {/* ================= ACTIONS ================= */}
-      <div className={`flex gap-3 ${SPACING.actionsTop}`}>
-        
+<div className={`flex gap-3 ${SPACING.footerTop}`}>        
        <button
   onClick={handleSave}
-  className="px-6 py-3 bg-white text-black rounded-md cursor-pointer"
+  className={`${UI.buttonPrimary} cursor-pointer`}
 >
   Save
 </button>
 
 <button
   onClick={handleClose}
-className="px-6 py-3 bg-white text-black rounded-md cursor-pointer">
+  className={`${UI.buttonSecondary} cursor-pointer`}
+>
   Cancel
 </button>
 
