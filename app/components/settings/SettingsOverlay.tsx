@@ -240,114 +240,162 @@ const COLOR = {
 
 return createPortal(
   <div
-    className={`fixed inset-0 z-[9999] flex items-start justify-center ${COLOR.bg}`}
+    style={{
+      position: "fixed",
+      inset: 0,
+      zIndex: 9999,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "flex-start",
+      background: "#080808",
+      paddingTop: "80px",
+    }}
   >
     <div
-      className={`w-full max-w-2xl mx-auto ${SPACING.panelTop} ${COLOR.surface} rounded-2xl px-8 py-8`}
+      style={{
+        width: "640px",
+        background: "#121418",
+        borderRadius: "20px",
+        padding: "32px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "32px",
+      }}
     >
       
-      {/* ================= HEADER ================= */}
-      <div className={`flex justify-between items-center ${SPACING.headerBottom}`}>
-  
-        {/* LEFT: ICON + TITLE */}
-        <div className="flex items-center gap-3">
-          <div className="w-5 h-5 text-[#875DC2]">
+      {/* HEADER */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{ width: "20px", height: "20px", color: "#875DC2" }}>
             <SettingsIcon />
           </div>
-
-          <h2 className={`${COLOR.textPrimary} text-xl font-medium`}>
+          <div style={{ color: "#F5F6F7", fontSize: "20px", fontWeight: 500 }}>
             Settings
-          </h2>
+          </div>
         </div>
 
-        {/* RIGHT: CLOSE */}
         <button
           onClick={handleClose}
-          className={`${COLOR.textSecondary} hover:text-white transition cursor-pointer`}
+          style={{
+            color: "#aaa",
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "18px",
+          }}
         >
           ✕
         </button>
-</div>
+      </div>
 
+      {/* CONTENT */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+        
+        {/* SECTION */}
+        {[
+          { title: "General", fields: 2 },
+          { title: "Security", fields: 1 },
+          { title: "Infrastructure", fields: 2 },
+        ].map((section) => (
+          <div key={section.title} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            
+            <div style={{ color: "#aaa", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+              {section.title}
+            </div>
 
-     {/* ================= CONTENT ================= */}
-<div className={SPACING.bodyGap}>
-  
-  {/* GENERAL */}
-  <div className={SPACING.sectionGap}>
-    <div className={`text-sm ${COLOR.textSecondary} uppercase tracking-wide`}>
-      General
-    </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {Array.from({ length: section.fields }).map((_, i) => (
+                <div
+                  key={i}
+                  style={{
+                    height: "44px",
+                    borderRadius: "10px",
+                    background: "#1E2024",
+                  }}
+                />
+              ))}
+            </div>
 
-    <div className={SPACING.fieldGap}>
-      <div className={`h-10 ${COLOR.surface2} rounded-md`} />
-      <div className={`h-10 ${COLOR.surface2} rounded-md`} />
-    </div>
-  </div>
+          </div>
+        ))}
 
-  {/* SECURITY */}
-  <div className={SPACING.sectionGap}>
-    <div className={`text-sm ${COLOR.textSecondary} uppercase tracking-wide`}>
-      Security
-    </div>
+        {/* DANGER ZONE */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            paddingTop: "24px",
+            borderTop: "1px solid rgba(255,255,255,0.1)",
+          }}
+        >
+          <div style={{ color: "#ff6b6b", fontSize: "12px", textTransform: "uppercase" }}>
+            Danger Zone
+          </div>
 
-    <div className={SPACING.fieldGap}>
-      <div className={`h-10 ${COLOR.surface2} rounded-md`} />
-    </div>
-  </div>
+          <div
+            style={{
+              height: "44px",
+              borderRadius: "10px",
+              background: "#1E2024",
+            }}
+          />
+        </div>
 
-  {/* INFRASTRUCTURE */}
-  <div className={SPACING.sectionGap}>
-    <div className={`text-sm ${COLOR.textSecondary} uppercase tracking-wide`}>
-      Infrastructure
-    </div>
+      </div>
 
-    <div className={SPACING.fieldGap}>
-      <div className={`h-10 ${COLOR.surface2} rounded-md`} />
-      <div className={`h-10 ${COLOR.surface2} rounded-md`} />
-    </div>
-  </div>
+      {/* DEBUG */}
+      <pre
+        style={{
+          fontSize: "11px",
+          color: "#777",
+          maxHeight: "200px",
+          overflow: "auto",
+        }}
+      >
+        {JSON.stringify(draft, null, 2)}
+      </pre>
 
-  {/* DANGER ZONE */}
-  <div className={`${SPACING.sectionGap} ${SPACING.dangerTop} border-t ${COLOR.border}`}>
-    <div className={`text-sm ${COLOR.danger} uppercase tracking-wide`}>
-      Danger Zone
-    </div>
+      {/* ACTIONS */}
+      <div style={{ display: "flex", gap: "12px" }}>
+        
+        <button
+          onClick={handleSave}
+          style={{
+            padding: "13px 22px",
+            borderRadius: "12px",
+            background: "#53E9FD",
+            color: "#000",
+            border: "none",
+            cursor: "pointer",
+            fontWeight: 500,
+          }}
+        >
+          Save
+        </button>
 
-    <div className={SPACING.fieldGap}>
-      <div className={`h-10 ${COLOR.surface2} rounded-md`} />
-    </div>
-  </div>
+        <button
+          onClick={handleClose}
+          style={{
+            padding: "13px 22px",
+            borderRadius: "12px",
+            border: "1px solid rgba(255,255,255,0.1)",
+            background: "transparent",
+            color: "#F5F6F7",
+            cursor: "pointer",
+          }}
+        >
+          Cancel
+        </button>
 
-</div>
+      </div>
 
-
-{/* ================= DEBUG ================= */}
-<div className={SPACING.debugTop}>
-  <pre className={`text-xs ${COLOR.textMuted} overflow-auto max-h-64`}>
-    {JSON.stringify(draft, null, 2)}
-  </pre>
-</div>
-
-
-{/* ================= ACTIONS ================= */}
-<div className={`flex items-center gap-3 ${SPACING.footerTop}`}>
-  
-  <button
-  onClick={handleSave}
-  className={`px-6 py-3 rounded-lg bg-[#53E9FD] text-black font-medium transition hover:opacity-90 active:scale-[0.98] cursor-pointer`}
->
-    Save
-  </button>
-
-  <button
-  onClick={handleClose}
-  className={`px-6 py-3 rounded-lg border border-[rgba(255,255,255,0.10)] text-[#F5F6F7] bg-transparent transition hover:bg-white/5 active:scale-[0.98] cursor-pointer`}
->
-    Cancel
-  </button>
-
-</div>
     </div>
   </div>,
   document.body
