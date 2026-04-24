@@ -19,27 +19,12 @@ export default function CsvDownloadIcon() {
         fill="none"
       />
 
-      {/* CSV rows */}
+      {/* CSV structure */}
       <path
-        d="M8.5 11.5h7M8.5 14h7M8.5 16.5h4"
+        d="M8.5 11.5h7M8.5 14h7M8.5 16.5h5"
         stroke="currentColor"
         strokeWidth="1.6"
         strokeLinecap="round"
-      />
-
-      {/* Download arrow */}
-      <path
-        d="M12 8.5v4"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M10.5 11l1.5 1.5L13.5 11"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       />
     </svg>
   );

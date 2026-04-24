@@ -21,31 +21,16 @@ export default function JsonDownloadIcon() {
 
       {/* Curly braces */}
       <path
-        d="M10 10c-.8 0-1.2.4-1.2 1.2v1.2c0 .5-.2.9-.7 1.1.5.2.7.6.7 1.1v1.2c0 .8.4 1.2 1.2 1.2"
+        d="M10 11c-.7 0-1 .3-1 1v1c0 .5-.2.8-.6 1 .4.2.6.5.6 1v1c0 .7.3 1 1 1"
         stroke="currentColor"
         strokeWidth="1.6"
         strokeLinecap="round"
       />
       <path
-        d="M14 10c.8 0 1.2.4 1.2 1.2v1.2c0 .5.2.9.7 1.1-.5.2-.7.6-.7 1.1v1.2c0 .8-.4 1.2-1.2 1.2"
+        d="M14 11c.7 0 1 .3 1 1v1c0 .5.2.8.6 1-.4.2-.6.5-.6 1v1c0 .7-.3 1-1 1"
         stroke="currentColor"
         strokeWidth="1.6"
         strokeLinecap="round"
-      />
-
-      {/* Download arrow */}
-      <path
-        d="M12 8.5v3.5"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M10.5 11l1.5 1.5L13.5 11"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       />
     </svg>
   );
