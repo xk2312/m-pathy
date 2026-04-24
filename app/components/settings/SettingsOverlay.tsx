@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import SettingsIcon from "@/components/icons/wall/settings";
+
 /**
  * TYPES
  */
@@ -38,14 +39,12 @@ function warn(...args: any[]) {
 
 /**
  * INDEXED DB (placeholder for now)
- * -> wird später konkretisiert
  */
 
 async function loadUserRegistry(): Promise<UserRegistry | null> {
   log("LOAD → start");
 
   try {
-    // TODO: echte IndexedDB Verbindung
     const raw = localStorage.getItem("mpathy:user_registry");
 
     if (!raw) {
@@ -67,9 +66,7 @@ async function saveUserRegistry(registry: UserRegistry) {
   log("SAVE → start", registry);
 
   try {
-    // TODO: echte IndexedDB Verbindung
     localStorage.setItem("mpathy:user_registry", JSON.stringify(registry));
-
     log("SAVE → success");
   } catch (err) {
     warn("SAVE → failed", err);
@@ -86,29 +83,27 @@ export default function SettingsOverlay() {
    */
 
   const [isOpen, setIsOpen] = useState(false);
-
   const [registry, setRegistry] = useState<UserRegistry | null>(null);
-
   const [draft, setDraft] = useState<UserRegistry | null>(null);
 
-  /**
-   * LIFECYCLE
-   */
 
-  useEffect(() => {
+ /**
+ * LIFECYCLE
+ */
+
+useEffect(() => {
   log("MOUNT");
 
-  // 🔥 LISTEN TO WALL COMMANDS
-function handleCommand(event: any) {
-  const cmd = event?.detail?.command;
+  function handleCommand(event: any) {
+    const cmd = event?.detail?.command;
 
-  log("EVENT RAW", cmd);
+    log("EVENT RAW", cmd);
 
-  if (cmd === "open_settings") {
-    log("EVENT → open settings received");
-    setIsOpen(true);
+    if (cmd === "open_settings") {
+      log("EVENT → open settings received");
+      setIsOpen(true);
+    }
   }
-}
 
   window.addEventListener("mpathy:command", handleCommand);
 
@@ -129,19 +124,18 @@ function handleCommand(event: any) {
   return () => {
     window.removeEventListener("mpathy:command", handleCommand);
   };
-
 }, []);
 
-  /**
-   * HANDLERS
-   */
+/**
+ * HANDLERS
+ */
 
-  const handleOpen = () => {
-    log("UI → open overlay");
-    setIsOpen(true);
-  };
+const handleOpen = () => {
+  log("UI → open overlay");
+  setIsOpen(true);
+};
 
-  const handleClose = () => {
+const handleClose = () => {
   log("UI → close overlay");
 
   setIsOpen(false);
@@ -151,62 +145,61 @@ function handleCommand(event: any) {
     return;
   }
 
-  const reset = { ...registry }; // wichtig: neue Referenz
+  const reset = { ...registry };
   setDraft(reset);
 
   log("STATE → draft reset", reset);
 };
 
-  const handleChange = (path: string, value: any) => {
-    if (!draft) return;
+const handleChange = (path: string, value: any) => {
+  if (!draft) return;
 
-    log("CHANGE →", path, value);
+  log("CHANGE →", path, value);
 
-    const updated = { ...draft };
+  const updated = { ...draft };
 
-    // simple path setter (wird später verbessert)
-    const keys = path.split(".");
-    let obj: any = updated;
+  const keys = path.split(".");
+  let obj: any = updated;
 
-    for (let i = 0; i < keys.length - 1; i++) {
-      obj[keys[i]] = obj[keys[i]] || {};
-      obj = obj[keys[i]];
-    }
-
-    obj[keys[keys.length - 1]] = value;
-
-    setDraft(updated);
-    log("STATE → draft updated", updated);
-  };
-
-  const handleSave = async () => {
-    if (!draft) return;
-
-    log("ACTION → save triggered");
-
-    const updated = {
-      ...draft,
-      updated_at: new Date().toISOString(),
-    };
-
-    await saveUserRegistry(updated);
-
-    setRegistry(updated);
-    setDraft(updated);
-
-    log("STATE → persisted", updated);
-  };
-
-  /**
-   * RENDER
-   */
-
-  if (!isOpen) {
-    return null;
+  for (let i = 0; i < keys.length - 1; i++) {
+    obj[keys[i]] = obj[keys[i]] || {};
+    obj = obj[keys[i]];
   }
 
-  // =========================
-// SPACING SYSTEM (MASTER CONTROL)
+  obj[keys[keys.length - 1]] = value;
+
+  setDraft(updated);
+  log("STATE → draft updated", updated);
+};
+
+const handleSave = async () => {
+  if (!draft) return;
+
+  log("ACTION → save triggered");
+
+  const updated = {
+    ...draft,
+    updated_at: new Date().toISOString(),
+  };
+
+  await saveUserRegistry(updated);
+
+  setRegistry(updated);
+  setDraft(updated);
+
+  log("STATE → persisted", updated);
+};
+
+  /**
+ * RENDER
+ */
+
+if (!isOpen) {
+  return null;
+}
+
+// =========================
+// SPACING SYSTEM
 // =========================
 
 const SPACING = {
@@ -222,6 +215,11 @@ const SPACING = {
   debugTop: "mt-8",
   footerTop: "mt-8"
 };
+
+// =========================
+// COLOR SYSTEM
+// =========================
+
 const COLOR = {
   bg: "bg-[#080808]",
   surface: "bg-[#121418]",
@@ -233,167 +231,123 @@ const COLOR = {
   textMuted: "text-[rgba(245,246,247,0.52)]",
 
   accent: "text-[#53E9FD]",
-  danger: "${COLOR.danger}"
+  danger: "text-red-400"
 };
 
-const UI = {
-  buttonPrimary: `
-    px-6 py-3
-    rounded-lg
-    bg-[#53E9FD]
-    text-black
-    font-medium
-    transition
-    hover:opacity-90
-    active:scale-[0.98]
-  `,
-
-  buttonSecondary: `
-    px-6 py-3
-    rounded-lg
-    border border-[rgba(255,255,255,0.10)]
-    text-[#F5F6F7]
-    bg-transparent
-    transition
-    hover:bg-white/5
-    active:scale-[0.98]
-  `,
-
-  input: `
-    h-11
-    px-4
-    rounded-md
-    bg-[#1E2024]
-    text-[#F5F6F7]
-    border border-transparent
-    focus:border-[#53E9FD]
-    outline-none
-    w-full
-  `
-};
 // =========================
 // RENDER
 // =========================
 
 return createPortal(
   <div
-    className={`
-      fixed inset-0 z-[9999]
-      flex items-start justify-center
-${COLOR.bg}
-${SPACING.rootX}    `}
+    className={`fixed inset-0 z-[9999] flex items-start justify-center ${COLOR.bg} ${SPACING.rootX}`}
   >
     <div
-      className={`
-        w-full max-w-2xl
-${SPACING.panelTop}        ${COLOR.surface}
-        rounded-2xl
-${SPACING.panelX}
-${SPACING.panelY}      `}
+      className={`w-full max-w-2xl ${SPACING.panelTop} ${COLOR.surface} rounded-2xl ${SPACING.panelX} ${SPACING.panelY}`}
     >
       
       {/* ================= HEADER ================= */}
       <div className={`flex justify-between items-center ${SPACING.headerBottom}`}>
   
-  {/* LEFT: ICON + TITLE */}
-  <div className="flex items-center gap-3">
-    <div className="w-5 h-5 text-[#875DC2]">
-      <SettingsIcon />
+        {/* LEFT: ICON + TITLE */}
+        <div className="flex items-center gap-3">
+          <div className="w-5 h-5 text-[#875DC2]">
+            <SettingsIcon />
+          </div>
+
+          <h2 className={`${COLOR.textPrimary} text-xl font-medium`}>
+            Settings
+          </h2>
+        </div>
+
+        {/* RIGHT: CLOSE */}
+        <button
+          onClick={handleClose}
+          className={`${COLOR.textSecondary} hover:text-white transition cursor-pointer`}
+        >
+          ✕
+        </button>
+</div>
+
+
+     {/* ================= CONTENT ================= */}
+<div className={SPACING.bodyGap}>
+  
+  {/* GENERAL */}
+  <div className={SPACING.sectionGap}>
+    <div className={`text-sm ${COLOR.textSecondary} uppercase tracking-wide`}>
+      General
     </div>
 
-    <h2 className="${COLOR.textPrimary} text-xl font-medium">
-      Settings
-    </h2>
+    <div className={SPACING.fieldGap}>
+      <div className={`h-10 ${COLOR.surface2} rounded-md`} />
+      <div className={`h-10 ${COLOR.surface2} rounded-md`} />
+    </div>
   </div>
 
-  {/* RIGHT: CLOSE */}
-  <button
-    onClick={handleClose}
-    className="${COLOR.textSecondary} hover:${COLOR.textPrimary} transition cursor-pointer"
-  >
-    ✕
-  </button>
+  {/* SECURITY */}
+  <div className={SPACING.sectionGap}>
+    <div className={`text-sm ${COLOR.textSecondary} uppercase tracking-wide`}>
+      Security
+    </div>
+
+    <div className={SPACING.fieldGap}>
+      <div className={`h-10 ${COLOR.surface2} rounded-md`} />
+    </div>
+  </div>
+
+  {/* INFRASTRUCTURE */}
+  <div className={SPACING.sectionGap}>
+    <div className={`text-sm ${COLOR.textSecondary} uppercase tracking-wide`}>
+      Infrastructure
+    </div>
+
+    <div className={SPACING.fieldGap}>
+      <div className={`h-10 ${COLOR.surface2} rounded-md`} />
+      <div className={`h-10 ${COLOR.surface2} rounded-md`} />
+    </div>
+  </div>
+
+  {/* DANGER ZONE */}
+  <div className={`${SPACING.sectionGap} ${SPACING.dangerTop} border-t ${COLOR.border}`}>
+    <div className={`text-sm ${COLOR.danger} uppercase tracking-wide`}>
+      Danger Zone
+    </div>
+
+    <div className={SPACING.fieldGap}>
+      <div className={`h-10 ${COLOR.surface2} rounded-md`} />
+    </div>
+  </div>
 
 </div>
 
 
-      {/* ================= CONTENT ================= */}
-<div className={SPACING.bodyGap}>
-        {/* GENERAL (placeholder) */}
-<div className={SPACING.sectionGap}>
-            <div className="text-sm ${COLOR.textSecondary} uppercase tracking-wide">
-            General
-          </div>
-
-<div className={SPACING.bodyGap}>
-          <div className="h-10 ${COLOR.surface2} rounded-md" />            
-        <div className="h-10 ${COLOR.surface2} rounded-md" />
-          </div>
-        </div>
+{/* ================= DEBUG ================= */}
+<div className={SPACING.debugTop}>
+  <pre className={`text-xs ${COLOR.textMuted} overflow-auto max-h-64`}>
+    {JSON.stringify(draft, null, 2)}
+  </pre>
+</div>
 
 
-        {/* SECURITY (placeholder) */}
-<div className={SPACING.sectionGap}>
-            <div className="text-sm ${COLOR.textSecondary} uppercase tracking-wide">
-            Security
-          </div>
-
-<div className={SPACING.fieldGap}>
-              <div className="h-10 ${COLOR.surface2} rounded-md" />
-          </div>
-        </div>
-
-
-        {/* INFRASTRUCTURE (placeholder) */}
-<div className={SPACING.sectionGap}>
-            <div className="text-sm ${COLOR.textSecondary} uppercase tracking-wide">
-            Infrastructure
-          </div>
-
-<div className={SPACING.fieldGap}>
-              <div className="h-10 ${COLOR.surface2} rounded-md" />
-            <div className="h-10 ${COLOR.surface2} rounded-md" />
-          </div>
-        </div>
-
-
-        {/* DANGER ZONE (placeholder) */}
-<div className={`${SPACING.sectionGap} ${SPACING.dangerTop} border-t ${COLOR.border}`}>          <div className="text-sm ${COLOR.danger} uppercase tracking-wide">
-            Danger Zone
-          </div>
-
-<div className={SPACING.fieldGap}>
-              <div className="h-10 ${COLOR.surface2} rounded-md" />
-          </div>
-        </div>
-
-      </div>
-
-
-      {/* ================= DEBUG ================= */}
-<div className={SPACING.debugTop}>        <pre className="text-xs ${COLOR.textMuted} overflow-auto max-h-64">
-          {JSON.stringify(draft, null, 2)}
-        </pre>
-      </div>
-
-
-      {/* ================= ACTIONS ================= */}
-<div className={`flex gap-3 ${SPACING.footerTop}`}>        
-       <button
+{/* ================= ACTIONS ================= */}
+<div className={`flex gap-3 ${SPACING.footerTop}`}>
+  
+  <button
   onClick={handleSave}
-  className={`${UI.buttonPrimary} cursor-pointer`}
+  className={`px-6 py-3 rounded-lg bg-[#53E9FD] text-black font-medium transition hover:opacity-90 active:scale-[0.98] cursor-pointer`}
 >
-  Save
-</button>
+    Save
+  </button>
 
-<button
+  <button
   onClick={handleClose}
-  className={`${UI.buttonSecondary} cursor-pointer`}
+  className={`px-6 py-3 rounded-lg border border-[rgba(255,255,255,0.10)] text-[#F5F6F7] bg-transparent transition hover:bg-white/5 active:scale-[0.98] cursor-pointer`}
 >
-  Cancel
-</button>
+    Cancel
+  </button>
 
-      </div>
+</div>
     </div>
   </div>,
   document.body
