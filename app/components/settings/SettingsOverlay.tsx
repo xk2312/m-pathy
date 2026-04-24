@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import SettingsIcon from "@/components/icons/wall/settings";
 /**
  * TYPES
  */
@@ -226,28 +227,39 @@ const SPACING = {
 return createPortal(
   <div className="fixed inset-0 z-[9999] flex items-start justify-center bg-black/80">
     <div
-      className={`
-        w-full max-w-2xl
-        ${SPACING.overlayTop}
-        bg-neutral-900
-        rounded-2xl
-        ${SPACING.containerPadding}
-      `}
-    >
+  className={`
+    w-full max-w-2xl
+    ${SPACING.overlayTop}
+    bg-[#0C0C0C]
+    rounded-2xl
+    px-[13px] lg:px-[30px]
+    py-8
+  `}
+>
       
       {/* ================= HEADER ================= */}
       <div className={`flex justify-between items-center ${SPACING.headerBottom}`}>
-        <h2 className="text-white text-xl font-medium">
-          Settings
-        </h2>
+  
+  {/* LEFT: ICON + TITLE */}
+  <div className="flex items-center gap-3">
+    <div className="w-5 h-5 text-[#875DC2]">
+      <SettingsIcon />
+    </div>
 
-        <button
-          onClick={handleClose}
-          className="text-neutral-400 hover:text-white transition"
-        >
-          ✕
-        </button>
-      </div>
+    <h2 className="text-white text-xl font-medium">
+      Settings
+    </h2>
+  </div>
+
+  {/* RIGHT: CLOSE */}
+  <button
+    onClick={handleClose}
+    className="text-neutral-400 hover:text-white transition cursor-pointer"
+  >
+    ✕
+  </button>
+
+</div>
 
 
       {/* ================= CONTENT ================= */}
@@ -260,8 +272,8 @@ return createPortal(
           </div>
 
           <div className={SPACING.inputGap}>
-            <div className="h-10 bg-neutral-800 rounded-md" />
-            <div className="h-10 bg-neutral-800 rounded-md" />
+        <div className="h-10 bg-neutral-800/60 rounded-md" />            
+        <div className="h-10 bg-neutral-800/60 rounded-md" />
           </div>
         </div>
 
@@ -318,15 +330,13 @@ return createPortal(
         
         <button
           onClick={handleSave}
-          className="px-4 py-2 bg-white text-black rounded-md"
-        >
+className="px-[13px] py-[7px] bg-white text-black rounded-md cursor-pointer"        >
           Save
         </button>
 
         <button
           onClick={handleClose}
-          className="px-4 py-2 border border-white text-white rounded-md"
-        >
+className="px-[13px] py-[7px] border border-white text-white rounded-md cursor-pointer"        >
           Cancel
         </button>
 
