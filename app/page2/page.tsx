@@ -1323,6 +1323,8 @@ useEffect(() => {
   };
 }, [handleArchivePrepared, onClearChat]);
 
+//CHECK ob dieser Use EFFECT noch gebraicht wird, Möglicherweise ist er Legay. 
+
 useEffect(() => {
   async function loadUserRegistry() {
     try {

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Saeule from "./Saeule";
+import SettingsOverlay from "@/components/settings/SettingsOverlay";
 
 /* ======================================================================
    Props & Hook
@@ -90,6 +91,9 @@ export default function SidebarContainer({
   onClearChat={onClearChat}
   messages={messages}
 />
+
+{/* 🔥 SETTINGS OVERLAY MOUNT */}
+<SettingsOverlay />
 
 
         </div>
