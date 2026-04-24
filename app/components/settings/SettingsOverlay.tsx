@@ -103,7 +103,7 @@ function handleCommand(event: any) {
 
   log("EVENT RAW", cmd);
 
-  if (cmd === "settings") {
+  if (cmd === "open_settings") {
     log("EVENT → open settings received");
     setIsOpen(true);
   }
