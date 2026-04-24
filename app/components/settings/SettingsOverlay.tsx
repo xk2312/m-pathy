@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
+import { createPortal } from "react-dom";
 /**
  * TYPES
  */
@@ -223,8 +223,8 @@ const SPACING = {
 // RENDER
 // =========================
 
-return (
-  <div className="fixed inset-0 z-[9999] flex items-start justify-center bg-black/80">    
+return createPortal(
+  <div className="fixed inset-0 z-[9999] flex items-start justify-center bg-black/80">
     <div
       className={`
         w-full max-w-2xl
@@ -329,22 +329,10 @@ return (
         >
           Cancel
         </button>
-);
-          <button
-            onClick={handleSave}
-            className="px-4 py-2 bg-white text-black rounded"
-          >
-            Save
-          </button>
 
-          <button
-            onClick={handleClose}
-            className="px-4 py-2 border border-white text-white rounded"
-          >
-            Cancel
-          </button>
-        </div>
       </div>
     </div>
-  );
+  </div>,
+  document.body
+);
 }
