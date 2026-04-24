@@ -210,8 +210,9 @@ function handleCommand(event: any) {
 // =========================
 
 const SPACING = {
+  overlayRoot: "px-[13px] lg:px-[30px]",
   overlayTop: "mt-28",
-  containerPadding: "p-8",
+  containerPadding: "py-8",
   headerBottom: "mb-8",
   sectionGap: "space-y-12",
   sectionInner: "space-y-4",
@@ -219,23 +220,28 @@ const SPACING = {
   actionsTop: "mt-10"
 };
 
-
 // =========================
 // RENDER
 // =========================
 
 return createPortal(
-  <div className="fixed inset-0 z-[9999] flex items-start justify-center bg-black/80">
+  <div
+    className={`
+      fixed inset-0 z-[9999]
+      flex items-start justify-center
+      bg-black
+      ${SPACING.overlayRoot}
+    `}
+  >
     <div
-  className={`
-    w-full max-w-2xl
-    ${SPACING.overlayTop}
-    bg-[#0C0C0C]
-    rounded-2xl
-    px-[13px] lg:px-[30px]
-    py-8
-  `}
->
+      className={`
+        w-full max-w-2xl
+        ${SPACING.overlayTop}
+        bg-[#0C0C0C]
+        rounded-2xl
+        ${SPACING.containerPadding}
+      `}
+    >
       
       {/* ================= HEADER ================= */}
       <div className={`flex justify-between items-center ${SPACING.headerBottom}`}>
@@ -328,17 +334,19 @@ return createPortal(
       {/* ================= ACTIONS ================= */}
       <div className={`flex gap-3 ${SPACING.actionsTop}`}>
         
-        <button
-          onClick={handleSave}
-className="px-[13px] py-[7px] bg-white text-black rounded-md cursor-pointer"        >
-          Save
-        </button>
+       <button
+  onClick={handleSave}
+  className="px-[22px] py-[13px] bg-white text-black rounded-md cursor-pointer"
+>
+  Save
+</button>
 
-        <button
-          onClick={handleClose}
-className="px-[13px] py-[7px] border border-white text-white rounded-md cursor-pointer"        >
-          Cancel
-        </button>
+<button
+  onClick={handleClose}
+  className="px-[22px] py-[13px] border border-white text-white rounded-md cursor-pointer"
+>
+  Cancel
+</button>
 
       </div>
     </div>
