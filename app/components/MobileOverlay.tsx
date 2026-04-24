@@ -25,6 +25,19 @@ export default function MobileOverlay({
   useEffect(() => {
     if (!open) return;
     const { overflow, position } = document.body.style;
+  useEffect(() => {
+  function handleCommand(event: any) {
+    const cmd = event?.detail?.command;
+
+    if (cmd === "open_settings") {
+      onClose(); // Mobile Drawer schließen
+    }
+  }
+
+  window.addEventListener("mpathy:command", handleCommand);
+  return () => window.removeEventListener("mpathy:command", handleCommand);
+}, [onClose]);
+  
     document.body.style.overflow = "hidden";
     document.body.style.position = "relative";
     return () => {
