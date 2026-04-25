@@ -459,13 +459,22 @@ return createPortal(
             Danger Zone
           </div>
 
-          <div
-            style={{
-              height: "44px",
-              borderRadius: "10px",
-              background: "#1E2024",
-            }}
-          />
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+  
+  <div style={{ fontSize: "12px", color: "#ff6b6b" }}>
+    Account Deletion (coming soon)
+  </div>
+
+  <div
+    style={{
+      height: "44px",
+      borderRadius: "10px",
+      background: "#1E2024",
+      opacity: 0.6,
+    }}
+  />
+
+</div>
         </div>
 
       </div>
