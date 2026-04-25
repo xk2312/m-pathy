@@ -352,18 +352,6 @@ return createPortal(
 
       </div>
 
-      {/* DEBUG */}
-      <pre
-        style={{
-          fontSize: "11px",
-          color: "#777",
-          maxHeight: "200px",
-          overflow: "auto",
-        }}
-      >
-        {JSON.stringify(draft, null, 2)}
-      </pre>
-
       {/* ACTIONS */}
       <div style={{ display: "flex", gap: "12px" }}>
         
