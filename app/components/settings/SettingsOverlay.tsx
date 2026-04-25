@@ -315,48 +315,56 @@ return createPortal(
 
   <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
     
-    {/* NAME */}
-    <input
-      value={draft?.profile?.name ?? ""}
-      onChange={(e) => handleChange("profile.name", e.target.value)}
-      placeholder="Name"
-      style={{
-        height: "44px",
-        borderRadius: "10px",
-        background: "#1E2024",
-        border: "none",
-        padding: "0 12px",
-        color: "#F5F6F7",
-      }}
-    />
+   {/* NAME */}
+    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+      <div style={{ fontSize: "12px", color: "#888" }}>
+        Name
+      </div>
+
+      <input
+        value={draft?.profile?.name ?? ""}
+        onChange={(e) => handleChange("profile.name", e.target.value)}
+        style={{
+          height: "44px",
+          borderRadius: "10px",
+          background: "#1E2024",
+          border: "none",
+          padding: "0 12px",
+          color: "#F5F6F7",
+        }}
+      />
+    </div>
 
     {/* TONE */}
-    <select
-      value={String(draft?.profile?.tone ?? "2")}
-      onChange={(e) => handleChange("profile.tone", e.target.value)}
-      style={{
-        height: "44px",
-        borderRadius: "10px",
-        background: "#1E2024",
-        border: "none",
-        padding: "0 12px",
-        color: "#F5F6F7",
-      }}
-    >
-      <option value="1">Förmlich</option>
-      <option value="2">Persönlich</option>
-    </select>
+    <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+      <div style={{ fontSize: "12px", color: "#888" }}>
+        Tone
+      </div>
+
+      <select
+        value={String(draft?.profile?.tone ?? "2")}
+        onChange={(e) => handleChange("profile.tone", e.target.value)}
+        style={{
+          height: "44px",
+          borderRadius: "10px",
+          background: "#1E2024",
+          border: "none",
+          padding: "0 12px",
+          color: "#F5F6F7",
+        }}
+      >
+        <option value="1">Förmlich</option>
+        <option value="2">Persönlich</option>
+      </select>
+    </div>
 
   </div>
 
 </div>
 
 {/* SECURITY */}
-<div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-  
-  <div style={{ color: "#aaa", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-    Security
-  </div>
+<div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+  <div style={{ fontSize: "12px", color: "#888" }}>Public Key</div>
 
   <input
     value={draft?.security?.public_key ?? ""}
@@ -371,7 +379,6 @@ return createPortal(
       cursor: "not-allowed",
     }}
   />
-
 </div>
 
 {/* INFRASTRUCTURE */}
