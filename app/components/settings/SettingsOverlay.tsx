@@ -306,32 +306,87 @@ return createPortal(
       <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
         
         {/* SECTION */}
-        {[
-          { title: "General", fields: 2 },
-          { title: "Security", fields: 1 },
-          { title: "Infrastructure", fields: 2 },
-        ].map((section) => (
-          <div key={section.title} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            
-            <div style={{ color: "#aaa", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-              {section.title}
-            </div>
+        {/* GENERAL */}
+<div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+  
+  <div style={{ color: "#aaa", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+    General
+  </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {Array.from({ length: section.fields }).map((_, i) => (
-                <div
-                  key={i}
-                  style={{
-                    height: "44px",
-                    borderRadius: "10px",
-                    background: "#1E2024",
-                  }}
-                />
-              ))}
-            </div>
+  <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+    
+    {/* NAME */}
+    <input
+      value={draft?.profile?.name ?? ""}
+      onChange={(e) => handleChange("profile.name", e.target.value)}
+      placeholder="Name"
+      style={{
+        height: "44px",
+        borderRadius: "10px",
+        background: "#1E2024",
+        border: "none",
+        padding: "0 12px",
+        color: "#F5F6F7",
+      }}
+    />
 
-          </div>
-        ))}
+    {/* TONE */}
+    <select
+      value={String(draft?.profile?.tone ?? "2")}
+      onChange={(e) => handleChange("profile.tone", e.target.value)}
+      style={{
+        height: "44px",
+        borderRadius: "10px",
+        background: "#1E2024",
+        border: "none",
+        padding: "0 12px",
+        color: "#F5F6F7",
+      }}
+    >
+      <option value="1">Förmlich</option>
+      <option value="2">Persönlich</option>
+    </select>
+
+  </div>
+
+</div>
+
+{/* SECURITY */}
+<div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+  <div style={{ color: "#aaa", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+    Security
+  </div>
+
+  <div
+    style={{
+      height: "44px",
+      borderRadius: "10px",
+      background: "#1E2024",
+    }}
+  />
+</div>
+
+{/* INFRASTRUCTURE */}
+<div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+  <div style={{ color: "#aaa", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+    Infrastructure
+  </div>
+
+  <div
+    style={{
+      height: "44px",
+      borderRadius: "10px",
+      background: "#1E2024",
+    }}
+  />
+  <div
+    style={{
+      height: "44px",
+      borderRadius: "10px",
+      background: "#1E2024",
+    }}
+  />
+</div>
 
         {/* DANGER ZONE */}
         <div
