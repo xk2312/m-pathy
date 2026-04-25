@@ -200,6 +200,10 @@ if (!isOpen) {
   return null;
 }
 
+if (typeof document === "undefined") {
+  return null;
+}
+
 // =========================
 // SPACING SYSTEM
 // =========================
@@ -239,6 +243,11 @@ const COLOR = {
 // =========================
 // RENDER
 // =========================
+
+const portalTarget =
+  typeof document !== "undefined" ? document.body : null;
+
+if (!portalTarget) return null;
 
 return createPortal(
   <div
