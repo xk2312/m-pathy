@@ -23,10 +23,10 @@ async function executeCommand(command: string) {
     }
 
     // 👉 UI-only commands (kein path)
-    if (!entry.path) {
-      console.warn("[Dispatcher] No execution path for command:", command);
-      return;
-    }
+if (!entry.path) {
+  console.warn("[Dispatcher] UI command – skipping execution:", command);
+  return;
+}
 
     // 👉 dynamischer Import
     if (!entry.path || typeof entry.path !== "string") {
