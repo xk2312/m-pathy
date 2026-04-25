@@ -85,12 +85,14 @@ export function initCommandDispatcher() {
   if ((window as any).__m13DispatcherInitialized) return;
 
   window.addEventListener("mpathy:command", (e: any) => {
-    const command = e?.detail?.command;
+  const command = e?.detail?.command;
 
-    if (!command) return;
+  console.log("[DISPATCH EVENT]", command); // 👈 HIER
 
-    executeCommand(command);
-  });
+  if (!command) return;
+
+  executeCommand(command);
+});
 
   (window as any).__m13DispatcherInitialized = true;
 

@@ -97,6 +97,8 @@ useEffect(() => {
   function handleCommand(event: any) {
     const cmd = event?.detail?.command;
 
+    console.log("[SETTINGS LISTENER HIT]", cmd); // 👈 HIER
+
     log("EVENT RAW", cmd);
 
     if (cmd === "open_settings") {
