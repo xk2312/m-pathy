@@ -400,20 +400,49 @@ return createPortal(
     Infrastructure
   </div>
 
-  <div
+  {/* SERVER URL */}
+<div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+  <div style={{ fontSize: "12px", color: "#888" }}>
+    Server URL
+  </div>
+
+  <input
+    value={draft?.infrastructure?.server?.url ?? ""}
+    onChange={(e) =>
+      handleChange("infrastructure.server.url", e.target.value)
+    }
     style={{
       height: "44px",
       borderRadius: "10px",
       background: "#1E2024",
+      border: "none",
+      padding: "0 12px",
+      color: "#F5F6F7",
     }}
   />
-  <div
+</div>
+
+{/* API KEY */}
+<div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+  <div style={{ fontSize: "12px", color: "#888" }}>
+    API Key
+  </div>
+
+  <input
+    value={draft?.infrastructure?.server?.api_key ?? ""}
+    onChange={(e) =>
+      handleChange("infrastructure.server.api_key", e.target.value)
+    }
     style={{
       height: "44px",
       borderRadius: "10px",
       background: "#1E2024",
+      border: "none",
+      padding: "0 12px",
+      color: "#F5F6F7",
     }}
   />
+</div>
 </div>
 
         {/* DANGER ZONE */}
