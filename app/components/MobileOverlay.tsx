@@ -60,6 +60,23 @@ export default function MobileOverlay({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
+      // CLOSE on Settings Command
+    useEffect(() => {
+      function handleCommand(e: any) {
+        const cmd = e?.detail?.command;
+
+        if (cmd === "open_settings") {
+          onClose();
+        }
+      }
+
+      window.addEventListener("mpathy:command", handleCommand);
+
+      return () => {
+        window.removeEventListener("mpathy:command", handleCommand);
+      };
+    }, [onClose]);
+
   if (!open) return null;
 
    return (
