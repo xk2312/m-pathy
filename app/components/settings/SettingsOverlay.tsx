@@ -353,17 +353,25 @@ return createPortal(
 
 {/* SECURITY */}
 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+  
   <div style={{ color: "#aaa", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
     Security
   </div>
 
-  <div
+  <input
+    value={draft?.security?.public_key ?? ""}
+    readOnly
     style={{
       height: "44px",
       borderRadius: "10px",
       background: "#1E2024",
+      border: "none",
+      padding: "0 12px",
+      color: "#888",
+      cursor: "not-allowed",
     }}
   />
+
 </div>
 
 {/* INFRASTRUCTURE */}
