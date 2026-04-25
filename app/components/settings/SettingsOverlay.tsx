@@ -94,7 +94,8 @@ export default function SettingsOverlay() {
 useEffect(() => {
   log("MOUNT");
 
-  function handleOpen() {
+function handleOpen() {
+  console.log("[SETTINGS EVENT RECEIVED]");
   log("EVENT → open settings received");
   setIsOpen(true);
 }
