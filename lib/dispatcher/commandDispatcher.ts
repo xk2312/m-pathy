@@ -45,6 +45,10 @@ switch (entry.path) {
     mod = await import("@/app/functions/system/openArchive");
     break;
 
+  case "functions/system/openSettings":
+  mod = await import("@/app/functions/system/openSettings");
+  break;  
+
   case "functions/download/csvDownload":
     mod = await import("@/app/functions/download/csvDownload");
     break;
