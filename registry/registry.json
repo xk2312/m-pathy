@@ -27,7 +27,7 @@
   "category": "system",
   "state": "active",
   "command": "open_settings",
-  "path": "functions/system/openSettings",
+  "path": null,
   "ui": {
     "icon": "settings",
     "label": "Settings",

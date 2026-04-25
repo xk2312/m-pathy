@@ -24,7 +24,6 @@ async function executeCommand(command: string) {
 
     // 👉 UI-only commands (kein path)
 if (!entry.path) {
-  console.warn("[Dispatcher] UI command – skipping execution:", command);
   return;
 }
 
