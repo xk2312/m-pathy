@@ -1,9 +1,3 @@
-// app/functions/system/openSettings.ts
-
-export default async function openSettings() {
-  window.dispatchEvent(
-    new CustomEvent("mpathy:command", {
-      detail: { command: "open_settings" },
-    })
-  );
+export default function openSettings() {
+  window.dispatchEvent(new CustomEvent("mpathy:settings:open"));
 }

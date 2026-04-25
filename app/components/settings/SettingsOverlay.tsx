@@ -94,21 +94,12 @@ export default function SettingsOverlay() {
 useEffect(() => {
   log("MOUNT");
 
-  function handleCommand(event: any) {
-    const cmd = event?.detail?.command;
+  function handleOpen() {
+  log("EVENT → open settings received");
+  setIsOpen(true);
+}
 
-    console.log("[SETTINGS LISTENER HIT]", cmd); // 👈 HIER
-
-    log("EVENT RAW", cmd);
-
-    if (cmd === "open_settings") {
-      log("EVENT → open settings received");
-      setIsOpen(true);
-    }
-  }
-
-  window.addEventListener("mpathy:command", handleCommand);
-
+window.addEventListener("mpathy:settings:open", handleOpen);
   (async () => {
     const data = await loadUserRegistry();
 
@@ -124,8 +115,8 @@ useEffect(() => {
   })();
 
   return () => {
-    window.removeEventListener("mpathy:command", handleCommand);
-  };
+  window.removeEventListener("mpathy:settings:open", handleOpen);
+};
 }, []);
 
 /**
