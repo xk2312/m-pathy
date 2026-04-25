@@ -60,22 +60,17 @@ export default function MobileOverlay({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-      // CLOSE on Settings Command
-    useEffect(() => {
-      function handleCommand(e: any) {
-        const cmd = e?.detail?.command;
+      useEffect(() => {
+  function handleSettingsOpen() {
+    onClose();
+  }
 
-        if (cmd === "open_settings") {
-          onClose();
-        }
-      }
+  window.addEventListener("mpathy:settings:open", handleSettingsOpen);
 
-      window.addEventListener("mpathy:command", handleCommand);
-
-      return () => {
-        window.removeEventListener("mpathy:command", handleCommand);
-      };
-    }, [onClose]);
+  return () => {
+    window.removeEventListener("mpathy:settings:open", handleSettingsOpen);
+  };
+}, [onClose]);
 
   if (!open) return null;
 

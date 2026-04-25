@@ -135,6 +135,8 @@ const handleClose = () => {
 
   setIsOpen(false);
 
+  window.dispatchEvent(new CustomEvent("mpathy:mobile:open"));
+
   if (!registry) {
     log("STATE → no registry to reset");
     return;
