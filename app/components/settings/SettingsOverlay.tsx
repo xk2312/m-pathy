@@ -94,13 +94,14 @@ export default function SettingsOverlay() {
 useEffect(() => {
   log("MOUNT");
 
-function handleOpen() {
-  console.log("[SETTINGS EVENT RECEIVED]");
-  log("EVENT → open settings received");
-  setIsOpen(true);
-}
+  function handleOpen() {
+    console.log("[SETTINGS EVENT RECEIVED]");
+    log("EVENT → open settings received");
+    setIsOpen(true);
+  }
 
-window.addEventListener("mpathy:settings:open", handleOpen);
+  window.addEventListener("mpathy:settings:open", handleOpen);
+
   (async () => {
     const data = await loadUserRegistry();
 
@@ -116,8 +117,8 @@ window.addEventListener("mpathy:settings:open", handleOpen);
   })();
 
   return () => {
-  window.removeEventListener("mpathy:settings:open", handleOpen);
-};
+    window.removeEventListener("mpathy:settings:open", handleOpen);
+  };
 }, []);
 
 /**
@@ -238,7 +239,7 @@ const COLOR = {
 
 const portalTarget =
   typeof document !== "undefined" ? document.body : null;
-
+console.log("[SETTINGS RENDER]", isOpen);
 if (!portalTarget) return null;
 
 return createPortal(

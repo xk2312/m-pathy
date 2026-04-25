@@ -83,6 +83,7 @@ import { readArchiveChatContext, clearArchiveChatContext } from "@/lib/storage";
 import '@/lib/archiveChatPreparationListener'
 import type { ChatMessage, Role } from "@/lib/types";
 import { initCommandDispatcher } from "@/lib/dispatcher/commandDispatcher";
+import OverlayHost from "@/components/overlay/OverlayHost";
 
 // Kompatibler Alias – damit restlicher Code unverändert bleiben kann
 const persist = {
@@ -3450,6 +3451,7 @@ const withGate = (fn: () => void) => {
 
 </main>
 
+<OverlayHost />
 
   </LanguageProvider>
 )
