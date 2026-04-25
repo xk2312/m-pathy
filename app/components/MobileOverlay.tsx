@@ -60,19 +60,6 @@ export default function MobileOverlay({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-      useEffect(() => {
-  function handleSettingsOpen() {
-  setTimeout(() => {
-    onClose();
-  }, 0);
-}
-
-  window.addEventListener("mpathy:settings:open", handleSettingsOpen);
-
-  return () => {
-    window.removeEventListener("mpathy:settings:open", handleSettingsOpen);
-  };
-}, [onClose]);
 
   if (!open) return null;
 
