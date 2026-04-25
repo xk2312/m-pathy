@@ -62,8 +62,10 @@ export default function MobileOverlay({
 
       useEffect(() => {
   function handleSettingsOpen() {
+  setTimeout(() => {
     onClose();
-  }
+  }, 0);
+}
 
   window.addEventListener("mpathy:settings:open", handleSettingsOpen);
 
