@@ -166,15 +166,7 @@ const isDirty = (() => {
 useEffect(() => {
   log("MOUNT");
 
-  function handleOpen() {
-    console.log("[SETTINGS EVENT RECEIVED]");
-    log("EVENT → open settings received");
-    setIsOpen(true);
-  }
-
-  window.addEventListener("mpathy:settings:open", handleOpen);
-
-  (async () => {
+  async function init() {
     const data = await loadUserRegistry();
 
     if (!data) {
@@ -182,12 +174,26 @@ useEffect(() => {
       return;
     }
 
-   setRegistry(data);
+    setRegistry(data);
     setDraft(data);
     setInitial(JSON.parse(JSON.stringify(data)));
 
     log("INIT → state set", data);
-  })();
+  }
+
+  async function handleOpen() {
+    console.log("[SETTINGS EVENT RECEIVED]");
+    log("EVENT → open settings received");
+
+    await init(); // 🔥 CRITICAL FIX
+
+    setIsOpen(true);
+  }
+
+  window.addEventListener("mpathy:settings:open", handleOpen);
+
+  // initial load (optional, aber safe)
+  init();
 
   return () => {
     window.removeEventListener("mpathy:settings:open", handleOpen);
