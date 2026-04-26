@@ -140,7 +140,6 @@ export default function SettingsOverlay() {
    */
 
 const [isOpen, setIsOpen] = useState(false);
-const [isClosing, setIsClosing] = useState(false);
 const [registry, setRegistry] = useState<UserRegistry | null>(null);
 const [draft, setDraft] = useState<UserRegistry | null>(null);
 const [initial, setInitial] = useState<UserRegistry | null>(null);
@@ -183,8 +182,6 @@ useEffect(() => {
   }
 
   async function handleOpen() {
-  if (isClosing) return; // 🔥 CRITICAL FIX
-
   console.log("[SETTINGS EVENT RECEIVED]");
   log("EVENT → open settings received");
 
@@ -214,8 +211,6 @@ const handleOpen = () => {
 
 const handleClose = () => {
   log("UI → close overlay");
-
-  setIsClosing(true);
   setIsOpen(false);
 
   if (!registry) {
@@ -235,9 +230,6 @@ const handleClose = () => {
     }, 0);
   }
 };
-setTimeout(() => {
-  setIsClosing(false);
-}, 150);
 
 const handleChange = (path: string, value: any) => {
   if (!draft) return;
@@ -348,30 +340,34 @@ if (!portalTarget) return null;
 
 return createPortal(
   <div
-    style={{
-      position: "fixed",
-      inset: 0,
-      zIndex: 9999,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      background: "#080808",
-      padding: "24px",
-      overflowY: "auto",
-    }}
-  >
-    <div
-      style={{
-        width: "100%",
-        maxWidth: "640px",
-        background: "#121418",
-        borderRadius: "20px",
-        padding: "32px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "32px",
-      }}
-    >
+  style={{
+    position: "fixed",
+    inset: 0,
+    zIndex: 9999,
+    pointerEvents: "auto", // 🔥 sicherstellen
+
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "#080808",
+    padding: "24px",
+    overflowY: "auto",
+  }}
+>
+   <div
+  style={{
+    width: "100%",
+    maxWidth: "640px",
+    background: "#121418",
+    borderRadius: "20px",
+    padding: "32px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "32px",
+    position: "relative",
+    zIndex: 2, // 🔥 Panel über allem
+  }}
+>
       
       {/* HEADER */}
       <div
@@ -396,6 +392,8 @@ return createPortal(
             color: "#aaa",
             background: "transparent",
             border: "none",
+             position: "relative",
+            zIndex: 3333, // 🔥 immer top
             cursor: "pointer",
             fontSize: "18px",
           }}
