@@ -61,13 +61,40 @@ async function loadUserRegistry(): Promise<UserRegistry | null> {
       req.onerror = () => reject(req.error);
     });
 
-    if (!result) {
-      warn("LOAD → empty");
-      return null;
-    }
+   if (!result) {
+  warn("LOAD → empty");
+  return null;
+}
 
-    log("LOAD → success", result);
-    return result;
+/**
+ * RUNTIME NORMALIZATION (SAFE)
+ */
+if (!result.infrastructure) {
+  result.infrastructure = {};
+}
+
+if (!result.infrastructure.server) {
+  result.infrastructure.server = {};
+}
+
+if (typeof result.infrastructure.server !== "object") {
+  result.infrastructure.server = { url: result.infrastructure.server };
+}
+
+if (!("url" in result.infrastructure.server)) {
+  result.infrastructure.server.url = "";
+}
+
+if (!("api_key" in result.infrastructure.server)) {
+  result.infrastructure.server.api_key = "";
+}
+
+if (!("status" in result.infrastructure.server)) {
+  result.infrastructure.server.status = "unknown";
+}
+
+log("LOAD → success", result);
+return result;
 
   } catch (err) {
     warn("LOAD → failed", err);
