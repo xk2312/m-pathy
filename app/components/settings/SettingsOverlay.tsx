@@ -142,18 +142,19 @@ export default function SettingsOverlay() {
 const [isOpen, setIsOpen] = useState(false);
 const [registry, setRegistry] = useState<UserRegistry | null>(null);
 const [draft, setDraft] = useState<UserRegistry | null>(null);
+const [initial, setInitial] = useState<UserRegistry | null>(null);
 
 const [isSaving, setIsSaving] = useState(false);
 const [isSaved, setIsSaved] = useState(false);
 
 const isDirty = (() => {
-  if (!draft || !registry) return false;
+  if (!draft || !initial) return false;
 
   return (
-    draft.profile?.name !== registry.profile?.name ||
-    String(draft.profile?.tone ?? "") !== String(registry.profile?.tone ?? "") ||
-    draft.infrastructure?.server?.url !== registry.infrastructure?.server?.url ||
-    draft.infrastructure?.server?.api_key !== registry.infrastructure?.server?.api_key
+    draft.profile?.name !== initial.profile?.name ||
+    String(draft.profile?.tone ?? "") !== String(initial.profile?.tone ?? "") ||
+    draft.infrastructure?.server?.url !== initial.infrastructure?.server?.url ||
+    draft.infrastructure?.server?.api_key !== initial.infrastructure?.server?.api_key
   );
 })();
 
@@ -181,8 +182,9 @@ useEffect(() => {
       return;
     }
 
-    setRegistry(data);
+   setRegistry(data);
     setDraft(data);
+    setInitial(JSON.parse(JSON.stringify(data)));
 
     log("INIT → state set", data);
   })();
@@ -257,6 +259,7 @@ const handleSave = async () => {
 
   setRegistry(updated);
   setDraft(updated);
+  setInitial(JSON.parse(JSON.stringify(updated)));
 
   setIsSaving(false);
   setIsSaved(true);
@@ -443,7 +446,6 @@ return createPortal(
 
 </div>
 
-{/* SECURITY */}
 {/* SECURITY */}
 <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
   
