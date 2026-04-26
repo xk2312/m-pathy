@@ -224,10 +224,12 @@ const handleClose = () => {
 
   log("STATE → draft reset", reset);
 
-  // 🔥 defer to next frame
-  setTimeout(() => {
-    window.dispatchEvent(new CustomEvent("mpathy:mobile:open"));
-  }, 0);
+  // 🔥 ONLY trigger mobile overlay on small screens
+  if (typeof window !== "undefined" && window.innerWidth < 1024) {
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("mpathy:mobile:open"));
+    }, 0);
+  }
 };
 
 const handleChange = (path: string, value: any) => {
