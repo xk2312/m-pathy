@@ -140,6 +140,7 @@ export default function SettingsOverlay() {
    */
 
 const [isOpen, setIsOpen] = useState(false);
+const [isClosing, setIsClosing] = useState(false);
 const [registry, setRegistry] = useState<UserRegistry | null>(null);
 const [draft, setDraft] = useState<UserRegistry | null>(null);
 const [initial, setInitial] = useState<UserRegistry | null>(null);
@@ -182,13 +183,15 @@ useEffect(() => {
   }
 
   async function handleOpen() {
-    console.log("[SETTINGS EVENT RECEIVED]");
-    log("EVENT → open settings received");
+  if (isClosing) return; // 🔥 CRITICAL FIX
 
-    await init(); // 🔥 CRITICAL FIX
+  console.log("[SETTINGS EVENT RECEIVED]");
+  log("EVENT → open settings received");
 
-    setIsOpen(true);
-  }
+  await init();
+
+  setIsOpen(true);
+}
 
   window.addEventListener("mpathy:settings:open", handleOpen);
 
@@ -212,6 +215,7 @@ const handleOpen = () => {
 const handleClose = () => {
   log("UI → close overlay");
 
+  setIsClosing(true);
   setIsOpen(false);
 
   if (!registry) {
@@ -231,6 +235,9 @@ const handleClose = () => {
     }, 0);
   }
 };
+setTimeout(() => {
+  setIsClosing(false);
+}, 150);
 
 const handleChange = (path: string, value: any) => {
   if (!draft) return;
