@@ -139,9 +139,15 @@ export default function SettingsOverlay() {
    * STATE
    */
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [registry, setRegistry] = useState<UserRegistry | null>(null);
-  const [draft, setDraft] = useState<UserRegistry | null>(null);
+const [isOpen, setIsOpen] = useState(false);
+const [registry, setRegistry] = useState<UserRegistry | null>(null);
+const [draft, setDraft] = useState<UserRegistry | null>(null);
+
+const [isSaving, setIsSaving] = useState(false);
+const [isSaved, setIsSaved] = useState(false);
+
+const isDirty =
+  JSON.stringify(draft) !== JSON.stringify(registry);
 
 
  /**
@@ -227,7 +233,10 @@ const handleChange = (path: string, value: any) => {
 };
 
 const handleSave = async () => {
-  if (!draft) return;
+  if (!draft || !isDirty) return;
+
+  setIsSaving(true);
+  setIsSaved(false);
 
   log("ACTION → save triggered");
 
@@ -240,6 +249,13 @@ const handleSave = async () => {
 
   setRegistry(updated);
   setDraft(updated);
+
+  setIsSaving(false);
+  setIsSaved(true);
+
+  setTimeout(() => {
+    setIsSaved(false);
+  }, 1500);
 
   log("STATE → persisted", updated);
 };
@@ -539,20 +555,27 @@ return createPortal(
       {/* ACTIONS */}
       <div style={{ display: "flex", gap: "12px" }}>
         
-        <button
-          onClick={handleSave}
-          style={{
-            padding: "13px 22px",
-            borderRadius: "12px",
-            background: "#53E9FD",
-            color: "#000",
-            border: "none",
-            cursor: "pointer",
-            fontWeight: 500,
-          }}
-        >
-          Save
-        </button>
+       <button
+  onClick={handleSave}
+  disabled={!isDirty || isSaving}
+  style={{
+    padding: "13px 22px",
+    borderRadius: "12px",
+    background: !isDirty
+      ? "#2a2a2a"
+      : isSaved
+      ? "#4CAF50"
+      : "#53E9FD",
+    color: !isDirty ? "#777" : "#000",
+    border: "none",
+    cursor: !isDirty ? "not-allowed" : "pointer",
+    fontWeight: 500,
+    transition: "all 0.2s ease",
+    opacity: isSaving ? 0.7 : 1,
+  }}
+>
+  {isSaving ? "Saving..." : isSaved ? "Saved" : "Save"}
+</button>
 
         <button
           onClick={handleClose}
