@@ -146,8 +146,16 @@ const [draft, setDraft] = useState<UserRegistry | null>(null);
 const [isSaving, setIsSaving] = useState(false);
 const [isSaved, setIsSaved] = useState(false);
 
-const isDirty =
-  JSON.stringify(draft) !== JSON.stringify(registry);
+const isDirty = (() => {
+  if (!draft || !registry) return false;
+
+  return (
+    draft.profile?.name !== registry.profile?.name ||
+    String(draft.profile?.tone ?? "") !== String(registry.profile?.tone ?? "") ||
+    draft.infrastructure?.server?.url !== registry.infrastructure?.server?.url ||
+    draft.infrastructure?.server?.api_key !== registry.infrastructure?.server?.api_key
+  );
+})();
 
 
  /**
