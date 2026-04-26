@@ -45,29 +45,59 @@ async function loadUserRegistry(): Promise<UserRegistry | null> {
   log("LOAD → start");
 
   try {
-    const raw = localStorage.getItem("mpathy:user_registry");
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open("MpathyRuntime");
 
-    if (!raw) {
-      warn("LOAD → no registry found");
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve(request.result);
+    });
+
+    const tx = db.transaction("user", "readonly");
+    const store = tx.objectStore("user");
+
+    const result = await new Promise<any>((resolve, reject) => {
+      const req = store.get("registry");
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+
+    if (!result) {
+      warn("LOAD → empty");
       return null;
     }
 
-    const parsed = JSON.parse(raw);
-    log("LOAD → success", parsed);
+    log("LOAD → success", result);
+    return result;
 
-    return parsed;
   } catch (err) {
     warn("LOAD → failed", err);
     return null;
   }
 }
 
+
 async function saveUserRegistry(registry: UserRegistry) {
   log("SAVE → start", registry);
 
   try {
-    localStorage.setItem("mpathy:user_registry", JSON.stringify(registry));
-    log("SAVE → success");
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open("MpathyRuntime");
+
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve(request.result);
+    });
+
+    const tx = db.transaction("user", "readwrite");
+    const store = tx.objectStore("user");
+
+    store.put(registry, "registry");
+
+    await new Promise((resolve, reject) => {
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => reject(tx.error);
+    });
+
+    log("SAVE → success (IndexedDB)");
   } catch (err) {
     warn("SAVE → failed", err);
   }
