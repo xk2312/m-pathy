@@ -117,21 +117,45 @@ export default function MobileOverlay({
             background: "#0c0c0c",          
           }}
         >
-                   <button
+        <button
           onClick={onClose}
           aria-label="Overlay schließen"
           style={{
             position: "absolute",
-            top: 16,
-            right: 16,
-            padding: "6px 12px",
+            top: 12,
+            right: 12,
+            zIndex: 10,
+
+            // 🔥 größere Klickfläche
+            padding: "10px 14px",
+            minWidth: 44,
+            minHeight: 44,
+
             borderRadius: 999,
-            border: "1px solid rgba(148,163,184,0.6)",
-            background: "transparent",
-            color: "#e6f0f3",
-            fontSize: 12,
-            fontWeight: 600,
-            cursor: "pointer",           // 👈 NEU
+            border: "1px solid rgba(255,255,255,0.15)",
+
+            background: "rgba(255,255,255,0.02)",
+            color: "#F5F6F7",
+
+            fontSize: 13,
+            fontWeight: 500,
+
+            cursor: "pointer",
+            transition: "all 0.15s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "rgba(255,255,255,0.06)";
+            e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+            e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.boxShadow = "0 0 0 2px #53E9FD";
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.boxShadow = "none";
           }}
         >
           Close

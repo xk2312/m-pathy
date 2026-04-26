@@ -214,8 +214,6 @@ const handleClose = () => {
 
   setIsOpen(false);
 
-  window.dispatchEvent(new CustomEvent("mpathy:mobile:open"));
-
   if (!registry) {
     log("STATE → no registry to reset");
     return;
@@ -225,6 +223,11 @@ const handleClose = () => {
   setDraft(reset);
 
   log("STATE → draft reset", reset);
+
+  // 🔥 defer to next frame
+  setTimeout(() => {
+    window.dispatchEvent(new CustomEvent("mpathy:mobile:open"));
+  }, 0);
 };
 
 const handleChange = (path: string, value: any) => {
