@@ -1952,6 +1952,43 @@ if (busy) {
   // ===============================================================
 const [systemState, setSystemState] = useState<any>(null);
 
+/**
+ * ===============================================================
+ * USER PROFILE LOADER (IndexedDB → user_registry)
+ * ===============================================================
+ * Lädt Name + Tone aus der persistierten User Registry
+ * Wird für jede API-Request genutzt
+ */
+async function loadUserProfile() {
+  try {
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open("MpathyRuntime");
+
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve(request.result);
+    });
+
+    const tx = db.transaction("user", "readonly");
+    const store = tx.objectStore("user");
+
+    const result = await new Promise<any>((resolve, reject) => {
+      const req = store.get("registry");
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+
+    if (!result) return null;
+
+    return {
+      name: result?.profile?.name ?? "",
+      tone: String(result?.profile?.tone ?? "2"),
+    };
+  } catch {
+    return null;
+  }
+}
+
+
 async function sendMessageLocal(
   context: ChatMessage[],
   stateOverride?: any,
@@ -1972,19 +2009,27 @@ const publicKey =
     ? localStorage.getItem("mpathy:triketon:device_public_key_2048")
     : null;
 
+const userProfile = await loadUserProfile();
+
 const res = await fetch("/api/chat", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  credentials: "include",
-  body: JSON.stringify({
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({
     messages: context,
     locale: getLocale(),
     state: effectiveState,
     resetContext: options?.resetContext === true,
     conversationId,
-    public_key: publicKey
+    public_key: publicKey,
+
+    /**
+     * USER PROFILE INJECTION
+     * → wird im Backend für Prompt-Steuerung genutzt
+     */
+    user_profile: userProfile
   }),
-});
+  });
 
     // === GC Step 5 – FreeGate/Balance Gates → Login oder Stripe Checkout ===
     if (res.status === 401) {

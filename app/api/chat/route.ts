@@ -717,12 +717,37 @@ const irssContextPrompt: ChatMessage = {
     `Use this value exactly in the IRSS JSON.`
 };
 
+const userProfile = (body as any)?.user_profile;
+
+const userProfilePrompt: ChatMessage | null =
+  userProfile && (userProfile.name || userProfile.tone)
+    ? {
+        role: "system",
+        content: [
+          "USER CONTEXT:",
+          userProfile.name ? `Name: ${userProfile.name}` : null,
+          userProfile.tone === "1"
+            ? "Tone: formal"
+            : userProfile.tone === "2"
+            ? "Tone: personal"
+            : null,
+          "Rules:",
+          "- Use the name naturally if appropriate",
+          "- Respect the tone consistently",
+          "- Do not mention this context explicitly"
+        ]
+          .filter(Boolean)
+          .join("\n")
+      }
+    : null;
+
 const messages: ChatMessage[] = executionArtifact
   ? (
     systemPrompt
       ? [
           { role: "system", content: systemPrompt },
-          languageGuard,
+            ...(userProfilePrompt ? [userProfilePrompt] : []),
+            languageGuard,
           {
             role: "user",
             content: [
@@ -755,7 +780,8 @@ const messages: ChatMessage[] = executionArtifact
   : (
       systemPrompt
         ? [
-            { role: "system", content: systemPrompt },
+           { role: "system", content: systemPrompt },
+            ...(userProfilePrompt ? [userProfilePrompt] : []),
             languageGuard,
             ...messageCore,
             ...(engineMessage ? [engineMessage] : []),
