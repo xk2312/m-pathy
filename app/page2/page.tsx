@@ -2691,8 +2691,8 @@ sendMessageLocal(injectedContext)
 
     // 2️⃣ Text progressiv aufbauen
     const fullText = assistant.content ?? "";
-    const CHUNK_SIZE = 2;
-    const TICK_MS = 16;
+    const CHUNK_SIZE = 12;
+    const TICK_MS = 8;
     let firstChunkRendered = false;
 
     (async () => {
@@ -2849,8 +2849,8 @@ const assistantMsg = {
 
 // 2) Inhalt schrittweise aufbauen (visuell gestreamt)
 const fullText = assistant.content ?? "";
-const CHUNK_SIZE = 2;
-const TICK_MS = 16;
+const CHUNK_SIZE = 12;
+const TICK_MS = 8;
 
 const streamAssistant = async () => {
   let firstChunkRendered = false;
@@ -2879,9 +2879,8 @@ const streamAssistant = async () => {
       return next;
     });
 
-    // 🧠 kurze Pause + Repaint erlauben → echte sichtbare Chunks
+    // 🧠 kurze Pause ohne requestAnimationFrame, damit der Stream auch bei Tabwechsel weiterläuft
     await new Promise((r) => setTimeout(r, TICK_MS));
-    await new Promise(requestAnimationFrame);
   }
 };
 
