@@ -2855,8 +2855,16 @@ const TICK_MS = 8;
 const streamAssistant = async () => {
   let firstChunkRendered = false;
 
-  for (let i = 0; i < fullText.length; i += CHUNK_SIZE) {
-    const chunk = fullText.slice(i, i + CHUNK_SIZE);
+  for (let i = 0; i < fullText.length;) {
+    const hidden =
+      typeof document !== "undefined" &&
+      document.visibilityState === "hidden";
+
+    const chunk = hidden
+      ? fullText.slice(i)
+      : fullText.slice(i, i + CHUNK_SIZE);
+
+    i += chunk.length;
 
     setMessages((prev) => {
       const base = Array.isArray(prev) ? prev : [];
@@ -2879,8 +2887,9 @@ const streamAssistant = async () => {
       return next;
     });
 
-    // 🧠 kurze Pause ohne requestAnimationFrame, damit der Stream auch bei Tabwechsel weiterläuft
-    await new Promise((r) => setTimeout(r, TICK_MS));
+    if (!hidden) {
+      await new Promise((r) => setTimeout(r, TICK_MS));
+    }
   }
 };
 
