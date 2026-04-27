@@ -43,12 +43,13 @@ const apiVersion = process.env.AZURE_OPENAI_API_VERSION ?? "";
 const MODEL_MAX_TOKENS = parseInt(process.env.MODEL_MAX_TOKENS ?? "512", 10);
 const GPTX_MAX_CHARS = parseInt(process.env.GPTX_MAX_CHARS ?? "32000", 10);
 const MAX_PAYLOAD_BYTES = parseInt(process.env.MAX_PAYLOAD_BYTES ?? "120000", 10);
+const MAX_CONTEXT_MESSAGES = parseInt(process.env.MAX_CONTEXT_MESSAGES ?? "20", 10);
 
 console.log("ENV DEBUG");
 console.log("MODEL_MAX_TOKENS:", MODEL_MAX_TOKENS);
 console.log("GPTX_MAX_CHARS:", GPTX_MAX_CHARS);
 console.log("MAX_PAYLOAD_BYTES:", MAX_PAYLOAD_BYTES);
-console.log("MAX_CONTEXT_MESSAGES:", process.env.MAX_CONTEXT_MESSAGES);
+console.log("MAX_CONTEXT_MESSAGES:", MAX_CONTEXT_MESSAGES);
 
 // FreeGate-ENV
 const FREE_LIMIT   = parseInt(process.env.FREE_LIMIT ?? "9", 10);
@@ -651,7 +652,7 @@ const engineMessage: ChatMessage | null = engineResult.active
     })()
   : null;
 
-const messageCore: ChatMessage[] = body.messages;
+const messageCore: ChatMessage[] = body.messages.slice(-MAX_CONTEXT_MESSAGES);
 
 const executionArtifact =
   typeof (global as any).__m13ExecutionArtifact === "object" &&

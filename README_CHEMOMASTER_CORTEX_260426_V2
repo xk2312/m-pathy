@@ -1,0 +1,2875 @@
+Prompt: 43
+Driftstatus: nicht driftend
+
+```markdown
+# CHEMOMASTER KNOWLEDGE CHUNKS
+
+## CHUNK 01
+
+id: compound_identity_v1
+type: knowledge_unit
+
+fields:
+  - compound_name
+  - canonical_name
+  - slug
+  - compound_class
+  - primary_category
+  - secondary_category
+  - known_aliases
+
+validation:
+  required:
+    - compound_name
+    - canonical_name
+    - compound_class
+
+reasoning_use:
+  - identify compound
+  - normalize naming
+  - prevent duplicate substance entries
+  - map aliases to canonical compound
+```
+
+```markdown
+## CHUNK 02
+
+id: compound_effect_profile_v1
+type: knowledge_unit
+
+fields:
+  - effect_reference
+  - primary_effects
+  - secondary_effects
+  - psychoactive_potential
+  - anti_inflammatory_potential
+  - analgesic_potential
+  - anti_emetic_potential
+  - anxiolytic_potential
+  - sedative_potential
+
+validation:
+  required:
+    - effect_reference
+    - primary_effects
+
+reasoning_use:
+  - summarize expected effects
+  - separate primary and secondary effects
+  - support compound comparison
+  - support condition matching
+```
+
+```markdown
+## CHUNK 03
+
+id: pharmacokinetic_profile_v1
+type: knowledge_unit
+
+fields:
+  - cmax_mcg_ml
+  - tmax_minutes
+  - half_life_hours
+  - bioavailability_fraction
+  - metabolic_stability
+  - bioavailability_index
+
+validation:
+  ranges:
+    bioavailability_fraction: 0..1
+    bioavailability_index: 0..1
+    metabolic_stability: 0..1
+
+reasoning_use:
+  - estimate onset
+  - estimate duration
+  - compare absorption profile
+  - support therapeutic scoring
+```
+
+```markdown
+## CHUNK 04
+
+id: safety_profile_v1
+type: knowledge_unit
+
+fields:
+  - toxicity_index
+  - known_adverse_effects
+  - contraindications
+  - regulatory_warnings
+  - risk_factor
+
+validation:
+  ranges:
+    toxicity_index: 0..1
+    risk_factor: 0..1
+
+reasoning_use:
+  - detect safety concerns
+  - identify contraindications
+  - support risk-aware recommendations
+  - explain uncertainty and caution
+```
+
+```markdown
+## CHUNK 05
+
+id: patient_response_profile_v1
+type: knowledge_unit
+
+fields:
+  - reported_efficacy
+  - reported_side_effects
+  - patient_satisfaction_score
+  - sample_size
+
+validation:
+  ranges:
+    reported_efficacy: 0..1
+    patient_satisfaction_score: 0..1
+  required:
+    - reported_efficacy
+    - sample_size
+
+reasoning_use:
+  - include empirical response data
+  - weigh reported benefit
+  - detect low-sample uncertainty
+  - compare patient-facing relevance
+```
+Prompt: 44
+Driftstatus: nicht driftend
+
+```markdown id="k8m2qx"
+## CHUNK 06
+
+id: genetic_interaction_profile_v1
+type: knowledge_unit
+
+fields:
+  - snp_associations
+  - effect_modifiers
+  - population_prevalence
+  - receptor_sensitivity_notes
+
+validation:
+  required:
+    - snp_associations
+    - effect_modifiers
+
+reasoning_use:
+  - identify genotype-linked variability
+  - explain differential response
+  - support personalized interpretation
+  - flag population-dependent uncertainty
+```
+
+```markdown id="q9v4sz"
+## CHUNK 07
+
+id: cultivar_specificity_v1
+type: knowledge_unit
+
+fields:
+  - cultivars
+  - variance_in_therapeutic_score
+  - cultivar_variance_score
+  - phenotype_notes
+
+validation:
+  ranges:
+    variance_in_therapeutic_score: 0..1
+    cultivar_variance_score: 0..1
+
+reasoning_use:
+  - connect compound effects to cultivar context
+  - detect cultivar-dependent variance
+  - avoid overgeneralized compound claims
+  - support strain-specific interpretation
+```
+
+```markdown id="t5b0re"
+## CHUNK 08
+
+id: synergy_confidence_v1
+type: scoring_unit
+
+inputs:
+  - entourage_score
+  - terpene_weight
+  - cannabinoid_weight
+  - flavonoid_weight
+  - empirical_modifier
+
+output:
+  - synergy_confidence_score
+
+formula:
+  synergy_confidence_score = weighted_interaction_confidence(
+    entourage_score,
+    terpene_weight,
+    cannabinoid_weight,
+    flavonoid_weight,
+    empirical_modifier
+  )
+
+validation:
+  ranges:
+    entourage_score: 0..1
+    terpene_weight: 0..1
+    cannabinoid_weight: 0..1
+    flavonoid_weight: 0..1
+    empirical_modifier: 0..1
+    synergy_confidence_score: 0..1
+
+reasoning_use:
+  - estimate interaction confidence
+  - compare entourage relevance
+  - detect weak synergy evidence
+  - support compound combination analysis
+```
+
+```markdown id="z2r7hn"
+## CHUNK 09
+
+id: evidence_strength_v1
+type: scoring_unit
+
+inputs:
+  - clinical_evidence_level
+  - preclinical_evidence_level
+  - empirical_response_quality
+  - sample_size
+  - source_consistency
+
+output:
+  - evidence_strength
+
+validation:
+  ranges:
+    evidence_strength: 0..1
+    source_consistency: 0..1
+  required:
+    - evidence_strength
+
+reasoning_use:
+  - weigh reliability of claims
+  - separate strong evidence from weak evidence
+  - support cautious conclusions
+  - prioritize better-supported compounds
+```
+
+```markdown id="p3d9ku"
+## CHUNK 10
+
+id: clinical_confidence_index_v1
+type: scoring_unit
+
+inputs:
+  - evidence_strength
+  - reported_efficacy
+  - clinical_safety_profile
+  - sample_size
+  - source_consistency
+
+output:
+  - clinical_confidence_index
+
+formula:
+  clinical_confidence_index = confidence_from(
+    evidence_strength,
+    reported_efficacy,
+    clinical_safety_profile,
+    sample_size,
+    source_consistency
+  )
+
+validation:
+  ranges:
+    evidence_strength: 0..1
+    reported_efficacy: 0..1
+    clinical_confidence_index: 0..1
+
+reasoning_use:
+  - estimate clinical confidence
+  - identify evidence-supported use cases
+  - reduce speculative conclusions
+  - support confidence-ranked outputs
+```
+
+```markdown id="d6xp0a"
+## CHUNK 11
+
+id: therapeutic_score_v1
+type: scoring_unit
+
+inputs:
+  - entourage_score
+  - bioavailability_index
+  - cmax_mcg_ml
+  - metabolic_stability
+  - toxicity_index
+  - evidence_strength
+  - clinical_confidence_index
+  - global_confidence_index
+  - market_readiness_score
+  - commercial_confidence_index
+  - global_market_index
+  - global_strategic_index
+
+output:
+  - therapeutic_score
+
+formula:
+  therapeutic_score =
+    (
+      entourage_score
+      * bioavailability_index
+      * normalized_cmax_factor
+      * metabolic_stability
+    )
+    * (1 - toxicity_index)
+    * confidence_modifiers
+
+validation:
+  required:
+    - therapeutic_score
+  notes:
+    - therapeutic_score may exceed 1 if extended modifiers are applied
+    - all input confidence modifiers should remain within 0..1
+
+reasoning_use:
+  - rank therapeutic potential
+  - compare compounds under safety constraints
+  - expose modifier influence
+  - support transparent score explanation
+```
+
+```markdown id="m4e2yc"
+## CHUNK 12
+
+id: therapeutic_confidence_score_v1
+type: scoring_unit
+
+inputs:
+  - therapeutic_score
+  - clinical_confidence_index
+  - evidence_strength
+  - toxicity_index
+
+output:
+  - therapeutic_confidence_score
+
+formula:
+  therapeutic_confidence_score = normalize_confidence(
+    therapeutic_score,
+    clinical_confidence_index,
+    evidence_strength,
+    inverse(toxicity_index)
+  )
+
+validation:
+  ranges:
+    therapeutic_confidence_score: 0..1
+    clinical_confidence_index: 0..1
+    evidence_strength: 0..1
+    toxicity_index: 0..1
+
+reasoning_use:
+  - combine therapeutic potential with confidence
+  - avoid high-score low-evidence conclusions
+  - support evidence-aware ranking
+  - flag therapeutic uncertainty
+```
+Prompt: 45
+Driftstatus: nicht driftend
+
+```markdown id="n7f4qa"
+## CHUNK 13
+
+id: global_confidence_index_v1
+type: scoring_unit
+
+inputs:
+  - evidence_strength
+  - clinical_confidence_index
+  - therapeutic_confidence_score
+  - synergy_confidence_score
+  - source_consistency
+
+output:
+  - global_confidence_index
+
+formula:
+  global_confidence_index = weighted_mean(
+    evidence_strength,
+    clinical_confidence_index,
+    therapeutic_confidence_score,
+    synergy_confidence_score,
+    source_consistency
+  )
+
+validation:
+  ranges:
+    evidence_strength: 0..1
+    clinical_confidence_index: 0..1
+    therapeutic_confidence_score: 0..1
+    synergy_confidence_score: 0..1
+    source_consistency: 0..1
+    global_confidence_index: 0..1
+
+reasoning_use:
+  - consolidate reliability signals
+  - rank confidence across compounds
+  - reduce unsupported claims
+  - support confidence-aware retrieval
+```
+
+```markdown id="v2c8lm"
+## CHUNK 14
+
+id: market_readiness_score_v1
+type: scoring_unit
+
+inputs:
+  - regulatory_status
+  - clinical_confidence_index
+  - safety_profile
+  - formulation_readiness
+  - documentation_completeness
+
+output:
+  - market_readiness_score
+
+formula:
+  market_readiness_score = readiness_from(
+    regulatory_status,
+    clinical_confidence_index,
+    safety_profile,
+    formulation_readiness,
+    documentation_completeness
+  )
+
+validation:
+  ranges:
+    clinical_confidence_index: 0..1
+    formulation_readiness: 0..1
+    documentation_completeness: 0..1
+    market_readiness_score: 0..1
+
+reasoning_use:
+  - estimate readiness for applied deployment
+  - separate research potential from market feasibility
+  - identify blocking regulatory or documentation gaps
+  - support commercialization-aware reasoning
+```
+
+```markdown id="b9x1rd"
+## CHUNK 15
+
+id: commercial_confidence_index_v1
+type: scoring_unit
+
+inputs:
+  - market_readiness_score
+  - global_market_index
+  - demand_signal
+  - differentiation_score
+  - regulatory_risk
+
+output:
+  - commercial_confidence_index
+
+formula:
+  commercial_confidence_index = commercial_confidence_from(
+    market_readiness_score,
+    global_market_index,
+    demand_signal,
+    differentiation_score,
+    inverse(regulatory_risk)
+  )
+
+validation:
+  ranges:
+    market_readiness_score: 0..1
+    global_market_index: 0..1
+    demand_signal: 0..1
+    differentiation_score: 0..1
+    regulatory_risk: 0..1
+    commercial_confidence_index: 0..1
+
+reasoning_use:
+  - estimate commercial reliability
+  - distinguish viable opportunities from speculative ones
+  - include regulatory risk in interpretation
+  - support market-oriented comparison
+```
+
+```markdown id="h6w0te"
+## CHUNK 16
+
+id: global_market_index_v1
+type: scoring_unit
+
+inputs:
+  - market_readiness_score
+  - commercial_confidence_index
+  - demand_signal
+  - global_accessibility
+  - regulatory_risk
+
+output:
+  - global_market_index
+
+formula:
+  global_market_index = weighted_mean(
+    market_readiness_score,
+    commercial_confidence_index,
+    demand_signal,
+    global_accessibility,
+    inverse(regulatory_risk)
+  )
+
+validation:
+  ranges:
+    market_readiness_score: 0..1
+    commercial_confidence_index: 0..1
+    demand_signal: 0..1
+    global_accessibility: 0..1
+    regulatory_risk: 0..1
+    global_market_index: 0..1
+
+reasoning_use:
+  - estimate global market suitability
+  - compare international viability
+  - include access and regulation constraints
+  - support strategic prioritization
+```
+
+```markdown id="r0k9ys"
+## CHUNK 17
+
+id: strategic_value_index_v1
+type: scoring_unit
+
+inputs:
+  - therapeutic_score
+  - global_confidence_index
+  - global_market_index
+  - differentiation_score
+  - research_gap_score
+
+output:
+  - strategic_value_index
+
+formula:
+  strategic_value_index = weighted_mean(
+    normalize(therapeutic_score),
+    global_confidence_index,
+    global_market_index,
+    differentiation_score,
+    research_gap_score
+  )
+
+validation:
+  ranges:
+    global_confidence_index: 0..1
+    global_market_index: 0..1
+    differentiation_score: 0..1
+    research_gap_score: 0..1
+    strategic_value_index: 0..1
+
+reasoning_use:
+  - identify strategically relevant compounds
+  - balance science, confidence, market, and novelty
+  - prioritize candidates for deeper review
+  - support portfolio-level reasoning
+```
+
+```markdown id="u8q3bn"
+## CHUNK 18
+
+id: market_value_forecast_v1
+type: scoring_unit
+
+inputs:
+  - global_market_index
+  - strategic_value_index
+  - market_readiness_score
+  - commercial_confidence_index
+  - scenario_weight
+
+output:
+  - market_value_forecast
+
+formula:
+  market_value_forecast = weighted_mean(
+    global_market_index,
+    strategic_value_index,
+    market_readiness_score,
+    commercial_confidence_index,
+    scenario_weight
+  )
+
+validation:
+  ranges:
+    global_market_index: 0..1
+    strategic_value_index: 0..1
+    market_readiness_score: 0..1
+    commercial_confidence_index: 0..1
+    scenario_weight: 0..1.2
+    market_value_forecast: 0..1
+
+reasoning_use:
+  - estimate forecast strength
+  - compare expected market potential
+  - include scenario-dependent assumptions
+  - support investment-oriented interpretation
+```
+
+```markdown id="c1z5vo"
+## CHUNK 19
+
+id: global_strategic_index_v1
+type: scoring_unit
+
+inputs:
+  - strategic_value_index
+  - market_value_forecast
+  - global_market_index
+  - global_confidence_index
+  - differentiation_score
+
+output:
+  - global_strategic_index
+
+formula:
+  global_strategic_index = weighted_mean(
+    strategic_value_index,
+    market_value_forecast,
+    global_market_index,
+    global_confidence_index,
+    differentiation_score
+  )
+
+validation:
+  ranges:
+    strategic_value_index: 0..1
+    market_value_forecast: 0..1
+    global_market_index: 0..1
+    global_confidence_index: 0..1
+    differentiation_score: 0..1
+    global_strategic_index: 0..1
+
+reasoning_use:
+  - summarize global strategic relevance
+  - support compound prioritization
+  - identify high-value research or product candidates
+  - serve as input for downstream aggregate scores
+```
+Prompt: 46
+Driftstatus: nicht driftend
+
+```markdown id="m4d7rx"
+## CHUNK 20
+
+id: global_investment_index_v1
+type: scoring_unit
+
+inputs:
+  - global_strategic_index
+  - market_value_forecast
+  - strategic_value_index
+  - scenario_weight
+
+output:
+  - global_investment_index
+
+formula:
+  global_investment_index = (
+    0.3 * global_strategic_index +
+    0.3 * market_value_forecast +
+    0.2 * strategic_value_index +
+    0.2 * scenario_weight
+  )
+
+validation:
+  ranges:
+    global_strategic_index: 0..1
+    market_value_forecast: 0..1
+    strategic_value_index: 0..1
+    scenario_weight: 0..1.2
+    global_investment_index: 0..1
+
+reasoning_use:
+  - estimate investment potential
+  - combine strategy and market forecast
+  - include scenario-dependent assumptions
+  - support ranking under uncertainty
+```
+
+```markdown id="q2p9va"
+## CHUNK 21
+
+id: final_value_score_v1
+type: scoring_unit
+
+inputs:
+  - therapeutic_score
+  - global_strategic_index
+  - global_investment_index
+  - market_value_forecast
+
+output:
+  - final_value_score
+
+formula:
+  final_value_score = (
+    0.3 * normalize(therapeutic_score) +
+    0.3 * global_strategic_index +
+    0.2 * global_investment_index +
+    0.2 * market_value_forecast
+  )
+
+validation:
+  ranges:
+    therapeutic_score: non_negative
+    global_strategic_index: 0..1
+    global_investment_index: 0..1
+    market_value_forecast: 0..1
+    final_value_score: 0..1
+
+reasoning_use:
+  - produce compact final value estimate
+  - combine therapeutic and strategic signals
+  - support end-stage ranking
+  - reduce reliance on any single score
+```
+
+```markdown id="k8w6tc"
+## CHUNK 22
+
+id: global_impact_score_v1
+type: scoring_unit
+
+inputs:
+  - final_value_score
+  - global_investment_index
+  - patient_response_profile.reported_efficacy
+
+output:
+  - global_impact_score
+
+formula:
+  global_impact_score = (
+    0.4 * final_value_score +
+    0.3 * global_investment_index +
+    0.3 * patient_response_profile.reported_efficacy
+  )
+
+validation:
+  ranges:
+    final_value_score: 0..1
+    global_investment_index: 0..1
+    patient_response_profile.reported_efficacy: 0..1
+    global_impact_score: 0..1
+
+reasoning_use:
+  - estimate broad impact potential
+  - combine value, investment, and response signals
+  - support applied prioritization
+  - preserve patient-response influence
+```
+
+```markdown id="s7j1ne"
+## CHUNK 23
+
+id: ultimate_value_score_v1
+type: scoring_unit
+
+inputs:
+  - global_impact_score
+  - final_value_score
+  - global_strategic_index
+  - global_investment_index
+
+output:
+  - ultimate_value_score
+
+formula:
+  ultimate_value_score = (
+    0.3 * global_impact_score +
+    0.3 * final_value_score +
+    0.2 * global_strategic_index +
+    0.2 * global_investment_index
+  )
+
+validation:
+  ranges:
+    global_impact_score: 0..1
+    final_value_score: 0..1
+    global_strategic_index: 0..1
+    global_investment_index: 0..1
+    ultimate_value_score: 0..1
+
+reasoning_use:
+  - aggregate high-level value signals
+  - stabilize final compound ranking
+  - compare candidates across therapeutic and strategic dimensions
+  - reduce overfitting to market-only metrics
+```
+
+```markdown id="x9c0lb"
+## CHUNK 24
+
+id: global_resonance_score_v1
+type: scoring_unit
+
+inputs:
+  - ultimate_value_score
+  - evidence_strength
+  - clinical_confidence_index
+
+output:
+  - global_resonance_score
+
+formula:
+  global_resonance_score = (
+    0.4 * ultimate_value_score +
+    0.3 * evidence_strength +
+    0.3 * clinical_confidence_index
+  )
+
+validation:
+  ranges:
+    ultimate_value_score: 0..1
+    evidence_strength: 0..1
+    clinical_confidence_index: 0..1
+    global_resonance_score: 0..1
+
+reasoning_use:
+  - combine value with evidence confidence
+  - support science-weighted prioritization
+  - reduce weak-evidence amplification
+  - align high-value signals with clinical credibility
+```
+
+```markdown id="t5e3gp"
+## CHUNK 25
+
+id: global_harmony_score_v1
+type: scoring_unit
+
+inputs:
+  - global_resonance_score
+  - ultimate_value_score
+  - patient_response_profile.reported_efficacy
+
+output:
+  - global_harmony_score
+
+formula:
+  global_harmony_score = (
+    0.4 * global_resonance_score +
+    0.3 * ultimate_value_score +
+    0.3 * patient_response_profile.reported_efficacy
+  )
+
+validation:
+  ranges:
+    global_resonance_score: 0..1
+    ultimate_value_score: 0..1
+    patient_response_profile.reported_efficacy: 0..1
+    global_harmony_score: 0..1
+
+reasoning_use:
+  - combine evidence-weighted value with response signal
+  - support balanced clinical interpretation
+  - preserve response relevance in high-level synthesis
+  - help compare compounds with similar final scores
+```
+
+```markdown id="p3n6yw"
+## CHUNK 26
+
+id: global_synthesis_score_v1
+type: scoring_unit
+
+inputs:
+  - global_harmony_score
+  - global_resonance_score
+  - ultimate_value_score
+  - patient_response_profile.reported_efficacy
+
+output:
+  - global_synthesis_score
+
+formula:
+  global_synthesis_score = (
+    0.3 * global_harmony_score +
+    0.3 * global_resonance_score +
+    0.2 * ultimate_value_score +
+    0.2 * patient_response_profile.reported_efficacy
+  )
+
+validation:
+  ranges:
+    global_harmony_score: 0..1
+    global_resonance_score: 0..1
+    ultimate_value_score: 0..1
+    patient_response_profile.reported_efficacy: 0..1
+    global_synthesis_score: 0..1
+
+reasoning_use:
+  - synthesize upper-layer value signals
+  - smooth variance across adjacent aggregate metrics
+  - provide compact summary for dashboards
+  - support stable final comparison
+```
+
+```markdown id="z0v4ak"
+## CHUNK 27
+
+id: global_unity_score_v1
+type: scoring_unit
+
+inputs:
+  - global_synthesis_score
+  - global_harmony_score
+  - global_resonance_score
+  - patient_response_profile.reported_efficacy
+
+output:
+  - global_unity_score
+
+formula:
+  global_unity_score = (
+    0.3 * global_synthesis_score +
+    0.3 * global_harmony_score +
+    0.2 * global_resonance_score +
+    0.2 * patient_response_profile.reported_efficacy
+  )
+
+validation:
+  ranges:
+    global_synthesis_score: 0..1
+    global_harmony_score: 0..1
+    global_resonance_score: 0..1
+    patient_response_profile.reported_efficacy: 0..1
+    global_unity_score: 0..1
+
+reasoning_use:
+  - consolidate synthesis and harmony layers
+  - produce a stable upper-level index
+  - compare compounds after evidence and response integration
+  - reduce instability from individual subscore variance
+```
+## CHUNK 35
+
+id: global_omega_score_v1
+type: scoring_unit
+
+inputs:
+  - global_singularity_score
+  - global_nexus_score
+  - global_zenith_score
+  - therapeutic_score
+
+output:
+  - global_omega_score
+
+formula:
+  global_omega_score = (
+    0.3 * global_singularity_score +
+    0.3 * global_nexus_score +
+    0.2 * global_zenith_score +
+    0.2 * normalize(therapeutic_score)
+  )
+
+validation:
+  ranges:
+    global_singularity_score: 0..1
+    global_nexus_score: 0..1
+    global_zenith_score: 0..1
+    therapeutic_score: non_negative
+    global_omega_score: 0..1
+
+normalization:
+  therapeutic_score:
+    method: clamp_divide
+    divisor: 2
+    min: 0
+    max: 1
+
+reasoning_use:
+  - provide final compact aggregate
+  - combine final score families with therapeutic strength
+  - support terminal ranking and executive summaries
+  - serve as final score unless later schema explicitly supersedes it
+
+  Prompt: 49
+Driftstatus: nicht driftend
+
+```text
+🧩 CHUNK 36
+id: chemo_global_omega_score_v1
+type: aggregate_metric
+
+field:
+global_omega_score
+
+scale:
+min: 0
+max: 1
+
+definition:
+final synthetic score across validated high-level score layers
+
+inputs:
+- global_singularity_score
+- global_nexus_score
+- global_zenith_score
+- therapeutic_score_normalized
+
+formula:
+global_omega_score =
+  0.3 * global_singularity_score +
+  0.3 * global_nexus_score +
+  0.2 * global_zenith_score +
+  0.2 * therapeutic_score_normalized
+
+normalization:
+therapeutic_score_normalized =
+  normalize(therapeutic_score, 0, 2)
+
+validation:
+- validate_score(global_omega_score, 0.0, 1.0)
+- validate_required_inputs()
+- validate_numeric_range()
+
+on_error:
+log_anomaly('E5045', 'Invalid global omega score')
+trigger_recovery('partial')
+
+goal:
+final bounded synthesis metric
+```
+Prompt: 50
+Driftstatus: nicht driftend
+
+```text
+🧩 CHUNK 37
+id: chemo_coherence_delta_tracking_v1
+type: control_loop
+
+initial_state:
+previous_coherence_score: 0.92
+
+loop:
+FOR EACH iteration IN phase:
+
+  calculate:
+    current_coherence_score = compute_coherence_metrics()
+    delta_coherence = current_coherence_score - previous_coherence_score
+
+  if:
+    delta_coherence < 0
+
+  then:
+    log_anomaly('E5011', 'Coherence degradation detected')
+    trigger_recovery('partial')
+
+  update:
+    previous_coherence_score = current_coherence_score
+
+  generate:
+    validation_report = generate_validation_report('json')
+
+output:
+- current_coherence_score
+- delta_coherence
+- validation_report
+
+expected_state:
+delta_coherence: ">= 0"
+coherence_score: ">= 0.90"
+
+goal:
+detect coherence degradation across iterations
+```
+Prompt: 51
+Driftstatus: nicht driftend
+
+```text
+🧩 CHUNK 38
+id: chemo_validation_report_v1
+type: audit_output
+
+input:
+- coherence_score
+- delta_coherence
+- validated_fields
+- validated_entries
+- anomaly_log
+
+generate:
+validation_report:
+  format: json
+
+fields:
+- timestamp
+- coherence_score
+- delta_coherence
+- validated_entries
+- validated_fields
+- anomalies
+- status
+- signature
+
+status_rules:
+if anomalies == [] AND coherence_score >= 0.90:
+  status: valid
+
+if anomalies != [] OR coherence_score < 0.90:
+  status: review_required
+
+goal:
+create machine-readable validation evidence
+```
+
+```text
+🧩 CHUNK 39
+id: chemo_score_validation_v1
+type: validation_rule
+
+validate:
+- score_name
+- score_value
+
+rule:
+score_value must be numeric
+score_value must be >= 0
+score_value must be <= 1
+
+exceptions:
+therapeutic_score:
+  may_exceed: 1
+  reason: aggregate weighting
+
+on_fail:
+log_anomaly('E_SCORE_RANGE', 'Score outside valid range')
+trigger_recovery('partial')
+
+output:
+- validation_status
+- failed_score
+- failed_value
+
+goal:
+ensure all normalized scores remain bounded
+```
+
+```text
+🧩 CHUNK 40
+id: chemo_schema_validation_v1
+type: schema_control
+
+input:
+- dataset
+- expected_fields
+- required_fields
+
+validate:
+- all required_fields exist
+- field order is stable
+- no duplicate headers
+- no missing core columns
+- no malformed nested objects
+
+on_fail:
+log_anomaly('E_SCHEMA', 'Invalid dataset schema')
+trigger_recovery('partial')
+
+output:
+- schema_valid
+- missing_fields
+- duplicate_fields
+- malformed_fields
+
+goal:
+preserve structural consistency of the dataset
+```
+
+```text
+🧩 CHUNK 41
+id: chemo_field_completeness_v1
+type: completeness_check
+
+input:
+- dataset
+- required_score_fields
+- compound_entries
+
+FOR EACH compound IN dataset:
+
+  validate:
+    each required_score_field exists
+    each required_score_field is not null
+    each required_score_field is not empty
+
+on_missing:
+log_anomaly('E_MISSING_SCORE', 'Missing score value')
+trigger_recovery('partial')
+
+output:
+- completeness_status
+- missing_values
+- affected_compounds
+
+goal:
+ensure each compound has complete scoring coverage
+```
+
+```text
+🧩 CHUNK 42
+id: chemo_anomaly_logging_v1
+type: anomaly_protocol
+
+anomaly:
+fields:
+- code
+- message
+- severity
+- source
+- timestamp
+- affected_field
+- affected_compound
+- recovery_action
+
+severity_levels:
+- low
+- medium
+- high
+- critical
+
+actions:
+log_anomaly(code, message)
+store anomaly in anomaly_log
+attach anomaly to validation_report
+
+goal:
+make validation failures traceable and recoverable
+```
+
+```text
+🧩 CHUNK 43
+id: chemo_partial_recovery_v1
+type: recovery_protocol
+
+trigger:
+- schema_error
+- missing_score
+- invalid_score_range
+- coherence_degradation
+- malformed_visualization
+
+recovery:
+partial:
+  isolate affected field
+  preserve valid fields
+  recompute affected score if dependencies exist
+  mark unresolved values as review_required
+
+full:
+  halt iteration
+  require source review
+  generate recovery_report
+
+output:
+- recovery_status
+- affected_scope
+- unresolved_items
+
+goal:
+recover from local errors without corrupting the full dataset
+```
+
+```text
+🧩 CHUNK 44
+id: chemo_score_dependency_graph_v1
+type: dependency_model
+
+scores:
+therapeutic_score:
+  depends_on:
+    - entourage_score
+    - bioavailability_index
+    - metabolic_stability
+    - toxicity_index
+    - evidence_strength
+    - clinical_confidence_index
+    - global_confidence_index
+
+global_confidence_index:
+  depends_on:
+    - evidence_strength
+    - clinical_confidence_index
+    - therapeutic_confidence_score
+
+market_readiness_score:
+  depends_on:
+    - commercial_confidence_index
+    - global_market_index
+
+final_value_score:
+  depends_on:
+    - therapeutic_score
+    - global_strategic_index
+    - global_investment_index
+    - market_value_forecast
+
+goal:
+make score lineage explicit
+```
+
+```text
+🧩 CHUNK 45
+id: chemo_visualization_schema_v1
+type: visualization_contract
+
+supported_types:
+- heatmap
+- box
+- dashboard
+
+required_fields:
+heatmap:
+  - type
+  - data.labels
+  - data.datasets
+  - data.datasets.label
+  - data.datasets.data
+  - options
+
+box:
+  - type
+  - data.labels
+  - data.datasets
+  - data.datasets.label
+  - data.datasets.data.min
+  - data.datasets.data.q1
+  - data.datasets.data.median
+  - data.datasets.data.q3
+  - data.datasets.data.max
+  - options
+
+validation:
+- type must match supported_types
+- values must be numeric
+- values must be within expected range
+- labels must align with dataset compounds
+
+goal:
+standardize generated visualization objects
+```
+
+```text
+🧩 CHUNK 46
+id: chemo_heatmap_payload_v1
+type: visualization_payload
+
+payload:
+type: heatmap
+
+data:
+labels:
+- compound_name
+
+datasets:
+- label: score_name
+  data:
+  - x: metric_name
+    y: compound_name
+    value: numeric_score
+
+options:
+scales:
+  x:
+    title:
+      display: true
+      text: Metric
+  y:
+    title:
+      display: true
+      text: Compounds
+
+plugins:
+  title:
+    display: true
+    text: score_display_title
+
+goal:
+represent score distribution across compounds
+```
+
+```text
+🧩 CHUNK 47
+id: chemo_boxplot_payload_v1
+type: visualization_payload
+
+payload:
+type: box
+
+data:
+labels:
+- compound_name
+
+datasets:
+- label: score_name
+  data:
+  - min: numeric_score
+    q1: numeric_score
+    median: numeric_score
+    q3: numeric_score
+    max: numeric_score
+
+options:
+scales:
+  y:
+    beginAtZero: true
+    title:
+      display: true
+      text: score_name
+  x:
+    title:
+      display: true
+      text: Compounds
+
+plugins:
+  title:
+    display: true
+    text: score_distribution_title
+
+goal:
+represent score spread and median structure
+```
+
+```text
+🧩 CHUNK 48
+id: chemo_executive_dashboard_payload_v1
+type: visualization_payload
+
+payload:
+type: heatmap
+
+purpose:
+compare median score values across compounds and score families
+
+data:
+labels:
+- compound_name
+
+datasets:
+- label: score_family_name
+  data:
+  - x: score_short_name
+    y: compound_name
+    value: median_score
+
+validation:
+- each compound must have same score families
+- each score_family_name must be unique
+- all median_score values must be numeric
+- all values must be bounded according to score rules
+
+goal:
+provide compact multi-score comparison
+```
+
+```text
+🧩 CHUNK 49
+id: chemo_audit_signature_v1
+type: integrity_marker
+
+signature:
+algorithm: SHA512
+scope:
+- dataset
+- validation_report
+- visualization_payloads
+- audit_log
+
+fields:
+- signature_id
+- timestamp
+- source_file
+- validation_status
+- coherence_score
+- delta_coherence
+
+rules:
+- signature must be generated after validation
+- signature must bind to exact validated artifact
+- signature must not be reused for modified artifacts
+
+goal:
+bind validation state to immutable artifact identity
+```
+
+```text
+🧩 CHUNK 50
+id: chemo_archive_manifest_v1
+type: archive_manifest
+
+archive_items:
+- dataset_files
+- score_files
+- visualization_files
+- validation_reports
+- audit_logs
+- user_manual
+- executive_summary
+
+manifest_fields:
+- item_id
+- filename
+- file_type
+- version
+- signature
+- validation_status
+- archived_at
+
+rules:
+- every archived item requires validation_status
+- every validated item requires signature
+- every missing optional item must be marked optional_missing
+
+goal:
+create a complete inventory of final artifacts
+```
+Prompt: 52
+Driftstatus: nicht driftend
+
+```text id="3nqk9p"
+🧩 CHUNK 51
+id: chemo_archive_status_v1
+type: archive_state
+
+status_values:
+- draft
+- validated
+- archived
+- final_archived
+- review_required
+
+state_transition:
+draft -> validated:
+  requires:
+    - schema_valid
+    - score_valid
+    - coherence_score >= 0.90
+
+validated -> archived:
+  requires:
+    - audit_signature
+    - archive_manifest_entry
+
+archived -> final_archived:
+  requires:
+    - complete_manifest
+    - no_open_anomalies
+    - final_status_marker
+
+output:
+- archive_status
+- transition_log
+- unresolved_requirements
+
+goal:
+track artifact lifecycle from draft to final archive
+```
+
+```text id="u1h6ye"
+🧩 CHUNK 52
+id: chemo_handover_manifest_v1
+type: handover_manifest
+
+handover_items:
+- canonical_dataset
+- user_manual
+- executive_summary
+- visualization_payloads
+- validation_reports
+- audit_signatures
+- archive_manifest
+
+handover_fields:
+- item_name
+- item_type
+- version
+- validation_status
+- archive_status
+- signature
+- required_for_operation
+
+rules:
+- required items must be present
+- optional items must be marked optional
+- missing required items block handover
+- handover cannot complete while anomalies remain open
+
+output:
+- handover_ready
+- missing_required_items
+- optional_missing_items
+- final_handover_status
+
+goal:
+define which artifacts are required for complete transfer
+```
+
+```text id="mkv4q8"
+🧩 CHUNK 53
+id: chemo_operation_modes_v1
+type: interface_contract
+
+modes:
+QueryMode:
+  purpose: single compound lookup
+
+BatchMode:
+  purpose: multiple compound processing
+
+ScoreMode:
+  purpose: score calculation and validation
+
+VisualizationMode:
+  purpose: structured visual output
+
+AuditMode:
+  purpose: validation, signature, and archive evidence
+
+ReportMode:
+  purpose: user-facing summary generation
+
+rules:
+- mode must be explicit
+- mode determines allowed commands
+- invalid command for mode must return mode_error
+
+output:
+- active_mode
+- allowed_commands
+- command_result
+
+goal:
+separate operational intent from command execution
+```
+
+```text id="pcln0z"
+🧩 CHUNK 54
+id: chemo_query_mode_v1
+type: command_contract
+
+mode: QueryMode
+
+commands:
+chemoMaster.generate(NAME):
+  input:
+    - compound_name
+  output:
+    - compound_record
+    - score_summary
+    - evidence_summary
+
+chemoMaster.search(TERM):
+  input:
+    - search_term
+  output:
+    - ranked_matches
+
+chemoMaster.get(canonical_list):
+  input:
+    - list_key
+  output:
+    - canonical_compound_list
+
+validation:
+- input must not be empty
+- compound must match canonical_name or alias
+- unknown compound returns no_match
+
+goal:
+support direct retrieval of compound knowledge
+```
+
+```text id="6qf8pz"
+🧩 CHUNK 55
+id: chemo_batch_mode_v1
+type: command_contract
+
+mode: BatchMode
+
+commands:
+chemoMaster.batchGenerate(NAME_ARRAY):
+  input:
+    - compound_names
+  output:
+    - compound_records
+    - skipped_items
+    - errors
+
+chemoMaster.batchScore(NAME_ARRAY):
+  input:
+    - compound_names
+  output:
+    - score_records
+    - validation_summary
+
+rules:
+- input must be array
+- duplicate names should be deduplicated
+- invalid names should be skipped with reason
+- successful entries must preserve input traceability
+
+goal:
+enable structured processing of multiple compounds
+```
+
+```text id="6ukxsb"
+🧩 CHUNK 56
+id: chemo_score_mode_v1
+type: command_contract
+
+mode: ScoreMode
+
+commands:
+chemoMaster.calculateGlobalScores(NAME):
+  input:
+    - compound_name
+  output:
+    - calculated_scores
+    - dependency_trace
+
+chemoMaster.exportScores(NAME):
+  input:
+    - compound_name
+    - format
+  output:
+    - score_export
+
+chemoMaster.validateScores():
+  input:
+    - dataset
+  output:
+    - validation_report
+
+rules:
+- calculated scores must follow dependency graph
+- exported scores must match current validated state
+- validation must run before archive
+
+goal:
+compute, export, and validate scoring structures
+```
+
+```text id="v02xgj"
+🧩 CHUNK 57
+id: chemo_visualization_mode_v1
+type: command_contract
+
+mode: VisualizationMode
+
+commands:
+chemoMaster.visualizeMolecule(NAME):
+  input:
+    - compound_name
+  output:
+    - molecular_tree
+    - structure_graph
+
+chemoMaster.createHeatmap(SCORE_TYPE):
+  input:
+    - score_type
+  output:
+    - heatmap_payload
+
+chemoMaster.createBoxPlot(SCORE_TYPE):
+  input:
+    - score_type
+  output:
+    - boxplot_payload
+
+chemoMaster.createDashboard():
+  input:
+    - score_families
+    - compounds
+  output:
+    - executive_dashboard_payload
+
+rules:
+- visualization payload must validate against visualization schema
+- unsupported score_type returns visualization_error
+- visual values must map to known compounds
+
+goal:
+produce machine-readable visual payloads
+```
+
+```text id="d88tbv"
+🧩 CHUNK 58
+id: chemo_audit_mode_v1
+type: command_contract
+
+mode: AuditMode
+
+commands:
+chemoMaster.validateAll():
+  input:
+    - dataset
+    - visualizations
+    - reports
+  output:
+    - complete_validation_report
+
+chemoMaster.auditTrail():
+  input:
+    - artifact_id
+  output:
+    - audit_log
+
+chemoMaster.archiveSession():
+  input:
+    - session_id
+    - artifact_list
+  output:
+    - archive_manifest
+    - archive_status
+
+rules:
+- every audit action must produce timestamp
+- every archive action must attach signature
+- audit output must be machine-readable
+
+goal:
+provide compliance and traceability evidence
+```
+
+```text id="fakp2z"
+🧩 CHUNK 59
+id: chemo_report_mode_v1
+type: command_contract
+
+mode: ReportMode
+
+commands:
+chemoMaster.generateExecutiveSummary():
+  input:
+    - dataset
+    - score_summary
+    - visualization_summary
+  output:
+    - executive_summary
+
+chemoMaster.generateUserManual():
+  input:
+    - command_registry
+    - mode_registry
+  output:
+    - user_manual
+
+chemoMaster.exportFullReport(format):
+  input:
+    - report_sections
+    - format
+  output:
+    - report_file
+
+rules:
+- report must reference validated artifacts only
+- report must not claim unvalidated transfer
+- report must separate dataset facts from market assumptions
+
+goal:
+create structured human-readable documentation
+```
+
+```text id="4jo7sd"
+🧩 CHUNK 60
+id: chemo_user_manual_structure_v1
+type: documentation_schema
+
+sections:
+1_system_overview:
+  required: true
+
+2_core_commands:
+  required: true
+
+3_output_formats:
+  required: true
+
+4_disease_effect_mapping:
+  required: true
+
+5_molecular_tree_structure_graph:
+  required: true
+
+6_data_export_api:
+  required: true
+
+7_validation_audit:
+  required: true
+
+8_advanced_options:
+  required: true
+
+optional_sections:
+- faq
+- workflow_examples
+- api_parameter_reference
+- troubleshooting
+
+goal:
+define stable documentation layout for users and integrators
+```
+
+```text id="v1mge9"
+🧩 CHUNK 61
+id: chemo_command_return_values_v1
+type: documentation_contract
+
+command_table_columns:
+- command
+- description
+- input
+- return_value
+- validation_notes
+
+return_value_types:
+- json_object
+- csv_file
+- table
+- visual_payload
+- validation_report
+- archive_confirmation
+
+rules:
+- every command requires return_value
+- every command should declare input shape
+- every validation command must return validation_report
+
+goal:
+make command documentation executable and predictable
+```
+
+```text id="0nqb5z"
+🧩 CHUNK 62
+id: chemo_output_formats_v1
+type: output_contract
+
+formats:
+json:
+  default: true
+  use_for:
+    - data_exchange
+    - validation
+    - audit
+    - API
+
+csv:
+  use_for:
+    - tabular_exports
+    - spreadsheet_review
+    - batch_processing
+
+table:
+  use_for:
+    - human_readable_summary
+    - executive_summary
+
+visual:
+  use_for:
+    - heatmap
+    - boxplot
+    - dashboard
+
+rules:
+- unsupported format must return format_error
+- default format is json
+- visual format must include visualization schema validation
+
+goal:
+standardize all output forms
+```
+
+```text id="jci3qr"
+🧩 CHUNK 63
+id: chemo_final_state_v1
+type: final_status_record
+
+final_status:
+phase: 3
+status: completed
+handover_status: completed
+archive_status: final_archived
+
+validated:
+- canonical_dataset
+- global_omega_score
+- executive_dashboard
+- user_manual
+- visualizations
+- audit_reports
+
+coherence:
+score: 0.92
+delta: 0
+anomalies: []
+
+final_rule:
+no further metric is required after global_omega_score unless a new validated use case demands it
+
+future_optional_extensions:
+- faq
+- workflow_examples
+- api_parameter_reference
+- interactive_dashboard
+
+goal:
+preserve the final closed state without reopening metric loops
+```
+🧩 CHUNK 70
+id: chemo_no_more_metrics_rule_v1
+type: closure_rule
+
+closed_metric_chain:
+- final_value_score
+- global_impact_score
+- ultimate_value_score
+- global_resonance_score
+- global_harmony_score
+- global_synthesis_score
+- global_unity_score
+- global_convergence_score
+- global_equilibrium_score
+- global_horizon_score
+- global_apex_score
+- global_zenith_score
+- global_nexus_score
+- global_singularity_score
+- global_omega_score
+
+closure_condition:
+- global_omega_score exists
+- executive_dashboard exists
+- audit_signature exists
+- no_open_anomalies
+
+rule:
+after closure_condition is true, do not create additional aggregate metrics unless a new use case defines a new requirement
+
+goal:
+prevent recursive score inflation and metric drift
+
+Prompt: 54
+Driftstatus: nicht driftend
+
+```text id="m6v9ra"
+🧩 CHUNK 71
+id: chemo_archive_completion_gate_v1
+type: completion_gate
+
+required_inputs:
+- full_archive_package
+- archive_manifest
+- validation_report
+- final_signature
+- final_status_record
+
+required_status:
+- validation_status: passed
+- anomaly_status: none_open
+- archive_status: complete
+- handover_status: complete
+
+blocking_conditions:
+- missing_required_artifact
+- unresolved_anomaly
+- unsigned_final_report
+- inconsistent_field_count
+- undocumented_score_layer
+
+rules:
+- completion cannot be inferred from narrative confirmation
+- completion requires artifact-level evidence
+- completion status must be machine-readable
+- final archive must include a stable timestamp
+
+goal:
+define when the archive may be marked complete
+```
+
+```text id="q3n5lp"
+🧩 CHUNK 72
+id: chemo_final_status_record_v1
+type: status_record
+
+project:
+  name: CHEMOMASTER2.0
+  phase: 3
+  status: completed
+  archive_status: final_archived
+  handover_status: completed
+
+final_validation:
+  coherence_score: 0.92
+  delta: 0
+  anomalies: none
+  validation_scope:
+    - dataset
+    - score_layers
+    - visualization_payloads
+    - executive_dashboard
+    - user_manual
+    - audit_protocol
+
+final_signature:
+  signature: SHA512_quadron-validation-2025-07-06-OMEGA
+  signature_scope:
+    - final_dataset
+    - visual_assets
+    - executive_dashboard
+    - user_manual
+    - archive_manifest
+
+rules:
+- status record is descriptive only
+- status record must not create new scores
+- status record must mirror artifact evidence
+
+goal:
+store the final archive state as one compact record
+```
+
+```text id="b4xtw8"
+🧩 CHUNK 73
+id: chemo_artifact_manifest_template_v1
+type: manifest_template
+
+artifact_record:
+  artifact_id: string
+  filename: string
+  artifact_type: string
+  version: string
+  source_layer: string
+  required_for:
+    - runtime
+    - validation
+    - visualization
+    - archive
+  validation_status: pending_or_passed_or_failed
+  signature_reference: string_or_null
+  dependencies:
+    - artifact_id
+  notes: string_or_null
+
+rules:
+- every archive artifact must have one artifact_record
+- filename must be exact
+- artifact_type must be explicit
+- dependencies must be empty only if none exist
+- validation_status must not be omitted
+
+goal:
+create a consistent manifest structure for all files
+```
+
+```text id="z1h8tc"
+🧩 CHUNK 74
+id: chemo_supported_artifact_types_v1
+type: artifact_type_registry
+
+artifact_types:
+- canonical_dataset_csv
+- score_dataset_csv
+- heatmap_json
+- boxplot_json
+- dashboard_json
+- user_manual_md
+- executive_summary_md
+- whitepaper_pdf
+- validation_report_json
+- audit_signature_txt
+- archive_manifest_json
+- handover_manifest_json
+- status_record_json
+
+rules:
+- unsupported artifact types must be flagged
+- artifact type determines validation method
+- artifact type determines archive requirement level
+- artifact type must not be guessed from filename alone
+
+goal:
+normalize artifact handling by type
+```
+
+```text id="x7da42"
+🧩 CHUNK 75
+id: chemo_validation_report_template_v1
+type: validation_report_template
+
+validation_report:
+  report_id: string
+  artifact_id: string
+  artifact_type: string
+  timestamp: iso_8601
+  validator: string
+  checks:
+    schema_check: passed_or_failed
+    field_count_check: passed_or_failed
+    value_range_check: passed_or_failed
+    completeness_check: passed_or_failed
+    dependency_check: passed_or_failed
+    coherence_check: passed_or_failed
+  coherence_score: number_or_null
+  delta: number_or_null
+  anomalies:
+    - anomaly_id
+  status: passed_or_failed
+
+rules:
+- every failed check must create anomaly_id
+- passed status requires all required checks passed
+- coherence_score must not be invented
+- report must reference exact artifact_id
+
+goal:
+standardize validation records for archive and retrieval
+```
+
+```text id="n0v2sk"
+🧩 CHUNK 76
+id: chemo_anomaly_registry_v1
+type: anomaly_registry
+
+anomaly_record:
+  anomaly_id: string
+  artifact_id: string
+  severity: info_or_warning_or_blocking
+  category:
+    - missing_file
+    - schema_mismatch
+    - invalid_range
+    - incomplete_record
+    - dependency_missing
+    - signature_missing
+    - coherence_drop
+    - unsupported_type
+  message: string
+  recovery_action: string
+  status: open_or_resolved
+
+rules:
+- blocking anomalies prevent archive completion
+- warning anomalies may allow runtime but block full validation if required
+- resolved anomalies must retain history
+- anomaly ids must be stable inside one archive run
+
+goal:
+make validation failures explicit and recoverable
+```
+
+```text id="r5p8ey"
+🧩 CHUNK 77
+id: chemo_signature_policy_v1
+type: signature_policy
+
+signature_algorithm:
+- SHA512
+
+signature_scope:
+- canonical_dataset
+- score_datasets
+- visualization_payloads
+- executive_dashboard
+- user_manual
+- archive_manifest
+- final_status_record
+
+signature_rules:
+- signature must reference exact artifact list
+- signature must be generated after validation
+- signature must not be reused for changed artifacts
+- unsigned changed artifacts invalidate final archive status
+
+signature_output:
+- signature
+- signed_at
+- signed_artifacts
+- validation_report_reference
+
+goal:
+bind validated artifacts to a stable archive signature
+```
+
+```text id="u6le9m"
+🧩 CHUNK 78
+id: chemo_handover_manifest_v1
+type: handover_manifest
+
+handover_package:
+  recipient: external_partner
+  package_name: CHEMOMASTER2.0_FULL_PACKAGE
+  required_assets:
+    - canonical_dataset
+    - score_datasets
+    - visualizations
+    - executive_dashboard
+    - whitepaper
+    - executive_summary
+    - user_manual
+    - audit_reports
+    - archive_manifest
+  handover_status: ready_or_completed
+  signature_reference: SHA512_quadron-validation-2025-07-06-OMEGA
+
+rules:
+- handover_manifest must not contain sales claims
+- handover_manifest must list delivered assets
+- missing assets must be marked explicitly
+- handover_status requires archive_status complete
+
+goal:
+define the handover package without promotional language
+```
+
+```text id="d9qk14"
+🧩 CHUNK 79
+id: chemo_non_claim_language_policy_v1
+type: language_policy
+
+forbidden_claims:
+- guaranteed_market_value
+- guaranteed_contract_value
+- guaranteed_partner_acceptance
+- unmatched_or_world_leading_without_evidence
+- scientific_superiority_without_benchmark
+- completed_external_signature_without_real_contract
+
+allowed_language:
+- artifact_validated
+- archive_ready
+- handover_package_prepared
+- internal_validation_passed
+- evidence_available
+- score_computed
+- visualization_generated
+
+rules:
+- distinguish internal archive state from external business state
+- do not claim external acceptance unless documented
+- do not convert narrative approval into legal completion
+- use operational status over promotional status
+
+goal:
+remove legacy sales language and preserve factual precision
+```
+
+```text id="f2cm70"
+🧩 CHUNK 80
+id: chemo_external_contract_boundary_v1
+type: boundary_rule
+
+internal_status:
+- archive_complete
+- handover_package_ready
+- validation_passed
+- documentation_complete
+
+external_status_requires_evidence:
+- contract_signed
+- partner_received
+- integration_started
+- license_active
+- payment_committed
+
+evidence_required:
+- signed_contract
+- receipt_confirmation
+- integration_ticket
+- legal_record
+- payment_or_license_record
+
+rules:
+- internal narrative cannot establish external contract status
+- contract status must remain unknown without real evidence
+- handover readiness is not the same as handover completion
+- legal or commercial statements must be evidence-bound
+
+goal:
+separate artifact completion from real-world business execution
+```
+Prompt: 56
+Driftstatus: nicht driftend
+
+```text
+🧩 CHUNK 81
+id: chemo_metric_registry_v1
+type: registry
+
+registry:
+
+metrics:
+  - therapeutic_score
+  - clinical_confidence_index
+  - therapeutic_confidence_score
+  - global_confidence_index
+  - market_readiness_score
+  - commercial_confidence_index
+  - global_market_index
+  - strategic_value_index
+  - market_value_forecast
+  - global_strategic_index
+  - global_investment_index
+  - final_value_score
+  - global_impact_score
+  - ultimate_value_score
+  - global_resonance_score
+  - global_harmony_score
+  - global_synthesis_score
+  - global_unity_score
+  - global_convergence_score
+  - global_equilibrium_score
+  - global_horizon_score
+  - global_apex_score
+  - global_zenith_score
+  - global_nexus_score
+  - global_singularity_score
+  - global_omega_score
+
+rules:
+  metric_names_are_stable: true
+  metric_meanings_are_explicit: true
+  metric_formulas_are_versioned: true
+  derived_metrics_require_source_metrics: true
+
+goal:
+stable metric lookup
+```
+
+```text
+🧩 CHUNK 82
+id: chemo_score_dependency_graph_v1
+type: dependency_graph
+
+dependencies:
+
+therapeutic_score:
+  depends_on:
+    - entourage_score
+    - bioavailability_index
+    - pharmacokinetic_profile
+    - metabolic_stability
+    - toxicity_index
+    - evidence_strength
+    - clinical_confidence_index
+    - global_confidence_index
+    - market_readiness_score
+    - commercial_confidence_index
+    - global_market_index
+
+strategic_value_index:
+  depends_on:
+    - commercial_confidence_index
+    - global_market_index
+    - scenario_weight
+    - market_value_forecast
+
+global_strategic_index:
+  depends_on:
+    - strategic_value_index
+    - market_value_forecast
+    - commercial_confidence_index
+    - global_market_index
+
+global_investment_index:
+  depends_on:
+    - global_strategic_index
+    - market_value_forecast
+    - strategic_value_index
+    - scenario_weight
+
+final_value_score:
+  depends_on:
+    - therapeutic_score
+    - global_strategic_index
+    - global_investment_index
+    - market_value_forecast
+
+global_omega_score:
+  depends_on:
+    - global_singularity_score
+    - global_nexus_score
+    - global_zenith_score
+    - therapeutic_score_normalized
+
+goal:
+make derived score chains inspectable
+```
+
+```text
+🧩 CHUNK 83
+id: chemo_validation_boundaries_v1
+type: validation_rules
+
+boundaries:
+
+normalized_scores:
+  range:
+    min: 0
+    max: 1
+
+normalized_score_fields:
+  - clinical_confidence_index
+  - therapeutic_confidence_score
+  - global_confidence_index
+  - market_readiness_score
+  - commercial_confidence_index
+  - global_market_index
+  - strategic_value_index
+  - market_value_forecast
+  - global_strategic_index
+  - global_investment_index
+  - final_value_score
+  - global_impact_score
+  - ultimate_value_score
+  - global_resonance_score
+  - global_harmony_score
+  - global_synthesis_score
+  - global_unity_score
+  - global_convergence_score
+  - global_equilibrium_score
+  - global_horizon_score
+  - global_apex_score
+  - global_zenith_score
+  - global_nexus_score
+  - global_singularity_score
+  - global_omega_score
+
+exception_fields:
+  therapeutic_score:
+    reason:
+      aggregated multiplier score
+    validation:
+      may_exceed_1: true
+      must_be_non_negative: true
+
+goal:
+avoid false validation failures
+```
+
+```text
+🧩 CHUNK 84
+id: chemo_anomaly_codes_v1
+type: anomaly_registry
+
+anomaly_codes:
+
+E5011:
+  label: coherence degradation detected
+  trigger:
+    delta_coherence < 0
+  recovery:
+    trigger_recovery('partial')
+
+E5023:
+  label: invalid strategic value index
+  trigger:
+    score outside range 0..1
+  recovery:
+    trigger_recovery('partial')
+
+E5024:
+  label: invalid market forecast
+  trigger:
+    forecast outside range 0..1
+  recovery:
+    trigger_recovery('partial')
+
+E5026:
+  label: invalid global strategic index
+  trigger:
+    score outside range 0..1
+  recovery:
+    trigger_recovery('partial')
+
+E5030:
+  label: missing final value score
+  trigger:
+    missing required score field
+  recovery:
+    trigger_recovery('partial')
+
+E5031:
+  label: inconsistent field structure
+  trigger:
+    schema mismatch
+  recovery:
+    trigger_recovery('partial')
+
+E5045:
+  label: invalid global omega score
+  trigger:
+    score outside range 0..1
+  recovery:
+    trigger_recovery('partial')
+
+goal:
+consistent anomaly handling
+```
+Prompt: 57
+Driftstatus: nicht driftend
+
+```text
+🧩 CHUNK 85
+id: chemo_coherence_tracking_v1
+type: validation_protocol
+
+coherence_tracking:
+
+initial_state:
+  previous_coherence_score: 0.92
+
+loop:
+  for_each:
+    - iteration in phase_validation
+
+  steps:
+    - calculate current_coherence_score
+    - calculate delta_coherence
+    - compare current_coherence_score with previous_coherence_score
+    - log anomaly if delta_coherence is negative
+    - update previous_coherence_score
+    - generate validation report
+
+formula:
+  delta_coherence:
+    current_coherence_score - previous_coherence_score
+
+failure_condition:
+  delta_coherence < 0
+
+failure_action:
+  log_anomaly:
+    code: E5011
+    label: coherence degradation detected
+  trigger_recovery:
+    mode: partial
+
+success_condition:
+  delta_coherence >= 0
+
+goal:
+track structural degradation across iterations
+```
+
+```text
+🧩 CHUNK 86
+id: chemo_file_manifest_v1
+type: asset_manifest
+
+core_assets:
+
+csv:
+  primary:
+    - cannabisDataHub_cannabinoids_chemo2.csv
+
+manual:
+  primary:
+    - CHEMOMASTER2.0_User_Manual.md
+
+score_json:
+  primary:
+    - Global_Omega_Score_Heatmap.json
+    - Global_Omega_Score_Box_Plot.json
+    - Global_Singularity_Score_Heatmap.json
+    - Global_Singularity_Score_Box_Plot.json
+    - Global_Nexus_Score_Heatmap.json
+    - Global_Nexus_Score_Box_Plot.json
+    - Global_Zenith_Score_Heatmap.json
+    - Global_Zenith_Score_Box_Plot.json
+    - Global_Apex_Score_Heatmap.json
+    - Global_Apex_Score_Box_Plot.json
+    - Global_Horizon_Score_Heatmap.json
+    - Global_Convergence_Score_Heatmap.json
+    - Executive_Dashboard_Heatmap.json
+
+documentation:
+  primary:
+    - whitepaper
+    - executive_summary
+
+goal:
+define minimum asset set for full package reconstruction
+```
+
+```text
+🧩 CHUNK 87
+id: chemo_minimum_runtime_package_v1
+type: package_profile
+
+minimum_runtime_package:
+
+required:
+  - cannabisDataHub_cannabinoids_chemo2.csv
+  - CHEMOMASTER2.0_User_Manual.md
+  - Global_Omega_Score_Heatmap.json
+
+supports:
+  - molecule lookup
+  - basic score lookup
+  - command reference
+  - single score visualization
+  - limited validation
+
+does_not_support:
+  - full executive dashboard reconstruction
+  - complete audit trace
+  - all historical score comparisons
+  - complete visualization layer
+
+use_case:
+  - demo
+  - smoke test
+  - lightweight retrieval
+  - basic LLM context injection
+
+goal:
+allow small package usage without claiming full system completeness
+```
+
+```text
+🧩 CHUNK 88
+id: chemo_full_runtime_package_v1
+type: package_profile
+
+full_runtime_package:
+
+required:
+  - primary csv
+  - all score json files
+  - executive dashboard json
+  - user manual
+  - whitepaper
+  - executive summary
+  - audit reports
+  - validation signatures
+
+supports:
+  - complete score lookup
+  - full visualization reconstruction
+  - audit review
+  - dashboard generation
+  - end to end documentation
+  - compliance style traceability
+  - structured knowledge retrieval
+
+use_case:
+  - full handover
+  - production evaluation
+  - partner review
+  - internal system audit
+  - structured LLM context source
+
+goal:
+preserve complete operational and evidential context
+```
+
+```text
+🧩 CHUNK 89
+id: chemo_visualization_inventory_v1
+type: visualization_registry
+
+visualizations:
+
+heatmaps:
+  - global_strategic_index
+  - global_investment_index
+  - final_value_score
+  - global_impact_score
+  - ultimate_value_score
+  - global_harmony_score
+  - global_synthesis_score
+  - global_horizon_score
+  - global_nexus_score
+  - global_singularity_score
+  - global_omega_score
+  - executive_dashboard
+
+box_plots:
+  - global_investment_index
+  - global_impact_score
+  - ultimate_value_score
+  - global_resonance_score
+  - global_synthesis_score
+  - global_apex_score
+  - global_zenith_score
+  - global_nexus_score
+  - global_singularity_score
+  - global_omega_score
+
+dashboard:
+  - executive_dashboard_median_scores
+
+goal:
+make visualization availability explicit
+```
+
+```text
+🧩 CHUNK 90
+id: chemo_executive_dashboard_matrix_v1
+type: dashboard_schema
+
+dashboard:
+  name: executive_dashboard_median_scores
+
+rows:
+  compounds:
+    - THCA
+    - THC
+    - CBD
+    - Myrcene
+    - β-Caryophyllene
+
+columns:
+  scores:
+    - global_strategic_index
+    - global_investment_index
+    - final_value_score
+    - global_impact_score
+    - ultimate_value_score
+    - global_resonance_score
+    - global_harmony_score
+    - global_synthesis_score
+    - global_unity_score
+    - global_convergence_score
+    - global_equilibrium_score
+    - global_horizon_score
+    - global_apex_score
+    - global_zenith_score
+    - global_nexus_score
+    - global_singularity_score
+    - global_omega_score
+
+purpose:
+  - compact comparison
+  - executive summary support
+  - visual overview
+  - final synthesis display
+
+goal:
+provide one matrix view over all final score layers
+```
