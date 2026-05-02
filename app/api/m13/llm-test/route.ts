@@ -55,15 +55,15 @@ export async function POST(req: NextRequest) {
         ? body.system.trim()
         : "Antworte ausschließlich auf Deutsch. Antworte kurz, präzise und sachlich.";
 
-    const maxTokens =
+        const maxTokens =
       typeof body?.maxTokens === "number" && body.maxTokens > 0
         ? body.maxTokens
-        : 300;
+        : undefined;
 
     const temperature =
       typeof body?.temperature === "number" && body.temperature >= 0
         ? body.temperature
-        : 0.2;
+        : undefined;
 
     const result = await callM13Llm({
       command: body.command,
