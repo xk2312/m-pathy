@@ -64,6 +64,18 @@ export function getM13LlmRuntimeConfig(
     };
   }
 
+  if (command === "challenge") {
+    return {
+      command,
+      adapter: "anthropic_foundry",
+      endpoint: readRequiredEnv("M13_CLAUDE_OPUS_4_6_ENDPOINT"),
+      apiKey: readRequiredEnv("M13_CLAUDE_OPUS_4_6_API_KEY"),
+      deployment: readRequiredEnv("M13_CLAUDE_OPUS_4_6_DEPLOYMENT"),
+      maxTokens: readNumberEnv("M13_CHALLENGE_MAX_TOKENS", 1500),
+      temperature: readFloatEnv("M13_CHALLENGE_TEMPERATURE", 0.2),
+    };
+  }
+
   if (command === "summary") {
     return {
       command,
@@ -82,6 +94,18 @@ export function getM13LlmRuntimeConfig(
         readRequiredEnv("AZURE_OPENAI_API_VERSION"),
       maxTokens: readNumberEnv("M13_SUMMARY_MAX_TOKENS", 1500),
       temperature: readFloatEnv("M13_SUMMARY_TEMPERATURE", 0.2),
+    };
+  }
+
+  if (command === "fast") {
+    return {
+      command,
+      adapter: "anthropic_foundry",
+      endpoint: readRequiredEnv("M13_CLAUDE_HAIKU_4_5_ENDPOINT"),
+      apiKey: readRequiredEnv("M13_CLAUDE_HAIKU_4_5_API_KEY"),
+      deployment: readRequiredEnv("M13_CLAUDE_HAIKU_4_5_DEPLOYMENT"),
+      maxTokens: readNumberEnv("M13_FAST_MAX_TOKENS", 500),
+      temperature: readFloatEnv("M13_FAST_TEMPERATURE", 0.2),
     };
   }
 
