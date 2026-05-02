@@ -59,7 +59,7 @@ export function getM13LlmRuntimeConfig(
       endpoint: readRequiredEnv("M13_CLAUDE_SONNET_4_6_ENDPOINT"),
       apiKey: readRequiredEnv("M13_CLAUDE_SONNET_4_6_API_KEY"),
       deployment: readRequiredEnv("M13_CLAUDE_SONNET_4_6_DEPLOYMENT"),
-      maxTokens: readNumberEnv("M13_REASONING_MAX_TOKENS", 1200),
+      maxTokens: readNumberEnv("M13_REASONING_MAX_TOKENS", 8192),
       temperature: readFloatEnv("M13_REASONING_TEMPERATURE", 0.2),
     };
   }
@@ -71,7 +71,7 @@ export function getM13LlmRuntimeConfig(
       endpoint: readRequiredEnv("M13_CLAUDE_OPUS_4_6_ENDPOINT"),
       apiKey: readRequiredEnv("M13_CLAUDE_OPUS_4_6_API_KEY"),
       deployment: readRequiredEnv("M13_CLAUDE_OPUS_4_6_DEPLOYMENT"),
-      maxTokens: readNumberEnv("M13_CHALLENGE_MAX_TOKENS", 1500),
+      maxTokens: readNumberEnv("M13_CHALLENGE_MAX_TOKENS", 8192),
       temperature: readFloatEnv("M13_CHALLENGE_TEMPERATURE", 0.2),
     };
   }
@@ -92,7 +92,7 @@ export function getM13LlmRuntimeConfig(
       apiVersion:
         process.env.M13_GPT_4_1_MINI_API_VERSION?.trim() ||
         readRequiredEnv("AZURE_OPENAI_API_VERSION"),
-      maxTokens: readNumberEnv("M13_SUMMARY_MAX_TOKENS", 1500),
+      maxTokens: readNumberEnv("M13_SUMMARY_MAX_TOKENS", 8192),
       temperature: readFloatEnv("M13_SUMMARY_TEMPERATURE", 0.2),
     };
   }
@@ -104,7 +104,7 @@ export function getM13LlmRuntimeConfig(
       endpoint: readRequiredEnv("M13_CLAUDE_HAIKU_4_5_ENDPOINT"),
       apiKey: readRequiredEnv("M13_CLAUDE_HAIKU_4_5_API_KEY"),
       deployment: readRequiredEnv("M13_CLAUDE_HAIKU_4_5_DEPLOYMENT"),
-      maxTokens: readNumberEnv("M13_FAST_MAX_TOKENS", 500),
+      maxTokens: readNumberEnv("M13_FAST_MAX_TOKENS", 2040),
       temperature: readFloatEnv("M13_FAST_TEMPERATURE", 0.2),
     };
   }
