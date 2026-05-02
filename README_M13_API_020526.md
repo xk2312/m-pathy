@@ -926,3 +926,560 @@ Envelope strict.
 Extensions free.
 Audit stable.
 ```
+
+# 23. Confirmed LLM Expansion After Initial API Freeze
+
+After the initial API architecture freeze, the LLM expansion layer was implemented and tested independently before starting the real production API route.
+
+This was done deliberately to avoid building the API route on unverified model assumptions.
+
+Confirmed principle:
+
+```txt
+First close the model layer.
+Then close the adapter layer.
+Then plan the production API route.
+````
+
+No production route was created during this phase.
+
+No existing `/api/chat` logic was changed.
+
+No existing Triketon logic was changed.
+
+No existing production persistence was changed.
+
+---
+
+# 24. Confirmed v1 Commands
+
+The v1 command layer is now confirmed.
+
+Final v1 commands:
+
+```txt
+reasoning
+challenge
+summary
+fast
+```
+
+These commands are public intent commands.
+
+They do not expose internal C levels.
+
+They do not expose provider names.
+
+They do not expose fallback logic.
+
+Rule:
+
+```txt
+Public commands describe intent.
+The server owns the model mapping.
+```
+
+---
+
+# 25. Fixed Command to Model Mapping
+
+The v1 mapping is fixed and deterministic.
+
+```txt
+reasoning -> claude-sonnet-4-6
+challenge -> claude-opus-4-6
+summary   -> gpt-4.1-mini
+fast      -> claude-haiku-4-5
+```
+
+Hard rule:
+
+```txt
+One command.
+One model.
+One adapter.
+One audit path. 
+```
+
+There is no automatic model escalation in v1.
+
+There is no fallback model switching in v1.
+
+Reason:
+
+```txt
+Dynamic model switching creates drift in behavior, cost, audit, and reproducibility.
+```
+
+---
+
+# 26. Confirmed v1 Models
+
+All four v1 models were deployed and tested successfully.
+
+| Command     | Model               | Runtime model name          | Status    |
+| ----------- | ------------------- | --------------------------- | --------- |
+| `reasoning` | `claude-sonnet-4-6` | `claude-sonnet-4-6`         | confirmed |
+| `challenge` | `claude-opus-4-6`   | `claude-opus-4-6`           | confirmed |
+| `summary`   | `gpt-4.1-mini`      | `gpt-4.1-mini-2025-04-14`   | confirmed |
+| `fast`      | `claude-haiku-4-5`  | `claude-haiku-4-5-20251001` | confirmed |
+
+Confirmed behavior:
+
+```txt
+All four models respond successfully.
+German output works when server-side M13 context is provided.
+Usage metadata is returned by all four models.
+```
+
+---
+
+# 27. Confirmed Adapter Layer
+
+The adapter layer was created under:
+
+```txt
+lib/m13/llm/
+```
+
+Current files:
+
+```txt
+lib/m13/llm/types.ts
+lib/m13/llm/adapters/anthropicFoundry.ts
+lib/m13/llm/adapters/azureOpenAIChat.ts
+lib/m13/llm/registry.ts
+lib/m13/llm/index.ts
+```
+
+Confirmed adapters:
+
+```txt
+anthropic_foundry
+azure_openai_chat
+```
+
+Adapter mapping:
+
+```txt
+claude-sonnet-4-6 -> anthropic_foundry
+claude-opus-4-6   -> anthropic_foundry
+claude-haiku-4-5  -> anthropic_foundry
+gpt-4.1-mini      -> azure_openai_chat
+```
+
+Boundary:
+
+```txt
+Provider SDK calls belong inside adapters.
+Provider response parsing belongs inside adapters.
+Usage normalization belongs inside adapters.
+Command-to-model mapping belongs inside registry.
+```
+
+The production route must not reimplement these responsibilities.
+
+---
+
+# 28. Confirmed Usage Normalization
+
+The adapter layer normalizes provider-specific usage formats into one M13 usage object.
+
+Claude Foundry usage source:
+
+```txt
+input_tokens
+output_tokens
+cache_creation_input_tokens
+cache_read_input_tokens
+```
+
+Azure OpenAI usage source:
+
+```txt
+prompt_tokens
+completion_tokens
+prompt_tokens_details.cached_tokens
+```
+
+Normalized M13 usage target:
+
+```txt
+inputTokens
+outputTokens
+cachedInputTokens
+cacheCreationInputTokens
+totalTokens
+billableTokens
+```
+
+Confirmed result:
+
+```txt
+billableTokens is available for all four commands.
+```
+
+This is required for later server-side billing.
+
+---
+
+# 29. Confirmed ENV Expansion
+
+The shared environment file was expanded for the M13 LLM Gateway.
+
+Used production/staging ENV path:
+
+```txt
+/srv/app/shared/.env
+```
+
+Confirmed command bindings:
+
+```env
+M13_LLM_COMMAND_REASONING=claude_sonnet_4_6
+M13_LLM_COMMAND_CHALLENGE=claude_opus_4_6
+M13_LLM_COMMAND_SUMMARY=gpt_4_1_mini
+M13_LLM_COMMAND_FAST=claude_haiku_4_5
+```
+
+Confirmed model adapter bindings:
+
+```env
+M13_CLAUDE_SONNET_4_6_ADAPTER=anthropic_foundry
+M13_CLAUDE_OPUS_4_6_ADAPTER=anthropic_foundry
+M13_CLAUDE_HAIKU_4_5_ADAPTER=anthropic_foundry
+M13_GPT_4_1_MINI_ADAPTER=azure_openai_chat
+```
+
+The existing GPT 4.1 chat configuration remains untouched.
+
+---
+
+# 30. Confirmed Token and Limit Policy
+
+The M13 LLM limits were aligned with the existing GPT 4.1 chat setup.
+
+Existing chat limit reference:
+
+```env
+CHAT_CONCURRENCY=1
+MODEL_MAX_TOKENS=8192
+GPTX_MAX_CHARS=200000
+MAX_CONTEXT_MESSAGES=15
+```
+
+M13 API LLM limits:
+
+```env
+M13_LLM_CONCURRENCY=1
+
+M13_REASONING_MAX_TOKENS=8192
+M13_CHALLENGE_MAX_TOKENS=8192
+M13_SUMMARY_MAX_TOKENS=8192
+M13_FAST_MAX_TOKENS=2048
+
+M13_LLM_MAX_INPUT_CHARS=200000
+M13_LLM_MAX_MESSAGES=15
+```
+
+Reasoning, challenge, and summary share the same output ceiling as the existing GPT 4.1 chat route.
+
+Fast remains smaller by design.
+
+Rule:
+
+```txt
+fast must remain fast.
+fast must not become hidden reasoning.
+```
+
+---
+
+# 31. Confirmed Runtime Test Route
+
+A temporary Next.js test route was added:
+
+```txt
+app/api/m13/llm-test/route.ts
+```
+
+Purpose:
+
+```txt
+Validate callM13Llm() through the actual Next.js server runtime.
+```
+
+Scope:
+
+```txt
+No billing.
+No IRSS.
+No logbook.
+No public API contract.
+No Triketon.
+No chat route changes.
+```
+
+The route is temporary and must not be treated as production API.
+
+---
+
+# 32. Test Route Placement Correction
+
+The test route was initially placed incorrectly under:
+
+```txt
+lib/m13/llm-test/route.ts
+```
+
+This produced:
+
+```txt
+HTTP/1.1 404 Not Found
+```
+
+Reason:
+
+```txt
+Next.js only recognizes API routes under app/api/.../route.ts.
+```
+
+Correct placement:
+
+```txt
+app/api/m13/llm-test/route.ts
+```
+
+After moving the file, the test route became reachable.
+
+---
+
+# 33. Runtime Validation Results
+
+All four commands were validated through the temporary Next.js runtime test route.
+
+| Command     | Adapter             | Model                       | Status    |
+| ----------- | ------------------- | --------------------------- | --------- |
+| `reasoning` | `anthropic_foundry` | `claude-sonnet-4-6`         | confirmed |
+| `challenge` | `anthropic_foundry` | `claude-opus-4-6`           | confirmed |
+| `summary`   | `azure_openai_chat` | `gpt-4.1-mini-2025-04-14`   | confirmed |
+| `fast`      | `anthropic_foundry` | `claude-haiku-4-5-20251001` | confirmed |
+
+Confirmed:
+
+```txt
+callM13Llm() works in real Next server runtime.
+Both adapters work.
+All four commands resolve correctly.
+Usage normalization works.
+billableTokens is available.
+```
+
+---
+
+# 34. Server-Side M13 Context Finding
+
+The adapter layer does not automatically provide M13 identity.
+
+Observed issue:
+
+```txt
+Without explicit M13 context, Claude interpreted M13 as a biological bacteriophage.
+```
+
+Corrective rule:
+
+```txt
+Every production API call must receive server-owned M13 system context.
+```
+
+The user must not be responsible for providing the M13 identity context.
+
+The production route must inject the minimal M13 context before calling `callM13Llm()`.
+
+---
+
+# 35. Registry Default Correction
+
+The test route initially forced local defaults:
+
+```txt
+maxTokens: 300
+temperature: 0.2
+```
+
+This prevented ENV and registry defaults from being used.
+
+Observed issue:
+
+```txt
+challenge stopped with stop_reason: max_tokens
+```
+
+Correction:
+
+```txt
+The test route now forwards maxTokens and temperature only when explicitly provided.
+```
+
+Result:
+
+```txt
+If maxTokens is absent, registry and ENV defaults apply.
+```
+
+Commit title used:
+
+```txt
+test: let M13 LLM test route use registry defaults
+```
+
+---
+
+# 36. Current Safe Boundary After LLM Expansion
+
+The LLM layer is now ready as infrastructure.
+
+Completed:
+
+```txt
+model deployments
+ENV expansion
+adapter layer
+registry mapping
+runtime test route
+usage normalization
+token limit alignment
+four-command runtime verification
+```
+
+Not started:
+
+```txt
+production API route
+auth
+public key binding
+billing debit
+server-side IRSS generation
+API ledger
+run aggregation
+local-first logbook contract
+Schooling Extension integration
+```
+
+Boundary:
+
+```txt
+The LLM layer is ready.
+The API route is not started.
+The next sprint begins with route contract design.
+```
+
+---
+
+# 37. Temporary Test Route Status
+
+Current route:
+
+```txt
+app/api/m13/llm-test/route.ts
+```
+
+Status:
+
+```txt
+temporary
+internal
+adapter validation only
+not public API
+not billing safe
+not auth safe
+not final contract
+```
+
+Before production release, one of the following must happen:
+
+```txt
+remove the route
+or protect it strictly
+or keep it only behind development/staging guards
+```
+
+---
+
+# 38. Remaining Route-Blocking Decisions
+
+The original open decisions remain mostly valid, but the model and adapter decisions are now closed.
+
+Still route-blocking:
+
+```txt
+1. How exactly does API authentication work?
+2. How is Public Key bound to account and token balance?
+3. What is the exact server-generated API IRSS schema?
+4. What is the exact API Ledger Entry schema?
+5. What is the minimal generic Artifact Envelope?
+6. How does run aggregation and billing debit work?
+7. How does the Schooling Extension initialize and authorize API usage?
+```
+
+No production route should be implemented before these seven points are resolved.
+
+---
+
+# 39. Updated Next Sprint Direction
+
+The next sprint should begin with the seven route-blocking decisions.
+
+Order:
+
+```txt
+1. identity and authentication
+2. public key account binding
+3. server-side IRSS schema
+4. API ledger entry
+5. artifact envelope
+6. billing and run aggregation
+7. Schooling Extension handoff
+```
+
+Only after these are frozen should coding begin on:
+
+```txt
+app/api/m13/llm/route.ts
+```
+
+---
+
+# 40. Updated Final Freeze Statement
+
+This README now freezes both:
+
+```txt
+the original M13 API architecture space
+and the confirmed M13 LLM expansion state
+```
+
+The production route remains intentionally unbuilt.
+
+The system is ready for route contract design.
+
+Canonical closing rule remains:
+
+```txt
+M13 is nothing, so it can become everything.
+Core empty.
+Envelope strict.
+Extensions free.
+Audit stable.
+```
+
+---
+
+# 41. Commit Title Suggestion
+
+```txt
+docs: update M13 API README with confirmed LLM layer
+```
+
+````
