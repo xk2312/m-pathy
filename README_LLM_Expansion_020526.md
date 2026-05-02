@@ -1181,3 +1181,456 @@ For the current adapter layer already committed:
 ```txt
 feat: add isolated M13 LLM adapter layer
 ```
+
+## 32. Runtime Adapter Test Route
+
+After all four model deployments were confirmed independently, a temporary Next.js test route was added to validate the M13 LLM adapter layer inside the real server runtime.
+
+Test route:
+
+```txt
+app/api/m13/llm-test/route.ts
+````
+
+Purpose:
+
+```txt
+Validate callM13Llm() through the actual Next.js server runtime.
+```
+
+Scope:
+
+```txt
+No billing.
+No IRSS.
+No logbook.
+No public API contract.
+No Triketon.
+No chat route changes.
+```
+
+This route is temporary and exists only to prove that the adapter layer works before the real API route is built.
+
+---
+
+## 33. Test Route Placement Correction
+
+The route was first placed incorrectly under:
+
+```txt
+lib/m13/llm-test/route.ts
+```
+
+This did not work because Next.js only recognizes API routes under:
+
+```txt
+app/api/.../route.ts
+```
+
+Result of incorrect placement:
+
+```txt
+HTTP/1.1 404 Not Found
+```
+
+Correct placement:
+
+```txt
+app/api/m13/llm-test/route.ts
+```
+
+After moving the file, the route became reachable.
+
+---
+
+## 34. Confirmed Runtime Test: reasoning
+
+Command:
+
+```txt
+reasoning
+```
+
+Expected mapping:
+
+```txt
+reasoning -> claude-sonnet-4-6 -> anthropic_foundry
+```
+
+First test result:
+
+```txt
+HTTP 200
+adapter: anthropic_foundry
+model: claude-sonnet-4-6
+usage: normalized
+```
+
+Initial content issue:
+
+```txt
+The model interpreted M13 as the biological bacteriophage.
+```
+
+Reason:
+
+```txt
+The test prompt did not provide enough system context.
+```
+
+Corrected test added explicit M13 context:
+
+```txt
+M13 is a modular AI architecture by m-pathy, not a biological phage.
+```
+
+Corrected result:
+
+```txt
+command: reasoning
+adapter: anthropic_foundry
+model: claude-sonnet-4-6
+content: correct M13 context
+billableTokens: 232
+stop_reason: end_turn
+```
+
+Conclusion:
+
+```txt
+reasoning is confirmed through callM13Llm() in Next runtime.
+```
+
+---
+
+## 35. Confirmed Runtime Test: challenge
+
+Command:
+
+```txt
+challenge
+```
+
+Expected mapping:
+
+```txt
+challenge -> claude-opus-4-6 -> anthropic_foundry
+```
+
+Confirmed result:
+
+```txt
+command: challenge
+adapter: anthropic_foundry
+model: claude-opus-4-6
+usage: normalized
+billableTokens: 404
+```
+
+Observed issue:
+
+```txt
+stop_reason: max_tokens
+```
+
+Reason:
+
+```txt
+The test used maxTokens: 300.
+The output was cut off.
+```
+
+Implication:
+
+```txt
+The adapter works.
+The test max token limit was too low for challenge behavior.
+```
+
+Recommendation for future defaults:
+
+```txt
+M13_CHALLENGE_MAX_TOKENS should likely be 1200 to 1500.
+```
+
+Conclusion:
+
+```txt
+challenge is confirmed through callM13Llm() in Next runtime.
+```
+
+---
+
+## 36. Confirmed Runtime Test: summary
+
+Command:
+
+```txt
+summary
+```
+
+Expected mapping:
+
+```txt
+summary -> gpt-4.1-mini -> azure_openai_chat
+```
+
+Confirmed result:
+
+```txt
+command: summary
+adapter: azure_openai_chat
+model: gpt-4.1-mini-2025-04-14
+usage: normalized
+billableTokens: 114
+stop_reason: stop
+```
+
+Observed normalized usage:
+
+```txt
+inputTokens: 78
+outputTokens: 36
+cachedInputTokens: 0
+cacheCreationInputTokens: 0
+totalTokens: 114
+billableTokens: 114
+```
+
+Conclusion:
+
+```txt
+summary is confirmed through callM13Llm() in Next runtime.
+```
+
+---
+
+## 37. Confirmed Runtime Test: fast
+
+Command:
+
+```txt
+fast
+```
+
+Expected mapping:
+
+```txt
+fast -> claude-haiku-4-5 -> anthropic_foundry
+```
+
+Confirmed result:
+
+```txt
+command: fast
+adapter: anthropic_foundry
+model: claude-haiku-4-5-20251001
+usage: normalized
+billableTokens: 164
+stop_reason: end_turn
+```
+
+Observed normalized usage:
+
+```txt
+inputTokens: 70
+outputTokens: 94
+cachedInputTokens: 0
+cacheCreationInputTokens: 0
+totalTokens: 164
+billableTokens: 164
+```
+
+Conclusion:
+
+```txt
+fast is confirmed through callM13Llm() in Next runtime.
+```
+
+---
+
+## 38. Fully Confirmed Adapter Layer Matrix
+
+The adapter layer is now confirmed through the real Next.js runtime for all four v1 commands.
+
+| Command     | Model                       | Adapter             | Runtime Status |
+| ----------- | --------------------------- | ------------------- | -------------- |
+| `reasoning` | `claude-sonnet-4-6`         | `anthropic_foundry` | confirmed      |
+| `challenge` | `claude-opus-4-6`           | `anthropic_foundry` | confirmed      |
+| `summary`   | `gpt-4.1-mini-2025-04-14`   | `azure_openai_chat` | confirmed      |
+| `fast`      | `claude-haiku-4-5-20251001` | `anthropic_foundry` | confirmed      |
+
+Confirmed technical properties:
+
+```txt
+callM13Llm() works in Next server runtime.
+Anthropic Foundry adapter works.
+Azure OpenAI Chat adapter works.
+Usage is normalized.
+billableTokens is produced for all commands.
+German output works when sufficient system context is provided.
+```
+
+---
+
+## 39. Important Runtime Finding
+
+The adapter layer does not automatically provide M13 system identity.
+
+If the system prompt is too generic, a model may interpret “M13” as something outside the m-pathy context.
+
+Example issue:
+
+```txt
+Claude interpreted M13 as a biological bacteriophage.
+```
+
+Corrective rule:
+
+```txt
+Every real API call must include server-side M13 system context.
+```
+
+This should not be left to the user.
+
+The future production route must inject a minimal server-owned M13 context before calling the adapter layer.
+
+---
+
+## 40. Updated Status After Runtime Tests
+
+| Layer                        | Status      |
+| ---------------------------- | ----------- |
+| Four model deployments       | confirmed   |
+| Shared ENV expansion         | confirmed   |
+| Anthropic SDK access         | confirmed   |
+| Azure OpenAI Chat access     | confirmed   |
+| Adapter files                | created     |
+| Registry mappings            | activated   |
+| Test route placement         | corrected   |
+| callM13Llm runtime execution | confirmed   |
+| Normalized usage             | confirmed   |
+| billableTokens               | confirmed   |
+| Server-side M13 context need | confirmed   |
+| Production API route         | not started |
+| Billing integration          | not started |
+| Server-side IRSS generation  | not started |
+| API Ledger Space             | not started |
+
+---
+
+## 41. Current Safe Boundary
+
+The model and adapter layer is now ready.
+
+The production API route is not yet ready.
+
+The next architectural layer must not start by adding more model logic.
+
+The next architectural layer must use the adapter layer as a closed dependency.
+
+Boundary:
+
+```txt
+Model adapters are now infrastructure.
+The next sprint is route orchestration.
+```
+
+The production route must not reimplement:
+
+```txt
+provider SDK calls
+provider response parsing
+usage normalization
+command to model mapping
+```
+
+It must only orchestrate:
+
+```txt
+auth
+command validation
+server M13 context
+callM13Llm()
+server-side IRSS
+billing
+run aggregation
+logbook entry
+response contract
+```
+
+---
+
+## 42. Temporary Test Route Status
+
+The temporary route may remain during development, but it must be treated as non-production.
+
+Current route:
+
+```txt
+app/api/m13/llm-test/route.ts
+```
+
+Status:
+
+```txt
+temporary
+internal
+adapter validation only
+not public API
+not billing safe
+not auth safe
+not final contract
+```
+
+Before production release, one of the following must happen:
+
+```txt
+remove the route
+or protect it strictly
+or keep it only behind development/staging guards
+```
+
+---
+
+## 43. Next Recommended Step
+
+The next intelligent move is to freeze the LLM expansion state and then plan the real route.
+
+Immediate next step:
+
+```txt
+Commit this README expansion.
+```
+
+After that:
+
+```txt
+Plan app/api/m13/llm/route.ts
+```
+
+The route plan must begin with contract definition, not code.
+
+Required route planning sections:
+
+```txt
+Auth and API key relation to Public Key
+Command validation
+Server-side M13 context injection
+Server-side IRSS generation
+Billing and run aggregation
+API Ledger Entry shape
+Local-first response contract
+Error contract
+Staging-only test strategy
+```
+
+---
+
+## 44. Commit Title Suggestion
+
+For this README expansion:
+
+```txt
+docs: add M13 LLM runtime adapter test results
+```
