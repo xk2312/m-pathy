@@ -1634,3 +1634,230 @@ For this README expansion:
 ```txt
 docs: add M13 LLM runtime adapter test results
 ```
+
+## 45. Post-Limit Update
+
+After the first successful runtime tests, the M13 LLM token limits were aligned with the existing GPT 4.1 chat configuration.
+
+Existing chat limits:
+
+```env
+CHAT_CONCURRENCY=1
+MODEL_MAX_TOKENS=8192
+GPTX_MAX_CHARS=200000
+MAX_CONTEXT_MESSAGES=15
+````
+
+Equivalent M13 API LLM limits were added:
+
+```env
+M13_LLM_CONCURRENCY=1
+
+M13_REASONING_MAX_TOKENS=8192
+M13_CHALLENGE_MAX_TOKENS=8192
+M13_SUMMARY_MAX_TOKENS=8192
+M13_FAST_MAX_TOKENS=2048
+
+M13_LLM_MAX_INPUT_CHARS=200000
+M13_LLM_MAX_MESSAGES=15
+```
+
+Reasoning, challenge, and summary now share the same output token ceiling as the existing GPT 4.1 chat route.
+
+Fast remains smaller by design.
+
+Reason:
+
+```txt
+fast must remain fast
+fast must not become hidden reasoning
+fast must preserve cost and latency discipline
+```
+
+---
+
+## 46. Registry Token Default Alignment
+
+The registry fallback values were updated to match the new M13 API LLM limits.
+
+Updated file:
+
+```txt
+lib/m13/llm/registry.ts
+```
+
+Updated fallback values:
+
+```txt
+reasoning -> 8192
+challenge -> 8192
+summary   -> 8192
+fast      -> 2048
+```
+
+This ensures that even if ENV values are missing, the registry defaults stay aligned with the intended M13 API behavior.
+
+Commit title used:
+
+```txt
+chore: align M13 LLM registry token defaults with API limits
+```
+
+---
+
+## 47. Test Route Default Behavior Correction
+
+The temporary test route initially forced local defaults:
+
+```txt
+maxTokens: 300
+temperature: 0.2
+```
+
+This prevented the registry and ENV defaults from being used.
+
+Observed issue:
+
+```txt
+challenge stopped with stop_reason: max_tokens
+```
+
+Cause:
+
+```txt
+The test route sent maxTokens=300 even when the request did not include maxTokens.
+```
+
+The route was corrected so `maxTokens` and `temperature` are only forwarded when explicitly provided by the caller.
+
+Correct behavior:
+
+```txt
+No maxTokens in request
+-> registry default is used
+-> ENV-backed command limit is respected
+```
+
+Updated file:
+
+```txt
+app/api/m13/llm-test/route.ts
+```
+
+Commit title used:
+
+```txt
+test: let M13 LLM test route use registry defaults
+```
+
+---
+
+## 48. Final Runtime Status After Limit Alignment
+
+All four commands were re-tested through the temporary Next runtime test route after the ENV and registry limit updates.
+
+Confirmed active commands:
+
+| Command     | Model                       | Adapter             | Runtime Status |
+| ----------- | --------------------------- | ------------------- | -------------- |
+| `reasoning` | `claude-sonnet-4-6`         | `anthropic_foundry` | confirmed      |
+| `challenge` | `claude-opus-4-6`           | `anthropic_foundry` | confirmed      |
+| `summary`   | `gpt-4.1-mini-2025-04-14`   | `azure_openai_chat` | confirmed      |
+| `fast`      | `claude-haiku-4-5-20251001` | `anthropic_foundry` | confirmed      |
+
+Final confirmed properties:
+
+```txt
+Next runtime route works.
+callM13Llm() works.
+All four commands resolve correctly.
+Both adapters work.
+Usage normalization works.
+billableTokens is available.
+Registry defaults are respected.
+ENV-backed token limits are active.
+```
+
+---
+
+## 49. Final Safe Boundary Before API Route
+
+The LLM expansion sprint is now complete enough to freeze.
+
+Completed:
+
+```txt
+model deployments
+ENV expansion
+adapter layer
+registry mapping
+runtime test route
+usage normalization
+token limit alignment
+four-command runtime verification
+```
+
+Not started:
+
+```txt
+production API route
+auth
+public key binding
+billing debit
+server-side IRSS generation
+API ledger
+run aggregation
+local-first logbook contract
+Schooling Extension integration
+```
+
+Boundary:
+
+```txt
+The LLM layer is ready.
+The API route is not started.
+The next sprint begins with route contract design.
+```
+
+No new provider logic should be added to the production route.
+
+The production route must consume the LLM layer as infrastructure.
+
+---
+
+## 50. Next Sprint Entry Point
+
+The next sprint should begin with:
+
+```txt
+app/api/m13/llm/route.ts contract design
+```
+
+Not with code.
+
+The first planning object must define:
+
+```txt
+request contract
+response contract
+auth contract
+public key relation
+server-side IRSS shape
+billing aggregation model
+API ledger entry shape
+error contract
+Schooling Extension handoff
+```
+
+Only after those contracts are frozen should the production route be implemented.
+
+---
+
+## 51. Final Commit Title Suggestion
+
+For this final README closure:
+
+```txt
+docs: finalize M13 LLM expansion status quo
+```
+
