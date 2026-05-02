@@ -765,3 +765,419 @@ Neue LLM Expansion wird daneben aufgebaut.
 ```txt
 docs: freeze M13 LLM expansion adapter findings
 ```
+## 20. Model Expansion Status After Initial README
+
+After the initial README freeze, the model expansion sprint continued with the remaining planned v1 models.
+
+The goal was to verify each model independently before touching the new API route.
+
+No route changes were made.
+
+No existing chat route was changed.
+
+No existing Triketon logic was changed.
+
+No existing production persistence was changed.
+
+---
+
+## 21. Confirmed v1 Model Entrypoints
+
+The M13 API model layer now has four confirmed model entrypoints.
+
+| Command | Model | Adapter | Status |
+|---|---|---|---|
+| `reasoning` | `claude-sonnet-4-6` | `anthropic_foundry` | confirmed |
+| `challenge` | `claude-opus-4-6` | `anthropic_foundry` | confirmed |
+| `summary` | `gpt-4.1-mini` | `azure_openai_chat` | confirmed |
+| `fast` | `claude-haiku-4-5` | `anthropic_foundry` | confirmed |
+
+Core rule:
+
+```txt
+One command.
+One model.
+One adapter.
+One audit path.
+No internal model escalation.
+No fallback model switching in v1.
+````
+
+---
+
+## 22. Confirmed Command to Model Mapping
+
+The public command layer remains simple and stable.
+
+```txt
+reasoning
+challenge
+summary
+fast
+```
+
+The internal model mapping is fixed for v1:
+
+```txt
+reasoning  -> claude-sonnet-4-6
+challenge  -> claude-opus-4-6
+summary    -> gpt-4.1-mini
+fast       -> claude-haiku-4-5
+```
+
+Reasoning commands do not dynamically switch between Sonnet and Opus.
+
+Challenge commands do not fall back to Sonnet.
+
+Summary commands do not fall back to Claude.
+
+Fast commands do not fall back to GPT.
+
+This avoids drift in cost, behavior, audit, and reproducibility.
+
+---
+
+## 23. Claude Opus 4.6 Result
+
+Claude Opus 4.6 was deployed and tested successfully through Azure Foundry Anthropic.
+
+Configured endpoint base:
+
+```txt
+https://mutah-resource.services.ai.azure.com/anthropic/
+```
+
+Foundry displayed the full messages endpoint:
+
+```txt
+https://mutah-resource.services.ai.azure.com/anthropic/v1/messages
+```
+
+The SDK configuration uses the base endpoint, because the Anthropic SDK appends the message route internally.
+
+Confirmed deployment:
+
+```txt
+claude-opus-4-6
+```
+
+Confirmed adapter:
+
+```txt
+anthropic_foundry
+```
+
+Confirmed usage schema:
+
+```txt
+input_tokens
+output_tokens
+cache_creation_input_tokens
+cache_read_input_tokens
+```
+
+Observed successful test:
+
+```txt
+input_tokens: 69
+output_tokens: 270
+cache_creation_input_tokens: 0
+cache_read_input_tokens: 0
+```
+
+Result:
+
+```txt
+challenge -> claude-opus-4-6 -> confirmed
+```
+
+---
+
+## 24. Claude Haiku 4.5 Result
+
+Claude Haiku 4.5 was deployed and tested successfully through Azure Foundry Anthropic.
+
+Configured endpoint base:
+
+```txt
+https://mutah-resource.services.ai.azure.com/anthropic/
+```
+
+Confirmed deployment:
+
+```txt
+claude-haiku-4-5
+```
+
+Observed runtime model name:
+
+```txt
+claude-haiku-4-5-20251001
+```
+
+Confirmed adapter:
+
+```txt
+anthropic_foundry
+```
+
+Confirmed usage schema:
+
+```txt
+input_tokens
+output_tokens
+cache_creation_input_tokens
+cache_read_input_tokens
+```
+
+Observed successful test:
+
+```txt
+input_tokens: 58
+output_tokens: 57
+cache_creation_input_tokens: 0
+cache_read_input_tokens: 0
+```
+
+Result:
+
+```txt
+fast -> claude-haiku-4-5 -> confirmed
+```
+
+---
+
+## 25. GPT 4.1 Mini Result
+
+GPT 4.1 Mini was deployed and tested successfully through Azure OpenAI Chat Completions.
+
+Configured endpoint:
+
+```txt
+https://mutah-resource.cognitiveservices.azure.com/
+```
+
+Confirmed deployment:
+
+```txt
+gpt-4.1-mini
+```
+
+Observed runtime model name:
+
+```txt
+gpt-4.1-mini-2025-04-14
+```
+
+Confirmed adapter:
+
+```txt
+azure_openai_chat
+```
+
+Confirmed usage schema:
+
+```txt
+prompt_tokens
+completion_tokens
+total_tokens
+prompt_tokens_details.cached_tokens
+```
+
+Observed successful test:
+
+```txt
+prompt_tokens: 47
+completion_tokens: 49
+total_tokens: 96
+cached_tokens: 0
+```
+
+Result:
+
+```txt
+summary -> gpt-4.1-mini -> confirmed
+```
+
+---
+
+## 26. Confirmed ENV Expansion
+
+The shared environment file now contains the M13 LLM Gateway block.
+
+Production path used during validation:
+
+```txt
+/srv/app/shared/.env
+```
+
+The existing Azure OpenAI configuration remains untouched.
+
+The M13 LLM Gateway block adds independent model configuration for the new API model layer.
+
+Confirmed command bindings:
+
+```env
+M13_LLM_COMMAND_REASONING=claude_sonnet_4_6
+M13_LLM_COMMAND_CHALLENGE=claude_opus_4_6
+M13_LLM_COMMAND_SUMMARY=gpt_4_1_mini
+M13_LLM_COMMAND_FAST=claude_haiku_4_5
+```
+
+Confirmed model adapter types:
+
+```env
+M13_CLAUDE_SONNET_4_6_ADAPTER=anthropic_foundry
+M13_CLAUDE_OPUS_4_6_ADAPTER=anthropic_foundry
+M13_CLAUDE_HAIKU_4_5_ADAPTER=anthropic_foundry
+M13_GPT_4_1_MINI_ADAPTER=azure_openai_chat
+```
+
+---
+
+## 27. Adapter Layer Status
+
+The adapter layer was created under:
+
+```txt
+lib/m13/llm/
+```
+
+Current files:
+
+```txt
+lib/m13/llm/types.ts
+lib/m13/llm/adapters/anthropicFoundry.ts
+lib/m13/llm/adapters/azureOpenAIChat.ts
+lib/m13/llm/registry.ts
+lib/m13/llm/index.ts
+```
+
+Purpose:
+
+```txt
+Normalize different provider responses into one M13 LLM response format.
+```
+
+Confirmed provider differences:
+
+```txt
+Claude Foundry:
+content[] text blocks
+usage.input_tokens
+usage.output_tokens
+
+Azure OpenAI:
+choices[0].message.content
+usage.prompt_tokens
+usage.completion_tokens
+```
+
+The adapter layer must remain isolated from:
+
+```txt
+app/api/chat/route.ts
+Triketon
+Billing
+IRSS
+Frontend UI
+Engine state logic
+```
+
+---
+
+## 28. Required Registry Update
+
+The current `registry.ts` initially activated only:
+
+```txt
+reasoning
+summary
+```
+
+Now that Opus and Haiku are confirmed, `registry.ts` must be updated to activate:
+
+```txt
+challenge
+fast
+```
+
+Required mapping:
+
+```txt
+challenge -> claude_opus_4_6 -> anthropic_foundry
+fast      -> claude_haiku_4_5 -> anthropic_foundry
+```
+
+This must be done as a separate code step with exact BEFORE and AFTER patch.
+
+No route work should begin before this registry update is complete.
+
+---
+
+## 29. Updated Technical Status
+
+| Layer                                  | Status            |
+| -------------------------------------- | ----------------- |
+| Sonnet deployment                      | confirmed         |
+| Opus deployment                        | confirmed         |
+| Haiku deployment                       | confirmed         |
+| GPT 4.1 Mini deployment                | confirmed         |
+| Anthropic Foundry SDK                  | confirmed         |
+| Azure OpenAI Chat endpoint             | confirmed         |
+| Usage schema discovery                 | confirmed         |
+| German output behavior                 | confirmed         |
+| Adapter file structure                 | created           |
+| Adapter runtime through `callM13Llm()` | not yet confirmed |
+| New API route                          | not started       |
+| Billing integration                    | not started       |
+| IRSS server generation                 | not started       |
+| API Ledger Space                       | not started       |
+
+---
+
+## 30. Next Immediate Step
+
+The next immediate step is not the API route.
+
+The next immediate step is:
+
+```txt
+Update lib/m13/llm/registry.ts
+```
+
+Goal:
+
+```txt
+Activate challenge and fast commands.
+```
+
+After that:
+
+```txt
+Test callM13Llm() through a clean Next-compatible path.
+```
+
+Only after the adapter layer is fully validated should the new route be planned.
+
+---
+
+## 31. Updated Commit Title Suggestions
+
+For the completed model deployment and testing documentation:
+
+```txt
+docs: document confirmed M13 LLM model expansion
+```
+
+For the upcoming registry activation patch:
+
+```txt
+feat: activate M13 challenge and fast LLM mappings
+```
+
+For the current adapter layer already committed:
+
+```txt
+feat: add isolated M13 LLM adapter layer
+```
