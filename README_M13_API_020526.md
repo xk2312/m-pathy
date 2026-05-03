@@ -2863,3 +2863,930 @@ Billing decides.
 Schooling releases.
 ```
 
+---
+
+# 52. Main and Staging Runtime Separation
+
+## 52.1 Final Decision
+
+Main and Staging may deploy the same codebase, but they must not share the same runtime truth.
+
+Canonical rule:
+
+```txt
+Same codebase.
+Separate runtime truth.
+````
+
+Main and Staging must resolve authentication, billing, checkout and ledger behavior from server side environment configuration.
+
+The client must not decide whether a request runs as Main or Staging.
+
+The request body must not be allowed to override runtime context.
+
+Forbidden request logic:
+
+```json
+{
+  "environment": "staging",
+  "billing_context": "staging_dev"
+}
+```
+
+Runtime truth is server authoritative.
+
+---
+
+## 52.2 Main Runtime Meaning
+
+Main is the production environment.
+
+Main owns:
+
+```txt
+Main Auth Context
+Main Session Context
+Main Tokenbalance
+Stripe Live Checkout
+Production Ledger Context
+Released Extensions
+Production API Usage
+Production Chat Usage
+Production Extension Execution
+```
+
+Main rules:
+
+```txt
+Users buy or receive normal account tokens.
+Chat, API and released Extensions debit from the same Main account tokenbalance.
+Stripe Live may be offered when tokens are missing.
+Ledger entries are production ledger entries.
+```
+
+Canonical Main context:
+
+```txt
+M13_RUNTIME_ENV=production
+M13_BILLING_CONTEXT=main
+M13_LEDGER_CONTEXT=production
+M13_CHECKOUT_CONTEXT=stripe_live
+```
+
+---
+
+## 52.3 Staging Runtime Meaning
+
+Staging is the developer and candidate test environment.
+
+Staging owns:
+
+```txt
+Staging Auth Context
+Staging Session Context
+Staging Dev Tokenbalance
+Manual Dev Token Grants
+Staging Ledger Context
+Candidate Extension Tests
+Prompt Tests for Candidate Extensions
+```
+
+Staging rules:
+
+```txt
+Developer logs into Staging separately.
+Developer may use the same email address as on Main.
+Staging Dev Tokens are separate from Main Tokens.
+Staging Dev Tokens are manually granted by an administrator.
+Staging does not redirect to Stripe.
+Staging does not read Main tokenbalance.
+Staging does not debit Main tokenbalance.
+Staging does not write Main ledger.
+```
+
+Canonical Staging context:
+
+```txt
+M13_RUNTIME_ENV=staging
+M13_BILLING_CONTEXT=staging_dev
+M13_LEDGER_CONTEXT=staging
+M13_CHECKOUT_CONTEXT=disabled_admin_grant
+```
+
+---
+
+# 53. Same Email, Separate Auth Contexts
+
+## 53.1 Final Decision
+
+The same email address may exist on Main and Staging.
+
+However, Main and Staging are separate authentication contexts.
+
+Same email does not mean same runtime state.
+
+Canonical rule:
+
+```txt
+Same human email.
+Separate system state.
+```
+
+---
+
+## 53.2 Main Account State
+
+Example:
+
+```txt
+main:
+user@email.com
+→ Main Session
+→ Main Tokenbalance
+→ Main Ledger
+→ Stripe Live
+→ Production Usage
+```
+
+---
+
+## 53.3 Staging Account State
+
+Example:
+
+```txt
+staging:
+user@email.com
+→ Staging Session
+→ Staging Dev Tokenbalance
+→ Staging Ledger
+→ Manual Dev Token Grants
+→ Candidate Tests
+```
+
+---
+
+## 53.4 Forbidden Cross Context Behavior
+
+Staging must not:
+
+```txt
+create a Main session
+read Main tokenbalance
+write Main tokenbalance
+write Main ledger
+use Main Stripe checkout
+redirect login links to Main
+```
+
+Main must not:
+
+```txt
+read Staging Dev tokenbalance
+write Staging Dev tokenbalance
+write Staging ledger
+treat Staging Candidate Runs as production executions
+```
+
+---
+
+## 53.5 Final Sentence
+
+```txt
+Main and Staging may accept the same email address, but each environment owns its own session, balance, ledger and billing scope.
+```
+
+---
+
+# 54. Staging Auth Link Separation
+
+## 54.1 Final Decision
+
+Staging login links must return to Staging.
+
+Main login links must return to Main.
+
+The login email link must be built from the runtime environment base URL.
+
+The link must not be hardcoded to Main.
+
+---
+
+## 54.2 Required Behavior
+
+Main login:
+
+```txt
+User starts login on Main
+→ Magic Link points to Main
+→ User lands on Main
+→ Main Session is created
+→ Main Tokenbalance applies
+```
+
+Staging login:
+
+```txt
+User starts login on Staging
+→ Magic Link points to Staging
+→ User lands on Staging
+→ Staging Session is created
+→ Staging Dev Tokenbalance applies
+```
+
+---
+
+## 54.3 Required Environment Separation
+
+Main must resolve:
+
+```txt
+APP_BASE_URL=https://m-pathy.ai
+AUTH_CALLBACK_BASE_URL=https://m-pathy.ai
+MAGIC_LINK_BASE_URL=https://m-pathy.ai
+```
+
+Staging must resolve:
+
+```txt
+APP_BASE_URL=https://staging.m-pathy.ai
+AUTH_CALLBACK_BASE_URL=https://staging.m-pathy.ai
+MAGIC_LINK_BASE_URL=https://staging.m-pathy.ai
+```
+
+Variable names may differ in implementation.
+
+The required principle is fixed:
+
+```txt
+Auth links are environment bound.
+```
+
+---
+
+## 54.4 Resend Boundary
+
+Resend is only the mail transport.
+
+Resend must send the link that the server creates for the active environment.
+
+Resend must not force Main links for Staging login.
+
+---
+
+## 54.5 Final Sentence
+
+```txt
+Staging Auth is valid only when a Staging login creates a Staging session through a Staging magic link.
+```
+
+---
+
+# 55. Unified Token Principle with Environment Specific Balance Sources
+
+## 55.1 Final Decision
+
+There is one conceptual token economy per runtime context.
+
+Main and Staging do not share token balances.
+
+Within Main, all production consumption uses the same Main account tokenbalance.
+
+Within Staging, all developer test consumption uses the same Staging Dev tokenbalance.
+
+---
+
+## 55.2 Main Unified Token Source
+
+Main tokenbalance is used for:
+
+```txt
+Chat usage
+API usage
+Released Extension usage
+Production LLM calls
+Production Schooling usage
+```
+
+Tokens may be obtained through:
+
+```txt
+Stripe Live purchase
+manual grant
+future production credit mechanisms
+```
+
+All Main debits come from:
+
+```txt
+main_account_token_balance
+```
+
+---
+
+## 55.3 Staging Dev Token Source
+
+Staging Dev tokenbalance is used for:
+
+```txt
+Candidate Extension tests
+Developer prompt tests
+Staging Schooling runs
+Staging API tests
+Staging LLM calls
+```
+
+Staging Dev Tokens are granted manually by an administrator in v1.
+
+Staging does not use Stripe in v1.
+
+All Staging debits come from:
+
+```txt
+staging_dev_token_balance
+```
+
+---
+
+## 55.4 Final Sentence
+
+```txt
+The system must not care where tokens were purchased or granted; it must only resolve the correct balance source for the active runtime context.
+```
+
+---
+
+# 56. Staging Dev Tokens
+
+## 56.1 Final Decision
+
+Staging uses real Dev Tokens.
+
+Staging does not use simulated billing.
+
+Staging does not use Main billing.
+
+Staging has real debit behavior against a separate Staging Dev tokenbalance.
+
+---
+
+## 56.2 Reason
+
+Staging must test real execution behavior:
+
+```txt
+Ledger creation
+IRSS creation
+Artifact creation
+Usage normalization
+Billing status
+Token debit
+Run aggregation
+Candidate Extension execution
+```
+
+Therefore the Staging Ledger must not be dead.
+
+Only the balance source is different.
+
+---
+
+## 56.3 Staging Billing Shape
+
+A Staging Ledger Entry may contain:
+
+```json
+{
+  "environment": "staging",
+  "billing": {
+    "balance_source": "staging_dev_token_balance",
+    "status": "debited",
+    "debited": true,
+    "debit_amount": 114,
+    "balance_after": 4886,
+    "billing_unit": "tokens"
+  }
+}
+```
+
+Main Ledger Entry may contain:
+
+```json
+{
+  "environment": "production",
+  "billing": {
+    "balance_source": "main_account_token_balance",
+    "status": "debited",
+    "debited": true,
+    "debit_amount": 114,
+    "balance_after": 99886,
+    "billing_unit": "tokens"
+  }
+}
+```
+
+---
+
+## 56.4 Manual Grant Rule
+
+In v1, Staging Dev Tokens are granted manually by an administrator.
+
+No automatic Stripe checkout is required for Staging.
+
+No Stripe redirect is shown on Staging when tokens are missing.
+
+---
+
+## 56.5 Missing Staging Dev Tokens
+
+If a logged in Staging user has zero Staging Dev Tokens, execution is blocked before the LLM call.
+
+Required behavior:
+
+```txt
+Auth ok
+Staging context ok
+Staging Dev Balance checked
+Balance is zero or below required floor
+No LLM call
+No debit
+Controlled response returned
+```
+
+Canonical user facing message:
+
+```txt
+Deine Dev Tokens müssen erst aufgefüllt werden. Wende dich an den Administrator.
+```
+
+---
+
+## 56.6 Final Sentence
+
+```txt
+Staging writes real audit entries with real Staging Dev debits, but never touches Main tokenbalance.
+```
+
+---
+
+# 57. Billing, Checkout and Ledger Resolvers
+
+## 57.1 Final Decision
+
+The runtime separation must be implemented through server side resolvers.
+
+The existing Chat Route and the future API Route must both use the same runtime context logic.
+
+This prevents duplicated Main and Staging code paths.
+
+---
+
+## 57.2 Required Resolvers
+
+The system should resolve:
+
+```txt
+Runtime Context
+Billing Context
+Checkout Context
+Ledger Context
+```
+
+Conceptual resolver behavior:
+
+```txt
+runtimeContext:
+production or staging
+
+billingContext:
+main or staging_dev
+
+checkoutContext:
+stripe_live or disabled_admin_grant
+
+ledgerContext:
+production or staging
+```
+
+---
+
+## 57.3 Route Responsibility
+
+Routes should not hardcode repeated environment logic.
+
+Routes should ask the resolver:
+
+```txt
+Which runtime am I in?
+Which balance source applies?
+Is checkout enabled?
+Which ledger namespace applies?
+Should execution be blocked before LLM call?
+```
+
+---
+
+## 57.4 Existing Chat Route Impact
+
+The existing Chat Route is affected because it currently controls:
+
+```txt
+Prompt execution
+FreeGate
+Token checks
+Token debit
+Extension execution
+LLM calls
+Ledger or persistence behavior
+```
+
+Therefore the existing Chat Route must later respect the same runtime context as the future API Route.
+
+This does not mean duplicating logic inside the route.
+
+It means routing critical decisions through shared resolvers.
+
+---
+
+## 57.5 Future API Route Impact
+
+The future API route must also use the same runtime context.
+
+For production:
+
+```txt
+/api/m13/llm
+→ production runtime
+→ main tokenbalance
+→ production ledger
+→ real production debit
+```
+
+For staging:
+
+```txt
+/api/m13/llm
+→ staging runtime
+→ staging dev tokenbalance
+→ staging ledger
+→ real staging debit
+```
+
+---
+
+## 57.6 Final Sentence
+
+```txt
+The existing Chat Route and future API Route must both resolve billing, checkout and ledger behavior through the same server side runtime context, so Staging remains isolated without duplicating production logic.
+```
+Prompt: 58
+Drift: none
+
+Ja. Das sollten wir festhalten.
+
+Ergänze unter **# 57. Billing, Checkout and Ledger Resolvers** diesen Zusatz als neuen Abschnitt **57.7**:
+
+````md
+
+## 57.7 Shared Runtime Resolver
+
+The runtime resolver must be shared infrastructure.
+
+It must not be implemented separately per route.
+
+Forbidden structure:
+
+```txt
+app/api/chat/route.ts
+→ own runtime resolver
+
+app/api/m13/llm/route.ts
+→ own runtime resolver
+````
+
+Required structure:
+
+```txt
+shared runtime resolver
+→ app/api/chat/route.ts
+→ app/api/m13/llm/route.ts
+```
+
+Canonical target path:
+
+```txt
+lib/m13/runtime/resolveRuntimeContext.ts
+```
+
+The resolver provides one server-side runtime truth for all server-side execution routes.
+
+Conceptual resolver output:
+
+```ts
+{
+  runtimeEnv: "production" | "staging",
+  billingContext: "main" | "staging_dev",
+  ledgerContext: "production" | "staging",
+  checkoutContext: "stripe_live" | "disabled_admin_grant",
+  balanceSource: "main_account_token_balance" | "staging_dev_token_balance"
+}
+```
+
+Routes must not derive these values independently.
+
+Each route only consumes:
+
+```ts
+const runtime = resolveRuntimeContext();
+```
+
+Usage:
+
+```txt
+Chat Route uses runtime context for FreeGate, token checks, checkout behavior and ledger namespace.
+
+M13 API Route uses runtime context for auth, token checks, debit, ledger namespace and execution billing.
+```
+
+Canonical rule:
+
+```txt
+One shared runtime resolver.
+Many server-side execution routes.
+No duplicated runtime truth.
+```
+
+Final sentence:
+
+```txt
+Main and Staging separation must be resolved once in shared infrastructure and consumed by all execution routes.
+```
+
+````
+
+Commit Titel für diese README Ergänzung:
+
+```txt
+docs: define shared runtime resolver for execution routes
+````
+
+
+---
+
+# 58. Staging and Main Deployment Rule
+
+## 58.1 Final Decision
+
+Main and Staging may receive the same deployed code.
+
+The deployed code must remain environment safe.
+
+Runtime behavior must be controlled by server side environment configuration and storage namespaces.
+
+---
+
+## 58.2 Deployment Safety Rule
+
+The following must never be copied from Main to Staging as active runtime truth:
+
+```txt
+Main Auth Callback URL
+Main Magic Link Base URL
+Main Stripe Live Checkout Behavior
+Main Tokenbalance Source
+Main Ledger Namespace
+Main Billing Context
+```
+
+The following must never be copied from Staging to Main as active runtime truth:
+
+```txt
+Staging Dev Tokenbalance Source
+Staging Ledger Namespace
+Staging Auth Callback URL
+Disabled Checkout Context
+Candidate Test Context
+```
+
+---
+
+## 58.3 Same Code, Different Environment
+
+Allowed:
+
+```txt
+Same route code
+Same resolver code
+Same ledger contract
+Same billing contract
+Same artifact contract
+Same IRSS contract
+```
+
+Required difference:
+
+```txt
+Environment variables
+Balance source
+Ledger namespace
+Auth callback base URL
+Checkout behavior
+Candidate availability
+```
+
+---
+
+## 58.4 Final Sentence
+
+```txt
+Deploying the same code to Main is safe only if runtime truth is resolved by environment and never by hardcoded Main assumptions.
+```
+
+---
+
+# 59. Developer and User Execution Boundary
+
+## 59.1 Final Decision
+
+Developer execution and end user execution must be economically separated by runtime context.
+
+A Developer pays or receives Staging Dev Tokens for Staging Candidate work.
+
+An end user pays with Main Tokens when using released Extensions on Main.
+
+---
+
+## 59.2 Developer on Staging
+
+Developer behavior:
+
+```txt
+Developer logs into Staging
+Developer receives manual Staging Dev Tokens
+Developer runs Candidate Extension tests
+Developer prompt tests Candidate Extension behavior
+Debit comes from Staging Dev tokenbalance
+Ledger writes to Staging ledger
+```
+
+The Developer pays for:
+
+```txt
+Candidate build tests
+Candidate prompt tests
+Staging LLM calls
+Staging Schooling runs
+```
+
+---
+
+## 59.3 End User on Main
+
+End user behavior:
+
+```txt
+User logs into Main
+User has Main account tokens
+User runs released Extension
+Debit comes from Main account tokenbalance
+Ledger writes to production ledger
+```
+
+The end user pays for:
+
+```txt
+Released Extension execution
+Main Chat usage
+Main API usage
+Production LLM calls
+```
+
+---
+
+## 59.4 No Cross Subsidy Rule
+
+The Developer does not pay forever for all future Main users.
+
+Main users do not consume Staging Dev Tokens.
+
+Staging tests do not consume Main user tokens.
+
+---
+
+## 59.5 Final Sentence
+
+```txt
+Developer Candidate work is paid or granted in Staging; released Extension execution is paid by the executing Main user.
+```
+
+---
+
+# 60. Updated Implementation Boundary After Runtime Separation
+
+## 60.1 Still Planning Only
+
+This section defines planning decisions.
+
+It does not implement code.
+
+It does not require immediate patches.
+
+The only current execution is updating this README.
+
+---
+
+## 60.2 New Required Implementation Areas
+
+The future build must account for:
+
+```txt
+Runtime Context Resolver
+Billing Context Resolver
+Checkout Context Resolver
+Ledger Context Resolver
+Staging Auth Link Base URL
+Main Auth Link Base URL
+Staging Dev Tokenbalance
+Main Account Tokenbalance
+Manual Staging Dev Token Grant
+Staging Zero Token Block Message
+Shared route usage across Chat Route and API Route
+```
+
+---
+
+## 60.3 Critical Build Order Implication
+
+Before building the future API route, the system must understand runtime context separation.
+
+Reason:
+
+```txt
+The existing Chat Route and future API Route must both avoid Main and Staging billing drift.
+```
+
+This means runtime separation is a shared foundation.
+
+It is not only an API route feature.
+
+---
+
+## 60.4 Final Sentence
+
+```txt
+The next implementation phase must treat runtime separation as shared infrastructure before exposing Staging Dev Tokens or production API execution.
+```
+
+---
+
+# 61. Updated Final Freeze Statement After Runtime Separation
+
+This README now freezes:
+
+```txt
+M13 API architecture space
+M13 LLM expansion state
+seven route blocking decisions
+production route scope
+Main and Staging runtime separation
+Staging Dev Token model
+shared billing and ledger context requirement
+remaining implementation boundary
+```
+
+The production route remains intentionally unbuilt.
+
+The Staging Dev Token system remains intentionally unbuilt.
+
+The existing Chat Route remains intentionally unpatched in this document.
+
+The next valid step is implementation preparation based on exact file evidence.
+
+Canonical closing rule:
+
+```txt
+M13 is nothing, so it can become everything.
+Core empty.
+Envelope strict.
+Extensions free.
+Audit stable.
+Route orchestrates.
+Adapters execute.
+Ledger proves.
+Artifact carries.
+IRSS shows.
+Billing decides.
+Schooling releases.
+Runtime separates.
+Staging tests.
+Main produces.
+```
+
+Commit title suggestion:
+
+```txt
+docs: define main staging runtime separation for M13 API
+```
+
+```
+```
