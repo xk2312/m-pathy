@@ -1474,12 +1474,1392 @@ Extensions free.
 Audit stable.
 ```
 
----
+# 41. Resolved Route Blocking Decisions
 
-# 41. Commit Title Suggestion
+The seven route blocking decisions for the future production route are now resolved.
+
+Production route target:
 
 ```txt
-docs: update M13 API README with confirmed LLM layer
+app/api/m13/llm/route.ts
+````
+
+External path:
+
+```txt
+POST /api/m13/llm
 ```
 
-````
+The production route is still not implemented.
+
+This section closes the decision layer that previously blocked route planning.
+
+Resolved decisions:
+
+```txt
+1. API Authentication
+2. Public Key Binding
+3. Server Side API IRSS
+4. API Ledger Entry
+5. Generic Artifact Envelope
+6. Run Aggregation and Billing Debit
+7. Schooling Extension Initialization
+```
+
+Canonical rule:
+
+```txt
+No production implementation before these seven decisions are frozen.
+```
+
+Status:
+
+```txt
+The seven decisions are frozen.
+The route contract may now be planned.
+Code patches still require exact file inspection before implementation.
+```
+
+---
+
+# 42. Decision 1: API Authentication
+
+## 42.1 Final Decision
+
+API authentication v1 is based on server generated API Keys.
+
+A registered user can become an API user when all required conditions are satisfied.
+
+Required conditions:
+
+```txt
+1. User Account exists
+2. API Credit is available
+3. Schooling Extension is completed
+```
+
+After successful completion:
+
+```txt
+API Workspace is created
+API Key is created server side
+Public Key is bound as Audit Anchor
+API Access is enabled
+```
+
+## 42.2 User Account Meaning
+
+In v1, User Account means:
+
+```txt
+registered mail account
+```
+
+There is no Corporate Account layer in v1.
+
+There is no Organization layer in v1.
+
+There is no SSO in v1.
+
+There is no Team or Role system in v1.
+
+## 42.3 API Access Flow
+
+The API access flow is separate from the normal Chat flow.
+
+Canonical v1 path:
+
+```txt
+API Access Page
+→ Login or Mail Account
+→ API Credit through Stripe or manual grant
+→ Schooling Extension
+→ API Workspace
+→ API Key
+→ Proof Run
+→ /api/m13/llm usage
+```
+
+The normal Chat Settings Space does not activate API usage directly.
+
+The API Access Space is its own controlled entry path.
+
+## 42.4 Authentication Contract
+
+Future API calls use:
+
+```txt
+Authorization: Bearer m13_api_key_xxx
+X-M13-Public-Key: public_key_xxx
+```
+
+The API Key authenticates the API call.
+
+The Public Key does not authenticate the API call.
+
+The Public Key is only used as Ledger and Audit Anchor.
+
+## 42.5 Server Checks
+
+For each API call, the server must check:
+
+```txt
+API Key is valid
+API Key is active
+API Key belongs to an active API Workspace
+API Workspace belongs to a registered User Account
+User Account has API Access enabled
+User Account has API Credit
+Schooling Extension is completed
+Public Key is allowed for the API Workspace
+```
+
+## 42.6 Explicitly Not In v1
+
+```txt
+No FreeGate
+No Corporate Accounts
+No Organization Layer
+No SSO
+No Team Roles
+No Guest API Calls
+No API activation through normal Chat Settings
+No Public Key only authentication
+```
+
+## 42.7 Final Sentence
+
+```txt
+API Auth v1 = User Account + API Credit + Schooling Completion + API Workspace + API Key + Public Key Audit Anchor.
+```
+
+---
+
+# 43. Decision 2: Public Key Binding
+
+## 43.1 Final Decision
+
+The Tokenbalance belongs to the User Account.
+
+The API Key belongs to an API Workspace.
+
+The Public Key is registered as an allowed Audit Anchor on the API Workspace.
+
+## 43.2 Correct Responsibility Split
+
+```txt
+User Account = registered mail account and billing owner
+API Workspace = technical execution space
+API Key = API access secret
+Public Key = Audit Anchor
+Run = single execution unit
+Ledger Entry = persistent operation proof
+Artifact = generated result
+```
+
+## 43.3 Public Key Boundary
+
+The Public Key is not:
+
+```txt
+API Secret
+Authentication key
+Billing owner
+Account replacement
+Token owner
+```
+
+The Public Key is:
+
+```txt
+Ledger Anchor
+Audit Anchor
+Run provenance reference
+Artifact provenance reference
+Local first proof reference
+Future signing compatible anchor
+```
+
+## 43.4 API Workspace Meaning
+
+API Workspace is a technical execution scope.
+
+It is not a customer project.
+
+It is not a business project.
+
+It is not a corporate account.
+
+Example v1:
+
+```txt
+User Account: api@customer.com
+API Workspace: default
+API Key: m13_live_xxx
+Public Key: pub_xxx
+Run: run_xxx
+```
+
+## 43.5 Binding Logic
+
+During Schooling completion:
+
+```txt
+Public Key is read or created locally
+Public Key is sent to server
+Server hashes or references Public Key
+Server registers Public Key on API Workspace
+Server creates API Key
+Server activates API Access
+```
+
+## 43.6 Multiple Public Keys
+
+A User Account may have multiple Public Keys.
+
+An API Workspace may have multiple allowed Public Keys.
+
+Each Public Key has a status:
+
+```txt
+active
+revoked
+```
+
+Public Keys are not deleted when revoked.
+
+Old Ledger Entries remain audit valid.
+
+New Runs use a new active Public Key.
+
+## 43.7 Final Sentence
+
+```txt
+API Auth and Billing run through User Account and API Key; Public Key runs only as Audit Anchor inside the API Workspace.
+```
+
+---
+
+# 44. Decision 3: Server Side API IRSS
+
+## 44.1 Final Decision
+
+API IRSS v1 is a server generated Execution Snapshot.
+
+It is not generated by the LLM.
+
+It is not optional for the client.
+
+It is not a full Ledger.
+
+It is not full Run Aggregation.
+
+It is not the Artifact.
+
+## 44.2 Purpose
+
+API IRSS v1 shows the real server side execution surface of a concrete API operation.
+
+It documents:
+
+```txt
+System
+API Space
+Route
+Timestamp
+User Account Reference
+API Workspace
+Public Key Reference
+Run ID
+Stage ID
+Operation ID
+Ledger Entry ID
+Command
+Execution Mode
+LLM Provider
+Adapter
+Deployment
+Runtime Model
+Stop Reason
+Normalized Usage
+Billable Tokens
+Billing Result
+Balance After
+Artifact Status
+Artifact Payload Hash
+Server Side Drift Status
+Execution Status
+Ledger Entry Created
+Local Persistence Required
+```
+
+## 44.3 API IRSS v1 Shape
+
+```json
+{
+  "system": "M13",
+  "irss_version": "api_irss_v1",
+  "space": "api_execution",
+  "route": "/api/m13/llm",
+  "timestamp": "2026-05-03T00:00:00.000Z",
+
+  "user_account_ref": "usr_...",
+  "api_workspace_id": "ws_...",
+  "public_key_ref": "sha256:...",
+
+  "run_id": "run_...",
+  "stage_id": "stage_...",
+  "operation_id": "op_...",
+  "ledger_entry_id": "led_...",
+
+  "command": "summary",
+  "execution_mode": "single_llm_call",
+
+  "llm": {
+    "provider": "azure_openai",
+    "adapter": "azure_openai_chat",
+    "deployment": "gpt-4.1-mini",
+    "runtime_model": "gpt-4.1-mini-2025-04-14",
+    "stop_reason": "stop"
+  },
+
+  "usage": {
+    "input_tokens": 78,
+    "output_tokens": 36,
+    "cached_input_tokens": 0,
+    "cache_creation_input_tokens": 0,
+    "total_tokens": 114,
+    "billable_tokens": 114
+  },
+
+  "billing": {
+    "required": true,
+    "debited": true,
+    "debit_amount": 114,
+    "balance_after": 99886,
+    "billing_unit": "tokens"
+  },
+
+  "artifact": {
+    "artifact_id": "art_...",
+    "artifact_type": "generic",
+    "status": "created",
+    "payload_hash": "sha256:..."
+  },
+
+  "drift": {
+    "state": "none",
+    "origin": "none",
+    "risk": "none",
+    "signals": []
+  },
+
+  "status": {
+    "execution_status": "success",
+    "ledger_entry_created": true,
+    "local_persistence_required": true
+  }
+}
+```
+
+## 44.4 Forbidden IRSS Content
+
+API IRSS v1 must not contain:
+
+```txt
+API Key
+Provider Key
+ENV values
+full prompt
+full request body
+full chain history
+full Ledger
+balance_before
+private user data
+```
+
+## 44.5 Public Key in IRSS
+
+The IRSS uses:
+
+```txt
+public_key_ref = sha256(public_key)
+```
+
+It does not repeat the full Public Key unless explicitly required by a later audit format.
+
+## 44.6 Server Side Drift
+
+Server side drift v1 is Execution Drift.
+
+It is not semantic truth judgment.
+
+The server evaluates whether the execution was structurally valid, complete, billable and audit ready.
+
+Drift may be detected through:
+
+```txt
+invalid_auth
+invalid_workspace
+invalid_public_key
+schooling_missing
+invalid_command
+invalid_model_mapping
+adapter_mismatch
+runtime_model_mismatch
+input_limit_exceeded
+output_truncated
+usage_missing
+billing_failed
+artifact_failed
+ledger_failed
+server_context_missing
+response_contract_invalid
+provider_error
+```
+
+Allowed drift shape:
+
+```json
+{
+  "state": "none",
+  "origin": "none",
+  "risk": "none",
+  "signals": []
+}
+```
+
+Allowed drift state values:
+
+```txt
+none
+detected
+```
+
+Allowed drift risk values:
+
+```txt
+none
+low
+medium
+high
+```
+
+## 44.7 Final Sentence
+
+```txt
+API IRSS v1 shows maximum execution transparency as a server generated snapshot, but it does not replace API Ledger, Run Aggregation or Artifact Envelope.
+```
+
+---
+
+# 45. Decision 4: API Ledger Entry
+
+## 45.1 Final Decision
+
+M13 API Ledger v1 uses an Operation Ledger.
+
+Each productive LLM call creates exactly one API Ledger Entry.
+
+The Ledger Entry documents one real operation.
+
+It does not document the full run.
+
+It does not replace the Artifact.
+
+It does not replace the IRSS.
+
+It does not write into the existing Triketon.
+
+## 45.2 Ledger Responsibility
+
+API Ledger Entry stores:
+
+```txt
+Identity
+Execution
+LLM
+Usage
+Billing
+Artifact Reference
+IRSS
+Drift
+Integrity
+Timestamp
+Sync Status
+```
+
+## 45.3 API Ledger v1 Shape
+
+```json
+{
+  "id": "led_...",
+  "space": "api",
+  "entry_type": "llm_execution",
+
+  "identity": {
+    "user_account_ref": "usr_...",
+    "api_workspace_id": "ws_...",
+    "public_key_ref": "sha256:..."
+  },
+
+  "execution": {
+    "run_id": "run_...",
+    "stage_id": "stage_...",
+    "operation_id": "op_...",
+    "command": "summary",
+    "execution_mode": "single_llm_call",
+    "route": "/api/m13/llm",
+    "status": "success"
+  },
+
+  "llm": {
+    "provider": "azure_openai",
+    "adapter": "azure_openai_chat",
+    "deployment": "gpt-4.1-mini",
+    "runtime_model": "gpt-4.1-mini-2025-04-14",
+    "stop_reason": "stop"
+  },
+
+  "usage": {
+    "input_tokens": 78,
+    "output_tokens": 36,
+    "cached_input_tokens": 0,
+    "cache_creation_input_tokens": 0,
+    "total_tokens": 114,
+    "billable_tokens": 114
+  },
+
+  "billing": {
+    "required": true,
+    "status": "debited",
+    "debited": true,
+    "debit_amount": 114,
+    "balance_after": 99886,
+    "billing_unit": "tokens"
+  },
+
+  "artifact": {
+    "artifact_id": "art_...",
+    "artifact_type": "generic",
+    "artifact_version": "v1",
+    "status": "created",
+    "payload_hash": "sha256:..."
+  },
+
+  "irss": {},
+
+  "drift": {
+    "state": "none",
+    "origin": "none",
+    "risk": "none",
+    "signals": []
+  },
+
+  "integrity": {
+    "entry_hash": "sha256:...",
+    "prev_entry_hash": null,
+    "chain_id": "chain_..."
+  },
+
+  "timestamp": "2026-05-03T00:00:00.000Z",
+  "sync_status": "local_only"
+}
+```
+
+## 45.4 Ledger Entry Types
+
+Allowed entry_type values:
+
+```txt
+llm_execution
+llm_execution_rejected
+llm_execution_failed
+```
+
+Meaning:
+
+```txt
+llm_execution = LLM call was actually executed
+llm_execution_rejected = request rejected before LLM call
+llm_execution_failed = execution failed before successful LLM output
+```
+
+Billing failure after a successful LLM call remains:
+
+```txt
+entry_type = llm_execution
+billing.status = failed
+drift.risk = high
+```
+
+Reason:
+
+```txt
+The LLM call really happened.
+```
+
+## 45.5 Billing Status in Ledger
+
+Billing status is mandatory.
+
+Allowed billing.status values:
+
+```txt
+not_required
+precheck_failed
+debited
+failed
+```
+
+If Billing is not yet connected during development, use:
+
+```json
+{
+  "required": true,
+  "status": "pending",
+  "debited": false,
+  "debit_amount": 114,
+  "balance_after": null,
+  "billing_unit": "tokens"
+}
+```
+
+However, production release requires real debit.
+
+## 45.6 Integrity Rule
+
+The Ledger must never invent values.
+
+Unknown or unavailable values must be:
+
+```txt
+null
+pending
+failed
+```
+
+Never fake.
+
+## 45.7 Final Sentence
+
+```txt
+API Ledger v1 stores one real operation per entry, stays honest with pending or null values, and replaces neither IRSS nor Artifact nor Run Aggregation.
+```
+
+---
+
+# 46. Decision 5: Generic Artifact Envelope
+
+## 46.1 Final Decision
+
+M13 API v1 uses the hardened Auditable Generic Artifact Envelope.
+
+The Artifact is the generated result object.
+
+It is not Billing.
+
+It is not Usage.
+
+It is not LLM metadata.
+
+It is not Ledger.
+
+It is not Run Aggregation.
+
+It is not Core Fachlogik.
+
+## 46.2 Artifact v1 Shape
+
+```json
+{
+  "artifact_id": "art_...",
+  "artifact_type": "generic",
+  "artifact_version": "v1",
+  "status": "created",
+
+  "origin": {
+    "space": "api",
+    "route": "/api/m13/llm",
+    "run_id": "run_...",
+    "stage_id": "stage_...",
+    "operation_id": "op_...",
+    "ledger_entry_id": "led_..."
+  },
+
+  "output": {
+    "kind": "text",
+    "format": "markdown"
+  },
+
+  "payload": {
+    "content": "..."
+  },
+
+  "integrity": {
+    "payload_hash": "sha256:...",
+    "artifact_hash": "sha256:..."
+  },
+
+  "created_at": "2026-05-03T00:00:00.000Z"
+}
+```
+
+## 46.3 Allowed Values
+
+artifact_type:
+
+```txt
+generic
+```
+
+status:
+
+```txt
+created
+failed
+empty
+```
+
+output.kind:
+
+```txt
+text
+json
+file_ref
+mixed
+```
+
+output.format:
+
+```txt
+plain
+markdown
+json
+html
+csv
+pdf_ref
+binary_ref
+```
+
+## 46.4 Forbidden Artifact Content
+
+The Artifact must not contain:
+
+```txt
+Billing
+Token Usage
+LLM Provider
+Adapter
+Deployment
+Runtime Model
+API Key
+Provider Key
+Full Request Body
+Full Chain History
+Domain Tags
+Industry Classification
+Quality Score
+Regulatory Labels
+```
+
+## 46.5 No Fachcodes in Core
+
+The Core Artifact Envelope must not contain domain objects such as:
+
+```txt
+patient
+prescription
+diagnosis
+claim
+contract
+policy
+case
+```
+
+Extensions may define their own payload semantics inside payload.
+
+The Core only defines the Envelope.
+
+## 46.6 Final Sentence
+
+```txt
+Artifact Envelope v1 is an auditable result container, not fach logic and not a second Ledger.
+```
+
+---
+
+# 47. Decision 6: Run Aggregation and Billing Debit
+
+## 47.1 Final Decision
+
+M13 API Billing v1 uses Debit per Operation.
+
+Each productive LLM call is billed individually.
+
+Each productive LLM call creates exactly one Ledger Entry.
+
+Run Aggregation is derived from Ledger Entries with the same run_id.
+
+Run Aggregation never performs billing itself.
+
+## 47.2 Billing Flow Before LLM Call
+
+Before each LLM call, the server must check:
+
+```txt
+Auth valid
+API Workspace active
+Schooling completed
+Public Key allowed as Audit Anchor
+Command valid
+Credit Floor for Command available
+```
+
+## 47.3 Billing Flow After LLM Call
+
+After each successful LLM call, the server must:
+
+```txt
+Normalize Usage
+Read billableTokens
+Execute atomic debit
+Create Artifact
+Create IRSS
+Create Ledger Entry
+Return Response with Billing Status
+```
+
+## 47.4 Atomic Debit Rule
+
+Debit must be atomic.
+
+The server must not allow negative balances.
+
+The balance update must only succeed if the account has sufficient credit.
+
+Canonical database logic:
+
+```sql
+UPDATE account_balance
+SET balance = balance - debit_amount
+WHERE account_id = ...
+AND balance >= debit_amount
+```
+
+If the update does not succeed, billing failed.
+
+## 47.5 Credit Floor
+
+A Credit Floor is required before the LLM call.
+
+Purpose:
+
+```txt
+Prevent expensive calls with insufficient balance.
+```
+
+Possible v1 direction:
+
+```txt
+fast: minimum credit floor
+summary: minimum credit floor
+reasoning: minimum credit floor
+challenge: minimum credit floor
+```
+
+Exact numeric values are implementation details and must be defined before production release.
+
+## 47.6 Billing Failure After LLM Call
+
+If the LLM call succeeds but debit fails:
+
+```txt
+execution.status = completed_with_billing_failure
+billing.status = failed
+billing.debited = false
+drift.state = detected
+drift.origin = billing_failed
+drift.risk = high
+api_access_status = paused
+```
+
+The event must be written to the API Ledger.
+
+The API Access may remain paused until reconciliation.
+
+## 47.7 Billing Status Values
+
+Allowed billing.status values:
+
+```txt
+not_required
+precheck_failed
+debited
+failed
+```
+
+## 47.8 Run Aggregation v1
+
+Run Aggregation is ledger derived.
+
+It may calculate:
+
+```txt
+operation_count
+successful_operations
+failed_operations
+total_input_tokens
+total_output_tokens
+total_billable_tokens
+total_debited_tokens
+run_billing_status
+run_execution_status
+```
+
+Allowed run_billing_status values:
+
+```txt
+none
+fully_debited
+partially_debited
+billing_failed
+reconciliation_required
+```
+
+Allowed run_execution_status values:
+
+```txt
+completed
+partial
+failed
+blocked
+```
+
+Run Aggregation must not:
+
+```txt
+debit credits
+overwrite Ledger Entries
+hide failed operations
+pretend partial runs were atomic
+perform final settlement
+```
+
+## 47.9 Explicitly Not In v1
+
+```txt
+No Reservation System
+No Run End Settlement
+No Corporate Billing
+No Invoice Logic per Workspace
+No Team Seat Billing
+No Usage Plans
+No Reconciliation Dashboard
+No automatic Refunds
+No complex price zones
+```
+
+## 47.10 Final Sentence
+
+```txt
+M13 API Billing v1 is an atomic, auditable single debit per LLM Operation; Runs are summarized only from these Operations.
+```
+
+---
+
+# 48. Decision 7: Schooling Extension Initialization
+
+## 48.1 Final Decision
+
+The Schooling Extension is the mandatory API Access Gate.
+
+It is not only training.
+
+It is:
+
+```txt
+Setup
+Qualification
+Provisioning
+Proof Run
+Local Logbook Initialization
+API Access Release
+```
+
+No direct API usage is allowed before Schooling completion.
+
+## 48.2 Schooling Extension Purpose
+
+The Schooling Extension must turn a registered user into an API ready user.
+
+At the end, the user must have:
+
+```txt
+User Account
+API Credit
+API Workspace
+API Key
+registered Public Key
+local API Logbook
+first Test Run
+first Artifact
+first Ledger Entry
+first API IRSS
+```
+
+## 48.3 Schooling Flow v1
+
+Canonical flow:
+
+```txt
+1. User is registered
+2. User has API Credit
+3. User starts Schooling Extension
+4. Extension checks or creates Public Key
+5. Server creates API Workspace
+6. Server registers Public Key on API Workspace
+7. Server creates API Key
+8. Extension performs Proof Run against /api/m13/llm
+9. Server creates IRSS, Artifact and Ledger Entry
+10. Client stores local API Logbook
+11. API Access is marked completed
+```
+
+## 48.4 Three Phases
+
+The Schooling Extension uses three phases:
+
+```txt
+Phase 1: Readiness
+Phase 2: Provisioning
+Phase 3: Proof Run
+```
+
+### Phase 1: Readiness
+
+Checks:
+
+```txt
+User Account exists
+API Credit exists
+Public Key exists or can be created
+API Access is not already completed
+```
+
+### Phase 2: Provisioning
+
+Server creates or binds:
+
+```txt
+API Workspace
+API Key
+Public Key Reference
+Schooling State
+API Access State
+```
+
+### Phase 3: Proof Run
+
+The user performs a first controlled API call.
+
+The Proof Run must return:
+
+```txt
+API IRSS
+API Ledger Entry
+Generic Artifact Envelope
+Usage
+Billing Status
+Run ID
+Operation ID
+```
+
+## 48.5 State Created By Schooling
+
+Server side state after completion:
+
+```json
+{
+  "api_access_enabled": true,
+  "schooling_completed_at": "2026-05-03T00:00:00.000Z",
+  "api_workspace_id": "ws_...",
+  "api_key_id": "key_...",
+  "allowed_public_key_ref": "sha256:..."
+}
+```
+
+The raw API Key may be shown only once when created.
+
+The API Key must not be stored in Ledger, Artifact or IRSS.
+
+## 48.6 Local State Created By Schooling
+
+Client side local first state:
+
+```txt
+M13 API Logbook initialized
+First Proof Run stored
+First Artifact stored
+First Ledger Entry stored
+First IRSS stored
+API Workspace Reference stored
+Public Key Reference stored
+```
+
+The client cannot create server authority.
+
+The server remains authoritative for:
+
+```txt
+API Access
+API Key
+Credit Balance
+Debit
+Schooling Completion
+Workspace Status
+```
+
+## 48.7 Relation to Extension Sandbox
+
+The Extension Sandbox School and the API Schooling Extension are different.
+
+The Extension Sandbox School teaches extension building.
+
+The API Schooling Extension initializes API usage.
+
+Reusable principle from Sandbox:
+
+```txt
+Developer sees the Contract.
+Developer does not see the Core.
+```
+
+For API Schooling:
+
+```txt
+API User sees:
+- API Contract
+- API Key usage
+- Public Key role
+- IRSS
+- Ledger Entry
+- Artifact Envelope
+- Billing Status
+- Python Chain Example
+
+API User does not see:
+- route.ts
+- ENV
+- Provider Keys
+- Billing Internals
+- Adapter Internals
+- Core Files
+```
+
+## 48.8 Explicitly Not In v1
+
+```txt
+No Corporate Setup
+No Team Roles
+No SSO
+No multiple Workspace UI
+No complex Key Management UI
+No Extension Marketplace
+No full external Extension API
+No automatic Developer Registry Write
+No Main Deploy Flow
+```
+
+## 48.9 Final Sentence
+
+```txt
+The API Schooling Extension is the controlled onboarding and provisioning flow for API users; it is the mandatory gate before productive /api/m13/llm usage.
+```
+
+---
+
+# 49. Production Route Scope
+
+## 49.1 Route Target
+
+```txt
+app/api/m13/llm/route.ts
+```
+
+External path:
+
+```txt
+POST /api/m13/llm
+```
+
+## 49.2 Route May Orchestrate
+
+The route may orchestrate:
+
+```txt
+Auth
+API Workspace Check
+Schooling Check
+Public Key Audit Check
+Command Validation
+Credit Floor Check
+Server M13 Context Injection
+callM13Llm()
+Usage Reading
+Atomic Debit
+Artifact Envelope
+API IRSS
+API Ledger Entry
+Response Contract
+```
+
+## 49.3 Route Must Not Implement
+
+The route must not implement:
+
+```txt
+Provider SDK Calls
+Provider Response Parsing
+Usage Normalization Internally Again
+Command to Model Mapping Again
+FreeGate
+Triketon Refactor
+Chat Route Coupling
+Fachcodes in Core
+Corporate Account Logic
+Extension Marketplace Logic
+Run End Settlement
+Credit Reservation
+```
+
+## 49.4 Required Dependency
+
+The production route must use:
+
+```txt
+callM13Llm()
+```
+
+The LLM Adapter Layer is a closed dependency for route implementation.
+
+Provider logic remains inside:
+
+```txt
+lib/m13/llm/
+```
+
+## 49.5 Server M13 Context
+
+Every production API call must receive server owned M13 context.
+
+The user must not be responsible for providing M13 identity context.
+
+Reason:
+
+```txt
+Without explicit M13 context, models may interpret M13 incorrectly.
+```
+
+## 49.6 Final Sentence
+
+```txt
+The production route is an orchestration layer, not a provider layer and not a second Chat route.
+```
+
+---
+
+# 50. Remaining Implementation Boundary
+
+## 50.1 Still Not Implemented
+
+The following are still not implemented by this README:
+
+```txt
+Production route
+API Auth database layer
+API Workspace persistence
+API Key generation
+Public Key binding persistence
+Credit Floor values
+Atomic Debit implementation
+API Ledger persistence
+API Logbook client persistence
+Schooling Extension UI and flow
+Proof Run UI
+Stripe API Credit flow
+Reconciliation handling
+```
+
+## 50.2 Implementation Requires File Evidence
+
+No patch may be generated without first inspecting the real target file.
+
+Required workflow:
+
+```txt
+1. Localize target file
+2. Request or inspect exact file
+3. Analyze real code
+4. Confirm hypothesis
+5. Provide exact BEFORE and AFTER patch
+6. Include commit title
+```
+
+## 50.3 First Implementation Direction
+
+The next implementation sprint should not begin by coding the production route immediately.
+
+Recommended next order:
+
+```txt
+1. Freeze this README update
+2. Define route request and response contract
+3. Identify required server persistence objects
+4. Inspect current auth and token balance implementation
+5. Inspect existing token debit logic
+6. Decide minimal database/storage layer for API balance and workspace
+7. Patch only after exact file analysis
+```
+
+## 50.4 Final Sentence
+
+```txt
+The seven decisions are closed, but production implementation still requires exact file evidence and a separate patch plan.
+```
+
+---
+
+# 51. Updated Final Freeze Statement
+
+This README now freezes:
+
+```txt
+M13 API architecture space
+M13 LLM expansion state
+seven route blocking decisions
+production route scope
+remaining implementation boundary
+```
+
+The production route remains intentionally unbuilt.
+
+The next valid step is route contract planning and implementation preparation.
+
+Canonical closing rule:
+
+```txt
+M13 is nothing, so it can become everything.
+Core empty.
+Envelope strict.
+Extensions free.
+Audit stable.
+Route orchestrates.
+Adapters execute.
+Ledger proves.
+Artifact carries.
+IRSS shows.
+Billing decides.
+Schooling releases.
+```
+
